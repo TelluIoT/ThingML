@@ -94,11 +94,11 @@
                         </Require-Bundle>
             
                         <Export-Package>
-              org.sintef.thingml.editor,
-              org.sintef.thingml.editor.analysis,
-              org.sintef.thingml.editor.grammar,
-              org.sintef.thingml.editor.mopp,
-              org.sintef.thingml.editor.util
+              org.sintef.thingml.resource.thingml,
+              org.sintef.thingml.resource.thingml.analysis,
+              org.sintef.thingml.resource.thingml.grammar,
+              org.sintef.thingml.resource.thingml.mopp,
+              org.sintef.thingml.resource.thingml.util
                         </Export-Package>
                         <Private-Package>
               org.antlr.*
