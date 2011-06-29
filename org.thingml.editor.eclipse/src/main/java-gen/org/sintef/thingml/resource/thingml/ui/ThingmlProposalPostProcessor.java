@@ -11,24 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sintef.thingml
-
-import javax.swing.JFrame
+package org.sintef.thingml.resource.thingml.ui;
 
 /**
- * User: ffouquet
- * Date: 29/06/11
- * Time: 16:02
+ * A class which can be overridden to customize code completion proposals.
  */
-
-object ThingMLApp extends App {
-
-  var f = new ThingMLFrame
-  f.setSize(800,600)
-  f.setPreferredSize(f.getSize)
-  f.pack()
-  f.setVisible(true)
-  f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-
-
+public class ThingmlProposalPostProcessor {
+	
+	public java.util.List<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> process(java.util.List<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> proposals) {
+		// the default implementation does returns the proposals as they are
+		return proposals;
+	}
+	
 }

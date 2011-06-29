@@ -11,24 +11,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sintef.thingml
-
-import javax.swing.JFrame
+package org.sintef.thingml.resource.thingml.ui;
 
 /**
- * User: ffouquet
- * Date: 29/06/11
- * Time: 16:02
+ * The preference page to set the occurrence highlighting is not used anymore.
+ * This empty class is only generated to override old existing preference page
+ * code to avoid compile errors.
  */
-
-object ThingMLApp extends App {
-
-  var f = new ThingMLFrame
-  f.setSize(800,600)
-  f.setPreferredSize(f.getSize)
-  f.pack()
-  f.setVisible(true)
-  f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-
-
+public class ThingmlOccurrencePreferencePage {
 }

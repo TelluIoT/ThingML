@@ -11,24 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sintef.thingml
-
-import javax.swing.JFrame
+package org.sintef.thingml.resource.thingml.ui;
 
 /**
- * User: ffouquet
- * Date: 29/06/11
- * Time: 16:02
+ * A provider for BracketHandler objects.
  */
-
-object ThingMLApp extends App {
-
-  var f = new ThingMLFrame
-  f.setSize(800,600)
-  f.setPreferredSize(f.getSize)
-  f.pack()
-  f.setVisible(true)
-  f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-
-
+public interface IThingmlBracketHandlerProvider {
+	
+	/**
+	 * Returns the bracket handler.
+	 */
+	public org.sintef.thingml.resource.thingml.ui.IThingmlBracketHandler getBracketHandler();
+	
 }

@@ -1,0 +1,274 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.thingml</groupId>
+    <artifactId>org.thingml.editor.eclipse</artifactId>
+    <name>ThingML :: Editor :: Eclipse</name>
+    <packaging>bundle</packaging>
+	
+    <parent>
+        <artifactId>org.thingml.root</artifactId>
+        <groupId>org.thingml</groupId>
+        <version>0.5.0-SNAPSHOT</version>
+        <relativePath>../org.thingml.root/pom.xml</relativePath>
+    </parent>
+  
+    <build>
+		<!-- Manage mutli-source java project. Copy the src files inside the targetPath, the unique location for maven compiling
+		Drawback : once compiled the sources are not visible as java packages -->
+        <sourceDirectory>src/main/java</sourceDirectory>
+		<!--<outputDirectory>target/classes/</outputDirectory>-->
+        <resources>
+            <resource>
+                <directory>.</directory>
+                <includes>
+                    <include>plugin.properties</include>
+                    <include>plugin.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>icons</directory>
+                <targetPath>icons</targetPath>
+            </resource>
+            <resource>
+                <directory>css</directory>
+                <targetPath>css</targetPath>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <argLine>-Xmx1024m</argLine>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+			 <!-- Add generated source to build cycle -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>../src/main/java-gen</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			
+			
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.1.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>org.thingml.editor.eclipse</Bundle-SymbolicName>
+                        <Bundle-Name>org.thingml.editor.eclipse</Bundle-Name>
+                        <Bundle-Vendor>SINETF</Bundle-Vendor>
+                        <Bundle-ClassPath>.</Bundle-ClassPath>
+             <!-- Dependency used for compiling all the bundle (with dependecy to org.eclipse.core.* -->
+             
+                        <Require-Bundle>
+						
+                                org.eclipse.core.resources,
+                                org.emftext.access,
+                                org.eclipse.emf,
+                                org.eclipse.emf.codegen.ecore,
+                                org.eclipse.emf.ecore,
+                                org.eclipse.emf.ecore.edit,
+                                org.eclipse.emf.edit.ui,
+                                org.eclipse.emf.workspace,
+                                org.eclipse.jface,
+                                org.eclipse.jface.text,
+                                org.eclipse.ui,
+                                org.eclipse.ui.editors,
+                                org.eclipse.ui.ide,
+                                org.eclipse.ui.views,
+                                org.kermeta.kp.editor,
+                                org.emftext.commons.antlr3_3_0,
+                                org.thingml.model
+
+                        </Require-Bundle>
+            
+                        <Export-Package>
+                        </Export-Package>
+                        <Private-Package>
+                        </Private-Package>
+            <!--
+              specify the packages that should be imported to correctly build
+              the bundle (i.e <packaging>bundle<packaging> ".*" to also include
+              sub packages use the ! for avoiding to import some packages that
+              are already there with the Require-Bundle
+            -->
+                        <Import-Package>
+              !*
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+			
+        </plugins>
+    </build>
+    <dependencies>
+	
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.parser.eclipse</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+		
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.model</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+		
+        <dependency>
+            <groupId>org.emftext</groupId>
+            <artifactId>org.emftext.commons.antlr</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+		
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+	
+        <dependency>
+            <groupId>org.kevoree.extra</groupId>
+            <artifactId>org.kevoree.extra.emf.library</artifactId>
+            <version>${emf.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.emf.edit</artifactId>
+            <version>[2.5.0.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.emf.edit.ui</artifactId>
+            <version>[2.5.0.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.emf.ecore.edit</artifactId>
+            <version>[2.5.0.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.emf.ecore</artifactId>
+            <version>[2.5.0.0,)</version>
+        </dependency>
+	
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.ui</artifactId>
+            <version>[3.5.2.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.ui.workbench</artifactId>
+            <version>[3.5.2.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.ui.editors</artifactId>
+            <version>[3.5.0.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.ui.ide</artifactId>
+            <version>[3.5.2.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.jface</artifactId>
+            <version>[3.5.2.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.jface.text</artifactId>
+            <version>[3.5.2.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.text</artifactId>
+            <version>[3.5.0.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.swt</artifactId>
+            <version>[3.5.2.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
+            <version>[3.5.2.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.ui.workbench.texteditor</artifactId>
+            <version>[3.5.0.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.ui.views</artifactId>
+            <version>[3.4.1.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.core.runtime</artifactId>
+            <version>[3.5.0.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.core.commands</artifactId>
+            <version>[3.5.0.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.core.resources</artifactId>
+            <version>[3.5.2.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.core.jobs</artifactId>
+            <version>[3.4.100.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.equinox.common</artifactId>
+            <version>[3.5.1.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.equinox.registry</artifactId>
+            <version>[3.4.100.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.equinox.preferences</artifactId>
+            <version>[3.2.301.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kermeta.eclipse</groupId>
+            <artifactId>org.eclipse.core.filebuffers</artifactId>
+            <version>[3.5.100.0,)</version>
+        </dependency>
+    </dependencies>
+</project>

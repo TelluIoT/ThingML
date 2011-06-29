@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    	http://www.gnu.org/licenses/lgpl-3.0.txt
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<?eclipse version="3.2"?>
+<plugin>
+	<extension point="org.emftext.access.syntax.ui">
+		<metaInformationProvider class="org.sintef.thingml.resource.thingml.ui.ThingmlUIMetaInformation" id="org.sintef.thingml.resource.thingml.ui.ThingmlUIMetaInformation">
+		</metaInformationProvider>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors">
+		<editor class="org.sintef.thingml.resource.thingml.ui.ThingmlEditor" contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor" extensions="thingml" icon="icons/editor_icon.gif" id="org.sintef.thingml.resource.thingml.ui.ThingmlEditor" name="EMFText thingml Editor">
+			<contentTypeBinding contentTypeId="org.sintef.thingml.resource.thingml">
+			</contentTypeBinding>
+		</editor>
+	</extension>
+	
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer class="org.sintef.thingml.resource.thingml.ui.ThingmlPreferenceInitializer">
+		</initializer>
+	</extension>
+	
+	<extension point="org.eclipse.ui.preferencePages">
+		<page name="Thingml Text Editor" id="org.sintef.thingml.resource.thingml.ui.ThingmlPreferencePage" class="org.sintef.thingml.resource.thingml.ui.ThingmlPreferencePage" category="org.eclipse.ui.preferencePages.GeneralTextEditor">
+		</page>
+		<page name="Syntax Coloring" id="org.sintef.thingml.resource.thingml.ui.ThingmlSyntaxColoringPreferencePage" class="org.sintef.thingml.resource.thingml.ui.ThingmlSyntaxColoringPreferencePage" category="org.sintef.thingml.resource.thingml.ui.ThingmlPreferencePage">
+		</page>
+		<page name="Brackets" id="org.sintef.thingml.resource.thingml.ui.ThingmlBracketPreferencePage" class="org.sintef.thingml.resource.thingml.ui.ThingmlBracketPreferencePage" category="org.sintef.thingml.resource.thingml.ui.ThingmlPreferencePage">
+		</page>
+	</extension>
+	
+	<extension point="org.eclipse.ui.newWizards">
+		<category id="org.emftext.runtime.ui.EMFTextFileCategory" name="EMFText File">
+		</category>
+		<wizard category="org.emftext.runtime.ui.EMFTextFileCategory" icon="/icons/default_new_icon.gif" class="org.sintef.thingml.resource.thingml.ui.ThingmlNewFileWizard" id="org.sintef.thingml.resource.thingml.ui.ThingmlNewFileWizard" name="EMFText .thingml file">
+		</wizard>
+	</extension>
+	
+	<extension point="org.eclipse.ui.ide.markerResolution">
+		<markerResolutionGenerator class="org.sintef.thingml.resource.thingml.ui.ThingmlMarkerResolutionGenerator" markerType="org.sintef.thingml.resource.thingml.problem">
+		</markerResolutionGenerator>
+	</extension>
+	
+	<extension point="org.eclipse.core.filebuffers.annotationModelCreation">
+		<factory class="org.sintef.thingml.resource.thingml.ui.ThingmlAnnotationModelFactory" extensions="thingml">
+		</factory>
+	</extension>
+	
+	<extension point="org.eclipse.core.contenttype.contentTypes">
+		<content-type id="org.sintef.thingml.resource.thingml" name=".thingml File" base-type="org.eclipse.core.runtime.text" file-extensions="thingml">
+		</content-type>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors.documentProviders">
+		<provider class="org.eclipse.ui.editors.text.TextFileDocumentProvider" extensions="thingml" id="org.sintef.thingml.resource.thingml.ui.provider">
+		</provider>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type name="org.sintef.thingml.resource.thingml.ui.occurences">
+		</type>
+		<type name="org.sintef.thingml.resource.thingml.ui.occurences.declaration" super="org.sintef.thingml.resource.thingml.ui.occurences">
+		</type>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification annotationType="org.sintef.thingml.resource.thingml.ui.occurences" label="Occurrences (in .thingml files)" icon="/icons/occurrence_icon.gif" textPreferenceKey="thingml.occurrenceIndication" textPreferenceValue="false" highlightPreferenceKey="thingml.occurrenceHighlighting" highlightPreferenceValue="true" contributesToHeader="false" overviewRulerPreferenceKey="thingml.occurrenceIndicationInOverviewRuler" overviewRulerPreferenceValue="true" verticalRulerPreferenceKey="thingml.occurrenceIndicationInVerticalRuler" verticalRulerPreferenceValue="false" colorPreferenceKey="thingml.occurrenceIndicationColor" colorPreferenceValue="212,212,212" presentationLayer="4" showInNextPrevDropdownToolbarActionKey="thingml.showOccurrenceInNextPrevDropdownToolbarAction" showInNextPrevDropdownToolbarAction="true" isGoToNextNavigationTargetKey="thingml.isOccurrenceGoToNextNavigationTarget" isGoToNextNavigationTarget="false" isGoToPreviousNavigationTargetKey="thingml.isOccurrenceGoToPreviousNavigationTarget" isGoToPreviousNavigationTarget="false" textStylePreferenceKey="thingml.occurrenceTextStyle" textStylePreferenceValue="NONE">
+		</specification>
+		<specification annotationType="org.sintef.thingml.resource.thingml.ui.occurences.declaration" label="Declarations (in .thingml files)" textPreferenceKey="thingml.declarationIndication" textPreferenceValue="false" highlightPreferenceKey="thingml.declarationHighlighting" highlightPreferenceValue="true" overviewRulerPreferenceKey="thingml.declarationIndicationInOverviewRuler" overviewRulerPreferenceValue="true" verticalRulerPreferenceKey="thingml.declarationIndicationInVerticalRuler" verticalRulerPreferenceValue="false" colorPreferenceKey="thingml.declarationIndicationColor" colorPreferenceValue="240,216,168" presentationLayer="4" textStylePreferenceKey="thingml.declarationTextStyle" textStylePreferenceValue="NONE">
+		</specification>
+	</extension>
+	
+</plugin>

@@ -11,24 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sintef.thingml
-
-import javax.swing.JFrame
+package org.sintef.thingml.resource.thingml.ui;
 
 /**
- * User: ffouquet
- * Date: 29/06/11
- * Time: 16:02
+ * An enumeration of all position categories.
  */
-
-object ThingMLApp extends App {
-
-  var f = new ThingMLFrame
-  f.setSize(800,600)
-  f.setPreferredSize(f.getSize)
-  f.pack()
-  f.setVisible(true)
-  f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-
-
+public enum ThingmlPositionCategory {
+	BRACKET, DEFINTION, PROXY;
 }

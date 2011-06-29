@@ -11,24 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sintef.thingml
+package org.sintef.thingml.resource.thingml.ui;
 
-import javax.swing.JFrame
-
-/**
- * User: ffouquet
- * Date: 29/06/11
- * Time: 16:02
- */
-
-object ThingMLApp extends App {
-
-  var f = new ThingMLFrame
-  f.setSize(800,600)
-  f.setPreferredSize(f.getSize)
-  f.pack()
-  f.setVisible(true)
-  f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-
-
+public class ThingmlAnnotationModel extends org.eclipse.ui.texteditor.ResourceMarkerAnnotationModel implements org.eclipse.jface.text.source.IAnnotationModel {
+	
+	public ThingmlAnnotationModel(org.eclipse.core.resources.IResource resource) {
+		super(resource);
+	}
+	
+	protected org.eclipse.ui.texteditor.MarkerAnnotation createMarkerAnnotation(org.eclipse.core.resources.IMarker marker) {
+		return new org.sintef.thingml.resource.thingml.ui.ThingmlMarkerAnnotation(marker);
+	}
+	
 }

@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.thingml</groupId>
     <artifactId>org.thingml.parser.standalone</artifactId>
-    <name>ThingML :: Parser Standalone</name>
+    <name>ThingML :: Parser :: Standalone</name>
     <packaging>jar</packaging>
 
     <parent>
