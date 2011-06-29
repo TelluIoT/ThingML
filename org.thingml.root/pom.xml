@@ -1,0 +1,114 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.thingml</groupId>
+    <artifactId>org.thingml.root</artifactId>
+    <packaging>pom</packaging>
+    <name>ThingML :: Root</name>
+    <url>https://github.com/ffleurey/ThingML</url>
+    
+    <version>0.5.0-SNAPSHOT</version>
+
+    <properties>
+		<thingml.version>${project.version}</thingml.version>
+        <emf.version>2.6.0</emf.version>
+        <scala.version>2.9.0-1</scala.version>
+        <bundle.vendor>SINTEF</bundle.vendor>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.9.0</version>
+                <configuration>
+                    <basedir>${basedir}</basedir>
+                    <header>${basedir}/../HEADER</header>
+                    <strictCheck>true</strictCheck>
+                    <properties>
+                        <owner>SINTEF</owner>
+                        <year>${project.inceptionYear}</year>
+                        <email>franck@fleurey.com</email>
+                    </properties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Java compiler plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <!-- Resources plugin : allow to collect and embedd severals resources -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.4.3</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <!-- Felix BnD plugin : allow Bundle packaging : generate OSGi JAR  -->
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.1.0</version>
+                <extensions>true</extensions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>thingml-snapshots</id>
+            <url>http://www.thingml.org/snapshots:8081/artifactory/libs-release-local</url>
+        </repository>  
+		 <repository>
+            <id>kevoree-libs-release-local</id>
+            <url>http://maven.kevoree.org/release</url>
+        </repository>
+		<repository>
+            <id>kevoree-snapshots</id>
+            <url>http://maven.kevoree.org/snapshots</url>
+        </repository>  
+    </repositories>
+
+    <modules>
+		<module>../org.emftext.commons.antlr3_3_0</module>
+        <module>../org.thingml.model</module>
+        <module>../org.thingml.parser</module>
+    </modules>
+
+    <distributionManagement>
+       <repository>
+          <id>thingml</id>
+          <name>thingml-releases</name>
+          <url>http://thingml.org:8081/artifactory/libs-release-local</url>
+      </repository>
+    </distributionManagement>
+
+
+</project>

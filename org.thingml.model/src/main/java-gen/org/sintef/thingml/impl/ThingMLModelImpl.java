@@ -1,0 +1,235 @@
+/**
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.sintef.thingml.impl;
+
+import java.util.Collection;
+
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.EObjectImpl;
+
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.sintef.thingml.Message;
+import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.Type;
+
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Thing ML Model</b></em>'.
+ * <!-- end-user-doc -->
+ * <p>
+ * The following features are implemented:
+ * <ul>
+ *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getTypes <em>Types</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getImports <em>Imports</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getMessages <em>Messages</em>}</li>
+ * </ul>
+ * </p>
+ *
+ * @generated
+ */
+public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
+	/**
+	 * The cached value of the '{@link #getTypes() <em>Types</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypes()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Type> types;
+
+	/**
+	 * The cached value of the '{@link #getImports() <em>Imports</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getImports()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ThingMLModel> imports;
+
+	/**
+	 * The cached value of the '{@link #getMessages() <em>Messages</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMessages()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Message> messages;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ThingMLModelImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return ThingmlPackage.Literals.THING_ML_MODEL;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<Type> getTypes() {
+		if (types == null) {
+			types = new EObjectContainmentEList<Type>(Type.class, this, ThingmlPackage.THING_ML_MODEL__TYPES);
+		}
+		return types;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<ThingMLModel> getImports() {
+		if (imports == null) {
+			imports = new EObjectResolvingEList<ThingMLModel>(ThingMLModel.class, this, ThingmlPackage.THING_ML_MODEL__IMPORTS);
+		}
+		return imports;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<Message> getMessages() {
+		if (messages == null) {
+			messages = new EObjectContainmentEList<Message>(Message.class, this, ThingmlPackage.THING_ML_MODEL__MESSAGES);
+		}
+		return messages;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ThingmlPackage.THING_ML_MODEL__TYPES:
+				return ((InternalEList<?>)getTypes()).basicRemove(otherEnd, msgs);
+			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
+				return ((InternalEList<?>)getMessages()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case ThingmlPackage.THING_ML_MODEL__TYPES:
+				return getTypes();
+			case ThingmlPackage.THING_ML_MODEL__IMPORTS:
+				return getImports();
+			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
+				return getMessages();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case ThingmlPackage.THING_ML_MODEL__TYPES:
+				getTypes().clear();
+				getTypes().addAll((Collection<? extends Type>)newValue);
+				return;
+			case ThingmlPackage.THING_ML_MODEL__IMPORTS:
+				getImports().clear();
+				getImports().addAll((Collection<? extends ThingMLModel>)newValue);
+				return;
+			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
+				getMessages().clear();
+				getMessages().addAll((Collection<? extends Message>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case ThingmlPackage.THING_ML_MODEL__TYPES:
+				getTypes().clear();
+				return;
+			case ThingmlPackage.THING_ML_MODEL__IMPORTS:
+				getImports().clear();
+				return;
+			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
+				getMessages().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case ThingmlPackage.THING_ML_MODEL__TYPES:
+				return types != null && !types.isEmpty();
+			case ThingmlPackage.THING_ML_MODEL__IMPORTS:
+				return imports != null && !imports.isEmpty();
+			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
+				return messages != null && !messages.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
+
+} //ThingMLModelImpl

@@ -1,0 +1,21 @@
+import "PrimitiveTypes.thingml"
+
+// Definition of a driver to manage a set of LEDs
+// connected to digital IO PINs
+// Address of the LEDs is [1..*]
+
+// turn the LED ON
+message light_on(led_id : Integer);
+// turn the LED OFF
+message light_off(led_id : Integer);
+// toggle LED
+message toggle(led_id : Integer);
+
+thing LED
+{
+	port LED {
+		receives light_on
+		receives light_off
+		receives toggle
+	}
+}

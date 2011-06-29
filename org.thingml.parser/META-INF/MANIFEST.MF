@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: EMFText Parser Plugin: thingml
+Bundle-SymbolicName: org.sintef.thingml.resource.thingml;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: Software Technology Group - TU Dresden Germany
+Require-Bundle: org.eclipse.core.resources,
+  org.eclipse.emf,
+  org.eclipse.emf.codegen.ecore,
+  org.eclipse.emf.ecore,
+  org.eclipse.emf.ecore.edit,
+  org.eclipse.emf.validation,
+  org.eclipse.emf.workspace,
+  org.emftext.access;resolution:=optional,
+  org.emftext.commons.antlr3_3_0,
+  org.sintef.thingml.model
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.sintef.thingml.resource.thingml,
+  org.sintef.thingml.resource.thingml.analysis,
+  org.sintef.thingml.resource.thingml.mopp,
+  org.sintef.thingml.resource.thingml.grammar,
+  org.sintef.thingml.resource.thingml.util
+Bundle-Activator: org.sintef.thingml.resource.thingml.mopp.ThingmlPlugin

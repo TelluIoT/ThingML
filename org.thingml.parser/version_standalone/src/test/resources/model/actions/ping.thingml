@@ -1,0 +1,28 @@
+
+message ping() @code "66"
+		@sync_ack "pong" @timeout "1000" @retry "3";
+message pong() @code "67";
+
+// Definition of the Pingable fragmant
+thing fragment Pingable {
+
+	port PingPong {
+		sends ping, pong
+		receives ping, pong
+	}
+	
+	statechart Ping init PP {
+		state PP {
+			internal @internal "does not exit the state!"
+			event PingPong?ping
+			action do
+				PingPong!pong()
+			end
+		}
+	}
+}
+
+// Declaration of a Pingable thing
+thing MyStuff includes Pingable {
+
+}

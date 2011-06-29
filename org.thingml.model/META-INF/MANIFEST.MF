@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.sintef.thingml.model;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: .
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.sintef.thingml,
+ org.sintef.thingml.constraints,
+ org.sintef.thingml.impl,
+ org.sintef.thingml.util
+Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.validation
+Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.emf.ecore.xmi

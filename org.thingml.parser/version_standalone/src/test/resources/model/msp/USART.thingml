@@ -1,0 +1,19 @@
+import "PrimitiveTypes.thingml"
+
+message transmit_byte(b : Byte);
+message transmit(msg : String);
+message receive_byte(b : Byte);
+message transmit_Hex8(value : Integer);
+message transmit_hexdump(ptr : String, len : Integer);
+
+thing USART
+{
+
+	port USART {
+		sends receive_byte
+		receives transmit
+		receives transmit_byte
+		receives transmit_Hex8
+		receives transmit_hexdump
+	}
+}

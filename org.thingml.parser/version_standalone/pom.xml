@@ -1,0 +1,175 @@
+<!-- $Id: $ -->
+<!-- License    : EPL                                    -->
+<!-- Project    : org.kermeta.kp.editor -->
+<!-- Copyright  : IRISA / INRIA / Universite de Rennes 1 --> 
+<!-- Authors : Haja Rambelontsalama <hrambelo@irisa.fr> --> 
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.thingml</groupId>
+    <artifactId>org.thingml.parser.standalone</artifactId>
+    <name>ThingML :: Parser Standalone</name>
+    <packaging>bundle</packaging>
+
+    <parent>
+        <groupId>org.thingml</groupId>
+        <artifactId>org.thingml.parser</artifactId>
+        <version>0.5.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <build>
+    <!--
+      Manage mutli-source java project. Copy the src files inside the
+      targetPath, the unique location for maven compiling Drawback : once
+      compiled the sources are not visible as java packages
+    -->
+        <sourceDirectory>../src/main/java</sourceDirectory>
+    
+        <resources>
+            <resource>
+                <targetPath>${project.build.directory}/filtered-sources/java</targetPath>
+                <filtering>true</filtering>
+                <directory>../src/main/java-gen</directory>
+                <excludes>
+                    <exclude>**/IThingmlBuilder.java</exclude>
+                    <exclude>**/mopp/ThingmlBuilder.java</exclude>
+                    <exclude>**/mopp/ThingmlBuilderAdpater.java</exclude>
+                    <exclude>**/mopp/ThingmlMarkerHelper.java</exclude>
+                    <exclude>**/mopp/ThingmlNature.java</exclude>
+                    <exclude>**/mopp/ThingmlPlugin.java</exclude>
+                    <exclude>**/mopp/ThingmlResource.java</exclude>
+                    <exclude>**/mopp/ThingmlResourceFactoryDelegator.java</exclude>
+                    <exclude>**/util/ThingmlTextResourceUtil.java</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <targetPath>${project.build.directory}/filtered-sources/java</targetPath>
+                <filtering>true</filtering>
+                <directory>src/main/java-gen-cleaned</directory>
+                <excludes>
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <argLine>-Xmx1024m</argLine>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+      <!-- Add generated source to build cycle -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/filtered-sources/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+     
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*TestSuite.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.1.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>org.thingml.parser.standalone</Bundle-SymbolicName>
+                        <Bundle-Name>org.thingml.parser.standalone</Bundle-Name>
+                        <Bundle-Vendor>SINTEF</Bundle-Vendor>
+                        <Bundle-ClassPath>.</Bundle-ClassPath>
+             <!-- Dependency used for compiling all the bundle (with dependecy to org.eclipse.core.* -->
+
+                        <Export-Package>
+              org.sintef.thingml.editor,
+              org.sintef.thingml.analysis,
+              org.sintef.thingml.grammar,
+              org.sintef.thingml.mopp,
+              org.sintef.thingml.editor.util
+                        </Export-Package>
+                        <Private-Package>
+              org.antlr.*
+                        </Private-Package>
+            <!--
+              specify the packages that should be imported to correctly build
+              the bundle (i.e <packaging>bundle<packaging> ".*" to also include
+              sub packages use the ! for avoiding to import some packages that
+              are already there with the Require-Bundle
+            -->
+                        <Import-Package>
+              !org.eclipse.emf.*,
+              !org.osgi.framework.*,
+              org.sintef.thingml.*
+               <!-- Dependency used for compiling all the bundle (with dependecy to org.eclipse.core.* -->
+              <!-- ,!org.eclipse.core.* --> 
+                        </Import-Package>
+
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+  
+        <dependency>
+            <groupId>org.kevoree.extra</groupId>
+            <artifactId>org.kevoree.extra.emf.library</artifactId>
+            <version>${emf.version}</version>
+        </dependency>
+	
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.model</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+	
+    <!--<dependency>
+	  <groupId>org.emftext.commons</groupId>
+      <artifactId>commons.antlr3_2_0</artifactId>
+      <version>${kermeta.version}</version>
+    </dependency>-->
+	
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+	
+    <!--<dependency>
+      <groupId>org.kermeta.eclipse</groupId>
+      <artifactId>org.eclipse.emf.validation</artifactId>
+      <version>[1.3.0.0,)</version>
+    </dependency>-->
+        <dependency>
+            <groupId>org.emftext</groupId>
+            <artifactId>org.emftext.commons.antlr</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+    </dependencies>
+</project>

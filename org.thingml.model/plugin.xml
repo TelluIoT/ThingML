@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    	http://www.gnu.org/licenses/lgpl-3.0.txt
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://edap"
+            class="thingml.EdapPackage"
+            genModel="model/edap.genmodel"/>
+   </extension>
+   
+   
+   <extension
+         point="org.eclipse.emf.validation.constraintProviders">
+      <category
+            id="org.sintef.edap.model.constraints.typechecker.category"
+            mandatory="false"
+            name="typechecker">
+      </category>
+      <constraintProvider
+            cache="true"
+            mode="Batch">
+         <package
+               namespaceUri="http://edap">
+         </package>
+         <constraints
+               categories="org.sintef.edap.model.constraints.typechecker.category">
+            <constraint
+                  class="org.sintef.thingml.constraints.ConditionalConstraintChecker"
+                  id="org.sintef.edap.model.typechecker.OnlyBooleanConditions"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="OnlyBooleanConditions"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+            </constraint>
+         </constraints>
+      </constraintProvider>
+   </extension>
+   
+   <extension
+         point="org.eclipse.emf.validation.constraintBindings">
+      <binding
+            category="org.sintef.edap.model.constraints.typechecker.category"
+            context="org.sintef.edap.model.clientConditionalAction">
+      </binding>
+      <clientContext
+            default="true"
+            id="org.sintef.edap.model.clientContext2">
+      </clientContext>
+   </extension>
+
+</plugin>
