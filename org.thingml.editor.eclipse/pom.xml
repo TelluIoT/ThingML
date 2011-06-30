@@ -17,7 +17,7 @@
     <build>
 		<!-- Manage mutli-source java project. Copy the src files inside the targetPath, the unique location for maven compiling
 		Drawback : once compiled the sources are not visible as java packages -->
-        <sourceDirectory>src/main/java</sourceDirectory>
+        <sourceDirectory>src</sourceDirectory>
 		<!--<outputDirectory>target/classes/</outputDirectory>-->
         <resources>
             <resource>
@@ -60,7 +60,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/main/java-gen</source>
+                                <source>src-gen</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -147,128 +147,139 @@
             <artifactId>org.osgi.core</artifactId>
             <version>4.2.0</version>
         </dependency>
+        
+        <!-- OSGI Version of EMF -->
 	
         <dependency>
             <groupId>org.kevoree.extra</groupId>
             <artifactId>org.kevoree.extra.emf.library</artifactId>
             <version>${emf.version}</version>
         </dependency>
+        
+        <!-- DEPENDANCIES TO ECLIPSE PLUGINS (just for compiling) -->
 
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
+            <artifactId>org.eclipse.emf.validation</artifactId>
+            <version>${eclipse.version}</version>
+        </dependency>
+     
+
+        <dependency>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.emf.edit</artifactId>
-            <version>[2.5.0.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.emf.edit.ui</artifactId>
-            <version>[2.5.0.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.emf.ecore.edit</artifactId>
-            <version>[2.5.0.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.emf.ecore</artifactId>
-            <version>[2.5.0.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
 	
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.ui</artifactId>
-            <version>[3.5.2.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.ui.workbench</artifactId>
-            <version>[3.5.2.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.ui.editors</artifactId>
-            <version>[3.5.0.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.ui.ide</artifactId>
-            <version>[3.5.2.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.jface</artifactId>
-            <version>[3.5.2.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.jface.text</artifactId>
-            <version>[3.5.2.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.text</artifactId>
-            <version>[3.5.0.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.swt</artifactId>
-            <version>[3.5.2.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
-            <artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
-            <version>[3.5.2.0,)</version>
+            <groupId>org.eclipse.maven</groupId>
+            <artifactId>org.eclipse.swt.win32.win32.x86</artifactId>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.ui.workbench.texteditor</artifactId>
-            <version>[3.5.0.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.ui.views</artifactId>
-            <version>[3.4.1.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.core.runtime</artifactId>
-            <version>[3.5.0.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.core.commands</artifactId>
-            <version>[3.5.0.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.core.resources</artifactId>
-            <version>[3.5.2.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.core.jobs</artifactId>
-            <version>[3.4.100.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.equinox.common</artifactId>
-            <version>[3.5.1.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.equinox.registry</artifactId>
-            <version>[3.4.100.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.equinox.preferences</artifactId>
-            <version>[3.2.301.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kermeta.eclipse</groupId>
+            <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.core.filebuffers</artifactId>
-            <version>[3.5.100.0,)</version>
+            <version>${eclipse.version}</version>
         </dependency>
     </dependencies>
 </project>

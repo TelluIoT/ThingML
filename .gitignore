@@ -4,8 +4,6 @@
 /.svn/
 target/
 .DS_Store
-.classpath
-.project
 .settings/
 *.iml
 *.ipr

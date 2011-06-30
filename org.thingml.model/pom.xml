@@ -73,11 +73,13 @@
     </build>
     
     <dependencies>
+        
         <dependency>
             <groupId>org.kevoree.extra</groupId>
             <artifactId>org.kevoree.extra.emf.library</artifactId>
             <version>${emf.version}</version>
         </dependency>
+    
     </dependencies>
 
 </project>

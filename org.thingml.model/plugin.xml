@@ -27,54 +27,9 @@
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://edap"
-            class="thingml.EdapPackage"
-            genModel="model/edap.genmodel"/>
-   </extension>
-   
-   
-   <extension
-         point="org.eclipse.emf.validation.constraintProviders">
-      <category
-            id="org.sintef.edap.model.constraints.typechecker.category"
-            mandatory="false"
-            name="typechecker">
-      </category>
-      <constraintProvider
-            cache="true"
-            mode="Batch">
-         <package
-               namespaceUri="http://edap">
-         </package>
-         <constraints
-               categories="org.sintef.edap.model.constraints.typechecker.category">
-            <constraint
-                  class="org.sintef.thingml.constraints.ConditionalConstraintChecker"
-                  id="org.sintef.edap.model.typechecker.OnlyBooleanConditions"
-                  isEnabledByDefault="true"
-                  lang="Java"
-                  mode="Batch"
-                  name="OnlyBooleanConditions"
-                  severity="ERROR"
-                  statusCode="1">
-               <message>
-                  {0}
-               </message>
-            </constraint>
-         </constraints>
-      </constraintProvider>
-   </extension>
-   
-   <extension
-         point="org.eclipse.emf.validation.constraintBindings">
-      <binding
-            category="org.sintef.edap.model.constraints.typechecker.category"
-            context="org.sintef.edap.model.clientConditionalAction">
-      </binding>
-      <clientContext
-            default="true"
-            id="org.sintef.edap.model.clientContext2">
-      </clientContext>
+            uri="http://thingml"
+            class="org.sintef.thingml.ThingmlPackage"
+            genModel="src/main/model/thingml.genmodel"/>
    </extension>
 
 </plugin>

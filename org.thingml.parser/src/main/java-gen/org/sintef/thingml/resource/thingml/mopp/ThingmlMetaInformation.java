@@ -52,7 +52,7 @@ public class ThingmlMetaInformation implements org.sintef.thingml.resource.thing
 	}
 	
 	public String getPathToCSDefinition() {
-		return "org.sintef.thingml.model/model/thingml.cs";
+		return "org.sintef.thingml.model/src/main/model/thingml.cs";
 	}
 	
 	public String[] getTokenNames() {

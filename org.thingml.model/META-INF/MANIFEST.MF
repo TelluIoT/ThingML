@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.sintef.thingml.model;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -11,7 +11,6 @@ Export-Package: org.sintef.thingml,
  org.sintef.thingml.constraints,
  org.sintef.thingml.impl,
  org.sintef.thingml.util
-Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
- org.eclipse.emf.validation
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.ecore;visibility:=reexport
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.emf.ecore.xmi

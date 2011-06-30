@@ -1,25 +1,18 @@
-/**
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 SYNTAXDEF thingml
 FOR <http://thingml>
 START ThingMLModel
 
 
 OPTIONS {
+
 	memoize = "true";
 	tokenspace = "0";
 	usePredefinedTokens = "false";
+	srcFolder = "src/main/java";
+	srcGenFolder = "src/main/java-gen";
+	
+	//uiSrcFolder = "src/main/java";
+	//uiSrcGenFolder = "src/main/java-gen";
 }
 
 TOKENS{
@@ -73,22 +66,16 @@ TOKENSTYLES{
 	
 	"sends" COLOR #7F0055, BOLD;
 	"receives" COLOR #7F0055, BOLD;
-	
 	"STRING_EXT" COLOR #0055bb;
-	
 	"state" COLOR #CC8000, BOLD;
 	"composite" COLOR #CC8000, BOLD;
 	"statechart" COLOR #CC8000, BOLD;
-	"component" COLOR #CC8000, BOLD;
 	"event" COLOR #7F0055, BOLD;	
-	"eventref" COLOR #7F0055, BOLD;
 	"guard" COLOR #7F0055, BOLD;
 	"action" COLOR #7F0055, BOLD;
 	"on" COLOR #7F0055, BOLD;
 	"entry" COLOR #7F0055, BOLD;
 	"exit" COLOR #7F0055, BOLD;
-	"send" COLOR #7F0055, BOLD;
-	"receive" COLOR #7F0055, BOLD;
 	"transition" COLOR #CC8000, BOLD;
 	"init" COLOR #CC8000, BOLD;
 	"keeps" COLOR #CC8000, BOLD;
@@ -154,12 +141,6 @@ RULES{
 
 	ReceiveMessage ::= (name[] #1 ":" #1)? port[] "?" message[] ;
 	
-	// Connector ::= "connector" #1 "(" port1[] "," #1 port2[] ")" (annotations)* ;
-	
-	
-	
-	// CreateAction ::= "create" #1 ref (annotations)* ;
-	
 	// *********************
 	// * Actions
 	// *********************
@@ -221,12 +202,6 @@ RULES{
 	@Operator(type="unary_prefix", weight="6", superclass="Expression")	
 	NotExpression ::= "not" #1 term;
 	
-	//@Operator(type="primitive", weight="6", superclass="Expression")
-	//DictionaryNavigation ::= target "." property[] "[" index "]";
-	
-	//@Operator(type="unary_postfix", weight="7", superclass="Expression")
-	//PropertyNavigation ::= target #0 ("." #0 property[]) ;
-	
 	@Operator(type="primitive", weight="8", superclass="Expression")
 	EventReference ::= msgRef[] "." paramRef[];	
 	
@@ -238,9 +213,6 @@ RULES{
 
 	@Operator(type="primitive", weight="8", superclass="Expression")
 	IntegerLitteral ::= intValue[INTEGER_LITERAL];
-
-	//@Operator(type="primitive", weight="7", superclass="Expression")
-	//DoubleLitteral ::= doubleValue[REAL_LITERAL];
 	
 	@Operator(type="primitive", weight="8", superclass="Expression")
 	StringLitteral ::= stringValue[STRING_LITERAL];
