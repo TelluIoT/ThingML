@@ -6,7 +6,7 @@
     <artifactId>org.thingml.root</artifactId>
     <packaging>pom</packaging>
     <name>ThingML :: Root</name>
-    <url>https://github.com/ffleurey/ThingML</url>
+    <url>http://www.thingml.org</url>
     
     <version>0.5.0-SNAPSHOT</version>
 
@@ -93,13 +93,13 @@
         <repository>
             <id>thingml-lib</id>
             <name>thingml-releases-lib</name>
-            <url>http://thingml.org:8081/artifactory/libs-release-local</url>
+            <url>http://maven.thingml.org/libs-release-local</url>
         </repository>
 
         <repository>
             <id>thingml-ext</id>
             <name>thingml-releases-ext</name>
-            <url>http://thingml.org:8081/artifactory/ext-release-local</url>
+            <url>http://maven.thingml.org/ext-release-local</url>
         </repository>
         
         <repository>
