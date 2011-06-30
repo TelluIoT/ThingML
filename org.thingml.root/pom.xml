@@ -1,3 +1,4 @@
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -10,8 +11,9 @@
     <version>0.5.0-SNAPSHOT</version>
 
     <properties>
-		<thingml.version>${project.version}</thingml.version>
-        <emf.version>2.6.0</emf.version>
+        <thingml.version>${project.version}</thingml.version>
+        <eclipse.version>3.7.0</eclipse.version>
+        <emf.version>2.7.0</emf.version>
         <scala.version>2.9.0-1</scala.version>
         <bundle.vendor>SINTEF</bundle.vendor>
     </properties>
@@ -40,6 +42,11 @@
                         <year>${project.inceptionYear}</year>
                         <email>franck@fleurey.com</email>
                     </properties>
+                    <excludes>
+                    <exclude>
+                        **/*.cs
+                    </exclude>   
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -82,22 +89,33 @@
     </build>
 
     <repositories>
+        
         <repository>
-            <id>thingml-snapshots</id>
-            <url>http://www.thingml.org/snapshots:8081/artifactory/libs-release-local</url>
-        </repository>  
-		 <repository>
+            <id>thingml-lib</id>
+            <name>thingml-releases-lib</name>
+            <url>http://thingml.org:8081/artifactory/libs-release-local</url>
+        </repository>
+
+        <repository>
+            <id>thingml-ext</id>
+            <name>thingml-releases-ext</name>
+            <url>http://thingml.org:8081/artifactory/ext-release-local</url>
+        </repository>
+        
+        <repository>
             <id>kevoree-libs-release-local</id>
             <url>http://maven.kevoree.org/release</url>
         </repository>
-		<repository>
+        
+        <repository>
             <id>kevoree-snapshots</id>
             <url>http://maven.kevoree.org/snapshots</url>
         </repository>  
+
     </repositories>
 
     <modules>
-		<module>../org.emftext.commons.antlr3_3_0</module>
+        <module>../org.emftext.commons.antlr3_3_0</module>
         <module>../org.thingml.model</module>
         <module>../org.thingml.parser</module>
         <module>../org.thingml.editor.standalone</module>
@@ -105,11 +123,11 @@
     </modules>
 
     <distributionManagement>
-       <repository>
-          <id>thingml</id>
-          <name>thingml-releases</name>
-          <url>http://thingml.org:8081/artifactory/libs-release-local</url>
-      </repository>
+        <repository>
+            <id>thingml</id>
+            <name>thingml-releases</name>
+            <url>http://thingml.org:8081/artifactory/libs-release-local</url>
+        </repository>
     </distributionManagement>
 
 
