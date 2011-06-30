@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>jsyntaxpane</groupId>
+            <groupId>org.kevoree.extra</groupId>
             <artifactId>jsyntaxpane</artifactId>
             <version>0.9.6</version>
         </dependency>

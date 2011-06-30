@@ -30,7 +30,7 @@ class ThingMLPanel extends JPanel {
   var codeEditor = new JEditorPane();
   var scrPane = new JScrollPane(codeEditor);
   codeEditor.setContentType("text/thingml; charset=UTF-8");
-  codeEditor.setBackground(Color.LIGHT_GRAY)
+  //codeEditor.setBackground(Color.LIGHT_GRAY)
 
   var editorKit = codeEditor.getEditorKit
   var toolPane = new JToolBar

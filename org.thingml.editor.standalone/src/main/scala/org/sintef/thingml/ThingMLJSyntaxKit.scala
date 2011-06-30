@@ -13,7 +13,9 @@
  */
 package org.sintef.thingml
 
-import jsyntaxpane.DefaultSyntaxKit
+import java.awt.{Graphics, Color}
+import javax.swing.text.{TabExpander, Segment}
+import jsyntaxpane.{TokenTypes, SyntaxStyle, TokenType, DefaultSyntaxKit}
 
 /**
  * User: ffouquet
@@ -30,7 +32,7 @@ class ThingMLJSyntaxKit extends DefaultSyntaxKit(new ThingMLJSyntaxLexerWrapper(
   config.setProperty("RightMarginColor", "0xdddddd")
 
   config.setProperty("Action.indent.WordRegex", "\\w+|\\/(\\*)+")
- // config.setProperty("Action.combo-completion", "org.kevoree.tools.marShellGUI.KevsComboCompletionAction, control SPACE")
+  // config.setProperty("Action.combo-completion", "org.kevoree.tools.marShellGUI.KevsComboCompletionAction, control SPACE")
   config.setProperty("Action.combo-completion.MenuText", "Completions")
   config.setProperty("Action.double-quotes", "jsyntaxpane.actions.PairAction, typed \"")
   // config.setProperty("Action.double-quotes", "jsyntaxpane.actions.PairAction, typed \"")
@@ -39,15 +41,44 @@ class ThingMLJSyntaxKit extends DefaultSyntaxKit(new ThingMLJSyntaxLexerWrapper(
 
 
 
+  val STRINGSTYLE = new SyntaxStyle(new Color(204, 102, 0), false, true)
+  jsyntaxpane.SyntaxStyles.getInstance().put(TokenTypes.STRING,STRINGSTYLE)
+
+  //UGLY REFLECTIVE GENERATION
+  var infoProvider = classOf[org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider]
+  infoProvider.getDeclaredFields.foreach {
+    field =>
+
+      if (field.getType == classOf[org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword]) {
+        val kw = field.get(null).asInstanceOf[org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword]
+        val tStyle = ThingMLStyle.infoProvider.getDefaultTokenStyle(kw.getValue)
+        val newTType = new TokenType {
+          override def toString: String = "Style" + kw.getValue
+        }
+        if (tStyle != null) {
+          val colorTab = tStyle.getColorAsRGB
+          ThingMLStyle.styles.put(kw.getValue, newTType)
+          val sstyle = new SyntaxStyle(new Color(colorTab(0), colorTab(1), colorTab(2)), tStyle.isBold, tStyle.isItalic)
+          jsyntaxpane.SyntaxStyles.getInstance().put(newTType,sstyle)
+        } else {
+
+          ThingMLStyle.styles.put(kw.getValue, newTType)
+          val sstyle = new SyntaxStyle(Color.gray, true, false)
+          jsyntaxpane.SyntaxStyles.getInstance().put(newTType,sstyle)
+
+        }
+      }
+  }
+
+  /*
   config.setProperty("Style.IDENTIFIER", "0xFFCE89, 1")
   config.setProperty("Style.DELIMITER", "0xFFFFFF, 1")
   config.setProperty("Style.KEYWORD", "0xFC6C1D, 1")
   config.setProperty("Style.KEYWORD2", "0xFC6C1D, 3")
-
   config.setProperty("CaretColor", "0xFFFFFF")
   config.setProperty("TokenMarker.Color", "0x6D788F")
   config.setProperty("PairMarker.Color", "0x6D788F")
-
+ */
 
 
   /*

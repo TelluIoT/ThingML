@@ -21,9 +21,10 @@ package org.sintef.thingml
 
 import javax.swing.text.Segment
 import jsyntaxpane.{Token => JTOK}
+import jsyntaxpane.TokenTypes
 import jsyntaxpane.TokenType
 import resource.thingml.IThingmlTextToken
-import resource.thingml.mopp.{ThingmlLexer, ThingmlAntlrScanner}
+import resource.thingml.mopp.{ThingmlTokenStyleInformationProvider, ThingmlLexer, ThingmlAntlrScanner}
 import scala.collection.JavaConversions._
 ;
 
@@ -50,35 +51,18 @@ class ThingMLJSyntaxLexerWrapper extends jsyntaxpane.Lexer {
 
   def getType(tok: IThingmlTextToken): TokenType = {
     tok.getName match {
-
-      case "SL_COMMENT"=> TokenType.COMMENT
-      case "ML_COMMENT"=> TokenType.COMMENT
-
-
-
-
-      /*
-case k: Keyword => TokenType.KEYWORD
-case i: Identifier => TokenType.IDENTIFIER
-case d: Delimiter => TokenType.DELIMITER
-case c: Comment => TokenType.COMMENT
-case c: MLComment => TokenType.COMMENT
-case e: KError => TokenType.ERROR
-case slit: StringLit => TokenType.STRING
-case i: KIncomplet => TokenType.ERROR
-      */
-      case _ @ name => {
-        println("tokName="+tok.getName)
-        //println(tok.getText)
-        //println(tok.getClass.getName)
-
-       // if(lexer.getTokenNames.contains(name)){
-       //    TokenType.KEYWORD
-       // } else {
-           TokenType.DEFAULT
-        //}
-
+      case "SL_COMMENT" => TokenTypes.COMMENT
+      case "ML_COMMENT" => TokenTypes.COMMENT
+      case "ANNOTATION" => TokenTypes.STRING
+      case "STRING_LITERAL" => TokenTypes.STRING
+      case _@name => {
+        ThingMLStyle.styles.get(name) match {
+          case Some(e) => e
+          case None => TokenTypes.DEFAULT
+        }
       }
+
+
     }
   }
 
