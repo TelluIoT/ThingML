@@ -39,8 +39,8 @@
                     <strictCheck>true</strictCheck>
                     <properties>
                         <owner>SINTEF</owner>
-                        <year>${project.inceptionYear}</year>
-                        <email>franck@fleurey.com</email>
+                        <year>2011</year>
+                        <email>franck.fleurey@sintef.no</email>
                     </properties>
                     <excludes>
                     <exclude>
