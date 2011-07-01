@@ -64,7 +64,7 @@
                 <configuration>
                     <instructions>
 
-                        <Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>org.sintef.thingml.model;singleton:=true</Bundle-SymbolicName>
                         <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
 
                         <Export-Package>org.sintef.thingml.*</Export-Package>
