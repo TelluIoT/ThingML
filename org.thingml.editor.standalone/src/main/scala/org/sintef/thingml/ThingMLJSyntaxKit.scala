@@ -30,7 +30,8 @@ package org.sintef.thingml
 
 import java.awt.{Graphics, Color}
 import javax.swing.text.{TabExpander, Segment}
-import jsyntaxpane.{TokenTypes, SyntaxStyle, TokenType, DefaultSyntaxKit}
+import jsyntaxpane._
+import java.lang.Boolean
 
 /**
  * User: ffouquet
@@ -39,6 +40,8 @@ import jsyntaxpane.{TokenTypes, SyntaxStyle, TokenType, DefaultSyntaxKit}
  */
 
 class ThingMLJSyntaxKit extends DefaultSyntaxKit(new ThingMLJSyntaxLexerWrapper()) {
+
+  StaticConfig.staticConfig = new Boolean(true);
 
   override def getContentType = "text/thingml; charset=UTF-8"
 
@@ -58,6 +61,11 @@ class ThingMLJSyntaxKit extends DefaultSyntaxKit(new ThingMLJSyntaxLexerWrapper(
 
   val STRINGSTYLE = new SyntaxStyle(new Color(204, 102, 0), false, true)
   jsyntaxpane.SyntaxStyles.getInstance().put(TokenTypes.STRING,STRINGSTYLE)
+  val ANNOTSTYLE = new SyntaxStyle(Color.BLUE, true, false)
+  jsyntaxpane.SyntaxStyles.getInstance().put(TokenTypes.ANNOTATION,ANNOTSTYLE)
+  val COMMENTSTYLE = new SyntaxStyle(new Color(51,153,3), true, false)
+  jsyntaxpane.SyntaxStyles.getInstance().put(TokenTypes.COMMENT,COMMENTSTYLE)
+
 
   //UGLY REFLECTIVE GENERATION
   var infoProvider = classOf[org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider]

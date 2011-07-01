@@ -68,7 +68,7 @@ class ThingMLJSyntaxLexerWrapper extends jsyntaxpane.Lexer {
     tok.getName match {
       case "SL_COMMENT" => TokenTypes.COMMENT
       case "ML_COMMENT" => TokenTypes.COMMENT
-      case "ANNOTATION" => TokenTypes.STRING
+      case "ANNOTATION" => TokenTypes.ANNOTATION
       case "STRING_LITERAL" => TokenTypes.STRING
       case _@name => {
         ThingMLStyle.styles.get(name) match {
