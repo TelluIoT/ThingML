@@ -4,7 +4,7 @@
     <groupId>org.thingml</groupId>
     <artifactId>org.thingml.editor.standalone</artifactId>
     <name>ThingML :: Editor :: Standalone</name>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.thingml</groupId>

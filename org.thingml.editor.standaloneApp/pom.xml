@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.thingml</groupId>
+    <artifactId>org.thingml.editor.standaloneApp</artifactId>
+    <name>ThingML :: Editor :: StandaloneApp</name>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>org.thingml</groupId>
+        <artifactId>org.thingml.root</artifactId>
+        <version>0.5.0-SNAPSHOT</version>
+        <relativePath>../org.thingml.root/pom.xml</relativePath>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.parser.standalone</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.editor.standalone</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.sintef.thingml.ThingMLApp</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <!--
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <configuration>
+                            <jarPath>${project.build.directory}/${project.build.finalName}-small.jar</jarPath>
+                            <keystore>${project.build.directory}/../../../keystore</keystore>
+                            <alias>kevoree</alias>
+                            <storepass>kevoree</storepass>
+                            <signedjar>${project.build.directory}/${project.build.finalName}.jar</signedjar>
+                            <verify>true</verify>
+                        </configuration>
+                    </execution>
+                </executions>
+                -->
+            </plugin>
+
+
+        </plugins>
+    </build>
+
+</project>

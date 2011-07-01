@@ -110,12 +110,12 @@
         
         <repository>
             <id>kevoree-libs-release-local</id>
-            <url>http://maven.kevoree.org/release</url>
+            <url>http://maven2.kevoree.org/release</url>
         </repository>
         
         <repository>
             <id>kevoree-snapshots</id>
-            <url>http://maven.kevoree.org/snapshots</url>
+            <url>http://maven2.kevoree.org/snapshots</url>
         </repository>  
 
     </repositories>
@@ -125,6 +125,7 @@
         <module>../org.thingml.model</module>
         <module>../org.thingml.parser</module>
         <module>../org.thingml.editor.standalone</module>
+        <module>../org.thingml.editor.standaloneApp</module>
         <module>../org.thingml.editor.eclipse</module>
     </modules>
 
