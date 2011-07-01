@@ -43,9 +43,9 @@
                         <email>franck.fleurey@sintef.no</email>
                     </properties>
                     <excludes>
-                    <exclude>
+                        <exclude>
                         **/*.cs
-                    </exclude>   
+                        </exclude>   
                     </excludes>
                 </configuration>
                 <executions>
@@ -91,15 +91,21 @@
     <repositories>
         
         <repository>
-            <id>thingml-lib</id>
-            <name>thingml-releases-lib</name>
-            <url>http://maven.thingml.org/libs-release-local</url>
+            <id>thingml-snapshot</id>
+            <name>thingml-snapshot</name>
+            <url>http://maven.thingml.org/archiva/repository/thingml-snapshot/</url>
         </repository>
-
+        
         <repository>
-            <id>thingml-ext</id>
-            <name>thingml-releases-ext</name>
-            <url>http://maven.thingml.org/ext-release-local</url>
+            <id>thingml-release</id>
+            <name>thingml-release</name>
+            <url>http://maven.thingml.org/archiva/repository/thingml-release/</url>
+        </repository>
+        
+        <repository>
+            <id>thirdparty</id>
+            <name>thingml-snapshot</name>
+            <url>http://maven.thingml.org/archiva/repository/thirdparty/</url>
         </repository>
         
         <repository>
@@ -124,9 +130,9 @@
 
     <distributionManagement>
         <repository>
-            <id>thingml</id>
-            <name>thingml-releases</name>
-            <url>http://thingml.org:8081/artifactory/libs-release-local</url>
+            <id>thingml-snapshot</id>
+            <name>thingml-snapshot</name>
+            <url>http://maven.thingml.org/archiva/repository/thingml-snapshot/</url>
         </repository>
     </distributionManagement>
 

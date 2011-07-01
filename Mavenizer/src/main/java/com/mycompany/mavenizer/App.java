@@ -17,9 +17,9 @@ public class App {
      static String jarsFolder = "C:\\home\\eclipses\\eclipse3.7\\plugins";
      static String jarVersion = "3.7.0";
      static String groupID = "org.eclipse.maven";
-     static String repositoryId = "thingml";
-     static String repositoryUrl = "http://thingml.org:8081/artifactory/ext-release-local";
-     static int startID = 496;
+     static String repositoryId = "thirdparty";
+     static String repositoryUrl = "http://maven.thingml.org/archiva/repository/thirdparty/";
+     static int startID = 0;
 
     public static void main(String[] args) {
 
@@ -40,7 +40,7 @@ public class App {
                 command.append(" -Dpackaging=jar");
                 command.append(" -DgeneratePom=true");
                 command.append(" -Durl=" + repositoryUrl);
-                System.out.println(command);
+               // System.out.println(command);
                 
                 es.submit( new RunCommand( command.toString(), id) );
              
