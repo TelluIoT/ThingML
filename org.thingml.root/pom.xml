@@ -129,11 +129,19 @@
     </modules>
 
     <distributionManagement>
+        
         <repository>
+            <id>thingml-release</id>
+            <name>thingml-release</name>
+            <url>http://maven.thingml.org/archiva/repository/thingml-release/</url>
+        </repository>
+        
+        <snapshotRepository>
             <id>thingml-snapshot</id>
             <name>thingml-snapshot</name>
             <url>http://maven.thingml.org/archiva/repository/thingml-snapshot/</url>
-        </repository>
+        </snapshotRepository>
+        
     </distributionManagement>
 
 

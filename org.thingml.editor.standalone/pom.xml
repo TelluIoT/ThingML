@@ -16,8 +16,8 @@
     <dependencies>
         <dependency>
             <groupId>org.kevoree.extra</groupId>
-            <artifactId>jsyntaxpane</artifactId>
-            <version>0.9.6</version>
+            <artifactId>org.kevoree.extra.jsyntaxpane</artifactId>
+            <version>0.9.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
