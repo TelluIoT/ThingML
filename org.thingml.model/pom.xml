@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.thingml.model</artifactId>
     <packaging>bundle</packaging>
@@ -19,13 +19,23 @@
             <resource>
                 <directory>model</directory>
                 <targetPath>model</targetPath>
-                <excludes><exclude>**/*.pdf</exclude></excludes>
+                <excludes>
+                    <exclude>**/*.pdf</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>.</directory>
+                <includes>
+                    <include>plugin.properties</include>
+                    <include>plugin.xml</include>
+                </includes>
             </resource>
         </resources>
 
+
         <plugins>
 
-			<plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.5</version>
@@ -44,7 +54,7 @@
                     </execution>
                 </executions>
             </plugin>
-		
+
             <!-- Creation of the bundle jar and its manifest -->
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -62,8 +72,11 @@
                         <configuration>
                             <instructions>
                                 <Export-Package>org.sintef.thingml.*</Export-Package>
-                                <Import-Package>!org.sintef.thingml.*,org.eclipse.emf.*,org.osgi.framework</Import-Package>
+                                <Import-Package>!org.sintef.thingml.*,org.eclipse.emf.*,org.osgi.framework
+                                </Import-Package>
                                 <Bundle-ClassPath>.</Bundle-ClassPath>
+                                <Bundle-Vendor>SINTEF</Bundle-Vendor>
+                                <Bundle-SymbolicName>org.sintef.thingml.model</Bundle-SymbolicName>
                             </instructions>
                         </configuration>
                     </execution>
@@ -71,15 +84,15 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <dependencies>
-        
+
         <dependency>
             <groupId>org.kevoree.extra</groupId>
             <artifactId>org.kevoree.extra.emf.library</artifactId>
             <version>${emf.version}</version>
         </dependency>
-    
+
     </dependencies>
 
 </project>

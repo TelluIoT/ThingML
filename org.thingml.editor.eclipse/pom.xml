@@ -77,7 +77,7 @@
                     <instructions>
                         <Bundle-SymbolicName>org.thingml.editor.eclipse</Bundle-SymbolicName>
                         <Bundle-Name>org.thingml.editor.eclipse</Bundle-Name>
-                        <Bundle-Vendor>SINETF</Bundle-Vendor>
+                        <Bundle-Vendor>SINTEF</Bundle-Vendor>
                         <Bundle-ClassPath>.</Bundle-ClassPath>
              <!-- Dependency used for compiling all the bundle (with dependecy to org.eclipse.core.* -->
              
