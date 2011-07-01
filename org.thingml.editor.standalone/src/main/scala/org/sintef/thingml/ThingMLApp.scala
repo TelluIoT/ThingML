@@ -38,6 +38,8 @@ import javax.swing.JFrame
 
 object ThingMLApp extends App {
 
+
+
   var f = new ThingMLFrame
   f.setSize(800,600)
   f.setPreferredSize(f.getSize)
