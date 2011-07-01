@@ -67,6 +67,7 @@ public class ThingmlEditor extends org.eclipse.ui.editors.text.TextEditor implem
 		}
 	}
 	
+       
 	/**
 	 * Reacts to changes of the text resource displayed in the editor and resources
 	 * cross-referenced by it. Cross-referenced resources are unloaded, the displayed
@@ -78,37 +79,6 @@ public class ThingmlEditor extends org.eclipse.ui.editors.text.TextEditor implem
 		public void resourceChanged(org.eclipse.core.resources.IResourceChangeEvent event) {
 			org.eclipse.core.resources.IResourceDelta delta = event.getDelta();
 			try {
-				class ResourceDeltaVisitor implements org.eclipse.core.resources.IResourceDeltaVisitor {
-					protected org.eclipse.emf.ecore.resource.ResourceSet resourceSet = editingDomain.getResourceSet();
-					
-					public boolean visit(org.eclipse.core.resources.IResourceDelta delta) {
-						if (delta.getResource().getType() != org.eclipse.core.resources.IResource.FILE) {
-							return true;
-						}
-						int deltaKind = delta.getKind();
-						if (deltaKind == org.eclipse.core.resources.IResourceDelta.CHANGED && delta.getFlags() != org.eclipse.core.resources.IResourceDelta.MARKERS) {
-							org.eclipse.emf.ecore.resource.Resource changedResource = resourceSet.getResource(org.eclipse.emf.common.util.URI.createURI(delta.getFullPath().toString()), false);
-							if (changedResource != null) {
-								changedResource.unload();
-								org.sintef.thingml.resource.thingml.IThingmlTextResource currentResource = getResource();
-								if (changedResource.equals(currentResource)) {
-									// reload the resource displayed in the editor
-									resourceSet.getResource(currentResource.getURI(), true);
-								}
-								if (currentResource != null && currentResource.getErrors().isEmpty()) {
-									org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(currentResource);
-								}
-								// reset the selected element in outline and properties by text position
-								if (highlighting != null) {
-									highlighting.setEObjectSelection();
-								}
-							}
-						}
-						
-						return true;
-					}
-				}
-				
 				ResourceDeltaVisitor visitor = new ResourceDeltaVisitor();
 				delta.accept(visitor);
 			} catch (org.eclipse.core.runtime.CoreException exception) {
@@ -116,6 +86,37 @@ public class ThingmlEditor extends org.eclipse.ui.editors.text.TextEditor implem
 			}
 		}
 	}
+        
+                class ResourceDeltaVisitor implements org.eclipse.core.resources.IResourceDeltaVisitor {
+                protected org.eclipse.emf.ecore.resource.ResourceSet resourceSet = editingDomain.getResourceSet();
+
+                public boolean visit(org.eclipse.core.resources.IResourceDelta delta) {
+                        if (delta.getResource().getType() != org.eclipse.core.resources.IResource.FILE) {
+                                return true;
+                        }
+                        int deltaKind = delta.getKind();
+                        if (deltaKind == org.eclipse.core.resources.IResourceDelta.CHANGED && delta.getFlags() != org.eclipse.core.resources.IResourceDelta.MARKERS) {
+                                org.eclipse.emf.ecore.resource.Resource changedResource = resourceSet.getResource(org.eclipse.emf.common.util.URI.createURI(delta.getFullPath().toString()), false);
+                                if (changedResource != null) {
+                                        changedResource.unload();
+                                        org.sintef.thingml.resource.thingml.IThingmlTextResource currentResource = getResource();
+                                        if (changedResource.equals(currentResource)) {
+                                                // reload the resource displayed in the editor
+                                                resourceSet.getResource(currentResource.getURI(), true);
+                                        }
+                                        if (currentResource != null && currentResource.getErrors().isEmpty()) {
+                                                org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(currentResource);
+                                        }
+                                        // reset the selected element in outline and properties by text position
+                                        if (highlighting != null) {
+                                                highlighting.setEObjectSelection();
+                                        }
+                                }
+                        }
+
+                        return true;
+                }
+        }
 	
 	public void initializeEditor() {
 		super.initializeEditor();

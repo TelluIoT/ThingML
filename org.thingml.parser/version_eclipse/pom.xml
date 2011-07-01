@@ -74,7 +74,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>org.sintef.thingml.resource.thingml;singleton:=true</Bundle-SymbolicName>
                         <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
                         <Bundle-Vendor>SINETF</Bundle-Vendor>
                         <Bundle-ClassPath>.</Bundle-ClassPath>
@@ -90,7 +90,7 @@
                 org.eclipse.emf.workspace,
                 org.emftext.access;resolution:=optional,
                 org.emftext.commons.antlr3_3_0,
-                org.thingml.model
+                org.sintef.thingml.model
                         </Require-Bundle>
             
                         <Export-Package>
