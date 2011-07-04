@@ -1,0 +1,50 @@
+datatype Int16	
+	@c_type "int"
+	@java_type "short";
+	
+enumeration AnalogPin 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	A_0 @enum_val "14"
+	A_1 @enum_val "15"
+	A_2 @enum_val "16"
+	A_3 @enum_val "17"
+	A_4 @enum_val "18"
+	A_5 @enum_val "19"
+}
+
+message analogRead(pin : AnalogPin) @code "7" 
+		@sync_response "analogReadResult#value" @timeout "500" @retry "0";
+message analogReadResult(value : Int16) @code "8";
+
+
+thing Caller {
+	port AnalogClient {
+		sends analogRead
+		receives analogReadResult
+	}
+}
+
+thing Callee {
+
+	port AnalogServer {
+		sends analogReadResult
+		receives analogRead
+	}
+	
+	statechart XXX init Ready {
+	
+		state Ready {
+			
+			property last_value : Int16
+			
+			internal event m : AnalogServer?analogRead
+			action do
+				last_value = 'analogRead('& m.pin &');'
+				AnalogServer!analogReadResult(last_value)
+			end
+		} 
+	
+	}
+}

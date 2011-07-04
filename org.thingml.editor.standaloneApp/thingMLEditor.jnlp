@@ -8,13 +8,13 @@
     <offline-allowed/>
     <shortcut online="false">
       <desktop/>
-      <menu submenu="Kevoree"/>
+      <menu submenu="ThingML"/>
     </shortcut>
     
-   <association mime-type="application-x/kevmodel" extensions="kev"/>
+   <association mime-type="application-x/thingmlmodel" extensions="thingml"/>
    </information>
    <resources>
-      <jar href="/Users/ffouquet/Documents/DEV/ThingML/org.thingml.editor.standaloneApp/target/org.thingml.editor.standaloneApp-0.5.0-SNAPSHOT.jar" main="true" />
+      <jar href="ThingMLEditor.jar" main="true" />
    </resources>
 
    
@@ -23,7 +23,7 @@
    </application-desc>
    
    
-   <security>
+   <!--<security>
      <all-permissions/>
-  </security>
+  </security>-->
 </jnlp>

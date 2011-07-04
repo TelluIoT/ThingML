@@ -1,0 +1,14 @@
+
+// Definition of some primitive types used throuout the application
+
+datatype Integer	
+	@avr_type "uint_8"
+	@msp_type "int";
+	
+datatype String	
+	@avr_type "char *"
+	@msp_type "char *";
+
+datatype Byte
+	@avr_type "char"
+	@msp_type "char";
