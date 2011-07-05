@@ -21,6 +21,7 @@ import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.thingml.graphexport.ThingMLGraphExport._
 import java.lang.StringBuilder
 import java.util.Hashtable
+import javax.xml.transform.Result
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,23 +30,6 @@ import java.util.Hashtable
  * Time: 12:59
  * To change this template use File | Settings | File Templates.
  */
-
-
-/*
-digraph finite_state_machine {
-  rankdir=LR;
-	INIT_STATE [shape=circle label = "", style = filled, color = "black"];
-  S1 [label="SimpleState{>}{<}\n?Evt1\n?Evt2{}", shape = ellipse];
-  S2 [label="CompositeSate (3)\np1:String\n?Evt3", shape = ellipse]
-  INIT_STATE -> S1 [label="init"]
-  S1 -> S2 [label="transition1\n?Evt23()"]
-  S2 -> S1 [label="myTransition\n?message78(){}"]
-  S2 -> S2 [label="t\n?tick(){}"]
-}
- */
-
-
-
 
 case class RegionGraphExport(self : Region) {
 
@@ -66,15 +50,20 @@ case class StateGraphExport(self : State) {
   def nodeID = { self.getName }
   def nodeText  = { self.getName }
 
-  def graphviz(result : StringBuilder) = {
-    result.append("\t" + nodeID + " [label=\"" + nodeText)
+  def nodeFullText ( cr : String = "\\n" )= {
+    var result = new StringBuilder
+    result.append(nodeText)
     if (self.isInstanceOf[CompositeState]) result.append("(" + self.asInstanceOf[CompositeState].getSubstate.size() + ")")
     if (self.getEntry != null) result.append("{i}")
     if (self.getExit != null) result.append("{o}")
     if (self.isInstanceOf[CompositeState]) result.append(" (" + self.asInstanceOf[CompositeState].getSubstate.size() + ")")
-    self.getProperties.foreach { p => result.append("\\n" + p.getName + " : " + p.getType.getName) }
-    self.getInternal.foreach { i => result.append("\\n" + i.edgeText) }
-    result.append("\", shape = ellipse];\n")
+    self.getProperties.foreach { p => result.append(cr + p.getName + " : " + p.getType.getName) }
+    self.getInternal.foreach { i => result.append(cr + i.edgeText) }
+    result.toString
+  }
+
+  def graphviz(result : StringBuilder) = {
+    result.append("\t" + nodeID + " [label=\"" + nodeFullText() + "\", shape = ellipse];\n")
     self.getOutgoing.foreach{ t=>
       result.append{"\t\t" + t.getSource.nodeID + " -> " + t.getTarget.nodeID + " [label=\"" + t.edgeText + "\"];\n"}
     }
@@ -110,6 +99,182 @@ object ThingMLGraphExport {
     model.allThings.foreach{ t => t.allStateMachines.foreach { tr => tr.allContainedRegions().foreach{ r =>
       result.put(r.qname("_"), r.graphviz())
     }}}
+    result
+  }
+
+  def allGraphML(model : ThingMLModel ) = {
+    var result : Hashtable[String, String] = new java.util.Hashtable[String, String]()
+    model.allThings.foreach{ t => t.allStateMachines.foreach { sm =>
+      result.put(sm.qname("_"), graphml(sm).toString)
+    }}
+    result
+  }
+
+  def graphml( sm : StateMachine ) : scala.xml.Elem = {
+    var result =
+    <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
+      <key for="node" id="d6" yfiles.type="nodegraphics"/>
+      <key for="edge" id="d10" yfiles.type="edgegraphics"/>
+      <graph edgedefault="directed" id="G">
+          {
+            val nodes : scala.collection.mutable.ArrayBuffer[scala.xml.Elem] = new scala.collection.mutable.ArrayBuffer[scala.xml.Elem]
+            if (sm.getRegion.size > 0) {
+              sm.getRegion.foreach{ r =>
+                nodes.add(graphmlParallelRegion(r))
+              }
+            }
+            else {
+               sm.getSubstate.foreach{ s => nodes.add(graphmlstate(s))
+                 s.getOutgoing.foreach{ t =>
+                 nodes.add(graphmlTransition(t))
+               }}
+            }
+            nodes.add(graphmlInitState(sm))
+            nodes.add(graphmlInitTransition(sm))
+            nodes
+          }
+        </graph>
+    </graphml>
+    result
+  }
+
+  def graphmlCompositeState( cs : CompositeState ) : scala.xml.Elem = {
+    var result =
+
+      <node id={ cs.nodeID } yfiles.foldertype="group">
+        <data key="d6">
+          <y:ProxyAutoBoundsNode>
+            <y:Realizers active="0">
+              <y:GroupNode>
+                <y:Fill color="#FFFFFF" transparent="false"/>
+                <y:BorderStyle color="#000000" type="line" width="1.0"/>
+                <y:NodeLabel alignment="center" autoSizePolicy="node_width" backgroundColor="#FFCC66" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" modelName="internal" modelPosition="t" textColor="#000000" visible="true">{ cs.nodeFullText("\n") }</y:NodeLabel>
+                <y:Shape type="roundrectangle"/>
+                <y:NodeBounds considerNodeLabelSize="true"/>
+                <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
+                <y:BorderInsets bottom="1" bottomF="1" left="15" leftF="15.0" right="15" rightF="15.0" top="1" topF="1"/>
+              </y:GroupNode>
+            </y:Realizers>
+          </y:ProxyAutoBoundsNode>
+        </data>
+        <graph edgedefault="directed" id={ cs.qname() + "_Graph" }>
+          {
+            val nodes : scala.collection.mutable.ArrayBuffer[scala.xml.Elem] = new scala.collection.mutable.ArrayBuffer[scala.xml.Elem]
+            if (cs.getRegion.size > 0) {
+              cs.getRegion.foreach{ r =>
+                nodes.add(graphmlParallelRegion(r))
+              }
+            }
+            else {
+               cs.getSubstate.foreach{ s => nodes.add(graphmlstate(s))
+                 s.getOutgoing.foreach{ t =>
+                 nodes.add(graphmlTransition(t))
+               }}
+            }
+            nodes.add(graphmlInitState(cs))
+            nodes.add(graphmlInitTransition(cs))
+            nodes
+          }
+        </graph>
+      </node>
+    result
+  }
+
+  def graphmlParallelRegion( pr : Region ) : scala.xml.Elem = {
+     var result : scala.xml.Elem =
+        <node id={ pr.qname() } yfiles.foldertype="group">
+          <data key="d6">
+            <y:ProxyAutoBoundsNode>
+              <y:Realizers active="0">
+                <y:GroupNode>
+                  <y:Fill hasColor="false" transparent="false"/>
+                  <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
+                  <y:NodeLabel alignment="center" autoSizePolicy="node_width" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="t" textColor="#000000" visible="true">{ pr.qname() }</y:NodeLabel>
+                  <y:Shape type="roundrectangle"/>
+                  <y:State closed="false" innerGraphDisplayEnabled="false"/>
+                  <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
+                  <y:BorderInsets bottom="1" bottomF="1" left="0" leftF="0.0" right="0" rightF="0.0" top="1" topF="1"/>
+                </y:GroupNode>
+              </y:Realizers>
+            </y:ProxyAutoBoundsNode>
+          </data>
+          <graph edgedefault="directed" id={ pr.qname() + "_Graph" }>
+         {
+            val nodes : scala.collection.mutable.ArrayBuffer[scala.xml.Elem] = new scala.collection.mutable.ArrayBuffer[scala.xml.Elem]
+            pr.getSubstate.foreach{
+              s => nodes.add(graphmlstate(s))
+              s.getOutgoing.foreach{ t =>
+                nodes.add(graphmlTransition(t))
+              }
+            }
+            nodes.add(graphmlInitState(pr))
+            nodes.add(graphmlInitTransition(pr))
+            nodes
+         }
+        </graph>
+        </node>
+    result
+  }
+
+  def graphmlstate( s : State ) : scala.xml.Elem = {
+
+    if (s.isInstanceOf[CompositeState]) graphmlCompositeState(s.asInstanceOf[CompositeState])
+    else {
+      var result  =
+        <node id={ s.nodeID }>
+        <data key="d6">
+          <y:ShapeNode>
+            <y:Geometry height="70.0" width="200.0"/>
+            <y:Fill color="#FFCC66" transparent="false"/>
+            <y:BorderStyle color="#000000" type="line" width="1.0"/>
+            <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#000000" visible="true">{ s.nodeFullText("\n") }</y:NodeLabel>
+            <y:Shape type="roundrectangle"/>
+          </y:ShapeNode>
+        </data>
+      </node>
+      result
+    }
+  }
+
+  def graphmlTransition( t : Transition ) : scala.xml.Elem = {
+    var result =
+     <edge id={ t.getName } source={ t.getSource.nodeID } target={ t.getTarget.nodeID }>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="side_slider" preferredPlacement="right" ratio="0.0" textColor="#000000" visible="true">{ t.edgeText }</y:EdgeLabel>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    result
+  }
+
+  def graphmlInitState( r : Region )  : scala.xml.Elem = {
+    var result =
+    <node id={ r.qname() + "_INIT" }>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Fill color="#000000" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="c" textColor="#FFFFFF" visible="true">{ if (r.isHistory) "H" else "I" }</y:NodeLabel>
+          <y:Shape type="ellipse"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    result
+  }
+
+  def graphmlInitTransition( r : Region ) : scala.xml.Elem = {
+    var result =
+    <edge id={ r.qname() + "_INITT" } source={ r.qname() + "_INIT" } target={ r.getInitial.nodeID }>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
     result
   }
 }
