@@ -127,7 +127,8 @@
 		<module>../org.thingml.graphExport</module>
         <module>../org.thingml.editor.standalone</module>
         <module>../org.thingml.editor.eclipse</module>
-		<module>../org.thingml.editor.standaloneApp</module>
+		<!-- The standolone app can only be built on the server which has the keystore to sign the jar
+		<module>../org.thingml.editor.standaloneApp</module>-->
 		
     </modules>
 
