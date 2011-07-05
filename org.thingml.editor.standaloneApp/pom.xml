@@ -59,7 +59,7 @@
                         </manifest>
                     </archive>
                 </configuration>
-                <!--
+
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -67,16 +67,16 @@
                             <goal>sign</goal>
                         </goals>
                         <configuration>
-                            <jarPath>${project.build.directory}/${project.build.finalName}-small.jar</jarPath>
-                            <keystore>${project.build.directory}/../../../keystore</keystore>
-                            <alias>kevoree</alias>
-                            <storepass>kevoree</storepass>
-                            <signedjar>${project.build.directory}/${project.build.finalName}.jar</signedjar>
+                            <jarPath>${project.build.directory}/${project.build.finalName}.jar</jarPath>
+                            <keystore>/home/franck/thingml.ks</keystore>
+                            <alias>thingml</alias>
+                            <storepass>thingmlkeystore</storepass>
+                            <signedjar>${project.build.directory}/${project.build.finalName}-signed.jar</signedjar>
                             <verify>true</verify>
                         </configuration>
                     </execution>
                 </executions>
-                -->
+
             </plugin>
 
 
