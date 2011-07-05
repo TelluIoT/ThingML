@@ -28,8 +28,8 @@
  */
 package org.sintef.thingml
 
-import javax.swing.JFrame
-import java.awt.BorderLayout
+import java.awt.{Dimension, BorderLayout}
+import javax.swing.{JSplitPane, JFrame}
 
 /**
  * User: ffouquet
@@ -41,6 +41,24 @@ class ThingMLFrame extends JFrame {
 
   setTitle("ThingML Editor")
   this.setLayout(new BorderLayout())
-  add(new ThingMLPanel(),BorderLayout.CENTER)
+  val editor = new ThingMLPanel()
+  val filePanel = new FilePanel(editor)
+  filePanel.setPreferredSize(new Dimension(300,300))
+  filePanel.setSize(300,300)
+
+
+  var splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,filePanel,editor)
+  //splitPane.setResizeWeight(0.3);
+  //splitPane.setOneTouchExpandable(true);
+  splitPane.setContinuousLayout(true);
+  splitPane.setDividerSize(6);
+  splitPane.setDividerLocation(200);
+  splitPane.setResizeWeight(0.0);
+  splitPane.setBorder(null);
+
+
+  add(splitPane, BorderLayout.CENTER)
+
+
 
 }
