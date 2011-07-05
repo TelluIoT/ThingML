@@ -81,6 +81,10 @@ public class StandaloneParserTestLoadFile extends TestCase {
                System.out.println(s);
             }
 
+            for (String s : ThingMLGraphExport.allGraphML( (ThingMLModel)model.getContents().get(0) ).values()) {
+               System.out.println(s);
+            }
+
             
     }
 

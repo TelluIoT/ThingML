@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp spec="1.0" codebase="http://dist.thingml.org/" >
    <information>
-      <title>ThingML Editor Editor</title>
+      <title>ThingML Editor</title>
       <vendor>SINTEF</vendor>
     <!-- <icon href="icon/kev-logo-full.png" width="64" height="64"/>-->
     <!-- allow app to run without Internet access -->
