@@ -161,7 +161,7 @@
                             <goal>sign</goal>
                         </goals>
                         <configuration>
-                            <jarPath>${project.build.directory}/${project.build.finalName}.jar</jarPath>
+                            <jarPath>${project.build.directory}/${project.build.finalName}-small.jar</jarPath>
                             <keystore>/home/franck/thingml.ks</keystore>
                             <alias>thingml</alias>
                             <storepass>thingmlkeystore</storepass>
