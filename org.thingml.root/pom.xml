@@ -124,9 +124,11 @@
         <module>../org.emftext.commons.antlr3_3_0</module>
         <module>../org.thingml.model</module>
         <module>../org.thingml.parser</module>
+		<module>../org.thingml.graphExport</module>
         <module>../org.thingml.editor.standalone</module>
-        <module>../org.thingml.editor.standaloneApp</module>
         <module>../org.thingml.editor.eclipse</module>
+		<module>../org.thingml.editor.standaloneApp</module>
+		
     </modules>
 
     <distributionManagement>
