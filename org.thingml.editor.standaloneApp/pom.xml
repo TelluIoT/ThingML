@@ -172,9 +172,56 @@
                 </executions>
 
             </plugin>
+            
+            
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
 
+
+            <plugin>
+                <groupId>com.goldin.plugins</groupId>
+                <artifactId>maven-copy-plugin</artifactId>
+                <version>0.2.3</version>
+                <executions>
+                    <execution>
+                        <id>create-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                
+                                <resource>
+                                    <targetPath>/var/www/dist</targetPath>
+                                    <file>${basedir}/LaunchThingMLEditor.jnlp</file>
+                                    <destFileName>LaunchThingMLEditor.jnlp</destFileName>
+                                </resource>
+                                <resource>
+                                    <targetPath>/var/www/dist</targetPath>
+                                    <file>${project.build.directory}/org.thingml.editor.standaloneApp-${project.version}-signed.jar</file>
+                                    <destFileName>ThingMLEditor.jar</destFileName>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
         </plugins>
     </build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>evgeny-goldin.org</id>
+            <url>http://evgeny-goldin.org/artifactory/repo/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>
