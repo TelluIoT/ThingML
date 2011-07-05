@@ -42,7 +42,7 @@ class ThingMLFrame extends JFrame {
   setTitle("ThingML Editor")
   this.setLayout(new BorderLayout())
   val editor = new ThingMLPanel()
-  val filePanel = new FilePanel(editor)
+  val filePanel = new FilePanel(editor,this)
   filePanel.setPreferredSize(new Dimension(300,300))
   filePanel.setSize(300,300)
 

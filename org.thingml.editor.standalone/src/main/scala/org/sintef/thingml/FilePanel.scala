@@ -30,7 +30,7 @@ import org.eclipse.emf.common.util.URI
  * Time: 17:07
  */
 
-class FilePanel(editor: ThingMLPanel) extends JPanel with Runnable {
+class FilePanel(editor: ThingMLPanel,frame:ThingMLFrame) extends JPanel with Runnable {
 
   var tree = new JTree();
   this.setLayout(new BorderLayout())
@@ -72,7 +72,8 @@ class FilePanel(editor: ThingMLPanel) extends JPanel with Runnable {
       val fileF = new File(root + "/" + file.substring(file.indexOf("/")))
       if (fileF.isFile) {
         val content = Source.fromFile(fileF.getAbsolutePath, "utf-8").getLines().mkString("\n")
-        editor.loadText(content)
+        editor.loadText(content,fileF)
+        frame.setTitle("ThingML Editor : "+p1.getNewLeadSelectionPath.getLastPathComponent.toString)
       }
 
     }
