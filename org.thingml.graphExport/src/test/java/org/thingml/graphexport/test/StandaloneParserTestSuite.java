@@ -50,8 +50,6 @@ public class StandaloneParserTestSuite extends TestSuite {
         try {
             TestSuite suite = new TestSuite("Standalone Parser Test Suite");
             populate(suite, "model/actions");
-            populate(suite, "model/datatypes");
-            populate(suite, "model/devices");
             populate(suite, "model/msp");
             populate(suite, "model/statecharts");
             return suite;
