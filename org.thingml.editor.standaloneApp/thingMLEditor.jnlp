@@ -23,7 +23,7 @@
    </application-desc>
    
    
-   <!--<security>
+   <security>
      <all-permissions/>
-  </security>-->
+  </security>
 </jnlp>
