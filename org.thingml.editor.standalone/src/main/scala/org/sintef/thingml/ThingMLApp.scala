@@ -29,6 +29,7 @@
 package org.sintef.thingml
 
 import javax.swing.JFrame
+import scala.collection.JavaConversions._
 
 /**
  * User: ffouquet
@@ -36,16 +37,36 @@ import javax.swing.JFrame
  * Time: 16:02
  */
 
-object ThingMLApp extends App {
+object ThingMLApp {
+
+  def main(args: scala.Array[scala.Predef.String]): scala.Unit = {
+
+
+    val f = new ThingMLFrame
+    f.setSize(800, 600)
+    f.setPreferredSize(f.getSize)
+    f.pack()
+    f.setVisible(true)
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
 
 
 
-  var f = new ThingMLFrame
-  f.setSize(800,600)
-  f.setPreferredSize(f.getSize)
-  f.pack()
-  f.setVisible(true)
-  f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+    var debugMSg = args.mkString(";")
+    System.getProperties.foreach {
+      prop =>
+        debugMSg = debugMSg + "\n" + prop._1 + "=>" + prop._2
+    }
+
+    if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+      System.out.println("Mac detected");
+      MacIntegration.addOSXIntegration(f.editor);
+    }
+
+
+    f.editor.codeEditor.setText(debugMSg)
+
+
+  }
 
 
 }

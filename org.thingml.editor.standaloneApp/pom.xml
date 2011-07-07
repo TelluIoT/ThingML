@@ -1,4 +1,3 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -13,7 +12,7 @@
         <version>0.5.0-SNAPSHOT</version>
         <relativePath>../org.thingml.root/pom.xml</relativePath>
     </parent>
-    
+
     <profiles>
         <profile>
             <id>org.thingml.editor.standaloneApp.mac</id>
@@ -50,23 +49,23 @@
     <build>
         <plugins>
 
-<!--
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
--->
+            <!--
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-shade-plugin</artifactId>
+                            <version>1.4</version>
+                            <executions>
+                                <execution>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>shade</goal>
+                                    </goals>
+                                    <configuration>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+            -->
 
             <plugin>
                 <groupId>com.pyx4me</groupId>
@@ -113,11 +112,11 @@
                             <inclusion>
                                 <groupId>org.emftext</groupId>
                                 <artifactId>org.emftext.commons.antlr</artifactId>
-                            </inclusion>   
+                            </inclusion>
                             <inclusion>
                                 <groupId>org.thingml</groupId>
                                 <artifactId>org.thingml.model</artifactId>
-                            </inclusion>                            
+                            </inclusion>
                             <inclusion>
                                 <groupId>org.kevoree.extra</groupId>
                                 <artifactId>org.kevoree.extra.emf.library</artifactId>
@@ -127,12 +126,17 @@
                                 <artifactId>org.kevoree.extra.jsyntaxpane</artifactId>
                                 <filter>!META-INF/services/jsyntaxpane/kitsfortypes.properties</filter>
                             </inclusion>
-                            
+
                             <inclusion>
                                 <groupId>org.scala-lang</groupId>
                                 <artifactId>scala-library</artifactId>
                             </inclusion>
-                            
+
+                            <inclusion>
+                                <groupId>org.apple</groupId>
+                                <artifactId>AppleJavaExtensions</artifactId>
+                            </inclusion>
+
                         </inclusions>
                     </assembly>
                     <libs>
@@ -185,7 +189,7 @@
                         </goals>
                         <configuration>
                             <resources>
-                                
+
                                 <resource>
                                     <targetPath>/var/www/dist</targetPath>
                                     <file>${basedir}/LaunchThingMLEditor.jnlp</file>
@@ -193,7 +197,9 @@
                                 </resource>
                                 <resource>
                                     <targetPath>/var/www/dist</targetPath>
-                                    <file>${project.build.directory}/org.thingml.editor.standaloneApp-${project.version}-signed.jar</file>
+                                    <file>
+                                        ${project.build.directory}/org.thingml.editor.standaloneApp-${project.version}-signed.jar
+                                    </file>
                                     <destFileName>ThingMLEditor.jar</destFileName>
                                 </resource>
                             </resources>
