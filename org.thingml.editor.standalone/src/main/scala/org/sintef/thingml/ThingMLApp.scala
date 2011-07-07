@@ -52,6 +52,7 @@ object ThingMLApp {
         f.setVisible(true)
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
 
+    /*
         var debugMSg = args.mkString(";")
         System.getProperties.foreach {
           prop =>
@@ -63,6 +64,7 @@ object ThingMLApp {
           MacIntegration.addOSXIntegration(f.editor);
         }
         f.editor.codeEditor.setText(debugMSg)
+        */
     //  }
   //  })
 

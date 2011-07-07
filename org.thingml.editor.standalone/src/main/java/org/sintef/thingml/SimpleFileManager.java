@@ -114,8 +114,9 @@ public class SimpleFileManager {
   private DefaultMutableTreeNode descend(File dir, int depth) {
     DefaultMutableTreeNode ret = new DefaultMutableTreeNode(dir.getName());
     File[] lst = dir.listFiles();
-    Arrays.sort(lst);
-
+      try {
+          Arrays.sort(lst);
+      } catch(Exception e) {}
     for (int i=0;i<lst.length;i++) {
       if (depth>0 && lst[i].canRead()) {
         if (lst[i].isDirectory()) {
