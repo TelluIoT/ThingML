@@ -133,7 +133,7 @@
                             </inclusion>
 
                             <inclusion>
-                                <groupId>org.apple</groupId>
+                                <groupId>com.apple</groupId>
                                 <artifactId>AppleJavaExtensions</artifactId>
                             </inclusion>
 

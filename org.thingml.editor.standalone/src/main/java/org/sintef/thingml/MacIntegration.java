@@ -28,7 +28,8 @@
  */
 package org.sintef.thingml;
 
-import com.apple.eawt.*;
+import com.apple.eawt.AppEvent;
+import com.apple.eawt.Application;
 
 /**
  * User: ffouquet
@@ -41,7 +42,7 @@ public class MacIntegration {
         Application app = Application.getApplication();
         //app.setEnabledAboutMenu(true);
 	    //app.setEnabledPreferencesMenu(true);
-        app.setOpenURIHandler(new OpenURIHandler() {
+        app.setOpenURIHandler(new com.apple.eawt.OpenURIHandler() {
             @Override
             public void openURI(AppEvent.OpenURIEvent openURIEvent) {
 
@@ -50,7 +51,7 @@ public class MacIntegration {
                //System.out.println("Hi");
             }
         });
-        app.setOpenFileHandler(new OpenFilesHandler() {
+        app.setOpenFileHandler(new com.apple.eawt.OpenFilesHandler() {
             @Override
             public void openFiles(AppEvent.OpenFilesEvent openFilesEvent) {
                 //System.out.println("Hi");
