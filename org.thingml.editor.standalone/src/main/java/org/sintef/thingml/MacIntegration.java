@@ -28,8 +28,8 @@
  */
 package org.sintef.thingml;
 
-import com.apple.eawt.AppEvent;
-import com.apple.eawt.Application;
+
+import com.apple.eawt.*;
 
 /**
  * User: ffouquet
@@ -42,6 +42,7 @@ public class MacIntegration {
         Application app = Application.getApplication();
         //app.setEnabledAboutMenu(true);
 	    //app.setEnabledPreferencesMenu(true);
+  /*
         app.setOpenURIHandler(new com.apple.eawt.OpenURIHandler() {
             @Override
             public void openURI(AppEvent.OpenURIEvent openURIEvent) {
@@ -60,7 +61,7 @@ public class MacIntegration {
             }
         });
 
-/*
+     */
         app.addApplicationListener(new ApplicationAdapter() {
             @Override
             public void handleAbout(ApplicationEvent applicationEvent) {
@@ -75,7 +76,7 @@ public class MacIntegration {
             @Override
             public void handleOpenFile(ApplicationEvent applicationEvent) {
                 System.out.println("open => "+applicationEvent.getFilename());
-               editor.loadModel(applicationEvent.getFilename());
+                editor.codeEditor().setText(editor.codeEditor()+"\n"+applicationEvent.getFilename());
             }
 
             @Override
@@ -98,7 +99,7 @@ public class MacIntegration {
                 super.handleReOpenApplication(applicationEvent);    //To change body of overridden methods use File | Settings | File Templates.
             }
         });
-          */
+
 
     }
 

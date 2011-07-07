@@ -5,7 +5,7 @@ message pongA();
 message pongB();
 
 // Definition of the Pingable fragmant
-thing Hello @c_code "generate"
+thing HelloPar @c_code "generate"
 {
 
 	port IO {
@@ -13,7 +13,7 @@ thing Hello @c_code "generate"
 		sends pongA, pongB 
 	}
 	
-	statechart Hello init A {
+	statechart HelloPar init A {
 
 		state A {
 			transition -> A event IO?pingA 
@@ -37,4 +37,3 @@ thing Hello @c_code "generate"
 		
 	}
 }
-

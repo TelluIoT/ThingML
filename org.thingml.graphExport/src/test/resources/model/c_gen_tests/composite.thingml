@@ -2,14 +2,14 @@ message hello();
 message world();
 
 // Definition of the Pingable fragmant
-thing Hello @c_code "generate"
+thing HelloComp @c_code "generate"
 {
 
 	port IO {
 		receives hello, world 
 	}
 	
-	statechart Hello init Init {
+	statechart HelloComp init Init {
 
 		state Init {
 			on entry print "Welcome!\n"
@@ -41,4 +41,3 @@ thing Hello @c_code "generate"
 		}
 	}
 }
-

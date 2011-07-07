@@ -60,6 +60,7 @@ case class RegionScalaImpl (self : Region) {
       if (r.isInstanceOf[State]) result.add(r.asInstanceOf[State])
       r.getSubstate.filter{ s => !s.isInstanceOf[Region] }.foreach{ s => result.add(s) }
     }
+    //println(self.getName + ".allContainedStates = " + result.toString)
     result
   }
 

@@ -18,6 +18,7 @@ package org.thingml.cgenerator
 import org.sintef.thingml._
 import org.thingml.cgenerator.CGenerator._
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
+import resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import sun.applet.resources.MsgAppletViewer
 import com.sun.org.apache.xpath.internal.operations.Variable
@@ -227,19 +228,18 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
             }
             // Execute Entry actions
             if (s.getEntry != null) s.getEntry.generateC(builder)
-            builder append "\n"
+            //builder append "\n"
             // Recurse on contained states
             regions.foreach {
-              r => builder append composedBehaviour.qname("_") + "_OnEntry(" + builder append state_var_name(r) + ");\n"
+              r => builder append composedBehaviour.qname("_") + "_OnEntry(" + state_var_name(r) + ");\n"
             }
           }
           case _ => {
             // just a leaf state: execute entry actions
             if (s.getEntry != null) s.getEntry.generateC(builder)
-            builder append "\n"
           }
         }
-        builder append "\n"
+        builder append "break;\n"
     }
     builder append "default: break;\n"
     builder append "}\n"
@@ -260,20 +260,18 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
             regions.addAll(cs.getRegion)
             // Exit all contained states
             regions.foreach {
-              r => builder append composedBehaviour.qname("_") + "_OnExit(" + builder append state_var_name(r) + ");\n"
+              r => builder append composedBehaviour.qname("_") + "_OnExit(" + state_var_name(r) + ");\n"
             }
             // Execute Exit actions
             if (s.getExit != null) s.getExit.generateC(builder)
-            builder append "\n"
 
           }
           case _ => {
             // just a leaf state: execute exit actions
             if (s.getExit != null) s.getExit.generateC(builder)
-            builder append "\n"
           }
         }
-        builder append "\n"
+        builder append "break;\n"
     }
     builder append "default: break;\n"
     builder append "}\n"
@@ -296,24 +294,29 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
   }
 
   def dispatchToSubRegions(builder: StringBuilder, cs: CompositeState, port: Port, msg: Message) {
+
+    println("dispatchToSubRegions for " + cs + " port=" + port.getName + " msg=" + msg.getName)
     cs.directSubRegions().foreach {
       r =>
+         println("  processing region " + r)
       // for all states of the region, if the state can handle the message and that state is active we forward the message
-        var states = r.getSubstate.filter {
+        val states = r.getSubstate.filter {
           s => s.canHandle(port, msg)
         }
         states.foreach {
           s =>
+            println("    processing state " + s)
             if (states.head != s) builder append "else "
             builder append "if (" + state_var_name(cs) + " == " + state_id(s) + ") {\n" // s is the current state
             // dispatch to sub-regions if it is a composite
             s match {
               case comp: CompositeState => dispatchToSubRegions(builder, comp, port, msg)
+              case _ => { /* do nothing */ }
             }
             // handle message locally
             var lh = s.getOutgoing.union(s.getInternal).foreach {
               h =>
-                h match {
+                h.getEvent.filter{ e => e.isInstanceOf[ReceiveMessage] && e.asInstanceOf[ReceiveMessage].getPort == port && e.asInstanceOf[ReceiveMessage].getMessage == msg}.head match {
                   case mh: ReceiveMessage if (mh.getPort == port && mh.getMessage == msg) => {
                     // check the guard and generate the code to handle the message
                     if (h.getGuard != null) {
@@ -329,11 +332,11 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
                       }
                       case et: Transition => {
                         // Execute the exit actions for current states (starting at the deepest)
-                        builder append composedBehaviour.qname("_") + "_OnExit(" + builder append state_id(et.getSource) + ");\n"
+                        builder append composedBehaviour.qname("_") + "_OnExit(" + state_id(et.getSource) + ");\n"
                         // Do the action
                         et.getAction.generateC(builder)
                         // Enter the target state and initialize its children
-                        builder append composedBehaviour.qname("_") + "_OnEntry(" + builder append state_id(et.getTarget) + ");\n"
+                        builder append composedBehaviour.qname("_") + "_OnEntry(" + state_id(et.getTarget) + ");\n"
                       }
                     }
                     if (h.getGuard != null) {
@@ -475,7 +478,7 @@ case class ActionBlockCGenerator(override val self: ActionBlock) extends ActionC
       a => a.generateC(builder)
       builder append "\n"
     }
-    builder append ") "
+    builder append "}\n"
   }
 }
 
@@ -509,14 +512,16 @@ case class LoopActionCGenerator(override val self: LoopAction) extends ActionCGe
 case class PrintActionCGenerator(override val self: PrintAction) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder) {
     builder append "//TODO: print "
-    builder append self.getMsg.generateC(builder)
+    self.getMsg.generateC(builder)
+    builder append "\n"
   }
 }
 
 case class ErrorActionCGenerator(override val self: ErrorAction) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder) {
     builder append "//TODO: report error "
-    builder append self.getMsg.generateC(builder)
+    self.getMsg.generateC(builder)
+    builder append "\n"
   }
 }
 
@@ -656,7 +661,7 @@ case class IntegerLitteralCGenerator(override val self: IntegerLitteral) extends
 
 case class StringLitteralCGenerator(override val self: StringLitteral) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder) {
-    builder.append(self.getStringValue.toString)
+    builder.append("\"" + CharacterEscaper.escapeEscapedCharacters(self.getStringValue) + "\"")
   }
 }
 

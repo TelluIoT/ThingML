@@ -10,3 +10,4 @@ target/
 *.iws
 keystore
 /.idea/
+test_out/
