@@ -44,6 +44,7 @@ import org.junit.Test;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
+import org.thingml.cgenerator.*;
 
 import org.thingml.graphexport.*;
 
@@ -82,6 +83,10 @@ public class StandaloneParserTestLoadFile extends TestCase {
             }
 
             for (String s : ThingMLGraphExport.allGraphML( (ThingMLModel)model.getContents().get(0) ).values()) {
+               System.out.println(s);
+            }
+
+            for (String s : CGenerator.compileAll( (ThingMLModel)model.getContents().get(0)).values()) {
                System.out.println(s);
             }
 

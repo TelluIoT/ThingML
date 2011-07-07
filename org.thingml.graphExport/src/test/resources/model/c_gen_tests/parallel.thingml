@@ -1,0 +1,40 @@
+message pingA();
+message pingB();
+message ping();
+message pongA();
+message pongB();
+
+// Definition of the Pingable fragmant
+thing Hello @c_code "generate"
+{
+
+	port IO {
+		receives ping, pingA, pingB
+		sends pongA, pongB 
+	}
+	
+	statechart Hello init A {
+
+		state A {
+			transition -> A event IO?pingA 
+			action do IO!pongA() print "a" end
+			
+			transition -> A event IO?ping 
+			action do IO!pongA() print "a" end
+		}
+		
+	region B init B {
+	
+		state B {
+			transition -> B event IO?pingA 
+			action do IO!pongB() print "b" end
+			
+			transition -> B event IO?ping 
+			action do IO!pongB() print "b" end
+		}
+	
+	}
+		
+	}
+}
+

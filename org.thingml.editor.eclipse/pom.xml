@@ -87,7 +87,7 @@
                         <Require-Bundle>
                                 
                                   org.emftext.access;resolution:=optional,
-                                  org.eclipse.emf,
+                                <!--  org.eclipse.emf, -->
                                   org.eclipse.emf.codegen.ecore,
                                   org.eclipse.emf.ecore,
                                   org.eclipse.emf.ecore.edit,

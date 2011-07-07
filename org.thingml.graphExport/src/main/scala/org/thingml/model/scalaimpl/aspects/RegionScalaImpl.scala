@@ -16,9 +16,9 @@
 package org.thingml.model.scalaimpl.aspects
 
 import org.sintef.thingml._
-import java.util.ArrayList
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import scala.collection.JavaConversions._
+import java.util.{Hashtable, HashSet, ArrayList}
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,4 +45,49 @@ case class RegionScalaImpl (self : Region) {
     result
   }
 
+  def directSubRegions() : ArrayList[Region] = {
+    var result : ArrayList[Region] = new ArrayList[Region]()
+    result.add(self)
+    if (self.isInstanceOf[CompositeState]) {
+      self.asInstanceOf[CompositeState].getRegion.foreach{ r => result.addAll(r.allContainedRegions)}
+    }
+    result
+  }
+
+  def allContainedStates() : ArrayList[State] = {
+    var result : ArrayList[State] = new ArrayList[State]()
+    allContainedRegions.foreach{ r =>
+      if (r.isInstanceOf[State]) result.add(r.asInstanceOf[State])
+      r.getSubstate.filter{ s => !s.isInstanceOf[Region] }.foreach{ s => result.add(s) }
+    }
+    result
+  }
+
+  def allContainedSimpleStates() : ArrayList[State] = {
+    var result : ArrayList[State] = new ArrayList[State]()
+    allContainedStates.foreach{ s => if (s.getClass == classOf[State]) result.add(s) }
+    result
+  }
+
+  def allContainedCompositeStates() : ArrayList[CompositeState] = {
+    var result : ArrayList[CompositeState] = new ArrayList[CompositeState]()
+    allContainedStates.foreach{ s => if (s.isInstanceOf[CompositeState]) result.add(s.asInstanceOf[CompositeState]) }
+    result
+  }
+
+  def allContainedProperties() : ArrayList[Property] = {
+    var result : ArrayList[Property] = new ArrayList[Property]()
+    allContainedStates.foreach{ s =>
+      result.addAll(s.getProperties)
+    }
+    result
+  }
+
+  def allUsedTypes() : HashSet[Type] = {
+    var result : HashSet[Type] = new HashSet[Type]()
+    allContainedProperties.foreach{p =>
+      if (!result.contains(p.getType)) result.add(p.getType)
+    }
+    result
+  }
 }
