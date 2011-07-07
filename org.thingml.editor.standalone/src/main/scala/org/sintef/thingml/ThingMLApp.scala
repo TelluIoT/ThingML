@@ -43,8 +43,8 @@ object ThingMLApp {
   def main(args: scala.Array[scala.Predef.String]): scala.Unit = {
 
 
-    SwingUtilities.invokeLater(new Runnable {
-      def run() {
+    //SwingUtilities.invokeLater(new Runnable {
+    //  def run() {
         val f = new ThingMLFrame(args)
         f.setSize(800, 600)
         f.setPreferredSize(f.getSize)
@@ -63,8 +63,8 @@ object ThingMLApp {
           MacIntegration.addOSXIntegration(f.editor);
         }
         f.editor.codeEditor.setText(debugMSg)
-      }
-    })
+    //  }
+  //  })
 
 
   }
