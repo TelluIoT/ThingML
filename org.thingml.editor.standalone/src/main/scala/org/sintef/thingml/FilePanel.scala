@@ -30,25 +30,29 @@ import org.eclipse.emf.common.util.URI
  * Time: 17:07
  */
 
-class FilePanel(editor: ThingMLPanel,frame:ThingMLFrame) extends JPanel with Runnable {
+class FilePanel(editor: ThingMLPanel, frame: ThingMLFrame, rootF: File = null) extends JPanel with Runnable {
 
   var tree = new JTree();
   this.setLayout(new BorderLayout())
   add(new JScrollPane(tree), BorderLayout.CENTER);
 
-  var root : File = null
+  var root: File = rootF
   var filechooser = new JFileChooser()
   filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
   filechooser.setDialogTitle("Select base directory for ThingML files");
   var returnVal = filechooser.showOpenDialog(null);
-  if (filechooser.getSelectedFile != null && returnVal == JFileChooser.APPROVE_OPTION) {
-    root = filechooser.getSelectedFile
-  } else {
-    System.exit(0)
+
+
+  if (root == null) {
+    if (filechooser.getSelectedFile != null && returnVal == JFileChooser.APPROVE_OPTION) {
+      root = filechooser.getSelectedFile
+    } else {
+      System.exit(0)
+    }
   }
 
 
- // var root = new File("/Users/ffouquet/Documents/DEV/ThingML/org.thingml.parser/version_standalone/src/test/resources/model");
+  // var root = new File("/Users/ffouquet/Documents/DEV/ThingML/org.thingml.parser/version_standalone/src/test/resources/model");
   // CHANEG
   val fileFilter = new FileFilter() {
     def accept(p1: File) = (p1.getName.endsWith(".thingml"))
@@ -72,8 +76,8 @@ class FilePanel(editor: ThingMLPanel,frame:ThingMLFrame) extends JPanel with Run
       val fileF = new File(root + "/" + file.substring(file.indexOf("/")))
       if (fileF.isFile) {
         val content = Source.fromFile(fileF.getAbsolutePath, "utf-8").getLines().mkString("\n")
-        editor.loadText(content,fileF)
-        frame.setTitle("ThingML Editor : "+p1.getNewLeadSelectionPath.getLastPathComponent.toString)
+        editor.loadText(content, fileF)
+        frame.setTitle("ThingML Editor : " + p1.getNewLeadSelectionPath.getLastPathComponent.toString)
       }
 
     }

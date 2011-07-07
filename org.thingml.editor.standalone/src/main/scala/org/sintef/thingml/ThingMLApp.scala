@@ -30,6 +30,7 @@ package org.sintef.thingml
 
 import javax.swing.JFrame
 import scala.collection.JavaConversions._
+import java.io.File
 
 /**
  * User: ffouquet
@@ -42,7 +43,7 @@ object ThingMLApp {
   def main(args: scala.Array[scala.Predef.String]): scala.Unit = {
 
 
-    val f = new ThingMLFrame
+    val f = new ThingMLFrame(args)
     f.setSize(800, 600)
     f.setPreferredSize(f.getSize)
     f.pack()
@@ -51,6 +52,10 @@ object ThingMLApp {
 
 
 
+
+
+
+    /*
     var debugMSg = args.mkString(";")
     System.getProperties.foreach {
       prop =>
@@ -61,10 +66,8 @@ object ThingMLApp {
       System.out.println("Mac detected");
       MacIntegration.addOSXIntegration(f.editor);
     }
-
-
     f.editor.codeEditor.setText(debugMSg)
-
+      */
 
   }
 

@@ -30,6 +30,8 @@ package org.sintef.thingml
 
 import java.awt.{Dimension, BorderLayout}
 import javax.swing.{JSplitPane, JFrame}
+import java.io.File
+import javax.xml.transform.Source
 
 /**
  * User: ffouquet
@@ -37,17 +39,36 @@ import javax.swing.{JSplitPane, JFrame}
  * Time: 15:24
  */
 
-class ThingMLFrame extends JFrame {
+class ThingMLFrame(args: scala.Array[scala.Predef.String]) extends JFrame {
+
+  var filePanel : FilePanel = null
+  val editor = new ThingMLPanel()
+
+  val argsL = args.toList
+  if (argsL.contains("-open")) {
+    val index = argsL.indexOf("-open")
+    if ((index + 1) < argsL.size) {
+      val filePath = new File("file:///" + argsL(index + 1))
+      if (filePath.isFile) {
+
+        filePanel =new FilePanel(editor, this,filePath.getParentFile)
+        editor.loadText(scala.io.Source.fromFile(filePath,"utf-8").mkString("\n"),filePath)
+      }
+    }
+  } else {
+
+  }
+
 
   setTitle("ThingML Editor")
   this.setLayout(new BorderLayout())
-  val editor = new ThingMLPanel()
-  val filePanel = new FilePanel(editor,this)
-  filePanel.setPreferredSize(new Dimension(300,300))
-  filePanel.setSize(300,300)
 
 
-  var splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,filePanel,editor)
+  filePanel.setPreferredSize(new Dimension(300, 300))
+  filePanel.setSize(300, 300)
+
+
+  var splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, filePanel, editor)
   //splitPane.setResizeWeight(0.3);
   //splitPane.setOneTouchExpandable(true);
   splitPane.setContinuousLayout(true);
@@ -58,7 +79,6 @@ class ThingMLFrame extends JFrame {
 
 
   add(splitPane, BorderLayout.CENTER)
-
 
 
 }
