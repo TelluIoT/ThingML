@@ -53,7 +53,7 @@ class ThingMLFrame(args: scala.Array[scala.Predef.String]) extends JFrame {
 
 
 
-      filePanel = new FilePanel(editor, this, filePath.getParentFile)
+      filePanel = new FilePanel(editor, this/*, filePath.getParentFile*/)
       editor.loadText(scala.io.Source.fromFile(filePath, "utf-8").mkString("\n"), filePath)
     //} else {
     //  throw new Exception("error => "+filePath.getAbsoluteFile)
