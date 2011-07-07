@@ -50,7 +50,7 @@ class ThingMLFrame(args: scala.Array[scala.Predef.String]) extends JFrame {
     val filePath = new File( argsFlat.substring(argsFlat.indexOf("=")+1))
     //if (filePath.i) {
       filePanel = new FilePanel(editor, this, filePath.getParentFile)
-      editor.loadText(scala.io.Source.fromFile(filePath, "utf-8").mkString("\n"), filePath)
+      editor.loadText(scala.io.Source.fromFile(filePath, "utf-8").getLines().mkString("\n"))
     //} else {
     //  throw new Exception("error => "+filePath.getAbsoluteFile)
     //}
