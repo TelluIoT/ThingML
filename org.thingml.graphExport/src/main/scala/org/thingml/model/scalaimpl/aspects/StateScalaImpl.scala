@@ -16,8 +16,10 @@
 package org.thingml.model.scalaimpl.aspects
 
 import org.sintef.thingml._
-import java.util.ArrayList
+import org.thingml.model.scalaimpl.ThingMLScalaImpl._
+import scala.collection.JavaConversions._
 import org.sintef.thingml.constraints.ThingMLHelpers
+import java.util.{Hashtable, ArrayList}
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,4 +43,51 @@ case class StateScalaImpl (self : State) {
     return ThingMLHelpers.allValidTargetStates(self)
   }
 
+  def allStates : ArrayList[State] = {
+    self match {
+      case cs : CompositeState => cs.allContainedStates
+      case _ => {
+        val result = new ArrayList[State]()
+        result.add(self)
+        result
+      }
+    }
+  }
+
+  def canHandle(p : Port, m : Message) = {
+    val handlers = allMessageHandlers
+    if (!handlers.containsKey(p)) false
+    else handlers.get(p).contains(m)
+  }
+
+  def allHandlers(p : Port, m : Message) : ArrayList[Handler] = {
+    val handlers = allMessageHandlers
+    if (!handlers.containsKey(p) || !handlers.get(p).contains(m)) new ArrayList[Handler]()
+    else handlers.get(p).get(m)
+  }
+
+  def allMessageHandlers() : Hashtable[Port, Hashtable[Message, ArrayList[Handler]]] = {
+    var result :  Hashtable[Port, Hashtable[Message, ArrayList[Handler]]] = new  Hashtable[Port, Hashtable[Message, ArrayList[Handler]]]()
+    allStates.foreach { s =>
+      s.getOutgoing.union(s.getInternal)foreach{ t =>
+        t match {
+          case rm : ReceiveMessage if (rm.getMessage != null && rm.getPort != null) => {
+            var phdlrs = result.get(rm.getPort)
+            if (phdlrs == null) {
+              phdlrs = new Hashtable[Message, ArrayList[Handler]]()
+              result.put(rm.getPort, phdlrs)
+            }
+            var hdlrs = phdlrs.get(rm.getMessage)
+            if (hdlrs == null) {
+              hdlrs = new ArrayList[Handler]
+              phdlrs.put(rm.getMessage, hdlrs)
+            }
+            hdlrs.add(t)
+          }
+          case _ => { /* Not a message */ }
+        }
+      }
+    }
+    result
+  }
 }

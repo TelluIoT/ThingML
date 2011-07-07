@@ -358,7 +358,8 @@ public class ThingMLHelpers {
 
 	public static ArrayList<State> allValidTargetStates(State state) {
 		ArrayList<State> result = new ArrayList<State>();
-		result.addAll(findContainingRegion(state).getSubstate());
+		if (state instanceof CompositeState) result.addAll(findContainingRegion(state.eContainer()).getSubstate());
+		else result.addAll(findContainingRegion(state).getSubstate());
 		return result;
 	}
 	

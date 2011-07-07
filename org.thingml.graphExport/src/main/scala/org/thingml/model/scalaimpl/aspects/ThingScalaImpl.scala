@@ -16,6 +16,8 @@
 package org.thingml.model.scalaimpl.aspects
 
 import org.sintef.thingml._
+import org.thingml.model.scalaimpl.ThingMLScalaImpl._
+import scala.collection.JavaConversions._
 import java.util.ArrayList
 import org.sintef.thingml.constraints.ThingMLHelpers
 
@@ -37,6 +39,14 @@ case class ThingScalaImpl (self : Thing) {
     return ThingMLHelpers.allProperties(self)
   }
 
+  def allPropertiesInDepth: ArrayList[Property] = {
+    var result = allProperties
+    allStateMachines.foreach{sm =>
+        result.addAll(sm.allContainedProperties)
+    }
+    result
+  }
+
   def allPorts: ArrayList[Port] = {
     return ThingMLHelpers.allPorts(self)
   }
@@ -52,5 +62,6 @@ case class ThingScalaImpl (self : Thing) {
   def allStateMachines: ArrayList[StateMachine] = {
     return ThingMLHelpers.allStateMachines(self)
   }
+
 
 }

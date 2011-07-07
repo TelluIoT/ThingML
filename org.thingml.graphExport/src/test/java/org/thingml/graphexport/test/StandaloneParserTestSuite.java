@@ -52,6 +52,7 @@ public class StandaloneParserTestSuite extends TestSuite {
             populate(suite, "model/actions");
             populate(suite, "model/msp");
             populate(suite, "model/statecharts");
+            populate(suite, "model/c_gen_tests");
             return suite;
         } 
         catch (Throwable t) {
