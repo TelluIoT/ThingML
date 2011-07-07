@@ -32,6 +32,7 @@ import java.awt.{Dimension, BorderLayout}
 import javax.swing.{JSplitPane, JFrame}
 import java.io.File
 import javax.xml.transform.Source
+import java.lang.Exception
 
 /**
  * User: ffouquet
@@ -51,6 +52,8 @@ class ThingMLFrame(args: scala.Array[scala.Predef.String]) extends JFrame {
     if (filePath.isFile) {
       filePanel = new FilePanel(editor, this, filePath.getParentFile)
       editor.loadText(scala.io.Source.fromFile(filePath, "utf-8").mkString("\n"), filePath)
+    } else {
+      throw new Exception("error => "+filePath.getName)
     }
   } else {
     filePanel = new FilePanel(editor, this)
