@@ -42,24 +42,22 @@ import java.lang.Exception
 
 class ThingMLFrame(args: scala.Array[scala.Predef.String]) extends JFrame {
 
-  var filePanel: FilePanel  = new FilePanel(editor, this)
+  var filePanel: FilePanel = null // = new FilePanel(editor, this)
   val editor = new ThingMLPanel()
 
-  /*
-  val argsL = args.toList
-  if (argsL.contains("-open")) {
-    val index = argsL.indexOf("-open")
-    val filePath = new File("file:///" + argsL(index + 1))
-    if (filePath.isFile) {
+  val argsFlat = args.mkString("=")
+  if (argsFlat.contains("-open=")) {
+    val filePath = new File("file:///" + argsFlat.substring(argsFlat.indexOf("=")))
+    //if (filePath.i) {
       filePanel = new FilePanel(editor, this, filePath.getParentFile)
       editor.loadText(scala.io.Source.fromFile(filePath, "utf-8").mkString("\n"), filePath)
-    } else {
-      throw new Exception("error => "+filePath.getName)
-    }
+    //} else {
+    //  throw new Exception("error => "+filePath.getAbsoluteFile)
+    //}
   } else {
     filePanel = new FilePanel(editor, this)
   }
-      */
+
 
   setTitle("ThingML Editor")
   this.setLayout(new BorderLayout())
