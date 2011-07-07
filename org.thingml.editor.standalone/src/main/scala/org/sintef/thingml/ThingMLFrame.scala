@@ -41,22 +41,19 @@ import javax.xml.transform.Source
 
 class ThingMLFrame(args: scala.Array[scala.Predef.String]) extends JFrame {
 
-  var filePanel : FilePanel = null
+  var filePanel: FilePanel = null
   val editor = new ThingMLPanel()
 
   val argsL = args.toList
   if (argsL.contains("-open")) {
     val index = argsL.indexOf("-open")
-    if ((index + 1) < argsL.size) {
-      val filePath = new File("file:///" + argsL(index + 1))
-      if (filePath.isFile) {
-
-        filePanel =new FilePanel(editor, this,filePath.getParentFile)
-        editor.loadText(scala.io.Source.fromFile(filePath,"utf-8").mkString("\n"),filePath)
-      }
+    val filePath = new File("file:///" + argsL(index + 1))
+    if (filePath.isFile) {
+      filePanel = new FilePanel(editor, this, filePath.getParentFile)
+      editor.loadText(scala.io.Source.fromFile(filePath, "utf-8").mkString("\n"), filePath)
     }
   } else {
-
+    filePanel = new FilePanel(editor, this)
   }
 
 
