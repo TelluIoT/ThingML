@@ -37,13 +37,11 @@ class FilePanel(editor: ThingMLPanel, frame: ThingMLFrame, rootF: File = null) e
   add(new JScrollPane(tree), BorderLayout.CENTER);
 
   var root: File = rootF
-  var filechooser = new JFileChooser()
-  filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-  filechooser.setDialogTitle("Select base directory for ThingML files");
-  var returnVal = filechooser.showOpenDialog(null);
-
-
   if (root == null) {
+    val filechooser = new JFileChooser()
+    filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    filechooser.setDialogTitle("Select base directory for ThingML files");
+    var returnVal = filechooser.showOpenDialog(null);
     if (filechooser.getSelectedFile != null && returnVal == JFileChooser.APPROVE_OPTION) {
       root = filechooser.getSelectedFile
     } else {
