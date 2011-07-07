@@ -28,9 +28,9 @@
  */
 package org.sintef.thingml
 
-import javax.swing.JFrame
 import scala.collection.JavaConversions._
 import java.io.File
+import javax.swing.{SwingUtilities, JFrame}
 
 /**
  * User: ffouquet
@@ -43,30 +43,28 @@ object ThingMLApp {
   def main(args: scala.Array[scala.Predef.String]): scala.Unit = {
 
 
-    val f = new ThingMLFrame(args)
-    f.setSize(800, 600)
-    f.setPreferredSize(f.getSize)
-    f.pack()
-    f.setVisible(true)
-    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+    SwingUtilities.invokeLater(new Runnable {
+      def run() {
+        val f = new ThingMLFrame(args)
+        f.setSize(800, 600)
+        f.setPreferredSize(f.getSize)
+        f.pack()
+        f.setVisible(true)
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
 
+        var debugMSg = args.mkString(";")
+        System.getProperties.foreach {
+          prop =>
+            debugMSg = debugMSg + "\n" + prop._1 + "=>" + prop._2
+        }
 
-
-
-
-
-
-    var debugMSg = args.mkString(";")
-    System.getProperties.foreach {
-      prop =>
-        debugMSg = debugMSg + "\n" + prop._1 + "=>" + prop._2
-    }
-
-    if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-      System.out.println("Mac detected");
-      MacIntegration.addOSXIntegration(f.editor);
-    }
-    f.editor.codeEditor.setText(debugMSg)
+        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+          System.out.println("Mac detected");
+          MacIntegration.addOSXIntegration(f.editor);
+        }
+        f.editor.codeEditor.setText(debugMSg)
+      }
+    })
 
 
   }
