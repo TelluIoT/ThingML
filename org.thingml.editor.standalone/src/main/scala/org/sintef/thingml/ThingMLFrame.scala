@@ -45,6 +45,7 @@ class ThingMLFrame(args: scala.Array[scala.Predef.String]) extends JFrame {
   var filePanel: FilePanel = null
   val editor = new ThingMLPanel()
 
+  /*
   val argsL = args.toList
   if (argsL.contains("-open")) {
     val index = argsL.indexOf("-open")
@@ -58,7 +59,7 @@ class ThingMLFrame(args: scala.Array[scala.Predef.String]) extends JFrame {
   } else {
     filePanel = new FilePanel(editor, this)
   }
-
+      */
 
   setTitle("ThingML Editor")
   this.setLayout(new BorderLayout())
