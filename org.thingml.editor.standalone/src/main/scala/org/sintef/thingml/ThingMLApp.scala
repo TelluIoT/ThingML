@@ -55,7 +55,7 @@ object ThingMLApp {
 
 
 
-    /*
+
     var debugMSg = args.mkString(";")
     System.getProperties.foreach {
       prop =>
@@ -67,7 +67,7 @@ object ThingMLApp {
       MacIntegration.addOSXIntegration(f.editor);
     }
     f.editor.codeEditor.setText(debugMSg)
-      */
+
 
   }
 
