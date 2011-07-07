@@ -56,35 +56,42 @@ case class StateScalaImpl (self : State) {
 
   def canHandle(p : Port, m : Message) = {
     val handlers = allMessageHandlers
-    if (!handlers.containsKey(p)) false
-    else handlers.get(p).contains(m)
+    val result = if (!handlers.containsKey(p)) false
+    else handlers.get(p).containsKey(m)
+    println("     ** State " + self.getName + " canHandle(" + p.getName + ", " + m.getName + ") = " + result)
+    result
   }
 
   def allHandlers(p : Port, m : Message) : ArrayList[Handler] = {
     val handlers = allMessageHandlers
-    if (!handlers.containsKey(p) || !handlers.get(p).contains(m)) new ArrayList[Handler]()
+    if (!handlers.containsKey(p) || !handlers.get(p).containsKey(m)) new ArrayList[Handler]()
     else handlers.get(p).get(m)
   }
 
   def allMessageHandlers() : Hashtable[Port, Hashtable[Message, ArrayList[Handler]]] = {
     var result :  Hashtable[Port, Hashtable[Message, ArrayList[Handler]]] = new  Hashtable[Port, Hashtable[Message, ArrayList[Handler]]]()
     allStates.foreach { s =>
+      //println("Processisng state " + s.getName)
       s.getOutgoing.union(s.getInternal)foreach{ t =>
-        t match {
-          case rm : ReceiveMessage if (rm.getMessage != null && rm.getPort != null) => {
-            var phdlrs = result.get(rm.getPort)
-            if (phdlrs == null) {
-              phdlrs = new Hashtable[Message, ArrayList[Handler]]()
-              result.put(rm.getPort, phdlrs)
+        //println("  Processisng handler " + t + " Event = " + t.getEvent)
+        t.getEvent.foreach{e =>
+          e match {
+            case rm : ReceiveMessage if (rm.getMessage != null && rm.getPort != null) => {
+              //println("    found handler for " + rm.getPort.getName + "?" + rm.getMessage.getName)
+              var phdlrs = result.get(rm.getPort)
+              if (phdlrs == null) {
+                phdlrs = new Hashtable[Message, ArrayList[Handler]]()
+                result.put(rm.getPort, phdlrs)
+              }
+              var hdlrs = phdlrs.get(rm.getMessage)
+              if (hdlrs == null) {
+                hdlrs = new ArrayList[Handler]
+                phdlrs.put(rm.getMessage, hdlrs)
+              }
+              hdlrs.add(t)
             }
-            var hdlrs = phdlrs.get(rm.getMessage)
-            if (hdlrs == null) {
-              hdlrs = new ArrayList[Handler]
-              phdlrs.put(rm.getMessage, hdlrs)
-            }
-            hdlrs.add(t)
+            case _ => { /* Not a message */ }
           }
-          case _ => { /* Not a message */ }
         }
       }
     }

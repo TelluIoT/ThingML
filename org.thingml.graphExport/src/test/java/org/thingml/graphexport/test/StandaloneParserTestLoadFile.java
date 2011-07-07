@@ -33,7 +33,12 @@
 
 package org.thingml.graphexport.test;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Hashtable;
+
 import junit.framework.TestCase;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
@@ -41,12 +46,15 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.junit.Test;
+import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.cgenerator.*;
 
 import org.thingml.graphexport.*;
+
+import javax.lang.model.element.NestingKind;
 
 /**
  *
@@ -62,32 +70,53 @@ public class StandaloneParserTestLoadFile extends TestCase {
 
     @Override
     public void runTest() throws IOException {
-           // Register the generated package and the XMI Factory
-            EPackage.Registry.INSTANCE.put(ThingmlPackage.eNS_URI, ThingmlPackage.eINSTANCE);
-            Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
 
-            // Load the model
-            ResourceSet rs = new ResourceSetImpl();
-            URI xmiuri = URI.createFileURI(model_path);
-            Resource model = rs.getResource(xmiuri, true);
-            model.load(null);
+            try {
+               // Register the generated package and the XMI Factory
+                EPackage.Registry.INSTANCE.put(ThingmlPackage.eNS_URI, ThingmlPackage.eINSTANCE);
+                Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
 
-            assert(model.getContents().size() > 0);
+                // Load the model
+                ResourceSet rs = new ResourceSetImpl();
+                URI xmiuri = URI.createFileURI(model_path);
+                Resource model = rs.getResource(xmiuri, true);
+                model.load(null);
 
-            assert ( model.getContents().get(0) instanceof ThingMLModel );
+                assert(model.getContents().size() > 0);
 
-            System.out.println("Model : " + model + " : ");
+                assert ( model.getContents().get(0) instanceof ThingMLModel );
 
-            for (String s : ThingMLGraphExport.allGraphviz( (ThingMLModel)model.getContents().get(0) ).values()) {
-               System.out.println(s);
+                System.out.println("Model : " + model + " : ");
+
+                File dir = new File("test_out");
+                if (!dir.exists()) dir.mkdir();
+
+                Hashtable<String, String> dots = ThingMLGraphExport.allGraphviz( (ThingMLModel)model.getContents().get(0) );
+                for (String name : dots.keySet()) {
+                    System.out.println(" -> Writing file " + name + ".dot");
+                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(name + ".dot")));
+                    w.println(dots.get(name));
+                    w.close();
+                }
+
+                Hashtable<String, String> gml = ThingMLGraphExport.allGraphML( (ThingMLModel)model.getContents().get(0) );
+                for (String name : gml.keySet()) {
+                    System.out.println(" -> Writing file " + name + ".graphml");
+                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" +new File(name + ".graphml")));
+                    w.println(gml.get(name));
+                    w.close();
+                }
+
+                Hashtable<Thing, String> ccode =  CGenerator.compileAll( (ThingMLModel)model.getContents().get(0));
+                for (Thing t : CGenerator.compileAll( (ThingMLModel)model.getContents().get(0)).keySet()) {
+                    System.out.println(" -> Writing file " + t.getName() + ".c");
+                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" +new File(t.getName() + ".c")));
+                    w.println(ccode.get(t));
+                    w.close();
+                }
             }
-
-            for (String s : ThingMLGraphExport.allGraphML( (ThingMLModel)model.getContents().get(0) ).values()) {
-               System.out.println(s);
-            }
-
-            for (String s : CGenerator.compileAll( (ThingMLModel)model.getContents().get(0)).values()) {
-               System.out.println(s);
+            catch(Throwable t) {
+               t.printStackTrace();
             }
 
             
