@@ -72,7 +72,7 @@ public class SimpleFileManager {
     if (root==null) throw new NullPointerException();
     this.filter=filter;
     if (!root.exists() || !root.canRead()) {
-      throw new IOException(root.getName());
+      throw new IOException(root.getAbsolutePath());
     }
     this.root=root;
   }
