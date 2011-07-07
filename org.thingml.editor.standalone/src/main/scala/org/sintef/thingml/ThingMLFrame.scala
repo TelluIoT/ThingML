@@ -47,7 +47,7 @@ class ThingMLFrame(args: scala.Array[scala.Predef.String]) extends JFrame {
 
   val argsFlat = args.mkString("=")
   if (argsFlat.contains("-open=")) {
-    val filePath = new File("file://" + argsFlat.substring(argsFlat.indexOf("=")+1))
+    val filePath = new File( argsFlat.substring(argsFlat.indexOf("=")+1))
     //if (filePath.i) {
 
 
