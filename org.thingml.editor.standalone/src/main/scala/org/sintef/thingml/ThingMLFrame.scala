@@ -42,7 +42,7 @@ import java.lang.Exception
 
 class ThingMLFrame(args: scala.Array[scala.Predef.String]) extends JFrame {
 
-  var filePanel: FilePanel = null
+  var filePanel: FilePanel  = new FilePanel(editor, this)
   val editor = new ThingMLPanel()
 
   /*
