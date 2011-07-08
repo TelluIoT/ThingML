@@ -43,6 +43,8 @@ public class ThingMLModelImportsReferenceResolver implements org.sintef.thingml.
 	public void resolve(java.lang.String identifier, org.sintef.thingml.ThingMLModel container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.ThingMLModel> result) {
 		try {
 			URI uri = URI.createURI(identifier).resolve(container.eResource().getURI());
+			//System.out.println("identifier = " + identifier + " container.eResource().getURI() = " + container.eResource().getURI());
+			//System.out.println("uri = " + uri);
 			//Resource r = container.eResource().getResourceSet().getResource(uri, true);
 			Resource r = new ResourceSetImpl().getResource(uri, true);
 			r.load(null);
@@ -51,7 +53,8 @@ public class ThingMLModelImportsReferenceResolver implements org.sintef.thingml.
 		} catch (ClassCastException e) {
 			result.setErrorMessage("The given URI contains a model with a wrong type");
 		} catch (Exception e) {
-			result.setErrorMessage("Unable to load model with uri: " + identifier);
+			//e.printStackTrace();
+			result.setErrorMessage("Unable to load model with uri: " + identifier + " cause: " + e.getMessage());
 		}
 	}
 	

@@ -38,6 +38,8 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+import resource.thingml.IThingmlTextDiagnostic
+import resource.thingml.mopp._
 import scala.collection.JavaConversions._
 import javax.swing.text.{Utilities, JTextComponent}
 import org.eclipse.emf.ecore.util.EcoreUtil
@@ -57,6 +59,9 @@ class ThingMLPanel extends JPanel {
   var codeEditor = new JEditorPane();
   var scrPane = new JScrollPane(codeEditor);
   codeEditor.setContentType("text/thingml; charset=UTF-8");
+
+  val reg = Resource.Factory.Registry.INSTANCE;
+	reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
 
   //codeEditor.setBackground(Color.LIGHT_GRAY)
 
@@ -97,26 +102,54 @@ class ThingMLPanel extends JPanel {
     start()
     var checkNeeded = false
 
+
+
     private def updateMarkers(content: String) {
 
       try {
-        val ressource = new org.sintef.thingml.resource.thingml.mopp.ThingmlResource(URI.createURI(org.sintef.thingml.ThingmlPackage.eNS_URI))
+
+         var resource : Resource = null
+
+         if (!targetFile.isEmpty) {
+           resource = new ThingmlResource(URI.createFileURI(targetFile.get.getAbsolutePath))
+         }
+         else resource = new ThingmlResource(URI.createURI("http://thingml.org"))
+
+         // It does not really work without a resourceSet
+         val rset = new ResourceSetImpl()
+         rset.getResources.add(resource)
+
+        // This is the text from the editor
         val stream = new ByteArrayInputStream(codeEditor.getText.getBytes);
-        ressource.load(stream, new java.util.HashMap());
-        //EcoreUtil.resolveAll(ressource)
+        resource.load(stream, null);
+
         Markers.removeMarkers(codeEditor)
-        ressource.getErrors.foreach {
+
+        if(resource.getErrors.isEmpty)
+          org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(resource);
+
+        resource.getErrors.foreach {
           error =>
-            val marker = new Markers.SimpleMarker(new Color(255, 0, 0, 100), error.getMessage)
-            val offset = getIndex(error.getLine, error.getColumn)
-            Markers.markText(codeEditor, offset, getNextIndex(offset), marker)
+             val marker = new Markers.SimpleMarker(new Color(255, 0, 0, 100), error.getMessage)
+
+            error match {
+              case e : IThingmlTextDiagnostic => {
+                Markers.markText(codeEditor, e.getCharStart, e.getCharEnd+1, marker)
+              }
+              case _ => {
+                val offset = getIndex(error.getLine, error.getColumn)
+                Markers.markText(codeEditor, offset, getNextIndex(offset), marker)
+              }
+            }
         }
-        ressource.getWarnings.foreach {
+        resource.getWarnings.foreach {
           error =>
             val marker = new Markers.SimpleMarker(new Color(255, 155, 0, 100), error.getMessage)
             val offset = getIndex(error.getLine, error.getColumn)
             Markers.markText(codeEditor, offset, getNextIndex(offset), marker)
         }
+
+        val model = resource.getContents.get(0).asInstanceOf[ThingMLModel]
 
         targetFile match {
           case Some(tf) => {
@@ -126,7 +159,6 @@ class ThingMLPanel extends JPanel {
           }
           case None =>
         }
-
 
       } catch {
         case _@e => {
