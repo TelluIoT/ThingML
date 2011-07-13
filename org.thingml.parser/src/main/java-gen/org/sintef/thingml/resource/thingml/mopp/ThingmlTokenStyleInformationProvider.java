@@ -13,19 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.sintef.thingml.resource.thingml.mopp;
 
 public class ThingmlTokenStyleInformationProvider {
@@ -85,13 +72,7 @@ public class ThingmlTokenStyleInformationProvider {
 		if ("statechart".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0xCC, 0x80, 0x00}, null, true, false, false, false);
 		}
-		if ("component".equals(tokenName)) {
-			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0xCC, 0x80, 0x00}, null, true, false, false, false);
-		}
 		if ("event".equals(tokenName)) {
-			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x7F, 0x00, 0x55}, null, true, false, false, false);
-		}
-		if ("eventref".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x7F, 0x00, 0x55}, null, true, false, false, false);
 		}
 		if ("guard".equals(tokenName)) {
@@ -107,12 +88,6 @@ public class ThingmlTokenStyleInformationProvider {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x7F, 0x00, 0x55}, null, true, false, false, false);
 		}
 		if ("exit".equals(tokenName)) {
-			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x7F, 0x00, 0x55}, null, true, false, false, false);
-		}
-		if ("send".equals(tokenName)) {
-			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x7F, 0x00, 0x55}, null, true, false, false, false);
-		}
-		if ("receive".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x7F, 0x00, 0x55}, null, true, false, false, false);
 		}
 		if ("transition".equals(tokenName)) {
@@ -160,16 +135,31 @@ public class ThingmlTokenStyleInformationProvider {
 		if ("includes".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x80, 0x00, 0x55}, null, true, false, false, false);
 		}
-		if ("property".equals(tokenName)) {
+		if ("required".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x80, 0x00, 0x55}, null, true, false, false, false);
 		}
-		if ("dictionary".equals(tokenName)) {
+		if ("provided".equals(tokenName)) {
+			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x80, 0x00, 0x55}, null, true, false, false, false);
+		}
+		if ("property".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x80, 0x00, 0x55}, null, true, false, false, false);
 		}
 		if ("region".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x80, 0x00, 0x55}, null, true, false, false, false);
 		}
 		if ("internal".equals(tokenName)) {
+			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x80, 0x00, 0x55}, null, true, false, false, false);
+		}
+		if ("set".equals(tokenName)) {
+			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x80, 0x00, 0x55}, null, true, false, false, false);
+		}
+		if ("configuration".equals(tokenName)) {
+			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x80, 0x00, 0x55}, null, true, false, false, false);
+		}
+		if ("instance".equals(tokenName)) {
+			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x80, 0x00, 0x55}, null, true, false, false, false);
+		}
+		if ("connector".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x80, 0x00, 0x55}, null, true, false, false, false);
 		}
 		if ("do".equals(tokenName)) {

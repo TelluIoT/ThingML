@@ -30,11 +30,13 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Type;
@@ -47,9 +49,10 @@ import org.sintef.thingml.Type;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.PropertyImpl#getType <em>Type</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.PropertyImpl#isChangeable <em>Changeable</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.PropertyImpl#getLowerBound <em>Lower Bound</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.PropertyImpl#getUpperBound <em>Upper Bound</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.PropertyImpl#getInit <em>Init</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.PropertyImpl#isChangeable <em>Changeable</em>}</li>
  * </ul>
  * </p>
  *
@@ -65,26 +68,6 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 	 * @ordered
 	 */
 	protected Type type;
-
-	/**
-	 * The default value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isChangeable()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean CHANGEABLE_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isChangeable()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean changeable = CHANGEABLE_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getLowerBound() <em>Lower Bound</em>}' attribute.
@@ -125,6 +108,36 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 	 * @ordered
 	 */
 	protected int upperBound = UPPER_BOUND_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getInit() <em>Init</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getInit()
+	 * @generated
+	 * @ordered
+	 */
+	protected Expression init;
+
+	/**
+	 * The default value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isChangeable()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean CHANGEABLE_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isChangeable()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean changeable = CHANGEABLE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -209,6 +222,20 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ThingmlPackage.PROPERTY__INIT:
+				return basicSetInit(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public int getLowerBound() {
 		return lowerBound;
 	}
@@ -251,18 +278,63 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Expression getInit() {
+		return init;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetInit(Expression newInit, NotificationChain msgs) {
+		Expression oldInit = init;
+		init = newInit;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.PROPERTY__INIT, oldInit, newInit);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setInit(Expression newInit) {
+		if (newInit != init) {
+			NotificationChain msgs = null;
+			if (init != null)
+				msgs = ((InternalEObject)init).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.PROPERTY__INIT, null, msgs);
+			if (newInit != null)
+				msgs = ((InternalEObject)newInit).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.PROPERTY__INIT, null, msgs);
+			msgs = basicSetInit(newInit, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.PROPERTY__INIT, newInit, newInit));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ThingmlPackage.PROPERTY__TYPE:
 				if (resolve) return getType();
 				return basicGetType();
-			case ThingmlPackage.PROPERTY__CHANGEABLE:
-				return isChangeable();
 			case ThingmlPackage.PROPERTY__LOWER_BOUND:
 				return getLowerBound();
 			case ThingmlPackage.PROPERTY__UPPER_BOUND:
 				return getUpperBound();
+			case ThingmlPackage.PROPERTY__INIT:
+				return getInit();
+			case ThingmlPackage.PROPERTY__CHANGEABLE:
+				return isChangeable();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -278,14 +350,17 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 			case ThingmlPackage.PROPERTY__TYPE:
 				setType((Type)newValue);
 				return;
-			case ThingmlPackage.PROPERTY__CHANGEABLE:
-				setChangeable((Boolean)newValue);
-				return;
 			case ThingmlPackage.PROPERTY__LOWER_BOUND:
 				setLowerBound((Integer)newValue);
 				return;
 			case ThingmlPackage.PROPERTY__UPPER_BOUND:
 				setUpperBound((Integer)newValue);
+				return;
+			case ThingmlPackage.PROPERTY__INIT:
+				setInit((Expression)newValue);
+				return;
+			case ThingmlPackage.PROPERTY__CHANGEABLE:
+				setChangeable((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -302,14 +377,17 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 			case ThingmlPackage.PROPERTY__TYPE:
 				setType((Type)null);
 				return;
-			case ThingmlPackage.PROPERTY__CHANGEABLE:
-				setChangeable(CHANGEABLE_EDEFAULT);
-				return;
 			case ThingmlPackage.PROPERTY__LOWER_BOUND:
 				setLowerBound(LOWER_BOUND_EDEFAULT);
 				return;
 			case ThingmlPackage.PROPERTY__UPPER_BOUND:
 				setUpperBound(UPPER_BOUND_EDEFAULT);
+				return;
+			case ThingmlPackage.PROPERTY__INIT:
+				setInit((Expression)null);
+				return;
+			case ThingmlPackage.PROPERTY__CHANGEABLE:
+				setChangeable(CHANGEABLE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -325,12 +403,14 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 		switch (featureID) {
 			case ThingmlPackage.PROPERTY__TYPE:
 				return type != null;
-			case ThingmlPackage.PROPERTY__CHANGEABLE:
-				return changeable != CHANGEABLE_EDEFAULT;
 			case ThingmlPackage.PROPERTY__LOWER_BOUND:
 				return lowerBound != LOWER_BOUND_EDEFAULT;
 			case ThingmlPackage.PROPERTY__UPPER_BOUND:
 				return upperBound != UPPER_BOUND_EDEFAULT;
+			case ThingmlPackage.PROPERTY__INIT:
+				return init != null;
+			case ThingmlPackage.PROPERTY__CHANGEABLE:
+				return changeable != CHANGEABLE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -345,12 +425,12 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (changeable: ");
-		result.append(changeable);
-		result.append(", lowerBound: ");
+		result.append(" (lowerBound: ");
 		result.append(lowerBound);
 		result.append(", upperBound: ");
 		result.append(upperBound);
+		result.append(", changeable: ");
+		result.append(changeable);
 		result.append(')');
 		return result.toString();
 	}

@@ -38,9 +38,10 @@ package org.sintef.thingml;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.sintef.thingml.Property#getType <em>Type</em>}</li>
- *   <li>{@link org.sintef.thingml.Property#isChangeable <em>Changeable</em>}</li>
  *   <li>{@link org.sintef.thingml.Property#getLowerBound <em>Lower Bound</em>}</li>
  *   <li>{@link org.sintef.thingml.Property#getUpperBound <em>Upper Bound</em>}</li>
+ *   <li>{@link org.sintef.thingml.Property#getInit <em>Init</em>}</li>
+ *   <li>{@link org.sintef.thingml.Property#isChangeable <em>Changeable</em>}</li>
  * </ul>
  * </p>
  *
@@ -152,5 +153,31 @@ public interface Property extends AnnotatedElement {
 	 * @generated
 	 */
 	void setUpperBound(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Init</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Init</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Init</em>' containment reference.
+	 * @see #setInit(Expression)
+	 * @see org.sintef.thingml.ThingmlPackage#getProperty_Init()
+	 * @model containment="true" required="true"
+	 * @generated
+	 */
+	Expression getInit();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.Property#getInit <em>Init</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Init</em>' containment reference.
+	 * @see #getInit()
+	 * @generated
+	 */
+	void setInit(Expression value);
 
 } // Property

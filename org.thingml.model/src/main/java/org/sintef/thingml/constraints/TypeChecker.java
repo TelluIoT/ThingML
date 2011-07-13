@@ -73,22 +73,22 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 	}
 
 	@Override
-	public Type caseIntegerLitteral(IntegerLitteral object) {
+	public Type caseIntegerLiteral(IntegerLiteral object) {
 		return INTEGER_TYPE;
 	}
 
 	@Override
-	public Type caseBooleanLitteral(BooleanLitteral object) {
+	public Type caseBooleanLiteral(BooleanLiteral object) {
 		return BOOLEAN_TYPE;
 	}
 
 	@Override
-	public Type caseStringLitteral(StringLitteral object) {
+	public Type caseStringLiteral(StringLiteral object) {
 		return STRING_TYPE;
 	}
 
 	@Override
-	public Type caseDoubleLitteral(DoubleLitteral object) {
+	public Type caseDoubleLiteral(DoubleLiteral object) {
 		return REAL_TYPE;
 	}
 

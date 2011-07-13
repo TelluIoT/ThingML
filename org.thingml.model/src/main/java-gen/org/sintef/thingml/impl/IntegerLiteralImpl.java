@@ -13,19 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -34,23 +21,23 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.sintef.thingml.IntegerLitteral;
+import org.sintef.thingml.IntegerLiteral;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Integer Litteral</b></em>'.
+ * An implementation of the model object '<em><b>Integer Literal</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.IntegerLitteralImpl#getIntValue <em>Int Value</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.IntegerLiteralImpl#getIntValue <em>Int Value</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class IntegerLitteralImpl extends LitteralImpl implements IntegerLitteral {
+public class IntegerLiteralImpl extends LiteralImpl implements IntegerLiteral {
 	/**
 	 * The default value of the '{@link #getIntValue() <em>Int Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -76,7 +63,7 @@ public class IntegerLitteralImpl extends LitteralImpl implements IntegerLitteral
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected IntegerLitteralImpl() {
+	protected IntegerLiteralImpl() {
 		super();
 	}
 
@@ -87,7 +74,7 @@ public class IntegerLitteralImpl extends LitteralImpl implements IntegerLitteral
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ThingmlPackage.Literals.INTEGER_LITTERAL;
+		return ThingmlPackage.Literals.INTEGER_LITERAL;
 	}
 
 	/**
@@ -108,7 +95,7 @@ public class IntegerLitteralImpl extends LitteralImpl implements IntegerLitteral
 		int oldIntValue = intValue;
 		intValue = newIntValue;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.INTEGER_LITTERAL__INT_VALUE, oldIntValue, intValue));
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.INTEGER_LITERAL__INT_VALUE, oldIntValue, intValue));
 	}
 
 	/**
@@ -119,7 +106,7 @@ public class IntegerLitteralImpl extends LitteralImpl implements IntegerLitteral
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.INTEGER_LITTERAL__INT_VALUE:
+			case ThingmlPackage.INTEGER_LITERAL__INT_VALUE:
 				return getIntValue();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -133,7 +120,7 @@ public class IntegerLitteralImpl extends LitteralImpl implements IntegerLitteral
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.INTEGER_LITTERAL__INT_VALUE:
+			case ThingmlPackage.INTEGER_LITERAL__INT_VALUE:
 				setIntValue((Integer)newValue);
 				return;
 		}
@@ -148,7 +135,7 @@ public class IntegerLitteralImpl extends LitteralImpl implements IntegerLitteral
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.INTEGER_LITTERAL__INT_VALUE:
+			case ThingmlPackage.INTEGER_LITERAL__INT_VALUE:
 				setIntValue(INT_VALUE_EDEFAULT);
 				return;
 		}
@@ -163,7 +150,7 @@ public class IntegerLitteralImpl extends LitteralImpl implements IntegerLitteral
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.INTEGER_LITTERAL__INT_VALUE:
+			case ThingmlPackage.INTEGER_LITERAL__INT_VALUE:
 				return intValue != INT_VALUE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
@@ -185,4 +172,4 @@ public class IntegerLitteralImpl extends LitteralImpl implements IntegerLitteral
 		return result.toString();
 	}
 
-} //IntegerLitteralImpl
+} //IntegerLiteralImpl

@@ -122,6 +122,10 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createPropertyAdapter();
 			}
 			@Override
+			public Adapter casePropertyAssign(PropertyAssign object) {
+				return createPropertyAssignAdapter();
+			}
+			@Override
 			public Adapter casePlatformAnnotation(PlatformAnnotation object) {
 				return createPlatformAnnotationAdapter();
 			}
@@ -198,8 +202,8 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createSendActionAdapter();
 			}
 			@Override
-			public Adapter casePropertyAssignment(PropertyAssignment object) {
-				return createPropertyAssignmentAdapter();
+			public Adapter caseVariableAssignment(VariableAssignment object) {
+				return createVariableAssignmentAdapter();
 			}
 			@Override
 			public Adapter caseEvent(Event object) {
@@ -218,28 +222,40 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createPortAdapter();
 			}
 			@Override
+			public Adapter caseRequiredPort(RequiredPort object) {
+				return createRequiredPortAdapter();
+			}
+			@Override
+			public Adapter caseProvidedPort(ProvidedPort object) {
+				return createProvidedPortAdapter();
+			}
+			@Override
 			public Adapter caseEventReference(EventReference object) {
 				return createEventReferenceAdapter();
 			}
 			@Override
-			public Adapter caseLitteral(Litteral object) {
-				return createLitteralAdapter();
+			public Adapter caseLiteral(Literal object) {
+				return createLiteralAdapter();
 			}
 			@Override
-			public Adapter caseIntegerLitteral(IntegerLitteral object) {
-				return createIntegerLitteralAdapter();
+			public Adapter caseEnumLiteralRef(EnumLiteralRef object) {
+				return createEnumLiteralRefAdapter();
 			}
 			@Override
-			public Adapter caseBooleanLitteral(BooleanLitteral object) {
-				return createBooleanLitteralAdapter();
+			public Adapter caseIntegerLiteral(IntegerLiteral object) {
+				return createIntegerLiteralAdapter();
 			}
 			@Override
-			public Adapter caseStringLitteral(StringLitteral object) {
-				return createStringLitteralAdapter();
+			public Adapter caseBooleanLiteral(BooleanLiteral object) {
+				return createBooleanLiteralAdapter();
 			}
 			@Override
-			public Adapter caseDoubleLitteral(DoubleLitteral object) {
-				return createDoubleLitteralAdapter();
+			public Adapter caseStringLiteral(StringLiteral object) {
+				return createStringLiteralAdapter();
+			}
+			@Override
+			public Adapter caseDoubleLiteral(DoubleLiteral object) {
+				return createDoubleLiteralAdapter();
 			}
 			@Override
 			public Adapter caseUnaryExpression(UnaryExpression object) {
@@ -328,6 +344,18 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseErrorAction(ErrorAction object) {
 				return createErrorActionAdapter();
+			}
+			@Override
+			public Adapter caseConfiguration(Configuration object) {
+				return createConfigurationAdapter();
+			}
+			@Override
+			public Adapter caseInstance(Instance object) {
+				return createInstanceAdapter();
+			}
+			@Override
+			public Adapter caseConnector(Connector object) {
+				return createConnectorAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -444,6 +472,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createPropertyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.PropertyAssign <em>Property Assign</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.PropertyAssign
+	 * @generated
+	 */
+	public Adapter createPropertyAssignAdapter() {
 		return null;
 	}
 
@@ -714,16 +756,16 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.PropertyAssignment <em>Property Assignment</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.VariableAssignment <em>Variable Assignment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.PropertyAssignment
+	 * @see org.sintef.thingml.VariableAssignment
 	 * @generated
 	 */
-	public Adapter createPropertyAssignmentAdapter() {
+	public Adapter createVariableAssignmentAdapter() {
 		return null;
 	}
 
@@ -784,6 +826,34 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.RequiredPort <em>Required Port</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.RequiredPort
+	 * @generated
+	 */
+	public Adapter createRequiredPortAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ProvidedPort <em>Provided Port</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ProvidedPort
+	 * @generated
+	 */
+	public Adapter createProvidedPortAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.EventReference <em>Event Reference</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -798,72 +868,86 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Litteral <em>Litteral</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Literal <em>Literal</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.Litteral
+	 * @see org.sintef.thingml.Literal
 	 * @generated
 	 */
-	public Adapter createLitteralAdapter() {
+	public Adapter createLiteralAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.IntegerLitteral <em>Integer Litteral</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.EnumLiteralRef <em>Enum Literal Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.IntegerLitteral
+	 * @see org.sintef.thingml.EnumLiteralRef
 	 * @generated
 	 */
-	public Adapter createIntegerLitteralAdapter() {
+	public Adapter createEnumLiteralRefAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.BooleanLitteral <em>Boolean Litteral</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.IntegerLiteral <em>Integer Literal</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.BooleanLitteral
+	 * @see org.sintef.thingml.IntegerLiteral
 	 * @generated
 	 */
-	public Adapter createBooleanLitteralAdapter() {
+	public Adapter createIntegerLiteralAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StringLitteral <em>String Litteral</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.BooleanLiteral <em>Boolean Literal</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.StringLitteral
+	 * @see org.sintef.thingml.BooleanLiteral
 	 * @generated
 	 */
-	public Adapter createStringLitteralAdapter() {
+	public Adapter createBooleanLiteralAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.DoubleLitteral <em>Double Litteral</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StringLiteral <em>String Literal</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.DoubleLitteral
+	 * @see org.sintef.thingml.StringLiteral
 	 * @generated
 	 */
-	public Adapter createDoubleLitteralAdapter() {
+	public Adapter createStringLiteralAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.DoubleLiteral <em>Double Literal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.DoubleLiteral
+	 * @generated
+	 */
+	public Adapter createDoubleLiteralAdapter() {
 		return null;
 	}
 
@@ -1172,6 +1256,48 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createErrorActionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Configuration <em>Configuration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Configuration
+	 * @generated
+	 */
+	public Adapter createConfigurationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Instance <em>Instance</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Instance
+	 * @generated
+	 */
+	public Adapter createInstanceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Connector <em>Connector</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Connector
+	 * @generated
+	 */
+	public Adapter createConnectorAdapter() {
 		return null;
 	}
 

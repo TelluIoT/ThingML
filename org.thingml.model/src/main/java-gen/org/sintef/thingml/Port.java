@@ -45,7 +45,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getPort()
- * @model
+ * @model abstract="true"
  * @generated
  */
 public interface Port extends AnnotatedElement {

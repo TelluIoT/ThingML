@@ -87,6 +87,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.THING: return createThing();
 			case ThingmlPackage.PARAMETER: return createParameter();
 			case ThingmlPackage.PROPERTY: return createProperty();
+			case ThingmlPackage.PROPERTY_ASSIGN: return createPropertyAssign();
 			case ThingmlPackage.PLATFORM_ANNOTATION: return createPlatformAnnotation();
 			case ThingmlPackage.ENUMERATION: return createEnumeration();
 			case ThingmlPackage.PRIMITIVE_TYPE: return createPrimitiveType();
@@ -101,15 +102,17 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.EXTERN_STATEMENT: return createExternStatement();
 			case ThingmlPackage.EXTERN_EXPRESSION: return createExternExpression();
 			case ThingmlPackage.SEND_ACTION: return createSendAction();
-			case ThingmlPackage.PROPERTY_ASSIGNMENT: return createPropertyAssignment();
+			case ThingmlPackage.VARIABLE_ASSIGNMENT: return createVariableAssignment();
 			case ThingmlPackage.RECEIVE_MESSAGE: return createReceiveMessage();
 			case ThingmlPackage.DICTIONARY: return createDictionary();
-			case ThingmlPackage.PORT: return createPort();
+			case ThingmlPackage.REQUIRED_PORT: return createRequiredPort();
+			case ThingmlPackage.PROVIDED_PORT: return createProvidedPort();
 			case ThingmlPackage.EVENT_REFERENCE: return createEventReference();
-			case ThingmlPackage.INTEGER_LITTERAL: return createIntegerLitteral();
-			case ThingmlPackage.BOOLEAN_LITTERAL: return createBooleanLitteral();
-			case ThingmlPackage.STRING_LITTERAL: return createStringLitteral();
-			case ThingmlPackage.DOUBLE_LITTERAL: return createDoubleLitteral();
+			case ThingmlPackage.ENUM_LITERAL_REF: return createEnumLiteralRef();
+			case ThingmlPackage.INTEGER_LITERAL: return createIntegerLiteral();
+			case ThingmlPackage.BOOLEAN_LITERAL: return createBooleanLiteral();
+			case ThingmlPackage.STRING_LITERAL: return createStringLiteral();
+			case ThingmlPackage.DOUBLE_LITERAL: return createDoubleLiteral();
 			case ThingmlPackage.NOT_EXPRESSION: return createNotExpression();
 			case ThingmlPackage.UNARY_MINUS: return createUnaryMinus();
 			case ThingmlPackage.PLUS_EXPRESSION: return createPlusExpression();
@@ -129,6 +132,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.EXPRESSION_GROUP: return createExpressionGroup();
 			case ThingmlPackage.PRINT_ACTION: return createPrintAction();
 			case ThingmlPackage.ERROR_ACTION: return createErrorAction();
+			case ThingmlPackage.CONFIGURATION: return createConfiguration();
+			case ThingmlPackage.INSTANCE: return createInstance();
+			case ThingmlPackage.CONNECTOR: return createConnector();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -182,6 +188,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public Property createProperty() {
 		PropertyImpl property = new PropertyImpl();
 		return property;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PropertyAssign createPropertyAssign() {
+		PropertyAssignImpl propertyAssign = new PropertyAssignImpl();
+		return propertyAssign;
 	}
 
 	/**
@@ -329,9 +345,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PropertyAssignment createPropertyAssignment() {
-		PropertyAssignmentImpl propertyAssignment = new PropertyAssignmentImpl();
-		return propertyAssignment;
+	public VariableAssignment createVariableAssignment() {
+		VariableAssignmentImpl variableAssignment = new VariableAssignmentImpl();
+		return variableAssignment;
 	}
 
 	/**
@@ -359,9 +375,19 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Port createPort() {
-		PortImpl port = new PortImpl();
-		return port;
+	public RequiredPort createRequiredPort() {
+		RequiredPortImpl requiredPort = new RequiredPortImpl();
+		return requiredPort;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ProvidedPort createProvidedPort() {
+		ProvidedPortImpl providedPort = new ProvidedPortImpl();
+		return providedPort;
 	}
 
 	/**
@@ -379,9 +405,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public IntegerLitteral createIntegerLitteral() {
-		IntegerLitteralImpl integerLitteral = new IntegerLitteralImpl();
-		return integerLitteral;
+	public EnumLiteralRef createEnumLiteralRef() {
+		EnumLiteralRefImpl enumLiteralRef = new EnumLiteralRefImpl();
+		return enumLiteralRef;
 	}
 
 	/**
@@ -389,9 +415,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public BooleanLitteral createBooleanLitteral() {
-		BooleanLitteralImpl booleanLitteral = new BooleanLitteralImpl();
-		return booleanLitteral;
+	public IntegerLiteral createIntegerLiteral() {
+		IntegerLiteralImpl integerLiteral = new IntegerLiteralImpl();
+		return integerLiteral;
 	}
 
 	/**
@@ -399,9 +425,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public StringLitteral createStringLitteral() {
-		StringLitteralImpl stringLitteral = new StringLitteralImpl();
-		return stringLitteral;
+	public BooleanLiteral createBooleanLiteral() {
+		BooleanLiteralImpl booleanLiteral = new BooleanLiteralImpl();
+		return booleanLiteral;
 	}
 
 	/**
@@ -409,9 +435,19 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DoubleLitteral createDoubleLitteral() {
-		DoubleLitteralImpl doubleLitteral = new DoubleLitteralImpl();
-		return doubleLitteral;
+	public StringLiteral createStringLiteral() {
+		StringLiteralImpl stringLiteral = new StringLiteralImpl();
+		return stringLiteral;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DoubleLiteral createDoubleLiteral() {
+		DoubleLiteralImpl doubleLiteral = new DoubleLiteralImpl();
+		return doubleLiteral;
 	}
 
 	/**
@@ -602,6 +638,36 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public ErrorAction createErrorAction() {
 		ErrorActionImpl errorAction = new ErrorActionImpl();
 		return errorAction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Configuration createConfiguration() {
+		ConfigurationImpl configuration = new ConfigurationImpl();
+		return configuration;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Instance createInstance() {
+		InstanceImpl instance = new InstanceImpl();
+		return instance;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Connector createConnector() {
+		ConnectorImpl connector = new ConnectorImpl();
+		return connector;
 	}
 
 	/**

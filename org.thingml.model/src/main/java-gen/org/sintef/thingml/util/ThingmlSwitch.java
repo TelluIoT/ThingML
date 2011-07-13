@@ -146,6 +146,14 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.PROPERTY_ASSIGN: {
+				PropertyAssign propertyAssign = (PropertyAssign)theEObject;
+				T result = casePropertyAssign(propertyAssign);
+				if (result == null) result = caseAnnotatedElement(propertyAssign);
+				if (result == null) result = caseThingMLElement(propertyAssign);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ThingmlPackage.PLATFORM_ANNOTATION: {
 				PlatformAnnotation platformAnnotation = (PlatformAnnotation)theEObject;
 				T result = casePlatformAnnotation(platformAnnotation);
@@ -298,10 +306,10 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.PROPERTY_ASSIGNMENT: {
-				PropertyAssignment propertyAssignment = (PropertyAssignment)theEObject;
-				T result = casePropertyAssignment(propertyAssignment);
-				if (result == null) result = caseAction(propertyAssignment);
+			case ThingmlPackage.VARIABLE_ASSIGNMENT: {
+				VariableAssignment variableAssignment = (VariableAssignment)theEObject;
+				T result = caseVariableAssignment(variableAssignment);
+				if (result == null) result = caseAction(variableAssignment);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -337,6 +345,24 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.REQUIRED_PORT: {
+				RequiredPort requiredPort = (RequiredPort)theEObject;
+				T result = caseRequiredPort(requiredPort);
+				if (result == null) result = casePort(requiredPort);
+				if (result == null) result = caseAnnotatedElement(requiredPort);
+				if (result == null) result = caseThingMLElement(requiredPort);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.PROVIDED_PORT: {
+				ProvidedPort providedPort = (ProvidedPort)theEObject;
+				T result = caseProvidedPort(providedPort);
+				if (result == null) result = casePort(providedPort);
+				if (result == null) result = caseAnnotatedElement(providedPort);
+				if (result == null) result = caseThingMLElement(providedPort);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ThingmlPackage.EVENT_REFERENCE: {
 				EventReference eventReference = (EventReference)theEObject;
 				T result = caseEventReference(eventReference);
@@ -344,42 +370,50 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.LITTERAL: {
-				Litteral litteral = (Litteral)theEObject;
-				T result = caseLitteral(litteral);
-				if (result == null) result = caseExpression(litteral);
+			case ThingmlPackage.LITERAL: {
+				Literal literal = (Literal)theEObject;
+				T result = caseLiteral(literal);
+				if (result == null) result = caseExpression(literal);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.INTEGER_LITTERAL: {
-				IntegerLitteral integerLitteral = (IntegerLitteral)theEObject;
-				T result = caseIntegerLitteral(integerLitteral);
-				if (result == null) result = caseLitteral(integerLitteral);
-				if (result == null) result = caseExpression(integerLitteral);
+			case ThingmlPackage.ENUM_LITERAL_REF: {
+				EnumLiteralRef enumLiteralRef = (EnumLiteralRef)theEObject;
+				T result = caseEnumLiteralRef(enumLiteralRef);
+				if (result == null) result = caseLiteral(enumLiteralRef);
+				if (result == null) result = caseExpression(enumLiteralRef);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.BOOLEAN_LITTERAL: {
-				BooleanLitteral booleanLitteral = (BooleanLitteral)theEObject;
-				T result = caseBooleanLitteral(booleanLitteral);
-				if (result == null) result = caseLitteral(booleanLitteral);
-				if (result == null) result = caseExpression(booleanLitteral);
+			case ThingmlPackage.INTEGER_LITERAL: {
+				IntegerLiteral integerLiteral = (IntegerLiteral)theEObject;
+				T result = caseIntegerLiteral(integerLiteral);
+				if (result == null) result = caseLiteral(integerLiteral);
+				if (result == null) result = caseExpression(integerLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.STRING_LITTERAL: {
-				StringLitteral stringLitteral = (StringLitteral)theEObject;
-				T result = caseStringLitteral(stringLitteral);
-				if (result == null) result = caseLitteral(stringLitteral);
-				if (result == null) result = caseExpression(stringLitteral);
+			case ThingmlPackage.BOOLEAN_LITERAL: {
+				BooleanLiteral booleanLiteral = (BooleanLiteral)theEObject;
+				T result = caseBooleanLiteral(booleanLiteral);
+				if (result == null) result = caseLiteral(booleanLiteral);
+				if (result == null) result = caseExpression(booleanLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.DOUBLE_LITTERAL: {
-				DoubleLitteral doubleLitteral = (DoubleLitteral)theEObject;
-				T result = caseDoubleLitteral(doubleLitteral);
-				if (result == null) result = caseLitteral(doubleLitteral);
-				if (result == null) result = caseExpression(doubleLitteral);
+			case ThingmlPackage.STRING_LITERAL: {
+				StringLiteral stringLiteral = (StringLiteral)theEObject;
+				T result = caseStringLiteral(stringLiteral);
+				if (result == null) result = caseLiteral(stringLiteral);
+				if (result == null) result = caseExpression(stringLiteral);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.DOUBLE_LITERAL: {
+				DoubleLiteral doubleLiteral = (DoubleLiteral)theEObject;
+				T result = caseDoubleLiteral(doubleLiteral);
+				if (result == null) result = caseLiteral(doubleLiteral);
+				if (result == null) result = caseExpression(doubleLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -552,6 +586,30 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.CONFIGURATION: {
+				Configuration configuration = (Configuration)theEObject;
+				T result = caseConfiguration(configuration);
+				if (result == null) result = caseAnnotatedElement(configuration);
+				if (result == null) result = caseThingMLElement(configuration);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.INSTANCE: {
+				Instance instance = (Instance)theEObject;
+				T result = caseInstance(instance);
+				if (result == null) result = caseAnnotatedElement(instance);
+				if (result == null) result = caseThingMLElement(instance);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.CONNECTOR: {
+				Connector connector = (Connector)theEObject;
+				T result = caseConnector(connector);
+				if (result == null) result = caseAnnotatedElement(connector);
+				if (result == null) result = caseThingMLElement(connector);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -658,6 +716,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseProperty(Property object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Property Assign</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Property Assign</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePropertyAssign(PropertyAssign object) {
 		return null;
 	}
 
@@ -947,17 +1020,17 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Property Assignment</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Variable Assignment</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Property Assignment</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Variable Assignment</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T casePropertyAssignment(PropertyAssignment object) {
+	public T caseVariableAssignment(VariableAssignment object) {
 		return null;
 	}
 
@@ -1022,6 +1095,36 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Required Port</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Required Port</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseRequiredPort(RequiredPort object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Provided Port</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Provided Port</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseProvidedPort(ProvidedPort object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Event Reference</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1037,77 +1140,92 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Litteral</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Literal</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Litteral</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Literal</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseLitteral(Litteral object) {
+	public T caseLiteral(Literal object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Integer Litteral</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Enum Literal Ref</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Integer Litteral</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Enum Literal Ref</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseIntegerLitteral(IntegerLitteral object) {
+	public T caseEnumLiteralRef(EnumLiteralRef object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Boolean Litteral</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Integer Literal</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Boolean Litteral</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Integer Literal</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseBooleanLitteral(BooleanLitteral object) {
+	public T caseIntegerLiteral(IntegerLiteral object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>String Litteral</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Boolean Literal</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>String Litteral</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Boolean Literal</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStringLitteral(StringLitteral object) {
+	public T caseBooleanLiteral(BooleanLiteral object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Double Litteral</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>String Literal</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Double Litteral</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>String Literal</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDoubleLitteral(DoubleLitteral object) {
+	public T caseStringLiteral(StringLiteral object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Double Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Double Literal</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDoubleLiteral(DoubleLiteral object) {
 		return null;
 	}
 
@@ -1438,6 +1556,51 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseErrorAction(ErrorAction object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Configuration</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Configuration</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConfiguration(Configuration object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Instance</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Instance</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInstance(Instance object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Connector</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Connector</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConnector(Connector object) {
 		return null;
 	}
 

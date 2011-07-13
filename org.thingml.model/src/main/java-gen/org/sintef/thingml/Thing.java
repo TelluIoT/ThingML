@@ -43,6 +43,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.sintef.thingml.Thing#getPorts <em>Ports</em>}</li>
  *   <li>{@link org.sintef.thingml.Thing#getBehaviour <em>Behaviour</em>}</li>
  *   <li>{@link org.sintef.thingml.Thing#getIncludes <em>Includes</em>}</li>
+ *   <li>{@link org.sintef.thingml.Thing#getAssign <em>Assign</em>}</li>
  * </ul>
  * </p>
  *
@@ -142,5 +143,21 @@ public interface Thing extends Type {
 	 * @generated
 	 */
 	EList<Thing> getIncludes();
+
+	/**
+	 * Returns the value of the '<em><b>Assign</b></em>' containment reference list.
+	 * The list contents are of type {@link org.sintef.thingml.PropertyAssign}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Assign</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Assign</em>' containment reference list.
+	 * @see org.sintef.thingml.ThingmlPackage#getThing_Assign()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<PropertyAssign> getAssign();
 
 } // Thing

@@ -13,19 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.sintef.thingml.resource.thingml.mopp;
 
 public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThingmlTextPrinter {
@@ -143,11 +130,15 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.Port) {
+		if (element instanceof org.sintef.thingml.RequiredPort) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_3, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.Dictionary) {
+		if (element instanceof org.sintef.thingml.ProvidedPort) {
+			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_4, foundFormattingElements);
+			return;
+		}
+		if (element instanceof org.sintef.thingml.Property) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_5, foundFormattingElements);
 			return;
 		}
@@ -195,116 +186,128 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_17, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.SendAction) {
+		if (element instanceof org.sintef.thingml.PropertyAssign) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_18, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.PropertyAssignment) {
+		if (element instanceof org.sintef.thingml.Configuration) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_19, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.ActionBlock) {
+		if (element instanceof org.sintef.thingml.Instance) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_20, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.ExternStatement) {
+		if (element instanceof org.sintef.thingml.Connector) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_21, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.ConditionalAction) {
+		if (element instanceof org.sintef.thingml.SendAction) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_22, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.LoopAction) {
+		if (element instanceof org.sintef.thingml.VariableAssignment) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_23, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.PrintAction) {
+		if (element instanceof org.sintef.thingml.ActionBlock) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_24, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.ErrorAction) {
+		if (element instanceof org.sintef.thingml.ExternStatement) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_25, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.OrExpression) {
+		if (element instanceof org.sintef.thingml.ConditionalAction) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_26, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.AndExpression) {
+		if (element instanceof org.sintef.thingml.LoopAction) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_27, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.LowerExpression) {
+		if (element instanceof org.sintef.thingml.PrintAction) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_28, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.GreaterExpression) {
+		if (element instanceof org.sintef.thingml.ErrorAction) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.EqualsExpression) {
+		if (element instanceof org.sintef.thingml.OrExpression) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_30, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.PlusExpression) {
+		if (element instanceof org.sintef.thingml.AndExpression) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_31, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.MinusExpression) {
+		if (element instanceof org.sintef.thingml.LowerExpression) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_32, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.TimesExpression) {
+		if (element instanceof org.sintef.thingml.GreaterExpression) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_33, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.DivExpression) {
+		if (element instanceof org.sintef.thingml.EqualsExpression) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_34, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.ModExpression) {
+		if (element instanceof org.sintef.thingml.PlusExpression) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_35, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.UnaryMinus) {
+		if (element instanceof org.sintef.thingml.MinusExpression) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_36, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.NotExpression) {
+		if (element instanceof org.sintef.thingml.TimesExpression) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.EventReference) {
+		if (element instanceof org.sintef.thingml.DivExpression) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_38, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.ExpressionGroup) {
+		if (element instanceof org.sintef.thingml.ModExpression) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_39, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.PropertyReference) {
+		if (element instanceof org.sintef.thingml.UnaryMinus) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_40, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.IntegerLitteral) {
+		if (element instanceof org.sintef.thingml.NotExpression) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_41, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.StringLitteral) {
+		if (element instanceof org.sintef.thingml.EventReference) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_42, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.BooleanLitteral) {
+		if (element instanceof org.sintef.thingml.ExpressionGroup) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_43, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.ExternExpression) {
+		if (element instanceof org.sintef.thingml.PropertyReference) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_44, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.Property) {
-			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_4, foundFormattingElements);
+		if (element instanceof org.sintef.thingml.IntegerLiteral) {
+			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_45, foundFormattingElements);
+			return;
+		}
+		if (element instanceof org.sintef.thingml.StringLiteral) {
+			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_46, foundFormattingElements);
+			return;
+		}
+		if (element instanceof org.sintef.thingml.BooleanLiteral) {
+			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_47, foundFormattingElements);
+			return;
+		}
+		if (element instanceof org.sintef.thingml.ExternExpression) {
+			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_48, foundFormattingElements);
 			return;
 		}
 		if (element instanceof org.sintef.thingml.State) {

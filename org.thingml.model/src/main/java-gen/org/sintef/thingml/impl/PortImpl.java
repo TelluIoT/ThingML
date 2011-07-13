@@ -63,7 +63,7 @@ import org.sintef.thingml.ThingmlPackage;
  *
  * @generated
  */
-public class PortImpl extends AnnotatedElementImpl implements Port {
+public abstract class PortImpl extends AnnotatedElementImpl implements Port {
 	/**
 	 * The cached value of the '{@link #getReceives() <em>Receives</em>}' reference list.
 	 * <!-- begin-user-doc -->

@@ -10,9 +10,6 @@ OPTIONS {
 	usePredefinedTokens = "false";
 	srcFolder = "src/main/java";
 	srcGenFolder = "src/main/java-gen";
-	
-	//uiSrcFolder = "src/main/java";
-	//uiSrcGenFolder = "src/main/java-gen";
 }
 
 TOKENS{
@@ -95,23 +92,19 @@ TOKENSTYLES{
 
 RULES{
 	
-	ThingMLModel::= ( !0 "import" #1 imports[STRING_LITERAL] )* ( !0 (messages | types) )* ;
+	ThingMLModel::= ( !0 "import" #1 imports[STRING_LITERAL] )* ( !0 (messages | types | configs) )* ;
 		
 	Message ::= "message" #1 name[]  "(" (parameters (","  parameters)* )? ")"(annotations)* ";"  ;
 	
-	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  properties | ports | (behaviour) )* !0 "}" ;
+	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  properties | assign | ports | behaviour )* !0 "}" ;
 	
-	Port ::= !1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
-	
-//	SoftwareComponent ::= (partial[T_ASPECT])? (singleton[T_SINGLETON])? "component" #1 name[] (annotations)*  !0 "{" (ports | connectors | messages | properties | "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* | (!1 compositeComponent) )* (!1 behaviour)? !0 "}" ;
-	
-//	SoftwareComponent ::= (partial[T_ASPECT])? (singleton[T_SINGLETON])? "component" #1 name[] (annotations)*  !0 "{" ( messages | properties | "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* | (!1 compositeComponent) )* (!1 behaviour)? !0 "}" ;
-	
-//	Simulator ::= "simulator" #1 name[] "for" device[] (annotations)* !0 "{" ( messages | properties |  "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* | (!1 compositeComponent) )* (!1 behaviour) !0 "}" ;
+	RequiredPort ::= !1 "required" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 
-	Property::= !1 (changeable[T_READONLY])? "property" #1 name[]  ":"  type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?(annotations)*;
+	ProvidedPort ::= !1 "provided" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 	
-	Dictionary::= !1 (changeable[T_READONLY])? "dictionary" #1 name[]  ":"  indexType[] "->" type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?(annotations)*;
+	Property::= !1 (changeable[T_READONLY])? "property" #1 name[]  ":"  type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")? #1 "=" #1 init  (annotations)*;
+	
+//	Dictionary::= !1 (changeable[T_READONLY])? "dictionary" #1 name[]  ":"  indexType[] "->" type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?(annotations)*;
 	
 	Parameter::= name[]  ":"  type[];
 	
@@ -131,23 +124,32 @@ RULES{
 	
 	ParallelRegion ::= "region" #1 name[] #1 "init" #1 initial[] ("keeps" #1 history[T_HISTORY])? (annotations)* #1 "{"(!1 substate)* !0 "}"  ;
 	
-	// ComponentReference ::= component[];
-		
-	//Broadcast::= "broadcast" #1 target "#" message[] "(" (parameters ("," #1 parameters)* )? ")"  ;	
-
 	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
 
 	InternalTransition ::= !1 "internal" (#1 name[])? (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
 
 	ReceiveMessage ::= (name[] #1 ":" #1)? port[] "?" message[] ;
 	
+	PropertyAssign ::= "set" #1 property[] #1 "=" #1 init ; 
+	
+
+	// *******************************
+	// * Configurations and Instances
+	// *******************************
+	
+	Configuration ::= "configuration" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  instances | connectors )* !0 "}" ;
+	
+	Instance ::= "instance" #1 (name[] #1)? ":" #1 type[] (annotations)*  !0 (  assign )* !0 ;
+	
+	Connector ::= "connector" #1 (name[] #1)? client[] "." required[] "=>" server[] "." provided[] (!0 annotations)*;
+
 	// *********************
 	// * Actions
 	// *********************
 	
 	SendAction::= port[] "!" message[] "(" (parameters ("," #1 parameters)* )? ")";
 	
-	PropertyAssignment ::= property[] #1 "=" #1 expression ; 
+	VariableAssignment ::= property[] #1 "=" #1 expression ; 
 	
 	ActionBlock::= "do" ( !1 actions )* !0 "end"  ;
 	
@@ -212,13 +214,13 @@ RULES{
 	PropertyReference ::= property[] ;
 
 	@Operator(type="primitive", weight="8", superclass="Expression")
-	IntegerLitteral ::= intValue[INTEGER_LITERAL];
+	IntegerLiteral ::= intValue[INTEGER_LITERAL];
 	
 	@Operator(type="primitive", weight="8", superclass="Expression")
-	StringLitteral ::= stringValue[STRING_LITERAL];
+	StringLiteral ::= stringValue[STRING_LITERAL];
 	
 	@Operator(type="primitive", weight="8", superclass="Expression")
-	BooleanLitteral ::= boolValue[BOOLEAN_LITERAL];
+	BooleanLiteral ::= boolValue[BOOLEAN_LITERAL];
 	
 	@Operator(type="primitive", weight="8", superclass="Expression")
 	ExternExpression::= expression[STRING_EXT] ("&" segments)*;

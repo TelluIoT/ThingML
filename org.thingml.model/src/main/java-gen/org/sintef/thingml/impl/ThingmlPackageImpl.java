@@ -40,14 +40,19 @@ import org.sintef.thingml.ActionBlock;
 import org.sintef.thingml.AndExpression;
 import org.sintef.thingml.AnnotatedElement;
 import org.sintef.thingml.BinaryExpression;
+import org.sintef.thingml.BooleanLiteral;
 import org.sintef.thingml.BooleanLitteral;
 import org.sintef.thingml.CompositeState;
 import org.sintef.thingml.ConditionalAction;
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Connector;
 import org.sintef.thingml.ControlStructure;
 import org.sintef.thingml.Dictionary;
 import org.sintef.thingml.DictionaryReference;
 import org.sintef.thingml.DictionaryNavigation;
 import org.sintef.thingml.DivExpression;
+import org.sintef.thingml.DoubleLiteral;
+import org.sintef.thingml.EnumLiteralRef;
 import org.sintef.thingml.DoubleLitteral;
 import org.sintef.thingml.Enumeration;
 import org.sintef.thingml.EnumerationLiteral;
@@ -61,8 +66,11 @@ import org.sintef.thingml.ExternExpression;
 import org.sintef.thingml.ExternStatement;
 import org.sintef.thingml.GreaterExpression;
 import org.sintef.thingml.Handler;
+import org.sintef.thingml.Instance;
+import org.sintef.thingml.IntegerLiteral;
 import org.sintef.thingml.IntegerLitteral;
 import org.sintef.thingml.InternalTransition;
+import org.sintef.thingml.Literal;
 import org.sintef.thingml.Litteral;
 import org.sintef.thingml.LoopAction;
 import org.sintef.thingml.LowerExpression;
@@ -79,13 +87,17 @@ import org.sintef.thingml.Port;
 import org.sintef.thingml.PrimitiveType;
 import org.sintef.thingml.PrintAction;
 import org.sintef.thingml.Property;
+import org.sintef.thingml.PropertyAssign;
 import org.sintef.thingml.PropertyAssignment;
 import org.sintef.thingml.PropertyReference;
+import org.sintef.thingml.ProvidedPort;
 import org.sintef.thingml.ReceiveMessage;
 import org.sintef.thingml.Region;
+import org.sintef.thingml.RequiredPort;
 import org.sintef.thingml.SendAction;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
+import org.sintef.thingml.StringLiteral;
 import org.sintef.thingml.StringLitteral;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLElement;
@@ -97,6 +109,7 @@ import org.sintef.thingml.Transition;
 import org.sintef.thingml.Type;
 import org.sintef.thingml.UnaryExpression;
 import org.sintef.thingml.UnaryMinus;
+import org.sintef.thingml.VariableAssignment;
 
 /**
  * <!-- begin-user-doc -->
@@ -153,6 +166,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass propertyEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass propertyAssignEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -292,7 +312,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass propertyAssignmentEClass = null;
+	private EClass variableAssignmentEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -327,6 +347,20 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass requiredPortEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass providedPortEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass eventReferenceEClass = null;
 
 	/**
@@ -334,35 +368,42 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass litteralEClass = null;
+	private EClass literalEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass integerLitteralEClass = null;
+	private EClass enumLiteralRefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass booleanLitteralEClass = null;
+	private EClass integerLiteralEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass stringLitteralEClass = null;
+	private EClass booleanLiteralEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass doubleLitteralEClass = null;
+	private EClass stringLiteralEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass doubleLiteralEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -519,6 +560,27 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	private EClass errorActionEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass configurationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass instanceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass connectorEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -620,6 +682,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getThingMLModel_Configs() {
+		return (EReference)thingMLModelEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getMessage() {
 		return messageEClass;
 	}
@@ -692,6 +763,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getThing_Assign() {
+		return (EReference)thingEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getParameter() {
 		return parameterEClass;
 	}
@@ -756,7 +836,34 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	public EAttribute getProperty_Changeable() {
-		return (EAttribute)propertyEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)propertyEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getPropertyAssign() {
+		return propertyAssignEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getPropertyAssign_Init() {
+		return (EReference)propertyAssignEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getPropertyAssign_Property() {
+		return (EReference)propertyAssignEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -765,7 +872,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	public EAttribute getProperty_LowerBound() {
-		return (EAttribute)propertyEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)propertyEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -774,7 +881,16 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	public EAttribute getProperty_UpperBound() {
-		return (EAttribute)propertyEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)propertyEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProperty_Init() {
+		return (EReference)propertyEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1187,8 +1303,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getPropertyAssignment() {
-		return propertyAssignmentEClass;
+	public EClass getVariableAssignment() {
+		return variableAssignmentEClass;
 	}
 
 	/**
@@ -1196,8 +1312,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getPropertyAssignment_Property() {
-		return (EReference)propertyAssignmentEClass.getEStructuralFeatures().get(0);
+	public EReference getVariableAssignment_Property() {
+		return (EReference)variableAssignmentEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1205,8 +1321,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getPropertyAssignment_Expression() {
-		return (EReference)propertyAssignmentEClass.getEStructuralFeatures().get(1);
+	public EReference getVariableAssignment_Expression() {
+		return (EReference)variableAssignmentEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1304,6 +1420,24 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getRequiredPort() {
+		return requiredPortEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getProvidedPort() {
+		return providedPortEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getEventReference() {
 		return eventReferenceEClass;
 	}
@@ -1331,8 +1465,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getLitteral() {
-		return litteralEClass;
+	public EClass getLiteral() {
+		return literalEClass;
 	}
 
 	/**
@@ -1340,8 +1474,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getIntegerLitteral() {
-		return integerLitteralEClass;
+	public EClass getEnumLiteralRef() {
+		return enumLiteralRefEClass;
 	}
 
 	/**
@@ -1349,8 +1483,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getIntegerLitteral_IntValue() {
-		return (EAttribute)integerLitteralEClass.getEStructuralFeatures().get(0);
+	public EReference getEnumLiteralRef_Enum() {
+		return (EReference)enumLiteralRefEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1358,8 +1492,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getBooleanLitteral() {
-		return booleanLitteralEClass;
+	public EReference getEnumLiteralRef_Literal() {
+		return (EReference)enumLiteralRefEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1367,8 +1501,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getBooleanLitteral_BoolValue() {
-		return (EAttribute)booleanLitteralEClass.getEStructuralFeatures().get(0);
+	public EClass getIntegerLiteral() {
+		return integerLiteralEClass;
 	}
 
 	/**
@@ -1376,8 +1510,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getStringLitteral() {
-		return stringLitteralEClass;
+	public EAttribute getIntegerLiteral_IntValue() {
+		return (EAttribute)integerLiteralEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1385,8 +1519,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getStringLitteral_StringValue() {
-		return (EAttribute)stringLitteralEClass.getEStructuralFeatures().get(0);
+	public EClass getBooleanLiteral() {
+		return booleanLiteralEClass;
 	}
 
 	/**
@@ -1394,8 +1528,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getDoubleLitteral() {
-		return doubleLitteralEClass;
+	public EAttribute getBooleanLiteral_BoolValue() {
+		return (EAttribute)booleanLiteralEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1403,8 +1537,35 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getDoubleLitteral_DoubleValue() {
-		return (EAttribute)doubleLitteralEClass.getEStructuralFeatures().get(0);
+	public EClass getStringLiteral() {
+		return stringLiteralEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getStringLiteral_StringValue() {
+		return (EAttribute)stringLiteralEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getDoubleLiteral() {
+		return doubleLiteralEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDoubleLiteral_DoubleValue() {
+		return (EAttribute)doubleLiteralEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1700,6 +1861,123 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getConfiguration() {
+		return configurationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConfiguration_Instances() {
+		return (EReference)configurationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConfiguration_Connectors() {
+		return (EReference)configurationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getConfiguration_Fragment() {
+		return (EAttribute)configurationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConfiguration_Includes() {
+		return (EReference)configurationEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getInstance() {
+		return instanceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getInstance_Type() {
+		return (EReference)instanceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getInstance_Assign() {
+		return (EReference)instanceEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getConnector() {
+		return connectorEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnector_Server() {
+		return (EReference)connectorEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnector_Client() {
+		return (EReference)connectorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnector_Required() {
+		return (EReference)connectorEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getConnector_Provided() {
+		return (EReference)connectorEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ThingmlFactory getThingmlFactory() {
 		return (ThingmlFactory)getEFactoryInstance();
 	}
@@ -1727,6 +2005,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(thingMLModelEClass, THING_ML_MODEL__TYPES);
 		createEReference(thingMLModelEClass, THING_ML_MODEL__IMPORTS);
 		createEReference(thingMLModelEClass, THING_ML_MODEL__MESSAGES);
+		createEReference(thingMLModelEClass, THING_ML_MODEL__CONFIGS);
 
 		messageEClass = createEClass(MESSAGE);
 		createEReference(messageEClass, MESSAGE__PARAMETERS);
@@ -1737,6 +2016,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(thingEClass, THING__PORTS);
 		createEReference(thingEClass, THING__BEHAVIOUR);
 		createEReference(thingEClass, THING__INCLUDES);
+		createEReference(thingEClass, THING__ASSIGN);
 
 		parameterEClass = createEClass(PARAMETER);
 		createEReference(parameterEClass, PARAMETER__TYPE);
@@ -1748,9 +2028,14 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		propertyEClass = createEClass(PROPERTY);
 		createEReference(propertyEClass, PROPERTY__TYPE);
-		createEAttribute(propertyEClass, PROPERTY__CHANGEABLE);
 		createEAttribute(propertyEClass, PROPERTY__LOWER_BOUND);
 		createEAttribute(propertyEClass, PROPERTY__UPPER_BOUND);
+		createEReference(propertyEClass, PROPERTY__INIT);
+		createEAttribute(propertyEClass, PROPERTY__CHANGEABLE);
+
+		propertyAssignEClass = createEClass(PROPERTY_ASSIGN);
+		createEReference(propertyAssignEClass, PROPERTY_ASSIGN__INIT);
+		createEReference(propertyAssignEClass, PROPERTY_ASSIGN__PROPERTY);
 
 		platformAnnotationEClass = createEClass(PLATFORM_ANNOTATION);
 		createEAttribute(platformAnnotationEClass, PLATFORM_ANNOTATION__VALUE);
@@ -1816,9 +2101,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(sendActionEClass, SEND_ACTION__MESSAGE);
 		createEReference(sendActionEClass, SEND_ACTION__PORT);
 
-		propertyAssignmentEClass = createEClass(PROPERTY_ASSIGNMENT);
-		createEReference(propertyAssignmentEClass, PROPERTY_ASSIGNMENT__PROPERTY);
-		createEReference(propertyAssignmentEClass, PROPERTY_ASSIGNMENT__EXPRESSION);
+		variableAssignmentEClass = createEClass(VARIABLE_ASSIGNMENT);
+		createEReference(variableAssignmentEClass, VARIABLE_ASSIGNMENT__PROPERTY);
+		createEReference(variableAssignmentEClass, VARIABLE_ASSIGNMENT__EXPRESSION);
 
 		eventEClass = createEClass(EVENT);
 
@@ -1834,23 +2119,31 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(portEClass, PORT__RECEIVES);
 		createEReference(portEClass, PORT__SENDS);
 
+		requiredPortEClass = createEClass(REQUIRED_PORT);
+
+		providedPortEClass = createEClass(PROVIDED_PORT);
+
 		eventReferenceEClass = createEClass(EVENT_REFERENCE);
 		createEReference(eventReferenceEClass, EVENT_REFERENCE__MSG_REF);
 		createEReference(eventReferenceEClass, EVENT_REFERENCE__PARAM_REF);
 
-		litteralEClass = createEClass(LITTERAL);
+		literalEClass = createEClass(LITERAL);
 
-		integerLitteralEClass = createEClass(INTEGER_LITTERAL);
-		createEAttribute(integerLitteralEClass, INTEGER_LITTERAL__INT_VALUE);
+		enumLiteralRefEClass = createEClass(ENUM_LITERAL_REF);
+		createEReference(enumLiteralRefEClass, ENUM_LITERAL_REF__ENUM);
+		createEReference(enumLiteralRefEClass, ENUM_LITERAL_REF__LITERAL);
 
-		booleanLitteralEClass = createEClass(BOOLEAN_LITTERAL);
-		createEAttribute(booleanLitteralEClass, BOOLEAN_LITTERAL__BOOL_VALUE);
+		integerLiteralEClass = createEClass(INTEGER_LITERAL);
+		createEAttribute(integerLiteralEClass, INTEGER_LITERAL__INT_VALUE);
 
-		stringLitteralEClass = createEClass(STRING_LITTERAL);
-		createEAttribute(stringLitteralEClass, STRING_LITTERAL__STRING_VALUE);
+		booleanLiteralEClass = createEClass(BOOLEAN_LITERAL);
+		createEAttribute(booleanLiteralEClass, BOOLEAN_LITERAL__BOOL_VALUE);
 
-		doubleLitteralEClass = createEClass(DOUBLE_LITTERAL);
-		createEAttribute(doubleLitteralEClass, DOUBLE_LITTERAL__DOUBLE_VALUE);
+		stringLiteralEClass = createEClass(STRING_LITERAL);
+		createEAttribute(stringLiteralEClass, STRING_LITERAL__STRING_VALUE);
+
+		doubleLiteralEClass = createEClass(DOUBLE_LITERAL);
+		createEAttribute(doubleLiteralEClass, DOUBLE_LITERAL__DOUBLE_VALUE);
 
 		unaryExpressionEClass = createEClass(UNARY_EXPRESSION);
 		createEReference(unaryExpressionEClass, UNARY_EXPRESSION__TERM);
@@ -1905,6 +2198,22 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		errorActionEClass = createEClass(ERROR_ACTION);
 		createEReference(errorActionEClass, ERROR_ACTION__MSG);
+
+		configurationEClass = createEClass(CONFIGURATION);
+		createEReference(configurationEClass, CONFIGURATION__INSTANCES);
+		createEReference(configurationEClass, CONFIGURATION__CONNECTORS);
+		createEAttribute(configurationEClass, CONFIGURATION__FRAGMENT);
+		createEReference(configurationEClass, CONFIGURATION__INCLUDES);
+
+		instanceEClass = createEClass(INSTANCE);
+		createEReference(instanceEClass, INSTANCE__TYPE);
+		createEReference(instanceEClass, INSTANCE__ASSIGN);
+
+		connectorEClass = createEClass(CONNECTOR);
+		createEReference(connectorEClass, CONNECTOR__SERVER);
+		createEReference(connectorEClass, CONNECTOR__CLIENT);
+		createEReference(connectorEClass, CONNECTOR__REQUIRED);
+		createEReference(connectorEClass, CONNECTOR__PROVIDED);
 	}
 
 	/**
@@ -1940,6 +2249,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		parameterEClass.getESuperTypes().add(this.getThingMLElement());
 		typeEClass.getESuperTypes().add(this.getAnnotatedElement());
 		propertyEClass.getESuperTypes().add(this.getAnnotatedElement());
+		propertyAssignEClass.getESuperTypes().add(this.getAnnotatedElement());
 		platformAnnotationEClass.getESuperTypes().add(this.getThingMLElement());
 		enumerationEClass.getESuperTypes().add(this.getType());
 		primitiveTypeEClass.getESuperTypes().add(this.getType());
@@ -1958,17 +2268,20 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		externStatementEClass.getESuperTypes().add(this.getAction());
 		externExpressionEClass.getESuperTypes().add(this.getExpression());
 		sendActionEClass.getESuperTypes().add(this.getAction());
-		propertyAssignmentEClass.getESuperTypes().add(this.getAction());
+		variableAssignmentEClass.getESuperTypes().add(this.getAction());
 		eventEClass.getESuperTypes().add(this.getThingMLElement());
 		receiveMessageEClass.getESuperTypes().add(this.getEvent());
 		dictionaryEClass.getESuperTypes().add(this.getProperty());
 		portEClass.getESuperTypes().add(this.getAnnotatedElement());
+		requiredPortEClass.getESuperTypes().add(this.getPort());
+		providedPortEClass.getESuperTypes().add(this.getPort());
 		eventReferenceEClass.getESuperTypes().add(this.getExpression());
-		litteralEClass.getESuperTypes().add(this.getExpression());
-		integerLitteralEClass.getESuperTypes().add(this.getLitteral());
-		booleanLitteralEClass.getESuperTypes().add(this.getLitteral());
-		stringLitteralEClass.getESuperTypes().add(this.getLitteral());
-		doubleLitteralEClass.getESuperTypes().add(this.getLitteral());
+		literalEClass.getESuperTypes().add(this.getExpression());
+		enumLiteralRefEClass.getESuperTypes().add(this.getLiteral());
+		integerLiteralEClass.getESuperTypes().add(this.getLiteral());
+		booleanLiteralEClass.getESuperTypes().add(this.getLiteral());
+		stringLiteralEClass.getESuperTypes().add(this.getLiteral());
+		doubleLiteralEClass.getESuperTypes().add(this.getLiteral());
 		unaryExpressionEClass.getESuperTypes().add(this.getExpression());
 		notExpressionEClass.getESuperTypes().add(this.getUnaryExpression());
 		unaryMinusEClass.getESuperTypes().add(this.getUnaryExpression());
@@ -1991,12 +2304,16 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		expressionGroupEClass.getESuperTypes().add(this.getExpression());
 		printActionEClass.getESuperTypes().add(this.getAction());
 		errorActionEClass.getESuperTypes().add(this.getAction());
+		configurationEClass.getESuperTypes().add(this.getAnnotatedElement());
+		instanceEClass.getESuperTypes().add(this.getAnnotatedElement());
+		connectorEClass.getESuperTypes().add(this.getAnnotatedElement());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(thingMLModelEClass, ThingMLModel.class, "ThingMLModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getThingMLModel_Types(), this.getType(), null, "types", null, 0, -1, ThingMLModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getThingMLModel_Imports(), this.getThingMLModel(), null, "imports", null, 0, -1, ThingMLModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getThingMLModel_Messages(), this.getMessage(), null, "messages", null, 0, -1, ThingMLModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getThingMLModel_Configs(), this.getConfiguration(), null, "configs", null, 0, -1, ThingMLModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(messageEClass, Message.class, "Message", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getMessage_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2007,6 +2324,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getThing_Ports(), this.getPort(), this.getPort_Owner(), "ports", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getThing_Behaviour(), this.getStateMachine(), null, "behaviour", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getThing_Includes(), this.getThing(), null, "includes", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getThing_Assign(), this.getPropertyAssign(), null, "assign", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(parameterEClass, Parameter.class, "Parameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getParameter_Type(), this.getType(), null, "type", null, 1, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2018,9 +2336,14 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		initEClass(propertyEClass, Property.class, "Property", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProperty_Type(), this.getType(), null, "type", null, 1, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getProperty_Changeable(), ecorePackage.getEBoolean(), "changeable", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProperty_LowerBound(), ecorePackage.getEInt(), "lowerBound", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getProperty_UpperBound(), ecorePackage.getEInt(), "upperBound", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getProperty_Init(), this.getExpression(), null, "init", null, 1, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getProperty_Changeable(), ecorePackage.getEBoolean(), "changeable", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(propertyAssignEClass, PropertyAssign.class, "PropertyAssign", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getPropertyAssign_Init(), this.getExpression(), null, "init", null, 1, 1, PropertyAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPropertyAssign_Property(), this.getProperty(), null, "property", null, 1, 1, PropertyAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(platformAnnotationEClass, PlatformAnnotation.class, "PlatformAnnotation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPlatformAnnotation_Value(), ecorePackage.getEString(), "value", null, 1, 1, PlatformAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2086,9 +2409,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getSendAction_Message(), this.getMessage(), null, "message", null, 1, 1, SendAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSendAction_Port(), this.getPort(), null, "port", null, 1, 1, SendAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(propertyAssignmentEClass, PropertyAssignment.class, "PropertyAssignment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getPropertyAssignment_Property(), this.getProperty(), null, "property", null, 1, 1, PropertyAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getPropertyAssignment_Expression(), this.getExpression(), null, "expression", null, 1, 1, PropertyAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(variableAssignmentEClass, VariableAssignment.class, "VariableAssignment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getVariableAssignment_Property(), this.getProperty(), null, "property", null, 1, 1, VariableAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getVariableAssignment_Expression(), this.getExpression(), null, "expression", null, 1, 1, VariableAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eventEClass, Event.class, "Event", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -2099,28 +2422,36 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(dictionaryEClass, Dictionary.class, "Dictionary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDictionary_IndexType(), this.getType(), null, "indexType", null, 1, 1, Dictionary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(portEClass, Port.class, "Port", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(portEClass, Port.class, "Port", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getPort_Owner(), this.getThing(), this.getThing_Ports(), "owner", null, 0, 1, Port.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPort_Receives(), this.getMessage(), null, "receives", null, 0, -1, Port.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPort_Sends(), this.getMessage(), null, "sends", null, 0, -1, Port.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(requiredPortEClass, RequiredPort.class, "RequiredPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(providedPortEClass, ProvidedPort.class, "ProvidedPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(eventReferenceEClass, EventReference.class, "EventReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getEventReference_MsgRef(), this.getReceiveMessage(), null, "msgRef", null, 1, 1, EventReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getEventReference_ParamRef(), this.getParameter(), null, "paramRef", null, 1, 1, EventReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(litteralEClass, Litteral.class, "Litteral", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(literalEClass, Literal.class, "Literal", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(integerLitteralEClass, IntegerLitteral.class, "IntegerLitteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getIntegerLitteral_IntValue(), ecorePackage.getEInt(), "intValue", null, 1, 1, IntegerLitteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(enumLiteralRefEClass, EnumLiteralRef.class, "EnumLiteralRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getEnumLiteralRef_Enum(), this.getEnumeration(), null, "enum", null, 0, 1, EnumLiteralRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getEnumLiteralRef_Literal(), this.getEnumerationLiteral(), null, "literal", null, 0, 1, EnumLiteralRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(booleanLitteralEClass, BooleanLitteral.class, "BooleanLitteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getBooleanLitteral_BoolValue(), ecorePackage.getEBoolean(), "boolValue", null, 1, 1, BooleanLitteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(integerLiteralEClass, IntegerLiteral.class, "IntegerLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIntegerLiteral_IntValue(), ecorePackage.getEInt(), "intValue", null, 1, 1, IntegerLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(stringLitteralEClass, StringLitteral.class, "StringLitteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getStringLitteral_StringValue(), ecorePackage.getEString(), "stringValue", null, 1, 1, StringLitteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(booleanLiteralEClass, BooleanLiteral.class, "BooleanLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getBooleanLiteral_BoolValue(), ecorePackage.getEBoolean(), "boolValue", null, 1, 1, BooleanLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(doubleLitteralEClass, DoubleLitteral.class, "DoubleLitteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getDoubleLitteral_DoubleValue(), ecorePackage.getEDouble(), "doubleValue", null, 1, 1, DoubleLitteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(stringLiteralEClass, StringLiteral.class, "StringLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStringLiteral_StringValue(), ecorePackage.getEString(), "stringValue", null, 1, 1, StringLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(doubleLiteralEClass, DoubleLiteral.class, "DoubleLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDoubleLiteral_DoubleValue(), ecorePackage.getEDouble(), "doubleValue", null, 1, 1, DoubleLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(unaryExpressionEClass, UnaryExpression.class, "UnaryExpression", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getUnaryExpression_Term(), this.getExpression(), null, "term", null, 1, 1, UnaryExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2175,6 +2506,22 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		initEClass(errorActionEClass, ErrorAction.class, "ErrorAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getErrorAction_Msg(), this.getExpression(), null, "msg", null, 1, 1, ErrorAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(configurationEClass, Configuration.class, "Configuration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getConfiguration_Instances(), this.getInstance(), null, "instances", null, 0, -1, Configuration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConfiguration_Connectors(), this.getConnector(), null, "connectors", null, 0, -1, Configuration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getConfiguration_Fragment(), ecorePackage.getEBoolean(), "fragment", null, 0, 1, Configuration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConfiguration_Includes(), this.getConfiguration(), null, "includes", null, 0, -1, Configuration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(instanceEClass, Instance.class, "Instance", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getInstance_Type(), this.getThing(), null, "type", null, 1, 1, Instance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getInstance_Assign(), this.getPropertyAssign(), null, "assign", null, 0, -1, Instance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(connectorEClass, Connector.class, "Connector", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getConnector_Server(), this.getInstance(), null, "server", null, 1, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnector_Client(), this.getInstance(), null, "client", null, 1, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnector_Required(), this.getRequiredPort(), null, "required", null, 1, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConnector_Provided(), this.getProvidedPort(), null, "provided", null, 1, 1, Connector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

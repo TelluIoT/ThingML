@@ -93,6 +93,15 @@ public interface ThingmlFactory extends EFactory {
 	Property createProperty();
 
 	/**
+	 * Returns a new object of class '<em>Property Assign</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Property Assign</em>'.
+	 * @generated
+	 */
+	PropertyAssign createPropertyAssign();
+
+	/**
 	 * Returns a new object of class '<em>Platform Annotation</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -219,13 +228,13 @@ public interface ThingmlFactory extends EFactory {
 	SendAction createSendAction();
 
 	/**
-	 * Returns a new object of class '<em>Property Assignment</em>'.
+	 * Returns a new object of class '<em>Variable Assignment</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Property Assignment</em>'.
+	 * @return a new object of class '<em>Variable Assignment</em>'.
 	 * @generated
 	 */
-	PropertyAssignment createPropertyAssignment();
+	VariableAssignment createVariableAssignment();
 
 	/**
 	 * Returns a new object of class '<em>Receive Message</em>'.
@@ -246,13 +255,22 @@ public interface ThingmlFactory extends EFactory {
 	Dictionary createDictionary();
 
 	/**
-	 * Returns a new object of class '<em>Port</em>'.
+	 * Returns a new object of class '<em>Required Port</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Port</em>'.
+	 * @return a new object of class '<em>Required Port</em>'.
 	 * @generated
 	 */
-	Port createPort();
+	RequiredPort createRequiredPort();
+
+	/**
+	 * Returns a new object of class '<em>Provided Port</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Provided Port</em>'.
+	 * @generated
+	 */
+	ProvidedPort createProvidedPort();
 
 	/**
 	 * Returns a new object of class '<em>Event Reference</em>'.
@@ -264,40 +282,49 @@ public interface ThingmlFactory extends EFactory {
 	EventReference createEventReference();
 
 	/**
-	 * Returns a new object of class '<em>Integer Litteral</em>'.
+	 * Returns a new object of class '<em>Enum Literal Ref</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Integer Litteral</em>'.
+	 * @return a new object of class '<em>Enum Literal Ref</em>'.
 	 * @generated
 	 */
-	IntegerLitteral createIntegerLitteral();
+	EnumLiteralRef createEnumLiteralRef();
 
 	/**
-	 * Returns a new object of class '<em>Boolean Litteral</em>'.
+	 * Returns a new object of class '<em>Integer Literal</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Boolean Litteral</em>'.
+	 * @return a new object of class '<em>Integer Literal</em>'.
 	 * @generated
 	 */
-	BooleanLitteral createBooleanLitteral();
+	IntegerLiteral createIntegerLiteral();
 
 	/**
-	 * Returns a new object of class '<em>String Litteral</em>'.
+	 * Returns a new object of class '<em>Boolean Literal</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>String Litteral</em>'.
+	 * @return a new object of class '<em>Boolean Literal</em>'.
 	 * @generated
 	 */
-	StringLitteral createStringLitteral();
+	BooleanLiteral createBooleanLiteral();
 
 	/**
-	 * Returns a new object of class '<em>Double Litteral</em>'.
+	 * Returns a new object of class '<em>String Literal</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Double Litteral</em>'.
+	 * @return a new object of class '<em>String Literal</em>'.
 	 * @generated
 	 */
-	DoubleLitteral createDoubleLitteral();
+	StringLiteral createStringLiteral();
+
+	/**
+	 * Returns a new object of class '<em>Double Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Double Literal</em>'.
+	 * @generated
+	 */
+	DoubleLiteral createDoubleLiteral();
 
 	/**
 	 * Returns a new object of class '<em>Not Expression</em>'.
@@ -469,6 +496,33 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	ErrorAction createErrorAction();
+
+	/**
+	 * Returns a new object of class '<em>Configuration</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Configuration</em>'.
+	 * @generated
+	 */
+	Configuration createConfiguration();
+
+	/**
+	 * Returns a new object of class '<em>Instance</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Instance</em>'.
+	 * @generated
+	 */
+	Instance createInstance();
+
+	/**
+	 * Returns a new object of class '<em>Connector</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Connector</em>'.
+	 * @generated
+	 */
+	Connector createConnector();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -13,19 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -38,24 +25,24 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.Property;
-import org.sintef.thingml.PropertyAssignment;
 import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.VariableAssignment;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Property Assignment</b></em>'.
+ * An implementation of the model object '<em><b>Variable Assignment</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.PropertyAssignmentImpl#getProperty <em>Property</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.PropertyAssignmentImpl#getExpression <em>Expression</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.VariableAssignmentImpl#getProperty <em>Property</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.VariableAssignmentImpl#getExpression <em>Expression</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class PropertyAssignmentImpl extends ActionImpl implements PropertyAssignment {
+public class VariableAssignmentImpl extends ActionImpl implements VariableAssignment {
 	/**
 	 * The cached value of the '{@link #getProperty() <em>Property</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -81,7 +68,7 @@ public class PropertyAssignmentImpl extends ActionImpl implements PropertyAssign
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected PropertyAssignmentImpl() {
+	protected VariableAssignmentImpl() {
 		super();
 	}
 
@@ -92,7 +79,7 @@ public class PropertyAssignmentImpl extends ActionImpl implements PropertyAssign
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ThingmlPackage.Literals.PROPERTY_ASSIGNMENT;
+		return ThingmlPackage.Literals.VARIABLE_ASSIGNMENT;
 	}
 
 	/**
@@ -106,7 +93,7 @@ public class PropertyAssignmentImpl extends ActionImpl implements PropertyAssign
 			property = (Property)eResolveProxy(oldProperty);
 			if (property != oldProperty) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.PROPERTY_ASSIGNMENT__PROPERTY, oldProperty, property));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.VARIABLE_ASSIGNMENT__PROPERTY, oldProperty, property));
 			}
 		}
 		return property;
@@ -130,7 +117,7 @@ public class PropertyAssignmentImpl extends ActionImpl implements PropertyAssign
 		Property oldProperty = property;
 		property = newProperty;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.PROPERTY_ASSIGNMENT__PROPERTY, oldProperty, property));
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.VARIABLE_ASSIGNMENT__PROPERTY, oldProperty, property));
 	}
 
 	/**
@@ -151,7 +138,7 @@ public class PropertyAssignmentImpl extends ActionImpl implements PropertyAssign
 		Expression oldExpression = expression;
 		expression = newExpression;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.PROPERTY_ASSIGNMENT__EXPRESSION, oldExpression, newExpression);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION, oldExpression, newExpression);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -166,14 +153,14 @@ public class PropertyAssignmentImpl extends ActionImpl implements PropertyAssign
 		if (newExpression != expression) {
 			NotificationChain msgs = null;
 			if (expression != null)
-				msgs = ((InternalEObject)expression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.PROPERTY_ASSIGNMENT__EXPRESSION, null, msgs);
+				msgs = ((InternalEObject)expression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION, null, msgs);
 			if (newExpression != null)
-				msgs = ((InternalEObject)newExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.PROPERTY_ASSIGNMENT__EXPRESSION, null, msgs);
+				msgs = ((InternalEObject)newExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION, null, msgs);
 			msgs = basicSetExpression(newExpression, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.PROPERTY_ASSIGNMENT__EXPRESSION, newExpression, newExpression));
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION, newExpression, newExpression));
 	}
 
 	/**
@@ -184,7 +171,7 @@ public class PropertyAssignmentImpl extends ActionImpl implements PropertyAssign
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ThingmlPackage.PROPERTY_ASSIGNMENT__EXPRESSION:
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION:
 				return basicSetExpression(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -198,10 +185,10 @@ public class PropertyAssignmentImpl extends ActionImpl implements PropertyAssign
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.PROPERTY_ASSIGNMENT__PROPERTY:
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__PROPERTY:
 				if (resolve) return getProperty();
 				return basicGetProperty();
-			case ThingmlPackage.PROPERTY_ASSIGNMENT__EXPRESSION:
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION:
 				return getExpression();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -215,10 +202,10 @@ public class PropertyAssignmentImpl extends ActionImpl implements PropertyAssign
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.PROPERTY_ASSIGNMENT__PROPERTY:
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__PROPERTY:
 				setProperty((Property)newValue);
 				return;
-			case ThingmlPackage.PROPERTY_ASSIGNMENT__EXPRESSION:
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION:
 				setExpression((Expression)newValue);
 				return;
 		}
@@ -233,10 +220,10 @@ public class PropertyAssignmentImpl extends ActionImpl implements PropertyAssign
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.PROPERTY_ASSIGNMENT__PROPERTY:
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__PROPERTY:
 				setProperty((Property)null);
 				return;
-			case ThingmlPackage.PROPERTY_ASSIGNMENT__EXPRESSION:
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION:
 				setExpression((Expression)null);
 				return;
 		}
@@ -251,12 +238,12 @@ public class PropertyAssignmentImpl extends ActionImpl implements PropertyAssign
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.PROPERTY_ASSIGNMENT__PROPERTY:
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__PROPERTY:
 				return property != null;
-			case ThingmlPackage.PROPERTY_ASSIGNMENT__EXPRESSION:
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION:
 				return expression != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //PropertyAssignmentImpl
+} //VariableAssignmentImpl

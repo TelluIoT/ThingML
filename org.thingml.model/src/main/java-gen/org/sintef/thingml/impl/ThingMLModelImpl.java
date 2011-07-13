@@ -43,6 +43,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.ThingmlPackage;
@@ -58,6 +59,7 @@ import org.sintef.thingml.Type;
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getTypes <em>Types</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getImports <em>Imports</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getMessages <em>Messages</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getConfigs <em>Configs</em>}</li>
  * </ul>
  * </p>
  *
@@ -93,6 +95,16 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 	 * @ordered
 	 */
 	protected EList<Message> messages;
+
+	/**
+	 * The cached value of the '{@link #getConfigs() <em>Configs</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getConfigs()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Configuration> configs;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -154,6 +166,18 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Configuration> getConfigs() {
+		if (configs == null) {
+			configs = new EObjectContainmentEList<Configuration>(Configuration.class, this, ThingmlPackage.THING_ML_MODEL__CONFIGS);
+		}
+		return configs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -161,6 +185,8 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				return ((InternalEList<?>)getTypes()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
 				return ((InternalEList<?>)getMessages()).basicRemove(otherEnd, msgs);
+			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
+				return ((InternalEList<?>)getConfigs()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -179,6 +205,8 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				return getImports();
 			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
 				return getMessages();
+			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
+				return getConfigs();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -204,6 +232,10 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				getMessages().clear();
 				getMessages().addAll((Collection<? extends Message>)newValue);
 				return;
+			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
+				getConfigs().clear();
+				getConfigs().addAll((Collection<? extends Configuration>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -225,6 +257,9 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
 				getMessages().clear();
 				return;
+			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
+				getConfigs().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -243,6 +278,8 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				return imports != null && !imports.isEmpty();
 			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
 				return messages != null && !messages.isEmpty();
+			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
+				return configs != null && !configs.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

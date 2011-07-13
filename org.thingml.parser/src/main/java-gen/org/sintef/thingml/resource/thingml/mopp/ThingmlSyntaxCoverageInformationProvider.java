@@ -13,19 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.sintef.thingml.resource.thingml.mopp;
 
 public class ThingmlSyntaxCoverageInformationProvider {
@@ -35,9 +22,9 @@ public class ThingmlSyntaxCoverageInformationProvider {
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getThingMLModel(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getMessage(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(),
-			org.sintef.thingml.ThingmlPackage.eINSTANCE.getPort(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getRequiredPort(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getProvidedPort(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getProperty(),
-			org.sintef.thingml.ThingmlPackage.eINSTANCE.getDictionary(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getParameter(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrimitiveType(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getEnumeration(),
@@ -50,8 +37,12 @@ public class ThingmlSyntaxCoverageInformationProvider {
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getTransition(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getInternalTransition(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getReceiveMessage(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getPropertyAssign(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getConfiguration(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getInstance(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getConnector(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getSendAction(),
-			org.sintef.thingml.ThingmlPackage.eINSTANCE.getPropertyAssignment(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getVariableAssignment(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternStatement(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(),
@@ -73,9 +64,9 @@ public class ThingmlSyntaxCoverageInformationProvider {
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getEventReference(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getPropertyReference(),
-			org.sintef.thingml.ThingmlPackage.eINSTANCE.getIntegerLitteral(),
-			org.sintef.thingml.ThingmlPackage.eINSTANCE.getStringLitteral(),
-			org.sintef.thingml.ThingmlPackage.eINSTANCE.getBooleanLitteral(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getIntegerLiteral(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getStringLiteral(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getBooleanLiteral(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(),
 		};
 	}
