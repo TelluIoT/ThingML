@@ -6,7 +6,7 @@ message pong() @code "67";
 // Definition of the Pingable fragmant
 thing fragment Pingable {
 
-	port PingPong {
+	provided port PingPong {
 		sends ping, pong
 		receives ping, pong
 	}

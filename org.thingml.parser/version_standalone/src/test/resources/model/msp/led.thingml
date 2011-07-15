@@ -13,7 +13,7 @@ message toggle(led_id : Integer);
 
 thing LED
 {
-	port LED {
+	provided port LED {
 		receives light_on
 		receives light_off
 		receives toggle

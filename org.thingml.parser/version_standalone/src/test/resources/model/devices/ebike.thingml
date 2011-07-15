@@ -58,22 +58,22 @@ message pong() @code "67";
 
 thing EBike {
 	
-	port ADC {
+	provided port ADC {
 		receives GetADC
 		sends ADCValue
 	}
 
-	port Monitoring {
+	provided port Monitoring {
 		sends powerData, tempData, distData
 		receives subscribePower, subscribeTemp, subscribeDist
 	}
 	
-	port Sensors {
+	provided port Sensors {
 		receives getAirTemp, getCtrlTemp, getCurrent, getDist, getPower, getSpeed, getVoltage
 		sends AirTempValue, CtrlTempValue, CurrentValue, DistValue, PowerValue, SpeedValue, VoltageValue
 	}
 	
-	port ping {
+	provided port ping {
 		sends pong
 		receives ping
 	}

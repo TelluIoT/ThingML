@@ -163,31 +163,31 @@ message eeprom_write_ack() @code "35";
 
 thing JArduino 
 {
-	port DigitalIO {
+	provided port DigitalIO {
 		receives pinMode, digitalRead, digitalWrite
 		sends digitalReadResult
 	}
 	
-	port AnalogIO {
+	provided port AnalogIO {
 		receives analogReference, analogRead, analogWrite
 		sends analogReadResult
 	}
 	
-	port AdvancedIO {
+	provided port AdvancedIO {
 		receives tone, noTone
 	}
 	
-	port Ping {
+	provided port Ping {
 		receives ping
 		sends pong
 	}
 	
-	port Interrupts {
+	provided port Interrupts {
 		receives attachInterrupt, detachInterrupt
 		sends interruptNotification
 	}
 	
-	port EEPROM {
+	provided port EEPROM {
 		receives eeprom_read, eeprom_sync_write, eeprom_write
 		sends eeprom_value, eeprom_write_ack
 	}

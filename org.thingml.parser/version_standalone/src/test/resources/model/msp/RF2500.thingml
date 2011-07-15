@@ -12,7 +12,7 @@ thing RF2500
 	@rf_channel "0x00"
 	@rf_power "0xFE"
 {
-	port RF2500 {	
+	provided port RF2500 {	
 		receives set_address
 		receives set_channel
 		receives transmit

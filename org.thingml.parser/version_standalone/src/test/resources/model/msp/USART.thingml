@@ -9,7 +9,7 @@ message transmit_hexdump(ptr : String, len : Integer);
 thing USART
 {
 
-	port USART {
+	provided port USART {
 		sends receive_byte
 		receives transmit
 		receives transmit_byte

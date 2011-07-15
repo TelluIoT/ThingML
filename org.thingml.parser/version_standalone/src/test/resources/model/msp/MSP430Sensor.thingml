@@ -25,7 +25,7 @@ message voltage_value(v : Integer);
 
 thing MSP430Sensor
 {
-	port MSP430Sensor {
+	provided port MSP430Sensor {
 		receives mesure_temperature
 		receives mesure_voltage
 		//receives mesure_adc

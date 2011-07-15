@@ -71,6 +71,8 @@ public class StandaloneParserTestLoadFile extends TestCase {
 
             assert(model.getContents().size() > 0);
 
+            assert(model.getErrors().size() == 0);
+
             assert ( model.getContents().get(0) instanceof ThingMLModel );
             
     }

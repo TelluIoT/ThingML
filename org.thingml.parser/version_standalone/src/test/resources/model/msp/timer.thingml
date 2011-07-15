@@ -10,7 +10,7 @@ message timeout(timer_id : Integer);
 // Manage a set of software timers.
 thing Timer
 {
-	port Timer {
+	provided port Timer {
 		sends timeout
 		receives start
 		receives cancel

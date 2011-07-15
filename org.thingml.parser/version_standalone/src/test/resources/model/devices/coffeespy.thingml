@@ -47,29 +47,29 @@ message pong() @code "67";
 
 thing CoffeeSensor {
 	
-	port Sensors {
+	provided port Sensors {
 		sends TemperatureValue, DistanceValue, LightValue
 		receives GetTemperature, GetDistance, GetLight
 		sends rawData
 		receives subscribeRawData, getRawData, unsubscribeRawData
 	}
 	
-	port Motion {
+	provided port Motion {
 		receives subscribeMotion, unsubscribeMotion
 		sends approachingMotion, leavingMotion
 	}
 	
-	port Light {
+	provided port Light {
 		receives subscribeLightChange, unsubscribeLightChange
 		sends lightON, lightOFF
 	}
 	
-	port Temperature {
+	provided port Temperature {
 		receives subscribeTemperatureChange, unsubscribeTemperatureChange
 		sends temperatureIncrease, temperatureDecrease
 	}
 	
-	port Ping {
+	provided port Ping {
 		receives ping
 		sends pong
 	}

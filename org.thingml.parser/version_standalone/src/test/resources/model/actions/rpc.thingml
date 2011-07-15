@@ -20,7 +20,7 @@ message analogReadResult(value : Int16) @code "8";
 
 
 thing Caller {
-	port AnalogClient {
+	required port AnalogClient {
 		sends analogRead
 		receives analogReadResult
 	}
@@ -28,7 +28,7 @@ thing Caller {
 
 thing Callee {
 
-	port AnalogServer {
+	provided port AnalogServer {
 		sends analogReadResult
 		receives analogRead
 	}
@@ -37,7 +37,7 @@ thing Callee {
 	
 		state Ready {
 			
-			property last_value : Int16
+			property last_value : Int16 = 0
 			
 			internal event m : AnalogServer?analogRead
 			action do

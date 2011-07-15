@@ -21,7 +21,7 @@ message SensorName(name : String) @code "66";
 // Definition of the sensor protocol
 thing WTSClient {  
 
-	port WTSClient {
+	required port WTSClient {
 		sends GetData, GetStatus, GetName
 		sends ResetMinMax, SetMinAlarm, SetMaxAlarm, SetBattAlarm, SetInterval, SetName
 		receives SensorData, SensorStatus, SensorName
@@ -30,22 +30,22 @@ thing WTSClient {
 
 thing WTS {
 
-	port WTSClient {
+	provided port WTSClient {
 		receives GetData, GetStatus, GetName
 		receives ResetMinMax, SetMinAlarm, SetMaxAlarm, SetBattAlarm, SetInterval, SetName
 		sends SensorData, SensorStatus, SensorName
 	}
 	
-	port Timer {
+	required port Timer {
 		receives timeout
 		sends start, cancel
 	}
 	
-	port LED {
+	required port LED {
 		sends light_on, light_off
 	}
 	
-	port MSP430Sensor {
+	required port MSP430Sensor {
 		sends mesure_temperature
 		sends mesure_voltage
 		//receives mesure_adc
@@ -54,10 +54,10 @@ thing WTS {
 		receives voltage_value
 	}
 
-	property name : String
-	property temp : Integer 
-	property volt : Integer
-	property interval : Integer
+	property name : String = "Sensor"
+	property temp : Integer = 0
+	property volt : Integer = 0
+	property interval : Integer = 30
 
 	// Behaviour of the application
 	statechart WTS init INIT {
@@ -84,9 +84,9 @@ thing WTS {
 	
 		composite state ACTIVE init ReadSensorValues {
 			
-			property interval_cpt : Integer
-			property min : Integer
-			property max : Integer
+			property interval_cpt : Integer = 0
+			property min : Integer = 0
+			property max : Integer = 0
 			
 			on entry interval_cpt = 0
 			
