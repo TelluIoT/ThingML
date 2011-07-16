@@ -15,12 +15,22 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
+import java.util.ArrayList;
+
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Instance;
+import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+
 public class ConnectorClientReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.Connector, org.sintef.thingml.Instance> {
 	
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Connector, org.sintef.thingml.Instance> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Connector, org.sintef.thingml.Instance>();
 	
 	public void resolve(String identifier, org.sintef.thingml.Connector container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Instance> result) {
-		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
+		Configuration config = ThingMLHelpers.findContainingConfiguration(container);
+		ArrayList<Instance> ts = ThingMLHelpers.findInstance(config, identifier, resolveFuzzy);
+		for (Instance t : ts) result.addMapping(t.getName(), t);
+		if(!result.wasResolved()) result.setErrorMessage("Cannot resolve instance " + identifier);
 	}
 	
 	public String deResolve(org.sintef.thingml.Instance element, org.sintef.thingml.Connector container, org.eclipse.emf.ecore.EReference reference) {

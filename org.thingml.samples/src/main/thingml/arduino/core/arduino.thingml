@@ -1,0 +1,8 @@
+import "arduino_stdlib.thingml"
+import "scheduler.thingml"
+import "clock.thingml"
+
+thing Arduino includes ArduinoStdlib, Scheduler, Clock
+{	
+
+}

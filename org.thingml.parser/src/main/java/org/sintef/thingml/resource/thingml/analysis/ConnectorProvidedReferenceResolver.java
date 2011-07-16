@@ -15,12 +15,21 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
+import java.util.ArrayList;
+
+import org.sintef.thingml.ProvidedPort;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+
 public class ConnectorProvidedReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.Connector, org.sintef.thingml.ProvidedPort> {
 	
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Connector, org.sintef.thingml.ProvidedPort> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Connector, org.sintef.thingml.ProvidedPort>();
 	
 	public void resolve(String identifier, org.sintef.thingml.Connector container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.ProvidedPort> result) {
-		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
+		Thing thing = container.getServer().getType();
+		ArrayList<ProvidedPort> ts = ThingMLHelpers.findProvidedPort(thing, identifier, resolveFuzzy);
+		for (ProvidedPort t : ts) result.addMapping(t.getName(), t);
+		if(!result.wasResolved()) result.setErrorMessage("Cannot resolve port " + identifier);
 	}
 	
 	public String deResolve(org.sintef.thingml.ProvidedPort element, org.sintef.thingml.Connector container, org.eclipse.emf.ecore.EReference reference) {

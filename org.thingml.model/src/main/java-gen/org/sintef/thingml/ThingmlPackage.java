@@ -110,22 +110,13 @@ public interface ThingmlPackage extends EPackage {
 	int THING_ML_MODEL__IMPORTS = 1;
 
 	/**
-	 * The feature id for the '<em><b>Messages</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THING_ML_MODEL__MESSAGES = 2;
-
-	/**
 	 * The feature id for the '<em><b>Configs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THING_ML_MODEL__CONFIGS = 3;
+	int THING_ML_MODEL__CONFIGS = 2;
 
 	/**
 	 * The number of structural features of the '<em>Thing ML Model</em>' class.
@@ -134,7 +125,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THING_ML_MODEL_FEATURE_COUNT = 4;
+	int THING_ML_MODEL_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ThingMLElementImpl <em>Thing ML Element</em>}' class.
@@ -367,13 +358,22 @@ public interface ThingmlPackage extends EPackage {
 	int THING__ASSIGN = TYPE_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Messages</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THING__MESSAGES = TYPE_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>Thing</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THING_FEATURE_COUNT = TYPE_FEATURE_COUNT + 6;
+	int THING_FEATURE_COUNT = TYPE_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ParameterImpl <em>Parameter</em>}' class.
@@ -3161,17 +3161,6 @@ public interface ThingmlPackage extends EPackage {
 	EReference getThingMLModel_Imports();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.ThingMLModel#getMessages <em>Messages</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Messages</em>'.
-	 * @see org.sintef.thingml.ThingMLModel#getMessages()
-	 * @see #getThingMLModel()
-	 * @generated
-	 */
-	EReference getThingMLModel_Messages();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.ThingMLModel#getConfigs <em>Configs</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3278,6 +3267,17 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getThing_Assign();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Thing#getMessages <em>Messages</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Messages</em>'.
+	 * @see org.sintef.thingml.Thing#getMessages()
+	 * @see #getThing()
+	 * @generated
+	 */
+	EReference getThing_Messages();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Parameter <em>Parameter</em>}'.
@@ -4739,14 +4739,6 @@ public interface ThingmlPackage extends EPackage {
 		EReference THING_ML_MODEL__IMPORTS = eINSTANCE.getThingMLModel_Imports();
 
 		/**
-		 * The meta object literal for the '<em><b>Messages</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference THING_ML_MODEL__MESSAGES = eINSTANCE.getThingMLModel_Messages();
-
-		/**
 		 * The meta object literal for the '<em><b>Configs</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -4829,6 +4821,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference THING__ASSIGN = eINSTANCE.getThing_Assign();
+
+		/**
+		 * The meta object literal for the '<em><b>Messages</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference THING__MESSAGES = eINSTANCE.getThing_Messages();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ParameterImpl <em>Parameter</em>}' class.

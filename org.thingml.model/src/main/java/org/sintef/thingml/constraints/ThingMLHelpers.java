@@ -69,6 +69,19 @@ public class ThingMLHelpers {
 		}
 	}
 	
+	public static Configuration findContainingConfiguration(EObject object) {
+		if (object instanceof Configuration) return (Configuration)object;
+		else {
+			EObject container = object.eContainer();
+			if (container != null) {
+				return findContainingConfiguration(container);
+			} 
+			else {
+				return null;
+			}
+		}
+	}
+	
 	public static State findContainingState(EObject object) {
 		if (object instanceof State) return (State)object;
 		else {
@@ -161,16 +174,6 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
-	public static ArrayList<Message> allMessages(ThingMLModel model) {
-		ArrayList<Message> result = new ArrayList<Message>();
-		for (ThingMLModel m : allThingMLModelModels(model)) {
-			for (Message msg : m.getMessages()) {
-				if (!result.contains(msg)) result.add(msg);
-			}
-		}
-		return result;
-	}
-	
 	public static ArrayList<Type> findSimpleType(ThingMLModel model, String name, boolean fuzzy) {
 		ArrayList<Type> result = new ArrayList<Type>();
 		for (Type t : allSimpleTypes(model)) {
@@ -193,42 +196,57 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
-	public static ArrayList<Message> findMessage(ThingMLModel model, String name, boolean fuzzy) {
-		ArrayList<Message> result = new ArrayList<Message>();
-		for (Message msg : allMessages(model)) {
-			if (msg.getName().startsWith(name)) {
-				if (fuzzy) result.add(msg);
-				else if (msg.getName().equals(name)) result.add(msg);
-			}
-		}
-		return result;
-	}
-	
 	/* ***********************************************************
 	 * Resolution for Things: Ports, Properties, StateMachines, Messages
 	 * ***********************************************************/
 	
-	public static ArrayList<Thing> allFragments(Thing thing) {
+	public static ArrayList<Thing> allThingFragments(Thing thing) {
 		ArrayList<Thing> result = new ArrayList<Thing>();
 		result.add(thing);
 		for (Thing t : thing.getIncludes())
-			for (Thing c : allFragments(t))
+			for (Thing c : allThingFragments(t))
 				if (!result.contains(c))result.add(c);
 		return result;
 	}
 	
 	public static ArrayList<Property> allProperties(Thing thing) {
 		ArrayList<Property> result = new ArrayList<Property>();
-		for (Thing t : allFragments(thing)) {
+		for (Thing t : allThingFragments(thing)) {
 			result.addAll(t.getProperties());
+		}
+		return result;
+	}
+	
+	public static ArrayList<Message> allMessages(Thing thing) {
+		ArrayList<Message> result = new ArrayList<Message>();
+		for (Thing t : allThingFragments(thing)) {
+			for (Message msg : t.getMessages()) {
+				if (!result.contains(msg)) result.add(msg);
+			}
 		}
 		return result;
 	}
 	
 	public static ArrayList<Port> allPorts(Thing thing) {
 		ArrayList<Port> result = new ArrayList<Port>();
-		for (Thing t : allFragments(thing)) {
+		for (Thing t : allThingFragments(thing)) {
 			result.addAll(t.getPorts());
+		}
+		return result;
+	}
+	
+	public static ArrayList<ProvidedPort> allProvidedPorts(Thing thing) {
+		ArrayList<ProvidedPort> result = new ArrayList<ProvidedPort>();
+		for (Port p : allPorts(thing)) {
+			if (p instanceof ProvidedPort) result.add((ProvidedPort)p);
+		}
+		return result;
+	}
+	
+	public static ArrayList<RequiredPort> allRequiredPorts(Thing thing) {
+		ArrayList<RequiredPort> result = new ArrayList<RequiredPort>();
+		for (Port p : allPorts(thing)) {
+			if (p instanceof RequiredPort) result.add((RequiredPort)p);
 		}
 		return result;
 	}
@@ -255,7 +273,7 @@ public class ThingMLHelpers {
 	
 	public static ArrayList<StateMachine> allStateMachines(Thing thing) {
 		ArrayList<StateMachine> result = new ArrayList<StateMachine>();
-		for (Thing t : allFragments(thing)) {
+		for (Thing t : allThingFragments(thing)) {
 			result.addAll(t.getBehaviour());
 		}
 		return result;
@@ -272,9 +290,42 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
+	public static ArrayList<Message> findMessage(Thing thing, String name, boolean fuzzy) {
+		ArrayList<Message> result = new ArrayList<Message>();
+		for (Message msg : allMessages(thing)) {
+			if (msg.getName().startsWith(name)) {
+				if (fuzzy) result.add(msg);
+				else if (msg.getName().equals(name)) result.add(msg);
+			}
+		}
+		return result;
+	}
+	
 	public static ArrayList<Port> findPort(Thing thing, String name, boolean fuzzy) {
 		ArrayList<Port> result = new ArrayList<Port>();
 		for (Port t : allPorts(thing)) {
+			if (t.getName().startsWith(name)) {
+				if (fuzzy) result.add(t);
+				else if (t.getName().equals(name)) result.add(t);
+			}
+		}
+		return result;
+	}
+	
+	public static ArrayList<RequiredPort> findRequiredPort(Thing thing, String name, boolean fuzzy) {
+		ArrayList<RequiredPort> result = new ArrayList<RequiredPort>();
+		for (RequiredPort t : allRequiredPorts(thing)) {
+			if (t.getName().startsWith(name)) {
+				if (fuzzy) result.add(t);
+				else if (t.getName().equals(name)) result.add(t);
+			}
+		}
+		return result;
+	}
+	
+	public static ArrayList<ProvidedPort> findProvidedPort(Thing thing, String name, boolean fuzzy) {
+		ArrayList<ProvidedPort> result = new ArrayList<ProvidedPort>();
+		for (ProvidedPort t : allProvidedPorts(thing)) {
 			if (t.getName().startsWith(name)) {
 				if (fuzzy) result.add(t);
 				else if (t.getName().equals(name)) result.add(t);
@@ -378,7 +429,73 @@ public class ThingMLHelpers {
 	 * Resolution for Configurations, Instances and Connectors
 	 * ***********************************************************/
 	
-	// TODO
+	public static ArrayList<Configuration> allConfigurations(ThingMLModel model) {
+		ArrayList<Configuration> result = new ArrayList<Configuration>();
+		for (ThingMLModel m : allThingMLModelModels(model)) {
+			for (Configuration c : m.getConfigs()) {
+				if (!result.contains(c)) result.add(c);
+			}
+		}
+		return result;
+	}
+	
+	public static ArrayList<Configuration> findConfiguration(ThingMLModel model, String name, boolean fuzzy) {
+		ArrayList<Configuration> result = new ArrayList<Configuration>();
+		for (Configuration c : allConfigurations(model)) {
+			if (c.getName().startsWith(name)) {
+				if (fuzzy) result.add(c);
+				else if (c.getName().equals(name)) result.add(c);
+			}
+		}
+		return result;
+	}
+	
+	public static ArrayList<Configuration> allConfigurationFragments(Configuration config) {
+		ArrayList<Configuration> result = new ArrayList<Configuration>();
+		result.add(config);
+		for (Configuration t : config.getIncludes())
+			for (Configuration c : allConfigurationFragments(t))
+				if (!result.contains(c))result.add(c);
+		return result;
+	}
+	
+	public static ArrayList<Instance> allInstances(Configuration config) {
+		ArrayList<Instance> result = new ArrayList<Instance>();
+		for (Configuration t : allConfigurationFragments(config)) {
+			result.addAll(t.getInstances());
+		}
+		return result;
+	}
+	
+	public static ArrayList<Connector> allConnectors(Configuration config) {
+		ArrayList<Connector> result = new ArrayList<Connector>();
+		for (Configuration t : allConfigurationFragments(config)) {
+			result.addAll(t.getConnectors());
+		}
+		return result;
+	}
+	
+	public static ArrayList<Instance> findInstance(Configuration config, String name, boolean fuzzy) {
+		ArrayList<Instance> result = new ArrayList<Instance>();
+		for (Instance i : allInstances(config)) {
+			if (i.getName().startsWith(name)) {
+				if (fuzzy) result.add(i);
+				else if (i.getName().equals(name)) result.add(i);
+			}
+		}
+		return result;
+	}
+	
+	public static ArrayList<Connector> findConnector(Configuration config, String name, boolean fuzzy) {
+		ArrayList<Connector> result = new ArrayList<Connector>();
+		for (Connector i : allConnectors(config)) {
+			if (i.getName().startsWith(name)) {
+				if (fuzzy) result.add(i);
+				else if (i.getName().equals(name)) result.add(i);
+			}
+		}
+		return result;
+	}
 	
 	/* ***********************************************************
 	 * Resolution for Specific Actions / Expressions

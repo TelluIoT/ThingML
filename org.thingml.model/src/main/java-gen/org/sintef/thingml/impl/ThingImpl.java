@@ -45,6 +45,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.sintef.thingml.Message;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.PropertyAssign;
@@ -65,6 +66,7 @@ import org.sintef.thingml.ThingmlPackage;
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getBehaviour <em>Behaviour</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getIncludes <em>Includes</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getAssign <em>Assign</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ThingImpl#getMessages <em>Messages</em>}</li>
  * </ul>
  * </p>
  *
@@ -140,6 +142,16 @@ public class ThingImpl extends TypeImpl implements Thing {
 	 * @ordered
 	 */
 	protected EList<PropertyAssign> assign;
+
+	/**
+	 * The cached value of the '{@link #getMessages() <em>Messages</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMessages()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Message> messages;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -246,6 +258,18 @@ public class ThingImpl extends TypeImpl implements Thing {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Message> getMessages() {
+		if (messages == null) {
+			messages = new EObjectContainmentEList<Message>(Message.class, this, ThingmlPackage.THING__MESSAGES);
+		}
+		return messages;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -272,6 +296,8 @@ public class ThingImpl extends TypeImpl implements Thing {
 				return ((InternalEList<?>)getBehaviour()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.THING__ASSIGN:
 				return ((InternalEList<?>)getAssign()).basicRemove(otherEnd, msgs);
+			case ThingmlPackage.THING__MESSAGES:
+				return ((InternalEList<?>)getMessages()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -296,6 +322,8 @@ public class ThingImpl extends TypeImpl implements Thing {
 				return getIncludes();
 			case ThingmlPackage.THING__ASSIGN:
 				return getAssign();
+			case ThingmlPackage.THING__MESSAGES:
+				return getMessages();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -332,6 +360,10 @@ public class ThingImpl extends TypeImpl implements Thing {
 				getAssign().clear();
 				getAssign().addAll((Collection<? extends PropertyAssign>)newValue);
 				return;
+			case ThingmlPackage.THING__MESSAGES:
+				getMessages().clear();
+				getMessages().addAll((Collection<? extends Message>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -362,6 +394,9 @@ public class ThingImpl extends TypeImpl implements Thing {
 			case ThingmlPackage.THING__ASSIGN:
 				getAssign().clear();
 				return;
+			case ThingmlPackage.THING__MESSAGES:
+				getMessages().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -386,6 +421,8 @@ public class ThingImpl extends TypeImpl implements Thing {
 				return includes != null && !includes.isEmpty();
 			case ThingmlPackage.THING__ASSIGN:
 				return assign != null && !assign.isEmpty();
+			case ThingmlPackage.THING__MESSAGES:
+				return messages != null && !messages.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

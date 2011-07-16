@@ -303,14 +303,12 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		// the number of elements stored in each structural feature. For lists this is the
 		// list size. For non-multiple features it is either 1 (if the feature is set) or
 		// 0 (if the feature is null).
-		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(4);
+		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(3);
 		Object temp;
 		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING_ML_MODEL__TYPES));
 		printCountingMap.put("types", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
 		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING_ML_MODEL__IMPORTS));
 		printCountingMap.put("imports", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
-		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING_ML_MODEL__MESSAGES));
-		printCountingMap.put("messages", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
 		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING_ML_MODEL__CONFIGS));
 		printCountingMap.put("configs", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
 		// print collected hidden tokens
@@ -398,39 +396,15 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		int count;
 		int alt = -1;
 		alt = 0;
-		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"messages"		));
+		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"types"		));
 		int tempMatchCount;
-		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"types"		));
+		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"configs"		));
 		if (tempMatchCount > matches) {
 			alt = 1;
 			matches = tempMatchCount;
 		}
-		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"configs"		));
-		if (tempMatchCount > matches) {
-			alt = 2;
-			matches = tempMatchCount;
-		}
 		switch(alt) {
 			case 1:			{
-				// DEFINITION PART BEGINS (Containment)
-				count = printCountingMap.get("types");
-				if (count > 0) {
-					Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING_ML_MODEL__TYPES));
-					java.util.List<?> list = (java.util.List<?>) o;
-					int index = list.size() - count;
-					if (index >= 0) {
-						o = list.get(index);
-					} else {
-						o = null;
-					}
-					if (o != null) {
-						doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
-					}
-					printCountingMap.put("types", count - 1);
-				}
-			}
-			break;
-			case 2:			{
 				// DEFINITION PART BEGINS (Containment)
 				count = printCountingMap.get("configs");
 				if (count > 0) {
@@ -450,9 +424,9 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 			}
 			break;
 			default:			// DEFINITION PART BEGINS (Containment)
-			count = printCountingMap.get("messages");
+			count = printCountingMap.get("types");
 			if (count > 0) {
-				Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING_ML_MODEL__MESSAGES));
+				Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING_ML_MODEL__TYPES));
 				java.util.List<?> list = (java.util.List<?>) o;
 				int index = list.size() - count;
 				if (index >= 0) {
@@ -463,7 +437,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 				if (o != null) {
 					doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 				}
-				printCountingMap.put("messages", count - 1);
+				printCountingMap.put("types", count - 1);
 			}
 		}
 	}
@@ -637,7 +611,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		// the number of elements stored in each structural feature. For lists this is the
 		// list size. For non-multiple features it is either 1 (if the feature is set) or
 		// 0 (if the feature is null).
-		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(8);
+		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(9);
 		Object temp;
 		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING__NAME));
 		printCountingMap.put("name", temp == null ? 0 : 1);
@@ -655,6 +629,8 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		printCountingMap.put("includes", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
 		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING__ASSIGN));
 		printCountingMap.put("assign", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING__MESSAGES));
+		printCountingMap.put("messages", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
 		// print collected hidden tokens
 		int count;
 		boolean iterate = true;
@@ -867,25 +843,49 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		int count;
 		int alt = -1;
 		alt = 0;
-		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"properties"		));
+		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"messages"		));
 		int tempMatchCount;
-		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"assign"		));
+		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"properties"		));
 		if (tempMatchCount > matches) {
 			alt = 1;
 			matches = tempMatchCount;
 		}
-		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"ports"		));
+		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"assign"		));
 		if (tempMatchCount > matches) {
 			alt = 2;
 			matches = tempMatchCount;
 		}
-		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"behaviour"		));
+		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"ports"		));
 		if (tempMatchCount > matches) {
 			alt = 3;
 			matches = tempMatchCount;
 		}
+		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"behaviour"		));
+		if (tempMatchCount > matches) {
+			alt = 4;
+			matches = tempMatchCount;
+		}
 		switch(alt) {
 			case 1:			{
+				// DEFINITION PART BEGINS (Containment)
+				count = printCountingMap.get("properties");
+				if (count > 0) {
+					Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING__PROPERTIES));
+					java.util.List<?> list = (java.util.List<?>) o;
+					int index = list.size() - count;
+					if (index >= 0) {
+						o = list.get(index);
+					} else {
+						o = null;
+					}
+					if (o != null) {
+						doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
+					}
+					printCountingMap.put("properties", count - 1);
+				}
+			}
+			break;
+			case 2:			{
 				// DEFINITION PART BEGINS (Containment)
 				count = printCountingMap.get("assign");
 				if (count > 0) {
@@ -904,7 +904,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 				}
 			}
 			break;
-			case 2:			{
+			case 3:			{
 				// DEFINITION PART BEGINS (Containment)
 				count = printCountingMap.get("ports");
 				if (count > 0) {
@@ -923,7 +923,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 				}
 			}
 			break;
-			case 3:			{
+			case 4:			{
 				// DEFINITION PART BEGINS (Containment)
 				count = printCountingMap.get("behaviour");
 				if (count > 0) {
@@ -943,9 +943,9 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 			}
 			break;
 			default:			// DEFINITION PART BEGINS (Containment)
-			count = printCountingMap.get("properties");
+			count = printCountingMap.get("messages");
 			if (count > 0) {
-				Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING__PROPERTIES));
+				Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.THING__MESSAGES));
 				java.util.List<?> list = (java.util.List<?>) o;
 				int index = list.size() - count;
 				if (index >= 0) {
@@ -956,7 +956,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 				if (o != null) {
 					doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 				}
-				printCountingMap.put("properties", count - 1);
+				printCountingMap.put("messages", count - 1);
 			}
 		}
 	}
@@ -1595,20 +1595,18 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 			out.print(sWriter.toString());
 			printCountingMap.putAll(printCountingMap1);
 		}
-		// DEFINITION PART BEGINS (WhiteSpaces)
-		out.print(" ");
-		// DEFINITION PART BEGINS (CsString)
-		out.print("=");
-		// DEFINITION PART BEGINS (WhiteSpaces)
-		out.print(" ");
-		// DEFINITION PART BEGINS (Containment)
-		count = printCountingMap.get("init");
-		if (count > 0) {
-			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__INIT));
-			if (o != null) {
-				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
-			}
-			printCountingMap.put("init", count - 1);
+		// DEFINITION PART BEGINS (CompoundDefinition)
+		sWriter = new java.io.StringWriter();
+		out1 = new java.io.PrintWriter(sWriter);
+		printCountingMap1 = new java.util.LinkedHashMap<String, Integer>(printCountingMap);
+		print_org_sintef_thingml_Property_2(element, localtab, out1, printCountingMap1);
+		if (printCountingMap.equals(printCountingMap1)) {
+			out1.close();
+		} else {
+			out1.flush();
+			out1.close();
+			out.print(sWriter.toString());
+			printCountingMap.putAll(printCountingMap1);
 		}
 		// DEFINITION PART BEGINS (CompoundDefinition)
 		iterate = true;
@@ -1616,7 +1614,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 			sWriter = new java.io.StringWriter();
 			out1 = new java.io.PrintWriter(sWriter);
 			printCountingMap1 = new java.util.LinkedHashMap<String, Integer>(printCountingMap);
-			print_org_sintef_thingml_Property_2(element, localtab, out1, printCountingMap1);
+			print_org_sintef_thingml_Property_3(element, localtab, out1, printCountingMap1);
 			if (printCountingMap.equals(printCountingMap1)) {
 				iterate = false;
 				out1.close();
@@ -1677,6 +1675,26 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	}
 	
 	public void print_org_sintef_thingml_Property_2(org.sintef.thingml.Property element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
+		String localtab = outertab;
+		int count;
+		// DEFINITION PART BEGINS (WhiteSpaces)
+		out.print(" ");
+		// DEFINITION PART BEGINS (CsString)
+		out.print("=");
+		// DEFINITION PART BEGINS (WhiteSpaces)
+		out.print(" ");
+		// DEFINITION PART BEGINS (Containment)
+		count = printCountingMap.get("init");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__INIT));
+			if (o != null) {
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
+			}
+			printCountingMap.put("init", count - 1);
+		}
+	}
+	
+	public void print_org_sintef_thingml_Property_3(org.sintef.thingml.Property element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
 		String localtab = outertab;
 		int count;
 		// DEFINITION PART BEGINS (Containment)

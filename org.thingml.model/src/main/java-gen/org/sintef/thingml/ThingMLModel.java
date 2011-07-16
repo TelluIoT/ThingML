@@ -42,7 +42,6 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.sintef.thingml.ThingMLModel#getTypes <em>Types</em>}</li>
  *   <li>{@link org.sintef.thingml.ThingMLModel#getImports <em>Imports</em>}</li>
- *   <li>{@link org.sintef.thingml.ThingMLModel#getMessages <em>Messages</em>}</li>
  *   <li>{@link org.sintef.thingml.ThingMLModel#getConfigs <em>Configs</em>}</li>
  * </ul>
  * </p>
@@ -83,22 +82,6 @@ public interface ThingMLModel extends EObject {
 	 * @generated
 	 */
 	EList<ThingMLModel> getImports();
-
-	/**
-	 * Returns the value of the '<em><b>Messages</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.Message}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Messages</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Messages</em>' containment reference list.
-	 * @see org.sintef.thingml.ThingmlPackage#getThingMLModel_Messages()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<Message> getMessages();
 
 	/**
 	 * Returns the value of the '<em><b>Configs</b></em>' containment reference list.

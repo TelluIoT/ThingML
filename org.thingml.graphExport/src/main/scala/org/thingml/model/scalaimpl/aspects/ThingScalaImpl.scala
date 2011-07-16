@@ -32,7 +32,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers
 case class ThingScalaImpl (self : Thing) {
 
     def allFragments: ArrayList[Thing] = {
-    return ThingMLHelpers.allFragments(self)
+    return ThingMLHelpers.allThingFragments(self)
   }
 
    def allProperties: ArrayList[Property] = {
@@ -63,5 +63,8 @@ case class ThingScalaImpl (self : Thing) {
     return ThingMLHelpers.allStateMachines(self)
   }
 
+  def allMessages: ArrayList[Message] = {
+    return ThingMLHelpers.allMessages(self)
+  }
 
 }

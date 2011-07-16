@@ -1,0 +1,23 @@
+datatype Byte
+	@avr_type "char"
+	@msp_type "char";
+
+datatype Int8	
+	@c_type "uint8_t"
+	@java_type "short";
+
+datatype Int16	
+	@c_type "int"
+	@java_type "short";
+
+datatype Long	
+	@c_type "long"
+	@java_type "long";
+
+datatype Double	
+	@c_type "double"
+	@java_type "double";
+
+datatype String	
+	@avr_type "char *"
+	@msp_type "char *";

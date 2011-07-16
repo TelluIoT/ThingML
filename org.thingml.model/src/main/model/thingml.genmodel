@@ -10,7 +10,6 @@
     <genClasses ecoreClass="thingml.ecore#//ThingMLModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ThingMLModel/types"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ThingMLModel/imports"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ThingMLModel/messages"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ThingMLModel/configs"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Message">
@@ -23,6 +22,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/behaviour"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/includes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/assign"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/messages"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Parameter">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Parameter/type"/>

@@ -26,12 +26,10 @@ TOKENS{
 
 		DEFINE STRING_EXT $'\''('\\'('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')|('\\''u'('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F'))|'\\'('0'..'7')|~('\\'|'\''))*'\''$;
 		
-		DEFINE T_MULTICAST $'multicast'$;
 		DEFINE T_READONLY $'readonly'$;
 		
 		DEFINE T_ASPECT $'fragment'$;
 		DEFINE T_HISTORY $'history'$;
-		DEFINE T_SINGLETON $'singleton'$;
 		
 		DEFINE WHITESPACE $(' '|'\t'|'\f')$;
 		DEFINE LINEBREAKS $('\r\n'|'\r'|'\n')$;
@@ -44,42 +42,76 @@ TOKENS{
 }
 
 TOKENSTYLES{
-	"TEXT" COLOR #000000;
 	
-	"T_MULTICAST" COLOR #7F0055, BOLD;
-	"T_READONLY" COLOR #7F0055, BOLD;
-
-	"SL_COMMENT"  COLOR #00aa33;
-	"ML_COMMENT"  COLOR #00aa33;
+	// Default text
+	"TEXT" COLOR #222222;
 	
+	// Comments
+	"SL_COMMENT"  COLOR #666666;
+	"ML_COMMENT"  COLOR #666666;
+	
+	// Annotations & ext
 	"ANNOTATION" COLOR #0055bb , BOLD;
-	"STRING_LITERAL" COLOR #0055bb;
+	"STRING_EXT" COLOR #0055bb;
 	
+	// Literals
+	"STRING_LITERAL" COLOR #0055bb;
+	"INTEGER_LITERAL" COLOR #0055bb;
+	
+	// Definition of types and messages
+	"T_READONLY" COLOR #CC8000, BOLD;
 	"thing" COLOR #CC8000, BOLD;
 	"datatype" COLOR #CC8000, BOLD;
 	"enumeration" COLOR #CC8000, BOLD;
-	"T_ASPECT" COLOR #CC8000, BOLD;
-	"T_SINGLETON" COLOR #CC8000, BOLD;
+	"sends" COLOR #CC8000, BOLD;
+	"receives" COLOR #CC8000, BOLD;
+	"port" COLOR #CC8000, BOLD;
+	"provided" COLOR #CC8000, BOLD;	
+	"required" COLOR #CC8000, BOLD;
+	"message" COLOR #CC8000, BOLD;	
+	"property" COLOR #CC8000, BOLD;	
 	
-	"sends" COLOR #7F0055, BOLD;
-	"receives" COLOR #7F0055, BOLD;
-	"STRING_EXT" COLOR #0055bb;
-	"state" COLOR #CC8000, BOLD;
-	"composite" COLOR #CC8000, BOLD;
-	"statechart" COLOR #CC8000, BOLD;
-	"event" COLOR #7F0055, BOLD;	
-	"guard" COLOR #7F0055, BOLD;
-	"action" COLOR #7F0055, BOLD;
-	"on" COLOR #7F0055, BOLD;
-	"entry" COLOR #7F0055, BOLD;
-	"exit" COLOR #7F0055, BOLD;
-	"transition" COLOR #CC8000, BOLD;
-	"init" COLOR #CC8000, BOLD;
-	"keeps" COLOR #CC8000, BOLD;
-	"T_HISTORY" COLOR #CC8000, BOLD;
-	"port" COLOR #CC8000, BOLD;	
-	"import" COLOR #7F0055, BOLD;
-	"->" COLOR #CC8000, BOLD;
+	
+	// State machines
+	"state" COLOR #A22000, BOLD;
+	"composite" COLOR #A22000, BOLD;
+	"statechart" COLOR #A22000, BOLD;
+	"event" COLOR #A22000, BOLD;	
+	"guard" COLOR #A22000, BOLD;
+	"action" COLOR #A22000, BOLD;
+	"on" COLOR #A22000, BOLD;
+	"entry" COLOR #A22000, BOLD;
+	"exit" COLOR #A22000, BOLD;
+	"region" COLOR #A22000, BOLD;
+	"internal" COLOR #A22000, BOLD;
+	"transition" COLOR #A22000, BOLD;
+	"init" COLOR #A22000, BOLD;
+	"keeps" COLOR #A22000, BOLD;
+	"T_HISTORY" COLOR #A22000, BOLD;
+	"->" COLOR #A22000, BOLD;
+	
+	// Action language
+	"do" COLOR #444444, BOLD;
+	"end" COLOR #444444, BOLD;
+	"if" COLOR #444444, BOLD;
+	"while" COLOR #444444, BOLD;
+	"print" COLOR #444444, BOLD;
+	"error" COLOR #444444, BOLD;
+	"not" COLOR #444444, BOLD;
+	"and" COLOR #444444, BOLD;
+	"or" COLOR #444444, BOLD;
+	
+	// Configurations and Instances
+	"configuration" COLOR #007F55, BOLD;
+	"instance" COLOR #007F55, BOLD;	
+	"connector" COLOR #007F55, BOLD;	
+	"=>" COLOR #007F55, BOLD;
+
+	// Special keywords
+	"T_ASPECT" COLOR #444444, BOLD;
+	"includes" COLOR #444444, BOLD;
+	"import" COLOR #444444, BOLD;
+	"set" COLOR #444444, BOLD;
 	
 	"(" COLOR #444444, BOLD;
 	")" COLOR #444444, BOLD;
@@ -87,22 +119,25 @@ TOKENSTYLES{
 	"}" COLOR #444444, BOLD;
 	"[" COLOR #444444, BOLD;
 	"]" COLOR #444444, BOLD;
+	
+	"!" COLOR #444444, BOLD;
+	"?" COLOR #444444, BOLD;
 }
 
 
-RULES{
+RULES {
 	
-	ThingMLModel::= ( !0 "import" #1 imports[STRING_LITERAL] )* ( !0 (messages | types | configs) )* ;
+	ThingMLModel::= ( !0 "import" #1 imports[STRING_LITERAL] )* ( !0 (types | configs) )* ;
 		
 	Message ::= "message" #1 name[]  "(" (parameters (","  parameters)* )? ")"(annotations)* ";"  ;
 	
-	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  properties | assign | ports | behaviour )* !0 "}" ;
+	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | properties | assign | ports | behaviour )* !0 "}" ;
 	
 	RequiredPort ::= !1 "required" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 
 	ProvidedPort ::= !1 "provided" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 	
-	Property::= !1 (changeable[T_READONLY])? "property" #1 name[]  ":"  type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")? #1 "=" #1 init  (annotations)*;
+	Property::= !1 (changeable[T_READONLY])? "property" #1 name[]  ":"  type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")? (#1 "=" #1 init)?  (annotations)*;
 	
 //	Dictionary::= !1 (changeable[T_READONLY])? "dictionary" #1 name[]  ":"  indexType[] "->" type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?(annotations)*;
 	

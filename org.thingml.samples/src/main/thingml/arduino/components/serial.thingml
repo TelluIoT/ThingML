@@ -1,0 +1,45 @@
+import "../core/typedefs.thingml"
+import "../core/scheduler.thingml"
+
+thing fragment SerialMsgs {
+	message writeByte(b : Byte);
+	message writeMessage(msg : String);
+	message receiveByte(b : Byte);
+	message receiveMessage(b : Byte);
+}
+
+thing Serial includes SerialMsgs, SchedulerMsgs
+{
+    property delimiter : Byte = "\n"
+    property buffer_size : Int8 = 32
+    property buffer : String = ""
+    property index : Int8 = 0
+
+
+	provided port Serial 
+    {
+		sends receiveByte, receiveMessage
+        receives writeByte, writeMessage
+	}
+
+    required port Scheduler 
+    {
+        receives loop
+    }
+
+    statechart SerialImpl init Receiving {
+            
+        state Receiving {
+            on entry index = 0
+            
+            internal event Scheduler?loop
+            action do
+                if ('Serial.available()' > 0) do
+                 // TODO: read data from serial port
+                end 
+            end
+            
+        }
+        
+    }
+}

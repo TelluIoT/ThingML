@@ -44,6 +44,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.sintef.thingml.Thing#getBehaviour <em>Behaviour</em>}</li>
  *   <li>{@link org.sintef.thingml.Thing#getIncludes <em>Includes</em>}</li>
  *   <li>{@link org.sintef.thingml.Thing#getAssign <em>Assign</em>}</li>
+ *   <li>{@link org.sintef.thingml.Thing#getMessages <em>Messages</em>}</li>
  * </ul>
  * </p>
  *
@@ -159,5 +160,21 @@ public interface Thing extends Type {
 	 * @generated
 	 */
 	EList<PropertyAssign> getAssign();
+
+	/**
+	 * Returns the value of the '<em><b>Messages</b></em>' containment reference list.
+	 * The list contents are of type {@link org.sintef.thingml.Message}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Messages</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Messages</em>' containment reference list.
+	 * @see org.sintef.thingml.ThingmlPackage#getThing_Messages()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Message> getMessages();
 
 } // Thing

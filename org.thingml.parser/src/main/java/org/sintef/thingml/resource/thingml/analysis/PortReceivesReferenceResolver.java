@@ -31,6 +31,7 @@ package org.sintef.thingml.resource.thingml.analysis;
 import java.util.ArrayList;
 
 import org.sintef.thingml.Message;
+import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.Type;
 import org.sintef.thingml.constraints.ThingMLHelpers;
@@ -40,7 +41,7 @@ public class PortReceivesReferenceResolver implements org.sintef.thingml.resourc
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Port, org.sintef.thingml.Message> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Port, org.sintef.thingml.Message>();
 	
 	public void resolve(String identifier, org.sintef.thingml.Port container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Message> result) {
-		ThingMLModel root = ThingMLHelpers.findContainingModel(container);
+		Thing root = ThingMLHelpers.findContainingThing(container);
 		ArrayList<Message> ts = ThingMLHelpers.findMessage(root, identifier, resolveFuzzy);
 		for (Message t : ts) result.addMapping(t.getName(), t);
 		if(!result.wasResolved()) result.setErrorMessage("Cannot resolve message " + identifier);

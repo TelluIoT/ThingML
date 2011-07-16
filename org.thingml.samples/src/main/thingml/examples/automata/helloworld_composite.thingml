@@ -1,0 +1,43 @@
+// Definition of the Pingable fragmant
+thing HelloComp @c_code "generate"
+{
+
+	message hello();
+	message world();
+
+	provided port IO {
+		receives hello, world 
+	}
+	
+	statechart HelloComp init Init {
+
+		state Init {
+			on entry print "Welcome!\n"
+			transition -> H event IO?hello
+		}
+		
+		composite state H init E {
+			on entry print "H"
+			on exit print "D\n"
+			
+			transition -> Init event IO?world
+			
+			composite state E init L {
+				on entry print "E"
+				on exit print "L"
+				composite state L init L {
+					on entry print "L"
+					on exit print "R"
+					composite state L init O {
+						on entry print "L"
+						on exit print "O"
+						state O {
+							on entry print "O\n"
+							on exit print "W"
+						}
+					}
+				}
+			}
+		}
+	}
+}

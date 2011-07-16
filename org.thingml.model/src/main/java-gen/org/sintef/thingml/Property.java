@@ -165,7 +165,7 @@ public interface Property extends AnnotatedElement {
 	 * @return the value of the '<em>Init</em>' containment reference.
 	 * @see #setInit(Expression)
 	 * @see org.sintef.thingml.ThingmlPackage#getProperty_Init()
-	 * @model containment="true" required="true"
+	 * @model containment="true"
 	 * @generated
 	 */
 	Expression getInit();

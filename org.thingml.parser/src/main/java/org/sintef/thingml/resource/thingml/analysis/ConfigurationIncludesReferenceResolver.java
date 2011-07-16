@@ -15,12 +15,22 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
+import java.util.ArrayList;
+
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+
 public class ConfigurationIncludesReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.Configuration, org.sintef.thingml.Configuration> {
 	
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Configuration, org.sintef.thingml.Configuration> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Configuration, org.sintef.thingml.Configuration>();
 	
 	public void resolve(String identifier, org.sintef.thingml.Configuration container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Configuration> result) {
-		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
+		ThingMLModel root = ThingMLHelpers.findContainingModel(container);
+		ArrayList<Configuration> ts = ThingMLHelpers.findConfiguration(root, identifier, resolveFuzzy);
+		for (Configuration t : ts) result.addMapping(t.getName(), t);
+		if(!result.wasResolved()) result.setErrorMessage("Cannot resolve configuration " + identifier);
 	}
 	
 	public String deResolve(org.sintef.thingml.Configuration element, org.sintef.thingml.Configuration container, org.eclipse.emf.ecore.EReference reference) {

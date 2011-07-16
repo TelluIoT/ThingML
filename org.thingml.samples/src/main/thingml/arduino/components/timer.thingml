@@ -1,0 +1,60 @@
+import "../core/typedefs.thingml"
+import "../core/clock.thingml"
+
+thing fragment TimerMsgs {
+	// Start the Timer
+	message timer_start(delay : Int16);
+	// Cancel the Timer
+	message timer_cancel();
+	// Notification that the timer has expired
+	message timer_timeout();
+}
+
+// Manage a set of software timers.
+thing SoftTimer includes TimerMsgs, ClockMsgs
+{
+	provided port SoftTimer
+    {
+		sends timer_timeout
+		receives timer_start, timer_cancel
+	}
+
+    required port Clock
+    {
+        receives tick1ms
+    }
+    
+    statechart SoftTimer init Idle {
+    
+        property counter : Int16 = 0
+    
+        state Idle {
+            transition start -> Counting
+                event m : SoftTimer?timer_start
+                guard m.delay > 0
+                action counter = m.delay
+        }
+        
+        state Counting {
+            
+            internal tick 
+                event Clock?tick1ms
+                guard counter > 0
+                action counter = counter - 1
+            
+            transition timeout -> Idle
+                event Clock?tick1ms
+                guard counter == 0
+                action SoftTimer!timer_timeout()
+                
+            transition cancel -> Idle
+                event m : SoftTimer?timer_cancel
+                
+            internal reset
+                event m : SoftTimer?timer_start
+                guard m.delay > 0
+                action counter = m.delay
+
+        }
+    }
+}

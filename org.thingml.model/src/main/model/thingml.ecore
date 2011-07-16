@@ -8,8 +8,6 @@
         eType="#//Type" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="imports" upperBound="-1"
         eType="#//ThingMLModel"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="messages" upperBound="-1"
-        eType="#//Message" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="configs" upperBound="-1"
         eType="#//Configuration" containment="true"/>
   </eClassifiers>
@@ -29,6 +27,8 @@
         eType="#//Thing"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assign" upperBound="-1"
         eType="#//PropertyAssign" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messages" upperBound="-1"
+        eType="#//Message" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//ThingMLElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//Type"/>
@@ -41,7 +41,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//Type"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="init" lowerBound="1" eType="#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="init" eType="#//Expression"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="changeable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>

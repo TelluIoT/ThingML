@@ -58,7 +58,6 @@ import org.sintef.thingml.Type;
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getTypes <em>Types</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getImports <em>Imports</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getMessages <em>Messages</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getConfigs <em>Configs</em>}</li>
  * </ul>
  * </p>
@@ -85,16 +84,6 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 	 * @ordered
 	 */
 	protected EList<ThingMLModel> imports;
-
-	/**
-	 * The cached value of the '{@link #getMessages() <em>Messages</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMessages()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Message> messages;
 
 	/**
 	 * The cached value of the '{@link #getConfigs() <em>Configs</em>}' containment reference list.
@@ -154,18 +143,6 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Message> getMessages() {
-		if (messages == null) {
-			messages = new EObjectContainmentEList<Message>(Message.class, this, ThingmlPackage.THING_ML_MODEL__MESSAGES);
-		}
-		return messages;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EList<Configuration> getConfigs() {
 		if (configs == null) {
 			configs = new EObjectContainmentEList<Configuration>(Configuration.class, this, ThingmlPackage.THING_ML_MODEL__CONFIGS);
@@ -183,8 +160,6 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 		switch (featureID) {
 			case ThingmlPackage.THING_ML_MODEL__TYPES:
 				return ((InternalEList<?>)getTypes()).basicRemove(otherEnd, msgs);
-			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
-				return ((InternalEList<?>)getMessages()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
 				return ((InternalEList<?>)getConfigs()).basicRemove(otherEnd, msgs);
 		}
@@ -203,8 +178,6 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				return getTypes();
 			case ThingmlPackage.THING_ML_MODEL__IMPORTS:
 				return getImports();
-			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
-				return getMessages();
 			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
 				return getConfigs();
 		}
@@ -228,10 +201,6 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				getImports().clear();
 				getImports().addAll((Collection<? extends ThingMLModel>)newValue);
 				return;
-			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
-				getMessages().clear();
-				getMessages().addAll((Collection<? extends Message>)newValue);
-				return;
 			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
 				getConfigs().clear();
 				getConfigs().addAll((Collection<? extends Configuration>)newValue);
@@ -254,9 +223,6 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 			case ThingmlPackage.THING_ML_MODEL__IMPORTS:
 				getImports().clear();
 				return;
-			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
-				getMessages().clear();
-				return;
 			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
 				getConfigs().clear();
 				return;
@@ -276,8 +242,6 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				return types != null && !types.isEmpty();
 			case ThingmlPackage.THING_ML_MODEL__IMPORTS:
 				return imports != null && !imports.isEmpty();
-			case ThingmlPackage.THING_ML_MODEL__MESSAGES:
-				return messages != null && !messages.isEmpty();
 			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
 				return configs != null && !configs.isEmpty();
 		}
