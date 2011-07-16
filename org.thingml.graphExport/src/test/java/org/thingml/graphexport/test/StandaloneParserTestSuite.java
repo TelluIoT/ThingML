@@ -49,10 +49,8 @@ public class StandaloneParserTestSuite extends TestSuite {
     public static Test suite() {
         try {
             TestSuite suite = new TestSuite("Standalone Parser Test Suite");
-            populate(suite, "model/actions");
-            populate(suite, "model/msp");
-            populate(suite, "model/statecharts");
-            populate(suite, "model/c_gen_tests");
+            populate(suite, "model/statemachines");
+            populate(suite, "model/arduino");
             return suite;
         } 
         catch (Throwable t) {

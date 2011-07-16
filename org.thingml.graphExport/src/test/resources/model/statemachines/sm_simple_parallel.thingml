@@ -8,7 +8,7 @@ message pongB();
 thing HelloPar @c_code "generate"
 {
 
-	port IO {
+	provided port IO {
 		receives ping, pingA, pingB
 		sends pongA, pongB 
 	}

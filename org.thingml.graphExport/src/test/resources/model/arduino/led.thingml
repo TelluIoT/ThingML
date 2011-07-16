@@ -1,0 +1,43 @@
+import "arduino.thingml"
+
+message led_on();
+message led_off();
+message led_toggle();
+
+thing LED
+{
+    
+    property led_pin : DigitalPin = 13
+    
+	provided port LED 
+    @direction "provided"
+    {
+		receives led_on, led_off, led_toggle
+	}
+
+    required port DigitalIO
+    @direction "required"
+    {
+        sends pinMode, digitalWrite    
+    }
+    
+    statechart LEDImpl init LED_OFF {
+        
+        // Bug cannot refer to enum litterals
+        on entry DigitalIO!pinMode(led_pin, 'PinMode.OUTPUT')
+        
+        state LED_OFF {
+            on entry DigitalIO!digitalWrite(led_pin, 'DigitalState.LOW')
+            transition switch_on -> LED_ON event LED?led_on event LED?led_toggle
+            
+        }
+        
+        state LED_ON {
+            on entry DigitalIO!digitalWrite(led_pin, 'DigitalState.HIGH')
+            transition switch_off -> LED_OFF event LED?led_off event LED?led_toggle
+        }
+    
+   
+    }
+    
+}

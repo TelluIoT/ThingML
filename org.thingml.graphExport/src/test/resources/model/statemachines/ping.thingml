@@ -5,7 +5,7 @@ message pong();
 thing Ping @c_code "generate"
 {
 
-	port PingPong {
+	provided port PingPong {
 		sends pong
 		receives ping
 	}

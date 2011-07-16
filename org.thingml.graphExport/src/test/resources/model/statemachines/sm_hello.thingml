@@ -11,7 +11,7 @@ message d();
 thing Hello @c_code "generate"
 {
 
-	port IO {
+	provided port IO {
 		receives h,e,l,o
 		sends w,o,r,l,d
 	}

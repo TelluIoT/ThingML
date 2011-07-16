@@ -1,0 +1,194 @@
+import "typedefs.thingml"
+
+enumeration PinMode 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	INPUT @enum_val "0"
+	OUTPUT @enum_val "1"
+}
+
+enumeration DigitalState 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	LOW @enum_val "0"
+	HIGH @enum_val "1"
+}
+
+enumeration DigitalPin 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	PIN_0 @enum_val "0"
+	PIN_1 @enum_val "1"
+	PIN_2 @enum_val "2"
+	PIN_3 @enum_val "3"
+	PIN_4 @enum_val "4"
+	PIN_5 @enum_val "5"
+	PIN_6 @enum_val "6"
+	PIN_7 @enum_val "7"
+	PIN_8 @enum_val "8"
+	PIN_9 @enum_val "9"
+	PIN_10 @enum_val "10"
+	PIN_11 @enum_val "11"
+	PIN_12 @enum_val "12"
+	PIN_13 @enum_val "13"
+	A_0 @enum_val "14"
+	A_1 @enum_val "15"
+	A_2 @enum_val "16"
+	A_3 @enum_val "17"
+	A_4 @enum_val "18"
+	A_5 @enum_val "19"
+}
+
+enumeration PWMPin 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	PWM_PIN_3 @enum_val "3"
+	PWM_PIN_5 @enum_val "5"
+	PWM_PIN_6 @enum_val "6"
+	PWM_PIN_9 @enum_val "9"
+	PWM_PIN_10 @enum_val "10"
+	PWM_PIN_11 @enum_val "11"
+}
+
+
+enumeration AnalogPin 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	A_0 @enum_val "14"
+	A_1 @enum_val "15"
+	A_2 @enum_val "16"
+	A_3 @enum_val "17"
+	A_4 @enum_val "18"
+	A_5 @enum_val "19"
+}
+
+enumeration AnalogReference 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	DEFAULT @enum_val "1"
+	INTERNAL @enum_val "3"
+	EXTERNAL @enum_val "0"
+}
+
+enumeration InterruptPin 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	PIN_2_INT0 @enum_val "0"
+	PIN_3_INT1 @enum_val "1"
+}
+
+enumeration InterruptTrigger 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	CHANGE @enum_val "1"
+	RISING @enum_val "3"
+	FALLING @enum_val "2"
+	LOW @enum_val "0"
+}
+
+// Digital I/O
+message pinMode(pin : DigitalPin, mode : PinMode) @code "2";
+message digitalWrite(pin : DigitalPin, value : DigitalState) @code "3";
+message digitalRead(pin : DigitalPin) @code "4"
+	@sync_response "digitalReadResult#value" @timeout "500" @retry "0";
+message digitalReadResult(value : DigitalState) @code "5";
+
+// Analog I/O
+message analogReference(type : AnalogReference) @code "6";
+message analogRead(pin : AnalogPin) @code "7" 
+	@sync_response "analogReadResult#value" @timeout "500" @retry "0";
+message analogReadResult(value : Int16) @code "8";
+message analogWrite(pin : PWMPin, value : Int8) @code "9";
+
+// Advanced I/O
+message tone(pin : DigitalPin, frequency : Int16, duration : Int16) @code "10";
+message noTone(pin : DigitalPin) @code "11";
+
+// Simple Ping
+message ping() @code "66"
+	@sync_ack "pong" @timeout "1000" @retry "3" ;
+message pong() @code "67";
+
+// Interrupts
+message attachInterrupt(interrupt : InterruptPin, mode : InterruptTrigger) @code "21";
+message detachInterrupt(interrupt : InterruptPin) @code "22";
+message interruptNotification(interrupt : InterruptPin) @code "23";
+
+// EEPROM Library
+message eeprom_read(address : Int16) @code "31"
+	@sync_response "eeprom_value#value" @timeout "500" @retry "0";
+message eeprom_value(value : Int8) @code "32";
+message eeprom_write(address : Int16, value : Int8) @code "33";
+message eeprom_sync_write(address : Int16, value : Int8) @code "34"
+	@sync_ack "eeprom_write_ack" @timeout "500" @retry "0" ;
+message eeprom_write_ack() @code "35";
+
+thing Arduino 
+{
+	provided port DigitalIO {
+		receives pinMode, digitalRead, digitalWrite
+		sends digitalReadResult
+	}
+	
+	provided port AnalogIO {
+		receives analogReference, analogRead, analogWrite
+		sends analogReadResult
+	}
+	
+	provided port AdvancedIO {
+		receives tone, noTone
+	}
+	
+	provided port Ping {
+		receives ping
+		sends pong
+	}
+	
+	provided port Interrupts {
+		receives attachInterrupt, detachInterrupt
+		sends interruptNotification
+	}
+	
+	provided port EEPROM {
+		receives eeprom_read, eeprom_sync_write, eeprom_write
+		sends eeprom_value, eeprom_write_ack
+	}
+    
+    statechart ArduinoImpl init RunningArduino {
+        state RunningArduino {
+        
+            internal event m : DigitalIO?pinMode 
+            action 'pinMode(' & m.pin & ', '& m.mode &');'
+            
+            internal event m : DigitalIO?digitalWrite 
+            action 'digitalWrite(' & m.pin & ', '& m.value &');'
+            
+            internal event m : DigitalIO?digitalRead 
+            action DigitalIO!digitalReadResult('digitalRead(' & m.pin &')')
+            
+            internal event m : AnalogIO?analogReference 
+            action 'analogReference(' & m.type & ');'
+            
+            internal event m : AnalogIO?analogRead 
+            action AnalogIO!analogReadResult('analogRead(' & m.pin &')')
+            
+            internal event m : AnalogIO?analogWrite 
+            action 'analogWrite(' & m.pin & ', '& m.value &');'
+            
+            internal event m : AdvancedIO?tone 
+            action 'analogWrite(' & m.pin & ', '& m.frequency & ', '& m.duration &');'
+            
+            internal event m : AdvancedIO?noTone 
+            action 'analogWrite(' & m.pin & ');'
+                    
+        }
+    }
+}

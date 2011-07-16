@@ -5,7 +5,7 @@ message world();
 thing HelloComp @c_code "generate"
 {
 
-	port IO {
+	provided port IO {
 		receives hello, world 
 	}
 	
