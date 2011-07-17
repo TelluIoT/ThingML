@@ -39,6 +39,10 @@ case class ThingMLElementScalaImpl(self : ThingMLElement) {
     return ThingMLHelpers.findContainingThing(self)
   }
 
+  def findContainingConfiguration: Configuration = {
+    return ThingMLHelpers.findContainingConfiguration(self)
+  }
+
   def findContainingState: State = {
     return ThingMLHelpers.findContainingState(self)
   }
