@@ -25,7 +25,7 @@ thing BlinkLED includes LEDMsgs, TimerMsgs
 
 configuration Blink {
 	instance led : LED
-		set led_pin = 13
+		set led_pin = DigitalPin:PIN_13 
 	instance timer : SoftTimer
 	instance app : BlinkLED
 	connector app.HW => led.LED

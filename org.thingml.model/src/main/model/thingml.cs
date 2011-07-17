@@ -37,8 +37,8 @@ TOKENS{
 		//DEFINE MULTIPLICITY $(('0'..'9')+) '\.' '\.' ( ('*') | (('1'..'9')+) )$;
 		//DEFINE MULTIPLICITY $( ('*') | (('1'..'9')+) )$;
 		
-		//DEFINE TEXT $('A'..'Z' | 'a'..'z' | '0'..'9' | '_' | '-' )+$;
-		DEFINE TEXT $('A'..'Z' | 'a'..'z' | '0'..'9' | '_' )+ (':' ':' ('A'..'Z' | 'a'..'z' | '0'..'9' | '_')+ )* $;
+		DEFINE TEXT $('A'..'Z' | 'a'..'z' | '0'..'9' | '_' | '-' )+$;
+		//DEFINE TEXT $('A'..'Z' | 'a'..'z' | '0'..'9' | '_' )+ (':' ':' ('A'..'Z' | 'a'..'z' | '0'..'9' | '_')+ )* $;
 }
 
 TOKENSTYLES{
@@ -53,10 +53,12 @@ TOKENSTYLES{
 	// Annotations & ext
 	"ANNOTATION" COLOR #0055bb , BOLD;
 	"STRING_EXT" COLOR #0055bb;
+	"&" COLOR #0055bb, BOLD;
 	
 	// Literals
 	"STRING_LITERAL" COLOR #0055bb;
 	"INTEGER_LITERAL" COLOR #0055bb;
+	"BOOLEAN_LITERAL" COLOR #0055bb, BOLD;
 	
 	// Definition of types and messages
 	"T_READONLY" COLOR #CC8000, BOLD;
@@ -122,6 +124,9 @@ TOKENSTYLES{
 	
 	"!" COLOR #444444, BOLD;
 	"?" COLOR #444444, BOLD;
+	"." COLOR #444444, BOLD;
+	":" COLOR #444444, BOLD;
+	
 }
 
 
@@ -256,6 +261,9 @@ RULES {
 	
 	@Operator(type="primitive", weight="8", superclass="Expression")
 	BooleanLiteral ::= boolValue[BOOLEAN_LITERAL];
+	
+	@Operator(type="primitive", weight="8", superclass="Expression")
+	EnumLiteralRef ::= enum[] ":" literal[];
 	
 	@Operator(type="primitive", weight="8", superclass="Expression")
 	ExternExpression::= expression[STRING_EXT] ("&" segments)*;

@@ -9,7 +9,7 @@ thing fragment LEDMsgs {
 thing LED includes LEDMsgs, ArduinoStdlibMsgs
 {
     
-    readonly property led_pin : DigitalPin = 13
+    readonly property led_pin : DigitalPin = DigitalPin:PIN_13
     
 	provided port LED 
     {

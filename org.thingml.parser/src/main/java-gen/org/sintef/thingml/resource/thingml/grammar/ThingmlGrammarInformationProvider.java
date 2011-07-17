@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.grammar;
 
@@ -869,13 +860,19 @@ public class ThingmlGrammarInformationProvider {
 	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlSequence THINGML_47_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlSequence(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_47_0_0_0);
 	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlChoice THINGML_47_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlChoice(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_47_0_0);
 	public final static Rule THINGML_47 = new Rule(org.sintef.thingml.ThingmlPackage.eINSTANCE.getBooleanLiteral(), THINGML_47_0, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder THINGML_48_0_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.EXTERN_EXPRESSION__EXPRESSION), "STRING_EXT", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, 0);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword THINGML_48_0_0_1_0_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword("&", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlContainment THINGML_48_0_0_1_0_0_1 = new org.sintef.thingml.resource.thingml.grammar.ThingmlContainment(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.EXTERN_EXPRESSION__SEGMENTS), org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, 0);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlSequence THINGML_48_0_0_1_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlSequence(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_48_0_0_1_0_0_0, THINGML_48_0_0_1_0_0_1);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlChoice THINGML_48_0_0_1_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlChoice(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_48_0_0_1_0_0);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlCompound THINGML_48_0_0_1 = new org.sintef.thingml.resource.thingml.grammar.ThingmlCompound(THINGML_48_0_0_1_0, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.STAR);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlSequence THINGML_48_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlSequence(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_48_0_0_0, THINGML_48_0_0_1);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder THINGML_48_0_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEnumLiteralRef().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.ENUM_LITERAL_REF__ENUM), "TEXT", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, 0);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword THINGML_48_0_0_1 = new org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword(":", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder THINGML_48_0_0_2 = new org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEnumLiteralRef().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.ENUM_LITERAL_REF__LITERAL), "TEXT", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, 0);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlSequence THINGML_48_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlSequence(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_48_0_0_0, THINGML_48_0_0_1, THINGML_48_0_0_2);
 	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlChoice THINGML_48_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlChoice(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_48_0_0);
-	public final static Rule THINGML_48 = new Rule(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), THINGML_48_0, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
+	public final static Rule THINGML_48 = new Rule(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEnumLiteralRef(), THINGML_48_0, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder THINGML_49_0_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.EXTERN_EXPRESSION__EXPRESSION), "STRING_EXT", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, 0);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword THINGML_49_0_0_1_0_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword("&", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlContainment THINGML_49_0_0_1_0_0_1 = new org.sintef.thingml.resource.thingml.grammar.ThingmlContainment(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.EXTERN_EXPRESSION__SEGMENTS), org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, 0);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlSequence THINGML_49_0_0_1_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlSequence(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_49_0_0_1_0_0_0, THINGML_49_0_0_1_0_0_1);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlChoice THINGML_49_0_0_1_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlChoice(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_49_0_0_1_0_0);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlCompound THINGML_49_0_0_1 = new org.sintef.thingml.resource.thingml.grammar.ThingmlCompound(THINGML_49_0_0_1_0, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.STAR);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlSequence THINGML_49_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlSequence(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_49_0_0_0, THINGML_49_0_0_1);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlChoice THINGML_49_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlChoice(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_49_0_0);
+	public final static Rule THINGML_49 = new Rule(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), THINGML_49_0, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
 }

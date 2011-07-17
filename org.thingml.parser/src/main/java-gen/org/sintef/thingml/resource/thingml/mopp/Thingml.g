@@ -399,7 +399,7 @@ options {
 				break;
 			}
 		}
-		int followSetID = 342;
+		int followSetID = 345;
 		int i;
 		for (i = tokenIndexOfLastCompleteElement; i < tokenStream.size(); i++) {
 			org.antlr.runtime3_3_0.CommonToken nextToken = (org.antlr.runtime3_3_0.CommonToken) tokenStream.get(i);
@@ -2639,6 +2639,7 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 88, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_14);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 88, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_14);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 88, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_14);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 88, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_14);
 			}
 			
 			(
@@ -2836,7 +2837,7 @@ parse_org_sintef_thingml_Parameter returns [org.sintef.thingml.Parameter element
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 93);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_85, 93);
 	}
 	
 	a1 = ':' {
@@ -2850,7 +2851,7 @@ parse_org_sintef_thingml_Parameter returns [org.sintef.thingml.Parameter element
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_85, 94);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_86, 94);
 	}
 	
 	(
@@ -2911,7 +2912,7 @@ parse_org_sintef_thingml_PrimitiveType returns [org.sintef.thingml.PrimitiveType
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_86, 96);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_87, 96);
 	}
 	
 	(
@@ -2948,7 +2949,7 @@ parse_org_sintef_thingml_PrimitiveType returns [org.sintef.thingml.PrimitiveType
 	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 97, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_87, 97);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_88, 97);
 	}
 	
 	(
@@ -2977,7 +2978,7 @@ parse_org_sintef_thingml_PrimitiveType returns [org.sintef.thingml.PrimitiveType
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 98, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_87, 98);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_88, 98);
 			}
 			
 		)
@@ -2985,7 +2986,7 @@ parse_org_sintef_thingml_PrimitiveType returns [org.sintef.thingml.PrimitiveType
 	)*	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 99, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_87, 99);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_88, 99);
 	}
 	
 	a3 = ';' {
@@ -3022,7 +3023,7 @@ parse_org_sintef_thingml_Enumeration returns [org.sintef.thingml.Enumeration ele
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_88, 101);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_89, 101);
 	}
 	
 	(
@@ -3059,7 +3060,7 @@ parse_org_sintef_thingml_Enumeration returns [org.sintef.thingml.Enumeration ele
 	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 102, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_89, 102);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_90, 102);
 	}
 	
 	(
@@ -3088,7 +3089,7 @@ parse_org_sintef_thingml_Enumeration returns [org.sintef.thingml.Enumeration ele
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 103, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_89, 103);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_90, 103);
 			}
 			
 		)
@@ -3096,7 +3097,7 @@ parse_org_sintef_thingml_Enumeration returns [org.sintef.thingml.Enumeration ele
 	)*	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 104, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_89, 104);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_90, 104);
 	}
 	
 	a3 = '{' {
@@ -3110,8 +3111,8 @@ parse_org_sintef_thingml_Enumeration returns [org.sintef.thingml.Enumeration ele
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_90, 105, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_15);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_91, 105);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_91, 105, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_15);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_92, 105);
 	}
 	
 	(
@@ -3139,16 +3140,16 @@ parse_org_sintef_thingml_Enumeration returns [org.sintef.thingml.Enumeration ele
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_90, 106, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_15);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_91, 106);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_91, 106, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_15);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_92, 106);
 			}
 			
 		)
 		
 	)*	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_90, 107, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_15);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_91, 107);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_91, 107, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_15);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_92, 107);
 	}
 	
 	a5 = '}' {
@@ -3208,8 +3209,8 @@ parse_org_sintef_thingml_EnumerationLiteral returns [org.sintef.thingml.Enumerat
 	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 109, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_90, 109, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_15);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_91, 109);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_91, 109, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_15);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_92, 109);
 	}
 	
 	(
@@ -3238,8 +3239,8 @@ parse_org_sintef_thingml_EnumerationLiteral returns [org.sintef.thingml.Enumerat
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 110, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_90, 110, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_15);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_91, 110);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_91, 110, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_15);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_92, 110);
 			}
 			
 		)
@@ -3247,8 +3248,8 @@ parse_org_sintef_thingml_EnumerationLiteral returns [org.sintef.thingml.Enumerat
 	)*	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 111, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_90, 111, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_15);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_91, 111);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_91, 111, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_15);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_92, 111);
 	}
 	
 ;
@@ -3290,7 +3291,7 @@ parse_org_sintef_thingml_PlatformAnnotation returns [org.sintef.thingml.Platform
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_92, 112);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_93, 112);
 	}
 	
 	(
@@ -3348,9 +3349,8 @@ parse_org_sintef_thingml_PlatformAnnotation returns [org.sintef.thingml.Platform
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 113);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 113);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 113);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_87, 113);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_89, 113);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_93, 113);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_88, 113);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_90, 113);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_94, 113);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_95, 113);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 113);
@@ -3358,6 +3358,7 @@ parse_org_sintef_thingml_PlatformAnnotation returns [org.sintef.thingml.Platform
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_98, 113);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 113);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 113);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_101, 113);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_16, 113, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_17);
 	}
 	
@@ -3378,8 +3379,8 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_101, 114);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_102, 114);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_103, 114);
 	}
 	
 	(
@@ -3417,14 +3418,14 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_102, 115);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_103, 115);
 			}
 			
 		)
 		
 	)?	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_102, 116);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_103, 116);
 	}
 	
 	a2 = 'init' {
@@ -3438,7 +3439,7 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_103, 117);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_104, 117);
 	}
 	
 	(
@@ -3478,9 +3479,9 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_104, 118);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 118, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_105, 118);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 118, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_106, 118);
 	}
 	
 	(
@@ -3496,7 +3497,7 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_106, 119);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_107, 119);
 			}
 			
 			(
@@ -3533,7 +3534,7 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 120, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_105, 120);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_106, 120);
 			}
 			
 		)
@@ -3541,7 +3542,7 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 	)?	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 121, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_105, 121);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_106, 121);
 	}
 	
 	(
@@ -3570,7 +3571,7 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 122, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_105, 122);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_106, 122);
 			}
 			
 		)
@@ -3578,7 +3579,7 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 	)*	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 123, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_105, 123);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_106, 123);
 	}
 	
 	a7 = '{' {
@@ -3670,7 +3671,7 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_107, 127);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 127);
 			}
 			
 			a10 = 'entry' {
@@ -3684,7 +3685,6 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 128, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 128, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 128, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 128, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
@@ -3692,6 +3692,7 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 128, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 128, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 128, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 128, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 			}
 			
 			(
@@ -3752,7 +3753,7 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 131);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_117, 131);
 			}
 			
 			a13 = 'exit' {
@@ -3766,7 +3767,6 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 132, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 132, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 132, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 132, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
@@ -3774,6 +3774,7 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 132, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 132, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 132, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 132, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 			}
 			
 			(
@@ -3971,7 +3972,7 @@ parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine e
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_63, 141);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 141, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 141);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_117, 141);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_118, 141);
 	}
 	
 ;
@@ -3991,7 +3992,7 @@ parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null]
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_118, 142);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_119, 142);
 	}
 	
 	(
@@ -4028,7 +4029,7 @@ parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null]
 	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 143, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_119, 143);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_120, 143);
 	}
 	
 	(
@@ -4057,7 +4058,7 @@ parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null]
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 144, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_119, 144);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_120, 144);
 			}
 			
 		)
@@ -4065,7 +4066,7 @@ parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null]
 	)*	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 145, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_119, 145);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_120, 145);
 	}
 	
 	a3 = '{' {
@@ -4148,7 +4149,7 @@ parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null]
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_120, 149);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_121, 149);
 			}
 			
 			a6 = 'entry' {
@@ -4162,7 +4163,6 @@ parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null]
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 150, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 150, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 150, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 150, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
@@ -4170,6 +4170,7 @@ parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null]
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 150, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 150, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 150, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 150, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 			}
 			
 			(
@@ -4224,7 +4225,7 @@ parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null]
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_121, 153);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_122, 153);
 			}
 			
 			a9 = 'exit' {
@@ -4238,7 +4239,6 @@ parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null]
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 154, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 154, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 154, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 154, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
@@ -4246,6 +4246,7 @@ parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null]
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 154, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 154, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 154, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 154, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 			}
 			
 			(
@@ -4372,7 +4373,7 @@ parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null]
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_63, 160);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 160, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 160);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_117, 160);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_118, 160);
 	}
 	
 	|//derived choice rules for sub-classes: 
@@ -4397,7 +4398,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_122, 161);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_123, 161);
 	}
 	
 	a1 = 'state' {
@@ -4411,7 +4412,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_123, 162);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_124, 162);
 	}
 	
 	(
@@ -4447,7 +4448,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_124, 163);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_125, 163);
 	}
 	
 	a3 = 'init' {
@@ -4461,7 +4462,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_125, 164);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_126, 164);
 	}
 	
 	(
@@ -4501,9 +4502,9 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_126, 165);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 165, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_127, 165);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 165, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_128, 165);
 	}
 	
 	(
@@ -4519,7 +4520,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_128, 166);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_129, 166);
 			}
 			
 			(
@@ -4556,7 +4557,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 167, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_127, 167);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_128, 167);
 			}
 			
 		)
@@ -4564,7 +4565,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 	)?	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 168, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_127, 168);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_128, 168);
 	}
 	
 	(
@@ -4593,7 +4594,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 169, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_127, 169);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_128, 169);
 			}
 			
 		)
@@ -4601,7 +4602,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 	)*	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 170, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_127, 170);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_128, 170);
 	}
 	
 	a8 = '{' {
@@ -4696,7 +4697,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_129, 174);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_130, 174);
 			}
 			
 			a11 = 'entry' {
@@ -4710,7 +4711,6 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 175, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 175, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 175, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 175, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
@@ -4718,6 +4718,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 175, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 175, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 175, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 175, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_18);
 			}
 			
 			(
@@ -4780,7 +4781,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_130, 178);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_131, 178);
 			}
 			
 			a14 = 'exit' {
@@ -4794,7 +4795,6 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 179, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 179, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 179, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 179, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
@@ -4802,6 +4802,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 179, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 179, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 179, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 179, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_19);
 			}
 			
 			(
@@ -5031,7 +5032,7 @@ parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeSta
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_63, 189);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 189, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 189);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_117, 189);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_118, 189);
 	}
 	
 	|//derived choice rules for sub-classes: 
@@ -5055,7 +5056,7 @@ parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegi
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_131, 190);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_132, 190);
 	}
 	
 	(
@@ -5091,7 +5092,7 @@ parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegi
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_132, 191);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_133, 191);
 	}
 	
 	a2 = 'init' {
@@ -5105,7 +5106,7 @@ parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegi
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_133, 192);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_134, 192);
 	}
 	
 	(
@@ -5145,9 +5146,9 @@ parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegi
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_134, 193);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_135, 193);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 193, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_93, 193);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_94, 193);
 	}
 	
 	(
@@ -5163,7 +5164,7 @@ parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegi
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_135, 194);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_136, 194);
 			}
 			
 			(
@@ -5200,7 +5201,7 @@ parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegi
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 195, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_93, 195);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_94, 195);
 			}
 			
 		)
@@ -5208,7 +5209,7 @@ parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegi
 	)?	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 196, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_93, 196);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_94, 196);
 	}
 	
 	(
@@ -5237,7 +5238,7 @@ parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegi
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 197, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_93, 197);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_94, 197);
 			}
 			
 		)
@@ -5245,7 +5246,7 @@ parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegi
 	)*	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 198, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_93, 198);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_94, 198);
 	}
 	
 	a7 = '{' {
@@ -5262,7 +5263,7 @@ parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegi
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 199, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 199, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 199, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_117, 199);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_118, 199);
 	}
 	
 	(
@@ -5293,7 +5294,7 @@ parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegi
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 200, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 200, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 200, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_117, 200);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_118, 200);
 			}
 			
 		)
@@ -5303,7 +5304,7 @@ parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegi
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 201, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 201, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 201, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_117, 201);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_118, 201);
 	}
 	
 	a9 = '}' {
@@ -5339,8 +5340,8 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_136, 203);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_137, 203);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_138, 203);
 	}
 	
 	(
@@ -5378,14 +5379,14 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_137, 204);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_138, 204);
 			}
 			
 		)
 		
 	)?	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_137, 205);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_138, 205);
 	}
 	
 	a2 = '->' {
@@ -5399,7 +5400,7 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_138, 206);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_139, 206);
 	}
 	
 	(
@@ -5440,9 +5441,9 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 207, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_94, 207);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_95, 207);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 207);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 207);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 207, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 207, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 207);
@@ -5479,9 +5480,9 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 208, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_94, 208);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_95, 208);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 208);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 208);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 208, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 208, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 208);
@@ -5497,9 +5498,9 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 	)*	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 209, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_94, 209);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_95, 209);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 209);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 209);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 209, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 209, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 209);
@@ -5523,8 +5524,8 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_139, 210, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_20);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_140, 210, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_20);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_141, 210, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_20);
 			}
 			
 			(
@@ -5550,9 +5551,9 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_94, 211);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_95, 211);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 211);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 211);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 211, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 211, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 211);
@@ -5567,9 +5568,9 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 		
 	)*	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_94, 212);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_95, 212);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 212);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 212);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 212, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 212, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 212);
@@ -5602,6 +5603,7 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 213, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_21);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 213, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_21);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 213, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_21);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 213, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_21);
 			}
 			
 			(
@@ -5627,7 +5629,7 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 214);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 214);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 214, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 214, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 214);
@@ -5642,7 +5644,7 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 		
 	)?	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 215);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 215);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 215, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 215, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 215);
@@ -5666,7 +5668,6 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 216, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 216, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 216, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 216, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
@@ -5674,6 +5675,7 @@ parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition eleme
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 216, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 216, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 216, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 216, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
 			}
 			
 			(
@@ -5740,11 +5742,11 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_141, 219);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_142, 219);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 219, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 219);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_98, 219);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 219);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 219);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 219, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 219, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 219, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
@@ -5792,9 +5794,9 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 220, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 220);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_98, 220);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 220);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 220);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 220, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 220, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 220, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
@@ -5811,9 +5813,9 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 	)?	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 221, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 221);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_98, 221);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 221);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 221);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 221, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 221, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 221, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
@@ -5851,9 +5853,9 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 222, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 222);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_98, 222);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 222);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 222);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 222, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 222, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 222, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
@@ -5870,9 +5872,9 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 	)*	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 223, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 223);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_98, 223);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 223);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 223);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 223, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 223, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 223, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
@@ -5897,8 +5899,8 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_139, 224, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_20);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_140, 224, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_20);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_141, 224, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_20);
 			}
 			
 			(
@@ -5924,9 +5926,9 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 225);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_98, 225);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 225);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 225);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 225, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 225, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 225, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
@@ -5942,9 +5944,9 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 		
 	)*	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 226);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_98, 226);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 226);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 226);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 226, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 226, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 226, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
@@ -5978,6 +5980,7 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 227, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_21);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 227, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_21);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 227, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_21);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 227, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_21);
 			}
 			
 			(
@@ -6003,7 +6006,7 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 228);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 228);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 228, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 228, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 228, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
@@ -6019,7 +6022,7 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 		
 	)?	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 229);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 229);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 229, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 229, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 229, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
@@ -6044,7 +6047,6 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 230, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 230, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 230, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 230, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
@@ -6052,6 +6054,7 @@ parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.Internal
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 230, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 230, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 230, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 230, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_22);
 			}
 			
 			(
@@ -6144,7 +6147,7 @@ parse_org_sintef_thingml_ReceiveMessage returns [org.sintef.thingml.ReceiveMessa
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_142, 233);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_143, 233);
 			}
 			
 			a1 = ':' {
@@ -6158,14 +6161,14 @@ parse_org_sintef_thingml_ReceiveMessage returns [org.sintef.thingml.ReceiveMessa
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_140, 234);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_141, 234);
 			}
 			
 		)
 		
 	)?	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_140, 235);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_141, 235);
 	}
 	
 	(
@@ -6205,7 +6208,7 @@ parse_org_sintef_thingml_ReceiveMessage returns [org.sintef.thingml.ReceiveMessa
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_143, 236);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_144, 236);
 	}
 	
 	a3 = '?' {
@@ -6219,7 +6222,7 @@ parse_org_sintef_thingml_ReceiveMessage returns [org.sintef.thingml.ReceiveMessa
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_144, 237);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_145, 237);
 	}
 	
 	(
@@ -6259,9 +6262,9 @@ parse_org_sintef_thingml_ReceiveMessage returns [org.sintef.thingml.ReceiveMessa
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_94, 238);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_95, 238);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 238);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 238);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 238, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 238, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 238);
@@ -6270,9 +6273,9 @@ parse_org_sintef_thingml_ReceiveMessage returns [org.sintef.thingml.ReceiveMessa
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 238, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_62, 238, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_11);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 238);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 238);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_98, 238);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 238);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 238);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_63, 238);
 	}
 	
@@ -6293,7 +6296,7 @@ parse_org_sintef_thingml_PropertyAssign returns [org.sintef.thingml.PropertyAssi
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_145, 239);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_146, 239);
 	}
 	
 	(
@@ -6333,7 +6336,7 @@ parse_org_sintef_thingml_PropertyAssign returns [org.sintef.thingml.PropertyAssi
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_146, 240);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 240);
 	}
 	
 	a2 = '=' {
@@ -6356,6 +6359,7 @@ parse_org_sintef_thingml_PropertyAssign returns [org.sintef.thingml.PropertyAssi
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 241, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_23);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 241, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_23);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 241, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_23);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 241, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_23);
 	}
 	
 	(
@@ -6389,9 +6393,9 @@ parse_org_sintef_thingml_PropertyAssign returns [org.sintef.thingml.PropertyAssi
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_18, 242, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_7);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 242, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_8);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_20, 242);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 242, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 242, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 242);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 242, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 242, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 242);
 	}
 	
 ;
@@ -6411,8 +6415,8 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 243);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_151, 243);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_152, 243);
 	}
 	
 	(
@@ -6450,14 +6454,14 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_151, 244);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_152, 244);
 			}
 			
 		)
 		
 	)?	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_151, 245);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_152, 245);
 	}
 	
 	(
@@ -6493,9 +6497,9 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_152, 246);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_153, 246);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 246, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 246);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_101, 246);
 	}
 	
 	(
@@ -6511,7 +6515,7 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 			}
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_153, 247);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_154, 247);
 			}
 			
 			(
@@ -6551,9 +6555,9 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_154, 248);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_155, 248);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 248, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 248);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_101, 248);
 			}
 			
 			(
@@ -6569,7 +6573,7 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 					}
 					{
 						// expected elements (follow set)
-						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_155, 249);
+						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_156, 249);
 					}
 					
 					(
@@ -6609,18 +6613,18 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 					)
 					{
 						// expected elements (follow set)
-						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_154, 250);
+						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_155, 250);
 						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 250, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 250);
+						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_101, 250);
 					}
 					
 				)
 				
 			)*			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_154, 251);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_155, 251);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 251, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 251);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_101, 251);
 			}
 			
 		)
@@ -6628,7 +6632,7 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 	)?	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 252, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 252);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_101, 252);
 	}
 	
 	(
@@ -6657,7 +6661,7 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 253, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 253);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_101, 253);
 			}
 			
 		)
@@ -6665,7 +6669,7 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 	)*	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 254, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 254);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_101, 254);
 	}
 	
 	a8 = '{' {
@@ -6679,9 +6683,9 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 255, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 255, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 255);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 255, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 255, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 255);
 	}
 	
 	(
@@ -6709,9 +6713,9 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 256, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 256, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 256);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 256, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 256, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 256);
 			}
 			
 			
@@ -6738,18 +6742,18 @@ parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 257, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 257, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 257);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 257, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 257, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 257);
 			}
 			
 		)
 		
 	)*	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 258, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 258, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 258);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 258, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 258, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 258);
 	}
 	
 	a11 = '}' {
@@ -6786,8 +6790,8 @@ parse_org_sintef_thingml_Instance returns [org.sintef.thingml.Instance element =
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_156, 260);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_157, 260);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_158, 260);
 	}
 	
 	(
@@ -6825,14 +6829,14 @@ parse_org_sintef_thingml_Instance returns [org.sintef.thingml.Instance element =
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_157, 261);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_158, 261);
 			}
 			
 		)
 		
 	)?	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_157, 262);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_158, 262);
 	}
 	
 	a2 = ':' {
@@ -6846,7 +6850,7 @@ parse_org_sintef_thingml_Instance returns [org.sintef.thingml.Instance element =
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_158, 263);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_159, 263);
 	}
 	
 	(
@@ -6888,9 +6892,9 @@ parse_org_sintef_thingml_Instance returns [org.sintef.thingml.Instance element =
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 264, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_16, 264, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_17);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 264, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 264, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 264);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 264, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 264, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 264);
 	}
 	
 	(
@@ -6920,9 +6924,9 @@ parse_org_sintef_thingml_Instance returns [org.sintef.thingml.Instance element =
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 265, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_16, 265, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_17);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 265, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 265, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 265);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 265, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 265, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 265);
 			}
 			
 		)
@@ -6931,9 +6935,9 @@ parse_org_sintef_thingml_Instance returns [org.sintef.thingml.Instance element =
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 266, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_16, 266, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_17);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 266, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 266, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 266);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 266, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 266, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 266);
 	}
 	
 	(
@@ -6962,9 +6966,9 @@ parse_org_sintef_thingml_Instance returns [org.sintef.thingml.Instance element =
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_16, 267, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_17);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 267, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 267, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 267);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 267, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 267, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 267);
 			}
 			
 		)
@@ -6972,9 +6976,9 @@ parse_org_sintef_thingml_Instance returns [org.sintef.thingml.Instance element =
 	)*	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_16, 268, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_17);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 268, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 268, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 268);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 268, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 268, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 268);
 	}
 	
 ;
@@ -6994,8 +6998,8 @@ parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_159, 269);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_160, 269);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_161, 269);
 	}
 	
 	(
@@ -7033,14 +7037,14 @@ parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_160, 270);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_161, 270);
 			}
 			
 		)
 		
 	)?	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_160, 271);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_161, 271);
 	}
 	
 	(
@@ -7080,7 +7084,7 @@ parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_161, 272);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_162, 272);
 	}
 	
 	a3 = '.' {
@@ -7094,7 +7098,7 @@ parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_162, 273);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_163, 273);
 	}
 	
 	(
@@ -7134,7 +7138,7 @@ parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_163, 274);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_164, 274);
 	}
 	
 	a5 = '=>' {
@@ -7148,7 +7152,7 @@ parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_164, 275);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_165, 275);
 	}
 	
 	(
@@ -7188,7 +7192,7 @@ parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_165, 276);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_166, 276);
 	}
 	
 	a7 = '.' {
@@ -7202,7 +7206,7 @@ parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_166, 277);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_167, 277);
 	}
 	
 	(
@@ -7243,9 +7247,9 @@ parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element
 	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 278, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 278, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 278, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 278);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 278, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 278, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 278);
 	}
 	
 	(
@@ -7274,9 +7278,9 @@ parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element
 			{
 				// expected elements (follow set)
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 279, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 279, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 279, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 279);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 279, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 279, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 279);
 			}
 			
 		)
@@ -7284,9 +7288,9 @@ parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element
 	)*	{
 		// expected elements (follow set)
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 280, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 280, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 280, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 280);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 280, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 280, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 280);
 	}
 	
 ;
@@ -7332,7 +7336,7 @@ parse_org_sintef_thingml_SendAction returns [org.sintef.thingml.SendAction eleme
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_167, 281);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_168, 281);
 	}
 	
 	a1 = '!' {
@@ -7346,7 +7350,7 @@ parse_org_sintef_thingml_SendAction returns [org.sintef.thingml.SendAction eleme
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_168, 282);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_169, 282);
 	}
 	
 	(
@@ -7386,7 +7390,7 @@ parse_org_sintef_thingml_SendAction returns [org.sintef.thingml.SendAction eleme
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_169, 283);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 283);
 	}
 	
 	a3 = '(' {
@@ -7409,7 +7413,8 @@ parse_org_sintef_thingml_SendAction returns [org.sintef.thingml.SendAction eleme
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 284, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_26);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 284, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_26);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 284, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_26);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 284);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 284, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_26);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 284);
 	}
 	
 	(
@@ -7437,8 +7442,8 @@ parse_org_sintef_thingml_SendAction returns [org.sintef.thingml.SendAction eleme
 			)
 			{
 				// expected elements (follow set)
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 285);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 285);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 285);
 			}
 			
 			(
@@ -7463,6 +7468,7 @@ parse_org_sintef_thingml_SendAction returns [org.sintef.thingml.SendAction eleme
 						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 286, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_26);
 						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 286, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_26);
 						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 286, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_26);
+						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 286, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_26);
 					}
 					
 					(
@@ -7488,23 +7494,23 @@ parse_org_sintef_thingml_SendAction returns [org.sintef.thingml.SendAction eleme
 					)
 					{
 						// expected elements (follow set)
+						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 287);
 						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 287);
-						addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 287);
 					}
 					
 				)
 				
 			)*			{
 				// expected elements (follow set)
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 288);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 288);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 288);
 			}
 			
 		)
 		
 	)?	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 289);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 289);
 	}
 	
 	a7 = ')' {
@@ -7530,7 +7536,6 @@ parse_org_sintef_thingml_SendAction returns [org.sintef.thingml.SendAction eleme
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 290);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 290);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 290);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 290, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 290, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 290, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 290, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -7538,7 +7543,8 @@ parse_org_sintef_thingml_SendAction returns [org.sintef.thingml.SendAction eleme
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 290, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 290, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 290, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 290);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 290, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 290);
 	}
 	
 ;
@@ -7584,7 +7590,7 @@ parse_org_sintef_thingml_VariableAssignment returns [org.sintef.thingml.Variable
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 291);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 291);
 	}
 	
 	a1 = '=' {
@@ -7607,6 +7613,7 @@ parse_org_sintef_thingml_VariableAssignment returns [org.sintef.thingml.Variable
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 292, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_28);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 292, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_28);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 292, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_28);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 292, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_28);
 	}
 	
 	(
@@ -7644,7 +7651,6 @@ parse_org_sintef_thingml_VariableAssignment returns [org.sintef.thingml.Variable
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 293);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 293);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 293);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 293, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 293, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 293, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 293, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -7652,7 +7658,8 @@ parse_org_sintef_thingml_VariableAssignment returns [org.sintef.thingml.Variable
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 293, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 293, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 293, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 293);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 293, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 293);
 	}
 	
 ;
@@ -7672,7 +7679,6 @@ parse_org_sintef_thingml_ActionBlock returns [org.sintef.thingml.ActionBlock ele
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 294, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 294, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 294, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 294, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -7680,7 +7686,8 @@ parse_org_sintef_thingml_ActionBlock returns [org.sintef.thingml.ActionBlock ele
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 294, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 294, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 294, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 294);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 294, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 294);
 	}
 	
 	(
@@ -7708,7 +7715,6 @@ parse_org_sintef_thingml_ActionBlock returns [org.sintef.thingml.ActionBlock ele
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 295, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 295, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 295, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 295, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -7716,14 +7722,14 @@ parse_org_sintef_thingml_ActionBlock returns [org.sintef.thingml.ActionBlock ele
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 295, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 295, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 295, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 295);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 295, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 295);
 			}
 			
 		)
 		
 	)*	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 296, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 296, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 296, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 296, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -7731,7 +7737,8 @@ parse_org_sintef_thingml_ActionBlock returns [org.sintef.thingml.ActionBlock ele
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 296, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 296, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 296, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 296);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 296, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 296);
 	}
 	
 	a2 = 'end' {
@@ -7757,7 +7764,6 @@ parse_org_sintef_thingml_ActionBlock returns [org.sintef.thingml.ActionBlock ele
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 297);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 297);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 297);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 297, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 297, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 297, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 297, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -7765,7 +7771,8 @@ parse_org_sintef_thingml_ActionBlock returns [org.sintef.thingml.ActionBlock ele
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 297, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 297, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 297, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 297);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 297, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 297);
 	}
 	
 ;
@@ -7807,7 +7814,7 @@ parse_org_sintef_thingml_ExternStatement returns [org.sintef.thingml.ExternState
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 298);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 298);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_58, 298);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 298, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 298, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
@@ -7820,7 +7827,6 @@ parse_org_sintef_thingml_ExternStatement returns [org.sintef.thingml.ExternState
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 298);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 298);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 298);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 298, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 298, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 298, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 298, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -7828,7 +7834,8 @@ parse_org_sintef_thingml_ExternStatement returns [org.sintef.thingml.ExternState
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 298, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 298, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 298, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 298);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 298, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 298);
 	}
 	
 	(
@@ -7853,6 +7860,7 @@ parse_org_sintef_thingml_ExternStatement returns [org.sintef.thingml.ExternState
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 299, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_29);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 299, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_29);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 299, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_29);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 299, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_29);
 			}
 			
 			(
@@ -7878,7 +7886,7 @@ parse_org_sintef_thingml_ExternStatement returns [org.sintef.thingml.ExternState
 			)
 			{
 				// expected elements (follow set)
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 300);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 300);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_58, 300);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 300, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 300, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
@@ -7891,7 +7899,6 @@ parse_org_sintef_thingml_ExternStatement returns [org.sintef.thingml.ExternState
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 300);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 300);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 300);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 300, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 300, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 300, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 300, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -7899,14 +7906,15 @@ parse_org_sintef_thingml_ExternStatement returns [org.sintef.thingml.ExternState
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 300, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 300, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 300, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 300);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 300, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+				addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 300);
 			}
 			
 		)
 		
 	)*	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 301);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 301);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_58, 301);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 301, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 301, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
@@ -7919,7 +7927,6 @@ parse_org_sintef_thingml_ExternStatement returns [org.sintef.thingml.ExternState
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 301);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 301);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 301);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 301, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 301, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 301, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 301, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -7927,7 +7934,8 @@ parse_org_sintef_thingml_ExternStatement returns [org.sintef.thingml.ExternState
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 301, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 301, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 301, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 301);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 301, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 301);
 	}
 	
 ;
@@ -7947,7 +7955,7 @@ parse_org_sintef_thingml_ConditionalAction returns [org.sintef.thingml.Condition
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 302);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_176, 302);
 	}
 	
 	a1 = '(' {
@@ -7970,6 +7978,7 @@ parse_org_sintef_thingml_ConditionalAction returns [org.sintef.thingml.Condition
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 303, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_30);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 303, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_30);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 303, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_30);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 303, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_30);
 	}
 	
 	(
@@ -7995,7 +8004,7 @@ parse_org_sintef_thingml_ConditionalAction returns [org.sintef.thingml.Condition
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_176, 304);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_177, 304);
 	}
 	
 	a3 = ')' {
@@ -8009,7 +8018,6 @@ parse_org_sintef_thingml_ConditionalAction returns [org.sintef.thingml.Condition
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 305, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 305, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 305, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 305, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
@@ -8017,6 +8025,7 @@ parse_org_sintef_thingml_ConditionalAction returns [org.sintef.thingml.Condition
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 305, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 305, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 305, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 305, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
 	}
 	
 	(
@@ -8054,7 +8063,6 @@ parse_org_sintef_thingml_ConditionalAction returns [org.sintef.thingml.Condition
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 306);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 306);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 306);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 306, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 306, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 306, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 306, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -8062,7 +8070,8 @@ parse_org_sintef_thingml_ConditionalAction returns [org.sintef.thingml.Condition
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 306, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 306, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 306, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 306);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 306, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 306);
 	}
 	
 ;
@@ -8082,7 +8091,7 @@ parse_org_sintef_thingml_LoopAction returns [org.sintef.thingml.LoopAction eleme
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_177, 307);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_178, 307);
 	}
 	
 	a1 = '(' {
@@ -8105,6 +8114,7 @@ parse_org_sintef_thingml_LoopAction returns [org.sintef.thingml.LoopAction eleme
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 308, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_30);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 308, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_30);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 308, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_30);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 308, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_30);
 	}
 	
 	(
@@ -8130,7 +8140,7 @@ parse_org_sintef_thingml_LoopAction returns [org.sintef.thingml.LoopAction eleme
 	)
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_178, 309);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_179, 309);
 	}
 	
 	a3 = ')' {
@@ -8144,7 +8154,6 @@ parse_org_sintef_thingml_LoopAction returns [org.sintef.thingml.LoopAction eleme
 	}
 	{
 		// expected elements (follow set)
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 310, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 310, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 310, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 310, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
@@ -8152,6 +8161,7 @@ parse_org_sintef_thingml_LoopAction returns [org.sintef.thingml.LoopAction eleme
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 310, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 310, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 310, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 310, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_31);
 	}
 	
 	(
@@ -8189,7 +8199,6 @@ parse_org_sintef_thingml_LoopAction returns [org.sintef.thingml.LoopAction eleme
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 311);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 311);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 311);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 311, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 311, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 311, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 311, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -8197,7 +8206,8 @@ parse_org_sintef_thingml_LoopAction returns [org.sintef.thingml.LoopAction eleme
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 311, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 311, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 311, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 311);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 311, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 311);
 	}
 	
 ;
@@ -8226,6 +8236,7 @@ parse_org_sintef_thingml_PrintAction returns [org.sintef.thingml.PrintAction ele
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 312, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_32);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 312, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_32);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 312, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_32);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 312, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_32);
 	}
 	
 	(
@@ -8263,7 +8274,6 @@ parse_org_sintef_thingml_PrintAction returns [org.sintef.thingml.PrintAction ele
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 313);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 313);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 313);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 313, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 313, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 313, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 313, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -8271,7 +8281,8 @@ parse_org_sintef_thingml_PrintAction returns [org.sintef.thingml.PrintAction ele
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 313, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 313, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 313, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 313);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 313, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 313);
 	}
 	
 ;
@@ -8300,6 +8311,7 @@ parse_org_sintef_thingml_ErrorAction returns [org.sintef.thingml.ErrorAction ele
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 314, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_33);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 314, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_33);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 314, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_33);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 314, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_33);
 	}
 	
 	(
@@ -8337,7 +8349,6 @@ parse_org_sintef_thingml_ErrorAction returns [org.sintef.thingml.ErrorAction ele
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 315);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 315);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 315);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 315, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 315, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 315, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 315, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -8345,7 +8356,8 @@ parse_org_sintef_thingml_ErrorAction returns [org.sintef.thingml.ErrorAction ele
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 315, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 315, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 315, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 315);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 315, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 315);
 	}
 	
 ;
@@ -8377,6 +8389,7 @@ parseop_Expression_level_1 returns [org.sintef.thingml.Expression element = null
 			addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 316, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 			addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 316, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 			addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 316, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
+			addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 316, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 		}
 		
 		rightArg = parseop_Expression_level_2		{
@@ -8450,6 +8463,7 @@ leftArg = parseop_Expression_level_3((
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 317, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 317, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 317, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
+		addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 317, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 	}
 	
 	rightArg = parseop_Expression_level_3	{
@@ -8523,6 +8537,7 @@ a0 = '<' {
 	addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 318, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 	addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 318, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 	addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 318, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
+	addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 318, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 }
 
 rightArg = parseop_Expression_level_4{
@@ -8587,6 +8602,7 @@ a0 = '>' {
 	addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 319, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 	addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 319, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 	addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 319, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
+	addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 319, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 }
 
 rightArg = parseop_Expression_level_4{
@@ -8651,6 +8667,7 @@ a0 = '==' {
 	addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 320, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 	addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 320, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 	addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 320, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
+	addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 320, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 }
 
 rightArg = parseop_Expression_level_4{
@@ -8724,6 +8741,7 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 321, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 321, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 321, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 321, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 }
 
 rightArg = parseop_Expression_level_5{
@@ -8788,6 +8806,7 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 322, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 322, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 322, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 322, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 }
 
 rightArg = parseop_Expression_level_5{
@@ -8861,6 +8880,7 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 323, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 323, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 323, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 323, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 }
 
 rightArg = parseop_Expression_level_6{
@@ -8925,6 +8945,7 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 324, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 324, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 324, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 324, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 }
 
 rightArg = parseop_Expression_level_6{
@@ -8989,6 +9010,7 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 325, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 325, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 325, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 325, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_34);
 }
 
 rightArg = parseop_Expression_level_6{
@@ -9059,6 +9081,7 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 326, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_35);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 326, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_35);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 326, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_35);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 326, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_35);
 }
 
 arg = parseop_Expression_level_8{
@@ -9101,6 +9124,7 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 327, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_35);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 327, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_35);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 327, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_35);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 327, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_35);
 }
 
 arg = parseop_Expression_level_8{
@@ -9137,7 +9161,8 @@ c0 = parse_org_sintef_thingml_EventReference{ element = c0; /* this is a subclas
 |c3 = parse_org_sintef_thingml_IntegerLiteral{ element = c3; /* this is a subclass or primitive expression choice */ }
 |c4 = parse_org_sintef_thingml_StringLiteral{ element = c4; /* this is a subclass or primitive expression choice */ }
 |c5 = parse_org_sintef_thingml_BooleanLiteral{ element = c5; /* this is a subclass or primitive expression choice */ }
-|c6 = parse_org_sintef_thingml_ExternExpression{ element = c6; /* this is a subclass or primitive expression choice */ }
+|c6 = parse_org_sintef_thingml_EnumLiteralRef{ element = c6; /* this is a subclass or primitive expression choice */ }
+|c7 = parse_org_sintef_thingml_ExternExpression{ element = c7; /* this is a subclass or primitive expression choice */ }
 ;
 
 parse_org_sintef_thingml_EventReference returns [org.sintef.thingml.EventReference element = null]
@@ -9181,7 +9206,7 @@ copyLocalizationInfos((org.antlr.runtime3_3_0.CommonToken) a0, proxy);
 )
 {
 // expected elements (follow set)
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_189, 328);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_190, 328);
 }
 
 a1 = '.' {
@@ -9195,7 +9220,7 @@ copyLocalizationInfos((org.antlr.runtime3_3_0.CommonToken)a1, element);
 }
 {
 // expected elements (follow set)
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_190, 329);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_191, 329);
 }
 
 (
@@ -9258,14 +9283,13 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 330);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 330);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 330);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 330);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 330);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 330, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 330, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 330);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 330);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 330);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 330, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 330, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 330);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 330);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 330);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 330);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 330, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 330, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 330, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 330, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -9273,9 +9297,9 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 330, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 330, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 330, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 330);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 330);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_179, 330);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 330, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 330);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 330);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_180, 330);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_181, 330);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_182, 330);
@@ -9285,8 +9309,9 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_186, 330);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_187, 330);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_188, 330);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_191, 330);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_189, 330);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 330);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_193, 330);
 }
 
 ;
@@ -9315,6 +9340,7 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 331, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_36);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 331, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_36);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 331, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_36);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 331, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_36);
 }
 
 (
@@ -9340,7 +9366,7 @@ copyLocalizationInfos(a1_0, element);
 )
 {
 // expected elements (follow set)
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_191, 332);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 332);
 }
 
 a2 = ')' {
@@ -9377,14 +9403,13 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 333);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 333);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 333);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 333);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 333);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 333, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 333, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 333);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 333);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 333);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 333, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 333, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 333);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 333);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 333);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 333);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 333, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 333, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 333, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 333, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -9392,9 +9417,9 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 333, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 333, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 333, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 333);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 333);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_179, 333);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 333, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 333);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 333);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_180, 333);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_181, 333);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_182, 333);
@@ -9404,8 +9429,9 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_186, 333);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_187, 333);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_188, 333);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_191, 333);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_189, 333);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 333);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_193, 333);
 }
 
 ;
@@ -9474,14 +9500,13 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 334);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 334);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 334);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 334);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 334);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 334, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 334, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 334);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 334);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 334);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 334, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 334, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 334);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 334);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 334);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 334);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 334, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 334, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 334, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 334, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -9489,9 +9514,9 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 334, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 334, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 334, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 334);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 334);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_179, 334);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 334, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 334);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 334);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_180, 334);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_181, 334);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_182, 334);
@@ -9501,8 +9526,9 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_186, 334);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_187, 334);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_188, 334);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_191, 334);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_189, 334);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 334);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_193, 334);
 }
 
 ;
@@ -9567,14 +9593,13 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 335);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 335);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 335);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 335);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 335);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 335, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 335, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 335);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 335);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 335);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 335, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 335, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 335);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 335);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 335);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 335);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 335, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 335, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 335, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 335, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -9582,9 +9607,9 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 335, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 335, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 335, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 335);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 335);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_179, 335);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 335, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 335);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 335);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_180, 335);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_181, 335);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_182, 335);
@@ -9594,8 +9619,9 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_186, 335);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_187, 335);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_188, 335);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_191, 335);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_189, 335);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 335);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_193, 335);
 }
 
 ;
@@ -9660,14 +9686,13 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 336);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 336);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 336);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 336);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 336);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 336, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 336, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 336);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 336);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 336);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 336, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 336, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 336);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 336);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 336);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 336);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 336, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 336, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 336, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 336, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -9675,9 +9700,9 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 336, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 336, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 336, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 336);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 336);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_179, 336);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 336, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 336);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 336);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_180, 336);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_181, 336);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_182, 336);
@@ -9687,8 +9712,9 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_186, 336);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_187, 336);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_188, 336);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_191, 336);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_189, 336);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 336);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_193, 336);
 }
 
 ;
@@ -9753,14 +9779,13 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 337);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 337);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 337);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 337);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 337);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 337, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 337, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 337);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 337);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 337);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 337, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 337, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 337);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 337);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 337);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 337);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 337, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 337, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 337, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 337, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -9768,9 +9793,9 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 337, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 337, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 337, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 337);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 337);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_179, 337);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 337, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 337);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 337);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_180, 337);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_181, 337);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_182, 337);
@@ -9780,8 +9805,160 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_186, 337);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_187, 337);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_188, 337);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_191, 337);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_189, 337);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 337);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_193, 337);
+}
+
+;
+
+parse_org_sintef_thingml_EnumLiteralRef returns [org.sintef.thingml.EnumLiteralRef element = null]
+@init{
+}
+:
+(
+a0 = TEXT
+{
+if (terminateParsing) {
+throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+}
+if (element == null) {
+element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createEnumLiteralRef();
+incompleteObjects.push(element);
+}
+if (a0 != null) {
+org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
+tokenResolver.setOptions(getOptions());
+org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
+tokenResolver.resolve(a0.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.ENUM_LITERAL_REF__ENUM), result);
+Object resolvedObject = result.getResolvedToken();
+if (resolvedObject == null) {
+addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_3_0.CommonToken) a0).getLine(), ((org.antlr.runtime3_3_0.CommonToken) a0).getCharPositionInLine(), ((org.antlr.runtime3_3_0.CommonToken) a0).getStartIndex(), ((org.antlr.runtime3_3_0.CommonToken) a0).getStopIndex());
+}
+String resolved = (String) resolvedObject;
+org.sintef.thingml.Enumeration proxy = org.sintef.thingml.ThingmlFactory.eINSTANCE.createEnumeration();
+collectHiddenTokens(element);
+registerContextDependentProxy(new org.sintef.thingml.resource.thingml.mopp.ThingmlContextDependentURIFragmentFactory<org.sintef.thingml.EnumLiteralRef, org.sintef.thingml.Enumeration>(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getEnumLiteralRefEnumReferenceResolver()), element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.ENUM_LITERAL_REF__ENUM), resolved, proxy);
+if (proxy != null) {
+Object value = proxy;
+element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.ENUM_LITERAL_REF__ENUM), value);
+completedElement(value, false);
+}
+collectHiddenTokens(element);
+retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_48_0_0_0, proxy, true);
+copyLocalizationInfos((org.antlr.runtime3_3_0.CommonToken) a0, element);
+copyLocalizationInfos((org.antlr.runtime3_3_0.CommonToken) a0, proxy);
+}
+}
+)
+{
+// expected elements (follow set)
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_194, 338);
+}
+
+a1 = ':' {
+if (element == null) {
+element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createEnumLiteralRef();
+incompleteObjects.push(element);
+}
+collectHiddenTokens(element);
+retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_48_0_0_1, null, true);
+copyLocalizationInfos((org.antlr.runtime3_3_0.CommonToken)a1, element);
+}
+{
+// expected elements (follow set)
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_195, 339);
+}
+
+(
+a2 = TEXT
+{
+if (terminateParsing) {
+throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+}
+if (element == null) {
+element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createEnumLiteralRef();
+incompleteObjects.push(element);
+}
+if (a2 != null) {
+org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
+tokenResolver.setOptions(getOptions());
+org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
+tokenResolver.resolve(a2.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.ENUM_LITERAL_REF__LITERAL), result);
+Object resolvedObject = result.getResolvedToken();
+if (resolvedObject == null) {
+addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_3_0.CommonToken) a2).getLine(), ((org.antlr.runtime3_3_0.CommonToken) a2).getCharPositionInLine(), ((org.antlr.runtime3_3_0.CommonToken) a2).getStartIndex(), ((org.antlr.runtime3_3_0.CommonToken) a2).getStopIndex());
+}
+String resolved = (String) resolvedObject;
+org.sintef.thingml.EnumerationLiteral proxy = org.sintef.thingml.ThingmlFactory.eINSTANCE.createEnumerationLiteral();
+collectHiddenTokens(element);
+registerContextDependentProxy(new org.sintef.thingml.resource.thingml.mopp.ThingmlContextDependentURIFragmentFactory<org.sintef.thingml.EnumLiteralRef, org.sintef.thingml.EnumerationLiteral>(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getEnumLiteralRefLiteralReferenceResolver()), element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.ENUM_LITERAL_REF__LITERAL), resolved, proxy);
+if (proxy != null) {
+Object value = proxy;
+element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.ENUM_LITERAL_REF__LITERAL), value);
+completedElement(value, false);
+}
+collectHiddenTokens(element);
+retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_48_0_0_2, proxy, true);
+copyLocalizationInfos((org.antlr.runtime3_3_0.CommonToken) a2, element);
+copyLocalizationInfos((org.antlr.runtime3_3_0.CommonToken) a2, proxy);
+}
+}
+)
+{
+// expected elements (follow set)
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_6, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_4);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_14, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_5);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_15, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_5);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_16, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_6);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_17, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_7);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_18, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_7);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_8);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_20, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_57, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_58, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_62, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_11);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_63, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_64, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_65, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_112, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_180, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_181, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_182, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_183, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_184, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_185, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_186, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_187, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_188, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_189, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 340);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_193, 340);
 }
 
 ;
@@ -9816,173 +9993,14 @@ element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPa
 completedElement(value, false);
 }
 collectHiddenTokens(element);
-retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_48_0_0_0, resolved, true);
+retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_49_0_0_0, resolved, true);
 copyLocalizationInfos((org.antlr.runtime3_3_0.CommonToken) a0, element);
 }
 }
 )
 {
 // expected elements (follow set)
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_6, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_4);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_14, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_5);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_15, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_5);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_16, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_6);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_17, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_7);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_18, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_7);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_8);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_20, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_57, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_58, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_62, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_11);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_63, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_64, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_65, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_112, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 338, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_179, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_180, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_181, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_182, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_183, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_184, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_185, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_186, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_187, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_188, 338);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_191, 338);
-}
-
-(
-(
-a1 = '&' {
-if (element == null) {
-element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createExternExpression();
-incompleteObjects.push(element);
-}
-collectHiddenTokens(element);
-retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_48_0_0_1_0_0_0, null, true);
-copyLocalizationInfos((org.antlr.runtime3_3_0.CommonToken)a1, element);
-}
-{
-// expected elements (follow set)
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_75, 339, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_76, 339, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_77, 339, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_78, 339, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_79, 339, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_80, 339, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 339, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 339, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 339, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
-}
-
-(
-a2_0 = parse_org_sintef_thingml_Expression{
-if (terminateParsing) {
-	throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
-}
-if (element == null) {
-	element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createExternExpression();
-	incompleteObjects.push(element);
-}
-if (a2_0 != null) {
-	if (a2_0 != null) {
-		Object value = a2_0;
-		addObjectToList(element, org.sintef.thingml.ThingmlPackage.EXTERN_EXPRESSION__SEGMENTS, value);
-		completedElement(value, true);
-	}
-	collectHiddenTokens(element);
-	retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_48_0_0_1_0_0_1, a2_0, true);
-	copyLocalizationInfos(a2_0, element);
-}
-}
-)
-{
-// expected elements (follow set)
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_6, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_4);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_14, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_5);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_15, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_5);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_16, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_6);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_17, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_7);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_18, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_7);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_8);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_20, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_57, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_58, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_62, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_11);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_63, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_64, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_65, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_112, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 340, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_179, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_180, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_181, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_182, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_183, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_184, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_185, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_186, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_187, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_188, 340);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_191, 340);
-}
-
-)
-
-)*{
-// expected elements (follow set)
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 341);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_193, 341);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_6, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_4);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_14, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_5);
@@ -10006,14 +10024,13 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 341);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 341);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 341);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_96, 341);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_99, 341);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_147, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 341);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 341);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 341);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 341);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 341);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 341);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_170, 341);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_108, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
@@ -10021,9 +10038,9 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 341);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_174, 341);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_179, 341);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 341, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 341);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 341);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_180, 341);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_181, 341);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_182, 341);
@@ -10033,7 +10050,168 @@ addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetP
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_186, 341);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_187, 341);
 addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_188, 341);
-addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_191, 341);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_189, 341);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 341);
+}
+
+(
+(
+a1 = '&' {
+if (element == null) {
+element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createExternExpression();
+incompleteObjects.push(element);
+}
+collectHiddenTokens(element);
+retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_49_0_0_1_0_0_0, null, true);
+copyLocalizationInfos((org.antlr.runtime3_3_0.CommonToken)a1, element);
+}
+{
+// expected elements (follow set)
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_75, 342, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_76, 342, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_77, 342, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_78, 342, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_79, 342, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_80, 342, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_81, 342, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_82, 342, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_83, 342, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_84, 342, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_13, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_37);
+}
+
+(
+a2_0 = parse_org_sintef_thingml_Expression{
+if (terminateParsing) {
+	throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+}
+if (element == null) {
+	element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createExternExpression();
+	incompleteObjects.push(element);
+}
+if (a2_0 != null) {
+	if (a2_0 != null) {
+		Object value = a2_0;
+		addObjectToList(element, org.sintef.thingml.ThingmlPackage.EXTERN_EXPRESSION__SEGMENTS, value);
+		completedElement(value, true);
+	}
+	collectHiddenTokens(element);
+	retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_49_0_0_1_0_0_1, a2_0, true);
+	copyLocalizationInfos(a2_0, element);
+}
+}
+)
+{
+// expected elements (follow set)
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_193, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_6, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_4);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_14, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_5);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_15, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_5);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_16, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_6);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_17, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_7);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_18, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_7);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_8);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_20, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_57, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_58, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_62, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_11);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_63, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_64, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_65, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_112, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 343, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_180, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_181, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_182, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_183, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_184, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_185, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_186, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_187, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_188, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_189, 343);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 343);
+}
+
+)
+
+)*{
+// expected elements (follow set)
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_193, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_12, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_3);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_6, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_4);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_14, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_5);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_15, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_5);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_16, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_6);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_17, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_7);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_18, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_7);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_19, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_8);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_20, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_57, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_58, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_59, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_60, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_9);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_61, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_10);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_62, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_11);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_63, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_64, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_65, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_66, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_12);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_67, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_68, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_69, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_70, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_97, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_100, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_148, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_24);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_149, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_25);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_150, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_172, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_171, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_109, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_110, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_111, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_112, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_113, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_114, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_115, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_116, 344, org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.FEATURE_27);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_173, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_175, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_180, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_181, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_182, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_183, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_184, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_185, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_186, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_187, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_188, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_189, 344);
+addExpectedElement(org.sintef.thingml.resource.thingml.grammar.ThingmlFollowSetProvider.TERMINAL_192, 344);
 }
 
 ;
@@ -10119,6 +10297,6 @@ LINEBREAKS:
 { _channel = 99; }
 ;
 TEXT:
-(('A'..'Z' | 'a'..'z' | '0'..'9' | '_' )+ (':' ':' ('A'..'Z' | 'a'..'z' | '0'..'9' | '_')+ )* )
+(('A'..'Z' | 'a'..'z' | '0'..'9' | '_' | '-' )+)
 ;
 

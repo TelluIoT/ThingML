@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.mopp;
 
@@ -40,6 +31,8 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 	protected org.sintef.thingml.resource.thingml.analysis.EventReferenceMsgRefReferenceResolver eventReferenceMsgRefReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.EventReferenceMsgRefReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.EventReferenceParamRefReferenceResolver eventReferenceParamRefReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.EventReferenceParamRefReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.PropertyReferencePropertyReferenceResolver propertyReferencePropertyReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.PropertyReferencePropertyReferenceResolver();
+	protected org.sintef.thingml.resource.thingml.analysis.EnumLiteralRefEnumReferenceResolver enumLiteralRefEnumReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.EnumLiteralRefEnumReferenceResolver();
+	protected org.sintef.thingml.resource.thingml.analysis.EnumLiteralRefLiteralReferenceResolver enumLiteralRefLiteralReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.EnumLiteralRefLiteralReferenceResolver();
 	
 	public org.sintef.thingml.resource.thingml.analysis.ThingMLModelImportsReferenceResolver getThingMLModelImportsReferenceResolver() {
 		return thingMLModelImportsReferenceResolver;
@@ -133,6 +126,14 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		return propertyReferencePropertyReferenceResolver;
 	}
 	
+	public org.sintef.thingml.resource.thingml.analysis.EnumLiteralRefEnumReferenceResolver getEnumLiteralRefEnumReferenceResolver() {
+		return enumLiteralRefEnumReferenceResolver;
+	}
+	
+	public org.sintef.thingml.resource.thingml.analysis.EnumLiteralRefLiteralReferenceResolver getEnumLiteralRefLiteralReferenceResolver() {
+		return enumLiteralRefLiteralReferenceResolver;
+	}
+	
 	public void setOptions(java.util.Map<?, ?> options) {
 		thingMLModelImportsReferenceResolver.setOptions(options);
 		thingIncludesReferenceResolver.setOptions(options);
@@ -157,6 +158,8 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		eventReferenceMsgRefReferenceResolver.setOptions(options);
 		eventReferenceParamRefReferenceResolver.setOptions(options);
 		propertyReferencePropertyReferenceResolver.setOptions(options);
+		enumLiteralRefEnumReferenceResolver.setOptions(options);
+		enumLiteralRefLiteralReferenceResolver.setOptions(options);
 	}
 	
 	public void resolveFuzzy(String identifier, org.eclipse.emf.ecore.EObject container, org.eclipse.emf.ecore.EReference reference, int position, org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.eclipse.emf.ecore.EObject> result) {
@@ -347,6 +350,22 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 				propertyReferencePropertyReferenceResolver.resolve(identifier, (org.sintef.thingml.PropertyReference) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
 			}
 		}
+		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getEnumLiteralRef().isInstance(container)) {
+			ThingmlFuzzyResolveResult<org.sintef.thingml.Enumeration> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.Enumeration>(result);
+			String referenceName = reference.getName();
+			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
+			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("enum")) {
+				enumLiteralRefEnumReferenceResolver.resolve(identifier, (org.sintef.thingml.EnumLiteralRef) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
+			}
+		}
+		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getEnumLiteralRef().isInstance(container)) {
+			ThingmlFuzzyResolveResult<org.sintef.thingml.EnumerationLiteral> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.EnumerationLiteral>(result);
+			String referenceName = reference.getName();
+			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
+			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("literal")) {
+				enumLiteralRefLiteralReferenceResolver.resolve(identifier, (org.sintef.thingml.EnumLiteralRef) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
+			}
+		}
 	}
 	
 	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<? extends org.eclipse.emf.ecore.EObject, ? extends org.eclipse.emf.ecore.EObject> getResolver(org.eclipse.emf.ecore.EStructuralFeature reference) {
@@ -418,6 +437,12 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		}
 		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getPropertyReference_Property()) {
 			return propertyReferencePropertyReferenceResolver;
+		}
+		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getEnumLiteralRef_Enum()) {
+			return enumLiteralRefEnumReferenceResolver;
+		}
+		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getEnumLiteralRef_Literal()) {
+			return enumLiteralRefLiteralReferenceResolver;
 		}
 		return null;
 	}

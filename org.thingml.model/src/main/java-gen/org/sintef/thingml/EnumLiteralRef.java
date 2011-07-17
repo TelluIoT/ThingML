@@ -45,7 +45,7 @@ public interface EnumLiteralRef extends Literal {
 	 * @return the value of the '<em>Enum</em>' reference.
 	 * @see #setEnum(Enumeration)
 	 * @see org.sintef.thingml.ThingmlPackage#getEnumLiteralRef_Enum()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	Enumeration getEnum();
@@ -71,7 +71,7 @@ public interface EnumLiteralRef extends Literal {
 	 * @return the value of the '<em>Literal</em>' reference.
 	 * @see #setLiteral(EnumerationLiteral)
 	 * @see org.sintef.thingml.ThingmlPackage#getEnumLiteralRef_Literal()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	EnumerationLiteral getLiteral();

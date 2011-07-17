@@ -163,12 +163,45 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
+	public static ArrayList<Enumeration> allEnnumerations(ThingMLModel model) {
+		ArrayList<Enumeration> result = new ArrayList<Enumeration>();
+		for (ThingMLModel m : allThingMLModelModels(model)) {
+			for (Type t : m.getTypes()) {
+				if ( (t instanceof Enumeration) && !result.contains(t)) 
+					result.add((Enumeration)t);
+			}
+		}
+		return result;
+	}
+	
 	public static ArrayList<Thing> allThings(ThingMLModel model) {
 		ArrayList<Thing> result = new ArrayList<Thing>();
 		for (ThingMLModel m : allThingMLModelModels(model)) {
 			for (Type t : m.getTypes()) {
 				if ( (t instanceof Thing) && !result.contains(t)) 
 					result.add((Thing)t);
+			}
+		}
+		return result;
+	}
+	
+	public static ArrayList<Enumeration> findEnumeration(ThingMLModel model, String name, boolean fuzzy) {
+		ArrayList<Enumeration> result = new ArrayList<Enumeration>();
+		for (Enumeration t : allEnnumerations(model)) {
+			if (t.getName().startsWith(name)) {
+				if (fuzzy) result.add(t);
+				else if (t.getName().equals(name)) result.add(t);
+			}
+		}
+		return result;
+	}
+	
+	public static ArrayList<EnumerationLiteral> findEnumerationLiteral(Enumeration e, String name, boolean fuzzy) {
+		ArrayList<EnumerationLiteral> result = new ArrayList<EnumerationLiteral>();
+		for (EnumerationLiteral t : e.getLiterals()) {
+			if (t.getName().startsWith(name)) {
+				if (fuzzy) result.add(t);
+				else if (t.getName().equals(name)) result.add(t);
 			}
 		}
 		return result;
