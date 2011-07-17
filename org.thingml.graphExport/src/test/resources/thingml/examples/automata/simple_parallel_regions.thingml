@@ -1,12 +1,12 @@
-message pingA();
-message pingB();
-message ping();
-message pongA();
-message pongB();
-
 // Definition of the Pingable fragmant
 thing HelloPar @c_code "generate"
 {
+
+	message pingA();
+	message pingB();
+	message ping();
+	message pongA();
+	message pongB();
 
 	provided port IO {
 		receives ping, pingA, pingB
@@ -36,4 +36,8 @@ thing HelloPar @c_code "generate"
 	}
 		
 	}
+}
+
+configuration SimpleParRegions {
+	instance hello : HelloPar
 }

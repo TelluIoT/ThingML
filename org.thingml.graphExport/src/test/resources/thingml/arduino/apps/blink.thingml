@@ -1,0 +1,40 @@
+import "../devices/led.thingml"
+import "../devices/softtimer.thingml"
+
+thing Blink includes LEDMsgs, TimerMsgs
+{
+	required port HW 
+    {	
+		sends led_toggle, timer_start
+        receives timer_timeout
+	}
+
+    statechart BlinkImpl init Blinking {
+        
+        state Blinking {
+            
+            on entry HW!timer_start(1000)
+            
+            transition -> Blinking
+                event HW?timer_timeout
+                action HW!led_toggle()
+        }
+    }
+}
+
+configuration Blink {
+
+	// The arduino board with a LED on pin 13
+	instance arduino : Arduino
+	instance led : LED
+		set pin = DigitalPin:PIN_13 
+	connector led.DigitalIO => arduino.DigitalIO
+	
+	// The timer
+	instance timer : SoftTimer
+	
+	// The blink application
+	instance app : Blink
+	connector app.HW => led.LED
+	connector app.HW => timer.SoftTimer
+}

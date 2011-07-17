@@ -49,8 +49,11 @@ public class StandaloneParserTestSuite extends TestSuite {
     public static Test suite() {
         try {
             TestSuite suite = new TestSuite("Standalone Parser Test Suite");
-            //populate(suite, "model/statemachines");
-            //populate(suite, "model/arduino");
+
+            File dir = new File(StandaloneParserTestSuite.class.getClassLoader().getResource("thingml").getFile());
+
+            populate(suite, dir);
+
             return suite;
         } 
         catch (Throwable t) {
@@ -59,12 +62,15 @@ public class StandaloneParserTestSuite extends TestSuite {
         return null;
     }
 
-    public static void populate(TestSuite ts, String folder) {
-              File dir = new File(StandaloneParserTestSuite.class.getClassLoader().getResource(folder).getFile());
+    public static void populate(TestSuite ts, File dir) {
+
         if (dir.isDirectory()) {
             for (File f : dir.listFiles()) {
                 if (f.isFile() && f.getName().endsWith(".thingml")) {
                     ts.addTest(new StandaloneParserTestLoadFile(f.getAbsolutePath()));
+                }
+                if (f.isDirectory()) {
+                    populate(ts, f);
                 }
             }
         }

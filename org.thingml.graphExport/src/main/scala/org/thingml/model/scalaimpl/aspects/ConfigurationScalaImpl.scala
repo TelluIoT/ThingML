@@ -43,4 +43,12 @@ case class ConfigurationScalaImpl (self : Configuration) {
     return ThingMLHelpers.allConnectors(self)
   }
 
+  def allThings : ArrayList[Thing] = {
+    var result : ArrayList[Thing] = new ArrayList[Thing]()
+    allInstances.foreach{ i =>
+      if (!result.contains(i.getType)) result.add(i.getType)
+    }
+    result
+  }
+
 }

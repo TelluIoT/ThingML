@@ -1,15 +1,17 @@
-message h();
-message e();
-message l();
-message o();
-message w();
-message r();
-message l();
-message d();
-
-// Definition of the Pingable fragmant
+// Definition of a flat state machine
+// which transforms 'hello' into 'world'
 thing Hello @c_code "generate"
 {
+
+	message h();
+	message e();
+	message l();
+	message o();
+	
+	message w();
+	message r();
+	message l();
+	message d();
 
 	provided port IO {
 		receives h,e,l,o
@@ -41,4 +43,8 @@ thing Hello @c_code "generate"
 			transition -> Init
 		}
 	}
+}
+
+configuration HelloStateMachine {
+	instance hello : Hello
 }

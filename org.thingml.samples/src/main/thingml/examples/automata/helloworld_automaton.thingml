@@ -44,3 +44,7 @@ thing Hello @c_code "generate"
 		}
 	}
 }
+
+configuration HelloStateMachine {
+	instance hello : Hello
+}

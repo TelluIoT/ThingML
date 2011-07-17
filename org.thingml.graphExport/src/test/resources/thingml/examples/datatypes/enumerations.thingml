@@ -1,0 +1,93 @@
+enumeration PinMode 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	INPUT @enum_val "0"
+	OUTPUT @enum_val "1"
+}
+
+enumeration DigitalState 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	LOW @enum_val "0"
+	HIGH @enum_val "1"
+}
+
+enumeration DigitalPin 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	PIN_0 @enum_val "0"
+	PIN_1 @enum_val "1"
+	PIN_2 @enum_val "2"
+	PIN_3 @enum_val "3"
+	PIN_4 @enum_val "4"
+	PIN_5 @enum_val "5"
+	PIN_6 @enum_val "6"
+	PIN_7 @enum_val "7"
+	PIN_8 @enum_val "8"
+	PIN_9 @enum_val "9"
+	PIN_10 @enum_val "10"
+	PIN_11 @enum_val "11"
+	PIN_12 @enum_val "12"
+	PIN_13 @enum_val "13"
+	A_0 @enum_val "14"
+	A_1 @enum_val "15"
+	A_2 @enum_val "16"
+	A_3 @enum_val "17"
+	A_4 @enum_val "18"
+	A_5 @enum_val "19"
+}
+
+enumeration PWMPin 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	PWM_PIN_3 @enum_val "3"
+	PWM_PIN_5 @enum_val "5"
+	PWM_PIN_6 @enum_val "6"
+	PWM_PIN_9 @enum_val "9"
+	PWM_PIN_10 @enum_val "10"
+	PWM_PIN_11 @enum_val "11"
+}
+
+
+enumeration AnalogPin 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	A_0 @enum_val "14"
+	A_1 @enum_val "15"
+	A_2 @enum_val "16"
+	A_3 @enum_val "17"
+	A_4 @enum_val "18"
+	A_5 @enum_val "19"
+}
+
+enumeration AnalogReference 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	DEFAULT @enum_val "1"
+	INTERNAL @enum_val "3"
+	EXTERNAL @enum_val "0"
+}
+
+enumeration InterruptPin 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	PIN_2_INT0 @enum_val "0"
+	PIN_3_INT1 @enum_val "1"
+}
+
+enumeration InterruptTrigger 
+	@java_type "byte"
+	@c_type "uint8_t"
+{
+	CHANGE @enum_val "1"
+	RISING @enum_val "3"
+	FALLING @enum_val "2"
+	LOW @enum_val "0"
+}

@@ -1,9 +1,9 @@
-message hello();
-message world();
-
 // Definition of the Pingable fragmant
 thing HelloComp @c_code "generate"
 {
+
+	message hello();
+	message world();
 
 	provided port IO {
 		receives hello, world 
@@ -40,4 +40,8 @@ thing HelloComp @c_code "generate"
 			}
 		}
 	}
+}
+
+configuration HelloCompositeStateMachine {
+	instance hello : HelloComp
 }

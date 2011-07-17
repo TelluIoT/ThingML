@@ -46,6 +46,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.junit.Test;
+import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.ThingmlPackage;
@@ -107,8 +108,8 @@ public class StandaloneParserTestLoadFile extends TestCase {
                     w.close();
                 }
 
-                Hashtable<Thing, String> ccode =  CGenerator.compileAll( (ThingMLModel)model.getContents().get(0));
-                for (Thing t : CGenerator.compileAll( (ThingMLModel)model.getContents().get(0)).keySet()) {
+                Hashtable<Configuration, String> ccode =  CGenerator.compileAll( (ThingMLModel)model.getContents().get(0));
+                for (Configuration t : CGenerator.compileAll( (ThingMLModel)model.getContents().get(0)).keySet()) {
                     System.out.println(" -> Writing file " + t.getName() + ".c");
                     PrintWriter w = new PrintWriter(new FileWriter("test_out/" +new File(t.getName() + ".c")));
                     w.println(ccode.get(t));

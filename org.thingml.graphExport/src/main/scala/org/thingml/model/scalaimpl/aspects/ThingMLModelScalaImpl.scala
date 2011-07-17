@@ -48,4 +48,8 @@ case class ThingMLModelScalaImpl(self : ThingMLModel) {
     return ThingMLHelpers.allThings(self)
   }
 
+  def allConfigurations: ArrayList[Configuration] = {
+    return ThingMLHelpers.allConfigurations(self)
+  }
+
 }

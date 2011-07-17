@@ -1,13 +1,14 @@
-import "typedefs.thingml"
+import "../core/typedefs.thingml"
+import "../core/scheduler.thingml"
 
-message poll();
+thing fragment SerialMsgs {
+	message writeByte(b : Byte);
+	message writeMessage(msg : String);
+	message receiveByte(b : Byte);
+	message receiveMessage(b : Byte);
+}
 
-message writeByte(b : Byte);
-message writeMessage(msg : String);
-message receiveByte(b : Byte);
-message receiveMessage(b : Byte);
-
-thing Serial
+thing Serial includes SerialMsgs, SchedulerMsgs
 {
     property delimiter : Byte = "\n"
     property buffer_size : Int8 = 32
@@ -23,7 +24,7 @@ thing Serial
 
     required port Scheduler 
     {
-        receives poll
+        receives loop
     }
 
     statechart SerialImpl init Receiving {
@@ -31,10 +32,10 @@ thing Serial
         state Receiving {
             on entry index = 0
             
-            internal event Scheduler?poll
+            internal event Scheduler?loop
             action do
                 if ('Serial.available()' > 0) do
-                 // TODO
+                 // TODO: read data from serial port
                 end 
             end
             

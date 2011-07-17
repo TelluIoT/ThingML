@@ -1,0 +1,126 @@
+import "led.thingml"
+import "softtimer.thingml"
+
+thing fragment StatusLEDMsgs {
+	message statusON();
+	message statusOFF();
+	message statusBlinkSlow();
+	message statusBlinkFast();
+	message statusBlinkCode(code : Int8);
+}
+
+thing StatusLED includes LEDMsgs, TimerMsgs, StatusLEDMsgs
+{
+    
+    readonly property slow_delay : Int16 = 1000
+    readonly property fast_delay : Int16 = 150
+    
+	required port led 
+    {
+		sends led_on, led_off, led_toggle
+	}
+
+	required port timer {
+		sends timer_start, timer_cancel
+		receives timer_timeout
+	}
+	
+	provided port statusLed {
+		receives statusON, statusOFF, statusBlinkSlow, statusBlinkFast, statusBlinkCode
+	}
+    
+    statechart StatusLEDImpl init Status_OFF {
+        
+        property delay : Int16 = slow_delay
+        property code : Int8 = 1
+        
+        state Status_OFF {
+        	on entry led!led_off()
+        	
+        	// This block is in all states, we should be able to write it only once
+        	transition -> Status_ON event statusLed?statusON
+        	transition -> Status_OFF event statusLed?statusOFF
+        	transition -> Status_Code event m: statusLed?statusBlinkCode
+        		action code = m.code
+        	transition -> Status_Blink event statusLed?statusBlinkSlow
+            	action delay = slow_delay
+            transition -> Status_Blink event statusLed?statusBlinkFast
+            	action delay = fast_delay
+            // end of the transition block which should be written only once
+            
+        }
+        
+        state Status_ON {
+            on entry led!led_on()
+            
+            // This block is in all states, we should be able to write it only once
+        	transition -> Status_ON event statusLed?statusON
+        	transition -> Status_OFF event statusLed?statusOFF
+        	transition -> Status_Code event m: statusLed?statusBlinkCode
+        		action code = m.code
+        	transition -> Status_Blink event statusLed?statusBlinkSlow
+            	action delay = slow_delay
+            transition -> Status_Blink event statusLed?statusBlinkFast
+            	action delay = fast_delay
+            // end of the transition block which should be written only once
+        }
+        
+        state Status_Blink {
+        	on entry timer!timer_start(delay)
+        	on exit timer!timer_cancel()
+        	
+        	// This block is in all states, we should be able to write it only once
+        	transition -> Status_ON event statusLed?statusON
+        	transition -> Status_OFF event statusLed?statusOFF
+        	transition -> Status_Code event m: statusLed?statusBlinkCode
+        		action code = m.code
+        	transition -> Status_Blink event statusLed?statusBlinkSlow
+            	action delay = slow_delay
+            transition -> Status_Blink event statusLed?statusBlinkFast
+            	action delay = fast_delay
+            // end of the transition block which should be written only once
+        	
+        	internal event timer?timer_timeout
+        	action do 
+        		led!led_toggle()
+        		timer!timer_start(delay)
+        	end
+        }
+        
+        state Status_Code {
+        
+        	property counter : Int8 = 0
+        	
+        	on entry do 
+        		counter = code * 2 - 1
+        		timer!timer_start(slow_delay)
+        		led!led_off()
+        	end
+        	
+        	internal event timer?timer_timeout
+        		guard counter > 0
+	        	action do 
+	        		led!led_toggle()
+	        		counter = counter - 1
+	        		timer!timer_start(fast_delay)
+	        	end
+	        
+	        transition -> Status_Code 
+	        	event timer?timer_timeout
+        		guard not (counter > 0)
+        
+        	// This block is in all states, we should be able to write it only once
+        	transition -> Status_ON event statusLed?statusON
+        	transition -> Status_OFF event statusLed?statusOFF
+        	transition -> Status_Code event m: statusLed?statusBlinkCode
+        		action code = m.code
+        	transition -> Status_Blink event statusLed?statusBlinkSlow
+            	action delay = slow_delay
+            transition -> Status_Blink event statusLed?statusBlinkFast
+            	action delay = fast_delay
+            // end of the transition block which should be written only once
+        }
+    
+    }
+    
+}

@@ -37,3 +37,7 @@ thing HelloPar @c_code "generate"
 		
 	}
 }
+
+configuration SimpleParRegions {
+	instance hello : HelloPar
+}

@@ -41,3 +41,7 @@ thing HelloComp @c_code "generate"
 		}
 	}
 }
+
+configuration HelloCompositeStateMachine {
+	instance hello : HelloComp
+}
