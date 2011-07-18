@@ -188,10 +188,10 @@ thing ArduinoStdlib includes ArduinoStdlibMsgs
             action 'analogWrite(' & m.pin & ', '& m.value &');'
             
             internal event m : AdvancedIO?tone 
-            action 'analogWrite(' & m.pin & ', '& m.frequency & ', '& m.duration &');'
+            action 'tone(' & m.pin & ', '& m.frequency & ', '& m.duration &');'
             
             internal event m : AdvancedIO?noTone 
-            action 'analogWrite(' & m.pin & ');'
+            action 'noTone(' & m.pin & ');'
                     
         }
     }

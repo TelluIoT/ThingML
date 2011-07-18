@@ -1,3 +1,5 @@
+package org.thingml.model.scalaimpl.aspects
+
 /**
  * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
  *
@@ -13,18 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sintef.thingml;
-
+import org.sintef.thingml._
+import scala.collection.JavaConversions._
+import org.sintef.thingml.constraints.ThingMLHelpers
+import java.util.{Hashtable, ArrayList}
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Unary Minus</b></em>'.
- * <!-- end-user-doc -->
- *
- *
- * @see org.sintef.thingml.ThingmlPackage#getUnaryMinus()
- * @model
- * @generated
+ * Created by IntelliJ IDEA.
+ * User: ffl
+ * Date: 04.07.11
+ * Time: 10:37
+ * To change this template use File | Settings | File Templates.
  */
-public interface UnaryMinus extends UnaryExpression {
-} // UnaryMinus
+
+case class ConnectorScalaImpl (self : Connector) {
+
+
+}

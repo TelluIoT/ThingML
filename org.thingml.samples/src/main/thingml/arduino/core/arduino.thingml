@@ -2,7 +2,7 @@ import "arduino_stdlib.thingml"
 import "scheduler.thingml"
 import "clock.thingml"
 
-thing Arduino includes ArduinoStdlib, SchedulerMsgs, ClockMsgs
+thing Arduino includes ArduinoStdlib, SchedulerMsgs
 {	
 
 }

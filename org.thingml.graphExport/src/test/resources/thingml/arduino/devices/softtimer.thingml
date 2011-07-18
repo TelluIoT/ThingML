@@ -1,5 +1,5 @@
 import "../core/typedefs.thingml"
-import "../core/clock.thingml"
+import "../core/scheduler.thingml"
 
 thing fragment TimerMsgs {
 	// Start the Timer
@@ -11,40 +11,34 @@ thing fragment TimerMsgs {
 }
 
 // Manage a set of software timers.
-thing SoftTimer includes TimerMsgs, ClockMsgs
+thing SoftTimer includes TimerMsgs, SchedulerMsgs
 {
 	provided port SoftTimer
     {
 		sends timer_timeout
 		receives timer_start, timer_cancel
 	}
-
-    required port Clock
-    {
-        receives tick1ms
-    }
+	
+	required port Polling {
+		receives loop
+	}
     
     statechart SoftTimer init Idle {
     
-        property counter : Int16 = 0
+        property target : Long = 0
     
         state Idle {
             transition start -> Counting
                 event m : SoftTimer?timer_start
                 guard m.delay > 0
-                action counter = m.delay
+                action target = 'millis()' + m.delay
         }
         
         state Counting {
             
-            internal tick 
-                event Clock?tick1ms
-                guard counter > 0
-                action counter = counter - 1
-            
-            transition timeout -> Idle
-                event Clock?tick1ms
-                guard counter == 0
+            transition timeout -> Idle 
+                event Polling?loop
+                guard not ('millis()' < target)
                 action SoftTimer!timer_timeout()
                 
             transition cancel -> Idle
@@ -53,7 +47,7 @@ thing SoftTimer includes TimerMsgs, ClockMsgs
             internal reset
                 event m : SoftTimer?timer_start
                 guard m.delay > 0
-                action counter = m.delay
+                action target = 'millis()' + m.delay
 
         }
     }

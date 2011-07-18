@@ -11,13 +11,18 @@ thing Blink includes LEDMsgs, TimerMsgs
 
     statechart BlinkImpl init Blinking {
         
+        on entry 'Serial.begin(9600);'
+        
         state Blinking {
             
             on entry HW!timer_start(1000)
             
             transition -> Blinking
                 event HW?timer_timeout
-                action HW!led_toggle()
+                action do 
+                	HW!led_toggle()
+                	'Serial.println("Blink!");'
+               	end
         }
     }
 }

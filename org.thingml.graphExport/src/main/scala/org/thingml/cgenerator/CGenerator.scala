@@ -16,6 +16,7 @@
 package org.thingml.cgenerator
 
 import org.sintef.thingml._
+import constraints.ThingMLHelpers
 import org.thingml.cgenerator.CGenerator._
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import resource.thingml.analysis.helper.CharacterEscaper
@@ -52,6 +53,8 @@ object CGenerator {
 
   implicit def cGeneratorAspect(self: EnumerationLiteral): EnumerationLiteralCGenerator = EnumerationLiteralCGenerator(self)
 
+  implicit def cGeneratorAspect(self: Property): PropertyCGenerator = PropertyCGenerator(self)
+
   implicit def cGeneratorAspect(self: Type) = self match {
     case t: PrimitiveType => PrimitiveTypeCGenerator(t)
     case t: Enumeration => EnumerationCGenerator(t)
@@ -60,7 +63,7 @@ object CGenerator {
 
   implicit def cGeneratorAspect(self: Action) = self match {
     case a: SendAction => SendActionCGenerator(a)
-    case a: PropertyAssignment => PropertyAssignmentCGenerator(a)
+    case a: VariableAssignment => VariableAssignmentCGenerator(a)
     case a: ActionBlock => ActionBlockCGenerator(a)
     case a: ExternStatement => ExternStatementCGenerator(a)
     case a: ConditionalAction => ConditionalActionCGenerator(a)
@@ -86,9 +89,9 @@ object CGenerator {
     case exp: EventReference => EventReferenceCGenerator(exp)
     case exp: ExpressionGroup => ExpressionGroupCGenerator(exp)
     case exp: PropertyReference => PropertyReferenceCGenerator(exp)
-    case exp: IntegerLitteral => IntegerLitteralCGenerator(exp)
-    case exp: StringLitteral => StringLitteralCGenerator(exp)
-    case exp: BooleanLitteral => BooleanLitteralCGenerator(exp)
+    case exp: IntegerLiteral => IntegerLiteralCGenerator(exp)
+    case exp: StringLiteral => StringLiteralCGenerator(exp)
+    case exp: BooleanLiteral => BooleanLiteralCGenerator(exp)
     case exp: EnumLiteralRef => EnumLiteralRefCGenerator(exp)
     case exp: ExternExpression => ExternExpressionCGenerator(exp)
     case _ => ExpressionCGenerator(self)
@@ -132,20 +135,31 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
     // TODO: Generate includes and headers
 
-    // Generate code for things and types which appear in the configuration
+    // Generate code for enumerations (generate for all enum)
+    val model = ThingMLHelpers.findContainingModel(self)
+
+    model.allSimpleTypes.filter{ t => t.isInstanceOf[Enumeration] }.foreach{ e =>
+      e.generateC(builder)
+    }
+
+    // Generate code for things which appear in the configuration
     self.allThings.foreach { thing =>
        thing.generateC(builder)
     }
 
-    // Generate code and variable for instances
-    self.allInstances.foreach { inst =>
-       inst.generateC(builder)
-    }
+    builder append "void initialize_configuration_" + self.getName + "() {\n"
 
     // Generate code to initialize connectors
     self.allConnectors.foreach { conn =>
        conn.generateC(builder)
     }
+
+    // Generate code to initialize variable for instances
+    self.allInstances.foreach { inst =>
+       inst.generateC(builder)
+    }
+
+    builder append "}\n"
 
     // TODO: Generate "main" method
 
@@ -155,14 +169,30 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 case class InstanceCGenerator(override val self: Instance) extends ThingMLCGenerator(self) {
 
   override def generateC(builder: StringBuilder) {
-    // TODO: implement
+    // Initialize variables and state machines
+    self.getAssign.foreach{ assign =>
+      builder append assign.getProperty.c_var_name + " = "
+      assign.getInit.generateC(builder)
+      builder append ";\n";
+    }
+    builder append self.getType.composedBehaviour.qname("_") + "_OnEntry(" + self.getType.state_id(self.getType.composedBehaviour) + ");\n"
   }
 }
 
 case class ConnectorCGenerator(override val self: Connector) extends ThingMLCGenerator(self) {
 
   override def generateC(builder: StringBuilder) {
-    // TODO: implement
+    // connect the handlers for messages with the sender
+    // sender_listener = reveive_handler;
+    self.getProvided.getSends.filter{m => self.getRequired.getReceives.contains(m)}.foreach { m =>
+       builder append self.getServer.getType.sender_name(self.getProvided, m) + "_listener = "
+       builder append self.getClient.getType.handler_name(self.getRequired, m) + ";\n"
+    }
+
+    self.getRequired.getSends.filter{m => self.getProvided.getReceives.contains(m)}.foreach { m =>
+       builder append self.getClient.getType.sender_name(self.getRequired, m) + "_listener = "
+       builder append self.getServer.getType.handler_name(self.getProvided, m) + ";\n"
+    }
   }
 }
 
@@ -181,24 +211,30 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     builder append "\n"
 
     builder append "// Declaration of prototypes:\n"
-    generatePrototypes(builder: StringBuilder)
+    generatePrototypes(builder)
     builder append "\n"
 
     builder append "// On Entry Actions:\n"
-    generateEntryActions(builder: StringBuilder)
+    generateEntryActions(builder)
     builder append "\n"
 
     builder append "// On Exit Actions:\n"
-    generateExitActions(builder: StringBuilder)
+    generateExitActions(builder)
     builder append "\n"
 
     builder append "// Event Handlers for incomming messages:\n"
-    generateEventHandlers(builder: StringBuilder, composedBehaviour)
+    generateEventHandlers(builder, composedBehaviour)
+    builder append "\n"
+
+    builder append "// Observers for outgoing messages:\n"
+    generateMessageSendingOperations(builder)
     builder append "\n"
 
   }
 
-  def handler_name(s: State, p: Port, m: Message) = s.qname("_") + "_handle_" + p.getName + "_" + m.getName
+  def handler_name(p: Port, m: Message) = m.eContainer().asInstanceOf[Thing].qname("_") + "_handle_" + p.getName + "_" + m.getName
+
+  def sender_name(p: Port, m: Message) = m.eContainer().asInstanceOf[Thing].qname("_") + "_send_" + p.getName + "_" + m.getName
 
   def state_var_name(r: Region) = r.qname("_") + "_State"
 
@@ -210,6 +246,26 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
       p =>
         if (p != m.getParameters.head) builder.append(", ")
         builder.append(p.getType.c_type() + " " + p.getName)
+    }
+    builder append ")"
+  }
+
+  def append_actual_parameters(builder: StringBuilder, m: Message) {
+    builder append "("
+    m.getParameters.foreach {
+      p =>
+        if (p != m.getParameters.head) builder.append(", ")
+        builder.append(p.getName)
+    }
+    builder append ")"
+  }
+
+  def append_formal_type_signature(builder: StringBuilder, m: Message) {
+    builder append "("
+    m.getParameters.foreach {
+      p =>
+        if (p != m.getParameters.head) builder.append(", ")
+        builder.append(p.getType.c_type())
     }
     builder append ")"
   }
@@ -232,7 +288,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     // Create variables for all the properties defined in the Thing and States
     self.allPropertiesInDepth.foreach {
       p =>
-        builder append p.getType.c_type + " " + p.qname("_") + "_var;\n"
+        builder append p.getType.c_type + " " + p.c_var_name + ";\n"
     }
   }
 
@@ -245,11 +301,37 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     handlers.keys().foreach {
       port => handlers.get(port).keys.foreach {
         msg =>
-          builder append "void " + handler_name(composedBehaviour, port, msg)
+          builder append "void " + handler_name(port, msg)
           append_formal_parameters(builder, msg)
           builder append ";\n"
       }
     }
+    // Message Sending
+    self.allPorts.foreach{ port => port.getSends.foreach{ msg =>
+      builder append "void " + sender_name(port, msg)
+          append_formal_parameters(builder, msg)
+          builder append ";\n"
+    }}
+  }
+
+  def generateMessageSendingOperations(builder: StringBuilder) {
+
+    self.allPorts.foreach{ port => port.getSends.foreach{ msg =>
+      // Variable for the function pointer
+      builder append "void (*" + sender_name(port, msg) + "_listener)"
+      append_formal_type_signature(builder, msg)
+      builder append "= 0x0;\n"
+
+      // Operation which calls on the function pointer if it is not NULL
+      builder append "void " + sender_name(port, msg)
+      append_formal_parameters(builder, msg)
+      builder append "{\n"
+      // if (timer_receive_timeout_listener != 0) timer_receive_timeout_listener(timer_id);
+      builder append "if ("+ sender_name(port, msg) +"_listener != 0x0) " + sender_name(port, msg) +"_listener"
+      append_actual_parameters(builder, msg)
+      builder append ";\n}\n"
+    }}
+
   }
 
   def generateEntryActions(builder: StringBuilder) {
@@ -327,7 +409,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     handlers.keys().foreach {
       port => handlers.get(port).keys.foreach {
         msg =>
-          builder append "void " + handler_name(cs, port, msg)
+          builder append "void " + handler_name(port, msg)
           append_formal_parameters(builder, msg)
           builder append " {\n"
           // dispatch the current message to sub-regions
@@ -377,10 +459,13 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
                       case et: Transition => {
                         // Execute the exit actions for current states (starting at the deepest)
                         builder append composedBehaviour.qname("_") + "_OnExit(" + state_id(et.getSource) + ");\n"
-                        // Do the action
-                        et.getAction.generateC(builder)
+                         // Set the new current state
+                        builder append state_var_name(cs) + " = " + state_id(et.getTarget) + ";\n"
                         // Enter the target state and initialize its children
                         builder append composedBehaviour.qname("_") + "_OnEntry(" + state_id(et.getTarget) + ");\n"
+                        // TODO: There is a semantic problem here
+                         // Do the action
+                        et.getAction.generateC(builder)
                       }
                     }
                     if (h.getGuard != null) {
@@ -412,6 +497,12 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     }
   }
 
+}
+
+case class PropertyCGenerator(override val self: Property) extends ThingMLCGenerator(self) {
+   def c_var_name = {
+       self.qname("_") + "_var"
+   }
 }
 
 case class EnumerationLiteralCGenerator(override val self: EnumerationLiteral) extends ThingMLCGenerator(self) {
@@ -495,7 +586,11 @@ case class ActionCGenerator(val self: Action) /*extends ThingMLCGenerator(self)*
 
 case class SendActionCGenerator(override val self: SendAction) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder) {
-    builder.append(self.getMessage.getName)
+
+    val thing = ThingMLHelpers.findContainingThing(self)
+
+    builder append thing.sender_name(self.getPort, self.getMessage)
+
     builder append "("
     self.getParameters.foreach {
       p =>
@@ -504,16 +599,16 @@ case class SendActionCGenerator(override val self: SendAction) extends ActionCGe
         }
         p.generateC(builder)
     }
-    builder append ");"
+    builder append ");\n"
   }
 }
 
-case class PropertyAssignmentCGenerator(override val self: PropertyAssignment) extends ActionCGenerator(self) {
+case class VariableAssignmentCGenerator(override val self: VariableAssignment) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder) {
-    builder.append(self.getProperty.getName)
+    builder.append(self.getProperty.c_var_name)
     builder append " = "
-    builder.append(self.getExpression)
-    builder append ";"
+    self.getExpression.generateC(builder)
+    builder append ";\n"
   }
 }
 
@@ -522,7 +617,7 @@ case class ActionBlockCGenerator(override val self: ActionBlock) extends ActionC
     builder append "{\n"
     self.getActions.foreach {
       a => a.generateC(builder)
-      builder append "\n"
+      //builder append "\n"
     }
     builder append "}\n"
   }
@@ -534,6 +629,7 @@ case class ExternStatementCGenerator(override val self: ExternStatement) extends
     self.getSegments.foreach {
       e => e.generateC(builder)
     }
+    builder append "\n"
   }
 }
 
@@ -699,19 +795,19 @@ case class PropertyReferenceCGenerator(override val self: PropertyReference) ext
   }
 }
 
-case class IntegerLitteralCGenerator(override val self: IntegerLitteral) extends ExpressionCGenerator(self) {
+case class IntegerLiteralCGenerator(override val self: IntegerLiteral) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder) {
     builder.append(self.getIntValue.toString)
   }
 }
 
-case class StringLitteralCGenerator(override val self: StringLitteral) extends ExpressionCGenerator(self) {
+case class StringLiteralCGenerator(override val self: StringLiteral) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder) {
     builder.append("\"" + CharacterEscaper.escapeEscapedCharacters(self.getStringValue) + "\"")
   }
 }
 
-case class BooleanLitteralCGenerator(override val self: BooleanLitteral) extends ExpressionCGenerator(self) {
+case class BooleanLiteralCGenerator(override val self: BooleanLiteral) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder) {
     builder.append(if (self.isBoolValue) "1" else "0")
   }

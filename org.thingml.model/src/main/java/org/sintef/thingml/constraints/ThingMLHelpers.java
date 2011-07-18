@@ -69,6 +69,19 @@ public class ThingMLHelpers {
 		}
 	}
 	
+	public static Instance findContainingInstance(EObject object) {
+		if (object instanceof Instance) return (Instance)object;
+		else {
+			EObject container = object.eContainer();
+			if (container != null) {
+				return findContainingInstance(container);
+			} 
+			else {
+				return null;
+			}
+		}
+	}
+	
 	public static Configuration findContainingConfiguration(EObject object) {
 		if (object instanceof Configuration) return (Configuration)object;
 		else {

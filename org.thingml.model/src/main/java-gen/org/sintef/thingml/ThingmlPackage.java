@@ -13,19 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.sintef.thingml;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -2925,7 +2912,6 @@ public interface ThingmlPackage extends EPackage {
 	 */
 	int ERROR_ACTION_FEATURE_COUNT = ACTION_FEATURE_COUNT + 1;
 
-
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ConfigurationImpl <em>Configuration</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -3353,6 +3339,39 @@ public interface ThingmlPackage extends EPackage {
 	EReference getProperty_Type();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.Property#getLowerBound <em>Lower Bound</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Lower Bound</em>'.
+	 * @see org.sintef.thingml.Property#getLowerBound()
+	 * @see #getProperty()
+	 * @generated
+	 */
+	EAttribute getProperty_LowerBound();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.Property#getUpperBound <em>Upper Bound</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Upper Bound</em>'.
+	 * @see org.sintef.thingml.Property#getUpperBound()
+	 * @see #getProperty()
+	 * @generated
+	 */
+	EAttribute getProperty_UpperBound();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Property#getInit <em>Init</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Init</em>'.
+	 * @see org.sintef.thingml.Property#getInit()
+	 * @see #getProperty()
+	 * @generated
+	 */
+	EReference getProperty_Init();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.sintef.thingml.Property#isChangeable <em>Changeable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3394,39 +3413,6 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getPropertyAssign_Property();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.sintef.thingml.Property#getLowerBound <em>Lower Bound</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Lower Bound</em>'.
-	 * @see org.sintef.thingml.Property#getLowerBound()
-	 * @see #getProperty()
-	 * @generated
-	 */
-	EAttribute getProperty_LowerBound();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.sintef.thingml.Property#getUpperBound <em>Upper Bound</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Upper Bound</em>'.
-	 * @see org.sintef.thingml.Property#getUpperBound()
-	 * @see #getProperty()
-	 * @generated
-	 */
-	EAttribute getProperty_UpperBound();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Property#getInit <em>Init</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Init</em>'.
-	 * @see org.sintef.thingml.Property#getInit()
-	 * @see #getProperty()
-	 * @generated
-	 */
-	EReference getProperty_Init();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.PlatformAnnotation <em>Platform Annotation</em>}'.
@@ -4895,6 +4881,30 @@ public interface ThingmlPackage extends EPackage {
 		EReference PROPERTY__TYPE = eINSTANCE.getProperty_Type();
 
 		/**
+		 * The meta object literal for the '<em><b>Lower Bound</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY__LOWER_BOUND = eINSTANCE.getProperty_LowerBound();
+
+		/**
+		 * The meta object literal for the '<em><b>Upper Bound</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PROPERTY__UPPER_BOUND = eINSTANCE.getProperty_UpperBound();
+
+		/**
+		 * The meta object literal for the '<em><b>Init</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROPERTY__INIT = eINSTANCE.getProperty_Init();
+
+		/**
 		 * The meta object literal for the '<em><b>Changeable</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -4927,30 +4937,6 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PROPERTY_ASSIGN__PROPERTY = eINSTANCE.getPropertyAssign_Property();
-
-		/**
-		 * The meta object literal for the '<em><b>Lower Bound</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PROPERTY__LOWER_BOUND = eINSTANCE.getProperty_LowerBound();
-
-		/**
-		 * The meta object literal for the '<em><b>Upper Bound</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PROPERTY__UPPER_BOUND = eINSTANCE.getProperty_UpperBound();
-
-		/**
-		 * The meta object literal for the '<em><b>Init</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference PROPERTY__INIT = eINSTANCE.getProperty_Init();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.PlatformAnnotationImpl <em>Platform Annotation</em>}' class.

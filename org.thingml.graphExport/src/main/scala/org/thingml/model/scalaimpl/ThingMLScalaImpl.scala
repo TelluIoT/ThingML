@@ -35,5 +35,6 @@ object ThingMLScalaImpl {
   implicit def scalaImplAspect(self:ThingMLElement) = ThingMLElementScalaImpl(self)
   implicit def scalaImplAspect(self:Region) = RegionScalaImpl(self)
   implicit def scalaImplAspect(self:Configuration) = ConfigurationScalaImpl(self)
+  implicit def scalaImplAspect(self:Connector) = ConnectorScalaImpl(self)
 
 }

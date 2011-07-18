@@ -15,12 +15,29 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
+import java.util.ArrayList;
+
+import org.sintef.thingml.Property;
+import org.sintef.thingml.State;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+
 public class PropertyAssignPropertyReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.PropertyAssign, org.sintef.thingml.Property> {
 	
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.PropertyAssign, org.sintef.thingml.Property> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.PropertyAssign, org.sintef.thingml.Property>();
 	
 	public void resolve(String identifier, org.sintef.thingml.PropertyAssign container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Property> result) {
-		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
+		Thing s = ThingMLHelpers.findContainingThing(container);
+		if (s == null) {
+			s = ThingMLHelpers.findContainingInstance(container).getType();
+		}
+		ArrayList<Property> ps = ThingMLHelpers.findProperty(s, identifier, resolveFuzzy);
+		for(Property p : ps) {
+			result.addMapping(p.getName(), p);
+		}
+		
+		if (!result.wasResolved())
+			result.setErrorMessage("Cannot resolve variable " + identifier);
 	}
 	
 	public String deResolve(org.sintef.thingml.Property element, org.sintef.thingml.PropertyAssign container, org.eclipse.emf.ecore.EReference reference) {

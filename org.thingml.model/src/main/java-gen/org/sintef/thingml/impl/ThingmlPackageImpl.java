@@ -13,19 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.sintef.thingml.impl;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -41,7 +28,6 @@ import org.sintef.thingml.AndExpression;
 import org.sintef.thingml.AnnotatedElement;
 import org.sintef.thingml.BinaryExpression;
 import org.sintef.thingml.BooleanLiteral;
-import org.sintef.thingml.BooleanLitteral;
 import org.sintef.thingml.CompositeState;
 import org.sintef.thingml.ConditionalAction;
 import org.sintef.thingml.Configuration;
@@ -49,11 +35,9 @@ import org.sintef.thingml.Connector;
 import org.sintef.thingml.ControlStructure;
 import org.sintef.thingml.Dictionary;
 import org.sintef.thingml.DictionaryReference;
-import org.sintef.thingml.DictionaryNavigation;
 import org.sintef.thingml.DivExpression;
 import org.sintef.thingml.DoubleLiteral;
 import org.sintef.thingml.EnumLiteralRef;
-import org.sintef.thingml.DoubleLitteral;
 import org.sintef.thingml.Enumeration;
 import org.sintef.thingml.EnumerationLiteral;
 import org.sintef.thingml.EqualsExpression;
@@ -68,10 +52,8 @@ import org.sintef.thingml.GreaterExpression;
 import org.sintef.thingml.Handler;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.IntegerLiteral;
-import org.sintef.thingml.IntegerLitteral;
 import org.sintef.thingml.InternalTransition;
 import org.sintef.thingml.Literal;
-import org.sintef.thingml.Litteral;
 import org.sintef.thingml.LoopAction;
 import org.sintef.thingml.LowerExpression;
 import org.sintef.thingml.Message;
@@ -88,7 +70,6 @@ import org.sintef.thingml.PrimitiveType;
 import org.sintef.thingml.PrintAction;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.PropertyAssign;
-import org.sintef.thingml.PropertyAssignment;
 import org.sintef.thingml.PropertyReference;
 import org.sintef.thingml.ProvidedPort;
 import org.sintef.thingml.ReceiveMessage;
@@ -98,7 +79,6 @@ import org.sintef.thingml.SendAction;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.StringLiteral;
-import org.sintef.thingml.StringLitteral;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLElement;
 import org.sintef.thingml.ThingMLModel;
@@ -835,6 +815,33 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getProperty_LowerBound() {
+		return (EAttribute)propertyEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getProperty_UpperBound() {
+		return (EAttribute)propertyEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getProperty_Init() {
+		return (EReference)propertyEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getProperty_Changeable() {
 		return (EAttribute)propertyEClass.getEStructuralFeatures().get(4);
 	}
@@ -864,33 +871,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EReference getPropertyAssign_Property() {
 		return (EReference)propertyAssignEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getProperty_LowerBound() {
-		return (EAttribute)propertyEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getProperty_UpperBound() {
-		return (EAttribute)propertyEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getProperty_Init() {
-		return (EReference)propertyEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
