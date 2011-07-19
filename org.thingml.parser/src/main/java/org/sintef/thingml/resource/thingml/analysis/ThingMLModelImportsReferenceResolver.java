@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 
 
 public class ThingMLModelImportsReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.ThingMLModel, org.sintef.thingml.ThingMLModel> {
@@ -46,9 +47,59 @@ public class ThingMLModelImportsReferenceResolver implements org.sintef.thingml.
 			//System.out.println("identifier = " + identifier + " container.eResource().getURI() = " + container.eResource().getURI());
 			//System.out.println("uri = " + uri);
 			//Resource r = container.eResource().getResourceSet().getResource(uri, true);
-			Resource r = new ResourceSetImpl().getResource(uri, true);
+			
+			/*
+			for (Resource res : container.eResource().getResourceSet().getResources()) {
+				System.out.println(" ||||||||||||||||--  ALREADY LOADED : " + res.getURI());
+				if (res.getURI().equals(uri)) {
+					System.out.println(" ||||||||||||||||--  NO NEED TO RELOAD : " + uri);
+					ThingMLModel m = (ThingMLModel)res.getContents().get(0);
+					result.addMapping(identifier, m);
+					return;
+				}
+			}
+			
+			
+			// search for the model in the cache:
+			ThingMLModel cache = container;
+			while (cache.get__imports_parent() != null) cache = cache.get__imports_parent();
+			
+			System.out.println(" ||||||||||||||||--  CACHE = " + cache);
+			
+			for (ThingMLModel m : cache.get__imports_cache()) {
+				System.out.println(" ||||||||||||||||--  ALREADY LOADED : " + m.getUri());
+				if (m.getUri().equals(uri.toString())) {
+					result.addMapping(identifier, m);
+					System.out.println(" ||||||||||||||||--  NO NEED TO RELOAD : " + uri);
+					return;
+				}
+			}
+			
+			/*
+			for (ThingMLModel m :ThingMLHelpers.allThingMLModelModels(container)) {
+				if (m.getUri().equals(uri.toString())) {
+					result.addMapping(identifier, m);
+					System.out.println(" ||||||||||||||||--  NO NEED TO RELOAD : " + uri);
+					return;
+				}
+			}
+			*/
+			System.out.println(" ||||||||||||||||--  LOADING : " + uri);
+			
+			Resource r = container.eResource().getResourceSet().getResource(uri, true);
+			//Resource r = new ResourceSetImpl().getResource(uri, true);
 			r.load(null);
+
 			ThingMLModel m = (ThingMLModel)r.getContents().get(0);
+			
+			/*
+			m.setUri(uri.toString());
+			m.set__imports_parent(container);
+			System.out.println(" ||||||||||||||||--  Import parent for : " + m + " is " + container);
+			while (cache.get__imports_parent() != null) cache = cache.get__imports_parent();
+			cache.get__imports_cache().add(m);
+			*/
+			
 			result.addMapping(identifier, m);
 		} catch (ClassCastException e) {
 			result.setErrorMessage("The given URI contains a model with a wrong type");

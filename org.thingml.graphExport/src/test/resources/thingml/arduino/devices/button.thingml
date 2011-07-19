@@ -5,7 +5,7 @@ thing fragment ButtonMsgs {
 	message release();
 }
 
-thing Button includes ButtonMsgs, SchedulerMsgs, ArduinoStdlibMsgs
+thing Button includes ButtonMsgs, ArduinoMsgs
 {	
 
 	readonly property pin : DigitalPin = DigitalPin:PIN_3
@@ -28,26 +28,38 @@ thing Button includes ButtonMsgs, SchedulerMsgs, ArduinoStdlibMsgs
 	
 	 statechart ButtonImpl init Released {
         
+        property debounce : Int8 = 20
+        
         on entry do
         	DigitalIO!pinMode(pin, PinMode:INPUT)
         	DigitalIO!digitalWrite(pin, DigitalState:HIGH) // pull-up
+        	debounce = 20
         end
         
         internal event Polling?loop
-            action DigitalIO!digitalRead(pin)
+            action do
+            	if (debounce > 0) debounce = debounce - 1
+            	if (debounce == 0) DigitalIO!digitalRead(pin)
+            end
         
         state Released {
             transition pressed -> Pressed
             event m: DigitalIO?digitalReadResult
-            guard m.value == DigitalState:LOW
-            action Button!press()
+            guard m.value == DigitalState:HIGH
+            action do 
+            	debounce = 20
+            	Button!press()
+            end
         }
         
         state Pressed {
-            transition pressed -> Pressed
+            transition pressed -> Released
             event m: DigitalIO?digitalReadResult
-            guard m.value == DigitalState:HIGH
-            action Button!release()
+            guard m.value == DigitalState:LOW
+            action do
+            	debounce = 20
+            	Button!release()
+            end
         }
     }
 }

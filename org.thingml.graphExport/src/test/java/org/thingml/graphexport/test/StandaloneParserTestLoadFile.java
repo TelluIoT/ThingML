@@ -80,8 +80,9 @@ public class StandaloneParserTestLoadFile extends TestCase {
                 // Load the model
                 ResourceSet rs = new ResourceSetImpl();
                 URI xmiuri = URI.createFileURI(model_path);
-                Resource model = rs.getResource(xmiuri, true);
+                Resource model = rs.createResource(xmiuri);
                 model.load(null);
+                //org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(rs);
 
                 assert(model.getContents().size() > 0);
 

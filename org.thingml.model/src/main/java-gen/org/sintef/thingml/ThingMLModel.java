@@ -30,6 +30,9 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.sintef.thingml.ThingMLModel#getTypes <em>Types</em>}</li>
  *   <li>{@link org.sintef.thingml.ThingMLModel#getImports <em>Imports</em>}</li>
  *   <li>{@link org.sintef.thingml.ThingMLModel#getConfigs <em>Configs</em>}</li>
+ *   <li>{@link org.sintef.thingml.ThingMLModel#getUri <em>Uri</em>}</li>
+ *   <li>{@link org.sintef.thingml.ThingMLModel#get__imports_cache <em>imports cache</em>}</li>
+ *   <li>{@link org.sintef.thingml.ThingMLModel#get__imports_parent <em>imports parent</em>}</li>
  * </ul>
  * </p>
  *
@@ -85,5 +88,73 @@ public interface ThingMLModel extends EObject {
 	 * @generated
 	 */
 	EList<Configuration> getConfigs();
+
+	/**
+	 * Returns the value of the '<em><b>Uri</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Uri</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Uri</em>' attribute.
+	 * @see #setUri(String)
+	 * @see org.sintef.thingml.ThingmlPackage#getThingMLModel_Uri()
+	 * @model
+	 * @generated
+	 */
+	String getUri();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.ThingMLModel#getUri <em>Uri</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Uri</em>' attribute.
+	 * @see #getUri()
+	 * @generated
+	 */
+	void setUri(String value);
+
+	/**
+	 * Returns the value of the '<em><b>imports cache</b></em>' reference list.
+	 * The list contents are of type {@link org.sintef.thingml.ThingMLModel}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>imports cache</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>imports cache</em>' reference list.
+	 * @see org.sintef.thingml.ThingmlPackage#getThingMLModel___imports_cache()
+	 * @model
+	 * @generated
+	 */
+	EList<ThingMLModel> get__imports_cache();
+
+	/**
+	 * Returns the value of the '<em><b>imports parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>imports parent</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>imports parent</em>' reference.
+	 * @see #set__imports_parent(ThingMLModel)
+	 * @see org.sintef.thingml.ThingmlPackage#getThingMLModel___imports_parent()
+	 * @model
+	 * @generated
+	 */
+	ThingMLModel get__imports_parent();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.ThingMLModel#get__imports_parent <em>imports parent</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>imports parent</em>' reference.
+	 * @see #get__imports_parent()
+	 * @generated
+	 */
+	void set__imports_parent(ThingMLModel value);
 
 } // ThingMLModel

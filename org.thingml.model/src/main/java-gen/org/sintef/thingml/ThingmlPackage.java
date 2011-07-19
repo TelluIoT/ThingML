@@ -106,13 +106,40 @@ public interface ThingmlPackage extends EPackage {
 	int THING_ML_MODEL__CONFIGS = 2;
 
 	/**
+	 * The feature id for the '<em><b>Uri</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THING_ML_MODEL__URI = 3;
+
+	/**
+	 * The feature id for the '<em><b>imports cache</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THING_ML_MODEL__IMPORTS_CACHE = 4;
+
+	/**
+	 * The feature id for the '<em><b>imports parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THING_ML_MODEL__IMPORTS_PARENT = 5;
+
+	/**
 	 * The number of structural features of the '<em>Thing ML Model</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THING_ML_MODEL_FEATURE_COUNT = 3;
+	int THING_ML_MODEL_FEATURE_COUNT = 6;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ThingMLElementImpl <em>Thing ML Element</em>}' class.
@@ -3158,6 +3185,39 @@ public interface ThingmlPackage extends EPackage {
 	EReference getThingMLModel_Configs();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.ThingMLModel#getUri <em>Uri</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Uri</em>'.
+	 * @see org.sintef.thingml.ThingMLModel#getUri()
+	 * @see #getThingMLModel()
+	 * @generated
+	 */
+	EAttribute getThingMLModel_Uri();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.sintef.thingml.ThingMLModel#get__imports_cache <em>imports cache</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>imports cache</em>'.
+	 * @see org.sintef.thingml.ThingMLModel#get__imports_cache()
+	 * @see #getThingMLModel()
+	 * @generated
+	 */
+	EReference getThingMLModel___imports_cache();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.ThingMLModel#get__imports_parent <em>imports parent</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>imports parent</em>'.
+	 * @see org.sintef.thingml.ThingMLModel#get__imports_parent()
+	 * @see #getThingMLModel()
+	 * @generated
+	 */
+	EReference getThingMLModel___imports_parent();
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Message <em>Message</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4731,6 +4791,30 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference THING_ML_MODEL__CONFIGS = eINSTANCE.getThingMLModel_Configs();
+
+		/**
+		 * The meta object literal for the '<em><b>Uri</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute THING_ML_MODEL__URI = eINSTANCE.getThingMLModel_Uri();
+
+		/**
+		 * The meta object literal for the '<em><b>imports cache</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference THING_ML_MODEL__IMPORTS_CACHE = eINSTANCE.getThingMLModel___imports_cache();
+
+		/**
+		 * The meta object literal for the '<em><b>imports parent</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference THING_ML_MODEL__IMPORTS_PARENT = eINSTANCE.getThingMLModel___imports_parent();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.MessageImpl <em>Message</em>}' class.

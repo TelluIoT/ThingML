@@ -122,5 +122,14 @@ thing StatusLED includes LEDMsgs, TimerMsgs, StatusLEDMsgs
         }
     
     }
-    
+}
+
+configuration fragment StatusLedFragment {
+	instance led : LED
+		set pin = DigitalPin:PIN_13
+	
+	instance timer : SoftTimer
+	instance statusLed : StatusLED
+	connector statusLed.timer => timer.SoftTimer
+	connector statusLed.led => led.LED
 }

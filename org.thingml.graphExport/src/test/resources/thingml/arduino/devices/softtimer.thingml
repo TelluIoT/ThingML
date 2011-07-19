@@ -1,5 +1,5 @@
 import "../core/typedefs.thingml"
-import "../core/scheduler.thingml"
+import "../core/arduino.thingml"
 
 thing fragment TimerMsgs {
 	// Start the Timer
@@ -11,7 +11,7 @@ thing fragment TimerMsgs {
 }
 
 // Manage a set of software timers.
-thing SoftTimer includes TimerMsgs, SchedulerMsgs
+thing SoftTimer includes TimerMsgs, ArduinoMsgs
 {
 	provided port SoftTimer
     {

@@ -17,6 +17,7 @@ package org.sintef.thingml.impl;
 
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -24,6 +25,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -45,6 +47,9 @@ import org.sintef.thingml.Type;
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getTypes <em>Types</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getImports <em>Imports</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getConfigs <em>Configs</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getUri <em>Uri</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#get__imports_cache <em>imports cache</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#get__imports_parent <em>imports parent</em>}</li>
  * </ul>
  * </p>
  *
@@ -80,6 +85,46 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 	 * @ordered
 	 */
 	protected EList<Configuration> configs;
+
+	/**
+	 * The default value of the '{@link #getUri() <em>Uri</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getUri()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String URI_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getUri() <em>Uri</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getUri()
+	 * @generated
+	 * @ordered
+	 */
+	protected String uri = URI_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #get__imports_cache() <em>imports cache</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #get__imports_cache()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ThingMLModel> __imports_cache;
+
+	/**
+	 * The cached value of the '{@link #get__imports_parent() <em>imports parent</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #get__imports_parent()
+	 * @generated
+	 * @ordered
+	 */
+	protected ThingMLModel __imports_parent;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -141,6 +186,77 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getUri() {
+		return uri;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setUri(String newUri) {
+		String oldUri = uri;
+		uri = newUri;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.THING_ML_MODEL__URI, oldUri, uri));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<ThingMLModel> get__imports_cache() {
+		if (__imports_cache == null) {
+			__imports_cache = new EObjectResolvingEList<ThingMLModel>(ThingMLModel.class, this, ThingmlPackage.THING_ML_MODEL__IMPORTS_CACHE);
+		}
+		return __imports_cache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ThingMLModel get__imports_parent() {
+		if (__imports_parent != null && __imports_parent.eIsProxy()) {
+			InternalEObject old__imports_parent = (InternalEObject)__imports_parent;
+			__imports_parent = (ThingMLModel)eResolveProxy(old__imports_parent);
+			if (__imports_parent != old__imports_parent) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.THING_ML_MODEL__IMPORTS_PARENT, old__imports_parent, __imports_parent));
+			}
+		}
+		return __imports_parent;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ThingMLModel basicGet__imports_parent() {
+		return __imports_parent;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void set__imports_parent(ThingMLModel new__imports_parent) {
+		ThingMLModel old__imports_parent = __imports_parent;
+		__imports_parent = new__imports_parent;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.THING_ML_MODEL__IMPORTS_PARENT, old__imports_parent, __imports_parent));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -166,6 +282,13 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				return getImports();
 			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
 				return getConfigs();
+			case ThingmlPackage.THING_ML_MODEL__URI:
+				return getUri();
+			case ThingmlPackage.THING_ML_MODEL__IMPORTS_CACHE:
+				return get__imports_cache();
+			case ThingmlPackage.THING_ML_MODEL__IMPORTS_PARENT:
+				if (resolve) return get__imports_parent();
+				return basicGet__imports_parent();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -191,6 +314,16 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				getConfigs().clear();
 				getConfigs().addAll((Collection<? extends Configuration>)newValue);
 				return;
+			case ThingmlPackage.THING_ML_MODEL__URI:
+				setUri((String)newValue);
+				return;
+			case ThingmlPackage.THING_ML_MODEL__IMPORTS_CACHE:
+				get__imports_cache().clear();
+				get__imports_cache().addAll((Collection<? extends ThingMLModel>)newValue);
+				return;
+			case ThingmlPackage.THING_ML_MODEL__IMPORTS_PARENT:
+				set__imports_parent((ThingMLModel)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -212,6 +345,15 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
 				getConfigs().clear();
 				return;
+			case ThingmlPackage.THING_ML_MODEL__URI:
+				setUri(URI_EDEFAULT);
+				return;
+			case ThingmlPackage.THING_ML_MODEL__IMPORTS_CACHE:
+				get__imports_cache().clear();
+				return;
+			case ThingmlPackage.THING_ML_MODEL__IMPORTS_PARENT:
+				set__imports_parent((ThingMLModel)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -230,8 +372,30 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				return imports != null && !imports.isEmpty();
 			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
 				return configs != null && !configs.isEmpty();
+			case ThingmlPackage.THING_ML_MODEL__URI:
+				return URI_EDEFAULT == null ? uri != null : !URI_EDEFAULT.equals(uri);
+			case ThingmlPackage.THING_ML_MODEL__IMPORTS_CACHE:
+				return __imports_cache != null && !__imports_cache.isEmpty();
+			case ThingmlPackage.THING_ML_MODEL__IMPORTS_PARENT:
+				return __imports_parent != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (uri: ");
+		result.append(uri);
+		result.append(')');
+		return result.toString();
 	}
 
 } //ThingMLModelImpl

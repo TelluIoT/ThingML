@@ -1,5 +1,5 @@
 import "../core/typedefs.thingml"
-import "../core/scheduler.thingml"
+import "../core/arduino.thingml"
 
 thing fragment SerialMsgs {
 	message writeByte(b : Byte);
@@ -8,7 +8,7 @@ thing fragment SerialMsgs {
 	message receiveMessage(b : Byte);
 }
 
-thing Serial includes SerialMsgs, SchedulerMsgs
+thing Serial includes SerialMsgs, ArduinoMsgs
 {
     property delimiter : Byte = "\n"
     property buffer_size : Int8 = 32

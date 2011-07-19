@@ -20,14 +20,14 @@ thing Blink includes LEDMsgs, TimerMsgs
             transition -> Blinking
                 event HW?timer_timeout
                 action do 
-                	HW!led_toggle()
+                	HW!led_toggle() 
                 	'Serial.println("Blink!");'
                	end
         }
     }
 }
 
-configuration Blink {
+configuration Blink {       
 
 	// The arduino board with a LED on pin 13
 	instance arduino : Arduino
