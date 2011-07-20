@@ -18,8 +18,8 @@ package org.thingml.model.scalaimpl.aspects
 import org.sintef.thingml._
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import scala.collection.JavaConversions._
-import java.util.ArrayList
 import org.sintef.thingml.constraints.ThingMLHelpers
+import java.util.{Hashtable, ArrayList}
 
 /**
  * Created by IntelliJ IDEA.
@@ -49,6 +49,61 @@ case class ConfigurationScalaImpl (self : Configuration) {
       if (!result.contains(i.getType)) result.add(i.getType)
     }
     result
+  }
+
+  // Returns the set of destination for messages sent through the port p
+  // For each outgoing message the results gives the list of destinations
+  // sorted by source instance as a list of target instances+port
+  // message* -> source instance* -> (target instance, port)*
+  def allMessageDispatch(t : Thing, p : Port) : Hashtable[Message, Hashtable[Instance, ArrayList[((Instance, Port))]]] = {
+
+    val result = new Hashtable[Message, Hashtable[Instance, ArrayList[((Instance, Port))]]]()
+
+    allInstances.filter{ i => i.getType == t}.foreach {i =>
+       allConnectors.filter { c => c.getClient == i && c.getRequired == p}.foreach{ c =>
+           p.getSends.foreach{ m =>
+              if (c.getProvided.getReceives.contains(m)) {
+
+                var mtable = result.get(m)
+                if (mtable == null) {
+                  mtable = new Hashtable[Instance, ArrayList[((Instance, Port))]]()
+                  result.put(m, mtable)
+                }
+
+                var itable = mtable.get(i)
+                if (itable == null) {
+                  itable = new ArrayList[((Instance, Port))]()
+                  mtable.put(i, itable)
+                }
+
+                itable.add( ((c.getServer, c.getProvided)) )
+
+              }
+           }
+       }
+       allConnectors.filter { c => c.getServer == i && c.getProvided == p}.foreach{ c =>
+           p.getSends.foreach{ m =>
+              if (c.getRequired.getReceives.contains(m)) {
+
+                var mtable = result.get(m)
+                if (mtable == null) {
+                  mtable = new Hashtable[Instance, ArrayList[((Instance, Port))]]()
+                  result.put(m, mtable)
+                }
+
+                var itable = mtable.get(i)
+                if (itable == null) {
+                  itable = new ArrayList[((Instance, Port))]()
+                  mtable.put(i, itable)
+                }
+
+                itable.add( ((c.getClient, c.getRequired)) )
+
+              }
+           }
+       }
+     }
+     result
   }
 
 }

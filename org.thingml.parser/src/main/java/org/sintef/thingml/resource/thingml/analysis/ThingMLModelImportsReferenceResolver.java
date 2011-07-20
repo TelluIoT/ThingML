@@ -84,7 +84,7 @@ public class ThingMLModelImportsReferenceResolver implements org.sintef.thingml.
 				}
 			}
 			*/
-			System.out.println(" ||||||||||||||||--  LOADING : " + uri);
+			//System.out.println(" ||||||||||||||||--  LOADING : " + uri);
 			
 			Resource r = container.eResource().getResourceSet().getResource(uri, true);
 			//Resource r = new ResourceSetImpl().getResource(uri, true);

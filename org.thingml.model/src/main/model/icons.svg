@@ -1,0 +1,2347 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.48.0 r9654"
+   sodipodi:docname="icons.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   version="1.1">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient9602">
+      <stop
+         id="stop9604"
+         offset="0"
+         style="stop-color:#ff217a;stop-opacity:1;" />
+      <stop
+         id="stop9606"
+         offset="1"
+         style="stop-color:#f40810;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient8309">
+      <stop
+         id="stop8311"
+         offset="0"
+         style="stop-color:#cc3a05;stop-opacity:1;" />
+      <stop
+         id="stop8313"
+         offset="1"
+         style="stop-color:#cb4400;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient8303">
+      <stop
+         id="stop8305"
+         offset="0"
+         style="stop-color:#cd2900;stop-opacity:1;" />
+      <stop
+         id="stop8307"
+         offset="1"
+         style="stop-color:#9a050a;stop-opacity:1;" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Arrow1Sstart"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Sstart"
+       style="overflow:visible">
+      <path
+         id="path4966"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none"
+         transform="scale(0.2) translate(6,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mstart"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Mstart"
+       style="overflow:visible">
+      <path
+         id="path4960"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none"
+         transform="scale(0.4) translate(10,0)" />
+    </marker>
+    <linearGradient
+       id="linearGradient4899">
+      <stop
+         style="stop-color:#ff3d0c;stop-opacity:1;"
+         offset="0"
+         id="stop4901" />
+      <stop
+         style="stop-color:#db080f;stop-opacity:1;"
+         offset="1"
+         id="stop4903" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4816">
+      <stop
+         style="stop-color:#f69000;stop-opacity:1;"
+         offset="0"
+         id="stop4818" />
+      <stop
+         id="stop4820"
+         offset="1"
+         style="stop-color:#ff1d00;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4685">
+      <stop
+         style="stop-color:#f45a06;stop-opacity:1;"
+         offset="0"
+         id="stop4687" />
+      <stop
+         style="stop-color:#eb2b00;stop-opacity:1;"
+         offset="1"
+         id="stop4690" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4679">
+      <stop
+         style="stop-color:#f38a00;stop-opacity:1;"
+         offset="0"
+         id="stop4681" />
+      <stop
+         style="stop-color:#e94a00;stop-opacity:1;"
+         offset="1"
+         id="stop4683" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4672">
+      <stop
+         id="stop4675"
+         offset="0"
+         style="stop-color:#fce400;stop-opacity:1;" />
+      <stop
+         style="stop-color:#ff9a00;stop-opacity:1;"
+         offset="1"
+         id="stop4677" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4866">
+      <stop
+         style="stop-color:#567aff;stop-opacity:0.84799999;"
+         offset="0"
+         id="stop4868" />
+      <stop
+         id="stop4870"
+         offset="1"
+         style="stop-color:#0000ff;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4829">
+      <stop
+         id="stop4837"
+         offset="0"
+         style="stop-color:#567aff;stop-opacity:0.84799999;" />
+      <stop
+         style="stop-color:#0000ff;stop-opacity:1;"
+         offset="1"
+         id="stop4833" />
+    </linearGradient>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <linearGradient
+       y2="768.75258"
+       x2="398.63376"
+       y1="914.25151"
+       x1="448.63954"
+       id="linearGradient4619"
+       xlink:href="#linearGradient1850"
+       inkscape:collect="always"
+       gradientTransform="scale(0.9626452,1.0388043)"
+       gradientUnits="userSpaceOnUse" />
+    <marker
+       inkscape:stockid="DistanceOut"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="DistanceOut"
+       style="overflow:visible;">
+      <g
+         transform="scale(-0.6,0.6) translate(8,0)"
+         id="g990">
+        <path
+           sodipodi:nodetypes="ccccc"
+           id="path991"
+           d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+           style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;" />
+        <path
+           id="path992"
+           d="M -14.759949,-7 L -14.759949,65"
+           style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.2pt;marker-start:none;" />
+      </g>
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1L"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1L"
+       style="overflow:visible;">
+      <path
+         sodipodi:nodetypes="ccccc"
+         id="path1797"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;"
+         transform="scale(0.8)" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleOutL"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="TriangleOutL"
+       style="overflow:visible;">
+      <path
+         sodipodi:nodetypes="cccc"
+         id="path1745"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;"
+         transform="scale(0.8)" />
+    </marker>
+    <linearGradient
+       id="linearGradient3237">
+      <stop
+         id="stop3238"
+         offset="0.0000000"
+         style="stop-color:#1436da;stop-opacity:1.0000000;" />
+      <stop
+         id="stop3241"
+         offset="0.50000000"
+         style="stop-color:#4d9bff;stop-opacity:1.0000000;" />
+      <stop
+         id="stop3239"
+         offset="1.0000000"
+         style="stop-color:#1436da;stop-opacity:1.0000000;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3243">
+      <stop
+         id="stop3244"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:0.61838442;" />
+      <stop
+         id="stop3245"
+         offset="1.0000000"
+         style="stop-color:#ffffff;stop-opacity:0.0000000;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3283">
+      <stop
+         id="stop3284"
+         offset="0"
+         style="stop-color:#7cff68;stop-opacity:1;" />
+      <stop
+         id="stop3285"
+         offset="1"
+         style="stop-color:#15a400;stop-opacity:1;" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="TriangleOutM"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="TriangleOutM"
+       style="overflow:visible;">
+      <path
+         sodipodi:nodetypes="cccc"
+         id="path3352"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;"
+         transform="scale(0.4)" />
+    </marker>
+    <linearGradient
+       y2="123.7301"
+       x2="60.5043"
+       y1="-22.6318"
+       x1="67.0205"
+       gradientUnits="objectBoundingBox"
+       id="XMLID_1_">
+      <stop
+         id="stop4664"
+         style="stop-color:#DCF0FF"
+         offset="0.382" />
+      <stop
+         id="stop4666"
+         style="stop-color:#C9E6FF"
+         offset="0.4435" />
+      <stop
+         id="stop4668"
+         style="stop-color:#92CAFF"
+         offset="0.6311" />
+      <stop
+         id="stop4670"
+         style="stop-color:#6AB5FF"
+         offset="0.793" />
+      <stop
+         id="stop4672"
+         style="stop-color:#52A9FF"
+         offset="0.9213" />
+      <stop
+         id="stop4674"
+         style="stop-color:#49A4FF"
+         offset="1" />
+      <midPointStop
+         id="midPointStop4676"
+         style="stop-color:#DCF0FF"
+         offset="0.382" />
+      <midPointStop
+         id="midPointStop4678"
+         style="stop-color:#DCF0FF"
+         offset="0.4" />
+      <midPointStop
+         id="midPointStop4680"
+         style="stop-color:#49A4FF"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       y2="64.3467"
+       x2="120.7432"
+       y1="64.3467"
+       x1="8.5332"
+       gradientUnits="objectBoundingBox"
+       id="XMLID_2_">
+      <stop
+         id="stop4689"
+         style="stop-color:#FFFFFF"
+         offset="0.0056" />
+      <stop
+         id="stop4691"
+         style="stop-color:#87BBFF"
+         offset="0.3989" />
+      <stop
+         id="stop4693"
+         style="stop-color:#1E65FF"
+         offset="1" />
+      <midPointStop
+         id="midPointStop4695"
+         style="stop-color:#FFFFFF"
+         offset="0.0056" />
+      <midPointStop
+         id="midPointStop4697"
+         style="stop-color:#FFFFFF"
+         offset="0.5" />
+      <midPointStop
+         id="midPointStop4699"
+         style="stop-color:#87BBFF"
+         offset="0.3989" />
+      <midPointStop
+         id="midPointStop4701"
+         style="stop-color:#87BBFF"
+         offset="0.5" />
+      <midPointStop
+         id="midPointStop4703"
+         style="stop-color:#1E65FF"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       y2="41.6424"
+       x2="10.7515"
+       y1="71.2764"
+       x1="87.4238"
+       gradientUnits="objectBoundingBox"
+       id="XMLID_3_">
+      <stop
+         id="stop4710"
+         style="stop-color:#001EA4"
+         offset="0" />
+      <stop
+         id="stop4712"
+         style="stop-color:#398BFF"
+         offset="1" />
+      <midPointStop
+         id="midPointStop4714"
+         style="stop-color:#001EA4"
+         offset="0" />
+      <midPointStop
+         id="midPointStop4716"
+         style="stop-color:#001EA4"
+         offset="0.5" />
+      <midPointStop
+         id="midPointStop4718"
+         style="stop-color:#398BFF"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       y2="67.4256"
+       x2="85.1559"
+       y1="59.9604"
+       x1="32.1113"
+       gradientUnits="objectBoundingBox"
+       id="XMLID_4_">
+      <stop
+         id="stop4728"
+         style="stop-color:#CDF8FF"
+         offset="0" />
+      <stop
+         id="stop4730"
+         style="stop-color:#A1D6FF"
+         offset="0.1068" />
+      <stop
+         id="stop4732"
+         style="stop-color:#5CA2FF"
+         offset="0.2858" />
+      <stop
+         id="stop4734"
+         style="stop-color:#2A7BFF"
+         offset="0.4358" />
+      <stop
+         id="stop4736"
+         style="stop-color:#0C64FF"
+         offset="0.549" />
+      <stop
+         id="stop4738"
+         style="stop-color:#005BFF"
+         offset="0.6124" />
+      <stop
+         id="stop4740"
+         style="stop-color:#0056FF"
+         offset="0.7113" />
+      <stop
+         id="stop4742"
+         style="stop-color:#0047FF"
+         offset="0.8313" />
+      <stop
+         id="stop4744"
+         style="stop-color:#002FFF"
+         offset="0.9616" />
+      <stop
+         id="stop4746"
+         style="stop-color:#0026FF"
+         offset="1" />
+      <midPointStop
+         id="midPointStop4748"
+         style="stop-color:#CDF8FF"
+         offset="0" />
+      <midPointStop
+         id="midPointStop4750"
+         style="stop-color:#CDF8FF"
+         offset="0.4214" />
+      <midPointStop
+         id="midPointStop4752"
+         style="stop-color:#005BFF"
+         offset="0.6124" />
+      <midPointStop
+         id="midPointStop4754"
+         style="stop-color:#005BFF"
+         offset="0.6667" />
+      <midPointStop
+         id="midPointStop4756"
+         style="stop-color:#0026FF"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       y2="76.854"
+       x2="97.3291"
+       y1="55.1499"
+       x1="46.1694"
+       gradientUnits="objectBoundingBox"
+       id="XMLID_7_">
+      <stop
+         id="stop4792"
+         style="stop-color:#6AC5FF"
+         offset="0" />
+      <stop
+         id="stop4794"
+         style="stop-color:#61B3F6"
+         offset="0.1262" />
+      <stop
+         id="stop4796"
+         style="stop-color:#4886E0"
+         offset="0.3781" />
+      <stop
+         id="stop4798"
+         style="stop-color:#213DBD"
+         offset="0.7286" />
+      <stop
+         id="stop4800"
+         style="stop-color:#00009F"
+         offset="1" />
+      <midPointStop
+         id="midPointStop4802"
+         style="stop-color:#6AC5FF"
+         offset="0" />
+      <midPointStop
+         id="midPointStop4804"
+         style="stop-color:#6AC5FF"
+         offset="0.5526" />
+      <midPointStop
+         id="midPointStop4806"
+         style="stop-color:#00009F"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       y2="70.7129"
+       x2="120.5585"
+       y1="100.9258"
+       x1="57.8667"
+       gradientUnits="objectBoundingBox"
+       id="XMLID_8_">
+      <stop
+         id="stop4815"
+         style="stop-color:#FFFFFF"
+         offset="0" />
+      <stop
+         id="stop4817"
+         style="stop-color:#B1B1C5"
+         offset="1" />
+      <midPointStop
+         id="midPointStop4819"
+         style="stop-color:#FFFFFF"
+         offset="0" />
+      <midPointStop
+         id="midPointStop4821"
+         style="stop-color:#FFFFFF"
+         offset="0.5" />
+      <midPointStop
+         id="midPointStop4823"
+         style="stop-color:#B1B1C5"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       y2="70.4536"
+       x2="116.4508"
+       y1="124.1084"
+       x1="18.0327"
+       gradientUnits="objectBoundingBox"
+       id="XMLID_9_">
+      <stop
+         id="stop4830"
+         style="stop-color:#FFFFFF"
+         offset="0" />
+      <stop
+         id="stop4832"
+         style="stop-color:#B1B1C5"
+         offset="1" />
+      <midPointStop
+         id="midPointStop4834"
+         style="stop-color:#FFFFFF"
+         offset="0" />
+      <midPointStop
+         id="midPointStop4836"
+         style="stop-color:#FFFFFF"
+         offset="0.5" />
+      <midPointStop
+         id="midPointStop4838"
+         style="stop-color:#B1B1C5"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       y2="50.8101"
+       x2="35.7537"
+       y1="73.9512"
+       x1="95.627"
+       gradientUnits="objectBoundingBox"
+       id="XMLID_10_">
+      <stop
+         id="stop4845"
+         style="stop-color:#001EA4"
+         offset="0" />
+      <stop
+         id="stop4847"
+         style="stop-color:#398BFF"
+         offset="1" />
+      <midPointStop
+         id="midPointStop4849"
+         style="stop-color:#001EA4"
+         offset="0" />
+      <midPointStop
+         id="midPointStop4851"
+         style="stop-color:#001EA4"
+         offset="0.5" />
+      <midPointStop
+         id="midPointStop4853"
+         style="stop-color:#398BFF"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1926">
+      <stop
+         id="stop1927"
+         offset="0.0000000"
+         style="stop-color:#727272;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1841"
+         offset="0.50000000"
+         style="stop-color:#b8b8b8;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1929"
+         offset="1.0000000"
+         style="stop-color:#727272;stop-opacity:1.0000000;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1837">
+      <stop
+         id="stop1838"
+         offset="0"
+         style="stop-color:#ffb106;stop-opacity:1;" />
+      <stop
+         id="stop1840"
+         offset="1"
+         style="stop-color:#ef0c00;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1841">
+      <stop
+         id="stop1842"
+         offset="0.0000000"
+         style="stop-color:#c9002e;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1843"
+         offset="0.50000000"
+         style="stop-color:#bf8cbb;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1844"
+         offset="1.0000000"
+         style="stop-color:#1436da;stop-opacity:1.0000000;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1850">
+      <stop
+         id="stop1852"
+         offset="0"
+         style="stop-color:#ff5100;stop-opacity:1;" />
+      <stop
+         id="stop1853"
+         offset="1"
+         style="stop-color:#dd7200;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1864">
+      <stop
+         id="stop1865"
+         offset="0.0000000"
+         style="stop-color:#ffff00;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1866"
+         offset="0.50000000"
+         style="stop-color:#ffffb1;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1867"
+         offset="1.0000000"
+         style="stop-color:#ffff00;stop-opacity:1.0000000;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1873">
+      <stop
+         id="stop1874"
+         offset="0.0000000"
+         style="stop-color:#00b700;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1875"
+         offset="0.50000000"
+         style="stop-color:#93ff91;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1876"
+         offset="1.0000000"
+         style="stop-color:#00b700;stop-opacity:1.0000000;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1882">
+      <stop
+         id="stop1883"
+         offset="0.0000000"
+         style="stop-color:#c300dd;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1884"
+         offset="0.50000000"
+         style="stop-color:#ff70ff;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1885"
+         offset="1.0000000"
+         style="stop-color:#c300dd;stop-opacity:1.0000000;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1891">
+      <stop
+         id="stop1892"
+         offset="0.0000000"
+         style="stop-color:#00cdcd;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1893"
+         offset="0.50000000"
+         style="stop-color:#99ffff;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1894"
+         offset="1.0000000"
+         style="stop-color:#00cdcd;stop-opacity:1.0000000;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1900">
+      <stop
+         id="stop1901"
+         offset="0.0000000"
+         style="stop-color:#9b9b9b;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1902"
+         offset="0.50000000"
+         style="stop-color:#d0d0d0;stop-opacity:1.0000000;" />
+      <stop
+         id="stop1903"
+         offset="1.0000000"
+         style="stop-color:#9b9b9b;stop-opacity:1.0000000;" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="TriangleInL"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="TriangleInL"
+       style="overflow:visible;">
+      <path
+         sodipodi:nodetypes="cccc"
+         id="path4431"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;"
+         transform="scale(-0.8)" />
+    </marker>
+    <linearGradient
+       id="linearGradient4312">
+      <stop
+         id="stop4314"
+         offset="0.0000000"
+         style="stop-color:#ffffff;stop-opacity:1.0000000;" />
+      <stop
+         id="stop4316"
+         offset="1.0000000"
+         style="stop-color:#ffffff;stop-opacity:0.0000000;" />
+    </linearGradient>
+    <inkscape:perspective
+       id="perspective3059"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1850"
+       id="linearGradient5120"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.7796892,0,0,0.8183098,-25.265228,19.718526)"
+       x1="-58.888443"
+       y1="319.29721"
+       x2="-28.885639"
+       y2="319.29721" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4866"
+       id="linearGradient5122"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.7796892,0,0,0.8183098,-166.3024,-65.896166)"
+       x1="133.16463"
+       y1="424.63885"
+       x2="151.86374"
+       y2="424.63885" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1850"
+       id="linearGradient5124"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.7796892,0,0,0.8183098,-21.366768,23.40092)"
+       x1="-58.888443"
+       y1="319.29721"
+       x2="-28.885639"
+       y2="319.29721" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4866"
+       id="linearGradient5126"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.7796892,0,0,0.8183098,-162.40395,-62.213772)"
+       x1="133.16463"
+       y1="424.63885"
+       x2="151.86374"
+       y2="424.63885" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1850"
+       id="linearGradient5128"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.7796892,0,0,0.8183098,-17.663248,26.878737)"
+       x1="-58.888443"
+       y1="319.29721"
+       x2="-28.885639"
+       y2="319.29721" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4866"
+       id="linearGradient5130"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.7796892,0,0,0.8183098,-158.70043,-58.735956)"
+       x1="133.16463"
+       y1="424.63885"
+       x2="151.86374"
+       y2="424.63885" />
+    <inkscape:perspective
+       id="perspective3814"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3283"
+       id="linearGradient8267"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.0823769,0,0,0.7808874,360.46908,115.68229)"
+       x1="1.4789383"
+       y1="65.262573"
+       x2="22.511032"
+       y2="52.941143" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4672"
+       id="linearGradient8279"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.8332088,0,0,0.3597887,-15.237746,2.0032731)"
+       x1="515.13483"
+       y1="270.07495"
+       x2="482.57669"
+       y2="282.7312" />
+    <inkscape:perspective
+       id="perspective8338"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4899"
+       id="linearGradient8434"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.3286553,0,0,0.2679961,48.65608,588.62517)"
+       x1="891.46564"
+       y1="172.28287"
+       x2="923.57037"
+       y2="139.13443" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4672"
+       id="linearGradient8437"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.6338709,0,0,0.2722069,36.55278,559.15148)"
+       x1="515.13483"
+       y1="270.07495"
+       x2="482.57669"
+       y2="282.7312" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3283"
+       id="linearGradient8440"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.0659042,0,0,1.184883,332.70205,550.9376)"
+       x1="1.4789383"
+       y1="65.262573"
+       x2="22.511032"
+       y2="52.941143" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4672"
+       id="linearGradient8444"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.7588906,0,0,0.2722069,-74.94133,558.34776)"
+       x1="515.13483"
+       y1="270.07495"
+       x2="482.57669"
+       y2="282.7312" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3283"
+       id="linearGradient8447"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.0659042,0,0,1.184883,285.01597,551.2055)"
+       x1="1.4789383"
+       y1="65.262573"
+       x2="22.511032"
+       y2="52.941143" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4899"
+       id="linearGradient8451"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.4102915,0,0,0.3394315,-117.20559,580.72515)"
+       x1="891.46564"
+       y1="172.28287"
+       x2="923.57037"
+       y2="139.13443" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3283"
+       id="linearGradient8454"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.0659042,0,0,1.184883,236.82819,552.12853)"
+       x1="1.4789383"
+       y1="65.262573"
+       x2="22.511032"
+       y2="52.941143" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4899"
+       id="linearGradient8458"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-47.99928,465.41781)"
+       x1="403.46021"
+       y1="-26.020864"
+       x2="425.09906"
+       y2="-26.020864" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4899"
+       id="linearGradient8463"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.4511096,0,0,0.3700466,96.1376,625.75389)"
+       x1="891.46564"
+       y1="172.28287"
+       x2="923.57037"
+       y2="139.13443" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4899"
+       id="linearGradient8466"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.5882078,0,0,0.5927187,-335.22168,157.44454)"
+       x1="891.46564"
+       y1="172.28287"
+       x2="923.57037"
+       y2="139.13443" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4899"
+       id="linearGradient8470"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9963176,0,0,1.5365936,228.01787,444.69472)"
+       x1="117.50245"
+       y1="32.979504"
+       x2="128.99104"
+       y2="23.479506" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3283"
+       id="linearGradient8474"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9703616,0,0,0.7808874,487.35836,630.75819)"
+       x1="1.4789383"
+       y1="65.262573"
+       x2="22.511032"
+       y2="52.941143" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4672"
+       id="linearGradient8480"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.8332088,0,0,0.3597887,38.23143,583.64648)"
+       x1="515.13483"
+       y1="270.07495"
+       x2="482.57669"
+       y2="282.7312" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3283"
+       id="linearGradient8483"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9703616,0,0,0.7808874,436.14348,631.4292)"
+       x1="1.4789383"
+       y1="65.262573"
+       x2="22.511032"
+       y2="52.941143" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4672"
+       id="linearGradient8488"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.8332088,0,0,0.3597887,-10.64239,583.26761)"
+       x1="515.13483"
+       y1="270.07495"
+       x2="482.57669"
+       y2="282.7312" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3283"
+       id="linearGradient8491"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9703616,0,0,0.7808874,387.26966,631.05034)"
+       x1="1.4789383"
+       y1="65.262573"
+       x2="22.511032"
+       y2="52.941143" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4672"
+       id="linearGradient8496"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.99107,0,0,0.4418765,-88.47895,460.28956)"
+       x1="515.13483"
+       y1="270.07495"
+       x2="482.57669"
+       y2="282.7312" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4672"
+       id="linearGradient8504"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.99107,0,0,0.4418765,-141.52032,454.85786)"
+       x1="515.13483"
+       y1="270.07495"
+       x2="482.57669"
+       y2="282.7312" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1837"
+       id="linearGradient8514"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9963176,0,0,1.5365936,175.56774,493.49972)"
+       x1="125.85434"
+       y1="27.985102"
+       x2="137.047"
+       y2="25.295185" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4899"
+       id="linearGradient8520"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9963176,0,0,1.5365936,278.62958,444.2857)"
+       x1="117.50245"
+       y1="32.979504"
+       x2="128.99104"
+       y2="23.479506" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1837"
+       id="linearGradient8525"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9963176,0,0,1.5365936,223.02872,493.38146)"
+       x1="125.53932"
+       y1="27.687477"
+       x2="139.35284"
+       y2="24.638288" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3283"
+       id="linearGradient8530"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.0823769,0,0,0.7808874,336.2397,631.15433)"
+       x1="1.4789383"
+       y1="65.262573"
+       x2="22.511032"
+       y2="52.941143" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3283"
+       id="linearGradient8536"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.0823769,0,0,0.7808874,284.53513,631.95803)"
+       x1="1.4789383"
+       y1="65.262573"
+       x2="22.511032"
+       y2="52.941143" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3243"
+       id="linearGradient8580"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.19574,0,0,0.8363022,57.42769,345.09879)"
+       x1="406.30405"
+       y1="318.76013"
+       x2="412.85714"
+       y2="337.53938" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4672"
+       id="linearGradient8633"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.99107,0,0,0.4418765,-191.47859,454.57641)"
+       x1="515.13483"
+       y1="270.07495"
+       x2="482.57669"
+       y2="282.7312" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3283"
+       id="linearGradient9535"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.0823769,0,0,0.7808874,230.82132,632.76173)"
+       x1="1.4789383"
+       y1="65.262573"
+       x2="22.511032"
+       y2="52.941143" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4899"
+       id="linearGradient9566"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1,0,0,1.1363717,-102.43089,466.88549)"
+       x1="403.46021"
+       y1="-26.020864"
+       x2="425.09906"
+       y2="-26.020864" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4899-4"
+       id="linearGradient8466-7"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.5882078,0,0,0.5927187,-335.22168,157.44454)"
+       x1="891.46564"
+       y1="172.28287"
+       x2="923.57037"
+       y2="139.13443" />
+    <linearGradient
+       id="linearGradient4899-4">
+      <stop
+         style="stop-color:#ff3d0c;stop-opacity:1;"
+         offset="0"
+         id="stop4901-0" />
+      <stop
+         style="stop-color:#db080f;stop-opacity:1;"
+         offset="1"
+         id="stop4903-9" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4899-0"
+       id="linearGradient8466-6"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.5882078,0,0,0.5927187,-335.22168,157.44454)"
+       x1="891.46564"
+       y1="172.28287"
+       x2="923.57037"
+       y2="139.13443" />
+    <linearGradient
+       id="linearGradient4899-0">
+      <stop
+         style="stop-color:#ff3d0c;stop-opacity:1;"
+         offset="0"
+         id="stop4901-4" />
+      <stop
+         style="stop-color:#db080f;stop-opacity:1;"
+         offset="1"
+         id="stop4903-0" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1837"
+       id="linearGradient4252"
+       x1="403.77396"
+       y1="186.28618"
+       x2="421.02197"
+       y2="202.38802"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1837-6"
+       id="linearGradient4252-8"
+       x1="403.77396"
+       y1="186.28618"
+       x2="421.02197"
+       y2="202.38802"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       id="linearGradient1837-6">
+      <stop
+         id="stop1838-0"
+         offset="0"
+         style="stop-color:#ffb106;stop-opacity:1;" />
+      <stop
+         id="stop1840-2"
+         offset="1"
+         style="stop-color:#ef0c00;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1837-6"
+       id="linearGradient4290"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(2.1123112,0,0,2.1296876,-579.97007,-174.55267)"
+       x1="403.77396"
+       y1="186.28618"
+       x2="416.23877"
+       y2="203.85612" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.2788995"
+     inkscape:cx="371.86322"
+     inkscape:cy="813.66021"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1005"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3919" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-610.54254,754.94027"
+       id="guide9608" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#cccccc;fill-opacity:1;fill-rule:evenodd;stroke:#808080;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect3315-7"
+       width="65.1651"
+       height="36.181782"
+       x="322.22626"
+       y="214.214"
+       ry="4.7358356" />
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.25347054;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect4694"
+       width="28.749332"
+       height="28.478697"
+       x="289.29922"
+       y="564.43384"
+       rx="1.8230096"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\boolean.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.31282318;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8071"
+       width="30.103069"
+       height="29.834673"
+       x="232.53712"
+       y="661.92841"
+       rx="1.9088508"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\and.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient9535);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8041"
+       width="31.117611"
+       height="14.646316"
+       x="231.94072"
+       y="672.98486"
+       rx="6.2149477"
+       ry="3.6274602"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\and.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8633);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.25;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect4692"
+       width="29.732101"
+       height="13.256294"
+       x="288.86301"
+       y="571.01636"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\boolean.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.31282318;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect4752"
+       width="30.103069"
+       height="29.834673"
+       x="236.89909"
+       y="537.85785"
+       rx="1.9088508"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       sodipodi:open="true"
+       sodipodi:end="6.2538604"
+       sodipodi:start="0"
+       transform="matrix(0.3259505,0,0,0.2686258,145.36497,531.52708)"
+       d="M 337.64347,39.07819 A 13.788582,17.67767 0 1 1 337.63754,38.559868"
+       sodipodi:ry="17.67767"
+       sodipodi:rx="13.788582"
+       sodipodi:cy="39.07819"
+       sodipodi:cx="323.85489"
+       id="path4766"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.67700005;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       sodipodi:type="arc" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       sodipodi:nodetypes="ccccccccccccccccccccccccccccc"
+       id="path4768"
+       d="M 248.83048,546.40427 L 247.7187,547.3694 L 243.55452,547.54541 L 236.38217,558.90314 L 240.46557,562.37562 L 242.63623,560.44536 L 240.955,557.97871 L 243.95673,553.51118 L 246.55523,558.79082 L 247.40257,561.60807 L 245.60253,563.68322 L 250.78938,563.68322 L 253.11427,563.42581 L 251.15997,549.92232 L 251.71586,550.94972 L 253.0659,551.63465 L 253.22473,549.75109 L 255.34242,553.75171 L 256.38453,559.55328 L 256.17159,561.85507 L 257.98956,561.25483 L 259.52489,561.06803 L 260.74258,559.91609 L 260.61995,556.79442 L 258.90176,555.29393 L 258.1484,555.77537 L 256.57294,549.17248 L 252.69531,547.12033 L 252.64236,546.40427"
+       style="fill:#ea2127;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       sodipodi:nodetypes="ccccccc"
+       id="path4770"
+       d="M 249.14815,546.18633 L 251.56955,551.10539 L 253.59533,552.19505 L 253.24625,549.92232 L 252.9833,548.45906 C 252.84267,547.25524 252.70208,546.71525 252.61443,545.99954 L 249.14815,546.18633 z"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       id="path4772"
+       d="M 240.995,561.84636 L 245.65395,563.30962 L 246.60691,562.31335 L 242.21268,560.81896"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.45932445px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       sodipodi:nodetypes="cccccccc"
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       id="path4774"
+       d="M 259.32317,555.88745 L 262.39152,552.91283 L 265.02018,552.66368 L 267.57817,553.22213 L 267.50546,554.06451 L 265.2742,554.59001 L 262.86638,553.86218 L 259.79802,556.74186"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.38465384px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       sodipodi:nodetypes="ccccc"
+       id="path4780"
+       d="M 247.0796,564.96276 L 247.0244,568.55162 L 259.31374,568.33741 L 259.30993,566.77007 L 258.23806,563.51285"
+       style="fill:#ea2127;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       sodipodi:nodetypes="ccccccc"
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       id="path4778"
+       d="M 247.15099,564.50311 L 247.16487,565.43084 L 253.44169,564.97578 L 258.21873,563.49019 L 258.10038,563.25912 L 253.15469,564.44534 L 247.15099,564.50311 z"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.43564838px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       sodipodi:open="true"
+       sodipodi:end="6.2538604"
+       sodipodi:start="0"
+       transform="matrix(0.3259505,0,0,0.2686258,145.3766,412.63392)"
+       d="M 337.64347,39.07819 A 13.788582,17.67767 0 1 1 337.63754,38.559868"
+       sodipodi:ry="17.67767"
+       sodipodi:rx="13.788582"
+       sodipodi:cy="39.07819"
+       sodipodi:cx="323.85489"
+       id="path4784"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.67700005;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       sodipodi:type="arc" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       sodipodi:nodetypes="ccccccccccccccccccccccccccccc"
+       id="path4786"
+       d="M 248.84211,427.51111 L 247.73033,428.47624 L 243.56615,428.65226 L 236.3938,440.00998 L 240.4772,443.48245 L 242.64786,441.5522 L 240.96663,439.08555 L 243.96836,434.61802 L 246.56686,439.89766 L 247.4142,442.71491 L 245.61416,444.79005 L 250.80101,444.79005 L 253.1259,444.53264 L 251.1716,431.02916 L 251.72749,432.05656 L 253.07753,432.74149 L 253.23636,430.85793 L 255.35405,434.85856 L 256.39616,440.66012 L 256.18322,442.9619 L 258.00119,442.36166 L 259.53652,442.17487 L 260.75421,441.02293 L 260.63158,437.90127 L 258.91339,436.40077 L 258.16003,436.88221 L 256.58457,430.27932 L 252.70694,428.22718 L 252.65399,427.51111"
+       style="fill:#ea2127;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       sodipodi:nodetypes="ccccccc"
+       id="path4788"
+       d="M 249.15978,427.29318 L 251.58118,432.21223 L 253.60696,433.30189 L 253.25788,431.02916 L 252.99493,429.5659 C 252.8543,428.36209 252.71371,427.82209 252.62606,427.10638 L 249.15978,427.29318 z"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       id="path4790"
+       d="M 241.00663,442.95319 L 245.66558,444.41645 L 246.61854,443.42019 L 242.22431,441.9258"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.45932445px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       sodipodi:nodetypes="cccccccc"
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       id="path4792"
+       d="M 259.3348,436.99429 L 262.40315,434.01967 L 265.03181,433.77052 L 267.5898,434.32897 L 267.51709,435.17135 L 265.28583,435.69685 L 262.87801,434.96902 L 259.80965,437.8487"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.38465384px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       sodipodi:nodetypes="ccccc"
+       id="path4794"
+       d="M 247.09123,446.06959 L 247.03603,449.65845 L 259.32537,449.44424 L 259.32156,447.8769 L 258.24969,444.61969"
+       style="fill:#ea2127;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       sodipodi:nodetypes="ccccccc"
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\diva5.png"
+       id="path4796"
+       d="M 247.16262,445.60994 L 247.1765,446.53768 L 253.45332,446.08261 L 258.23036,444.59702 L 258.11201,444.36596 L 253.16632,445.55217 L 247.16262,445.60994 z"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.43564838px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <rect
+       style="fill:url(#linearGradient8580);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.25;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect4867"
+       width="24.993496"
+       height="17.480486"
+       x="544.2074"
+       y="611.26892"
+       ry="1.8230097"
+       rx="1.8230097"
+       inkscape:export-filename="/home/franck/logo-metacore/outline/property.png"
+       inkscape:export-xdpi="47.330158"
+       inkscape:export-ydpi="47.330158" />
+    <text
+       id="text4883"
+       y="117.27242"
+       x="477.10562"
+       style="font-size:40px;font-style:italic;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       xml:space="preserve"><tspan
+         id="tspan4889"
+         y="117.27242"
+         x="477.10562"
+         sodipodi:role="line" /></text>
+    <text
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\and.png"
+       transform="scale(1.1170777,0.8951929)"
+       id="text8037"
+       y="781.93713"
+       x="209.32732"
+       style="font-size:54.22160721px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       xml:space="preserve"><tspan
+         y="781.93713"
+         x="209.32732"
+         id="tspan8039"
+         sodipodi:role="line">^</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.31282318;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8073"
+       width="30.103069"
+       height="29.834673"
+       x="286.25092"
+       y="661.12469"
+       rx="1.9088508"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\or.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8536);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8075"
+       width="31.117611"
+       height="14.646316"
+       x="285.65454"
+       y="672.18115"
+       rx="6.2149477"
+       ry="3.6274602"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\or.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <text
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\or.png"
+       transform="scale(-1.1170777,-0.8951929)"
+       id="text8077"
+       y="-725.53064"
+       x="-282.8544"
+       style="font-size:54.22160721px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       xml:space="preserve"><tspan
+         y="-725.53064"
+         x="-282.8544"
+         id="tspan8079"
+         sodipodi:role="line">^</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.31282318;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8083"
+       width="30.103069"
+       height="29.834673"
+       x="337.95547"
+       y="660.32098"
+       rx="1.9088508"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\not.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8530);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8085"
+       width="31.117611"
+       height="14.646316"
+       x="337.3591"
+       y="671.3775"
+       rx="6.2149477"
+       ry="3.6274602"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\not.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\not.png"
+       id="path8093"
+       d="M 342.56672,669.08179 L 359.96472,669.08179 L 359.96472,680.07388 L 359.96472,680.07388"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:4.96509886;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.31282318;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8095"
+       width="30.103069"
+       height="29.834673"
+       x="339.17654"
+       y="516.85724"
+       rx="1.9088508"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\propertyPriority.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8525);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8097"
+       width="31.248096"
+       height="16.497955"
+       x="338.60403"
+       y="526.20483"
+       rx="4.5628815"
+       ry="4.0860558"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\propertyPriority.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\propertyPriority.png"
+       transform="matrix(0.8638427,0,0,1,120.95379,502.78804)"
+       d="M 272.9894,43.453363 L 265.29856,38.321508 L 256.71101,41.74771 L 259.21509,32.847458 L 253.30288,25.738963 L 262.54133,25.370159 L 267.47493,17.550666 L 270.68052,26.222985 L 279.64187,28.498767 L 272.38459,34.227359 L 272.9894,43.453363 z"
+       inkscape:randomized="0"
+       inkscape:rounded="0"
+       inkscape:flatsided="false"
+       sodipodi:arg2="1.6751955"
+       sodipodi:arg1="1.046877"
+       sodipodi:r2="6.9615173"
+       sodipodi:r1="13.923034"
+       sodipodi:cy="31.397894"
+       sodipodi:cx="266.02402"
+       sodipodi:sides="5"
+       id="path8099"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.398;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4.19999981;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       sodipodi:type="star" />
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.31282318;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8103"
+       width="30.103069"
+       height="29.834673"
+       x="394.77737"
+       y="467.76151"
+       rx="1.9088508"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\propertyValue.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8520);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8105"
+       width="31.248096"
+       height="16.497955"
+       x="394.20486"
+       y="477.1091"
+       rx="4.5628815"
+       ry="4.0860558"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\propertyValue.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <text
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\propertyValue.png"
+       transform="scale(0.8248564,1.2123322)"
+       id="text8111"
+       y="409.66931"
+       x="484.49139"
+       style="font-size:26.03309059px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       xml:space="preserve"><tspan
+         y="409.66931"
+         x="484.49139"
+         id="tspan8113"
+         sodipodi:role="line">=</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.31282318;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8115"
+       width="30.103069"
+       height="29.834673"
+       x="291.71561"
+       y="516.97552"
+       rx="1.9088508"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\propertyPriorityrule.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8514);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8117"
+       width="31.248096"
+       height="16.497955"
+       x="291.1431"
+       y="526.32306"
+       rx="4.5628815"
+       ry="4.0860558"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\propertyPriorityrule.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\propertyPriorityrule.png"
+       sodipodi:nodetypes="cczcccccc"
+       id="path8125"
+       d="M 303.91447,521.79286 C 303.91487,521.79061 303.90686,534.55934 303.90856,534.55654 C 303.90728,534.56086 301.06047,530.78327 301.05571,530.67344 C 301.05342,530.62089 297.37414,533.19666 297.33891,535.9381 C 297.30359,538.68884 303.50915,546.86218 303.50915,546.86218 C 303.50915,546.86218 296.05437,542.41628 294.57507,537.57503 C 293.35902,533.08261 298.16745,525.38436 298.16534,525.38607 C 298.16357,525.37787 295.92953,521.7516 295.92295,521.75154 C 295.92426,521.74744 303.91482,521.79249 303.91447,521.79286 z"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.43584454;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\propertyPriorityrule.png"
+       sodipodi:nodetypes="cczcccccc"
+       id="path8127"
+       d="M 310.72364,545.55086 C 310.72371,545.55322 308.17341,533.54987 308.17238,533.55349 C 308.17272,533.54868 311.60456,535.43603 311.63105,535.53645 C 311.64373,535.58449 314.58513,531.01552 314.06907,528.41884 C 313.55125,525.81337 306.08265,521.75669 306.08265,521.75669 C 306.08265,521.75669 313.97846,521.58122 316.33833,525.26667 C 318.38096,528.77804 315.40463,538.81996 315.40627,538.8171 C 315.40958,538.82377 318.23529,540.92679 318.24148,540.92298 C 318.24108,540.92763 310.72338,545.55141 310.72364,545.55086 z"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.43584454;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\boolean.png"
+       transform="scale(1.0874575,0.9195762)"
+       id="text8151"
+       y="644.19141"
+       x="274.85663"
+       style="font-size:23.85572052px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       xml:space="preserve"><tspan
+         style="font-style:italic;font-weight:normal"
+         y="644.19141"
+         x="274.85663"
+         id="tspan8153"
+         sodipodi:role="line">B</tspan></text>
+    <text
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\boolean.png"
+       transform="scale(1.1550925,0.8657315)"
+       id="text8155"
+       y="681.97382"
+       x="252.09001"
+       style="font-size:26.51967239px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       xml:space="preserve"><tspan
+         y="681.97382"
+         x="252.09001"
+         id="tspan8157"
+         sodipodi:role="line">:</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.25347054;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8177"
+       width="28.749332"
+       height="28.478697"
+       x="339.25748"
+       y="564.71527"
+       rx="1.8230096"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enum.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8504);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.25;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8179"
+       width="29.732101"
+       height="13.256294"
+       x="338.82126"
+       y="571.29779"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enum.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enum.png"
+       id="path8199"
+       d="M 346.14956,576.11315 L 365.85064,576.11315"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.3538413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enum.png"
+       id="path8201"
+       d="M 346.14956,581.60676 L 365.85064,581.60676"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.3538413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enum.png"
+       id="path8203"
+       d="M 346.14956,587.10033 L 365.85064,587.10033"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.3538413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enum.png"
+       id="path8205"
+       d="M 346.14956,592.59386 L 365.85064,592.59386"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.3538413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.25347054;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8207"
+       width="28.749332"
+       height="28.478697"
+       x="392.29886"
+       y="564.14697"
+       rx="1.8230096"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enumLiteral.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8496);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.25;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8209"
+       width="29.732101"
+       height="13.256294"
+       x="391.86264"
+       y="576.72949"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enumLiteral.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enumLiteral.png"
+       id="path8211"
+       d="M 399.38036,585.33353 L 419.08144,585.33353"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.3538413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.25347054;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8233"
+       width="28.749332"
+       height="28.478697"
+       x="388.88904"
+       y="663.03125"
+       rx="1.8230096"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enumTerm.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8491);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8235"
+       width="27.897243"
+       height="14.646316"
+       x="388.27322"
+       y="671.2735"
+       rx="5.5717616"
+       ry="3.6274602"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enumTerm.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8488);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.25;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8237"
+       width="24.996265"
+       height="10.79366"
+       x="393.18866"
+       y="678.07642"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enumTerm.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\enumTerm.png"
+       id="path8239"
+       d="M 398.83975,684.59666 L 415.83338,684.59666"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.53685784;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.25347054;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8245"
+       width="28.749332"
+       height="28.478697"
+       x="437.76285"
+       y="663.41016"
+       rx="1.8230096"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\booleanTerm.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8483);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8247"
+       width="27.897243"
+       height="14.646316"
+       x="437.14703"
+       y="671.65234"
+       rx="5.5717616"
+       ry="3.6274602"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\booleanTerm.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8480);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.25;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8249"
+       width="24.996265"
+       height="10.79366"
+       x="442.06247"
+       y="678.45526"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\booleanTerm.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <text
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\booleanTerm.png"
+       transform="scale(1.0874575,0.9195762)"
+       id="text8257"
+       y="746.68927"
+       x="411.06436"
+       style="font-size:23.85572052px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       xml:space="preserve"><tspan
+         style="font-style:italic;font-weight:normal"
+         y="746.68927"
+         x="411.06436"
+         id="tspan8259"
+         sodipodi:role="line">B</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.25347054;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8269"
+       width="28.749332"
+       height="28.478697"
+       x="488.97778"
+       y="662.73907"
+       rx="1.8230096"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variantTerm.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8474);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8271"
+       width="27.897243"
+       height="14.646316"
+       x="488.36194"
+       y="670.98132"
+       rx="5.5717616"
+       ry="3.6274602"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variantTerm.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.31282318;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8285"
+       width="30.103069"
+       height="29.834673"
+       x="344.16568"
+       y="468.1705"
+       rx="1.9088508"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\property.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8470);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8287"
+       width="31.248096"
+       height="16.497955"
+       x="343.59317"
+       y="477.51813"
+       rx="4.5628815"
+       ry="4.0860558"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\property.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.4131678;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8293"
+       width="12.071163"
+       height="12.071163"
+       x="-212.42128"
+       y="634.85614"
+       transform="matrix(0.8193268,-0.5733268,0.8193268,0.5733268,0,0)"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\property.png"
+       inkscape:export-xdpi="47.817226"
+       inkscape:export-ydpi="47.817226" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variant.png"
+       sodipodi:nodetypes="czczzzzzzzzzzczzzzzzzzzzzzzzzczzzzzzzzzzzzzzzzczzzzzzzzzzzz"
+       id="path8344"
+       d="m 197.63664,260.68916 c 0,0 0.24652,0.99435 -1.26065,1.58789 -1.50715,0.59354 -7.879,-0.39697 -8.66691,-1.34971 -0.7879,-0.95273 -2.60008,-7.93944 -1.41822,-9.05097 1.18185,-1.11152 1.26063,-0.95273 2.36369,-0.63515 1.10307,0.31758 1.72612,1.30116 2.60009,1.19091 0.87395,-0.11024 2.0043,-0.96946 2.3637,-1.90546 0.35942,-0.93601 0.0566,-2.85862 -0.55749,-3.58924 -0.6141,-0.73061 -1.75394,-0.91407 -2.5941,-0.85685 -0.84017,0.0572 -1.88729,1.31538 -2.60009,1.27031 -0.71279,-0.0451 -1.26418,-0.55152 -1.5758,-1.03213 -0.31162,-0.48061 -0.30641,-1.03792 -0.31516,-1.90546 -0.009,-0.86755 0.34323,-2.79832 0.55152,-3.81094 0.2083,-1.01262 0.0135,-2.48972 0.7879,-2.93759 0.77442,-0.44787 1.86761,0.5632 2.83646,0.79394 0.96885,0.23074 2.74212,0.64438 3.62435,0.71455 0.88224,0.0702 1.61884,0.11906 2.20612,-0.0794 0.58728,-0.19845 1.39269,-0.63465 1.57581,-1.11152 0.18312,-0.47687 -0.10067,-0.95888 -0.31515,-1.42911 -0.21449,-0.47022 -0.99689,-0.95871 -1.18187,-1.58788 -0.18496,-0.62918 -0.17545,-1.82225 0.15759,-2.38184 0.33304,-0.55958 0.94209,-0.82767 1.65458,-1.03213 0.71248,-0.20446 2.29203,-0.35782 2.99403,0 0.702,0.35782 1.21295,1.13803 1.33944,1.82608 0.1265,0.68805 -0.3835,1.76802 -0.63031,2.30244 -0.24683,0.53442 -0.7843,0.86485 -0.86672,1.27031 -0.0824,0.40545 0.0141,0.83486 0.23639,1.19091 0.22229,0.35605 0.50402,0.71611 1.26064,0.95274 0.75661,0.23663 2.48665,0.0426 3.70314,-0.15879 1.21648,-0.2014 3.32908,-2.24319 4.33346,-1.27031 1.00438,0.97288 -0.97581,3.58833 -1.10306,4.68427 -0.12724,1.09594 -0.0459,1.92039 0,2.54063 0.0459,0.62023 -0.0391,1.16148 0.23637,1.58788 0.27547,0.42641 0.93769,0.97545 1.49701,0.95273 0.55932,-0.0227 1.0745,-0.90436 1.57581,-1.19091 0.50131,-0.28655 1.15793,-0.74686 1.73338,-0.71455 0.57544,0.0323 1.31502,0.49309 1.73339,0.95273 0.41836,0.45965 0.82412,1.28732 0.86669,1.98487 0.0426,0.69753 -0.33714,1.80768 -0.7091,2.38182 -0.37197,0.57415 -0.98444,1.22207 -1.57581,1.34971 -0.59138,0.12764 -1.35282,-0.3031 -1.89097,-0.55576 -0.53815,-0.25266 -1.18936,-1.07485 -1.65459,-1.11152 -0.46524,-0.0367 -0.75927,0.23123 -1.02427,0.47636 -0.265,0.24514 -0.49623,0.64045 -0.63034,1.11152 -0.1341,0.47108 -0.14218,1.10751 -0.0788,1.98487 0.0634,0.87736 0.48688,2.87123 0.70912,3.81093 0.22223,0.9397 1.26109,1.43015 0.7091,2.46123 -0.55198,1.03108 -3.67806,1.33234 -4.96377,1.5085 -1.28573,0.17615 -2.76284,0.19487 -3.46678,-0.0794 -0.70393,-0.27427 -1.07452,-0.60475 -1.18185,-1.03213 -0.10734,-0.42737 0.24021,-0.87818 0.47273,-1.27031 0.23253,-0.39213 0.92696,-0.65602 1.10307,-1.27031 0.17611,-0.61429 -0.0218,-1.946 -0.39395,-2.54062 -0.37216,-0.59463 -1.21111,-1.01388 -1.73339,-1.19092 -0.52228,-0.17704 -1.11248,-0.10432 -1.57579,-0.0794 -0.46331,0.0249 -1.06496,-0.027 -1.49703,0.23819 -0.43207,0.2652 -0.87092,0.93644 -1.10306,1.5085 -0.23213,0.57205 -0.43031,1.67328 -0.31516,2.22304 0.11514,0.54976 0.7879,1.27031 0.7879,1.27031"
+       style="fill:url(#linearGradient8466);fill-opacity:1;fill-rule:evenodd;stroke:none"
+       inkscape:connector-curvature="0" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variantTerm.png"
+       sodipodi:nodetypes="czczzzzzzzzzzczzzzzzzzzzzzzzzczzzzzzzzzzzzzzzzczzzzzzzzzzzz"
+       id="path8362"
+       d="M 504.79848,690.21163 C 504.79848,690.21163 504.98755,690.83243 503.83167,691.203 C 502.6758,691.57356 497.78909,690.95516 497.18482,690.36034 C 496.58056,689.76554 495.19076,685.40359 496.09716,684.70963 C 497.00354,684.01569 497.06396,684.11482 497.90992,684.31308 C 498.7559,684.51137 499.23373,685.12543 499.90399,685.05661 C 500.57424,684.98778 501.44113,684.45136 501.71676,683.86698 C 501.99241,683.28261 501.76017,682.08229 501.28921,681.62615 C 500.81825,681.17002 499.94408,681.05548 499.29974,681.0912 C 498.65539,681.12692 497.85234,681.91241 497.30568,681.88427 C 496.75902,681.85615 496.33615,681.53996 496.09716,681.2399 C 495.85817,680.93984 495.86216,680.59191 495.85545,680.05028 C 495.84875,679.50866 496.11868,678.30323 496.27842,677.67102 C 496.43818,677.03883 496.28877,676.11665 496.88269,675.83703 C 497.47661,675.55742 498.31499,676.18865 499.05802,676.33271 C 499.80107,676.47676 501.16102,676.735 501.83762,676.77882 C 502.51423,676.82263 503.07915,676.85314 503.52954,676.72925 C 503.97995,676.60535 504.59763,676.33302 504.73807,676.0353 C 504.8785,675.73758 504.66086,675.43666 504.49637,675.14308 C 504.33188,674.84951 503.73184,674.54454 503.58997,674.15173 C 503.44812,673.75893 503.45541,673.01406 503.71083,672.6647 C 503.96624,672.31535 504.43334,672.14797 504.97976,672.02033 C 505.52618,671.89268 506.73757,671.79693 507.27596,672.02033 C 507.81433,672.24372 508.20619,672.73082 508.3032,673.16038 C 508.40022,673.58994 508.00908,674.26419 507.8198,674.59784 C 507.6305,674.93149 507.21831,675.13779 507.15509,675.39092 C 507.0919,675.64406 507.16592,675.91215 507.33638,676.13443 C 507.50686,676.35672 507.72293,676.58151 508.3032,676.72925 C 508.88346,676.87698 510.21026,676.75585 511.14322,676.63011 C 512.07616,676.50438 513.69637,675.22964 514.46665,675.83703 C 515.23693,676.44443 513.71827,678.07731 513.62068,678.76152 C 513.5231,679.44573 513.58548,679.96046 513.62068,680.34769 C 513.65588,680.7349 513.5907,681.07282 513.80196,681.33904 C 514.01322,681.60526 514.5211,681.94802 514.95005,681.93384 C 515.379,681.91966 515.77411,681.36924 516.15858,681.19034 C 516.54305,681.01143 517.04662,680.72405 517.48795,680.74422 C 517.92926,680.7644 518.49647,681.05207 518.81732,681.33904 C 519.13817,681.626 519.44935,682.14273 519.48201,682.57823 C 519.51465,683.01372 519.22344,683.70679 518.93818,684.06525 C 518.65291,684.4237 518.18318,684.82822 517.72965,684.9079 C 517.27611,684.98759 516.69215,684.71868 516.27943,684.56094 C 515.8667,684.40318 515.36728,683.88987 515.01049,683.86698 C 514.65369,683.84408 514.42819,684.01135 514.22495,684.16439 C 514.02172,684.31742 513.84438,684.56422 513.74153,684.85833 C 513.63868,685.15243 513.63249,685.54978 513.68111,686.09752 C 513.72972,686.64528 514.0545,687.89009 514.22495,688.47676 C 514.39538,689.06345 515.19211,689.36965 514.76878,690.01336 C 514.34545,690.65709 511.94799,690.84518 510.96195,690.95514 C 509.97589,691.06512 508.84306,691.07682 508.3032,690.90559 C 507.76334,690.73434 507.47912,690.52802 507.39681,690.2612 C 507.31449,689.99438 507.58104,689.71294 507.75936,689.46813 C 507.93769,689.2233 508.47026,689.05856 508.60532,688.67504 C 508.74039,688.29151 508.58862,687.46013 508.3032,687.08887 C 508.01779,686.71763 507.37437,686.45589 506.97382,686.34536 C 506.57328,686.23484 506.12064,686.28023 505.76531,686.29579 C 505.40999,686.31135 504.94857,686.27892 504.61721,686.4445 C 504.28585,686.61007 503.94928,687.02914 503.77124,687.38628 C 503.59323,687.74342 503.44124,688.43095 503.52954,688.77417 C 503.61785,689.11741 504.13381,689.56726 504.13381,689.56726"
+       style="fill:url(#linearGradient8463);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\dimension.png"
+       sodipodi:nodetypes="czczzzzzzzzzzczzzzzzzzzzzzzzzczzzzzzzzzzzzzzzzczzzzzzzzzzzz"
+       id="path8366"
+       d="M 354.16493,442.88655 C 354.16493,442.88655 354.33764,443.64535 353.28166,444.09829 C 352.2257,444.55123 347.76132,443.79536 347.20928,443.06831 C 346.65725,442.34127 345.38757,437.00962 346.21563,436.1614 C 347.04367,435.31319 347.09887,435.43436 347.87171,435.67671 C 348.64457,435.91906 349.08111,436.66964 349.69344,436.58551 C 350.30576,436.50138 351.09773,435.8457 351.34955,435.13142 C 351.60136,434.41715 351.3892,432.94998 350.95895,432.39243 C 350.52868,431.83489 349.73007,431.69489 349.14142,431.73856 C 348.55276,431.78222 347.8191,432.74234 347.31969,432.70794 C 346.82028,432.67355 346.43396,432.28708 346.21563,431.92032 C 345.99728,431.55356 346.00094,431.12827 345.9948,430.46623 C 345.98868,429.8042 346.23528,428.33079 346.38122,427.55805 C 346.52717,426.78531 346.39067,425.65812 346.93325,425.31634 C 347.47585,424.97457 348.24178,425.74613 348.92059,425.92221 C 349.5994,426.09828 350.84183,426.41394 351.45996,426.46749 C 352.07809,426.52104 352.59418,426.55834 353.00565,426.4069 C 353.41712,426.25546 353.98142,425.92259 354.10972,425.55869 C 354.23802,425.19478 354.03919,424.82696 353.88892,424.46812 C 353.73864,424.10929 353.19046,423.73651 353.06085,423.25638 C 352.93127,422.77625 352.93793,421.8658 353.17127,421.43878 C 353.40461,421.01175 353.83133,420.80717 354.33053,420.65114 C 354.82972,420.49512 355.93642,420.37808 356.42826,420.65114 C 356.92011,420.9242 357.27811,421.51959 357.36674,422.04465 C 357.45537,422.5697 357.09804,423.39385 356.92511,423.80167 C 356.75218,424.20949 356.3756,424.46165 356.31785,424.77106 C 356.26012,425.08047 356.32774,425.40815 356.48348,425.67986 C 356.63923,425.95157 356.83662,426.22633 357.36674,426.4069 C 357.89684,426.58748 359.10898,426.43942 359.9613,426.28573 C 360.81361,426.13204 362.29379,424.57392 362.9975,425.31634 C 363.70121,426.05876 362.3138,428.05464 362.22464,428.89097 C 362.1355,429.7273 362.19248,430.35645 362.22464,430.82975 C 362.25681,431.30306 362.19725,431.7161 362.39026,432.04149 C 362.58326,432.36689 363.04724,432.78586 363.43912,432.76853 C 363.831,432.7512 364.19195,432.0784 364.54319,431.85973 C 364.89443,431.64106 365.35449,431.28979 365.75767,431.31445 C 366.16084,431.3391 366.67902,431.69073 366.97215,432.04149 C 367.26527,432.39225 367.54956,433.02386 367.57939,433.55616 C 367.60921,434.08847 367.34317,434.93563 367.08257,435.37377 C 366.82195,435.81191 366.39283,436.30635 365.97849,436.40375 C 365.56414,436.50115 365.03065,436.17245 364.6536,435.97964 C 364.27655,435.78684 363.82029,435.15941 363.49433,435.13142 C 363.16837,435.10344 362.96235,435.30788 362.77668,435.49495 C 362.59102,435.68201 362.42901,435.98368 362.33504,436.34316 C 362.24109,436.70265 362.23542,437.18832 362.27985,437.85784 C 362.32426,438.52736 362.62097,440.04891 362.77668,440.76601 C 362.93239,441.4831 363.66026,441.85737 363.27351,442.6442 C 362.88677,443.43103 360.69652,443.66092 359.7957,443.79535 C 358.89486,443.92978 357.85994,443.94407 357.36674,443.73477 C 356.87353,443.52547 356.61388,443.27328 356.53869,442.94714 C 356.46347,442.621 356.70698,442.27699 356.8699,441.97775 C 357.03281,441.6785 357.51937,441.47713 357.64275,441.00835 C 357.76614,440.53958 357.62749,439.52334 357.36674,439.06957 C 357.10598,438.61581 356.51818,438.29587 356.15225,438.16077 C 355.78632,438.02567 355.37281,438.08117 355.04819,438.10018 C 354.72358,438.1192 354.30204,438.07957 353.99931,438.28194 C 353.69658,438.48432 353.38911,438.99655 353.22647,439.43309 C 353.06383,439.86964 352.92498,440.71 353.00565,441.12953 C 353.08633,441.54906 353.55769,442.09892 353.55769,442.09892"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\dimension.png"
+       sodipodi:nodetypes="czczzzzzzzzzzczzzzzzzzzzzzzzzczzzzzzzzzzzzzzzzczzzzzzzzzzzz"
+       id="path8370"
+       d="M 358.71114,446.16737 C 358.71114,446.16737 358.88387,446.92617 357.82789,447.37911 C 356.77192,447.83205 352.30755,447.07617 351.75551,446.34913 C 351.20347,445.62209 349.93379,440.29044 350.76184,439.44222 C 351.5899,438.594 351.6451,438.71517 352.41794,438.95752 C 353.19079,439.19987 353.62733,439.95045 354.23967,439.86632 C 354.85199,439.78219 355.64396,439.12652 355.89576,438.41224 C 356.14759,437.69796 355.93542,436.23079 355.50517,435.67325 C 355.07491,435.1157 354.27629,434.97571 353.68764,435.01937 C 353.09898,435.06304 352.36533,436.02316 351.86592,435.98876 C 351.36651,435.95436 350.98018,435.5679 350.76184,435.20114 C 350.54351,434.83437 350.54716,434.40908 350.54103,433.74705 C 350.5349,433.08501 350.78151,431.61161 350.92745,430.83887 C 351.07339,430.06613 350.93689,428.93893 351.47948,428.59716 C 352.02208,428.25539 352.788,429.02695 353.46682,429.20303 C 354.14563,429.3791 355.38806,429.69476 356.00618,429.74831 C 356.62431,429.80186 357.14041,429.83916 357.55187,429.68772 C 357.96335,429.53628 358.52765,429.20341 358.65595,428.83951 C 358.78425,428.4756 358.58542,428.10778 358.43515,427.74894 C 358.28487,427.3901 357.73668,427.01733 357.60708,426.5372 C 357.47749,426.05707 357.48416,425.14662 357.7175,424.71959 C 357.95083,424.29257 358.37756,424.08799 358.87676,423.93196 C 359.37595,423.77594 360.48264,423.6589 360.97449,423.93196 C 361.46634,424.20502 361.82434,424.8004 361.91296,425.32546 C 362.00158,425.85052 361.64426,426.67466 361.47134,427.08249 C 361.2984,427.49031 360.92183,427.74247 360.86408,428.05187 C 360.80634,428.36128 360.87396,428.68897 361.02971,428.96068 C 361.18545,429.23238 361.38284,429.50714 361.91296,429.68772 C 362.44307,429.8683 363.6552,429.72024 364.50752,429.56655 C 365.35984,429.41286 366.84001,427.85474 367.54372,428.59716 C 368.24743,429.33958 366.86003,431.33546 366.77087,432.17179 C 366.68173,433.00811 366.73871,433.63727 366.77087,434.11057 C 366.80304,434.58388 366.74348,434.99691 366.93648,435.32231 C 367.12949,435.64771 367.59346,436.06668 367.98534,436.04935 C 368.37723,436.03202 368.73818,435.35922 369.08942,435.14055 C 369.44066,434.92187 369.90071,434.57061 370.3039,434.59527 C 370.70707,434.61992 371.22525,434.97155 371.51837,435.32231 C 371.8115,435.67307 372.09578,436.30468 372.12561,436.83698 C 372.15544,437.36929 371.8894,438.21645 371.62879,438.65458 C 371.36818,439.09272 370.93906,439.58716 370.52472,439.68456 C 370.11037,439.78196 369.57687,439.45326 369.19983,439.26046 C 368.82278,439.06765 368.36652,438.44023 368.04056,438.41224 C 367.71459,438.38426 367.50858,438.58869 367.32291,438.77576 C 367.13724,438.96282 366.97523,439.26449 366.88127,439.62397 C 366.78732,439.98346 366.78165,440.46913 366.82607,441.13865 C 366.87049,441.80818 367.1672,443.32973 367.32291,444.04682 C 367.47861,444.76392 368.20648,445.13819 367.81974,445.92502 C 367.43299,446.71185 365.24274,446.94174 364.34193,447.07617 C 363.44109,447.2106 362.40617,447.22488 361.91296,447.01558 C 361.41976,446.80629 361.1601,446.55409 361.08491,446.22796 C 361.0097,445.90182 361.25321,445.55781 361.41612,445.25856 C 361.57904,444.95932 362.06558,444.75795 362.18898,444.28917 C 362.31236,443.8204 362.17372,442.80416 361.91296,442.35039 C 361.65221,441.89662 361.06441,441.57669 360.69847,441.44158 C 360.33254,441.30648 359.91903,441.36198 359.59442,441.381 C 359.26981,441.40001 358.84827,441.36038 358.54554,441.56276 C 358.24281,441.76514 357.93533,442.27737 357.77269,442.71391 C 357.61005,443.15045 357.47119,443.99082 357.55187,444.41035 C 357.63255,444.82988 358.10392,445.37974 358.10392,445.37974"
+       style="fill:#616161;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\dimension.png"
+       sodipodi:nodetypes="czczzzzzzzzzzczzzzzzzzzzzzzzzczzzzzzzzzzzzzzzzczzzzzzzzzzzz"
+       id="path8374"
+       d="M 363.68302,449.92223 C 363.68302,449.92223 363.85574,450.68103 362.79975,451.13397 C 361.74379,451.58691 357.27942,450.83104 356.72738,450.10399 C 356.17535,449.37695 354.90566,444.0453 355.73372,443.19708 C 356.56177,442.34886 356.61696,442.47003 357.38982,442.71238 C 358.16267,442.95473 358.5992,443.70531 359.21154,443.62119 C 359.82386,443.53706 360.61583,442.88138 360.86764,442.1671 C 361.11946,441.45282 360.9073,439.98565 360.47704,439.42811 C 360.04678,438.87056 359.24816,438.73057 358.65951,438.77423 C 358.07086,438.81789 357.33721,439.77802 356.83778,439.74362 C 356.33838,439.70922 355.95205,439.32275 355.73372,438.95599 C 355.51538,438.58923 355.51904,438.16395 355.51291,437.50191 C 355.50677,436.83987 355.75339,435.36648 355.89932,434.59373 C 356.04526,433.82099 355.90876,432.6938 356.45136,432.35202 C 356.99394,432.01025 357.75988,432.78181 358.43869,432.95789 C 359.11751,433.13397 360.35992,433.44962 360.97805,433.50317 C 361.59619,433.55672 362.11228,433.59402 362.52375,433.44258 C 362.93521,433.29114 363.49952,432.95827 363.62782,432.59437 C 363.75613,432.23046 363.55729,431.86264 363.40701,431.5038 C 363.25673,431.14497 362.70856,430.77219 362.57895,430.29206 C 362.44936,429.81194 362.45602,428.90148 362.68936,428.47446 C 362.92271,428.04743 363.34944,427.84285 363.84863,427.68682 C 364.34783,427.5308 365.45452,427.41376 365.94637,427.68682 C 366.43822,427.95988 366.7962,428.55527 366.88483,429.08033 C 366.97346,429.60538 366.61614,430.42952 366.44322,430.83735 C 366.27027,431.24517 365.8937,431.49733 365.83596,431.80674 C 365.77822,432.11615 365.84584,432.44383 366.00157,432.71554 C 366.15732,432.98725 366.35471,433.26201 366.88483,433.44258 C 367.41494,433.62316 368.62708,433.4751 369.4794,433.32141 C 370.33171,433.16772 371.81188,431.6096 372.51559,432.35202 C 373.2193,433.09444 371.8319,435.09032 371.74274,435.92665 C 371.65359,436.76297 371.71059,437.39213 371.74274,437.86543 C 371.7749,438.33874 371.71535,438.75177 371.90835,439.07717 C 372.10136,439.40256 372.56534,439.82154 372.95722,439.80421 C 373.3491,439.78688 373.71006,439.11408 374.0613,438.89541 C 374.41253,438.67673 374.87259,438.32547 375.27576,438.35013 C 375.67895,438.37478 376.19713,438.72641 376.49025,439.07717 C 376.78337,439.42792 377.06766,440.05953 377.09749,440.59184 C 377.12731,441.12414 376.86128,441.97131 376.60066,442.40945 C 376.34004,442.84759 375.91092,443.34202 375.49658,443.43942 C 375.08225,443.53683 374.54875,443.20812 374.1717,443.01532 C 373.79465,442.82251 373.33838,442.19508 373.01243,442.1671 C 372.68646,442.13912 372.48045,442.34356 372.29479,442.53062 C 372.10911,442.71768 371.9471,443.01935 371.85314,443.37884 C 371.75918,443.73832 371.75353,444.22399 371.79795,444.89351 C 371.84236,445.56304 372.13907,447.08459 372.29479,447.80169 C 372.45049,448.51878 373.17835,448.89305 372.7916,449.67988 C 372.40487,450.46672 370.21462,450.6966 369.31379,450.83103 C 368.41296,450.96546 367.37804,450.97975 366.88483,450.77045 C 366.39163,450.56115 366.13198,450.30895 366.05678,449.98282 C 365.98157,449.65668 366.22508,449.31266 366.38799,449.01342 C 366.55091,448.71418 367.03746,448.51281 367.16084,448.04404 C 367.28424,447.57526 367.14559,446.55902 366.88483,446.10525 C 366.62408,445.65148 366.03628,445.33155 365.67035,445.19645 C 365.30442,445.06134 364.8909,445.11684 364.56628,445.13586 C 364.24167,445.15488 363.82013,445.11524 363.51741,445.31762 C 363.21468,445.52 362.90721,446.03223 362.74456,446.46877 C 362.58192,446.90532 362.44307,447.74568 362.52375,448.16521 C 362.60442,448.58474 363.07578,449.1346 363.07578,449.1346"
+       style="fill:url(#linearGradient8458);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.25347054;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8386"
+       width="28.749332"
+       height="28.478697"
+       x="238.73579"
+       y="612.67352"
+       rx="1.8230096"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variantExp.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8454);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8388"
+       width="30.644028"
+       height="22.223652"
+       x="237.93056"
+       y="613.16125"
+       rx="6.1203618"
+       ry="5.5041432"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variantExp.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variantExp.png"
+       sodipodi:nodetypes="czczzzzzzzzzzczzzzzzzzzzzzzzzczzzzzzzzzzzzzzzzczzzzzzzzzzzz"
+       id="path8390"
+       d="M 254.47809,639.8501 C 254.47809,639.8501 254.65006,640.41954 253.59876,640.75945 C 252.54748,641.09935 248.10294,640.53211 247.55335,639.98651 C 247.00376,639.44092 245.73972,635.43984 246.5641,634.8033 C 247.38847,634.16677 247.44342,634.2577 248.21284,634.43955 C 248.98227,634.62144 249.41686,635.1847 250.02648,635.12157 C 250.63608,635.05843 251.42453,634.56639 251.67522,634.03036 C 251.92593,633.49434 251.7147,632.39332 251.28636,631.97492 C 250.85801,631.55653 250.06294,631.45147 249.4769,631.48423 C 248.89085,631.517 248.16047,632.2375 247.66327,632.21169 C 247.16608,632.18589 246.78147,631.89586 246.5641,631.62063 C 246.34674,631.34539 246.35037,631.02625 246.34426,630.52943 C 246.33817,630.03262 246.58368,628.92692 246.72896,628.34701 C 246.87427,627.76713 246.73838,626.92124 247.27855,626.66476 C 247.81873,626.40828 248.58126,626.98728 249.25705,627.11942 C 249.93287,627.25156 251.16977,627.48843 251.78514,627.52862 C 252.40053,627.5688 252.91434,627.5968 253.32397,627.48316 C 253.73363,627.36951 254.29542,627.11971 254.42315,626.84662 C 254.55087,626.57353 254.35293,626.2975 254.20332,626.02822 C 254.05371,625.75894 253.50797,625.4792 253.37893,625.11889 C 253.24992,624.75858 253.25655,624.07534 253.48886,623.75488 C 253.72116,623.43444 254.14599,623.2809 254.64297,623.16382 C 255.13995,623.04673 256.24173,622.95891 256.7314,623.16382 C 257.22106,623.36873 257.57746,623.81553 257.66569,624.20955 C 257.75394,624.60357 257.39819,625.22204 257.22603,625.52809 C 257.05386,625.83413 256.67897,626.02337 256.62147,626.25555 C 256.564,626.48775 256.63132,626.73365 256.78636,626.93755 C 256.94141,627.14145 257.13793,627.34764 257.66569,627.48316 C 258.19345,627.61867 259.4002,627.50756 260.24874,627.39222 C 261.09726,627.27688 262.57087,626.10762 263.27145,626.66476 C 263.97203,627.22189 262.59079,628.71969 262.50203,629.34729 C 262.41328,629.9749 262.47001,630.44704 262.50203,630.80223 C 262.53404,631.15741 262.47476,631.46737 262.66691,631.71157 C 262.85905,631.95576 263.32097,632.27016 263.71111,632.25716 C 264.10125,632.24415 264.46061,631.73927 264.81029,631.57517 C 265.15997,631.41106 265.61798,631.14746 266.01937,631.16596 C 266.42075,631.18447 266.93664,631.44834 267.22846,631.71157 C 267.52027,631.97479 267.8033,632.44876 267.833,632.84823 C 267.86269,633.24769 267.59783,633.88342 267.33838,634.21223 C 267.07892,634.54102 266.6517,634.91208 266.2392,634.98516 C 265.8267,635.05826 265.29558,634.8116 264.9202,634.66691 C 264.54482,634.5222 264.09059,634.05136 263.76608,634.03036 C 263.44157,634.00936 263.23647,634.16279 263.05162,634.30317 C 262.86678,634.44354 262.70549,634.66992 262.61194,634.93969 C 262.5184,635.20946 262.51277,635.57394 262.55699,636.07636 C 262.6012,636.5788 262.89659,637.72063 263.05162,638.25876 C 263.20663,638.79691 263.93127,639.07778 263.54624,639.66823 C 263.16122,640.2587 260.98069,640.43123 260.08387,640.5321 C 259.18703,640.63298 258.15671,640.64371 257.66569,640.48665 C 257.17468,640.32956 256.91618,640.14031 256.84132,639.89557 C 256.76645,639.65082 257.00888,639.39267 257.17106,639.16811 C 257.33326,638.94354 257.81764,638.79243 257.94048,638.44064 C 258.06333,638.08884 257.92529,637.32624 257.66569,636.98569 C 257.40611,636.64517 256.82091,636.40508 256.4566,636.3037 C 256.0923,636.20232 255.68062,636.24396 255.35744,636.25823 C 255.03427,636.2725 254.6146,636.24275 254.31323,636.39464 C 254.01185,636.54651 253.70573,636.93091 253.5438,637.2585 C 253.3819,637.58609 253.24366,638.21674 253.32397,638.53156 C 253.40429,638.84641 253.87357,639.25904 253.87357,639.25904"
+       style="fill:url(#linearGradient8451);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.25347054;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8396"
+       width="28.749332"
+       height="28.478697"
+       x="286.92358"
+       y="612.5542"
+       rx="1.8230096"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\contextExp.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8447);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8398"
+       width="30.644028"
+       height="22.223652"
+       x="286.11835"
+       y="612.23822"
+       rx="6.1203618"
+       ry="5.5041432"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\contextExp.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8444);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.25;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8406"
+       width="22.76672"
+       height="8.1662073"
+       x="292.86993"
+       y="630.0777"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\contextExp.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.25347054;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8410"
+       width="28.749332"
+       height="28.478697"
+       x="334.47571"
+       y="612.28632"
+       rx="1.8230096"
+       ry="0"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\expression.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8440);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:0;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8412"
+       width="30.644028"
+       height="22.223652"
+       x="333.80444"
+       y="611.97034"
+       rx="6.1203618"
+       ry="5.5041432"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\expression.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:url(#linearGradient8437);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.25;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect8414"
+       width="19.01613"
+       height="8.1662073"
+       x="343.77081"
+       y="630.88135"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\expression.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\expression.png"
+       sodipodi:nodetypes="czczzzzzzzzzzczzzzzzzzzzzzzzzczzzzzzzzzzzzzzzzczzzzzzzzzzzz"
+       id="path8420"
+       d="M 346.38538,635.30693 C 346.38538,635.30693 346.52313,635.75653 345.68102,636.0249 C 344.83891,636.29327 341.2787,635.84541 340.83846,635.41463 C 340.39823,634.98386 339.38569,631.82484 340.04605,631.32226 C 340.70639,630.81969 340.75041,630.89148 341.36673,631.03507 C 341.98307,631.17867 342.33119,631.62339 342.81951,631.57355 C 343.30782,631.5237 343.93939,631.13521 344.1402,630.71199 C 344.34103,630.28878 344.17183,629.41948 343.82871,629.08913 C 343.48559,628.75879 342.84872,628.67584 342.37929,628.70171 C 341.90984,628.72758 341.32478,629.29645 340.92652,629.27607 C 340.52825,629.2557 340.22017,629.02671 340.04605,628.8094 C 339.87193,628.59209 339.87484,628.34011 339.86995,627.94785 C 339.86507,627.5556 340.06173,626.6826 340.17811,626.22473 C 340.2945,625.76689 340.18565,625.09902 340.61835,624.89652 C 341.05105,624.69402 341.66185,625.15117 342.20318,625.25549 C 342.74453,625.35982 343.73532,625.54685 344.22825,625.57858 C 344.7212,625.6103 345.13277,625.63241 345.4609,625.54268 C 345.78905,625.45295 346.23906,625.25572 346.34137,625.04011 C 346.44368,624.82449 346.28512,624.60655 346.16528,624.39394 C 346.04544,624.18133 345.60829,623.96047 345.50493,623.67599 C 345.40158,623.39151 345.40689,622.85206 345.59298,622.59904 C 345.77906,622.34604 346.11936,622.22482 346.51746,622.13238 C 346.91555,622.03993 347.79811,621.97059 348.19035,622.13238 C 348.58258,622.29416 348.86807,622.64693 348.93874,622.95803 C 349.00943,623.26912 348.72446,623.75743 348.58656,623.99907 C 348.44865,624.2407 348.14835,624.39011 348.10229,624.57343 C 348.05625,624.75676 348.11018,624.95091 348.23437,625.1119 C 348.35857,625.27289 348.51599,625.43569 348.93874,625.54268 C 349.36149,625.64967 350.32813,625.56195 351.00784,625.47088 C 351.68753,625.37982 352.86793,624.45663 353.42912,624.89652 C 353.9903,625.3364 352.88389,626.51898 352.81279,627.0145 C 352.74169,627.51002 352.78714,627.8828 352.81279,628.16324 C 352.83843,628.44367 352.79094,628.6884 352.94486,628.8812 C 353.09877,629.074 353.46879,629.32223 353.7813,629.31197 C 354.09381,629.3017 354.38166,628.90307 354.66177,628.77351 C 354.94187,628.64394 355.30875,628.43581 355.63028,628.45042 C 355.9518,628.46503 356.36504,628.67337 356.59879,628.8812 C 356.83255,629.08902 357.05926,629.46325 357.08305,629.77865 C 357.10683,630.09404 356.89467,630.59598 356.68684,630.85558 C 356.47901,631.11518 356.13679,631.40814 355.80637,631.46585 C 355.47594,631.52356 355.0505,631.32881 354.74981,631.21457 C 354.44912,631.10032 354.08527,630.72857 353.82533,630.71199 C 353.56538,630.6954 353.4011,630.81655 353.25303,630.92738 C 353.10496,631.03821 352.97576,631.21695 352.90083,631.42995 C 352.8259,631.64294 352.82139,631.93071 352.85681,632.3274 C 352.89223,632.7241 353.12885,633.62562 353.25303,634.0505 C 353.37719,634.47539 353.95765,634.69715 353.64923,635.16334 C 353.34082,635.62954 351.59415,635.76576 350.87577,635.8454 C 350.15738,635.92505 349.33206,635.93352 348.93874,635.80951 C 348.54543,635.68549 348.33836,635.53607 348.27839,635.34283 C 348.21842,635.14959 348.41261,634.94577 348.54253,634.76847 C 348.67245,634.59116 349.06045,634.47185 349.15885,634.1941 C 349.25726,633.91633 349.14669,633.31423 348.93874,633.04536 C 348.73081,632.77649 348.26205,632.58694 347.97023,632.50689 C 347.67841,632.42685 347.34864,632.45972 347.08977,632.47099 C 346.8309,632.48226 346.49473,632.45877 346.25332,632.57869 C 346.01191,632.6986 345.7667,633.0021 345.63699,633.26075 C 345.5073,633.5194 345.39657,634.01732 345.4609,634.26589 C 345.52524,634.51447 345.90114,634.84026 345.90114,634.84026"
+       style="fill:url(#linearGradient8434);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\expression.png"
+       id="path8424"
+       d="M 340.07961,615.94361 L 359.78069,615.94361"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.3538413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\contextExp.png"
+       id="path8426"
+       d="M 291.85773,617.01521 L 311.55881,617.01521"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.3538413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variantExp.png"
+       id="path8428"
+       d="M 244.70745,617.551 L 264.40853,617.551"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.3538413;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variability.png"
+       sodipodi:nodetypes="czczzzzzzzzzzczzzzzzzzzzzzzzzczzzzzzzzzzzzzzzzczzzzzzzzzzzz"
+       id="path9562"
+       d="M 304.27952,445.00984 C 304.27952,445.00984 304.45225,445.87212 303.39627,446.38683 C 302.3403,446.90153 297.87593,446.04257 297.32389,445.21639 C 296.77185,444.3902 295.50217,438.33147 296.33022,437.36758 C 297.15828,436.40369 297.21348,436.54138 297.98632,436.81678 C 298.75917,437.09218 299.19571,437.94512 299.80805,437.84951 C 300.42037,437.75391 301.21234,437.00883 301.46414,436.19714 C 301.71597,435.38545 301.5038,433.7182 301.07355,433.08463 C 300.64329,432.45104 299.84467,432.29196 299.25602,432.34158 C 298.66736,432.39119 297.93371,433.48226 297.4343,433.44316 C 296.93489,433.40407 296.54856,432.9649 296.33022,432.54812 C 296.11189,432.13135 296.11554,431.64806 296.10941,430.89575 C 296.10328,430.14343 296.34989,428.4691 296.49583,427.59097 C 296.64177,426.71285 296.50527,425.43193 297.04786,425.04355 C 297.59046,424.65516 298.35638,425.53194 299.0352,425.73204 C 299.71401,425.93213 300.95644,426.29083 301.57456,426.35168 C 302.19269,426.41253 302.70879,426.45493 303.12025,426.28283 C 303.53173,426.11074 304.09603,425.73248 304.22433,425.31894 C 304.35263,424.90542 304.1538,424.48742 304.00353,424.07966 C 303.85325,423.67188 303.30506,423.24828 303.17546,422.70267 C 303.04587,422.15707 303.05254,421.12245 303.28588,420.63719 C 303.51921,420.15193 303.94594,419.91945 304.44514,419.74215 C 304.94433,419.56484 306.05102,419.43185 306.54287,419.74215 C 307.03472,420.05245 307.39272,420.72902 307.48134,421.32569 C 307.56996,421.92235 307.21264,422.85888 307.03972,423.32231 C 306.86678,423.78576 306.49021,424.0723 306.43246,424.4239 C 306.37472,424.77551 306.44234,425.14788 306.59809,425.45664 C 306.75383,425.7654 306.95122,426.07763 307.48134,426.28283 C 308.01145,426.48804 309.22358,426.31979 310.0759,426.14513 C 310.92822,425.97048 312.40839,424.19988 313.1121,425.04355 C 313.81581,425.88722 312.42841,428.15528 312.33925,429.10566 C 312.25011,430.05604 312.30709,430.77099 312.33925,431.30884 C 312.37142,431.84669 312.31186,432.31605 312.50486,432.68583 C 312.69787,433.05559 313.16184,433.53171 313.55372,433.51202 C 313.94561,433.49231 314.30656,432.72777 314.6578,432.47927 C 315.00904,432.23078 315.46909,431.83162 315.87228,431.85963 C 316.27545,431.88764 316.79363,432.28724 317.08675,432.68583 C 317.37988,433.08441 317.66416,433.80216 317.69399,434.40706 C 317.72382,435.01195 317.45778,435.97465 317.19717,436.47253 C 316.93656,436.97042 316.50744,437.53228 316.0931,437.64297 C 315.67875,437.75365 315.14525,437.38012 314.76821,437.16103 C 314.39116,436.94193 313.9349,436.22893 313.60894,436.19714 C 313.28297,436.16534 313.07696,436.39765 312.89129,436.61023 C 312.70562,436.8228 312.54361,437.16561 312.44965,437.57411 C 312.3557,437.98263 312.35003,438.53452 312.39445,439.29534 C 312.43887,440.05618 312.73558,441.78523 312.89129,442.60011 C 313.04699,443.415 313.77486,443.84031 313.38812,444.73444 C 313.00137,445.62857 310.81112,445.88981 309.91031,446.04257 C 309.00947,446.19534 307.97455,446.21156 307.48134,445.97372 C 306.98814,445.73589 306.72848,445.4493 306.65329,445.07869 C 306.57808,444.70808 306.82159,444.31715 306.9845,443.97709 C 307.14742,443.63705 307.63396,443.40821 307.75736,442.87551 C 307.88074,442.34281 307.7421,441.18798 307.48134,440.67233 C 307.22059,440.15668 306.63279,439.79312 306.26685,439.63958 C 305.90092,439.48606 305.48741,439.54913 305.1628,439.57074 C 304.83819,439.59235 304.41665,439.54731 304.11392,439.77729 C 303.81119,440.00727 303.50371,440.58935 303.34107,441.08542 C 303.17843,441.5815 303.03957,442.53647 303.12025,443.01321 C 303.20093,443.48995 303.6723,444.1148 303.6723,444.1148"
+       style="fill:#616161;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variability.png"
+       sodipodi:nodetypes="czczzzzzzzzzzczzzzzzzzzzzzzzzczzzzzzzzzzzzzzzzczzzzzzzzzzzz"
+       id="path9564"
+       d="M 309.2514,449.27676 C 309.2514,449.27676 309.42412,450.13903 308.36813,450.65374 C 307.31217,451.16845 302.8478,450.3095 302.29576,449.4833 C 301.74373,448.65711 300.47404,442.59838 301.3021,441.63449 C 302.13015,440.67059 302.18534,440.80829 302.9582,441.08369 C 303.73105,441.35909 304.16758,442.21202 304.77992,442.11643 C 305.39224,442.02083 306.18421,441.27573 306.43602,440.46405 C 306.68784,439.65236 306.47568,437.98512 306.04542,437.35154 C 305.61516,436.71796 304.81654,436.55888 304.22789,436.60849 C 303.63924,436.65811 302.90559,437.74917 302.40616,437.71008 C 301.90676,437.67099 301.52043,437.23182 301.3021,436.81504 C 301.08376,436.39827 301.08742,435.91498 301.08129,435.16267 C 301.07515,434.41034 301.32177,432.73601 301.4677,431.85789 C 301.61364,430.97977 301.47714,429.69885 302.01974,429.31048 C 302.56232,428.92209 303.32826,429.79888 304.00707,429.99896 C 304.68589,430.19905 305.9283,430.55776 306.54643,430.61861 C 307.16457,430.67946 307.68066,430.72185 308.09213,430.54976 C 308.50359,430.37767 309.0679,429.9994 309.1962,429.58588 C 309.32451,429.17234 309.12567,428.75435 308.97539,428.34658 C 308.82511,427.9388 308.27694,427.5152 308.14733,426.96959 C 308.01774,426.42398 308.0244,425.38937 308.25774,424.90411 C 308.49109,424.41886 308.91782,424.18637 309.41701,424.00907 C 309.91621,423.83176 311.0229,423.69877 311.51475,424.00907 C 312.0066,424.31937 312.36458,424.99594 312.45321,425.5926 C 312.54184,426.18927 312.18452,427.1258 312.0116,427.58923 C 311.83865,428.05268 311.46208,428.33922 311.40434,428.69082 C 311.3466,429.04243 311.41422,429.41481 311.56995,429.72356 C 311.7257,430.03232 311.92309,430.34455 312.45321,430.54976 C 312.98332,430.75496 314.19546,430.58671 315.04778,430.41206 C 315.90009,430.23741 317.38026,428.46681 318.08397,429.31048 C 318.78768,430.15414 317.40028,432.4222 317.31112,433.37258 C 317.22197,434.32295 317.27897,435.0379 317.31112,435.57576 C 317.34328,436.11362 317.28373,436.58297 317.47673,436.95275 C 317.66974,437.32251 318.13372,437.79863 318.5256,437.77893 C 318.91748,437.75924 319.27844,436.99469 319.62968,436.7462 C 319.98091,436.4977 320.44097,436.09854 320.84414,436.12655 C 321.24733,436.15457 321.76551,436.55415 322.05863,436.95275 C 322.35175,437.35133 322.63604,438.06907 322.66587,438.67396 C 322.69569,439.27886 322.42966,440.24156 322.16904,440.73945 C 321.90842,441.23733 321.4793,441.79919 321.06496,441.90987 C 320.65063,442.02057 320.11713,441.64703 319.74008,441.42794 C 319.36303,441.20883 318.90676,440.49584 318.58081,440.46405 C 318.25484,440.43225 318.04883,440.66457 317.86317,440.87714 C 317.67749,441.08971 317.51548,441.43252 317.42152,441.84103 C 317.32756,442.24954 317.32191,442.80144 317.36633,443.56226 C 317.41074,444.3231 317.70745,446.05214 317.86317,446.86703 C 318.01887,447.68191 318.74673,448.10722 318.35998,449.00136 C 317.97325,449.8955 315.783,450.15673 314.88217,450.30949 C 313.98134,450.46225 312.94642,450.47849 312.45321,450.24065 C 311.96001,450.00281 311.70036,449.71621 311.62516,449.34561 C 311.54995,448.97499 311.79346,448.58406 311.95637,448.24401 C 312.11929,447.90396 312.60584,447.67513 312.72922,447.14243 C 312.85262,446.60973 312.71397,445.4549 312.45321,444.93925 C 312.19246,444.4236 311.60466,444.06004 311.23873,443.90651 C 310.8728,443.75298 310.45928,443.81605 310.13466,443.83766 C 309.81005,443.85927 309.38851,443.81423 309.08579,444.04421 C 308.78306,444.27419 308.47559,444.85627 308.31294,445.35234 C 308.1503,445.84842 308.01145,446.80339 308.09213,447.28013 C 308.1728,447.75687 308.64416,448.38172 308.64416,448.38172"
+       style="fill:url(#linearGradient9566);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.4131678;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect9568"
+       width="12.635946"
+       height="12.635946"
+       x="-163.77965"
+       y="537.32654"
+       transform="matrix(0.7827057,-0.622392,0.7827057,0.622392,0,0)"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variability.png"
+       inkscape:export-xdpi="47.817226"
+       inkscape:export-ydpi="47.817226" />
+    <rect
+       style="fill:#ea2127;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect9586"
+       width="31.515995"
+       height="31.500317"
+       x="235.93346"
+       y="469.46945"
+       rx="4.6020002"
+       ry="7.8016977"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\Invariant.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect9610"
+       width="21.335821"
+       height="19.444847"
+       x="240.88957"
+       y="475.36295"
+       rx="3.1154802"
+       ry="4.8159142"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\Invariant.png"
+       inkscape:export-xdpi="47.817257"
+       inkscape:export-ydpi="47.817257" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:4.03140783px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 253.49506,479.12878 L 249.37202,491.9333"
+       id="path9574"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\Invariant.png"
+       inkscape:export-xdpi="47"
+       inkscape:export-ydpi="47" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.75654936px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 247.77591,478.36588 L 258.64334,478.36588"
+       id="path9576"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\Invariant.png"
+       inkscape:export-xdpi="47"
+       inkscape:export-ydpi="47" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.75654936px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 244.47697,491.82647 L 255.3444,491.82647"
+       id="path9612"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\Invariant.png"
+       inkscape:export-xdpi="47"
+       inkscape:export-ydpi="47" />
+    <rect
+       style="fill:#cccccc;fill-rule:evenodd;stroke:#808080;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       id="rect3315"
+       width="65.1651"
+       height="36.181782"
+       x="401.59885"
+       y="167.32922"
+       ry="4.7358356" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect3317"
+       width="10.039973"
+       height="7.1984596"
+       x="364.84879"
+       y="179.0741"
+       ry="1.1366005" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319"
+       width="7.3879037"
+       height="2.6520679"
+       x="409.17621"
+       y="164.29831" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-7"
+       width="7.3879037"
+       height="2.6520679"
+       x="423.54156"
+       y="164.29831" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-5"
+       width="7.3879037"
+       height="2.6520679"
+       x="437.90695"
+       y="164.29831" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-70"
+       width="7.3879037"
+       height="2.6520679"
+       x="452.27231"
+       y="164.29831" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-3"
+       width="7.3879037"
+       height="2.6520679"
+       x="409.12885"
+       y="203.88986" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-7-2"
+       width="7.3879037"
+       height="2.6520679"
+       x="423.4942"
+       y="203.88986" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-5-2"
+       width="7.3879037"
+       height="2.6520679"
+       x="437.85959"
+       y="203.88986" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-70-0"
+       width="7.3879037"
+       height="2.6520679"
+       x="452.22495"
+       y="203.88986" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variant.png"
+       sodipodi:nodetypes="czczzzzzzzzzzczzzzzzzzzzzzzzzczzzzzzzzzzzzzzzzczzzzzzzzzzzz"
+       id="path8344-0"
+       d="m 410.85043,200.48192 c 0,0 0.14059,0.55908 -0.71951,0.89279 -0.86017,0.33372 -4.49679,-0.22319 -4.94647,-0.75887 -0.44968,-0.53569 -1.48394,-4.464 -0.80943,-5.08898 0.67453,-0.62496 0.71948,-0.53567 1.34904,-0.35712 0.62955,0.17853 0.98515,0.7316 1.48394,0.66961 0.49881,-0.062 1.14391,-0.54509 1.34905,-1.07138 0.20512,-0.52625 0.0323,-1.60727 -0.31819,-2.01807 -0.3505,-0.41078 -1.00102,-0.51393 -1.48052,-0.48176 -0.47951,0.0322 -1.07715,0.73959 -1.48396,0.71424 -0.4068,-0.0253 -0.7215,-0.31009 -0.89936,-0.58033 -0.17784,-0.27022 -0.17488,-0.58356 -0.17983,-1.07135 -0.006,-0.48779 0.19585,-1.57336 0.31478,-2.14272 0.11884,-0.56935 0.008,-1.39988 0.44967,-1.65169 0.44199,-0.25183 1.06591,0.31667 1.61886,0.44639 0.55295,0.12984 1.56501,0.36233 2.06852,0.40178 0.50354,0.0396 0.92393,0.0671 1.25911,-0.0447 0.33517,-0.11148 0.79484,-0.35682 0.89936,-0.62495 0.1045,-0.26813 -0.0574,-0.53914 -0.17983,-0.80352 -0.12246,-0.26437 -0.56896,-0.53903 -0.67453,-0.89279 -0.1056,-0.35377 -0.10008,-1.02459 0.09,-1.33922 0.19012,-0.31463 0.53769,-0.46535 0.94432,-0.58032 0.40664,-0.11495 1.30814,-0.20119 1.70878,0 0.40066,0.20119 0.69228,0.63987 0.76447,1.02674 0.0722,0.38685 -0.21888,0.99408 -0.35973,1.29455 -0.14091,0.30049 -0.44763,0.48628 -0.49467,0.71424 -0.0471,0.22796 0.008,0.46941 0.13491,0.6696 0.12688,0.2002 0.28767,0.40264 0.71949,0.53567 0.43182,0.13315 1.4192,0.0239 2.1135,-0.0892 0.69428,-0.11329 1.9,-1.26126 2.47323,-0.71424 0.57323,0.54701 -0.55692,2.01755 -0.62953,2.63376 -0.0727,0.6162 -0.0262,1.07975 0,1.42849 0.0262,0.34873 -0.0224,0.65305 0.13492,0.89279 0.1573,0.23976 0.53515,0.54846 0.85437,0.53567 0.31923,-0.0136 0.61326,-0.50847 0.89938,-0.66959 0.2861,-0.16117 0.66086,-0.41993 0.98927,-0.40176 0.32844,0.0176 0.75055,0.27725 0.98932,0.53568 0.23876,0.25844 0.47036,0.72379 0.49465,1.11601 0.0243,0.39219 -0.19249,1.01637 -0.40472,1.33919 -0.21229,0.32281 -0.56185,0.68712 -0.89937,0.75889 -0.3375,0.0718 -0.77209,-0.17034 -1.07922,-0.3125 -0.30715,-0.14202 -0.67881,-0.60432 -0.94433,-0.62495 -0.26552,-0.0206 -0.43333,0.12999 -0.58458,0.26784 -0.15131,0.13781 -0.2832,0.36011 -0.35976,0.62495 -0.0766,0.26488 -0.0812,0.62272 -0.0449,1.11603 0.0362,0.4933 0.27789,1.61437 0.40472,2.14271 0.12689,0.52834 0.71976,0.80412 0.40471,1.38384 -0.31504,0.57973 -2.09919,0.74911 -2.83299,0.84818 -0.73379,0.099 -1.57683,0.10953 -1.97858,-0.0447 -0.40176,-0.15415 -0.61327,-0.34001 -0.67453,-0.58033 -0.0613,-0.24029 0.13713,-0.49375 0.26982,-0.71422 0.13271,-0.22048 0.52902,-0.36887 0.62954,-0.71425 0.10056,-0.34539 -0.0126,-1.09415 -0.22483,-1.42849 -0.2124,-0.33434 -0.69122,-0.57005 -0.98932,-0.6696 -0.29807,-0.0996 -0.63492,-0.0587 -0.89934,-0.0447 -0.26442,0.0136 -0.6078,-0.0156 -0.85439,0.1339 -0.24659,0.14909 -0.49706,0.52651 -0.62955,0.84816 -0.13255,0.32162 -0.2456,0.94081 -0.17982,1.2499 0.0657,0.30913 0.44967,0.71426 0.44967,0.71426"
+       style="fill:url(#linearGradient4252);fill-opacity:1;fill-rule:evenodd;stroke:none"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:19.00371933px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Rod;-inkscape-font-specification:Rod"
+       x="397.89758"
+       y="184.97008"
+       id="text4230"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0194686,0.9809032)"><tspan
+         sodipodi:role="line"
+         id="tspan4232"
+         x="397.89758"
+         y="184.97008">Thing</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:24.92768669px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Nyala;-inkscape-font-specification:Nyala"
+       x="425.79477"
+       y="200.74896"
+       id="text4234"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0014831,0.99851909)"><tspan
+         sodipodi:role="line"
+         id="tspan4236"
+         x="425.79477"
+         y="200.74896">ML</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 439.86442,248.02787 c -0.18943,10.41883 -11.93431,9.85053 -11.93431,9.85053 0,0 2.65207,-19.70107 -3.4098,-8.71393 -6.06187,10.98714 -5.87243,19.89051 -5.87243,19.89051 0,0 17.42787,5.683 12.69204,-2.08377 -4.73584,-7.76677 -1.32604,-7.19847 -1.32604,-7.19847 l 9.85054,-1.51547 z"
+       id="path4254"
+       inkscape:connector-curvature="0" />
+    <path
+       inkscape:export-ydpi="47"
+       inkscape:export-xdpi="47"
+       inkscape:export-filename="C:\Documents and Settings\ffl\My Documents\eclipse-workspaces\DiVA\diva.model\model\icons\variant.png"
+       sodipodi:nodetypes="czzzzzzzzzzcczzzzzzzzzzzzzzzzc"
+       id="path8344-0-9"
+       d="m 275.90564,252.6964 c -0.94987,-1.14085 -3.13454,-9.50692 -1.70977,-10.83793 1.42481,-1.33097 1.51976,-1.14081 2.8496,-0.76055 1.32981,0.38021 2.08093,1.55808 3.13453,1.42605 1.05366,-0.13204 2.41629,-1.16086 2.84962,-2.28171 0.43327,-1.12074 0.0682,-3.42297 -0.67212,-4.29785 -0.74037,-0.87483 -2.11446,-1.09451 -3.12732,-1.026 -1.01287,0.0686 -2.27527,1.57509 -3.13458,1.52111 -0.85929,-0.0538 -1.52404,-0.66039 -1.89973,-1.23592 -0.37566,-0.57549 -0.3694,-1.2428 -0.37985,-2.28164 -0.0134,-1.03885 0.4137,-3.35077 0.66491,-4.56333 0.25102,-1.21253 0.0172,-2.9813 0.94984,-3.51758 l 27.64126,6e-5 c 1.21084,1.16497 -1.17638,4.29675 -1.32976,5.60909 -0.15353,1.31231 -0.0554,2.29953 0,3.04223 0.0554,0.74269 -0.0474,1.3908 0.285,1.90138 0.33226,0.51061 1.13039,1.16805 1.8047,1.1408 0.6743,-0.0289 1.29538,-1.08288 1.89976,-1.42601 0.60433,-0.34325 1.39595,-0.89433 2.08965,-0.85563 0.69376,0.0375 1.58538,0.59046 2.08974,1.14084 0.50434,0.55038 0.99356,1.54143 1.04486,2.37675 0.0514,0.83524 -0.40659,2.16455 -0.85489,2.85205 -0.44843,0.68749 -1.1868,1.46335 -1.89976,1.6162 -0.7129,0.15291 -1.63088,-0.36278 -2.27964,-0.66553 -0.64879,-0.30245 -1.43385,-1.28701 -1.99472,-1.33095 -0.56086,-0.0439 -0.91533,0.27684 -1.23481,0.57042 -0.31962,0.29349 -0.59821,0.76692 -0.75994,1.33095 -0.16176,0.5641 -0.17153,1.32619 -0.0949,2.3768 0.0765,1.05057 0.58698,3.43809 0.85488,4.5633 0.26804,1.12519 2.02055,2.31767 1.35507,3.55229"
+       style="fill:url(#linearGradient4290);fill-opacity:1;fill-rule:evenodd;stroke:none"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-3-4"
+       width="7.3879037"
+       height="2.6520679"
+       x="329.75623"
+       y="250.11163" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-7-2-7"
+       width="7.3879037"
+       height="2.6520679"
+       x="344.12158"
+       y="250.11163" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-5-2-8"
+       width="7.3879037"
+       height="2.6520679"
+       x="358.48697"
+       y="250.11163" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-70-0-0"
+       width="7.3879037"
+       height="2.6520679"
+       x="372.85233"
+       y="250.11163" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-3-47"
+       width="7.3879037"
+       height="2.6520679"
+       x="328.43021"
+       y="212.03552" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-7-2-4"
+       width="7.3879037"
+       height="2.6520679"
+       x="342.79556"
+       y="212.03552" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-5-2-9"
+       width="7.3879037"
+       height="2.6520679"
+       x="357.16095"
+       y="212.03552" />
+    <rect
+       style="fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3319-70-0-2"
+       width="7.3879037"
+       height="2.6520679"
+       x="371.52631"
+       y="212.03552" />
+    <text
+       xml:space="preserve"
+       style="font-size:19.00371933px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Rod;-inkscape-font-specification:Rod"
+       x="319.61612"
+       y="233.26561"
+       id="text4230-0"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0194686,0.98090319)"><tspan
+         sodipodi:role="line"
+         id="tspan4232-8"
+         x="319.61612"
+         y="233.26561">Thing</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:24.92768669px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Nyala;-inkscape-font-specification:Nyala"
+       x="347.24237"
+       y="246.67474"
+       id="text4234-5"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0014831,0.99851909)"><tspan
+         sodipodi:role="line"
+         id="tspan4236-3"
+         x="347.24237"
+         y="246.67474">ML</tspan></text>
+  </g>
+</svg>

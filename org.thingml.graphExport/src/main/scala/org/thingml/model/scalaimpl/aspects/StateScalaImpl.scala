@@ -58,7 +58,7 @@ case class StateScalaImpl (self : State) {
     val handlers = allMessageHandlers
     val result = if (!handlers.containsKey(p)) false
     else handlers.get(p).containsKey(m)
-    println("     ** State " + self.getName + " canHandle(" + p.getName + ", " + m.getName + ") = " + result)
+    //println("     ** State " + self.getName + " canHandle(" + p.getName + ", " + m.getName + ") = " + result)
     result
   }
 
