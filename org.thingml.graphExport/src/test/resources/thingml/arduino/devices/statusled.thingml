@@ -12,8 +12,8 @@ thing fragment StatusLEDMsgs {
 thing StatusLED includes LEDMsgs, TimerMsgs, StatusLEDMsgs
 {
     
-    readonly property slow_delay : Int16 = 500
-    readonly property fast_delay : Int16 = 75
+    readonly property slow_delay : Int16 = 1000
+    readonly property fast_delay : Int16 = 150
     
 	required port led 
     {
@@ -42,8 +42,10 @@ thing StatusLED includes LEDMsgs, TimerMsgs, StatusLEDMsgs
         	transition -> Status_OFF event statusLed?statusOFF
         	transition -> Status_Code event m: statusLed?statusBlinkCode
         		action code = m.code
-        	transition -> Status_Blink_Fast event statusLed?statusBlinkFast
-            transition -> Status_Blink_Slow event statusLed?statusBlinkSlow
+        	transition -> Status_Blink event statusLed?statusBlinkSlow
+            	action delay = slow_delay
+            transition -> Status_Blink event statusLed?statusBlinkFast
+            	action delay = fast_delay
             // end of the transition block which should be written only once
             
         }
@@ -56,16 +58,15 @@ thing StatusLED includes LEDMsgs, TimerMsgs, StatusLEDMsgs
         	transition -> Status_OFF event statusLed?statusOFF
         	transition -> Status_Code event m: statusLed?statusBlinkCode
         		action code = m.code
-        	transition -> Status_Blink_Fast event statusLed?statusBlinkFast
-            transition -> Status_Blink_Slow event statusLed?statusBlinkSlow
+        	transition -> Status_Blink event statusLed?statusBlinkSlow
+            	action delay = slow_delay
+            transition -> Status_Blink event statusLed?statusBlinkFast
+            	action delay = fast_delay
             // end of the transition block which should be written only once
         }
         
-        state Status_Blink_Fast {
-        	on entry do
-        		delay = fast_delay
-        		timer!timer_start(delay)
-        	end
+        state Status_Blink {
+        	on entry timer!timer_start(delay)
         	on exit timer!timer_cancel()
         	
         	// This block is in all states, we should be able to write it only once
@@ -73,31 +74,10 @@ thing StatusLED includes LEDMsgs, TimerMsgs, StatusLEDMsgs
         	transition -> Status_OFF event statusLed?statusOFF
         	transition -> Status_Code event m: statusLed?statusBlinkCode
         		action code = m.code
-        	transition -> Status_Blink_Fast event statusLed?statusBlinkFast
-            transition -> Status_Blink_Slow event statusLed?statusBlinkSlow
-            // end of the transition block which should be written only once
-        	
-        	internal event timer?timer_timeout
-        	action do 
-        		led!led_toggle()
-        		timer!timer_start(delay)
-        	end
-        }
-        
-        state Status_Blink_Slow {
-        	on entry do
-        		delay = slow_delay
-        		timer!timer_start(delay)
-        	end
-        	on exit timer!timer_cancel()
-        	
-        	// This block is in all states, we should be able to write it only once
-        	transition -> Status_ON event statusLed?statusON
-        	transition -> Status_OFF event statusLed?statusOFF
-        	transition -> Status_Code event m: statusLed?statusBlinkCode
-        		action code = m.code
-        	transition -> Status_Blink_Fast event statusLed?statusBlinkFast
-            transition -> Status_Blink_Slow event statusLed?statusBlinkSlow
+        	transition -> Status_Blink event statusLed?statusBlinkSlow
+            	action delay = slow_delay
+            transition -> Status_Blink event statusLed?statusBlinkFast
+            	action delay = fast_delay
             // end of the transition block which should be written only once
         	
         	internal event timer?timer_timeout
@@ -134,8 +114,10 @@ thing StatusLED includes LEDMsgs, TimerMsgs, StatusLEDMsgs
         	transition -> Status_OFF event statusLed?statusOFF
         	transition -> Status_Code event m: statusLed?statusBlinkCode
         		action code = m.code
-        	transition -> Status_Blink_Fast event statusLed?statusBlinkFast
-            transition -> Status_Blink_Slow event statusLed?statusBlinkSlow
+        	transition -> Status_Blink event statusLed?statusBlinkSlow
+            	action delay = slow_delay
+            transition -> Status_Blink event statusLed?statusBlinkFast
+            	action delay = fast_delay
             // end of the transition block which should be written only once
         }
     
@@ -143,13 +125,11 @@ thing StatusLED includes LEDMsgs, TimerMsgs, StatusLEDMsgs
 }
 
 configuration fragment StatusLedFragment {
-
-	instance led : LED set pin = DigitalPin:PIN_13
+	instance led : LED
+		set pin = DigitalPin:PIN_13
 	
 	instance timer : SoftTimer
-	connector statusLed.timer => timer.SoftTimer
-	
 	instance statusLed : StatusLED
+	connector statusLed.timer => timer.SoftTimer
 	connector statusLed.led => led.LED
-	
 }

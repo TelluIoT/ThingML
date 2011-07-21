@@ -30,7 +30,8 @@ thing BlinkButtonStatus includes StatusLEDMsgs, ButtonMsgs
 configuration BlinkButtonStatus includes StatusLedFragment {       
 
 	instance arduino : Arduino
-	instance button : Button set pin = DigitalPin:PIN_4
+	instance button : Button
+		set pin = DigitalPin:PIN_4
 		
 	connector button.DigitalIO => arduino.DigitalIO
 	connector led.DigitalIO => arduino.DigitalIO
