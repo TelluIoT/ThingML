@@ -12,7 +12,7 @@ thing fragment StatusLEDMsgs {
 thing StatusLED includes LEDMsgs, TimerMsgs, StatusLEDMsgs
 {
     
-    readonly property slow_delay : Int16 = 1000
+    readonly property slow_delay : Int16 = 750
     readonly property fast_delay : Int16 = 150
     
 	required port led 
