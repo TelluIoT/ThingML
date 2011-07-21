@@ -81,6 +81,8 @@ TOKENSTYLES{
 	"event" COLOR #A22000, BOLD;	
 	"guard" COLOR #A22000, BOLD;
 	"action" COLOR #A22000, BOLD;
+	"before" COLOR #A22000, BOLD;
+	"after" COLOR #A22000, BOLD;
 	"on" COLOR #A22000, BOLD;
 	"entry" COLOR #A22000, BOLD;
 	"exit" COLOR #A22000, BOLD;
@@ -164,7 +166,7 @@ RULES {
 	
 	ParallelRegion ::= "region" #1 name[] #1 "init" #1 initial[] ("keeps" #1 history[T_HISTORY])? (annotations)* #1 "{"(!1 substate)* !0 "}"  ;
 	
-	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
+	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? (!1 "before" #1 before)? (!1 "after" #1 after)? ;
 
 	InternalTransition ::= !1 "internal" (#1 name[])? (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
 
