@@ -39,7 +39,7 @@ thing SoftTimer includes TimerMsgs, ArduinoMsgs
             transition timeout -> Idle 
                 event Polling?loop
                 guard not ('millis()' < target)
-                action SoftTimer!timer_timeout()
+                after SoftTimer!timer_timeout()
                 
             transition cancel -> Idle
                 event m : SoftTimer?timer_cancel

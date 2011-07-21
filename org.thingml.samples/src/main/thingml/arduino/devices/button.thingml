@@ -46,20 +46,16 @@ thing Button includes ButtonMsgs, ArduinoMsgs
             transition pressed -> Pressed
             event m: DigitalIO?digitalReadResult
             guard m.value == DigitalState:HIGH
-            action do 
-            	debounce = 20
-            	Button!press()
-            end
+            action debounce = 20
+            after Button!press()
         }
         
         state Pressed {
             transition pressed -> Released
             event m: DigitalIO?digitalReadResult
             guard m.value == DigitalState:LOW
-            action do
-            	debounce = 20
-            	Button!release()
-            end
+            action debounce = 20
+            after Button!release()
         }
     }
 }

@@ -38,11 +38,11 @@ thing SoftButton includes ButtonMsgs, SoftButtonMsgs, TimerMsgs
 			
 			transition long -> Idle
 			event timer?timer_timeout
-			action softButton!longpress()
+			after softButton!longpress()
 			
 			transition click -> Released
 			event button?release
-			action timer!timer_cancel()
+			after timer!timer_cancel()
         }
         
         state Released {
@@ -50,11 +50,11 @@ thing SoftButton includes ButtonMsgs, SoftButtonMsgs, TimerMsgs
         	
         	transition long -> Idle
 			event timer?timer_timeout
-			action softButton!click()
+			after softButton!click()
 			
 			transition pressed -> Idle
             event m: button?press
-            action do 
+            after do 
             	timer!timer_cancel()
             	softButton!doubleclick()
             end

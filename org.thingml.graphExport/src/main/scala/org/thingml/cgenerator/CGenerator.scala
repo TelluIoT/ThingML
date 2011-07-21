@@ -614,15 +614,22 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
                   it.getAction.generateC(builder)
                 }
                 case et: Transition => {
+
+                  et.getBefore.generateC(builder)
+
                   // Execute the exit actions for current states (starting at the deepest)
                   builder append composedBehaviour.qname("_") + "_OnExit(" + state_id(et.getSource) + ", " + instance_var_name + ");\n"
                   // Set the new current state
                   builder append instance_var_name + "->" + state_var_name(cs) + " = " + state_id(et.getTarget) + ";\n"
-                  // Enter the target state and initialize its children
-                  builder append composedBehaviour.qname("_") + "_OnEntry(" + state_id(et.getTarget) + ", " + instance_var_name + ");\n"
-                  // TODO: There is a semantic problem here
+
                   // Do the action
                   et.getAction.generateC(builder)
+
+                  // Enter the target state and initialize its children
+                  builder append composedBehaviour.qname("_") + "_OnEntry(" + state_id(et.getTarget) + ", " + instance_var_name + ");\n"
+
+                  et.getAfter.generateC(builder)
+
                 }
               }
               if (h.getGuard != null) {

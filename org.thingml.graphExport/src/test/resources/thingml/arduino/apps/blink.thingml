@@ -19,7 +19,7 @@ thing Blink includes LEDMsgs, TimerMsgs
             
             transition -> Blinking
                 event HW?timer_timeout
-                action do 
+                after do 
                 	HW!led_toggle() 
                 	'Serial.println("Blink!");'
                	end
