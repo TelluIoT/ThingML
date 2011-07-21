@@ -178,7 +178,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     self.allThings.foreach{t => t.allPorts.foreach{ port => port.getSends.foreach{ msg =>
 
       // check if there is an connector for this message
-      if (self.getConnectors.exists{ c =>
+      if (self.allConnectors.exists{ c =>
         (c.getRequired == port && c.getProvided.getReceives.contains(msg)) ||
           (c.getProvided == port && c.getRequired.getReceives.contains(msg)) }) {
         builder append t.sender_name(port, msg) + "_listener = "
@@ -278,12 +278,14 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
   def c_var_decl() = "struct " + self.getType.instance_struct_name() + " " + self.getName + "_var;"
 
   override def generateC(builder: StringBuilder) {
+
     // Initialize variables and state machines
-    self.getAssign.foreach{ assign =>
-      builder append c_var_name + "." + assign.getProperty.c_var_name + " = "
-      assign.getInit.generateC(builder)
+    self.initExpressions.foreach{ init =>
+      builder append c_var_name + "." + init._1.c_var_name + " = "
+      init._2.generateC(builder)
       builder append ";\n";
     }
+
     builder append self.getType.composedBehaviour.qname("_") + "_OnEntry(" + self.getType.state_id(self.getType.composedBehaviour) + ", &" + c_var_name + ");\n"
   }
 }

@@ -51,6 +51,27 @@ case class ConfigurationScalaImpl (self : Configuration) {
     result
   }
 
+  def initExpressionsForInstance(i : Instance) : ArrayList[((Property, Expression))] = {
+    var result = new ArrayList[((Property, Expression))]()
+
+    i.getType.allProperties.foreach{ p =>
+
+      // get the init from the instance if there is an assignment
+      var assigns = i.getAssign.filter{a => a.getProperty == p}
+
+      if (assigns.size > 1) println("Error: Instance " + i.getName + " contains several assignments for property " + p.getName)
+
+      if (assigns.size > 0) {
+        result.add( ((p, assigns.head.getInit)) )
+      }
+      else {
+        // Get the init value from the type
+        result.add( ((p, i.getType.initExpression(p))) )
+      }
+    }
+    result
+  }
+
   // Returns the set of destination for messages sent through the port p
   // For each outgoing message the results gives the list of destinations
   // sorted by source instance as a list of target instances+port

@@ -67,4 +67,27 @@ case class ThingScalaImpl (self : Thing) {
     return ThingMLHelpers.allMessages(self)
   }
 
+  def initExpression(p : Property) : Expression = {
+
+    var assigns = self.getAssign.filter{ a => a.getProperty == p }
+
+    // If the expression is defined locally return the init expression
+    if (self.getProperties.contains(p)) {
+      if (assigns.size > 0) println("Error: Thing " + self.getName + " cannot redefine initial value for property " + p.getName)
+      return p.getInit
+    }
+
+    if (assigns.size > 1) println("Error: Thing " + self.getName + " contains several assignments for property " + p.getName)
+
+    if (assigns.size == 1) {
+      return assigns.head.getInit
+    }
+
+    var imports = self.getIncludes.filter{t => t.allProperties.contains(p)}
+    //  imports cannot be empty since the property must be defined in a imported thing
+    if (assigns.size > 1) println("Warning: Thing " + self.getName + " gets property " + p.getName + " from several paths, it should define its initial value")
+
+    return imports.head.initExpression(p)
+  }
+
 }
