@@ -281,9 +281,11 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
 
     // Initialize variables and state machines
     self.initExpressions.foreach{ init =>
-      builder append c_var_name + "." + init._1.c_var_name + " = "
-      init._2.generateC(builder)
-      builder append ";\n";
+      if (init._2 != null ) {
+        builder append c_var_name + "." + init._1.c_var_name + " = "
+        init._2.generateC(builder)
+        builder append ";\n";
+      }
     }
 
     builder append self.getType.composedBehaviour.qname("_") + "_OnEntry(" + self.getType.state_id(self.getType.composedBehaviour) + ", &" + c_var_name + ");\n"
@@ -586,14 +588,14 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
           // If the state machine itself has a handler
           if (cs.canHandle(port, msg)) {
             // it can only be an internal handler so the last param can be null (in theory)
-            generateMessageHandlers(cs, port, msg, builder, null)
+            generateMessageHandlers(cs, port, msg, builder, null, cs)
           }
           builder append "}\n"
       }
     }
   }
 
-  def generateMessageHandlers(s: State, port: Port, msg: Message, builder: StringBuilder, cs: CompositeState) {
+  def generateMessageHandlers(s: State, port: Port, msg: Message, builder: StringBuilder, cs: CompositeState, r: Region) {
     s.getOutgoing.union(s.getInternal).foreach {
       h =>
         h.getEvent.filter {
@@ -620,7 +622,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
                   // Execute the exit actions for current states (starting at the deepest)
                   builder append composedBehaviour.qname("_") + "_OnExit(" + state_id(et.getSource) + ", " + instance_var_name + ");\n"
                   // Set the new current state
-                  builder append instance_var_name + "->" + state_var_name(cs) + " = " + state_id(et.getTarget) + ";\n"
+                  builder append instance_var_name + "->" + state_var_name(r) + " = " + state_id(et.getTarget) + ";\n"
 
                   // Do the action
                   et.getAction.generateC(builder)
@@ -656,14 +658,14 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
           s =>
             //println("    processing state " + s)
             if (states.head != s) builder append "else "
-            builder append "if (" + instance_var_name() + "->" + state_var_name(cs) + " == " + state_id(s) + ") {\n" // s is the current state
+            builder append "if (" + instance_var_name() + "->" + state_var_name(r) + " == " + state_id(s) + ") {\n" // s is the current state
             // dispatch to sub-regions if it is a composite
             s match {
               case comp: CompositeState => dispatchToSubRegions(builder, comp, port, msg)
               case _ => { /* do nothing */ }
             }
             // handle message locally
-            generateMessageHandlers(s, port, msg, builder, cs)
+            generateMessageHandlers(s, port, msg, builder, cs, r)
 
             builder append "}\n"
         }

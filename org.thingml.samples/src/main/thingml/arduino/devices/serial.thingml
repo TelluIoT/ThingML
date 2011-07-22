@@ -2,27 +2,22 @@ import "../core/typedefs.thingml"
 import "../core/arduino.thingml"
 
 thing fragment SerialMsgs {
-	message writeByte(b : Byte);
-	message writeMessage(msg : String);
+	message printByte(b : Byte);
+	message printMessage(msg : String);
+	message printValue(v : Int16);
 	message receiveByte(b : Byte);
-	message receiveMessage(b : Byte);
 }
 
 thing Serial includes SerialMsgs, ArduinoMsgs
 {
-    property delimiter : Byte = "\n"
-    property buffer_size : Int8 = 32
-    property buffer : String = ""
-    property index : Int8 = 0
 
-
-	provided port Serial 
+	provided port serial 
     {
-		sends receiveByte, receiveMessage
-        receives writeByte, writeMessage
+		sends receiveByte
+        receives printByte, printMessage, printValue
 	}
 
-    required port Scheduler 
+    required port polling 
     {
         receives loop
     }
@@ -30,14 +25,20 @@ thing Serial includes SerialMsgs, ArduinoMsgs
     statechart SerialImpl init Receiving {
             
         state Receiving {
-            on entry index = 0
+            on entry 'Serial.begin(9600);'
             
-            internal event Scheduler?loop
-            action do
-                if ('Serial.available()' > 0) do
-                 // TODO: read data from serial port
-                end 
-            end
+            internal event polling?loop
+            guard 'Serial.available()' > 0
+            action serial!receiveByte('(char)Serial.read()')
+            
+            internal event m : serial?printByte
+            action 'Serial.print(' & m.b & ');'
+            
+            internal event m : serial?printMessage
+            action 'Serial.print(' & m.msg & ');'
+            
+            internal event m : serial?printValue
+            action 'Serial.print(' & m.v & ', DEC);'
             
         }
         
