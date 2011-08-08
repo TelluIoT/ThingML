@@ -29,12 +29,10 @@
 package org.sintef.thingml
 
 import java.awt.{Color, BorderLayout}
-import javax.swing.{JToolBar, JScrollPane, JEditorPane, JPanel}
 import actors.DaemonActor
 import javax.swing.event.{DocumentEvent, DocumentListener}
 import jsyntaxpane.components.Markers
 import org.eclipse.emf.ecore.EPackage
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
@@ -43,7 +41,13 @@ import resource.thingml.mopp._
 import scala.collection.JavaConversions._
 import javax.swing.text.{Utilities, JTextComponent}
 import org.eclipse.emf.ecore.util.EcoreUtil
-import java.io.{FileWriter, File, ByteArrayInputStream}
+import javax.swing._
+import java.awt.event.{ActionEvent, ActionListener}
+import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
+import org.thingml.cgenerator.CGenerator
+import java.io._
+import java.util.Hashtable
+import javax.management.remote.rmi._RMIConnection_Stub
 
 /**
  * User: ffouquet
@@ -72,6 +76,49 @@ class ThingMLPanel extends JPanel {
 
   add(scrPane, BorderLayout.CENTER)
   add(toolPane, BorderLayout.NORTH)
+
+  // Add the C Compiler toolbar
+  var arduinoToolBar = new JToolBar
+  var b = new JButton("Compile to Arduino")
+  val cfilechooser = new JFileChooser();
+  cfilechooser.setDialogTitle("Select target directory");
+  cfilechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+  b.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty) return;
+      var returnVal = cfilechooser.showOpenDialog(ThingMLPanel.this);
+      if (returnVal == 0) {
+        println("cfilechooser.getSelectedFile = " + cfilechooser.getSelectedFile);
+
+        try {
+          val folder = cfilechooser.getSelectedFile.toString
+
+          // Load the model
+          var rs: ResourceSet = new ResourceSetImpl
+          var xmiuri: URI = URI.createFileURI(targetFile.get.getAbsolutePath)
+          var model: Resource = rs.createResource(xmiuri)
+          model.load(null)
+
+          var ccode: Hashtable[Configuration, String] = CGenerator.compileAll(model.getContents.get(0).asInstanceOf[ThingMLModel])
+
+
+          for (t <- CGenerator.compileAll(model.getContents.get(0).asInstanceOf[ThingMLModel]).keySet) {
+            System.out.println(" -> Writing file " + t.getName + ".pde")
+            var w: PrintWriter = new PrintWriter(new FileWriter(folder + "/" + new File(t.getName + ".pde")))
+            w.println(ccode.get(t))
+            w.close
+          }
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+
+      }
+    }
+  })
+  arduinoToolBar.add("Compilers", b)
+  add(arduinoToolBar, BorderLayout.SOUTH)
 
 
   def getIndex(line: Int, column: Int): Int = {
