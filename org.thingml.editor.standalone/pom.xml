@@ -39,7 +39,7 @@
 
          <dependency>
             <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.graphexport</artifactId>
+            <artifactId>org.thingml.graphExport</artifactId>
             <version>${project.version}</version>
         </dependency>
 
