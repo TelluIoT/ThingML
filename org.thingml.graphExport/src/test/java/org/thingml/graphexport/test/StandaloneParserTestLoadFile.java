@@ -52,6 +52,7 @@ import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.cgenerator.*;
+import org.thingml.scalagenerator.*;
 
 import org.thingml.graphexport.*;
 
@@ -114,6 +115,14 @@ public class StandaloneParserTestLoadFile extends TestCase {
                     System.out.println(" -> Writing file " + t.getName() + ".c");
                     PrintWriter w = new PrintWriter(new FileWriter("test_out/" +new File(t.getName() + ".c")));
                     w.println(ccode.get(t));
+                    w.close();
+                }
+                
+                Hashtable<Configuration, String> scalacode =  ScalaGenerator.compileAll( (ThingMLModel)model.getContents().get(0));
+                for (Configuration t : ScalaGenerator.compileAll( (ThingMLModel)model.getContents().get(0)).keySet()) {
+                    System.out.println(" -> Writing file " + t.getName() + ".scala");
+                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" +new File(t.getName() + ".scala")));
+                    w.println(scalacode.get(t));
                     w.close();
                 }
             }
