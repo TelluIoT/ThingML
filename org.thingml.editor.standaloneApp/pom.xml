@@ -117,6 +117,10 @@
                                 <groupId>org.thingml</groupId>
                                 <artifactId>org.thingml.model</artifactId>
                             </inclusion>
+							<inclusion>
+                                <groupId>org.thingml</groupId>
+                                <artifactId>org.thingml.graphExport</artifactId>
+                            </inclusion>
                             <inclusion>
                                 <groupId>org.kevoree.extra</groupId>
                                 <artifactId>org.kevoree.extra.emf.library</artifactId>
