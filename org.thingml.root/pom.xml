@@ -124,7 +124,7 @@
         <module>../org.emftext.commons.antlr3_3_0</module>
         <module>../org.thingml.model</module>
         <module>../org.thingml.parser</module>
-		<module>../org.thingml.graphExport</module>
+        <module>../org.thingml.compilers</module>
         <module>../org.thingml.editor.standalone</module>
         <module>../org.thingml.editor.eclipse</module>
 		<!-- The standolone app can only be built on the server which has the keystore to sign the jar
