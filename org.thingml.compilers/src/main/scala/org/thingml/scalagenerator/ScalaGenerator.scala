@@ -266,12 +266,24 @@ case class StateMachineScalaGenerator(override val self: StateMachine) extends T
 case class StateScalaGenerator(override val self: State) extends ThingMLScalaGenerator(self) {
   override def generateScala(builder: StringBuilder) {
     builder append "case class " + self.getName + "State(master : Orchestrator) extends State(master) {\n"
-    builder append "override def onEntry() = {\n"
-    self.getEntry.generateScala(builder)
-    builder append "}\n\n"
-    builder append "override def onExit() = {\n"
-    self.getExit.generateScala(builder)
-    builder append "}\n\n"
+    
+    Option(self.getEntry) match {
+      case Some(a) =>  
+        builder append "override def onEntry() = {\n"
+        self.getEntry.generateScala(builder)
+        builder append "}\n\n"
+      case None =>
+        println("INFO: no onEntry action for state "+self)
+    }
+    Option(self.getExit) match {
+      case Some(a) =>  
+        builder append "override def onExit() = {\n"
+        self.getExit.generateScala(builder)
+        builder append "}\n\n"
+      case None =>
+        println("INFO: no onExit action for state "+self)
+    }    
+
     builder append "}\n\n"
   }
 }
@@ -288,12 +300,22 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
      builder append "}\n"
      }*/
     
-    builder append "override def onEntry() = {\n"
-    self.getEntry.generateScala(builder)
-    builder append "}\n\n"
-    builder append "override def onExit() = {\n"
-    self.getExit.generateScala(builder)
-    builder append "}\n\n"
+    Option(self.getEntry) match {
+      case Some(a) =>  
+        builder append "override def onEntry() = {\n"
+        self.getEntry.generateScala(builder)
+        builder append "}\n\n"
+      case None =>
+        println("INFO: no onEntry action for state "+self)
+    }
+    Option(self.getExit) match {
+      case Some(a) =>  
+        builder append "override def onExit() = {\n"
+        self.getExit.generateScala(builder)
+        builder append "}\n\n"
+      case None =>
+        println("INFO: no onExit action for state "+self)
+    }
     
     builder append "//create sub-states\n"
     self.getSubstate.foreach{ sub =>  
