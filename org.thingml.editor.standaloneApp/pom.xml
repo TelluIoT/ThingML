@@ -119,7 +119,7 @@
                             </inclusion>
 							<inclusion>
                                 <groupId>org.thingml</groupId>
-                                <artifactId>org.thingml.graphExport</artifactId>
+                                <artifactId>org.thingml.compilers</artifactId>
                             </inclusion>
                             <inclusion>
                                 <groupId>org.kevoree.extra</groupId>
