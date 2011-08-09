@@ -1,0 +1,38 @@
+import "../core/testharness.thingml"
+import "arduinoharness.thingml"
+
+thing TestPropertyArduino includes Test 
+@test "t # 0"
+@test "tt # 01"
+@test "tdfgt # 01"
+@test "tttazett # 01245"
+@test "tttttttttttt # 01245678901"
+{
+	statechart TestPropertyArduino init I {
+	
+	property counter : Int16 = 0 
+	
+		state I {
+			transition -> J
+			event m : harness?testIn
+			guard m.c == '\'t\''
+		}
+		
+		state J {
+			on entry harness!testOut(counter + 48)
+			on exit do
+				counter = counter + 1
+				if (counter > 9) counter = 0
+				end
+				
+			transition -> J
+			event m : harness?testIn
+			guard m.c == '\'t\''
+		}
+	}
+}
+
+configuration TestPropertyArduino includes ArduinoHarness {
+	instance test : TestPropertyArduino
+	connector test.harness => harness.test 
+}
