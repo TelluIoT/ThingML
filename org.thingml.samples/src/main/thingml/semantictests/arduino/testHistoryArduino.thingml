@@ -1,0 +1,7 @@
+import "../core/testHistory.thingml"
+import "arduinoharness.thingml"
+
+configuration TestHistoryArduino includes ArduinoHarness {
+	instance test : TestHistory 
+	connector test.harness => harness.test 
+}
