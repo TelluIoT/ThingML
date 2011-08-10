@@ -1,4 +1,4 @@
-import "../testharness.thingml"
+import "testharness.thingml"
 
 thing TestHistory includes Test 
 @test "t # C0"
