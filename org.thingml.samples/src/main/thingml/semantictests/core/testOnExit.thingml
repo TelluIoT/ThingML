@@ -1,4 +1,4 @@
-import "testharness.thingml"
+import "../testharness.thingml"
 
 thing TestOnExit includes Test 
 @test "t # X"

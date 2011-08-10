@@ -1,4 +1,4 @@
-import "testharness.thingml"
+import "../testharness.thingml"
 
 thing TestRegion includes Test 
 @test "t # I^AF^B"

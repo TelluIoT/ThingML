@@ -1,0 +1,14 @@
+import "../extended/testPing.thingml"
+import "arduinoharness.thingml"
+
+configuration TestPing includes ArduinoHarness, TestPingFrag {
+	connector test.harness => harness.test 
+}
+
+
+configuration TestPing2 includes ArduinoHarness {
+    instance pingable : Pingable
+    instance test : TestPing
+    connector test.ppclient => pingable.pp	
+    connector test.harness => harness.test 
+}

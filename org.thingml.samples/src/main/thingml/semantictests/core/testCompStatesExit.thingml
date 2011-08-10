@@ -1,4 +1,4 @@
-import "testharness.thingml"
+import "../testharness.thingml"
 
 thing TestCompStatesExit includes Test 
 @test "t # I"

@@ -1,4 +1,4 @@
-import "testharness.thingml"
+import "../testharness.thingml"
 
 thing TestBefore includes Test 
 @test "t # BX"

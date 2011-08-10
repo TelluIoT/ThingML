@@ -1,4 +1,4 @@
-import "testharness.thingml"
+import "../testharness.thingml"
 
 thing TestHistoryStates includes Test 
 @test "yzyznyniyziyzniyz # I1313412I24I243I23"

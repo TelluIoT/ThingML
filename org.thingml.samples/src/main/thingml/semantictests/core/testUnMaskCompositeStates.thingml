@@ -1,4 +1,4 @@
-import "testharness.thingml"
+import "../testharness.thingml"
 
 thing TestUnMaskCompositeStates includes Test 
 @test "n # 0"
