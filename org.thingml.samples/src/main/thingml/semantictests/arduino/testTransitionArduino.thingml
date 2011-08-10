@@ -2,6 +2,6 @@ import "../core/testTransition.thingml"
 import "arduinoharness.thingml"
 
 configuration TestTransitionArduino includes ArduinoHarness {
-	instance test : TestTransition
+	instance test : TestTransition 
 	connector test.harness => harness.test 
 }
