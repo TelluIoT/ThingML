@@ -20,6 +20,7 @@ thing Pingable includes PingMsg {
 }
 
 thing TestPing includes Test, PingMsg
+@test "ppp # epxrepxrepxr"
 {
     required port ppclient {
         sends ping
@@ -45,7 +46,7 @@ thing TestPing includes Test, PingMsg
 
 			transition -> Ping
 			event m : ppclient?pong
-			after harness!testOut('\'p\'')
+			after harness!testOut('\'r\'')
 		}
 	}
 }

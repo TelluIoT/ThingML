@@ -1,4 +1,4 @@
-import "../core/testharness.thingml"
+import "../testharness.thingml"
 import "../../arduino/core/arduino.thingml"
 import "../../arduino/devices/led.thingml"
 
