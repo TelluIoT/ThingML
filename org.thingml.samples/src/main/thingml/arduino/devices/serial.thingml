@@ -1,4 +1,3 @@
-import "../core/typedefs.thingml"
 import "../core/arduino.thingml"
 
 thing fragment SerialMsgs {
@@ -8,7 +7,7 @@ thing fragment SerialMsgs {
 	message receiveByte(b : Byte);
 }
 
-thing Serial includes SerialMsgs, ArduinoMsgs
+thing Serial includes SerialMsgs, ArduinoStdlibMsgs, ThingMLScheduler
 {
 
 	provided port serial 
@@ -19,7 +18,7 @@ thing Serial includes SerialMsgs, ArduinoMsgs
 
     required port polling 
     {
-        receives loop
+        receives poll
     }
 
     statechart SerialImpl init Receiving {
@@ -27,7 +26,7 @@ thing Serial includes SerialMsgs, ArduinoMsgs
         state Receiving {
             on entry 'Serial.begin(9600);'
             
-            internal event polling?loop
+            internal event polling?poll
             guard 'Serial.available()' > 0
             action serial!receiveByte('(char)Serial.read()')
             

@@ -155,7 +155,7 @@ RULES {
 	Enumeration::= "enumeration" #1 name[] (annotations)* !0 "{" (literals)* "}" ;
 	
 	EnumerationLiteral ::= !1 name[] (annotations)* ;
-	
+	 
 	PlatformAnnotation ::= !1 name[ANNOTATION] #1 value[STRING_LITERAL] ;
 	
 	StateMachine::= !1 "statechart" (#1 name[])? #1 "init" #1 initial[] ("keeps" #1 history[T_HISTORY])? (annotations)* #1 "{" ( !1 properties )* ( !1 "on" #1 "entry" #1 entry )? ( !1 "on" #1 "exit" #1 exit )?  ((!1 substate) | internal)* (!1 region)* !0 "}"  ;

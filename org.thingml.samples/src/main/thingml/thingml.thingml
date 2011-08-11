@@ -1,0 +1,95 @@
+/* ThingML Framework */
+
+/*****************************************************************************
+ * Definition of the default ThingML DataTypes
+ *****************************************************************************/
+datatype Byte	
+	@c_type "uint8_t"
+	@java_type "byte";
+
+datatype Boolean	
+	@c_type "uint8_t"
+	@java_type "boolean";
+
+datatype Integer	
+	@c_type "int"
+	@java_type "int";
+
+datatype Long	
+	@c_type "long"
+	@java_type "long";
+
+datatype Double	
+	@c_type "double"
+	@java_type "double";
+
+datatype Char	
+	@c_type "char"
+	@java_type "char";
+
+datatype String	
+	@c_type "char *"
+	@java_type "String";
+
+/*****************************************************************************
+ * Definition of the ThingML scheduler messages
+ *****************************************************************************/
+
+thing ThingMLScheduler {
+	// Event corresponding to the setup and poll operations.
+	// The compiler will automatically generate these events
+	// for all components which reveives them.
+	// (No need for connectors)
+	message setup();
+	message poll();
+}
+
+/*****************************************************************************
+ * Definition of the ThingML test framework
+ *****************************************************************************/
+ 
+thing fragment TestMsg {
+	message testOut(c : Char);
+	message testIn(c : Char);
+	message testFailure();
+}
+
+thing fragment TestHarness includes TestMsg {
+
+	provided port test {
+		sends testIn
+		receives testOut, testFailure
+	}
+	
+}
+
+thing fragment Test includes TestMsg {
+
+	required port harness {
+		receives testIn
+		sends testOut, testFailure
+	}
+	
+}
+
+/*****************************************************************************
+ * Definition of the built-in things and messages
+ *****************************************************************************/
+ 
+thing fragment TimerMsgs {
+	// Start the Timer
+	message timer_start(delay : Integer);
+	// Cancel the Timer
+	message timer_cancel();
+	// Notification that the timer has expired
+	message timer_timeout();
+}
+
+thing fragment Timer includes TimerMsgs
+{
+	provided port timer
+    {
+		sends timer_timeout
+		receives timer_start, timer_cancel
+	}
+}

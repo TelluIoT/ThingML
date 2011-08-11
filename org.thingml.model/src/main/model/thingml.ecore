@@ -56,10 +56,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Enumeration" eSuperTypes="#//Type">
     <eStructuralFeatures xsi:type="ecore:EReference" name="literals" upperBound="-1"
-        eType="#//EnumerationLiteral" containment="true"/>
+        eType="#//EnumerationLiteral" containment="true" eOpposite="#//EnumerationLiteral/enum"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PrimitiveType" eSuperTypes="#//Type"/>
-  <eClassifiers xsi:type="ecore:EClass" name="EnumerationLiteral" eSuperTypes="#//AnnotatedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EnumerationLiteral" eSuperTypes="#//AnnotatedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enum" lowerBound="1" eType="#//Enumeration"
+        eOpposite="#//Enumeration/literals"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AnnotatedElement" abstract="true" eSuperTypes="#//ThingMLElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
         eType="#//PlatformAnnotation" containment="true"/>

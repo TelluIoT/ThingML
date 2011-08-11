@@ -49,7 +49,9 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Enumeration/literals"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//PrimitiveType"/>
-    <genClasses ecoreClass="thingml.ecore#//EnumerationLiteral"/>
+    <genClasses ecoreClass="thingml.ecore#//EnumerationLiteral">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference thingml.ecore#//EnumerationLiteral/enum"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="thingml.ecore#//AnnotatedElement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//AnnotatedElement/annotations"/>
     </genClasses>

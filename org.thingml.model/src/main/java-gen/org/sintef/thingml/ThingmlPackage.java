@@ -685,13 +685,22 @@ public interface ThingmlPackage extends EPackage {
 	int ENUMERATION_LITERAL__ANNOTATIONS = ANNOTATED_ELEMENT__ANNOTATIONS;
 
 	/**
+	 * The feature id for the '<em><b>Enum</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUMERATION_LITERAL__ENUM = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Enumeration Literal</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ENUMERATION_LITERAL_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
+	int ENUMERATION_LITERAL_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.StateImpl <em>State</em>}' class.
@@ -3495,6 +3504,17 @@ public interface ThingmlPackage extends EPackage {
 	EClass getEnumerationLiteral();
 
 	/**
+	 * Returns the meta object for the container reference '{@link org.sintef.thingml.EnumerationLiteral#getEnum <em>Enum</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Enum</em>'.
+	 * @see org.sintef.thingml.EnumerationLiteral#getEnum()
+	 * @see #getEnumerationLiteral()
+	 * @generated
+	 */
+	EReference getEnumerationLiteral_Enum();
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.AnnotatedElement <em>Annotated Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5033,6 +5053,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ENUMERATION_LITERAL = eINSTANCE.getEnumerationLiteral();
+
+		/**
+		 * The meta object literal for the '<em><b>Enum</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ENUMERATION_LITERAL__ENUM = eINSTANCE.getEnumerationLiteral_Enum();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.AnnotatedElementImpl <em>Annotated Element</em>}' class.

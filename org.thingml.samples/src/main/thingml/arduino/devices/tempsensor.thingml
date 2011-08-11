@@ -16,7 +16,7 @@ thing fragment TempSensorMsgs {
 	message deactivate_alarms();
 }
 
-thing TempSensor includes TempSensorMsgs, ArduinoMsgs, TimerMsgs
+thing TempSensor includes TempSensorMsgs, ThingMLScheduler, ArduinoStdlibMsgs, TimerMsgs
 {	
 
 	readonly property pin : AnalogPin = AnalogPin:A_0
@@ -53,7 +53,7 @@ thing TempSensor includes TempSensorMsgs, ArduinoMsgs, TimerMsgs
 	}
 	
 	required port polling {
-		receives loop
+		receives poll
 	}
 	
 	 statechart TempSensorImpl init Idle {
@@ -134,11 +134,11 @@ thing TempSensor includes TempSensorMsgs, ArduinoMsgs, TimerMsgs
         		state NoAlarm {
         			
         			transition -> HighTempAlarm
-        			event polling?loop
+        			event polling?poll
         			guard temp > max_alarm
         			
         			transition -> LowTempAlarm
-        			event polling?loop
+        			event polling?poll
         			guard temp < min_alarm
         			
         		}
@@ -148,7 +148,7 @@ thing TempSensor includes TempSensorMsgs, ArduinoMsgs, TimerMsgs
         			on entry tempalarms!high_temp_alarm(temp)
         			
         			transition -> NoAlarm
-        			event polling?loop
+        			event polling?poll
         			guard temp < max_alarm
         		}
         		
@@ -156,7 +156,7 @@ thing TempSensor includes TempSensorMsgs, ArduinoMsgs, TimerMsgs
         			on entry tempalarms!low_temp_alarm(temp)
         			
         			transition -> NoAlarm
-        			event polling?loop
+        			event polling?poll
         			guard temp > min_alarm
         		}
         		
