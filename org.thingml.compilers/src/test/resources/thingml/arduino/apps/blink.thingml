@@ -36,5 +36,5 @@ configuration Blink {
 	// The blink application
 	instance app : Blink
 	connector app.HW => led.LED
-	connector app.HW => timer.SoftTimer
+	connector app.HW => timer.timer
 }

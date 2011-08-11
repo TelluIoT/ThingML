@@ -1,4 +1,12 @@
-import "typedefs.thingml"
+import "../../thingml.thingml"
+
+datatype Int8	
+	@c_type "uint8_t"
+	@java_type "short";
+
+datatype Int16	
+	@c_type "int"
+	@java_type "int";
 
 enumeration PinMode 
 	@java_type "byte"

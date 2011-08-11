@@ -1,0 +1,74 @@
+import "../testharness.thingml"
+
+thing PingMsg {
+    message ping(num : Int16);
+    message pong(num : Int16);        
+}
+
+thing PingServer includes PingMsg {
+    
+    provided port pp {
+         receives ping
+         sends pong
+    }
+    
+    statechart PingServer init Idle {
+    
+        state Idle {
+            internal event p : pp?ping
+            action pp!pong(p.num)    
+        }    
+    } 
+}
+
+thing TestMultiPing2 includes Test, PingMsg
+@test " # "
+{
+    required port ppclient1 {
+        sends ping
+        receives pong    
+    }
+    
+    required port ppclient2 {
+        sends ping
+        receives pong    
+    }
+    
+	statechart TestPing init Ping {
+	
+		state Ping {
+			transition -> Pong
+			event m : harness?testIn
+			guard m.c == '\'1\''
+			after do
+                	harness!testOut('\'1\'')
+                	ppclient1!ping(1)
+                end
+            transition -> Pong
+			event m : harness?testIn
+			guard m.c == '\'2\''
+			after do
+                	harness!testOut('\'2\'')
+                	ppclient2!ping(2)
+            	end
+		}
+
+		state Pong {
+    
+			transition -> Ping
+			event p : ppclient1?pong
+			after harness!testOut('\'1\'')
+			transition -> Ping
+			event t : ppclient2?pong
+			after harness!testOut('\'2\'')
+		}
+	}
+}
+
+configuration fragment TestMultiPing2Frag {
+    instance pingServ1 : PingServer
+    instance pingServ2 : PingServer
+    instance test : TestMultiPing2
+    connector test.ppclient1 => pingServ1.pp
+    connector test.ppclient2 => pingServ2.pp
+}

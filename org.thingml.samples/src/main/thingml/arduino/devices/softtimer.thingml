@@ -1,26 +1,11 @@
-import "../core/typedefs.thingml"
 import "../core/arduino.thingml"
 
-thing fragment TimerMsgs {
-	// Start the Timer
-	message timer_start(delay : Int16);
-	// Cancel the Timer
-	message timer_cancel();
-	// Notification that the timer has expired
-	message timer_timeout();
-}
-
 // Manage a set of software timers.
-thing SoftTimer includes TimerMsgs, ArduinoMsgs
+thing SoftTimer includes Timer, ThingMLScheduler
 {
-	provided port SoftTimer
-    {
-		sends timer_timeout
-		receives timer_start, timer_cancel
-	}
 	
 	required port Polling {
-		receives loop
+		receives poll
 	}
     
     statechart SoftTimer init Idle {
@@ -29,7 +14,7 @@ thing SoftTimer includes TimerMsgs, ArduinoMsgs
     
         state Idle {
             transition start -> Counting
-                event m : SoftTimer?timer_start
+                event m : timer?timer_start
                 guard m.delay > 0
                 action target = 'millis()' + m.delay
         }
@@ -37,15 +22,15 @@ thing SoftTimer includes TimerMsgs, ArduinoMsgs
         state Counting {
             
             transition timeout -> Idle 
-                event Polling?loop
+                event Polling?poll
                 guard not ('millis()' < target)
-                after SoftTimer!timer_timeout()
+                after timer!timer_timeout()
                 
             transition cancel -> Idle
-                event m : SoftTimer?timer_cancel
+                event m : timer?timer_cancel
                 
             internal reset
-                event m : SoftTimer?timer_start
+                event m : timer?timer_start
                 guard m.delay > 0
                 action target = 'millis()' + m.delay
 

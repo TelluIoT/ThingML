@@ -1,15 +1,6 @@
 import "arduino_stdlib.thingml"
 
-thing ArduinoMsgs includes ArduinoStdlibMsgs {
-
-	// Event corresponding to the setup and loop operations.
-	// The compiler will automatically generate these events
-	// for all components which reveives them
-	message setup();
-	message loop();
-}
-
-thing Arduino includes ArduinoStdlib, ArduinoMsgs
+thing Arduino includes ArduinoStdlib
 {	
 
 }

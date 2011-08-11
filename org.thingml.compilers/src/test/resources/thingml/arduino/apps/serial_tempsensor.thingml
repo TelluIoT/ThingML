@@ -58,7 +58,7 @@ configuration SerialTempSensor {
 	instance sensor_timer : SoftTimer
 	
 	instance tempsensor : TempSensor set pin = AnalogPin:A_0
-	connector tempsensor.timer => sensor_timer.SoftTimer
+	connector tempsensor.timer => sensor_timer.timer
 	connector tempsensor.adc => arduino.AnalogIO
 	
 	instance serial : Serial

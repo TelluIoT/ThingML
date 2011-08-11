@@ -235,16 +235,19 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
   def generateArduinoPDEMain(builder : StringBuilder) {
 
+    //#include <stdint.h>
+    //#include <stdio.h>
+
       var model = ThingMLHelpers.findContainingModel(self)
-      // Serach for the Arduino Thing
-      var things = model.allThings.filter{ t => t.getName == "Arduino" }
+      // Serach for the ThingMLSheduler Thing
+      var things = model.allThings.filter{ t => t.getName == "ThingMLScheduler" }
 
       //println("*******>   things.size : " + things.size)
 
       if (!things.isEmpty) {
         var arduino = things.head
         var setup_msg : Message = arduino.allMessages.filter{ m => m.getName == "setup" }.head
-        var loop_msg : Message = arduino.allMessages.filter{ m => m.getName == "loop" }.head
+        var poll_msg : Message = arduino.allMessages.filter{ m => m.getName == "poll" }.head
 
         // generate the setup operation
         builder append "void setup() {\n"
@@ -260,8 +263,8 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
           p.getReceives.foreach{ msg =>
           }
-          if (p.getReceives.contains(loop_msg)) {
-             builder append i.getType.handler_name(p, loop_msg) +  "(&" + i.c_var_name() + ");\n"
+          if (p.getReceives.contains(poll_msg)) {
+             builder append i.getType.handler_name(p, poll_msg) +  "(&" + i.c_var_name() + ");\n"
           }
         }}
         builder append "}\n"

@@ -1,0 +1,45 @@
+import "../testharness.thingml"
+
+thing LinuxHarness includes TestHarness, ThingMLScheduler {
+
+	required port polling {
+		receives poll
+	}
+    
+	statechart LinuxHarness init Testing {
+		
+		state Testing {
+		
+			property c : Char
+		
+			internal event polling?poll
+            action do
+            	c = '(char)getc()'
+            	if (c == '\'#\'') do // end of the test
+            		'printf("\n");'
+            		'exit(0);' 
+            	end
+            	// forward test input
+            	test!testIn(c)
+            end
+            
+            internal event m : test?testOut
+            action do 
+            	'printf(' & m.c & ');'
+            	'ffllush(stdout);'
+            end
+            
+            transition -> Failed 
+            event test?testFailure
+            action 'printf(" *FAILURE* ");'
+			
+		}
+		
+		state Failed {
+		}
+	}
+}
+
+configuration fragment LinuxHarness {
+	instance harness : LinuxHarness
+}

@@ -58,5 +58,5 @@ configuration Blink4Leds {
 	connector app.leds => led3.LED
 	connector app.leds => led4.LED
 
-	connector app.timer => timer.SoftTimer
+	connector app.timer => timer.timer
 }

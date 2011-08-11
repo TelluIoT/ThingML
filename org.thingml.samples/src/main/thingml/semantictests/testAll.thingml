@@ -1,0 +1,68 @@
+import "core/testAfter.thingml" 
+import "core/testBefore.thingml"	
+
+thing TestRunner includes TestMsg {
+
+    message oracle();
+    message pass();
+    message fail();
+    
+    provided port oracleprovider {
+        receives oracle
+        sends pass, fail
+    }
+    
+    required port orcaleclient {
+        receives oracle
+        sends pass, fail
+    }
+    
+    provided port harnessTestAfter {
+        sends testIn
+		receives testOut, testFailure
+    }
+    
+    provided port harnessTestBefore {
+        sends testIn
+		receives testOut, testFailure
+    }
+    
+    statechart RunAllTests init Init {
+        
+        state Init {}    
+    
+        composite state TestAfter init Run {
+            // "tdfgt # EAEA"
+            state Run {
+                on entry do
+                  harnessTestAfter!testIn('\'t\'')
+                  harnessTestAfter!testIn('\'d\'')
+                  harnessTestAfter!testIn('\'f\'')
+                  harnessTestAfter!testIn('\'g\'')
+                  harnessTestAfter!testIn('\'t\'') 
+                end
+            }
+         /*
+        region Oracle init Running {
+          
+            composite state Running init S1 {
+                
+                internal event harnessTestAfter?testOut // we got an unexpected output
+                event harnessTestAfter?testFailure // we got an explicit test failure
+                action oracleprovider!fail()
+                
+                state S1 { transition -> S2 event m : harnessTestAfter?testOut guard m.c == '\'E\'' }
+                state S2 { transition -> S3 event m : harnessTestAfter?testOut guard m.c == '\'A\'' }
+                state S3 { transition -> S4 event m : harnessTestAfter?testOut guard m.c == '\'E\'' }
+                state S4 { internal event m : harnessTestAfter?testOut guard m.c == '\'A\'' action oracleprovider!pass() }
+               
+            }
+
+        }
+       */
+        }
+    
+    }
+        
+    
+}

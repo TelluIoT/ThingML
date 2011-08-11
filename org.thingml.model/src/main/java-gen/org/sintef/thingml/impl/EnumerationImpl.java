@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -81,9 +82,24 @@ public class EnumerationImpl extends TypeImpl implements Enumeration {
 	 */
 	public EList<EnumerationLiteral> getLiterals() {
 		if (literals == null) {
-			literals = new EObjectContainmentEList<EnumerationLiteral>(EnumerationLiteral.class, this, ThingmlPackage.ENUMERATION__LITERALS);
+			literals = new EObjectContainmentWithInverseEList<EnumerationLiteral>(EnumerationLiteral.class, this, ThingmlPackage.ENUMERATION__LITERALS, ThingmlPackage.ENUMERATION_LITERAL__ENUM);
 		}
 		return literals;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ThingmlPackage.ENUMERATION__LITERALS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getLiterals()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**

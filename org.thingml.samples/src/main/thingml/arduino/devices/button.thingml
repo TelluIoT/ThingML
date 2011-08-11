@@ -5,7 +5,7 @@ thing fragment ButtonMsgs {
 	message release();
 }
 
-thing Button includes ButtonMsgs, ArduinoMsgs
+thing Button includes ButtonMsgs, ArduinoStdlibMsgs, ThingMLScheduler
 {	
 
 	readonly property pin : DigitalPin = DigitalPin:PIN_3
@@ -23,7 +23,7 @@ thing Button includes ButtonMsgs, ArduinoMsgs
     }
 	
 	required port Polling {
-		receives loop
+		receives poll
 	}
 	
 	 statechart ButtonImpl init Released {
@@ -36,7 +36,7 @@ thing Button includes ButtonMsgs, ArduinoMsgs
         	debounce = 20
         end
         
-        internal event Polling?loop
+        internal event Polling?poll
             action do
             	if (debounce > 0) debounce = debounce - 1
             	if (debounce == 0) DigitalIO!digitalRead(pin)

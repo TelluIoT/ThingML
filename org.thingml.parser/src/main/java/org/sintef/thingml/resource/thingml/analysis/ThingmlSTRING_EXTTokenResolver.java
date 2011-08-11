@@ -38,7 +38,10 @@ public class ThingmlSTRING_EXTTokenResolver implements org.sintef.thingml.resour
 	public java.lang.String deResolve(java.lang.Object value, org.eclipse.emf.ecore.EStructuralFeature feature, org.eclipse.emf.ecore.EObject container) {
 		java.lang.String result = defaultTokenResolver.deResolve(value, feature, container);
 		//escape escapes
-		result = CharacterEscaper.escapeEscapedCharacters(result);
+		
+		//result = CharacterEscaper.escapeEscapedCharacters(result);
+		
+		result = result.replaceAll("'", "\'");
 		
 		result = '\'' + result + '\'';
 		return result;
@@ -56,7 +59,9 @@ public class ThingmlSTRING_EXTTokenResolver implements org.sintef.thingml.resour
 		
 		//TODO @mseifert: either implement escaping (inverse of unescapeEscapedCharacters) 
 		//     for deResolve or leave the below .
-		lexem = CharacterEscaper.unescapeEscapedCharacters(lexem);
+		//lexem = CharacterEscaper.unescapeEscapedCharacters(lexem);
+		
+		lexem = lexem.replaceAll("\\\\'", "'");
 		
 		result.setResolvedToken(lexem);
 	}
