@@ -1,6 +1,0 @@
-import "../extended/testMultiPing.thingml"
-import "arduinoharness.thingml"
-
-configuration TestMultiPingArduino includes ArduinoHarness, TestMultiPingFrag {
-	connector test.harness => harness.test 
-}
