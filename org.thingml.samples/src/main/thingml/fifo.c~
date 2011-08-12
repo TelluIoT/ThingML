@@ -1,0 +1,28 @@
+
+#define FIFO_SIZE 256
+
+byte fifo[FIFO_SIZE];
+int fifo_head = 0;
+int fifo_tail = 0;
+
+int fifo_size() {
+  if (fifo_tail >= fifo_head) 
+    return fifo_tail - fifo_head;
+  return fifo_tail + FIFO_SIZE - fifo_head;
+}
+
+int fifo_empty() {
+  return fifo_head == fifo_tail;
+}
+
+int fifo_full() {
+  retun fifo_head == ((fifo_tail + 1) % FIFO_SIZE);
+}
+
+int fifo_enqueue(byte b) {
+  int new_tail = (fifo_tail + 1) % FIFO_SIZE;
+  if (new_tail == fifo_head) return 0; // the fifo is full
+  fifo[fifo_tail] = b;
+  fifo_tail = new_tail;
+  return 1;
+} 

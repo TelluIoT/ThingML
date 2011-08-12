@@ -24,9 +24,12 @@ import scala.collection.JavaConversions._
 import sun.applet.resources.MsgAppletViewer
 import com.sun.org.apache.xpath.internal.operations.Variable
 import org.eclipse.emf.ecore.xml.`type`.internal.RegEx.Match
-import java.util.{ArrayList, Hashtable}
 import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
 import java.lang.StringBuilder
+import javax.xml.transform.Result
+import java.util.{Hashtable, ArrayList}
+import scala.util.parsing.input.StreamReader
+import java.io._
 
 object CGenerator {
 
@@ -128,6 +131,37 @@ case class ThingMLCGenerator(self: ThingMLElement) {
 
 
 case class ConfigurationCGenerator(override val self: Configuration) extends ThingMLCGenerator(self) {
+  /**
+   * Fetch the entire contents of a text file, and return it in a String.
+   * This style of implementation does not throw Exceptions to the caller.
+   *
+   * @param aFile is a file which already exists and can be read.
+   */
+  def getContents(aFile: File): String = {
+    var contents: StringBuilder = new StringBuilder
+    try {
+      var input: BufferedReader  = new BufferedReader (new FileReader(aFile))
+      try {
+        var line: String = null
+        while ((({
+          line = input.readLine; line
+        })) != null) {
+          contents.append(line)
+          //contents.append(System.getProperty("line.separator"))
+          contents.append("\n")
+        }
+      }
+      finally {
+        input.close
+      }
+    }
+    catch {
+      case ex: IOException => {
+        ex.printStackTrace
+      }
+    }
+    return contents.toString
+  }
 
   override def generateC(builder: StringBuilder) {
 
@@ -137,7 +171,6 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append " *****************************************************************************/\n\n"
     val model = ThingMLHelpers.findContainingModel(self)
 
-    // TODO: Generate includes and headers
     self.allThings.foreach { t =>
       var h = t.annotation("c_header")
       if (h != null) {
@@ -146,14 +179,11 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
       }
     }
 
-
     // Generate code for enumerations (generate for all enum)
     builder append "\n"
     builder append "/*****************************************************************************\n"
     builder append " * Definition of simple types and enumerations\n"
     builder append " *****************************************************************************/\n\n"
-
-
 
     model.allSimpleTypes.filter{ t => t.isInstanceOf[Enumeration] }.foreach{ e =>
       e.generateC(builder)
@@ -164,10 +194,16 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
        thing.generateC(builder)
     }
 
+
     builder append "\n"
     builder append "/*****************************************************************************\n"
     builder append " * Definitions for configuration : " +  self.getName + "\n"
     builder append " *****************************************************************************/\n\n"
+
+    var fifotemplate: File = new File(classOf[ConfigurationCGenerator].getClassLoader.getResource("ctemplates/fifo.c").getFile)
+    builder append getContents(fifotemplate)
+    builder append "\n"
+
 
     builder append "//Declaration of instance variables\n"
     self.allInstances.foreach { inst =>
@@ -176,7 +212,11 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
     builder append "\n"
 
+    generateMessageEnqueue(builder)
+    builder append "\n"
     generateMessageDispatchers(builder)
+    builder append "\n"
+    generateMessageProcessQueue(builder)
 
     builder append "\n"
 
@@ -191,7 +231,11 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         (c.getRequired == port && c.getProvided.getReceives.contains(msg)) ||
           (c.getProvided == port && c.getRequired.getReceives.contains(msg)) }) {
         builder append t.sender_name(port, msg) + "_listener = "
-        builder append "dispatch_" + t.sender_name(port, msg) + ";\n"
+
+        // This is for static call of dispatches
+        // builder append "dispatch_" + t.sender_name(port, msg) + ";\n"
+        // This is to enquqe the message and let the scheduler forward it
+         builder append "enqueue_" + t.sender_name(port, msg) + ";\n"
       }
     }}}
 
@@ -211,6 +255,126 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
     generateArduinoPDEMain(builder);
 
+  }
+
+  val handler_codes = new Hashtable[Port, Hashtable[Message, Integer]]()
+  var handler_code_cpt = 1;
+  def handler_code (p : Port, m : Message) = {
+    var table : Hashtable[Message, Integer] =  handler_codes.get(p)
+    if (table == null) {
+      table = new Hashtable[Message, Integer]()
+      handler_codes.put(p, table)
+    }
+    var result = table.get(m)
+    if (result == null) {
+      result = handler_code_cpt
+      handler_code_cpt += 1
+      table.put(m, result)
+    }
+    result
+  }
+
+  def message_size(m : Message) = {
+    var result = 4 // 4 bytes to store the port/message code and the source instance
+    m.getParameters.foreach{ p =>
+      result += p.getType.c_byte_size()
+    }
+    result
+  }
+
+  def generateMessageEnqueue(builder : StringBuilder) {
+
+    self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
+      var allMessageDispatch = self.allMessageDispatch(t,p)
+      allMessageDispatch.keySet().foreach{m =>
+        builder append "// Enqueue of messages " + t.getName + "::" + p.getName + "::" + m.getName + "\n"
+        builder append "void enqueue_" + t.sender_name(p, m)
+        t.append_formal_parameters(builder, m)
+        builder append "{\n"
+
+        builder append "if ( fifo_byte_available() > " + message_size(m) + " ) {\n\n"
+
+        //DEBUG
+       // builder append "Serial.println(\"QU MSG "+m.getName+"\");\n"
+
+        builder append "_fifo_enqueue( ("+handler_code(p,m)+" >> 8) & 0xFF );\n"
+        builder append "_fifo_enqueue( "+handler_code(p,m)+" & 0xFF );\n\n"
+
+        builder append "// pointer to the source instance\n"
+        builder append "_fifo_enqueue( ((uint16_t)_instance >> 8) & 0xFF );\n"
+        builder append "_fifo_enqueue( (uint16_t)_instance & 0xFF );\n"
+
+        m.getParameters.foreach{ pt =>
+          //result += p.getType.c_byte_size()
+          builder append "\n// parameter " + pt.getName + "\n"
+          pt.getType.bytes_to_serialize(pt.getName).foreach { l =>
+            builder append "_fifo_enqueue( "+l+" );\n"
+          }
+        }
+        builder append "}\n"
+        builder append "}\n"
+
+      }
+    }}
+  }
+
+  def generateMessageProcessQueue(builder : StringBuilder) {
+
+    builder append "uint8_t processMessageQueue() {\n"
+    builder append "if (fifo_empty()) return 0; // return if there is nothing to do\n\n"
+
+
+    var max_msg_size = 0
+
+    self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
+      var allMessageDispatch = self.allMessageDispatch(t,p)
+      allMessageDispatch.keySet().foreach{m =>
+        val size = message_size(m)
+        if ( size > max_msg_size) max_msg_size = size
+      }}}
+
+    // Allocate a buffer to store the message bytes.
+    // Size of the buffer is "size-2" because we have already read 2 bytes
+    builder append "byte mbuf[" + (max_msg_size-2) + "];\n"
+    builder append "uint8_t mbufi = 0;\n\n"
+
+     builder append "// Read the code of the next port/message in the queue\n"
+    builder append "uint16_t code = fifo_dequeue() << 8;\n\n"
+    builder append "code += fifo_dequeue();\n\n"
+
+    builder append "// Switch to call the appropriate handler\n"
+    builder append "switch(code) {\n"
+
+    self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
+      var allMessageDispatch = self.allMessageDispatch(t,p)
+      allMessageDispatch.keySet().foreach{m =>
+
+        builder append "case " + handler_code(p,m) + ":\n"
+
+        builder append "while (mbufi < "+(message_size(m)-2)+") mbuf[mbufi++] = fifo_dequeue();\n"
+        // Fill the buffer
+
+        //DEBUG
+       // builder append "Serial.println(\"FW MSG "+m.getName+"\");\n"
+
+        builder append "dispatch_" + t.sender_name(p, m) + "("
+        builder append "(" + t.instance_struct_name() + "*)"
+        builder append "((mbuf[0] << 8) + mbuf[1]) /* instance */"
+
+        var idx = 2
+
+        m.getParameters.foreach{ pt =>
+          builder append ",\n" + pt.getType.deserialize_from_byte("mbuf", idx) + " /* " + pt.getName + " */ "
+          idx = idx + pt.getType.c_byte_size()
+        }
+
+        builder append ");\n"
+
+        builder append "break;\n"
+      }
+    }}
+    builder append "}\n"
+    builder append "}\n"
   }
 
   def generateMessageDispatchers(builder : StringBuilder) {
@@ -269,6 +433,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         builder append "}\n"
         // generate the loop operation
          builder append "void loop() {\n"
+        builder append "processMessageQueue();\n"
         self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
           p.getReceives.foreach{ msg =>
           }
@@ -789,6 +954,43 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
       }
     }
   }
+
+  def c_byte_size(): Integer = {
+    self.getAnnotations.filter {
+      a => a.getName == "c_byte_size"
+    }.headOption match {
+      case Some(a) => return Integer.parseInt(a.asInstanceOf[PlatformAnnotation].getValue)
+      case None => {
+        println("Warning: Missing annotation c_byte_size for type " + self.getName + ", using 2 as the type size.")
+        return 2
+      }
+    }
+  }
+
+  def deserialize_from_byte(buffer : String, idx : Integer) = {
+    var result =  ""
+    var i = c_byte_size
+    var index = idx
+    while (i>0) {
+      i = i-1
+      if(i==0) result += buffer + "[" + index + "]"
+      else result += "(" + buffer + "[" + index + "]" + "<<" + (8*i) + ") + "
+      index = index + 1
+    }
+    result
+  }
+
+  def bytes_to_serialize(variable : String) : ArrayList[String] = {
+    var result = new ArrayList[String]()
+    var i = c_byte_size
+    while (i>0) {
+      i = i-1
+      if(i==0) result.add(variable + " & 0xFF")
+      else result.add("(" + variable + ">>" + (8*i) + ") & 0xFF")
+    }
+    result
+  }
+
 }
 
 /**

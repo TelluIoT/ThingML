@@ -51,6 +51,14 @@ case class ConfigurationScalaImpl (self : Configuration) {
     result
   }
 
+  def allMessages() : Set[Message] = {
+    var result : Set[Message] = Set()
+    allThings.foreach{ t =>
+      result = result ++ t.allMessages
+    }
+    result
+  }
+
   def initExpressionsForInstance(i : Instance) : ArrayList[((Property, Expression))] = {
     var result = new ArrayList[((Property, Expression))]()
 
