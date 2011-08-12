@@ -1,33 +1,5 @@
-datatype Char
-	@c_type "char";
+import "../thingml.thingml"
 
-datatype Int16	
-	@c_type "int";
-
-datatype String	
-	@c_type "char *";
-	
-
-thing fragment TestMsg {
-	message testOut(c : Char);
-	message testIn(c : Char);
-	message testFailure();
-}
-
-thing fragment TestHarness includes TestMsg {
-
-	provided port test {
-		sends testIn
-		receives testOut, testFailure
-	}
-	
-}
-
-thing fragment Test includes TestMsg {
-
-	required port harness {
-		receives testIn
-		sends testOut, testFailure
-	}
-	
-}
+datatype Int16
+	@c_type "int"
+	@java_type "int";

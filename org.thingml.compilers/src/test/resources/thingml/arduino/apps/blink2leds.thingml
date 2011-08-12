@@ -67,7 +67,7 @@ configuration Blink2Leds {
 	// The blink application
 	instance app : Blink2Leds
 	connector app.led1 => led1.LED
-	connector app.timer1 => timer1.SoftTimer
+	connector app.timer1 => timer1.timer
 	connector app.led2 => led2.LED
-	connector app.timer2 => timer2.SoftTimer
+	connector app.timer2 => timer2.timer
 }

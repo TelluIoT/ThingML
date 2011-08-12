@@ -90,4 +90,16 @@ case class ThingScalaImpl (self : Thing) {
     return imports.head.initExpression(p)
   }
 
+
+    def hasAnnotation(name : String): Boolean = {
+      self.getAnnotations.filter { a => a.getName == name }.isEmpty
+    }
+
+    def annotation(name : String): String = {
+      self.getAnnotations.filter { a => a.getName == name }.headOption match {
+      case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
+      case None => return null;
+    }
+    }
+
 }

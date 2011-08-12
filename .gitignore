@@ -11,3 +11,4 @@ target/
 keystore
 /.idea/
 test_out/
+.directory

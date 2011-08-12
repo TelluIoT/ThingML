@@ -42,7 +42,7 @@ thing SoftButton includes ButtonMsgs, SoftButtonMsgs, TimerMsgs
 			
 			transition click -> Released
 			event button?release
-			after timer!timer_cancel()
+			action timer!timer_cancel()
         }
         
         state Released {

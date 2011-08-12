@@ -1,11 +1,11 @@
-import "testharness.thingml"
-import "../arduino/core/arduino.thingml"
-import "../arduino/devices/led.thingml"
+import "../testharness.thingml"
+import "../../arduino/core/arduino.thingml"
+import "../../arduino/devices/led.thingml"
 
-thing ArduinoHarness includes TestHarness, ArduinoMsgs, LEDMsgs {
+thing ArduinoHarness includes TestHarness, ThingMLScheduler, LEDMsgs {
 	
 	required port polling {
-        receives loop
+        receives poll
     }
     
     required port led {
@@ -18,7 +18,7 @@ thing ArduinoHarness includes TestHarness, ArduinoMsgs, LEDMsgs {
 		
 		state Testing {
 			
-			internal event polling?loop
+			internal event polling?poll
             guard 'Serial.available()' > 0
             action test!testIn('(char)Serial.read()')
             

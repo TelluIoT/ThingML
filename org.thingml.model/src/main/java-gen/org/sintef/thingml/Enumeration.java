@@ -37,6 +37,7 @@ public interface Enumeration extends Type {
 	/**
 	 * Returns the value of the '<em><b>Literals</b></em>' containment reference list.
 	 * The list contents are of type {@link org.sintef.thingml.EnumerationLiteral}.
+	 * It is bidirectional and its opposite is '{@link org.sintef.thingml.EnumerationLiteral#getEnum <em>Enum</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Literals</em>' containment reference list isn't clear,
@@ -45,7 +46,8 @@ public interface Enumeration extends Type {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Literals</em>' containment reference list.
 	 * @see org.sintef.thingml.ThingmlPackage#getEnumeration_Literals()
-	 * @model containment="true"
+	 * @see org.sintef.thingml.EnumerationLiteral#getEnum
+	 * @model opposite="enum" containment="true"
 	 * @generated
 	 */
 	EList<EnumerationLiteral> getLiterals();

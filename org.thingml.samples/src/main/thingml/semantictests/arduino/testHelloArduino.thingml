@@ -1,4 +1,4 @@
-import "testHello.thingml"
+import "../core/testHello.thingml"
 import "arduinoharness.thingml"
 
 configuration TestHelloArduino includes ArduinoHarness {

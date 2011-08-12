@@ -1,0 +1,7 @@
+import "../core/testOnExit.thingml"
+import "arduinoharness.thingml"
+
+configuration TestOnExitArduino includes ArduinoHarness {
+	instance test : TestOnExit
+	connector test.harness => harness.test 
+}

@@ -130,6 +130,6 @@ configuration fragment StatusLedFragment {
 	
 	instance timer : SoftTimer
 	instance statusLed : StatusLED
-	connector statusLed.timer => timer.SoftTimer
+	connector statusLed.timer => timer.timer
 	connector statusLed.led => led.LED
 }
