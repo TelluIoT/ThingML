@@ -22,14 +22,6 @@ import org.sintef.thingml._
 import java.util.ArrayList
 import org.sintef.thingml.constraints.ThingMLHelpers
 
-/**
- * Created by IntelliJ IDEA.
- * User: ffl
- * Date: 04.07.11
- * Time: 09:53
- * To change this template use File | Settings | File Templates.
- */
-
 case class ThingMLModelScalaImpl(self : ThingMLModel) {
 
   def allThingMLModelModels: ArrayList[ThingMLModel] = {
@@ -46,6 +38,14 @@ case class ThingMLModelScalaImpl(self : ThingMLModel) {
 
   def allThings: ArrayList[Thing] = {
     return ThingMLHelpers.allThings(self)
+  }
+  
+  def allMessages: Set[Message] = {
+    var msg : Set[Message] = Set()
+    allThings.foreach{t =>
+      msg = msg ++ ThingScalaImpl(t).allMessages
+    }
+    return msg
   }
 
   def allConfigurations: ArrayList[Configuration] = {
