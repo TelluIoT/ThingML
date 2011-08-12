@@ -1,5 +1,7 @@
 import "../testharness.thingml"
 
+// One client server couple.
+
 thing PingMsg {
     message ping();
     message pong();        

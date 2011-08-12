@@ -1,6 +1,10 @@
 import "../testharness.thingml"
 
-thing LinuxHarness includes TestHarness, ThingMLScheduler {
+thing LinuxHarness includes TestHarness, ThingMLScheduler 
+@c_header "#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>"
+{
 
 	required port polling {
 		receives poll
@@ -14,7 +18,7 @@ thing LinuxHarness includes TestHarness, ThingMLScheduler {
 		
 			internal event polling?poll
             action do
-            	c = '(char)getc()'
+            	c = '(char)getchar()'
             	if (c == '\'#\'') do // end of the test
             		'printf("\n");'
             		'exit(0);' 
@@ -25,8 +29,8 @@ thing LinuxHarness includes TestHarness, ThingMLScheduler {
             
             internal event m : test?testOut
             action do 
-            	'printf(' & m.c & ');'
-            	'ffllush(stdout);'
+            	'putchar(' & m.c & ');'
+            	'fflush(stdout);'
             end
             
             transition -> Failed 
