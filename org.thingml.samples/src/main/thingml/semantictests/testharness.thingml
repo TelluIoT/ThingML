@@ -2,4 +2,5 @@ import "../thingml.thingml"
 
 datatype Int16
 	@c_type "int"
+    @c_byte_size "2"
 	@java_type "int";
