@@ -218,6 +218,10 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
           builder append c.getClient.getType.getName + "_" + c.getClient.hashCode + ".getBehavior(\"" + sm1.getName + "\").get.getPort(\"" + c.getRequired.getName + "\").get,\n" 
           builder append c.getServer.getType.getName + "_" + c.getServer.hashCode + ".getBehavior(\"" + sm2.getName + "\").get.getPort(\"" + c.getProvided.getName + "\").get\n"
           builder append")\n"
+          builder append c.getName + "_" + c.hashCode + ".connect(\n" 
+          builder append c.getServer.getType.getName + "_" + c.getServer.hashCode + ".getBehavior(\"" + sm2.getName + "\").get.getPort(\"" + c.getProvided.getName + "\").get,\n"
+          builder append c.getClient.getType.getName + "_" + c.getClient.hashCode + ".getBehavior(\"" + sm1.getName + "\").get.getPort(\"" + c.getRequired.getName + "\").get\n" 
+          builder append")\n\n"
         }
       }
     }
@@ -328,6 +332,14 @@ case class EnumerationLiteralScalaGenerator(override val self: EnumerationLitera
 
 case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScalaGenerator(self) {
   
+  def printGuard(builder : StringBuilder) {
+    if(self.getGuard != null){
+      builder append "override def checkGuard() : Boolean = {\n"
+      self.getGuard.generateScala(builder)
+      builder append "}\n"
+    }
+  }
+  
   def printAction(builder : StringBuilder) {
     builder append "override def executeActions() = {\n"
     if (debug)
@@ -347,7 +359,7 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
   override def generateScala(builder: StringBuilder) {
     builder append "case class Transition" + self.getSource.getName+"2"+self.getTarget.getName + "_" + self.hashCode + " extends TransitionAction {\n"
     
-    //printEvents(builder)
+    printGuard(builder)
     
     Option(self.getBefore) match {
       case Some(a) =>
@@ -378,6 +390,7 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
 case class InternalTransitionScalaGenerator(override val self: InternalTransition) extends HandlerScalaGenerator(self) {
   override def generateScala(builder: StringBuilder) {
     builder append "case class InternalTransition" + self.hashCode + " extends InternalTransitionAction {\n"
+    printGuard(builder)
     printAction(builder)
     builder append "}\n"
   }
