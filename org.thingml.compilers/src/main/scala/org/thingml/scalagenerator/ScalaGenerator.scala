@@ -653,12 +653,12 @@ case class VariableAssignmentScalaGenerator(override val self: VariableAssignmen
 
 case class ActionBlockScalaGenerator(override val self: ActionBlock) extends ActionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder) {
-    builder append "{\n"
+    //builder append "{\n"
     self.getActions.foreach {
       a => a.generateScala(builder)
       //builder append "\n"
     }
-    builder append "}\n"
+    //builder append "}\n"
   }
 }
 
