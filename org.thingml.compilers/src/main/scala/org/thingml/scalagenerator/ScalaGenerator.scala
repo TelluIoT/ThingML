@@ -37,6 +37,8 @@ import java.lang.StringBuilder
 
 object ScalaGenerator {
   
+  var debug = true
+  
   val keywords = scala.List("implicit","match","requires","type","var","abstract","do","finally","import","object","throw","val","case","else","for","lazy","override","return","trait","catch","extends","forSome","match","package","sealed","try","while","class","false","if","new","private","super","true","with","def","final","implicit","null","protected","this","yield","_",":","=","=>","<-","<:","<%",">:","#","@")
   val badChar = scala.List("_")
   def protectScalaKeyword(value : String) : String = {
@@ -216,6 +218,10 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
           builder append c.getClient.getType.getName + "_" + c.getClient.hashCode + ".getBehavior(\"" + sm1.getName + "\").get.getPort(\"" + c.getRequired.getName + "\").get,\n" 
           builder append c.getServer.getType.getName + "_" + c.getServer.hashCode + ".getBehavior(\"" + sm2.getName + "\").get.getPort(\"" + c.getProvided.getName + "\").get\n"
           builder append")\n"
+          builder append c.getName + "_" + c.hashCode + ".connect(\n" 
+          builder append c.getServer.getType.getName + "_" + c.getServer.hashCode + ".getBehavior(\"" + sm2.getName + "\").get.getPort(\"" + c.getProvided.getName + "\").get,\n"
+          builder append c.getClient.getType.getName + "_" + c.getClient.hashCode + ".getBehavior(\"" + sm1.getName + "\").get.getPort(\"" + c.getRequired.getName + "\").get\n" 
+          builder append")\n\n"
         }
       }
     }
@@ -326,8 +332,18 @@ case class EnumerationLiteralScalaGenerator(override val self: EnumerationLitera
 
 case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScalaGenerator(self) {
   
+  def printGuard(builder : StringBuilder) {
+    if(self.getGuard != null){
+      builder append "override def checkGuard() : Boolean = {\n"
+      self.getGuard.generateScala(builder)
+      builder append "}\n"
+    }
+  }
+  
   def printAction(builder : StringBuilder) {
     builder append "override def executeActions() = {\n"
+    if (debug)
+      builder append "println(this + \".executeActions\")\n"
     Option(self.getAction) match {
       case Some(a) =>
         self.getAction.generateScala(builder)
@@ -343,11 +359,13 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
   override def generateScala(builder: StringBuilder) {
     builder append "case class Transition" + self.getSource.getName+"2"+self.getTarget.getName + "_" + self.hashCode + " extends TransitionAction {\n"
     
-    //printEvents(builder)
+    printGuard(builder)
     
     Option(self.getBefore) match {
       case Some(a) =>
         builder append "override def executeBeforeActions() = {\n"
+        if (debug)
+          builder append "println(this + \".executeBeforeActions\")\n"
         self.getBefore.generateScala(builder)
         builder append "}\n\n"
       case None =>
@@ -357,6 +375,8 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
     Option(self.getAfter) match {
       case Some(a) =>
         builder append "override def executeAfterActions() = {\n"
+        if (debug)
+          builder append "println(this + \".executeAfterActions\")\n"
         self.getAfter.generateScala(builder)
         builder append "}\n\n"
       case None =>
@@ -370,6 +390,7 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
 case class InternalTransitionScalaGenerator(override val self: InternalTransition) extends HandlerScalaGenerator(self) {
   override def generateScala(builder: StringBuilder) {
     builder append "case class InternalTransition" + self.hashCode + " extends InternalTransitionAction {\n"
+    printGuard(builder)
     printAction(builder)
     builder append "}\n"
   }
@@ -416,7 +437,7 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
   
   def printEvent(e : Event) : String = e match {
     case rm : ReceiveMessage =>
-      return "\"" + rm.getMessage.getName + "\""
+      return firstToUpper(rm.getMessage.getName) + ".getName"
     case _ => 
       println("Warning: Unknown type of event: "+e)
       return "null"
@@ -424,6 +445,8 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
   
   def generateActions(builder : StringBuilder) {
     builder append "override def onEntry() = {\n"
+    if (debug)
+      builder append "println(this + \".onEntry\")\n"
     Option(self.getEntry) match {
       case Some(a) =>  
         self.getEntry.generateScala(builder)
@@ -434,6 +457,8 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
     builder append "}\n\n"
     
     builder append "override def onExit() = {\n"
+    if (debug)
+      builder append "println(this + \".onExit\")\n"
     Option(self.getExit) match {
       case Some(a) =>  
         self.getExit.generateScala(builder)
@@ -795,8 +820,8 @@ case class EventReferenceScalaGenerator(override val self: EventReference) exten
   override def generateScala(builder: StringBuilder) {
     //TODO: this could cause a null pointer if trying to get an event that does not exists... but this should be checked in the model ;-)
     //if not, it would be possible to generate a match Some/None to properly handle this...
-    builder append "getEvent(\"" 
-    builder append self.getMsgRef.getMessage.getName + "\").get.asInstanceOf[" + firstToUpper(self.getMsgRef.getMessage.getName) + "]." + protectScalaKeyword(self.getParamRef.getName)
+    builder append "getEvent(" 
+    builder append firstToUpper(self.getMsgRef.getMessage.getName) + ".getName).get.asInstanceOf[" + firstToUpper(self.getMsgRef.getMessage.getName) + "]." + protectScalaKeyword(self.getParamRef.getName)
   }
 }
 
