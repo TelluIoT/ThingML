@@ -987,7 +987,7 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
   def bytes_to_serialize(variable : String) : ArrayList[String] = {
     var result = new ArrayList[String]()
     var v = variable
-    if (is_pointer) v += "(uint16_t)" + v
+    if (is_pointer) v = "(uint16_t)" + v
     var i = c_byte_size
     while (i>0) {
       i = i-1
