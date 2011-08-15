@@ -578,6 +578,13 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
       }
     }
 
+    // init state variables:
+    builder append "// Init the state variables\n"
+    self.getType.composedBehaviour.allContainedRegions.foreach {
+      r =>
+        builder append c_var_name + "." + self.getType.state_var_name(r) + " = " + self.getType.state_id(r.getInitial) + ";\n"
+    }
+
     builder append self.getType.composedBehaviour.qname("_") + "_OnEntry(" + self.getType.state_id(self.getType.composedBehaviour) + ", &" + c_var_name + ");\n"
   }
 }
@@ -713,18 +720,6 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
   */
 
   def generateInstanceStruct(builder: StringBuilder) {
-
-    /*
-    struct LED_Instance{
-      // state of the instance
-      int LED_LEDImpl_State;
-      // properties of the instance
-      uint8_t LED_pin_var;
-      // pointers for outgoing messages
-      void (*LED_send_DigitalIO_pinMode_listener)(uint8_t, uint8_t);
-      void (*LED_send_DigitalIO_digitalWrite_listener)(uint8_t, uint8_t);
-    } ;
-    */
 
     builder append "struct " + instance_struct_name + " {\n"
 

@@ -56,8 +56,12 @@ thing ExtendedSerial includes IsDigitMsgs, ExtendedSerialFrag, ArduinoStdlibMsgs
             
         	internal event m : serial?receiveByte
             guard not (m.b == '\'$\'')
-            action extSerial!receiveByte(m.b)
-        
+            action do 
+                extSerial!receiveByte(m.b)
+                serial!printMessage ("Recu: ") // Debug
+                serial!printByte (m.b) // Debug
+                end
+                
             transition -> Buf
             event m : serial?receiveByte
             guard m.b == '\'$\''      

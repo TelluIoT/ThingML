@@ -1,0 +1,76 @@
+import "../core/arduino.thingml"
+import "softtimer.thingml"
+
+thing fragment AnalogPotMsgs
+{
+	message getValue ();
+	message subscribe (value : Boolean);
+	message value (val : Integer);
+}
+
+thing AnalogPot includes AnalogPotMsgs, TimerMsgs, ArduinoStdlibMsgs
+{
+	readonly property pin : UInt8 = 1
+	readonly property refreshRate : Integer = 30
+	
+	required port Timer
+	{
+		sends timer_start, timer_cancel
+		receives timer_timeout
+	}
+	
+	required port AnalogIO {
+		sends analogRead
+		receives analogReadResult
+	}
+
+	provided port Pot
+	{
+		sends value
+		receives subscribe, getValue
+	} 
+	
+	statechart AnalogPotImpl init Running
+	{ 	 
+		composite state Running init Unsubscribe keeps history
+		{ 
+			transition -> ReadValue
+			event Pot?getValue
+			event Timer?timer_timeout
+			action AnalogIO!analogRead (pin)
+				
+			state Unsubscribe
+			{
+				transition -> Subscribe
+				event m : Pot?subscribe
+				guard m.value == true
+			}
+			
+			state Subscribe
+			{
+				on entry Timer!timer_start (refreshRate)
+				
+				transition -> Unsubscribe
+				event m : Pot?subscribe
+				guard m.value == false
+				action Timer!timer_cancel ()
+			}
+		}
+		
+		state ReadValue
+		{	
+			transition -> Running
+			event m : AnalogIO?analogReadResult
+			action Pot!value (m.value) 
+		}
+	}
+}
+
+configuration AnalogPotFrag
+{
+	instance arduino : Arduino
+	instance analogPot : AnalogPot
+	instance timer : SoftTimer
+	connector analogPot.Timer => timer.timer
+	connector analogPot.AnalogIO => arduino.AnalogIO
+}

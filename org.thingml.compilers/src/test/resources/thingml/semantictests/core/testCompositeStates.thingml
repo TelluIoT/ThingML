@@ -1,11 +1,11 @@
 import "../testharness.thingml"
 
 thing TestCompositeStates includes Test 
-@test "n # 0"
-@test "nn # 01"
-@test "nni # 010"
-@test "nnn # 0123"
-@test "nnnoip # 01233210"
+@test "n # 01"
+@test "nn # 0123"
+@test "nni # 01232"
+@test "nnn # 012345"
+@test "nnnoip # 012345543210"
 
 {
 	statechart TestCompositeStates init I {
@@ -47,7 +47,7 @@ thing TestCompositeStates includes Test
 				}
 				
 				state C2S2 {
-					on entry harness!testOut('\'3\'')
+					on exit harness!testOut('\'3\'')
 					transition -> C2S3
 					event m : harness?testIn
 					guard m.c == '\'n\''
