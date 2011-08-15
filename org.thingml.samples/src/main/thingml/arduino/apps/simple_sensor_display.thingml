@@ -1,0 +1,41 @@
+import "../devices/lcd_screen.thingml"
+import "../devices/analog_pot.thingml"
+
+thing SimpleSensorDisplay includes LcdScreenMsgs, AnalogPotMsgs
+{	
+	required port Display 
+    {	
+		sends initDisplay, refreshDisplay, getDisplay
+	}
+
+	required port Pot
+	{
+		receives value
+		sends subscribe, getValue
+	}
+	
+   	statechart SimpleSensorDisplayImpl init Running
+   	{
+   		on entry Display!initDisplay ("Position", "%", 0, 0, 1023)
+   		state Running
+   		{
+   			on entry Pot!subscribe ()
+   			internal refresh event m : Pot?value
+   			action do
+   				Display!refreshDisplay (0, m.val)
+   				Display!getDisplay (0)
+   				end 
+   		}	
+   	}
+}
+
+configuration SimpleSensorDisplay
+{
+	instance screen : LcdScreen
+	instance pot : AnalogPot
+		set pin = 4
+	instance app : SimpleSensorDisplay
+	
+	connector app.Display => screen.Display
+	connector app.Pot => pot.Pot
+}

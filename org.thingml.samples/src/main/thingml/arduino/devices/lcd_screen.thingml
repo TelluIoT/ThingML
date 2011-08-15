@@ -1,0 +1,49 @@
+import "../core/arduino.thingml"
+
+datatype SensorDisplay
+@c_type "struct sensor_display_ *"
+@c_byte_size "*";
+
+
+thing fragment LcdScreenMsgs 
+{
+	message initDisplay (title : String, unit : String, initValue : Integer, minValue : Integer, maxValue : Integer);
+	message refreshDisplay (id : UInt8, value : Integer);
+	message currentDisplay (id : UInt8);
+	message getDisplay (id : UInt8);
+}
+
+thing LcdScreen includes LcdScreenMsgs 
+{	
+	readonly property maxDisplay : UInt8 = 1 // Max number of simultaneous display.
+	readonly property maxLengthTitle : UInt8 = 10 // Max length of the title string. 
+	readonly property maxLengthUnit : UInt8 = 5 // Max length of the unit string.
+	
+	property sensorDisplay : SensorDisplay 
+	
+	provided port Display
+	{
+		receives initDisplay, refreshDisplay, getDisplay
+		sends currentDisplay
+	}
+	
+	statechart LcdScreenImp init Initialization 
+	{
+		state Initialization
+		{
+			transition initializing -> Running
+			event d : Display?initDisplay
+			action sensorDisplay = 'lcd_display_init ('& d.title &', '& d.unit &', '& d.initValue &', '& d.minValue &', '& d.maxValue &')'  
+		}
+		
+		state Running
+		{
+			internal event d : Display?refreshDisplay
+			action 'lcd_display_refresh ('& sensorDisplay &', '& d.value &')'
+			
+			internal event Display?getDisplay
+			action 'sensor_print_fullscreen ('& sensorDisplay &')'
+		}
+	}
+}
+
