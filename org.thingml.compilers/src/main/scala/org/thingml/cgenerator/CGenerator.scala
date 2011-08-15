@@ -31,6 +31,18 @@ import java.util.{Hashtable, ArrayList}
 import scala.util.parsing.input.StreamReader
 import java.io._
 
+import io.Source
+
+
+object SimpleCopyTemplate {
+
+    def copyFromClassPath(path : String) : String = {
+      Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream(path),"utf-8").getLines().mkString("\n")
+    }
+
+
+}
+
 object CGenerator {
 
   def compileAll(model: ThingMLModel): Hashtable[Configuration, String] = {
@@ -131,37 +143,7 @@ case class ThingMLCGenerator(self: ThingMLElement) {
 
 
 case class ConfigurationCGenerator(override val self: Configuration) extends ThingMLCGenerator(self) {
-  /**
-   * Fetch the entire contents of a text file, and return it in a String.
-   * This style of implementation does not throw Exceptions to the caller.
-   *
-   * @param aFile is a file which already exists and can be read.
-   */
-  def getContents(aFile: File): String = {
-    var contents: StringBuilder = new StringBuilder
-    try {
-      var input: BufferedReader  = new BufferedReader (new FileReader(aFile))
-      try {
-        var line: String = null
-        while ((({
-          line = input.readLine; line
-        })) != null) {
-          contents.append(line)
-          //contents.append(System.getProperty("line.separator"))
-          contents.append("\n")
-        }
-      }
-      finally {
-        input.close
-      }
-    }
-    catch {
-      case ex: IOException => {
-        ex.printStackTrace
-      }
-    }
-    return contents.toString
-  }
+
 
   override def generateC(builder: StringBuilder) {
 
@@ -200,8 +182,9 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append " * Definitions for configuration : " +  self.getName + "\n"
     builder append " *****************************************************************************/\n\n"
 
-    var fifotemplate: File = new File(classOf[ConfigurationCGenerator].getClassLoader.getResource("ctemplates/fifo.c").getFile)
-    builder append getContents(fifotemplate)
+    var fifotemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/fifo.c")
+
+    builder append fifotemplate
     builder append "\n"
 
 
