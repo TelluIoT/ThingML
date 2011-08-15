@@ -44,7 +44,7 @@ object CGenerator {
 
   def compileAll(model: ThingMLModel): Hashtable[Configuration, String] = {
     val result = new Hashtable[Configuration, String]()
-    model.allConfigurations.foreach {
+    model.allConfigurations.filter{c=> !c.isFragment}.foreach {
       t =>
         result.put(t, compile(t))
     }
