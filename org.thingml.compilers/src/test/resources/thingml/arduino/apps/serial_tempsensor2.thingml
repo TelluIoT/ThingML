@@ -1,0 +1,28 @@
+import "../devices/extendedSerial.thingml"
+import "../devices/tempsensor.thingml"
+
+// Waiting the new version of the compiler.
+
+thing SerialTempSensor2 includes ExtendedSerialFrag {
+    
+    required port serial {
+		receives receiveByte
+        sends printByte
+	}
+
+    statechart SerialTempSensorImpl init Running {
+        
+        state Running {
+        	internal event m : serial?receiveByte
+        	guard m.b == '\'t\''
+        	action serial!printByte('\'T\'')         	
+        }
+    }
+}
+
+configuration SerialTempSensor2 includes extendedSerialFrag {
+	instance arduino : Arduino
+	instance extSerial : ExtendedSerial
+	instance app : SerialTempSensor2
+	connector app.serial => extSerial.extSerial
+}

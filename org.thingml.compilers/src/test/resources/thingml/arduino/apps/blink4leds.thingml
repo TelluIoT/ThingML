@@ -1,6 +1,5 @@
 import "../devices/led.thingml"
-//import "../devices/softtimer.thingml"
-import "../devices/softtimer_scala.thingml"
+import "../devices/softtimer.thingml"
 
 thing Blink4Leds includes LEDMsgs, TimerMsgs
 {

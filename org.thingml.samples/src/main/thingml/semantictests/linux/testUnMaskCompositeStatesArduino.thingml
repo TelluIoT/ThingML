@@ -1,7 +1,0 @@
-import "../core/testUnMaskCompositeStates.thingml"
-import "arduinoharness.thingml"
-
-configuration TestUnMaskCompositeStatesArduino includes ArduinoHarness {
-	instance test : TestUnMaskCompositeStates 
-	connector test.harness => harness.test 
-}

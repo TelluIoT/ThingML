@@ -215,7 +215,7 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 			isLoaded = false;
 			java.util.Map<Object, Object> loadOptions = addDefaultLoadOptions(options);
 			doLoad(inputStream, loadOptions);
-			org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(this.getResourceSet());
+			org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(this);
 		} catch (org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException tpe) {
 			// do nothing - the resource is left unchanged if this exception is thrown
 		}
@@ -455,7 +455,7 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 	public void load(java.util.Map<?, ?> options) throws java.io.IOException {
 		java.util.Map<Object, Object> loadOptions = addDefaultLoadOptions(options);
 		super.load(loadOptions);
-		org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(this.getResourceSet());
+		org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(this);
 	}
 	
 	public void setURI(org.eclipse.emf.common.util.URI uri) {
