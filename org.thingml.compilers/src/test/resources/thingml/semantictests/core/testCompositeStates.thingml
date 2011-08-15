@@ -1,6 +1,6 @@
 import "../testharness.thingml"
 
-thing TestUnMaskCompositeStates includes Test 
+thing TestCompositeStates includes Test 
 @test "n # 0"
 @test "nn # 01"
 @test "nni # 010"
@@ -8,7 +8,7 @@ thing TestUnMaskCompositeStates includes Test
 @test "nnnoip # 01233210"
 
 {
-	statechart TestUnMaskCompositeStates init I {
+	statechart TestCompositeStates init I {
 	
 		state I {
 			transition -> C1

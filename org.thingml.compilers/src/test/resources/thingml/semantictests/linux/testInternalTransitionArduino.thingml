@@ -1,7 +1,0 @@
-import "../core/testInternalTransition.thingml"
-import "arduinoharness.thingml"
-
-configuration TestInternalTransitionArduino includes ArduinoHarness {
-	instance test : TestInternalTransition
-	connector test.harness => harness.test 
-}

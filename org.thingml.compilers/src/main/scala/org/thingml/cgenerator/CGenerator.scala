@@ -25,22 +25,19 @@ import sun.applet.resources.MsgAppletViewer
 import com.sun.org.apache.xpath.internal.operations.Variable
 import org.eclipse.emf.ecore.xml.`type`.internal.RegEx.Match
 import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
-import java.lang.StringBuilder
 import javax.xml.transform.Result
 import java.util.{Hashtable, ArrayList}
 import scala.util.parsing.input.StreamReader
 import java.io._
 
 import io.Source
-
+import java.lang.StringBuilder
 
 object SimpleCopyTemplate {
 
     def copyFromClassPath(path : String) : String = {
       Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream(path),"utf-8").getLines().mkString("\n")
     }
-
-
 }
 
 object CGenerator {
@@ -56,7 +53,10 @@ object CGenerator {
 
   def compile(t: Configuration) = {
     var builder = new StringBuilder()
-    t.generateC(builder)
+
+    var context = new ArduinoCGeneratorContext()
+
+    t.generateC(builder, context)
     builder.toString
   }
 
@@ -135,17 +135,63 @@ object CGenerator {
   */
 }
 
+
+class CGeneratorContext {
+
+  // pointer size in bytes of the target platform
+  def pointerSize() = { 2 }
+
+  // Default size of the fifo (in bytes)
+  def fifoSize() = { 256 }
+
+  // output the generated files to the given folder
+  def compile(src: Configuration, dir : File) {
+    /* To be implemented by sub-classes */
+  }
+
+  def generateMain(builder: StringBuilder, cfg : Configuration) {
+    /* To be implemented by sub-classes */
+  }
+}
+
+class ArduinoCGeneratorContext extends CGeneratorContext {
+
+  // pointer size in bytes of the target platform
+  override def pointerSize() = { 2 }
+
+  // Default size of the fifo (in bytes)
+  override def fifoSize() = { 256 }
+
+  // output the generated files to the given folder
+  override def compile(src: Configuration, dir : File) {
+    var builder = new StringBuilder();
+    src.generateC(builder, this)
+    var code = builder.toString
+  }
+
+  override def generateMain(builder: StringBuilder, cfg : Configuration) {
+    var initb = new StringBuilder()
+    cfg.generateInitializationCode(initb)
+    var pollb = new StringBuilder()
+    cfg.generatePollingCode(pollb)
+    var maintemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/arduino_main.c")
+    maintemplate = maintemplate.replace("/* INIT_CODE */", initb.toString);
+    maintemplate = maintemplate.replace("/* POLL_CODE */", pollb.toString);
+    builder append maintemplate
+  }
+
+}
+
 case class ThingMLCGenerator(self: ThingMLElement) {
-  def generateC(builder: StringBuilder) {
+  def generateC(builder: StringBuilder, context : CGeneratorContext) {
     // Implemented in the sub-classes
   }
 }
 
-
 case class ConfigurationCGenerator(override val self: Configuration) extends ThingMLCGenerator(self) {
 
 
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
     builder append "\n"
     builder append "/***************************************************************************** \n"
@@ -168,12 +214,12 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append " *****************************************************************************/\n\n"
 
     model.allSimpleTypes.filter{ t => t.isInstanceOf[Enumeration] }.foreach{ e =>
-      e.generateC(builder)
+      e.generateC(builder, context)
     }
 
     // Generate code for things which appear in the configuration
     self.allThings.foreach { thing =>
-       thing.generateC(builder)
+       thing.generateC(builder, context)
     }
 
 
@@ -183,6 +229,8 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append " *****************************************************************************/\n\n"
 
     var fifotemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/fifo.c")
+
+    fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + context.fifoSize());
 
     builder append fifotemplate
     builder append "\n"
@@ -195,11 +243,11 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
     builder append "\n"
 
-    generateMessageEnqueue(builder)
+    generateMessageEnqueue(builder, context)
     builder append "\n"
-    generateMessageDispatchers(builder)
+    generateMessageDispatchers(builder, context)
     builder append "\n"
-    generateMessageProcessQueue(builder)
+    generateMessageProcessQueue(builder, context)
 
     builder append "\n"
 
@@ -226,7 +274,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append "// Initialize instance variables and states\n"
     // Generate code to initialize variable for instances
     self.allInstances.foreach { inst =>
-       inst.generateC(builder)
+       inst.generateC(builder, context)
     }
 
     builder append "}\n"
@@ -236,7 +284,8 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append " * Main for configuration : " +  self.getName + "\n"
     builder append " *****************************************************************************/\n\n"
 
-    generateArduinoPDEMain(builder);
+    //generateArduinoPDEMain(builder);
+    context.generateMain(builder, self)
 
   }
 
@@ -257,15 +306,17 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     result
   }
 
-  def message_size(m : Message) = {
-    var result = 4 // 4 bytes to store the port/message code and the source instance
+  def message_size(m : Message, context : CGeneratorContext) = {
+
+    var result = 2 // 2 bytes to store the port/message code
+    result += context.pointerSize() // to store the pointer to the source instance
     m.getParameters.foreach{ p =>
       result += p.getType.c_byte_size()
     }
     result
   }
 
-  def generateMessageEnqueue(builder : StringBuilder) {
+  def generateMessageEnqueue(builder : StringBuilder, context : CGeneratorContext) {
 
     self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
       var allMessageDispatch = self.allMessageDispatch(t,p)
@@ -275,7 +326,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         t.append_formal_parameters(builder, m)
         builder append "{\n"
 
-        builder append "if ( fifo_byte_available() > " + message_size(m) + " ) {\n\n"
+        builder append "if ( fifo_byte_available() > " + message_size(m, context) + " ) {\n\n"
 
         //DEBUG
        // builder append "Serial.println(\"QU MSG "+m.getName+"\");\n"
@@ -301,18 +352,18 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     }}
   }
 
-  def generateMessageProcessQueue(builder : StringBuilder) {
+  def generateMessageProcessQueue(builder : StringBuilder, context : CGeneratorContext) {
 
     builder append "uint8_t processMessageQueue() {\n"
     builder append "if (fifo_empty()) return 0; // return if there is nothing to do\n\n"
 
 
-    var max_msg_size = 0
+    var max_msg_size = 2 + context.pointerSize()  // at least the code and the source instance pointer
 
     self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
-        val size = message_size(m)
+        val size = message_size(m, context)
         if ( size > max_msg_size) max_msg_size = size
       }}}
 
@@ -334,7 +385,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
         builder append "case " + handler_code(p,m) + ":\n"
 
-        builder append "while (mbufi < "+(message_size(m)-2)+") mbuf[mbufi++] = fifo_dequeue();\n"
+        builder append "while (mbufi < "+(message_size(m, context)-2)+") mbuf[mbufi++] = fifo_dequeue();\n"
         // Fill the buffer
 
         //DEBUG
@@ -360,7 +411,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append "}\n"
   }
 
-  def generateMessageDispatchers(builder : StringBuilder) {
+  def generateMessageDispatchers(builder : StringBuilder, context : CGeneratorContext) {
 
     self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
       var allMessageDispatch = self.allMessageDispatch(t,p)
@@ -388,11 +439,8 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
       }
     }}
   }
-
+  /*
   def generateArduinoPDEMain(builder : StringBuilder) {
-
-    //#include <stdint.h>
-    //#include <stdio.h>
 
       var model = ThingMLHelpers.findContainingModel(self)
       // Serach for the ThingMLSheduler Thing
@@ -427,44 +475,88 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         builder append "}\n"
       }
   }
+      */
+  /*
+  def generateArduinoLinuxCMain(builder : StringBuilder) {
 
-    def generateArduinoLinuxCMain(builder : StringBuilder) {
+    var model = ThingMLHelpers.findContainingModel(self)
+    // Serach for the ThingMLSheduler Thing
+    var things = model.allThings.filter{ t => t.getName == "ThingMLScheduler" }
 
-    //#include <stdint.h>
-    //#include <stdio.h>
+    //println("*******>   things.size : " + things.size)
 
-      var model = ThingMLHelpers.findContainingModel(self)
-      // Serach for the ThingMLSheduler Thing
-      var things = model.allThings.filter{ t => t.getName == "ThingMLScheduler" }
+    if (!things.isEmpty) {
+      var arduino = things.head
+      var setup_msg : Message = arduino.allMessages.filter{ m => m.getName == "setup" }.head
+      var poll_msg : Message = arduino.allMessages.filter{ m => m.getName == "poll" }.head
 
-      //println("*******>   things.size : " + things.size)
+      builder append "int main() {\n"
+      builder append "initialize_configuration_" + self.getName + "();\n"
+      self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
+        if (p.getReceives.contains(setup_msg)) {
+           builder append i.getType.handler_name(p, setup_msg) +  "(&" + i.c_var_name() + ");\n"
+        }
+      }}
 
-      if (!things.isEmpty) {
-        var arduino = things.head
-        var setup_msg : Message = arduino.allMessages.filter{ m => m.getName == "setup" }.head
-        var poll_msg : Message = arduino.allMessages.filter{ m => m.getName == "poll" }.head
-
-        // generate the setup operation
-        builder append "int main() {\n"
-        builder append "initialize_configuration_" + self.getName + "();\n"
-        self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
-          if (p.getReceives.contains(setup_msg)) {
-             builder append i.getType.handler_name(p, setup_msg) +  "(&" + i.c_var_name() + ");\n"
-          }
-        }}
-        // generate the loop operation
-         builder append "while(1) {\n"
-        self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
-          p.getReceives.foreach{ msg =>
-          }
-          if (p.getReceives.contains(poll_msg)) {
-             builder append i.getType.handler_name(p, poll_msg) +  "(&" + i.c_var_name() + ");\n"
-          }
-        }}
-        builder append "}\n"
-        builder append "}\n"
-      }
+       builder append "while(1) {\n"
+      self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
+        p.getReceives.foreach{ msg =>
+        }
+        if (p.getReceives.contains(poll_msg)) {
+           builder append i.getType.handler_name(p, poll_msg) +  "(&" + i.c_var_name() + ");\n"
+        }
+      }}
+      builder append "}\n"
+      builder append "}\n"
+    }
   }
+       */
+  def generateInitializationCode(builder : StringBuilder) {
+
+    var model = ThingMLHelpers.findContainingModel(self)
+
+    // Serach for the ThingMLSheduler Thing
+    var things = model.allThings.filter{ t => t.getName == "ThingMLScheduler" }
+
+    if (!things.isEmpty) {
+      var arduino = things.head
+      var setup_msg : Message = arduino.allMessages.filter{ m => m.getName == "setup" }.head
+
+      // Call the initialization function
+      builder append "initialize_configuration_" + self.getName + "();\n"
+
+      // Send a setup message to all components which can receive it
+      self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
+        if (p.getReceives.contains(setup_msg)) {
+           builder append i.getType.handler_name(p, setup_msg) +  "(&" + i.c_var_name() + ");\n"
+        }
+      }}
+    }
+  }
+
+   def generatePollingCode(builder : StringBuilder) {
+
+    var model = ThingMLHelpers.findContainingModel(self)
+
+    // Serach for the ThingMLSheduler Thing
+    var things = model.allThings.filter{ t => t.getName == "ThingMLScheduler" }
+
+    if (!things.isEmpty) {
+      var arduino = things.head
+      var poll_msg : Message = arduino.allMessages.filter{ m => m.getName == "poll" }.head
+
+      // Send a poll message to all components which can receive it
+      self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
+        p.getReceives.foreach{ msg =>
+        }
+        if (p.getReceives.contains(poll_msg)) {
+           builder append i.getType.handler_name(p, poll_msg) +  "(&" + i.c_var_name() + ");\n"
+        }
+      }}
+    }
+  }
+
+
 
 }
 
@@ -475,13 +567,13 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
 
   def c_var_decl() = "struct " + self.getType.instance_struct_name() + " " + self.getName + "_var;"
 
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
     // Initialize variables and state machines
     self.initExpressions.foreach{ init =>
       if (init._2 != null ) {
         builder append c_var_name + "." + init._1.c_var_name + " = "
-        init._2.generateC(builder)
+        init._2.generateC(builder, context)
         builder append ";\n";
       }
     }
@@ -492,7 +584,7 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
 
 case class ConnectorCGenerator(override val self: Connector) extends ThingMLCGenerator(self) {
 
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     // connect the handlers for messages with the sender
     // sender_listener = reveive_handler;
     self.getProvided.getSends.filter{m => self.getRequired.getReceives.contains(m)}.foreach { m =>
@@ -510,7 +602,7 @@ case class ConnectorCGenerator(override val self: Connector) extends ThingMLCGen
 
 case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(self) {
 
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder append "/*****************************************************************************\n"
     builder append " * Definitions for type : " + self.getName + "\n"
     builder append " *****************************************************************************/\n\n"
@@ -527,16 +619,23 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     generatePrototypes(builder)
     builder append "\n"
 
+    var h = self.annotation("c_global")
+    if (h != null) {
+       builder append "\n// BEGIN: Code from the c_global annotation " + self.getName + "\n"
+       builder append h
+       builder append "\n// END: Code from the c_global annotation " + self.getName + "\n\n"
+    }
+
     builder append "// On Entry Actions:\n"
-    generateEntryActions(builder)
+    generateEntryActions(builder, context)
     builder append "\n"
 
     builder append "// On Exit Actions:\n"
-    generateExitActions(builder)
+    generateExitActions(builder, context)
     builder append "\n"
 
     builder append "// Event Handlers for incomming messages:\n"
-    generateEventHandlers(builder, composedBehaviour)
+    generateEventHandlers(builder, composedBehaviour, context)
     builder append "\n"
 
     builder append "// Observers for outgoing messages:\n"
@@ -701,7 +800,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
   }
 
-  def generateEntryActions(builder: StringBuilder) {
+  def generateEntryActions(builder: StringBuilder, context : CGeneratorContext) {
     builder append "void " + composedBehaviour.qname("_") + "_OnEntry(int state, "
     builder append "struct " + instance_struct_name + " *" + instance_var_name + ") {\n"
     builder append "switch(state) {\n"
@@ -721,7 +820,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
               }
             }
             // Execute Entry actions
-            if (s.getEntry != null) s.getEntry.generateC(builder)
+            if (s.getEntry != null) s.getEntry.generateC(builder, context)
             //builder append "\n"
             // Recurse on contained states
             regions.foreach {
@@ -730,7 +829,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
           }
           case _ => {
             // just a leaf state: execute entry actions
-            if (s.getEntry != null) s.getEntry.generateC(builder)
+            if (s.getEntry != null) s.getEntry.generateC(builder, context)
           }
         }
         builder append "break;\n"
@@ -740,7 +839,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     builder append "}\n"
   }
 
-  def generateExitActions(builder: StringBuilder) {
+  def generateExitActions(builder: StringBuilder, context : CGeneratorContext) {
     builder append "void " + composedBehaviour.qname("_") + "_OnExit(int state, "
     builder append "struct " + instance_struct_name + " *" + instance_var_name + ") {\n"
     builder append "switch(state) {\n"
@@ -758,12 +857,12 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
               r => builder append composedBehaviour.qname("_") + "_OnExit(" + instance_var_name + "->" + state_var_name(r) + ", " + instance_var_name + ");\n"
             }
             // Execute Exit actions
-            if (s.getExit != null) s.getExit.generateC(builder)
+            if (s.getExit != null) s.getExit.generateC(builder, context)
 
           }
           case _ => {
             // just a leaf state: execute exit actions
-            if (s.getExit != null) s.getExit.generateC(builder)
+            if (s.getExit != null) s.getExit.generateC(builder, context)
           }
         }
         builder append "break;\n"
@@ -773,7 +872,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     builder append "}\n"
   }
 
-  def generateEventHandlers(builder: StringBuilder, cs: StateMachine) {
+  def generateEventHandlers(builder: StringBuilder, cs: StateMachine, context : CGeneratorContext) {
     val handlers = composedBehaviour.allMessageHandlers()
     handlers.keys().foreach {
       port => handlers.get(port).keys.foreach {
@@ -782,18 +881,18 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
           append_formal_parameters(builder, msg)
           builder append " {\n"
           // dispatch the current message to sub-regions
-          dispatchToSubRegions(builder, cs, port, msg)
+          dispatchToSubRegions(builder, cs, port, msg, context)
           // If the state machine itself has a handler
           if (cs.canHandle(port, msg)) {
             // it can only be an internal handler so the last param can be null (in theory)
-            generateMessageHandlers(cs, port, msg, builder, null, cs)
+            generateMessageHandlers(cs, port, msg, builder, null, cs, context)
           }
           builder append "}\n"
       }
     }
   }
 
-  def generateMessageHandlers(s: State, port: Port, msg: Message, builder: StringBuilder, cs: CompositeState, r: Region) {
+  def generateMessageHandlers(s: State, port: Port, msg: Message, builder: StringBuilder, cs: CompositeState, r: Region, context : CGeneratorContext) {
     s.getOutgoing.union(s.getInternal).foreach {
       h =>
         h.getEvent.filter {
@@ -804,18 +903,18 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
               // check the guard and generate the code to handle the message
               if (h.getGuard != null) {
                 builder append "if ("
-                h.getGuard.generateC(builder)
+                h.getGuard.generateC(builder, context)
                 builder append ") {\n"
               }
               // Generate code to handle message
               h match {
                 case it: InternalTransition => {
                   // Do the action, that is all.
-                  it.getAction.generateC(builder)
+                  it.getAction.generateC(builder, context)
                 }
                 case et: Transition => {
 
-                  et.getBefore.generateC(builder)
+                  et.getBefore.generateC(builder, context)
 
                   // Execute the exit actions for current states (starting at the deepest)
                   builder append composedBehaviour.qname("_") + "_OnExit(" + state_id(et.getSource) + ", " + instance_var_name + ");\n"
@@ -823,12 +922,12 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
                   builder append instance_var_name + "->" + state_var_name(r) + " = " + state_id(et.getTarget) + ";\n"
 
                   // Do the action
-                  et.getAction.generateC(builder)
+                  et.getAction.generateC(builder, context)
 
                   // Enter the target state and initialize its children
                   builder append composedBehaviour.qname("_") + "_OnEntry(" + state_id(et.getTarget) + ", " + instance_var_name + ");\n"
 
-                  et.getAfter.generateC(builder)
+                  et.getAfter.generateC(builder, context)
 
                 }
               }
@@ -842,7 +941,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     }
   }
 
-  def dispatchToSubRegions(builder: StringBuilder, cs: CompositeState, port: Port, msg: Message) {
+  def dispatchToSubRegions(builder: StringBuilder, cs: CompositeState, port: Port, msg: Message, context : CGeneratorContext) {
 
     //println("dispatchToSubRegions for " + cs + " port=" + port.getName + " msg=" + msg.getName)
     cs.directSubRegions().foreach {
@@ -859,11 +958,11 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
             builder append "if (" + instance_var_name() + "->" + state_var_name(r) + " == " + state_id(s) + ") {\n" // s is the current state
             // dispatch to sub-regions if it is a composite
             s match {
-              case comp: CompositeState => dispatchToSubRegions(builder, comp, port, msg)
+              case comp: CompositeState => dispatchToSubRegions(builder, comp, port, msg, context)
               case _ => { /* do nothing */ }
             }
             // handle message locally
-            generateMessageHandlers(s, port, msg, builder, cs, r)
+            generateMessageHandlers(s, port, msg, builder, cs, r, context)
 
             builder append "}\n"
         }
@@ -918,7 +1017,7 @@ case class EnumerationLiteralCGenerator(override val self: EnumerationLiteral) e
  */
 
 case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     // Implemented in the sub-classes
   }
 
@@ -1004,13 +1103,13 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
  */
 
 case class PrimitiveTypeCGenerator(override val self: PrimitiveType) extends TypeCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder append "// ThingML type " + self.getName + " is mapped to " + c_type + "\n"
   }
 }
 
 case class EnumerationCGenerator(override val self: Enumeration) extends TypeCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder append "// Definition of Enumeration  " + self.getName + "\n"
     self.getLiterals.foreach {
       l =>
@@ -1024,7 +1123,7 @@ case class EnumerationCGenerator(override val self: Enumeration) extends TypeCGe
  * Action abstract class
  */
 case class ActionCGenerator(val self: Action) /*extends ThingMLCGenerator(self)*/ {
-  def generateC(builder: StringBuilder) {
+  def generateC(builder: StringBuilder, context : CGeneratorContext) {
     // Implemented in the sub-classes
   }
 }
@@ -1034,7 +1133,7 @@ case class ActionCGenerator(val self: Action) /*extends ThingMLCGenerator(self)*
  */
 
 case class SendActionCGenerator(override val self: SendAction) extends ActionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
     val thing = ThingMLHelpers.findContainingThing(self.getPort)
 
@@ -1044,26 +1143,26 @@ case class SendActionCGenerator(override val self: SendAction) extends ActionCGe
     self.getParameters.foreach {
       p =>
         builder append ", "
-        p.generateC(builder)
+        p.generateC(builder, context)
     }
     builder append ");\n"
   }
 }
 
 case class VariableAssignmentCGenerator(override val self: VariableAssignment) extends ActionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder.append("_instance->" + self.getProperty.c_var_name)
     builder append " = "
-    self.getExpression.generateC(builder)
+    self.getExpression.generateC(builder, context)
     builder append ";\n"
   }
 }
 
 case class ActionBlockCGenerator(override val self: ActionBlock) extends ActionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder append "{\n"
     self.getActions.foreach {
-      a => a.generateC(builder)
+      a => a.generateC(builder, context)
       //builder append "\n"
     }
     builder append "}\n"
@@ -1071,45 +1170,45 @@ case class ActionBlockCGenerator(override val self: ActionBlock) extends ActionC
 }
 
 case class ExternStatementCGenerator(override val self: ExternStatement) extends ActionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder.append(self.getStatement)
     self.getSegments.foreach {
-      e => e.generateC(builder)
+      e => e.generateC(builder, context)
     }
     builder append "\n"
   }
 }
 
 case class ConditionalActionCGenerator(override val self: ConditionalAction) extends ActionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder append "if("
-    self.getCondition.generateC(builder)
+    self.getCondition.generateC(builder, context)
     builder append ") "
-    self.getAction.generateC(builder)
+    self.getAction.generateC(builder, context)
   }
 }
 
 case class LoopActionCGenerator(override val self: LoopAction) extends ActionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder append "while("
-    self.getCondition.generateC(builder)
+    self.getCondition.generateC(builder, context)
     builder append ") "
-    self.getAction.generateC(builder)
+    self.getAction.generateC(builder, context)
   }
 }
 
 case class PrintActionCGenerator(override val self: PrintAction) extends ActionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder append "//TODO: print "
-    self.getMsg.generateC(builder)
+    self.getMsg.generateC(builder, context)
     builder append "\n"
   }
 }
 
 case class ErrorActionCGenerator(override val self: ErrorAction) extends ActionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder append "//TODO: report error "
-    self.getMsg.generateC(builder)
+    self.getMsg.generateC(builder, context)
     builder append "\n"
   }
 }
@@ -1119,7 +1218,7 @@ case class ErrorActionCGenerator(override val self: ErrorAction) extends ActionC
  */
 
 case class ExpressionCGenerator(val self: Expression) /*extends ThingMLCGenerator(self)*/ {
-  def generateC(builder: StringBuilder) {
+  def generateC(builder: StringBuilder, context : CGeneratorContext) {
     // Implemented in the sub-classes
   }
 }
@@ -1129,148 +1228,148 @@ case class ExpressionCGenerator(val self: Expression) /*extends ThingMLCGenerato
  */
 
 case class OrExpressionCGenerator(override val self: OrExpression) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
-    self.getLhs.generateC(builder)
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    self.getLhs.generateC(builder, context)
     builder append " || "
-    self.getRhs.generateC(builder)
+    self.getRhs.generateC(builder, context)
   }
 }
 
 case class AndExpressionCGenerator(override val self: AndExpression) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
-    self.getLhs.generateC(builder)
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    self.getLhs.generateC(builder, context)
     builder append " && "
-    self.getRhs.generateC(builder)
+    self.getRhs.generateC(builder, context)
   }
 }
 
 case class LowerExpressionCGenerator(override val self: LowerExpression) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
-    self.getLhs.generateC(builder)
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    self.getLhs.generateC(builder, context)
     builder append " < "
-    self.getRhs.generateC(builder)
+    self.getRhs.generateC(builder, context)
   }
 }
 
 case class GreaterExpressionCGenerator(override val self: GreaterExpression) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
-    self.getLhs.generateC(builder)
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    self.getLhs.generateC(builder, context)
     builder append " > "
-    self.getRhs.generateC(builder)
+    self.getRhs.generateC(builder, context)
   }
 }
 
 case class EqualsExpressionCGenerator(override val self: EqualsExpression) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
-    self.getLhs.generateC(builder)
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    self.getLhs.generateC(builder, context)
     builder append " == "
-    self.getRhs.generateC(builder)
+    self.getRhs.generateC(builder, context)
   }
 }
 
 case class PlusExpressionCGenerator(override val self: PlusExpression) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
-    self.getLhs.generateC(builder)
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    self.getLhs.generateC(builder, context)
     builder append " + "
-    self.getRhs.generateC(builder)
+    self.getRhs.generateC(builder, context)
   }
 }
 
 case class MinusExpressionCGenerator(override val self: MinusExpression) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
-    self.getLhs.generateC(builder)
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    self.getLhs.generateC(builder, context)
     builder append " - "
-    self.getRhs.generateC(builder)
+    self.getRhs.generateC(builder, context)
   }
 }
 
 case class TimesExpressionCGenerator(override val self: TimesExpression) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
-    self.getLhs.generateC(builder)
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    self.getLhs.generateC(builder, context)
     builder append " * "
-    self.getRhs.generateC(builder)
+    self.getRhs.generateC(builder, context)
   }
 }
 
 case class DivExpressionCGenerator(override val self: DivExpression) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
-    self.getLhs.generateC(builder)
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    self.getLhs.generateC(builder, context)
     builder append " / "
-    self.getRhs.generateC(builder)
+    self.getRhs.generateC(builder, context)
   }
 }
 
 case class ModExpressionCGenerator(override val self: ModExpression) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
-    self.getLhs.generateC(builder)
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    self.getLhs.generateC(builder, context)
     builder append " % "
-    self.getRhs.generateC(builder)
+    self.getRhs.generateC(builder, context)
   }
 }
 
 case class UnaryMinusCGenerator(override val self: UnaryMinus) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder append " -"
-    self.getTerm.generateC(builder)
+    self.getTerm.generateC(builder, context)
   }
 }
 
 case class NotExpressionCGenerator(override val self: NotExpression) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder append " !"
-    self.getTerm.generateC(builder)
+    self.getTerm.generateC(builder, context)
   }
 }
 
 case class EventReferenceCGenerator(override val self: EventReference) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder.append(self.getParamRef.getName)
   }
 }
 
 case class ExpressionGroupCGenerator(override val self: ExpressionGroup) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder append "("
-    self.getExp.generateC(builder)
+    self.getExp.generateC(builder, context)
     builder append ")"
   }
 }
 
 case class PropertyReferenceCGenerator(override val self: PropertyReference) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder.append("_instance->" + self.getProperty.qname("_") + "_var")
   }
 }
 
 case class IntegerLiteralCGenerator(override val self: IntegerLiteral) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder.append(self.getIntValue.toString)
   }
 }
 
 case class StringLiteralCGenerator(override val self: StringLiteral) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder.append("\"" + CharacterEscaper.escapeEscapedCharacters(self.getStringValue) + "\"")
   }
 }
 
 case class BooleanLiteralCGenerator(override val self: BooleanLiteral) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder.append(if (self.isBoolValue) "1" else "0")
   }
 }
 
 case class EnumLiteralRefCGenerator(override val self: EnumLiteralRef) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder.append(self.getLiteral.c_name)
   }
 }
 
 case class ExternExpressionCGenerator(override val self: ExternExpression) extends ExpressionCGenerator(self) {
-  override def generateC(builder: StringBuilder) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder.append(self.getExpression)
     self.getSegments.foreach {
-      e => e.generateC(builder)
+      e => e.generateC(builder, context)
     }
   }
 }

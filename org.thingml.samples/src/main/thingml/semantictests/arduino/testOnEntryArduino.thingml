@@ -4,4 +4,4 @@ import "arduinoharness.thingml"
 configuration TestOnEntryArduino includes ArduinoHarness {
 	instance test : TestOnEntry
 	connector test.harness => harness.test 
-}
+} 

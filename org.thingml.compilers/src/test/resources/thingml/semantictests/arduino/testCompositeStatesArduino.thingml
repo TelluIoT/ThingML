@@ -1,0 +1,7 @@
+import "../core/testCompositeStates.thingml"
+import "arduinoharness.thingml"
+
+configuration TestCompositeStatesArduino includes ArduinoHarness {
+	instance test : TestCompositeStates 
+	connector test.harness => harness.test 
+}

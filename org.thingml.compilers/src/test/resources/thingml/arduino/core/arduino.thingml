@@ -1,5 +1,4 @@
-//import "arduino_stdlib.thingml"
-import "arduino_stdlib_scala.thingml"
+import "arduino_stdlib.thingml"
 
 thing Arduino includes ArduinoStdlib
 {	

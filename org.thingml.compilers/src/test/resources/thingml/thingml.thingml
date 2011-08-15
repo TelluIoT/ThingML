@@ -5,30 +5,63 @@
  *****************************************************************************/
 datatype Byte	
 	@c_type "uint8_t"
+	@c_byte_size "1"
 	@java_type "byte";
 
 datatype Boolean	
 	@c_type "uint8_t"
+	@c_byte_size "2"
 	@java_type "boolean";
 
 datatype Integer	
 	@c_type "int"
+	@c_byte_size "2"
 	@java_type "int";
+	
+datatype UInt8	
+	@c_type "uint8_t"
+	@c_byte_size "1"
+	@java_type "short";
+	
+datatype Int8	
+	@c_type "int8_t"
+	@c_byte_size "1"
+	@java_type "short";
+
+datatype UInt16	
+	@c_type "uint16_t"
+	@c_byte_size "2"
+	@java_type "int";
+
+datatype Int16	
+	@c_type "int"
+    @c_byte_size "2"
+	@java_type "int";
+
 
 datatype Long	
 	@c_type "long"
+	@c_byte_size "4"
+	@java_type "long";
+	
+datatype ULong	
+	@c_type "unsigned long"
+	@c_byte_size "4"
 	@java_type "long";
 
 datatype Double	
 	@c_type "double"
+	@c_byte_size "4"
 	@java_type "double";
 
 datatype Char	
 	@c_type "char"
+	@c_byte_size "1"
 	@java_type "char";
 
 datatype String	
 	@c_type "char *"
+	@c_byte_size "*"
 	@java_type "String";
 
 /*****************************************************************************
