@@ -959,7 +959,11 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
     self.getAnnotations.filter {
       a => a.getName == "c_byte_size"
     }.headOption match {
-      case Some(a) => return Integer.parseInt(a.asInstanceOf[PlatformAnnotation].getValue)
+      case Some(a) => {
+        var v = a.asInstanceOf[PlatformAnnotation].getValue
+        if (v == "*") return 2; // pointer size for arduino
+        else return Integer.parseInt(a.asInstanceOf[PlatformAnnotation].getValue)
+      }
       case None => {
         println("Warning: Missing annotation c_byte_size for type " + self.getName + ", using 2 as the type size.")
         return 2
@@ -967,8 +971,25 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
     }
   }
 
+  def is_pointer(): Boolean = {
+    self.getAnnotations.filter {
+      a => a.getName == "c_byte_size"
+    }.headOption match {
+      case Some(a) => {
+        var v = a.asInstanceOf[PlatformAnnotation].getValue
+        if (v == "*") return true
+        else return false
+      }
+      case None => {
+        println("Warning: Missing annotation c_byte_size for type " + self.getName + ", using 2 as the type size.")
+        return false
+      }
+    }
+  }
+
   def deserialize_from_byte(buffer : String, idx : Integer) = {
     var result =  ""
+    if (is_pointer) result += "(" + c_type + ")"
     var i = c_byte_size
     var index = idx
     while (i>0) {
@@ -982,11 +1003,13 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
 
   def bytes_to_serialize(variable : String) : ArrayList[String] = {
     var result = new ArrayList[String]()
+    var v = variable
+    if (is_pointer) v += "(uint16_t)" + v
     var i = c_byte_size
     while (i>0) {
       i = i-1
-      if(i==0) result.add(variable + " & 0xFF")
-      else result.add("(" + variable + ">>" + (8*i) + ") & 0xFF")
+      if(i==0) result.add(v + " & 0xFF")
+      else result.add("(" + v + ">>" + (8*i) + ") & 0xFF")
     }
     result
   }

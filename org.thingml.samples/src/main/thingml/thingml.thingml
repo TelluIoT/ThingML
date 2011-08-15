@@ -33,6 +33,12 @@ datatype UInt16
 	@c_byte_size "2"
 	@java_type "int";
 
+datatype Int16	
+	@c_type "int"
+    @c_byte_size "2"
+	@java_type "int";
+
+
 datatype Long	
 	@c_type "long"
 	@c_byte_size "4"
@@ -55,7 +61,7 @@ datatype Char
 
 datatype String	
 	@c_type "char *"
-	@c_byte_size "2"
+	@c_byte_size "*"
 	@java_type "String";
 
 /*****************************************************************************
