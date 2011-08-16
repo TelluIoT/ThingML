@@ -1,0 +1,25 @@
+// 
+// (c) SINTEF 2011
+//
+// Simple configuration, connecting the client to the mediator and the mediator
+// to the server.
+// 
+// See also client.thingml, server.thingml, mediator.thingml
+// 
+// by Franck CHAUVEL <franck.chauve@sintef.no>
+//
+
+import "client.thingml"
+import "server.thingml"
+import "mediator.thingml"
+
+configuration Configuration {
+
+	instance client: Client
+	instance server: Server
+	instance mediator: Mediator
+	
+	connector client.LoginServer => mediator.Client
+	connector server.LoginClient => mediator.Server  
+
+}
