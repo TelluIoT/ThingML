@@ -1,0 +1,42 @@
+import "PrimitiveTypes.thingml"
+
+enumeration ADC10Port {
+	A0 @flag "INCH_A0"
+	A1 @flag "INCH_A1"
+	A2 @flag "INCH_A1"
+	A3 @flag "INCH_A1"
+	A4 @flag "INCH_A1"
+	A5 @flag "INCH_A1"
+	A6 @flag "INCH_A1"
+	A7 @flag "INCH_A1"
+	VEREF_PLUS @flag "INCH_VEREF_PLUS"
+	VEREF_MINUS @flag "INCH_VEREF_MINUS"
+	TEMP @flag "INCH_TEMP"
+	VCC2 @flag "INCH_VCC2"
+}
+
+thing fragment MSP430SensorMessages {
+	message mesure_temperature();
+	message mesure_voltage();
+	//message mesure_adc(channel : ADC10Port);
+	
+	message temperature_value(v : Integer);
+	message voltage_value(v : Integer);
+	//message adc_value(channel : ADC10Port, v : Integer);
+}
+
+thing MSP430Sensor includes MSP430SensorMessages
+{
+
+
+
+	provided port MSP430Sensor {
+		receives mesure_temperature
+		receives mesure_voltage
+		//receives mesure_adc
+		
+		sends temperature_value
+		sends voltage_value
+		//sends adc_value
+	}
+}

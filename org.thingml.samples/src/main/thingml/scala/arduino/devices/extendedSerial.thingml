@@ -1,0 +1,112 @@
+import "../core/arduino.thingml"
+import "serial.thingml"
+
+thing fragment ExtendedSerialFrag includes SerialMsgs {
+	//readonly property bufferSize : Int8 = 20
+	//property buffer : String = 'malloc (' & bufferSize & '* sizeof (char))'
+	property buffer : String = '(char *)malloc (20 * sizeof (char))'
+	property index : Int8 = 0
+	message receiveValue(v : Int16);
+}
+
+thing fragment IsDigitMsgs {
+    message char(c : Byte);
+	message isDigit(b : Boolean, c : Byte);
+}
+
+thing fragment IsDigit includes IsDigitMsgs {
+    
+	provided port testDigit {
+		receives char
+		sends isDigit
+	}
+	
+	statechart IsDigitImpl init Run {
+		state Run {
+			internal event m : testDigit?char
+			action do
+				if (47 < m.c < 58 ) testDigit!isDigit(true, m.c)
+				if (not (47 < m.c < 58)) testDigit!isDigit(false, m.c)
+				end
+		}
+	}
+}
+
+thing ExtendedSerial includes IsDigitMsgs, ExtendedSerialFrag, ArduinoStdlibMsgs
+{
+	required port serial {
+        receives receiveByte
+        sends printByte, printMessage, printValue
+	}
+	
+	required port testDigit {
+		sends char
+		receives isDigit
+	}
+	
+	provided port extSerial {
+		sends receiveByte, receiveValue
+        receives printByte, printMessage, printValue
+	}
+
+    statechart ExtendedSerialImpl init Receiving {
+            
+        state Receiving {
+            on entry serial!printMessage("Waiting\n") // Debug
+            
+        	internal event m : serial?receiveByte
+            guard not (m.b == '\'$\'')
+            action do 
+                extSerial!receiveByte(m.b)
+                serial!printMessage ("Recu: ") // Debug
+                serial!printByte (m.b) // Debug
+                end
+                
+            transition -> Buf
+            event m : serial?receiveByte
+            guard m.b == '\'$\''      
+            action serial!printMessage("Reading a Number") // Debug
+            
+            internal event m : extSerial?printByte
+            action serial!printByte(m.b)
+            
+            internal event m : extSerial?printMessage
+            action serial!printMessage(m.msg)
+            
+            internal event m : extSerial?printValue
+            action serial!printValue(m.v)                             
+        }
+        
+        state Buf {
+        	on entry index = 0
+            on exit serial!printValue('atoi('& buffer &')')	// Debug
+        
+        	transition -> Receiving
+        	event m : serial?receiveByte
+        	guard m.b == '\'\n\'' and not (index == 0) // To avoid the first '\n' which comes with the '$'.
+        	action ''& buffer &'['& index & '] = \'\0\';' 
+        	after extSerial!receiveValue('atoi('& buffer &')')
+        	
+        	// Send the byte to check if it's a digit like supposed.
+        	internal event m : serial?receiveByte
+            guard not (m.b == '\'\n\'')
+            action testDigit!char(m.b)
+            	
+            // Add the digit to the buffer.	
+        	internal event m : testDigit?isDigit
+            guard m.b == true  // No effect!
+            action do
+            	''& buffer &'['& index & '] = '& m.c &';'
+            	index = index + 1
+            	end	
+        }
+    }
+}
+
+configuration extendedSerialFrag {
+	instance serial : Serial
+	instance exSerial : ExtendedSerial
+    instance testdigit : IsDigit
+	connector exSerial.serial => serial.serial
+    connector exSerial.testDigit => testdigit.testDigit 
+}

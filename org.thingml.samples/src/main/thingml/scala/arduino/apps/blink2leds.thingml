@@ -1,0 +1,75 @@
+import "../devices/led.thingml"
+import "../devices/softtimer.thingml"
+
+thing Blink2Leds includes LEDMsgs, TimerMsgs
+{
+
+	required port timer1
+	{
+		sends timer_start
+        receives timer_timeout
+	}
+	
+	required port timer2
+	{
+		sends timer_start
+        receives timer_timeout
+	}
+	
+	required port led1
+	{
+		sends led_toggle
+	}
+	
+	required port led2
+	{
+		sends led_toggle
+	}
+
+    statechart Blink2LedsImpl init Blinking {
+        
+        state Blinking {
+            
+            on entry do 
+            	timer1!timer_start(1000)
+            	timer2!timer_start(333)
+            end
+            
+            internal Blink1 event timer1?timer_timeout
+            action do
+            	led1!led_toggle()
+            	timer1!timer_start(1000)
+            end
+            
+            internal Blink2 event timer2?timer_timeout
+            action do
+            	led2!led_toggle()
+            	timer2!timer_start(333)
+            end
+        }
+    }
+}
+
+configuration Blink2Leds {       
+
+	// The arduino board with 2 LEDs on pin 10 and 13
+	instance arduino : Arduino
+	
+	instance led1 : LED set pin = DigitalPin:PIN_10 
+	connector led1.DigitalIO => arduino.DigitalIO
+	
+	instance led2 : LED set pin = DigitalPin:PIN_13 
+	connector led2.DigitalIO => arduino.DigitalIO
+	
+	instance timer1 : SoftTimer
+	instance timer2 : SoftTimer
+	
+	// The blink application
+	instance app : Blink2Leds
+    connector timer1.Polling => arduino.Polling
+    connector timer2.Polling => arduino.Polling
+	connector app.led1 => led1.LED
+	connector app.timer1 => timer1.timer
+	connector app.led2 => led2.LED
+	connector app.timer2 => timer2.timer
+}

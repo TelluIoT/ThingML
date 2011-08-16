@@ -1,0 +1,41 @@
+import "../devices/led.thingml"
+import "../devices/button.thingml"
+
+thing SimpleButton includes LEDMsgs, ButtonMsgs
+{
+	required port button 
+    {	
+		receives press, release
+	}
+	
+	required port led 
+    {	
+		sends led_toggle
+	}
+
+    statechart SimpleButtonImpl init Running {
+        
+        state Running {
+            
+        	internal event button?press
+        	action led!led_toggle()        
+           
+        }
+    }
+}
+
+configuration SimpleButton {       
+
+	instance arduino : Arduino
+	instance button : Button
+		set pin = DigitalPin:PIN_4
+	instance led : LED
+		set pin = DigitalPin:PIN_13 	
+	connector button.DigitalIO => arduino.DigitalIO
+	connector led.DigitalIO => arduino.DigitalIO
+
+	// The blink application
+	instance app : SimpleButton
+	connector app.button => button.Button
+	connector app.led => led.LED
+}

@@ -1,0 +1,60 @@
+import "../testharness.thingml"
+import "../../arduino/core/arduino.thingml"
+import "../../arduino/devices/led.thingml"
+
+thing ArduinoHarness includes TestHarness, ThingMLScheduler, LEDMsgs 
+{
+
+    property visible : Boolean = false
+	
+	required port polling {
+        receives poll
+    }
+    
+    required port led {
+    	sends led_on
+    }
+    
+	statechart ArduinoHarness init Testing {
+		
+		//on entry 'Serial.begin(9600);'
+		
+		state Testing {
+			
+			internal event polling?poll
+            guard not visible
+            action 
+            do
+            visible = true
+            'Dialog.showInput(message = "Enter char", initial = "c") match {
+                case inputChar : Some[String] => '  
+                test!testIn('inputChar.get.charAt(0)')  
+                'case _ => 
+            }'
+            visible = false
+            end
+            
+            internal event m : test?testOut
+            action 'println(' & m.c & ');'
+            
+            transition -> Failed 
+            event test?testFailure
+            action 'println(" *FAILURE* ");'
+			
+		}
+		
+		state Failed {
+			on entry 'System.exit(1)'
+		}
+	}
+}
+
+configuration fragment ArduinoHarness {
+	instance arduino : Arduino
+	instance led : LED
+		set pin = DigitalPin:PIN_13 
+	connector led.DigitalIO => arduino.DigitalIO
+    connector harness.polling => arduino.Polling
+	instance harness : ArduinoHarness
+	connector harness.led => led.LED	
+}

@@ -1,0 +1,43 @@
+import "../devices/statusled.thingml"
+import "../devices/button.thingml"
+
+thing BlinkButtonStatus includes StatusLEDMsgs, ButtonMsgs
+{
+	required port button 
+    {	
+		receives press, release
+	}
+	
+	required port status
+	{
+		sends statusOFF, statusON, statusBlinkSlow, statusBlinkFast
+	}
+
+    statechart BlinkButtonStatusImpl init Running {
+        
+        state Running {
+            
+        	internal event button?release
+        	action status!statusBlinkSlow()  
+        	
+        	internal event button?press
+        	action status!statusBlinkFast()        
+           
+        }
+    }
+}
+
+configuration BlinkButtonStatus includes StatusLedFragment {       
+
+	instance arduino : Arduino
+	instance button : Button
+		set pin = DigitalPin:PIN_4
+		
+	connector button.DigitalIO => arduino.DigitalIO
+	connector led.DigitalIO => arduino.DigitalIO
+
+	// The blink application
+	instance app : BlinkButtonStatus
+	connector app.button => button.Button
+	connector app.status => statusLed.statusLed
+}

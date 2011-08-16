@@ -1,0 +1,6 @@
+import "../extended/testMaskProperty.thingml"
+import "arduinoharness.thingml"
+
+configuration TestMaskProperty includes ArduinoHarness, TestMaskPropertyFrag {
+	connector test.harness => harness.test 
+}
