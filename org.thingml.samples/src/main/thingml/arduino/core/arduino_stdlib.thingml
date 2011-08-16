@@ -108,13 +108,13 @@ thing fragment ArduinoStdlibMsgs {
 	message digitalWrite(pin : DigitalPin, value : DigitalState) @code "3";
 	message digitalRead(pin : DigitalPin) @code "4"
 		@sync_response "digitalReadResult#value" @timeout "500" @retry "0";
-	message digitalReadResult(value : DigitalState) @code "5";
+	message digitalReadResult(pin : DigitalPin, value : DigitalState) @code "5";
 	
 	// Analog I/O
 	message analogReference(type : AnalogReference) @code "6";
 	message analogRead(pin : AnalogPin) @code "7" 
 		@sync_response "analogReadResult#value" @timeout "500" @retry "0";
-	message analogReadResult(value : Int16) @code "8";
+	message analogReadResult(pin : AnalogPin, value : Int16) @code "8";
 	message analogWrite(pin : PWMPin, value : Int8) @code "9";
 	
 	// Advanced I/O
@@ -183,13 +183,13 @@ thing ArduinoStdlib includes ArduinoStdlibMsgs
             action 'digitalWrite(' & m.pin & ', '& m.value &');'
             
             internal event m : DigitalIO?digitalRead 
-            action DigitalIO!digitalReadResult('digitalRead(' & m.pin &')')
+            action DigitalIO!digitalReadResult(m.pin, 'digitalRead(' & m.pin &')')
             
             internal event m : AnalogIO?analogReference 
             action 'analogReference(' & m.type & ');'
             
             internal event m : AnalogIO?analogRead 
-            action AnalogIO!analogReadResult('analogRead(' & m.pin &')')
+            action AnalogIO!analogReadResult(m.pin, 'analogRead(' & m.pin &')')
             
             internal event m : AnalogIO?analogWrite 
             action 'analogWrite(' & m.pin & ', '& m.value &');'

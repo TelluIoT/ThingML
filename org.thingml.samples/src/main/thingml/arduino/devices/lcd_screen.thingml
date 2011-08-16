@@ -179,7 +179,6 @@ void sensor_print_fullscreen (unsigned short id)
 	readonly property maxLengthTitle : UInt8 = 10 // Max length of the title string. 
 	readonly property maxLengthUnit : UInt8 = 5 // Max length of the unit string.
 	
-	property sensorDisplay : SensorDisplay
     property currentDisplay : Int8 = - 1 
 	
 	provided port Display
@@ -188,28 +187,25 @@ void sensor_print_fullscreen (unsigned short id)
 		sends currentDisplay
 	}
 	
-	statechart LcdScreenImp init Initialization 
+	statechart LcdScreenImp init Running 
 	{
         on entry 'lcd_init (10, 11, 12, 13, 14, 15, 16);'
-		state Initialization
-		{
-			transition initializing -> Running
-			event d : Display?initDisplay
-			action sensorDisplay = 'lcd_display_init ('& d.id &', '& d.title &', '& d.unit &', '& d.initValue &', '& d.minValue &', '& d.maxValue &')'  
-		}
 		
 		state Running
 		{
-			internal event d : Display?refreshDisplay
-			action do
-                'lcd_display_refresh ('& d.id &', '& d.value &');'
-                if (currentDisplay == d.id) 'sensor_print_fullscreen ('& d.id &');'
-                end
+			internal initialize event d : Display?initDisplay
+			action 'lcd_display_init ('& d.id &', '& d.title &', '& d.unit &', '& d.initValue &', '& d.minValue &', '& d.maxValue &');'  
 			
-			internal event d : Display?setDisplay
+            internal display event d : Display?setDisplay
 			action do
                 'sensor_print_fullscreen ('& d.id &');'
                 currentDisplay = d.id
+                end
+                
+			internal refresh event d : Display?refreshDisplay
+			action do
+                'lcd_display_refresh ('& d.id &', '& d.value &');'
+                if (currentDisplay == d.id) 'sensor_print_fullscreen ('& d.id &');'
                 end
 		}
 	}

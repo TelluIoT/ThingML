@@ -10,7 +10,7 @@ thing fragment AnalogInputMsgs
 
 thing AnalogInput includes AnalogInputMsgs, TimerMsgs, ArduinoStdlibMsgs
 {
-	readonly property pin : UInt8 = 1
+	readonly property pin : AnalogPin = AnalogPin:A_4
 	readonly property refreshRate : UInt16 = 30
 	readonly property precision : Int8 = 1
 	
@@ -67,6 +67,7 @@ thing AnalogInput includes AnalogInputMsgs, TimerMsgs, ArduinoStdlibMsgs
 		{	
 			transition -> Running
 			event m : AnalogIO?analogReadResult
+            guard m.pin == pin
 			action do
 				if (m.value - oldValue > precision or m.value - oldValue < - precision) do
                     Analog!value (m.value)
@@ -79,6 +80,7 @@ thing AnalogInput includes AnalogInputMsgs, TimerMsgs, ArduinoStdlibMsgs
 		{	
 			transition -> Running
 			event m : AnalogIO?analogReadResult
+            guard m.pin == pin
 			action Analog!value (m.value)
 		}
 	}
@@ -88,7 +90,6 @@ configuration AnalogInputConfFrag
 {
 	instance arduino : Arduino
 	instance analog : AnalogInput
-        set pin = 4
 	instance timer : SoftTimer
 	connector analog.Timer => timer.timer
 	connector analog.AnalogIO => arduino.AnalogIO

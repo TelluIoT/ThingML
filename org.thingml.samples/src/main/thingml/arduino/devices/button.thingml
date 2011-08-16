@@ -45,17 +45,17 @@ thing Button includes ButtonMsgs, ArduinoStdlibMsgs, ThingMLScheduler
         state Released {
             transition pressed -> Pressed
             event m: DigitalIO?digitalReadResult
-            guard m.value == DigitalState:HIGH
-            action debounce = 20
-            after Button!press()
+            guard m.value == DigitalState:HIGH and m.pin == pin 
+            // action debounce = 20
+            action Button!press()
         }
         
         state Pressed {
             transition pressed -> Released
             event m: DigitalIO?digitalReadResult
-            guard m.value == DigitalState:LOW
-            action debounce = 20
-            after Button!release()
+            guard m.value == DigitalState:LOW and m.pin == pin
+            // action debounce = 20
+            action Button!release()
         }
     }
 }

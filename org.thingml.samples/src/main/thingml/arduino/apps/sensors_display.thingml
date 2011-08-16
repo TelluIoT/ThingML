@@ -1,0 +1,114 @@
+import "../devices/lcd_screen.thingml"
+import "../devices/analog_input.thingml"
+import "../devices/button.thingml"
+import "../devices/led.thingml"
+
+thing SensorsDisplay includes LcdScreenMsgs, AnalogInputMsgs, LEDMsgs, ButtonMsgs
+@c_header "
+#include <math.h>
+int temperature (int RawADC) {
+ double Temp;
+ Temp = log(((10240000/RawADC) - 10000));
+ Temp = 1 / (0.001129148 + (0.000234125 + (0.0000000876741 * Temp * Temp ))* Temp );
+ Temp = Temp - 273.15;            // Convert Kelvin to Celcius
+ return (int)Temp;
+}
+"
+{		
+	property tempDisplay : UInt8 = 0
+	property potDisplay : UInt8 = 1
+	
+	required port Display 
+    {	
+		sends initDisplay, refreshDisplay, setDisplay
+	}
+
+	required port Pot
+	{
+		receives value
+		sends subscribe
+	}
+	
+    required port Temp
+	{
+		receives value
+		sends subscribe
+	}
+
+    required port Led
+	{
+		sends led_toggle
+	}
+
+	required port Button
+    {
+        receives press
+    }
+	
+   	statechart SensorsDisplayImpl init Temp
+   	{
+   		on entry do
+        		Display!initDisplay (potDisplay, "Position", "", 0, 0, 1023)
+        		Display!initDisplay (tempDisplay, "Temperature", "C", 25, 20, 30)
+        	    Temp!subscribe (true)
+        	    Pot!subscribe (true)
+        		end
+   	    
+   	    internal event m : Temp?value
+        action Display!refreshDisplay (tempDisplay, 'temperature ('& m.val &')')
+        	
+        internal event m : Pot?value
+        action Display!refreshDisplay (potDisplay, m.val)
+        	
+   	    state Temp
+        {		
+        	on entry Display!setDisplay (tempDisplay)
+        	
+        	transition switch -> Pot
+        	event Button?press
+            action Led!led_toggle ()
+        }
+        
+        state Pot
+        {		
+        	on entry Display!setDisplay (potDisplay)
+        
+        	transition switch -> Temp
+        	event Button?press
+            action Led!led_toggle ()	
+        }
+   	}
+}
+
+configuration SensorsDisplay
+{
+	instance arduino : Arduino
+	
+	instance pot : AnalogInput
+        set pin = AnalogPin:A_4
+    instance temp : AnalogInput
+        set pin = AnalogPin:A_3
+	instance timerPot : SoftTimer
+ 	instance timerTemp : SoftTimer
+	connector pot.Timer => timerPot.timer
+ 	connector temp.Timer => timerTemp.timer
+	connector pot.AnalogIO => arduino.AnalogIO
+ 	connector temp.AnalogIO => arduino.AnalogIO
+
+    instance led : LED 
+        set pin = DigitalPin:PIN_8 
+	connector led.DigitalIO => arduino.DigitalIO
+
+    instance button : Button
+        set pin = DigitalPin:PIN_9
+    connector button.DigitalIO => arduino.DigitalIO
+
+	instance screen : LcdScreen
+	
+	instance app : SensorsDisplay	
+	connector app.Display => screen.Display
+    connector app.Pot => pot.Analog
+    connector app.Temp => temp.Analog
+    connector app.Led => led.LED
+    connector app.Button => button.Button
+}
