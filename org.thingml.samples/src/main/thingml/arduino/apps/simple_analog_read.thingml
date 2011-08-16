@@ -1,7 +1,7 @@
 import "../devices/serial.thingml"
 import "../devices/analog_input.thingml"
 
-thing SimpleAnalogRead includes SerialMsgs, AnalogPotMsgs
+thing SimpleAnalogRead includes SerialMsgs, AnalogInputMsgs
 {
 	required port Serial 
     {	
@@ -9,7 +9,7 @@ thing SimpleAnalogRead includes SerialMsgs, AnalogPotMsgs
         sends printByte, printMessage, printValue
 	}
 	
-	required port Pot
+	required port Analog
     {	
 		receives value
 		sends subscribe, getValue
@@ -17,7 +17,7 @@ thing SimpleAnalogRead includes SerialMsgs, AnalogPotMsgs
 
     statechart SimpleAnalogReadImpl init Running 
     {
-		internal event m : Pot?value
+		internal event m : Analog?value
 		action do 
             Serial!printValue (m.val)
 		    Serial!printByte ('\'\n\'')
@@ -26,15 +26,15 @@ thing SimpleAnalogRead includes SerialMsgs, AnalogPotMsgs
         { 
         	internal event m : Serial?receiveByte
         	guard m.b == '\'g\''
-        	action Pot!getValue ()	      
+        	action Analog!getValue ()	      
            
            	internal event m : Serial?receiveByte
         	guard m.b == '\'s\''
-        	action Pot!subscribe (true)
+        	action Analog!subscribe (true)
         	
         	internal event m : Serial?receiveByte
         	guard m.b == '\'u\''
-        	action Pot!subscribe (false)
+        	action Analog!subscribe (false)
         }
     }
 }
@@ -44,5 +44,5 @@ configuration SimpleAnalogRead includes AnalogInputConfFrag {
 	instance app : SimpleAnalogRead
 	
 	connector app.Serial => serial.serial
-	connector app.Pot => pot.Pot 
+	connector app.Analog => analog.Analog 
 }

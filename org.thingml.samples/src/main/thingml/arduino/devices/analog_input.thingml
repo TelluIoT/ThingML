@@ -1,14 +1,14 @@
 import "../core/arduino.thingml"
 import "softtimer.thingml"
 
-thing fragment AnalogPotMsgs
+thing fragment AnalogInputMsgs
 {
 	message getValue ();
 	message subscribe (value : Boolean);
 	message value (val : Int16);
 }
 
-thing AnalogPot includes AnalogPotMsgs, TimerMsgs, ArduinoStdlibMsgs
+thing AnalogInput includes AnalogInputMsgs, TimerMsgs, ArduinoStdlibMsgs
 {
 	readonly property pin : UInt8 = 1
 	readonly property refreshRate : UInt16 = 30
@@ -27,18 +27,18 @@ thing AnalogPot includes AnalogPotMsgs, TimerMsgs, ArduinoStdlibMsgs
 		receives analogReadResult
 	}
 
-	provided port Pot
+	provided port Analog
 	{
 		sends value
 		receives subscribe, getValue
 	} 
 	
-	statechart AnalogPotImpl init Running
+	statechart AnalogInputImpl init Running
 	{ 	 
 		composite state Running init Unsubscribe keeps history
 		{ 
 			transition -> ReadValueG
-			event Pot?getValue
+			event Analog?getValue
             action AnalogIO!analogRead (pin)
             
             transition -> ReadValueS
@@ -48,7 +48,7 @@ thing AnalogPot includes AnalogPotMsgs, TimerMsgs, ArduinoStdlibMsgs
 			state Unsubscribe
 			{
 				transition -> Subscribe
-				event m : Pot?subscribe
+				event m : Analog?subscribe
 				guard m.value == true
 			}
 			
@@ -57,7 +57,7 @@ thing AnalogPot includes AnalogPotMsgs, TimerMsgs, ArduinoStdlibMsgs
 				on entry Timer!timer_start (refreshRate)
 				
 				transition -> Unsubscribe
-				event m : Pot?subscribe
+				event m : Analog?subscribe
 				guard m.value == false
 				action Timer!timer_cancel ()
 			}
@@ -69,7 +69,7 @@ thing AnalogPot includes AnalogPotMsgs, TimerMsgs, ArduinoStdlibMsgs
 			event m : AnalogIO?analogReadResult
 			action do
 				if (m.value - oldValue > precision or m.value - oldValue < - precision) do
-                    Pot!value (m.value)
+                    Analog!value (m.value)
 				    oldValue = m.value
                 end 
 			end
@@ -79,7 +79,7 @@ thing AnalogPot includes AnalogPotMsgs, TimerMsgs, ArduinoStdlibMsgs
 		{	
 			transition -> Running
 			event m : AnalogIO?analogReadResult
-			action Pot!value (m.value)
+			action Analog!value (m.value)
 		}
 	}
 }
@@ -87,9 +87,9 @@ thing AnalogPot includes AnalogPotMsgs, TimerMsgs, ArduinoStdlibMsgs
 configuration AnalogInputConfFrag
 {
 	instance arduino : Arduino
-	instance pot : AnalogPot
+	instance analog : AnalogInput
         set pin = 4
 	instance timer : SoftTimer
-	connector pot.Timer => timer.timer
-	connector pot.AnalogIO => arduino.AnalogIO
+	connector analog.Timer => timer.timer
+	connector analog.AnalogIO => arduino.AnalogIO
 }

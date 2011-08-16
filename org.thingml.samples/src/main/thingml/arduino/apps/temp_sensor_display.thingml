@@ -1,7 +1,7 @@
 import "../devices/lcd_screen.thingml"
 import "../devices/analog_input.thingml"
 
-thing TempSensorDisplay includes LcdScreenMsgs, AnalogPotMsgs
+thing TempSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
 @c_header "
 #include <math.h>
 int temperature (int RawADC) {
@@ -15,10 +15,10 @@ int temperature (int RawADC) {
 {
 	required port Display 
     {	
-		sends initDisplay, refreshDisplay, getDisplay
+		sends initDisplay, refreshDisplay, setDisplay
 	}
 
-	required port Pot
+	required port Temp
 	{
 		receives value
 		sends subscribe
@@ -26,15 +26,15 @@ int temperature (int RawADC) {
 	
    	statechart TempSensorDisplayImpl init Running
    	{
-   		on entry Display!initDisplay ("Temperature", "C", 0, 20, 35)
+   		on entry do
+                Display!initDisplay (0, "Temperature", "C", 0, 20, 35)
+                Display!setDisplay (0)
+                end
    		state Running
    		{
-   			on entry Pot!subscribe (true)
-   			internal refresh event m : Pot?value
-   			action do
-   				Display!refreshDisplay (0, 'temperature ('& m.val &')')
-   				Display!getDisplay (0)
-   				end 
+   			on entry Temp!subscribe (true)
+   			internal refresh event m : Temp?value
+   			action Display!refreshDisplay (0, 'temperature ('& m.val &')') 
    		}	
    	}
 }
@@ -45,5 +45,5 @@ configuration TempSensorDisplay includes AnalogInputConfFrag
 	instance app : TempSensorDisplay
 	
 	connector app.Display => screen.Display
-	connector app.Pot => pot.Pot
+	connector app.Temp => analog.Analog
 }

@@ -1,14 +1,14 @@
 import "../devices/lcd_screen.thingml"
 import "../devices/analog_input.thingml"
 
-thing PotSensorDisplay includes LcdScreenMsgs, AnalogPotMsgs
+thing PotSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
 {	
 	required port Display 
     {	
-		sends initDisplay, refreshDisplay, getDisplay
+		sends initDisplay, refreshDisplay, setDisplay
 	}
 
-	required port Pot
+	required port Analog
 	{
 		receives value
 		sends subscribe
@@ -16,15 +16,15 @@ thing PotSensorDisplay includes LcdScreenMsgs, AnalogPotMsgs
 	
    	statechart PotSensorDisplayImpl init Running
    	{
-   		on entry Display!initDisplay ("Position", "", 0, 0, 1023)
+   		on entry do 
+                Display!initDisplay (3, "Position", "", 0, 0, 1023)
+                Display!setDisplay (3)
+                end
    		state Running
    		{
-   			on entry Pot!subscribe (true)
-   			internal refresh event m : Pot?value
-   			action do
-   				Display!refreshDisplay (0, m.val)
-   				Display!getDisplay (0)
-   				end 
+   			on entry Analog!subscribe (true)
+   			internal refresh event m : Analog?value
+   			action Display!refreshDisplay (3, m.val) 
    		}	
    	}
 }
@@ -35,5 +35,5 @@ configuration PotSensorDisplay includes AnalogInputConfFrag
 	instance app : PotSensorDisplay
 	
 	connector app.Display => screen.Display
-	connector app.Pot => pot.Pot
+	connector app.Analog => analog.Analog
 }
