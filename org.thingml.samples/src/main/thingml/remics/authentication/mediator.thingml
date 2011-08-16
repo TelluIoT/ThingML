@@ -16,7 +16,7 @@ datatype String;
 datatype Boolean;
 
 
-thing Server {
+thing Mediator {
 
 	property password: String // Use to store the password
 
@@ -29,12 +29,12 @@ thing Server {
 	message password(pwd: String);
 	message access(result: Boolean); 
 		
-	required port Client {
+	provided port Client {
 		receives log
 		sends ack 
 	}
 	
-	required port Server {
+	provided port Server {
 		sends login, password
 		receives access
 	}

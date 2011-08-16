@@ -26,7 +26,7 @@ thing Server {
 	message password(pwd: String);
 	message access(result: Boolean); 
 		
-	provided port LoginClient {
+	required port LoginClient {
 		receives login, password
 		sends access
 	}
