@@ -102,7 +102,10 @@ enumeration InterruptTrigger
 }
 
 thing fragment ArduinoStdlibMsgs {
-
+    
+    //Polling (defined in bootstrap)
+    //message poll() @code "0";
+    
 	// Digital I/O
 	message pinMode(pin : DigitalPin, mode : PinMode) @code "2";
 	message digitalWrite(pin : DigitalPin, value : DigitalState) @code "3";
@@ -141,8 +144,23 @@ thing fragment ArduinoStdlibMsgs {
 	message eeprom_write_ack() @code "35";
 }
 
-thing ArduinoStdlib includes ArduinoStdlibMsgs
+thing ArduinoStdlib includes ArduinoStdlibMsgs, ThingMLScheduler
+@scala_header "
+class PollTask(p : Port) extends TimerTask{\n
+  override def run {\n
+    p.send(new Poll())\n
+  }\n
+}\n\n
+object Random1024{\n
+    val r : Random = new Random()\n
+    def randomInt() = r.nextInt(1024)\n
+}\n\n"
 {
+        
+	provided port Polling {
+		sends poll
+	}
+    
 	provided port DigitalIO {
 		receives pinMode, digitalRead, digitalWrite
 		sends digitalReadResult
@@ -175,30 +193,35 @@ thing ArduinoStdlib includes ArduinoStdlibMsgs
     // Implemetation which maps to extern calls to the arduino lib
     statechart ArduinoStdlibImpl init RunningArduino {
         state RunningArduino {
+            
+            on entry
+            do
+                'new Timer().scheduleAtFixedRate(new PollTask(getPort("Polling").get), 5, 5)'
+            end
         
             internal event m : DigitalIO?pinMode 
-            action 'pinMode(' & m.pin & ', '& m.mode &');'
+            action 'println("pinMode("+' & m.pin & '+", "+'& m.mode &'+");")'
             
             internal event m : DigitalIO?digitalWrite 
-            action 'digitalWrite(' & m.pin & ', '& m.value &');'
+            action 'println("digitalWrite("+' & m.pin & '+", "+'& m.value &'+");")'
             
             internal event m : DigitalIO?digitalRead 
-            action DigitalIO!digitalReadResult('digitalRead(' & m.pin &')')
+            action DigitalIO!digitalReadResult('Random1024.randomInt')
             
             internal event m : AnalogIO?analogReference 
-            action 'analogReference(' & m.type & ');'
+            action 'println("analogReference("+' & m.type & '+");")'
             
             internal event m : AnalogIO?analogRead 
-            action AnalogIO!analogReadResult('analogRead(' & m.pin &')')
+            action AnalogIO!analogReadResult('Random1024.randomInt')
             
             internal event m : AnalogIO?analogWrite 
-            action 'analogWrite(' & m.pin & ', '& m.value &');'
+            action 'println("analogWrite("+' & m.pin & '+", "+'& m.value &'+");")'
             
             internal event m : AdvancedIO?tone 
-            action 'tone(' & m.pin & ', '& m.frequency & ', '& m.duration &');'
+            action 'println("tone("+' & m.pin & '+", "+'& m.frequency & '+", "+'& m.duration &'+");")'
             
             internal event m : AdvancedIO?noTone 
-            action 'noTone(' & m.pin & ');'
+            action 'println("noTone("+' & m.pin & '+");")'
                     
         }
     }

@@ -95,7 +95,7 @@ object ScalaGenerator {
     builder append "object Random1024{\n"
     builder append "val r : Random = new Random()\n"
     builder append "def randomInt() = r.nextInt(256).toByte\n"
-    builder append "}"
+    builder append "}\n"
   }
 
   implicit def scalaGeneratorAspect(self: Thing): ThingScalaGenerator = ThingScalaGenerator(self)

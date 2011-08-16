@@ -24,7 +24,7 @@ thing PingServer includes PingMsg {
 }
 
 thing TestMultiClientPing includes Test, PingMsg
-@test "1121200221 # P1P1P2P1P2PPP2P2P1"
+@test "1121200221 # P1P1P2P1P2PPP2P2P1" // False
 {
     required port ppclient1 {
         sends ping

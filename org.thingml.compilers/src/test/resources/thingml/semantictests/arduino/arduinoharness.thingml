@@ -2,7 +2,10 @@ import "../testharness.thingml"
 import "../../arduino/core/arduino.thingml"
 import "../../arduino/devices/led.thingml"
 
-thing ArduinoHarness includes TestHarness, ThingMLScheduler, LEDMsgs {
+thing ArduinoHarness includes TestHarness, ThingMLScheduler, LEDMsgs 
+{
+
+    property visible : Boolean = false
 	
 	required port polling {
         receives poll
@@ -14,25 +17,34 @@ thing ArduinoHarness includes TestHarness, ThingMLScheduler, LEDMsgs {
     
 	statechart ArduinoHarness init Testing {
 		
-		on entry 'Serial.begin(9600);'
+		//on entry 'Serial.begin(9600);'
 		
 		state Testing {
 			
 			internal event polling?poll
-            guard 'Serial.available()' > 0
-            action test!testIn('(char)Serial.read()')
+            guard not visible
+            action 
+            do
+            visible = true
+            'Dialog.showInput(message = "Enter char", initial = \'c\') match {
+                case inputChar : Some[Char] => '  
+                test!testIn('inputChar.get')  
+                'case _ => 
+            }'
+            visible = false
+            end
             
             internal event m : test?testOut
-            action 'Serial.print(' & m.c & ');'
+            action 'println(' & m.c & ');'
             
             transition -> Failed 
             event test?testFailure
-            action 'Serial.print(" *FAILURE* ");'
+            action 'println(" *FAILURE* ");'
 			
 		}
 		
 		state Failed {
-			on entry led!led_on()
+			on entry 'System.exit(1)'
 		}
 	}
 }
@@ -42,6 +54,7 @@ configuration fragment ArduinoHarness {
 	instance led : LED
 		set pin = DigitalPin:PIN_13 
 	connector led.DigitalIO => arduino.DigitalIO
+    connector harness.polling => arduino.Polling
 	instance harness : ArduinoHarness
 	connector harness.led => led.LED	
 }
