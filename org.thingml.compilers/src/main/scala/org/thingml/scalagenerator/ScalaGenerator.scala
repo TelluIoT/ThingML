@@ -80,6 +80,22 @@ object ScalaGenerator {
 
     builder append "package " + pack + "\n"
     builder append "import org.sintef.smac._" + "\n"
+    
+    //TODO this should not always be generated...
+    builder append "import java.util.TimerTask\n"
+    builder append "import java.util.Timer\n"
+    builder append "import scala.util.Random\n"
+    builder append "import scala.swing.Dialog\n"
+
+    builder append "class PollTask(p : Port) extends TimerTask{\n"
+    builder append "override def run {\n"
+    builder append "p.send(new Poll())\n"
+    builder append "}\n"
+    builder append "}\n"
+    builder append "object Random1024{\n"
+    builder append "val r : Random = new Random()\n"
+    builder append "def randomInt() = r.nextInt(256).toByte\n"
+    builder append "}"
   }
 
   implicit def scalaGeneratorAspect(self: Thing): ThingScalaGenerator = ThingScalaGenerator(self)
@@ -231,7 +247,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     }
     
     builder append "//Starting Things\n"
-    self.getInstances.foreach{ i =>
+    self.allInstances.foreach{ i =>
       builder append i.getType.getName + "_" + i.hashCode + ".start\n"
     }
     
@@ -682,12 +698,12 @@ case class ActionBlockScalaGenerator(override val self: ActionBlock) extends Act
 
 case class ExternStatementScalaGenerator(override val self: ExternStatement) extends ActionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder) {
-    builder append "/*"
+    //builder append "/*"
     builder.append(self.getStatement)
     self.getSegments.foreach {
       e => e.generateScala(builder)
     }
-    builder append "*/"
+    //builder append "*/"
     builder append "\n"
   }
 }
