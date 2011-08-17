@@ -65,17 +65,17 @@
          	<artifactId>maven-antrun-plugin</artifactId>
 	        <executions>
 	           <execution>
-	             <phase>deploy</phase>
+	             <phase>compile</phase>
 	             <configuration>
 	               <tasks>
 	        	   <copy todir="src/test/resources/thingml">
 			       <fileset dir="../org.thingml.samples/src/main/thingml"/>
-  			   </copy>
-			</tasks>
+  			       </copy>
+			       </tasks>
 	             </configuration>
-	           <goals>        
+	          <!-- <goals>
 		       <goal>validate</goal>
-	             </goals>  
+	             </goals>    -->
 	         </execution>
 	      </executions>
 	   </plugin> 

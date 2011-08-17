@@ -230,7 +230,7 @@ class ArduinoCGeneratorContext ( src: Configuration ) extends CGeneratorContext 
 
   override def generateMain(builder: StringBuilder, cfg : Configuration) {
     var initb = new StringBuilder()
-    cfg.generateInitializationCode(initb)
+    cfg.generateInitializationCode(initb, this)
     var pollb = new StringBuilder()
     cfg.generatePollingCode(pollb)
     var maintemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/arduino_main.c")

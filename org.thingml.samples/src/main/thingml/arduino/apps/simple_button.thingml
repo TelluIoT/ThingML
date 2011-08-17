@@ -5,7 +5,7 @@ thing SimpleButton includes LEDMsgs, ButtonMsgs
 {
 	required port button 
     {	
-		receives press, release
+		receives press
 	}
 	
 	required port led 
@@ -24,7 +24,14 @@ thing SimpleButton includes LEDMsgs, ButtonMsgs
     }
 }
 
-configuration SimpleButton {       
+configuration SimpleButton 
+  @debug "false"
+  @debug_fifo "true"
+  @debug_message_send "press"
+  @debug_message_send "led.*"
+  @debug_message_receive "press"
+  @debug_message_receive "led.*"
+{      
 
 	instance arduino : Arduino
 	instance button : Button

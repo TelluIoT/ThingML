@@ -36,26 +36,28 @@ thing Button includes ButtonMsgs, ArduinoStdlibMsgs, ThingMLScheduler
         	debounce = 20
         end
         
-        internal event Polling?poll
-            action do
-            	if (debounce > 0) debounce = debounce - 1
-            	if (debounce == 0) DigitalIO!digitalRead(pin)
-            end
-        
         state Released {
+            
             transition pressed -> Pressed
             event m: DigitalIO?digitalReadResult
             guard m.value == DigitalState:HIGH and m.pin == pin 
-            // action debounce = 20
             action Button!press()
+            
         }
         
         state Pressed {
+            
             transition pressed -> Released
             event m: DigitalIO?digitalReadResult
             guard m.value == DigitalState:LOW and m.pin == pin
-            // action debounce = 20
             action Button!release()
+            
+        }
+        
+        // Region which polls the button (Waits for the result before polling again)
+        region Polling init Poll {
+            state Poll { transition -> Wait event Polling?poll action DigitalIO!digitalRead(pin) } 
+            state Wait { transition -> Poll event m: DigitalIO?digitalReadResult guard m.pin == pin }  
         }
     }
 }
