@@ -1,65 +1,49 @@
 // 
 // (c) SINTEF 2011
 //
-// Define the behavior of an authentication server, which first waits for a login, 
-// checks (and return an acknowledgement) and then waits for the password and check
-// it as well. The authentication is successful if both the login and password are
-// accepted. 
-//
-// TODO: In this simple example, the server can only authentify one single user. It would
-// better to extend it to several user.
+// Define the behavior of a simple authentication server that accepts credentials and 
+// check their validity.
 // 
-// by Franck CHAUVEL <franck.chauve@sintef.no>
-// and Brice MORIN <brice.morin@sintef.no>
+// See also client.thingml, AP1.thingml 
 //
-import "API2.thingml"
+// by Franck CHAUVEL <franck.chauve@sintef.no>
+//
+
+import "API1.thingml"
+
 datatype String;
 
 datatype Boolean;
 
+thing Server includes API1 {
 
-thing Server includes API2{
-
-	property username: String = "bmorin"
-	property password: String = "clio"
-		
-	required port LoginClient {
-		receives login, password
-		sends access
+	readonly property login : String = "toto"
+	readonly property password: String = "pouet"
+	
+	provided port LoginClient {
+		sends ack
+		receives log 
 	}
 	
-	statechart Authentication init WaitingForLogin {
+	statechart Authentication init Ready {
 	
-		state WaitingForLogin {
-			on entry print "Ready: Waiting for credential ..."
+		state Ready {
+			on entry print "Ready: Waiting for credentials..."
 			
-			transition -> WaitingForPassword
-				event e: LoginClient?login
-				guard e.login == username
-				action LoginClient!access(true)
-		}
-		
-		
-		state WaitingForPassword  {
-			
-			// The password received is the good one
-			transition -> LoggedOn
-				event e: LoginClient?password
-				guard e.pwd == password
-				action LoginClient!access(true)
+			transition -> LoggedOn 
+				event e : LoginClient?log
+				guard e.password == password and e.login == login
+				action LoginClient!ack(true)
 				
-			// The password received is wrong, so the server rolls back 
-			// its initial state
-			transition -> WaitingForLogin
-				event e: LoginClient?password
-				guard not e.pwd == password // This should be working
-				action LoginClient!access(false)
+			transition -> LoggedOn
+				event e: LoginClient?log
+				guard not (e.password == password and e.login == login) 
+				action LoginClient!ack(false)
 		}
-		
 		
 		state LoggedOn {
-			on entry print "You are now logged in"
+			on entry print "Your are logged in"
 		}
-			
+	
 	}
 }

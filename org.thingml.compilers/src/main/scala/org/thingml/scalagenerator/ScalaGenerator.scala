@@ -443,10 +443,8 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
       case _ =>
     }
     
-    h.getEvent.headOption match {
-      case Some(a) =>
+    h.getEvent.foreach{a =>
         builder append init + ".initEvent(" + printEvent(a) + ")\n"
-      case None =>
     }
   }
   
