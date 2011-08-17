@@ -13,6 +13,7 @@
 // and Brice MORIN <brice.morin@sintef.no>
 //
 import "API2.thingml"
+
 datatype String;
 
 datatype Boolean;

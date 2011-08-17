@@ -8,6 +8,7 @@
 // by Franck CHAUVEL <franck.chauve@sintef.no>
 // and Brice MORIN <brice.morin@sintef.no>
 //
+
 import "API1.thingml"
 
 datatype String;

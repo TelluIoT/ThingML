@@ -57,6 +57,29 @@
                 </configuration>
             </plugin>
 
+	    <!-- Antrun plugin: use to run any kind of Ant tasks.
+		Use to copy the thingml samples within the test of the
+		compilers automatically 
+		-->	   	
+	    <plugin>
+         	<artifactId>maven-antrun-plugin</artifactId>
+	        <executions>
+	           <execution>
+	             <phase>deploy</phase>
+	             <configuration>
+	               <tasks>
+	        	   <copy todir="src/test/resources/thingml">
+			       <fileset dir="../org.thingml.samples/src/main/thingml"/>
+  			   </copy>
+			</tasks>
+	             </configuration>
+	           <goals>        
+		       <goal>validate</goal>
+	             </goals>  
+	         </execution>
+	      </executions>
+	   </plugin> 
+
         </plugins>
 
     </build>
