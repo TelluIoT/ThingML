@@ -31,7 +31,7 @@ import scala.util.parsing.input.StreamReader
 import java.io._
 
 import io.Source
-import java.lang.StringBuilder
+import java.lang.{Boolean, StringBuilder}
 
 object SimpleCopyTemplate {
 
@@ -54,7 +54,7 @@ object CGenerator {
   def compile(t: Configuration) = {
     var builder = new StringBuilder()
 
-    var context = new ArduinoCGeneratorContext()
+    var context = new ArduinoCGeneratorContext(t)
 
     t.generateC(builder, context)
     builder.toString
@@ -136,7 +136,9 @@ object CGenerator {
 }
 
 
-class CGeneratorContext {
+class CGeneratorContext( src: Configuration ) {
+  // The configuration
+  var cfg = src
 
   // pointer size in bytes of the target platform
   def pointerSize() = { 2 }
@@ -152,9 +154,66 @@ class CGeneratorContext {
   def generateMain(builder: StringBuilder, cfg : Configuration) {
     /* To be implemented by sub-classes */
   }
+
+  var debug : Boolean = _debug
+
+  def _debug() : Boolean = {
+     cfg.getAnnotations.filter {
+      a => a.getName == "debug"
+    }.headOption match {
+      case Some(a) => {
+        var v = a.asInstanceOf[PlatformAnnotation].getValue
+        if (v == "true") return true
+        else return false
+      }
+      case None => {
+        return false
+      }
+    }
+  }
+
+  def debug_fifo() : Boolean = {
+    if (!debug) return false
+     cfg.getAnnotations.filter {
+      a => a.getName == "debug_fifo"
+    }.headOption match {
+      case Some(a) => {
+        var v = a.asInstanceOf[PlatformAnnotation].getValue
+        if (v == "true") return true
+        else return false
+      }
+      case None => {
+        return false
+      }
+    }
+  }
+
+  def debug_message_send(m : Message) : Boolean = {
+    if (!debug) return false
+   cfg.getAnnotations.filter{
+    a => a.getName == "debug_message_send"
+    }.foreach { a=>
+      if (m.getName.matches(a.asInstanceOf[PlatformAnnotation].getValue)) return true
+    }
+    return false
+  }
+
+  def debug_message_receive(m : Message) : Boolean = {
+    if (!debug) return false
+   cfg.getAnnotations.filter{
+    a => a.getName == "debug_message_receive"
+    }.foreach { a=>
+      if (m.getName.matches(a.asInstanceOf[PlatformAnnotation].getValue)) return true
+    }
+    return false
+  }
+
+  def init_debug_mode() = "" // Any code to initialize the debug mode
+
+  def print_debug_message(msg : String) = "// DEBUG: " + msg
 }
 
-class ArduinoCGeneratorContext extends CGeneratorContext {
+class ArduinoCGeneratorContext ( src: Configuration ) extends CGeneratorContext ( src ) {
 
   // pointer size in bytes of the target platform
   override def pointerSize() = { 2 }
@@ -179,6 +238,10 @@ class ArduinoCGeneratorContext extends CGeneratorContext {
     maintemplate = maintemplate.replace("/* POLL_CODE */", pollb.toString);
     builder append maintemplate
   }
+
+  override def init_debug_mode() = "Serial.begin(9600);" // Any code to initialize the debug mode
+
+  override def print_debug_message(msg : String) = "Serial.println(\"DB: " + msg + "\");"
 
 }
 
@@ -346,6 +409,15 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
           }
         }
         builder append "}\n"
+
+        // Produce a debug message if the fifo is full
+        if (context.debug_fifo()) {
+          builder append "else {\n"
+          builder append context.print_debug_message("FIFO FULL (lost msg " + m.getName + ")") + "\n"
+          builder append "}\n"
+        }
+
+
         builder append "}\n"
 
       }
@@ -875,6 +947,11 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
           builder append "void " + handler_name(port, msg)
           append_formal_parameters(builder, msg)
           builder append " {\n"
+
+          if (context.debug_message_receive(msg)) {
+            builder append context.print_debug_message("<- " + handler_name(port, msg)) + "\n"
+          }
+
           // dispatch the current message to sub-regions
           dispatchToSubRegions(builder, cs, port, msg, context)
           // If the state machine itself has a handler
@@ -1131,6 +1208,10 @@ case class SendActionCGenerator(override val self: SendAction) extends ActionCGe
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
     val thing = ThingMLHelpers.findContainingThing(self.getPort)
+
+    if (context.debug_message_send(self.getMessage)) {
+      builder append context.print_debug_message("-> " + thing.sender_name(self.getPort, self.getMessage)) + "\n"
+    }
 
     builder append thing.sender_name(self.getPort, self.getMessage)
 
