@@ -73,18 +73,6 @@ unsigned short digits_counter (int d)
   return digits;
 }
 
-unsigned short first_free_id = 0;
-
-unsigned short get_new_id () 
-{
-  return first_free_id ++;
-}
-
-unsigned short get_current_id () 
-{
-  return first_free_id;
-}
-
 struct sensor_display_ 
 {
   unsigned short id; 
@@ -131,12 +119,17 @@ struct sensor_display_ * lcd_display_init (unsigned short id, char * title, char
   disp->max_value = max_value;
 
   // Fill the top screen buffer.
-  strcpy (disp->top_display, strcat (strcat (disp->top_display, disp->title), \": \"));
-  for (int i = 0; i < digits_counter (max_value) - digits_counter (init_value); i ++)
-    strcat (disp->top_display, \" \");
-  char char_val[digits_counter (disp->max_value) + 1];
-  strcat (disp->top_display, itoa (init_value, char_val, 10));
-  strcat (disp->top_display, unit); 
+    if (init_value > disp->max_value)
+    strcpy (disp->top_display, \"-XXX-\");
+  else
+  {
+      strcpy (disp->top_display, strcat (strcat (disp->top_display, disp->title), \": \"));
+      for (int i = 0; i < digits_counter (max_value) - digits_counter (init_value); i ++)
+        strcat (disp->top_display, \" \");
+      char char_val[digits_counter (disp->max_value) + 1];
+      strcat (disp->top_display, itoa (init_value, char_val, 10));
+      strcat (disp->top_display, unit);
+  } 
   
   progressbar_display_refresh (disp, init_value);
   
@@ -148,17 +141,22 @@ struct sensor_display_ * lcd_display_refresh (unsigned short id, int value)
     struct sensor_display_ * disp = &sensor_display[id];
   // Not optimized.
   
-  // Fill the top screen buffer.
-  strcpy (disp->top_display, \"\");
-  strcat (strcat (disp->top_display, disp->title), \": \");
-  for (int i = 0; i < digits_counter (disp->max_value) - digits_counter (value); i ++)
-    strcat (disp->top_display, \" \");
-  char char_val[digits_counter (disp->max_value) + 1];
-  strcat (disp->top_display, itoa (value, char_val, 10));
-  strcat (disp->top_display, disp->unit); 
+  if (value > disp->max_value)
+    strcpy (disp->top_display, \"-XXX-\");
   
-  progressbar_display_refresh (disp, value);
-  
+  else
+  {
+      // Fill the top screen buffer.
+      strcpy (disp->top_display, \"\");
+      strcat (strcat (disp->top_display, disp->title), \": \");
+      for (int i = 0; i < digits_counter (disp->max_value) - digits_counter (value); i ++)
+        strcat (disp->top_display, \" \");
+      char char_val[digits_counter (disp->max_value) + 1];
+      strcat (disp->top_display, itoa (value, char_val, 10));
+      strcat (disp->top_display, disp->unit); 
+      
+      progressbar_display_refresh (disp, value);
+  }  
   return disp;
 }
 
