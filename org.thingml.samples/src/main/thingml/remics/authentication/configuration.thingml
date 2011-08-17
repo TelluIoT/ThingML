@@ -74,4 +74,3 @@ configuration ManyClientsOneMediator {
 	connector client5.LoginServer => mediator.Client
 	connector substitute.LoginClient => mediator.Server
 }
-
