@@ -80,6 +80,7 @@ thing TempSensor includes TempSensorMsgs, ThingMLScheduler, ArduinoStdlibMsgs, T
         	
         	transition -> Idle
     		event m : adc?analogReadResult
+            guard m.pin == pin
     		action do
     			// average with the last 3 samples
     			temp = (m.value + 3 * temp) / 4 

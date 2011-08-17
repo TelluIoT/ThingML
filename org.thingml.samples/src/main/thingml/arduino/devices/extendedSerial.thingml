@@ -1,12 +1,8 @@
 import "../core/arduino.thingml"
 import "serial.thingml"
 
-thing fragment ExtendedSerialFrag includes SerialMsgs {
-	//readonly property bufferSize : Int8 = 20
-	//property buffer : String = 'malloc (' & bufferSize & '* sizeof (char))'
-	property buffer : String = '(char *)malloc (20 * sizeof (char))'
-	property index : Int8 = 0
-	message receiveValue(v : Int16);
+thing fragment ExtendedSerialMsgs includes SerialMsgs {
+	message receiveValue (v : Int16);
 }
 
 thing fragment IsDigitMsgs {
@@ -32,8 +28,14 @@ thing fragment IsDigit includes IsDigitMsgs {
 	}
 }
 
-thing ExtendedSerial includes IsDigitMsgs, ExtendedSerialFrag, ArduinoStdlibMsgs
+thing ExtendedSerial includes IsDigitMsgs, ExtendedSerialMsgs, ArduinoStdlibMsgs
 {
+    
+    //readonly property bufferSize : Int8 = 20
+	//property buffer : String = 'malloc (' & bufferSize & '* sizeof (char))'
+	property buffer : String = '(char *)malloc (20 * sizeof (char))'
+	property index : Int8 = 0
+
 	required port serial {
         receives receiveByte
         sends printByte, printMessage, printValue
@@ -51,22 +53,9 @@ thing ExtendedSerial includes IsDigitMsgs, ExtendedSerialFrag, ArduinoStdlibMsgs
 
     statechart ExtendedSerialImpl init Receiving {
             
-        state Receiving {
-            on entry serial!printMessage("Waiting\n") // Debug
-            
-        	internal event m : serial?receiveByte
-            guard not (m.b == '\'$\'')
-            action do 
-                extSerial!receiveByte(m.b)
-                serial!printMessage ("Recu: ") // Debug
-                serial!printByte (m.b) // Debug
-                end
-                
-            transition -> Buf
-            event m : serial?receiveByte
-            guard m.b == '\'$\''      
-            action serial!printMessage("Reading a Number") // Debug
-            
+        state Receiving 
+        {    
+            //* Redirecting print actions to basic serial device.
             internal event m : extSerial?printByte
             action serial!printByte(m.b)
             
@@ -74,12 +63,21 @@ thing ExtendedSerial includes IsDigitMsgs, ExtendedSerialFrag, ArduinoStdlibMsgs
             action serial!printMessage(m.msg)
             
             internal event m : extSerial?printValue
-            action serial!printValue(m.v)                             
+            action serial!printValue(m.v)
+            //*
+            
+        	internal event m : serial?receiveByte
+            guard not (m.b == '\'$\'')
+            action extSerial!receiveByte(m.b)
+                
+            transition readNumber -> Buf
+            event m : serial?receiveByte
+            guard m.b == '\'$\''      
+            action serial!printMessage("Reading a Number\n") // Debug                             
         }
         
         state Buf {
         	on entry index = 0
-            on exit serial!printValue('atoi('& buffer &')')	// Debug
         
         	transition -> Receiving
         	event m : serial?receiveByte

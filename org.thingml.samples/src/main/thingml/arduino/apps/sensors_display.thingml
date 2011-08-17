@@ -4,7 +4,8 @@ import "../devices/button.thingml"
 import "../devices/led.thingml"
 
 thing SensorsDisplay includes LcdScreenMsgs, AnalogInputMsgs, LEDMsgs, ButtonMsgs
-@c_header "
+@c_header 
+"
 #include <math.h>
 int temperature (int RawADC) {
  double Temp;
@@ -45,13 +46,13 @@ int temperature (int RawADC) {
         receives press
     }
 	
-   	statechart SensorsDisplayImpl init Temp
+   	statechart SensorsDisplayImpl init Pot
    	{
    		on entry do
         		Display!initDisplay (potDisplay, "Position", "", 0, 0, 1023)
         		Display!initDisplay (tempDisplay, "Temperature", "C", 25, 20, 30)
-        	    Temp!subscribe (true)
-        	    Pot!subscribe (true)
+        	    Temp!subscribe (true) 
+        	    Pot!subscribe (true)  
         		end
    	    
    	    internal event m : Temp?value
@@ -82,8 +83,10 @@ int temperature (int RawADC) {
 
 configuration SensorsDisplay
 {
+    // Arduino declaration.
 	instance arduino : Arduino
 	
+    // Two AnalogInput devices configuration.
 	instance pot : AnalogInput
         set pin = AnalogPin:A_4
     instance temp : AnalogInput
@@ -95,16 +98,20 @@ configuration SensorsDisplay
 	connector pot.AnalogIO => arduino.AnalogIO
  	connector temp.AnalogIO => arduino.AnalogIO
 
+    // Led device configuration.
     instance led : LED 
         set pin = DigitalPin:PIN_8 
 	connector led.DigitalIO => arduino.DigitalIO
 
+    // Button device configuration.
     instance button : Button
         set pin = DigitalPin:PIN_9
-    connector button.DigitalIO => arduino.DigitalIO
-
+//    connector button.DigitalIO => arduino.DigitalIO // Waiting for debug.
+    
+    // Screen device configuration.
 	instance screen : LcdScreen
 	
+    // Application's ports connections.
 	instance app : SensorsDisplay	
 	connector app.Display => screen.Display
     connector app.Pot => pot.Analog
