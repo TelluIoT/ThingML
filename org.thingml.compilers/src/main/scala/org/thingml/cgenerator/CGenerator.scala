@@ -583,7 +583,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     }
   }
        */
-  def generateInitializationCode(builder : StringBuilder) {
+  def generateInitializationCode(builder : StringBuilder, context : CGeneratorContext) {
 
     var model = ThingMLHelpers.findContainingModel(self)
 
@@ -596,6 +596,10 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
       // Call the initialization function
       builder append "initialize_configuration_" + self.getName + "();\n"
+
+      if (context.debug) {
+         builder append context.init_debug_mode() + "\n"
+      }
 
       // Send a setup message to all components which can receive it
       self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
