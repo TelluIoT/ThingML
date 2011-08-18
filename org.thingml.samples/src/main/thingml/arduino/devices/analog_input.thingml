@@ -3,94 +3,125 @@ import "softtimer.thingml"
 
 thing fragment AnalogInputMsgs
 {
-	message getValue ();
-	message subscribe (value : Boolean);
-	message value (val : Int16);
+	message readAnalogInput ();
+	message analogInputValue (value : Int16);
 }
 
-thing AnalogInput includes AnalogInputMsgs, TimerMsgs, ArduinoStdlibMsgs
+thing fragment AnalogInput includes AnalogInputMsgs, ArduinoStdlibMsgs
 {
 	readonly property pin : AnalogPin = AnalogPin:A_4
-	readonly property refreshRate : UInt16 = 30
-	readonly property precision : Int8 = 1
+	
+	provided port AnalogInput 
+	{
+		receives readAnalogInput
+		sends analogInputValue 
+	}
+	
+	required port AnalogIO
+	{
+		receives analogReadResult
+		sends analogRead
+	}
+}
+
+thing SimpleAnalogInput includes AnalogInput
+{
+	statechart SimpleAnalogInputImp init Running
+	{
+		state Running
+		{
+			transition WaitingResult -> Waiting
+			event AnalogInput?readAnalogInput
+			action AnalogIO!analogRead (pin)
+		}
+		
+		state Waiting
+		{
+			transition ResultCatched -> Running
+			event m : AnalogIO?analogReadResult
+			guard m.pin == pin
+			action AnalogInput!analogInputValue (m.value)
+		}
+	}
+}
+
+thing RegularAnalogInput includes AnalogInput, TimerMsgs
+{
+	readonly property refreshRate : UInt16 = 2000
+
+	required port Timer
+	{
+		receives timer_timeout
+		sends timer_start
+	}
+	statechart RegularAnalogInputImp init Running
+	{
+		internal event m : AnalogIO?analogReadResult
+		guard m.pin == pin
+		action AnalogInput!analogInputValue (m.value)
+		
+		state Running
+		{
+			on entry Timer!timer_start (refreshRate)
+			
+			transition Refresh -> Running
+			event Timer?timer_timeout
+			action AnalogIO!analogRead (pin)
+		}
+	}
+}
+
+thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
+{
+	readonly property valuePrecision : Int8 = 1
+	readonly property refreshPrecision : UInt8 = 20
 	
 	property oldValue : Int16 = 3333
 	
 	required port Timer
 	{
-		sends timer_start, timer_cancel
+		sends timer_start
 		receives timer_timeout
 	}
 	
-	required port AnalogIO {
-		sends analogRead
-		receives analogReadResult
-	}
-
-	provided port Analog
+	statechart OnChangeAnalogInputImpl init Running
 	{
-		sends value
-		receives subscribe, getValue
-	} 
-	
-	statechart AnalogInputImpl init Running
-	{ 	 
-		composite state Running init Unsubscribe keeps history
-		{ 
-			transition -> ReadValueG
-			event Analog?getValue
-            action AnalogIO!analogRead (pin)
-            
-            transition -> ReadValueS
+		internal event m : AnalogIO?analogReadResult
+		guard m.pin == pin and (m.value - oldValue < - valuePrecision or m.value - oldValue > valuePrecision)
+		action do
+			AnalogInput!analogInputValue (m.value)
+			oldValue = m.value
+			end
+		 
+		state Running
+		{
+			on entry Timer!timer_start (refreshPrecision)
+			
+			transition Check -> Running 
 			event Timer?timer_timeout
 			action AnalogIO!analogRead (pin)
-				
-			state Unsubscribe
-			{
-				transition -> Subscribe
-				event m : Analog?subscribe
-				guard m.value == true
-			}
-			
-			state Subscribe
-			{
-				on entry Timer!timer_start (refreshRate)
-				
-				transition -> Unsubscribe
-				event m : Analog?subscribe
-				guard m.value == false
-				action Timer!timer_cancel ()
-			}
-		}
-		
-		state ReadValueS
-		{	
-			transition -> Running
-			event m : AnalogIO?analogReadResult
-            guard m.pin == pin
-			action do
-				if (m.value - oldValue > precision or m.value - oldValue < - precision) do
-                    Analog!value (m.value)
-				    oldValue = m.value
-                end 
-			end
-		}
-        
-        state ReadValueG
-		{	
-			transition -> Running
-			event m : AnalogIO?analogReadResult
-            guard m.pin == pin
-			action Analog!value (m.value)
-		}
-	}
+		} 	 
+	}		
 }
 
-configuration AnalogInputConfFrag
-{
-	instance arduino : Arduino
-	instance analog : AnalogInput
-	instance timer : SoftTimer
-	connector analog.Timer => timer.timer
-	connector analog.AnalogIO => arduino.AnalogIO
-}
+//* Configuration needs: *
+//
+// instance arduino : Arduino
+//
+// * SimpleAnalogInput *
+// instance simpleAnalogInput : SimpleAnalogInput
+// connector simpleAnalogInput.AnalogIO => arduino.AnalogIO
+//
+// * RegularAnalogInput *
+// instance regularAnalogInput : RegularAnalogInput
+// instance timer : SoftTimer
+// connector regularAnalogInput.AnalogIO => arduino.AnalogIO
+// connector regularAnalogInput.Timer => timer.timer
+//
+// * OnChangeAnalogInput *
+// instance onChangeAnalogInput : OnChangeAnalogInput
+// instance timer : SoftTimer
+// connector onChangeAnalogInput.AnalogIO => arduino.AnalogIO
+// connector onChangeAnalogInput.Timer => timer.timer
+//
+//*  

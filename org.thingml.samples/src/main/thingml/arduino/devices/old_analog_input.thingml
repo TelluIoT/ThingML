@@ -1,0 +1,96 @@
+import "../core/arduino.thingml"
+import "softtimer.thingml"
+
+thing fragment AnalogInputMsgs
+{
+	message getValue ();
+	message subscribe (value : Boolean);
+	message value (val : Int16);
+}
+
+thing AnalogInput includes AnalogInputMsgs, TimerMsgs, ArduinoStdlibMsgs
+{
+	readonly property pin : AnalogPin = AnalogPin:A_4
+	readonly property refreshRate : UInt16 = 30
+	readonly property precision : Int8 = 1
+	
+	property oldValue : Int16 = 3333
+	
+	required port Timer
+	{
+		sends timer_start, timer_cancel
+		receives timer_timeout
+	}
+	
+	required port AnalogIO {
+		sends analogRead
+		receives analogReadResult
+	}
+
+	provided port Analog
+	{
+		sends value
+		receives subscribe, getValue
+	} 
+	
+	statechart AnalogInputImpl init Running
+	{ 	 
+		composite state Running init Unsubscribe keeps history
+		{ 
+			transition -> ReadValueG
+			event Analog?getValue
+            action AnalogIO!analogRead (pin)
+            
+            transition -> ReadValueS
+			event Timer?timer_timeout
+			action AnalogIO!analogRead (pin)
+				
+			state Unsubscribe
+			{
+				transition -> Subscribe
+				event m : Analog?subscribe
+				guard m.value == true
+			}
+			
+			state Subscribe
+			{
+				on entry Timer!timer_start (refreshRate)
+				
+				transition -> Unsubscribe
+				event m : Analog?subscribe
+				guard m.value == false
+				action Timer!timer_cancel ()
+			}
+		}
+		
+		state ReadValueS
+		{	
+			transition -> Running
+			event m : AnalogIO?analogReadResult
+            guard m.pin == pin
+			action do
+				if (m.value - oldValue > precision or m.value - oldValue < - precision) do
+                    Analog!value (m.value)
+				    oldValue = m.value
+                end 
+			end
+		}
+        
+        state ReadValueG
+		{	
+			transition -> Running
+			event m : AnalogIO?analogReadResult
+            guard m.pin == pin
+			action Analog!value (m.value)
+		}
+	}
+}
+
+configuration AnalogInputConfFrag
+{
+	instance arduino : Arduino
+	instance analog : AnalogInput
+	instance timer : SoftTimer
+	connector analog.Timer => timer.timer
+	connector analog.AnalogIO => arduino.AnalogIO
+}

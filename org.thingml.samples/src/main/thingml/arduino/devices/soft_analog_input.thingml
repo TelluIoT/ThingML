@@ -1,0 +1,72 @@
+import "../core/arduino.thingml"
+import "analog_input.thingml"
+
+thing fragment SoftAnalogInputMsgs
+{
+	message getValue ();
+	message subscribe (value : Boolean);
+	message value (val : Int16);
+}
+
+thing SoftAnalogInput includes SoftAnalogInputMsgs, AnalogInputMsgs
+{
+	readonly property pin : AnalogPin = AnalogPin:A_4
+	readonly property refreshRate : UInt16 = 30
+	readonly property precision : Int8 = 1
+	
+	required port GetAnalogInput 
+	{
+		sends readAnalogInput
+		receives analogInputValue 
+	}
+	
+	required port ChangeAnalogInput 
+	{
+		receives analogInputValue 
+	}
+	
+	provided port SoftAnalogInput
+	{
+		sends value
+		receives subscribe, getValue
+	} 
+	
+	statechart SoftAnalogInputImpl init Unsubscribe
+	{ 	  
+		internal event m : GetAnalogInput?analogInputValue
+        action SoftAnalogInput!value (m.value)
+				
+		state Unsubscribe
+		{
+			transition -> Subscribe
+			event m : SoftAnalogInput?subscribe
+			guard m.value == true
+		}
+			
+		state Subscribe
+		{
+			internal event m : ChangeAnalogInput?analogInputValue
+           	action SoftAnalogInput!value (m.value)
+			
+			transition -> Unsubscribe
+			event m : SoftAnalogInput?subscribe
+			guard m.value == false
+		}	
+	}
+}
+
+//* Configuration needs: *
+//
+// includes AnalogInputConf
+//
+// * Instance of AnalogInput's things *
+// instance simpleAnalogInput : SimpleAnalogInput
+// instance onChangeAnalogInput : OnChangeAnalogInput
+//	 set refreshPrecision = refreshRate 	// Can't use refreshRate property here.
+//	 set valuePrecision = precision 		// Idem
+//
+// instance softAnalogInput : SoftAnalogInput
+// connector softAnalogInput.GetAnalogInput => simpleAnalogInput.AnalogInput
+// connector softAnalogInput.ChangeAnalogInput => onChangeAnalogInput.AnalogInput
+//
+//*

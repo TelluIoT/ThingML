@@ -1,5 +1,5 @@
 import "../devices/lcd_screen.thingml"
-import "../devices/analog_input.thingml"
+import "../devices/old_analog_input.thingml"
 
 thing TempSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
 @c_header "

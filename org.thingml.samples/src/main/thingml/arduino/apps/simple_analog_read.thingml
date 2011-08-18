@@ -1,5 +1,5 @@
 import "../devices/serial.thingml"
-import "../devices/analog_input.thingml"
+import "../devices/old_analog_input.thingml"
 
 thing SimpleAnalogRead includes SerialMsgs, AnalogInputMsgs
 {
