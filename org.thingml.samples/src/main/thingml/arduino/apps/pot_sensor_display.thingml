@@ -10,8 +10,8 @@ thing PotSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
 
 	required port AnalogInput
 	{
-		sends readAnalogInput
-		receives analogInputValue 
+		sends read_analog_input
+		receives analog_input_value 
 	}
 	
    	statechart PotSensorDisplayImpl init Running
@@ -22,7 +22,7 @@ thing PotSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
                 end
    		state Running
    		{
-   			internal refresh event m : AnalogInput?analogInputValue
+   			internal refresh event m : AnalogInput?analog_input_value
    			action Display!refreshDisplay (3, m.value) 
    		}	
    	}

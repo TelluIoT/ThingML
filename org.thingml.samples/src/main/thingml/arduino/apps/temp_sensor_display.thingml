@@ -20,8 +20,8 @@ int temperature (int RawADC) {
 
 	required port Temp
 	{
-		receives analogInputValue
-		sends readAnalogInput
+		receives analog_input_value
+		sends read_analog_input
 	}
 	
    	statechart TempSensorDisplayImpl init Running
@@ -32,7 +32,7 @@ int temperature (int RawADC) {
                 end
    		state Running
    		{
-   			internal refresh event m : Temp?analogInputValue
+   			internal refresh event m : Temp?analog_input_value
    			action Display!refreshDisplay (0, 'temperature ('& m.value &')') 
    		}	
    	}

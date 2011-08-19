@@ -1,0 +1,60 @@
+import "../core/arduino.thingml"
+import "../devices/analog_input.thingml"
+
+thing fragment TempSensorMsgs includes AnalogInputMsgs 
+{
+	message read_temp ();
+	message temp_value (val : Int16);
+}
+
+thing TempSensor includes TempSensorMsgs
+@c_header 
+"
+#include <math.h>
+int temperature (int RawADC) {
+ double Temp;
+ Temp = log(((10240000/RawADC) - 10000));
+ Temp = 1 / (0.001129148 + (0.000234125 + (0.0000000876741 * Temp * Temp ))* Temp );
+ Temp = Temp - 273.15;            // Convert Kelvin to Celcius
+ return (int)Temp;
+}
+"
+{
+    readonly property pin : AnalogPin = AnalogPin:A_3
+    
+	provided port TempSensor 
+    {
+		receives read_temp
+		sends temp_value
+	}
+
+    required port AnalogInput
+    {
+        receives analog_input_value
+        sends read_analog_input    
+    }
+    
+    statechart TempSensorImpl init Running 
+    {    
+    	internal event m : AnalogInput?analog_input_value
+    	action TempSensor!temp_value ('temperature ('& m.value &')')
+    	
+        state Running 
+        {
+        	internal event TempSensor?read_temp
+        	action AnalogInput!read_analog_input ()
+        }        
+    }
+}
+
+//* Configuration needs:
+//
+// includes AnalogInput
+//
+// instance temp_sensor : TempSensor
+// instance analog_input : OnChangeAnalogInput
+// 		set pin = pin	 
+// 
+// connector temp_sensor.AnalogInput => analog_input.AnalogInput
+//
+//* 

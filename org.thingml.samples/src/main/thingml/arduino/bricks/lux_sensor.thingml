@@ -1,0 +1,49 @@
+import "../core/arduino.thingml"
+import "../devices/analog_input.thingml"
+
+thing fragment LuxSensorMsgs includes AnalogInputMsgs 
+{
+	message read_luminosity ();
+	message luminosity_value (val : UInt8);
+}
+
+thing LuxSensor includes LuxSensorMsgs
+{
+    readonly property pin : AnalogPin = AnalogPin:A_5
+    
+	provided port LuxSensor 
+    {
+		receives read_luminosity
+		sends luminosity_value
+	}
+
+    required port AnalogInput
+    {
+        receives analog_input_value
+        sends read_analog_input    
+    }
+    
+    statechart LuxSensorImpl init Running 
+    {    
+    	internal event m : AnalogInput?analog_input_value
+    	action LuxSensor!luminosity_value (m.value)
+    	
+        state Running 
+        {
+        	internal event LuxSensor?read_luminosity
+        	action AnalogInput!read_analog_input ()
+        }        
+    }
+}
+
+//* Configuration needs:
+//
+// includes AnalogInput
+//
+// instance lux_sensor : LuxSensor
+// instance analog_input : OnChangeAnalogInput
+// 		set pin = pin	 
+// 
+// connector lux_sensor.AnalogInput => analog_input.AnalogInput
+//
+//* 

@@ -1,8 +1,9 @@
 import "../core/arduino.thingml"
 
-thing fragment DigitalInputMsgs {
-    message read_digital_input();
-	message digital_input_value(v : DigitalState);
+thing fragment DigitalInputMsgs 
+{
+    message read_digital_input ();
+	message digital_input_value (value : DigitalState);
 }
 
 thing fragment DigitalInput includes DigitalInputMsgs, ArduinoStdlibMsgs, ThingMLScheduler
@@ -25,7 +26,7 @@ thing fragment DigitalInput includes DigitalInputMsgs, ArduinoStdlibMsgs, ThingM
 
 thing SimpleDigitalInput includes DigitalInput {
     
-    statechart OnChangeDigitalInputImpl init Idle {
+    statechart SimpleDigitalInputImpl init Idle {
         
         // Global initialization of the pin
         on entry do

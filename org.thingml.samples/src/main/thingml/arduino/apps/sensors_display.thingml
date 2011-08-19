@@ -26,13 +26,13 @@ int temperature (int RawADC) {
 
 	required port Pot
 	{
-		receives analogInputValue
-		sends readAnalogInput
+		receives analog_input_value
+		sends read_analog_input
 	}
 	
     required port Temp
 	{
-		receives analogInputValue
+		receives analog_input_value
 	}
 
     required port Led
@@ -52,10 +52,10 @@ int temperature (int RawADC) {
         		Display!initDisplay (tempDisplay, "Temperature", "C", 25, 20, 30)  
         		end
    	    
-   	    internal event m : Temp?analogInputValue
+   	    internal event m : Temp?analog_input_value
         action Display!refreshDisplay (tempDisplay, 'temperature ('& m.value &')')
         	
-        internal event m : Pot?analogInputValue
+        internal event m : Pot?analog_input_value
         action Display!refreshDisplay (potDisplay, m.value)
         	
    	    state Temp
