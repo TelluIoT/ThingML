@@ -1,5 +1,5 @@
 import "../devices/lcd_screen.thingml"
-import "../devices/old_analog_input.thingml"
+import "../devices/analog_input.thingml"
 
 thing TempSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
 @c_header "
@@ -20,8 +20,8 @@ int temperature (int RawADC) {
 
 	required port Temp
 	{
-		receives value
-		sends subscribe
+		receives analogInputValue
+		sends readAnalogInput
 	}
 	
    	statechart TempSensorDisplayImpl init Running
@@ -32,18 +32,29 @@ int temperature (int RawADC) {
                 end
    		state Running
    		{
-   			on entry Temp!subscribe (true)
-   			internal refresh event m : Temp?value
-   			action Display!refreshDisplay (0, 'temperature ('& m.val &')') 
+   			internal refresh event m : Temp?analogInputValue
+   			action Display!refreshDisplay (0, 'temperature ('& m.value &')') 
    		}	
    	}
 }
 
-configuration TempSensorDisplay includes AnalogInputConfFrag
+configuration TempSensorDisplay
 {
+    // Arduino declaration.
+    instance arduino : Arduino
+    
+    // On change analog input configuration.
+	instance on_change_analog_input : OnChangeAnalogInput
+        set pin = AnalogPin:A_3
+	instance timer : SoftTimer
+	connector on_change_analog_input.AnalogIO => arduino.AnalogIO
+	connector on_change_analog_input.Timer => timer.timer
+
+    // Screen declaration.
 	instance screen : LcdScreen
-	instance app : TempSensorDisplay
-	
+
+    // Application configuration.
+	instance app : TempSensorDisplay	
 	connector app.Display => screen.Display
-	connector app.Temp => analog.Analog
+	connector app.Temp => on_change_analog_input.AnalogInput
 }

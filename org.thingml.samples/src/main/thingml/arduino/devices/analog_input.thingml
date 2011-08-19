@@ -45,7 +45,7 @@ thing SimpleAnalogInput includes AnalogInput
 	}
 }
 
-thing RegularAnalogInput includes AnalogInput, TimerMsgs
+thing PeriodicAnalogInput includes AnalogInput, TimerMsgs
 {
 	readonly property refreshRate : UInt16 = 2000
 
@@ -54,7 +54,7 @@ thing RegularAnalogInput includes AnalogInput, TimerMsgs
 		receives timer_timeout
 		sends timer_start
 	}
-	statechart RegularAnalogInputImp init Running
+	statechart PeriodicAnalogInputImp init Running
 	{
 		internal event m : AnalogIO?analogReadResult
 		guard m.pin == pin
@@ -66,6 +66,7 @@ thing RegularAnalogInput includes AnalogInput, TimerMsgs
 			
 			transition Refresh -> Running
 			event Timer?timer_timeout
+			event AnalogInput?readAnalogInput
 			action AnalogIO!analogRead (pin)
 		}
 	}
@@ -92,7 +93,7 @@ thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 			AnalogInput!analogInputValue (m.value)
 			oldValue = m.value
 			end
-		 
+		
 		state Running
 		{
 			on entry Timer!timer_start (refreshPrecision)
@@ -101,7 +102,24 @@ thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 			event Timer?timer_timeout
 			action AnalogIO!analogRead (pin)
 		} 	 
-	}		
+	
+	 	region SimpleAnalogRead init Idle 
+	 	{
+        	state Idle 
+        	{ 
+        		transition waiting_answer -> Waiting 
+        		event AnalogInput?readAnalogInput 
+        	}
+            
+            state Waiting 
+            {
+                transition GotAnswer -> Idle 
+                event m: AnalogIO?analogReadResult 
+                guard m.pin == pin
+                action AnalogInput!analogInputValue (m.value)
+            }    
+        }	
+	}	
 }
 
 //* Configuration needs: *
@@ -112,11 +130,11 @@ thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 // instance simpleAnalogInput : SimpleAnalogInput
 // connector simpleAnalogInput.AnalogIO => arduino.AnalogIO
 //
-// * RegularAnalogInput *
-// instance regularAnalogInput : RegularAnalogInput
+// * PeriodicAnalogInput *
+// instance periodicAnalogInput : PeriodicAnalogInput
 // instance timer : SoftTimer
-// connector regularAnalogInput.AnalogIO => arduino.AnalogIO
-// connector regularAnalogInput.Timer => timer.timer
+// connector periodicAnalogInput.AnalogIO => arduino.AnalogIO
+// connector periodicAnalogInput.Timer => timer.timer
 //
 // * OnChangeAnalogInput *
 // instance onChangeAnalogInput : OnChangeAnalogInput
