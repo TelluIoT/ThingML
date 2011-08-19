@@ -1,0 +1,56 @@
+import "../core/arduino.thingml"
+import "../devices/digital_output.thingml"
+
+thing fragment LedMsgs 
+{
+	message led_on ();
+	message led_off ();
+	message led_toggle ();
+}
+
+thing Led includes DigitalOutputMsgs, LedMsgs
+{
+    readonly property pin : DigitalPin = DigitalPin:PIN_13
+    
+	provided port Led 
+    {
+		receives led_on, led_off, led_toggle
+	}
+
+    required port DigitalOutput
+    {
+        sends digital_output_value    
+    }
+    
+    statechart LedImpl init LedOff 
+    {    
+        state LedOff 
+        {
+            on entry DigitalOutput!digital_output_value (DigitalState:LOW)
+            transition switch_on -> LedOn 
+            event Led?led_on 
+            event Led?led_toggle
+            
+        }
+        
+        state LedOn 
+        {
+            on entry DigitalOutput!digital_output_value (DigitalState:HIGH)
+            transition switch_off -> LedOff 
+            event Led?led_off 
+            event Led?led_toggle
+        }
+    }
+}
+
+//* Configuration needs:
+//
+// includes DigitalOutputConf
+//
+// instance led : Led
+// instance digital_output : DigitalOutput
+// 		set pin = pin	 
+// 
+// connector led.DigitalOutput => digital_output.DigitalOutput
+//
+//* 
