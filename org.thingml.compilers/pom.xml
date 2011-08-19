@@ -60,25 +60,26 @@
 	    <!-- Antrun plugin: use to run any kind of Ant tasks.
 		Use to copy the thingml samples within the test of the
 		compilers automatically 
-		-->	   	
-	    <plugin>
+		-->	   
+	 <plugin>
          	<artifactId>maven-antrun-plugin</artifactId>
 	        <executions>
 	           <execution>
-	             <phase>compile</phase>
+	             <phase>validate</phase>
 	             <configuration>
-	               <tasks>
-	        	   <copy todir="src/test/resources/thingml">
+	                <tasks>
+	        	   <copy todir="src/test/resources/thingml"  preservelastmodified="true">
 			       <fileset dir="../org.thingml.samples/src/main/thingml"/>
-  			       </copy>
-			       </tasks>
-	             </configuration>
-	          <!-- <goals>
-		       <goal>validate</goal>
-	             </goals>    -->
+  			   </copy>
+			</tasks>
+		     </configuration>
+	           <goals>        
+		       <goal>run</goal>
+	             </goals>  
 	         </execution>
 	      </executions>
 	   </plugin> 
+
 
         </plugins>
 
