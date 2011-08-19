@@ -1,21 +1,13 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * $Id$
  */
 package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -23,7 +15,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.sintef.thingml.Connector;
-import org.sintef.thingml.Instance;
+import org.sintef.thingml.InstanceRef;
 import org.sintef.thingml.ProvidedPort;
 import org.sintef.thingml.RequiredPort;
 import org.sintef.thingml.ThingmlPackage;
@@ -35,8 +27,8 @@ import org.sintef.thingml.ThingmlPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.ConnectorImpl#getServer <em>Server</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.ConnectorImpl#getClient <em>Client</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ConnectorImpl#getSrv <em>Srv</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ConnectorImpl#getCli <em>Cli</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConnectorImpl#getRequired <em>Required</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConnectorImpl#getProvided <em>Provided</em>}</li>
  * </ul>
@@ -46,24 +38,24 @@ import org.sintef.thingml.ThingmlPackage;
  */
 public class ConnectorImpl extends AnnotatedElementImpl implements Connector {
 	/**
-	 * The cached value of the '{@link #getServer() <em>Server</em>}' reference.
+	 * The cached value of the '{@link #getSrv() <em>Srv</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getServer()
+	 * @see #getSrv()
 	 * @generated
 	 * @ordered
 	 */
-	protected Instance server;
+	protected InstanceRef srv;
 
 	/**
-	 * The cached value of the '{@link #getClient() <em>Client</em>}' reference.
+	 * The cached value of the '{@link #getCli() <em>Cli</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getClient()
+	 * @see #getCli()
 	 * @generated
 	 * @ordered
 	 */
-	protected Instance client;
+	protected InstanceRef cli;
 
 	/**
 	 * The cached value of the '{@link #getRequired() <em>Required</em>}' reference.
@@ -109,16 +101,23 @@ public class ConnectorImpl extends AnnotatedElementImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Instance getServer() {
-		if (server != null && server.eIsProxy()) {
-			InternalEObject oldServer = (InternalEObject)server;
-			server = (Instance)eResolveProxy(oldServer);
-			if (server != oldServer) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.CONNECTOR__SERVER, oldServer, server));
-			}
+	public InstanceRef getSrv() {
+		return srv;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetSrv(InstanceRef newSrv, NotificationChain msgs) {
+		InstanceRef oldSrv = srv;
+		srv = newSrv;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.CONNECTOR__SRV, oldSrv, newSrv);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
-		return server;
+		return msgs;
 	}
 
 	/**
@@ -126,37 +125,18 @@ public class ConnectorImpl extends AnnotatedElementImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Instance basicGetServer() {
-		return server;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setServer(Instance newServer) {
-		Instance oldServer = server;
-		server = newServer;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.CONNECTOR__SERVER, oldServer, server));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Instance getClient() {
-		if (client != null && client.eIsProxy()) {
-			InternalEObject oldClient = (InternalEObject)client;
-			client = (Instance)eResolveProxy(oldClient);
-			if (client != oldClient) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.CONNECTOR__CLIENT, oldClient, client));
-			}
+	public void setSrv(InstanceRef newSrv) {
+		if (newSrv != srv) {
+			NotificationChain msgs = null;
+			if (srv != null)
+				msgs = ((InternalEObject)srv).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.CONNECTOR__SRV, null, msgs);
+			if (newSrv != null)
+				msgs = ((InternalEObject)newSrv).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.CONNECTOR__SRV, null, msgs);
+			msgs = basicSetSrv(newSrv, msgs);
+			if (msgs != null) msgs.dispatch();
 		}
-		return client;
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.CONNECTOR__SRV, newSrv, newSrv));
 	}
 
 	/**
@@ -164,8 +144,8 @@ public class ConnectorImpl extends AnnotatedElementImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Instance basicGetClient() {
-		return client;
+	public InstanceRef getCli() {
+		return cli;
 	}
 
 	/**
@@ -173,11 +153,33 @@ public class ConnectorImpl extends AnnotatedElementImpl implements Connector {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setClient(Instance newClient) {
-		Instance oldClient = client;
-		client = newClient;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.CONNECTOR__CLIENT, oldClient, client));
+	public NotificationChain basicSetCli(InstanceRef newCli, NotificationChain msgs) {
+		InstanceRef oldCli = cli;
+		cli = newCli;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.CONNECTOR__CLI, oldCli, newCli);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setCli(InstanceRef newCli) {
+		if (newCli != cli) {
+			NotificationChain msgs = null;
+			if (cli != null)
+				msgs = ((InternalEObject)cli).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.CONNECTOR__CLI, null, msgs);
+			if (newCli != null)
+				msgs = ((InternalEObject)newCli).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.CONNECTOR__CLI, null, msgs);
+			msgs = basicSetCli(newCli, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.CONNECTOR__CLI, newCli, newCli));
 	}
 
 	/**
@@ -262,14 +264,28 @@ public class ConnectorImpl extends AnnotatedElementImpl implements Connector {
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ThingmlPackage.CONNECTOR__SRV:
+				return basicSetSrv(null, msgs);
+			case ThingmlPackage.CONNECTOR__CLI:
+				return basicSetCli(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.CONNECTOR__SERVER:
-				if (resolve) return getServer();
-				return basicGetServer();
-			case ThingmlPackage.CONNECTOR__CLIENT:
-				if (resolve) return getClient();
-				return basicGetClient();
+			case ThingmlPackage.CONNECTOR__SRV:
+				return getSrv();
+			case ThingmlPackage.CONNECTOR__CLI:
+				return getCli();
 			case ThingmlPackage.CONNECTOR__REQUIRED:
 				if (resolve) return getRequired();
 				return basicGetRequired();
@@ -288,11 +304,11 @@ public class ConnectorImpl extends AnnotatedElementImpl implements Connector {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.CONNECTOR__SERVER:
-				setServer((Instance)newValue);
+			case ThingmlPackage.CONNECTOR__SRV:
+				setSrv((InstanceRef)newValue);
 				return;
-			case ThingmlPackage.CONNECTOR__CLIENT:
-				setClient((Instance)newValue);
+			case ThingmlPackage.CONNECTOR__CLI:
+				setCli((InstanceRef)newValue);
 				return;
 			case ThingmlPackage.CONNECTOR__REQUIRED:
 				setRequired((RequiredPort)newValue);
@@ -312,11 +328,11 @@ public class ConnectorImpl extends AnnotatedElementImpl implements Connector {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.CONNECTOR__SERVER:
-				setServer((Instance)null);
+			case ThingmlPackage.CONNECTOR__SRV:
+				setSrv((InstanceRef)null);
 				return;
-			case ThingmlPackage.CONNECTOR__CLIENT:
-				setClient((Instance)null);
+			case ThingmlPackage.CONNECTOR__CLI:
+				setCli((InstanceRef)null);
 				return;
 			case ThingmlPackage.CONNECTOR__REQUIRED:
 				setRequired((RequiredPort)null);
@@ -336,10 +352,10 @@ public class ConnectorImpl extends AnnotatedElementImpl implements Connector {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.CONNECTOR__SERVER:
-				return server != null;
-			case ThingmlPackage.CONNECTOR__CLIENT:
-				return client != null;
+			case ThingmlPackage.CONNECTOR__SRV:
+				return srv != null;
+			case ThingmlPackage.CONNECTOR__CLI:
+				return cli != null;
 			case ThingmlPackage.CONNECTOR__REQUIRED:
 				return required != null;
 			case ThingmlPackage.CONNECTOR__PROVIDED:

@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * $Id$
  */
 package org.sintef.thingml;
 
@@ -42,6 +33,15 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	ThingMLModel createThingMLModel();
+
+	/**
+	 * Returns a new object of class '<em>Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Function</em>'.
+	 * @generated
+	 */
+	Function createFunction();
 
 	/**
 	 * Returns a new object of class '<em>Message</em>'.
@@ -467,6 +467,15 @@ public interface ThingmlFactory extends EFactory {
 	ExpressionGroup createExpressionGroup();
 
 	/**
+	 * Returns a new object of class '<em>Return Action</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Return Action</em>'.
+	 * @generated
+	 */
+	ReturnAction createReturnAction();
+
+	/**
 	 * Returns a new object of class '<em>Print Action</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -510,6 +519,60 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	Connector createConnector();
+
+	/**
+	 * Returns a new object of class '<em>Config Property Assign</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Config Property Assign</em>'.
+	 * @generated
+	 */
+	ConfigPropertyAssign createConfigPropertyAssign();
+
+	/**
+	 * Returns a new object of class '<em>Config Include</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Config Include</em>'.
+	 * @generated
+	 */
+	ConfigInclude createConfigInclude();
+
+	/**
+	 * Returns a new object of class '<em>Instance Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Instance Ref</em>'.
+	 * @generated
+	 */
+	InstanceRef createInstanceRef();
+
+	/**
+	 * Returns a new object of class '<em>Function Call Statement</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Function Call Statement</em>'.
+	 * @generated
+	 */
+	FunctionCallStatement createFunctionCallStatement();
+
+	/**
+	 * Returns a new object of class '<em>Function Call Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Function Call Expression</em>'.
+	 * @generated
+	 */
+	FunctionCallExpression createFunctionCallExpression();
+
+	/**
+	 * Returns a new object of class '<em>Local Variable</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Local Variable</em>'.
+	 * @generated
+	 */
+	LocalVariable createLocalVariable();
 
 	/**
 	 * Returns the package supported by this factory.

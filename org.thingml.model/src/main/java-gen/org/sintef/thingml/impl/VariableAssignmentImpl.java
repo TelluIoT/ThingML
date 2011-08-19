@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * $Id$
  */
 package org.sintef.thingml.impl;
 
@@ -24,8 +15,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.sintef.thingml.Expression;
-import org.sintef.thingml.Property;
 import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.Variable;
 import org.sintef.thingml.VariableAssignment;
 
 /**
@@ -51,7 +42,7 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 	 * @generated
 	 * @ordered
 	 */
-	protected Property property;
+	protected Variable property;
 
 	/**
 	 * The cached value of the '{@link #getExpression() <em>Expression</em>}' containment reference.
@@ -87,10 +78,10 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Property getProperty() {
+	public Variable getProperty() {
 		if (property != null && property.eIsProxy()) {
 			InternalEObject oldProperty = (InternalEObject)property;
-			property = (Property)eResolveProxy(oldProperty);
+			property = (Variable)eResolveProxy(oldProperty);
 			if (property != oldProperty) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.VARIABLE_ASSIGNMENT__PROPERTY, oldProperty, property));
@@ -104,7 +95,7 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Property basicGetProperty() {
+	public Variable basicGetProperty() {
 		return property;
 	}
 
@@ -113,8 +104,8 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setProperty(Property newProperty) {
-		Property oldProperty = property;
+	public void setProperty(Variable newProperty) {
+		Variable oldProperty = property;
 		property = newProperty;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.VARIABLE_ASSIGNMENT__PROPERTY, oldProperty, property));
@@ -203,7 +194,7 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ThingmlPackage.VARIABLE_ASSIGNMENT__PROPERTY:
-				setProperty((Property)newValue);
+				setProperty((Variable)newValue);
 				return;
 			case ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION:
 				setExpression((Expression)newValue);
@@ -221,7 +212,7 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ThingmlPackage.VARIABLE_ASSIGNMENT__PROPERTY:
-				setProperty((Property)null);
+				setProperty((Variable)null);
 				return;
 			case ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION:
 				setExpression((Expression)null);

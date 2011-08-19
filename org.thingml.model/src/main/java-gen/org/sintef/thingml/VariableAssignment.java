@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * $Id$
  */
 package org.sintef.thingml;
 
@@ -43,12 +34,12 @@ public interface VariableAssignment extends Action {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Property</em>' reference.
-	 * @see #setProperty(Property)
+	 * @see #setProperty(Variable)
 	 * @see org.sintef.thingml.ThingmlPackage#getVariableAssignment_Property()
 	 * @model required="true"
 	 * @generated
 	 */
-	Property getProperty();
+	Variable getProperty();
 
 	/**
 	 * Sets the value of the '{@link org.sintef.thingml.VariableAssignment#getProperty <em>Property</em>}' reference.
@@ -58,7 +49,7 @@ public interface VariableAssignment extends Action {
 	 * @see #getProperty()
 	 * @generated
 	 */
-	void setProperty(Property value);
+	void setProperty(Variable value);
 
 	/**
 	 * Returns the value of the '<em><b>Expression</b></em>' containment reference.

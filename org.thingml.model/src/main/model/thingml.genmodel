@@ -12,6 +12,10 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ThingMLModel/imports"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ThingMLModel/configs"/>
     </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//Function">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Function/parameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Function/body"/>
+    </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Message">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Message/parameters"/>
     </genClasses>
@@ -23,18 +27,18 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/includes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/assign"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/messages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/functions"/>
     </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//Parameter">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Parameter/type"/>
-    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//Parameter"/>
+    <genClasses image="false" ecoreClass="thingml.ecore#//Variable"/>
     <genClasses image="false" ecoreClass="thingml.ecore#//ThingMLElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//ThingMLElement/name"/>
     </genClasses>
     <genClasses image="false" ecoreClass="thingml.ecore#//Type"/>
+    <genClasses image="false" ecoreClass="thingml.ecore#//TypedElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//TypedElement/type"/>
+    </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Property">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Property/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//Property/lowerBound"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//Property/upperBound"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Property/init"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//Property/changeable"/>
     </genClasses>
@@ -120,7 +124,9 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Port/receives"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Port/sends"/>
     </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//RequiredPort"/>
+    <genClasses ecoreClass="thingml.ecore#//RequiredPort">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//RequiredPort/optional"/>
+    </genClasses>
     <genClasses ecoreClass="thingml.ecore#//ProvidedPort"/>
     <genClasses ecoreClass="thingml.ecore#//EventReference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//EventReference/msgRef"/>
@@ -177,6 +183,9 @@
     <genClasses ecoreClass="thingml.ecore#//ExpressionGroup">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ExpressionGroup/exp"/>
     </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//ReturnAction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ReturnAction/exp"/>
+    </genClasses>
     <genClasses ecoreClass="thingml.ecore#//PrintAction">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//PrintAction/msg"/>
     </genClasses>
@@ -187,17 +196,40 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Configuration/instances"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Configuration/connectors"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//Configuration/fragment"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Configuration/includes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Configuration/configs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Configuration/propassigns"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Instance">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Instance/type"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Instance/assign"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Connector">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Connector/server"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Connector/client"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Connector/srv"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Connector/cli"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Connector/required"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Connector/provided"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//ConfigPropertyAssign">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ConfigPropertyAssign/init"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ConfigPropertyAssign/property"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ConfigPropertyAssign/instance"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//ConfigInclude">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ConfigInclude/config"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//InstanceRef">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//InstanceRef/config"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//InstanceRef/instance"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//FunctionCall">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//FunctionCall/parameters"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//FunctionCall/function"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//FunctionCallStatement"/>
+    <genClasses ecoreClass="thingml.ecore#//FunctionCallExpression"/>
+    <genClasses ecoreClass="thingml.ecore#//LocalVariable">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//LocalVariable/init"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//LocalVariable/changeable"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

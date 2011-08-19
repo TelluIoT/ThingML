@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * $Id$
  */
 package org.sintef.thingml;
 
@@ -24,8 +15,8 @@ package org.sintef.thingml;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.sintef.thingml.Connector#getServer <em>Server</em>}</li>
- *   <li>{@link org.sintef.thingml.Connector#getClient <em>Client</em>}</li>
+ *   <li>{@link org.sintef.thingml.Connector#getSrv <em>Srv</em>}</li>
+ *   <li>{@link org.sintef.thingml.Connector#getCli <em>Cli</em>}</li>
  *   <li>{@link org.sintef.thingml.Connector#getRequired <em>Required</em>}</li>
  *   <li>{@link org.sintef.thingml.Connector#getProvided <em>Provided</em>}</li>
  * </ul>
@@ -37,56 +28,56 @@ package org.sintef.thingml;
  */
 public interface Connector extends AnnotatedElement {
 	/**
-	 * Returns the value of the '<em><b>Server</b></em>' reference.
+	 * Returns the value of the '<em><b>Srv</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Server</em>' reference isn't clear,
+	 * If the meaning of the '<em>Srv</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Server</em>' reference.
-	 * @see #setServer(Instance)
-	 * @see org.sintef.thingml.ThingmlPackage#getConnector_Server()
-	 * @model required="true"
+	 * @return the value of the '<em>Srv</em>' containment reference.
+	 * @see #setSrv(InstanceRef)
+	 * @see org.sintef.thingml.ThingmlPackage#getConnector_Srv()
+	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	Instance getServer();
+	InstanceRef getSrv();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Connector#getServer <em>Server</em>}' reference.
+	 * Sets the value of the '{@link org.sintef.thingml.Connector#getSrv <em>Srv</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Server</em>' reference.
-	 * @see #getServer()
+	 * @param value the new value of the '<em>Srv</em>' containment reference.
+	 * @see #getSrv()
 	 * @generated
 	 */
-	void setServer(Instance value);
+	void setSrv(InstanceRef value);
 
 	/**
-	 * Returns the value of the '<em><b>Client</b></em>' reference.
+	 * Returns the value of the '<em><b>Cli</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Client</em>' reference isn't clear,
+	 * If the meaning of the '<em>Cli</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Client</em>' reference.
-	 * @see #setClient(Instance)
-	 * @see org.sintef.thingml.ThingmlPackage#getConnector_Client()
-	 * @model required="true"
+	 * @return the value of the '<em>Cli</em>' containment reference.
+	 * @see #setCli(InstanceRef)
+	 * @see org.sintef.thingml.ThingmlPackage#getConnector_Cli()
+	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	Instance getClient();
+	InstanceRef getCli();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Connector#getClient <em>Client</em>}' reference.
+	 * Sets the value of the '{@link org.sintef.thingml.Connector#getCli <em>Cli</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Client</em>' reference.
-	 * @see #getClient()
+	 * @param value the new value of the '<em>Cli</em>' containment reference.
+	 * @see #getCli()
 	 * @generated
 	 */
-	void setClient(Instance value);
+	void setCli(InstanceRef value);
 
 	/**
 	 * Returns the value of the '<em><b>Required</b></em>' reference.

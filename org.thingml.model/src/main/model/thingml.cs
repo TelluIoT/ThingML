@@ -28,6 +28,8 @@ TOKENS{
 		
 		DEFINE T_READONLY $'readonly'$;
 		
+		DEFINE T_OPTIONAL $'optional'$;
+		
 		DEFINE T_ASPECT $'fragment'$;
 		DEFINE T_HISTORY $'history'$;
 		
@@ -63,6 +65,7 @@ TOKENSTYLES{
 	// Definition of types and messages
 	"T_READONLY" COLOR #CC8000, BOLD;
 	"thing" COLOR #CC8000, BOLD;
+	"includes" COLOR #CC8000, BOLD;
 	"datatype" COLOR #CC8000, BOLD;
 	"enumeration" COLOR #CC8000, BOLD;
 	"sends" COLOR #CC8000, BOLD;
@@ -70,6 +73,7 @@ TOKENSTYLES{
 	"port" COLOR #CC8000, BOLD;
 	"provided" COLOR #CC8000, BOLD;	
 	"required" COLOR #CC8000, BOLD;
+	"T_OPTIONAL" COLOR #CC8000, BOLD;
 	"message" COLOR #CC8000, BOLD;	
 	"property" COLOR #CC8000, BOLD;	
 	
@@ -108,7 +112,8 @@ TOKENSTYLES{
 	// Configurations and Instances
 	"configuration" COLOR #007F55, BOLD;
 	"instance" COLOR #007F55, BOLD;	
-	"connector" COLOR #007F55, BOLD;	
+	"connector" COLOR #007F55, BOLD;
+	"group" COLOR #007F55, BOLD;	
 	"=>" COLOR #007F55, BOLD;
 
 	// Special keywords
@@ -136,15 +141,19 @@ RULES {
 	
 	ThingMLModel::= ( !0 "import" #1 imports[STRING_LITERAL] )* ( !0 (types | configs) )* ;
 		
-	Message ::= "message" #1 name[]  "(" (parameters (","  parameters)* )? ")"(annotations)* ";"  ;
+	Message ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ";"  ;
 	
-	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | properties | assign | ports | behaviour )* !0 "}" ;
+	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* #1 ":" #1 type[] #1 body ;
 	
-	RequiredPort ::= !1 "required" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
+	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour )* !0 "}" ;
+	
+	RequiredPort ::= !1 (optional[T_OPTIONAL])? "required" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 
-	ProvidedPort ::= !1 "provided" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
+	ProvidedPort ::= !1  "provided" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 	
-	Property::= !1 (changeable[T_READONLY])? "property" #1 name[]  ":"  type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")? (#1 "=" #1 init)?  (annotations)*;
+	Property::= !1 (changeable[T_READONLY])? "property" #1 name[] #1 ":" #1 type[]  (#1 "=" #1 init)?  (annotations)*;
+	
+	//("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?
 	
 //	Dictionary::= !1 (changeable[T_READONLY])? "dictionary" #1 name[]  ":"  indexType[] "->" type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?(annotations)*;
 	
@@ -179,11 +188,17 @@ RULES {
 	// * Configurations and Instances
 	// *******************************
 	
-	Configuration ::= "configuration" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  instances | connectors )* !0 "}" ;
+	Configuration ::= "configuration" (#1 fragment[T_ASPECT])? #1 name[] (annotations)*  !0 "{" (  instances | connectors | configs | propassigns )* !0 "}" ;
 	
-	Instance ::= "instance" #1 (name[] #1)? ":" #1 type[] (annotations)*  !0 (  assign )* !0 ;
+	ConfigInclude ::= "group" #1 name[] #1 ":" #1 config[] (annotations)* !0 ;
 	
-	Connector ::= "connector" #1 (name[] #1)? client[] "." required[] "=>" server[] "." provided[] (!0 annotations)*;
+	Instance ::= "instance" #1 (name[] #1)? ":" #1 type[] (annotations)* !0 (  assign )* !0 ;
+	
+	Connector ::= "connector" #1 (name[] #1)? cli "." required[] "=>" srv "." provided[] (!0 annotations)*;
+	
+	ConfigPropertyAssign ::= "set" instance "." property[] "=" init;
+	
+	InstanceRef ::= (config[] ".")* instance[];
 
 	// *********************
 	// * Actions
@@ -193,7 +208,9 @@ RULES {
 	
 	VariableAssignment ::= property[] #1 "=" #1 expression ; 
 	
-	ActionBlock::= "do" ( !1 actions )* !0 "end"  ;
+	ActionBlock::= "do" ( !1 actions  )* !0 "end"  ;
+	
+	LocalVariable::= !1 (changeable[T_READONLY])? "var" #1 name[] #1 ":" #1 type[]  (#1 "=" #1 init)?  (annotations)*;
 	
 	ExternStatement::= statement[STRING_EXT] ("&" segments)*;
 	
@@ -204,6 +221,10 @@ RULES {
 	PrintAction ::= "print" #1 msg;
 	
 	ErrorAction ::= "error" #1 msg;
+	
+	ReturnAction ::= "return" #1 exp;
+	
+	FunctionCallStatement ::= function[] "(" (parameters ("," #1 parameters)* )? ")";
 	
 	// *********************
 	// * The Expressions
@@ -266,6 +287,9 @@ RULES {
 	
 	@Operator(type="primitive", weight="8", superclass="Expression")
 	EnumLiteralRef ::= enum[] ":" literal[];
+	
+	@Operator(type="primitive", weight="8", superclass="Expression")
+	FunctionCallExpression ::= function[] "(" (parameters ("," #1 parameters)* )? ")";
 	
 	@Operator(type="primitive", weight="8", superclass="Expression")
 	ExternExpression::= expression[STRING_EXT] ("&" segments)*;
