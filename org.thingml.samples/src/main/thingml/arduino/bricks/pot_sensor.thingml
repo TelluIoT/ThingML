@@ -4,7 +4,7 @@ import "../devices/analog_input.thingml"
 thing fragment PotSensorMsgs includes AnalogInputMsgs 
 {
 	message read_position ();
-	message position_value (val : UInt8);
+	message position_value (val : UInt16);
 }
 
 thing PotSensor includes PotSensorMsgs

@@ -19,6 +19,7 @@ thing SimplePotSensorDisplay includes SimpleSensorsDisplay, PotSensorMsgs
 	required port PotSensor
 	{
 		receives position_value
+        sends read_position
 	}
 	
 	statechart SimplePotSensorDisplayImpl init Running
@@ -31,7 +32,10 @@ thing SimplePotSensorDisplay includes SimpleSensorsDisplay, PotSensorMsgs
 
 			transition refresh -> Running
 			event m : PotSensor?position_value
-			action LcdScreen!print_value (m.val)
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ")
+                end
 		}
 	}
 }
@@ -52,7 +56,10 @@ thing SimpleTempSensorDisplay includes SimpleSensorsDisplay, TempSensorMsgs
 			on entry LcdScreen!set_cursor (0, 1)
 			transition refresh -> Running
 			event m : TempSensor?temp_value
-			action LcdScreen!print_value (m.val)
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ")
+                end
 		}
 	}
 }
@@ -73,7 +80,10 @@ thing SimpleLuxSensorDisplay includes SimpleSensorsDisplay, LuxSensorMsgs
 			on entry LcdScreen!set_cursor (0, 1)
 			transition refresh -> Running
 			event m : LuxSensor?luminosity_value
-			action LcdScreen!print_value (m.val)
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ")
+                end
 		}
 	}
 }
@@ -88,24 +98,32 @@ configuration SimpleSensorsDisplay
     // Analog input configuration
     instance analog_input : OnChangeAnalogInput
         set pin = AnalogPin:A_4
+    instance timer : SoftTimer
+    connector analog_input.AnalogIO => arduino.AnalogIO
+    connector analog_input.Timer => timer.timer
     connector analog_input.AnalogIO => arduino.AnalogIO
 		
-//* Uncomment only the three lines which refer to the sensor you want use. *//
+//* Uncomment only the five lines which refer to the sensor you want use. *//
 
 	// * Potentiometer *
-	instance pot_sensor_display : SimplePotSensorDisplay
+ 	instance pot_sensor_display : SimplePotSensorDisplay
     instance pot_sensor : PotSensor
     connector pot_sensor_display.PotSensor => pot_sensor.PotSensor
-	connector pot_sensor_display.LcdScreen => lcd_screen.LcdScreen
+ 	connector pot_sensor_display.LcdScreen => lcd_screen.LcdScreen
     connector pot_sensor.AnalogInput => analog_input.AnalogInput
 	
 	// * Temperature *
-//	instance temp_sensor : SimpleTempSensorDisplay
-//	connector temp_sensor.LcdScreen => lcd_screen.LcdScreen
-//  connector temp_sensor.TempSensor => analog_input.AnalogInput
+// 	instance temp_sensor_display : SimpleTempSensorDisplay
+//  instance temp_sensor : TempSensor
+//  connector temp_sensor_display.TempSensor => temp_sensor.TempSensor
+// 	connector temp_sensor_display.LcdScreen => lcd_screen.LcdScreen
+//  connector temp_sensor.AnalogInput => analog_input.AnalogInput
+
 	
 	// * Luminosity *
-//	instance lux_sensor : SimpleLuxSensorDisplay
-//	connector lux_sensor.LcdScreen => lcd_screen.LcdScreen
-//  connector lux_sensor.LuxSensor => analog_input.AnalogInput
+//	instance lux_sensor_display : SimpleLuxSensorDisplay
+//  instance lux_sensor : LuxSensor
+//  connector lux_sensor_display.LuxSensor => lux_sensor.LuxSensor
+//	connector lux_sensor_display.LcdScreen => lcd_screen.LcdScreen
+//  connector lux_sensor.AnalogInput => analog_input.AnalogInput  
 }

@@ -4,7 +4,7 @@ import "../devices/analog_input.thingml"
 thing fragment LuxSensorMsgs includes AnalogInputMsgs 
 {
 	message read_luminosity ();
-	message luminosity_value (val : UInt8);
+	message luminosity_value (val : UInt16);
 }
 
 thing LuxSensor includes LuxSensorMsgs
