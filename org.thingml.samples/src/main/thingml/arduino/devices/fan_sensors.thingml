@@ -35,8 +35,8 @@ thing FanSensors includes FanSensorsMsgs, ThingMLScheduler
  * Timer 2 to mesure short time intervals (50 uS resolution, up to 2 sec)
  *********************************************************************/
 
-volatile int16_t timer2ticks = 0;
-volatile int16_t timer2ticks_timeout = 5000;
+volatile uint16_t timer2ticks = 0;
+volatile uint16_t timer2ticks_timeout = 5000;
 volatile uint8_t _timer2ticks_has_timedout = 0;
 
 ISR(TIMER2_OVF_vect) { // 15,5 kHz
@@ -44,7 +44,7 @@ ISR(TIMER2_OVF_vect) { // 15,5 kHz
   else timer2ticks ++;
 };
 
-void reset_timer2ticks(int16_t timeout) {
+void reset_timer2ticks(uint16_t timeout) {
    timer2ticks_timeout = timeout;
    _timer2ticks_has_timedout = 0;
    cli(); // disable interrupts
@@ -52,7 +52,7 @@ void reset_timer2ticks(int16_t timeout) {
    sei(); // enable interrupts
 }
 
-int16_t read_timer2ticks() {
+uint16_t read_timer2ticks() {
    cli(); // disable interrupts
    int16_t result = timer2ticks;
    sei(); // enable interrupts
@@ -79,9 +79,9 @@ void timer2_init() {
 
 volatile static uint8_t  freq_pin;
 volatile static uint8_t  freq_state;
-volatile static int16_t freq_result;
+volatile static long freq_result;
 
-#define TIMEOUT 2000
+#define TIMEOUT 3000
 
 #define IDLE      0
 #define WAITING   1
@@ -91,7 +91,9 @@ volatile static int16_t freq_result;
 ISR (PCINT2_vect)
 {   
   
-  if (read_timer2ticks() < 5) return; // debounce
+  uint16_t ticks = read_timer2ticks();
+  
+  if (ticks < 10) return; // debounce
   
     switch(freq_state) {
        case WAITING:  
@@ -99,7 +101,7 @@ ISR (PCINT2_vect)
          freq_state = COUNTING;
          break;
        case COUNTING:
-         freq_result = read_timer2ticks();
+         freq_result = ticks;
          freq_state = RESULT;
          cli();
          PCMSK2 = 0; // Disable further interrupts
@@ -109,10 +111,11 @@ ISR (PCINT2_vect)
     }
 }
 
-int16_t freq_result() {
+uint16_t get_freq_result() {
   
   if (freq_state == RESULT) {
-    int16_t result = freq_result;
+    uint16_t result = (454545 /freq_result);
+    if (result > 6000 || result < 100) result = 0; // this is abviously a bad value
     freq_state = IDLE;
     return result;
   }
@@ -123,7 +126,7 @@ int16_t freq_result() {
        cli();
        PCMSK2 = 0; // Disable further interrupts
        sei();
-       return -1; // Timeout: no pulse was received in the given time frame    
+       return 0; // Timeout: no pulse was received in the given time frame    
      }
   }
   
@@ -133,10 +136,11 @@ int16_t freq_result() {
 uint8_t freq_result_ready() {
     if (freq_state == RESULT) return 1;
     if (freq_state == WAITING || freq_state == COUNTING) {
-     if (timer2ticks_has_timedout() != 0) {
+      if (timer2ticks_has_timedout() != 0) {
          return 1;    
-     }
-     return 0;
+      }
+    }
+    return 0;
 }
 
 void freq_start(uint8_t pin) {
@@ -186,7 +190,7 @@ void freq_init() {
         }
         
         state Measuring {
-            on entry 'freq_start('& pin &');'
+            on entry 'freq_start('& pin &'); sei();'
             
             // notify further requsests that the sensor is busy
             internal event m : FanSensors?read_fan_sensor
@@ -195,7 +199,7 @@ void freq_init() {
             transition -> IDLE 
             event Polling?poll
             guard 'freq_result_ready()'
-            action FanSensors!fan_sensor_rpm(pin, 'freq_result()')
+            action FanSensors!fan_sensor_rpm(pin, 'get_freq_result()')
            
         }
     
