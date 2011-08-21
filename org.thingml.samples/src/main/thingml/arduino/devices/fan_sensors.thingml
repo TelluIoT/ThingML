@@ -1,0 +1,204 @@
+import "../core/arduino.thingml"
+import "led.thingml"
+
+/*****************************************************
+ * Fan sensor uses Timer2 and port interrupt on port D
+ *****************************************************/
+
+enumeration FanSensorPin 
+	@java_type "byte"
+    @c_byte_size "1"
+	@c_type "uint8_t"
+{
+	FAN_SENSOR_PIN_2 @enum_val "2"
+	FAN_SENSOR_PIN_3 @enum_val "3"
+	FAN_SENSOR_PIN_4 @enum_val "4"
+	FAN_SENSOR_PIN_5 @enum_val "5"
+	FAN_SENSOR_PIN_6 @enum_val "6"
+	FAN_SENSOR_PIN_7 @enum_val "7"
+}
+
+thing fragment FanSensorsMsgs {
+    message read_fan_sensor(sensor : FanSensorPin);
+    message fan_sensor_rpm(sensor : FanSensorPin, rpm : Int16);
+    message fan_sensor_busy(sensor : FanSensorPin); // if the sensor is busy with another fan
+}
+
+thing FanSensors includes FanSensorsMsgs, ThingMLScheduler
+@singleton "true"
+@c_global "
+#include <avr/interrupt.h>
+#include <avr/io.h>
+
+/*********************************************************************
+ * High resolution stop watch
+ * Timer 2 to mesure short time intervals (50 uS resolution, up to 2 sec)
+ *********************************************************************/
+
+volatile int16_t timer2ticks = 0;
+volatile int16_t timer2ticks_timeout = 5000;
+volatile uint8_t _timer2ticks_has_timedout = 0;
+
+ISR(TIMER2_OVF_vect) { // 15,5 kHz
+  if (timer2ticks > timer2ticks_timeout) _timer2ticks_has_timedout = 1;
+  else timer2ticks ++;
+};
+
+void reset_timer2ticks(int16_t timeout) {
+   timer2ticks_timeout = timeout;
+   _timer2ticks_has_timedout = 0;
+   cli(); // disable interrupts
+   timer2ticks = 0;
+   sei(); // enable interrupts
+}
+
+int16_t read_timer2ticks() {
+   cli(); // disable interrupts
+   int16_t result = timer2ticks;
+   sei(); // enable interrupts
+   return result;
+}
+
+uint8_t timer2ticks_has_timedout() {
+  return _timer2ticks_has_timedout;
+}
+
+void timer2_init() {
+  TCCR2A = 
+  TCCR2B = TCCR2B & 0b11111000 | 0b001;
+  TIMSK2 |= (1 << TOIE2); 
+}
+
+/*********************************************************************/
+
+
+/*********************************************************************
+ * Computation of intervals on pins PD0..8 (1 pin at the time)
+ * Using PCINT16..27 external interrupts and timer2 to count the time
+ *********************************************************************/
+
+volatile static uint8_t  freq_pin;
+volatile static uint8_t  freq_state;
+volatile static int16_t freq_result;
+
+#define TIMEOUT 2000
+
+#define IDLE      0
+#define WAITING   1
+#define COUNTING  2
+#define RESULT    3
+
+ISR (PCINT2_vect)
+{   
+  
+  if (read_timer2ticks() < 5) return; // debounce
+  
+    switch(freq_state) {
+       case WAITING:  
+         reset_timer2ticks(TIMEOUT);
+         freq_state = COUNTING;
+         break;
+       case COUNTING:
+         freq_result = read_timer2ticks();
+         freq_state = RESULT;
+         cli();
+         PCMSK2 = 0; // Disable further interrupts
+         sei();
+         break;
+       default: break;
+    }
+}
+
+int16_t freq_result() {
+  
+  if (freq_state == RESULT) {
+    int16_t result = freq_result;
+    freq_state = IDLE;
+    return result;
+  }
+  
+  else if (freq_state == WAITING || freq_state == COUNTING) {
+     if (timer2ticks_has_timedout() != 0) {
+       freq_state = IDLE;
+       cli();
+       PCMSK2 = 0; // Disable further interrupts
+       sei();
+       return -1; // Timeout: no pulse was received in the given time frame    
+     }
+  }
+  
+  return -2; // No result or result not ready
+}
+
+uint8_t freq_result_ready() {
+    if (freq_state == RESULT) return 1;
+    if (freq_state == WAITING || freq_state == COUNTING) {
+     if (timer2ticks_has_timedout() != 0) {
+         return 1;    
+     }
+     return 0;
+}
+
+void freq_start(uint8_t pin) {
+  
+  if (freq_state == IDLE) {
+    // Set the pin as input with pullup
+    DDRD &= ~(1 << pin); // input
+    PORTD |= 1 << pin; // pullup
+    freq_pin = pin;
+    freq_state = WAITING;
+    reset_timer2ticks(TIMEOUT);
+    cli();
+    PCMSK2 = 1 << pin; // Enable interrupts for that pin
+    sei();
+  }  
+}
+
+void freq_init() {
+    timer2_init();
+    PCMSK2 = 0;
+    PCICR = 0b00000100;
+}
+
+/*********************************************************************/
+
+"
+{	
+	provided port FanSensors {
+        receives read_fan_sensor
+        sends fan_sensor_rpm, fan_sensor_busy
+	}
+
+    required port Polling {
+		receives poll
+	}
+    
+    statechart FanSensorsImpl init IDLE {
+        
+        property pin : FanSensorPin
+        
+        on entry 'freq_init();'
+        
+        state IDLE {
+           transition -> Measuring
+           event m : FanSensors?read_fan_sensor
+           action pin = m.sensor
+        }
+        
+        state Measuring {
+            on entry 'freq_start('& pin &');'
+            
+            // notify further requsests that the sensor is busy
+            internal event m : FanSensors?read_fan_sensor
+            action FanSensors!fan_sensor_busy(m.sensor)
+            
+            transition -> IDLE 
+            event Polling?poll
+            guard 'freq_result_ready()'
+            action FanSensors!fan_sensor_rpm(pin, 'freq_result()')
+           
+        }
+    
+    }
+
+}
