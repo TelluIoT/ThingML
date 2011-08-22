@@ -20,6 +20,7 @@ import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import scala.collection.JavaConversions._
 import java.util.ArrayList
 import org.sintef.thingml.constraints.ThingMLHelpers
+import java.lang.Boolean
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,7 +32,23 @@ import org.sintef.thingml.constraints.ThingMLHelpers
 
 case class ThingScalaImpl (self : Thing) {
 
-    def allFragments: ArrayList[Thing] = {
+  def isSingleton : Boolean = {
+    self.getAnnotations.filter {
+      a => a.getName == "singleton"
+    }.headOption match {
+      case Some(a) => {
+        var v = a.asInstanceOf[PlatformAnnotation].getValue
+        if (v == "true") return true
+        else return false
+      }
+      case None => {
+        return false
+      }
+    }
+  }
+
+
+  def allFragments: ArrayList[Thing] = {
     return ThingMLHelpers.allThingFragments(self)
   }
 

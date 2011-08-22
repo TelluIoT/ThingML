@@ -73,9 +73,25 @@ case class ConfigurationScalaImpl (self : Configuration) {
 
     // Add the instances of this configuration (actually a copy)
     self.getInstances.foreach{ inst =>
-      var copy = EcoreUtil.copy(inst).asInstanceOf[Instance]
-      copy.setName(prefix + "_" + copy.getName) // rename the instance with the prefix
-      instances.put(copy.getName, copy)
+
+      var key = prefix + "_" + inst.getName
+      var copy : Instance = null
+
+      if (inst.getType.isSingleton) {
+        // TODO: This could can become slow if we have a large number of instances
+        var others = instances.values().filter{ i => i.getType == inst.getType }
+        if (others.isEmpty) {
+           copy = EcoreUtil.copy(inst).asInstanceOf[Instance]
+           copy.setName(inst.getName) // no prefix needed
+        }
+        else copy = others.head // There will be only one in the list
+      }
+      else {
+        copy = EcoreUtil.copy(inst).asInstanceOf[Instance]
+        copy.setName(key) // rename the instance with the prefix
+      }
+
+      instances.put(key, copy)
     }
 
     // Add the connectors
