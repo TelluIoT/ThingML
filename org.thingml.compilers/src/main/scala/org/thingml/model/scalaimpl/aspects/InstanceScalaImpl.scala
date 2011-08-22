@@ -30,7 +30,7 @@ import java.util.{Hashtable, ArrayList}
  */
 
 case class InstanceScalaImpl (self : Instance) {
-
+  /*
   def initExpressions : ArrayList[((Property, Expression))] = {
     var result = new ArrayList[((Property, Expression))]()
 
@@ -51,5 +51,5 @@ case class InstanceScalaImpl (self : Instance) {
     }
     result
   }
-
+  */
 }

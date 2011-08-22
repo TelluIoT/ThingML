@@ -39,6 +39,10 @@ case class ThingScalaImpl (self : Thing) {
     return ThingMLHelpers.allProperties(self)
   }
 
+  def allFuntions: ArrayList[Function] = {
+    return ThingMLHelpers.allFunctions(self)
+  }
+
   def allPropertiesInDepth: ArrayList[Property] = {
     var result = allProperties
     allStateMachines.foreach{sm =>

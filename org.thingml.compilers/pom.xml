@@ -6,13 +6,12 @@
     <groupId>org.thingml</groupId>
     <artifactId>org.thingml.compilers</artifactId>
 	<name>ThingML :: Compilers</name>
-    <version>0.5.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
         <artifactId>org.thingml.root</artifactId>
         <groupId>org.thingml</groupId>
-        <version>0.5.0-SNAPSHOT</version>
+        <version>0.6.0-SNAPSHOT</version>
         <relativePath>../org.thingml.root/pom.xml</relativePath>
     </parent>
 

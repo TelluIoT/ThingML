@@ -5,11 +5,10 @@
     <packaging>bundle</packaging>
     <name>ThingML :: Model</name>
 
-    <version>0.5.0-SNAPSHOT</version>
     <parent>
         <artifactId>org.thingml.root</artifactId>
         <groupId>org.thingml</groupId>
-        <version>0.5.0-SNAPSHOT</version>
+        <version>0.6.0-SNAPSHOT</version>
         <relativePath>../org.thingml.root/pom.xml</relativePath>
     </parent>
 

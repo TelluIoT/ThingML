@@ -12,3 +12,4 @@ keystore
 /.idea/
 test_out/
 .directory
+org.thingml.compilers/src/test/resources/thingml
