@@ -645,7 +645,7 @@ case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGener
     }.headOption match {
       case Some(a) => 
         var res : String = a.asInstanceOf[PlatformAnnotation].getValue
-        res = res(0).toUpperCase + res.substring(1, res.length)
+        //res = res(0).toUpperCase + res.substring(1, res.length)
         return res
       case None => {
           println("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
