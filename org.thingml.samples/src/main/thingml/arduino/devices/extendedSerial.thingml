@@ -105,6 +105,7 @@ configuration extendedSerialFrag {
 	instance serial : Serial
 	instance exSerial : ExtendedSerial
     instance testdigit : IsDigit
+    
 	connector exSerial.serial => serial.serial
     connector exSerial.testDigit => testdigit.testDigit 
 }

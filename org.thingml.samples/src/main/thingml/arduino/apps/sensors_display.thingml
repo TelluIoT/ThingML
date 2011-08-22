@@ -1,5 +1,5 @@
 import "../devices/lcd_screen.thingml"
-import "../devices/old_analog_input.thingml"
+import "../devices/analog_input.thingml"
 import "../devices/button.thingml"
 import "../devices/led.thingml"
 
@@ -26,14 +26,13 @@ int temperature (int RawADC) {
 
 	required port Pot
 	{
-		receives value
-		sends subscribe
+		receives analog_input_value
+		sends read_analog_input
 	}
 	
     required port Temp
 	{
-		receives value
-		sends subscribe
+		receives analog_input_value
 	}
 
     required port Led
@@ -50,16 +49,14 @@ int temperature (int RawADC) {
    	{
    		on entry do
         		Display!initDisplay (potDisplay, "Position", "", 0, 0, 1023)
-        		Display!initDisplay (tempDisplay, "Temperature", "C", 25, 20, 30)
-        	    Temp!subscribe (true) 
-        	    Pot!subscribe (true)  
+        		Display!initDisplay (tempDisplay, "Temperature", "C", 25, 20, 30)  
         		end
    	    
-   	    internal event m : Temp?value
-        action Display!refreshDisplay (tempDisplay, 'temperature ('& m.val &')')
+   	    internal event m : Temp?analog_input_value
+        action Display!refreshDisplay (tempDisplay, 'temperature ('& m.value &')')
         	
-        internal event m : Pot?value
-        action Display!refreshDisplay (potDisplay, m.val)
+        internal event m : Pot?analog_input_value
+        action Display!refreshDisplay (potDisplay, m.value)
         	
    	    state Temp
         {		
@@ -87,9 +84,9 @@ configuration SensorsDisplay
 	instance arduino : Arduino
 	
     // Two AnalogInput devices configuration.
-	instance pot : AnalogInput
+	instance pot : OnChangeAnalogInput
         set pin = AnalogPin:A_4
-    instance temp : AnalogInput
+    instance temp : OnChangeAnalogInput
         set pin = AnalogPin:A_3
 	instance timerPot : SoftTimer
  	instance timerTemp : SoftTimer
@@ -106,7 +103,7 @@ configuration SensorsDisplay
     // Button device configuration.
     instance button : Button
         set pin = DigitalPin:PIN_9
-    connector button.DigitalIO => arduino.DigitalIO // Waiting for debug.
+    connector button.DigitalIO => arduino.DigitalIO
     
     // Screen device configuration.
 	instance screen : LcdScreen
@@ -114,8 +111,8 @@ configuration SensorsDisplay
     // Application's ports connections.
 	instance app : SensorsDisplay	
 	connector app.Display => screen.Display
-    connector app.Pot => pot.Analog
-    connector app.Temp => temp.Analog
+    connector app.Pot => pot.AnalogInput
+    connector app.Temp => temp.AnalogInput
     connector app.Led => led.LED
     connector app.Button => button.Button
 }

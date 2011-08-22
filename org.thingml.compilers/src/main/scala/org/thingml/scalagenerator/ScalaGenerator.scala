@@ -51,7 +51,16 @@ object ScalaGenerator {
     return returnString.toString
   }
 
-  def firstToUpper(value : String) : String = value(0).toUpperCase + value.substring(1, value.length)
+  def firstToUpper(value : String) : String = {
+    var result = ""
+    if (value.size > 0)
+      result += value(0).toUpperCase 
+    else
+      result = "null"
+    if (value.size > 1)
+      result += value.substring(1, value.length)
+    return result
+  }
 
   def compileAll(model: ThingMLModel, pack : String): Hashtable[Configuration, String] = {
     val result = new Hashtable[Configuration, String]()

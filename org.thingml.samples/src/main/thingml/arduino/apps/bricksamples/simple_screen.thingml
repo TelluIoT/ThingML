@@ -1,0 +1,32 @@
+import "../../core/arduino.thingml"
+import "../../bricks/lcd_screen.thingml"
+
+thing SimpleScreen includes LcdScreenMsgs
+{
+	required port LcdScreen
+	{
+		sends print_string, set_cursor
+	}
+	
+	statechart SimpleScreenImpl init Run
+	{
+		state Run
+		{
+			on entry do
+				LcdScreen!print_string ("Hello")
+				LcdScreen!set_cursor (0, 1)
+				LcdScreen!print_string ("World")
+				end
+		}
+	}
+}
+
+configuration SimpleScreen
+{
+	// Screen declaration.
+	instance lcd_screen : LcdScreen
+		
+	// Simple button configuration.
+	instance simple_screen : SimpleScreen
+	connector simple_screen.LcdScreen => lcd_screen.LcdScreen
+}

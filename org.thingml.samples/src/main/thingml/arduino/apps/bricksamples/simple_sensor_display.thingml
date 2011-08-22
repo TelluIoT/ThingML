@@ -1,0 +1,129 @@
+import "../../core/arduino.thingml"
+import "../../bricks/lcd_screen.thingml"
+import "../../bricks/pot_sensor.thingml"
+import "../../bricks/temp_sensor.thingml"
+import "../../bricks/lux_sensor.thingml"
+
+thing fragment SimpleSensorsDisplay includes LcdScreenMsgs
+{
+	required port LcdScreen
+	{
+		sends print_string, set_cursor, print_value
+	}
+}
+
+// Use only one of the three things following.
+
+thing SimplePotSensorDisplay includes SimpleSensorsDisplay, PotSensorMsgs
+{
+	required port PotSensor
+	{
+		receives position_value
+        sends read_position
+	}
+	
+	statechart SimplePotSensorDisplayImpl init Running
+	{
+		on entry LcdScreen!print_string ("Position:")
+		
+		state Running
+		{
+			on entry LcdScreen!set_cursor (0, 1)
+
+			transition refresh -> Running
+			event m : PotSensor?position_value
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ")
+                end
+		}
+	}
+}
+
+thing SimpleTempSensorDisplay includes SimpleSensorsDisplay, TempSensorMsgs
+{
+	required port TempSensor
+	{
+		receives temp_value
+	}
+	
+	statechart SimpleTempSensorDisplayImpl init Running
+	{
+		on entry LcdScreen!print_string ("Temperature:")
+		
+		state Running
+		{
+			on entry LcdScreen!set_cursor (0, 1)
+			transition refresh -> Running
+			event m : TempSensor?temp_value
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ")
+                end
+		}
+	}
+}
+
+thing SimpleLuxSensorDisplay includes SimpleSensorsDisplay, LuxSensorMsgs
+{
+	required port LuxSensor
+	{
+		receives luminosity_value
+	}
+	
+	statechart SimpleLuxSensorDisplayImpl init Running
+	{
+		on entry LcdScreen!print_string ("Luminosity:")
+		
+		state Running
+		{
+			on entry LcdScreen!set_cursor (0, 1)
+			transition refresh -> Running
+			event m : LuxSensor?luminosity_value
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ")
+                end
+		}
+	}
+}
+configuration SimpleSensorsDisplay
+{
+    // Arduino declaration.
+    instance arduino : Arduino
+    
+	// Screen declaration.
+	instance lcd_screen : LcdScreen
+
+    // Analog input configuration
+    instance analog_input : OnChangeAnalogInput
+        set pin = AnalogPin:A_4
+    instance timer : SoftTimer
+    connector analog_input.AnalogIO => arduino.AnalogIO
+    connector analog_input.Timer => timer.timer
+    connector analog_input.AnalogIO => arduino.AnalogIO
+		
+//* Uncomment only the five lines which refer to the sensor you want use. *//
+
+	// * Potentiometer *
+ 	instance pot_sensor_display : SimplePotSensorDisplay
+    instance pot_sensor : PotSensor
+    connector pot_sensor_display.PotSensor => pot_sensor.PotSensor
+ 	connector pot_sensor_display.LcdScreen => lcd_screen.LcdScreen
+    connector pot_sensor.AnalogInput => analog_input.AnalogInput
+	
+	// * Temperature *
+// 	instance temp_sensor_display : SimpleTempSensorDisplay
+//  instance temp_sensor : TempSensor
+//  connector temp_sensor_display.TempSensor => temp_sensor.TempSensor
+// 	connector temp_sensor_display.LcdScreen => lcd_screen.LcdScreen
+//  connector temp_sensor.AnalogInput => analog_input.AnalogInput
+
+	
+	// * Luminosity *
+//	instance lux_sensor_display : SimpleLuxSensorDisplay
+//  instance lux_sensor : LuxSensor
+//  connector lux_sensor_display.LuxSensor => lux_sensor.LuxSensor
+//	connector lux_sensor_display.LcdScreen => lcd_screen.LcdScreen
+//  connector lux_sensor.AnalogInput => analog_input.AnalogInput  
+}

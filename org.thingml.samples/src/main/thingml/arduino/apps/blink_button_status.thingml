@@ -27,17 +27,19 @@ thing BlinkButtonStatus includes StatusLEDMsgs, ButtonMsgs
     }
 }
 
-configuration BlinkButtonStatus includes StatusLedFragment {       
+configuration BlinkButtonStatus {       
+
+	group led : StatusLedFragment
 
 	instance arduino : Arduino
 	instance button : Button
 		set pin = DigitalPin:PIN_4
 		
 	connector button.DigitalIO => arduino.DigitalIO
-	connector led.DigitalIO => arduino.DigitalIO
+	connector led.led.DigitalIO => arduino.DigitalIO
 
 	// The blink application
 	instance app : BlinkButtonStatus
 	connector app.button => button.Button
-	connector app.status => statusLed.statusLed
+	connector app.status => led.statusLed.statusLed
 }
