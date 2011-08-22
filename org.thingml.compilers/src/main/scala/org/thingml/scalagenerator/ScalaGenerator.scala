@@ -291,8 +291,17 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     builder append "\n/**\n"
     builder append " * Definitions for type : " + self.getName + "\n"
     builder append " **/\n"
+    
+    var traits = ""
+    self.getAnnotations.filter {
+      a => a.getName == "java_interface" || a.getName == "scala_trait"
+    }.headOption match {
+      case Some(a) => 
+        traits = "with " + a.asInstanceOf[PlatformAnnotation].getValue
+      case None =>
+    }
 
-    builder append "class " + firstToUpper(self.getName) + " extends Component {\n\n"
+    builder append "class " + firstToUpper(self.getName) + " extends Component " + traits + "{\n\n"
     
     builder append "//Companion object\n"
     builder append "object " + firstToUpper(self.getName) + "{\n"
