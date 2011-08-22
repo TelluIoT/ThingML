@@ -1,0 +1,63 @@
+import "../core/arduino.thingml"
+import "../devices/digital_output.thingml"
+
+thing fragment LcdScreenMsgs 
+{
+	message clear ();
+	message home ();
+	message set_cursor (col : UInt8, row : UInt8);
+	message print_byte (b : Byte);
+	message print_string (s : String);
+	message print_value (v : Int16);
+	message display (b : Boolean);
+}
+
+thing LcdScreen includes LcdScreenMsgs
+@c_header "
+#include <LiquidCrystal.h>
+LiquidCrystal lcd (10, 11, 12, 13, 14, 15, 16);
+char buf[5];
+"
+{
+    readonly property col : UInt8 = 16
+    readonly property row : UInt8 = 2
+    
+	provided port LcdScreen 
+    {
+		receives clear, home, set_cursor, print_byte, print_string, print_value, display 
+	}
+
+    statechart LcdScreenImpl init Running 
+    {        	
+        state Running
+        {
+        	on entry 'lcd.begin ('& col &', '& row &');'
+        	
+        	internal event LcdScreen?clear
+        	action 'lcd.clear ();'
+        	
+        	internal event LcdScreen?home
+        	action 'lcd.home ();'
+        	
+        	internal event m : LcdScreen?set_cursor
+        	action 'lcd.setCursor ('& m.col &', '& m.row &');'
+        	
+        	internal event m : LcdScreen?print_byte
+        	action 'lcd.write ('& m.b &');'
+        	
+        	internal event m : LcdScreen?print_string
+        	action 'lcd.print ('& m.s &');'
+        	
+        	internal event m : LcdScreen?print_value
+        	action 'lcd.print (itoa ('& m.v &', buf, 10));'
+        	
+        	internal event m : LcdScreen?display
+        	guard m.b == true
+        	action 'lcd.display ();'
+        	
+        	internal event m : LcdScreen?display
+        	guard m.b == false
+        	action 'lcd.noDisplay ();'
+        }
+    }
+}

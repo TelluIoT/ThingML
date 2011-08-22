@@ -1,0 +1,127 @@
+import "../devices/tinypwm.thingml"
+import "../devices/fan_sensors.thingml"
+import "../bricks/pot_sensor.thingml"
+import "../bricks/lcd_screen.thingml"
+
+thing SimpleFanCtrl includes TinyPWMMsgs, PotSensorMsgs, LcdScreenMsgs, FanSensorsMsgs
+{
+    
+	required port PWM 
+    {	
+		sends set_pwm, set_pwm_a, set_pwm_b
+	}
+
+    required port LcdScreen
+	{
+		sends clear, print_string, print_value, set_cursor
+	}
+
+    required port Pot1
+	{
+		receives position_value
+	}
+
+    required port Pot2
+	{
+		receives position_value
+	}
+
+    required port Sensors {
+        sends read_fan_sensor
+        receives fan_sensor_rpm
+	}
+
+    statechart BlinkImpl init Fan1 {
+        
+        property fan1 : Long = 0
+        property fan2 : Long = 0
+        
+        property cpt : Int8 = 0
+        
+        on entry PWM!set_pwm(0, 0)
+        
+        internal event m : Pot1?position_value
+        action PWM!set_pwm_a(m.val / 4)
+        
+        internal event m : Pot2?position_value
+        action PWM!set_pwm_b(m.val / 4)
+        
+        state Fan1 {
+            on entry Sensors!read_fan_sensor(FanSensorPin:FAN_SENSOR_PIN_2)
+            transition -> Fan2
+            event m : Sensors?fan_sensor_rpm
+            action fan1 = fan1 + m.rpm
+        }
+        
+        state Fan2 {
+            on entry Sensors!read_fan_sensor(FanSensorPin:FAN_SENSOR_PIN_3)
+            
+            on exit do
+            
+                if (cpt == 7) do
+                    
+                    fan1 = fan1 / 8
+                    fan2 = fan2 / 8
+                
+                    // update display
+                    LcdScreen!clear()
+                    LcdScreen!print_string("Fan 1 : ")
+                    LcdScreen!print_value(fan1)
+                    LcdScreen!set_cursor (0, 1)
+                    LcdScreen!print_string("Fan 2 : ")
+                    LcdScreen!print_value(fan2)
+                    
+                    cpt = 0
+                end
+                cpt = cpt + 1
+            end
+            
+            transition -> Fan1
+            event m : Sensors?fan_sensor_rpm
+            action fan2 = fan2 + m.rpm
+        }
+        
+    }
+}
+
+configuration SimpleFanCtrl {       
+
+    // Arduino board
+    instance arduino : Arduino
+    
+    // Pot 1
+    instance analog_input_1 : OnChangeAnalogInput
+        set pin = AnalogPin:A_4
+    instance timer_1 : SoftTimer
+    instance pot_sensor_1 : PotSensor
+    connector analog_input_1.AnalogIO => arduino.AnalogIO
+    connector analog_input_1.Timer => timer_1.timer
+    connector pot_sensor_1.AnalogInput => analog_input_1.AnalogInput
+	
+    // Pot 2
+    instance analog_input_2 : OnChangeAnalogInput
+        set pin = AnalogPin:A_5
+    instance timer_2 : SoftTimer
+    instance pot_sensor_2 : PotSensor
+    connector analog_input_2.AnalogIO => arduino.AnalogIO
+    connector analog_input_2.Timer => timer_2.timer
+    connector pot_sensor_2.AnalogInput => analog_input_2.AnalogInput
+    
+    // Lcd Screen
+    instance lcd_screen : LcdScreen
+	
+    // TinyPWM
+    instance tiny_pwm : TinyPWM
+    
+    // Fan Sensors
+    instance fan_sensors : FanSensors
+    
+    // Main application
+    instance main : SimpleFanCtrl
+    connector main.Pot1 => pot_sensor_1.PotSensor
+    connector main.Pot2 => pot_sensor_2.PotSensor
+    connector main.PWM => tiny_pwm.PWM
+    connector main.LcdScreen => lcd_screen.LcdScreen
+    connector main.Sensors => fan_sensors.FanSensors
+	
+}

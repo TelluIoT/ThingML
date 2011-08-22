@@ -1,0 +1,40 @@
+import "../core/arduino.thingml"
+import "../devices/digital_input.thingml"
+
+thing fragment ButtonMsgs includes DigitalInputMsgs 
+{
+	message press ();
+	message release ();
+}
+
+thing Button includes ButtonMsgs
+{	
+
+	readonly property pin : DigitalPin = DigitalPin:PIN_8
+	
+	provided port Button 
+	{
+		sends press
+		sends release
+	}
+	
+	required port DigitalInput
+    {
+        sends read_digital_input
+		receives digital_input_value    
+    }
+	
+	 statechart ButtonImpl init Running 
+	 {
+        state Running
+        {    
+            internal event m : DigitalInput?digital_input_value
+            guard m.value == DigitalState:HIGH 
+            action Button!press ()   
+            
+            internal event m : DigitalInput?digital_input_value
+            guard m.value == DigitalState:LOW 
+            action Button!release ()
+        }
+    }
+}

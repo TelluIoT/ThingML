@@ -1,0 +1,67 @@
+import "../../core/arduino.thingml"
+import "../../bricks/led.thingml"
+import "../../bricks/button.thingml"
+import "../../devices/digital_input.thingml"
+
+thing SimpleButton includes LedMsgs, ButtonMsgs
+{
+	readonly property led_pin : DigitalPin = DigitalPin:PIN_13
+	
+	required port Led
+	{
+		sends led_on, led_off
+	}
+	
+	required port Button
+	{
+		receives press, release
+	}
+		
+	statechart SimpleButton init Idle
+	{
+		state Idle
+		{
+			transition pressed -> LedOn
+			event Button?press
+			action Led!led_on ()
+		}
+		
+		state LedOn
+		{
+			transition released -> Idle
+			event Button?release
+			action Led!led_off ()
+		}
+	}
+}
+
+configuration SimpleButton
+@debug "false"
+@debug_message_receive "press"
+{
+	// Arduino declaration.
+	instance arduino : Arduino
+	
+	// Digital output configuration.
+	instance digital_output : DigitalOutput
+		set pin = DigitalPin:PIN_8
+	connector digital_output.DigitalIO => arduino.DigitalIO
+	
+	// Led configuration.
+	instance led : Led
+	connector led.DigitalOutput => digital_output.DigitalOutput
+		
+	// Digital input configuration.
+	instance digital_input : OnChangeDigitalInput
+		set pin = DigitalPin:PIN_9
+	connector digital_input.DigitalIO => arduino.DigitalIO
+	
+	// Button configuration.
+	instance button : Button
+	connector button.DigitalInput => digital_input.DigitalInput
+	
+	// Simple button configuration.
+	instance simple_button : SimpleButton
+	connector simple_button.Led => led.Led
+	connector simple_button.Button => button.Button
+}

@@ -1,5 +1,5 @@
 import "../devices/lcd_screen.thingml"
-import "../devices/old_analog_input.thingml"
+import "../devices/analog_input.thingml"
 
 thing PotSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
 {	
@@ -8,10 +8,10 @@ thing PotSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
 		sends initDisplay, refreshDisplay, setDisplay
 	}
 
-	required port Analog
+	required port AnalogInput
 	{
-		receives value
-		sends subscribe
+		sends read_analog_input
+		receives analog_input_value 
 	}
 	
    	statechart PotSensorDisplayImpl init Running
@@ -22,18 +22,28 @@ thing PotSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
                 end
    		state Running
    		{
-   			on entry Analog!subscribe (true)
-   			internal refresh event m : Analog?value
-   			action Display!refreshDisplay (3, m.val) 
+   			internal refresh event m : AnalogInput?analog_input_value
+   			action Display!refreshDisplay (3, m.value) 
    		}	
    	}
 }
 
-configuration PotSensorDisplay includes AnalogInputConfFrag
+configuration PotSensorDisplay
 {
-	instance screen : LcdScreen
-	instance app : PotSensorDisplay
+	// Arduino declaration.
+	instance arduino : Arduino
 	
+	// On change analog input configuration.
+	instance on_change_analog_input : OnChangeAnalogInput
+        set pin = AnalogPin:A_4
+	instance timer : SoftTimer
+	connector on_change_analog_input.AnalogIO => arduino.AnalogIO
+	connector on_change_analog_input.Timer => timer.timer
+	
+	instance screen : LcdScreen
+	
+	// Application configuration.
+	instance app : PotSensorDisplay
 	connector app.Display => screen.Display
-	connector app.Analog => analog.Analog
+	connector app.AnalogInput => on_change_analog_input.AnalogInput
 }

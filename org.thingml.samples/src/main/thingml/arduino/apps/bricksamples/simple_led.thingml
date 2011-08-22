@@ -1,0 +1,57 @@
+import "../../core/arduino.thingml"
+import "../../bricks/led.thingml"
+import "../../devices/digital_input.thingml"
+import "../../devices/softtimer.thingml"
+
+thing SimpleLed includes LedMsgs, TimerMsgs
+{
+	readonly property led_pin : DigitalPin = DigitalPin:PIN_13
+	readonly property frequency : UInt16 = 1000
+	
+	required port Led
+	{
+		sends led_toggle
+	}
+	
+	required port Timer
+	{
+		sends timer_start
+		receives timer_timeout
+	}
+	
+	statechart SimpleLedImpl init Running
+	{
+		state Running
+		{
+			on entry Timer!timer_start (frequency)
+			
+			transition toggle -> Running
+			event Timer?timer_timeout
+			action Led!led_toggle ()
+		}
+	}
+}
+
+configuration SimpleLed
+{
+	// Arduino declaration.
+	instance arduino : Arduino
+	
+	// Digital output configuration.
+	instance digital_output : DigitalOutput
+		set pin = DigitalPin:PIN_8
+	connector digital_output.DigitalIO => arduino.DigitalIO
+	
+	// Led configuration.
+	instance led : Led
+	connector led.DigitalOutput => digital_output.DigitalOutput
+		
+	// Timer configuration.
+	instance timer : SoftTimer
+	
+	// Simple led configuration.
+	instance simple_led : SimpleLed
+        set frequency = 800
+	connector simple_led.Led => led.Led
+	connector simple_led.Timer => timer.timer
+}

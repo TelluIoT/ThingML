@@ -1,0 +1,41 @@
+import "../core/arduino.thingml"
+
+thing fragment DigitalOutputMsgs 
+{
+	message digital_output_value (value : DigitalState);
+}
+
+thing DigitalOutput includes DigitalOutputMsgs, ArduinoStdlibMsgs
+{	
+	readonly property pin : DigitalPin = DigitalPin:PIN_13
+	
+	provided port DigitalOutput 
+	{
+		receives digital_output_value
+	}
+	
+	required port DigitalIO
+    {
+        sends pinMode, digitalWrite    
+    }
+    
+    statechart DigitalOutpuImpl init Running
+    {
+    	on entry DigitalIO!pinMode (pin, PinMode:OUTPUT)
+    	
+    	state Running
+    	{
+    		internal event m : DigitalOutput?digital_output_value
+    		action DigitalIO!digitalWrite (pin, m.value)
+    	}
+    }
+}
+
+//* Configuration needs: 
+//
+// instance arduino : Arduino
+//
+// instance digital_output : DigitalOutput
+// connector digital_output.DigitalIO => arduino.DigitalIO
+//
+//*
