@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.thingml</groupId>
     <artifactId>org.thingml.compilers</artifactId>
-	<name>ThingML :: Compilers</name>
+    <name>ThingML :: Compilers</name>
     <packaging>jar</packaging>
 
     <parent>
@@ -60,25 +60,24 @@
 		Use to copy the thingml samples within the test of the
 		compilers automatically 
 		-->	   
-	 <plugin>
-         	<artifactId>maven-antrun-plugin</artifactId>
-	        <executions>
-	           <execution>
-	             <phase>validate</phase>
-	             <configuration>
-	                <tasks>
-	        	   <copy todir="src/test/resources/thingml"  preservelastmodified="true">
-			       <fileset dir="../org.thingml.samples/src/main/thingml"/>
-  			   </copy>
-			</tasks>
-		     </configuration>
-	           <goals>        
-		       <goal>run</goal>
-	             </goals>  
-	         </execution>
-	      </executions>
-	   </plugin> 
-
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <configuration>
+                            <tasks>
+                                <copy todir="src/test/resources/thingml"  preservelastmodified="true">
+                                    <fileset dir="../org.thingml.samples/src/main/thingml"/>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                        <goals>        
+                            <goal>run</goal>
+                        </goals>  
+                    </execution>
+                </executions>
+            </plugin> 
 
         </plugins>
 

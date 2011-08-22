@@ -1,6 +1,0 @@
-import "arduino_stdlib.thingml"
-
-thing Arduino includes ArduinoStdlib
-{	
-
-}

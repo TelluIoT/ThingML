@@ -1,4 +1,7 @@
-import "../core/arduino.thingml"
+import "../../thingml.thingml"
+
+datatype LedDevice
+@scala_type "org.thingml.devices.LedDemo"
 
 thing fragment LEDMsgs {
 	message led_on();
@@ -6,36 +9,42 @@ thing fragment LEDMsgs {
 	message led_toggle();
 }
 
-thing LED includes LEDMsgs, ArduinoStdlibMsgs
+thing LED includes LEDMsgs
 {
     
-    readonly property pin : DigitalPin = DigitalPin:PIN_13
-    
+    property device : LedDevice
+
 	provided port LED 
     {
 		receives led_on, led_off, led_toggle
 	}
 
-    required port DigitalIO
-    {
-        sends pinMode, digitalWrite    
-    }
     
     statechart LEDImpl init LED_OFF {
         
-        on entry DigitalIO!pinMode(pin, PinMode:OUTPUT)
+        on entry device = 'new org.thingml.devices.LedDemo()'
         
         state LED_OFF {
-            on entry DigitalIO!digitalWrite(pin, DigitalState:LOW)
-            transition switch_on -> LED_ON event LED?led_on event LED?led_toggle
+            on entry 'LED_device_var.off()'
             
+            transition switch_on -> LED_ON 
+            	event e22 : LED?led_on 
+            	
+            transition switch_on -> LED_ON 
+            	event e22: LED?led_toggle 
+            	
         }
         
         state LED_ON {
-            on entry DigitalIO!digitalWrite(pin, DigitalState:HIGH)
-            transition switch_off -> LED_OFF event LED?led_off event LED?led_toggle
+            on entry 'LED_device_var.on()'
+            
+            transition switch_off -> LED_OFF 
+            	event e22 : LED?led_off
+            	
+            transition switch_off -> LED_OFF 
+            	event e22 : LED?led_toggle
+            	
         }
-    
    
     }
     

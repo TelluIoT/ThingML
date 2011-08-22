@@ -1,7 +1,8 @@
-import "../core/arduino.thingml"
+import "../../thingml.thingml"
 
 // Manage a set of software timers.
-thing SoftTimer includes Timer, ThingMLScheduler
+// this should be refactored to avoid using poll
+thing SoftTimer includes Timer, ThingMLSchedulerMsg
 {
 	
 	required port Polling {

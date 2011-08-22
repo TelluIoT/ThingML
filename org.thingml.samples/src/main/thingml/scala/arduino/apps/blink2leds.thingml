@@ -6,14 +6,14 @@ thing Blink2Leds includes LEDMsgs, TimerMsgs
 
 	required port timer1
 	{
-		sends timer_start
-        receives timer_timeout
+            sends timer_start
+            receives timer_timeout
 	}
 	
 	required port timer2
 	{
 		sends timer_start
-        receives timer_timeout
+            receives timer_timeout
 	}
 	
 	required port led1
@@ -50,24 +50,21 @@ thing Blink2Leds includes LEDMsgs, TimerMsgs
     }
 }
 
-configuration Blink2Leds {       
+configuration ScalaBlink2LedsSimulator {       
 
-	// The arduino board with 2 LEDs on pin 10 and 13
-	instance arduino : Arduino
-	
-	instance led1 : LED set pin = DigitalPin:PIN_10 
-	connector led1.DigitalIO => arduino.DigitalIO
-	
-	instance led2 : LED set pin = DigitalPin:PIN_13 
-	connector led2.DigitalIO => arduino.DigitalIO
+	instance scheduler : ThingMLScheduler
+
+	instance led1 : LED	
+	instance led2 : LED
 	
 	instance timer1 : SoftTimer
 	instance timer2 : SoftTimer
 	
+	connector timer1.Polling => scheduler.Polling
+	connector timer2.Polling => scheduler.Polling
+	
 	// The blink application
 	instance app : Blink2Leds
-    connector timer1.Polling => arduino.Polling
-    connector timer2.Polling => arduino.Polling
 	connector app.led1 => led1.LED
 	connector app.timer1 => timer1.timer
 	connector app.led2 => led2.LED

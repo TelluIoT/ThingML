@@ -1,7 +1,0 @@
-import "../core/testCompStatesEntry.thingml"
-import "arduinoharness.thingml"
-
-configuration TestCompStatesEntryArduino includes ArduinoHarness {
-	instance test : TestCompStatesEntry 
-	connector test.harness => harness.test 
-}
