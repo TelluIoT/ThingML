@@ -1,0 +1,60 @@
+import "../../core/arduino.thingml"
+import "../../bricks/led.thingml"
+import "../../bricks/tilt_switch.thingml"
+import "../../devices/digital_input.thingml"
+
+thing SimpleTilt includes LedMsgs, TiltSwitchMsgs
+{
+	readonly property led_pin : DigitalPin = DigitalPin:PIN_9
+	readonly property tilt_pin : DigitalPin = DigitalPin:PIN_8
+	
+	required port Led
+	{
+		sends led_toggle
+	}
+	
+	required port TiltSwitch
+	{
+		receives tilt_toggle
+	}
+		
+	statechart SimpleTiltImpl init Running
+	{
+		state Running
+		{
+			internal switch event TiltSwitch?tilt_toggle
+			action Led!led_toggle ()
+		}
+	}
+}
+
+configuration SimpleTilt
+@debug "false"
+@debug_message_receive "press"
+{
+	// Arduino declaration.
+	instance arduino : Arduino
+	
+	// Digital output configuration.
+	instance digital_output : DigitalOutput
+		set pin = DigitalPin:PIN_9
+	connector digital_output.DigitalIO => arduino.DigitalIO
+	
+	// Led configuration.
+	instance led : Led
+	connector led.DigitalOutput => digital_output.DigitalOutput
+		
+	// Digital input configuration.
+	instance digital_input : OnChangeDigitalInput
+		set pin = DigitalPin:PIN_8
+	connector digital_input.DigitalIO => arduino.DigitalIO
+	
+	// tilt configuration.
+	instance tilt : TiltSwitch
+	connector tilt.DigitalInput => digital_input.DigitalInput
+	
+	// Simple button configuration.
+	instance simple_tilt : SimpleTilt
+	connector simple_tilt.Led => led.Led
+	connector simple_tilt.TiltSwitch => tilt.TiltSwitch
+}

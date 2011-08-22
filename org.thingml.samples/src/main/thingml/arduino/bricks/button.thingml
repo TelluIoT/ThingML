@@ -20,7 +20,6 @@ thing Button includes ButtonMsgs
 	
 	required port DigitalInput
     {
-        sends read_digital_input
 		receives digital_input_value    
     }
 	

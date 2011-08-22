@@ -1,0 +1,95 @@
+import "../../core/arduino.thingml"
+import "../../bricks/buzzer.thingml"
+import "../../devices/softtimer.thingml"
+
+thing SimpleBuzzer includes BuzzerMsgs, TimerMsgs
+{
+	readonly property buzzer_pin : DigitalPin = DigitalPin:PIN_8
+	property counter : UInt8 = 0 
+	
+	required port Buzzer
+	{
+		sends buzzer_delay
+	}
+	
+	required port Timer
+	{
+		sends timer_start
+		receives timer_timeout
+	}
+	
+	statechart SimpleBuzzerImpl init Fast
+	{       
+        on entry Timer!timer_start (50)
+        
+		state Fast
+		{
+            on entry counter = 0
+            
+			internal repeat event Timer?timer_timeout
+            guard counter < 3
+            action do
+                Buzzer!buzzer_delay (100)
+                counter = counter + 1
+                Timer!timer_start (500)
+                end
+                
+            transition switch -> Slow
+            event Timer?timer_timeout
+            guard counter == 3
+            //action Timer!timer_start (400)
+		}
+			
+		state Slow
+		{	
+            on entry counter = 0
+                
+            internal repeat event Timer?timer_timeout
+            guard counter < 3
+            action do
+                Buzzer!buzzer_delay (1000)
+                counter = counter + 1
+                Timer!timer_start (1400)
+                end
+                
+            transition switch -> Fast
+            event Timer?timer_timeout
+            guard counter == 3
+            //action Timer!timer_start (400)
+		}
+	}
+}
+
+configuration SimpleBuzzer
+@debug "true"
+@debug_fifo "true"
+@debug_message_send "timer_start"
+@debug_message_receive "timer_start"
+@debug_message_send "timer_timeout"
+@debug_message_receive "timer_timeout"
+@debug_message_send "buzzer_delay"
+@debug_message_receive "buzzer_delay"
+  
+{
+	// Arduino declaration.
+	instance arduino : Arduino
+	
+	// Digital output configuration.
+	instance digital_output : DigitalOutput
+		set pin = DigitalPin:PIN_8
+	connector digital_output.DigitalIO => arduino.DigitalIO
+	
+	// Buzzer configuration.
+	instance buz_timer : SoftTimer
+	instance buzzer : Buzzer
+	connector buzzer.Timer => buz_timer.timer 
+	connector buzzer.DigitalOutput => digital_output.DigitalOutput
+		
+	// Timer configuration.
+	instance timer : SoftTimer
+	
+	// Simple led configuration.
+	instance simple_buzzer : SimpleBuzzer
+	connector simple_buzzer.Buzzer => buzzer.Buzzer
+	connector simple_buzzer.Timer => timer.timer
+}

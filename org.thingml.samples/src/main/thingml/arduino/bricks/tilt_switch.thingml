@@ -1,0 +1,44 @@
+import "../core/arduino.thingml"
+import "../devices/digital_input.thingml"
+
+thing fragment TiltSwitchMsgs includes DigitalInputMsgs 
+{
+	message tilt_toggle ();
+}
+
+thing TiltSwitch includes TiltSwitchMsgs
+{
+    readonly property pin : DigitalPin = DigitalPin:PIN_10
+    
+	provided port TiltSwitch 
+    {
+		sends tilt_toggle
+	}
+
+    required port DigitalInput
+    {
+        sends read_digital_input
+		receives digital_input_value
+    }
+    
+    statechart TiltSwitchImpl init Running 
+    {    
+        state Running
+        {
+           	internal event m : DigitalInput?digital_input_value 
+            action TiltSwitch!tilt_toggle ()   
+        }
+    }
+}
+
+//* Configuration needs:
+//
+// includes DigitalInputConf
+//
+// instance tilt_switch : TiltSwitch
+// instance digital_input : DigitalInput
+// 		set pin = pin	 
+// 
+// connector tilt_switch.DigitalInput => digital_input.DigitalInput
+//
+//* 
