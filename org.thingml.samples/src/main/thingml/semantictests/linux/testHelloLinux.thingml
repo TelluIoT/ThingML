@@ -1,7 +1,10 @@
 import "../core/testHello.thingml"
 import "linuxharness.thingml"
 
-configuration TestHelloLinux includes LinuxHarness {
+configuration TestHelloLinux {
+
+	group harness : LinuxHarness
+
 	instance test : TestHello
-	connector test.harness => harness.test 
+	connector test.harness => harness.harness.test 
 }
