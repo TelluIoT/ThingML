@@ -15,14 +15,12 @@
  */
 package org.thingml.cgenerator
 
-import org.sintef.thingml._
-import constraints.ThingMLHelpers
+import org.sintef.thingml.constraints.ThingMLHelpers
 import org.thingml.cgenerator.CGenerator._
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
-import resource.thingml.analysis.helper.CharacterEscaper
+import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import sun.applet.resources.MsgAppletViewer
-import com.sun.org.apache.xpath.internal.operations.Variable
 import org.eclipse.emf.ecore.xml.`type`.internal.RegEx.Match
 import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
 import javax.xml.transform.Result
@@ -32,6 +30,7 @@ import java.io._
 
 import io.Source
 import java.lang.{Boolean, StringBuilder}
+import org.sintef.thingml._
 
 object SimpleCopyTemplate {
 
@@ -68,7 +67,8 @@ object CGenerator {
 
   implicit def cGeneratorAspect(self: EnumerationLiteral): EnumerationLiteralCGenerator = EnumerationLiteralCGenerator(self)
 
-  implicit def cGeneratorAspect(self: Property): PropertyCGenerator = PropertyCGenerator(self)
+  implicit def cGeneratorAspect(self: Variable): VariableCGenerator = VariableCGenerator(self)
+ // implicit def cGeneratorAspect(self: Property): PropertyCGenerator = PropertyCGenerator(self)
 
   implicit def cGeneratorAspect(self: Type) = self match {
     case t: PrimitiveType => PrimitiveTypeCGenerator(t)
@@ -646,6 +646,8 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
     // Initialize variables and state machines
+
+    /*
     self.initExpressions.foreach{ init =>
       if (init._2 != null ) {
         builder append c_var_name + "." + init._1.c_var_name + " = "
@@ -653,6 +655,7 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
         builder append ";\n";
       }
     }
+    */
 
     // init state variables:
     builder append "// Init the state variables\n"
@@ -671,13 +674,13 @@ case class ConnectorCGenerator(override val self: Connector) extends ThingMLCGen
     // connect the handlers for messages with the sender
     // sender_listener = reveive_handler;
     self.getProvided.getSends.filter{m => self.getRequired.getReceives.contains(m)}.foreach { m =>
-       builder append self.getServer.getType.sender_name(self.getProvided, m) + "_listener = "
-       builder append self.getClient.getType.handler_name(self.getRequired, m) + ";\n"
+       builder append self.getSrv.getInstance().getType.sender_name(self.getProvided, m) + "_listener = "
+       builder append self.getCli.getInstance().getType.handler_name(self.getRequired, m) + ";\n"
     }
 
     self.getRequired.getSends.filter{m => self.getProvided.getReceives.contains(m)}.foreach { m =>
-       builder append self.getClient.getType.sender_name(self.getRequired, m) + "_listener = "
-       builder append self.getServer.getType.handler_name(self.getProvided, m) + ";\n"
+       builder append self.getCli.getInstance().getType.sender_name(self.getRequired, m) + "_listener = "
+       builder append self.getSrv.getInstance().getType.handler_name(self.getProvided, m) + ";\n"
     }
   }
 }
@@ -1063,12 +1066,19 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
 }
 
-case class PropertyCGenerator(override val self: Property) extends ThingMLCGenerator(self) {
+case class VariableCGenerator(override val self: Variable) extends ThingMLCGenerator(self) {
    def c_var_name = {
        self.qname("_") + "_var"
    }
 }
 
+/*
+case class PropertyCGenerator(override val self: Property) extends ThingMLCGenerator(self) {
+   def c_var_name = {
+       self.qname("_") + "_var"
+   }
+}
+  */
 case class EnumerationLiteralCGenerator(override val self: EnumerationLiteral) extends ThingMLCGenerator(self) {
 
   def enum_val: String = {
