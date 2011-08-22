@@ -1,7 +1,0 @@
-import "../core/testHello.thingml"
-import "linuxharness.thingml"
-
-configuration TestHelloLinux includes LinuxHarness {
-	instance test : TestHello
-	connector test.harness => harness.test 
-}

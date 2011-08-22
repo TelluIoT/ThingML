@@ -1,6 +1,0 @@
-import "../extended/testMultiServerPing.thingml"
-import "arduinoharness.thingml"
-
-configuration TestMultiServerPingArduino includes ArduinoHarness, TestMultiServerPingFrag {
-	connector test.harness => harness.test 
-}
