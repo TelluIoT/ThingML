@@ -10,6 +10,9 @@ thing fragment LuxSensorMsgs includes AnalogInputMsgs
 thing LuxSensor includes LuxSensorMsgs
 {
     readonly property pin : AnalogPin = AnalogPin:A_5
+    readonly property sample_rate : UInt8 = 1
+    property tot_value : UInt16 = 0
+    property counter : UInt8 = 0
     
 	provided port LuxSensor 
     {
@@ -26,7 +29,19 @@ thing LuxSensor includes LuxSensorMsgs
     statechart LuxSensorImpl init Running 
     {    
     	internal event m : AnalogInput?analog_input_value
-    	action LuxSensor!luminosity_value (m.value)
+        guard counter == sample_rate
+    	action do
+            LuxSensor!luminosity_value ((tot_value + m.value) / (sample_rate + 1))
+            tot_value = 0
+            counter = 0
+            end
+            
+        internal event m : AnalogInput?analog_input_value
+        guard counter < sample_rate
+    	action do
+            tot_value = tot_value + m.value
+            counter = counter + 1
+            end
     	
         state Running 
         {

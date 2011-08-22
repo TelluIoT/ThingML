@@ -127,16 +127,15 @@ configuration SimpleSensorsDisplay
     instance timer : SoftTimer
     connector analog_input.AnalogIO => arduino.AnalogIO
     connector analog_input.Timer => timer.timer
-    connector analog_input.AnalogIO => arduino.AnalogIO
-		
+ 		
 //* Uncomment only the five lines which refer to the sensor you want use. *//
 
 	// * Potentiometer *
- 	instance pot_sensor_display : SimplePotSensorDisplay
-    instance pot_sensor : PotSensor
-    connector pot_sensor_display.PotSensor => pot_sensor.PotSensor
- 	connector pot_sensor_display.LcdScreen => lcd_screen.LcdScreen
-    connector pot_sensor.AnalogInput => analog_input.AnalogInput
+//  	instance pot_sensor_display : SimplePotSensorDisplay
+//     instance pot_sensor : PotSensor
+//     connector pot_sensor_display.PotSensor => pot_sensor.PotSensor
+//  	connector pot_sensor_display.LcdScreen => lcd_screen.LcdScreen
+//     connector pot_sensor.AnalogInput => analog_input.AnalogInput
 	
 	// * Temperature *
 // 	instance temp_sensor_display : SimpleTempSensorDisplay
@@ -147,16 +146,16 @@ configuration SimpleSensorsDisplay
 
 	
 	// * Luminosity *
-//	instance lux_sensor_display : SimpleLuxSensorDisplay
-//  instance lux_sensor : LuxSensor
-//  connector lux_sensor_display.LuxSensor => lux_sensor.LuxSensor
-//	connector lux_sensor_display.LcdScreen => lcd_screen.LcdScreen
-//  connector lux_sensor.AnalogInput => analog_input.AnalogInput 
+	instance lux_sensor_display : SimpleLuxSensorDisplay
+    instance lux_sensor : LuxSensor
+    connector lux_sensor_display.LuxSensor => lux_sensor.LuxSensor
+	connector lux_sensor_display.LcdScreen => lcd_screen.LcdScreen
+    connector lux_sensor.AnalogInput => analog_input.AnalogInput 
 
     // * Sound *
-//	instance sound_sensor_display : SimpleSoundSensorDisplay
-//  instance sound_sensor : SoundSensor
-//  connector sound_sensor_display.SoundSensor => sound_sensor.SoundSensor
-//	connector sound_sensor_display.LcdScreen => lcd_screen.LcdScreen
-//  connector sound_sensor.AnalogInput => analog_input.AnalogInput  
+// 	instance sound_sensor_display : SimpleSoundSensorDisplay
+//     instance sound_sensor : SoundSensor
+//     connector sound_sensor_display.SoundSensor => sound_sensor.SoundSensor
+//     connector sound_sensor_display.LcdScreen => lcd_screen.LcdScreen
+//     connector sound_sensor.AnalogInput => analog_input.AnalogInput  
 }

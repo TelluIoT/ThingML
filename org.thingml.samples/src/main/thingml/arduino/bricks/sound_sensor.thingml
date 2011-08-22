@@ -10,6 +10,9 @@ thing fragment SoundSensorMsgs includes AnalogInputMsgs
 thing SoundSensor includes SoundSensorMsgs
 {
     readonly property pin : AnalogPin = AnalogPin:A_5
+    readonly property sample_rate : UInt8 = 50
+    property counter : UInt8 = 0
+    property max_value : UInt16 = 0
     
 	provided port SoundSensor 
     {
@@ -26,8 +29,20 @@ thing SoundSensor includes SoundSensorMsgs
     statechart SoundSensorImpl init Running 
     {    
     	internal event m : AnalogInput?analog_input_value
-    	action SoundSensor!sound_value (m.value)
-    	
+        guard counter == sample_rate
+    	action do
+            SoundSensor!sound_value (max_value)
+            counter = 0
+            max_value = 0
+            end
+
+        internal event m : AnalogInput?analog_input_value
+        guard counter < sample_rate
+    	action do
+            if (m.value > max_value) max_value = m.value
+            counter = counter + 1
+            end 
+        	
         state Running 
         {
         	internal event SoundSensor?read_sound
@@ -41,9 +56,10 @@ thing SoundSensor includes SoundSensorMsgs
 // includes AnalogInput
 //
 // instance sound_sensor : SoundSensor
-// instance analog_input : OnChangeAnalogInput
+// instance analog_input : PeriodicAnalogInput
 // 		set pin = pin	 
-// 
+//      set refresh_rate = 2000
+//
 // connector sound_sensor.AnalogInput => analog_input.AnalogInput
 //
 //* 
