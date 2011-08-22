@@ -645,6 +645,17 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
 
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
+
+   // builder append "// Init properties\n"
+
+    context.cfg.initExpressionsForInstance(self).foreach{ init =>
+      if (init._2 != null ) {
+        builder append c_var_name + "." + init._1.c_var_name + " = "
+        init._2.generateC(builder, context)
+        builder append ";\n";
+      }
+    }
+
     // Initialize variables and state machines
 
     /*
