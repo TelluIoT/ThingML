@@ -8,6 +8,7 @@ thing fragment TinyPWMMsgs {
 }
 
 thing TinyPWM includes TinyPWMMsgs, LEDMsgs
+@singleton "true"
 @c_global "
 #include <avr/io.h>
 #include <util/delay.h>
