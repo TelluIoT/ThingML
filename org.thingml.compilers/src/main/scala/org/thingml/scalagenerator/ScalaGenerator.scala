@@ -442,10 +442,6 @@ case class InternalTransitionScalaGenerator(override val self: InternalTransitio
   }
 }
 
-/*case class ParallelRegionScalaGenerator(override val self: ParallelRegion) extends ThingMLScalaGenerator(self) {
-  
- }*/
-
 case class StateMachineScalaGenerator(override val self: StateMachine) extends CompositeStateScalaGenerator(self) {
   override def generateScala(builder: StringBuilder, thing : Thing) {
     builder append "case class " + firstToUpper(self.getName) + "StateMachine(keepHistory : Boolean, root : Component) extends StateAction {\n"
@@ -455,37 +451,13 @@ case class StateMachineScalaGenerator(override val self: StateMachine) extends C
     
     generateActions(builder, thing)
     generateSub(builder, thing)
-    //generateInternalTransitions(builder)
     
     builder append "}\n"
   }
 }
 
 case class StateScalaGenerator(override val self: State) extends ThingMLScalaGenerator(self) {
-  
-  /*def printEvents(h : Handler, builder : StringBuilder) {
-    var init : String = ""
-    h match {
-      case t : Transition =>
-        init = "t_" + t.getSource.getName+"2"+t.getTarget.getName + "_" + t.hashCode
-      case i : InternalTransition =>
-        init = "t_self_" + i.hashCode
-      case _ =>
-    }
     
-    h.getEvent.foreach{a =>
-      builder append init + ".initEvent(" + printEvent(a) + ")\n"
-    }
-  }*/
-  
-  /*def printEvent(e : Event) : String = e match {
-    case rm : ReceiveMessage =>
-      return firstToUpper(rm.getMessage.getName) + ".getName"
-    case _ => 
-      println("Warning: Unknown type of event: "+e)
-      return "null"
-  }*/
-  
   def generateActions(builder : StringBuilder, thing : Thing) {
     builder append "override def onEntry() = {\n"
     if (debug)
@@ -525,7 +497,6 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
   def generateInternalTransitions(builder : StringBuilder, t : InternalTransition, thing : Thing){
     val state = t.eContainer.asInstanceOf[State].getName + "_state"
     builder append "val t_self_" + t.hashCode  + " = new InternalTransition(" + state + ", " + "new InternalTransition" + t.hashCode + "(), " + generateHandler(t, thing) + ")\n"
-    //printEvents(t, builder)
     builder append state + ".addInternalTransition(t_self_" + t.hashCode + ")\n"
   }
   
@@ -539,7 +510,6 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
     builder append "case class " + firstToUpper(self.getName) + "State extends StateAction {\n"
     
     generateActions(builder, thing)
-    //generateInternalTransitions(builder)
 
     builder append "}\n\n"
   }
@@ -552,16 +522,8 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
    
     builder append "def getBehavior = parent\n"
     builder append "val parent : StateMachine = new Region(keepHistory)\n"
-   
-    /*
-    builder append "ports.keys.foreach{k => \n"
-    builder append "new Port(k, ports.get(k).get._1, ports.get(k).get._2, parent).start\n"
-    builder append "}\n"
-    */
     
-    //generateActions(builder)
     r.getSubstate.foreach{sub => sub.generateScala(builder, thing)}
-    //generateInternalTransitions(builder)
     
     builder append "}\n"
   }
@@ -572,7 +534,6 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
     self.getSubstate.foreach{ sub =>  
       sub match {
         case cs : CompositeState =>  
-          //TODO history + refactor SMAc to avoid mixing GUI too directly with the framework...
           val history = if(cs.isHistory) "true" else "false"
           builder append "val " + cs.getName + "_state = new " + firstToUpper(cs.getName) + "State(" + history + ", root).getComposite\n"
         case s : State =>
@@ -675,7 +636,6 @@ case class EnumerationScalaGenerator(override val self: Enumeration) extends Typ
     self.getLiterals.foreach {
       l => builder append "val " + l.scala_name + " : " + scala_type + " = " + l.enum_val +"\n"
     }
-    //builder append "\tval " + self.getLiterals.mkString(",") + "\n"
     builder append "}\n"
   }
 }
