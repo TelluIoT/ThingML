@@ -594,12 +594,14 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
       var arduino = things.head
       var setup_msg : Message = arduino.allMessages.filter{ m => m.getName == "setup" }.head
 
-      // Call the initialization function
-      builder append "initialize_configuration_" + self.getName + "();\n"
-
       if (context.debug) {
          builder append context.init_debug_mode() + "\n"
       }
+
+      // Call the initialization function
+      builder append "initialize_configuration_" + self.getName + "();\n"
+
+
 
       // Send a setup message to all components which can receive it
       self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
@@ -983,19 +985,27 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
   }
 
   def generateMessageHandlers(s: State, port: Port, msg: Message, builder: StringBuilder, cs: CompositeState, r: Region, context : CGeneratorContext) {
+    var first = true;
     s.getOutgoing.union(s.getInternal).foreach {
       h =>
         h.getEvent.filter {
-          e => e.isInstanceOf[ReceiveMessage] && e.asInstanceOf[ReceiveMessage].getPort == port && e.asInstanceOf[ReceiveMessage].getMessage == msg
+          e =>
+
+            e.isInstanceOf[ReceiveMessage] && e.asInstanceOf[ReceiveMessage].getPort == port && e.asInstanceOf[ReceiveMessage].getMessage == msg
         }.foreach {
+
           event => event match {
             case mh: ReceiveMessage if (mh.getPort == port && mh.getMessage == msg) => {
               // check the guard and generate the code to handle the message
-              if (h.getGuard != null) {
-                builder append "if ("
-                h.getGuard.generateC(builder, context)
-                builder append ") {\n"
-              }
+
+              if (first) first = false
+              else builder append "else "
+
+              builder append "if ("
+              if (h.getGuard != null) h.getGuard.generateC(builder, context)
+              else builder append "1"
+              builder append ") {\n"
+
               // Generate code to handle message
               h match {
                 case it: InternalTransition => {
@@ -1021,9 +1031,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
                 }
               }
-              if (h.getGuard != null) {
-                builder append "}\n"
-              }
+              builder append "}\n"
             }
 
           }
