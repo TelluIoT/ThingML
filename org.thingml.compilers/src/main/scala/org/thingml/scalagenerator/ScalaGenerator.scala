@@ -634,7 +634,8 @@ case class FunctionScalaGenerator(override val self: Function) extends TypedElem
       case None =>
     }
   
-    builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => ScalaGenerator.protectScalaKeyword(p.getName) + " : " + p.getType.scala_type}.mkString(", ") + ") : " + self.getType.scala_type + " = {\n"
+    builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => ScalaGenerator.protectScalaKeyword(p.scala_var_name) + " : " + p.getType.scala_type}.mkString(", ") + ") : " + self.getType.scala_type + " = {\n"
+    builder append "val handler = this\n" 
     self.getBody.generateScala(builder, thing)
     builder append "}\n"
   }
