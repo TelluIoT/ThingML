@@ -1,0 +1,37 @@
+
+import "../../thingml.thingml"
+
+datatype Device
+@scala_type "org.thingml.devices.PotentiometerDemo";
+
+
+thing fragment PotentiometerMessages {
+	message newValue(value: Integer);
+}
+
+
+thing Potentiometer includes PotentiometerMessages 
+@scala_trait "org.thingml.devices.PotentiometerObserver"
+{
+
+	property device : Device
+	
+	provided port Potentiometer {
+		sends newValue
+	}
+
+	statechart behavior init Ready {
+		
+		on entry do
+		device = 'new org.thingml.devices.PotentiometerDemo(0, 1023)' 
+		'Potentiometer_device_var.addObserver(this)'
+		'override def newValue(v: Int) = {' 
+		Potentiometer!newValue('v')
+		'}'
+		end
+			
+		state Ready {}
+		
+	}
+
+}
