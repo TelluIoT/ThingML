@@ -39,7 +39,7 @@ thing ChangingFrequencyLed includes LedMsgs, TimerMsgs, PotentiometerMessages
 	}
 }
 
-configuration ScalaSimpleLedSimulator
+configuration ScalaChangingFrequencyLedSimulator
 {
 	instance led : Led
 	instance potentiometer: Potentiometer		
