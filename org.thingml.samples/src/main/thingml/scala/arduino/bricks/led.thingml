@@ -25,7 +25,7 @@ thing Led includes LedMsgs
     
         state LedOff 
         {
-            on entry 'LED_device_var.off()'
+            on entry 'Led_device_var.off()'
             transition switch_on -> LedOn 
             event Led?led_on 
             event Led?led_toggle
@@ -34,7 +34,7 @@ thing Led includes LedMsgs
         
         state LedOn 
         {
-            on entry 'LED_device_var.on()'
+            on entry 'Led_device_var.on()'
             transition switch_off -> LedOff 
             event Led?led_off 
             event Led?led_toggle
