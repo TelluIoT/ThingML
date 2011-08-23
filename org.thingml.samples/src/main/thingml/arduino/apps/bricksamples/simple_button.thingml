@@ -6,6 +6,7 @@ import "../../devices/digital_input.thingml"
 thing SimpleButton includes LedMsgs, ButtonMsgs
 {
 	readonly property led_pin : DigitalPin = DigitalPin:PIN_13
+	readonly property button_pin : DigitalPin = DigitalPin:PIN_8
 	
 	required port Led
 	{
@@ -17,7 +18,7 @@ thing SimpleButton includes LedMsgs, ButtonMsgs
 		receives press, release
 	}
 		
-	statechart SimpleButton init Idle
+	statechart SimpleButtonImpl init Idle
 	{
 		state Idle
 		{
@@ -36,8 +37,6 @@ thing SimpleButton includes LedMsgs, ButtonMsgs
 }
 
 configuration SimpleButton
-@debug "false"
-@debug_message_receive "press"
 {
 	// Arduino declaration.
 	instance arduino : Arduino

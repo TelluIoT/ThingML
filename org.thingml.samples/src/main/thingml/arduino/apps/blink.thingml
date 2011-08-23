@@ -22,7 +22,12 @@ thing Blink includes LEDMsgs, TimerMsgs
     }
 }
 
-configuration Blink {       
+configuration Blink 
+    @debug "true"
+    @debug_fifo "true"
+    @debug_message_send ".*"
+    @debug_message_receive ".*"
+{       
 
 	// The arduino board with a LED on pin 13
 	instance arduino : Arduino

@@ -3,6 +3,7 @@ import "../../bricks/lcd_screen.thingml"
 import "../../bricks/pot_sensor.thingml"
 import "../../bricks/temp_sensor.thingml"
 import "../../bricks/lux_sensor.thingml"
+import "../../bricks/sound_sensor.thingml"
 
 thing fragment SimpleSensorsDisplay includes LcdScreenMsgs
 {
@@ -12,7 +13,7 @@ thing fragment SimpleSensorsDisplay includes LcdScreenMsgs
 	}
 }
 
-// Use only one of the three things following.
+// Use only one of the four things following.
 
 thing SimplePotSensorDisplay includes SimpleSensorsDisplay, PotSensorMsgs
 {
@@ -24,7 +25,7 @@ thing SimplePotSensorDisplay includes SimpleSensorsDisplay, PotSensorMsgs
 	
 	statechart SimplePotSensorDisplayImpl init Running
 	{
-		on entry LcdScreen!print_string ("Position:")
+		on entry LcdScreen!print_string ("Position val:")
 		
 		state Running
 		{
@@ -73,7 +74,7 @@ thing SimpleLuxSensorDisplay includes SimpleSensorsDisplay, LuxSensorMsgs
 	
 	statechart SimpleLuxSensorDisplayImpl init Running
 	{
-		on entry LcdScreen!print_string ("Luminosity:")
+		on entry LcdScreen!print_string ("Luminosity val:")
 		
 		state Running
 		{
@@ -87,6 +88,31 @@ thing SimpleLuxSensorDisplay includes SimpleSensorsDisplay, LuxSensorMsgs
 		}
 	}
 }
+
+thing SimpleSoundSensorDisplay includes SimpleSensorsDisplay, SoundSensorMsgs
+{
+	required port SoundSensor
+	{
+		receives sound_value
+	}
+	
+	statechart SimpleSoundSensorDisplayImpl init Running
+	{
+		on entry LcdScreen!print_string ("Sound value:")
+		
+		state Running
+		{
+			on entry LcdScreen!set_cursor (0, 1)
+			transition refresh -> Running
+			event m : SoundSensor?sound_value
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ")
+                end
+		}
+	}
+}
+
 configuration SimpleSensorsDisplay
 {
     // Arduino declaration.
@@ -101,16 +127,15 @@ configuration SimpleSensorsDisplay
     instance timer : SoftTimer
     connector analog_input.AnalogIO => arduino.AnalogIO
     connector analog_input.Timer => timer.timer
-    connector analog_input.AnalogIO => arduino.AnalogIO
-		
+ 		
 //* Uncomment only the five lines which refer to the sensor you want use. *//
 
 	// * Potentiometer *
- 	instance pot_sensor_display : SimplePotSensorDisplay
-    instance pot_sensor : PotSensor
-    connector pot_sensor_display.PotSensor => pot_sensor.PotSensor
- 	connector pot_sensor_display.LcdScreen => lcd_screen.LcdScreen
-    connector pot_sensor.AnalogInput => analog_input.AnalogInput
+//  	instance pot_sensor_display : SimplePotSensorDisplay
+//     instance pot_sensor : PotSensor
+//     connector pot_sensor_display.PotSensor => pot_sensor.PotSensor
+//  	connector pot_sensor_display.LcdScreen => lcd_screen.LcdScreen
+//     connector pot_sensor.AnalogInput => analog_input.AnalogInput
 	
 	// * Temperature *
 // 	instance temp_sensor_display : SimpleTempSensorDisplay
@@ -121,9 +146,16 @@ configuration SimpleSensorsDisplay
 
 	
 	// * Luminosity *
-//	instance lux_sensor_display : SimpleLuxSensorDisplay
-//  instance lux_sensor : LuxSensor
-//  connector lux_sensor_display.LuxSensor => lux_sensor.LuxSensor
-//	connector lux_sensor_display.LcdScreen => lcd_screen.LcdScreen
-//  connector lux_sensor.AnalogInput => analog_input.AnalogInput  
+	instance lux_sensor_display : SimpleLuxSensorDisplay
+    instance lux_sensor : LuxSensor
+    connector lux_sensor_display.LuxSensor => lux_sensor.LuxSensor
+	connector lux_sensor_display.LcdScreen => lcd_screen.LcdScreen
+    connector lux_sensor.AnalogInput => analog_input.AnalogInput 
+
+    // * Sound *
+// 	instance sound_sensor_display : SimpleSoundSensorDisplay
+//     instance sound_sensor : SoundSensor
+//     connector sound_sensor_display.SoundSensor => sound_sensor.SoundSensor
+//     connector sound_sensor_display.LcdScreen => lcd_screen.LcdScreen
+//     connector sound_sensor.AnalogInput => analog_input.AnalogInput  
 }

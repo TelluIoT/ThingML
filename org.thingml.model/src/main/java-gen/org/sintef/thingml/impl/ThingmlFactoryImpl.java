@@ -70,6 +70,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case ThingmlPackage.THING_ML_MODEL: return createThingMLModel();
+			case ThingmlPackage.FUNCTION: return createFunction();
 			case ThingmlPackage.MESSAGE: return createMessage();
 			case ThingmlPackage.THING: return createThing();
 			case ThingmlPackage.PARAMETER: return createParameter();
@@ -117,11 +118,18 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.PROPERTY_REFERENCE: return createPropertyReference();
 			case ThingmlPackage.DICTIONARY_REFERENCE: return createDictionaryReference();
 			case ThingmlPackage.EXPRESSION_GROUP: return createExpressionGroup();
+			case ThingmlPackage.RETURN_ACTION: return createReturnAction();
 			case ThingmlPackage.PRINT_ACTION: return createPrintAction();
 			case ThingmlPackage.ERROR_ACTION: return createErrorAction();
 			case ThingmlPackage.CONFIGURATION: return createConfiguration();
 			case ThingmlPackage.INSTANCE: return createInstance();
 			case ThingmlPackage.CONNECTOR: return createConnector();
+			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN: return createConfigPropertyAssign();
+			case ThingmlPackage.CONFIG_INCLUDE: return createConfigInclude();
+			case ThingmlPackage.INSTANCE_REF: return createInstanceRef();
+			case ThingmlPackage.FUNCTION_CALL_STATEMENT: return createFunctionCallStatement();
+			case ThingmlPackage.FUNCTION_CALL_EXPRESSION: return createFunctionCallExpression();
+			case ThingmlPackage.LOCAL_VARIABLE: return createLocalVariable();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -135,6 +143,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public ThingMLModel createThingMLModel() {
 		ThingMLModelImpl thingMLModel = new ThingMLModelImpl();
 		return thingMLModel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Function createFunction() {
+		FunctionImpl function = new FunctionImpl();
+		return function;
 	}
 
 	/**
@@ -612,6 +630,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public ReturnAction createReturnAction() {
+		ReturnActionImpl returnAction = new ReturnActionImpl();
+		return returnAction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public PrintAction createPrintAction() {
 		PrintActionImpl printAction = new PrintActionImpl();
 		return printAction;
@@ -655,6 +683,66 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public Connector createConnector() {
 		ConnectorImpl connector = new ConnectorImpl();
 		return connector;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ConfigPropertyAssign createConfigPropertyAssign() {
+		ConfigPropertyAssignImpl configPropertyAssign = new ConfigPropertyAssignImpl();
+		return configPropertyAssign;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ConfigInclude createConfigInclude() {
+		ConfigIncludeImpl configInclude = new ConfigIncludeImpl();
+		return configInclude;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InstanceRef createInstanceRef() {
+		InstanceRefImpl instanceRef = new InstanceRefImpl();
+		return instanceRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public FunctionCallStatement createFunctionCallStatement() {
+		FunctionCallStatementImpl functionCallStatement = new FunctionCallStatementImpl();
+		return functionCallStatement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public FunctionCallExpression createFunctionCallExpression() {
+		FunctionCallExpressionImpl functionCallExpression = new FunctionCallExpressionImpl();
+		return functionCallExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LocalVariable createLocalVariable() {
+		LocalVariableImpl localVariable = new LocalVariableImpl();
+		return localVariable;
 	}
 
 	/**

@@ -5,14 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.thingml</groupId>
     <artifactId>org.thingml.compilers</artifactId>
-	<name>ThingML :: Compilers</name>
-    <version>0.5.0-SNAPSHOT</version>
+    <name>ThingML :: Compilers</name>
     <packaging>jar</packaging>
 
     <parent>
         <artifactId>org.thingml.root</artifactId>
         <groupId>org.thingml</groupId>
-        <version>0.5.0-SNAPSHOT</version>
+        <version>0.6.0-SNAPSHOT</version>
         <relativePath>../org.thingml.root/pom.xml</relativePath>
     </parent>
 
@@ -61,25 +60,24 @@
 		Use to copy the thingml samples within the test of the
 		compilers automatically 
 		-->	   
-	 <plugin>
-         	<artifactId>maven-antrun-plugin</artifactId>
-	        <executions>
-	           <execution>
-	             <phase>validate</phase>
-	             <configuration>
-	                <tasks>
-	        	   <copy todir="src/test/resources/thingml"  preservelastmodified="true">
-			       <fileset dir="../org.thingml.samples/src/main/thingml"/>
-  			   </copy>
-			</tasks>
-		     </configuration>
-	           <goals>        
-		       <goal>run</goal>
-	             </goals>  
-	         </execution>
-	      </executions>
-	   </plugin> 
-
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <configuration>
+                            <tasks>
+                                <copy todir="src/test/resources/thingml"  preservelastmodified="true">
+                                    <fileset dir="../org.thingml.samples/src/main/thingml"/>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                        <goals>        
+                            <goal>run</goal>
+                        </goals>  
+                    </execution>
+                </executions>
+            </plugin> 
 
         </plugins>
 

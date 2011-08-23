@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.ThingmlPackage;
-import org.sintef.thingml.Type;
 
 /**
  * <!-- begin-user-doc -->
@@ -35,9 +34,6 @@ import org.sintef.thingml.Type;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.PropertyImpl#getType <em>Type</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.PropertyImpl#getLowerBound <em>Lower Bound</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.PropertyImpl#getUpperBound <em>Upper Bound</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.PropertyImpl#getInit <em>Init</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.PropertyImpl#isChangeable <em>Changeable</em>}</li>
  * </ul>
@@ -45,57 +41,7 @@ import org.sintef.thingml.Type;
  *
  * @generated
  */
-public class PropertyImpl extends AnnotatedElementImpl implements Property {
-	/**
-	 * The cached value of the '{@link #getType() <em>Type</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getType()
-	 * @generated
-	 * @ordered
-	 */
-	protected Type type;
-
-	/**
-	 * The default value of the '{@link #getLowerBound() <em>Lower Bound</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getLowerBound()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final int LOWER_BOUND_EDEFAULT = 0;
-
-	/**
-	 * The cached value of the '{@link #getLowerBound() <em>Lower Bound</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getLowerBound()
-	 * @generated
-	 * @ordered
-	 */
-	protected int lowerBound = LOWER_BOUND_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getUpperBound() <em>Upper Bound</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getUpperBound()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final int UPPER_BOUND_EDEFAULT = 0;
-
-	/**
-	 * The cached value of the '{@link #getUpperBound() <em>Upper Bound</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getUpperBound()
-	 * @generated
-	 * @ordered
-	 */
-	protected int upperBound = UPPER_BOUND_EDEFAULT;
-
+public class PropertyImpl extends VariableImpl implements Property {
 	/**
 	 * The cached value of the '{@link #getInit() <em>Init</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -143,86 +89,6 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 	@Override
 	protected EClass eStaticClass() {
 		return ThingmlPackage.Literals.PROPERTY;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Type getType() {
-		if (type != null && type.eIsProxy()) {
-			InternalEObject oldType = (InternalEObject)type;
-			type = (Type)eResolveProxy(oldType);
-			if (type != oldType) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.PROPERTY__TYPE, oldType, type));
-			}
-		}
-		return type;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Type basicGetType() {
-		return type;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setType(Type newType) {
-		Type oldType = type;
-		type = newType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.PROPERTY__TYPE, oldType, type));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public int getLowerBound() {
-		return lowerBound;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setLowerBound(int newLowerBound) {
-		int oldLowerBound = lowerBound;
-		lowerBound = newLowerBound;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.PROPERTY__LOWER_BOUND, oldLowerBound, lowerBound));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public int getUpperBound() {
-		return upperBound;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setUpperBound(int newUpperBound) {
-		int oldUpperBound = upperBound;
-		upperBound = newUpperBound;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.PROPERTY__UPPER_BOUND, oldUpperBound, upperBound));
 	}
 
 	/**
@@ -311,13 +177,6 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.PROPERTY__TYPE:
-				if (resolve) return getType();
-				return basicGetType();
-			case ThingmlPackage.PROPERTY__LOWER_BOUND:
-				return getLowerBound();
-			case ThingmlPackage.PROPERTY__UPPER_BOUND:
-				return getUpperBound();
 			case ThingmlPackage.PROPERTY__INIT:
 				return getInit();
 			case ThingmlPackage.PROPERTY__CHANGEABLE:
@@ -334,15 +193,6 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.PROPERTY__TYPE:
-				setType((Type)newValue);
-				return;
-			case ThingmlPackage.PROPERTY__LOWER_BOUND:
-				setLowerBound((Integer)newValue);
-				return;
-			case ThingmlPackage.PROPERTY__UPPER_BOUND:
-				setUpperBound((Integer)newValue);
-				return;
 			case ThingmlPackage.PROPERTY__INIT:
 				setInit((Expression)newValue);
 				return;
@@ -361,15 +211,6 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.PROPERTY__TYPE:
-				setType((Type)null);
-				return;
-			case ThingmlPackage.PROPERTY__LOWER_BOUND:
-				setLowerBound(LOWER_BOUND_EDEFAULT);
-				return;
-			case ThingmlPackage.PROPERTY__UPPER_BOUND:
-				setUpperBound(UPPER_BOUND_EDEFAULT);
-				return;
 			case ThingmlPackage.PROPERTY__INIT:
 				setInit((Expression)null);
 				return;
@@ -388,12 +229,6 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.PROPERTY__TYPE:
-				return type != null;
-			case ThingmlPackage.PROPERTY__LOWER_BOUND:
-				return lowerBound != LOWER_BOUND_EDEFAULT;
-			case ThingmlPackage.PROPERTY__UPPER_BOUND:
-				return upperBound != UPPER_BOUND_EDEFAULT;
 			case ThingmlPackage.PROPERTY__INIT:
 				return init != null;
 			case ThingmlPackage.PROPERTY__CHANGEABLE:
@@ -412,11 +247,7 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (lowerBound: ");
-		result.append(lowerBound);
-		result.append(", upperBound: ");
-		result.append(upperBound);
-		result.append(", changeable: ");
+		result.append(" (changeable: ");
 		result.append(changeable);
 		result.append(')');
 		return result.toString();

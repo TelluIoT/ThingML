@@ -22,9 +22,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.sintef.thingml.Property;
 import org.sintef.thingml.PropertyReference;
 import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.Variable;
 
 /**
  * <!-- begin-user-doc -->
@@ -48,7 +48,7 @@ public class PropertyReferenceImpl extends ExpressionImpl implements PropertyRef
 	 * @generated
 	 * @ordered
 	 */
-	protected Property property;
+	protected Variable property;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -74,10 +74,10 @@ public class PropertyReferenceImpl extends ExpressionImpl implements PropertyRef
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Property getProperty() {
+	public Variable getProperty() {
 		if (property != null && property.eIsProxy()) {
 			InternalEObject oldProperty = (InternalEObject)property;
-			property = (Property)eResolveProxy(oldProperty);
+			property = (Variable)eResolveProxy(oldProperty);
 			if (property != oldProperty) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.PROPERTY_REFERENCE__PROPERTY, oldProperty, property));
@@ -91,7 +91,7 @@ public class PropertyReferenceImpl extends ExpressionImpl implements PropertyRef
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Property basicGetProperty() {
+	public Variable basicGetProperty() {
 		return property;
 	}
 
@@ -100,8 +100,8 @@ public class PropertyReferenceImpl extends ExpressionImpl implements PropertyRef
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setProperty(Property newProperty) {
-		Property oldProperty = property;
+	public void setProperty(Variable newProperty) {
+		Variable oldProperty = property;
 		property = newProperty;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.PROPERTY_REFERENCE__PROPERTY, oldProperty, property));
@@ -131,7 +131,7 @@ public class PropertyReferenceImpl extends ExpressionImpl implements PropertyRef
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ThingmlPackage.PROPERTY_REFERENCE__PROPERTY:
-				setProperty((Property)newValue);
+				setProperty((Variable)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -146,7 +146,7 @@ public class PropertyReferenceImpl extends ExpressionImpl implements PropertyRef
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ThingmlPackage.PROPERTY_REFERENCE__PROPERTY:
-				setProperty((Property)null);
+				setProperty((Variable)null);
 				return;
 		}
 		super.eUnset(featureID);

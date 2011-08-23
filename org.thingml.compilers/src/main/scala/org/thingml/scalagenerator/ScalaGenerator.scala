@@ -21,17 +21,16 @@
 package org.thingml.scalagenerator
 
 import org.thingml.scalagenerator.ScalaGenerator._
-import org.sintef.thingml._
-import constraints.ThingMLHelpers
+import org.sintef.thingml.constraints.ThingMLHelpers
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
-import resource.thingml.analysis.helper.CharacterEscaper
+import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import sun.applet.resources.MsgAppletViewer
-import com.sun.org.apache.xpath.internal.operations.Variable
 import org.eclipse.emf.ecore.xml.`type`.internal.RegEx.Match
 import java.util.{ArrayList, Hashtable}
 import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
 import java.lang.StringBuilder
+import org.sintef.thingml._
 
 //TODO: better handle naming conventions to avoid duplicating code and ease the maintenance
 
@@ -56,8 +55,6 @@ object ScalaGenerator {
     var result = ""
     if (value.size > 0)
       result += value(0).toUpperCase 
-    else
-      result = "null"
     if (value.size > 1)
       result += value.substring(1, value.length)
     return result
@@ -96,7 +93,7 @@ object ScalaGenerator {
     builder append "import scala.util.Random\n"
     builder append "import scala.swing.Dialog\n"
 
-    builder append "class PollTask(p : Port) extends TimerTask{\n"
+    /*builder append "class PollTask(p : Port) extends TimerTask{\n"
     builder append "override def run {\n"
     builder append "p.send(new Poll())\n"
     builder append "}\n"
@@ -104,7 +101,7 @@ object ScalaGenerator {
     builder append "object Random1024{\n"
     builder append "val r : Random = new Random()\n"
     builder append "def randomInt() = r.nextInt(256).toByte\n"
-    builder append "}\n"
+    builder append "}\n"*/
   }
 
   implicit def scalaGeneratorAspect(self: Thing): ThingScalaGenerator = ThingScalaGenerator(self)
@@ -115,7 +112,7 @@ object ScalaGenerator {
 
   implicit def scalaGeneratorAspect(self: EnumerationLiteral): EnumerationLiteralScalaGenerator = EnumerationLiteralScalaGenerator(self)
 
-  implicit def scalaGeneratorAspect(self: Property): PropertyScalaGenerator = PropertyScalaGenerator(self)
+  implicit def scalaGeneratorAspect(self: Variable): VariableScalaGenerator = VariableScalaGenerator(self)
 
   implicit def scalaGeneratorAspect(self: Type) = self match {
     case t: PrimitiveType => PrimitiveTypeScalaGenerator(t)
@@ -229,35 +226,39 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     builder append "def main(args: Array[String]): Unit = {\n"
       
     builder append "//Connectors\n"
+    var i : Int = 0
     self.allConnectors.foreach{ c =>
-      builder append "val " + c.getName + "_" + c.hashCode + " = new Channel\n"
-      builder append c.getName + "_" + c.hashCode + ".start\n"
+      builder append "val " + c.getName + "_" + i + " = new Channel\n"
+      builder append c.getName + "_" + i + ".start\n"
+      i = i + 1
     }
       
     builder append "//Things\n"
     self.allInstances.foreach{ i =>
-      builder append "val " + i.getType.getName + "_" + i.hashCode + " = new " + firstToUpper(i.getType.getName) + "()\n"
+      builder append "val " + i.getType.getName + "_" + i.getName + " = new " + firstToUpper(i.getType.getName) + "()\n"
     }
     
     builder append "//Bindings\n"
+    i = 0
     self.allConnectors.foreach{ c =>
-      c.getClient.getType.allStateMachines.foreach{sm1 =>
-        c.getServer.getType.allStateMachines.foreach{sm2 =>
-          builder append c.getName + "_" + c.hashCode + ".connect(\n" 
-          builder append c.getClient.getType.getName + "_" + c.getClient.hashCode + ".getPort(\"" + c.getRequired.getName + "\").get,\n" 
-          builder append c.getServer.getType.getName + "_" + c.getServer.hashCode + ".getPort(\"" + c.getProvided.getName + "\").get\n"
+      c.getCli.getInstance().getType.allStateMachines.foreach{sm1 =>
+        c.getSrv.getInstance().getType.allStateMachines.foreach{sm2 =>
+          builder append c.getName + "_" + i + ".connect(\n" 
+          builder append c.getCli.getInstance.getType.getName + "_" + c.getCli.getInstance.getName + ".getPort(\"" + c.getRequired.getName + "\").get,\n"
+          builder append c.getSrv.getInstance.getType.getName + "_" + c.getSrv.getInstance.getName + ".getPort(\"" + c.getProvided.getName + "\").get\n"
           builder append")\n"
-          builder append c.getName + "_" + c.hashCode + ".connect(\n" 
-          builder append c.getServer.getType.getName + "_" + c.getServer.hashCode + ".getPort(\"" + c.getProvided.getName + "\").get,\n"
-          builder append c.getClient.getType.getName + "_" + c.getClient.hashCode + ".getPort(\"" + c.getRequired.getName + "\").get\n" 
+          builder append c.getName + "_" + i + ".connect(\n" 
+          builder append c.getSrv.getInstance.getType.getName + "_" + c.getSrv.getInstance.getName + ".getPort(\"" + c.getProvided.getName + "\").get,\n"
+          builder append c.getCli.getInstance.getType.getName + "_" + c.getCli.getInstance.getName + ".getPort(\"" + c.getRequired.getName + "\").get\n"
           builder append")\n\n"
         }
       }
+      i = i + 1
     }
     
     builder append "//Starting Things\n"
     self.allInstances.foreach{ i =>
-      builder append i.getType.getName + "_" + i.hashCode + ".start\n"
+      builder append i.getType.getName + "_" + i.getName + ".start\n"
     }
     
     builder append "}\n\n"
@@ -358,7 +359,7 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
   }
 }
 
-case class PropertyScalaGenerator(override val self: Property) extends ThingMLScalaGenerator(self) {
+case class VariableScalaGenerator(override val self: Variable) extends ThingMLScalaGenerator(self) {
   def scala_var_name = {
     self.qname("_") + "_var"
   }

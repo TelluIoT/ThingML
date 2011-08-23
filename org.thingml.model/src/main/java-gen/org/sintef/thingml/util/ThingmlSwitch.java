@@ -85,6 +85,15 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.FUNCTION: {
+				Function function = (Function)theEObject;
+				T result = caseFunction(function);
+				if (result == null) result = caseAnnotatedElement(function);
+				if (result == null) result = caseTypedElement(function);
+				if (result == null) result = caseThingMLElement(function);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ThingmlPackage.MESSAGE: {
 				Message message = (Message)theEObject;
 				T result = caseMessage(message);
@@ -105,7 +114,19 @@ public class ThingmlSwitch<T> extends Switch<T> {
 			case ThingmlPackage.PARAMETER: {
 				Parameter parameter = (Parameter)theEObject;
 				T result = caseParameter(parameter);
+				if (result == null) result = caseVariable(parameter);
+				if (result == null) result = caseTypedElement(parameter);
+				if (result == null) result = caseAnnotatedElement(parameter);
 				if (result == null) result = caseThingMLElement(parameter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.VARIABLE: {
+				Variable variable = (Variable)theEObject;
+				T result = caseVariable(variable);
+				if (result == null) result = caseTypedElement(variable);
+				if (result == null) result = caseAnnotatedElement(variable);
+				if (result == null) result = caseThingMLElement(variable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -123,9 +144,17 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.TYPED_ELEMENT: {
+				TypedElement typedElement = (TypedElement)theEObject;
+				T result = caseTypedElement(typedElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ThingmlPackage.PROPERTY: {
 				Property property = (Property)theEObject;
 				T result = caseProperty(property);
+				if (result == null) result = caseVariable(property);
+				if (result == null) result = caseTypedElement(property);
 				if (result == null) result = caseAnnotatedElement(property);
 				if (result == null) result = caseThingMLElement(property);
 				if (result == null) result = defaultCase(theEObject);
@@ -317,6 +346,8 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				Dictionary dictionary = (Dictionary)theEObject;
 				T result = caseDictionary(dictionary);
 				if (result == null) result = caseProperty(dictionary);
+				if (result == null) result = caseVariable(dictionary);
+				if (result == null) result = caseTypedElement(dictionary);
 				if (result == null) result = caseAnnotatedElement(dictionary);
 				if (result == null) result = caseThingMLElement(dictionary);
 				if (result == null) result = defaultCase(theEObject);
@@ -557,6 +588,13 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.RETURN_ACTION: {
+				ReturnAction returnAction = (ReturnAction)theEObject;
+				T result = caseReturnAction(returnAction);
+				if (result == null) result = caseAction(returnAction);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ThingmlPackage.PRINT_ACTION: {
 				PrintAction printAction = (PrintAction)theEObject;
 				T result = casePrintAction(printAction);
@@ -595,6 +633,61 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN: {
+				ConfigPropertyAssign configPropertyAssign = (ConfigPropertyAssign)theEObject;
+				T result = caseConfigPropertyAssign(configPropertyAssign);
+				if (result == null) result = caseAnnotatedElement(configPropertyAssign);
+				if (result == null) result = caseThingMLElement(configPropertyAssign);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.CONFIG_INCLUDE: {
+				ConfigInclude configInclude = (ConfigInclude)theEObject;
+				T result = caseConfigInclude(configInclude);
+				if (result == null) result = caseAnnotatedElement(configInclude);
+				if (result == null) result = caseThingMLElement(configInclude);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.INSTANCE_REF: {
+				InstanceRef instanceRef = (InstanceRef)theEObject;
+				T result = caseInstanceRef(instanceRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.FUNCTION_CALL: {
+				FunctionCall functionCall = (FunctionCall)theEObject;
+				T result = caseFunctionCall(functionCall);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.FUNCTION_CALL_STATEMENT: {
+				FunctionCallStatement functionCallStatement = (FunctionCallStatement)theEObject;
+				T result = caseFunctionCallStatement(functionCallStatement);
+				if (result == null) result = caseAction(functionCallStatement);
+				if (result == null) result = caseFunctionCall(functionCallStatement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.FUNCTION_CALL_EXPRESSION: {
+				FunctionCallExpression functionCallExpression = (FunctionCallExpression)theEObject;
+				T result = caseFunctionCallExpression(functionCallExpression);
+				if (result == null) result = caseFunctionCall(functionCallExpression);
+				if (result == null) result = caseExpression(functionCallExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.LOCAL_VARIABLE: {
+				LocalVariable localVariable = (LocalVariable)theEObject;
+				T result = caseLocalVariable(localVariable);
+				if (result == null) result = caseVariable(localVariable);
+				if (result == null) result = caseAction(localVariable);
+				if (result == null) result = caseTypedElement(localVariable);
+				if (result == null) result = caseAnnotatedElement(localVariable);
+				if (result == null) result = caseThingMLElement(localVariable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -611,6 +704,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseThingMLModel(ThingMLModel object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Function</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFunction(Function object) {
 		return null;
 	}
 
@@ -660,6 +768,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Variable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Variable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseVariable(Variable object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Thing ML Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -686,6 +809,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseType(Type object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Typed Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Typed Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTypedElement(TypedElement object) {
 		return null;
 	}
 
@@ -1515,6 +1653,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Return Action</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Return Action</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReturnAction(ReturnAction object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Print Action</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1586,6 +1739,111 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseConnector(Connector object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Config Property Assign</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Config Property Assign</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConfigPropertyAssign(ConfigPropertyAssign object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Config Include</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Config Include</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConfigInclude(ConfigInclude object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Instance Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Instance Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInstanceRef(InstanceRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Function Call</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Function Call</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFunctionCall(FunctionCall object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Function Call Statement</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Function Call Statement</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFunctionCallStatement(FunctionCallStatement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Function Call Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Function Call Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFunctionCallExpression(FunctionCallExpression object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Local Variable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Local Variable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLocalVariable(LocalVariable object) {
 		return null;
 	}
 

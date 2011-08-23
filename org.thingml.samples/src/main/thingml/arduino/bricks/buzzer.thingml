@@ -1,0 +1,71 @@
+import "../core/arduino.thingml"
+import "../devices/digital_output.thingml"
+import "../devices/softtimer.thingml"
+
+thing fragment BuzzerMsgs includes DigitalOutputMsgs, TimerMsgs
+{
+	message buzzer_on ();
+	message buzzer_off ();
+	message buzzer_delay (d : UInt16);
+}
+
+thing Buzzer includes BuzzerMsgs
+{
+    readonly property pin : DigitalPin = DigitalPin:PIN_13
+    
+	provided port Buzzer 
+    {
+		receives buzzer_on, buzzer_off, buzzer_delay
+	}
+
+    required port DigitalOutput
+    {
+        sends digital_output_value    
+    }
+    
+    required port Timer
+    {
+    	sends timer_start, timer_cancel
+    	receives timer_timeout
+    }
+    
+    statechart BuzzerImpl init BuzzerOff 
+    {    
+        state BuzzerOff 
+        {
+            on entry DigitalOutput!digital_output_value (DigitalState:LOW)
+            
+            transition switch_on -> BuzzerOn 
+            event Buzzer?buzzer_on 
+            
+            transition delay -> BuzzerOn
+            event m : Buzzer?buzzer_delay
+            action Timer!timer_start (m.d)
+        }
+        
+        state BuzzerOn
+        {
+            on entry DigitalOutput!digital_output_value (DigitalState:HIGH)
+  
+            transition switch_off -> BuzzerOff 
+            event Buzzer?buzzer_off 
+            event Timer?timer_timeout
+            action Timer!timer_cancel ()   
+        }
+    }
+}
+
+//* Configuration needs:
+//
+// includes DigitalOutputConf
+//
+// instance timer : SoftTimer
+//
+// instance buzzer : Buzzer
+// instance digital_output : DigitalOutput
+// 		set pin = pin	 
+// 
+// connector buzzer.DigitalOutput => digital_output.DigitalOutput
+// connector buzzer.Timer => timer.timer
+//
+//* 

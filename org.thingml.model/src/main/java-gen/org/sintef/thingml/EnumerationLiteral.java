@@ -33,7 +33,6 @@ package org.sintef.thingml;
  * @generated
  */
 public interface EnumerationLiteral extends AnnotatedElement {
-
 	/**
 	 * Returns the value of the '<em><b>Enum</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link org.sintef.thingml.Enumeration#getLiterals <em>Literals</em>}'.
@@ -61,4 +60,5 @@ public interface EnumerationLiteral extends AnnotatedElement {
 	 * @generated
 	 */
 	void setEnum(Enumeration value);
+
 } // EnumerationLiteral

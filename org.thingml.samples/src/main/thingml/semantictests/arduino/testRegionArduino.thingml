@@ -1,7 +1,8 @@
 import "../core/testRegion.thingml"
 import "arduinoharness.thingml"
 
-configuration TestRegionArduino includes ArduinoHarness {
+configuration TestRegionArduino {
 	instance test : TestRegion 
-	connector test.harness => harness.test 
+	group harness : ArduinoHarness
+	connector test.harness => harness.harness.test 
 }

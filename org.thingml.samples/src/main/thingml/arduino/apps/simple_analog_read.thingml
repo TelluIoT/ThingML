@@ -39,10 +39,13 @@ thing SimpleAnalogRead includes SerialMsgs, AnalogInputMsgs
     }
 }
 
-configuration SimpleAnalogRead includes AnalogInputConfFrag {       
+configuration SimpleAnalogRead {
+
+	group analogin : AnalogInputConfFrag
+	       
 	instance serial : Serial
 	instance app : SimpleAnalogRead
 	
 	connector app.Serial => serial.serial
-	connector app.Analog => analog.Analog 
+	connector app.Analog => analogin.analog.Analog 
 }

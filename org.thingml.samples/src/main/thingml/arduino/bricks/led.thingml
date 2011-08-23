@@ -1,14 +1,14 @@
 import "../core/arduino.thingml"
 import "../devices/digital_output.thingml"
 
-thing fragment LedMsgs 
+thing fragment LedMsgs includes DigitalOutputMsgs
 {
 	message led_on ();
 	message led_off ();
 	message led_toggle ();
 }
 
-thing Led includes DigitalOutputMsgs, LedMsgs
+thing Led includes LedMsgs
 {
     readonly property pin : DigitalPin = DigitalPin:PIN_13
     

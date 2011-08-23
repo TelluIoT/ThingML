@@ -28,9 +28,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.sintef.thingml.ConfigInclude;
+import org.sintef.thingml.ConfigPropertyAssign;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Connector;
 import org.sintef.thingml.Instance;
@@ -46,7 +47,8 @@ import org.sintef.thingml.ThingmlPackage;
  *   <li>{@link org.sintef.thingml.impl.ConfigurationImpl#getInstances <em>Instances</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConfigurationImpl#getConnectors <em>Connectors</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConfigurationImpl#isFragment <em>Fragment</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.ConfigurationImpl#getIncludes <em>Includes</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ConfigurationImpl#getConfigs <em>Configs</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ConfigurationImpl#getPropassigns <em>Propassigns</em>}</li>
  * </ul>
  * </p>
  *
@@ -94,14 +96,24 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 	protected boolean fragment = FRAGMENT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getIncludes() <em>Includes</em>}' reference list.
+	 * The cached value of the '{@link #getConfigs() <em>Configs</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getIncludes()
+	 * @see #getConfigs()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Configuration> includes;
+	protected EList<ConfigInclude> configs;
+
+	/**
+	 * The cached value of the '{@link #getPropassigns() <em>Propassigns</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPropassigns()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ConfigPropertyAssign> propassigns;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -172,11 +184,23 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Configuration> getIncludes() {
-		if (includes == null) {
-			includes = new EObjectResolvingEList<Configuration>(Configuration.class, this, ThingmlPackage.CONFIGURATION__INCLUDES);
+	public EList<ConfigInclude> getConfigs() {
+		if (configs == null) {
+			configs = new EObjectContainmentEList<ConfigInclude>(ConfigInclude.class, this, ThingmlPackage.CONFIGURATION__CONFIGS);
 		}
-		return includes;
+		return configs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<ConfigPropertyAssign> getPropassigns() {
+		if (propassigns == null) {
+			propassigns = new EObjectContainmentEList<ConfigPropertyAssign>(ConfigPropertyAssign.class, this, ThingmlPackage.CONFIGURATION__PROPASSIGNS);
+		}
+		return propassigns;
 	}
 
 	/**
@@ -191,6 +215,10 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 				return ((InternalEList<?>)getInstances()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.CONFIGURATION__CONNECTORS:
 				return ((InternalEList<?>)getConnectors()).basicRemove(otherEnd, msgs);
+			case ThingmlPackage.CONFIGURATION__CONFIGS:
+				return ((InternalEList<?>)getConfigs()).basicRemove(otherEnd, msgs);
+			case ThingmlPackage.CONFIGURATION__PROPASSIGNS:
+				return ((InternalEList<?>)getPropassigns()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -209,8 +237,10 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 				return getConnectors();
 			case ThingmlPackage.CONFIGURATION__FRAGMENT:
 				return isFragment();
-			case ThingmlPackage.CONFIGURATION__INCLUDES:
-				return getIncludes();
+			case ThingmlPackage.CONFIGURATION__CONFIGS:
+				return getConfigs();
+			case ThingmlPackage.CONFIGURATION__PROPASSIGNS:
+				return getPropassigns();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -235,9 +265,13 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 			case ThingmlPackage.CONFIGURATION__FRAGMENT:
 				setFragment((Boolean)newValue);
 				return;
-			case ThingmlPackage.CONFIGURATION__INCLUDES:
-				getIncludes().clear();
-				getIncludes().addAll((Collection<? extends Configuration>)newValue);
+			case ThingmlPackage.CONFIGURATION__CONFIGS:
+				getConfigs().clear();
+				getConfigs().addAll((Collection<? extends ConfigInclude>)newValue);
+				return;
+			case ThingmlPackage.CONFIGURATION__PROPASSIGNS:
+				getPropassigns().clear();
+				getPropassigns().addAll((Collection<? extends ConfigPropertyAssign>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -260,8 +294,11 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 			case ThingmlPackage.CONFIGURATION__FRAGMENT:
 				setFragment(FRAGMENT_EDEFAULT);
 				return;
-			case ThingmlPackage.CONFIGURATION__INCLUDES:
-				getIncludes().clear();
+			case ThingmlPackage.CONFIGURATION__CONFIGS:
+				getConfigs().clear();
+				return;
+			case ThingmlPackage.CONFIGURATION__PROPASSIGNS:
+				getPropassigns().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -281,8 +318,10 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 				return connectors != null && !connectors.isEmpty();
 			case ThingmlPackage.CONFIGURATION__FRAGMENT:
 				return fragment != FRAGMENT_EDEFAULT;
-			case ThingmlPackage.CONFIGURATION__INCLUDES:
-				return includes != null && !includes.isEmpty();
+			case ThingmlPackage.CONFIGURATION__CONFIGS:
+				return configs != null && !configs.isEmpty();
+			case ThingmlPackage.CONFIGURATION__PROPASSIGNS:
+				return propassigns != null && !propassigns.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

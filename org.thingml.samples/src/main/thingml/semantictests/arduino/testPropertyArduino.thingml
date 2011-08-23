@@ -32,7 +32,8 @@ thing TestPropertyArduino includes Test
 	}
 }
 
-configuration TestPropertyArduino includes ArduinoHarness {
+configuration TestPropertyArduino {
 	instance test : TestPropertyArduino
-	connector test.harness => harness.test 
+	group harness : ArduinoHarness
+	connector test.harness => harness.harness.test 
 }

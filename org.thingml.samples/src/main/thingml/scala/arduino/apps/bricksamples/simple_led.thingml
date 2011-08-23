@@ -1,0 +1,50 @@
+import "../../../thingml.thingml"
+import "../../bricks/led.thingml"
+import "../../devices/softtimer.thingml"
+
+thing SimpleLed includes LedMsgs, TimerMsgs
+{
+	readonly property frequency : UInt16 = 1000
+	
+	required port Led
+	{
+		sends led_toggle
+	}
+	
+	required port Timer
+	{
+		sends timer_start
+		receives timer_timeout
+	}
+	
+	statechart SimpleLedImpl init Running
+	{
+		state Running
+		{
+			on entry Timer!timer_start (frequency)
+			
+			transition toggle -> Running
+			event Timer?timer_timeout
+			action Led!led_toggle ()
+		}
+	}
+}
+
+configuration ScalaSimpleLedSimulator
+{
+	// Scheduler declaration.
+	instance scheduler : ThingMLScheduler
+		
+	// Led configuration.
+	instance led : Led
+		
+	// Timer configuration.
+	instance timer : SoftTimer
+	connector timer.Polling => scheduler.Polling
+	
+	// Simple led configuration.
+	instance simple_led : SimpleLed
+        set frequency = 800
+	connector simple_led.Led => led.Led
+	connector simple_led.Timer => timer.timer
+}

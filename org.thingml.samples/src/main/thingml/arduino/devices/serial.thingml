@@ -8,6 +8,7 @@ thing fragment SerialMsgs {
 }
 
 thing Serial includes SerialMsgs, ArduinoStdlibMsgs, ThingMLScheduler
+@singleton "true"
 {
 
 	provided port serial 

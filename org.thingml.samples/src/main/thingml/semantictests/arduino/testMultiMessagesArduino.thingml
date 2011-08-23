@@ -1,6 +1,8 @@
 import "../extended/testMultiMessages.thingml"
 import "arduinoharness.thingml"
 
-configuration TestMultiMessagesArduino includes ArduinoHarness, TestMultiMessagesFrag {
-	connector test.harness => harness.test 
+configuration TestMultiMessagesArduino {
+	group test : TestMultiMessagesFrag
+	group harness : ArduinoHarness
+	connector test.test.harness => harness.harness.test   
 }

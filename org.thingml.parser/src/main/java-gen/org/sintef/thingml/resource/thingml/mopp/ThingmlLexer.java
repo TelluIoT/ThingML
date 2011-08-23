@@ -22,7 +22,6 @@ import org.antlr.runtime3_3_0.*;
 
 public class ThingmlLexer extends Lexer {
     public static final int EOF=-1;
-    public static final int T__17=17;
     public static final int T__18=18;
     public static final int T__19=19;
     public static final int T__20=20;
@@ -88,19 +87,22 @@ public class ThingmlLexer extends Lexer {
     public static final int T__80=80;
     public static final int T__81=81;
     public static final int T__82=82;
+    public static final int T__83=83;
+    public static final int T__84=84;
     public static final int STRING_LITERAL=4;
     public static final int TEXT=5;
     public static final int T_ASPECT=6;
-    public static final int T_READONLY=7;
-    public static final int INTEGER_LITERAL=8;
+    public static final int T_OPTIONAL=7;
+    public static final int T_READONLY=8;
     public static final int ANNOTATION=9;
     public static final int T_HISTORY=10;
     public static final int STRING_EXT=11;
-    public static final int BOOLEAN_LITERAL=12;
-    public static final int SL_COMMENT=13;
-    public static final int ML_COMMENT=14;
-    public static final int WHITESPACE=15;
-    public static final int LINEBREAKS=16;
+    public static final int INTEGER_LITERAL=12;
+    public static final int BOOLEAN_LITERAL=13;
+    public static final int SL_COMMENT=14;
+    public static final int ML_COMMENT=15;
+    public static final int WHITESPACE=16;
+    public static final int LINEBREAKS=17;
 
     	public java.util.List<org.antlr.runtime3_3_0.RecognitionException> lexerExceptions  = new java.util.ArrayList<org.antlr.runtime3_3_0.RecognitionException>();
     	public java.util.List<Integer> lexerExceptionsPosition = new java.util.ArrayList<Integer>();
@@ -124,36 +126,15 @@ public class ThingmlLexer extends Lexer {
     }
     public String getGrammarFileName() { return "Thingml.g"; }
 
-    // $ANTLR start "T__17"
-    public final void mT__17() throws RecognitionException {
-        try {
-            int _type = T__17;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:16:7: ( 'import' )
-            // Thingml.g:16:9: 'import'
-            {
-            match("import"); 
-
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end "T__17"
-
     // $ANTLR start "T__18"
     public final void mT__18() throws RecognitionException {
         try {
             int _type = T__18;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:17:7: ( 'message' )
-            // Thingml.g:17:9: 'message'
+            // Thingml.g:16:7: ( 'import' )
+            // Thingml.g:16:9: 'import'
             {
-            match("message"); 
+            match("import"); 
 
 
             }
@@ -171,10 +152,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__19;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:18:7: ( '(' )
-            // Thingml.g:18:9: '('
+            // Thingml.g:17:7: ( 'message' )
+            // Thingml.g:17:9: 'message'
             {
-            match('('); 
+            match("message"); 
+
 
             }
 
@@ -191,10 +173,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__20;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:19:7: ( ',' )
-            // Thingml.g:19:9: ','
+            // Thingml.g:18:7: ( '(' )
+            // Thingml.g:18:9: '('
             {
-            match(','); 
+            match('('); 
 
             }
 
@@ -211,10 +193,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__21;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:20:7: ( ')' )
-            // Thingml.g:20:9: ')'
+            // Thingml.g:19:7: ( ',' )
+            // Thingml.g:19:9: ','
             {
-            match(')'); 
+            match(','); 
 
             }
 
@@ -231,10 +213,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__22;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:21:7: ( ';' )
-            // Thingml.g:21:9: ';'
+            // Thingml.g:20:7: ( ')' )
+            // Thingml.g:20:9: ')'
             {
-            match(';'); 
+            match(')'); 
 
             }
 
@@ -251,11 +233,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__23;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:22:7: ( 'thing' )
-            // Thingml.g:22:9: 'thing'
+            // Thingml.g:21:7: ( ';' )
+            // Thingml.g:21:9: ';'
             {
-            match("thing"); 
-
+            match(';'); 
 
             }
 
@@ -272,10 +253,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__24;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:23:7: ( 'includes' )
-            // Thingml.g:23:9: 'includes'
+            // Thingml.g:22:7: ( 'function' )
+            // Thingml.g:22:9: 'function'
             {
-            match("includes"); 
+            match("function"); 
 
 
             }
@@ -293,10 +274,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__25;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:24:7: ( '{' )
-            // Thingml.g:24:9: '{'
+            // Thingml.g:23:7: ( ':' )
+            // Thingml.g:23:9: ':'
             {
-            match('{'); 
+            match(':'); 
 
             }
 
@@ -313,10 +294,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__26;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:25:7: ( '}' )
-            // Thingml.g:25:9: '}'
+            // Thingml.g:24:7: ( 'thing' )
+            // Thingml.g:24:9: 'thing'
             {
-            match('}'); 
+            match("thing"); 
+
 
             }
 
@@ -333,10 +315,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__27;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:26:7: ( 'required' )
-            // Thingml.g:26:9: 'required'
+            // Thingml.g:25:7: ( 'includes' )
+            // Thingml.g:25:9: 'includes'
             {
-            match("required"); 
+            match("includes"); 
 
 
             }
@@ -354,11 +336,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__28;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:27:7: ( 'port' )
-            // Thingml.g:27:9: 'port'
+            // Thingml.g:26:7: ( '{' )
+            // Thingml.g:26:9: '{'
             {
-            match("port"); 
-
+            match('{'); 
 
             }
 
@@ -375,11 +356,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__29;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:28:7: ( 'receives' )
-            // Thingml.g:28:9: 'receives'
+            // Thingml.g:27:7: ( '}' )
+            // Thingml.g:27:9: '}'
             {
-            match("receives"); 
-
+            match('}'); 
 
             }
 
@@ -396,10 +376,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__30;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:29:7: ( 'sends' )
-            // Thingml.g:29:9: 'sends'
+            // Thingml.g:28:7: ( 'required' )
+            // Thingml.g:28:9: 'required'
             {
-            match("sends"); 
+            match("required"); 
 
 
             }
@@ -417,10 +397,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__31;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:30:7: ( 'provided' )
-            // Thingml.g:30:9: 'provided'
+            // Thingml.g:29:7: ( 'port' )
+            // Thingml.g:29:9: 'port'
             {
-            match("provided"); 
+            match("port"); 
 
 
             }
@@ -438,10 +418,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__32;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:31:7: ( 'property' )
-            // Thingml.g:31:9: 'property'
+            // Thingml.g:30:7: ( 'receives' )
+            // Thingml.g:30:9: 'receives'
             {
-            match("property"); 
+            match("receives"); 
 
 
             }
@@ -459,10 +439,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__33;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:32:7: ( ':' )
-            // Thingml.g:32:9: ':'
+            // Thingml.g:31:7: ( 'sends' )
+            // Thingml.g:31:9: 'sends'
             {
-            match(':'); 
+            match("sends"); 
+
 
             }
 
@@ -479,10 +460,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__34;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:33:7: ( '[' )
-            // Thingml.g:33:9: '['
+            // Thingml.g:32:7: ( 'provided' )
+            // Thingml.g:32:9: 'provided'
             {
-            match('['); 
+            match("provided"); 
+
 
             }
 
@@ -499,10 +481,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__35;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:34:7: ( '..' )
-            // Thingml.g:34:9: '..'
+            // Thingml.g:33:7: ( 'property' )
+            // Thingml.g:33:9: 'property'
             {
-            match(".."); 
+            match("property"); 
 
 
             }
@@ -520,10 +502,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__36;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:35:7: ( ']' )
-            // Thingml.g:35:9: ']'
+            // Thingml.g:34:7: ( '=' )
+            // Thingml.g:34:9: '='
             {
-            match(']'); 
+            match('='); 
 
             }
 
@@ -540,10 +522,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__37;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:36:7: ( '=' )
-            // Thingml.g:36:9: '='
+            // Thingml.g:35:7: ( 'datatype' )
+            // Thingml.g:35:9: 'datatype'
             {
-            match('='); 
+            match("datatype"); 
+
 
             }
 
@@ -560,10 +543,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__38;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:37:7: ( 'datatype' )
-            // Thingml.g:37:9: 'datatype'
+            // Thingml.g:36:7: ( 'enumeration' )
+            // Thingml.g:36:9: 'enumeration'
             {
-            match("datatype"); 
+            match("enumeration"); 
 
 
             }
@@ -581,10 +564,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__39;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:38:7: ( 'enumeration' )
-            // Thingml.g:38:9: 'enumeration'
+            // Thingml.g:37:7: ( 'statechart' )
+            // Thingml.g:37:9: 'statechart'
             {
-            match("enumeration"); 
+            match("statechart"); 
 
 
             }
@@ -602,10 +585,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__40;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:39:7: ( 'statechart' )
-            // Thingml.g:39:9: 'statechart'
+            // Thingml.g:38:7: ( 'init' )
+            // Thingml.g:38:9: 'init'
             {
-            match("statechart"); 
+            match("init"); 
 
 
             }
@@ -623,10 +606,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__41;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:40:7: ( 'init' )
-            // Thingml.g:40:9: 'init'
+            // Thingml.g:39:7: ( 'keeps' )
+            // Thingml.g:39:9: 'keeps'
             {
-            match("init"); 
+            match("keeps"); 
 
 
             }
@@ -644,10 +627,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__42;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:41:7: ( 'keeps' )
-            // Thingml.g:41:9: 'keeps'
+            // Thingml.g:40:7: ( 'on' )
+            // Thingml.g:40:9: 'on'
             {
-            match("keeps"); 
+            match("on"); 
 
 
             }
@@ -665,10 +648,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__43;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:42:7: ( 'on' )
-            // Thingml.g:42:9: 'on'
+            // Thingml.g:41:7: ( 'entry' )
+            // Thingml.g:41:9: 'entry'
             {
-            match("on"); 
+            match("entry"); 
 
 
             }
@@ -686,10 +669,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__44;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:43:7: ( 'entry' )
-            // Thingml.g:43:9: 'entry'
+            // Thingml.g:42:7: ( 'exit' )
+            // Thingml.g:42:9: 'exit'
             {
-            match("entry"); 
+            match("exit"); 
 
 
             }
@@ -707,10 +690,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__45;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:44:7: ( 'exit' )
-            // Thingml.g:44:9: 'exit'
+            // Thingml.g:43:7: ( 'state' )
+            // Thingml.g:43:9: 'state'
             {
-            match("exit"); 
+            match("state"); 
 
 
             }
@@ -728,10 +711,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__46;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:45:7: ( 'state' )
-            // Thingml.g:45:9: 'state'
+            // Thingml.g:44:7: ( 'composite' )
+            // Thingml.g:44:9: 'composite'
             {
-            match("state"); 
+            match("composite"); 
 
 
             }
@@ -749,10 +732,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__47;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:46:7: ( 'composite' )
-            // Thingml.g:46:9: 'composite'
+            // Thingml.g:45:7: ( 'region' )
+            // Thingml.g:45:9: 'region'
             {
-            match("composite"); 
+            match("region"); 
 
 
             }
@@ -770,10 +753,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__48;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:47:7: ( 'region' )
-            // Thingml.g:47:9: 'region'
+            // Thingml.g:46:7: ( 'transition' )
+            // Thingml.g:46:9: 'transition'
             {
-            match("region"); 
+            match("transition"); 
 
 
             }
@@ -791,10 +774,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__49;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:48:7: ( 'transition' )
-            // Thingml.g:48:9: 'transition'
+            // Thingml.g:47:7: ( '->' )
+            // Thingml.g:47:9: '->'
             {
-            match("transition"); 
+            match("->"); 
 
 
             }
@@ -812,10 +795,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__50;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:49:7: ( '->' )
-            // Thingml.g:49:9: '->'
+            // Thingml.g:48:7: ( 'event' )
+            // Thingml.g:48:9: 'event'
             {
-            match("->"); 
+            match("event"); 
 
 
             }
@@ -833,10 +816,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__51;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:50:7: ( 'event' )
-            // Thingml.g:50:9: 'event'
+            // Thingml.g:49:7: ( 'guard' )
+            // Thingml.g:49:9: 'guard'
             {
-            match("event"); 
+            match("guard"); 
 
 
             }
@@ -854,10 +837,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__52;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:51:7: ( 'guard' )
-            // Thingml.g:51:9: 'guard'
+            // Thingml.g:50:7: ( 'action' )
+            // Thingml.g:50:9: 'action'
             {
-            match("guard"); 
+            match("action"); 
 
 
             }
@@ -875,10 +858,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__53;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:52:7: ( 'action' )
-            // Thingml.g:52:9: 'action'
+            // Thingml.g:51:7: ( 'before' )
+            // Thingml.g:51:9: 'before'
             {
-            match("action"); 
+            match("before"); 
 
 
             }
@@ -896,10 +879,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__54;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:53:7: ( 'before' )
-            // Thingml.g:53:9: 'before'
+            // Thingml.g:52:7: ( 'after' )
+            // Thingml.g:52:9: 'after'
             {
-            match("before"); 
+            match("after"); 
 
 
             }
@@ -917,10 +900,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__55;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:54:7: ( 'after' )
-            // Thingml.g:54:9: 'after'
+            // Thingml.g:53:7: ( 'internal' )
+            // Thingml.g:53:9: 'internal'
             {
-            match("after"); 
+            match("internal"); 
 
 
             }
@@ -938,11 +921,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__56;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:55:7: ( 'internal' )
-            // Thingml.g:55:9: 'internal'
+            // Thingml.g:54:7: ( '?' )
+            // Thingml.g:54:9: '?'
             {
-            match("internal"); 
-
+            match('?'); 
 
             }
 
@@ -959,10 +941,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__57;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:56:7: ( '?' )
-            // Thingml.g:56:9: '?'
+            // Thingml.g:55:7: ( 'set' )
+            // Thingml.g:55:9: 'set'
             {
-            match('?'); 
+            match("set"); 
+
 
             }
 
@@ -979,10 +962,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__58;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:57:7: ( 'set' )
-            // Thingml.g:57:9: 'set'
+            // Thingml.g:56:7: ( 'configuration' )
+            // Thingml.g:56:9: 'configuration'
             {
-            match("set"); 
+            match("configuration"); 
 
 
             }
@@ -1000,10 +983,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__59;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:58:7: ( 'configuration' )
-            // Thingml.g:58:9: 'configuration'
+            // Thingml.g:57:7: ( 'group' )
+            // Thingml.g:57:9: 'group'
             {
-            match("configuration"); 
+            match("group"); 
 
 
             }
@@ -1021,8 +1004,8 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__60;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:59:7: ( 'instance' )
-            // Thingml.g:59:9: 'instance'
+            // Thingml.g:58:7: ( 'instance' )
+            // Thingml.g:58:9: 'instance'
             {
             match("instance"); 
 
@@ -1042,8 +1025,8 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__61;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:60:7: ( 'connector' )
-            // Thingml.g:60:9: 'connector'
+            // Thingml.g:59:7: ( 'connector' )
+            // Thingml.g:59:9: 'connector'
             {
             match("connector"); 
 
@@ -1063,8 +1046,8 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__62;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:61:7: ( '.' )
-            // Thingml.g:61:9: '.'
+            // Thingml.g:60:7: ( '.' )
+            // Thingml.g:60:9: '.'
             {
             match('.'); 
 
@@ -1083,8 +1066,8 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__63;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:62:7: ( '=>' )
-            // Thingml.g:62:9: '=>'
+            // Thingml.g:61:7: ( '=>' )
+            // Thingml.g:61:9: '=>'
             {
             match("=>"); 
 
@@ -1104,8 +1087,8 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__64;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:63:7: ( '!' )
-            // Thingml.g:63:9: '!'
+            // Thingml.g:62:7: ( '!' )
+            // Thingml.g:62:9: '!'
             {
             match('!'); 
 
@@ -1124,8 +1107,8 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__65;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:64:7: ( 'do' )
-            // Thingml.g:64:9: 'do'
+            // Thingml.g:63:7: ( 'do' )
+            // Thingml.g:63:9: 'do'
             {
             match("do"); 
 
@@ -1145,8 +1128,8 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__66;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:65:7: ( 'end' )
-            // Thingml.g:65:9: 'end'
+            // Thingml.g:64:7: ( 'end' )
+            // Thingml.g:64:9: 'end'
             {
             match("end"); 
 
@@ -1166,10 +1149,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__67;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:66:7: ( '&' )
-            // Thingml.g:66:9: '&'
+            // Thingml.g:65:7: ( 'var' )
+            // Thingml.g:65:9: 'var'
             {
-            match('&'); 
+            match("var"); 
+
 
             }
 
@@ -1186,11 +1170,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__68;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:67:7: ( 'if' )
-            // Thingml.g:67:9: 'if'
+            // Thingml.g:66:7: ( '&' )
+            // Thingml.g:66:9: '&'
             {
-            match("if"); 
-
+            match('&'); 
 
             }
 
@@ -1207,10 +1190,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__69;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:68:7: ( 'while' )
-            // Thingml.g:68:9: 'while'
+            // Thingml.g:67:7: ( 'if' )
+            // Thingml.g:67:9: 'if'
             {
-            match("while"); 
+            match("if"); 
 
 
             }
@@ -1228,10 +1211,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__70;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:69:7: ( 'print' )
-            // Thingml.g:69:9: 'print'
+            // Thingml.g:68:7: ( 'while' )
+            // Thingml.g:68:9: 'while'
             {
-            match("print"); 
+            match("while"); 
 
 
             }
@@ -1249,10 +1232,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__71;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:70:7: ( 'error' )
-            // Thingml.g:70:9: 'error'
+            // Thingml.g:69:7: ( 'print' )
+            // Thingml.g:69:9: 'print'
             {
-            match("error"); 
+            match("print"); 
 
 
             }
@@ -1270,10 +1253,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__72;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:71:7: ( 'or' )
-            // Thingml.g:71:9: 'or'
+            // Thingml.g:70:7: ( 'error' )
+            // Thingml.g:70:9: 'error'
             {
-            match("or"); 
+            match("error"); 
 
 
             }
@@ -1291,10 +1274,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__73;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:72:7: ( 'and' )
-            // Thingml.g:72:9: 'and'
+            // Thingml.g:71:7: ( 'return' )
+            // Thingml.g:71:9: 'return'
             {
-            match("and"); 
+            match("return"); 
 
 
             }
@@ -1312,10 +1295,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__74;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:73:7: ( '<' )
-            // Thingml.g:73:9: '<'
+            // Thingml.g:72:7: ( 'or' )
+            // Thingml.g:72:9: 'or'
             {
-            match('<'); 
+            match("or"); 
+
 
             }
 
@@ -1332,10 +1316,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__75;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:74:7: ( '>' )
-            // Thingml.g:74:9: '>'
+            // Thingml.g:73:7: ( 'and' )
+            // Thingml.g:73:9: 'and'
             {
-            match('>'); 
+            match("and"); 
+
 
             }
 
@@ -1352,11 +1337,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__76;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:75:7: ( '==' )
-            // Thingml.g:75:9: '=='
+            // Thingml.g:74:7: ( '<' )
+            // Thingml.g:74:9: '<'
             {
-            match("=="); 
-
+            match('<'); 
 
             }
 
@@ -1373,10 +1357,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__77;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:76:7: ( '+' )
-            // Thingml.g:76:9: '+'
+            // Thingml.g:75:7: ( '>' )
+            // Thingml.g:75:9: '>'
             {
-            match('+'); 
+            match('>'); 
 
             }
 
@@ -1393,10 +1377,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__78;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:77:7: ( '-' )
-            // Thingml.g:77:9: '-'
+            // Thingml.g:76:7: ( '==' )
+            // Thingml.g:76:9: '=='
             {
-            match('-'); 
+            match("=="); 
+
 
             }
 
@@ -1413,10 +1398,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__79;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:78:7: ( '*' )
-            // Thingml.g:78:9: '*'
+            // Thingml.g:77:7: ( '+' )
+            // Thingml.g:77:9: '+'
             {
-            match('*'); 
+            match('+'); 
 
             }
 
@@ -1433,10 +1418,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__80;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:79:7: ( '/' )
-            // Thingml.g:79:9: '/'
+            // Thingml.g:78:7: ( '-' )
+            // Thingml.g:78:9: '-'
             {
-            match('/'); 
+            match('-'); 
 
             }
 
@@ -1453,10 +1438,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__81;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:80:7: ( '\\u0025' )
-            // Thingml.g:80:9: '\\u0025'
+            // Thingml.g:79:7: ( '*' )
+            // Thingml.g:79:9: '*'
             {
-            match('%'); 
+            match('*'); 
 
             }
 
@@ -1473,8 +1458,48 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T__82;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:81:7: ( 'not' )
-            // Thingml.g:81:9: 'not'
+            // Thingml.g:80:7: ( '/' )
+            // Thingml.g:80:9: '/'
+            {
+            match('/'); 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "T__82"
+
+    // $ANTLR start "T__83"
+    public final void mT__83() throws RecognitionException {
+        try {
+            int _type = T__83;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // Thingml.g:81:7: ( '\\u0025' )
+            // Thingml.g:81:9: '\\u0025'
+            {
+            match('%'); 
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "T__83"
+
+    // $ANTLR start "T__84"
+    public final void mT__84() throws RecognitionException {
+        try {
+            int _type = T__84;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // Thingml.g:82:7: ( 'not' )
+            // Thingml.g:82:9: 'not'
             {
             match("not"); 
 
@@ -1487,22 +1512,22 @@ public class ThingmlLexer extends Lexer {
         finally {
         }
     }
-    // $ANTLR end "T__82"
+    // $ANTLR end "T__84"
 
     // $ANTLR start "SL_COMMENT"
     public final void mSL_COMMENT() throws RecognitionException {
         try {
             int _type = SL_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10463:11: ( ( '//' (~ ( '\\n' | '\\r' | '\\uffff' ) )* ) )
-            // Thingml.g:10464:1: ( '//' (~ ( '\\n' | '\\r' | '\\uffff' ) )* )
+            // Thingml.g:12437:11: ( ( '//' (~ ( '\\n' | '\\r' | '\\uffff' ) )* ) )
+            // Thingml.g:12438:1: ( '//' (~ ( '\\n' | '\\r' | '\\uffff' ) )* )
             {
-            // Thingml.g:10464:1: ( '//' (~ ( '\\n' | '\\r' | '\\uffff' ) )* )
-            // Thingml.g:10464:2: '//' (~ ( '\\n' | '\\r' | '\\uffff' ) )*
+            // Thingml.g:12438:1: ( '//' (~ ( '\\n' | '\\r' | '\\uffff' ) )* )
+            // Thingml.g:12438:2: '//' (~ ( '\\n' | '\\r' | '\\uffff' ) )*
             {
             match("//"); 
 
-            // Thingml.g:10464:6: (~ ( '\\n' | '\\r' | '\\uffff' ) )*
+            // Thingml.g:12438:6: (~ ( '\\n' | '\\r' | '\\uffff' ) )*
             loop1:
             do {
                 int alt1=2;
@@ -1515,7 +1540,7 @@ public class ThingmlLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // Thingml.g:10464:7: ~ ( '\\n' | '\\r' | '\\uffff' )
+            	    // Thingml.g:12438:7: ~ ( '\\n' | '\\r' | '\\uffff' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFE') ) {
             	        input.consume();
@@ -1555,15 +1580,15 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = ML_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10467:11: ( ( '/*' ( . )* '*/' ) )
-            // Thingml.g:10468:1: ( '/*' ( . )* '*/' )
+            // Thingml.g:12441:11: ( ( '/*' ( . )* '*/' ) )
+            // Thingml.g:12442:1: ( '/*' ( . )* '*/' )
             {
-            // Thingml.g:10468:1: ( '/*' ( . )* '*/' )
-            // Thingml.g:10468:2: '/*' ( . )* '*/'
+            // Thingml.g:12442:1: ( '/*' ( . )* '*/' )
+            // Thingml.g:12442:2: '/*' ( . )* '*/'
             {
             match("/*"); 
 
-            // Thingml.g:10468:6: ( . )*
+            // Thingml.g:12442:6: ( . )*
             loop2:
             do {
                 int alt2=2;
@@ -1588,7 +1613,7 @@ public class ThingmlLexer extends Lexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // Thingml.g:10468:6: .
+            	    // Thingml.g:12442:6: .
             	    {
             	    matchAny(); 
 
@@ -1622,14 +1647,14 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = ANNOTATION;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10471:11: ( ( '@' ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+ ) )
-            // Thingml.g:10472:1: ( '@' ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+ )
+            // Thingml.g:12445:11: ( ( '@' ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+ ) )
+            // Thingml.g:12446:1: ( '@' ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+ )
             {
-            // Thingml.g:10472:1: ( '@' ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+ )
-            // Thingml.g:10472:2: '@' ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+
+            // Thingml.g:12446:1: ( '@' ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+ )
+            // Thingml.g:12446:2: '@' ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+
             {
             match('@'); 
-            // Thingml.g:10472:5: ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+
+            // Thingml.g:12446:5: ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+
             int cnt3=0;
             loop3:
             do {
@@ -1686,10 +1711,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = BOOLEAN_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10474:16: ( ( 'true' | 'false' ) )
-            // Thingml.g:10475:1: ( 'true' | 'false' )
+            // Thingml.g:12448:16: ( ( 'true' | 'false' ) )
+            // Thingml.g:12449:1: ( 'true' | 'false' )
             {
-            // Thingml.g:10475:1: ( 'true' | 'false' )
+            // Thingml.g:12449:1: ( 'true' | 'false' )
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -1707,7 +1732,7 @@ public class ThingmlLexer extends Lexer {
             }
             switch (alt4) {
                 case 1 :
-                    // Thingml.g:10475:2: 'true'
+                    // Thingml.g:12449:2: 'true'
                     {
                     match("true"); 
 
@@ -1715,7 +1740,7 @@ public class ThingmlLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:10475:9: 'false'
+                    // Thingml.g:12449:9: 'false'
                     {
                     match("false"); 
 
@@ -1741,10 +1766,10 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = INTEGER_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10477:16: ( ( ( '1' .. '9' ) ( '0' .. '9' )* | '0' ) )
-            // Thingml.g:10478:1: ( ( '1' .. '9' ) ( '0' .. '9' )* | '0' )
+            // Thingml.g:12451:16: ( ( ( '1' .. '9' ) ( '0' .. '9' )* | '0' ) )
+            // Thingml.g:12452:1: ( ( '1' .. '9' ) ( '0' .. '9' )* | '0' )
             {
-            // Thingml.g:10478:1: ( ( '1' .. '9' ) ( '0' .. '9' )* | '0' )
+            // Thingml.g:12452:1: ( ( '1' .. '9' ) ( '0' .. '9' )* | '0' )
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -1762,16 +1787,16 @@ public class ThingmlLexer extends Lexer {
             }
             switch (alt6) {
                 case 1 :
-                    // Thingml.g:10478:2: ( '1' .. '9' ) ( '0' .. '9' )*
+                    // Thingml.g:12452:2: ( '1' .. '9' ) ( '0' .. '9' )*
                     {
-                    // Thingml.g:10478:2: ( '1' .. '9' )
-                    // Thingml.g:10478:3: '1' .. '9'
+                    // Thingml.g:12452:2: ( '1' .. '9' )
+                    // Thingml.g:12452:3: '1' .. '9'
                     {
                     matchRange('1','9'); 
 
                     }
 
-                    // Thingml.g:10478:13: ( '0' .. '9' )*
+                    // Thingml.g:12452:13: ( '0' .. '9' )*
                     loop5:
                     do {
                         int alt5=2;
@@ -1784,7 +1809,7 @@ public class ThingmlLexer extends Lexer {
 
                         switch (alt5) {
                     	case 1 :
-                    	    // Thingml.g:10478:14: '0' .. '9'
+                    	    // Thingml.g:12452:14: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -1800,7 +1825,7 @@ public class ThingmlLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:10478:27: '0'
+                    // Thingml.g:12452:27: '0'
                     {
                     match('0'); 
 
@@ -1825,14 +1850,14 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = STRING_LITERAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10480:15: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\"' ) )* '\"' ) )
-            // Thingml.g:10481:1: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\"' ) )* '\"' )
+            // Thingml.g:12454:15: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\"' ) )* '\"' ) )
+            // Thingml.g:12455:1: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\"' ) )* '\"' )
             {
-            // Thingml.g:10481:1: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\"' ) )* '\"' )
-            // Thingml.g:10481:2: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\"' ) )* '\"'
+            // Thingml.g:12455:1: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\"' ) )* '\"' )
+            // Thingml.g:12455:2: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\"' ) )* '\"'
             {
             match('\"'); 
-            // Thingml.g:10481:5: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\"' ) )*
+            // Thingml.g:12455:5: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\"' ) )*
             loop7:
             do {
                 int alt7=5;
@@ -1880,7 +1905,7 @@ public class ThingmlLexer extends Lexer {
 
                 switch (alt7) {
             	case 1 :
-            	    // Thingml.g:10481:6: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' )
+            	    // Thingml.g:12455:6: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' )
             	    {
             	    match('\\'); 
             	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||input.LA(1)=='t' ) {
@@ -1896,10 +1921,10 @@ public class ThingmlLexer extends Lexer {
             	    }
             	    break;
             	case 2 :
-            	    // Thingml.g:10481:47: ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
+            	    // Thingml.g:12455:47: ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
             	    {
-            	    // Thingml.g:10481:47: ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
-            	    // Thingml.g:10481:48: '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )
+            	    // Thingml.g:12455:47: ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
+            	    // Thingml.g:12455:48: '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )
             	    {
             	    match('\\'); 
             	    match('u'); 
@@ -1946,11 +1971,11 @@ public class ThingmlLexer extends Lexer {
             	    }
             	    break;
             	case 3 :
-            	    // Thingml.g:10481:169: '\\\\' ( '0' .. '7' )
+            	    // Thingml.g:12455:169: '\\\\' ( '0' .. '7' )
             	    {
             	    match('\\'); 
-            	    // Thingml.g:10481:173: ( '0' .. '7' )
-            	    // Thingml.g:10481:174: '0' .. '7'
+            	    // Thingml.g:12455:173: ( '0' .. '7' )
+            	    // Thingml.g:12455:174: '0' .. '7'
             	    {
             	    matchRange('0','7'); 
 
@@ -1960,7 +1985,7 @@ public class ThingmlLexer extends Lexer {
             	    }
             	    break;
             	case 4 :
-            	    // Thingml.g:10481:184: ~ ( '\\\\' | '\"' )
+            	    // Thingml.g:12455:184: ~ ( '\\\\' | '\"' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2000,14 +2025,14 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = STRING_EXT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10483:11: ( ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\\'' ) )* '\\'' ) )
-            // Thingml.g:10484:1: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\\'' ) )* '\\'' )
+            // Thingml.g:12457:11: ( ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\\'' ) )* '\\'' ) )
+            // Thingml.g:12458:1: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\\'' ) )* '\\'' )
             {
-            // Thingml.g:10484:1: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\\'' ) )* '\\'' )
-            // Thingml.g:10484:2: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\\'' ) )* '\\''
+            // Thingml.g:12458:1: ( '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\\'' ) )* '\\'' )
+            // Thingml.g:12458:2: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\\'' ) )* '\\''
             {
             match('\''); 
-            // Thingml.g:10484:6: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\\'' ) )*
+            // Thingml.g:12458:6: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ) | '\\\\' ( '0' .. '7' ) | ~ ( '\\\\' | '\\'' ) )*
             loop8:
             do {
                 int alt8=5;
@@ -2055,7 +2080,7 @@ public class ThingmlLexer extends Lexer {
 
                 switch (alt8) {
             	case 1 :
-            	    // Thingml.g:10484:7: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' )
+            	    // Thingml.g:12458:7: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' )
             	    {
             	    match('\\'); 
             	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||input.LA(1)=='t' ) {
@@ -2071,10 +2096,10 @@ public class ThingmlLexer extends Lexer {
             	    }
             	    break;
             	case 2 :
-            	    // Thingml.g:10484:48: ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
+            	    // Thingml.g:12458:48: ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
             	    {
-            	    // Thingml.g:10484:48: ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
-            	    // Thingml.g:10484:49: '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )
+            	    // Thingml.g:12458:48: ( '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
+            	    // Thingml.g:12458:49: '\\\\' 'u' ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )
             	    {
             	    match('\\'); 
             	    match('u'); 
@@ -2121,11 +2146,11 @@ public class ThingmlLexer extends Lexer {
             	    }
             	    break;
             	case 3 :
-            	    // Thingml.g:10484:170: '\\\\' ( '0' .. '7' )
+            	    // Thingml.g:12458:170: '\\\\' ( '0' .. '7' )
             	    {
             	    match('\\'); 
-            	    // Thingml.g:10484:174: ( '0' .. '7' )
-            	    // Thingml.g:10484:175: '0' .. '7'
+            	    // Thingml.g:12458:174: ( '0' .. '7' )
+            	    // Thingml.g:12458:175: '0' .. '7'
             	    {
             	    matchRange('0','7'); 
 
@@ -2135,7 +2160,7 @@ public class ThingmlLexer extends Lexer {
             	    }
             	    break;
             	case 4 :
-            	    // Thingml.g:10484:185: ~ ( '\\\\' | '\\'' )
+            	    // Thingml.g:12458:185: ~ ( '\\\\' | '\\'' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2175,11 +2200,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T_READONLY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10486:11: ( ( 'readonly' ) )
-            // Thingml.g:10487:1: ( 'readonly' )
+            // Thingml.g:12460:11: ( ( 'readonly' ) )
+            // Thingml.g:12461:1: ( 'readonly' )
             {
-            // Thingml.g:10487:1: ( 'readonly' )
-            // Thingml.g:10487:2: 'readonly'
+            // Thingml.g:12461:1: ( 'readonly' )
+            // Thingml.g:12461:2: 'readonly'
             {
             match("readonly"); 
 
@@ -2197,16 +2222,43 @@ public class ThingmlLexer extends Lexer {
     }
     // $ANTLR end "T_READONLY"
 
+    // $ANTLR start "T_OPTIONAL"
+    public final void mT_OPTIONAL() throws RecognitionException {
+        try {
+            int _type = T_OPTIONAL;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // Thingml.g:12463:11: ( ( 'optional' ) )
+            // Thingml.g:12464:1: ( 'optional' )
+            {
+            // Thingml.g:12464:1: ( 'optional' )
+            // Thingml.g:12464:2: 'optional'
+            {
+            match("optional"); 
+
+
+            }
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "T_OPTIONAL"
+
     // $ANTLR start "T_ASPECT"
     public final void mT_ASPECT() throws RecognitionException {
         try {
             int _type = T_ASPECT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10489:9: ( ( 'fragment' ) )
-            // Thingml.g:10490:1: ( 'fragment' )
+            // Thingml.g:12466:9: ( ( 'fragment' ) )
+            // Thingml.g:12467:1: ( 'fragment' )
             {
-            // Thingml.g:10490:1: ( 'fragment' )
-            // Thingml.g:10490:2: 'fragment'
+            // Thingml.g:12467:1: ( 'fragment' )
+            // Thingml.g:12467:2: 'fragment'
             {
             match("fragment"); 
 
@@ -2229,11 +2281,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = T_HISTORY;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10492:10: ( ( 'history' ) )
-            // Thingml.g:10493:1: ( 'history' )
+            // Thingml.g:12469:10: ( ( 'history' ) )
+            // Thingml.g:12470:1: ( 'history' )
             {
-            // Thingml.g:10493:1: ( 'history' )
-            // Thingml.g:10493:2: 'history'
+            // Thingml.g:12470:1: ( 'history' )
+            // Thingml.g:12470:2: 'history'
             {
             match("history"); 
 
@@ -2256,11 +2308,11 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = WHITESPACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10495:11: ( ( ( ' ' | '\\t' | '\\f' ) ) )
-            // Thingml.g:10496:1: ( ( ' ' | '\\t' | '\\f' ) )
+            // Thingml.g:12472:11: ( ( ( ' ' | '\\t' | '\\f' ) ) )
+            // Thingml.g:12473:1: ( ( ' ' | '\\t' | '\\f' ) )
             {
-            // Thingml.g:10496:1: ( ( ' ' | '\\t' | '\\f' ) )
-            // Thingml.g:10496:2: ( ' ' | '\\t' | '\\f' )
+            // Thingml.g:12473:1: ( ( ' ' | '\\t' | '\\f' ) )
+            // Thingml.g:12473:2: ( ' ' | '\\t' | '\\f' )
             {
             if ( input.LA(1)=='\t'||input.LA(1)=='\f'||input.LA(1)==' ' ) {
                 input.consume();
@@ -2291,13 +2343,13 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = LINEBREAKS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10499:11: ( ( ( '\\r\\n' | '\\r' | '\\n' ) ) )
-            // Thingml.g:10500:1: ( ( '\\r\\n' | '\\r' | '\\n' ) )
+            // Thingml.g:12476:11: ( ( ( '\\r\\n' | '\\r' | '\\n' ) ) )
+            // Thingml.g:12477:1: ( ( '\\r\\n' | '\\r' | '\\n' ) )
             {
-            // Thingml.g:10500:1: ( ( '\\r\\n' | '\\r' | '\\n' ) )
-            // Thingml.g:10500:2: ( '\\r\\n' | '\\r' | '\\n' )
+            // Thingml.g:12477:1: ( ( '\\r\\n' | '\\r' | '\\n' ) )
+            // Thingml.g:12477:2: ( '\\r\\n' | '\\r' | '\\n' )
             {
-            // Thingml.g:10500:2: ( '\\r\\n' | '\\r' | '\\n' )
+            // Thingml.g:12477:2: ( '\\r\\n' | '\\r' | '\\n' )
             int alt9=3;
             int LA9_0 = input.LA(1);
 
@@ -2321,7 +2373,7 @@ public class ThingmlLexer extends Lexer {
             }
             switch (alt9) {
                 case 1 :
-                    // Thingml.g:10500:3: '\\r\\n'
+                    // Thingml.g:12477:3: '\\r\\n'
                     {
                     match("\r\n"); 
 
@@ -2329,14 +2381,14 @@ public class ThingmlLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:10500:10: '\\r'
+                    // Thingml.g:12477:10: '\\r'
                     {
                     match('\r'); 
 
                     }
                     break;
                 case 3 :
-                    // Thingml.g:10500:15: '\\n'
+                    // Thingml.g:12477:15: '\\n'
                     {
                     match('\n'); 
 
@@ -2365,13 +2417,13 @@ public class ThingmlLexer extends Lexer {
         try {
             int _type = TEXT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // Thingml.g:10503:5: ( ( ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+ ) )
-            // Thingml.g:10504:1: ( ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+ )
+            // Thingml.g:12480:5: ( ( ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+ ) )
+            // Thingml.g:12481:1: ( ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+ )
             {
-            // Thingml.g:10504:1: ( ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+ )
-            // Thingml.g:10504:2: ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+
+            // Thingml.g:12481:1: ( ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+ )
+            // Thingml.g:12481:2: ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+
             {
-            // Thingml.g:10504:2: ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+
+            // Thingml.g:12481:2: ( 'A' .. 'Z' | 'a' .. 'z' | '0' .. '9' | '_' | '-' )+
             int cnt10=0;
             loop10:
             do {
@@ -2424,558 +2476,572 @@ public class ThingmlLexer extends Lexer {
     // $ANTLR end "TEXT"
 
     public void mTokens() throws RecognitionException {
-        // Thingml.g:1:8: ( T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | T__48 | T__49 | T__50 | T__51 | T__52 | T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | T__76 | T__77 | T__78 | T__79 | T__80 | T__81 | T__82 | SL_COMMENT | ML_COMMENT | ANNOTATION | BOOLEAN_LITERAL | INTEGER_LITERAL | STRING_LITERAL | STRING_EXT | T_READONLY | T_ASPECT | T_HISTORY | WHITESPACE | LINEBREAKS | TEXT )
-        int alt11=79;
+        // Thingml.g:1:8: ( T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | T__48 | T__49 | T__50 | T__51 | T__52 | T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | T__76 | T__77 | T__78 | T__79 | T__80 | T__81 | T__82 | T__83 | T__84 | SL_COMMENT | ML_COMMENT | ANNOTATION | BOOLEAN_LITERAL | INTEGER_LITERAL | STRING_LITERAL | STRING_EXT | T_READONLY | T_OPTIONAL | T_ASPECT | T_HISTORY | WHITESPACE | LINEBREAKS | TEXT )
+        int alt11=81;
         alt11 = dfa11.predict(input);
         switch (alt11) {
             case 1 :
-                // Thingml.g:1:10: T__17
-                {
-                mT__17(); 
-
-                }
-                break;
-            case 2 :
-                // Thingml.g:1:16: T__18
+                // Thingml.g:1:10: T__18
                 {
                 mT__18(); 
 
                 }
                 break;
-            case 3 :
-                // Thingml.g:1:22: T__19
+            case 2 :
+                // Thingml.g:1:16: T__19
                 {
                 mT__19(); 
 
                 }
                 break;
-            case 4 :
-                // Thingml.g:1:28: T__20
+            case 3 :
+                // Thingml.g:1:22: T__20
                 {
                 mT__20(); 
 
                 }
                 break;
-            case 5 :
-                // Thingml.g:1:34: T__21
+            case 4 :
+                // Thingml.g:1:28: T__21
                 {
                 mT__21(); 
 
                 }
                 break;
-            case 6 :
-                // Thingml.g:1:40: T__22
+            case 5 :
+                // Thingml.g:1:34: T__22
                 {
                 mT__22(); 
 
                 }
                 break;
-            case 7 :
-                // Thingml.g:1:46: T__23
+            case 6 :
+                // Thingml.g:1:40: T__23
                 {
                 mT__23(); 
 
                 }
                 break;
-            case 8 :
-                // Thingml.g:1:52: T__24
+            case 7 :
+                // Thingml.g:1:46: T__24
                 {
                 mT__24(); 
 
                 }
                 break;
-            case 9 :
-                // Thingml.g:1:58: T__25
+            case 8 :
+                // Thingml.g:1:52: T__25
                 {
                 mT__25(); 
 
                 }
                 break;
-            case 10 :
-                // Thingml.g:1:64: T__26
+            case 9 :
+                // Thingml.g:1:58: T__26
                 {
                 mT__26(); 
 
                 }
                 break;
-            case 11 :
-                // Thingml.g:1:70: T__27
+            case 10 :
+                // Thingml.g:1:64: T__27
                 {
                 mT__27(); 
 
                 }
                 break;
-            case 12 :
-                // Thingml.g:1:76: T__28
+            case 11 :
+                // Thingml.g:1:70: T__28
                 {
                 mT__28(); 
 
                 }
                 break;
-            case 13 :
-                // Thingml.g:1:82: T__29
+            case 12 :
+                // Thingml.g:1:76: T__29
                 {
                 mT__29(); 
 
                 }
                 break;
-            case 14 :
-                // Thingml.g:1:88: T__30
+            case 13 :
+                // Thingml.g:1:82: T__30
                 {
                 mT__30(); 
 
                 }
                 break;
-            case 15 :
-                // Thingml.g:1:94: T__31
+            case 14 :
+                // Thingml.g:1:88: T__31
                 {
                 mT__31(); 
 
                 }
                 break;
-            case 16 :
-                // Thingml.g:1:100: T__32
+            case 15 :
+                // Thingml.g:1:94: T__32
                 {
                 mT__32(); 
 
                 }
                 break;
-            case 17 :
-                // Thingml.g:1:106: T__33
+            case 16 :
+                // Thingml.g:1:100: T__33
                 {
                 mT__33(); 
 
                 }
                 break;
-            case 18 :
-                // Thingml.g:1:112: T__34
+            case 17 :
+                // Thingml.g:1:106: T__34
                 {
                 mT__34(); 
 
                 }
                 break;
-            case 19 :
-                // Thingml.g:1:118: T__35
+            case 18 :
+                // Thingml.g:1:112: T__35
                 {
                 mT__35(); 
 
                 }
                 break;
-            case 20 :
-                // Thingml.g:1:124: T__36
+            case 19 :
+                // Thingml.g:1:118: T__36
                 {
                 mT__36(); 
 
                 }
                 break;
-            case 21 :
-                // Thingml.g:1:130: T__37
+            case 20 :
+                // Thingml.g:1:124: T__37
                 {
                 mT__37(); 
 
                 }
                 break;
-            case 22 :
-                // Thingml.g:1:136: T__38
+            case 21 :
+                // Thingml.g:1:130: T__38
                 {
                 mT__38(); 
 
                 }
                 break;
-            case 23 :
-                // Thingml.g:1:142: T__39
+            case 22 :
+                // Thingml.g:1:136: T__39
                 {
                 mT__39(); 
 
                 }
                 break;
-            case 24 :
-                // Thingml.g:1:148: T__40
+            case 23 :
+                // Thingml.g:1:142: T__40
                 {
                 mT__40(); 
 
                 }
                 break;
-            case 25 :
-                // Thingml.g:1:154: T__41
+            case 24 :
+                // Thingml.g:1:148: T__41
                 {
                 mT__41(); 
 
                 }
                 break;
-            case 26 :
-                // Thingml.g:1:160: T__42
+            case 25 :
+                // Thingml.g:1:154: T__42
                 {
                 mT__42(); 
 
                 }
                 break;
-            case 27 :
-                // Thingml.g:1:166: T__43
+            case 26 :
+                // Thingml.g:1:160: T__43
                 {
                 mT__43(); 
 
                 }
                 break;
-            case 28 :
-                // Thingml.g:1:172: T__44
+            case 27 :
+                // Thingml.g:1:166: T__44
                 {
                 mT__44(); 
 
                 }
                 break;
-            case 29 :
-                // Thingml.g:1:178: T__45
+            case 28 :
+                // Thingml.g:1:172: T__45
                 {
                 mT__45(); 
 
                 }
                 break;
-            case 30 :
-                // Thingml.g:1:184: T__46
+            case 29 :
+                // Thingml.g:1:178: T__46
                 {
                 mT__46(); 
 
                 }
                 break;
-            case 31 :
-                // Thingml.g:1:190: T__47
+            case 30 :
+                // Thingml.g:1:184: T__47
                 {
                 mT__47(); 
 
                 }
                 break;
-            case 32 :
-                // Thingml.g:1:196: T__48
+            case 31 :
+                // Thingml.g:1:190: T__48
                 {
                 mT__48(); 
 
                 }
                 break;
-            case 33 :
-                // Thingml.g:1:202: T__49
+            case 32 :
+                // Thingml.g:1:196: T__49
                 {
                 mT__49(); 
 
                 }
                 break;
-            case 34 :
-                // Thingml.g:1:208: T__50
+            case 33 :
+                // Thingml.g:1:202: T__50
                 {
                 mT__50(); 
 
                 }
                 break;
-            case 35 :
-                // Thingml.g:1:214: T__51
+            case 34 :
+                // Thingml.g:1:208: T__51
                 {
                 mT__51(); 
 
                 }
                 break;
-            case 36 :
-                // Thingml.g:1:220: T__52
+            case 35 :
+                // Thingml.g:1:214: T__52
                 {
                 mT__52(); 
 
                 }
                 break;
-            case 37 :
-                // Thingml.g:1:226: T__53
+            case 36 :
+                // Thingml.g:1:220: T__53
                 {
                 mT__53(); 
 
                 }
                 break;
-            case 38 :
-                // Thingml.g:1:232: T__54
+            case 37 :
+                // Thingml.g:1:226: T__54
                 {
                 mT__54(); 
 
                 }
                 break;
-            case 39 :
-                // Thingml.g:1:238: T__55
+            case 38 :
+                // Thingml.g:1:232: T__55
                 {
                 mT__55(); 
 
                 }
                 break;
-            case 40 :
-                // Thingml.g:1:244: T__56
+            case 39 :
+                // Thingml.g:1:238: T__56
                 {
                 mT__56(); 
 
                 }
                 break;
-            case 41 :
-                // Thingml.g:1:250: T__57
+            case 40 :
+                // Thingml.g:1:244: T__57
                 {
                 mT__57(); 
 
                 }
                 break;
-            case 42 :
-                // Thingml.g:1:256: T__58
+            case 41 :
+                // Thingml.g:1:250: T__58
                 {
                 mT__58(); 
 
                 }
                 break;
-            case 43 :
-                // Thingml.g:1:262: T__59
+            case 42 :
+                // Thingml.g:1:256: T__59
                 {
                 mT__59(); 
 
                 }
                 break;
-            case 44 :
-                // Thingml.g:1:268: T__60
+            case 43 :
+                // Thingml.g:1:262: T__60
                 {
                 mT__60(); 
 
                 }
                 break;
-            case 45 :
-                // Thingml.g:1:274: T__61
+            case 44 :
+                // Thingml.g:1:268: T__61
                 {
                 mT__61(); 
 
                 }
                 break;
-            case 46 :
-                // Thingml.g:1:280: T__62
+            case 45 :
+                // Thingml.g:1:274: T__62
                 {
                 mT__62(); 
 
                 }
                 break;
-            case 47 :
-                // Thingml.g:1:286: T__63
+            case 46 :
+                // Thingml.g:1:280: T__63
                 {
                 mT__63(); 
 
                 }
                 break;
-            case 48 :
-                // Thingml.g:1:292: T__64
+            case 47 :
+                // Thingml.g:1:286: T__64
                 {
                 mT__64(); 
 
                 }
                 break;
-            case 49 :
-                // Thingml.g:1:298: T__65
+            case 48 :
+                // Thingml.g:1:292: T__65
                 {
                 mT__65(); 
 
                 }
                 break;
-            case 50 :
-                // Thingml.g:1:304: T__66
+            case 49 :
+                // Thingml.g:1:298: T__66
                 {
                 mT__66(); 
 
                 }
                 break;
-            case 51 :
-                // Thingml.g:1:310: T__67
+            case 50 :
+                // Thingml.g:1:304: T__67
                 {
                 mT__67(); 
 
                 }
                 break;
-            case 52 :
-                // Thingml.g:1:316: T__68
+            case 51 :
+                // Thingml.g:1:310: T__68
                 {
                 mT__68(); 
 
                 }
                 break;
-            case 53 :
-                // Thingml.g:1:322: T__69
+            case 52 :
+                // Thingml.g:1:316: T__69
                 {
                 mT__69(); 
 
                 }
                 break;
-            case 54 :
-                // Thingml.g:1:328: T__70
+            case 53 :
+                // Thingml.g:1:322: T__70
                 {
                 mT__70(); 
 
                 }
                 break;
-            case 55 :
-                // Thingml.g:1:334: T__71
+            case 54 :
+                // Thingml.g:1:328: T__71
                 {
                 mT__71(); 
 
                 }
                 break;
-            case 56 :
-                // Thingml.g:1:340: T__72
+            case 55 :
+                // Thingml.g:1:334: T__72
                 {
                 mT__72(); 
 
                 }
                 break;
-            case 57 :
-                // Thingml.g:1:346: T__73
+            case 56 :
+                // Thingml.g:1:340: T__73
                 {
                 mT__73(); 
 
                 }
                 break;
-            case 58 :
-                // Thingml.g:1:352: T__74
+            case 57 :
+                // Thingml.g:1:346: T__74
                 {
                 mT__74(); 
 
                 }
                 break;
-            case 59 :
-                // Thingml.g:1:358: T__75
+            case 58 :
+                // Thingml.g:1:352: T__75
                 {
                 mT__75(); 
 
                 }
                 break;
-            case 60 :
-                // Thingml.g:1:364: T__76
+            case 59 :
+                // Thingml.g:1:358: T__76
                 {
                 mT__76(); 
 
                 }
                 break;
-            case 61 :
-                // Thingml.g:1:370: T__77
+            case 60 :
+                // Thingml.g:1:364: T__77
                 {
                 mT__77(); 
 
                 }
                 break;
-            case 62 :
-                // Thingml.g:1:376: T__78
+            case 61 :
+                // Thingml.g:1:370: T__78
                 {
                 mT__78(); 
 
                 }
                 break;
-            case 63 :
-                // Thingml.g:1:382: T__79
+            case 62 :
+                // Thingml.g:1:376: T__79
                 {
                 mT__79(); 
 
                 }
                 break;
-            case 64 :
-                // Thingml.g:1:388: T__80
+            case 63 :
+                // Thingml.g:1:382: T__80
                 {
                 mT__80(); 
 
                 }
                 break;
-            case 65 :
-                // Thingml.g:1:394: T__81
+            case 64 :
+                // Thingml.g:1:388: T__81
                 {
                 mT__81(); 
 
                 }
                 break;
-            case 66 :
-                // Thingml.g:1:400: T__82
+            case 65 :
+                // Thingml.g:1:394: T__82
                 {
                 mT__82(); 
 
                 }
                 break;
+            case 66 :
+                // Thingml.g:1:400: T__83
+                {
+                mT__83(); 
+
+                }
+                break;
             case 67 :
-                // Thingml.g:1:406: SL_COMMENT
+                // Thingml.g:1:406: T__84
+                {
+                mT__84(); 
+
+                }
+                break;
+            case 68 :
+                // Thingml.g:1:412: SL_COMMENT
                 {
                 mSL_COMMENT(); 
 
                 }
                 break;
-            case 68 :
-                // Thingml.g:1:417: ML_COMMENT
+            case 69 :
+                // Thingml.g:1:423: ML_COMMENT
                 {
                 mML_COMMENT(); 
 
                 }
                 break;
-            case 69 :
-                // Thingml.g:1:428: ANNOTATION
+            case 70 :
+                // Thingml.g:1:434: ANNOTATION
                 {
                 mANNOTATION(); 
 
                 }
                 break;
-            case 70 :
-                // Thingml.g:1:439: BOOLEAN_LITERAL
+            case 71 :
+                // Thingml.g:1:445: BOOLEAN_LITERAL
                 {
                 mBOOLEAN_LITERAL(); 
 
                 }
                 break;
-            case 71 :
-                // Thingml.g:1:455: INTEGER_LITERAL
+            case 72 :
+                // Thingml.g:1:461: INTEGER_LITERAL
                 {
                 mINTEGER_LITERAL(); 
 
                 }
                 break;
-            case 72 :
-                // Thingml.g:1:471: STRING_LITERAL
+            case 73 :
+                // Thingml.g:1:477: STRING_LITERAL
                 {
                 mSTRING_LITERAL(); 
 
                 }
                 break;
-            case 73 :
-                // Thingml.g:1:486: STRING_EXT
+            case 74 :
+                // Thingml.g:1:492: STRING_EXT
                 {
                 mSTRING_EXT(); 
 
                 }
                 break;
-            case 74 :
-                // Thingml.g:1:497: T_READONLY
+            case 75 :
+                // Thingml.g:1:503: T_READONLY
                 {
                 mT_READONLY(); 
 
                 }
                 break;
-            case 75 :
-                // Thingml.g:1:508: T_ASPECT
+            case 76 :
+                // Thingml.g:1:514: T_OPTIONAL
+                {
+                mT_OPTIONAL(); 
+
+                }
+                break;
+            case 77 :
+                // Thingml.g:1:525: T_ASPECT
                 {
                 mT_ASPECT(); 
 
                 }
                 break;
-            case 76 :
-                // Thingml.g:1:517: T_HISTORY
+            case 78 :
+                // Thingml.g:1:534: T_HISTORY
                 {
                 mT_HISTORY(); 
 
                 }
                 break;
-            case 77 :
-                // Thingml.g:1:527: WHITESPACE
+            case 79 :
+                // Thingml.g:1:544: WHITESPACE
                 {
                 mWHITESPACE(); 
 
                 }
                 break;
-            case 78 :
-                // Thingml.g:1:538: LINEBREAKS
+            case 80 :
+                // Thingml.g:1:555: LINEBREAKS
                 {
                 mLINEBREAKS(); 
 
                 }
                 break;
-            case 79 :
-                // Thingml.g:1:549: TEXT
+            case 81 :
+                // Thingml.g:1:566: TEXT
                 {
                 mTEXT(); 
 
@@ -2989,203 +3055,204 @@ public class ThingmlLexer extends Lexer {
 
     protected DFA11 dfa11 = new DFA11(this);
     static final String DFA11_eotS =
-        "\1\uffff\2\57\4\uffff\1\57\2\uffff\3\57\2\uffff\1\74\1\uffff\1"+
-        "\77\5\57\1\113\3\57\3\uffff\1\57\4\uffff\1\124\1\uffff\1\57\1\uffff"+
-        "\1\57\2\131\2\uffff\1\57\3\uffff\2\57\1\140\10\57\5\uffff\1\57\1"+
-        "\160\5\57\1\170\1\171\1\57\2\uffff\6\57\3\uffff\3\57\1\131\1\uffff"+
-        "\6\57\1\uffff\14\57\1\u0098\2\57\1\uffff\2\57\1\u009d\4\57\2\uffff"+
-        "\5\57\1\u00a8\2\57\1\u00ab\5\57\1\u00b1\5\57\1\u00b7\4\57\1\u00bc"+
-        "\4\57\1\uffff\4\57\1\uffff\1\u00c5\11\57\1\uffff\2\57\1\uffff\5"+
-        "\57\1\uffff\3\57\1\u00d9\1\57\1\uffff\4\57\1\uffff\2\57\1\u00e1"+
-        "\1\u00e2\1\u00e4\2\57\1\u00e7\1\uffff\1\u00e8\1\u00e9\1\u00ea\3"+
-        "\57\1\u00ee\1\57\1\u00f0\1\57\1\u00f2\1\u00b7\2\57\1\u00f5\4\57"+
-        "\1\uffff\3\57\1\u00fd\3\57\2\uffff\1\57\1\uffff\2\57\4\uffff\3\57"+
-        "\1\uffff\1\u0107\1\uffff\1\u0108\1\uffff\2\57\1\uffff\3\57\1\u010e"+
-        "\3\57\1\uffff\11\57\2\uffff\1\57\1\u011c\1\u011d\1\u011e\1\u011f"+
-        "\1\uffff\1\57\1\u0121\1\u0122\1\u0123\1\u0124\1\u0125\1\57\1\u0127"+
-        "\4\57\1\u012c\4\uffff\1\57\5\uffff\1\57\1\uffff\1\57\1\u0130\1\57"+
-        "\1\u0132\1\uffff\1\u0133\1\u0134\1\57\1\uffff\1\57\3\uffff\1\u0137"+
-        "\1\57\1\uffff\1\57\1\u013a\1\uffff";
+        "\1\uffff\2\56\4\uffff\1\56\1\uffff\1\56\2\uffff\3\56\1\77\5\56"+
+        "\1\114\3\56\3\uffff\1\56\1\uffff\1\56\4\uffff\1\127\1\uffff\1\56"+
+        "\1\uffff\2\132\2\uffff\1\56\3\uffff\2\56\1\141\13\56\3\uffff\1\56"+
+        "\1\165\5\56\1\175\1\176\2\56\2\uffff\10\56\3\uffff\1\56\1\132\1"+
+        "\uffff\6\56\1\uffff\20\56\1\u00a2\2\56\1\uffff\2\56\1\u00a7\4\56"+
+        "\2\uffff\7\56\1\u00b4\1\56\1\u00b6\1\56\1\u00b8\3\56\1\u00bc\10"+
+        "\56\1\u00c5\5\56\1\u00cb\4\56\1\uffff\4\56\1\uffff\1\u00d4\13\56"+
+        "\1\uffff\1\56\1\uffff\1\56\1\uffff\3\56\1\uffff\4\56\1\u00c5\1\56"+
+        "\1\u00ea\1\56\1\uffff\5\56\1\uffff\2\56\1\u00f3\1\u00f4\1\u00f6"+
+        "\2\56\1\u00f9\1\uffff\1\u00fa\1\u00fb\1\u00fc\4\56\1\u0101\1\u0102"+
+        "\1\56\1\u0104\1\56\1\u0106\1\56\1\u0108\6\56\1\uffff\3\56\1\u0112"+
+        "\1\u0113\3\56\2\uffff\1\56\1\uffff\2\56\4\uffff\4\56\2\uffff\1\u011e"+
+        "\1\uffff\1\u011f\1\uffff\1\56\1\uffff\3\56\1\u0124\5\56\2\uffff"+
+        "\12\56\2\uffff\1\u0134\1\u0135\1\u0136\1\u0137\1\uffff\1\u0138\1"+
+        "\u0139\1\56\1\u013b\1\u013c\1\u013d\1\u013e\1\u013f\1\56\1\u0141"+
+        "\1\56\1\u0143\3\56\6\uffff\1\56\5\uffff\1\56\1\uffff\1\56\1\uffff"+
+        "\1\u014a\1\56\1\u014c\1\u014d\1\u014e\1\56\1\uffff\1\56\3\uffff"+
+        "\1\u0151\1\56\1\uffff\1\56\1\u0154\1\uffff";
     static final String DFA11_eofS =
-        "\u013b\uffff";
+        "\u0155\uffff";
     static final String DFA11_minS =
-        "\1\11\1\146\1\145\4\uffff\1\150\2\uffff\1\145\1\157\1\145\2\uffff"+
-        "\1\56\1\uffff\1\75\1\141\1\156\1\145\1\156\1\157\1\55\1\165\1\143"+
-        "\1\145\3\uffff\1\150\4\uffff\1\52\1\uffff\1\157\1\uffff\1\141\2"+
-        "\55\2\uffff\1\151\3\uffff\1\160\1\143\1\55\1\163\1\151\2\141\1\162"+
-        "\1\151\1\156\1\141\5\uffff\1\164\1\55\1\144\1\151\1\145\1\162\1"+
-        "\145\2\55\1\155\2\uffff\1\141\2\164\1\144\1\146\1\151\3\uffff\1"+
-        "\164\1\154\1\141\1\55\1\uffff\1\163\1\157\1\154\1\164\1\145\1\164"+
-        "\1\uffff\1\163\2\156\1\145\1\165\1\145\1\151\1\144\1\164\1\160\1"+
-        "\156\1\144\1\55\1\164\1\141\1\uffff\1\155\1\162\1\55\1\164\1\156"+
-        "\1\157\1\160\2\uffff\1\160\1\146\1\162\1\151\1\145\1\55\1\157\1"+
-        "\154\1\55\1\163\1\147\1\164\1\162\1\165\1\55\1\162\2\141\1\147\1"+
-        "\163\1\55\2\151\2\157\1\55\1\151\1\145\1\164\1\163\1\uffff\1\145"+
-        "\1\164\1\145\1\171\1\uffff\1\55\1\164\1\162\1\163\1\157\1\151\1"+
-        "\145\1\144\1\157\1\162\1\uffff\1\162\1\145\1\uffff\1\145\1\155\1"+
-        "\157\1\164\1\144\1\uffff\2\156\1\147\1\55\1\151\1\uffff\1\162\1"+
-        "\166\2\156\1\uffff\1\144\1\162\3\55\1\171\1\162\1\55\1\uffff\3\55"+
-        "\1\163\1\147\1\143\1\55\1\156\1\55\1\145\2\55\1\145\1\162\1\55\1"+
-        "\145\1\141\1\143\1\145\1\uffff\1\164\2\145\1\55\1\154\1\145\1\164"+
-        "\2\uffff\1\150\1\uffff\1\160\1\141\4\uffff\1\151\1\165\1\164\1\uffff"+
-        "\1\55\1\uffff\1\55\1\uffff\1\156\1\171\1\uffff\1\163\1\154\1\145"+
-        "\1\55\1\151\1\144\1\163\1\uffff\1\171\1\144\1\171\1\141\1\145\2"+
-        "\164\1\162\1\157\2\uffff\1\164\4\55\1\uffff\1\157\5\55\1\162\1\55"+
-        "\1\151\1\145\1\141\1\162\1\55\4\uffff\1\156\5\uffff\1\164\1\uffff"+
-        "\1\157\1\55\1\164\1\55\1\uffff\2\55\1\156\1\uffff\1\151\3\uffff"+
-        "\1\55\1\157\1\uffff\1\156\1\55\1\uffff";
+        "\1\11\1\146\1\145\4\uffff\1\141\1\uffff\1\150\2\uffff\1\145\1\157"+
+        "\1\145\1\75\1\141\1\156\1\145\1\156\1\157\1\55\1\162\1\143\1\145"+
+        "\3\uffff\1\141\1\uffff\1\150\4\uffff\1\52\1\uffff\1\157\1\uffff"+
+        "\2\55\2\uffff\1\151\3\uffff\1\160\1\143\1\55\1\163\1\156\1\154\1"+
+        "\141\1\151\2\141\1\162\1\151\1\156\1\141\3\uffff\1\164\1\55\1\144"+
+        "\1\151\1\145\1\162\1\145\2\55\1\164\1\155\2\uffff\1\141\1\157\2"+
+        "\164\1\144\1\146\1\162\1\151\3\uffff\1\164\1\55\1\uffff\1\163\1"+
+        "\157\1\154\1\164\1\145\1\164\1\uffff\1\163\1\143\1\163\1\147\2\156"+
+        "\1\145\1\165\1\145\1\151\1\165\1\144\1\164\1\160\1\156\1\144\1\55"+
+        "\1\164\1\141\1\uffff\1\155\1\162\1\55\1\164\1\156\1\157\1\160\2"+
+        "\uffff\1\151\1\160\1\146\1\162\1\165\1\151\1\145\1\55\1\157\1\55"+
+        "\1\154\1\55\1\164\1\162\1\165\1\55\1\162\2\141\1\164\1\145\1\155"+
+        "\1\147\1\163\1\55\2\151\1\157\1\162\1\157\1\55\1\151\1\145\1\164"+
+        "\1\163\1\uffff\1\145\1\164\1\145\1\171\1\uffff\1\55\1\164\1\162"+
+        "\1\163\2\157\1\151\1\145\1\144\1\160\1\157\1\162\1\uffff\1\162\1"+
+        "\uffff\1\145\1\uffff\1\157\1\164\1\144\1\uffff\2\156\1\147\1\151"+
+        "\1\55\1\145\1\55\1\151\1\uffff\1\162\1\166\3\156\1\uffff\1\144\1"+
+        "\162\3\55\1\171\1\162\1\55\1\uffff\3\55\1\156\1\163\1\147\1\143"+
+        "\2\55\1\156\1\55\1\145\1\55\1\162\1\55\1\145\1\141\1\143\1\145\1"+
+        "\157\1\156\1\uffff\1\164\2\145\2\55\1\154\1\145\1\164\2\uffff\1"+
+        "\150\1\uffff\1\160\1\141\4\uffff\1\141\1\151\1\165\1\164\2\uffff"+
+        "\1\55\1\uffff\1\55\1\uffff\1\171\1\uffff\1\163\1\154\1\145\1\55"+
+        "\1\156\1\164\1\151\1\144\1\163\2\uffff\1\171\1\144\1\171\1\141\1"+
+        "\145\1\164\1\154\1\164\1\162\1\157\2\uffff\4\55\1\uffff\2\55\1\157"+
+        "\5\55\1\162\1\55\1\151\1\55\1\145\1\141\1\162\6\uffff\1\156\5\uffff"+
+        "\1\164\1\uffff\1\157\1\uffff\1\55\1\164\3\55\1\156\1\uffff\1\151"+
+        "\3\uffff\1\55\1\157\1\uffff\1\156\1\55\1\uffff";
     static final String DFA11_maxS =
-        "\1\175\1\156\1\145\4\uffff\1\162\2\uffff\1\145\1\162\1\164\2\uffff"+
-        "\1\56\1\uffff\1\76\1\157\1\170\1\145\1\162\1\157\1\172\1\165\1\156"+
-        "\1\145\3\uffff\1\150\4\uffff\1\57\1\uffff\1\157\1\uffff\1\162\2"+
-        "\172\2\uffff\1\151\3\uffff\1\160\1\164\1\172\1\163\1\151\1\165\1"+
-        "\161\1\162\1\157\1\164\1\141\5\uffff\1\164\1\172\1\165\1\151\1\145"+
-        "\1\162\1\145\2\172\1\156\2\uffff\1\141\2\164\1\144\1\146\1\151\3"+
-        "\uffff\1\164\1\154\1\141\1\172\1\uffff\1\163\1\157\1\154\1\164\1"+
-        "\145\1\164\1\uffff\1\163\2\156\1\145\1\165\1\145\1\151\1\144\1\164"+
-        "\1\166\1\156\1\144\1\172\1\164\1\141\1\uffff\1\155\1\162\1\172\1"+
-        "\164\1\156\1\157\1\160\2\uffff\1\160\1\156\1\162\1\151\1\145\1\172"+
-        "\1\157\1\154\1\172\1\163\1\147\1\164\1\162\1\165\1\172\1\162\2\141"+
-        "\1\147\1\163\1\172\2\151\2\157\1\172\1\151\1\145\1\164\1\163\1\uffff"+
-        "\1\145\1\164\1\145\1\171\1\uffff\1\172\1\164\1\162\1\163\1\157\1"+
-        "\151\1\145\1\144\1\157\1\162\1\uffff\1\162\1\145\1\uffff\1\145\1"+
-        "\155\1\157\1\164\1\144\1\uffff\2\156\1\147\1\172\1\151\1\uffff\1"+
-        "\162\1\166\2\156\1\uffff\1\144\1\162\3\172\1\171\1\162\1\172\1\uffff"+
-        "\3\172\1\163\1\147\1\143\1\172\1\156\1\172\1\145\2\172\1\145\1\162"+
-        "\1\172\1\145\1\141\1\143\1\145\1\uffff\1\164\2\145\1\172\1\154\1"+
-        "\145\1\164\2\uffff\1\150\1\uffff\1\160\1\141\4\uffff\1\151\1\165"+
-        "\1\164\1\uffff\1\172\1\uffff\1\172\1\uffff\1\156\1\171\1\uffff\1"+
-        "\163\1\154\1\145\1\172\1\151\1\144\1\163\1\uffff\1\171\1\144\1\171"+
-        "\1\141\1\145\2\164\1\162\1\157\2\uffff\1\164\4\172\1\uffff\1\157"+
-        "\5\172\1\162\1\172\1\151\1\145\1\141\1\162\1\172\4\uffff\1\156\5"+
-        "\uffff\1\164\1\uffff\1\157\1\172\1\164\1\172\1\uffff\2\172\1\156"+
-        "\1\uffff\1\151\3\uffff\1\172\1\157\1\uffff\1\156\1\172\1\uffff";
+        "\1\175\1\156\1\145\4\uffff\1\165\1\uffff\1\162\2\uffff\1\145\1"+
+        "\162\1\164\1\76\1\157\1\170\1\145\1\162\1\157\1\172\1\165\1\156"+
+        "\1\145\3\uffff\1\141\1\uffff\1\150\4\uffff\1\57\1\uffff\1\157\1"+
+        "\uffff\2\172\2\uffff\1\151\3\uffff\1\160\1\164\1\172\1\163\1\156"+
+        "\1\154\1\141\1\151\1\165\1\164\1\162\1\157\1\164\1\141\3\uffff\1"+
+        "\164\1\172\1\165\1\151\1\145\1\162\1\145\2\172\1\164\1\156\2\uffff"+
+        "\1\141\1\157\2\164\1\144\1\146\1\162\1\151\3\uffff\1\164\1\172\1"+
+        "\uffff\1\163\1\157\1\154\1\164\1\145\1\164\1\uffff\1\163\1\143\1"+
+        "\163\1\147\2\156\1\145\1\165\1\145\1\151\1\165\1\144\1\164\1\166"+
+        "\1\156\1\144\1\172\1\164\1\141\1\uffff\1\155\1\162\1\172\1\164\1"+
+        "\156\1\157\1\160\2\uffff\1\151\1\160\1\156\1\162\1\165\1\151\1\145"+
+        "\1\172\1\157\1\172\1\154\1\172\1\164\1\162\1\165\1\172\1\162\2\141"+
+        "\1\164\1\145\1\155\1\147\1\163\1\172\2\151\1\157\1\162\1\157\1\172"+
+        "\1\151\1\145\1\164\1\163\1\uffff\1\145\1\164\1\145\1\171\1\uffff"+
+        "\1\172\1\164\1\162\1\163\2\157\1\151\1\145\1\144\1\160\1\157\1\162"+
+        "\1\uffff\1\162\1\uffff\1\145\1\uffff\1\157\1\164\1\144\1\uffff\2"+
+        "\156\1\147\1\151\1\172\1\145\1\172\1\151\1\uffff\1\162\1\166\3\156"+
+        "\1\uffff\1\144\1\162\3\172\1\171\1\162\1\172\1\uffff\3\172\1\156"+
+        "\1\163\1\147\1\143\2\172\1\156\1\172\1\145\1\172\1\162\1\172\1\145"+
+        "\1\141\1\143\1\145\1\157\1\156\1\uffff\1\164\2\145\2\172\1\154\1"+
+        "\145\1\164\2\uffff\1\150\1\uffff\1\160\1\141\4\uffff\1\141\1\151"+
+        "\1\165\1\164\2\uffff\1\172\1\uffff\1\172\1\uffff\1\171\1\uffff\1"+
+        "\163\1\154\1\145\1\172\1\156\1\164\1\151\1\144\1\163\2\uffff\1\171"+
+        "\1\144\1\171\1\141\1\145\1\164\1\154\1\164\1\162\1\157\2\uffff\4"+
+        "\172\1\uffff\2\172\1\157\5\172\1\162\1\172\1\151\1\172\1\145\1\141"+
+        "\1\162\6\uffff\1\156\5\uffff\1\164\1\uffff\1\157\1\uffff\1\172\1"+
+        "\164\3\172\1\156\1\uffff\1\151\3\uffff\1\172\1\157\1\uffff\1\156"+
+        "\1\172\1\uffff";
     static final String DFA11_acceptS =
-        "\3\uffff\1\3\1\4\1\5\1\6\1\uffff\1\11\1\12\3\uffff\1\21\1\22\1"+
-        "\uffff\1\24\12\uffff\1\51\1\60\1\63\1\uffff\1\72\1\73\1\75\1\77"+
-        "\1\uffff\1\101\1\uffff\1\105\3\uffff\1\110\1\111\1\uffff\1\115\1"+
-        "\116\1\117\13\uffff\1\23\1\56\1\57\1\74\1\25\12\uffff\1\42\1\76"+
-        "\6\uffff\1\103\1\104\1\100\4\uffff\1\107\6\uffff\1\64\17\uffff\1"+
-        "\61\7\uffff\1\33\1\70\36\uffff\1\52\4\uffff\1\62\12\uffff\1\71\2"+
-        "\uffff\1\102\5\uffff\1\31\5\uffff\1\106\4\uffff\1\14\10\uffff\1"+
-        "\35\23\uffff\1\7\7\uffff\1\66\1\16\1\uffff\1\36\2\uffff\1\34\1\43"+
-        "\1\67\1\32\3\uffff\1\44\1\uffff\1\47\1\uffff\1\65\2\uffff\1\1\7"+
-        "\uffff\1\40\11\uffff\1\45\1\46\5\uffff\1\2\15\uffff\1\114\1\10\1"+
-        "\50\1\54\1\uffff\1\13\1\15\1\112\1\17\1\20\1\uffff\1\26\4\uffff"+
-        "\1\113\3\uffff\1\37\1\uffff\1\55\1\41\1\30\2\uffff\1\27\2\uffff"+
-        "\1\53";
+        "\3\uffff\1\3\1\4\1\5\1\6\1\uffff\1\10\1\uffff\1\13\1\14\15\uffff"+
+        "\1\47\1\55\1\57\1\uffff\1\63\1\uffff\1\73\1\74\1\76\1\100\1\uffff"+
+        "\1\102\1\uffff\1\106\2\uffff\1\111\1\112\1\uffff\1\117\1\120\1\121"+
+        "\16\uffff\1\56\1\75\1\23\13\uffff\1\40\1\77\10\uffff\1\104\1\105"+
+        "\1\101\2\uffff\1\110\6\uffff\1\64\23\uffff\1\60\7\uffff\1\31\1\71"+
+        "\43\uffff\1\50\4\uffff\1\61\14\uffff\1\72\1\uffff\1\62\1\uffff\1"+
+        "\103\3\uffff\1\27\10\uffff\1\107\5\uffff\1\16\10\uffff\1\33\25\uffff"+
+        "\1\11\10\uffff\1\66\1\20\1\uffff\1\34\2\uffff\1\32\1\41\1\67\1\30"+
+        "\4\uffff\1\42\1\52\1\uffff\1\45\1\uffff\1\65\1\uffff\1\1\11\uffff"+
+        "\1\36\1\70\12\uffff\1\43\1\44\4\uffff\1\2\17\uffff\1\116\1\12\1"+
+        "\46\1\53\1\7\1\115\1\uffff\1\15\1\17\1\113\1\21\1\22\1\uffff\1\24"+
+        "\1\uffff\1\114\6\uffff\1\35\1\uffff\1\54\1\37\1\26\2\uffff\1\25"+
+        "\2\uffff\1\51";
     static final String DFA11_specialS =
-        "\u013b\uffff}>";
+        "\u0155\uffff}>";
     static final String[] DFA11_transitionS = {
-            "\1\55\1\56\1\uffff\1\55\1\56\22\uffff\1\55\1\34\1\52\2\uffff"+
-            "\1\44\1\35\1\53\1\3\1\5\1\42\1\41\1\4\1\27\1\17\1\43\1\51\11"+
-            "\50\1\15\1\6\1\37\1\21\1\40\1\33\1\46\32\57\1\16\1\uffff\1\20"+
-            "\1\uffff\1\57\1\uffff\1\31\1\32\1\26\1\22\1\23\1\47\1\30\1\54"+
-            "\1\1\1\57\1\24\1\57\1\2\1\45\1\25\1\13\1\57\1\12\1\14\1\7\2"+
-            "\57\1\36\3\57\1\10\1\uffff\1\11",
-            "\1\62\6\uffff\1\60\1\61",
-            "\1\63",
+            "\1\54\1\55\1\uffff\1\54\1\55\22\uffff\1\54\1\33\1\51\2\uffff"+
+            "\1\44\1\35\1\52\1\3\1\5\1\42\1\41\1\4\1\25\1\32\1\43\1\50\11"+
+            "\47\1\10\1\6\1\37\1\17\1\40\1\31\1\46\32\56\4\uffff\1\56\1\uffff"+
+            "\1\27\1\30\1\24\1\20\1\21\1\7\1\26\1\53\1\1\1\56\1\22\1\56\1"+
+            "\2\1\45\1\23\1\15\1\56\1\14\1\16\1\11\1\56\1\34\1\36\3\56\1"+
+            "\12\1\uffff\1\13",
+            "\1\61\6\uffff\1\57\1\60",
+            "\1\62",
             "",
             "",
             "",
             "",
-            "\1\64\11\uffff\1\65",
+            "\1\64\20\uffff\1\65\2\uffff\1\63",
+            "",
+            "\1\66\11\uffff\1\67",
             "",
             "",
-            "\1\66",
-            "\1\67\2\uffff\1\70",
-            "\1\71\16\uffff\1\72",
-            "",
-            "",
-            "\1\73",
-            "",
+            "\1\70",
+            "\1\71\2\uffff\1\72",
+            "\1\73\16\uffff\1\74",
             "\1\76\1\75",
             "\1\100\15\uffff\1\101",
             "\1\102\3\uffff\1\105\3\uffff\1\104\1\uffff\1\103",
             "\1\106",
-            "\1\107\3\uffff\1\110",
-            "\1\111",
-            "\1\57\2\uffff\12\57\4\uffff\1\112\2\uffff\32\57\4\uffff\1"+
-            "\57\1\uffff\32\57",
-            "\1\114",
-            "\1\115\2\uffff\1\116\7\uffff\1\117",
-            "\1\120",
+            "\1\107\1\uffff\1\111\1\uffff\1\110",
+            "\1\112",
+            "\1\56\2\uffff\12\56\4\uffff\1\113\2\uffff\32\56\4\uffff\1"+
+            "\56\1\uffff\32\56",
+            "\1\116\2\uffff\1\115",
+            "\1\117\2\uffff\1\120\7\uffff\1\121",
+            "\1\122",
             "",
             "",
             "",
-            "\1\121",
+            "\1\123",
+            "",
+            "\1\124",
             "",
             "",
             "",
             "",
-            "\1\123\4\uffff\1\122",
+            "\1\126\4\uffff\1\125",
             "",
-            "\1\125",
+            "\1\130",
             "",
-            "\1\126\20\uffff\1\127",
-            "\1\57\2\uffff\12\130\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "",
-            "",
-            "\1\132",
-            "",
+            "\1\56\2\uffff\12\131\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "",
             "",
             "\1\133",
-            "\1\134\5\uffff\1\135\11\uffff\1\137\1\136",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\141",
+            "",
+            "",
+            "",
+            "\1\134",
+            "\1\135\5\uffff\1\136\11\uffff\1\140\1\137",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "\1\142",
-            "\1\143\23\uffff\1\144",
-            "\1\150\1\uffff\1\146\3\uffff\1\147\11\uffff\1\145",
-            "\1\151",
-            "\1\153\5\uffff\1\152",
-            "\1\154\5\uffff\1\155",
+            "\1\143",
+            "\1\144",
+            "\1\145",
+            "\1\146",
+            "\1\147\23\uffff\1\150",
+            "\1\155\1\uffff\1\152\3\uffff\1\153\11\uffff\1\151\2\uffff"+
+            "\1\154",
             "\1\156",
+            "\1\160\5\uffff\1\157",
+            "\1\161\5\uffff\1\162",
+            "\1\163",
             "",
             "",
             "",
-            "",
-            "",
-            "\1\157",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\163\17\uffff\1\162\1\161",
             "\1\164",
-            "\1\165",
-            "\1\166",
-            "\1\167",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\172\1\173",
-            "",
-            "",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\170\17\uffff\1\167\1\166",
+            "\1\171",
+            "\1\172",
+            "\1\173",
             "\1\174",
-            "\1\175",
-            "\1\176",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "\1\177",
-            "\1\u0080",
-            "\1\u0081",
-            "",
+            "\1\u0080\1\u0081",
             "",
             "",
             "\1\u0082",
             "\1\u0083",
             "\1\u0084",
-            "\1\57\2\uffff\12\130\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "",
             "\1\u0085",
             "\1\u0086",
             "\1\u0087",
             "\1\u0088",
             "\1\u0089",
+            "",
+            "",
+            "",
             "\1\u008a",
+            "\1\56\2\uffff\12\131\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "",
             "\1\u008b",
             "\1\u008c",
@@ -3193,259 +3260,296 @@ public class ThingmlLexer extends Lexer {
             "\1\u008e",
             "\1\u008f",
             "\1\u0090",
+            "",
             "\1\u0091",
             "\1\u0092",
             "\1\u0093",
-            "\1\u0095\5\uffff\1\u0094",
+            "\1\u0094",
+            "\1\u0095",
             "\1\u0096",
             "\1\u0097",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\u0098",
             "\1\u0099",
             "\1\u009a",
-            "",
             "\1\u009b",
             "\1\u009c",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\u009e",
-            "\1\u009f",
+            "\1\u009d",
+            "\1\u009f\5\uffff\1\u009e",
             "\1\u00a0",
             "\1\u00a1",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u00a3",
+            "\1\u00a4",
             "",
-            "",
-            "\1\u00a2",
-            "\1\u00a3\7\uffff\1\u00a4",
             "\1\u00a5",
             "\1\u00a6",
-            "\1\u00a7",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u00a8",
             "\1\u00a9",
             "\1\u00aa",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\u00ab",
+            "",
+            "",
             "\1\u00ac",
             "\1\u00ad",
-            "\1\u00ae",
-            "\1\u00af",
+            "\1\u00ae\7\uffff\1\u00af",
             "\1\u00b0",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\u00b1",
             "\1\u00b2",
             "\1\u00b3",
-            "\1\u00b4",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "\1\u00b5",
-            "\1\u00b6",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\u00b8",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u00b7",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "\1\u00b9",
             "\1\u00ba",
             "\1\u00bb",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "\1\u00bd",
             "\1\u00be",
             "\1\u00bf",
             "\1\u00c0",
-            "",
             "\1\u00c1",
             "\1\u00c2",
             "\1\u00c3",
             "\1\u00c4",
-            "",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "\1\u00c6",
             "\1\u00c7",
             "\1\u00c8",
             "\1\u00c9",
             "\1\u00ca",
-            "\1\u00cb",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "\1\u00cc",
             "\1\u00cd",
             "\1\u00ce",
-            "",
             "\1\u00cf",
-            "\1\u00d0",
             "",
+            "\1\u00d0",
             "\1\u00d1",
             "\1\u00d2",
             "\1\u00d3",
-            "\1\u00d4",
-            "\1\u00d5",
             "",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u00d5",
             "\1\u00d6",
             "\1\u00d7",
             "\1\u00d8",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\u00d9",
             "\1\u00da",
-            "",
             "\1\u00db",
             "\1\u00dc",
             "\1\u00dd",
             "\1\u00de",
-            "",
             "\1\u00df",
+            "",
             "\1\u00e0",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\2\57"+
-            "\1\u00e3\27\57",
+            "",
+            "\1\u00e1",
+            "",
+            "\1\u00e2",
+            "\1\u00e3",
+            "\1\u00e4",
+            "",
             "\1\u00e5",
             "\1\u00e6",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\u00e7",
+            "\1\u00e8",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u00e9",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "\1\u00eb",
+            "",
             "\1\u00ec",
             "\1\u00ed",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\u00ee",
             "\1\u00ef",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\u00f0",
+            "",
             "\1\u00f1",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\u00f3",
-            "\1\u00f4",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\u00f6",
+            "\1\u00f2",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\2\56"+
+            "\1\u00f5\27\56",
             "\1\u00f7",
             "\1\u00f8",
-            "\1\u00f9",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "",
-            "\1\u00fa",
-            "\1\u00fb",
-            "\1\u00fc",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u00fd",
             "\1\u00fe",
             "\1\u00ff",
             "\1\u0100",
-            "",
-            "",
-            "\1\u0101",
-            "",
-            "\1\u0102",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "\1\u0103",
-            "",
-            "",
-            "",
-            "",
-            "\1\u0104",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "\1\u0105",
-            "\1\u0106",
-            "",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u0107",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "\1\u0109",
             "\1\u010a",
-            "",
             "\1\u010b",
             "\1\u010c",
             "\1\u010d",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\u010e",
+            "",
             "\1\u010f",
             "\1\u0110",
             "\1\u0111",
-            "",
-            "\1\u0112",
-            "\1\u0113",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "\1\u0114",
             "\1\u0115",
             "\1\u0116",
+            "",
+            "",
             "\1\u0117",
+            "",
             "\1\u0118",
             "\1\u0119",
+            "",
+            "",
+            "",
+            "",
             "\1\u011a",
-            "",
-            "",
             "\1\u011b",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\u011c",
+            "\1\u011d",
+            "",
+            "",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "",
             "\1\u0120",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "",
+            "\1\u0121",
+            "\1\u0122",
+            "\1\u0123",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u0125",
             "\1\u0126",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\u0127",
             "\1\u0128",
             "\1\u0129",
+            "",
+            "",
             "\1\u012a",
             "\1\u012b",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "",
-            "",
-            "",
-            "",
+            "\1\u012c",
             "\1\u012d",
-            "",
-            "",
-            "",
-            "",
-            "",
             "\1\u012e",
-            "",
             "\1\u012f",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "\1\u0130",
             "\1\u0131",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\u0135",
-            "",
-            "\1\u0136",
+            "\1\u0132",
+            "\1\u0133",
             "",
             "",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             "",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
-            "\1\u0138",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u013a",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u0140",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u0142",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u0144",
+            "\1\u0145",
+            "\1\u0146",
             "",
-            "\1\u0139",
-            "\1\57\2\uffff\12\57\7\uffff\32\57\4\uffff\1\57\1\uffff\32"+
-            "\57",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "\1\u0147",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "\1\u0148",
+            "",
+            "\1\u0149",
+            "",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u014b",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u014f",
+            "",
+            "\1\u0150",
+            "",
+            "",
+            "",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
+            "\1\u0152",
+            "",
+            "\1\u0153",
+            "\1\56\2\uffff\12\56\7\uffff\32\56\4\uffff\1\56\1\uffff\32"+
+            "\56",
             ""
     };
 
@@ -3479,7 +3583,7 @@ public class ThingmlLexer extends Lexer {
             this.transition = DFA11_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | T__48 | T__49 | T__50 | T__51 | T__52 | T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | T__76 | T__77 | T__78 | T__79 | T__80 | T__81 | T__82 | SL_COMMENT | ML_COMMENT | ANNOTATION | BOOLEAN_LITERAL | INTEGER_LITERAL | STRING_LITERAL | STRING_EXT | T_READONLY | T_ASPECT | T_HISTORY | WHITESPACE | LINEBREAKS | TEXT );";
+            return "1:1: Tokens : ( T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | T__48 | T__49 | T__50 | T__51 | T__52 | T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | T__76 | T__77 | T__78 | T__79 | T__80 | T__81 | T__82 | T__83 | T__84 | SL_COMMENT | ML_COMMENT | ANNOTATION | BOOLEAN_LITERAL | INTEGER_LITERAL | STRING_LITERAL | STRING_EXT | T_READONLY | T_OPTIONAL | T_ASPECT | T_HISTORY | WHITESPACE | LINEBREAKS | TEXT );";
         }
     }
  

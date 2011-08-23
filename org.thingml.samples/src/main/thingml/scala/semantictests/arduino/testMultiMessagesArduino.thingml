@@ -1,6 +1,0 @@
-import "../extended/testMultiMessages.thingml"
-import "arduinoharness.thingml"
-
-configuration TestMultiMessagesArduino includes ArduinoHarness, TestMultiMessagesFrag {
-	connector test.harness => harness.test 
-}

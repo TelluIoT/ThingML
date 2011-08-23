@@ -47,7 +47,7 @@ thing SimpleAnalogInput includes AnalogInput
 
 thing PeriodicAnalogInput includes AnalogInput, TimerMsgs
 {
-	readonly property refreshRate : UInt16 = 2000
+	readonly property refresh_rate : UInt16 = 2000
 
 	required port Timer
 	{
@@ -62,7 +62,7 @@ thing PeriodicAnalogInput includes AnalogInput, TimerMsgs
 		
 		state Running
 		{
-			on entry Timer!timer_start (refreshRate)
+			on entry Timer!timer_start (refresh_rate)
 			
 			transition Refresh -> Running
 			event Timer?timer_timeout
@@ -133,6 +133,7 @@ thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 //
 // * PeriodicAnalogInput *
 // instance periodicAnalogInput : PeriodicAnalogInput
+//      set refresh_rate = 2000
 // instance timer : SoftTimer
 // connector periodicAnalogInput.AnalogIO => arduino.AnalogIO
 // connector periodicAnalogInput.Timer => timer.timer

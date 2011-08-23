@@ -24,9 +24,6 @@ package org.sintef.thingml;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.sintef.thingml.Property#getType <em>Type</em>}</li>
- *   <li>{@link org.sintef.thingml.Property#getLowerBound <em>Lower Bound</em>}</li>
- *   <li>{@link org.sintef.thingml.Property#getUpperBound <em>Upper Bound</em>}</li>
  *   <li>{@link org.sintef.thingml.Property#getInit <em>Init</em>}</li>
  *   <li>{@link org.sintef.thingml.Property#isChangeable <em>Changeable</em>}</li>
  * </ul>
@@ -36,85 +33,7 @@ package org.sintef.thingml;
  * @model
  * @generated
  */
-public interface Property extends AnnotatedElement {
-	/**
-	 * Returns the value of the '<em><b>Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Type</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Type</em>' reference.
-	 * @see #setType(Type)
-	 * @see org.sintef.thingml.ThingmlPackage#getProperty_Type()
-	 * @model required="true"
-	 * @generated
-	 */
-	Type getType();
-
-	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Property#getType <em>Type</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Type</em>' reference.
-	 * @see #getType()
-	 * @generated
-	 */
-	void setType(Type value);
-
-	/**
-	 * Returns the value of the '<em><b>Lower Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Lower Bound</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Lower Bound</em>' attribute.
-	 * @see #setLowerBound(int)
-	 * @see org.sintef.thingml.ThingmlPackage#getProperty_LowerBound()
-	 * @model
-	 * @generated
-	 */
-	int getLowerBound();
-
-	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Property#getLowerBound <em>Lower Bound</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Lower Bound</em>' attribute.
-	 * @see #getLowerBound()
-	 * @generated
-	 */
-	void setLowerBound(int value);
-
-	/**
-	 * Returns the value of the '<em><b>Upper Bound</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Upper Bound</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Upper Bound</em>' attribute.
-	 * @see #setUpperBound(int)
-	 * @see org.sintef.thingml.ThingmlPackage#getProperty_UpperBound()
-	 * @model
-	 * @generated
-	 */
-	int getUpperBound();
-
-	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Property#getUpperBound <em>Upper Bound</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Upper Bound</em>' attribute.
-	 * @see #getUpperBound()
-	 * @generated
-	 */
-	void setUpperBound(int value);
-
+public interface Property extends Variable {
 	/**
 	 * Returns the value of the '<em><b>Init</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

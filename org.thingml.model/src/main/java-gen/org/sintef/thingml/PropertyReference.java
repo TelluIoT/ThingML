@@ -42,12 +42,12 @@ public interface PropertyReference extends Expression {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Property</em>' reference.
-	 * @see #setProperty(Property)
+	 * @see #setProperty(Variable)
 	 * @see org.sintef.thingml.ThingmlPackage#getPropertyReference_Property()
 	 * @model required="true"
 	 * @generated
 	 */
-	Property getProperty();
+	Variable getProperty();
 
 	/**
 	 * Sets the value of the '{@link org.sintef.thingml.PropertyReference#getProperty <em>Property</em>}' reference.
@@ -57,6 +57,6 @@ public interface PropertyReference extends Expression {
 	 * @see #getProperty()
 	 * @generated
 	 */
-	void setProperty(Property value);
+	void setProperty(Variable value);
 
 } // PropertyReference

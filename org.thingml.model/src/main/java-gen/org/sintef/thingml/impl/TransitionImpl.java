@@ -66,6 +66,7 @@ public class TransitionImpl extends HandlerImpl implements Transition {
 	 * @ordered
 	 */
 	protected Action after;
+
 	/**
 	 * The cached value of the '{@link #getBefore() <em>Before</em>}' containment reference.
 	 * <!-- begin-user-doc -->

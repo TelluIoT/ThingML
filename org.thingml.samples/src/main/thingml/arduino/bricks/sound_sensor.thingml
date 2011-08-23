@@ -1,0 +1,65 @@
+import "../core/arduino.thingml"
+import "../devices/analog_input.thingml"
+
+thing fragment SoundSensorMsgs includes AnalogInputMsgs 
+{
+	message read_sound ();
+	message sound_value (val : UInt16);
+}
+
+thing SoundSensor includes SoundSensorMsgs
+{
+    readonly property pin : AnalogPin = AnalogPin:A_5
+    readonly property sample_rate : UInt8 = 50
+    property counter : UInt8 = 0
+    property max_value : UInt16 = 0
+    
+	provided port SoundSensor 
+    {
+		receives read_sound
+		sends sound_value
+	}
+
+    required port AnalogInput
+    {
+        receives analog_input_value
+        sends read_analog_input    
+    }
+    
+    statechart SoundSensorImpl init Running 
+    {    
+    	internal event m : AnalogInput?analog_input_value
+        guard counter == sample_rate
+    	action do
+            SoundSensor!sound_value (max_value)
+            counter = 0
+            max_value = 0
+            end
+
+        internal event m : AnalogInput?analog_input_value
+        guard counter < sample_rate
+    	action do
+            if (m.value > max_value) max_value = m.value
+            counter = counter + 1
+            end 
+        	
+        state Running 
+        {
+        	internal event SoundSensor?read_sound
+        	action AnalogInput!read_analog_input ()
+        }        
+    }
+}
+
+//* Configuration needs:
+//
+// includes AnalogInput
+//
+// instance sound_sensor : SoundSensor
+// instance analog_input : PeriodicAnalogInput
+// 		set pin = pin	 
+//      set refresh_rate = 2000
+//
+// connector sound_sensor.AnalogInput => analog_input.AnalogInput
+//
+//* 

@@ -95,7 +95,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
                 File dir = new File("test_out");
                 if (!dir.exists()) dir.mkdir();
 
-                Hashtable<String, String> dots = ThingMLGraphExport.allGraphviz( (ThingMLModel)model.getContents().get(0) );
+                /*Hashtable<String, String> dots = ThingMLGraphExport.allGraphviz( (ThingMLModel)model.getContents().get(0) );
                 for (String name : dots.keySet()) {
                     System.out.println(" -> Writing file " + name + ".dot");
                     PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(name + ".dot")));
@@ -117,7 +117,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
                     PrintWriter w = new PrintWriter(new FileWriter("test_out/" +new File(t.getName() + ".pde")));
                     w.println(ccode.get(t));
                     w.close();
-                }
+                }*/
                 
                 Hashtable<Configuration, String> scalacode =  ScalaGenerator.compileAll( (ThingMLModel)model.getContents().get(0), "org.thingml.generated");
                 for (Configuration t : scalacode.keySet()) {

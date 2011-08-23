@@ -26,7 +26,7 @@ public class ConnectorRequiredReferenceResolver implements org.sintef.thingml.re
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Connector, org.sintef.thingml.RequiredPort> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Connector, org.sintef.thingml.RequiredPort>();
 	
 	public void resolve(String identifier, org.sintef.thingml.Connector container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.RequiredPort> result) {
-		Thing thing = container.getClient().getType();
+		Thing thing = container.getCli().getInstance().getType();
 		ArrayList<RequiredPort> ts = ThingMLHelpers.findRequiredPort(thing, identifier, resolveFuzzy);
 		for (RequiredPort t : ts) result.addMapping(t.getName(), t);
 		if(!result.wasResolved()) result.setErrorMessage("Cannot resolve port " + identifier);

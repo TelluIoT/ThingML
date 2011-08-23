@@ -53,6 +53,48 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	
 	public ResultType interprete(org.eclipse.emf.ecore.EObject object, ContextType context) {
 		ResultType result = null;
+		if (object instanceof org.sintef.thingml.LocalVariable) {
+			result = interprete_org_sintef_thingml_LocalVariable((org.sintef.thingml.LocalVariable) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.FunctionCallExpression) {
+			result = interprete_org_sintef_thingml_FunctionCallExpression((org.sintef.thingml.FunctionCallExpression) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.FunctionCallStatement) {
+			result = interprete_org_sintef_thingml_FunctionCallStatement((org.sintef.thingml.FunctionCallStatement) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.FunctionCall) {
+			result = interprete_org_sintef_thingml_FunctionCall((org.sintef.thingml.FunctionCall) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.InstanceRef) {
+			result = interprete_org_sintef_thingml_InstanceRef((org.sintef.thingml.InstanceRef) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.ConfigInclude) {
+			result = interprete_org_sintef_thingml_ConfigInclude((org.sintef.thingml.ConfigInclude) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.ConfigPropertyAssign) {
+			result = interprete_org_sintef_thingml_ConfigPropertyAssign((org.sintef.thingml.ConfigPropertyAssign) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		if (object instanceof org.sintef.thingml.Connector) {
 			result = interprete_org_sintef_thingml_Connector((org.sintef.thingml.Connector) object, context);
 		}
@@ -79,6 +121,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.PrintAction) {
 			result = interprete_org_sintef_thingml_PrintAction((org.sintef.thingml.PrintAction) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.ReturnAction) {
+			result = interprete_org_sintef_thingml_ReturnAction((org.sintef.thingml.ReturnAction) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -389,20 +437,26 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.PropertyAssign) {
-			result = interprete_org_sintef_thingml_PropertyAssign((org.sintef.thingml.PropertyAssign) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
-		if (object instanceof org.sintef.thingml.Property) {
-			result = interprete_org_sintef_thingml_Property((org.sintef.thingml.Property) object, context);
+		if (object instanceof org.sintef.thingml.Thing) {
+			result = interprete_org_sintef_thingml_Thing((org.sintef.thingml.Thing) object, context);
 		}
 		if (result != null) {
 			return result;
 		}
 		if (object instanceof org.sintef.thingml.Type) {
 			result = interprete_org_sintef_thingml_Type((org.sintef.thingml.Type) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.Parameter) {
+			result = interprete_org_sintef_thingml_Parameter((org.sintef.thingml.Parameter) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.Variable) {
+			result = interprete_org_sintef_thingml_Variable((org.sintef.thingml.Variable) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -419,20 +473,32 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.Parameter) {
-			result = interprete_org_sintef_thingml_Parameter((org.sintef.thingml.Parameter) object, context);
+		if (object instanceof org.sintef.thingml.PropertyAssign) {
+			result = interprete_org_sintef_thingml_PropertyAssign((org.sintef.thingml.PropertyAssign) object, context);
 		}
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.Thing) {
-			result = interprete_org_sintef_thingml_Thing((org.sintef.thingml.Thing) object, context);
+		if (object instanceof org.sintef.thingml.Property) {
+			result = interprete_org_sintef_thingml_Property((org.sintef.thingml.Property) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.TypedElement) {
+			result = interprete_org_sintef_thingml_TypedElement((org.sintef.thingml.TypedElement) object, context);
 		}
 		if (result != null) {
 			return result;
 		}
 		if (object instanceof org.sintef.thingml.Message) {
 			result = interprete_org_sintef_thingml_Message((org.sintef.thingml.Message) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.Function) {
+			result = interprete_org_sintef_thingml_Function((org.sintef.thingml.Function) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -456,6 +522,10 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		return null;
 	}
 	
+	public ResultType interprete_org_sintef_thingml_Function(org.sintef.thingml.Function object, ContextType context) {
+		return null;
+	}
+	
 	public ResultType interprete_org_sintef_thingml_Message(org.sintef.thingml.Message object, ContextType context) {
 		return null;
 	}
@@ -468,11 +538,19 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		return null;
 	}
 	
+	public ResultType interprete_org_sintef_thingml_Variable(org.sintef.thingml.Variable object, ContextType context) {
+		return null;
+	}
+	
 	public ResultType interprete_org_sintef_thingml_ThingMLElement(org.sintef.thingml.ThingMLElement object, ContextType context) {
 		return null;
 	}
 	
 	public ResultType interprete_org_sintef_thingml_Type(org.sintef.thingml.Type object, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_TypedElement(org.sintef.thingml.TypedElement object, ContextType context) {
 		return null;
 	}
 	
@@ -696,6 +774,10 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		return null;
 	}
 	
+	public ResultType interprete_org_sintef_thingml_ReturnAction(org.sintef.thingml.ReturnAction object, ContextType context) {
+		return null;
+	}
+	
 	public ResultType interprete_org_sintef_thingml_PrintAction(org.sintef.thingml.PrintAction object, ContextType context) {
 		return null;
 	}
@@ -713,6 +795,34 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	}
 	
 	public ResultType interprete_org_sintef_thingml_Connector(org.sintef.thingml.Connector object, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_ConfigPropertyAssign(org.sintef.thingml.ConfigPropertyAssign object, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_ConfigInclude(org.sintef.thingml.ConfigInclude object, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_InstanceRef(org.sintef.thingml.InstanceRef object, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_FunctionCall(org.sintef.thingml.FunctionCall object, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_FunctionCallStatement(org.sintef.thingml.FunctionCallStatement object, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_FunctionCallExpression(org.sintef.thingml.FunctionCallExpression object, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_LocalVariable(org.sintef.thingml.LocalVariable object, ContextType context) {
 		return null;
 	}
 	

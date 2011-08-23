@@ -2,17 +2,17 @@ import "../devices/lcd_screen.thingml"
 import "../devices/analog_input.thingml"
 
 thing TempSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
-@c_header "
-#include <math.h>
-int temperature (int RawADC) {
- double Temp;
- Temp = log(((10240000/RawADC) - 10000));
- Temp = 1 / (0.001129148 + (0.000234125 + (0.0000000876741 * Temp * Temp ))* Temp );
- Temp = Temp - 273.15;            // Convert Kelvin to Celcius
- return (int)Temp;
-}
-"
+@c_header "#include <math.h>"
 {
+
+	function convertTemperature(adc : Int16) : Int16 do
+		var tmp : Double
+ 		tmp = 'log('& (10240000 / adc ) - 10000 &')'
+ 		tmp = 1 / ( '0.001129148' + ('0.000234125' + ('0.0000000876741' * tmp * tmp )) * tmp )
+ 		tmp = tmp - '273.15' // Convert Kelvin to Celcius'
+ 		return '(int)'& tmp	
+	end
+
 	required port Display 
     {	
 		sends initDisplay, refreshDisplay, setDisplay

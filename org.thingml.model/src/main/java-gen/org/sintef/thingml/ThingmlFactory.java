@@ -44,6 +44,15 @@ public interface ThingmlFactory extends EFactory {
 	ThingMLModel createThingMLModel();
 
 	/**
+	 * Returns a new object of class '<em>Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Function</em>'.
+	 * @generated
+	 */
+	Function createFunction();
+
+	/**
 	 * Returns a new object of class '<em>Message</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -467,6 +476,15 @@ public interface ThingmlFactory extends EFactory {
 	ExpressionGroup createExpressionGroup();
 
 	/**
+	 * Returns a new object of class '<em>Return Action</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Return Action</em>'.
+	 * @generated
+	 */
+	ReturnAction createReturnAction();
+
+	/**
 	 * Returns a new object of class '<em>Print Action</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -510,6 +528,60 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	Connector createConnector();
+
+	/**
+	 * Returns a new object of class '<em>Config Property Assign</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Config Property Assign</em>'.
+	 * @generated
+	 */
+	ConfigPropertyAssign createConfigPropertyAssign();
+
+	/**
+	 * Returns a new object of class '<em>Config Include</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Config Include</em>'.
+	 * @generated
+	 */
+	ConfigInclude createConfigInclude();
+
+	/**
+	 * Returns a new object of class '<em>Instance Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Instance Ref</em>'.
+	 * @generated
+	 */
+	InstanceRef createInstanceRef();
+
+	/**
+	 * Returns a new object of class '<em>Function Call Statement</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Function Call Statement</em>'.
+	 * @generated
+	 */
+	FunctionCallStatement createFunctionCallStatement();
+
+	/**
+	 * Returns a new object of class '<em>Function Call Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Function Call Expression</em>'.
+	 * @generated
+	 */
+	FunctionCallExpression createFunctionCallExpression();
+
+	/**
+	 * Returns a new object of class '<em>Local Variable</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Local Variable</em>'.
+	 * @generated
+	 */
+	LocalVariable createLocalVariable();
 
 	/**
 	 * Returns the package supported by this factory.

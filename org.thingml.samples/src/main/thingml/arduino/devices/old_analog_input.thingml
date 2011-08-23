@@ -86,7 +86,7 @@ thing AnalogInput includes AnalogInputMsgs, TimerMsgs, ArduinoStdlibMsgs
 	}
 }
 
-configuration AnalogInputConfFrag
+configuration fragment AnalogInputConfFrag
 {
 	instance arduino : Arduino
 	instance analog : AnalogInput

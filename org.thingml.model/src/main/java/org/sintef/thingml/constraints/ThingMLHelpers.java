@@ -56,6 +56,45 @@ public class ThingMLHelpers {
 		}
 	}
 	
+	public static Function findContainingFunction(EObject object) {
+		if (object instanceof Function) return (Function)object;
+		else {
+			EObject container = object.eContainer();
+			if (container != null) {
+				return findContainingFunction(container);
+			} 
+			else {
+				return null;
+			}
+		}
+	}
+	
+	public static ThingMLElement findContainingElement(EObject object) {
+		if (object instanceof ThingMLElement) return (ThingMLElement)object;
+		else {
+			EObject container = object.eContainer();
+			if (container != null) {
+				return findContainingElement(container);
+			} 
+			else {
+				return null;
+			}
+		}
+	}
+	
+	public static ActionBlock findContainingActionBlock(EObject object) {
+		if (object instanceof ActionBlock) return (ActionBlock)object;
+		else {
+			EObject container = object.eContainer();
+			if (container != null) {
+				return findContainingActionBlock(container);
+			} 
+			else {
+				return null;
+			}
+		}
+	}
+	
 	public static Thing findContainingThing(EObject object) {
 		if (object instanceof Thing) return (Thing)object;
 		else {
@@ -263,6 +302,14 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
+	public static ArrayList<Function> allFunctions(Thing thing) {
+		ArrayList<Function> result = new ArrayList<Function>();
+		for (Thing t : allThingFragments(thing)) {
+			result.addAll(t.getFunctions());
+		}
+		return result;
+	}
+	
 	public static ArrayList<Message> allMessages(Thing thing) {
 		ArrayList<Message> result = new ArrayList<Message>();
 		for (Thing t : allThingFragments(thing)) {
@@ -328,6 +375,17 @@ public class ThingMLHelpers {
 	public static ArrayList<Property> findProperty(Thing thing, String name, boolean fuzzy) {
 		ArrayList<Property> result = new ArrayList<Property>();
 		for (Property t : allProperties(thing)) {
+			if (t.getName().startsWith(name)) {
+				if (fuzzy) result.add(t);
+				else if (t.getName().equals(name)) result.add(t);
+			}
+		}
+		return result;
+	}
+	
+	public static ArrayList<Function> findFunction(Thing thing, String name, boolean fuzzy) {
+		ArrayList<Function> result = new ArrayList<Function>();
+		for (Function t : allFunctions(thing)) {
 			if (t.getName().startsWith(name)) {
 				if (fuzzy) result.add(t);
 				else if (t.getName().equals(name)) result.add(t);
@@ -442,6 +500,60 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
+	
+	public static ArrayList<Variable> allVisibleVariables (EObject container) {
+		ArrayList<Variable> result = new ArrayList<Variable>();
+		
+		// Add the variables of the block if we are in a block
+		ActionBlock b = findContainingActionBlock(container);
+		if (b != null) {
+			for (Action a : b.getActions()) {
+				if (a == container || a.eContents().contains(container)) continue; // ignore variables defined after the current statement
+				if (a instanceof Variable) result.add((Variable)a);
+			}
+			
+			result.addAll(allVisibleVariables(b.eContainer()));
+
+			return result;
+		}
+		
+		// Add the variables of the state if we are in a state
+		State s = findContainingState(container);
+		if (s != null) {
+			result.addAll(allProperties(s));
+			return result;
+		}
+		
+		// Add parameters of the function if we are in a function 
+		Function f = findContainingFunction(container);
+		if (f != null) {
+			result.addAll(f.getParameters());
+			result.addAll(allVisibleVariables(f.eContainer()));
+		}
+		
+		// Only the variables of the thing if we are in a thing:
+		Thing t = findContainingThing(container);
+		if (t != null) {
+			// Properties from the thing
+			result.addAll(allProperties(t));
+			return result;
+		}
+				
+		return result;		
+		
+	}
+	
+	public static ArrayList<Variable> findVisibleVariables(EObject container, String name, boolean fuzzy) {
+		ArrayList<Variable> result = new ArrayList<Variable>();
+		for (Variable t : allVisibleVariables(container)) {
+			if (t.getName().startsWith(name)) {
+				if (fuzzy) result.add(t);
+				else if (t.getName().equals(name)) result.add(t);
+			}
+		}
+		return result;
+	}
+	
 	public static ArrayList<Property> findProperty(State state, String name, boolean fuzzy) {
 		ArrayList<Property> result = new ArrayList<Property>();
 		for (Property t : allProperties(state)) {
@@ -495,7 +607,8 @@ public class ThingMLHelpers {
 		}
 		return result;
 	}
-	
+
+	/*
 	public static ArrayList<Configuration> allConfigurationFragments(Configuration config) {
 		ArrayList<Configuration> result = new ArrayList<Configuration>();
 		result.add(config);
@@ -504,6 +617,16 @@ public class ThingMLHelpers {
 				if (!result.contains(c))result.add(c);
 		return result;
 	}
+	*/
+	/*
+	public static ArrayList<ConfigInclude> allConfigurationFragments(Configuration config) {
+		ArrayList<Configuration> result = new ArrayList<Configuration>();
+		result.add(config);
+		for (Configuration t : config.getIncludes())
+			for (Configuration c : allConfigurationFragments(t))
+				if (!result.contains(c))result.add(c);
+		return result;
+	} 
 	
 	public static ArrayList<Instance> allInstances(Configuration config) {
 		ArrayList<Instance> result = new ArrayList<Instance>();
@@ -520,6 +643,7 @@ public class ThingMLHelpers {
 		}
 		return result;
 	}
+	
 	
 	public static ArrayList<Instance> findInstance(Configuration config, String name, boolean fuzzy) {
 		ArrayList<Instance> result = new ArrayList<Instance>();
@@ -542,7 +666,7 @@ public class ThingMLHelpers {
 		}
 		return result;
 	}
-	
+	*/
 	/* ***********************************************************
 	 * Resolution for Specific Actions / Expressions
 	 * ***********************************************************/

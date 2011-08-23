@@ -43,12 +43,12 @@ public interface VariableAssignment extends Action {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Property</em>' reference.
-	 * @see #setProperty(Property)
+	 * @see #setProperty(Variable)
 	 * @see org.sintef.thingml.ThingmlPackage#getVariableAssignment_Property()
 	 * @model required="true"
 	 * @generated
 	 */
-	Property getProperty();
+	Variable getProperty();
 
 	/**
 	 * Sets the value of the '{@link org.sintef.thingml.VariableAssignment#getProperty <em>Property</em>}' reference.
@@ -58,7 +58,7 @@ public interface VariableAssignment extends Action {
 	 * @see #getProperty()
 	 * @generated
 	 */
-	void setProperty(Property value);
+	void setProperty(Variable value);
 
 	/**
 	 * Returns the value of the '<em><b>Expression</b></em>' containment reference.
