@@ -30,6 +30,24 @@ import java.util.{Collections, Hashtable, ArrayList}
  * To change this template use File | Settings | File Templates.
  */
 
+object MergedConfigurationCache {
+
+  val cache = new Hashtable[Configuration, Configuration]()
+
+  def getMergedConfiguration(c : Configuration) = {
+    cache.get(c)
+  }
+
+  def cacheMergedConfiguration(c : Configuration, mc : Configuration)  {
+    cache.put(c, mc)
+  }
+
+  def clearCache() {
+    cache.clear
+  }
+
+}
+
 case class ConfigurationScalaImpl (self : Configuration) {
    /*
     def allConfigurationFragments: ArrayList[Configuration] = {
@@ -37,11 +55,10 @@ case class ConfigurationScalaImpl (self : Configuration) {
   }
    */
 
-  var merged_config : Configuration = null
 
   def merge() : Configuration = {
 
-    if (merged_config != null) return merged_config
+    if (MergedConfigurationCache.getMergedConfiguration(self) != null) return MergedConfigurationCache.getMergedConfiguration(self)
 
     var copy = EcoreUtil.copy(self).asInstanceOf[Configuration]
     var instances = new Hashtable[String, Instance]()
@@ -60,7 +77,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
     copy.getConnectors.addAll(connectors)
     copy.getPropassigns.addAll(assigns.values())
 
-    merged_config = copy
+    MergedConfigurationCache.cacheMergedConfiguration(self, copy)
 
     return copy
   }
@@ -121,7 +138,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
 
       var id = inst_name + "_" + a.getProperty.getName
 
-      assigns.put(inst_name, copy) // This will replace any previous initialization of the variable
+      assigns.put(id, copy) // This will replace any previous initialization of the variable
     }
 
   }
@@ -169,9 +186,15 @@ case class ConfigurationScalaImpl (self : Configuration) {
   def initExpressionsForInstance(i : Instance) : ArrayList[((Property, Expression))] = {
     var result = new ArrayList[((Property, Expression))]()
 
+    //println("init instance " + i.getName + " " + i.toString)
+
     i.getType.allProperties.foreach{ p =>
 
-      var confassigns = allPropAssigns.filter{ a => a.getInstance().getInstance() == i && a.getProperty == p}
+      val assigns =  allPropAssigns
+
+      var confassigns = assigns.filter{ a =>
+        a.getInstance().getInstance().getName == i.getName && a.getProperty == p
+      }
 
       if (confassigns.size > 0) {  // There is an assignment for this property
          result.add( ((p, confassigns.head.getInit)) )

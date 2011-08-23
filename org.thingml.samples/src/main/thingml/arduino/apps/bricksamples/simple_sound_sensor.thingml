@@ -1,0 +1,86 @@
+import "../../core/arduino.thingml"
+import "../../bricks/sound_sensor.thingml"
+import "../../bricks/led.thingml"
+
+//*
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+//      - sound sensor (1)  -> Default pin: A_4
+//      - led (1)           -> Default pin: D_8
+//
+// The led toggle when .
+//*
+
+thing SimpleSoundSensor includes LedMsgs, SoundSensorMsgs
+{
+	readonly property led_pin : DigitalPin = DigitalPin:PIN_8
+	readonly property sound_sensor_pin : AnalogPin = AnalogPin:A_4
+	readonly property threshold : UInt16 = 500
+	
+	required port Led
+	{
+		sends led_toggle
+	}
+	
+	required port SoundSensor
+	{
+		receives sound_value
+	}
+	
+	statechart SimpleSoundSensorImpl init Running
+	{
+		state Running
+		{
+			internal event m : SoundSensor?sound_value
+			guard m.val > threshold
+			action Led!led_toggle ()
+		}
+	}
+}
+
+configuration SimpleSoundSensor
+{
+	// Arduino declaration.
+	instance arduino : Arduino
+	
+	// Digital output configuration.
+	instance digital_output : DigitalOutput
+		set pin = DigitalPin:PIN_8
+	connector digital_output.DigitalIO => arduino.DigitalIO
+	
+	// Led configuration.
+	instance led : Led
+	connector led.DigitalOutput => digital_output.DigitalOutput
+	
+	 // Analog input configuration.
+    instance analog_input : OnChangeAnalogInput
+        set pin = AnalogPin:A_4
+        set refresh_rate = 1
+    instance timer : SoftTimer
+    connector analog_input.AnalogIO => arduino.AnalogIO
+    connector analog_input.Timer => timer.timer
+    
+    // Sound sensor configuration.
+	instance sound_sensor : SoundSensor
+        set sample_rate = 100
+	connector sound_sensor.AnalogInput => analog_input.AnalogInput
+	
+	// Simple sound sensor configuration.
+	instance simple_sound_sensor : SimpleSoundSensor
+	connector simple_sound_sensor.Led => led.Led
+	connector simple_sound_sensor.SoundSensor => sound_sensor.SoundSensor
+
+    // ******************************* //
+    
+//     group led : Led
+//         set led.io.digital_output.pin = DigitalPin:PIN_8
+//     group sound_sensor : SoundSensor
+//         set sound_sensor.io.analog_input.pin = AnalogPin:A_4
+//         
+//     instance simple_sound_sensor : SimpleSoundSensor
+// 	connector simple_sound_sensor.Led => led.led.Led
+// 	connector simple_sound_sensor.SoundSensor => sound_sensor.sound_sensor.SoundSensor
+    
+}

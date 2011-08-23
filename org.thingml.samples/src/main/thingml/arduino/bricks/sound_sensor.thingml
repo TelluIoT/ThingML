@@ -51,15 +51,11 @@ thing SoundSensor includes SoundSensorMsgs
     }
 }
 
-//* Configuration needs:
-//
-// includes AnalogInput
-//
-// instance sound_sensor : SoundSensor
-// instance analog_input : PeriodicAnalogInput
-// 		set pin = pin	 
-//      set refresh_rate = 2000
-//
-// connector sound_sensor.AnalogInput => analog_input.AnalogInput
-//
-//* 
+
+configuration fragment SoundSensor
+{
+    group io : OnChangeAnalogInput
+
+    instance sound_sensor : SoundSensor
+    connector sound_sensor.AnalogInput => io.analog_input.AnalogInput
+} 

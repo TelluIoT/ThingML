@@ -31,6 +31,7 @@ import java.io._
 import io.Source
 import java.lang.{Boolean, StringBuilder}
 import org.sintef.thingml._
+import org.thingml.model.scalaimpl.aspects.MergedConfigurationCache
 
 object SimpleCopyTemplate {
 
@@ -56,6 +57,9 @@ object CGenerator {
     var context = new ArduinoCGeneratorContext(t)
 
     t.generateC(builder, context)
+
+    MergedConfigurationCache.clearCache(); // Cleanup
+
     builder.toString
   }
 
@@ -334,7 +338,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     }}}
 
     builder append "\n"
-    builder append "// Initialize instance variables and states\n"
+    //builder append "// Initialize instance variables and states\n"
     // Generate code to initialize variable for instances
     self.allInstances.foreach { inst =>
        inst.generateC(builder, context)
@@ -647,37 +651,28 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
 
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
-
-   // builder append "// Init properties\n"
-
-    context.cfg.initExpressionsForInstance(self).foreach{ init =>
-      if (init._2 != null ) {
-        builder append c_var_name + "." + init._1.c_var_name + " = "
-        init._2.generateC(builder, context)
-        builder append ";\n";
-      }
-    }
-
-    // Initialize variables and state machines
-
-    /*
-    self.initExpressions.foreach{ init =>
-      if (init._2 != null ) {
-        builder append c_var_name + "." + init._1.c_var_name + " = "
-        init._2.generateC(builder, context)
-        builder append ";\n";
-      }
-    }
-    */
-
     // init state variables:
-    builder append "// Init the state variables\n"
+    builder append "// Init the state variables and properties for instance " + self.getName + "\n"
     self.getType.composedBehaviour.allContainedRegions.foreach {
       r =>
         builder append c_var_name + "." + self.getType.state_var_name(r) + " = " + self.getType.state_id(r.getInitial) + ";\n"
     }
 
+    // Init properties
+    context.cfg.initExpressionsForInstance(self).foreach{ init =>
+
+      //println("GENERATE INIT: INSTANCE:" + self.getName + " PROP:" + init._1.getName)
+
+      if (init._2 != null ) {
+        builder append c_var_name + "." + init._1.c_var_name + " = "
+        init._2.generateC(builder, context)
+        builder append ";\n";
+      }
+    }
+
     builder append self.getType.composedBehaviour.qname("_") + "_OnEntry(" + self.getType.state_id(self.getType.composedBehaviour) + ", &" + c_var_name + ");\n"
+
+    builder append "\n"
   }
 }
 

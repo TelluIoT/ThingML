@@ -5,7 +5,7 @@ import "../../devices/softtimer.thingml"
 
 thing ChangingFrequencyLed includes LedMsgs, TimerMsgs, PotentiometerMessages
 {
-	readonly property frequency : UInt16 = 500
+	property frequency : UInt16 = 500
 	
 	required port Led
 	{
@@ -34,7 +34,7 @@ thing ChangingFrequencyLed includes LedMsgs, TimerMsgs, PotentiometerMessages
 			
 			transition update -> Running
 				event e: Potentiometer?newValue
-				action Timer!timer_start(e.value)
+				action frequency = e.value
 		}
 	}
 }

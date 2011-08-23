@@ -16,13 +16,13 @@ thing SoftAnalogInput includes SoftAnalogInputMsgs, AnalogInputMsgs
 	
 	required port GetAnalogInput 
 	{
-		sends readAnalogInput
-		receives analogInputValue 
+		sends read_analog_input
+		receives analog_input_value 
 	}
 	
 	required port ChangeAnalogInput 
 	{
-		receives analogInputValue 
+		receives analog_input_value 
 	}
 	
 	provided port SoftAnalogInput
@@ -33,7 +33,7 @@ thing SoftAnalogInput includes SoftAnalogInputMsgs, AnalogInputMsgs
 	
 	statechart SoftAnalogInputImpl init Unsubscribe
 	{ 	  
-		internal event m : GetAnalogInput?analogInputValue
+		internal event m : GetAnalogInput?analog_input_value
         action SoftAnalogInput!value (m.value)
 				
 		state Unsubscribe
@@ -45,7 +45,7 @@ thing SoftAnalogInput includes SoftAnalogInputMsgs, AnalogInputMsgs
 			
 		state Subscribe
 		{
-			internal event m : ChangeAnalogInput?analogInputValue
+			internal event m : ChangeAnalogInput?analog_input_value
            	action SoftAnalogInput!value (m.value)
 			
 			transition -> Unsubscribe
