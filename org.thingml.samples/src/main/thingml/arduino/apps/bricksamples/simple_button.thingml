@@ -8,16 +8,16 @@ import "../../devices/digital_input.thingml"
 // Electronic Brick components.
 //  
 // Requirements:
-//      - button (1)
-//      - led (1) 
+//      - button (1)    ->  Default pin: D_9 
+//      - led (1)       ->  Default pin: D_8
 //
 // The led is on while the button is pressed and off when it is released.
 //*
 
 thing SimpleButton includes LedMsgs, ButtonMsgs
 {
-	readonly property led_pin : DigitalPin = DigitalPin:PIN_13
-	readonly property button_pin : DigitalPin = DigitalPin:PIN_8
+	//readonly property led_pin : DigitalPin = DigitalPin:PIN_13
+	//readonly property button_pin : DigitalPin = DigitalPin:PIN_8
 	
 	required port Led
 	{
@@ -74,4 +74,15 @@ configuration SimpleButton
 	instance simple_button : SimpleButton
 	connector simple_button.Led => led.Led
 	connector simple_button.Button => button.Button
+
+    //***********************//
+ 
+//     group button : Button
+//         set button.io.digital_input.pin = DigitalPin:PIN_9
+//     group led : Led
+//         set led.io.digital_output.pin = DigitalPin:PIN_8
+//     
+//     instance simple_button : SimpleButton
+// 	connector simple_button.Led => led.led.Led
+// 	connector simple_button.Button => button.button.Button
 }

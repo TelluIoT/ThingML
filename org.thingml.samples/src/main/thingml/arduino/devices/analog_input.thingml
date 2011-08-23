@@ -74,8 +74,8 @@ thing PeriodicAnalogInput includes AnalogInput, TimerMsgs
 
 thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 {
-	readonly property valuePrecision : Int8 = 1
-	readonly property refreshPrecision : UInt8 = 20
+	readonly property value_precision : Int8 = 1
+	readonly property refresh_rate : UInt8 = 20
 	
 	property oldValue : Int16 = 3333
 	
@@ -88,7 +88,7 @@ thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 	statechart OnChangeAnalogInputImpl init Running
 	{
 		internal event m : AnalogIO?analogReadResult
-		guard m.pin == pin and (m.value - oldValue < - valuePrecision or m.value - oldValue > valuePrecision)
+		guard m.pin == pin and (m.value - oldValue < - value_precision or m.value - oldValue > value_precision)
 		action do
 			AnalogInput!analog_input_value (m.value)
 			oldValue = m.value
@@ -96,7 +96,7 @@ thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 		
 		state Running
 		{
-			on entry Timer!timer_start (refreshPrecision)
+			on entry Timer!timer_start (refresh_rate)
 			
 			transition Check -> Running 
 			event Timer?timer_timeout
@@ -123,25 +123,31 @@ thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 	}	
 }
 
-//* Configuration needs: *
-//
-// instance arduino : Arduino
-//
-// * SimpleAnalogInput *
-// instance simpleAnalogInput : SimpleAnalogInput
-// connector simpleAnalogInput.AnalogIO => arduino.AnalogIO
-//
-// * PeriodicAnalogInput *
-// instance periodicAnalogInput : PeriodicAnalogInput
-//      set refresh_rate = 2000
-// instance timer : SoftTimer
-// connector periodicAnalogInput.AnalogIO => arduino.AnalogIO
-// connector periodicAnalogInput.Timer => timer.timer
-//
-// * OnChangeAnalogInput *
-// instance onChangeAnalogInput : OnChangeAnalogInput
-// instance timer : SoftTimer
-// connector onChangeAnalogInput.AnalogIO => arduino.AnalogIO
-// connector onChangeAnalogInput.Timer => timer.timer
-//
-//*  
+configuration fragment SimpleAnalogInput
+{
+    instance arduino : Arduino
+
+    instance analog_input : SimpleAnalogInput
+    connector analog_input.AnalogIO => arduino.AnalogIO
+}
+
+configuration fragment PeriodiqueAnalogInput
+{
+    instance arduino : Arduino
+    
+    instance analog_input : PeriodicAnalogInput
+        set refresh_rate = 2000
+    instance timer : SoftTimer
+    connector analog_input.AnalogIO => arduino.AnalogIO
+    connector analog_input.Timer => timer.timer
+}
+
+configuration fragment OnChangeAnalogInput
+{
+    instance arduino : Arduino
+    
+    instance analog_input : OnChangeAnalogInput
+    instance timer : SoftTimer
+    connector analog_input.AnalogIO => arduino.AnalogIO
+    connector analog_input.Timer => timer.timer
+} 

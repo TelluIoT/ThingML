@@ -1,9 +1,21 @@
 import "../../core/arduino.thingml"
 import "../../bricks/lcd_screen.thingml"
-import "../../bricks/pot_sensor.thingml"
-import "../../bricks/temp_sensor.thingml"
-import "../../bricks/lux_sensor.thingml"
+import "../../bricks/rotation_sensor.thingml"
+import "../../bricks/temperature_sensor.thingml"
+import "../../bricks/light_sensor.thingml"
 import "../../bricks/sound_sensor.thingml"
+
+//*
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+//      - Lcd screen 1602 (1)
+//      - Sound sensor (1) or Light Sensor (1) or Rotation sensor (1) or Temperature sensor (1) ->  Default pin: A_4 
+//
+// The screen displays the value of the sensor of your choice.
+// Keep in mind that in this example, you have to use only one sensor at the time.
+//*
 
 thing fragment SimpleSensorsDisplay includes LcdScreenMsgs
 {
@@ -15,24 +27,24 @@ thing fragment SimpleSensorsDisplay includes LcdScreenMsgs
 
 // Use only one of the four things following.
 
-thing SimplePotSensorDisplay includes SimpleSensorsDisplay, PotSensorMsgs
+thing SimpleRotSensorDisplay includes SimpleSensorsDisplay, RotationSensorMsgs
 {
-	required port PotSensor
+	required port RotationSensor
 	{
-		receives position_value
-        sends read_position
+		receives rotation_value
+        sends read_rotation
 	}
 	
-	statechart SimplePotSensorDisplayImpl init Running
+	statechart SimpleRotSensorDisplayImpl init Running
 	{
-		on entry LcdScreen!print_string ("Position val:")
+		on entry LcdScreen!print_string ("Rotation val:")
 		
 		state Running
 		{
 			on entry LcdScreen!set_cursor (0, 1)
 
 			transition refresh -> Running
-			event m : PotSensor?position_value
+			event m : RotationSensor?rotation_value
 			action do
                 LcdScreen!print_value (m.val)
                 LcdScreen!print_string ("    ")
@@ -41,11 +53,11 @@ thing SimplePotSensorDisplay includes SimpleSensorsDisplay, PotSensorMsgs
 	}
 }
 
-thing SimpleTempSensorDisplay includes SimpleSensorsDisplay, TempSensorMsgs
+thing SimpleTempSensorDisplay includes SimpleSensorsDisplay, TemperatureSensorMsgs
 {
 	required port TempSensor
 	{
-		receives temp_value
+		receives temperature_value
 	}
 	
 	statechart SimpleTempSensorDisplayImpl init Running
@@ -56,7 +68,7 @@ thing SimpleTempSensorDisplay includes SimpleSensorsDisplay, TempSensorMsgs
 		{
 			on entry LcdScreen!set_cursor (0, 1)
 			transition refresh -> Running
-			event m : TempSensor?temp_value
+			event m : TempSensor?temperature_value
 			action do
                 LcdScreen!print_value (m.val)
                 LcdScreen!print_string ("    ")
@@ -65,22 +77,22 @@ thing SimpleTempSensorDisplay includes SimpleSensorsDisplay, TempSensorMsgs
 	}
 }
 
-thing SimpleLuxSensorDisplay includes SimpleSensorsDisplay, LuxSensorMsgs
+thing SimpleLightSensorDisplay includes SimpleSensorsDisplay, LightSensorMsgs
 {
-	required port LuxSensor
+	required port LightSensor
 	{
-		receives luminosity_value
+		receives light_value
 	}
 	
-	statechart SimpleLuxSensorDisplayImpl init Running
+	statechart SimpleLightSensorDisplayImpl init Running
 	{
-		on entry LcdScreen!print_string ("Luminosity val:")
+		on entry LcdScreen!print_string ("Light value:")
 		
 		state Running
 		{
 			on entry LcdScreen!set_cursor (0, 1)
 			transition refresh -> Running
-			event m : LuxSensor?luminosity_value
+			event m : LightSensor?light_value
 			action do
                 LcdScreen!print_value (m.val)
                 LcdScreen!print_string ("    ")
@@ -130,29 +142,28 @@ configuration SimpleSensorsDisplay
  		
 //* Uncomment only the five lines which refer to the sensor you want use. *//
 
-	// * Potentiometer *
-//  	instance pot_sensor_display : SimplePotSensorDisplay
-//     instance pot_sensor : PotSensor
-//     connector pot_sensor_display.PotSensor => pot_sensor.PotSensor
-//  	connector pot_sensor_display.LcdScreen => lcd_screen.LcdScreen
-//     connector pot_sensor.AnalogInput => analog_input.AnalogInput
-	
-	// * Temperature *
+	// * Rotation sensor *
+ 	instance pot_sensor_display : SimpleRotSensorDisplay
+    instance pot_sensor : RotationSensor
+    connector pot_sensor_display.RotationSensor => pot_sensor.RotationSensor
+ 	connector pot_sensor_display.LcdScreen => lcd_screen.LcdScreen
+    connector pot_sensor.AnalogInput => analog_input.AnalogInput
+
+// 	// * Temperature sensor *
 // 	instance temp_sensor_display : SimpleTempSensorDisplay
-//  instance temp_sensor : TempSensor
-//  connector temp_sensor_display.TempSensor => temp_sensor.TempSensor
+//     instance temp_sensor : TemperatureSensor
+//     connector temp_sensor_display.TempSensor => temp_sensor.TemperatureSensor
 // 	connector temp_sensor_display.LcdScreen => lcd_screen.LcdScreen
-//  connector temp_sensor.AnalogInput => analog_input.AnalogInput
+//     connector temp_sensor.AnalogInput => analog_input.AnalogInput
 
-	
-	// * Luminosity *
-	instance lux_sensor_display : SimpleLuxSensorDisplay
-    instance lux_sensor : LuxSensor
-    connector lux_sensor_display.LuxSensor => lux_sensor.LuxSensor
-	connector lux_sensor_display.LcdScreen => lcd_screen.LcdScreen
-    connector lux_sensor.AnalogInput => analog_input.AnalogInput 
+// 	// * Light sensor *
+// 	instance lux_sensor_display : SimpleLightSensorDisplay
+//     instance lux_sensor : LightSensor
+//     connector lux_sensor_display.LightSensor => lux_sensor.LightSensor
+// 	connector lux_sensor_display.LcdScreen => lcd_screen.LcdScreen
+//     connector lux_sensor.AnalogInput => analog_input.AnalogInput 
 
-    // * Sound *
+//     // * Sound  sensor *
 // 	instance sound_sensor_display : SimpleSoundSensorDisplay
 //     instance sound_sensor : SoundSensor
 //     connector sound_sensor_display.SoundSensor => sound_sensor.SoundSensor

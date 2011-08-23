@@ -1,0 +1,46 @@
+import "../core/arduino.thingml"
+import "../devices/analog_input.thingml"
+
+thing fragment RotationSensorMsgs includes AnalogInputMsgs 
+{
+	message read_rotation ();
+	message rotation_value (val : UInt16);
+}
+
+thing RotationSensor includes RotationSensorMsgs
+{
+    readonly property pin : AnalogPin = AnalogPin:A_3
+    
+	provided port RotationSensor 
+    {
+		receives read_rotation
+		sends rotation_value
+	}
+
+    required port AnalogInput
+    {
+        receives analog_input_value
+        sends read_analog_input    
+    }
+    
+    statechart RotationSensorImpl init Running 
+    {    
+    	internal event m : AnalogInput?analog_input_value
+    	action RotationSensor!rotation_value (m.value)
+    	
+        state Running 
+        {
+        	internal event RotationSensor?read_rotation
+        	action AnalogInput!read_analog_input ()
+        }        
+    }
+}
+
+
+configuration fragment RotationSensor
+{
+    group io : OnChangeAnalogInput
+
+    instance rotation_sensor : RotationSensor
+    connector rotation_sensor.AnalogInput => io.analog_input.AnalogInput
+} 

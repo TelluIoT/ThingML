@@ -1,23 +1,23 @@
 import "../core/arduino.thingml"
 import "../devices/analog_input.thingml"
 
-thing fragment LuxSensorMsgs includes AnalogInputMsgs 
+thing fragment LightSensorMsgs includes AnalogInputMsgs 
 {
-	message read_luminosity ();
-	message luminosity_value (val : UInt16);
+	message read_light ();
+	message light_value (val : UInt16);
 }
 
-thing LuxSensor includes LuxSensorMsgs
+thing LightSensor includes LightSensorMsgs
 {
     readonly property pin : AnalogPin = AnalogPin:A_5
     readonly property sample_rate : UInt8 = 1
     property tot_value : UInt16 = 0
     property counter : UInt8 = 0
     
-	provided port LuxSensor 
+	provided port LightSensor 
     {
-		receives read_luminosity
-		sends luminosity_value
+		receives read_light
+		sends light_value
 	}
 
     required port AnalogInput
@@ -26,12 +26,12 @@ thing LuxSensor includes LuxSensorMsgs
         sends read_analog_input    
     }
     
-    statechart LuxSensorImpl init Running 
+    statechart LightSensorImpl init Running 
     {    
     	internal event m : AnalogInput?analog_input_value
         guard counter == sample_rate
     	action do
-            LuxSensor!luminosity_value ((tot_value + m.value) / (sample_rate + 1))
+            LightSensor!light_value ((tot_value + m.value) / (sample_rate + 1))
             tot_value = 0
             counter = 0
             end
@@ -45,20 +45,16 @@ thing LuxSensor includes LuxSensorMsgs
     	
         state Running 
         {
-        	internal event LuxSensor?read_luminosity
+        	internal event LightSensor?read_light
         	action AnalogInput!read_analog_input ()
         }        
     }
 }
 
-//* Configuration needs:
-//
-// includes AnalogInput
-//
-// instance lux_sensor : LuxSensor
-// instance analog_input : OnChangeAnalogInput
-// 		set pin = pin	 
-// 
-// connector lux_sensor.AnalogInput => analog_input.AnalogInput
-//
-//* 
+configuration fragment LightSensor
+{
+    group io : OnChangeAnalogInput
+
+    instance light_sensor : LightSensor
+    connector light_sensor.AnalogInput => io.analog_input.AnalogInput
+} 

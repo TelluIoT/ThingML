@@ -43,7 +43,7 @@ thing Led includes LedMsgs
     }
 }
 
-configuration Led
+configuration fragment Led
 {
     group io : DigitalOutput
 

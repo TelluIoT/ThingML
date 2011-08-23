@@ -1,13 +1,13 @@
 import "../core/arduino.thingml"
 import "../devices/analog_input.thingml"
 
-thing fragment TempSensorMsgs includes AnalogInputMsgs 
+thing fragment TemperatureSensorMsgs includes AnalogInputMsgs 
 {
-	message read_temp ();
-	message temp_value (val : Int16);
+	message read_temperature ();
+	message temperature_value (val : Int16);
 }
 
-thing TempSensor includes TempSensorMsgs
+thing TemperatureSensor includes TemperatureSensorMsgs
 @c_header 
 "
 #include <math.h>
@@ -22,10 +22,10 @@ int temperature (int RawADC) {
 {
     readonly property pin : AnalogPin = AnalogPin:A_3
     
-	provided port TempSensor 
+	provided port TemperatureSensor 
     {
-		receives read_temp
-		sends temp_value
+		receives read_temperature
+		sends temperature_value
 	}
 
     required port AnalogInput
@@ -37,24 +37,21 @@ int temperature (int RawADC) {
     statechart TempSensorImpl init Running 
     {    
     	internal event m : AnalogInput?analog_input_value
-    	action TempSensor!temp_value ('temperature ('& m.value &')')
+    	action TemperatureSensor!temperature_value ('temperature ('& m.value &')')
     	
         state Running 
         {
-        	internal event TempSensor?read_temp
+        	internal event TemperatureSensor?read_temperature
         	action AnalogInput!read_analog_input ()
         }        
     }
 }
 
-//* Configuration needs:
-//
-// includes AnalogInput
-//
-// instance temp_sensor : TempSensor
-// instance analog_input : OnChangeAnalogInput
-// 		set pin = pin	 
-// 
-// connector temp_sensor.AnalogInput => analog_input.AnalogInput
-//
-//* 
+
+configuration fragment TemperatureSensor
+{
+    group io : OnChangeAnalogInput
+
+    instance temperature_sensor : TemperatureSensor
+    connector temperature_sensor.AnalogInput => io.analog_input.AnalogInput
+} 

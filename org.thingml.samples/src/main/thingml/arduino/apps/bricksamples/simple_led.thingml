@@ -8,7 +8,7 @@ import "../../devices/softtimer.thingml"
 // Electronic Brick components.
 //  
 // Requirements:
-//      - led (1) 
+//      - led (1)   ->  Default pin: D_8
 //
 // The led simply blink (default frequency is one seconde).
 //*
@@ -44,32 +44,32 @@ thing SimpleLed includes LedMsgs, TimerMsgs
 
 configuration SimpleLed
 {
-// 	// Arduino declaration.
-// 	instance arduino : Arduino
-// 	
-// 	// Digital output configuration.
-// 	instance digital_output : DigitalOutput
-// 		set pin = DigitalPin:PIN_8
-// 	connector digital_output.DigitalIO => arduino.DigitalIO
-// 	
-// 	// Led configuration.
-// 	instance led : Led
-// 	connector led.DigitalOutput => digital_output.DigitalOutput
-// 		
-// 	// Timer configuration.
-// 	instance timer : SoftTimer
-// 	
-// 	// Simple led configuration.
-// 	instance simple_led : SimpleLed
-//         set frequency = 800
-// 	connector simple_led.Led => led.Led
-// 	connector simple_led.Timer => timer.timer
+	// Arduino declaration.
+	instance arduino : Arduino
+	
+	// Digital output configuration.
+	instance digital_output : DigitalOutput
+		set pin = DigitalPin:PIN_8
+	connector digital_output.DigitalIO => arduino.DigitalIO
+	
+	// Led configuration.
+	instance led : Led
+	connector led.DigitalOutput => digital_output.DigitalOutput
+		
+	// Timer configuration.
+	instance timer : SoftTimer
+	
+	// Simple led configuration.
+	instance simple_led : SimpleLed
+        set frequency = 800
+	connector simple_led.Led => led.Led
+	connector simple_led.Timer => timer.timer
 
-    group led : Led
-    set led.io.digital_output.pin = DigitalPin:PIN_8
-    
-    instance timer : SoftTimer
-    instance simple_led : SimpleLed
-    connector simple_led.Timer => timer.timer
-    connector simple_led.Led => led.led.Led 
+//     group led : Led
+//     set led.io.digital_output.pin = DigitalPin:PIN_8
+//     
+//     instance timer : SoftTimer
+//     instance simple_led : SimpleLed
+//     connector simple_led.Timer => timer.timer
+//     connector simple_led.Led => led.led.Led 
 }
