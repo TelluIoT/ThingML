@@ -9,7 +9,6 @@ thing fragment SoundSensorMsgs includes AnalogInputMsgs
 
 thing SoundSensor includes SoundSensorMsgs
 {
-    readonly property pin : AnalogPin = AnalogPin:A_5
     readonly property sample_rate : UInt8 = 50
     property counter : UInt8 = 0
     property max_value : UInt16 = 0

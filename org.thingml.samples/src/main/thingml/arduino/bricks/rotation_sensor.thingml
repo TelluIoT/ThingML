@@ -8,9 +8,7 @@ thing fragment RotationSensorMsgs includes AnalogInputMsgs
 }
 
 thing RotationSensor includes RotationSensorMsgs
-{
-    readonly property pin : AnalogPin = AnalogPin:A_3
-    
+{  
 	provided port RotationSensor 
     {
 		receives read_rotation

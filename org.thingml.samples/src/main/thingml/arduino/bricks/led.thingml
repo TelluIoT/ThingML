@@ -9,9 +9,7 @@ thing fragment LedMsgs includes DigitalOutputMsgs
 }
 
 thing Led includes LedMsgs
-{
-    readonly property pin : DigitalPin = DigitalPin:PIN_13
-    
+{   
 	provided port Led 
     {
 		receives led_on, led_off, led_toggle

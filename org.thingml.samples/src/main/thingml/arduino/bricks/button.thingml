@@ -8,10 +8,7 @@ thing fragment ButtonMsgs includes DigitalInputMsgs
 }
 
 thing Button includes ButtonMsgs
-{	
-
-	readonly property pin : DigitalPin = DigitalPin:PIN_8
-	
+{		
 	provided port Button 
 	{
 		sends press

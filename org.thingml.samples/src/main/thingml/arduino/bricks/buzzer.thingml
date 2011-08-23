@@ -10,9 +10,7 @@ thing fragment BuzzerMsgs includes DigitalOutputMsgs, TimerMsgs
 }
 
 thing Buzzer includes BuzzerMsgs
-{
-    readonly property pin : DigitalPin = DigitalPin:PIN_13
-    
+{ 
 	provided port Buzzer 
     {
 		receives buzzer_on, buzzer_off, buzzer_delay

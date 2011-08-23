@@ -9,7 +9,6 @@ thing fragment LightSensorMsgs includes AnalogInputMsgs
 
 thing LightSensor includes LightSensorMsgs
 {
-    readonly property pin : AnalogPin = AnalogPin:A_5
     readonly property sample_rate : UInt8 = 1
     property tot_value : UInt16 = 0
     property counter : UInt8 = 0

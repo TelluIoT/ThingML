@@ -19,9 +19,7 @@ int temperature (int RawADC) {
  return (int)Temp;
 }
 "
-{
-    readonly property pin : AnalogPin = AnalogPin:A_3
-    
+{   
 	provided port TemperatureSensor 
     {
 		receives read_temperature
