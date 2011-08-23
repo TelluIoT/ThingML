@@ -110,15 +110,15 @@ public class StandaloneParserTestLoadFile extends TestCase {
                     w.println(gml.get(name));
                     w.close();
                 }
-
+                  */
                 Hashtable<Configuration, String> ccode =  CGenerator.compileAll( (ThingMLModel)model.getContents().get(0));
                 for (Configuration t : ccode.keySet()) {
                     System.out.println(" -> Writing file " + t.getName() + ".pde");
                     PrintWriter w = new PrintWriter(new FileWriter("test_out/" +new File(t.getName() + ".pde")));
                     w.println(ccode.get(t));
                     w.close();
-                }*/
-                
+                }
+                    /*
                 Hashtable<Configuration, String> scalacode =  ScalaGenerator.compileAll( (ThingMLModel)model.getContents().get(0), "org.thingml.generated");
                 for (Configuration t : scalacode.keySet()) {
                     System.out.println(" -> Writing file " + t.getName() + ".scala");
@@ -126,6 +126,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
                     w.println(scalacode.get(t));
                     w.close();
                 }
+                */
             }
             catch(Throwable t) {
                t.printStackTrace();
