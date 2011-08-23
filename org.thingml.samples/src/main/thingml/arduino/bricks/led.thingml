@@ -43,14 +43,10 @@ thing Led includes LedMsgs
     }
 }
 
-//* Configuration needs:
-//
-// includes DigitalOutputConf
-//
-// instance led : Led
-// instance digital_output : DigitalOutput
-// 		set pin = pin	 
-// 
-// connector led.DigitalOutput => digital_output.DigitalOutput
-//
-//* 
+configuration Led
+{
+    group io : DigitalOutput
+
+    instance led : Led	 
+    connector led.DigitalOutput => io.digital_output.DigitalOutput
+} 

@@ -3,6 +3,17 @@ import "../../bricks/led.thingml"
 import "../../bricks/button.thingml"
 import "../../devices/digital_input.thingml"
 
+//*
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+//      - button (1)
+//      - led (1) 
+//
+// The led is on while the button is pressed and off when it is released.
+//*
+
 thing SimpleButton includes LedMsgs, ButtonMsgs
 {
 	readonly property led_pin : DigitalPin = DigitalPin:PIN_13

@@ -31,11 +31,10 @@ thing DigitalOutput includes DigitalOutputMsgs, ArduinoStdlibMsgs
     }
 }
 
-//* Configuration needs: 
-//
-// instance arduino : Arduino
-//
-// instance digital_output : DigitalOutput
-// connector digital_output.DigitalIO => arduino.DigitalIO
-//
-//*
+configuration fragment DigitalOutput
+{
+    instance arduino : Arduino
+
+    instance digital_output : DigitalOutput
+    connector digital_output.DigitalIO => arduino.DigitalIO
+}

@@ -55,17 +55,12 @@ thing Buzzer includes BuzzerMsgs
     }
 }
 
-//* Configuration needs:
-//
-// includes DigitalOutputConf
-//
-// instance timer : SoftTimer
-//
-// instance buzzer : Buzzer
-// instance digital_output : DigitalOutput
-// 		set pin = pin	 
-// 
-// connector buzzer.DigitalOutput => digital_output.DigitalOutput
-// connector buzzer.Timer => timer.timer
-//
-//* 
+configuration fragment Buzzer
+{
+    group io : DigitalOutput   
+    
+    instance timer : SoftTimer
+    instance buzzer : Buzzer	 
+    connector buzzer.DigitalOutput => io.digital_output.DigitalOutput
+    connector buzzer.Timer => timer.timer
+} 

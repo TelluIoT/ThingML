@@ -2,11 +2,22 @@ import "../../core/arduino.thingml"
 import "../../bricks/buzzer.thingml"
 import "../../devices/softtimer.thingml"
 
+//*
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+//      - buzzer (1) 
+//
+// The buzzer plays an SOS signal.
+//*
+
 thing SimpleBuzzer includes BuzzerMsgs, TimerMsgs
 {
-	//readonly property buzzer_pin : DigitalPin = DigitalPin:PIN_8
+	readonly property buzzer_pin : DigitalPin = DigitalPin:PIN_8
 
-	property counter : UInt8 = 0 
+	property counter : UInt8 = 0
+    property end_motif : Boolean = false 
 	
 	required port Buzzer
 	{
@@ -19,13 +30,8 @@ thing SimpleBuzzer includes BuzzerMsgs, TimerMsgs
 		receives timer_timeout
 	}
 	
-	statechart SimpleBuzzerImpl init Fast
+	statechart SimpleBuzzerImpl init Wait
 	{       
-        on entry do
-            Timer!timer_start (50)
-            'Serial.println("on entry !");'
-        end
-        
 		state Fast
 		{
             on entry counter = 0
@@ -33,52 +39,53 @@ thing SimpleBuzzer includes BuzzerMsgs, TimerMsgs
 			internal repeat event Timer?timer_timeout
             guard counter < 3
             action do
-                'Serial.println("repeat F");'
                 Buzzer!buzzer_delay (100)
                 counter = counter + 1
-                Timer!timer_start (500)
+                Timer!timer_start (150)
                 end
                 
             transition switch -> Slow
+            event Timer?timer_timeout 
+            guard counter == 3 and not end_motif
+            action Timer!timer_start (50)
+            
+            transition waiting -> Wait
             event Timer?timer_timeout
-            guard counter == 3
-            action 'Serial.println("switch F");'
-            //action Timer!timer_start (400)
+            guard counter == 3 and end_motif
 		}
 			
 		state Slow
 		{	
             on entry counter = 0
+            on exit end_motif = true
                 
             internal repeat event Timer?timer_timeout
             guard counter < 3
             action do
-                'Serial.println("repeat S");'
-                Buzzer!buzzer_delay (1000)
+                Buzzer!buzzer_delay (200)
                 counter = counter + 1
-                Timer!timer_start (1400)
+                Timer!timer_start (250)
                 end
                 
             transition switch -> Fast
             event Timer?timer_timeout
             guard counter == 3
-            action 'Serial.println("switch S");'
-            //action Timer!timer_start (400)
+            action Timer!timer_start (50)
 		}
+
+        state Wait
+        {
+            on entry Timer!timer_start (1000)
+            on exit Timer!timer_start (50)
+            
+            transition begin -> Fast
+            event Timer?timer_timeout
+            action end_motif = false
+        }
 	}
 }
 
 configuration SimpleBuzzer
-@debug "true"
-@debug_fifo "true"
-
-//@debug_message_send "timer_start"
-//@debug_message_receive "timer_start"
-//@debug_message_send "timer_timeout"
-@debug_message_receive "timer_timeout"
-//@debug_message_send "buzzer_delay"
-//@debug_message_receive "buzzer_delay"
-
 {
 	// Arduino declaration.
 	instance arduino : Arduino
