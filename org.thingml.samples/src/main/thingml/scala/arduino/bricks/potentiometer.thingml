@@ -9,10 +9,16 @@ thing fragment PotentiometerMessages {
 	message newValue(value: Integer);
 }
 
-
-thing Potentiometer includes PotentiometerMessages 
-@scala_trait "org.thingml.devices.PotentiometerObserver"
+//That would be cool to have ThingML code inside the annotations, so that I could properly send messages
+//instead of directly writting the could I would like to generate...
+thing Potentiometer includes PotentiometerMessages
+@scala_trait "org.thingml.devices.Observer" 
 {
+
+	function newValue(v : Integer)@override "true" : Void
+	do
+		Potentiometer!newValue(v)
+	end
 
 	property device : Device
 	
@@ -24,10 +30,7 @@ thing Potentiometer includes PotentiometerMessages
 		
 		on entry do
 		device = 'new org.thingml.devices.PotentiometerDemo(0, 1023)' 
-		'Potentiometer_device_var.addObserver(this)'
-		'override def newValue(v: Int) = {' 
-		Potentiometer!newValue('v')
-		'}'
+		'Potentiometer_device_var.register(root)'
 		end
 			
 		state Ready {}

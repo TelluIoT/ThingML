@@ -3,6 +3,9 @@
 /*****************************************************************************
  * Definition of the default ThingML DataTypes
  *****************************************************************************/
+datatype Void
+    @scala_type "Unit";
+
 datatype Byte	
 	@c_type "uint8_t"
 	@c_byte_size "1"
@@ -85,12 +88,12 @@ thing ThingMLScheduler includes ThingMLSchedulerMsg {
 	
 	statechart Scheduler init default {
 		state default {
-			on entry 'class PollTask(p : Port) extends TimerTask{
+			on entry 'class PollTask(p : Port) extends java.util.TimerTask{
 			  override def run {
 			    p.send(new Poll())
 			  }
 			}
-			new Timer().scheduleAtFixedRate(new PollTask(getPort("Polling").get), 5, 5)'
+			new java.util.Timer().scheduleAtFixedRate(new PollTask(getPort("Polling").get), 5, 5)'
 		}
 	}
 }

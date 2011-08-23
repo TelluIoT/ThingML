@@ -30,7 +30,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.thingml.graphexport.test;
 
 import java.io.File;
@@ -70,76 +69,85 @@ public class StandaloneParserTestLoadFile extends TestCase {
         this.model_path = model_path;
     }
 
-
     @Override
     public void runTest() throws IOException {
 
-            try {
-               // Register the generated package and the XMI Factory
-                EPackage.Registry.INSTANCE.put(ThingmlPackage.eNS_URI, ThingmlPackage.eINSTANCE);
-                Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
 
-                // Load the model
-                ResourceSet rs = new ResourceSetImpl();
-                URI xmiuri = URI.createFileURI(model_path);
-                Resource model = rs.createResource(xmiuri);
-                model.load(null);
-                //org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(rs);
+        // Register the generated package and the XMI Factory
+        EPackage.Registry.INSTANCE.put(ThingmlPackage.eNS_URI, ThingmlPackage.eINSTANCE);
+        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
 
-                assert(model.getContents().size() > 0);
+        // Load the model
+        ResourceSet rs = new ResourceSetImpl();
+        URI xmiuri = URI.createFileURI(model_path);
+        Resource model = rs.createResource(xmiuri);
+        model.load(null);
+        //org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(rs);
 
-                assert ( model.getContents().get(0) instanceof ThingMLModel );
+        assert (model.getContents().size() > 0);
 
-                System.out.println("Model : " + model + " : ");
+        assert (model.getContents().get(0) instanceof ThingMLModel);
 
-                File dir = new File("test_out");
-                if (!dir.exists()) dir.mkdir();
+        System.out.println("Model : " + model + " : ");
 
-                /*Hashtable<String, String> dots = ThingMLGraphExport.allGraphviz( (ThingMLModel)model.getContents().get(0) );
-                for (String name : dots.keySet()) {
-                    System.out.println(" -> Writing file " + name + ".dot");
-                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(name + ".dot")));
-                    w.println(dots.get(name));
-                    w.close();
-                }
+        File dir = new File("test_out");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
 
-                Hashtable<String, String> gml = ThingMLGraphExport.allGraphML( (ThingMLModel)model.getContents().get(0) );
-                for (String name : gml.keySet()) {
-                    System.out.println(" -> Writing file " + name + ".graphml");
-                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" +new File(name + ".graphml")));
-                    w.println(gml.get(name));
-                    w.close();
-                }
-                  */
-                Hashtable<Configuration, String> ccode =  CGenerator.compileAll( (ThingMLModel)model.getContents().get(0));
-                for (Configuration t : ccode.keySet()) {
-                    System.out.println(" -> Writing file " + t.getName() + ".pde");
-                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" +new File(t.getName() + ".pde")));
-                    w.println(ccode.get(t));
-                    w.close();
-                }
-                    /*
-                Hashtable<Configuration, String> scalacode =  ScalaGenerator.compileAll( (ThingMLModel)model.getContents().get(0), "org.thingml.generated");
-                for (Configuration t : scalacode.keySet()) {
-                    System.out.println(" -> Writing file " + t.getName() + ".scala");
-                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" +new File(t.getName() + ".scala")));
-                    w.println(scalacode.get(t));
-                    w.close();
-                }
-                */
+        try {
+            Hashtable<String, String> dots = ThingMLGraphExport.allGraphviz((ThingMLModel) model.getContents().get(0));
+            for (String name : dots.keySet()) {
+                System.out.println(" -> Writing file " + name + ".dot");
+                PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(name + ".dot")));
+                w.println(dots.get(name));
+                w.close();
             }
-            catch(Throwable t) {
-               t.printStackTrace();
-            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
 
-            
+        try {
+            Hashtable<String, String> gml = ThingMLGraphExport.allGraphML((ThingMLModel) model.getContents().get(0));
+            for (String name : gml.keySet()) {
+                System.out.println(" -> Writing file " + name + ".graphml");
+                PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(name + ".graphml")));
+                w.println(gml.get(name));
+                w.close();
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+
+        try {
+            Hashtable<Configuration, String> ccode = CGenerator.compileAll((ThingMLModel) model.getContents().get(0));
+            for (Configuration t : ccode.keySet()) {
+                System.out.println(" -> Writing file " + t.getName() + ".pde");
+                PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + ".pde")));
+                w.println(ccode.get(t));
+                w.close();
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+
+        try {
+            Hashtable<Configuration, String> scalacode = ScalaGenerator.compileAll((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
+            for (Configuration t : scalacode.keySet()) {
+                System.out.println(" -> Writing file " + t.getName() + ".scala");
+                PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + ".scala")));
+                w.println(scalacode.get(t));
+                w.close();
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+
+
     }
 
     @Override
     public String getName() {
         return this.model_path;
     }
-
-
-
 }

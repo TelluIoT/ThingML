@@ -85,23 +85,24 @@ object ScalaGenerator {
     builder append " **/\n\n"
 
     builder append "package " + pack + "\n"
-    builder append "import org.sintef.smac._" + "\n"
+    builder append "import org.sintef.smac._\n"
+    builder append "import org.thingml.devices._\n"
     
     //TODO this should not always be generated...
-    builder append "import java.util.TimerTask\n"
-    builder append "import java.util.Timer\n"
-    builder append "import scala.util.Random\n"
-    builder append "import scala.swing.Dialog\n"
-
+    /*builder append "import java.util.TimerTask\n"
+     builder append "import java.util.Timer\n"
+     builder append "import scala.util.Random\n"
+     builder append "import scala.swing.Dialog\n"
+     */
     /*builder append "class PollTask(p : Port) extends TimerTask{\n"
-    builder append "override def run {\n"
-    builder append "p.send(new Poll())\n"
-    builder append "}\n"
-    builder append "}\n"
-    builder append "object Random1024{\n"
-    builder append "val r : Random = new Random()\n"
-    builder append "def randomInt() = r.nextInt(256).toByte\n"
-    builder append "}\n"*/
+     builder append "override def run {\n"
+     builder append "p.send(new Poll())\n"
+     builder append "}\n"
+     builder append "}\n"
+     builder append "object Random1024{\n"
+     builder append "val r : Random = new Random()\n"
+     builder append "def randomInt() = r.nextInt(256).toByte\n"
+     builder append "}\n"*/
   }
 
   implicit def scalaGeneratorAspect(self: Thing): ThingScalaGenerator = ThingScalaGenerator(self)
@@ -119,6 +120,11 @@ object ScalaGenerator {
     case t: Enumeration => EnumerationScalaGenerator(t)
     case _ => TypeScalaGenerator(self)
   }
+  
+  implicit def scalaGeneratorAspect(self: TypedElement) = self match {
+    case t: Function => FunctionScalaGenerator(t)
+    case _ => TypedElementScalaGenerator(self)
+  } 
 
   implicit def scalaGeneratorAspect(self: Handler) = self match {
     case h: Transition => TransitionScalaGenerator(h)
@@ -329,11 +335,25 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     }
        
     generatePortDef(builder)
+    
+    
+    self.getFunctions.foreach{
+      f => f.generateScala(builder, self)
+    }
+    
+    self.getAnnotations.filter {
+      a => a.getName == "java_method" || a.getName == "scala_def"
+    }.headOption match {
+      case Some(a) => 
+        builder append a.asInstanceOf[PlatformAnnotation].getValue
+      case None =>
+    }
+    
 
     self.allStateMachines.foreach{b => 
       builder append "this.behavior ++= List("
       val hist = if (b.isHistory) "true" else "false"
-      builder append "new " + b.getName + "StateMachine(" + hist + ", this).getBehavior)\n"
+      builder append "new " + firstToUpper(b.getName) + "StateMachine(" + hist + ", this).getBehavior)\n"
     }
     
     self.allStateMachines.foreach{b => 
@@ -596,7 +616,31 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
   }
 }
 
+case class TypedElementScalaGenerator(val self: TypedElement) /*extends ThingMLScalaGenerator(self)*/ {
+  def generateScala(builder: StringBuilder, thing : Thing) {
+    // Implemented in the sub-classes
+  }
+}
+  
+  
 
+case class FunctionScalaGenerator(override val self: Function) extends TypedElementScalaGenerator(self) {
+  override def generateScala(builder: StringBuilder, thing : Thing) {
+    self.getAnnotations.filter {
+      a => a.getName == "override"
+    }.headOption match {
+      case Some(a) => 
+        builder append "override "
+      case None =>
+    }
+  
+    builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => ScalaGenerator.protectScalaKeyword(p.getName) + " : " + p.getType.scala_type}.mkString(", ") + ") : " + self.getType.scala_type + " = {\n"
+    self.getBody.generateScala(builder, thing)
+    builder append "}\n"
+  }
+}
+  
+    
 /**
  * Type abstract class
  */
@@ -612,18 +656,27 @@ case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGener
 
   def scala_type(): String = {
     self.getAnnotations.filter {
-      a => a.getName == "java_type" || a.getName == "scala_type"
+      a => a.getName == "scala_type"
     }.headOption match {
       case Some(a) => 
         var res : String = a.asInstanceOf[PlatformAnnotation].getValue
         //res = res(0).toUpperCase + res.substring(1, res.length)
         return res
-      case None => {
-          println("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
-          var res : String = self.getName
-          res = res(0).toUpperCase + res.substring(1, res.length)
-          return res
+      case None => 
+        self.getAnnotations.filter {
+          a => a.getName == "java_type"
+        }.headOption match {
+          case Some(a) => 
+            var res : String = a.asInstanceOf[PlatformAnnotation].getValue
+            //res = res(0).toUpperCase + res.substring(1, res.length)
+            return res
+          case None =>
+            println("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
+            var res : String = self.getName
+            res = res(0).toUpperCase + res.substring(1, res.length)
+            return res
         }
+        
     }
   }
 }
