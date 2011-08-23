@@ -131,7 +131,7 @@ configuration fragment SimpleAnalogInput
     connector analog_input.AnalogIO => arduino.AnalogIO
 }
 
-configuration fragment PeriodiqueAnalogInput
+configuration fragment PeriodicAnalogInput
 {
     instance arduino : Arduino
     
