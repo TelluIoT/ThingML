@@ -21,11 +21,11 @@ thing SimpleLed includes LedMsgs, TimerMsgs
 	{
 		state Running
 		{
-			on entry Timer!timer_start (frequency)
+			on entry Timer!timer_start(frequency)
 			
 			transition toggle -> Running
 			event Timer?timer_timeout
-			action Led!led_toggle ()
+			action Led!led_toggle()
 		}
 	}
 }

@@ -36,7 +36,7 @@ import org.sintef.thingml._
 
 object ScalaGenerator {
   
-  var debug = true
+  var debug = false
   
   val keywords = scala.List("implicit","match","requires","type","var","abstract","do","finally","import","object","throw","val","case","else","for","lazy","override","return","trait","catch","extends","forSome","match","package","sealed","try","while","class","false","if","new","private","super","true","with","def","final","implicit","null","protected","this","yield","_",":","=","=>","<-","<:","<%",">:","#","@")
   val badChar = scala.List("_")
@@ -418,7 +418,12 @@ case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScal
   def printGuard(builder : StringBuilder, thing : Thing) {
     if(self.getGuard != null){
       builder append "override def checkGuard() : Boolean = {\n"
+      builder append "try\n"
       self.getGuard.generateScala(builder, thing)
+      builder append "\ncatch {\n"
+      builder append "case nse : java.util.NoSuchElementException => return false\n"
+      builder append "case e : Exception => return false\n"
+      builder append"}\n"
       builder append "\n}\n"
     }
   }
