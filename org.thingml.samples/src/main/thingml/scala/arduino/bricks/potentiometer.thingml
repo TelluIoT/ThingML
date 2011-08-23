@@ -30,7 +30,7 @@ thing Potentiometer includes PotentiometerMessages
 		
 		on entry do
 		device = 'new org.thingml.devices.PotentiometerDemo(0, 1023)' 
-		'Potentiometer_device_var.addObserver(root)'
+		'Potentiometer_device_var.register(root)'
 		end
 			
 		state Ready {}
