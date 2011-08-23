@@ -127,46 +127,39 @@ thing SimpleSoundSensorDisplay includes SimpleSensorsDisplay, SoundSensorMsgs
 
 configuration SimpleSensorsDisplay
 {
-    // Arduino declaration.
-    instance arduino : Arduino
+    group rotation_sensor : RotationSensor
+        set rotation_sensor.io.analog_input.pin = AnalogPin:A_4
+        
+    group temperature_sensor : TemperatureSensor
+        set temperature_sensor.io.analog_input.pin = AnalogPin:A_4
+        
+    group light_sensor : LightSensor
+        set light_sensor.io.analog_input.pin = AnalogPin:A_4
+        
+    group sound_sensor : SoundSensor
+        set sound_sensor.io.analog_input.pin = AnalogPin:A_4
+ 
+    instance lcd_screen : LcdScreen
+       
+    //* Uncomment only the lines which refer to the sensor you want use. *//
     
-	// Screen declaration.
-	instance lcd_screen : LcdScreen
-
-    // Analog input configuration
-    instance analog_input : OnChangeAnalogInput
-        set pin = AnalogPin:A_4
-    instance timer : SoftTimer
-    connector analog_input.AnalogIO => arduino.AnalogIO
-    connector analog_input.Timer => timer.timer
- 		
-//* Uncomment only the five lines which refer to the sensor you want use. *//
-
-	// * Rotation sensor *
- 	instance pot_sensor_display : SimpleRotSensorDisplay
-    instance pot_sensor : RotationSensor
-    connector pot_sensor_display.RotationSensor => pot_sensor.RotationSensor
- 	connector pot_sensor_display.LcdScreen => lcd_screen.LcdScreen
-    connector pot_sensor.AnalogInput => analog_input.AnalogInput
-
-// 	// * Temperature sensor *
+//     // * Rotation sensor *
+//     instance rot_sensor_display : SimpleRotSensorDisplay
+//     connector rot_sensor_display.RotationSensor => rotation_sensor.rotation_sensor.RotationSensor
+//  	connector rot_sensor_display.LcdScreen => lcd_screen.LcdScreen
+    
+//     // * Temperature sensor *
 // 	instance temp_sensor_display : SimpleTempSensorDisplay
-//     instance temp_sensor : TemperatureSensor
-//     connector temp_sensor_display.TempSensor => temp_sensor.TemperatureSensor
+//     connector temp_sensor_display.TempSensor => temperature_sensor.temperature_sensor.TemperatureSensor
 // 	connector temp_sensor_display.LcdScreen => lcd_screen.LcdScreen
-//     connector temp_sensor.AnalogInput => analog_input.AnalogInput
 
-// 	// * Light sensor *
-// 	instance lux_sensor_display : SimpleLightSensorDisplay
-//     instance lux_sensor : LightSensor
-//     connector lux_sensor_display.LightSensor => lux_sensor.LightSensor
-// 	connector lux_sensor_display.LcdScreen => lcd_screen.LcdScreen
-//     connector lux_sensor.AnalogInput => analog_input.AnalogInput 
+//     // * Light sensor *
+// 	instance light_sensor_display : SimpleLightSensorDisplay
+//     connector light_sensor_display.LightSensor => light_sensor.light_sensor.LightSensor
+// 	connector light_sensor_display.LcdScreen => lcd_screen.LcdScreen
 
-//     // * Sound  sensor *
-// 	instance sound_sensor_display : SimpleSoundSensorDisplay
-//     instance sound_sensor : SoundSensor
-//     connector sound_sensor_display.SoundSensor => sound_sensor.SoundSensor
-//     connector sound_sensor_display.LcdScreen => lcd_screen.LcdScreen
-//     connector sound_sensor.AnalogInput => analog_input.AnalogInput  
+    // * Sound  sensor *
+	instance sound_sensor_display : SimpleSoundSensorDisplay
+    connector sound_sensor_display.SoundSensor => sound_sensor.sound_sensor.SoundSensor
+    connector sound_sensor_display.LcdScreen => lcd_screen.LcdScreen
 }

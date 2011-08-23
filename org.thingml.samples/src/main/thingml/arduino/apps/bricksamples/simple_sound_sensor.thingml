@@ -15,8 +15,6 @@ import "../../bricks/led.thingml"
 
 thing SimpleSoundSensor includes LedMsgs, SoundSensorMsgs
 {
-	readonly property led_pin : DigitalPin = DigitalPin:PIN_8
-	readonly property sound_sensor_pin : AnalogPin = AnalogPin:A_4
 	readonly property threshold : UInt16 = 500
 	
 	required port Led
@@ -41,46 +39,15 @@ thing SimpleSoundSensor includes LedMsgs, SoundSensorMsgs
 }
 
 configuration SimpleSoundSensor
-{
-	// Arduino declaration.
-	instance arduino : Arduino
-	
-	// Digital output configuration.
-	instance digital_output : DigitalOutput
-		set pin = DigitalPin:PIN_8
-	connector digital_output.DigitalIO => arduino.DigitalIO
-	
-	// Led configuration.
-	instance led : Led
-	connector led.DigitalOutput => digital_output.DigitalOutput
-	
-	 // Analog input configuration.
-    instance analog_input : OnChangeAnalogInput
-        set pin = AnalogPin:A_4
-        set refresh_rate = 1
-    instance timer : SoftTimer
-    connector analog_input.AnalogIO => arduino.AnalogIO
-    connector analog_input.Timer => timer.timer
-    
-    // Sound sensor configuration.
-	instance sound_sensor : SoundSensor
-        set sample_rate = 100
-	connector sound_sensor.AnalogInput => analog_input.AnalogInput
-	
-	// Simple sound sensor configuration.
-	instance simple_sound_sensor : SimpleSoundSensor
-	connector simple_sound_sensor.Led => led.Led
-	connector simple_sound_sensor.SoundSensor => sound_sensor.SoundSensor
-
-    // ******************************* //
-    
-//     group led : Led
-//         set led.io.digital_output.pin = DigitalPin:PIN_8
-//     group sound_sensor : SoundSensor
-//         set sound_sensor.io.analog_input.pin = AnalogPin:A_4
-//         
-//     instance simple_sound_sensor : SimpleSoundSensor
-// 	connector simple_sound_sensor.Led => led.led.Led
-// 	connector simple_sound_sensor.SoundSensor => sound_sensor.sound_sensor.SoundSensor
-    
+{    
+    group led : Led
+        set led.io.digital_output.pin = DigitalPin:PIN_8
+    group sound_sensor : SoundSensor
+        set sound_sensor.io.analog_input.pin = AnalogPin:A_4
+        set sound_sensor.io.analog_input.refresh_rate = 1 
+        set sound_sensor.sound_sensor.sample_rate = 100
+        
+    instance simple_sound_sensor : SimpleSoundSensor
+	connector simple_sound_sensor.Led => led.led.Led
+	connector simple_sound_sensor.SoundSensor => sound_sensor.sound_sensor.SoundSensor  
 }

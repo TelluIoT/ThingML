@@ -14,8 +14,6 @@ import "../../devices/softtimer.thingml"
 
 thing SimpleBuzzer includes BuzzerMsgs, TimerMsgs
 {
-	readonly property buzzer_pin : DigitalPin = DigitalPin:PIN_8
-
 	property counter : UInt8 = 0
     property end_motif : Boolean = false 
 	
@@ -86,37 +84,13 @@ thing SimpleBuzzer includes BuzzerMsgs, TimerMsgs
 }
 
 configuration SimpleBuzzer
-{
-	// Arduino declaration.
-	instance arduino : Arduino
-	
-	// Digital output configuration.
-	instance digital_output : DigitalOutput
-		set pin = DigitalPin:PIN_8
-	connector digital_output.DigitalIO => arduino.DigitalIO
-	
-	// Buzzer configuration.
-	instance buz_timer : SoftTimer
-	instance buzzer : Buzzer
-	connector buzzer.Timer => buz_timer.timer 
-	connector buzzer.DigitalOutput => digital_output.DigitalOutput
-		
-	// Timer configuration.
-	instance timer : SoftTimer
-	
-	// Simple buzzer configuration.
-	instance simple_buzzer : SimpleBuzzer
-	connector simple_buzzer.Buzzer => buzzer.Buzzer
-	connector simple_buzzer.Timer => timer.timer
-
-    //************************//
+{    
+    group buzzer : Buzzer
+        set buzzer.io.digital_output.pin = DigitalPin:PIN_8
+        
+    instance timer : SoftTimer
     
-//     group buzzer : Buzzer
-//         set buzzer.io.digital_output.pin = DigitalPin:PIN_8
-//         
-//     instance timer : SoftTimer
-//     
-//     instance simple_buzzer : SimpleBuzzer
-// 	connector simple_buzzer.Buzzer => buzzer.buzzer.Buzzer
-// 	connector simple_buzzer.Timer => timer.timer
+    instance simple_buzzer : SimpleBuzzer
+	connector simple_buzzer.Buzzer => buzzer.buzzer.Buzzer
+	connector simple_buzzer.Timer => timer.timer
 }

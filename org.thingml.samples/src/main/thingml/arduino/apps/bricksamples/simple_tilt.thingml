@@ -16,9 +16,6 @@ import "../../devices/digital_input.thingml"
 
 thing SimpleTilt includes LedMsgs, TiltSwitchMsgs
 {
-	readonly property led_pin : DigitalPin = DigitalPin:PIN_9
-	readonly property tilt_pin : DigitalPin = DigitalPin:PIN_8
-	
 	required port Led
 	{
 		sends led_toggle
@@ -40,41 +37,13 @@ thing SimpleTilt includes LedMsgs, TiltSwitchMsgs
 }
 
 configuration SimpleTilt
-{
-	// Arduino declaration.
-	instance arduino : Arduino
-	
-	// Digital output configuration.
-	instance digital_output : DigitalOutput
-		set pin = DigitalPin:PIN_8
-	connector digital_output.DigitalIO => arduino.DigitalIO
-	
-	// Led configuration.
-	instance led : Led
-	connector led.DigitalOutput => digital_output.DigitalOutput
-		
-	// Digital input configuration.
-	instance digital_input : OnChangeDigitalInput
-		set pin = DigitalPin:PIN_9
-	connector digital_input.DigitalIO => arduino.DigitalIO
-	
-	// tilt configuration.
-	instance tilt : TiltSwitch
-	connector tilt.DigitalInput => digital_input.DigitalInput
-	
-	// Simple button configuration.
-	instance simple_tilt : SimpleTilt
-	connector simple_tilt.Led => led.Led
-	connector simple_tilt.TiltSwitch => tilt.TiltSwitch
-
-    // *********************** //
-    
-//     group led : Led
-//         set led.io.digital_output.pin = DigitalPin:PIN_8
-//     group tilt : TiltSwitch
-//         set tilt.io.digital_input.pin = DigitalPin:PIN_9
-//         
-//     instance simple_tilt : SimpleTilt
-// 	connector simple_tilt.Led => led.led.Led
-// 	connector simple_tilt.TiltSwitch => tilt.tilt_switch.TiltSwitch
+{    
+    group led : Led
+        set led.io.digital_output.pin = DigitalPin:PIN_8
+    group tilt : TiltSwitch
+        set tilt.io.digital_input.pin = DigitalPin:PIN_9
+        
+    instance simple_tilt : SimpleTilt
+	connector simple_tilt.Led => led.led.Led
+	connector simple_tilt.TiltSwitch => tilt.tilt_switch.TiltSwitch
 }

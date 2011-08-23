@@ -7,9 +7,7 @@ thing fragment TiltSwitchMsgs includes DigitalInputMsgs
 }
 
 thing TiltSwitch includes TiltSwitchMsgs
-{
-    readonly property pin : DigitalPin = DigitalPin:PIN_10
-    
+{ 
 	provided port TiltSwitch 
     {
 		sends tilt_toggle
