@@ -31,14 +31,11 @@ thing TiltSwitch includes TiltSwitchMsgs
     }
 }
 
-//* Configuration needs:
-//
-// includes DigitalInputConf
-//
-// instance tilt_switch : TiltSwitch
-// instance digital_input : DigitalInput
-// 		set pin = pin	 
-// 
-// connector tilt_switch.DigitalInput => digital_input.DigitalInput
-//
-//* 
+
+configuration fragment TiltSwitch
+{
+    group io : OnChangeDigitalInput
+
+    instance tilt_switch : TiltSwitch
+    connector tilt_switch.DigitalInput => io.digital_input.DigitalInput
+}  

@@ -3,6 +3,17 @@ import "../../bricks/led.thingml"
 import "../../bricks/tilt_switch.thingml"
 import "../../devices/digital_input.thingml"
 
+//*
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+//      - tilt switch (1)   -> Default pin: D_9    
+//      - led (1)           -> Default pin: D_8
+//
+// The led toggle when the tilt switch.
+//*
+
 thing SimpleTilt includes LedMsgs, TiltSwitchMsgs
 {
 	readonly property led_pin : DigitalPin = DigitalPin:PIN_9
@@ -29,15 +40,13 @@ thing SimpleTilt includes LedMsgs, TiltSwitchMsgs
 }
 
 configuration SimpleTilt
-@debug "false"
-@debug_message_receive "press"
 {
 	// Arduino declaration.
 	instance arduino : Arduino
 	
 	// Digital output configuration.
 	instance digital_output : DigitalOutput
-		set pin = DigitalPin:PIN_9
+		set pin = DigitalPin:PIN_8
 	connector digital_output.DigitalIO => arduino.DigitalIO
 	
 	// Led configuration.
@@ -46,7 +55,7 @@ configuration SimpleTilt
 		
 	// Digital input configuration.
 	instance digital_input : OnChangeDigitalInput
-		set pin = DigitalPin:PIN_8
+		set pin = DigitalPin:PIN_9
 	connector digital_input.DigitalIO => arduino.DigitalIO
 	
 	// tilt configuration.
@@ -57,4 +66,15 @@ configuration SimpleTilt
 	instance simple_tilt : SimpleTilt
 	connector simple_tilt.Led => led.Led
 	connector simple_tilt.TiltSwitch => tilt.TiltSwitch
+
+    // *********************** //
+    
+//     group led : Led
+//         set led.io.digital_output.pin = DigitalPin:PIN_8
+//     group tilt : TiltSwitch
+//         set tilt.io.digital_input.pin = DigitalPin:PIN_9
+//         
+//     instance simple_tilt : SimpleTilt
+// 	connector simple_tilt.Led => led.led.Led
+// 	connector simple_tilt.TiltSwitch => tilt.tilt_switch.TiltSwitch
 }

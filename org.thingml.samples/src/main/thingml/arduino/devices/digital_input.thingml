@@ -101,3 +101,11 @@ thing OnChangeDigitalInput includes DigitalInput
         }
     }   
 }
+
+configuration fragment OnChangeDigitalInput
+{
+    instance arduino : Arduino
+
+    instance digital_input : OnChangeDigitalInput
+    connector digital_input.DigitalIO => arduino.DigitalIO
+}

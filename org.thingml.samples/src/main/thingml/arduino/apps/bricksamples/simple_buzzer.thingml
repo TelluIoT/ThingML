@@ -7,7 +7,7 @@ import "../../devices/softtimer.thingml"
 // Electronic Brick components.
 //  
 // Requirements:
-//      - buzzer (1) 
+//      - buzzer (1)    ->  Default pin: D_8
 //
 // The buzzer plays an SOS signal.
 //*
@@ -104,8 +104,19 @@ configuration SimpleBuzzer
 	// Timer configuration.
 	instance timer : SoftTimer
 	
-	// Simple led configuration.
+	// Simple buzzer configuration.
 	instance simple_buzzer : SimpleBuzzer
 	connector simple_buzzer.Buzzer => buzzer.Buzzer
 	connector simple_buzzer.Timer => timer.timer
+
+    //************************//
+    
+//     group buzzer : Buzzer
+//         set buzzer.io.digital_output.pin = DigitalPin:PIN_8
+//         
+//     instance timer : SoftTimer
+//     
+//     instance simple_buzzer : SimpleBuzzer
+// 	connector simple_buzzer.Buzzer => buzzer.buzzer.Buzzer
+// 	connector simple_buzzer.Timer => timer.timer
 }
