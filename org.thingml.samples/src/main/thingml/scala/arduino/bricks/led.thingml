@@ -12,7 +12,7 @@ thing fragment LedMsgs
 
 thing Led includes LedMsgs
 {
-    readonly property device : LedDevice
+    readonly property device : LedDevice = 'new org.thingml.devices.LedDemo()'
     
 	provided port Led 
     {
@@ -21,11 +21,11 @@ thing Led includes LedMsgs
     
     statechart LedImpl init LedOff 
     {    
-    	on entry device = 'new org.thingml.devices.LedDemo()'
+    	//on entry device = 'new org.thingml.devices.LedDemo()'
     
         state LedOff 
         {
-            on entry 'Led_device_var.off()'
+            on entry '' & device & '.off()'
             transition switch_on -> LedOn 
             event Led?led_on 
             event Led?led_toggle
@@ -34,7 +34,7 @@ thing Led includes LedMsgs
         
         state LedOn 
         {
-            on entry 'Led_device_var.on()'
+            on entry '' & device & '.on()'
             transition switch_off -> LedOff 
             event Led?led_off 
             event Led?led_toggle

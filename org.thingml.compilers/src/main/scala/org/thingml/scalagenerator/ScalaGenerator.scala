@@ -374,7 +374,14 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     builder append "\n// Variables for the properties of the instance\n"
     self.allPropertiesInDepth.foreach {
       p =>
-      builder append "var " + p.scala_var_name + " : " + p.getType.scala_type + " = _\n"
+      builder append "var " + p.scala_var_name + " : " + p.getType.scala_type + " = "
+      p.getInit match {
+        case i : Expression => 
+          val tempBuilder = new StringBuilder
+          i.generateScala(tempBuilder, self)
+          builder append tempBuilder.toString
+        case _ => builder append "_\n"
+      }
     }
   }
 }
