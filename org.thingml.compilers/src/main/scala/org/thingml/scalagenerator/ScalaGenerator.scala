@@ -361,8 +361,9 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
           val tempBuilder = new StringBuilder
           i.generateScala(tempBuilder, self)
           builder append tempBuilder.toString
-        case _ => builder append "_\n"
+        case _ => builder append "_"
       }
+      builder append "\n"
     }
   }
 }

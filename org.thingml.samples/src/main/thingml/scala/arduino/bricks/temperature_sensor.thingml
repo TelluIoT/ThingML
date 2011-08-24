@@ -1,7 +1,20 @@
 import "sensorAPI.thingml"
 
-thing TemperatureSensor includes SensorAPI
+thing fragment TemperatureSensorMsgs 
 {
+	message read_temperature ();
+	message temperature_value (val : Int16);
+}
+
+thing TemperatureSensor includes SensorAPI, TemperatureSensorMsgs
+{   
+ 
+    provided port TemperatureSensor 
+    {
+		receives read_temperature
+		sends temperature_value
+	}
+    
 	statechart behavior init Ready {
 		
 		on entry
@@ -9,6 +22,14 @@ thing TemperatureSensor includes SensorAPI
 		  device = 'new org.thingml.devices.PotentiometerDemo(-40, 130)' 
 		  'register()'
 		end
+
+        //This is an example of pull mode (sends the last value when requested by a client)
+        internal 
+        event m : TemperatureSensor?read_temperature
+        action
+        do
+            TemperatureSensor!temperature_value(lastValue)
+        end
 			
 		state Ready {}
 		

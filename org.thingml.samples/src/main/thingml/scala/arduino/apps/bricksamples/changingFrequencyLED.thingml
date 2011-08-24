@@ -2,7 +2,7 @@ import "../../bricks/led.thingml"
 import "../../bricks/potentiometer.thingml"
 import "../../devices/softtimer.thingml"
 
-thing ChangingFrequencyLed includes LedMsgs, TimerMsgs, SensorMsgs
+thing ChangingFrequencyLed includes LedMsgs, TimerMsgs, PotentiometerMsgs
 {
 	property frequency : UInt16 = 500
 	
@@ -41,11 +41,12 @@ thing ChangingFrequencyLed includes LedMsgs, TimerMsgs, SensorMsgs
 configuration ScalaChangingFrequencyLedSimulator
 {
 	instance led : Led
-	instance potentiometer: Potentiometer		
+	instance potentiometer: Potentiometer
+    connector potentiometer.Sensor => potentiometer.SensorMockUp
 	instance timer : SoftTimer
 	instance controller: ChangingFrequencyLed
 	
 	connector controller.Timer => timer.timer 
 	connector controller.Led => led.Led
-	connector controller.Potentiometer => potentiometer.Sensor
+	connector controller.Potentiometer => potentiometer.Potentiometer
 }

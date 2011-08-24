@@ -1,7 +1,16 @@
 import "sensorAPI.thingml"
 
-thing Potentiometer includes SensorAPI
+thing fragment PotentiometerMsgs{
+    message newValue(value : Integer);     
+}
+
+thing Potentiometer includes SensorAPI, PotentiometerMsgs
 {
+    
+    provided port Potentiometer {
+       sends newValue
+    }
+    
 	statechart behavior init Ready {
 		
 		on entry 
@@ -9,6 +18,14 @@ thing Potentiometer includes SensorAPI
 		  device = 'new org.thingml.devices.PotentiometerDemo(0, 1023)' 
 		  'register()'
 		end
+
+        //This is an example to implement push mode (send the last value whenever the mock is udapted)
+        internal 
+        event m : Sensor?update
+        action
+        do
+            Potentiometer!newValue(lastValue)
+        end
 			
 		state Ready {}
 		
