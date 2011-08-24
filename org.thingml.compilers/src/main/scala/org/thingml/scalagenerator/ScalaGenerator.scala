@@ -87,22 +87,6 @@ object ScalaGenerator {
     builder append "package " + pack + "\n"
     builder append "import org.sintef.smac._\n"
     builder append "import org.thingml.devices._\n"
-    
-    //TODO this should not always be generated...
-    /*builder append "import java.util.TimerTask\n"
-     builder append "import java.util.Timer\n"
-     builder append "import scala.util.Random\n"
-     builder append "import scala.swing.Dialog\n"
-     */
-    /*builder append "class PollTask(p : Port) extends TimerTask{\n"
-     builder append "override def run {\n"
-     builder append "p.send(new Poll())\n"
-     builder append "}\n"
-     builder append "}\n"
-     builder append "object Random1024{\n"
-     builder append "val r : Random = new Random()\n"
-     builder append "def randomInt() = r.nextInt(256).toByte\n"
-     builder append "}\n"*/
   }
 
   implicit def scalaGeneratorAspect(self: Thing): ThingScalaGenerator = ThingScalaGenerator(self)
@@ -130,11 +114,7 @@ object ScalaGenerator {
     case h: Transition => TransitionScalaGenerator(h)
     case h: InternalTransition => InternalTransitionScalaGenerator(h)
   }  
-  
-  /* implicit def scalaGeneratorAspect(self: Region) = self match {
-   case r: ParallelRegion => ParallelRegionScalaGenerator(r)
-   }*/
-  
+    
   implicit def scalaGeneratorAspect(self: State) = self match {
     case s: StateMachine => StateMachineScalaGenerator(s)
     case s: CompositeState => CompositeStateScalaGenerator(s)
@@ -264,7 +244,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     
     builder append "//Starting Things\n"
     self.allInstances.foreach{ i =>
-      builder append i.getType.getName + "_" + i.getName + ".start\n"
+      builder append i.getType.getName + "_" + i.getName + ".asInstanceOf[Component].start\n"
     }
     
     builder append "}\n\n"
@@ -359,13 +339,21 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     self.allStateMachines.foreach{b => 
       b.asInstanceOf[StateMachine].generateScala(builder, self)
     }
+    /*self.allStateMachines.foreach{b => 
+      b.getInternal.foreach{t => 
+        b.generateInternalTransitions(builder, t, self)
+      }
+      b.getInternal.foreach{t => 
+        t.generateScala(builder, self)
+      }
+    }*/
     
     builder append "}\n"
   }
 
   def generatePortDef(builder : StringBuilder) {
     self.allPorts.foreach{ p => 
-      builder append "new Port(\"" + p.getName + "\", List(" + p.getReceives.collect{case r => firstToUpper(self.getName) + "." + p.getName + "Port.in." + r.getName}.mkString(", ").toString + "), List(" + p.getSends.collect{case s => firstToUpper(self.getName) + "." + p.getName + "Port.out." + s.getName}.mkString(", ").toString + "), this).start\n"
+      builder append "new Port(" + firstToUpper(self.getName) + "." + p.getName + "Port.getName, List(" + p.getReceives.collect{case r => firstToUpper(self.getName) + "." + p.getName + "Port.in." + r.getName}.mkString(", ").toString + "), List(" + p.getSends.collect{case s => firstToUpper(self.getName) + "." + p.getName + "Port.out." + s.getName}.mkString(", ").toString + "), this).start\n"
     }
   }
   
@@ -418,9 +406,9 @@ case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScal
   def printGuard(builder : StringBuilder, thing : Thing) {
     if(self.getGuard != null){
       builder append "override def checkGuard() : Boolean = {\n"
-      builder append "try\n"
+      builder append "try {\n"
       self.getGuard.generateScala(builder, thing)
-      builder append "\ncatch {\n"
+      builder append "}\ncatch {\n"
       builder append "case nse : java.util.NoSuchElementException => return false\n"
       builder append "case e : Exception => return false\n"
       builder append"}\n"
@@ -492,6 +480,10 @@ case class StateMachineScalaGenerator(override val self: StateMachine) extends C
     builder append "val parent : StateMachine = new StateMachine(this, keepHistory, root)\n"
     
     generateActions(builder, thing)
+    self.getInternal.foreach{t =>
+      generateInternalTransitions(builder, t, thing)
+    }
+    generateInternalTransitions(builder, thing)
     generateSub(builder, thing)
     
     builder append "}\n"
@@ -537,9 +529,7 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
   }
   
   def generateInternalTransitions(builder : StringBuilder, t : InternalTransition, thing : Thing){
-    val state = t.eContainer.asInstanceOf[State].getName + "_state"
-    builder append "val t_self_" + t.hashCode  + " = new InternalTransition(" + state + ", " + "new InternalTransition" + t.hashCode + "(), " + generateHandler(t, thing) + ")\n"
-    builder append state + ".addInternalTransition(t_self_" + t.hashCode + ")\n"
+    builder append "val t_self_" + t.hashCode  + " = new InternalTransition(getBehavior, " + "new InternalTransition" + t.hashCode + "(), " + generateHandler(t, thing) + ")\n"
   }
   
   def generateInternalTransitions(builder : StringBuilder, thing : Thing) {
@@ -552,6 +542,10 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
     builder append "case class " + firstToUpper(self.getName) + "State extends StateAction {\n"
     
     generateActions(builder, thing)
+    self.getInternal.foreach{t =>
+      generateInternalTransitions(builder, t, thing)
+    }
+    generateInternalTransitions(builder, thing)
 
     builder append "}\n\n"
   }
@@ -586,9 +580,9 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
       }
       builder append "parent.addSubState(" + sub.getName + "_state" + ")\n"
       
-      sub.getInternal.foreach{t => 
+      /*sub.getInternal.foreach{t => 
         generateInternalTransitions(builder, t, thing)
-      }
+      }*/
       sub.generateScala(builder, thing)
     }
     builder append "parent.setInitial(" + self.getInitial.getName + "_state" + ")\n\n"
@@ -604,7 +598,7 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
     }
     
     self.getSubstate.foreach{sub => 
-      sub.generateInternalTransitions(builder, thing)
+      //sub.generateInternalTransitions(builder, thing)
       sub.getOutgoing.foreach{ t => 
         t.generateScala(builder, thing)
       }
@@ -618,6 +612,10 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
     builder append "val parent : CompositeState = new CompositeState(this, keepHistory, root)\n"
     
     generateActions(builder, thing)
+    self.getInternal.foreach{t =>
+      generateInternalTransitions(builder, t, thing)
+    }
+    generateInternalTransitions(builder, thing)
     generateSub(builder, thing)
     //generateInternalTransitions(builder)
     self.getRegion.foreach{r =>

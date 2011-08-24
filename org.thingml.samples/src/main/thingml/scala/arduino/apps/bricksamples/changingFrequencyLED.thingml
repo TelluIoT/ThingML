@@ -41,13 +41,13 @@ thing ChangingFrequencyLed includes LedMsgs, TimerMsgs, PotentiometerMessages
 
 configuration ScalaChangingFrequencyLedSimulator
 {
-    instance scheduler : ThingMLScheduler
+    //instance scheduler : ThingMLScheduler
 	instance led : Led
 	instance potentiometer: Potentiometer		
 	instance timer : SoftTimer
 	instance controller: ChangingFrequencyLed
 	
-    connector timer.Polling => scheduler.Polling
+    //connector timer.Polling => scheduler.Polling
 	connector controller.Timer => timer.timer 
 	connector controller.Led => led.Led
 	connector controller.Potentiometer => potentiometer.Potentiometer

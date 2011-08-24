@@ -1,40 +1,54 @@
 import "../../thingml.thingml"
 
+datatype JavaTimer
+@java_type "java.util.Timer";
+
 // Manage a set of software timers.
-// this should be refactored to avoid using poll
 thing SoftTimer includes Timer, ThingMLSchedulerMsg
+@scala_trait "org.thingml.utils.TimerTaskTrait"
 {
+
+    readonly property javaTimer : JavaTimer = 'new java.util.Timer()'
 	
-	required port Polling {
+    required port Polling {
 		receives poll
 	}
-    
-    statechart SoftTimer init Idle {
-    
-        property target : Long = 0
-    
-        state Idle {
-            transition start -> Counting
-                event m : timer?timer_start
-                guard m.delay > 0
-                action target = 'System.currentTimeMillis()' + m.delay
-        }
-        
-        state Counting {
-            
-            transition timeout -> Idle 
-                event Polling?poll
-                guard not ('System.currentTimeMillis()' < target)
-                after timer!timer_timeout()
-                
-            transition cancel -> Idle
-                event m : timer?timer_cancel
-                
-            internal reset
-                event m : timer?timer_start
-                guard m.delay > 0
-                action target = 'System.currentTimeMillis()' + m.delay
 
-        }
+    function run()@override "true" : Void
+    do
+        timer!timer_timeout()
+    end
+    
+    function cancel() : Void
+    do
+      'try {'
+      '' & javaTimer & '.cancel'            
+      '' & javaTimer & '.purge'
+      '} catch {'
+      'case _ =>'
+      '}'
+    end
+    
+    function start(delay : Integer) : Void
+    do
+        '' & javaTimer & '.schedule(this.newTimerTask, ' & delay & ')'
+    end
+    
+    statechart SoftTimer init default {
+    
+        internal start
+            event m : timer?timer_start
+            guard m.delay > 0
+            action do //should be implemented as proper ThingML function calls (currently not supported by compiler)
+                //'cancel()'
+                'start(' & m.delay & ')'
+            end
+            
+        internal cancel
+            event m : timer?timer_cancel
+            action 'cancel()' //should be implemented as proper ThingML function calls (currently not supported by compiler)
+    
+        state default {}
+        
     }
 }

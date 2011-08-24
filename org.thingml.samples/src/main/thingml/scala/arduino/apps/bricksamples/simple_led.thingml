@@ -33,14 +33,14 @@ thing SimpleLed includes LedMsgs, TimerMsgs
 configuration ScalaSimpleLedSimulator
 {
 	// Scheduler declaration.
-	instance scheduler : ThingMLScheduler
+	//instance scheduler : ThingMLScheduler
 		
 	// Led configuration.
 	instance led : Led
 		
 	// Timer configuration.
 	instance timer : SoftTimer
-	connector timer.Polling => scheduler.Polling
+	//connector timer.Polling => scheduler.Polling
 	
 	// Simple led configuration.
 	instance simple_led : SimpleLed
