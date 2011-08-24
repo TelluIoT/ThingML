@@ -37,6 +37,7 @@ thing LightSensor includes LightSensorMsgs, AnalogInputMsgs
 configuration fragment LightSensor
 {
     group io : OnChangeAnalogInput
+    	set io.analog_input.refresh_rate = 500
 
     instance light_sensor : LightSensor
     connector light_sensor.AnalogInput => io.analog_input.AnalogInput

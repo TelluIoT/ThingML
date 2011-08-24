@@ -1,0 +1,43 @@
+import "../core/arduino.thingml"
+import "../core/digital_input.thingml"
+
+thing fragment WaterSensorMsgs 
+{
+	message read_water ();
+	message water_value (val : DigitalState);
+}
+
+thing WaterSensor includes WaterSensorMsgs, DigitalInputMsgs
+{  
+	provided port WaterSensor 
+    {
+		receives read_water
+		sends water_value
+	}
+
+    required port DigitalInput
+    {
+        receives digital_input_value
+        sends read_digital_input    
+    }
+    
+    statechart WaterSensorImpl init Running 
+    {        
+        internal event m : DigitalInput?digital_input_value
+    	action WaterSensor!water_value (m.value)
+   
+        state Running 
+        {   
+        	internal force_reading event WaterSensor?read_water
+        	action DigitalInput!read_digital_input ()
+        }   
+    }
+}
+
+configuration fragment WaterSensor
+{
+    group io : OnChangeDigitalInput
+
+    instance water_sensor : WaterSensor
+    connector water_sensor.DigitalInput => io.digital_input.DigitalInput
+} 
