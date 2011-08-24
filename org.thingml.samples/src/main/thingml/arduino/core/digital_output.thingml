@@ -16,17 +16,17 @@ thing DigitalOutput includes DigitalOutputMsgs, ArduinoStdlibMsgs
 	
 	required port DigitalIO
     {
-        sends pinMode, digitalWrite    
+        sends pin_mode, digital_write    
     }
     
     statechart DigitalOutpuImpl init Running
     {
-    	on entry DigitalIO!pinMode (pin, PinMode:OUTPUT)
+    	on entry DigitalIO!pin_mode (pin, PinMode:OUTPUT)
     	
     	state Running
     	{
     		internal event m : DigitalOutput?digital_output_value
-    		action DigitalIO!digitalWrite (pin, m.value)
+    		action DigitalIO!digital_write (pin, m.value)
     	}
     }
 }

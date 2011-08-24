@@ -1,7 +1,7 @@
-import "../devices/led.thingml"
-import "../devices/softtimer.thingml"
+import "../bricks/led.thingml"
+import "../core/arduino_timer.thingml"
 
-thing Blink2Leds includes LEDMsgs, TimerMsgs
+thing Blink2Leds includes LedMsgs, TimerMsgs
 {
 
 	required port timer1
@@ -50,24 +50,20 @@ thing Blink2Leds includes LEDMsgs, TimerMsgs
     }
 }
 
-configuration Blink2Leds {       
-
-	// The arduino board with 2 LEDs on pin 10 and 13
-	instance arduino : Arduino
-	
-	instance led1 : LED set pin = DigitalPin:PIN_10 
-	connector led1.DigitalIO => arduino.DigitalIO
-	
-	instance led2 : LED set pin = DigitalPin:PIN_13 
-	connector led2.DigitalIO => arduino.DigitalIO
-	
+configuration Blink2Leds 
+{       
+	group led1 : Led
+		set led1.io.digital_output.pin = DigitalPin:PIN_10
+	group led2 : Led
+		set led1.io.digital_output.pin = DigitalPin:PIN_13
+		
 	instance timer1 : SoftTimer
 	instance timer2 : SoftTimer
 	
 	// The blink application
 	instance app : Blink2Leds
-	connector app.led1 => led1.LED
+	connector app.led1 => led1.led.Led
 	connector app.timer1 => timer1.timer
-	connector app.led2 => led2.LED
+	connector app.led2 => led2.led.Led
 	connector app.timer2 => timer2.timer
 }

@@ -104,57 +104,57 @@ enumeration InterruptTrigger
 thing fragment ArduinoStdlibMsgs {
 
 	// Digital I/O
-	message pinMode(pin : DigitalPin, mode : PinMode) @code "2";
-	message digitalWrite(pin : DigitalPin, value : DigitalState) @code "3";
-	message digitalRead(pin : DigitalPin) @code "4"
+	message pin_mode (pin : DigitalPin, mode : PinMode) @code "2";
+	message digital_write (pin : DigitalPin, value : DigitalState) @code "3";
+	message digital_read (pin : DigitalPin) @code "4"
 		@sync_response "digitalReadResult#value" @timeout "500" @retry "0";
-	message digitalReadResult(pin : DigitalPin, value : DigitalState) @code "5";
+	message digital_read_result (pin : DigitalPin, value : DigitalState) @code "5";
 	
 	// Analog I/O
-	message analogReference(type : AnalogReference) @code "6";
-	message analogRead(pin : AnalogPin) @code "7" 
+	message analog_reference (type : AnalogReference) @code "6";
+	message analog_read (pin : AnalogPin) @code "7" 
 		@sync_response "analogReadResult#value" @timeout "500" @retry "0";
-	message analogReadResult(pin : AnalogPin, value : Int16) @code "8";
-	message analogWrite(pin : PWMPin, value : Int8) @code "9";
+	message analog_read_result (pin : AnalogPin, value : Int16) @code "8";
+	message analog_write (pin : PWMPin, value : Int8) @code "9";
 	
 	// Advanced I/O
-	message tone(pin : DigitalPin, frequency : Int16, duration : Int16) @code "10";
-	message noTone(pin : DigitalPin) @code "11";
+	message tone (pin : DigitalPin, frequency : Int16, duration : Int16) @code "10";
+	message no_tone (pin : DigitalPin) @code "11";
 	
 	// Simple Ping
-	message ping() @code "66"
+	message ping () @code "66"
 		@sync_ack "pong" @timeout "1000" @retry "3" ;
-	message pong() @code "67";
+	message pong () @code "67";
 	
 	// Interrupts
-	message attachInterrupt(interrupt : InterruptPin, mode : InterruptTrigger) @code "21";
-	message detachInterrupt(interrupt : InterruptPin) @code "22";
-	message interruptNotification(interrupt : InterruptPin) @code "23";
+	message attach_interrupt (interrupt : InterruptPin, mode : InterruptTrigger) @code "21";
+	message detach_interrupt (interrupt : InterruptPin) @code "22";
+	message interrupt_notification (interrupt : InterruptPin) @code "23";
 	
 	// EEPROM Library
-	message eeprom_read(address : Int16) @code "31"
+	message eeprom_read (address : Int16) @code "31"
 		@sync_response "eeprom_value#value" @timeout "500" @retry "0";
-	message eeprom_value(value : Int8) @code "32";
-	message eeprom_write(address : Int16, value : Int8) @code "33";
-	message eeprom_sync_write(address : Int16, value : Int8) @code "34"
+	message eeprom_value (value : Int8) @code "32";
+	message eeprom_write (address : Int16, value : Int8) @code "33";
+	message eeprom_sync_write (address : Int16, value : Int8) @code "34"
 		@sync_ack "eeprom_write_ack" @timeout "500" @retry "0" ;
-	message eeprom_write_ack() @code "35";
+	message eeprom_write_ack () @code "35";
 }
 
 thing ArduinoStdlib includes ArduinoStdlibMsgs
 {
 	provided port DigitalIO {
-		receives pinMode, digitalRead, digitalWrite
-		sends digitalReadResult
+		receives pin_mode, digital_read, digital_write
+		sends digital_read_result
 	}
 	
 	provided port AnalogIO {
-		receives analogReference, analogRead, analogWrite
-		sends analogReadResult
+		receives analog_reference, analog_read, analog_write
+		sends analog_read_result
 	}
 	
 	provided port AdvancedIO {
-		receives tone, noTone
+		receives tone, no_tone
 	}
 	
 	provided port Ping {
@@ -163,8 +163,8 @@ thing ArduinoStdlib includes ArduinoStdlibMsgs
 	}
 	
 	provided port Interrupts {
-		receives attachInterrupt, detachInterrupt
-		sends interruptNotification
+		receives attach_interrupt, detach_interrupt
+		sends interrupt_notification
 	}
 	
 	provided port EEPROM {
@@ -176,28 +176,28 @@ thing ArduinoStdlib includes ArduinoStdlibMsgs
     statechart ArduinoStdlibImpl init RunningArduino {
         state RunningArduino {
         
-            internal event m : DigitalIO?pinMode 
+            internal event m : DigitalIO?pin_mode 
             action 'pinMode(' & m.pin & ', '& m.mode &');'
             
-            internal event m : DigitalIO?digitalWrite 
+            internal event m : DigitalIO?digital_write 
             action 'digitalWrite(' & m.pin & ', '& m.value &');'
             
-            internal event m : DigitalIO?digitalRead 
-            action DigitalIO!digitalReadResult(m.pin, 'digitalRead(' & m.pin &')')
+            internal event m : DigitalIO?digital_read 
+            action DigitalIO!digital_read_result(m.pin, 'digitalRead(' & m.pin &')')
             
-            internal event m : AnalogIO?analogReference 
+            internal event m : AnalogIO?analog_reference 
             action 'analogReference(' & m.type & ');'
             
-            internal event m : AnalogIO?analogRead 
-            action AnalogIO!analogReadResult(m.pin, 'analogRead(' & m.pin &')')
+            internal event m : AnalogIO?analog_read 
+            action AnalogIO!analog_read_result(m.pin, 'analogRead(' & m.pin &')')
             
-            internal event m : AnalogIO?analogWrite 
+            internal event m : AnalogIO?analog_write 
             action 'analogWrite(' & m.pin & ', '& m.value &');'
             
             internal event m : AdvancedIO?tone 
             action 'tone(' & m.pin & ', '& m.frequency & ', '& m.duration &');'
             
-            internal event m : AdvancedIO?noTone 
+            internal event m : AdvancedIO?no_tone 
             action 'noTone(' & m.pin & ');'
                     
         }

@@ -1,7 +1,6 @@
 import "../../core/arduino.thingml"
 import "../../bricks/led.thingml"
 import "../../bricks/tilt_switch.thingml"
-import "../../devices/digital_input.thingml"
 
 //*
 // This is an example of ThingML use to generate Arduino code which uses 

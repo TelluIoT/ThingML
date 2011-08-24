@@ -1,12 +1,12 @@
 import "../core/arduino.thingml"
-import "../devices/digital_input.thingml"
+import "../core/digital_input.thingml"
 
-thing fragment TiltSwitchMsgs includes DigitalInputMsgs 
+thing fragment TiltSwitchMsgs
 {
 	message tilt_toggle ();
 }
 
-thing TiltSwitch includes TiltSwitchMsgs
+thing TiltSwitch includes TiltSwitchMsgs, DigitalInputMsgs
 { 
 	provided port TiltSwitch 
     {

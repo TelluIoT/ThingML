@@ -1,10 +1,9 @@
 import "../devices/lcd_screen.thingml"
-import "../devices/analog_input.thingml"
+import "../bricks/temperature_sensor.thingml"
 
-thing TempSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
+thing TempSensorDisplay includes LcdScreenMsgs, TemperatureSensorMsgs
 @c_header "#include <math.h>"
 {
-
 	function convertTemperature(adc : Int16) : Int16 do
 		var tmp : Double
  		tmp = 'log('& (10240000 / adc ) - 10000 &')'
@@ -20,8 +19,7 @@ thing TempSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
 
 	required port Temp
 	{
-		receives analog_input_value
-		sends read_analog_input
+		receives temperature_value
 	}
 	
    	statechart TempSensorDisplayImpl init Running
@@ -32,23 +30,17 @@ thing TempSensorDisplay includes LcdScreenMsgs, AnalogInputMsgs
                 end
    		state Running
    		{
-   			internal refresh event m : Temp?analog_input_value
-   			action Display!refreshDisplay (0, 'temperature ('& m.value &')') 
+   			internal refresh event m : Temp?temperature_value
+   			action Display!refreshDisplay (0, 'temperature ('& m.val &')') 
    		}	
    	}
 }
 
 configuration TempSensorDisplay
 {
-    // Arduino declaration.
-    instance arduino : Arduino
-    
-    // On change analog input configuration.
-	instance on_change_analog_input : OnChangeAnalogInput
-        set pin = AnalogPin:A_3
-	instance timer : SoftTimer
-	connector on_change_analog_input.AnalogIO => arduino.AnalogIO
-	connector on_change_analog_input.Timer => timer.timer
+	// Temperature sensor configuration.
+	group temp_sensor : TemperatureSensor
+		set temp_sensor.io.analog_input.pin = AnalogPin:A_3
 
     // Screen declaration.
 	instance screen : LcdScreen
@@ -56,5 +48,5 @@ configuration TempSensorDisplay
     // Application configuration.
 	instance app : TempSensorDisplay	
 	connector app.Display => screen.Display
-	connector app.Temp => on_change_analog_input.AnalogInput
+	connector app.Temp => temp_sensor.temperature_sensor.TemperatureSensor
 }

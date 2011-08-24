@@ -1,10 +1,9 @@
 import "../core/arduino.thingml"
 import "../core/arduino.thingml"
-import "../devices/analog_input.thingml"
+import "../core/analog_input.thingml"
 import "../bricks/lcd_screen.thingml"
-import "../bricks/rotation_sensor.thingml"
 
-thing TestLM335 includes RotationSensorMsgs, LcdScreenMsgs, AnalogInputMsgs
+thing TestLM335 includes LcdScreenMsgs, AnalogInputMsgs
 {
     
     required port LcdScreen

@@ -1,0 +1,68 @@
+import "../core/arduino.thingml"
+	
+thing fragment ScreenCoreMsgs 
+{
+	message refresh (id : UInt8, buffer : String);
+	message setDisplay (id : UInt8);
+}
+
+thing LcdScreen includes ScreenCoreMsgs
+@c_header 
+"
+#include <LiquidCrystal.h>
+
+#define WIDTH 16
+#define HEIGHT 2
+
+LiquidCrystal lcd (10, 11, 12, 13, 14, 15, 16); 
+
+void lcd_init (short pin1, short pin2, short pin3, short pin4, short pin5, short pin6, short pin7)  
+{ 
+  LiquidCrystal lcd (pin1, pin2, pin3, pin4, pin5, pin6, pin7); 
+  lcd.begin (WIDHT, HEIGHT);
+} 
+
+char current_buffer[HEIGHT * WIDHT];
+char buffer[HEIGHT * WIDTH];
+
+void refresh (char * buffer)
+{	
+	if (strcmp (buffer[i], current_buffer[i]) != 0)
+		for (int i = 0; i < HEIGHT * WIDTH; i++)
+		{	
+			if (buffer[i] == '\0') {}// Temporary, just to see the behavior of screen.
+			else if (buffer[i] != current_buffer[i])
+			{
+				lcd.setCursor (i % WIDTH, i / WIDTH);
+				lcd.write (buffer[i]);
+			}
+		}
+	strcpy (current_buffer, buffer);
+}
+" 
+{		
+	readonly property screenWidht : UInt8 = 16
+	readonly property screenHeight : UInt8 = 2
+	
+	property currentDisplay : UInt8 = 0
+	
+	provided port Screen
+	{
+		receives setDisplay, refresh
+	}
+	
+	statechart ScreenCoreImp init Running 
+	{
+		state Running
+		{
+			on entry 'lcd_init (10, 11, 12, 13, 14, 15, 16);'
+			
+			internal event m : Screen?setDisplay
+			action currentDisplay = m.id
+			
+			internal event m : Screen?refresh
+			guard m.id == currentDisplay
+			action 'refresh ('& m.buffer &');' 
+		}
+	}
+}

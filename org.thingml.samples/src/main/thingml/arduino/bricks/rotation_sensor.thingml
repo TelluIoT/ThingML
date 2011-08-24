@@ -1,13 +1,13 @@
 import "../core/arduino.thingml"
-import "../devices/analog_input.thingml"
+import "../core/analog_input.thingml"
 
-thing fragment RotationSensorMsgs includes AnalogInputMsgs 
+thing fragment RotationSensorMsgs  
 {
 	message read_rotation ();
 	message rotation_value (val : UInt16);
 }
 
-thing RotationSensor includes RotationSensorMsgs
+thing RotationSensor includes RotationSensorMsgs, AnalogInputMsgs
 {  
 	provided port RotationSensor 
     {

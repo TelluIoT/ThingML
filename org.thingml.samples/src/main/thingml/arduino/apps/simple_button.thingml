@@ -1,7 +1,7 @@
-import "../devices/led.thingml"
-import "../devices/button.thingml"
+import "../bricks/led.thingml"
+import "../bricks/button.thingml"
 
-thing SimpleButton includes LEDMsgs, ButtonMsgs
+thing SimpleButton includes LedMsgs, ButtonMsgs
 {
 	required port button 
     {	
@@ -32,17 +32,15 @@ configuration SimpleButton
   @debug_message_receive "press"
   @debug_message_receive "led.*"
 {      
-
-	instance arduino : Arduino
-	instance button : Button
-		set pin = DigitalPin:PIN_4
-	instance led : LED
-		set pin = DigitalPin:PIN_13 	
-	connector button.DigitalIO => arduino.DigitalIO
-	connector led.DigitalIO => arduino.DigitalIO
+	// Led device configuration.
+	group led : Led
+		set led.io.digital_output.pin = DigitalPin:PIN_13
+	// Button device configuration.
+	group button : Button
+		set button.io.digital_input.pin = DigitalPin:PIN_4
 
 	// The blink application
 	instance app : SimpleButton
-	connector app.button => button.Button
-	connector app.led => led.LED
+	connector app.button => button.button.Button
+	connector app.led => led.led.Led
 }

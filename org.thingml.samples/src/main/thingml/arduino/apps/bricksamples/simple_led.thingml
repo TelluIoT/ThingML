@@ -1,6 +1,5 @@
 import "../../core/arduino.thingml"
 import "../../bricks/led.thingml"
-import "../../devices/digital_input.thingml"
 import "../../devices/softtimer.thingml"
 
 //*

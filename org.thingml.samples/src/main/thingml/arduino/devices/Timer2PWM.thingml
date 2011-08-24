@@ -14,7 +14,7 @@ enumeration T2PWMChannel
 }
 
 thing fragment Timer2PWMMsgs {
-	message setpwm(channel: T2PWMChannel, pwm : UInt8);
+	message setpwm (channel: T2PWMChannel, pwm : UInt8);
 }
 
 thing Timer2PWM includes Timer2PWMMsgs, ArduinoStdlibMsgs

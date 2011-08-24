@@ -1,0 +1,45 @@
+import "../core/arduino.thingml"
+import "screen_core.thingml"
+
+thing fragment ScreenDisplayMsgs includes ScreenCoreMsgs
+{
+	message printString (string : String);
+	message printByte (x : UInt8, y : UInt8, byte : Byte);
+	message display ();
+	message clear ();
+}
+
+thing LcdScreen includes ScreenDisplayMsgs
+@c_header 
+"
+// WIDTH and HEIGHT are defined in screen_core.
+old_display[WIDTH * HEIGHT];
+" 
+{	
+	readonly property id : UInt8 = 0
+	
+	provided port Display
+	{
+		receives printString, display, clear, printByte, printString
+	}
+	
+	required port Screen
+	{
+		sends refresh, setDisplay
+	}
+	
+	statechart LcdScreenImp init Running 
+	{	
+		state Running
+		{
+			internal event Display?display
+			action Screen!setDisplay (id)
+			
+			internal event Display?clear
+			action Screen!refresh ("")
+			
+			internal event m : Display?printString
+			action Screen!refresh ('string2buf ('& m.string &')')	
+		}
+	}
+}

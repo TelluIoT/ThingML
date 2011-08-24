@@ -1,5 +1,5 @@
 import "../core/arduino.thingml"
-import "led.thingml"
+import "../bricks/led.thingml"
 
 thing fragment TinyPWMMsgs {
     message set_pwm_a(pwm : UInt8);
@@ -7,7 +7,7 @@ thing fragment TinyPWMMsgs {
 	message set_pwm(pwma : UInt8, pwmb : UInt8);
 }
 
-thing TinyPWM includes TinyPWMMsgs, LEDMsgs
+thing TinyPWM includes TinyPWMMsgs, LedMsgs
 @singleton "true"
 @c_global "
 #include <avr/io.h>

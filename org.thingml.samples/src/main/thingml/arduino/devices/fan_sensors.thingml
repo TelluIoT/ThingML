@@ -1,5 +1,4 @@
 import "../core/arduino.thingml"
-import "led.thingml"
 
 /*****************************************************
  * Fan sensor uses Timer2 and port interrupt on port D

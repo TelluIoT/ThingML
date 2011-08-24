@@ -1,5 +1,5 @@
-import "led.thingml"
-import "softtimer.thingml"
+import "../bricks/led.thingml"
+import "../core/arduino_timer.thingml"
 
 thing fragment StatusLEDMsgs {
 	message statusON();
@@ -9,7 +9,7 @@ thing fragment StatusLEDMsgs {
 	message statusBlinkCode(code : Int8);
 }
 
-thing StatusLED includes LEDMsgs, TimerMsgs, StatusLEDMsgs
+thing StatusLED includes LedMsgs, TimerMsgs, StatusLEDMsgs
 {
     
     readonly property slow_delay : Int16 = 750
@@ -122,14 +122,4 @@ thing StatusLED includes LEDMsgs, TimerMsgs, StatusLEDMsgs
         }
     
     }
-}
-
-configuration fragment StatusLedFragment {
-	instance led : LED
-		set pin = DigitalPin:PIN_13
-	
-	instance timer : SoftTimer
-	instance statusLed : StatusLED
-	connector statusLed.timer => timer.timer
-	connector statusLed.led => led.LED
 }
