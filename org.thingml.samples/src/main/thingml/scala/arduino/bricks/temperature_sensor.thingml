@@ -1,12 +1,12 @@
 import "sensorAPI.thingml"
 
-thing Potentiometer includes SensorAPI
+thing TemperatureSensor includes SensorAPI
 {
 	statechart behavior init Ready {
 		
-		on entry 
+		on entry
         do
-		  device = 'new org.thingml.devices.PotentiometerDemo(0, 1023)' 
+		  device = 'new org.thingml.devices.PotentiometerDemo(-40, 130)' 
 		  'register()'
 		end
 			

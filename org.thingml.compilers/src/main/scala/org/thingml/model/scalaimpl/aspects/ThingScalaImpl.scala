@@ -37,13 +37,13 @@ case class ThingScalaImpl (self : Thing) {
       a => a.getName == "singleton"
     }.headOption match {
       case Some(a) => {
-        var v = a.asInstanceOf[PlatformAnnotation].getValue
-        if (v == "true") return true
-        else return false
-      }
+          var v = a.asInstanceOf[PlatformAnnotation].getValue
+          if (v == "true") return true
+          else return false
+        }
       case None => {
-        return false
-      }
+          return false
+        }
     }
   }
 
@@ -52,20 +52,24 @@ case class ThingScalaImpl (self : Thing) {
     return ThingMLHelpers.allThingFragments(self)
   }
 
-   def allProperties: ArrayList[Property] = {
+  def allProperties: ArrayList[Property] = {
     return ThingMLHelpers.allProperties(self)
   }
 
-  def allFuntions: ArrayList[Function] = {
+  def allFunctions: ArrayList[Function] = {
     return ThingMLHelpers.allFunctions(self)
   }
 
   def allPropertiesInDepth: ArrayList[Property] = {
     var result = allProperties
     allStateMachines.foreach{sm =>
-        result.addAll(sm.allContainedProperties)
+      result.addAll(sm.allContainedProperties)
     }
     result
+  }
+  
+  def allAnnotations: ArrayList[PlatformAnnotation] = {
+    return ThingMLHelpers.allAnnotations(self)
   }
 
   def allPorts: ArrayList[Port] = {
@@ -112,15 +116,15 @@ case class ThingScalaImpl (self : Thing) {
   }
 
 
-    def hasAnnotation(name : String): Boolean = {
-      self.getAnnotations.filter { a => a.getName == name }.isEmpty
-    }
+  def hasAnnotation(name : String): Boolean = {
+    !(allAnnotations.filter{ a => a.getName == name }.isEmpty)
+  }
 
-    def annotation(name : String): String = {
-      self.getAnnotations.filter { a => a.getName == name }.headOption match {
+  def annotation(name : String): String = {
+    allAnnotations.filter { a => a.getName == name }.headOption match {
       case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
       case None => return null;
     }
-    }
+  }
 
 }

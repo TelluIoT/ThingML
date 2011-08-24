@@ -280,12 +280,10 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     builder append " **/\n"
     
     var traits = ""
-    self.getAnnotations.filter {
-      a => a.getName == "java_interface" || a.getName == "scala_trait"
-    }.headOption match {
-      case Some(a) => 
-        traits = "with " + a.asInstanceOf[PlatformAnnotation].getValue
-      case None =>
+    if (self.hasAnnotation("scala_trait")) {
+      traits = "with " + self.annotation("scala_trait")
+    } else if (self.hasAnnotation("java_interface")) {
+      traits = "with " + self.annotation("java_interface")
     }
 
     builder append "class " + firstToUpper(self.getName) + " extends Component " + traits + "{\n\n"
@@ -317,18 +315,13 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     generatePortDef(builder)
     
     
-    self.getFunctions.foreach{
+    self.allFunctions.foreach{
       f => f.generateScala(builder, self)
     }
     
-    self.getAnnotations.filter {
-      a => a.getName == "java_method" || a.getName == "scala_def"
-    }.headOption match {
-      case Some(a) => 
-        builder append a.asInstanceOf[PlatformAnnotation].getValue
-      case None =>
-    }
-    
+    if(self.hasAnnotation("scala_def")) {
+      builder append self.annotation("scala_def")
+    }    
 
     self.allStateMachines.foreach{b => 
       builder append "this.behavior ++= List("
@@ -643,7 +636,7 @@ case class FunctionScalaGenerator(override val self: Function) extends TypedElem
         builder append "override "
       case None =>
     }
-  
+      
     builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => ScalaGenerator.protectScalaKeyword(p.scala_var_name) + " : " + p.getType.scala_type}.mkString(", ") + ") : " + self.getType.scala_type + " = {\n"
     builder append "val handler = this\n" 
     self.getBody.generateScala(builder, thing)
