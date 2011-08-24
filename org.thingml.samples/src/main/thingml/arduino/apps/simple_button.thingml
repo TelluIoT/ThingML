@@ -34,10 +34,10 @@ configuration SimpleButton
 {      
 	// Led device configuration.
 	group led : Led
-		set led.io.digital_output.pin = DigitalPin:PIN_13
+		set led.io.digital_output.pin = DigitalPin:PIN_8
 	// Button device configuration.
 	group button : Button
-		set button.io.digital_input.pin = DigitalPin:PIN_4
+		set button.io.digital_input.pin = DigitalPin:PIN_9
 
 	// The blink application
 	instance app : SimpleButton

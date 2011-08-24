@@ -53,9 +53,9 @@ thing Blink2Leds includes LedMsgs, TimerMsgs
 configuration Blink2Leds 
 {       
 	group led1 : Led
-		set led1.io.digital_output.pin = DigitalPin:PIN_10
+		set led1.io.digital_output.pin = DigitalPin:PIN_8
 	group led2 : Led
-		set led1.io.digital_output.pin = DigitalPin:PIN_13
+		set led2.io.digital_output.pin = DigitalPin:PIN_13
 		
 	instance timer1 : SoftTimer
 	instance timer2 : SoftTimer
