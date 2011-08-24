@@ -302,6 +302,14 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
+	public static ArrayList<PlatformAnnotation> allAnnotations(Thing thing) {
+		ArrayList<PlatformAnnotation> result = new ArrayList<PlatformAnnotation>();
+		for (Thing t : allThingFragments(thing)) {
+			result.addAll(t.getAnnotations());
+		}
+		return result;
+	}
+	
 	public static ArrayList<Function> allFunctions(Thing thing) {
 		ArrayList<Function> result = new ArrayList<Function>();
 		for (Thing t : allThingFragments(thing)) {

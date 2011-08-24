@@ -3,7 +3,7 @@ import "../devices/softtimer.thingml"
 
 //TODO Wrap buzzer with something better than a LED ;-)
 datatype LedDevice
-@scala_type "org.thingml.devices.LedDemo"
+@scala_type "org.thingml.devices.LedDemo";
 
 thing fragment BuzzerMsgs includes TimerMsgs
 {
@@ -14,7 +14,7 @@ thing fragment BuzzerMsgs includes TimerMsgs
 
 thing Buzzer includes BuzzerMsgs
 {
-	readonly property device : LedDevice
+	readonly property device : LedDevice = 'new org.thingml.devices.LedDemo()'
     
 	provided port Buzzer 
     {
@@ -29,11 +29,10 @@ thing Buzzer includes BuzzerMsgs
     
     statechart BuzzerImpl init BuzzerOff 
     {    
-    	on entry device = 'new org.thingml.devices.LedDemo()'
-    
+    	
         state BuzzerOff 
         {
-            on entry 'LED_device_var.off()'
+            on entry '' & device & '.off()'
             
             transition switch_on -> BuzzerOn 
             event Buzzer?buzzer_on 
@@ -45,7 +44,7 @@ thing Buzzer includes BuzzerMsgs
         
         state BuzzerOn
         {
-            on entry 'LED_device_var.on()'
+            on entry '' & device & '.on()'
   
             transition switch_off -> BuzzerOff 
             event Buzzer?buzzer_off 

@@ -1,7 +1,7 @@
-import "../devices/led.thingml"
+import "../bricks/led.thingml"
 import "../devices/softtimer.thingml"
 
-thing Blink2Leds includes LEDMsgs, TimerMsgs
+thing Blink2Leds includes LedMsgs, TimerMsgs
 {
 
 	required port timer1
@@ -54,8 +54,8 @@ configuration ScalaBlink2LedsSimulator {
 
 	instance scheduler : ThingMLScheduler
 
-	instance led1 : LED	
-	instance led2 : LED
+	instance led1 : Led	
+	instance led2 : Led
 	
 	instance timer1 : SoftTimer
 	instance timer2 : SoftTimer
@@ -65,8 +65,8 @@ configuration ScalaBlink2LedsSimulator {
 	
 	// The blink application
 	instance app : Blink2Leds
-	connector app.led1 => led1.LED
+	connector app.led1 => led1.Led
 	connector app.timer1 => timer1.timer
-	connector app.led2 => led2.LED
+	connector app.led2 => led2.Led
 	connector app.timer2 => timer2.timer
 }

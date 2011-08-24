@@ -9,36 +9,9 @@ import javax.swing.event.ChangeEvent
 import swing._
 
 /**
- * Define the interface of the objects that observe the potentiometer
- */
-abstract trait Observer {
-
-  def newValue(v: Int)
-
-}
-
-/**
- * Interface of the ObservablePotentiometer: defines the messages that the
- * potentiometer is able to send
- */
-trait ObservablePotentiometer {
-  var observers = Set[Observer]()
-
-  protected def notifyObservers(newValue: Int) = 
-    observers.foreach(_.newValue(newValue))
-
-  def register(observer: Observer) =
-    observers += observer
-
-  def unregister(observer: Observer) =
-    observers -= observer
-
-}
-
-/**
  * Simple GUI for a potentiometer that can be connected to ThingML models
  */
-class PotentiometerDemo(val min: Int, val max: Int) extends JFrame("Potentiometer Demo") with ObservablePotentiometer {
+class PotentiometerDemo(val min: Int, val max: Int) extends JFrame("Potentiometer Demo") with Device, Observable {
   val potentiometer = new JSlider(min.toInt, max.toInt, ((max - min) / 2).toInt)
   potentiometer.setMajorTickSpacing((max-min) / 10)
   potentiometer.setPaintTicks(true)

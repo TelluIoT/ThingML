@@ -1,0 +1,29 @@
+import "../../thingml.thingml"
+
+datatype Device
+@scala_type "org.thingml.devices.Device";
+
+thing fragment SensorMsgs 
+{
+	message newValue(value: Integer);    
+}
+
+thing fragment SensorAPI includes SensorMsgs
+@scala_trait "org.thingml.devices.Observer" 
+{
+	readonly property device : Device
+	
+	function newValue(v : Integer)@override "true" : Void
+	do
+		Sensor!newValue(v)
+	end
+	
+	function register() : Void
+	do
+		'' & device & '.register(root.asInstanceOf[org.thingml.devices.Observer])'
+	end
+	
+	provided port Sensor {
+		sends newValue
+	}
+}
