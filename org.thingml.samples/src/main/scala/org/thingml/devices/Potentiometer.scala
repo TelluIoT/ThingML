@@ -11,7 +11,7 @@ import swing._
 /**
  * Simple GUI for a potentiometer that can be connected to ThingML models
  */
-class PotentiometerDemo(val min: Int, val max: Int) extends JFrame("Potentiometer Demo") with Device with Observable {
+class PotentiometerDemo(val min: Int, val max: Int) extends JFrame("Potentiometer Demo") with Device {
   val potentiometer = new JSlider(min.toInt, max.toInt, ((max - min) / 2).toInt)
   potentiometer.setMajorTickSpacing((max-min) / 10)
   potentiometer.setPaintTicks(true)

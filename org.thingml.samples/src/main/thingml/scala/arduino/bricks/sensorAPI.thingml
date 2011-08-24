@@ -20,7 +20,7 @@ thing fragment SensorAPI includes SensorMsgs
 	
 	function register() : Void
 	do
-		'' & device & '.register(root.asInstanceOf[org.thingml.devices.Observer])'
+		'' & device & '.register(this)'
 	end
 	
 	provided port Sensor {
