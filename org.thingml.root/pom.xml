@@ -14,7 +14,7 @@
         <thingml.version>${project.version}</thingml.version>
         <eclipse.version>3.7.0</eclipse.version>
         <emf.version>2.7.0</emf.version>
-        <scala.version>2.9.0-1</scala.version>
+        <scala.version>2.9.0</scala.version>
         <bundle.vendor>SINTEF</bundle.vendor>
     </properties>
     
