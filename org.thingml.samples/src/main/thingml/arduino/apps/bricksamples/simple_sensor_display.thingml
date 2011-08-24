@@ -125,19 +125,23 @@ thing SimpleSoundSensorDisplay includes SimpleSensorsDisplay, SoundSensorMsgs
 	}
 }
 
-configuration SimpleSensorsDisplay
+configuration SimpleSensorDisplay
 {
     group rotation_sensor : RotationSensor
         set rotation_sensor.io.analog_input.pin = AnalogPin:A_4
         
     group temperature_sensor : TemperatureSensor
         set temperature_sensor.io.analog_input.pin = AnalogPin:A_4
+        set temperature_sensor.io.analog_input.refresh_rate = 200
         
     group light_sensor : LightSensor
         set light_sensor.io.analog_input.pin = AnalogPin:A_4
+        set light_sensor.io.analog_input.refresh_rate = 500
+        set light_sensor.io.analog_input.value_precision = 3
         
     group sound_sensor : SoundSensor
         set sound_sensor.io.analog_input.pin = AnalogPin:A_4
+        set sound_sensor.sound_sensor.sample_rate = 500
  
     instance lcd_screen : LcdScreen
        

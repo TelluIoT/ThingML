@@ -8,11 +8,7 @@ thing fragment LightSensorMsgs
 }
 
 thing LightSensor includes LightSensorMsgs, AnalogInputMsgs
-{
-    readonly property sample_rate : UInt8 = 1
-    property tot_value : UInt16 = 0
-    property counter : UInt8 = 0
-   
+{  
 	provided port LightSensor 
     {
 		receives read_light
@@ -28,33 +24,13 @@ thing LightSensor includes LightSensorMsgs, AnalogInputMsgs
     statechart LightSensorImpl init Running 
     {        
         internal event m : AnalogInput?analog_input_value
-        guard counter < sample_rate
-    	action do
-            tot_value = tot_value + m.value
-            counter = counter + 1
-            end
-    	
+    	action LightSensor!light_value (m.value)
+   
         state Running 
         {   
-            internal event m : AnalogInput?analog_input_value
-            guard counter == sample_rate or counter > sample_rate
-    	    action do
-                LightSensor!light_value ((tot_value + m.value) / (sample_rate + 1))
-                tot_value = 0
-                counter = 0
-            end
-            
-        	transition force_reading -> Read 
-            event LightSensor?read_light
+        	internal force_reading event LightSensor?read_light
         	action AnalogInput!read_analog_input ()
-        } 
-        
-        state Read
-        {
-            transition read -> Running 
-            event m : AnalogInput?analog_input_value
-    	    action LightSensor!light_value (m.value)
-        }         
+        }   
     }
 }
 
