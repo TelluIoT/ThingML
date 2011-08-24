@@ -315,7 +315,7 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     generatePortDef(builder)
     
     
-    self.getFunctions.foreach{
+    self.allFunctions.foreach{
       f => f.generateScala(builder, self)
     }
     
