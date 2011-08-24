@@ -1,15 +1,15 @@
 import "../core/arduino.thingml"
-import "../devices/digital_output.thingml"
-import "../devices/softtimer.thingml"
+import "../core/digital_output.thingml"
+import "../core/arduino_timer.thingml"
 
-thing fragment BuzzerMsgs includes DigitalOutputMsgs, TimerMsgs
+thing fragment BuzzerMsgs
 {
 	message buzzer_on ();
 	message buzzer_off ();
 	message buzzer_delay (d : UInt16);
 }
 
-thing Buzzer includes BuzzerMsgs
+thing Buzzer includes BuzzerMsgs, DigitalOutputMsgs, TimerMsgs
 { 
 	provided port Buzzer 
     {

@@ -1,13 +1,13 @@
 import "../core/arduino.thingml"
-import "../devices/digital_input.thingml"
+import "../core/digital_input.thingml"
 
-thing fragment ButtonMsgs includes DigitalInputMsgs 
+thing fragment ButtonMsgs 
 {
 	message press ();
 	message release ();
 }
 
-thing Button includes ButtonMsgs
+thing Button includes ButtonMsgs, DigitalInputMsgs
 {		
 	provided port Button 
 	{

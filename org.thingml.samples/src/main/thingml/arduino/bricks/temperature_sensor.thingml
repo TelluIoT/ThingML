@@ -1,13 +1,13 @@
 import "../core/arduino.thingml"
-import "../devices/analog_input.thingml"
+import "../core/analog_input.thingml"
 
-thing fragment TemperatureSensorMsgs includes AnalogInputMsgs 
+thing fragment TemperatureSensorMsgs 
 {
 	message read_temperature ();
 	message temperature_value (val : Int16);
 }
 
-thing TemperatureSensor includes TemperatureSensorMsgs
+thing TemperatureSensor includes TemperatureSensorMsgs, AnalogInputMsgs
 @c_header 
 "
 #include <math.h>
@@ -20,6 +20,8 @@ int temperature (int RawADC) {
 }
 "
 {   
+    property temp : Int16 = 0
+    
 	provided port TemperatureSensor 
     {
 		receives read_temperature
@@ -32,16 +34,30 @@ int temperature (int RawADC) {
         sends read_analog_input    
     }
     
-    statechart TempSensorImpl init Running 
+    statechart TempSensorImpl init Read 
     {    
-    	internal event m : AnalogInput?analog_input_value
-    	action TemperatureSensor!temperature_value ('temperature ('& m.value &')')
-    	
         state Running 
-        {
-        	internal event TemperatureSensor?read_temperature
+        {   
+            internal event m : AnalogInput?analog_input_value
+    	    action do
+                TemperatureSensor!temperature_value ((temp + 'temperature ('& m.value &')') / 2)
+                temp = 'temperature ('& m.value &')'
+                end
+            
+        	transition force_reading -> Read
+            event TemperatureSensor?read_temperature
         	action AnalogInput!read_analog_input ()
         }        
+        
+        state Read
+        {
+            transition read -> Running
+            event m : AnalogInput?analog_input_value
+    	    action do
+                temp = 'temperature ('& m.value &')'     
+                TemperatureSensor!temperature_value ('temperature ('& m.value &')')
+                end
+        }
     }
 }
 

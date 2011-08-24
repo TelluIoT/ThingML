@@ -1,14 +1,14 @@
 import "../core/arduino.thingml"
-import "../devices/digital_output.thingml"
+import "../core/digital_output.thingml"
 
-thing fragment LedMsgs includes DigitalOutputMsgs
+thing fragment LedMsgs
 {
 	message led_on ();
 	message led_off ();
 	message led_toggle ();
 }
 
-thing Led includes LedMsgs
+thing Led includes LedMsgs, DigitalOutputMsgs
 {   
 	provided port Led 
     {

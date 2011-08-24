@@ -1,5 +1,5 @@
 import "../core/arduino.thingml"
-import "softtimer.thingml"
+import "arduino_timer.thingml"
 
 thing fragment AnalogInputMsgs
 {
@@ -19,8 +19,8 @@ thing fragment AnalogInput includes AnalogInputMsgs, ArduinoStdlibMsgs
 	
 	required port AnalogIO
 	{
-		receives analogReadResult
-		sends analogRead
+		receives analog_read_result
+		sends analog_read
 	}
 }
 
@@ -32,13 +32,13 @@ thing SimpleAnalogInput includes AnalogInput
 		{
 			transition WaitingResult -> Waiting
 			event AnalogInput?read_analog_input
-			action AnalogIO!analogRead (pin)
+			action AnalogIO!analog_read (pin)
 		}
 		
 		state Waiting
 		{
 			transition ResultCatched -> Running
-			event m : AnalogIO?analogReadResult
+			event m : AnalogIO?analog_read_result
 			guard m.pin == pin
 			action AnalogInput!analog_input_value (m.value)
 		}
@@ -55,19 +55,23 @@ thing PeriodicAnalogInput includes AnalogInput, TimerMsgs
 		sends timer_start
 	}
 	statechart PeriodicAnalogInputImp init Running
-	{
-		internal event m : AnalogIO?analogReadResult
-		guard m.pin == pin
-		action AnalogInput!analog_input_value (m.value)
-		
+	{	
 		state Running
 		{
 			on entry Timer!timer_start (refresh_rate)
 			
-			transition Refresh -> Running
+			transition wait -> Waiting
 			event Timer?timer_timeout
 			event AnalogInput?read_analog_input
-			action AnalogIO!analogRead (pin)
+			action AnalogIO!analog_read (pin)
+		}
+		
+		state Waiting
+		{
+			transition got -> Running 
+			event m : AnalogIO?analog_read_result
+			guard m.pin == pin
+			action AnalogInput!analog_input_value (m.value)
 		}
 	}
 }
@@ -87,21 +91,25 @@ thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 	
 	statechart OnChangeAnalogInputImpl init Running
 	{
-		internal event m : AnalogIO?analogReadResult
-		guard m.pin == pin and (m.value - oldValue < - value_precision or m.value - oldValue > value_precision)
-		action do
-			AnalogInput!analog_input_value (m.value)
-			oldValue = m.value
-			end
-		
 		state Running
 		{
 			on entry Timer!timer_start (refresh_rate)
 			
-			transition Check -> Running 
+			transition wait -> Waiting 
 			event Timer?timer_timeout
-			action AnalogIO!analogRead (pin)
-		} 	 
+			action AnalogIO!analog_read (pin)
+		} 
+		
+		state Waiting
+		{
+			transition got -> Running
+			event m : AnalogIO?analog_read_result
+			guard m.pin == pin and (m.value - oldValue < - value_precision or m.value - oldValue > value_precision)
+			action do
+				AnalogInput!analog_input_value (m.value)
+				oldValue = m.value
+			end
+		}	 
 	
 	 	region SimpleAnalogRead init Idle 
 	 	{
@@ -109,13 +117,13 @@ thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
         	{ 
         		transition waiting_answer -> Waiting 
         		event AnalogInput?read_analog_input
-        		action AnalogIO!analogRead (pin)
+        		action AnalogIO!analog_read (pin)
         	}
             
             state Waiting 
             {
                 transition GotAnswer -> Idle 
-                event m: AnalogIO?analogReadResult 
+                event m: AnalogIO?analog_read_result 
                 guard m.pin == pin
                 action AnalogInput!analog_input_value (m.value)
             }    

@@ -1,5 +1,4 @@
 import "../core/arduino.thingml"
-import "../devices/digital_output.thingml"
 
 thing fragment LcdScreenMsgs 
 {

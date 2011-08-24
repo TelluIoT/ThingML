@@ -1,19 +1,19 @@
 import "../core/arduino.thingml"
-import "softtimer.thingml"
+import "../core/arduino_timer.thingml"
 
 thing fragment TempSensorMsgs {
 	
-	message temperature(t : Int16, min : Int16, max : Int16);
-	message get_temperature();
-	message reset_min_max();
+	message temperature (t : Int16, min : Int16, max : Int16);
+	message get_temperature ();
+	message reset_min_max ();
 	
-	message subscribe_temperature(interval : Int16); // in seconds if the sampling rate is 1 sec
-	message unsubscribe_temperature();
+	message subscribe_temperature (interval : Int16); // in seconds if the sampling rate is 1 sec
+	message unsubscribe_temperature ();
 	
-	message activate_alarms(low : Int16, high : Int16);
-	message high_temp_alarm(t : Int16);
-	message low_temp_alarm(t : Int16);
-	message deactivate_alarms();
+	message activate_alarms (low : Int16, high : Int16);
+	message high_temp_alarm (t : Int16);
+	message low_temp_alarm (t : Int16);
+	message deactivate_alarms ();
 }
 
 thing TempSensor includes TempSensorMsgs, ThingMLScheduler, ArduinoStdlibMsgs, TimerMsgs

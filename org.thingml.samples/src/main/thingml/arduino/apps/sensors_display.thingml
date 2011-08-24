@@ -1,9 +1,10 @@
 import "../devices/lcd_screen.thingml"
-import "../devices/analog_input.thingml"
-import "../devices/button.thingml"
-import "../devices/led.thingml"
+import "../bricks/rotation_sensor.thingml"
+import "../bricks/temperature_sensor.thingml"
+import "../bricks/button.thingml"
+import "../bricks/led.thingml"
 
-thing SensorsDisplay includes LcdScreenMsgs, AnalogInputMsgs, LEDMsgs, ButtonMsgs
+thing SensorsDisplay includes LcdScreenMsgs, RotationSensorMsgs, TemperatureSensorMsgs, LedMsgs, ButtonMsgs
 @c_header 
 "
 #include <math.h>
@@ -24,15 +25,14 @@ int temperature (int RawADC) {
 		sends initDisplay, refreshDisplay, setDisplay
 	}
 
-	required port Pot
+	required port Rot
 	{
-		receives analog_input_value
-		sends read_analog_input
+		receives rotation_value
 	}
 	
     required port Temp
 	{
-		receives analog_input_value
+		receives temperature_value
 	}
 
     required port Led
@@ -52,11 +52,11 @@ int temperature (int RawADC) {
         		Display!initDisplay (tempDisplay, "Temperature", "C", 25, 20, 30)  
         		end
    	    
-   	    internal event m : Temp?analog_input_value
-        action Display!refreshDisplay (tempDisplay, 'temperature ('& m.value &')')
+   	    internal event m : Temp?temperature_value
+        action Display!refreshDisplay (tempDisplay, 'temperature ('& m.val &')')
         	
-        internal event m : Pot?analog_input_value
-        action Display!refreshDisplay (potDisplay, m.value)
+        internal event m : Rot?rotation_value
+        action Display!refreshDisplay (potDisplay, m.val)
         	
    	    state Temp
         {		
@@ -80,30 +80,19 @@ int temperature (int RawADC) {
 
 configuration SensorsDisplay
 {
-    // Arduino declaration.
-	instance arduino : Arduino
-	
-    // Two AnalogInput devices configuration.
-	instance pot : OnChangeAnalogInput
-        set pin = AnalogPin:A_4
-    instance temp : OnChangeAnalogInput
-        set pin = AnalogPin:A_3
-	instance timerPot : SoftTimer
- 	instance timerTemp : SoftTimer
-	connector pot.Timer => timerPot.timer
- 	connector temp.Timer => timerTemp.timer
-	connector pot.AnalogIO => arduino.AnalogIO
- 	connector temp.AnalogIO => arduino.AnalogIO
+	// Rotation sensor configuration.
+	group rot_sensor : RotationSensor
+		set rot_sensor.io.analog_input.pin = AnalogPin:A_4
+	// Temperature sensor configuration.
+	group temp_sensor : TemperatureSensor
+		set temp_sensor.io.analog_input.pin = AnalogPin:A_3
 
-    // Led device configuration.
-    instance led : LED 
-        set pin = DigitalPin:PIN_8 
-	connector led.DigitalIO => arduino.DigitalIO
-
-    // Button device configuration.
-    instance button : Button
-        set pin = DigitalPin:PIN_9
-    connector button.DigitalIO => arduino.DigitalIO
+	// Led device configuration.
+	group led : Led
+		set led.io.digital_output.pin = DigitalPin:PIN_8
+	// Button device configuration.
+	group button : Button
+		set button.io.digital_input.pin = DigitalPin:PIN_9
     
     // Screen device configuration.
 	instance screen : LcdScreen
@@ -111,8 +100,8 @@ configuration SensorsDisplay
     // Application's ports connections.
 	instance app : SensorsDisplay	
 	connector app.Display => screen.Display
-    connector app.Pot => pot.AnalogInput
-    connector app.Temp => temp.AnalogInput
-    connector app.Led => led.LED
-    connector app.Button => button.Button
+    connector app.Rot => rot_sensor.rotation_sensor.RotationSensor
+    connector app.Temp => temp_sensor.temperature_sensor.TemperatureSensor
+    connector app.Led => led.led.Led
+    connector app.Button => button.button.Button
 }
