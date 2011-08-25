@@ -132,9 +132,9 @@ object CGenerator {
     var libpath : String = System.getProperty("java.library.path")
 
     if (libpath.length() > 0) {
-      libpath = ":" + libpath
+      libpath = File.pathSeparator + libpath
     }
-    libpath = arduinolibdir + "" + libpath
+    libpath = arduinolibdir + libpath
 
 
 
@@ -151,15 +151,17 @@ object CGenerator {
 
     libdir.listFiles().foreach{ f =>
       if (f.getName.endsWith(".jar")) {
-        if (classpath.length() > 0) classpath = f.getAbsolutePath + ":" + classpath
-        else classpath = f.getAbsolutePath
+        var fname = f.getAbsolutePath
+        if (fname.indexOf(' ') > 0) fname = "\"" + fname + "\""
+        if (classpath.length() > 0) classpath = fname + File.pathSeparator + classpath
+        else classpath = fname
       }
     }
 
     var pb: ProcessBuilder = new ProcessBuilder("java")
 
     pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-    pb.command().add("-Djava.library.path="+libdir.getAbsolutePath)
+    pb.command().add("-Djava.library.path=" + libpath)
     pb.command().add("-Djava.class.path=" + classpath)
     pb.command().add("processing.app.Base")
     pb.command().add(pde_file)
@@ -169,8 +171,8 @@ object CGenerator {
     var env = pb.environment
 
     env.put("APPDIR", arduino.getAbsolutePath)
-    env.put("PATH", arduino.getAbsolutePath + "/java/bin:" + env.get("PATH"))
-    env.put("LD_LIBRARY_PATH", libdir.getAbsolutePath + ":" + env.get("LD_LIBRARY_PATH"))
+    env.put("PATH", arduino.getAbsolutePath + "/java/bin" + File.pathSeparator + env.get("PATH"))
+    env.put("LD_LIBRARY_PATH", arduinolibdir + File.pathSeparator + env.get("LD_LIBRARY_PATH"))
 
     pb.directory(arduino)
 

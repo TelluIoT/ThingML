@@ -1,4 +1,3 @@
-import "../../core/arduino.thingml"
 import "../../bricks/lcd_screen.thingml"
 import "../../bricks/rotation_sensor.thingml"
 import "../../bricks/temperature_sensor.thingml"

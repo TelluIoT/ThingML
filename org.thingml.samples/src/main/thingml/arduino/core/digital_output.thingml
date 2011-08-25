@@ -2,7 +2,7 @@ import "../core/arduino.thingml"
 
 thing fragment DigitalOutputMsgs 
 {
-	message digital_output_value (value : DigitalState);
+	message set_digital_output (value : DigitalState);
 }
 
 thing DigitalOutput includes DigitalOutputMsgs, ArduinoStdlibMsgs
@@ -11,7 +11,7 @@ thing DigitalOutput includes DigitalOutputMsgs, ArduinoStdlibMsgs
 	
 	provided port DigitalOutput 
 	{
-		receives digital_output_value
+		receives set_digital_output
 	}
 	
 	required port DigitalIO
@@ -25,7 +25,7 @@ thing DigitalOutput includes DigitalOutputMsgs, ArduinoStdlibMsgs
     	
     	state Running
     	{
-    		internal event m : DigitalOutput?digital_output_value
+    		internal event m : DigitalOutput?set_digital_output
     		action DigitalIO!digital_write (pin, m.value)
     	}
     }

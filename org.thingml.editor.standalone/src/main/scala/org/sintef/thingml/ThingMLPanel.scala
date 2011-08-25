@@ -82,16 +82,17 @@ class ThingMLPanel extends JPanel {
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
   filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
   b.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         println("Input file : " + targetFile)
         if (targetFile.isEmpty) return;
-        val returnVal = filechooser.showOpenDialog(ThingMLPanel.this);
-        if (returnVal == 0) {
-          println("cfilechooser.getSelectedFile = " + filechooser.getSelectedFile);
+        //val returnVal = filechooser.showOpenDialog(ThingMLPanel.this);
+        //if (returnVal == 0) {
+         // println("cfilechooser.getSelectedFile = " + filechooser.getSelectedFile);
 
           try {
-            val folder = filechooser.getSelectedFile.toString
+//            val folder = filechooser.getSelectedFile.toString
 
             // Load the model
             var rs: ResourceSet = new ResourceSetImpl
@@ -99,18 +100,27 @@ class ThingMLPanel extends JPanel {
             var model: Resource = rs.createResource(xmiuri)
             model.load(null)
 
+            var m = model.getContents.get(0).asInstanceOf[ThingMLModel]
+
+            var arduino_dir = ThingMLSettings.get_arduino_dir_or_choose_if_not_set(ThingMLPanel.this)
+
+            if (arduino_dir != null) {
+              CGenerator.compileAndRunArduino(m, arduino_dir, ThingMLSettings.get_arduino_lib_dir())
+            }
+            /*
             CGenerator.compileAll(model.getContents.get(0).asInstanceOf[ThingMLModel]).foreach{entry =>
               System.out.println(" -> Writing file " + entry._1.getName + ".pde")
               var w: PrintWriter = new PrintWriter(new FileWriter(folder + "/" + new File(entry._1.getName + ".pde")))
               w.println(entry._2)
               w.close
             }
+            */
           }
           catch {
             case t : Throwable => t.printStackTrace()
           }
 
-        }
+        //}
       }
     })
 
@@ -149,6 +159,8 @@ class ThingMLPanel extends JPanel {
   arduinoToolBar.add("Compilers", b)
   arduinoToolBar.add("Compilers", bScala)
   add(arduinoToolBar, BorderLayout.SOUTH)
+
+
 
 
   def getIndex(line: Int, column: Int): Int = {

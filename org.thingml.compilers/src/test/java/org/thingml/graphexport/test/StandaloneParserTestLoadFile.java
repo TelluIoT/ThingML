@@ -66,8 +66,12 @@ public class StandaloneParserTestLoadFile extends TestCase {
         this.model_path = model_path;
     }
 
+
+
     @Override
     public void runTest() throws IOException {
+
+
 
 
         // Register the generated package and the XMI Factory

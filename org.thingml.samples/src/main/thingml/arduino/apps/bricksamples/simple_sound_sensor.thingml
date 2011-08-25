@@ -1,4 +1,3 @@
-import "../../core/arduino.thingml"
 import "../../bricks/sound_sensor.thingml"
 import "../../bricks/led.thingml"
 

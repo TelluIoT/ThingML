@@ -1,4 +1,3 @@
-import "../../core/arduino.thingml"
 import "../../bricks/led.thingml"
 import "../../core/arduino_timer.thingml"
 

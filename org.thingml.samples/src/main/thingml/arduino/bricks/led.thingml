@@ -17,14 +17,14 @@ thing Led includes LedMsgs, DigitalOutputMsgs
 
     required port DigitalOutput
     {
-        sends digital_output_value    
+        sends set_digital_output    
     }
     
     statechart LedImpl init LedOff 
     {    
         state LedOff 
         {
-            on entry DigitalOutput!digital_output_value (DigitalState:LOW)
+            on entry DigitalOutput!set_digital_output (DigitalState:LOW)
             transition switch_on -> LedOn 
             event Led?led_on 
             event Led?led_toggle
@@ -33,7 +33,7 @@ thing Led includes LedMsgs, DigitalOutputMsgs
         
         state LedOn 
         {
-            on entry DigitalOutput!digital_output_value (DigitalState:HIGH)
+            on entry DigitalOutput!set_digital_output (DigitalState:HIGH)
             transition switch_off -> LedOff 
             event Led?led_off 
             event Led?led_toggle
