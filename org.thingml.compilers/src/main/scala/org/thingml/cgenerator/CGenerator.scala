@@ -161,7 +161,7 @@ object CGenerator {
     var pb: ProcessBuilder = new ProcessBuilder("java")
 
     pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-    pb.command().add("-Djava.library.path="+libdir.getAbsolutePath)
+    pb.command().add("-Djava.library.path=" + libpath)
     pb.command().add("-Djava.class.path=" + classpath)
     pb.command().add("processing.app.Base")
     pb.command().add(pde_file)
@@ -172,7 +172,7 @@ object CGenerator {
 
     env.put("APPDIR", arduino.getAbsolutePath)
     env.put("PATH", arduino.getAbsolutePath + "/java/bin" + File.pathSeparator + env.get("PATH"))
-    env.put("LD_LIBRARY_PATH", libdir.getAbsolutePath + File.pathSeparator + env.get("LD_LIBRARY_PATH"))
+    env.put("LD_LIBRARY_PATH", arduinolibdir + File.pathSeparator + env.get("LD_LIBRARY_PATH"))
 
     pb.directory(arduino)
 

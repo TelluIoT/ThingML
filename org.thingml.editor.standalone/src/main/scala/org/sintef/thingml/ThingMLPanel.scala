@@ -102,10 +102,10 @@ class ThingMLPanel extends JPanel {
 
             var m = model.getContents.get(0).asInstanceOf[ThingMLModel]
 
-            var arduino_dir = ThingMLSettings.arduino_dir(ThingMLPanel.this)
+            var arduino_dir = ThingMLSettings.get_arduino_dir_or_choose_if_not_set(ThingMLPanel.this)
 
             if (arduino_dir != null) {
-              CGenerator.compileAndRunArduino(m, arduino_dir, arduino_dir + "/lib")
+              CGenerator.compileAndRunArduino(m, arduino_dir, ThingMLSettings.get_arduino_lib_dir())
             }
             /*
             CGenerator.compileAll(model.getContents.get(0).asInstanceOf[ThingMLModel]).foreach{entry =>
