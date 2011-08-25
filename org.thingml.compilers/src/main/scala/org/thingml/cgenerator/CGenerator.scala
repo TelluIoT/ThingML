@@ -43,10 +43,9 @@ object SimpleCopyTemplate {
 object CGenerator {
 
   def compileAll(model: ThingMLModel): Map[Configuration, String] = {
-    val result = Map[Configuration, String]()
+    var result = Map[Configuration, String]()
     model.allConfigurations.filter{c=> !c.isFragment}.foreach {
-      t =>
-        result.put(t, compile(t))
+      t => result += (t -> compile(t))
     }
     result
   }

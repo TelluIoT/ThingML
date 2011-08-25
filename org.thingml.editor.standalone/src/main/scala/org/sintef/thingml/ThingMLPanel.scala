@@ -101,7 +101,7 @@ class ThingMLPanel extends JPanel {
 
             CGenerator.compileAll(model.getContents.get(0).asInstanceOf[ThingMLModel]).foreach{entry =>
               System.out.println(" -> Writing file " + entry._1.getName + ".pde")
-              var w: PrintWriter = new PrintWriter(new FileWriter(folder + "/" + new File(entry._1 + ".pde")))
+              var w: PrintWriter = new PrintWriter(new FileWriter(folder + "/" + new File(entry._1.getName + ".pde")))
               w.println(entry._2)
               w.close
             }

@@ -70,10 +70,9 @@ object ScalaGenerator {
   }
   
   def compileAll(model: ThingMLModel, pack : String): Map[Configuration, String] = {
-    val result = Map[Configuration, String]()
+    var result = Map[Configuration, String]()
     model.allConfigurations.foreach {
-      t =>
-      result.put(t, compile(t, pack))
+      t => result += (t -> compile(t, pack))
     }
     result
   }
