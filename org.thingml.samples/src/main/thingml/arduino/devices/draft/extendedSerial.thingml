@@ -1,5 +1,5 @@
-import "../core/arduino.thingml"
-import "serial.thingml"
+import "../../core/arduino.thingml"
+import "../serial.thingml"
 
 thing fragment ExtendedSerialMsgs includes SerialMsgs {
 	message receiveValue (v : Int16);

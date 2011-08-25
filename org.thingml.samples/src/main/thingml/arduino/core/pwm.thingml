@@ -1,0 +1,38 @@
+import "../core/arduino.thingml"
+
+thing fragment PwmMsgs
+{
+	message set_pwm_value (value : UInt8);
+}
+
+thing Pwm includes PwmMsgs, ArduinoStdlibMsgs
+{
+	readonly property pin : PWMPin = PWMPin:PWM_PIN_3
+
+	provided port Pwm
+	{
+		receives set_pwm_value
+	}
+	
+	required port AnalogIO
+	{
+		sends analog_write
+	}
+	
+	statechart PwmImpl init Running
+	{
+		state Running
+		{
+			internal event m : Pwm?set_pwm_value
+			action AnalogIO!analog_write (pin, m.value)
+		}
+	}
+}
+
+configuration fragment Pwm
+{
+	instance arduino : Arduino
+	
+	instance pwm : Pwm
+	connector pwm.AnalogIO => arduino.AnalogIO
+}

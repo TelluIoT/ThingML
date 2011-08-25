@@ -1,6 +1,4 @@
-import "../../core/arduino.thingml"
 import "../../bricks/buzzer.thingml"
-import "../../devices/softtimer.thingml"
 
 //*
 // This is an example of ThingML use to generate Arduino code which uses 

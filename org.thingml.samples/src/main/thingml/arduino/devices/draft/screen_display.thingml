@@ -1,4 +1,4 @@
-import "../core/arduino.thingml"
+import "../../core/arduino.thingml"
 import "screen_core.thingml"
 
 thing fragment ScreenDisplayMsgs includes ScreenCoreMsgs

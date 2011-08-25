@@ -1,5 +1,5 @@
-import "../bricks/button.thingml"
-import "../core/arduino_timer.thingml"
+import "../../bricks/button.thingml"
+import "../../core/arduino_timer.thingml"
 
 thing fragment SoftButtonMsgs {
 	message click();

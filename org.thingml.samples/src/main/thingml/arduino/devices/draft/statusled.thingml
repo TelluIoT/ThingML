@@ -1,5 +1,5 @@
-import "../bricks/led.thingml"
-import "../core/arduino_timer.thingml"
+import "../../bricks/led.thingml"
+import "../../core/arduino_timer.thingml"
 
 thing fragment StatusLEDMsgs {
 	message statusON();
