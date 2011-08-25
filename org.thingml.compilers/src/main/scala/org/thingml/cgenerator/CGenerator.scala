@@ -152,7 +152,7 @@ object CGenerator {
     libdir.listFiles().foreach{ f =>
       if (f.getName.endsWith(".jar")) {
         var fname = f.getAbsolutePath
-        if (fname.contains(" ")) fname = "\"" + fname + "\""
+        if (fname.indexOf(' ') > 0) fname = "\"" + fname + "\""
         if (classpath.length() > 0) classpath = fname + File.pathSeparator + classpath
         else classpath = fname
       }
