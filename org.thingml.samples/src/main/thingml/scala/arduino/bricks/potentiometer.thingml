@@ -1,11 +1,12 @@
-import "sensorAPI.thingml"
+import "brickAPI.thingml"
 
 thing fragment PotentiometerMsgs{
     message newValue(value : Integer);     
 }
 
-thing Potentiometer includes SensorAPI, PotentiometerMsgs
+thing Potentiometer includes BrickSensor, PotentiometerMsgs
 {
+    set device = 'new org.thingml.devices.PotentiometerDemo(0, 1023)'
     
     provided port Potentiometer {
        sends newValue
@@ -14,8 +15,7 @@ thing Potentiometer includes SensorAPI, PotentiometerMsgs
 	statechart behavior init Ready {
 		
 		on entry 
-        do
-		  device = 'new org.thingml.devices.PotentiometerDemo(0, 1023)' 
+        do 
 		  'register()'
 		end
 

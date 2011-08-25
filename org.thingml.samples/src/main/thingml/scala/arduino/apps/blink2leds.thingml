@@ -54,7 +54,7 @@ configuration ScalaBlink2LedsSimulator {
 
 	instance scheduler : ThingMLScheduler
 
-	instance led1 : Led	
+	instance led1 : Led
 	instance led2 : Led
 	
 	instance timer1 : SoftTimer

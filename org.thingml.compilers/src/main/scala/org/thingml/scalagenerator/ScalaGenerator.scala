@@ -62,18 +62,16 @@ object ScalaGenerator {
 
   def compileAllJava(model: ThingMLModel, pack : String): Hashtable[Configuration, String] = {
     val result = new Hashtable[Configuration, String]()
-    model.allConfigurations.foreach {
-      t =>
-      result.put(t, compile(t, pack))
+    compileAll(model, pack).foreach{entry =>
+      result.put(entry._1, entry._2)
     }
     result
   }
   
   def compileAll(model: ThingMLModel, pack : String): Map[Configuration, String] = {
-    val result = Map[Configuration, String]()
+    var result = Map[Configuration, String]()
     model.allConfigurations.foreach {
-      t =>
-      result.put(t, compile(t, pack))
+      t => result += (t -> compile(t, pack))
     }
     result
   }
@@ -230,7 +228,23 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
       
     builder append "//Things\n"
     self.allInstances.foreach{ i =>
-      builder append "val " + i.getType.getName + "_" + i.getName + " = new " + firstToUpper(i.getType.getName) + "()\n"
+      builder append "val " + i.getType.getName + "_" + i.getName + " = new " + firstToUpper(i.getType.getName) + "("
+      var j = 0
+      self.initExpressionsForInstance(i).foreach{p =>         
+        if (j > 0)
+          builder append ", "
+        var result = p._1.scala_var_name + " = "
+        if (p._2 != null) {
+          var tempBuilder = new StringBuilder()
+          p._2.generateScala(tempBuilder, i.getType)
+          result = result + tempBuilder.toString
+        } else {
+          result = result + "null.asInstanceOf[" + p._1.getType.scala_type + "]"
+        }
+        builder append result
+        j = j + 1
+      }
+      builder append ")\n"
     }
     
     builder append "//Bindings\n"
@@ -295,7 +309,9 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
       traits = "with " + self.annotation("java_interface")
     }
 
-    builder append "class " + firstToUpper(self.getName) + " extends Component " + traits + "{\n\n"
+    builder append "class " + firstToUpper(self.getName) + "("
+    generateProperties(builder)
+    builder append ") extends Component " + traits + "{\n\n"
     
     builder append "//Companion object\n"
     builder append "object " + firstToUpper(self.getName) + "{\n"
@@ -316,10 +332,6 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     }
     builder append "}\n\n"
     
-    if (self.allPropertiesInDepth.size > 0){
-      generateProperties(builder)
-      builder append "\n"
-    }
        
     generatePortDef(builder)
     
@@ -341,14 +353,6 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     self.allStateMachines.foreach{b => 
       b.asInstanceOf[StateMachine].generateScala(builder, self)
     }
-    /*self.allStateMachines.foreach{b => 
-      b.getInternal.foreach{t => 
-        b.generateInternalTransitions(builder, t, self)
-      }
-      b.getInternal.foreach{t => 
-        t.generateScala(builder, self)
-      }
-    }*/
     
     builder append "}\n"
   }
@@ -360,20 +364,9 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
   }
   
   def generateProperties(builder: StringBuilder) {
-    // Create variables for all the properties defined in the Thing and States
-    builder append "\n// Variables for the properties of the instance\n"
-    self.allPropertiesInDepth.foreach {
-      p =>
-      builder append "var " + p.scala_var_name + " : " + p.getType.scala_type + " = "
-      p.getInit match {
-        case i : Expression => 
-          val tempBuilder = new StringBuilder
-          i.generateScala(tempBuilder, self)
-          builder append tempBuilder.toString
-        case _ => builder append "_"
-      }
-      builder append "\n"
-    }
+    builder append self.allPropertiesInDepth.collect{case p =>
+        (if (p.isChangeable) "val " else "var ") + p.scala_var_name + " : " + p.getType.scala_type
+    }.mkString(", ")
   }
 }
 
@@ -584,8 +577,8 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
       builder append "parent.addSubState(" + sub.getName + "_state" + ")\n"
       
       /*sub.getInternal.foreach{t => 
-        generateInternalTransitions(builder, t, thing)
-      }*/
+       generateInternalTransitions(builder, t, thing)
+       }*/
       sub.generateScala(builder, thing)
     }
     builder append "parent.setInitial(" + self.getInitial.getName + "_state" + ")\n\n"

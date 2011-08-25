@@ -27,6 +27,8 @@ import javax.xml.transform.Result
 import java.util.{Hashtable, ArrayList}
 import scala.util.parsing.input.StreamReader
 import java.io._
+import scala.actors._
+import scala.actors.Actor._
 
 import io.Source
 import java.lang.{Boolean, StringBuilder}
@@ -42,20 +44,157 @@ object SimpleCopyTemplate {
 
 object CGenerator {
 
+  def compileAndRunArduino(model : ThingMLModel, arduinoDir : String, libdir : String) {
+    // First look for a configuration in the model
+    model.getConfigs.filter{ c => !c.isFragment }.headOption match {
+      case Some (c) => compileAndRunArduino(c, arduinoDir, libdir)
+      case None =>
+        // look in all configs
+      model.allConfigurations.filter{ c => !c.isFragment }.headOption match {
+        case Some (c) => compileAndRunArduino(c, arduinoDir, libdir)
+        case None => {}
+      }
+    }
+  }
+
+  def compileAndRunArduino(cfg : Configuration, arduinoDir : String, libdir : String) {
+
+    // Create a temp folder
+    var folder = File.createTempFile(cfg.getName, null);
+    folder.delete
+    folder.mkdirs
+    folder.deleteOnExit
+
+    // Create a folder having the name of the config
+    folder = new File(folder, cfg.getName);
+    folder.mkdirs
+
+    // Compile the configuration:
+    var pde_code =  CGenerator.compile(cfg)
+
+    // Write the code in a pde file
+    var pde_file = new File(folder, cfg.getName + ".pde")
+    var w: PrintWriter = new PrintWriter(new FileWriter(pde_file))
+    w.print(pde_code)
+    w.close
+
+    // Open the arduino environment on the generated file
+    openArduinoIDE(pde_file.getAbsolutePath, arduinoDir, libdir)
+
+  }
+
+  private val console_out = actor {
+           loopWhile(true){
+              react {
+                  case TIMEOUT =>
+                      //caller ! "react timeout"
+                  case proc:Process =>
+                      println("[PROC] " + proc)
+                      val out = new BufferedReader( new InputStreamReader(proc.getInputStream))
+
+                      var line:String = null
+                      while({line = out.readLine; line != null}){
+                          println("["+ proc + " OUT] " + line)
+                      }
+
+                      out.close
+              }
+        }
+    }
+
+    private val console_err = actor {
+           loopWhile(true){
+              react {
+                  case TIMEOUT =>
+                      //caller ! "react timeout"
+                  case proc:Process =>
+                      println("[PROC] " + proc)
+
+                      val err = new BufferedReader( new InputStreamReader(proc.getErrorStream))
+                      var line:String = null
+
+                      while({line = err.readLine; line != null}){
+                           println("["+ proc + " ERR] " + line)
+                      }
+                      err.close
+
+              }
+        }
+    }
+
+  def openArduinoIDE(pde_file : String, arduinoDir : String, arduinolibdir : String)  {
+
+
+    var arduino = new File(arduinoDir)
+
+    var classpath : String = System.getProperty("java.class.path")
+
+    var libpath : String = System.getProperty("java.library.path")
+
+    if (libpath.length() > 0) {
+      libpath = File.pathSeparator + libpath
+    }
+    libpath = arduinolibdir + libpath
+
+
+
+    if (!arduino.exists() || !arduino.isDirectory) {
+      System.err.println("ERROR: Arduino installation directory " + arduinoDir + " does not exist.")
+      return;
+    }
+
+    var libdir = new File(arduino, "lib")
+    if (!libdir.exists() || !libdir.isDirectory) {
+      System.err.println("ERROR: Could not find lib directory in arduino installation at " + arduinoDir + ".")
+      return;
+    }
+
+    libdir.listFiles().foreach{ f =>
+      if (f.getName.endsWith(".jar")) {
+        var fname = f.getAbsolutePath
+        if (fname.contains(" ")) fname = "\"" + fname + "\""
+        if (classpath.length() > 0) classpath = fname + File.pathSeparator + classpath
+        else classpath = fname
+      }
+    }
+
+    var pb: ProcessBuilder = new ProcessBuilder("java")
+
+    pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+    pb.command().add("-Djava.library.path="+libdir.getAbsolutePath)
+    pb.command().add("-Djava.class.path=" + classpath)
+    pb.command().add("processing.app.Base")
+    pb.command().add(pde_file)
+
+    println("EXEC : " + pb.command().toString)
+
+    var env = pb.environment
+
+    env.put("APPDIR", arduino.getAbsolutePath)
+    env.put("PATH", arduino.getAbsolutePath + "/java/bin" + File.pathSeparator + env.get("PATH"))
+    env.put("LD_LIBRARY_PATH", libdir.getAbsolutePath + File.pathSeparator + env.get("LD_LIBRARY_PATH"))
+
+    pb.directory(arduino)
+
+    var p: Process = pb.start
+
+    console_out ! p
+    console_err ! p
+
+  }
+
   def compileAll(model: ThingMLModel): Map[Configuration, String] = {
-    val result = Map[Configuration, String]()
+    var result = Map[Configuration, String]()
     model.allConfigurations.filter{c=> !c.isFragment}.foreach {
-      t =>
-        result.put(t, compile(t))
+      t => result += (t -> compile(t))
     }
     result
   }
   
   def compileAllJava(model: ThingMLModel): Hashtable[Configuration, String] = {
     val result = new Hashtable[Configuration, String]()
-    model.allConfigurations.filter{c=> !c.isFragment}.foreach {
-      t =>
-        result.put(t, compile(t))
+    compileAll(model).foreach{entry =>
+      result.put(entry._1, entry._2)
     }
     result
   }
