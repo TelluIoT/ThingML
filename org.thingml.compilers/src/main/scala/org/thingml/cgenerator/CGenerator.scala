@@ -27,6 +27,8 @@ import javax.xml.transform.Result
 import java.util.{Hashtable, ArrayList}
 import scala.util.parsing.input.StreamReader
 import java.io._
+import scala.actors._
+import scala.actors.Actor._
 
 import io.Source
 import java.lang.{Boolean, StringBuilder}
@@ -42,13 +44,30 @@ object SimpleCopyTemplate {
 
 object CGenerator {
 
+  def compileAndRunArduino(model : ThingMLModel, arduinoDir : String, libdir : String) {
+    // First look for a configuration in the model
+    model.getConfigs.filter{ c => !c.isFragment }.headOption match {
+      case Some (c) => compileAndRunArduino(c, arduinoDir, libdir)
+      case None =>
+        // look in all configs
+      model.allConfigurations.filter{ c => !c.isFragment }.headOption match {
+        case Some (c) => compileAndRunArduino(c, arduinoDir, libdir)
+        case None => {}
+      }
+    }
+  }
+
   def compileAndRunArduino(cfg : Configuration, arduinoDir : String, libdir : String) {
 
-    // Create a temp folder with the name of the configuration
+    // Create a temp folder
     var folder = File.createTempFile(cfg.getName, null);
     folder.delete
     folder.mkdirs
     folder.deleteOnExit
+
+    // Create a folder having the name of the config
+    folder = new File(folder, cfg.getName);
+    folder.mkdirs
 
     // Compile the configuration:
     var pde_code =  CGenerator.compile(cfg)
@@ -64,15 +83,61 @@ object CGenerator {
 
   }
 
-  def openArduinoIDE(pde_file : String, arduinoDir : String, libdir : String)  {
+  private val console_out = actor {
+           loopWhile(true){
+              react {
+                  case TIMEOUT =>
+                      //caller ! "react timeout"
+                  case proc:Process =>
+                      println("[PROC] " + proc)
+                      val out = new BufferedReader( new InputStreamReader(proc.getInputStream))
 
-    var classpath = System.getProperty("java.class.path")
+                      var line:String = null
+                      while({line = out.readLine; line != null}){
+                          println("["+ proc + " OUT] " + line)
+                      }
 
-    var libpath = System.getProperty("java.library.path")
-    if (libpath.length() > 0) libpath = ":" + libpath
-    libpath = libdir + libpath
+                      out.close
+              }
+        }
+    }
+
+    private val console_err = actor {
+           loopWhile(true){
+              react {
+                  case TIMEOUT =>
+                      //caller ! "react timeout"
+                  case proc:Process =>
+                      println("[PROC] " + proc)
+
+                      val err = new BufferedReader( new InputStreamReader(proc.getErrorStream))
+                      var line:String = null
+
+                      while({line = err.readLine; line != null}){
+                           println("["+ proc + " ERR] " + line)
+                      }
+                      err.close
+
+              }
+        }
+    }
+
+  def openArduinoIDE(pde_file : String, arduinoDir : String, arduinolibdir : String)  {
+
 
     var arduino = new File(arduinoDir)
+
+    var classpath : String = System.getProperty("java.class.path")
+
+    var libpath : String = System.getProperty("java.library.path")
+
+    if (libpath.length() > 0) {
+      libpath = ":" + libpath
+    }
+    libpath = arduinolibdir + "" + libpath
+
+
+
     if (!arduino.exists() || !arduino.isDirectory) {
       System.err.println("ERROR: Arduino installation directory " + arduinoDir + " does not exist.")
       return;
@@ -84,23 +149,35 @@ object CGenerator {
       return;
     }
 
-    libdir.list().foreach{ f =>
-      if (f.endsWith(".jar")) {
-        if (classpath.length() > 0) classpath = f + ":" + classpath
-        else classpath = f
+    libdir.listFiles().foreach{ f =>
+      if (f.getName.endsWith(".jar")) {
+        if (classpath.length() > 0) classpath = f.getAbsolutePath + ":" + classpath
+        else classpath = f.getAbsolutePath
       }
     }
 
-    var cmd = "java -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel "
-    cmd += "-Djava.library.path=\""+libdir+"\" -classpath \"" + classpath + "\" "
-    cmd += "processing.app.Base " + pde_file
+    var pb: ProcessBuilder = new ProcessBuilder("java")
 
-    println("EXEC : " + cmd)
+    pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+    pb.command().add("-Djava.library.path="+libdir.getAbsolutePath)
+    pb.command().add("-Djava.class.path=" + classpath)
+    pb.command().add("processing.app.Base")
+    pb.command().add(pde_file)
 
-    var p = Runtime.getRuntime().exec(cmd);
+    println("EXEC : " + pb.command().toString)
 
-    // java -Djava.library.path=/usr/local/lib -classpath /home/user/zeromq/libjzmq/:./local_lat tcp://127.0.0.1:5555 1 100
+    var env = pb.environment
 
+    env.put("APPDIR", arduino.getAbsolutePath)
+    env.put("PATH", arduino.getAbsolutePath + "/java/bin:" + env.get("PATH"))
+    env.put("LD_LIBRARY_PATH", libdir.getAbsolutePath + ":" + env.get("LD_LIBRARY_PATH"))
+
+    pb.directory(arduino)
+
+    var p: Process = pb.start
+
+    console_out ! p
+    console_err ! p
 
   }
 
