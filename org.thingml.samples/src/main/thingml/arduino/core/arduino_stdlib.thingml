@@ -115,7 +115,7 @@ thing fragment ArduinoStdlibMsgs {
 	message analog_read (pin : AnalogPin) @code "7" 
 		@sync_response "analogReadResult#value" @timeout "500" @retry "0";
 	message analog_read_result (pin : AnalogPin, value : Int16) @code "8";
-	message analog_write (pin : PWMPin, value : Int8) @code "9";
+	message analog_write (pin : PWMPin, value : UInt8) @code "9";
 	
 	// Advanced I/O
 	message tone (pin : DigitalPin, frequency : Int16, duration : Int16) @code "10";

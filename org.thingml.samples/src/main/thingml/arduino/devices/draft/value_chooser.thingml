@@ -1,0 +1,87 @@
+import "../../core/arduino.thingml"
+import "../../bricks/rotation_sensor.thingml"
+import "../../bricks/lcd_screen.thingml"
+
+thing fragment ValueChooserMsgs 
+{
+    message run (name : String, low : Int16, high : Int16);
+    message get_value ();
+    message value_choosed (val : Int16);
+}
+
+thing ValueChooser includes ValueChooserMsgs, RotationSensorMsgs, LcdScreenMsgs
+{
+    property choosing_name : String
+    property choosing_value : Int16
+    property low : Int16
+    property high : Int16
+    
+    provided port ValueChooser
+    {
+        sends value_choosed
+        receives run, get_value
+    }
+    
+    required port LcdScreen
+    {
+        sends clear, print_string, print_value, set_cursor
+    }
+    
+    required port RotSensor
+    {
+        receives rotation_value
+    }
+    
+    statechart ValueChooserImpl init Idle
+    {
+        state Idle
+        {
+            transition run -> Running
+            event m : ValueChooser?run
+            action do
+                choosing_name = m.name
+                low = m.low
+                high = m.high
+                end
+        }
+        
+        state Running
+        {
+            internal refresh event m : RotSensor?rotation_value
+            action choosing_value = 'map ('& m.val &', '& low &', '& high &', 0, 1023)'
+             
+            transition over -> Idle
+            event ValueChooser?get_value
+            action ValueChooser!value_choosed (choosing_value)     
+        }
+        
+        region display init Running
+        {
+            state Running
+            {
+                on entry do
+                    LcdScreen!clear ()
+                    LcdScreen!print_string (choosing_name)
+                    end 
+                
+                internal event RotSensor?rotation_value
+                action do
+                    LcdScreen!set_cursor (0, 1)
+                    LcdScreen!print_value (choosing_value)
+                    LcdScreen!print_string ("     ")
+                    end
+            }
+        }
+    }    
+}
+
+configuration ValueChooser
+{
+    group rot_sensor : RotationSensor
+    
+    instance lcd_screen : LcdScreen
+    
+    instance value_chooser : ValueChooser
+    connector value_chooser.LcdScreen => lcd_screen.LcdScreen
+    connector value_chooser.RotSensor => rot_sensor.rotation_sensor.RotationSensor 
+}
