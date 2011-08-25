@@ -54,8 +54,9 @@ class ButtonDemo() extends JFrame("Button Demo") with Device with Observable {
   val frame = new JFrame()
   frame.add(button)
   frame.pack
+  frame.setSize(new Dimension(185, 140))
   frame.setVisible(true)
-  frame.setSize(new Dimension(50, 90))
+  
 }
 
 /**

@@ -36,7 +36,7 @@ import org.sintef.thingml._
 
 object ScalaGenerator {
   
-  var debug = false
+  var debug = true
   
   val keywords = scala.List("implicit","match","requires","type","var","abstract","do","finally","import","object","throw","val","case","else","for","lazy","override","return","trait","catch","extends","forSome","match","package","sealed","try","while","class","false","if","new","private","super","true","with","def","final","implicit","null","protected","this","yield","_",":","=","=>","<-","<:","<%",">:","#","@")
   val badChar = scala.List("_")

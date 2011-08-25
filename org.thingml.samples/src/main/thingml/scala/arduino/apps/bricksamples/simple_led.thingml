@@ -1,7 +1,8 @@
 import "../../bricks/led.thingml"
+import "../../bricks/button.thingml"
 import "../../devices/softtimer.thingml"
 
-thing SimpleLed includes LedMsgs, TimerMsgs
+thing SimpleLed includes LedMsgs, ButtonMsgs, TimerMsgs
 {
 	readonly property frequency : UInt16 = 1000
 	
@@ -12,19 +13,34 @@ thing SimpleLed includes LedMsgs, TimerMsgs
 	
 	required port Timer
 	{
-		sends timer_start
+		sends timer_start, timer_cancel
 		receives timer_timeout
 	}
+
+    required port Button
+    {
+        receives pressed, released    
+    }
 	
-	statechart SimpleLedImpl init Running
+	statechart SimpleLedImpl init Idle
 	{
-		state Running
+		state Idle
+        {
+           transition -> Running
+           event Button?released
+        }
+
+        state Running
 		{
 			on entry Timer!timer_start(frequency)
 			
 			transition toggle -> Running
 			event Timer?timer_timeout
 			action Led!led_toggle()
+
+            transition -> Idle
+            event Button?released
+            action Timer!timer_cancel()
 		}
 	}
 }
@@ -36,10 +52,15 @@ configuration ScalaSimpleLedSimulator
 		
 	// Timer configuration.
 	instance timer : SoftTimer
+
+    //Button configuration
+    instance button : Button
+    connector button.Sensor => button.SensorMockUp
 	
 	// Simple led configuration.
 	instance simple_led : SimpleLed
         set frequency = 800
 	connector simple_led.Led => led.Led
 	connector simple_led.Timer => timer.timer
+    connector simple_led.Button => button.Button
 }

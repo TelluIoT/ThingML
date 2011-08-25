@@ -113,8 +113,8 @@ class LedDemo(color: LedColor) extends LedModel with Device {
   val frame = new scala.swing.Frame()
   frame.contents = led
   frame.pack
+  frame.size_=(new Dimension(90, 90))
   frame.visible_=(true)
-  frame.size = new Dimension(50, 90)
   
   // Default constructor, which builds a red LED
   def this() =
