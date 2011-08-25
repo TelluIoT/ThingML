@@ -32,7 +32,6 @@ import io.Source
 import java.lang.{Boolean, StringBuilder}
 import org.sintef.thingml._
 import org.thingml.model.scalaimpl.aspects.MergedConfigurationCache
-import javax.swing.filechooser.FileNameExtensionFilter
 
 object SimpleCopyTemplate {
 
@@ -105,7 +104,15 @@ object CGenerator {
 
   }
 
-  def compileAll(model: ThingMLModel): Hashtable[Configuration, String] = {
+  def compileAll(model: ThingMLModel): Map[Configuration, String] = {
+    var result = Map[Configuration, String]()
+    model.allConfigurations.filter{c=> !c.isFragment}.foreach {
+      t => result += (t -> compile(t))
+    }
+    result
+  }
+  
+  def compileAllJava(model: ThingMLModel): Hashtable[Configuration, String] = {
     val result = new Hashtable[Configuration, String]()
     model.allConfigurations.filter{c=> !c.isFragment}.foreach {
       t =>

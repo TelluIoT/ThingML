@@ -5,25 +5,35 @@ datatype Device
 
 thing fragment SensorMsgs 
 {
-	message newValue(value: Integer);    
+	message update(); 
 }
 
 thing fragment SensorAPI includes SensorMsgs
 @scala_trait "org.thingml.devices.Observer" 
 {
 	readonly property device : Device
+    property lastValue : Int16 = 0
 	
 	function newValue(v : Integer)@override "true" : Void
 	do
-		Sensor!newValue(v)
+        lastValue = v
+		SensorMockUp!update()
 	end
 	
 	function register() : Void
 	do
-		'' & device & '.register(root.asInstanceOf[org.thingml.devices.Observer])'
+		'' & device & '.register(this)'
 	end
 	
-	provided port Sensor {
-		sends newValue
+    /**
+     * This makes it possible to notify the concrete Thing
+     * mocking the sensor (push mode)
+     */
+	provided port SensorMockUp {
+		sends update
 	}
+
+    required port Sensor {
+        receives update
+    }
 }

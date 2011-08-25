@@ -34,15 +34,15 @@ thing Blink4Leds includes LedMsgs, TimerMsgs
 
 configuration Blink4Leds {       
 
-	// The arduino board with 2 LEDs on pin 10 and 13
+	// The arduino board with 4 LEDs on pin 10, 13, 6, 8
 	group led1 : Led
 		set led1.io.digital_output.pin = DigitalPin:PIN_10
 	group led2 : Led
-		set led1.io.digital_output.pin = DigitalPin:PIN_13
+		set led2.io.digital_output.pin = DigitalPin:PIN_13
 	group led3 : Led
-		set led1.io.digital_output.pin = DigitalPin:PIN_6
+		set led3.io.digital_output.pin = DigitalPin:PIN_6
 	group led4 : Led
-		set led1.io.digital_output.pin = DigitalPin:PIN_8
+		set led4.io.digital_output.pin = DigitalPin:PIN_8
 	
 	instance timer : SoftTimer
 	

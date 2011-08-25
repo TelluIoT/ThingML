@@ -62,7 +62,7 @@ thing SoundSensor includes SoundSensorMsgs, AnalogInputMsgs
 configuration fragment SoundSensor
 {
     group io : OnChangeAnalogInput
-        set io.analog_input.refresh_rate = 5
+        set io.analog_input.refresh_rate = 1
 
     instance sound_sensor : SoundSensor
     connector sound_sensor.AnalogInput => io.analog_input.AnalogInput

@@ -31,7 +31,7 @@ thing TempSensorDisplay includes LcdScreenMsgs, TemperatureSensorMsgs
    		state Running
    		{
    			internal refresh event m : Temp?temperature_value
-   			action Display!refreshDisplay (0, 'temperature ('& m.val &')') 
+   			action Display!refreshDisplay (0, m.val) 
    		}	
    	}
 }

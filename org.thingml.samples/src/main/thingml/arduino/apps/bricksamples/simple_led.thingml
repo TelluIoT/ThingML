@@ -1,6 +1,6 @@
 import "../../core/arduino.thingml"
 import "../../bricks/led.thingml"
-import "../../devices/softtimer.thingml"
+import "../../core/arduino_timer.thingml"
 
 //*
 // This is an example of ThingML use to generate Arduino code which uses 

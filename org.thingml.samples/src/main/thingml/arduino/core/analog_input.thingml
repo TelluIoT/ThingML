@@ -79,7 +79,7 @@ thing PeriodicAnalogInput includes AnalogInput, TimerMsgs
 thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 {
 	readonly property value_precision : Int8 = 1
-	readonly property refresh_rate : UInt8 = 20
+	readonly property refresh_rate : UInt16 = 20
 	
 	property oldValue : Int16 = 3333
 	
@@ -104,10 +104,12 @@ thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 		{
 			transition got -> Running
 			event m : AnalogIO?analog_read_result
-			guard m.pin == pin and (m.value - oldValue < - value_precision or m.value - oldValue > value_precision)
+			guard m.pin == pin
 			action do
-				AnalogInput!analog_input_value (m.value)
-				oldValue = m.value
+                if (m.value - oldValue < - value_precision or m.value - oldValue > value_precision) do
+				    AnalogInput!analog_input_value (m.value)
+				    oldValue = m.value
+                    end
 			end
 		}	 
 	
@@ -144,7 +146,6 @@ configuration fragment PeriodicAnalogInput
     instance arduino : Arduino
     
     instance analog_input : PeriodicAnalogInput
-        set refresh_rate = 2000
     instance timer : SoftTimer
     connector analog_input.AnalogIO => arduino.AnalogIO
     connector analog_input.Timer => timer.timer

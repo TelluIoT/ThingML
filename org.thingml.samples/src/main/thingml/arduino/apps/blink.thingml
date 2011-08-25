@@ -23,10 +23,6 @@ thing Blink includes LedMsgs, TimerMsgs
 }
 
 configuration Blink 
-    @debug "true"
-    @debug_fifo "true"
-    @debug_message_send ".*"
-    @debug_message_receive ".*"
 {       
 	group led : Led
 		set led.io.digital_output.pin = DigitalPin:PIN_13

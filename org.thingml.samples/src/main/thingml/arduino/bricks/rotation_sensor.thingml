@@ -28,7 +28,7 @@ thing RotationSensor includes RotationSensorMsgs, AnalogInputMsgs
     	
         state Running 
         {
-        	internal event RotationSensor?read_rotation
+        	internal force_reading event RotationSensor?read_rotation
         	action AnalogInput!read_analog_input ()
         }        
     }

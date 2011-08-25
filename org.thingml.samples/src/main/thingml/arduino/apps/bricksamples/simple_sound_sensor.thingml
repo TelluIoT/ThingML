@@ -44,8 +44,6 @@ configuration SimpleSoundSensor
         set led.io.digital_output.pin = DigitalPin:PIN_8
     group sound_sensor : SoundSensor
         set sound_sensor.io.analog_input.pin = AnalogPin:A_4
-        set sound_sensor.io.analog_input.refresh_rate = 1 
-        set sound_sensor.sound_sensor.sample_rate = 100
         
     instance simple_sound_sensor : SimpleSoundSensor
 	connector simple_sound_sensor.Led => led.led.Led

@@ -3,12 +3,16 @@ import "../../thingml.thingml"
 datatype JavaTimer
 @java_type "java.util.Timer";
 
+datatype JavaTimerTask
+@java_type "java.util.TimerTask";
+
 // Manage a set of software timers.
 thing SoftTimer includes Timer, ThingMLSchedulerMsg
 @scala_trait "org.thingml.utils.TimerTaskTrait"
 {
 
-    readonly property javaTimer : JavaTimer = 'new java.util.Timer()'
+    property javaTimer : JavaTimer = 'new java.util.Timer()'
+    property lastTask : JavaTimerTask
 	
     required port Polling {
 		receives poll
@@ -22,16 +26,28 @@ thing SoftTimer includes Timer, ThingMLSchedulerMsg
     function cancel() : Void
     do
       'try {'
-      '' & javaTimer & '.cancel'            
+      '' & lastTask & '.cancel'            
       '' & javaTimer & '.purge'
       '} catch {'
       'case _ =>'
+      javaTimer = 'new java.util.Timer()'
       '}'
     end
     
     function start(delay : Integer) : Void
     do
-        '' & javaTimer & '.schedule(this.newTimerTask, ' & delay & ')'
+        if (not(lastTask == 'null')) 
+        do
+          'cancel()'
+        end
+        lastTask = 'this.newTimerTask'
+        'try'
+        '' & javaTimer & '.schedule(' & lastTask & ', ' & delay & ')'
+        'catch {'
+        'case _ =>'
+        javaTimer = 'new java.util.Timer()'
+        '' & javaTimer & '.schedule(' & lastTask & ', ' & delay & ')'
+        '}'
     end
     
     statechart SoftTimer init default {
@@ -40,7 +56,6 @@ thing SoftTimer includes Timer, ThingMLSchedulerMsg
             event m : timer?timer_start
             guard m.delay > 0
             action do //should be implemented as proper ThingML function calls (currently not supported by compiler)
-                //'cancel()'
                 'start(' & m.delay & ')'
             end
             

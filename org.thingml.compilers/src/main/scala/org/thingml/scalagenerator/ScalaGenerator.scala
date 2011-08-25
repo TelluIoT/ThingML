@@ -60,11 +60,19 @@ object ScalaGenerator {
     return result
   }
 
-  def compileAll(model: ThingMLModel, pack : String): Hashtable[Configuration, String] = {
+  def compileAllJava(model: ThingMLModel, pack : String): Hashtable[Configuration, String] = {
     val result = new Hashtable[Configuration, String]()
     model.allConfigurations.foreach {
       t =>
       result.put(t, compile(t, pack))
+    }
+    result
+  }
+  
+  def compileAll(model: ThingMLModel, pack : String): Map[Configuration, String] = {
+    var result = Map[Configuration, String]()
+    model.allConfigurations.foreach {
+      t => result += (t -> compile(t, pack))
     }
     result
   }
@@ -315,7 +323,7 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     generatePortDef(builder)
     
     
-    self.getFunctions.foreach{
+    self.allFunctions.foreach{
       f => f.generateScala(builder, self)
     }
     
@@ -361,8 +369,9 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
           val tempBuilder = new StringBuilder
           i.generateScala(tempBuilder, self)
           builder append tempBuilder.toString
-        case _ => builder append "_\n"
+        case _ => builder append "_"
       }
+      builder append "\n"
     }
   }
 }

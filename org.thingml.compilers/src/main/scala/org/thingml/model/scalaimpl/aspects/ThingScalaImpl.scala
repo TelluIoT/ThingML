@@ -56,7 +56,7 @@ case class ThingScalaImpl (self : Thing) {
     return ThingMLHelpers.allProperties(self)
   }
 
-  def allFuntions: ArrayList[Function] = {
+  def allFunctions: ArrayList[Function] = {
     return ThingMLHelpers.allFunctions(self)
   }
 

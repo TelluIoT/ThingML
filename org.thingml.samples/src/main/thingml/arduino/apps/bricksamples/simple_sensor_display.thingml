@@ -17,7 +17,7 @@ import "../../bricks/sound_sensor.thingml"
 // Keep in mind that in this example, you have to use only one sensor at the time.
 //*
 
-thing fragment SimpleSensorsDisplay includes LcdScreenMsgs
+thing fragment SimpleSensorDisplay includes LcdScreenMsgs
 {
 	required port LcdScreen
 	{
@@ -27,7 +27,7 @@ thing fragment SimpleSensorsDisplay includes LcdScreenMsgs
 
 // Use only one of the four things following.
 
-thing SimpleRotSensorDisplay includes SimpleSensorsDisplay, RotationSensorMsgs
+thing SimpleRotSensorDisplay includes SimpleSensorDisplay, RotationSensorMsgs
 {
 	required port RotationSensor
 	{
@@ -53,7 +53,7 @@ thing SimpleRotSensorDisplay includes SimpleSensorsDisplay, RotationSensorMsgs
 	}
 }
 
-thing SimpleTempSensorDisplay includes SimpleSensorsDisplay, TemperatureSensorMsgs
+thing SimpleTempSensorDisplay includes SimpleSensorDisplay, TemperatureSensorMsgs
 {
 	required port TempSensor
 	{
@@ -77,7 +77,7 @@ thing SimpleTempSensorDisplay includes SimpleSensorsDisplay, TemperatureSensorMs
 	}
 }
 
-thing SimpleLightSensorDisplay includes SimpleSensorsDisplay, LightSensorMsgs
+thing SimpleLightSensorDisplay includes SimpleSensorDisplay, LightSensorMsgs
 {
 	required port LightSensor
 	{
@@ -101,7 +101,7 @@ thing SimpleLightSensorDisplay includes SimpleSensorsDisplay, LightSensorMsgs
 	}
 }
 
-thing SimpleSoundSensorDisplay includes SimpleSensorsDisplay, SoundSensorMsgs
+thing SimpleSoundSensorDisplay includes SimpleSensorDisplay, SoundSensorMsgs
 {
 	required port SoundSensor
 	{
@@ -125,7 +125,7 @@ thing SimpleSoundSensorDisplay includes SimpleSensorsDisplay, SoundSensorMsgs
 	}
 }
 
-configuration SimpleSensorsDisplay
+configuration SimpleSensorDisplay
 {
     group rotation_sensor : RotationSensor
         set rotation_sensor.io.analog_input.pin = AnalogPin:A_4
@@ -135,9 +135,11 @@ configuration SimpleSensorsDisplay
         
     group light_sensor : LightSensor
         set light_sensor.io.analog_input.pin = AnalogPin:A_4
+        set light_sensor.io.analog_input.value_precision = 3
         
     group sound_sensor : SoundSensor
         set sound_sensor.io.analog_input.pin = AnalogPin:A_4
+        set sound_sensor.sound_sensor.sample_rate = 500
  
     instance lcd_screen : LcdScreen
        
