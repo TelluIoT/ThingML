@@ -132,9 +132,9 @@ object CGenerator {
     var libpath : String = System.getProperty("java.library.path")
 
     if (libpath.length() > 0) {
-      libpath = ":" + libpath
+      libpath = File.pathSeparator + libpath
     }
-    libpath = arduinolibdir + "" + libpath
+    libpath = arduinolibdir + libpath
 
 
 
@@ -151,8 +151,10 @@ object CGenerator {
 
     libdir.listFiles().foreach{ f =>
       if (f.getName.endsWith(".jar")) {
-        if (classpath.length() > 0) classpath = f.getAbsolutePath + ":" + classpath
-        else classpath = f.getAbsolutePath
+        var fname = f.getAbsolutePath
+        if (fname.contains(" ")) fname = "\"" + fname + "\""
+        if (classpath.length() > 0) classpath = fname + File.pathSeparator + classpath
+        else classpath = fname
       }
     }
 
@@ -169,8 +171,8 @@ object CGenerator {
     var env = pb.environment
 
     env.put("APPDIR", arduino.getAbsolutePath)
-    env.put("PATH", arduino.getAbsolutePath + "/java/bin:" + env.get("PATH"))
-    env.put("LD_LIBRARY_PATH", libdir.getAbsolutePath + ":" + env.get("LD_LIBRARY_PATH"))
+    env.put("PATH", arduino.getAbsolutePath + "/java/bin" + File.pathSeparator + env.get("PATH"))
+    env.put("LD_LIBRARY_PATH", libdir.getAbsolutePath + File.pathSeparator + env.get("LD_LIBRARY_PATH"))
 
     pb.directory(arduino)
 
