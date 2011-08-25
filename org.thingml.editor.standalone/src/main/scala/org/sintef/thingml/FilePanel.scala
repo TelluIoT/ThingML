@@ -41,8 +41,16 @@ class FilePanel(editor: ThingMLPanel, frame: ThingMLFrame, rootF: File = null) e
     val filechooser = new JFileChooser()
     filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     filechooser.setDialogTitle("Select base directory for ThingML files");
+
+    val dir = ThingMLSettings.get_default_work_dir()
+
+    if (dir != null) {
+      filechooser.setSelectedFile(dir)
+    }
+
     var returnVal = filechooser.showOpenDialog(null);
     if (filechooser.getSelectedFile != null && returnVal == JFileChooser.APPROVE_OPTION) {
+      ThingMLSettings.store_default_work_dir(filechooser.getSelectedFile)
       root = filechooser.getSelectedFile
     } else {
       System.exit(0)
