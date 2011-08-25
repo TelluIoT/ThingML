@@ -468,6 +468,7 @@ case class InternalTransitionScalaGenerator(override val self: InternalTransitio
   }
 }
 
+//TODO avoid code duplication with CompositeState
 case class StateMachineScalaGenerator(override val self: StateMachine) extends CompositeStateScalaGenerator(self) {
   override def generateScala(builder: StringBuilder, thing : Thing) {
     builder append "case class " + firstToUpper(self.getName) + "StateMachine(keepHistory : Boolean, root : Component) extends StateAction {\n"
@@ -480,7 +481,11 @@ case class StateMachineScalaGenerator(override val self: StateMachine) extends C
       generateInternalTransitions(builder, t, thing)
     }
     generateInternalTransitions(builder, thing)
-    generateSub(builder, thing)
+    generateSub(builder, thing, self)
+    
+    self.getRegion.foreach{r =>
+      generateRegion(builder, r, thing)
+    }
     
     builder append "}\n"
   }
@@ -550,20 +555,24 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
 case class CompositeStateScalaGenerator(override val self: CompositeState) extends StateScalaGenerator(self) {  
   
   def generateRegion(builder : StringBuilder, r : ParallelRegion, thing : Thing) {
-    builder append "case class " + firstToUpper(r.getName) + "Region(keepHistory : Boolean) {\n"
+    val history = if(r.isHistory) "true" else "false"
+    builder append "parent.addRegion(new " + firstToUpper(r.getName) + "Region(" + history + ")" + ".getBehavior)\n"
+    builder append "case class " + firstToUpper(r.getName) + "Region(keepHistory : Boolean) extends EmptyStateAction{\n"
    
     builder append "def getBehavior = parent\n"
-    builder append "val parent : StateMachine = new Region(keepHistory)\n"
+    builder append "val parent : CompositeState = new CompositeState(this, keepHistory, root)\n"
     
-    r.getSubstate.foreach{sub => sub.generateScala(builder, thing)}
+    //r.getSubstate.foreach{sub => sub.generateScala(builder, thing)}
+    
+    generateSub(builder, thing, r)
     
     builder append "}\n"
   }
   
-  def generateSub(builder : StringBuilder, thing : Thing) {
-    if (self.getSubstate.size > 0)
+  def generateSub(builder : StringBuilder, thing : Thing, r : Region) {
+    if (r.getSubstate.size > 0)
       builder append "//create sub-states\n"
-    self.getSubstate.foreach{ sub =>  
+    r.getSubstate.foreach{ sub =>  
       sub match {
         case cs : CompositeState =>  
           val history = if(cs.isHistory) "true" else "false"
@@ -581,19 +590,19 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
        }*/
       sub.generateScala(builder, thing)
     }
-    builder append "parent.setInitial(" + self.getInitial.getName + "_state" + ")\n\n"
+    builder append "parent.setInitial(" + r.getInitial.getName + "_state" + ")\n\n"
     
-    if (self.getSubstate.size > 0)
+    if (r.getSubstate.size > 0)
       builder append "//create transitions among sub-states\n"
     
-    self.getSubstate.foreach{sub => sub.getOutgoing.foreach{ t => 
+    r.getSubstate.foreach{sub => sub.getOutgoing.foreach{ t => 
         builder append "val t_" + t.getSource.getName+"2"+t.getTarget.getName + "_" + t.hashCode  + " = new Transition(" + t.getSource.getName + "_state, " + t.getTarget.getName + "_state, " + "Transition" + t.getSource.getName+"2"+t.getTarget.getName + "_" + t.hashCode + "(), " + generateHandler(t, thing) + ")\n"
         //printEvents(t, builder)
         builder append "parent.addTransition(t_" + t.getSource.getName+"2"+t.getTarget.getName+ "_" + t.hashCode + ")\n"
       }
     }
     
-    self.getSubstate.foreach{sub => 
+    r.getSubstate.foreach{sub => 
       //sub.generateInternalTransitions(builder, thing)
       sub.getOutgoing.foreach{ t => 
         t.generateScala(builder, thing)
@@ -612,7 +621,7 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
       generateInternalTransitions(builder, t, thing)
     }
     generateInternalTransitions(builder, thing)
-    generateSub(builder, thing)
+    generateSub(builder, thing, self)
     //generateInternalTransitions(builder)
     self.getRegion.foreach{r =>
       generateRegion(builder, r, thing)
@@ -782,8 +791,9 @@ case class ConditionalActionScalaGenerator(override val self: ConditionalAction)
   override def generateScala(builder: StringBuilder, thing : Thing) {
     builder append "if("
     self.getCondition.generateScala(builder, thing)
-    builder append ") "
+    builder append ") {\n"
     self.getAction.generateScala(builder, thing)
+    builder append "\n}\n"
   }
 }
 

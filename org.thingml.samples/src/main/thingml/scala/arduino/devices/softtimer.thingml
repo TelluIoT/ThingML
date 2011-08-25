@@ -26,8 +26,11 @@ thing SoftTimer includes Timer, ThingMLSchedulerMsg
     function cancel() : Void
     do
       'try {'
+      if (not(lastTask == 'null')) 
+      do
       '' & lastTask & '.cancel'            
       '' & javaTimer & '.purge'
+      end
       '} catch {'
       'case _ =>'
       javaTimer = 'new java.util.Timer()'
@@ -36,17 +39,12 @@ thing SoftTimer includes Timer, ThingMLSchedulerMsg
     
     function start(delay : Integer) : Void
     do
-        if (not(lastTask == 'null')) 
-        do
-          'cancel()'
-        end
+        'cancel()'
         lastTask = 'this.newTimerTask'
-        'try'
+        'try {'
         '' & javaTimer & '.schedule(' & lastTask & ', ' & delay & ')'
-        'catch {'
+        '} catch {'
         'case _ =>'
-        javaTimer = 'new java.util.Timer()'
-        '' & javaTimer & '.schedule(' & lastTask & ', ' & delay & ')'
         '}'
     end
     

@@ -6,6 +6,11 @@ thing SimpleLed includes LedMsgs, ButtonMsgs, TimerMsgs
 {
 	readonly property frequency : UInt16 = 1000
 	
+    required port Button
+    {
+        receives pressed, released    
+    }
+
 	required port Led
 	{
 		sends led_toggle
@@ -16,11 +21,17 @@ thing SimpleLed includes LedMsgs, ButtonMsgs, TimerMsgs
 		sends timer_start, timer_cancel
 		receives timer_timeout
 	}
-
-    required port Button
-    {
-        receives pressed, released    
-    }
+    
+    required port Led2
+	{
+		sends led_toggle
+	}
+    
+	required port Timer2
+	{
+		sends timer_start, timer_cancel
+		receives timer_timeout
+	}
 	
 	statechart SimpleLedImpl init Idle
 	{
@@ -42,6 +53,28 @@ thing SimpleLed includes LedMsgs, ButtonMsgs, TimerMsgs
             event Button?released
             action Timer!timer_cancel()
 		}
+
+        region test init Idle {
+		    state Idle
+            {
+                transition -> Running
+                event Button?pressed
+            }
+
+            state Running
+		    {
+			     on entry Timer2!timer_start(frequency)
+			
+			     transition toggle -> Running
+			     event Timer2?timer_timeout
+			     action Led2!led_toggle()
+
+                 transition -> Idle
+                 event Button?pressed
+                 action Timer2!timer_cancel()
+		     }
+            
+        }
 	}
 }
 
@@ -49,9 +82,11 @@ configuration ScalaSimpleLedSimulator
 {		
 	// Led configuration.
 	instance led : Led
+    instance led2 : Led
 		
 	// Timer configuration.
 	instance timer : SoftTimer
+    instance timer2 : SoftTimer
 
     //Button configuration
     instance button : Button
@@ -62,5 +97,7 @@ configuration ScalaSimpleLedSimulator
         set frequency = 800
 	connector simple_led.Led => led.Led
 	connector simple_led.Timer => timer.timer
+	connector simple_led.Led2 => led2.Led
+	connector simple_led.Timer2 => timer2.timer
     connector simple_led.Button => button.Button
 }
