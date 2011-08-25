@@ -1,6 +1,6 @@
 package org.thingml.devices
 
-trait Device extends Observable {}
+trait Device {}
 
 abstract trait Observer {
   def newValue(v: Int)

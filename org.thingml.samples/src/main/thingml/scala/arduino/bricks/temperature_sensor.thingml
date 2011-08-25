@@ -1,4 +1,4 @@
-import "sensorAPI.thingml"
+import "brickAPI.thingml"
 
 thing fragment TemperatureSensorMsgs 
 {
@@ -6,8 +6,10 @@ thing fragment TemperatureSensorMsgs
 	message temperature_value (val : Int16);
 }
 
-thing TemperatureSensor includes SensorAPI, TemperatureSensorMsgs
+thing TemperatureSensor includes BrickSensor, TemperatureSensorMsgs
 {   
+ 
+    set device = 'new org.thingml.devices.PotentiometerDemo(-40, 130)'
  
     provided port TemperatureSensor 
     {
@@ -18,8 +20,7 @@ thing TemperatureSensor includes SensorAPI, TemperatureSensorMsgs
 	statechart behavior init Ready {
 		
 		on entry
-        do
-		  device = 'new org.thingml.devices.PotentiometerDemo(-40, 130)' 
+        do 
 		  'register()'
 		end
 

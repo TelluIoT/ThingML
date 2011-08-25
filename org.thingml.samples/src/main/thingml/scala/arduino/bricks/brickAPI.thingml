@@ -3,15 +3,27 @@ import "../../thingml.thingml"
 datatype Device
 @scala_type "org.thingml.devices.Device";
 
+
+//Wrapped for the electronic bricks
+//(for actuators)
+thing fragment Brick 
+{
+    //The Scala device mocking the brick
+    readonly property device : Device   
+}
+
 thing fragment SensorMsgs 
 {
 	message update(); 
 }
 
-thing fragment SensorAPI includes SensorMsgs
+//Wrapped for the electronic bricks
+//(for sensors)
+thing fragment BrickSensor includes SensorMsgs, Brick
 @scala_trait "org.thingml.devices.Observer" 
 {
-	readonly property device : Device
+    //last value sent by the mock device
+    //can be sent to cliend requesting a value (pull mode)
     property lastValue : Int16 = 0
 	
 	function newValue(v : Integer)@override "true" : Void
@@ -22,7 +34,7 @@ thing fragment SensorAPI includes SensorMsgs
 	
 	function register() : Void
 	do
-		'' & device & '.register(this)'
+		'' & device & '.asInstanceOf[org.thingml.devices.Observable].register(this)'
 	end
 	
     /**
