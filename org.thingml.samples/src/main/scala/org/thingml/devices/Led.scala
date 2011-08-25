@@ -3,6 +3,7 @@ package org.thingml.devices
 import scala.swing._
 
 import java.awt.geom._
+import java.awt.Point
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
@@ -114,6 +115,7 @@ class LedDemo(color: LedColor) extends LedModel with Device {
   frame.contents = led
   frame.pack
   frame.size_=(new Dimension(90, 90))
+  frame.location_=(new Point(Helper.randomX, Helper.randomY))
   frame.visible_=(true)
   
   // Default constructor, which builds a red LED

@@ -24,6 +24,7 @@ class PotentiometerDemo(val min: Int, val max: Int) extends JFrame("Potentiomete
   setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
   pack
   setSize(400, 100)
+  setLocation(Helper.randomX, Helper.randomY)
   setVisible(true)
 }
 

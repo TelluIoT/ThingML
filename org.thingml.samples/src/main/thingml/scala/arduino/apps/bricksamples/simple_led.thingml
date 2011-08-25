@@ -78,7 +78,7 @@ thing SimpleLed includes LedMsgs, ButtonMsgs, TimerMsgs
 	}
 }
 
-configuration ScalaSimpleLedSimulator
+configuration fragment ScalaSimpleLedSimulatorFragment
 {		
 	// Led configuration.
 	instance led : Led
@@ -100,4 +100,18 @@ configuration ScalaSimpleLedSimulator
 	connector simple_led.Led2 => led2.Led
 	connector simple_led.Timer2 => timer2.timer
     connector simple_led.Button => button.Button
+}
+
+configuration ScalaSimpleLedSimulator
+{
+    group g1 : ScalaSimpleLedSimulatorFragment
+    group g2 : ScalaSimpleLedSimulatorFragment
+    group g3 : ScalaSimpleLedSimulatorFragment
+    group g4 : ScalaSimpleLedSimulatorFragment
+    group g5 : ScalaSimpleLedSimulatorFragment
+    group g6 : ScalaSimpleLedSimulatorFragment
+    group g7 : ScalaSimpleLedSimulatorFragment
+    group g8 : ScalaSimpleLedSimulatorFragment
+    group g9 : ScalaSimpleLedSimulatorFragment
+    group g10 : ScalaSimpleLedSimulatorFragment
 }

@@ -55,6 +55,7 @@ class ButtonDemo() extends JFrame("Button Demo") with Device with Observable {
   frame.add(button)
   frame.pack
   frame.setSize(new Dimension(185, 140))
+  frame.setLocation(Helper.randomX, Helper.randomY)
   frame.setVisible(true)
   
 }
