@@ -1,0 +1,41 @@
+import "brickAPI.thingml"
+
+thing fragment ButtonMsgs{
+    message pressed();
+    message released();
+}
+
+thing Button includes BrickSensor, ButtonMsgs
+{
+    set device = 'new org.thingml.devices.ButtonDemo()'
+    
+    provided port Button {
+       sends pressed, released
+    }
+    
+	statechart behavior init Ready {
+		
+		on entry 
+        do 
+		  'register()'
+		end
+
+        //This is an example to implement push mode (send the last value whenever the mock is udapted)
+        internal 
+        event m : Sensor?update
+        action
+        do
+            if (lastValue == 0) 
+            do
+                Button!pressed()
+            end
+            if (lastValue == 1)
+            do
+                Button!released()
+            end
+        end
+			
+		state Ready {}
+		
+	}
+}
