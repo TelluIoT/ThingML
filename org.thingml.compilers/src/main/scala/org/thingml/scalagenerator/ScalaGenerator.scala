@@ -60,8 +60,17 @@ object ScalaGenerator {
     return result
   }
 
-  def compileAll(model: ThingMLModel, pack : String): Hashtable[Configuration, String] = {
+  def compileAllJava(model: ThingMLModel, pack : String): Hashtable[Configuration, String] = {
     val result = new Hashtable[Configuration, String]()
+    model.allConfigurations.foreach {
+      t =>
+      result.put(t, compile(t, pack))
+    }
+    result
+  }
+  
+  def compileAll(model: ThingMLModel, pack : String): Map[Configuration, String] = {
+    val result = Map[Configuration, String]()
     model.allConfigurations.foreach {
       t =>
       result.put(t, compile(t, pack))

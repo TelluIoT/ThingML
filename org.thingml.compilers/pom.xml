@@ -108,6 +108,7 @@
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
+
     </dependencies>
 
 </project>

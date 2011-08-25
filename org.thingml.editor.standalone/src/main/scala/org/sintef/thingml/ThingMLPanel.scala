@@ -45,15 +45,12 @@ import javax.swing._
 import java.awt.event.{ActionEvent, ActionListener}
 import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
 import org.thingml.cgenerator.CGenerator
+import org.thingml.scalagenerator.ScalaGenerator
 import java.io._
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
 
-/**
- * User: ffouquet
- * Date: 29/06/11
- * Time: 15:58
- */
+import scala.collection.JavaConversions._
 
 class ThingMLPanel extends JPanel {
 
@@ -65,7 +62,7 @@ class ThingMLPanel extends JPanel {
   codeEditor.setContentType("text/thingml; charset=UTF-8");
 
   val reg = Resource.Factory.Registry.INSTANCE;
-	reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
+  reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
 
   //codeEditor.setBackground(Color.LIGHT_GRAY)
 
@@ -77,47 +74,80 @@ class ThingMLPanel extends JPanel {
   add(scrPane, BorderLayout.CENTER)
   add(toolPane, BorderLayout.NORTH)
 
+  //TODO: The integration of new compilers is not really clean. We should think about something more modular...
   // Add the C Compiler toolbar
   var arduinoToolBar = new JToolBar
   var b = new JButton("Compile to Arduino")
-  val cfilechooser = new JFileChooser();
-  cfilechooser.setDialogTitle("Select target directory");
-  cfilechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+  var bScala = new JButton("Compile to Scala")
+  val filechooser = new JFileChooser();
+  filechooser.setDialogTitle("Select target directory");
+  filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
   b.addActionListener(new ActionListener {
-    def actionPerformed(e: ActionEvent) {
-      println("Input file : " + targetFile)
-      if (targetFile.isEmpty) return;
-      var returnVal = cfilechooser.showOpenDialog(ThingMLPanel.this);
-      if (returnVal == 0) {
-        println("cfilechooser.getSelectedFile = " + cfilechooser.getSelectedFile);
+      def actionPerformed(e: ActionEvent) {
+        println("Input file : " + targetFile)
+        if (targetFile.isEmpty) return;
+        val returnVal = filechooser.showOpenDialog(ThingMLPanel.this);
+        if (returnVal == 0) {
+          println("cfilechooser.getSelectedFile = " + filechooser.getSelectedFile);
 
-        try {
-          val folder = cfilechooser.getSelectedFile.toString
+          try {
+            val folder = filechooser.getSelectedFile.toString
 
-          // Load the model
-          var rs: ResourceSet = new ResourceSetImpl
-          var xmiuri: URI = URI.createFileURI(targetFile.get.getAbsolutePath)
-          var model: Resource = rs.createResource(xmiuri)
-          model.load(null)
+            // Load the model
+            var rs: ResourceSet = new ResourceSetImpl
+            var xmiuri: URI = URI.createFileURI(targetFile.get.getAbsolutePath)
+            var model: Resource = rs.createResource(xmiuri)
+            model.load(null)
 
-          var ccode: Hashtable[Configuration, String] = CGenerator.compileAll(model.getContents.get(0).asInstanceOf[ThingMLModel])
-
-
-          for (t <- CGenerator.compileAll(model.getContents.get(0).asInstanceOf[ThingMLModel]).keySet) {
-            System.out.println(" -> Writing file " + t.getName + ".pde")
-            var w: PrintWriter = new PrintWriter(new FileWriter(folder + "/" + new File(t.getName + ".pde")))
-            w.println(ccode.get(t))
-            w.close
+            CGenerator.compileAll(model.getContents.get(0).asInstanceOf[ThingMLModel]).foreach{entry =>
+              System.out.println(" -> Writing file " + entry._1.getName + ".pde")
+              var w: PrintWriter = new PrintWriter(new FileWriter(folder + "/" + new File(entry._1 + ".pde")))
+              w.println(entry._2)
+              w.close
+            }
           }
-        }
-        catch {
-          case t : Throwable => t.printStackTrace()
-        }
+          catch {
+            case t : Throwable => t.printStackTrace()
+          }
 
+        }
       }
-    }
-  })
+    })
+
+  //TODO avoid code duplication (cf previous TODO)
+  bScala.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        println("Input file : " + targetFile)
+        if (targetFile.isEmpty) return;
+        val returnVal = filechooser.showOpenDialog(ThingMLPanel.this);
+        if (returnVal == 0) {
+          println("scalafilechooser.getSelectedFile = " + filechooser.getSelectedFile);
+
+          try {
+            val folder = filechooser.getSelectedFile.toString
+
+            // Load the model
+            var rs: ResourceSet = new ResourceSetImpl
+            var xmiuri: URI = URI.createFileURI(targetFile.get.getAbsolutePath)
+            var model: Resource = rs.createResource(xmiuri)
+            model.load(null)
+
+            ScalaGenerator.compileAll(model.getContents.get(0).asInstanceOf[ThingMLModel], folder).foreach{entry =>
+              System.out.println(" -> Writing file " + entry._1.getName + ".scala")
+              var w: PrintWriter = new PrintWriter(new FileWriter(folder + "/" + new File(entry._1.getName + ".scala")))
+              w.println(entry._2)
+              w.close
+            }
+          }
+          catch {
+            case t : Throwable => t.printStackTrace()
+          }
+
+        }         
+      }
+    })
   arduinoToolBar.add("Compilers", b)
+  arduinoToolBar.add("Compilers", bScala)
   add(arduinoToolBar, BorderLayout.SOUTH)
 
 
@@ -155,16 +185,16 @@ class ThingMLPanel extends JPanel {
 
       try {
 
-         var resource : Resource = null
+        var resource : Resource = null
 
-         if (!targetFile.isEmpty) {
-           resource = new ThingmlResource(URI.createFileURI(targetFile.get.getAbsolutePath))
-         }
-         else resource = new ThingmlResource(URI.createURI("http://thingml.org"))
+        if (!targetFile.isEmpty) {
+          resource = new ThingmlResource(URI.createFileURI(targetFile.get.getAbsolutePath))
+        }
+        else resource = new ThingmlResource(URI.createURI("http://thingml.org"))
 
-         // It does not really work without a resourceSet
-         val rset = new ResourceSetImpl()
-         rset.getResources.add(resource)
+        // It does not really work without a resourceSet
+        val rset = new ResourceSetImpl()
+        rset.getResources.add(resource)
 
         // This is the text from the editor
         val stream = new ByteArrayInputStream(codeEditor.getText.getBytes);
@@ -177,40 +207,40 @@ class ThingMLPanel extends JPanel {
 
         resource.getErrors.foreach {
           error =>
-             val marker = new Markers.SimpleMarker(new Color(255, 0, 0, 100), error.getMessage)
+          val marker = new Markers.SimpleMarker(new Color(255, 0, 0, 100), error.getMessage)
 
-            error match {
-              case e : IThingmlTextDiagnostic => {
+          error match {
+            case e : IThingmlTextDiagnostic => {
                 Markers.markText(codeEditor, e.getCharStart, e.getCharEnd+1, marker)
               }
-              case _ => {
+            case _ => {
                 val offset = getIndex(error.getLine, error.getColumn)
                 Markers.markText(codeEditor, offset, getNextIndex(offset), marker)
               }
-            }
+          }
         }
         resource.getWarnings.foreach {
           error =>
-            val marker = new Markers.SimpleMarker(new Color(255, 155, 0, 100), error.getMessage)
-            val offset = getIndex(error.getLine, error.getColumn)
-            Markers.markText(codeEditor, offset, getNextIndex(offset), marker)
+          val marker = new Markers.SimpleMarker(new Color(255, 155, 0, 100), error.getMessage)
+          val offset = getIndex(error.getLine, error.getColumn)
+          Markers.markText(codeEditor, offset, getNextIndex(offset), marker)
         }
 
         val model = resource.getContents.get(0).asInstanceOf[ThingMLModel]
 
         targetFile match {
           case Some(tf) => {
-            val fileWriter = new FileWriter(tf)
-            fileWriter.write(codeEditor.getText)
-            fileWriter.close()
-          }
+              val fileWriter = new FileWriter(tf)
+              fileWriter.write(codeEditor.getText)
+              fileWriter.close()
+            }
           case None =>
         }
 
       } catch {
         case _@e => {
-          e.printStackTrace()
-        }
+            e.printStackTrace()
+          }
       }
 
     }
@@ -220,12 +250,12 @@ class ThingMLPanel extends JPanel {
         reactWithin(500) {
           case scala.actors.TIMEOUT => if (checkNeeded) {
 
-            if (codeEditor.getDocument.getLength > 1) {
-              updateMarkers(codeEditor.getDocument.getText(0, codeEditor.getDocument.getLength - 1));
-            }
+              if (codeEditor.getDocument.getLength > 1) {
+                updateMarkers(codeEditor.getDocument.getText(0, codeEditor.getDocument.getLength - 1));
+              }
 
-            checkNeeded = false
-          }
+              checkNeeded = false
+            }
           case _ => checkNeeded = true
         }
       }
@@ -233,20 +263,20 @@ class ThingMLPanel extends JPanel {
   }
 
   codeEditor.getDocument.addDocumentListener(new DocumentListener() {
-    def removeUpdate(e: DocumentEvent) {
-      notificationSeamless ! "checkNeeded"
-      //updateMarkers(e.getDocument.getText(0, e.getDocument.getLength - 1))
-    }
+      def removeUpdate(e: DocumentEvent) {
+        notificationSeamless ! "checkNeeded"
+        //updateMarkers(e.getDocument.getText(0, e.getDocument.getLength - 1))
+      }
 
-    def insertUpdate(e: DocumentEvent) {
-      notificationSeamless ! "checkNeeded"
-      //updateMarkers(e.getDocument.getText(0, e.getDocument.getLength - 1))
-    }
+      def insertUpdate(e: DocumentEvent) {
+        notificationSeamless ! "checkNeeded"
+        //updateMarkers(e.getDocument.getText(0, e.getDocument.getLength - 1))
+      }
 
-    def changedUpdate(e: DocumentEvent) {
-      notificationSeamless ! "checkNeeded"
-      //updateMarkers(e.getDocument.getText(0, e.getDocument.getLength - 1))
-    }
-  })
+      def changedUpdate(e: DocumentEvent) {
+        notificationSeamless ! "checkNeeded"
+        //updateMarkers(e.getDocument.getText(0, e.getDocument.getLength - 1))
+      }
+    })
 
 }

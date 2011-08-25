@@ -42,7 +42,16 @@ object SimpleCopyTemplate {
 
 object CGenerator {
 
-  def compileAll(model: ThingMLModel): Hashtable[Configuration, String] = {
+  def compileAll(model: ThingMLModel): Map[Configuration, String] = {
+    val result = Map[Configuration, String]()
+    model.allConfigurations.filter{c=> !c.isFragment}.foreach {
+      t =>
+        result.put(t, compile(t))
+    }
+    result
+  }
+  
+  def compileAllJava(model: ThingMLModel): Hashtable[Configuration, String] = {
     val result = new Hashtable[Configuration, String]()
     model.allConfigurations.filter{c=> !c.isFragment}.foreach {
       t =>

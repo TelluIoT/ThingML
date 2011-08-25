@@ -120,7 +120,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
         }
 
         try {
-            Hashtable<Configuration, String> ccode = CGenerator.compileAll((ThingMLModel) model.getContents().get(0));
+            Hashtable<Configuration, String> ccode = CGenerator.compileAllJava((ThingMLModel) model.getContents().get(0));
             for (Configuration t : ccode.keySet()) {
                 System.out.println(" -> Writing file " + t.getName() + ".pde");
                 PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + ".pde")));
@@ -132,7 +132,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
         }
 
         try {
-            Hashtable<Configuration, String> scalacode = ScalaGenerator.compileAll((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
+            Hashtable<Configuration, String> scalacode = ScalaGenerator.compileAllJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
             for (Configuration t : scalacode.keySet()) {
                 System.out.println(" -> Writing file " + t.getName() + ".scala");
                 PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + ".scala")));
