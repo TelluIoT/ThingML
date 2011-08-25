@@ -42,6 +42,68 @@ object SimpleCopyTemplate {
 
 object CGenerator {
 
+  def compileAndRunArduino(cfg : Configuration, arduinoDir : String, libdir : String) {
+
+    // Create a temp folder with the name of the configuration
+    var folder = File.createTempFile(cfg.getName, null);
+    folder.delete
+    folder.mkdirs
+    folder.deleteOnExit
+
+    // Compile the configuration:
+    var pde_code =  CGenerator.compile(cfg)
+
+    // Write the code in a pde file
+    var pde_file = new File(folder, cfg.getName + ".pde")
+    var w: PrintWriter = new PrintWriter(new FileWriter(pde_file))
+    w.print(pde_code)
+    w.close
+
+    // Open the arduino environment on the generated file
+    openArduinoIDE(pde_file.getAbsolutePath, arduinoDir, libdir)
+
+  }
+
+  def openArduinoIDE(pde_file : String, arduinoDir : String, libdir : String)  {
+
+    var classpath = System.getProperty("java.class.path")
+
+    var libpath = System.getProperty("java.library.path")
+    if (libpath.length() > 0) libpath = ":" + libpath
+    libpath = libdir + libpath
+
+    var arduino = new File(arduinoDir)
+    if (!arduino.exists() || !arduino.isDirectory) {
+      System.err.println("ERROR: Arduino installation directory " + arduinoDir + " does not exist.")
+      return;
+    }
+
+    var libdir = new File(arduino, "lib")
+    if (!libdir.exists() || !libdir.isDirectory) {
+      System.err.println("ERROR: Could not find lib directory in arduino installation at " + arduinoDir + ".")
+      return;
+    }
+
+    libdir.list().foreach{ f =>
+      if (f.endsWith(".jar")) {
+        if (classpath.length() > 0) classpath = f + ":" + classpath
+        else classpath = f
+      }
+    }
+
+    var cmd = "java -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel "
+    cmd += "-Djava.library.path=\""+libdir+"\" -classpath \"" + classpath + "\" "
+    cmd += "processing.app.Base " + pde_file
+
+    println("EXEC : " + cmd)
+
+    var p = Runtime.getRuntime().exec(cmd);
+
+    // java -Djava.library.path=/usr/local/lib -classpath /home/user/zeromq/libjzmq/:./local_lat tcp://127.0.0.1:5555 1 100
+
+
+  }
+
   def compileAll(model: ThingMLModel): Map[Configuration, String] = {
     var result = Map[Configuration, String]()
     model.allConfigurations.filter{c=> !c.isFragment}.foreach {
