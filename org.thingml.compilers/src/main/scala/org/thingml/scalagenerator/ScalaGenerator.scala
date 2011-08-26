@@ -576,7 +576,7 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
       sub match {
         case cs : CompositeState =>  
           val history = if(cs.isHistory) "true" else "false"
-          builder append "val " + cs.getName + "_state = new " + firstToUpper(cs.getName) + "State(" + history + ", root).getComposite\n"
+          builder append "val " + cs.getName + "_state = new " + firstToUpper(cs.getName) + "State(" + history + ", root).getBehavior\n"
         case s : State =>
           builder append "val " + s.getName + "_state = new State(" + firstToUpper(s.getName) + "State(), root)\n"
         case _ => 
