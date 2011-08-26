@@ -26,10 +26,10 @@ thing Blink2Leds includes LedMsgs, TimerMsgs
 		sends led_toggle
 	}
 
-    statechart Blink2LedsImpl init Blinking {
-        
-        state Blinking {
-            
+    statechart Blink2LedsImpl init Blinking 
+    {    
+        state Blinking 
+        {    
             on entry do 
             	timer1!timer_start(1000)
             	timer2!timer_start(333)

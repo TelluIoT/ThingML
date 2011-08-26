@@ -9,15 +9,15 @@ thing Blink includes LedMsgs, TimerMsgs
         receives timer_timeout
 	}
 
-    statechart BlinkImpl init Blinking {
-        
-        state Blinking {
+    statechart BlinkImpl init Blinking 
+    {    
+        state Blinking 
+        {    
+            on entry HW!timer_start (1000)
             
-            on entry HW!timer_start(1000)
-            
-            transition -> Blinking
-            event HW?timer_timeout
-            after HW!led_toggle() 
+            transition -> Blinking 
+            event HW?timer_timeout 
+            action HW!led_toggle () 
         }
     }
 }
@@ -26,10 +26,8 @@ configuration Blink
 {       
 	group led : Led
 		set led.io.digital_output.pin = DigitalPin:PIN_13
-	
 	// The timer
 	instance timer : SoftTimer
-	
 	// The blink application
 	instance app : Blink
 	connector app.HW => led.led.Led

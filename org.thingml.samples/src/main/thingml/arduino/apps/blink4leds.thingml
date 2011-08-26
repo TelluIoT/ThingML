@@ -15,13 +15,11 @@ thing Blink4Leds includes LedMsgs, TimerMsgs
 		sends led_toggle
 	}
 
-    statechart Blink4LedsImpl init Blinking {
-        
-        state Blinking {
-            
-            on entry do 
-            	timer!timer_start(500)
-            end
+    statechart Blink4LedsImpl init Blinking 
+    {    
+        state Blinking 
+        {    
+            on entry timer!timer_start(500)
             
             internal Blink1 event timer?timer_timeout
             action do
