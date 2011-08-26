@@ -21,8 +21,8 @@ thing SoftTemperatureSensor includes SoftTemperatureSensorMsgs, TemperatureSenso
     readonly property delay : UInt16 = 20
     
 	property temp : Int16
-	property min : Int16
-	property max : Int16
+	property min : Int16 = 1000
+	property max : Int16 = - 1000
 	property interval : Int16
 	property min_alarm : Int16
 	property max_alarm : Int16
