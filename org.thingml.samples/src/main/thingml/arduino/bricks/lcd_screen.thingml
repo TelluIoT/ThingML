@@ -1,13 +1,11 @@
 import "../core/arduino.thingml"
 
-thing fragment LcdScreenMsgs 
+thing fragment LcdScreenMsgs includes Printable
 {
 	message clear ();
 	message home ();
 	message set_cursor (col : UInt8, row : UInt8);
-	message print_byte (b : Byte);
 	message print_string (s : String);
-	message print_value (v : Int16);
 	message display (b : Boolean);
 }
 

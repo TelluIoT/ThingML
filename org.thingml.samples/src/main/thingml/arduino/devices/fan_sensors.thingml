@@ -201,7 +201,48 @@ void freq_init() {
             action FanSensors!fan_sensor_rpm(pin, 'get_freq_result()')
            
         }
-    
     }
+}
 
+// Continuously monitors a set a fans
+thing MultipleFanSensors includes FanSensorsMsgs {
+    
+    readonly property number_of_fans : UInt8 = 2
+    
+    property cpt : UInt8 = 0
+   
+    required port Sensors {
+        sends read_fan_sensor
+        receives fan_sensor_rpm
+	}
+    
+    provided port FanSensors {
+        sends fan_sensor_rpm
+	}
+
+    statechart MultipleFanSensorsImpl init Running {
+        
+        on entry cpt = 0
+        
+        state Running {
+            on entry Sensors!read_fan_sensor(cpt + 2) // There will be a type checking problem here
+            transition -> Running
+            event m : Sensors?fan_sensor_rpm
+            action do
+              FanSensors!fan_sensor_rpm(m.sensor, m.rpm)
+              cpt = cpt + 1
+              if (cpt == number_of_fans) cpt = 0
+            end  
+        }
+    }
+}
+
+configuration fragment MultipleFanSensors {
+
+    instance sensors : FanSensors 
+    instance fan_sensors : MultipleFanSensors
+    connector fan_sensors.Sensors => sensors.FanSensors
+    
+    set fan_sensors.number_of_fans = 2 // To be set in fonfigurations using this fragment
+        
 }

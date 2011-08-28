@@ -126,3 +126,14 @@ thing fragment Timer includes TimerMsgs
 		receives timer_start, timer_cancel
 	}
 }
+
+
+/*****************************************************************************
+ * Definition of some shared messages
+ *****************************************************************************/
+
+thing fragment Printable {
+    message print_byte (b : Byte);
+	message print_message (msg : String);
+	message print_value (v : Int16);
+}

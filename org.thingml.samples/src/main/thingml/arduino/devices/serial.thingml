@@ -1,10 +1,7 @@
 import "../core/arduino.thingml"
 
-thing fragment SerialMsgs 
+thing fragment SerialMsgs includes Printable
 {
-	message print_byte (b : Byte);
-	message print_message (msg : String);
-	message print_value (v : Int16);
 	message receive_byte (b : Byte);
 }
 
