@@ -3,16 +3,15 @@ import "../core/digital_input.thingml"
 
 thing fragment WaterSensorMsgs 
 {
-	message read_water ();
-	message water_value (val : DigitalState);
+	message wet ();
+	message dry ();
 }
 
 thing WaterSensor includes WaterSensorMsgs, DigitalInputMsgs
 {  
 	provided port WaterSensor 
     {
-		receives read_water
-		sends water_value
+		sends wet, dry
 	}
 
     required port DigitalInput
@@ -23,13 +22,15 @@ thing WaterSensor includes WaterSensorMsgs, DigitalInputMsgs
     
     statechart WaterSensorImpl init Running 
     {        
-        internal event m : DigitalInput?digital_input_value
-    	action WaterSensor!water_value (m.value)
-   
         state Running 
         {   
-        	internal force_reading event WaterSensor?read_water
-        	action DigitalInput!read_digital_input ()
+            internal event m : DigitalInput?digital_input_value
+            guard m.value == DigitalState:HIGH
+    	    action WaterSensor!dry ()
+    
+            internal event m : DigitalInput?digital_input_value
+            guard m.value == DigitalState:LOW
+    	    action WaterSensor!wet ()
         }   
     }
 }

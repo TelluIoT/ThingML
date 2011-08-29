@@ -8,7 +8,7 @@ import "../../core/arduino_timer.thingml"
 // Requirements:
 //      - led (1)   ->  Default pin: D_8
 //
-// The led simply blink (default frequency is one seconde).
+// The led simply blink (default frequency is one second).
 //*
 
 thing SimpleLed includes LedMsgs, TimerMsgs

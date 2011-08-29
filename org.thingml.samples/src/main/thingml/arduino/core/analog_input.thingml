@@ -78,7 +78,7 @@ thing PeriodicAnalogInput includes AnalogInput, TimerMsgs
 
 thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 {
-	readonly property value_precision : Int8 = 1
+	readonly property value_precision : UInt8 = 1
 	readonly property refresh_rate : UInt16 = 20
 	
 	property oldValue : Int16 = 3333

@@ -6,7 +6,7 @@ thing fragment BuzzerMsgs
 {
 	message buzzer_on ();
 	message buzzer_off ();
-	message buzzer_delay (d : UInt16);
+	message buzzer_delay (delay : UInt16);
 }
 
 thing Buzzer includes BuzzerMsgs, DigitalOutputMsgs, TimerMsgs
@@ -38,7 +38,7 @@ thing Buzzer includes BuzzerMsgs, DigitalOutputMsgs, TimerMsgs
             
             transition delay -> BuzzerOn
             event m : Buzzer?buzzer_delay
-            action Timer!timer_start (m.d)
+            action Timer!timer_start (m.delay)
         }
         
         state BuzzerOn
