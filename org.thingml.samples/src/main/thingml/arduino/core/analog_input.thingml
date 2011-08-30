@@ -47,7 +47,7 @@ thing SimpleAnalogInput includes AnalogInput
 
 thing PeriodicAnalogInput includes AnalogInput, TimerMsgs
 {
-	readonly property refresh_rate : UInt16 = 2000
+	readonly property refresh_rate : Long = 5000
 
 	required port Timer
 	{
@@ -79,7 +79,7 @@ thing PeriodicAnalogInput includes AnalogInput, TimerMsgs
 thing OnChangeAnalogInput includes AnalogInput, TimerMsgs
 {
 	readonly property value_precision : UInt8 = 1
-	readonly property refresh_rate : UInt16 = 20
+	readonly property refresh_rate : UInt8 = 20
 	
 	property oldValue : Int16 = 3333
 	

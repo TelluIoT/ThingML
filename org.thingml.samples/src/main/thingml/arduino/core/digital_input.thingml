@@ -56,7 +56,7 @@ thing SimpleDigitalInput includes DigitalInput
 
 thing PeriodicDigitalInput includes DigitalInput, TimerMsgs
 {
-	readonly property refresh_rate : UInt16 = 2000
+	readonly property refresh_rate : Long = 5000
 	
 	required port Timer
 	{
