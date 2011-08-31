@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.util;
 
@@ -30,16 +21,30 @@ package org.sintef.thingml.resource.thingml.util;
 public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	
 	private java.util.Stack<org.eclipse.emf.ecore.EObject> interpretationStack = new java.util.Stack<org.eclipse.emf.ecore.EObject>();
+	private java.util.List<org.sintef.thingml.resource.thingml.IThingmlInterpreterListener> listeners = new java.util.ArrayList<org.sintef.thingml.resource.thingml.IThingmlInterpreterListener>();
+	private org.eclipse.emf.ecore.EObject nextObjectToInterprete;
+	private Object currentContext;
 	
 	public ResultType interprete(ContextType context) {
 		ResultType result = null;
+		org.eclipse.emf.ecore.EObject next = null;
+		currentContext = context;
 		while (!interpretationStack.empty()) {
-			org.eclipse.emf.ecore.EObject next = interpretationStack.pop();
+			try {
+				next = interpretationStack.pop();
+			} catch (java.util.EmptyStackException ese) {
+				// this can happen when the interpreter was terminated between the call to empty()
+				// and pop()
+				break;
+			}
+			nextObjectToInterprete = next;
+			notifyListeners(next);
 			result = interprete(next, context);
-			if (!continueInterpretation(result)) {
+			if (!continueInterpretation(context, result)) {
 				break;
 			}
 		}
+		currentContext = null;
 		return result;
 	}
 	
@@ -47,7 +52,7 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	 * Override this method to stop the overall interpretation depending on the result
 	 * of the interpretation of a single model elements.
 	 */
-	public boolean continueInterpretation(ResultType result) {
+	public boolean continueInterpretation(ContextType context, ResultType result) {
 		return true;
 	}
 	
@@ -139,6 +144,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.DictionaryReference) {
 			result = interprete_org_sintef_thingml_DictionaryReference((org.sintef.thingml.DictionaryReference) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.ArrayIndex) {
+			result = interprete_org_sintef_thingml_ArrayIndex((org.sintef.thingml.ArrayIndex) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -766,6 +777,10 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		return null;
 	}
 	
+	public ResultType interprete_org_sintef_thingml_ArrayIndex(org.sintef.thingml.ArrayIndex object, ContextType context) {
+		return null;
+	}
+	
 	public ResultType interprete_org_sintef_thingml_DictionaryReference(org.sintef.thingml.DictionaryReference object, ContextType context) {
 		return null;
 	}
@@ -826,6 +841,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		return null;
 	}
 	
+	private void notifyListeners(org.eclipse.emf.ecore.EObject element) {
+		for (org.sintef.thingml.resource.thingml.IThingmlInterpreterListener listener : listeners) {
+			listener.handleInterpreteObject(element);
+		}
+	}
+	
 	/**
 	 * Adds the given object to the interpretation stack. Attention: Objects that are
 	 * added first, are interpret last.
@@ -853,6 +874,45 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		reverse.addAll(objects);
 		java.util.Collections.reverse(reverse);
 		addObjectsToInterprete(reverse);
+	}
+	
+	/**
+	 * Adds the given object and all its children to the interpretation stack such
+	 * that they are interpret in top down order.
+	 */
+	public void addObjectTreeToInterpreteTopDown(org.eclipse.emf.ecore.EObject root) {
+		java.util.List<org.eclipse.emf.ecore.EObject> objects = new java.util.ArrayList<org.eclipse.emf.ecore.EObject>();
+		objects.add(root);
+		java.util.Iterator<org.eclipse.emf.ecore.EObject> it = root.eAllContents();
+		while (it.hasNext()) {
+			org.eclipse.emf.ecore.EObject eObject = (org.eclipse.emf.ecore.EObject) it.next();
+			objects.add(eObject);
+		}
+		addObjectsToInterpreteInReverseOrder(objects);
+	}
+	
+	public void addListener(org.sintef.thingml.resource.thingml.IThingmlInterpreterListener newListener) {
+		listeners.add(newListener);
+	}
+	
+	public boolean removeListener(org.sintef.thingml.resource.thingml.IThingmlInterpreterListener listener) {
+		return listeners.remove(listener);
+	}
+	
+	public org.eclipse.emf.ecore.EObject getNextObjectToInterprete() {
+		return nextObjectToInterprete;
+	}
+	
+	public java.util.Stack<org.eclipse.emf.ecore.EObject> getInterpretationStack() {
+		return interpretationStack;
+	}
+	
+	public void terminate() {
+		interpretationStack.clear();
+	}
+	
+	public Object getCurrentContext() {
+		return currentContext;
 	}
 	
 }

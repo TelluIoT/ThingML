@@ -77,13 +77,13 @@ thing SimpleBuzzer includes BuzzerMsgs, TimerMsgs
             transition begin -> Fast
             event Timer?timer_timeout
             action end_motif = false
-        }
+        } 
 	}
 }
 
 configuration SimpleBuzzer
 {    
-    group buzzer : Buzzer
+    group buzzer : Buzzer 
         set buzzer.io.digital_output.pin = DigitalPin:PIN_8
         
     instance timer : SoftTimer

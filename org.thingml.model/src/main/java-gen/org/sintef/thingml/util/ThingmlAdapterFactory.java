@@ -329,6 +329,10 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createPropertyReferenceAdapter();
 			}
 			@Override
+			public Adapter caseArrayIndex(ArrayIndex object) {
+				return createArrayIndexAdapter();
+			}
+			@Override
 			public Adapter caseDictionaryReference(DictionaryReference object) {
 				return createDictionaryReferenceAdapter();
 			}
@@ -1273,6 +1277,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createPropertyReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ArrayIndex <em>Array Index</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ArrayIndex
+	 * @generated
+	 */
+	public Adapter createArrayIndexAdapter() {
 		return null;
 	}
 

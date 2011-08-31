@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.ui;
 
@@ -153,25 +144,35 @@ public class ThingmlHTMLPrinter {
 		 */
 		protected String computeSubstitution(int c) throws java.io.IOException {
 			
-			if (c == '<')			return  processHTMLTag();
-			else if (fIgnore)			return EMPTY_STRING;
-			else if (c == '&')			return processEntity();
-			else if (fIsPreformattedText)			return processPreformattedText(c);
+			if (c == '<') {
+				return  processHTMLTag();
+			} else if (fIgnore) {
+				return EMPTY_STRING;
+			} else if (c == '&') {
+				return processEntity();
+			} else if (fIsPreformattedText) {
+				return processPreformattedText(c);
+			}
 			
 			return null;
 		}
 		
 		private String html2Text(String html) {
 			
-			if (html == null || html.length() == 0)			return EMPTY_STRING;
+			if (html == null || html.length() == 0) {
+				return EMPTY_STRING;
+			}
 			
 			html= html.toLowerCase();
 			
 			String tag= html;
-			if ('/' == tag.charAt(0))			tag= tag.substring(1);
+			if ('/' == tag.charAt(0)) {
+				tag= tag.substring(1);
+			}
 			
-			if (!fgTags.contains(tag))			return EMPTY_STRING;
-			
+			if (!fgTags.contains(tag)) {
+				return EMPTY_STRING;
+			}
 			
 			if ("pre".equals(html)) {
 				startPreformattedText();
@@ -183,7 +184,9 @@ public class ThingmlHTMLPrinter {
 				return EMPTY_STRING;
 			}
 			
-			if (fIsPreformattedText)			return EMPTY_STRING;
+			if (fIsPreformattedText) {
+				return EMPTY_STRING;
+			}
 			
 			if ("b".equals(html)) {
 				startBold();
@@ -195,23 +198,31 @@ public class ThingmlHTMLPrinter {
 				return EMPTY_STRING;
 			}
 			
-			if ("dl".equals(html))			return LINE_DELIM;
+			if ("dl".equals(html)) {
+				return LINE_DELIM;
+			}
 			
-			if ("dd".equals(html))			return "	";
+			if ("dd".equals(html)) {
+				return "	";
+			}
 			
-			if ("li".equals(html))			return LINE_DELIM + "\t-\n ";
+			if ("li".equals(html)) {
+				return LINE_DELIM + "\t-\n ";
+			}
 			
 			if ("/b".equals(html)) {
 				stopBold();
 				return EMPTY_STRING;
 			}
 			
-			if ("p".equals(html))  {
+			if ("p".equals(html)) {
 				fInParagraph= true;
 				return LINE_DELIM;
 			}
 			
-			if ("br".equals(html) || "br/".equals(html)|| "br /".equals(html)  || "div".equals(html))			return LINE_DELIM;
+			if ("br".equals(html) || "br/".equals(html)|| "br /".equals(html)  || "div".equals(html)) {
+				return LINE_DELIM;
+			}
 			
 			if ("/p".equals(html)) {
 				boolean inParagraph= fInParagraph;
@@ -224,7 +235,9 @@ public class ThingmlHTMLPrinter {
 				return LINE_DELIM;
 			}
 			
-			if ("/dd".equals(html))			return LINE_DELIM;
+			if ("/dd".equals(html)) {
+				return LINE_DELIM;
+			}
 			
 			if ("head".equals(html) && !fHeaderDetected) {
 				fHeaderDetected= true;
@@ -254,10 +267,10 @@ public class ThingmlHTMLPrinter {
 				while (ch != -1 && ch != '>') {
 					buf.append(Character.toLowerCase((char) ch));
 					ch= nextChar();
-					if (ch == '"'){
+					if (ch == '"') {
 						buf.append(Character.toLowerCase((char) ch));
 						ch= nextChar();
-						while (ch != -1 && ch != '"'){
+						while (ch != -1 && ch != '"') {
 							buf.append(Character.toLowerCase((char) ch));
 							ch= nextChar();
 						}
@@ -268,7 +281,9 @@ public class ThingmlHTMLPrinter {
 					}
 				}
 				
-				if (ch == -1)				return null;
+				if (ch == -1) {
+					return null;
+				}
 				
 				if (!isInComment(buf) || isCommentEnd(buf)) {
 					break;
@@ -290,7 +305,9 @@ public class ThingmlHTMLPrinter {
 		}
 		
 		private String processPreformattedText(int c) {
-			if  (c == '\r' || c == '\n')			fCounter++;
+			if  (c == '\r' || c == '\n') {
+				fCounter++;
+			}
 			return null;
 		}
 		
@@ -331,16 +348,19 @@ public class ThingmlHTMLPrinter {
 				ch= nextChar();
 			}
 			
-			if (ch == ';')			return entity2Text(buf.toString());
+			if (ch == ';') {
+				return entity2Text(buf.toString());
+			}
 			
 			buf.insert(0, '&');
-			if (ch != -1)			buf.append((char) ch);
+			if (ch != -1) {
+				buf.append((char) ch);
+			}
 			return buf.toString();
 		}
 		
 		public void close() throws java.io.IOException {
 			fReader.close();
-			
 		}
 		
 		public int read(char[] cbuf, int off, int len) throws java.io.IOException {
@@ -348,7 +368,9 @@ public class ThingmlHTMLPrinter {
 			for (int i= off; i < end; i++) {
 				int ch= read();
 				if (ch == -1) {
-					if (i == off)					return -1;
+					if (i == off) {
+						return -1;
+					}
 					return i - off;
 				}
 				cbuf[i]= (char)ch;
@@ -442,14 +464,12 @@ public class ThingmlHTMLPrinter {
 		}
 	}
 	
-	
-	
 	private static final String UNIT;
 	// See: https://bugs.eclipse.org/bugs/show_bug.cgi?id=155993
 	// if the platform is a mac the UNIT is set to "px"
 	static {
 		String platform = org.eclipse.swt.SWT.getPlatform();
-		UNIT= (platform.equals("carbon")||platform.equals("cocoa")) ? "px" : "pt";
+		UNIT = (platform.equals("carbon")||platform.equals("cocoa")) ? "px" : "pt";
 	}
 	
 	public static void addParagraph(StringBuffer buffer, String paragraph) {
@@ -487,20 +507,22 @@ public class ThingmlHTMLPrinter {
 	}
 	
 	public static String convertTopLevelFont(String styles, org.eclipse.swt.graphics.FontData fontData) {
-		boolean bold= (fontData.getStyle() & org.eclipse.swt.SWT.BOLD) != 0;
-		boolean italic= (fontData.getStyle() & org.eclipse.swt.SWT.ITALIC) != 0;
-		String size= Integer.toString(fontData.getHeight()) + UNIT;
-		String family= "'" + fontData.getName() + "',sans-serif";
+		boolean bold = (fontData.getStyle() & org.eclipse.swt.SWT.BOLD) != 0;
+		boolean italic = (fontData.getStyle() & org.eclipse.swt.SWT.ITALIC) != 0;
+		String size = Integer.toString(fontData.getHeight()) + UNIT;
+		String family = "'" + fontData.getName() + "',sans-serif";
 		
-		styles= styles.replaceFirst("(html\\s*\\{.*(?:\\s|;)font-size:\\s*)\\d+pt(\\;?.*\\})", "$1" + size + "$2");
-		styles= styles.replaceFirst("(html\\s*\\{.*(?:\\s|;)font-weight:\\s*)\\w+(\\;?.*\\})", "$1" + (bold ? "bold" : "normal") + "$2");
-		styles= styles.replaceFirst("(html\\s*\\{.*(?:\\s|;)font-style:\\s*)\\w+(\\;?.*\\})", "$1" + (italic ? "italic" : "normal") + "$2");
-		styles= styles.replaceFirst("(html\\s*\\{.*(?:\\s|;)font-family:\\s*).+?(;.*\\})", "$1" + family + "$2");
+		styles = styles.replaceFirst("(html\\s*\\{.*(?:\\s|;)font-size:\\s*)\\d+pt(\\;?.*\\})", "$1" + size + "$2");
+		styles = styles.replaceFirst("(html\\s*\\{.*(?:\\s|;)font-weight:\\s*)\\w+(\\;?.*\\})", "$1" + (bold ? "bold" : "normal") + "$2");
+		styles = styles.replaceFirst("(html\\s*\\{.*(?:\\s|;)font-style:\\s*)\\w+(\\;?.*\\})", "$1" + (italic ? "italic" : "normal") + "$2");
+		styles = styles.replaceFirst("(html\\s*\\{.*(?:\\s|;)font-family:\\s*).+?(;.*\\})", "$1" + family + "$2");
 		return styles;
 	}
 	
 	public static void insertStyles(StringBuffer buffer, String[] styles) {
-		if (styles == null || styles.length == 0)		return;
+		if (styles == null || styles.length == 0) {
+			return;
+		}
 		
 		StringBuffer styleBuf= new StringBuffer(10 * styles.length);
 		for (int i= 0; i < styles.length; i++) {

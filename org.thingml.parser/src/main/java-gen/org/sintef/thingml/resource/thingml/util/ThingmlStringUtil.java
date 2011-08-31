@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.util;
 
@@ -299,6 +290,80 @@ public class ThingmlStringUtil {
 			}
 		}
 		return distance[str1.length()][str2.length()];
+	}
+	
+	public static String encode(char delimiter, String[] parts) {
+		java.util.List<String> partList = new java.util.ArrayList<String>();
+		for (String part : parts) {
+			partList.add(part);
+		}
+		return encode(delimiter, partList);
+	}
+	
+	public static String encode(char delimiter, Iterable<String> parts) {
+		StringBuilder result = new StringBuilder();
+		for (String part : parts) {
+			String encodedPart = part.replace("\\", "\\\\");
+			encodedPart = encodedPart.replace("" + delimiter, "\\" + delimiter);
+			result.append(encodedPart);
+			result.append(delimiter);
+		}
+		return result.toString();
+	}
+	
+	public static java.util.List<String> decode(String text, char delimiter) {
+		java.util.List<String> parts = new java.util.ArrayList<String>();
+		
+		boolean escapeMode = false;
+		String part = "";
+		for (int i = 0; i < text.length(); i++) {
+			char c = text.charAt(i);
+			if (c == delimiter) {
+				if (escapeMode) {
+					part += delimiter;
+					escapeMode = false;
+				} else {
+					// end of part
+					parts.add(part);
+					part = "";
+				}
+			} else if (c == '\\') {
+				if (escapeMode) {
+					part += '\\';
+					escapeMode = false;
+				} else {
+					escapeMode = true;
+				}
+			} else {
+				part += c;
+			}
+		}
+		return parts;
+	}
+	
+	public static String convertToString(java.util.Map<String, Object> properties) {
+		java.util.List<String> parts = new java.util.ArrayList<String>();
+		for (String key : properties.keySet()) {
+			Object value = properties.get(key);
+			if (value instanceof String) {
+				parts.add(encode('=', new String[] {key, (String) value}));
+			} else {
+				throw new RuntimeException("Can't encode " + value);
+			}
+		}
+		return encode(';', parts);
+	}
+	
+	public static java.util.Map<String, String> convertFromString(String text) {
+		java.util.Map<String, String> result = new java.util.LinkedHashMap<String, String>();
+		java.util.List<String> keyValuePairs = decode(text, ';');
+		for (String pair : keyValuePairs) {
+			java.util.List<String> keyAndValue = decode(pair, '=');
+			String key = keyAndValue.get(0);
+			String value = keyAndValue.get(1);
+			result.put(key, value);
+		}
+		return result;
 	}
 	
 }

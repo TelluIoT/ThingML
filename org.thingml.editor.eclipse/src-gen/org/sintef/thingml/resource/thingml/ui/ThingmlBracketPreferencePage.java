@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.ui;
 
@@ -279,10 +270,10 @@ public class ThingmlBracketPreferencePage extends org.eclipse.jface.preference.P
 	 * Sets the default values for this preference page.
 	 */
 	protected void performDefaults() {
-		enableCheckbox.setSelection(getPreferenceStore().getDefaultBoolean(		org.sintef.thingml.resource.thingml.ui.ThingmlPreferenceConstants.EDITOR_MATCHING_BRACKETS_CHECKBOX));
+		enableCheckbox.setSelection(getPreferenceStore().getDefaultBoolean(org.sintef.thingml.resource.thingml.ui.ThingmlPreferenceConstants.EDITOR_MATCHING_BRACKETS_CHECKBOX));
 		matchingBracketsColorButton.setEnabled(enableCheckbox.getSelection());
 		matchingBracketsColorEditor.setColorValue(org.eclipse.jface.preference.PreferenceConverter.getDefaultColor(getPreferenceStore(), BRACKETS_COLOR));
-		bracketSetTemp.put(language, getPreferenceStore().getDefaultString(		language + org.sintef.thingml.resource.thingml.ui.ThingmlPreferenceConstants.EDITOR_BRACKETS_SUFFIX));
+		bracketSetTemp.put(language, getPreferenceStore().getDefaultString(language + org.sintef.thingml.resource.thingml.ui.ThingmlPreferenceConstants.EDITOR_BRACKETS_SUFFIX));
 		bracketsTmp.setBrackets(bracketSetTemp.get(language));
 		bracketsList.setItems(bracketsTmp.getBracketArray());
 		enableClosingInside.setSelection(false);
@@ -301,7 +292,7 @@ public class ThingmlBracketPreferencePage extends org.eclipse.jface.preference.P
 	}
 	
 	/**
-	 * Sets the chosen options to the preference store and refreshs it in the editor.
+	 * Sets the chosen options to the preference store and refreshes it in the editor.
 	 */
 	private void updateActiveEditor() {
 		// set the values after ok or apply

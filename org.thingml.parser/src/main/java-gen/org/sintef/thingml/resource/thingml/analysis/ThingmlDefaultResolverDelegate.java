@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
@@ -107,6 +98,22 @@ public class ThingmlDefaultResolverDelegate<ContainerType extends org.eclipse.em
 	private boolean enableScoping = true;
 	
 	/**
+	 * This is a cache for the extenal objects that are referenced by the current
+	 * resource. We must cache this set because determining this set required to
+	 * resolve proxy objects, which causes reference resolving to slow down
+	 * exponentially.
+	 */
+	private java.util.Set<org.eclipse.emf.ecore.EObject> referencedExternalObjects;
+	
+	/**
+	 * We store the number of proxy objects that were present when
+	 * <code>referencedExternalObjects</code> was resolved, to recompute this set when
+	 * a proxy was resolved. This is required, because a resolved proxy may point to a
+	 * new extenal object.
+	 */
+	private int oldProxyCount = -1;
+	
+	/**
 	 * This standard implementation searches for objects in the resource, which have
 	 * the correct type and a name/id attribute matching the identifier. If no
 	 * matching object is found, the identifier is used as URI. If the resource at
@@ -127,7 +134,7 @@ public class ThingmlDefaultResolverDelegate<ContainerType extends org.eclipse.em
 			}
 			boolean continueSearch = tryToResolveIdentifierAsURI(identifier, container, reference, position, resolveFuzzy, result);
 			if (continueSearch) {
-				java.util.Set<org.eclipse.emf.ecore.EObject> crossReferencedObjectsInOtherResource = findExternalReferences(container);
+				java.util.Set<org.eclipse.emf.ecore.EObject> crossReferencedObjectsInOtherResource = findReferencedExternalObjects(container);
 				for (org.eclipse.emf.ecore.EObject externalObject : crossReferencedObjectsInOtherResource) {
 					continueSearch = tryToResolveIdentifierInObjectTree(identifier, container, externalObject, reference, position, resolveFuzzy, result, !enableScoping);
 					if (!continueSearch) {
@@ -143,20 +150,43 @@ public class ThingmlDefaultResolverDelegate<ContainerType extends org.eclipse.em
 	
 	/**
 	 * Returns all EObjects that are referenced by EObjects in the resource that
-	 * contains <code>object</code>.
+	 * contains <code>object</code>, but that are located in different resources.
 	 */
-	private java.util.Set<org.eclipse.emf.ecore.EObject> findExternalReferences(org.eclipse.emf.ecore.EObject object) {
+	private java.util.Set<org.eclipse.emf.ecore.EObject> findReferencedExternalObjects(org.eclipse.emf.ecore.EObject object) {
 		org.eclipse.emf.ecore.EObject root = org.sintef.thingml.resource.thingml.util.ThingmlEObjectUtil.findRootContainer(object);
-		java.util.Set<org.eclipse.emf.ecore.EObject> externalReferences = new java.util.LinkedHashSet<org.eclipse.emf.ecore.EObject>();
-		externalReferences.addAll(root.eCrossReferences());
+		java.util.Map<org.eclipse.emf.ecore.EObject, java.util.Collection<org.eclipse.emf.ecore.EStructuralFeature.Setting>> proxies = org.eclipse.emf.ecore.util.EcoreUtil.ProxyCrossReferencer.find(root);
+		int proxyCount = 0;
+		for (java.util.Collection<org.eclipse.emf.ecore.EStructuralFeature.Setting> settings : proxies.values()) {
+			proxyCount += settings.size();
+		}
+		// Use the cache if it is still valid
+		if (referencedExternalObjects != null && oldProxyCount == proxyCount) {
+			return referencedExternalObjects;
+		}
+		referencedExternalObjects = new java.util.LinkedHashSet<org.eclipse.emf.ecore.EObject>();
+		oldProxyCount = proxyCount;
+		java.util.Set<org.eclipse.emf.ecore.EObject> referencedExternalObjects = new java.util.LinkedHashSet<org.eclipse.emf.ecore.EObject>();
+		referencedExternalObjects.addAll(getExternalObjects(root.eCrossReferences(), object));
 		java.util.Iterator<org.eclipse.emf.ecore.EObject> eAllContents = root.eAllContents();
 		while (eAllContents.hasNext()) {
 			org.eclipse.emf.ecore.EObject next = eAllContents.next();
+			referencedExternalObjects.addAll(getExternalObjects(next.eCrossReferences(), object));
+		}
+		return referencedExternalObjects;
+	}
+	
+	/**
+	 * Returns all EObjects that are not contained in the same resource as the given
+	 * EObject.
+	 */
+	private java.util.Set<org.eclipse.emf.ecore.EObject> getExternalObjects(java.util.Collection<org.eclipse.emf.ecore.EObject> objects, org.eclipse.emf.ecore.EObject object) {
+		java.util.Set<org.eclipse.emf.ecore.EObject> externalObjects = new java.util.LinkedHashSet<org.eclipse.emf.ecore.EObject>();
+		for (org.eclipse.emf.ecore.EObject next : objects) {
 			if (next.eResource() != object.eResource()) {
-				externalReferences.addAll(next.eCrossReferences());
+				externalObjects.add(next);
 			}
 		}
-		return externalReferences;
+		return externalObjects;
 	}
 	
 	/**
@@ -276,18 +306,29 @@ public class ThingmlDefaultResolverDelegate<ContainerType extends org.eclipse.em
 	}
 	
 	private StringMatch matches(org.eclipse.emf.ecore.EObject element, String identifier, boolean matchFuzzy) {
+		for (Object name : getNames(element)) {
+			StringMatch match = matches(identifier, name, matchFuzzy);
+			if (match.getExactMatch() != null) {
+				return match;
+			}
+		}
+		return new StringMatch();
+	}
+	
+	/**
+	 * Returns a list of potential identifiers that may be used to reference the given
+	 * element. This method can be overridden to customize the identification of
+	 * elements.
+	 */
+	protected java.util.List<Object> getNames(org.eclipse.emf.ecore.EObject element) {
+		java.util.List<Object> names = new java.util.ArrayList<Object>();
+		
 		// first check for attributes that have set the ID flag to true
-		java.util.List<org.eclipse.emf.ecore.EStructuralFeature> features = element.eClass().getEStructuralFeatures();
-		for (org.eclipse.emf.ecore.EStructuralFeature feature : features) {
-			if (feature instanceof org.eclipse.emf.ecore.EAttribute) {
-				org.eclipse.emf.ecore.EAttribute attribute = (org.eclipse.emf.ecore.EAttribute) feature;
-				if (attribute.isID()) {
-					Object attributeValue = element.eGet(attribute);
-					StringMatch match = matches(identifier, attributeValue, matchFuzzy);
-					if (match.getExactMatch() != null) {
-						return match;
-					}
-				}
+		java.util.List<org.eclipse.emf.ecore.EAttribute> attributes = element.eClass().getEAllAttributes();
+		for (org.eclipse.emf.ecore.EAttribute attribute : attributes) {
+			if (attribute.isID()) {
+				Object attributeValue = element.eGet(attribute);
+				names.add(attributeValue);
 			}
 		}
 		
@@ -295,30 +336,26 @@ public class ThingmlDefaultResolverDelegate<ContainerType extends org.eclipse.em
 		org.eclipse.emf.ecore.EStructuralFeature nameAttr = element.eClass().getEStructuralFeature(NAME_FEATURE);
 		if (nameAttr instanceof org.eclipse.emf.ecore.EAttribute) {
 			Object attributeValue = element.eGet(nameAttr);
-			return matches(identifier, attributeValue, matchFuzzy);
+			names.add(attributeValue);
 		} else {
 			// try any other string attribute found
-			for (org.eclipse.emf.ecore.EAttribute stringAttribute : element.eClass().getEAllAttributes()) {
-				if ("java.lang.String".equals(stringAttribute.getEType().getInstanceClassName())) {
-					Object attributeValue = element.eGet(stringAttribute);
-					StringMatch match = matches(identifier, attributeValue, matchFuzzy);
-					if (match.getExactMatch() != null) {
-						return match;
-					}
+			for (org.eclipse.emf.ecore.EAttribute attribute : attributes) {
+				if ("java.lang.String".equals(attribute.getEType().getInstanceClassName())) {
+					Object attributeValue = element.eGet(attribute);
+					names.add(attributeValue);
 				}
 			}
 			
-			for (org.eclipse.emf.ecore.EOperation o : element.eClass().getEAllOperations()) {
-				if (o.getName().toLowerCase().endsWith(NAME_FEATURE) && o.getEParameters().size() == 0 ) {
-					String result = (String) org.sintef.thingml.resource.thingml.util.ThingmlEObjectUtil.invokeOperation(element, o);
-					StringMatch match = matches(identifier, result, matchFuzzy);
-					if (match.getExactMatch() != null) {
-						return match;
-					}
+			// try operations without arguments that return strings and which have a name that
+			// ends with 'name'
+			for (org.eclipse.emf.ecore.EOperation operation : element.eClass().getEAllOperations()) {
+				if (operation.getName().toLowerCase().endsWith(NAME_FEATURE) && operation.getEParameters().size() == 0) {
+					String result = (String) org.sintef.thingml.resource.thingml.util.ThingmlEObjectUtil.invokeOperation(element, operation);
+					names.add(result);
 				}
 			}
 		}
-		return new StringMatch();
+		return names;
 	}
 	
 	private StringMatch matches(String identifier, Object attributeValue, boolean matchFuzzy) {
@@ -351,23 +388,12 @@ public class ThingmlDefaultResolverDelegate<ContainerType extends org.eclipse.em
 		if (deresolvedReference != null) {
 			return deresolvedReference;
 		}
-		org.eclipse.emf.ecore.EStructuralFeature nameAttr = element.eClass().getEStructuralFeature(NAME_FEATURE);
-		if (nameAttr instanceof org.eclipse.emf.ecore.EAttribute) {
-			return (String) element.eGet(nameAttr);
-		} else {
-			// try any other string attribute found
-			for (org.eclipse.emf.ecore.EAttribute strAttribute : element.eClass().getEAllAttributes()) {
-				if (!strAttribute.isMany() &&				strAttribute.getEType().getInstanceClassName().equals("String")) {
-					return (String) element.eGet(strAttribute);
-				}
-			}
-			for (org.eclipse.emf.ecore.EOperation o : element.eClass().getEAllOperations()) {
-				if (o.getName().toLowerCase().endsWith(NAME_FEATURE) && o.getEParameters().size() == 0 ) {
-					String result = (String) org.sintef.thingml.resource.thingml.util.ThingmlEObjectUtil.invokeOperation(element, o);
-					if (result != null) {
-						return result;
-					}
-				}
+		// if the referenced element was not a proxy, we try the same magic that was used
+		// while resolving elements to obtain names for elements
+		java.util.List<Object> names = getNames(element);
+		for (Object name : names) {
+			if (name != null && name instanceof String) {
+				return (String) name;
 			}
 		}
 		return null;

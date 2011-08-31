@@ -17,12 +17,14 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Type;
 import org.sintef.thingml.TypedElement;
@@ -35,6 +37,7 @@ import org.sintef.thingml.TypedElement;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.TypedElementImpl#getType <em>Type</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.TypedElementImpl#getCardinality <em>Cardinality</em>}</li>
  * </ul>
  * </p>
  *
@@ -50,6 +53,16 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	 * @ordered
 	 */
 	protected Type type;
+
+	/**
+	 * The cached value of the '{@link #getCardinality() <em>Cardinality</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCardinality()
+	 * @generated
+	 * @ordered
+	 */
+	protected Expression cardinality;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -113,12 +126,71 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Expression getCardinality() {
+		return cardinality;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetCardinality(Expression newCardinality, NotificationChain msgs) {
+		Expression oldCardinality = cardinality;
+		cardinality = newCardinality;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.TYPED_ELEMENT__CARDINALITY, oldCardinality, newCardinality);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setCardinality(Expression newCardinality) {
+		if (newCardinality != cardinality) {
+			NotificationChain msgs = null;
+			if (cardinality != null)
+				msgs = ((InternalEObject)cardinality).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.TYPED_ELEMENT__CARDINALITY, null, msgs);
+			if (newCardinality != null)
+				msgs = ((InternalEObject)newCardinality).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.TYPED_ELEMENT__CARDINALITY, null, msgs);
+			msgs = basicSetCardinality(newCardinality, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.TYPED_ELEMENT__CARDINALITY, newCardinality, newCardinality));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
+				return basicSetCardinality(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ThingmlPackage.TYPED_ELEMENT__TYPE:
 				if (resolve) return getType();
 				return basicGetType();
+			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
+				return getCardinality();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -133,6 +205,9 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 		switch (featureID) {
 			case ThingmlPackage.TYPED_ELEMENT__TYPE:
 				setType((Type)newValue);
+				return;
+			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
+				setCardinality((Expression)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -149,6 +224,9 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 			case ThingmlPackage.TYPED_ELEMENT__TYPE:
 				setType((Type)null);
 				return;
+			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
+				setCardinality((Expression)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -163,6 +241,8 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 		switch (featureID) {
 			case ThingmlPackage.TYPED_ELEMENT__TYPE:
 				return type != null;
+			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
+				return cardinality != null;
 		}
 		return super.eIsSet(featureID);
 	}

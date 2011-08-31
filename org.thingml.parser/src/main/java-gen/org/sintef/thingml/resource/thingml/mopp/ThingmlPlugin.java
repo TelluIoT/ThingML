@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.mopp;
 
@@ -24,13 +15,14 @@ public class ThingmlPlugin extends org.eclipse.core.runtime.Plugin {
 	/**
 	 * The version of EMFText that was used to generate this plug-in.
 	 */
-	public static final String EMFTEXT_SDK_VERSION = "1.3.4";
+	public static final String EMFTEXT_SDK_VERSION = "1.4.0";
 	/**
 	 * The ID of the extension point to register default options to be used when
 	 * loading resources with this plug-in.
 	 */
 	public static final String EP_DEFAULT_LOAD_OPTIONS_ID = PLUGIN_ID + ".default_load_options";
 	public static final String EP_ADDITIONAL_EXTENSION_PARSER_ID = PLUGIN_ID + ".additional_extension_parser";
+	public static final String DEBUG_MODEL_ID = PLUGIN_ID + ".debugModel";
 	
 	private static ThingmlPlugin plugin;
 	

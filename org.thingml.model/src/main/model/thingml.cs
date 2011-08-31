@@ -143,7 +143,7 @@ RULES {
 		
 	Message ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ";"  ;
 	
-	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* #1 ":" #1 type[] #1 body ;
+	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* #1 ":" #1 type[] ( "[" cardinality "]")? #1 body ;
 	
 	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour )* !0 "}" ;
 	
@@ -151,13 +151,13 @@ RULES {
 
 	ProvidedPort ::= !1  "provided" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 	
-	Property::= !1 (changeable[T_READONLY])? "property" #1 name[] #1 ":" #1 type[]  (#1 "=" #1 init)?  (annotations)*;
+	Property::= !1 (changeable[T_READONLY])? "property" #1 name[] #1 ":" #1 type[]  ( "[" cardinality "]")? (#1 "=" #1 init)?  (annotations)*;
 	
 	//("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?
 	
 //	Dictionary::= !1 (changeable[T_READONLY])? "dictionary" #1 name[]  ":"  indexType[] "->" type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?(annotations)*;
 	
-	Parameter::= name[]  ":"  type[];
+	Parameter::= name[]  ":"  type[] ( "[" cardinality "]")?;
 	
 	PrimitiveType::= "datatype" #1 name[] (annotations)* ";" ;
 	
@@ -210,7 +210,7 @@ RULES {
 	
 	ActionBlock::= "do" ( !1 actions  )* !0 "end"  ;
 	
-	LocalVariable::= !1 (changeable[T_READONLY])? "var" #1 name[] #1 ":" #1 type[]  (#1 "=" #1 init)?  (annotations)*;
+	LocalVariable::= !1 (changeable[T_READONLY])? "var" #1 name[] #1 ":" #1 type[] ( "[" cardinality "]")? (#1 "=" #1 init)?  (annotations)*;
 	
 	ExternStatement::= statement[STRING_EXT] ("&" segments)*;
 	
@@ -287,6 +287,9 @@ RULES {
 	
 	@Operator(type="primitive", weight="8", superclass="Expression")
 	EnumLiteralRef ::= enum[] ":" literal[];
+	
+	@Operator(type="unary_postfix", weight="7", superclass="Expression")
+	ArrayIndex ::= array "[" index "]";
 	
 	@Operator(type="primitive", weight="8", superclass="Expression")
 	FunctionCallExpression ::= function[] "(" (parameters ("," #1 parameters)* )? ")";

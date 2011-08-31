@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.ui;
 
@@ -19,9 +10,10 @@ package org.sintef.thingml.resource.thingml.ui;
  * A class to display the information of an element. Most of the code is taken
  * from <code>org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover</code>.
  */
-public class ThingmlTextHover implements org.eclipse.jface.text.ITextHover, org.eclipse.jface.text.ITextHoverExtension, org.eclipse.jface.text.ITextHoverExtension2{
+public class ThingmlTextHover implements org.eclipse.jface.text.ITextHover, org.eclipse.jface.text.ITextHoverExtension, org.eclipse.jface.text.ITextHoverExtension2 {
 	
 	private static final String FONT = org.eclipse.jface.resource.JFaceResources.DIALOG_FONT;
+	
 	private org.sintef.thingml.resource.thingml.IThingmlResourceProvider resourceProvider;
 	private org.sintef.thingml.resource.thingml.IThingmlHoverTextProvider hoverTextProvider;
 	/**
@@ -212,6 +204,8 @@ public class ThingmlTextHover implements org.eclipse.jface.text.ITextHover, org.
 		this.hoverTextProvider = new org.sintef.thingml.resource.thingml.ui.ThingmlUIMetaInformation().getHoverTextProvider();
 	}
 	
+	// The warning about overriding or implementing a deprecated API cannot be avoided
+	// because the SourceViewerConfiguration class depends on ITextHover.
 	public String getHoverInfo(org.eclipse.jface.text.ITextViewer textViewer, org.eclipse.jface.text.IRegion hoverRegion) {
 		return ((org.sintef.thingml.resource.thingml.ui.ThingmlDocBrowserInformationControlInput) getHoverInfo2(textViewer, hoverRegion)).getHtml();
 	}
@@ -226,7 +220,7 @@ public class ThingmlTextHover implements org.eclipse.jface.text.ITextHover, org.
 	
 	public org.eclipse.jface.text.IInformationControlCreator getHoverControlCreator() {
 		if (hoverControlCreator == null) {
-			hoverControlCreator = new HoverControlCreator(			getInformationPresenterControlCreator());
+			hoverControlCreator = new HoverControlCreator(getInformationPresenterControlCreator());
 		}
 		return hoverControlCreator;
 	}
@@ -323,39 +317,23 @@ public class ThingmlTextHover implements org.eclipse.jface.text.ITextHover, org.
 		org.osgi.framework.Bundle bundle = org.eclipse.core.runtime.Platform.getBundle(org.sintef.thingml.resource.thingml.ui.ThingmlUIPlugin.PLUGIN_ID);
 		java.net.URL styleSheetURL = bundle.getEntry("/css/hover_style.css");
 		if (styleSheetURL != null) {
-			java.io.BufferedReader reader = null;
 			try {
-				reader = new java.io.BufferedReader(new java.io.InputStreamReader(styleSheetURL.openStream()));
-				StringBuffer buffer = new StringBuffer();
-				String line = reader.readLine();
-				while (line != null) {
-					buffer.append(line);
-					buffer.append('\n');
-					line = reader.readLine();
-				}
-				return buffer.toString();
+				return org.sintef.thingml.resource.thingml.util.ThingmlStreamUtil.getContent(styleSheetURL.openStream());
 			} catch (java.io.IOException ex) {
 				ex.printStackTrace();
-				return "";
-			} finally {
-				try {
-					if (reader != null) {
-						reader.close();
-					}
-				} catch (java.io.IOException e) {
-					e.printStackTrace();
-				}
 			}
 		}
-		return null;
+		return "";
 	}
 	
 	private static org.eclipse.emf.ecore.EObject getFirstProxy(java.util.List<org.eclipse.emf.ecore.EObject> elements) {
 		return getFirstObject(elements, true);
 	}
+	
 	private static org.eclipse.emf.ecore.EObject getFirstNonProxy(java.util.List<org.eclipse.emf.ecore.EObject> elements) {
 		return getFirstObject(elements, false);
 	}
+	
 	private static org.eclipse.emf.ecore.EObject getFirstObject(java.util.List<org.eclipse.emf.ecore.EObject> elements, boolean proxy) {
 		for (org.eclipse.emf.ecore.EObject object : elements) {
 			if (proxy == object.eIsProxy()) {
@@ -364,4 +342,5 @@ public class ThingmlTextHover implements org.eclipse.jface.text.ITextHover, org.
 		}
 		return null;
 	}
+	
 }

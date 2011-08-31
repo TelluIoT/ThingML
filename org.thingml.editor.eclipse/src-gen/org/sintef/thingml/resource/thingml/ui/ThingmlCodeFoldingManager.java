@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.ui;
 
@@ -117,7 +108,7 @@ public class ThingmlCodeFoldingManager {
 	}
 	
 	/**
-	 * Checks whether the given postition are in the
+	 * Checks whether the given positions are in the
 	 * <code>org.eclipse.jface.text.source.projection.ProjectionAnnotationModel</code>
 	 * or in the addition set. If not it tries to add into <code>additions</code>.
 	 * Deletes old org.eclipse.jface.text.source.projection.ProjectionAnnotation with
@@ -409,8 +400,15 @@ public class ThingmlCodeFoldingManager {
 	private java.util.List<org.eclipse.emf.ecore.EObject> getAllContents(org.eclipse.emf.ecore.EObject[] contentArray) {
 		java.util.List<org.eclipse.emf.ecore.EObject> result = new java.util.ArrayList<org.eclipse.emf.ecore.EObject>();
 		for (org.eclipse.emf.ecore.EObject eObject : contentArray) {
+			if (eObject == null) {
+				continue;
+			}
 			result.add(eObject);
-			result.addAll(getAllContents(eObject.eContents().toArray(new org.eclipse.emf.ecore.EObject[0])));
+			java.util.List<org.eclipse.emf.ecore.EObject> contents = eObject.eContents();
+			if (contents == null) {
+				continue;
+			}
+			result.addAll(getAllContents(contents.toArray(new org.eclipse.emf.ecore.EObject[0])));
 		}
 		return result;
 	}

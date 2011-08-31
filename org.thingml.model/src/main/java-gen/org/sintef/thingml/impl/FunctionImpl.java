@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.sintef.thingml.Action;
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.Function;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.ThingmlPackage;
@@ -45,6 +46,7 @@ import org.sintef.thingml.TypedElement;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getType <em>Type</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getCardinality <em>Cardinality</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getBody <em>Body</em>}</li>
  * </ul>
@@ -62,6 +64,16 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 	 * @ordered
 	 */
 	protected Type type;
+
+	/**
+	 * The cached value of the '{@link #getCardinality() <em>Cardinality</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCardinality()
+	 * @generated
+	 * @ordered
+	 */
+	protected Expression cardinality;
 
 	/**
 	 * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference list.
@@ -145,6 +157,49 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Expression getCardinality() {
+		return cardinality;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetCardinality(Expression newCardinality, NotificationChain msgs) {
+		Expression oldCardinality = cardinality;
+		cardinality = newCardinality;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.FUNCTION__CARDINALITY, oldCardinality, newCardinality);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setCardinality(Expression newCardinality) {
+		if (newCardinality != cardinality) {
+			NotificationChain msgs = null;
+			if (cardinality != null)
+				msgs = ((InternalEObject)cardinality).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.FUNCTION__CARDINALITY, null, msgs);
+			if (newCardinality != null)
+				msgs = ((InternalEObject)newCardinality).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.FUNCTION__CARDINALITY, null, msgs);
+			msgs = basicSetCardinality(newCardinality, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.FUNCTION__CARDINALITY, newCardinality, newCardinality));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<Parameter> getParameters() {
 		if (parameters == null) {
 			parameters = new EObjectContainmentEList<Parameter>(Parameter.class, this, ThingmlPackage.FUNCTION__PARAMETERS);
@@ -203,6 +258,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case ThingmlPackage.FUNCTION__CARDINALITY:
+				return basicSetCardinality(null, msgs);
 			case ThingmlPackage.FUNCTION__PARAMETERS:
 				return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.FUNCTION__BODY:
@@ -222,6 +279,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 			case ThingmlPackage.FUNCTION__TYPE:
 				if (resolve) return getType();
 				return basicGetType();
+			case ThingmlPackage.FUNCTION__CARDINALITY:
+				return getCardinality();
 			case ThingmlPackage.FUNCTION__PARAMETERS:
 				return getParameters();
 			case ThingmlPackage.FUNCTION__BODY:
@@ -241,6 +300,9 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 		switch (featureID) {
 			case ThingmlPackage.FUNCTION__TYPE:
 				setType((Type)newValue);
+				return;
+			case ThingmlPackage.FUNCTION__CARDINALITY:
+				setCardinality((Expression)newValue);
 				return;
 			case ThingmlPackage.FUNCTION__PARAMETERS:
 				getParameters().clear();
@@ -264,6 +326,9 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 			case ThingmlPackage.FUNCTION__TYPE:
 				setType((Type)null);
 				return;
+			case ThingmlPackage.FUNCTION__CARDINALITY:
+				setCardinality((Expression)null);
+				return;
 			case ThingmlPackage.FUNCTION__PARAMETERS:
 				getParameters().clear();
 				return;
@@ -284,6 +349,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 		switch (featureID) {
 			case ThingmlPackage.FUNCTION__TYPE:
 				return type != null;
+			case ThingmlPackage.FUNCTION__CARDINALITY:
+				return cardinality != null;
 			case ThingmlPackage.FUNCTION__PARAMETERS:
 				return parameters != null && !parameters.isEmpty();
 			case ThingmlPackage.FUNCTION__BODY:
@@ -302,6 +369,7 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 		if (baseClass == TypedElement.class) {
 			switch (derivedFeatureID) {
 				case ThingmlPackage.FUNCTION__TYPE: return ThingmlPackage.TYPED_ELEMENT__TYPE;
+				case ThingmlPackage.FUNCTION__CARDINALITY: return ThingmlPackage.TYPED_ELEMENT__CARDINALITY;
 				default: return -1;
 			}
 		}
@@ -318,6 +386,7 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 		if (baseClass == TypedElement.class) {
 			switch (baseFeatureID) {
 				case ThingmlPackage.TYPED_ELEMENT__TYPE: return ThingmlPackage.FUNCTION__TYPE;
+				case ThingmlPackage.TYPED_ELEMENT__CARDINALITY: return ThingmlPackage.FUNCTION__CARDINALITY;
 				default: return -1;
 			}
 		}

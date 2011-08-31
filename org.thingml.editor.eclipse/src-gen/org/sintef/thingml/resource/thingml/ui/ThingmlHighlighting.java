@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.ui;
 
@@ -20,9 +11,10 @@ package org.sintef.thingml.resource.thingml.ui;
  */
 public class ThingmlHighlighting implements org.eclipse.jface.viewers.ISelectionProvider, org.eclipse.jface.viewers.ISelectionChangedListener {
 	
+	private final static org.sintef.thingml.resource.thingml.ui.ThingmlPositionHelper positionHelper = new org.sintef.thingml.resource.thingml.ui.ThingmlPositionHelper();
+	
 	private java.util.List<org.eclipse.jface.viewers.ISelectionChangedListener> selectionChangedListeners = new java.util.ArrayList<org.eclipse.jface.viewers.ISelectionChangedListener>();
 	private org.eclipse.jface.viewers.ISelection selection = null;
-	private final static org.sintef.thingml.resource.thingml.ui.ThingmlPositionHelper positionHelper = new org.sintef.thingml.resource.thingml.ui.ThingmlPositionHelper();
 	private boolean isHighlightBrackets = true;
 	private org.sintef.thingml.resource.thingml.ui.ThingmlTokenScanner scanner;
 	private org.sintef.thingml.resource.thingml.ui.ThingmlColorManager colorManager;
@@ -30,6 +22,7 @@ public class ThingmlHighlighting implements org.eclipse.jface.viewers.ISelection
 	private org.eclipse.swt.graphics.Color black;
 	private org.eclipse.swt.custom.StyledText textWidget;
 	private org.eclipse.jface.preference.IPreferenceStore preferenceStore;
+	private org.sintef.thingml.resource.thingml.ui.ThingmlEditor editor;
 	private org.eclipse.jface.text.source.projection.ProjectionViewer projectionViewer;
 	private org.sintef.thingml.resource.thingml.ui.ThingmlOccurrence occurrence;
 	private org.sintef.thingml.resource.thingml.ui.ThingmlBracketSet bracketSet;
@@ -117,6 +110,7 @@ public class ThingmlHighlighting implements org.eclipse.jface.viewers.ISelection
 		this.display = org.eclipse.swt.widgets.Display.getCurrent();
 		sourceviewer.getSelectionProvider();
 		preferenceStore = org.sintef.thingml.resource.thingml.ui.ThingmlUIPlugin.getDefault().getPreferenceStore();
+		this.editor = editor;
 		textWidget = sourceviewer.getTextWidget();
 		projectionViewer = sourceviewer;
 		scanner = new org.sintef.thingml.resource.thingml.ui.ThingmlTokenScanner(textResource, colorManager);
@@ -262,19 +256,7 @@ public class ThingmlHighlighting implements org.eclipse.jface.viewers.ISelection
 	
 	private void handleContentOutlineSelection(org.eclipse.jface.viewers.ISelection selection) {
 		if (!selection.isEmpty()) {
-			Object selectedElement = ((org.eclipse.jface.viewers.IStructuredSelection) selection).getFirstElement();
-			if (selectedElement instanceof org.eclipse.emf.ecore.EObject) {
-				org.eclipse.emf.ecore.EObject selectedEObject = (org.eclipse.emf.ecore.EObject) selectedElement;
-				org.eclipse.emf.ecore.resource.Resource resource = selectedEObject.eResource();
-				if (resource instanceof org.sintef.thingml.resource.thingml.IThingmlTextResource) {
-					org.sintef.thingml.resource.thingml.IThingmlTextResource textResource = (org.sintef.thingml.resource.thingml.IThingmlTextResource) resource;
-					org.sintef.thingml.resource.thingml.IThingmlLocationMap locationMap = textResource.getLocationMap();
-					int elementCharStart = locationMap.getCharStart(selectedEObject);
-					int elementCharEnd = locationMap.getCharEnd(selectedEObject);
-					org.eclipse.jface.text.TextSelection textEditorSelection = new org.eclipse.jface.text.TextSelection(elementCharStart, elementCharEnd - elementCharStart + 1);
-					projectionViewer.getSelectionProvider().setSelection(textEditorSelection);
-				}
-			}
+			editor.setSelection(selection);
 		}
 	}
 	
