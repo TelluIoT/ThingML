@@ -20,8 +20,6 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.sintef.thingml.resource.thingml,
   org.sintef.thingml.resource.thingml.analysis,
   org.sintef.thingml.resource.thingml.mopp,
-  org.sintef.thingml.resource.thingml.debug,
-  org.sintef.thingml.resource.thingml.launch,
   org.sintef.thingml.resource.thingml.grammar,
   org.sintef.thingml.resource.thingml.util
 Bundle-Activator: org.sintef.thingml.resource.thingml.mopp.ThingmlPlugin

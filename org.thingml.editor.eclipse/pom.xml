@@ -285,5 +285,15 @@
             <artifactId>org.eclipse.core.filebuffers</artifactId>
             <version>${eclipse.version}</version>
         </dependency>
+  	<dependency>
+      		<groupId>org.eclipse.maven</groupId>
+      		<artifactId>org.eclipse.emf.common.ui</artifactId>
+      		<version>3.7.0</version>
+   	 </dependency>
+	<dependency>
+	      	<groupId>org.eclipse.maven</groupId>
+	      	<artifactId>org.eclipse.core.expressions</artifactId>
+	      	<version>3.7.0</version>
+    </dependency>
     </dependencies>
 </project>
