@@ -9,7 +9,7 @@ import "../../bricks/tilt_switch.thingml"
 //      - tilt switch (1)   -> Default pin: D_9    
 //      - led (1)           -> Default pin: D_8
 //
-// The led toggle when the tilt switch.
+// The led toggle when the position of the tilt switch changes.
 //*
 
 thing SimpleTilt includes LedMsgs, TiltSwitchMsgs

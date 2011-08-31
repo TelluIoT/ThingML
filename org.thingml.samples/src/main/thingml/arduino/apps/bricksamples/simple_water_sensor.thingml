@@ -21,24 +21,22 @@ thing SimpleWaterSensor includes LedMsgs, WaterSensorMsgs
 	
 	required port WaterSensor
 	{
-		receives water_value
+		receives dry, wet
 	}
 		
 	statechart SimpleWaterSensorImpl init Idle
 	{
 		state Idle
 		{
-			transition dip -> LedOn
-			event m : WaterSensor?water_value
-			guard m.val == DigitalState:LOW
+			transition wet -> LedOn
+			event m : WaterSensor?wet
 			action Led!led_on ()
 		}
 		
 		state LedOn
 		{
 			transition dry -> Idle
-			event m : WaterSensor?water_value
-			guard m.val == DigitalState:HIGH
+			event m : WaterSensor?dry
 			action Led!led_off ()
 		}
 	}

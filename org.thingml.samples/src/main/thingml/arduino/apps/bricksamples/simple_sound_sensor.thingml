@@ -9,7 +9,7 @@ import "../../bricks/led.thingml"
 //      - sound sensor (1)  -> Default pin: A_4
 //      - led (1)           -> Default pin: D_8
 //
-// The led toggle when .
+// The led toggle when a high sound is detected.
 //*
 
 thing SimpleSoundSensor includes LedMsgs, SoundSensorMsgs
