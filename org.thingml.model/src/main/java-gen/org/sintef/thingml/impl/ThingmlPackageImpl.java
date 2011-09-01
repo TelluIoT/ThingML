@@ -26,6 +26,7 @@ import org.sintef.thingml.Action;
 import org.sintef.thingml.ActionBlock;
 import org.sintef.thingml.AndExpression;
 import org.sintef.thingml.AnnotatedElement;
+import org.sintef.thingml.ArrayIndex;
 import org.sintef.thingml.BinaryExpression;
 import org.sintef.thingml.BooleanLiteral;
 import org.sintef.thingml.CompositeState;
@@ -548,6 +549,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass arrayIndexEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass dictionaryReferenceEClass = null;
 
 	/**
@@ -932,6 +940,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EReference getTypedElement_Type() {
 		return (EReference)typedElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getTypedElement_Cardinality() {
+		return (EReference)typedElementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1920,6 +1937,33 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getArrayIndex() {
+		return arrayIndexEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getArrayIndex_Array() {
+		return (EReference)arrayIndexEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getArrayIndex_Index() {
+		return (EReference)arrayIndexEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getDictionaryReference() {
 		return dictionaryReferenceEClass;
 	}
@@ -2345,6 +2389,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		typedElementEClass = createEClass(TYPED_ELEMENT);
 		createEReference(typedElementEClass, TYPED_ELEMENT__TYPE);
+		createEReference(typedElementEClass, TYPED_ELEMENT__CARDINALITY);
 
 		propertyEClass = createEClass(PROPERTY);
 		createEReference(propertyEClass, PROPERTY__INIT);
@@ -2508,6 +2553,10 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		propertyReferenceEClass = createEClass(PROPERTY_REFERENCE);
 		createEReference(propertyReferenceEClass, PROPERTY_REFERENCE__PROPERTY);
 
+		arrayIndexEClass = createEClass(ARRAY_INDEX);
+		createEReference(arrayIndexEClass, ARRAY_INDEX__ARRAY);
+		createEReference(arrayIndexEClass, ARRAY_INDEX__INDEX);
+
 		dictionaryReferenceEClass = createEClass(DICTIONARY_REFERENCE);
 		createEReference(dictionaryReferenceEClass, DICTIONARY_REFERENCE__INDEX);
 
@@ -2653,6 +2702,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		loopActionEClass.getESuperTypes().add(this.getControlStructure());
 		conditionalActionEClass.getESuperTypes().add(this.getControlStructure());
 		propertyReferenceEClass.getESuperTypes().add(this.getExpression());
+		arrayIndexEClass.getESuperTypes().add(this.getExpression());
 		dictionaryReferenceEClass.getESuperTypes().add(this.getPropertyReference());
 		expressionGroupEClass.getESuperTypes().add(this.getExpression());
 		returnActionEClass.getESuperTypes().add(this.getAction());
@@ -2704,6 +2754,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		initEClass(typedElementEClass, TypedElement.class, "TypedElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTypedElement_Type(), this.getType(), null, "type", null, 1, 1, TypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypedElement_Cardinality(), this.getExpression(), null, "cardinality", null, 0, 1, TypedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(propertyEClass, Property.class, "Property", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getProperty_Init(), this.getExpression(), null, "init", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2866,6 +2917,10 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		initEClass(propertyReferenceEClass, PropertyReference.class, "PropertyReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getPropertyReference_Property(), this.getVariable(), null, "property", null, 1, 1, PropertyReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(arrayIndexEClass, ArrayIndex.class, "ArrayIndex", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getArrayIndex_Array(), this.getExpression(), null, "array", null, 1, 1, ArrayIndex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getArrayIndex_Index(), this.getExpression(), null, "index", null, 1, 1, ArrayIndex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(dictionaryReferenceEClass, DictionaryReference.class, "DictionaryReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDictionaryReference_Index(), this.getExpression(), null, "index", null, 1, 1, DictionaryReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

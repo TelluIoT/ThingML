@@ -458,6 +458,15 @@ public interface ThingmlFactory extends EFactory {
 	PropertyReference createPropertyReference();
 
 	/**
+	 * Returns a new object of class '<em>Array Index</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Array Index</em>'.
+	 * @generated
+	 */
+	ArrayIndex createArrayIndex();
+
+	/**
 	 * Returns a new object of class '<em>Dictionary Reference</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

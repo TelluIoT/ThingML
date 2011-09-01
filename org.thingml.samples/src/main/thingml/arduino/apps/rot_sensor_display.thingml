@@ -30,7 +30,7 @@ thing RotSensorDisplay includes LcdScreenMsgs, RotationSensorMsgs
 
 configuration RotSensorDisplay
 {
-	group rot_sensor : RotationSensor
+	group rot_sensor : RotationSensor 
 		set rot_sensor.io.analog_input.pin = AnalogPin:A_4
 	
 	instance screen : LcdScreen

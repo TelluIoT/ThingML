@@ -69,13 +69,23 @@ public class ThingmlHyperlink implements org.eclipse.jface.text.hyperlink.IHyper
 			org.eclipse.ui.IWorkbenchPage page = workbench.getActiveWorkbenchWindow().getActivePage();
 			try {
 				org.eclipse.ui.IEditorDescriptor desc = workbench.getEditorRegistry().getDefaultEditor(file.getName());
+				if (desc == null) {
+					desc = workbench.getEditorRegistry().findEditor("org.eclipse.emf.ecore.presentation.ReflectiveEditorID");
+				}
 				org.eclipse.ui.IEditorPart editorPart = page.openEditor(new org.eclipse.ui.part.FileEditorInput(file), desc.getId());
-				if (editorPart instanceof org.sintef.thingml.resource.thingml.ui.ThingmlEditor) {
-					org.sintef.thingml.resource.thingml.ui.ThingmlEditor emftEditor = (org.sintef.thingml.resource.thingml.ui.ThingmlEditor) editorPart;
-					emftEditor.setCaret(linkTarget, text);
+				if (editorPart instanceof org.eclipse.emf.edit.domain.IEditingDomainProvider) {
+					org.eclipse.emf.edit.domain.IEditingDomainProvider editingDomainProvider = (org.eclipse.emf.edit.domain.IEditingDomainProvider) editorPart;
+					org.eclipse.emf.edit.domain.EditingDomain editingDomain = editingDomainProvider.getEditingDomain();
+					org.eclipse.emf.common.util.URI uri = org.eclipse.emf.ecore.util.EcoreUtil.getURI(linkTarget);
+					org.eclipse.emf.ecore.EObject originalObject = editingDomain.getResourceSet().getEObject(uri, true);
+					if (editingDomainProvider instanceof org.eclipse.emf.common.ui.viewer.IViewerProvider) {
+						org.eclipse.emf.common.ui.viewer.IViewerProvider viewerProvider = (org.eclipse.emf.common.ui.viewer.IViewerProvider) editingDomainProvider;
+						org.eclipse.jface.viewers.Viewer viewer = viewerProvider.getViewer();
+						viewer.setSelection(new org.eclipse.jface.viewers.StructuredSelection(originalObject), true);
+					}
 				}
 			} catch (org.eclipse.ui.PartInitException e) {
-				e.printStackTrace();
+				org.sintef.thingml.resource.thingml.mopp.ThingmlPlugin.logError("Exception while opening hyperlink target.", e);
 			}
 		}
 	}

@@ -12,6 +12,7 @@ Require-Bundle: org.eclipse.core.resources,
   org.eclipse.emf.validation,
   org.eclipse.emf.workspace,
   org.emftext.access;resolution:=optional,
+  org.eclipse.debug.core,
   org.emftext.commons.antlr3_3_0,
   org.sintef.thingml.model
 Bundle-ActivationPolicy: lazy

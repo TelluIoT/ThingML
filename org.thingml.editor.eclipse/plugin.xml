@@ -49,6 +49,10 @@
 		</category>
 		<wizard category="org.emftext.runtime.ui.EMFTextFileCategory" icon="/icons/default_new_icon.gif" class="org.sintef.thingml.resource.thingml.ui.ThingmlNewFileWizard" id="org.sintef.thingml.resource.thingml.ui.ThingmlNewFileWizard" name="EMFText .thingml file">
 		</wizard>
+		<category id="org.emftext.runtime.ui.EMFTextProjectCategory" name="EMFText Project">
+		</category>
+		<wizard category="org.emftext.runtime.ui.EMFTextProjectCategory" icon="/icons/default_new_icon.gif" class="org.sintef.thingml.resource.thingml.ui.ThingmlNewProjectWizard" id="org.sintef.thingml.resource.thingml.ui.ThingmlNewProjectWizard" name="EMFText thingml project" project="true">
+		</wizard>
 	</extension>
 	
 	<extension point="org.eclipse.ui.ide.markerResolution">
@@ -83,6 +87,92 @@
 		</specification>
 		<specification annotationType="org.sintef.thingml.resource.thingml.ui.occurences.declaration" label="Declarations (in .thingml files)" textPreferenceKey="thingml.declarationIndication" textPreferenceValue="false" highlightPreferenceKey="thingml.declarationHighlighting" highlightPreferenceValue="true" overviewRulerPreferenceKey="thingml.declarationIndicationInOverviewRuler" overviewRulerPreferenceValue="true" verticalRulerPreferenceKey="thingml.declarationIndicationInVerticalRuler" verticalRulerPreferenceValue="false" colorPreferenceKey="thingml.declarationIndicationColor" colorPreferenceValue="240,216,168" presentationLayer="4" textStylePreferenceKey="thingml.declarationTextStyle" textStylePreferenceValue="NONE">
 		</specification>
+	</extension>
+	
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+		<launchConfigurationTypeImage icon="/icons/launch_type_icon.gif" configTypeID="org.sintef.thingml.resource.thingml.ui.launchConfigurationType" id="org.sintef.thingml.launchImage">
+		</launchConfigurationTypeImage>
+	</extension>
+	
+	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+		<launchConfigurationTabGroup type="org.sintef.thingml.resource.thingml.ui.launchConfigurationType" class="org.sintef.thingml.resource.thingml.ui.launch.ThingmlLaunchConfigurationTabGroup" id="org.sintef.thingml.launchConfigurationTabGroup" helpContextId="org.sintef.thingml.launchConfigHelpContext">
+			<launchMode mode="debug" perspective="org.eclipse.debug.ui.DebugPerspective" description="Debug thingml model.">
+			</launchMode>
+			<launchMode mode="run" description="Run thingml model.">
+			</launchMode>
+		</launchConfigurationTabGroup>
+	</extension>
+	
+	<extension point="org.eclipse.debug.ui.launchShortcuts">
+		<shortcut label="thingml Application" icon="/icons/launch_shortcut_icon.gif" helpContextId="org.sintef.thingml.launch" modes="run,debug" class="org.sintef.thingml.resource.thingml.ui.launch.ThingmlLaunchShortcut" description="Launch a thingml model" id="org.sintef.thingml.launchShortcut">
+			<description description="Run thingml model" mode="run">
+			</description>
+			<description description="Debug thingml model" mode="debug">
+			</description>
+			<contextualLaunch>
+				<enablement>
+					<with variable="selection">
+						<count value="1">
+						</count>
+						<iterate>
+							<test property="org.sintef.thingml.isLaunchable">
+							</test>
+						</iterate>
+					</with>
+				</enablement>
+			</contextualLaunch>
+			<configurationType id="org.sintef.thingml.resource.thingml.ui.launchConfigurationType">
+			</configurationType>
+		</shortcut>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester id="org.sintef.thingml.PropertyTester" type="java.lang.Object" namespace="org.sintef.thingml" properties="isLaunchable" class="org.sintef.thingml.resource.thingml.ui.ThingmlPropertyTester">
+		</propertyTester>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type name="org.sintef.thingml.resource.thingml.ui.debug.lineBreakpoint" markerType="org.sintef.thingml.resource.thingml.debug.lineBreakpoint.marker" super="org.eclipse.debug.core.breakpoint">
+		</type>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification annotationType="org.sintef.thingml.resource.thingml.ui.debug.lineBreakpoint" label="Breakpoints (in .thingml files)" icon="/icons/breakpoint_icon.gif" textPreferenceKey="org.sintef.thingml.resource.thingml.ui.lineBreakpoint" textPreferenceValue="false" highlightPreferenceKey="org.sintef.thingml.resource.thingml.ui.lineBreakpointHighlighting" highlightPreferenceValue="true" contributesToHeader="false" overviewRulerPreferenceKey="org.sintef.thingml.resource.thingml.ui.lineBreakpointIndicationInOverviewRuler" overviewRulerPreferenceValue="true" verticalRulerPreferenceKey="org.sintef.thingml.resource.thingml.ui.lineBreakpointIndicationInVerticalRuler" verticalRulerPreferenceValue="false" colorPreferenceKey="org.sintef.thingml.resource.thingml.ui.lineBreakpointColor" colorPreferenceValue="212,212,212" presentationLayer="4" showInNextPrevDropdownToolbarActionKey="org.sintef.thingml.resource.thingml.ui.showLineBreakpointInNextPrevDropdownToolbarAction" showInNextPrevDropdownToolbarAction="true" isGoToNextNavigationTargetKey="org.sintef.thingml.resource.thingml.ui.isLineBreakpointGoToNextNavigationTarget" isGoToNextNavigationTarget="false" isGoToPreviousNavigationTargetKey="org.sintef.thingml.resource.thingml.ui.isLineBreakpointGoToPreviousNavigationTarget" isGoToPreviousNavigationTarget="false" textStylePreferenceKey="org.sintef.thingml.resource.thingml.ui.lineBreakpointTextStyle" textStylePreferenceValue="NONE">
+		</specification>
+	</extension>
+	
+	<extension point="org.eclipse.core.runtime.adapters">
+		<factory adaptableType="org.sintef.thingml.resource.thingml.ui.ThingmlEditor" class="org.sintef.thingml.resource.thingml.ui.debug.ThingmlAdapterFactory">
+			<adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget">
+			</adapter>
+		</factory>
+		<factory adaptableType="org.sintef.thingml.resource.thingml.debug.ThingmlDebugVariable" class="org.sintef.thingml.resource.thingml.ui.debug.ThingmlAdapterFactory">
+			<adapter type="org.eclipse.debug.internal.ui.viewers.model.provisional.IElementLabelProvider">
+			</adapter>
+		</factory>
+		<factory adaptableType="org.sintef.thingml.resource.thingml.debug.ThingmlDebugVariable" class="org.sintef.thingml.resource.thingml.ui.debug.ThingmlAdapterFactory">
+			<adapter type="org.eclipse.debug.internal.ui.viewers.model.provisional.IElementContentProvider">
+			</adapter>
+		</factory>
+	</extension>
+	
+	<extension point="org.eclipse.ui.popupMenus">
+		<viewerContribution id="org.sintef.thingml.resource.thingml.ui.RulerPopupActions" targetID="org.sintef.thingml.resource.thingml.EditorRuler">
+			<action id="org.sintef.thingml.resource.thingml.ui.toggleBreakpointAction" icon="icons/breakpoint_icon.gif" label="Toggle Breakpoint" class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate" menubarPath="debug">
+			</action>
+		</viewerContribution>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editorActions">
+		<editorContribution targetID="org.sintef.thingml.resource.thingml.ui.ThingmlEditor" id="org.sintef.thingml.resource.thingml.ui.BreakpointRulerActions">
+			<action id="org.sintef.thingml.resource.thingml.ui.debug.RulerToggleBreakpointAction" label="Add breakpoint" class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate" actionID="RulerDoubleClick">
+			</action>
+		</editorContribution>
+	</extension>
+	
+	<extension point="org.eclipse.debug.ui.debugModelPresentations">
+		<debugModelPresentation id="org.sintef.thingml.resource.thingml.debugModel" class="org.sintef.thingml.resource.thingml.ui.debug.ThingmlDebugModelPresentation">
+		</debugModelPresentation>
 	</extension>
 	
 </plugin>

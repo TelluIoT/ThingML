@@ -22,7 +22,7 @@ public class ThingmlPreferencePage extends org.eclipse.jface.preference.Preferen
 	
 	public void init(org.eclipse.ui.IWorkbench workbench) {
 		setPreferenceStore(org.sintef.thingml.resource.thingml.ui.ThingmlUIPlugin.getDefault().getPreferenceStore());
-		setDescription(" Thingml Text Editor Preferences");
+		setDescription("Thingml Text Editor Preferences");
 	}
 	
 	@Override	

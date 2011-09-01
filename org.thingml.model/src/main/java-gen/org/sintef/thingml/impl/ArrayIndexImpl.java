@@ -16,60 +16,58 @@
 package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.sintef.thingml.ArrayIndex;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.ThingmlPackage;
-import org.sintef.thingml.Type;
-import org.sintef.thingml.TypedElement;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Typed Element</b></em>'.
+ * An implementation of the model object '<em><b>Array Index</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.TypedElementImpl#getType <em>Type</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.TypedElementImpl#getCardinality <em>Cardinality</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ArrayIndexImpl#getArray <em>Array</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ArrayIndexImpl#getIndex <em>Index</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public abstract class TypedElementImpl extends EObjectImpl implements TypedElement {
+public class ArrayIndexImpl extends ExpressionImpl implements ArrayIndex {
 	/**
-	 * The cached value of the '{@link #getType() <em>Type</em>}' reference.
+	 * The cached value of the '{@link #getArray() <em>Array</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getType()
+	 * @see #getArray()
 	 * @generated
 	 * @ordered
 	 */
-	protected Type type;
+	protected Expression array;
 
 	/**
-	 * The cached value of the '{@link #getCardinality() <em>Cardinality</em>}' containment reference.
+	 * The cached value of the '{@link #getIndex() <em>Index</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCardinality()
+	 * @see #getIndex()
 	 * @generated
 	 * @ordered
 	 */
-	protected Expression cardinality;
+	protected Expression index;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TypedElementImpl() {
+	protected ArrayIndexImpl() {
 		super();
 	}
 
@@ -80,7 +78,7 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ThingmlPackage.Literals.TYPED_ELEMENT;
+		return ThingmlPackage.Literals.ARRAY_INDEX;
 	}
 
 	/**
@@ -88,16 +86,8 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Type getType() {
-		if (type != null && type.eIsProxy()) {
-			InternalEObject oldType = (InternalEObject)type;
-			type = (Type)eResolveProxy(oldType);
-			if (type != oldType) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.TYPED_ELEMENT__TYPE, oldType, type));
-			}
-		}
-		return type;
+	public Expression getArray() {
+		return array;
 	}
 
 	/**
@@ -105,41 +95,11 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Type basicGetType() {
-		return type;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setType(Type newType) {
-		Type oldType = type;
-		type = newType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.TYPED_ELEMENT__TYPE, oldType, type));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Expression getCardinality() {
-		return cardinality;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetCardinality(Expression newCardinality, NotificationChain msgs) {
-		Expression oldCardinality = cardinality;
-		cardinality = newCardinality;
+	public NotificationChain basicSetArray(Expression newArray, NotificationChain msgs) {
+		Expression oldArray = array;
+		array = newArray;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.TYPED_ELEMENT__CARDINALITY, oldCardinality, newCardinality);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.ARRAY_INDEX__ARRAY, oldArray, newArray);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -150,18 +110,61 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setCardinality(Expression newCardinality) {
-		if (newCardinality != cardinality) {
+	public void setArray(Expression newArray) {
+		if (newArray != array) {
 			NotificationChain msgs = null;
-			if (cardinality != null)
-				msgs = ((InternalEObject)cardinality).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.TYPED_ELEMENT__CARDINALITY, null, msgs);
-			if (newCardinality != null)
-				msgs = ((InternalEObject)newCardinality).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.TYPED_ELEMENT__CARDINALITY, null, msgs);
-			msgs = basicSetCardinality(newCardinality, msgs);
+			if (array != null)
+				msgs = ((InternalEObject)array).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.ARRAY_INDEX__ARRAY, null, msgs);
+			if (newArray != null)
+				msgs = ((InternalEObject)newArray).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.ARRAY_INDEX__ARRAY, null, msgs);
+			msgs = basicSetArray(newArray, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.TYPED_ELEMENT__CARDINALITY, newCardinality, newCardinality));
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.ARRAY_INDEX__ARRAY, newArray, newArray));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Expression getIndex() {
+		return index;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetIndex(Expression newIndex, NotificationChain msgs) {
+		Expression oldIndex = index;
+		index = newIndex;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.ARRAY_INDEX__INDEX, oldIndex, newIndex);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setIndex(Expression newIndex) {
+		if (newIndex != index) {
+			NotificationChain msgs = null;
+			if (index != null)
+				msgs = ((InternalEObject)index).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.ARRAY_INDEX__INDEX, null, msgs);
+			if (newIndex != null)
+				msgs = ((InternalEObject)newIndex).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.ARRAY_INDEX__INDEX, null, msgs);
+			msgs = basicSetIndex(newIndex, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.ARRAY_INDEX__INDEX, newIndex, newIndex));
 	}
 
 	/**
@@ -172,8 +175,10 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
-				return basicSetCardinality(null, msgs);
+			case ThingmlPackage.ARRAY_INDEX__ARRAY:
+				return basicSetArray(null, msgs);
+			case ThingmlPackage.ARRAY_INDEX__INDEX:
+				return basicSetIndex(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -186,11 +191,10 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.TYPED_ELEMENT__TYPE:
-				if (resolve) return getType();
-				return basicGetType();
-			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
-				return getCardinality();
+			case ThingmlPackage.ARRAY_INDEX__ARRAY:
+				return getArray();
+			case ThingmlPackage.ARRAY_INDEX__INDEX:
+				return getIndex();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -203,11 +207,11 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.TYPED_ELEMENT__TYPE:
-				setType((Type)newValue);
+			case ThingmlPackage.ARRAY_INDEX__ARRAY:
+				setArray((Expression)newValue);
 				return;
-			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
-				setCardinality((Expression)newValue);
+			case ThingmlPackage.ARRAY_INDEX__INDEX:
+				setIndex((Expression)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -221,11 +225,11 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.TYPED_ELEMENT__TYPE:
-				setType((Type)null);
+			case ThingmlPackage.ARRAY_INDEX__ARRAY:
+				setArray((Expression)null);
 				return;
-			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
-				setCardinality((Expression)null);
+			case ThingmlPackage.ARRAY_INDEX__INDEX:
+				setIndex((Expression)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -239,12 +243,12 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.TYPED_ELEMENT__TYPE:
-				return type != null;
-			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
-				return cardinality != null;
+			case ThingmlPackage.ARRAY_INDEX__ARRAY:
+				return array != null;
+			case ThingmlPackage.ARRAY_INDEX__INDEX:
+				return index != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //TypedElementImpl
+} //ArrayIndexImpl

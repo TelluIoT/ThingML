@@ -22,9 +22,9 @@ public class ThingmlPropertySheetPage extends org.eclipse.ui.views.properties.Pr
 	}
 	
 	public void selectionChanged(org.eclipse.ui.IWorkbenchPart part, org.eclipse.jface.viewers.ISelection iSelection) {
-		// this is a workaround for a bug in EMF see
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=291301unfortunately Ed Merks
-		// refuses to fix it, so we need to solve it here
+		// This is a workaround for a bug in EMF (see
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=291301).Unfortunately Ed Merks
+		// refuses to fix it, so we need to solve it here.
 		if (iSelection instanceof org.sintef.thingml.resource.thingml.ui.ThingmlEObjectSelection) {
 			final org.sintef.thingml.resource.thingml.ui.ThingmlEObjectSelection selection = (org.sintef.thingml.resource.thingml.ui.ThingmlEObjectSelection) iSelection;
 			final org.eclipse.emf.ecore.EObject selectedObject = selection.getSelectedObject();

@@ -37,6 +37,7 @@
     <genClasses image="false" ecoreClass="thingml.ecore#//Type"/>
     <genClasses image="false" ecoreClass="thingml.ecore#//TypedElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//TypedElement/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//TypedElement/cardinality"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Property">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Property/init"/>
@@ -176,6 +177,10 @@
     <genClasses ecoreClass="thingml.ecore#//ConditionalAction"/>
     <genClasses ecoreClass="thingml.ecore#//PropertyReference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//PropertyReference/property"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//ArrayIndex">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ArrayIndex/array"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ArrayIndex/index"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//DictionaryReference">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//DictionaryReference/index"/>

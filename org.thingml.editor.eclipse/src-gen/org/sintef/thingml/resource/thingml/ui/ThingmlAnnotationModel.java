@@ -15,7 +15,7 @@
  */
 package org.sintef.thingml.resource.thingml.ui;
 
-public class ThingmlAnnotationModel extends org.eclipse.ui.texteditor.ResourceMarkerAnnotationModel implements org.eclipse.jface.text.source.IAnnotationModel {
+public class ThingmlAnnotationModel extends org.eclipse.ui.texteditor.ResourceMarkerAnnotationModel {
 	
 	public ThingmlAnnotationModel(org.eclipse.core.resources.IResource resource) {
 		super(resource);

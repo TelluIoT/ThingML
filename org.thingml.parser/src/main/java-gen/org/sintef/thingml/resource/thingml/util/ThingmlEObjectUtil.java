@@ -88,4 +88,16 @@ public class ThingmlEObjectUtil {
 		}
 	}
 	
+	/**
+	 * Returns the depth of the given element in the containment tree
+	 */
+	public static int getDepth(org.eclipse.emf.ecore.EObject current) {
+		org.eclipse.emf.ecore.EObject parent = current.eContainer();
+		if (parent == null) {
+			return 0;
+		} else {
+			return getDepth(parent) + 1;
+		}
+	}
+	
 }

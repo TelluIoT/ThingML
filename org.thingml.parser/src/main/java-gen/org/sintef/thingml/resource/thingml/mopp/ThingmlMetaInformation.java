@@ -105,4 +105,8 @@ public class ThingmlMetaInformation implements org.sintef.thingml.resource.thing
 		return getSyntaxName() + "_" + "RESOURCE_POSTPROCESSOR_PROVIDER";
 	}
 	
+	public String getLaunchConfigurationType() {
+		return "org.sintef.thingml.resource.thingml.ui.launchConfigurationType";
+	}
+	
 }
