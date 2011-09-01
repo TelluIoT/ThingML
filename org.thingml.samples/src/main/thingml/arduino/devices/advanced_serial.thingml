@@ -36,9 +36,9 @@ thing fragment IsDigit includes IsDigitMsgs
 
 thing AdvancedSerial includes IsDigitMsgs, AdvancedSerialMsgs, ArduinoStdlibMsgs, ThingMLScheduler
 {
-    readonly property bufferSize : UInt8 = 20
+    readonly property buffer_size : UInt8 = 20 // Not supported yet.
 	//property buffer : String = '(char *) malloc (' & bufferSize & '* sizeof (char))'
-    property buffer : String = '(char *) malloc (20 * sizeof (char))'
+    property buffer : String = '(char *) malloc (20 * sizeof (char))' // Temporary solution.
     property index : UInt8 = 0
     
 	required port Serial 

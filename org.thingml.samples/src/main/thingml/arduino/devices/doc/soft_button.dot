@@ -1,0 +1,20 @@
+//To create PNG: dot -Tpng led.dot > led.png
+
+digraph g {
+
+	graph [ rankdir = "LR"];
+	
+	node [ fontsize = "12" shape = "point"];
+	edge [];
+	
+	// Definition of the group
+	"Component" [
+	label = "<f0> SoftButton | <f1> soft_button.long_delay:UInt16 [Optional](1000) \n soft_button.double_delay:UInt16 [Optional](250)"
+	shape = "record"
+	];
+
+	// Definition of one port
+	"PP1" [label = "" shape = "plaintext"];
+	"Component" -> "PP1" [label = "soft_button.SoftButton" fontsize = "10" arrowhead = "odot"];
+
+}
