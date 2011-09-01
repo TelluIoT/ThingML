@@ -22,8 +22,37 @@ package org.sintef.thingml.resource.thingml.ui;
 public class ThingmlSyntaxColoringPreferencePage extends org.eclipse.jface.preference.PreferencePage implements org.eclipse.ui.IWorkbenchPreferencePage {
 	
 	private final static org.sintef.thingml.resource.thingml.ui.ThingmlAntlrTokenHelper tokenHelper = new org.sintef.thingml.resource.thingml.ui.ThingmlAntlrTokenHelper();
-	private static final java.util.Map<String, java.util.List<HighlightingColorListItem>> content = new java.util.LinkedHashMap<String, java.util.List<HighlightingColorListItem>>();
-	private static final java.util.Collection<IChangedPreference> changedPreferences = new java.util.ArrayList<IChangedPreference>();
+	private final static java.util.Map<String, java.util.List<HighlightingColorListItem>> content = new java.util.LinkedHashMap<String, java.util.List<HighlightingColorListItem>>();
+	private final static java.util.Collection<IChangedPreference> changedPreferences = new java.util.ArrayList<IChangedPreference>();
+	
+	public ThingmlSyntaxColoringPreferencePage() {
+		super();
+		
+		org.sintef.thingml.resource.thingml.IThingmlMetaInformation syntaxPlugin = new org.sintef.thingml.resource.thingml.mopp.ThingmlMetaInformation();
+		
+		String languageId = syntaxPlugin.getSyntaxName();
+		
+		java.util.List<HighlightingColorListItem> terminals = new java.util.ArrayList<HighlightingColorListItem>();
+		String[] tokenNames = syntaxPlugin.getTokenNames();
+		
+		for (int i = 0; i < tokenNames.length; i++) {
+			if (!tokenHelper.canBeUsedForSyntaxHighlighting(i)) {
+				continue;
+			}
+			
+			String tokenName = tokenHelper.getTokenName(tokenNames, i);
+			if (tokenName == null) {
+				continue;
+			}
+			HighlightingColorListItem item = new HighlightingColorListItem(languageId, tokenName);
+			terminals.add(item);
+		}
+		java.util.Collections.sort(terminals);
+		content.put(languageId, terminals);
+		
+		setPreferenceStore(org.sintef.thingml.resource.thingml.ui.ThingmlUIPlugin.getDefault().getPreferenceStore());
+		setDescription("Configure syntax coloring for ." + languageId + " files.");
+	}
 	
 	private interface IChangedPreference {
 		public void apply(org.eclipse.jface.preference.IPreferenceStore store);
@@ -526,35 +555,6 @@ public class ThingmlSyntaxColoringPreferencePage extends org.eclipse.jface.prefe
 		return (HighlightingColorListItem) element;
 	}
 	
-	public ThingmlSyntaxColoringPreferencePage() {
-		super();
-		
-		org.sintef.thingml.resource.thingml.IThingmlMetaInformation syntaxPlugin = new org.sintef.thingml.resource.thingml.mopp.ThingmlMetaInformation();
-		
-		String languageId = syntaxPlugin.getSyntaxName();
-		
-		java.util.List<HighlightingColorListItem> terminals = new java.util.ArrayList<HighlightingColorListItem>();
-		String[] tokenNames = syntaxPlugin.getTokenNames();
-		
-		for (int i = 0; i < tokenNames.length; i++) {
-			if (!tokenHelper.canBeUsedForSyntaxHighlighting(i)) {
-				continue;
-			}
-			
-			String tokenName = tokenHelper.getTokenName(tokenNames, i);
-			if (tokenName == null) {
-				continue;
-			}
-			HighlightingColorListItem item = new HighlightingColorListItem(languageId, tokenName);
-			terminals.add(item);
-		}
-		java.util.Collections.sort(terminals);
-		content.put(languageId, terminals);
-		
-		setPreferenceStore(org.sintef.thingml.resource.thingml.ui.ThingmlUIPlugin.getDefault().getPreferenceStore());
-		setDescription("Configure syntax coloring for ." + languageId + " files.");
-	}
-	
 	public void init(org.eclipse.ui.IWorkbench workbench) {
 	}
 	
@@ -624,4 +624,5 @@ public class ThingmlSyntaxColoringPreferencePage extends org.eclipse.jface.prefe
 			emfTextEditor.invalidateTextRepresentation();
 		}
 	}
+	
 }

@@ -573,6 +573,13 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.ARRAY_INDEX: {
+				ArrayIndex arrayIndex = (ArrayIndex)theEObject;
+				T result = caseArrayIndex(arrayIndex);
+				if (result == null) result = caseExpression(arrayIndex);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ThingmlPackage.DICTIONARY_REFERENCE: {
 				DictionaryReference dictionaryReference = (DictionaryReference)theEObject;
 				T result = caseDictionaryReference(dictionaryReference);
@@ -1619,6 +1626,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T casePropertyReference(PropertyReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Array Index</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Array Index</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseArrayIndex(ArrayIndex object) {
 		return null;
 	}
 

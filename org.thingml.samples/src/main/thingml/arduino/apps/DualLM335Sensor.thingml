@@ -38,11 +38,11 @@ thing DualLM335 includes LcdScreenMsgs, AnalogInputMsgs
                 temp1 = (temp1 + 1) / 2
                 // Update Display
                 LcdScreen!clear()
-                LcdScreen!print_string ("T1 = ")
+                LcdScreen!print_string ("  IN = ")
                 LcdScreen!print_value (temp1)
                 LcdScreen!print_string (" C")
                 LcdScreen!set_cursor (0, 1)
-                LcdScreen!print_string ("T2 = ")
+                LcdScreen!print_string (" OUT = ")
                 LcdScreen!print_value (temp2)
                 LcdScreen!print_string (" C")
             end

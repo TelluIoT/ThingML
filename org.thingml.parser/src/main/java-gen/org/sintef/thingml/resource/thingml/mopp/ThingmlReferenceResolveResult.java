@@ -82,7 +82,7 @@ public class ThingmlReferenceResolveResult<ReferenceType> implements org.sintef.
 	
 	public void addMapping(String identifier, ReferenceType target, String warning) {
 		if (mappings == null) {
-			mappings = new java.util.ArrayList<org.sintef.thingml.resource.thingml.IThingmlReferenceMapping<ReferenceType>>();
+			mappings = new java.util.ArrayList<org.sintef.thingml.resource.thingml.IThingmlReferenceMapping<ReferenceType>>(1);
 		}
 		mappings.add(new org.sintef.thingml.resource.thingml.mopp.ThingmlElementMapping<ReferenceType>(identifier, target, warning));
 		errorMessage = null;
@@ -94,7 +94,7 @@ public class ThingmlReferenceResolveResult<ReferenceType> implements org.sintef.
 	
 	public void addMapping(String identifier, org.eclipse.emf.common.util.URI uri, String warning) {
 		if (mappings == null) {
-			mappings = new java.util.ArrayList<org.sintef.thingml.resource.thingml.IThingmlReferenceMapping<ReferenceType>>();
+			mappings = new java.util.ArrayList<org.sintef.thingml.resource.thingml.IThingmlReferenceMapping<ReferenceType>>(1);
 		}
 		mappings.add(new org.sintef.thingml.resource.thingml.mopp.ThingmlURIMapping<ReferenceType>(identifier, uri, warning));
 	}

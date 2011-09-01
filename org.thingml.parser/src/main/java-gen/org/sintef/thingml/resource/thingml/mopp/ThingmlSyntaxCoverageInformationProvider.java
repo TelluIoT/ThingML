@@ -75,6 +75,7 @@ public class ThingmlSyntaxCoverageInformationProvider {
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getStringLiteral(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getBooleanLiteral(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getEnumLiteralRef(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(),
 		};

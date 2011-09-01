@@ -46,6 +46,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="Type" abstract="true" eSuperTypes="#//AnnotatedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="TypedElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//Type"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cardinality" eType="#//Expression"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Property" eSuperTypes="#//Variable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="init" eType="#//Expression"
@@ -234,6 +236,12 @@
   <eClassifiers xsi:type="ecore:EClass" name="PropertyReference" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="property" lowerBound="1"
         eType="#//Variable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ArrayIndex" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="array" lowerBound="1" eType="#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="index" lowerBound="1" eType="#//Expression"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DictionaryReference" eSuperTypes="#//PropertyReference">
     <eStructuralFeatures xsi:type="ecore:EReference" name="index" lowerBound="1" eType="#//Expression"

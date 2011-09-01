@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.sintef.thingml.TypedElement#getType <em>Type</em>}</li>
+ *   <li>{@link org.sintef.thingml.TypedElement#getCardinality <em>Cardinality</em>}</li>
  * </ul>
  * </p>
  *
@@ -59,5 +60,31 @@ public interface TypedElement extends EObject {
 	 * @generated
 	 */
 	void setType(Type value);
+
+	/**
+	 * Returns the value of the '<em><b>Cardinality</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Cardinality</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Cardinality</em>' containment reference.
+	 * @see #setCardinality(Expression)
+	 * @see org.sintef.thingml.ThingmlPackage#getTypedElement_Cardinality()
+	 * @model containment="true"
+	 * @generated
+	 */
+	Expression getCardinality();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.TypedElement#getCardinality <em>Cardinality</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Cardinality</em>' containment reference.
+	 * @see #getCardinality()
+	 * @generated
+	 */
+	void setCardinality(Expression value);
 
 } // TypedElement

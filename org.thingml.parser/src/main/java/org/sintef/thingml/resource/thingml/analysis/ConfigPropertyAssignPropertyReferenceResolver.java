@@ -27,14 +27,17 @@ public class ConfigPropertyAssignPropertyReferenceResolver implements org.sintef
 	
 	public void resolve(String identifier, org.sintef.thingml.ConfigPropertyAssign container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Property> result) {
 		Thing s = container.getInstance().getInstance().getType();
+		/*
 		if (s == null) {
 			s = ThingMLHelpers.findContainingInstance(container).getType();
 		}
-		ArrayList<Property> ps = ThingMLHelpers.findProperty(s, identifier, resolveFuzzy);
-		for(Property p : ps) {
-			result.addMapping(p.getName(), p);
+		*/
+		if (s != null) {
+			ArrayList<Property> ps = ThingMLHelpers.findProperty(s, identifier, resolveFuzzy);
+			for(Property p : ps) {
+				result.addMapping(p.getName(), p);
+			}
 		}
-		
 		if (!result.wasResolved())
 			result.setErrorMessage("Cannot resolve property " + identifier);
 	}

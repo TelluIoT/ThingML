@@ -116,6 +116,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.LOOP_ACTION: return createLoopAction();
 			case ThingmlPackage.CONDITIONAL_ACTION: return createConditionalAction();
 			case ThingmlPackage.PROPERTY_REFERENCE: return createPropertyReference();
+			case ThingmlPackage.ARRAY_INDEX: return createArrayIndex();
 			case ThingmlPackage.DICTIONARY_REFERENCE: return createDictionaryReference();
 			case ThingmlPackage.EXPRESSION_GROUP: return createExpressionGroup();
 			case ThingmlPackage.RETURN_ACTION: return createReturnAction();
@@ -603,6 +604,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public PropertyReference createPropertyReference() {
 		PropertyReferenceImpl propertyReference = new PropertyReferenceImpl();
 		return propertyReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ArrayIndex createArrayIndex() {
+		ArrayIndexImpl arrayIndex = new ArrayIndexImpl();
+		return arrayIndex;
 	}
 
 	/**

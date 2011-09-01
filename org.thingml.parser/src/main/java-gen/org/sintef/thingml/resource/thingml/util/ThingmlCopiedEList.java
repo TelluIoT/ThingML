@@ -17,7 +17,6 @@ package org.sintef.thingml.resource.thingml.util;
 
 public class ThingmlCopiedEList<E> implements org.eclipse.emf.common.util.EList<E> {
 	
-	private static final long serialVersionUID = 604726114003869602L;
 	private org.eclipse.emf.common.util.EList<E> original;
 	private org.eclipse.emf.common.util.EList<E> copy;
 	

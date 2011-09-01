@@ -96,8 +96,9 @@ public class ThingmlOccurrence {
 			if (candidate.eIsProxy()) {
 				candidate = getResolvedEObject(candidate);
 			}
-			// take an element that is actually contained in a resource. the location map
-			// might reference elements that were removed by a post processor
+			// Only accept elements that are actually contained in a resource. The location
+			// map might reference elements that were removed by a post processor and which
+			// are therefore not part of the resource anymore.
 			if (candidate.eResource() != null) {
 				return candidate;
 			}

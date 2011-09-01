@@ -74,4 +74,5 @@ public class ThingmlEObjectSelection implements org.eclipse.jface.viewers.IStruc
 		list.add(selectedObject);
 		return list;
 	}
+	
 }
