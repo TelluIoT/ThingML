@@ -18,6 +18,8 @@ import "../../bricks/temperature_sensor.thingml"
 import "../../bricks/light_sensor.thingml"
 import "../../bricks/sound_sensor.thingml"
 
+import "../../bricks/electricity_meter.thingml" //tmp
+
 thing fragment SimpleSensorDisplay includes LcdScreenMsgs
 {
 	required port LcdScreen
@@ -129,42 +131,63 @@ thing SimpleSoundSensorDisplay includes SimpleSensorDisplay, SoundSensorMsgs
 	}
 }
 
+thing SimpleTest includes SimpleSensorDisplay, ElectricityMeterMsgs
+{
+	required port Elc
+	{
+		receives electricity_value
+	}
+	
+	statechart SimpleSoundSensorDisplayImpl init Running
+	{
+		on entry LcdScreen!print_string ("Electricity:")
+		
+		state Running
+		{
+			on entry LcdScreen!set_cursor (0, 1)
+
+			transition refresh -> Running
+			event m : Elc?electricity_value
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ")
+                end
+		}
+	}
+}
+
 configuration SimpleSensorDisplay
 {
-    group rotation_sensor : RotationSensor
-        set rotation_sensor.io.analog_input.pin = AnalogPin:A_4
-        
-    group temperature_sensor : TemperatureSensor
-        set temperature_sensor.io.analog_input.pin = AnalogPin:A_4
-        
-    group light_sensor : LightSensor
-        set light_sensor.io.analog_input.pin = AnalogPin:A_4
-        set light_sensor.io.analog_input.value_precision = 3
-        
-    group sound_sensor : SoundSensor
-        set sound_sensor.io.analog_input.pin = AnalogPin:A_4
-        set sound_sensor.sound_sensor.sample_rate = 500
- 
     instance lcd_screen : LcdScreen
        
-    //* Uncomment only the lines which refer to the sensor you want use. *//
+//* Uncomment only the lines which refer to the sensor you want use. *//
     
 //     // * Rotation sensor *
+//     group rotation_sensor : RotationSensor
+//         set rotation_sensor.io.analog_input.pin = AnalogPin:A_4
 //     instance rot_sensor_display : SimpleRotSensorDisplay
 //     connector rot_sensor_display.RotationSensor => rotation_sensor.rotation_sensor.RotationSensor
 //  	connector rot_sensor_display.LcdScreen => lcd_screen.LcdScreen
     
 //     // * Temperature sensor *
+//     group temperature_sensor : TemperatureSensor
+//         set temperature_sensor.io.analog_input.pin = AnalogPin:A_4
 // 	instance temp_sensor_display : SimpleTempSensorDisplay
 //     connector temp_sensor_display.TempSensor => temperature_sensor.temperature_sensor.TemperatureSensor
 // 	connector temp_sensor_display.LcdScreen => lcd_screen.LcdScreen
 
 //     // * Light sensor *
+//     group light_sensor : LightSensor
+//         set light_sensor.io.analog_input.pin = AnalogPin:A_4
+//         set light_sensor.io.analog_input.value_precision = 3
 // 	instance light_sensor_display : SimpleLightSensorDisplay
 //     connector light_sensor_display.LightSensor => light_sensor.light_sensor.LightSensor
 // 	connector light_sensor_display.LcdScreen => lcd_screen.LcdScreen
 
     // * Sound  sensor *
+    group sound_sensor : SoundSensor
+        set sound_sensor.io.analog_input.pin = AnalogPin:A_4
+        set sound_sensor.sound_sensor.sample_rate = 500
 	instance sound_sensor_display : SimpleSoundSensorDisplay
     connector sound_sensor_display.SoundSensor => sound_sensor.sound_sensor.SoundSensor
     connector sound_sensor_display.LcdScreen => lcd_screen.LcdScreen
