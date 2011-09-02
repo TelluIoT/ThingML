@@ -1,20 +1,22 @@
-import "../../bricks/lcd_screen.thingml"
-import "../../bricks/rotation_sensor.thingml"
-import "../../bricks/temperature_sensor.thingml"
-import "../../bricks/light_sensor.thingml"
-import "../../bricks/sound_sensor.thingml"
-
 //*
+// Fabien Fleurey - 20/08/2011
+//
 // This is an example of ThingML use to generate Arduino code which uses 
 // Electronic Brick components.
 //  
 // Requirements:
-//      - Lcd screen 1602 (1) -> Default pins (PIN_10, PIN_11, PIN_12, PIN_13, A_0, A_1, A_2)
+//      - Lcd screen 1602 (1) -> Default pins (D_10, D_11, D_12, D_13, A_0, A_1, A_2)
 //      - Sound sensor (1) or Light Sensor (1) or Rotation sensor (1) or Temperature sensor (1) ->  Default pin: A_4 
 //
 // The screen displays the value of the sensor of your choice.
 // Keep in mind that in this example, you have to use only one sensor at the time.
 //*
+
+import "../../bricks/lcd_screen.thingml"
+import "../../bricks/rotation_sensor.thingml"
+import "../../bricks/temperature_sensor.thingml"
+import "../../bricks/light_sensor.thingml"
+import "../../bricks/sound_sensor.thingml"
 
 thing fragment SimpleSensorDisplay includes LcdScreenMsgs
 {

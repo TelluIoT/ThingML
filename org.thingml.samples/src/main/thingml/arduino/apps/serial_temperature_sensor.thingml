@@ -1,18 +1,25 @@
+//*
+// Fabien Fleurey - 25/08/2011
+//
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+// 		- Temperature sensor (1)  ->  Default pin: A_4
+//
+// This application provides an example of interface between the temperature sensor and the 
+// serial port. 
+//*
+
 import "../devices/advanced_serial.thingml"
 import "../devices/value_chooser.thingml"
 import "../devices/soft_temperature_sensor.thingml"
-import "../bricks/led.thingml"
 
-thing SerialTempSensor includes AdvancedSerialMsgs, LedMsgs, SoftTemperatureSensorMsgs, ValueChooserMsgs 
+thing SerialTempSensor includes AdvancedSerialMsgs, SoftTemperatureSensorMsgs, ValueChooserMsgs 
 {
     property low_temp_alarm : Int16
     property high_temp_alarm : Int16
-    
-    required port Led
-    {
-        sends led_toggle
-    }
-    
+       
     required port AdvSerial 
     {
 		receives receive_byte 
@@ -175,15 +182,12 @@ configuration SerialTempSensor
 {
     group adv_serial : AdvancedSerial
     group soft_temp_sensor : SoftTemperatureSensor
-        set soft_temp_sensor.temperature_sensor.io.analog_input.pin = AnalogPin:A_4
-    group led : Led
-        set led.io.digital_output.pin = DigitalPin:PIN_8    
+        set soft_temp_sensor.temperature_sensor.io.analog_input.pin = AnalogPin:A_4  
     group serial_value_chooser : SerialValueChooser
 
     // Application configuration.
 	instance serial_temp_sensor : SerialTempSensor
 	connector serial_temp_sensor.AdvSerial => adv_serial.advanced_serial.AdvancedSerial
-    connector serial_temp_sensor.Led => led.led.Led
     connector serial_temp_sensor.TempSensor => soft_temp_sensor.soft_temperature_sensor.SoftTemperatureSensor
     connector serial_temp_sensor.TempAlarms => soft_temp_sensor.soft_temperature_sensor.SoftTemperatureSensorAlarms
     connector serial_temp_sensor.ValueChooser => serial_value_chooser.value_chooser.ValueChooser

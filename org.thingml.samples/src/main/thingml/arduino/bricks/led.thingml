@@ -1,4 +1,10 @@
-import "../core/arduino.thingml"
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the LED. 
+//*
+
 import "../core/digital_output.thingml"
 
 thing fragment LedMsgs

@@ -1,4 +1,10 @@
-import "../core/arduino.thingml"
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the tilt switch. 
+//*
+
 import "../core/digital_input.thingml"
 
 thing fragment TiltSwitchMsgs

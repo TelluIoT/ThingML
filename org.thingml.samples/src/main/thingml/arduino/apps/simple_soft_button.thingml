@@ -1,9 +1,27 @@
+//*
+// Fabien Fleurey - 25/08/2011
+//
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+// 		- Button (1)  ->  Default pin: D_9
+// 		- LED (1)  ->  Default pin: D_8
+//
+// This is an example of use of soft button device. The LED turn in the opposite position
+// when the button is simply pressed, blink fast after a double click and blink slow if a 
+// long press is detected.
+//*
+
 import "../bricks/led.thingml"
 import "../core/arduino_timer.thingml"
 import "../devices/soft_button.thingml"
 
 thing SimpleSoftButton includes LedMsgs, TimerMsgs, SoftButtonMsgs 
 {
+    readonly property blink_fast_delay : UInt16 = 150
+    readonly property blink_slow_delay : UInt16 = 1000
+    
     required port SoftButton 
     {
 		receives click, double_click, long_press
@@ -42,7 +60,7 @@ thing SimpleSoftButton includes LedMsgs, TimerMsgs, SoftButtonMsgs
 	        
 	        state BlinkFast
             {
-	        	on entry Timer!timer_start (150)
+	        	on entry Timer!timer_start (blink_fast_delay)
 	        	
 	        	transition -> BlinkFast
 	        	event Timer?timer_timeout
@@ -55,7 +73,7 @@ thing SimpleSoftButton includes LedMsgs, TimerMsgs, SoftButtonMsgs
         
         state BlinkSlow 
         {
-        	on entry Timer!timer_start (1000)
+        	on entry Timer!timer_start (blink_slow_delay)
         	
         	transition -> BlinkSlow
 	       	event Timer?timer_timeout

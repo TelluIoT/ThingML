@@ -1,15 +1,17 @@
-import "../../core/arduino.thingml"
-import "../../bricks/lcd_screen.thingml"
-
 //*
+// Fabien Fleurey - 20/08/2011
+//
 // This is an example of ThingML use to generate Arduino code which uses 
 // Electronic Brick components.
 //  
 // Requirements:
-//      - lcd_screen 1602 (1)   -> Default pins (PIN_10, PIN_11, PIN_12, PIN_13, A_0, A_1, A_2)
+//      - lcd_screen 1602 (1)   -> Default pins (D_10, D_11, D_12, D_13, A_0, A_1, A_2)
 //
 // The screen diplays "Hello World"
 //*
+
+import "../../core/arduino.thingml"
+import "../../bricks/lcd_screen.thingml"
 
 thing SimpleScreen includes LcdScreenMsgs
 {

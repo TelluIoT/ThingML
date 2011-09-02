@@ -1,3 +1,11 @@
+//*
+// Fabien Fleurey - 20/08/2011
+// Core library.
+//
+// This file provides an interface with the Arduino core to use digital output. 
+// All more external things which use digital output should pass by this way.
+//*
+
 import "../core/arduino.thingml"
 
 thing fragment DigitalOutputMsgs 

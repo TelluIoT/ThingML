@@ -1,11 +1,26 @@
+//*
+// Fabien Fleurey - 25/08/2011
+//
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+//      - lcd_screen 1602 (1)  -> Default pins (D_10, D_11, D_12, D_13, A_0, A_1, A_2)
+//      - led (2)   		   ->  Default pin: D_8, D_9
+// 		- Temperature sensor (1)  ->  Default pin: A_4
+//
+// The LED connected in D_8 is turned on if the high temperature is reached, and the D_9
+// if the low temperature is reached.
+//*
+
 import "../devices/soft_temperature_sensor.thingml"
 import "../bricks/led.thingml"
 import "../bricks/lcd_screen.thingml"
 
 thing AdvTempSensor includes SoftTemperatureSensorMsgs, LedMsgs, LcdScreenMsgs
 {
-	property low_alarm : UInt8 = 24
-	property high_alarm : UInt8 = 28
+	readonly property low_alarm : UInt8 = 24
+	readonly property high_alarm : UInt8 = 28
 	
     required port LcdScreen
     {
@@ -24,12 +39,12 @@ thing AdvTempSensor includes SoftTemperatureSensorMsgs, LedMsgs, LcdScreenMsgs
 	    receives temperature
 	}
 	
-	required port RedLed
+	required port HighLed
 	{
 		sends led_on, led_off
 	}
 
-	required port GreenLed
+	required port LowLed
 	{
 		sends led_on, led_off
 	}
@@ -45,15 +60,15 @@ thing AdvTempSensor includes SoftTemperatureSensorMsgs, LedMsgs, LcdScreenMsgs
                 
 			internal event SoftTempSensorAlarms?no_alarm
 			action do
-				RedLed!led_off ()
-				GreenLed!led_off ()
+				HighLed!led_off ()
+				LowLed!led_off ()
 			end
 
 			internal event SoftTempSensorAlarms?high_temp_alarm
-			action RedLed!led_on ()
+			action HighLed!led_on ()
 			
 			internal event SoftTempSensorAlarms?low_temp_alarm
-			action GreenLed!led_on ()
+			action LowLed!led_on ()
 		}
 
         region display init Running
@@ -75,15 +90,11 @@ thing AdvTempSensor includes SoftTemperatureSensorMsgs, LedMsgs, LcdScreenMsgs
 }
 
 configuration AdvTempSensor
-@debug "true"
-@debug_message_send "high_temp_alarm"
-@debug_message_send "timer_start"
-@debug_message_send "activate_alarms"
 {
-	group red_led : Led
-	set red_led.io.digital_output.pin = DigitalPin:PIN_8
-	group green_led : Led
-	set green_led.io.digital_output.pin = DigitalPin:PIN_9
+	group high_led : Led
+	set high_led.io.digital_output.pin = DigitalPin:PIN_8
+	group low_led : Led
+	set low_led.io.digital_output.pin = DigitalPin:PIN_9
 
 	group soft_temp_sensor : SoftTemperatureSensor
 	set soft_temp_sensor.temperature_sensor.io.analog_input.pin = AnalogPin:A_4
@@ -93,7 +104,7 @@ configuration AdvTempSensor
 	instance adv_temp_sensor : AdvTempSensor
 	connector adv_temp_sensor.SoftTempSensor => soft_temp_sensor.soft_temperature_sensor.SoftTemperatureSensor
     connector adv_temp_sensor.SoftTempSensorAlarms => soft_temp_sensor.soft_temperature_sensor.SoftTemperatureSensorAlarms
-	connector adv_temp_sensor.GreenLed => green_led.led.Led
-	connector adv_temp_sensor.RedLed => red_led.led.Led
+	connector adv_temp_sensor.HighLed => high_led.led.Led
+	connector adv_temp_sensor.LowLed => low_led.led.Led
     connector adv_temp_sensor.LcdScreen => screen.LcdScreen
 }

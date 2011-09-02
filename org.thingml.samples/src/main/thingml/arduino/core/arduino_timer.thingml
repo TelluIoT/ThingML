@@ -3,37 +3,37 @@ import "../core/arduino.thingml"
 // Manage a set of software timers.
 thing SoftTimer includes Timer, ThingMLScheduler
 {
-	
-	required port Polling {
+	required port Polling 
+    {
 		receives poll
 	}
     
-    statechart SoftTimer init Idle {
-    
+    statechart SoftTimer init Idle 
+    {
         property target : Long = 0
     
-        state Idle {
+        state Idle 
+        {
             transition start -> Counting
-                event m : timer?timer_start
-                guard m.delay > 0
-                action target = 'millis()' + m.delay
+            event m : timer?timer_start
+            guard m.delay > 0
+            action target = 'millis()' + m.delay
         }
         
-        state Counting {
-            
+        state Counting 
+        {    
             transition timeout -> Idle 
-                event Polling?poll
-                guard not ('millis()' < target)
-                after timer!timer_timeout()
+            event Polling?poll
+            guard not ('millis()' < target)
+            after timer!timer_timeout()
                 
             transition cancel -> Idle
-                event m : timer?timer_cancel
+            event m : timer?timer_cancel
                 
             internal reset
-                event m : timer?timer_start
-                guard m.delay > 0
-                action target = 'millis()' + m.delay
-
+            event m : timer?timer_start
+            guard m.delay > 0
+            action target = 'millis()' + m.delay
         }
     }
 }
