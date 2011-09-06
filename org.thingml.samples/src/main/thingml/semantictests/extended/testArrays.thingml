@@ -41,7 +41,7 @@ thing TestArray includes Test
     }
 }
 
-configuration fragment TestArrayFrag {
+configuration fragment TestArrays {
     
     instance test : TestArray
     

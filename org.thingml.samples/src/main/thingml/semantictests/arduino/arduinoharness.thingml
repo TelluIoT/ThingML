@@ -1,15 +1,15 @@
 import "../testharness.thingml"
 import "../../arduino/core/arduino.thingml"
-import "../../arduino/devices/led.thingml"
+//import "../../arduino/devices/led.thingml"
 
-thing ArduinoHarness includes TestHarness, ThingMLScheduler, LEDMsgs {
+thing ArduinoHarness includes TestHarness, ThingMLScheduler /*, LEDMsgs */ {
 	
 	required port polling {
         receives poll
     }
     
     required port led {
-    	sends led_on
+  //  	sends led_on
     }
     
 	statechart ArduinoHarness init Testing {
@@ -32,16 +32,16 @@ thing ArduinoHarness includes TestHarness, ThingMLScheduler, LEDMsgs {
 		}
 		
 		state Failed {
-			on entry led!led_on()
+		//	on entry led!led_on()
 		}
 	}
 }
 
 configuration fragment ArduinoHarness {
 	instance arduino : Arduino
-	instance led : LED
-		set pin = DigitalPin:PIN_13 
-	connector led.DigitalIO => arduino.DigitalIO
+//	instance led : LED
+//		set pin = DigitalPin:PIN_13 
+//	connector led.DigitalIO => arduino.DigitalIO
 	instance harness : ArduinoHarness
-	connector harness.led => led.LED	
+//	connector harness.led => led.LED	
 }

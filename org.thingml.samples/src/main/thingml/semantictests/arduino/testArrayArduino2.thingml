@@ -1,0 +1,8 @@
+import "../extended/testArrays2.thingml"
+import "arduinoharness.thingml"
+
+configuration TestMaskProperty {
+	group test : TestArrays2
+	group harness : ArduinoHarness
+	connector test.test.harness => harness.harness.test 
+}

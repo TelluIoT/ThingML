@@ -220,6 +220,9 @@ object CGenerator {
   implicit def cGeneratorAspect(self: EnumerationLiteral): EnumerationLiteralCGenerator = EnumerationLiteralCGenerator(self)
 
   implicit def cGeneratorAspect(self: Variable): VariableCGenerator = VariableCGenerator(self)
+
+  implicit def cGeneratorAspect(self: Function): FunctionCGenerator = FunctionCGenerator(self)
+
  // implicit def cGeneratorAspect(self: Property): PropertyCGenerator = PropertyCGenerator(self)
 
   implicit def cGeneratorAspect(self: Type) = self match {
@@ -237,6 +240,9 @@ object CGenerator {
     case a: LoopAction => LoopActionCGenerator(a)
     case a: PrintAction => PrintActionCGenerator(a)
     case a: ErrorAction => ErrorActionCGenerator(a)
+    case a: ReturnAction => ReturnActionCGenerator(a)
+    case a: LocalVariable => LocalVariableActionCGenerator(a)
+    case a: FunctionCallStatement => FunctionCallStatementCGenerator(a)
     case _ => ActionCGenerator(self)
   }
 
@@ -261,6 +267,8 @@ object CGenerator {
     case exp: BooleanLiteral => BooleanLiteralCGenerator(exp)
     case exp: EnumLiteralRef => EnumLiteralRefCGenerator(exp)
     case exp: ExternExpression => ExternExpressionCGenerator(exp)
+    case exp: ArrayIndex => ArrayIndexCGenerator(exp)
+    case exp: FunctionCallExpression => FunctionCallExpressionCGenerator(exp)
     case _ => ExpressionCGenerator(self)
   }
 
@@ -785,9 +793,41 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
       }}
     }
   }
+}
+
+case class FunctionCGenerator(override val self: Function) extends ThingMLCGenerator(self) {
 
 
+  def c_name() = "f_" + self.qname("_")
 
+  def generateCforThing(builder: StringBuilder, context : CGeneratorContext, thing : Thing) {
+
+    // init state variables:
+    builder append "// Definition of function " + self.getName + "\n"
+
+    if (self.getType != null) {
+      builder append self.getType.c_type()
+      if (self.getCardinality != null) builder append "[]"
+    }
+    else builder append "void"
+
+    builder append " " + self.c_name + "("
+
+    builder append "struct " + thing.instance_struct_name + " *" + thing.instance_var_name
+
+    self.getParameters.foreach{ p =>
+      //if (p != self.getParameters.head)
+      builder append ", "
+      builder append p.getType.c_type()
+      if (p.getCardinality != null) builder append "[]"
+      builder append " " + p.getName
+    }
+    builder append ") {\n"
+
+    self.getBody.generateC(builder, context)
+
+    builder append  "}\n"
+  }
 }
 
 case class InstanceCGenerator(override val self: Instance) extends ThingMLCGenerator(self) {
@@ -867,6 +907,13 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
        builder append h
        builder append "\n// END: Code from the c_global annotation " + self.getName + "\n\n"
     }
+
+    builder append "// Declaration of functions:\n"
+    self.allFunctions.foreach{ f=>
+      f.generateCforThing(builder, context, self)
+      builder append "\n"
+    }
+    builder append "\n"
 
     builder append "// On Entry Actions:\n"
     generateEntryActions(builder, context)
@@ -1403,7 +1450,24 @@ case class SendActionCGenerator(override val self: SendAction) extends ActionCGe
 
 case class VariableAssignmentCGenerator(override val self: VariableAssignment) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
-    builder.append("_instance->" + self.getProperty.c_var_name)
+
+    self.getProperty match {
+      case p: Parameter => {
+         builder append  p.getName
+      }
+      case p : Property => {
+         builder.append("_instance->" + self.getProperty.qname("_") + "_var")
+      }
+      case v : LocalVariable => {
+         builder append  v.getName
+      }
+    }
+
+    self.getIndex.foreach{ idx =>
+      builder append "["
+      idx.generateC(builder, context)
+      builder append "]"
+    }
     builder append " = "
     self.getExpression.generateC(builder, context)
     builder append ";\n"
@@ -1465,6 +1529,45 @@ case class ErrorActionCGenerator(override val self: ErrorAction) extends ActionC
   }
 }
 
+case class ReturnActionCGenerator(override val self: ReturnAction) extends ActionCGenerator(self) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    builder append "return "
+    self.getExp.generateC(builder, context)
+    builder append ";\n"
+  }
+}
+
+case class LocalVariableActionCGenerator(override val self: LocalVariable) extends ActionCGenerator(self) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    builder append self.getType.c_type() + " " + self.getName
+    if (self.getCardinality != null) {
+      builder append "["
+      self.getCardinality.generateC(builder, context)
+      builder append "]"
+    }
+    if (self.getInit != null) {
+       builder append " = "
+       self.getInit.generateC(builder, context)
+    }
+    builder append ";\n"
+  }
+}
+
+case class FunctionCallStatementCGenerator(override val self: FunctionCallStatement) extends ActionCGenerator(self) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+
+    builder append self.getFunction.c_name
+
+    builder append "(_instance"
+    self.getParameters.foreach{ p =>
+      builder append ", "
+      p.generateC(builder, context)
+    }
+    builder append ");\n"
+  }
+}
+
+
 /**
  * Expression abstract classes
  */
@@ -1477,7 +1580,30 @@ case class ExpressionCGenerator(val self: Expression) /*extends ThingMLCGenerato
 
 /**
  * All Expression concrete classes
- */
+ */     //FunctionCallExpression
+
+case class ArrayIndexCGenerator(override val self: ArrayIndex) extends ExpressionCGenerator(self) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+    self.getArray.generateC(builder, context)
+    builder append "["
+    self.getIndex.generateC(builder, context)
+    builder append "]"
+  }
+}
+
+case class FunctionCallExpressionCGenerator(override val self: FunctionCallExpression) extends ExpressionCGenerator(self) {
+  override def generateC(builder: StringBuilder, context : CGeneratorContext) {
+
+    builder append self.getFunction.c_name
+
+    builder append "(_instance"
+    self.getParameters.foreach{ p =>
+      builder append ", "
+      p.generateC(builder, context)
+    }
+    builder append ")"
+  }
+}
 
 case class OrExpressionCGenerator(override val self: OrExpression) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
@@ -1589,7 +1715,17 @@ case class ExpressionGroupCGenerator(override val self: ExpressionGroup) extends
 
 case class PropertyReferenceCGenerator(override val self: PropertyReference) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
-    builder.append("_instance->" + self.getProperty.qname("_") + "_var")
+    self.getProperty match {
+      case p: Parameter => {
+         builder append  p.getName
+      }
+      case p : Property => {
+         builder.append("_instance->" + self.getProperty.qname("_") + "_var")
+      }
+      case v : LocalVariable => {
+         builder append  v.getName
+      }
+    }
   }
 }
 

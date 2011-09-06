@@ -2,6 +2,7 @@ import "../testharness.thingml"
 
 thing TestFunction includes Test 
 @test "11=22=888=999999999= # 2;4;24;81;"
+@test "55 55 55 55 55 55 55 55 55 55 55 01 = # 111;"
 {
     
     function sum(a : Int16, b : Int16) : Int16 do
@@ -26,7 +27,7 @@ thing TestFunction includes Test
     	return c - 48
     end
     
-    function intToChar(i : Int8) do
+    function intToChar(i : Int8) : Char do
     	if ( i > -1 and i < 10) return i + 48
     	return -1 // Error
     end
