@@ -15,6 +15,8 @@
  */
 package org.sintef.thingml;
 
+import org.eclipse.emf.common.util.EList;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -27,6 +29,7 @@ package org.sintef.thingml;
  *   <li>{@link org.sintef.thingml.ConfigPropertyAssign#getInit <em>Init</em>}</li>
  *   <li>{@link org.sintef.thingml.ConfigPropertyAssign#getProperty <em>Property</em>}</li>
  *   <li>{@link org.sintef.thingml.ConfigPropertyAssign#getInstance <em>Instance</em>}</li>
+ *   <li>{@link org.sintef.thingml.ConfigPropertyAssign#getIndex <em>Index</em>}</li>
  * </ul>
  * </p>
  *
@@ -112,5 +115,21 @@ public interface ConfigPropertyAssign extends AnnotatedElement {
 	 * @generated
 	 */
 	void setInstance(InstanceRef value);
+
+	/**
+	 * Returns the value of the '<em><b>Index</b></em>' containment reference list.
+	 * The list contents are of type {@link org.sintef.thingml.Expression}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Index</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Index</em>' containment reference list.
+	 * @see org.sintef.thingml.ThingmlPackage#getConfigPropertyAssign_Index()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Expression> getIndex();
 
 } // ConfigPropertyAssign

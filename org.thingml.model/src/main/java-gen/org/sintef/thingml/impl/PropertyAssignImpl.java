@@ -15,14 +15,18 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.PropertyAssign;
@@ -37,6 +41,7 @@ import org.sintef.thingml.ThingmlPackage;
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.PropertyAssignImpl#getInit <em>Init</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.PropertyAssignImpl#getProperty <em>Property</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.PropertyAssignImpl#getIndex <em>Index</em>}</li>
  * </ul>
  * </p>
  *
@@ -62,6 +67,16 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
 	 * @ordered
 	 */
 	protected Property property;
+
+	/**
+	 * The cached value of the '{@link #getIndex() <em>Index</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getIndex()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Expression> index;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -168,11 +183,25 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Expression> getIndex() {
+		if (index == null) {
+			index = new EObjectContainmentEList<Expression>(Expression.class, this, ThingmlPackage.PROPERTY_ASSIGN__INDEX);
+		}
+		return index;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ThingmlPackage.PROPERTY_ASSIGN__INIT:
 				return basicSetInit(null, msgs);
+			case ThingmlPackage.PROPERTY_ASSIGN__INDEX:
+				return ((InternalEList<?>)getIndex()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -190,6 +219,8 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
 			case ThingmlPackage.PROPERTY_ASSIGN__PROPERTY:
 				if (resolve) return getProperty();
 				return basicGetProperty();
+			case ThingmlPackage.PROPERTY_ASSIGN__INDEX:
+				return getIndex();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -199,6 +230,7 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -207,6 +239,10 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
 				return;
 			case ThingmlPackage.PROPERTY_ASSIGN__PROPERTY:
 				setProperty((Property)newValue);
+				return;
+			case ThingmlPackage.PROPERTY_ASSIGN__INDEX:
+				getIndex().clear();
+				getIndex().addAll((Collection<? extends Expression>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -226,6 +262,9 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
 			case ThingmlPackage.PROPERTY_ASSIGN__PROPERTY:
 				setProperty((Property)null);
 				return;
+			case ThingmlPackage.PROPERTY_ASSIGN__INDEX:
+				getIndex().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -242,6 +281,8 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
 				return init != null;
 			case ThingmlPackage.PROPERTY_ASSIGN__PROPERTY:
 				return property != null;
+			case ThingmlPackage.PROPERTY_ASSIGN__INDEX:
+				return index != null && !index.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

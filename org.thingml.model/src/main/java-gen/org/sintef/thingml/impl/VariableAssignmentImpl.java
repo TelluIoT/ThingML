@@ -15,14 +15,18 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Variable;
@@ -37,6 +41,7 @@ import org.sintef.thingml.VariableAssignment;
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.VariableAssignmentImpl#getProperty <em>Property</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.VariableAssignmentImpl#getExpression <em>Expression</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.VariableAssignmentImpl#getIndex <em>Index</em>}</li>
  * </ul>
  * </p>
  *
@@ -62,6 +67,16 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 	 * @ordered
 	 */
 	protected Expression expression;
+
+	/**
+	 * The cached value of the '{@link #getIndex() <em>Index</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getIndex()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Expression> index;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -168,11 +183,25 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Expression> getIndex() {
+		if (index == null) {
+			index = new EObjectContainmentEList<Expression>(Expression.class, this, ThingmlPackage.VARIABLE_ASSIGNMENT__INDEX);
+		}
+		return index;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION:
 				return basicSetExpression(null, msgs);
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__INDEX:
+				return ((InternalEList<?>)getIndex()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -190,6 +219,8 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 				return basicGetProperty();
 			case ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION:
 				return getExpression();
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__INDEX:
+				return getIndex();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -199,6 +230,7 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -207,6 +239,10 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 				return;
 			case ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION:
 				setExpression((Expression)newValue);
+				return;
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__INDEX:
+				getIndex().clear();
+				getIndex().addAll((Collection<? extends Expression>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -226,6 +262,9 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 			case ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION:
 				setExpression((Expression)null);
 				return;
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__INDEX:
+				getIndex().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -242,6 +281,8 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 				return property != null;
 			case ThingmlPackage.VARIABLE_ASSIGNMENT__EXPRESSION:
 				return expression != null;
+			case ThingmlPackage.VARIABLE_ASSIGNMENT__INDEX:
+				return index != null && !index.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

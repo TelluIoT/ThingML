@@ -15,14 +15,18 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.sintef.thingml.ConfigPropertyAssign;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.InstanceRef;
@@ -39,6 +43,7 @@ import org.sintef.thingml.ThingmlPackage;
  *   <li>{@link org.sintef.thingml.impl.ConfigPropertyAssignImpl#getInit <em>Init</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConfigPropertyAssignImpl#getProperty <em>Property</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConfigPropertyAssignImpl#getInstance <em>Instance</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ConfigPropertyAssignImpl#getIndex <em>Index</em>}</li>
  * </ul>
  * </p>
  *
@@ -74,6 +79,16 @@ public class ConfigPropertyAssignImpl extends AnnotatedElementImpl implements Co
 	 * @ordered
 	 */
 	protected InstanceRef instance;
+
+	/**
+	 * The cached value of the '{@link #getIndex() <em>Index</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getIndex()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Expression> index;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -223,6 +238,18 @@ public class ConfigPropertyAssignImpl extends AnnotatedElementImpl implements Co
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Expression> getIndex() {
+		if (index == null) {
+			index = new EObjectContainmentEList<Expression>(Expression.class, this, ThingmlPackage.CONFIG_PROPERTY_ASSIGN__INDEX);
+		}
+		return index;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -230,6 +257,8 @@ public class ConfigPropertyAssignImpl extends AnnotatedElementImpl implements Co
 				return basicSetInit(null, msgs);
 			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE:
 				return basicSetInstance(null, msgs);
+			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN__INDEX:
+				return ((InternalEList<?>)getIndex()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -249,6 +278,8 @@ public class ConfigPropertyAssignImpl extends AnnotatedElementImpl implements Co
 				return basicGetProperty();
 			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE:
 				return getInstance();
+			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN__INDEX:
+				return getIndex();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -258,6 +289,7 @@ public class ConfigPropertyAssignImpl extends AnnotatedElementImpl implements Co
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -269,6 +301,10 @@ public class ConfigPropertyAssignImpl extends AnnotatedElementImpl implements Co
 				return;
 			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE:
 				setInstance((InstanceRef)newValue);
+				return;
+			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN__INDEX:
+				getIndex().clear();
+				getIndex().addAll((Collection<? extends Expression>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -291,6 +327,9 @@ public class ConfigPropertyAssignImpl extends AnnotatedElementImpl implements Co
 			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE:
 				setInstance((InstanceRef)null);
 				return;
+			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN__INDEX:
+				getIndex().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -309,6 +348,8 @@ public class ConfigPropertyAssignImpl extends AnnotatedElementImpl implements Co
 				return property != null;
 			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE:
 				return instance != null;
+			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN__INDEX:
+				return index != null && !index.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

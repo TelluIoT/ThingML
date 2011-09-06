@@ -1010,6 +1010,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getPropertyAssign_Index() {
+		return (EReference)propertyAssignEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getPlatformAnnotation() {
 		return platformAnnotationEClass;
 	}
@@ -1462,6 +1471,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EReference getVariableAssignment_Expression() {
 		return (EReference)variableAssignmentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getVariableAssignment_Index() {
+		return (EReference)variableAssignmentEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2216,6 +2234,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getConfigPropertyAssign_Index() {
+		return (EReference)configPropertyAssignEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getConfigInclude() {
 		return configIncludeEClass;
 	}
@@ -2398,6 +2425,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		propertyAssignEClass = createEClass(PROPERTY_ASSIGN);
 		createEReference(propertyAssignEClass, PROPERTY_ASSIGN__INIT);
 		createEReference(propertyAssignEClass, PROPERTY_ASSIGN__PROPERTY);
+		createEReference(propertyAssignEClass, PROPERTY_ASSIGN__INDEX);
 
 		platformAnnotationEClass = createEClass(PLATFORM_ANNOTATION);
 		createEAttribute(platformAnnotationEClass, PLATFORM_ANNOTATION__VALUE);
@@ -2469,6 +2497,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		variableAssignmentEClass = createEClass(VARIABLE_ASSIGNMENT);
 		createEReference(variableAssignmentEClass, VARIABLE_ASSIGNMENT__PROPERTY);
 		createEReference(variableAssignmentEClass, VARIABLE_ASSIGNMENT__EXPRESSION);
+		createEReference(variableAssignmentEClass, VARIABLE_ASSIGNMENT__INDEX);
 
 		eventEClass = createEClass(EVENT);
 
@@ -2593,6 +2622,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(configPropertyAssignEClass, CONFIG_PROPERTY_ASSIGN__INIT);
 		createEReference(configPropertyAssignEClass, CONFIG_PROPERTY_ASSIGN__PROPERTY);
 		createEReference(configPropertyAssignEClass, CONFIG_PROPERTY_ASSIGN__INSTANCE);
+		createEReference(configPropertyAssignEClass, CONFIG_PROPERTY_ASSIGN__INDEX);
 
 		configIncludeEClass = createEClass(CONFIG_INCLUDE);
 		createEReference(configIncludeEClass, CONFIG_INCLUDE__CONFIG);
@@ -2763,6 +2793,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(propertyAssignEClass, PropertyAssign.class, "PropertyAssign", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getPropertyAssign_Init(), this.getExpression(), null, "init", null, 1, 1, PropertyAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPropertyAssign_Property(), this.getProperty(), null, "property", null, 1, 1, PropertyAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPropertyAssign_Index(), this.getExpression(), null, "index", null, 0, -1, PropertyAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(platformAnnotationEClass, PlatformAnnotation.class, "PlatformAnnotation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPlatformAnnotation_Value(), ecorePackage.getEString(), "value", null, 1, 1, PlatformAnnotation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2834,6 +2865,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(variableAssignmentEClass, VariableAssignment.class, "VariableAssignment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getVariableAssignment_Property(), this.getVariable(), null, "property", null, 1, 1, VariableAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getVariableAssignment_Expression(), this.getExpression(), null, "expression", null, 1, 1, VariableAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getVariableAssignment_Index(), this.getExpression(), null, "index", null, 0, -1, VariableAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eventEClass, Event.class, "Event", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -2958,6 +2990,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getConfigPropertyAssign_Init(), this.getExpression(), null, "init", null, 1, 1, ConfigPropertyAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getConfigPropertyAssign_Property(), this.getProperty(), null, "property", null, 1, 1, ConfigPropertyAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getConfigPropertyAssign_Instance(), this.getInstanceRef(), null, "instance", null, 1, 1, ConfigPropertyAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getConfigPropertyAssign_Index(), this.getExpression(), null, "index", null, 0, -1, ConfigPropertyAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(configIncludeEClass, ConfigInclude.class, "ConfigInclude", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getConfigInclude_Config(), this.getConfiguration(), null, "config", null, 1, 1, ConfigInclude.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

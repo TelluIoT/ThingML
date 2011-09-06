@@ -16,7 +16,7 @@ TOKENS{
 		DEFINE SL_COMMENT $'//'(~('\n'|'\r'|'\uffff'))* $ ;
 		DEFINE ML_COMMENT $'/*'.*'*/'$ ;
 		
-		DEFINE ANNOTATION $'@'('A'..'Z' | 'a'..'z' | '0'..'9' | '_' | '-' )+$;
+		DEFINE ANNOTATION $'@'('A'..'Z' | 'a'..'z' | '0'..'9' | '_' )+$;
 		
 		DEFINE BOOLEAN_LITERAL $'true'|'false'$;
 		
@@ -39,7 +39,7 @@ TOKENS{
 		//DEFINE MULTIPLICITY $(('0'..'9')+) '\.' '\.' ( ('*') | (('1'..'9')+) )$;
 		//DEFINE MULTIPLICITY $( ('*') | (('1'..'9')+) )$;
 		
-		DEFINE TEXT $('A'..'Z' | 'a'..'z' | '0'..'9' | '_' | '-' )+$;
+		DEFINE TEXT $('A'..'Z' | 'a'..'z' | '0'..'9' | '_' )+$;
 		//DEFINE TEXT $('A'..'Z' | 'a'..'z' | '0'..'9' | '_' )+ (':' ':' ('A'..'Z' | 'a'..'z' | '0'..'9' | '_')+ )* $;
 }
 
@@ -99,6 +99,9 @@ TOKENSTYLES{
 	"->" COLOR #A22000, BOLD;
 	
 	// Action language
+	"var" COLOR #444444, BOLD;
+	"function" COLOR #444444, BOLD;
+	"return" COLOR #444444, BOLD;
 	"do" COLOR #444444, BOLD;
 	"end" COLOR #444444, BOLD;
 	"if" COLOR #444444, BOLD;
@@ -143,7 +146,7 @@ RULES {
 		
 	Message ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ";"  ;
 	
-	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* #1 ":" #1 type[] ( "[" cardinality "]")? #1 body ;
+	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( "[" cardinality "]")? )? #1 body ;
 	
 	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour )* !0 "}" ;
 	
@@ -181,7 +184,7 @@ RULES {
 
 	ReceiveMessage ::= (name[] #1 ":" #1)? port[] "?" message[] ;
 	
-	PropertyAssign ::= "set" #1 property[] #1 "=" #1 init ; 
+	PropertyAssign ::= "set" #1 property[] ("[" index "]")* #1 "=" #1 init ; 
 	
 
 	// *******************************
@@ -192,11 +195,11 @@ RULES {
 	
 	ConfigInclude ::= "group" #1 name[] #1 ":" #1 config[] (annotations)* !0 ;
 	
-	Instance ::= "instance" #1 (name[] #1)? ":" #1 type[] (annotations)* !0 (  assign )* !0 ;
+	Instance ::= "instance" #1 (name[] #1)? ":" #1 type[] (annotations)*  ; // !0 (  assign )* !0
 	
 	Connector ::= "connector" #1 (name[] #1)? cli "." required[] "=>" srv "." provided[] (!0 annotations)*;
 	
-	ConfigPropertyAssign ::= "set" instance "." property[] "=" init;
+	ConfigPropertyAssign ::= "set" instance "." property[] ("[" index "]")* #1 "=" #1 init;
 	
 	InstanceRef ::= (config[] ".")* instance[];
 
@@ -206,7 +209,7 @@ RULES {
 	
 	SendAction::= port[] "!" message[] "(" (parameters ("," #1 parameters)* )? ")";
 	
-	VariableAssignment ::= property[] #1 "=" #1 expression ; 
+	VariableAssignment ::= property[] #1 ("[" index "]")* "=" #1 expression ; 
 	
 	ActionBlock::= "do" ( !1 actions  )* !0 "end"  ;
 	
@@ -262,7 +265,7 @@ RULES {
 	ModExpression ::= lhs #1 "%" #1 rhs;
 	
  	@Operator(type="unary_prefix", weight="6", superclass="Expression")	
-	UnaryMinus ::= "-" #1 term;
+	UnaryMinus ::= "-" term;
 	
 	@Operator(type="unary_prefix", weight="6", superclass="Expression")	
 	NotExpression ::= "not" #1 term;

@@ -711,13 +711,22 @@ public interface ThingmlPackage extends EPackage {
 	int PROPERTY_ASSIGN__PROPERTY = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Index</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_ASSIGN__INDEX = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Property Assign</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_ASSIGN_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
+	int PROPERTY_ASSIGN_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.PlatformAnnotationImpl <em>Platform Annotation</em>}' class.
@@ -1801,13 +1810,22 @@ public interface ThingmlPackage extends EPackage {
 	int VARIABLE_ASSIGNMENT__EXPRESSION = ACTION_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Index</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE_ASSIGNMENT__INDEX = ACTION_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Variable Assignment</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_ASSIGNMENT_FEATURE_COUNT = ACTION_FEATURE_COUNT + 2;
+	int VARIABLE_ASSIGNMENT_FEATURE_COUNT = ACTION_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.EventImpl <em>Event</em>}' class.
@@ -3453,13 +3471,22 @@ public interface ThingmlPackage extends EPackage {
 	int CONFIG_PROPERTY_ASSIGN__INSTANCE = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Index</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFIG_PROPERTY_ASSIGN__INDEX = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Config Property Assign</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONFIG_PROPERTY_ASSIGN_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
+	int CONFIG_PROPERTY_ASSIGN_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ConfigIncludeImpl <em>Config Include</em>}' class.
@@ -4071,6 +4098,17 @@ public interface ThingmlPackage extends EPackage {
 	EReference getPropertyAssign_Property();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.PropertyAssign#getIndex <em>Index</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Index</em>'.
+	 * @see org.sintef.thingml.PropertyAssign#getIndex()
+	 * @see #getPropertyAssign()
+	 * @generated
+	 */
+	EReference getPropertyAssign_Index();
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.PlatformAnnotation <em>Platform Annotation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4610,6 +4648,17 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getVariableAssignment_Expression();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.VariableAssignment#getIndex <em>Index</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Index</em>'.
+	 * @see org.sintef.thingml.VariableAssignment#getIndex()
+	 * @see #getVariableAssignment()
+	 * @generated
+	 */
+	EReference getVariableAssignment_Index();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Event <em>Event</em>}'.
@@ -5484,6 +5533,17 @@ public interface ThingmlPackage extends EPackage {
 	EReference getConfigPropertyAssign_Instance();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.ConfigPropertyAssign#getIndex <em>Index</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Index</em>'.
+	 * @see org.sintef.thingml.ConfigPropertyAssign#getIndex()
+	 * @see #getConfigPropertyAssign()
+	 * @generated
+	 */
+	EReference getConfigPropertyAssign_Index();
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.ConfigInclude <em>Config Include</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5919,6 +5979,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference PROPERTY_ASSIGN__PROPERTY = eINSTANCE.getPropertyAssign_Property();
+
+		/**
+		 * The meta object literal for the '<em><b>Index</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PROPERTY_ASSIGN__INDEX = eINSTANCE.getPropertyAssign_Index();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.PlatformAnnotationImpl <em>Platform Annotation</em>}' class.
@@ -6367,6 +6435,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference VARIABLE_ASSIGNMENT__EXPRESSION = eINSTANCE.getVariableAssignment_Expression();
+
+		/**
+		 * The meta object literal for the '<em><b>Index</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference VARIABLE_ASSIGNMENT__INDEX = eINSTANCE.getVariableAssignment_Index();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.EventImpl <em>Event</em>}' class.
@@ -7113,6 +7189,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference CONFIG_PROPERTY_ASSIGN__INSTANCE = eINSTANCE.getConfigPropertyAssign_Instance();
+
+		/**
+		 * The meta object literal for the '<em><b>Index</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CONFIG_PROPERTY_ASSIGN__INDEX = eINSTANCE.getConfigPropertyAssign_Index();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ConfigIncludeImpl <em>Config Include</em>}' class.

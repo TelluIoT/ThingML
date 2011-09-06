@@ -15,6 +15,8 @@
  */
 package org.sintef.thingml;
 
+import org.eclipse.emf.common.util.EList;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -26,6 +28,7 @@ package org.sintef.thingml;
  * <ul>
  *   <li>{@link org.sintef.thingml.PropertyAssign#getInit <em>Init</em>}</li>
  *   <li>{@link org.sintef.thingml.PropertyAssign#getProperty <em>Property</em>}</li>
+ *   <li>{@link org.sintef.thingml.PropertyAssign#getIndex <em>Index</em>}</li>
  * </ul>
  * </p>
  *
@@ -85,5 +88,21 @@ public interface PropertyAssign extends AnnotatedElement {
 	 * @generated
 	 */
 	void setProperty(Property value);
+
+	/**
+	 * Returns the value of the '<em><b>Index</b></em>' containment reference list.
+	 * The list contents are of type {@link org.sintef.thingml.Expression}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Index</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Index</em>' containment reference list.
+	 * @see org.sintef.thingml.ThingmlPackage#getPropertyAssign_Index()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Expression> getIndex();
 
 } // PropertyAssign
