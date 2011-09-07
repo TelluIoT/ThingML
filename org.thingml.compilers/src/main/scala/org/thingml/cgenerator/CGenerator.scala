@@ -894,7 +894,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     builder append "\n"
 
     builder append "// Definition of the instance stuct:\n"
-    generateInstanceStruct(builder)
+    generateInstanceStruct(builder, context)
     builder append "\n"
 
     builder append "// Declaration of prototypes:\n"
@@ -1001,7 +1001,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
   }
   */
 
-  def generateInstanceStruct(builder: StringBuilder) {
+  def generateInstanceStruct(builder: StringBuilder, context : CGeneratorContext) {
 
     builder append "struct " + instance_struct_name + " {\n"
 
@@ -1015,7 +1015,13 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     builder append "// Variables for the properties of the instance\n"
     self.allPropertiesInDepth.foreach {
       p =>
-        builder append p.getType.c_type + " " + p.c_var_name + ";\n"
+        builder append p.getType.c_type + " " + p.c_var_name
+        if (p.getCardinality != null) {
+          builder append  "["
+          p.getCardinality.generateC(builder, context)
+          builder append  "]"
+        }
+        builder append  ";\n"
     }
 
     /*

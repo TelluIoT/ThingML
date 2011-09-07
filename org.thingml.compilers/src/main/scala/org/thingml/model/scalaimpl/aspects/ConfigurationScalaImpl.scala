@@ -188,7 +188,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
 
     //println("init instance " + i.getName + " " + i.toString)
 
-    i.getType.allProperties.foreach{ p =>
+    i.getType.allPropertiesInDepth.foreach{ p =>
 
       val assigns =  allPropAssigns
 

@@ -1,7 +1,7 @@
 import "../testharness.thingml"
 
 thing TestArray includes Test 
-@test "12345678x12345678 # 1234567887654321"
+@test "12345678x12345678 # 12345678e87654321"
 {
 
 	property index : UInt8 = 0
@@ -20,7 +20,7 @@ thing TestArray includes Test
     	
     	internal event m : harness?testIn
 		guard m.c > '\'0\'' and m.c < '\'9\'' // 1..8
-		action harness!testOut( array[m.c - 1] )
+		action harness!testOut( array[m.c - 49] + 48 )
     
     	state start {
     		transition -> initialized
@@ -30,10 +30,12 @@ thing TestArray includes Test
     	
     	state initialized {
     	on entry do
+            harness!testOut('\'e\'')
     		// Populate the array
     		index = 0
     		while (index < 8) do
     			array[index] = 8 - index
+                index = index + 1
     		end
     	end
     	}

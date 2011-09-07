@@ -29,6 +29,7 @@ thing TestArray2 includes Test
 				while (index < 5) do 
 					array[index] = hello[index]
 					harness!testOut( array[index] )
+                    index = index + 1
 				end
 				hello[0] = '\'w\''
 				hello[1] = '\'o\''
@@ -45,6 +46,7 @@ thing TestArray2 includes Test
 				var index : Int8 = 0
 				while (index < 5) do 
 					harness!testOut( hello[index] )
+                    index = index + 1
 				end
 			end
     	}
