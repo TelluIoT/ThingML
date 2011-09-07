@@ -846,14 +846,22 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
         builder append c_var_name + "." + self.getType.state_var_name(r) + " = " + self.getType.state_id(r.getInitial) + ";\n"
     }
 
-    // Init properties
+    // Init simple properties
     context.cfg.initExpressionsForInstance(self).foreach{ init =>
-
-      //println("GENERATE INIT: INSTANCE:" + self.getName + " PROP:" + init._1.getName)
-
-      if (init._2 != null ) {
+       if (init._2 != null ) {
         builder append c_var_name + "." + init._1.c_var_name + " = "
         init._2.generateC(builder, context)
+        builder append ";\n";
+      }
+    }
+    // Init array properties
+    context.cfg.initExpressionsForInstanceArrays(self).foreach{ init =>
+       if (init._3 != null && init._2 != null) {
+        builder append c_var_name + "." + init._1.c_var_name
+        builder append  "["
+        init._2.generateC(builder, context)
+        builder append  "] = "
+        init._3.generateC(builder, context)
         builder append ";\n";
       }
     }
