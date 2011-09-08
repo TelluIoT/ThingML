@@ -94,7 +94,7 @@ configuration fragment ScalaSimpleLedSimulatorFragment
 	
 	// Simple led configuration.
 	instance simple_led : SimpleLed
-        set frequency = 800
+        set simple_led.frequency = 800
 	connector simple_led.Led => led.Led
 	connector simple_led.Timer => timer.timer
 	connector simple_led.Led2 => led2.Led

@@ -101,7 +101,9 @@ enumeration InterruptTrigger
 	LOW @enum_val "0"
 }
 
-thing fragment ArduinoStdlibMsgs {
+thing fragment ArduinoStdlibMsgs 
+@c_header "#include <EEPROM.h>"
+{
 
 	// Digital I/O
 	message pin_mode (pin : DigitalPin, mode : PinMode) @code "2";
@@ -161,16 +163,17 @@ thing ArduinoStdlib includes ArduinoStdlibMsgs
 		receives ping
 		sends pong
 	}
-	
+	/*
 	provided port Interrupts {
 		receives attach_interrupt, detach_interrupt
 		sends interrupt_notification
 	}
-	
+    */	
 	provided port EEPROM {
 		receives eeprom_read, eeprom_sync_write, eeprom_write
 		sends eeprom_value, eeprom_write_ack
 	}
+
     
     // Implemetation which maps to extern calls to the arduino lib
     statechart ArduinoStdlibImpl init RunningArduino {
@@ -199,6 +202,21 @@ thing ArduinoStdlib includes ArduinoStdlibMsgs
             
             internal event m : AdvancedIO?no_tone 
             action 'noTone(' & m.pin & ');'
+            
+            internal event m : Ping?ping 
+            action Ping!pong()
+            
+            internal event m : EEPROM?eeprom_read 
+            action EEPROM!eeprom_value('EEPROM.read(' & m.address &')')
+            
+            internal event m : EEPROM?eeprom_write 
+            action 'EEPROM.write('& m.address &', '& m.value &');'
+            
+            internal event m : EEPROM?eeprom_sync_write 
+            action do 
+               'EEPROM.write('& m.address &', '& m.value &');'
+               EEPROM!eeprom_write_ack()
+            end
                     
         }
     }

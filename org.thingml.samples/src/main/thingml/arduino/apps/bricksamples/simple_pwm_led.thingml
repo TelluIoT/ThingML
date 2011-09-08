@@ -39,7 +39,7 @@ thing SimplePwmLed includes PwmMsgs, RotationSensorMsgs
 configuration SimplePwmLed
 {
 	group pwm : Pwm
-		set pwm.pwm.pin = PWMPin:PWM_PIN_9
+		set pwm.pwm.pin = PWMPin:PWM_PIN_3
 	group rot_sensor : RotationSensor
 		set rot_sensor.io.analog_input.pin = AnalogPin:A_4
 		
