@@ -112,16 +112,40 @@ case class ThingScalaImpl (self : Thing) {
 
       var imports = self.getIncludes.filter{t => t.allProperties.contains(p)}
       //  imports cannot be empty since the property must be defined in a imported thing
-      if (assigns.size > 1) println("Warning: Thing " + self.getName + " gets property " + p.getName + " from several paths, it should define its initial value")
+      if (imports.size > 1) println("Warning: Thing " + self.getName + " gets property " + p.getName + " from several paths, it should define its initial value")
 
       return imports.head.initExpression(p)
     }
-    else { // It is a property of the state machinre
-
+    else { // It is a property of a state machine
       return p.getInit
     }
-
   }
+
+  def initExpressionsForArray(p : Property) : ArrayList[PropertyAssign] = {
+
+    var result = new ArrayList[PropertyAssign]()
+
+    if (self.allProperties.contains(p)) {  // It is a property of the thing
+
+      // collect assignment in the imported things first:
+      var imports = self.getIncludes.filter{t => t.allProperties.contains(p)}
+
+      imports.foreach{ t =>
+         result.addAll(t.initExpressionsForArray(p))
+      }
+
+      // collect assignments in this thing
+
+      var assigns = self.getAssign.filter{ a => a.getProperty == p }
+
+      result.addAll(assigns)
+    }
+    else { // It is a property of a state machine
+       // No way to initialize arrays in state machines (so far)
+    }
+    return result
+  }
+
 
 
   def hasAnnotation(name : String): Boolean = {

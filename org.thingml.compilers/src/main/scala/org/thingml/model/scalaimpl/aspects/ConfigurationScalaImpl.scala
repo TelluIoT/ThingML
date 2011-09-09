@@ -138,6 +138,11 @@ case class ConfigurationScalaImpl (self : Configuration) {
 
       var id = inst_name + "_" + a.getProperty.getName
 
+      if (a.getIndex.size() > 0)  { // It is an array
+          id += a.getIndex.head.toString
+        //println(id)
+      }
+
       assigns.put(id, copy) // This will replace any previous initialization of the variable
     }
 
@@ -183,12 +188,13 @@ case class ConfigurationScalaImpl (self : Configuration) {
     result
   }
 
+  // This method only initializes simple properties (not Arrays)
   def initExpressionsForInstance(i : Instance) : ArrayList[((Property, Expression))] = {
     var result = new ArrayList[((Property, Expression))]()
 
     //println("init instance " + i.getName + " " + i.toString)
 
-    i.getType.allPropertiesInDepth.foreach{ p =>
+    i.getType.allPropertiesInDepth.filter{ p=> p.getCardinality == null }.foreach{ p =>
 
       val assigns =  allPropAssigns
 
@@ -209,9 +215,33 @@ case class ConfigurationScalaImpl (self : Configuration) {
           result.add( ((p, assigns.head.getInit)) )
         }
         else {
-          // Get the init value from the type
           result.add( ((p, i.getType.initExpression(p))) )
         }
+      }
+    }
+    result
+  }
+
+    // This method only initializes Array properties (property, index expression, init expression)
+  def initExpressionsForInstanceArrays(i : Instance) : ArrayList[((Property, Expression , Expression))] = {
+
+    var result = new ArrayList[((Property, Expression, Expression))]()
+
+    i.getType.allPropertiesInDepth.filter{ p=> p.getCardinality != null }.foreach{ p =>
+
+      // look for assignements in the things:
+
+      i.getType.initExpressionsForArray(p).foreach{a =>
+        if (a.getIndex.size() == 1)
+          result.add( ((p, a.getIndex.head, a.getInit)) )
+        else System.err.println("ERROR: Malformed array initializiation for property " + p.getName + " in thing " + a.eContainer().asInstanceOf[Thing].getName)
+      }
+
+
+      allPropAssigns.filter{ a => a.getProperty == p}.foreach{ a =>
+        if (a.getIndex.size() == 1)
+          result.add( ((p, a.getIndex.head, a.getInit)) )
+        else System.err.println("ERROR: Malformed array initializiation for property " + p.getName + " in instance " + i.getName)
       }
     }
     result

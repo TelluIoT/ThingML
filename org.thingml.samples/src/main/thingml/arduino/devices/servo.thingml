@@ -1,0 +1,32 @@
+import "../core/arduino.thingml"
+
+datatype ArduinoServo
+	@c_type "Servo";
+
+thing fragment ServoMsg {
+    message servo_write(position : UInt8);    
+}
+
+thing Servo includes ServoMsg
+@c_header "#include <Servo.h>"
+{
+    readonly property pin : UInt8 = 9
+    property servo : ArduinoServo
+    
+    provided port Servo {
+        receives servo_write    
+    }
+            
+	statechart ServoImpl init Running
+	{
+
+		on entry '' & servo & '.attach('& pin &');' 
+		
+		state Running
+		{
+			transition refresh -> Running
+			event m : Servo?servo_write
+			action '' & servo & '.write('& m.position &');' 
+		}
+	}
+}

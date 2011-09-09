@@ -41,7 +41,7 @@ configuration SimplePWM {
     
     // Pot 1
     instance analog_input_1 : OnChangeAnalogInput
-        set pin = AnalogPin:A_4
+        set analog_input_1.pin = AnalogPin:A_4
     instance timer_1 : SoftTimer
     instance pot_sensor_1 : RotationSensor
     connector analog_input_1.AnalogIO => arduino.AnalogIO
@@ -50,7 +50,7 @@ configuration SimplePWM {
 	
     // Pot 2
     instance analog_input_2 : OnChangeAnalogInput
-        set pin = AnalogPin:A_5
+        set analog_input_2.pin = AnalogPin:A_5
     instance timer_2 : SoftTimer
     instance pot_sensor_2 : RotationSensor
     connector analog_input_2.AnalogIO => arduino.AnalogIO
