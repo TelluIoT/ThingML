@@ -478,31 +478,21 @@ case class InternalTransitionScalaGenerator(override val self: InternalTransitio
   }
 }
 
-//TODO avoid code duplication with CompositeState
 case class StateMachineScalaGenerator(override val self: StateMachine) extends CompositeStateScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def classHeader(builder: StringBuilder = Context.builder) {
     builder append "case class " + Context.firstToUpper(self.getName) + "StateMachine(keepHistory : Boolean, root : Component) extends StateAction {\n"
    
     builder append "def getBehavior = parent\n"
     builder append "val parent : StateMachine = new StateMachine(this, keepHistory, root)\n"
-    
-    generateActions()
-    self.getInternal.foreach{t =>
-      generateDeclaration(t)
-    }
-    generateInternalTransitions
-    generateSub(self)
-    
-    self.getRegion.foreach{r =>
-      generateRegion(r)
-    }
-    
-    builder append "}\n"
   }
 }
 
 case class StateScalaGenerator(override val self: State) extends ThingMLScalaGenerator(self) {
     
+  def declareState(builder: StringBuilder = Context.builder) {
+    builder append "val " + self.getName + "_state = new State(" + Context.firstToUpper(self.getName) + "State(), root)\n"
+  }
+  
   def generateActions(builder: StringBuilder = Context.builder) {
     builder append "override def onEntry() = {\n"
     if (Context.debug)
@@ -553,8 +543,11 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
 }
 
 case class CompositeStateScalaGenerator(override val self: CompositeState) extends StateScalaGenerator(self) {  
-  
-  
+
+  override def declareState(builder: StringBuilder = Context.builder) {
+    val history = if(self.isHistory) "true" else "false"
+    builder append "val " + self.getName + "_state = new " + Context.firstToUpper(self.getName) + "State(" + history + ", root).getBehavior\n"
+  }
   
   def generateRegion(r : ParallelRegion, builder: StringBuilder = Context.builder) {
     val history = if(r.isHistory) "true" else "false"
@@ -573,18 +566,8 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
     if (r.getSubstate.size > 0)
       builder append "//create sub-states\n"
     r.getSubstate.foreach{ sub =>  
-      sub match {
-        case cs : CompositeState =>  
-          val history = if(cs.isHistory) "true" else "false"
-          builder append "val " + cs.getName + "_state = new " + Context.firstToUpper(cs.getName) + "State(" + history + ", root).getBehavior\n"
-        case s : State =>
-          builder append "val " + s.getName + "_state = new State(" + Context.firstToUpper(s.getName) + "State(), root)\n"
-        case _ => 
-          builder append "//Warning: Unknown type of State... "+sub
-          println("Warning: Unknown type of State... "+sub)
-      }
+      sub.declareState()
       builder append "parent.addSubState(" + sub.getName + "_state" + ")\n"
-      
       sub.generateScala()
     }
     builder append "parent.setInitial(" + r.getInitial.getName + "_state" + ")\n\n"
@@ -605,23 +588,30 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
     }
   }
   
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "case class " + Context.firstToUpper(self.getName) + "State(keepHistory : Boolean, root : Component) extends StateAction {\n"
-    
+  def classHeader(builder: StringBuilder = Context.builder) {
+    builder append "case class " + Context.firstToUpper(self.getName) + "State(keepHistory : Boolean, root : Component) extends StateAction {\n"    
     builder append "def getBehavior = parent\n"
     builder append "val parent : CompositeState = new CompositeState(this, keepHistory, root)\n"
-    
+  }
+  
+  def classBody(builder: StringBuilder = Context.builder) {
     generateActions()
     self.getInternal.foreach{t =>
       generateDeclaration(t)
     }
     generateInternalTransitions
     generateSub(self)
+    
     self.getRegion.foreach{r =>
       generateRegion(r)
     }
-
-    builder append "}\n\n"
+    
+    builder append "}\n"
+  }
+  
+  override def generateScala(builder: StringBuilder = Context.builder) {
+    classHeader()
+    classBody()
   }
 }
 
@@ -773,12 +763,10 @@ case class ActionBlockScalaGenerator(override val self: ActionBlock) extends Act
 
 case class ExternStatementScalaGenerator(override val self: ExternStatement) extends ActionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
-    //builder append "/*"
     builder append self.getStatement
     self.getSegments.foreach {
       e => e.generateScala()
     }
-    //builder append "*/"
     builder append "\n"
   }
 }
@@ -827,7 +815,6 @@ case class ExpressionScalaGenerator(val self: Expression) /*extends ThingMLScala
     // Implemented in the sub-classes
   }
 }
-
 
 case class ArrayIndexScalaGenerator(override val self: ArrayIndex) extends ExpressionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
@@ -991,4 +978,3 @@ case class ExternExpressionScalaGenerator(override val self: ExternExpression) e
     }
   }
 }
-
