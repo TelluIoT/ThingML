@@ -96,7 +96,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
             dir.mkdir();
         }
 
-        try {
+ /*       try {
             Hashtable<String, String> dots = ThingMLGraphExport.allGraphviz((ThingMLModel) model.getContents().get(0));
             for (String name : dots.keySet()) {
                 System.out.println(" -> Writing file " + name + ".dot");
@@ -131,7 +131,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
         } catch (Throwable t) {
             t.printStackTrace();
         }
-
+*/
         try {
             Hashtable<Configuration, String> scalacode = ScalaGenerator.compileAllJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
             for (Configuration t : scalacode.keySet()) {
