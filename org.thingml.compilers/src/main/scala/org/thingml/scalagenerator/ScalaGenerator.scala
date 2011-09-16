@@ -1071,7 +1071,11 @@ case class ExternExpressionScalaGenerator(override val self: ExternExpression) e
 case class FunctionCallExpressionScalaGenerator(override val self: FunctionCallExpression) extends ExpressionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {  
     builder append self.getFunction().getName + "("
-    builder append self.getParameters().collect{case p => p.generateScala()}.mkString(", ")
+    builder append self.getParameters().collect{case p => 
+        var tempBuilder = new StringBuilder()
+        p.generateScala(tempBuilder)
+        tempBuilder.toString
+    }.mkString(", ")
     builder append ")\n"
   }   
 }
