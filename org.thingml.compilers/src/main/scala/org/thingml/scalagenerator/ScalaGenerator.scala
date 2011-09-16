@@ -25,10 +25,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
-import sun.applet.resources.MsgAppletViewer
-import org.eclipse.emf.ecore.xml.`type`.internal.RegEx.Match
 import java.util.{ArrayList, Hashtable}
-import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
 import org.sintef.thingml._
 
 //TODO: better handle naming conventions to avoid duplicating code and ease the maintenance
@@ -268,7 +265,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     
     builder append "//Things\n"
     self.allInstances.foreach{ i =>
-      builder append "val " + i.getType.getName + "_" + i.getName + " = new " + Context.firstToUpper(i.getType.getName) + "("
+      builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "("
       var j = 0
       self.initExpressionsForInstance(i).foreach{p =>         
         if (j > 0)
@@ -300,12 +297,12 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
       c.getCli.getInstance().getType.allStateMachines.foreach{sm1 =>
         c.getSrv.getInstance().getType.allStateMachines.foreach{sm2 =>
           builder append c.getName + "_" + i + ".connect(\n" 
-          builder append c.getCli.getInstance.getType.getName + "_" + c.getCli.getInstance.getName + ".getPort(\"" + c.getRequired.getName + "\").get,\n"
-          builder append c.getSrv.getInstance.getType.getName + "_" + c.getSrv.getInstance.getName + ".getPort(\"" + c.getProvided.getName + "\").get\n"
+          builder append c.getCli.getInstance.instanceName + ".getPort(\"" + c.getRequired.getName + "\").get,\n"
+          builder append c.getSrv.getInstance.instanceName + ".getPort(\"" + c.getProvided.getName + "\").get\n"
           builder append")\n"
           builder append c.getName + "_" + i + ".connect(\n" 
-          builder append c.getSrv.getInstance.getType.getName + "_" + c.getSrv.getInstance.getName + ".getPort(\"" + c.getProvided.getName + "\").get,\n"
-          builder append c.getCli.getInstance.getType.getName + "_" + c.getCli.getInstance.getName + ".getPort(\"" + c.getRequired.getName + "\").get\n"
+          builder append c.getSrv.getInstance.instanceName + ".getPort(\"" + c.getProvided.getName + "\").get,\n"
+          builder append c.getCli.getInstance.instanceName + ".getPort(\"" + c.getRequired.getName + "\").get\n"
           builder append")\n\n"
         }
       }
@@ -314,7 +311,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     
     builder append "//Starting Things\n"
     self.allInstances.foreach{ i =>
-      builder append i.getType.getName + "_" + i.getName + ".asInstanceOf[Component].start\n"
+      builder append i.instanceName + ".asInstanceOf[Component].start\n"
     }
     
     builder append "}\n\n"
@@ -323,7 +320,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
 }
 
 case class InstanceScalaGenerator(override val self: Instance) extends ThingMLScalaGenerator(self) {
-
+  val instanceName = self.getType.getName + "_" + self.getName
 }
 
 case class ConnectorScalaGenerator(override val self: Connector) extends ThingMLScalaGenerator(self) {
@@ -437,6 +434,9 @@ case class EnumerationLiteralScalaGenerator(override val self: EnumerationLitera
 
 case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScalaGenerator(self) {
   
+  val handlerInstanceName = "handler_" + self.hashCode
+  val handlerTypeName = "Handler" + self.hashCode
+    
   def generateHandler : String = {
     var tempbuilder = new StringBuilder()
     tempbuilder append "List("
@@ -478,8 +478,12 @@ case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScal
 }
 
 case class TransitionScalaGenerator(override val self: Transition) extends HandlerScalaGenerator(self) {
+  
+  override val handlerInstanceName = "t_" + self.getSource.getName + "2" + self.getTarget.getName + "_" + self.hashCode
+  override val handlerTypeName = "Transition" + self.getSource.getName + "2" + self.getTarget.getName + "_" + self.hashCode
+  
   override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "case class Transition" + self.getSource.getName+"2"+self.getTarget.getName + "_" + self.hashCode + " extends TransitionAction {\n"
+    builder append "case class " + handlerTypeName + " extends TransitionAction {\n"
     
     printGuard()
     
@@ -510,8 +514,12 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
 }
 
 case class InternalTransitionScalaGenerator(override val self: InternalTransition) extends HandlerScalaGenerator(self) {
+  
+  override val handlerInstanceName = "t_self_" + self.hashCode
+  override val handlerTypeName = "InternalTransition" + self.hashCode
+  
   override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "case class InternalTransition" + self.hashCode + " extends InternalTransitionAction {\n"
+    builder append "case class " + handlerTypeName + " extends InternalTransitionAction {\n"
     printGuard()
     printAction()
     builder append "}\n"
@@ -578,7 +586,7 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
   }
   
   def generateDeclaration(t : InternalTransition, builder: StringBuilder = Context.builder){
-    builder append "val t_self_" + t.hashCode  + " = new InternalTransition(getBehavior, " + "new InternalTransition" + t.hashCode + "(), " + t.generateHandler + ")\n"
+    builder append "val " + t.handlerInstanceName  + " = new InternalTransition(getBehavior, " + "new " + t.handlerTypeName + "(), " + t.generateHandler + ")\n"
   }
 }
 
@@ -616,8 +624,8 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
       builder append "//create transitions among sub-states\n"
     
     r.getSubstate.foreach{sub => sub.getOutgoing.foreach{ t => 
-        builder append "val t_" + t.getSource.getName+"2"+t.getTarget.getName + "_" + t.hashCode  + " = new Transition(" + t.getSource.getName + "_state, " + t.getTarget.getName + "_state, " + "Transition" + t.getSource.getName+"2"+t.getTarget.getName + "_" + t.hashCode + "(), " + t.generateHandler + ")\n"
-        builder append "parent.addTransition(t_" + t.getSource.getName+"2"+t.getTarget.getName+ "_" + t.hashCode + ")\n"
+        builder append "val " + t.handlerInstanceName  + " = new Transition(" + t.getSource.getName + "_state, " + t.getTarget.getName + "_state, " + "new " + t.handlerTypeName + "(), " + t.generateHandler + ")\n"
+        builder append "parent.addTransition(" + t.handlerInstanceName + ")\n"
       }
     }
     
