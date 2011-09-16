@@ -109,6 +109,8 @@ object ScalaGenerator {
     case a: LoopAction => LoopActionScalaGenerator(a)
     case a: PrintAction => PrintActionScalaGenerator(a)
     case a: ErrorAction => ErrorActionScalaGenerator(a)
+    case a: ReturnAction => ReturnActionScalaGenerator(a)
+    case a: LocalVariable => LocalVariableActionScalaGenerator(a)
     case _ => ActionScalaGenerator(self)
   }
 
@@ -129,6 +131,7 @@ object ScalaGenerator {
     case exp: ExpressionGroup => ExpressionGroupScalaGenerator(exp)
     case exp: PropertyReference => PropertyReferenceScalaGenerator(exp)
     case exp: IntegerLiteral => IntegerLiteralScalaGenerator(exp)
+    case exp: DoubleLiteral => DoubleLiteralScalaGenerator(exp)
     case exp: StringLiteral => StringLiteralScalaGenerator(exp)
     case exp: BooleanLiteral => BooleanLiteralScalaGenerator(exp)
     case exp: EnumLiteralRef => EnumLiteralRefScalaGenerator(exp)
@@ -845,6 +848,26 @@ case class ErrorActionScalaGenerator(override val self: ErrorAction) extends Act
   }
 }
 
+case class ReturnActionScalaGenerator(override val self: ReturnAction) extends ActionScalaGenerator(self) {
+  override def generateScala(builder: StringBuilder = Context.builder) {
+    builder append "return "
+    self.getExp.generateScala()
+    builder append "\n"
+  }
+}
+
+case class LocalVariableActionScalaGenerator(override val self: LocalVariable) extends ActionScalaGenerator(self) {
+  override def generateScala(builder: StringBuilder = Context.builder) {    
+    builder append (if (self.isChangeable) "var " else "val ")
+    builder append self.scala_var_name + " = "
+    if (self.getInit != null) 
+      self.getInit.generateScala() 
+    else 
+      builder append "_"
+    builder append "\n"
+  }
+}
+
 /**
  * Expression abstract classes
  */
@@ -988,6 +1011,12 @@ case class PropertyReferenceScalaGenerator(override val self: PropertyReference)
 case class IntegerLiteralScalaGenerator(override val self: IntegerLiteral) extends ExpressionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
     builder append self.getIntValue.toString
+  }
+}
+
+case class DoubleLiteralScalaGenerator(override val self: DoubleLiteral) extends ExpressionScalaGenerator(self) {
+  override def generateScala(builder: StringBuilder = Context.builder) {
+    builder append self.getDoubleValue.toString
   }
 }
 
