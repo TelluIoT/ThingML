@@ -60,7 +60,7 @@
 		Use to copy the thingml samples within the test of the
 		compilers automatically 
 		-->	   
-<!--            <plugin>
+            <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
@@ -78,7 +78,7 @@
                     </execution>
                 </executions>
             </plugin> 
--->
+
         </plugins>
 
     </build>

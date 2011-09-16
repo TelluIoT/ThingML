@@ -49,10 +49,10 @@ object MergedConfigurationCache {
 }
 
 case class ConfigurationScalaImpl (self : Configuration) {
-   /*
-    def allConfigurationFragments: ArrayList[Configuration] = {
-    return ThingMLHelpers.allConfigurationFragments(self)
-  }
+  /*
+   def allConfigurationFragments: ArrayList[Configuration] = {
+   return ThingMLHelpers.allConfigurationFragments(self)
+   }
    */
 
 
@@ -98,8 +98,8 @@ case class ConfigurationScalaImpl (self : Configuration) {
         // TODO: This could can become slow if we have a large number of instances
         var others = instances.values().filter{ i => i.getType == inst.getType }
         if (others.isEmpty) {
-           copy = EcoreUtil.copy(inst).asInstanceOf[Instance]
-           copy.setName(inst.getName) // no prefix needed
+          copy = EcoreUtil.copy(inst).asInstanceOf[Instance]
+          copy.setName(inst.getName) // no prefix needed
         }
         else copy = others.head // There will be only one in the list
       }
@@ -139,7 +139,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
       var id = inst_name + "_" + a.getProperty.getName
 
       if (a.getIndex.size() > 0)  { // It is an array
-          id += a.getIndex.head.toString
+        id += a.getIndex.head.toString
         //println(id)
       }
 
@@ -158,8 +158,8 @@ case class ConfigurationScalaImpl (self : Configuration) {
   }
 
   def allInstances: Set[Instance] = {
-     var result : Set[Instance] = Set()
-     result ++ merge().getInstances
+    var result : Set[Instance] = Set()
+    result ++ merge().getInstances
   }
 
   def allConnectors: Set[Connector] = {
@@ -203,7 +203,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
       }
 
       if (confassigns.size > 0) {  // There is an assignment for this property
-         result.add( ((p, confassigns.head.getInit)) )
+        result.add( ((p, confassigns.head.getInit)) )
       }
       else { // Look on the instance and in the type to find an init expression
         // get the init from the instance if there is an assignment
@@ -222,7 +222,23 @@ case class ConfigurationScalaImpl (self : Configuration) {
     result
   }
 
-    // This method only initializes Array properties (property, index expression, init expression)
+  def initExpressionsByArrays(i : Instance) : Map[Property, List[(Expression, Expression)]] = {
+    var result = Map[Property, List[(Expression, Expression)]]()
+    initExpressionsForInstanceArrays(i).foreach{init =>
+      if (init._3 != null && init._2 != null) {
+        result.get(init._1) match {
+          case Some(p) =>
+            val p2 = p :+ (init._2, init._3)
+            result += (init._1 -> p2)
+          case None =>
+            result += (init._1 -> List((init._2, init._3)))
+        }
+      }
+    }
+    return result
+  }
+  
+  // This method only initializes Array properties (property, index expression, init expression)
   def initExpressionsForInstanceArrays(i : Instance) : ArrayList[((Property, Expression , Expression))] = {
 
     var result = new ArrayList[((Property, Expression, Expression))]()
@@ -256,50 +272,50 @@ case class ConfigurationScalaImpl (self : Configuration) {
     val result = new Hashtable[Message, Hashtable[Instance, ArrayList[((Instance, Port))]]]()
 
     allInstances.filter{ i => i.getType == t}.foreach {i =>
-       allConnectors.filter { c => c.getCli.getInstance == i && c.getRequired == p}.foreach{ c =>
-           p.getSends.foreach{ m =>
-              if (c.getProvided.getReceives.contains(m)) {
+      allConnectors.filter { c => c.getCli.getInstance == i && c.getRequired == p}.foreach{ c =>
+        p.getSends.foreach{ m =>
+          if (c.getProvided.getReceives.contains(m)) {
 
-                var mtable = result.get(m)
-                if (mtable == null) {
-                  mtable = new Hashtable[Instance, ArrayList[((Instance, Port))]]()
-                  result.put(m, mtable)
-                }
+            var mtable = result.get(m)
+            if (mtable == null) {
+              mtable = new Hashtable[Instance, ArrayList[((Instance, Port))]]()
+              result.put(m, mtable)
+            }
 
-                var itable = mtable.get(i)
-                if (itable == null) {
-                  itable = new ArrayList[((Instance, Port))]()
-                  mtable.put(i, itable)
-                }
+            var itable = mtable.get(i)
+            if (itable == null) {
+              itable = new ArrayList[((Instance, Port))]()
+              mtable.put(i, itable)
+            }
 
-                itable.add( ((c.getSrv.getInstance, c.getProvided)) )
+            itable.add( ((c.getSrv.getInstance, c.getProvided)) )
 
-              }
-           }
-       }
-       allConnectors.filter { c => c.getSrv.getInstance == i && c.getProvided == p}.foreach{ c =>
-           p.getSends.foreach{ m =>
-              if (c.getRequired.getReceives.contains(m)) {
+          }
+        }
+      }
+      allConnectors.filter { c => c.getSrv.getInstance == i && c.getProvided == p}.foreach{ c =>
+        p.getSends.foreach{ m =>
+          if (c.getRequired.getReceives.contains(m)) {
 
-                var mtable = result.get(m)
-                if (mtable == null) {
-                  mtable = new Hashtable[Instance, ArrayList[((Instance, Port))]]()
-                  result.put(m, mtable)
-                }
+            var mtable = result.get(m)
+            if (mtable == null) {
+              mtable = new Hashtable[Instance, ArrayList[((Instance, Port))]]()
+              result.put(m, mtable)
+            }
 
-                var itable = mtable.get(i)
-                if (itable == null) {
-                  itable = new ArrayList[((Instance, Port))]()
-                  mtable.put(i, itable)
-                }
+            var itable = mtable.get(i)
+            if (itable == null) {
+              itable = new ArrayList[((Instance, Port))]()
+              mtable.put(i, itable)
+            }
 
-                itable.add( ((c.getCli.getInstance(), c.getRequired)) )
+            itable.add( ((c.getCli.getInstance(), c.getRequired)) )
 
-              }
-           }
-       }
-     }
-     result
+          }
+        }
+      }
+    }
+    result
   }
 
 }

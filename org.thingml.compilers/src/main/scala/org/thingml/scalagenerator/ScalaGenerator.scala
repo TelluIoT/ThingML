@@ -164,7 +164,7 @@ object ScalaGenerator {
     }
     
     var result = Map[Configuration, String]()
-    model.allConfigurations.foreach {
+    model.allConfigurations.filter{c=> !c.isFragment}.foreach {
       t => result += (t -> compile(t, pack))
     }
     result
@@ -233,7 +233,27 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
       builder append c.getName + "_" + i + ".start\n"
       i = i + 1
     }
-      
+    
+    self.allInstances.foreach{ i =>
+      if (self.initExpressionsForInstanceArrays(i).size > 0)
+        builder append "//Initializing arrays\n"
+      val arrayMap = self.initExpressionsByArrays(i)
+      arrayMap.keys.foreach{ init =>
+        var result = "val " + init.scala_var_name + " = new Array[" + init.getType.scala_type + "]()\n"       
+        arrayMap.get(init).get.foreach{pair => 
+          result = result +  init.scala_var_name + "("
+          var tempBuilder = new StringBuilder()
+          pair._1.generateScala(tempBuilder)
+          result = result + tempBuilder.toString
+          result = result +  ") = "
+          tempBuilder = new StringBuilder()
+          pair._2.generateScala(tempBuilder)
+          result = result + tempBuilder.toString + "\n"
+        }
+        builder append result
+      }
+    }
+    
     builder append "//Things\n"
     self.allInstances.foreach{ i =>
       builder append "val " + i.getType.getName + "_" + i.getName + " = new " + Context.firstToUpper(i.getType.getName) + "("
@@ -252,8 +272,16 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
         builder append result
         j = j + 1
       }
+      // Init array properties
+      //TODO: create temp arrays for initialization (outsite the new)
+      //and use these arrays here...
+      self.initExpressionsByArrays(i).keys.foreach{ init =>
+        if (j > 0)
+          builder append ", "
+        builder append init.scala_var_name + " = " + init.scala_var_name
+        j = j + 1
+      }
       builder append ")\n"
-      //TODO: handle array initialisation
     }
     
     builder append "//Bindings\n"
@@ -365,7 +393,9 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
   
   def generateProperties(builder: StringBuilder = Context.builder) {
     builder append self.allPropertiesInDepth.collect{case p =>
-        (if (p.isChangeable) "val " else "var ") + p.scala_var_name + " : " + p.getType.scala_type
+        (if (p.isChangeable) "val " else "var ") +
+        p.scala_var_name + " : " +
+        (if (p.getCardinality != null) "Array[" + p.getType.scala_type + "]" else  p.getType.scala_type)
     }.mkString(", ")
   }
 }
@@ -743,10 +773,21 @@ case class SendActionScalaGenerator(override val self: SendAction) extends Actio
 
 case class VariableAssignmentScalaGenerator(override val self: VariableAssignment) extends ActionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append self.getProperty.scala_var_name
-    builder append " = "
-    self.getExpression.generateScala()
-    builder append "\n"
+    if (self.getProperty.getCardinality != null) {
+      self.getIndex.foreach{i =>
+        builder append self.getProperty.scala_var_name
+        builder append "[" + i.generateScala() + "]"
+        builder append " = "
+        self.getExpression.generateScala()
+        builder append "\n"
+      }
+    }
+    else {
+      builder append self.getProperty.scala_var_name
+      builder append " = "
+      self.getExpression.generateScala()
+      builder append "\n"
+    }
   }
 }
 
