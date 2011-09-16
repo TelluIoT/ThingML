@@ -273,8 +273,6 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
         j = j + 1
       }
       // Init array properties
-      //TODO: create temp arrays for initialization (outsite the new)
-      //and use these arrays here...
       self.initExpressionsByArrays(i).keys.foreach{ init =>
         if (j > 0)
           builder append ", "
