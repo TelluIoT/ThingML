@@ -43,7 +43,7 @@ thing SoftTimer includes Timer, ThingMLSchedulerMsg
     function start(delay : Integer) : Integer
     do
         var status : Integer = 0
-        'cancel()'
+        cancel()
         lastTask = 'this.newTimerTask'
         'try {'
         '' & javaTimer & '.schedule(' & lastTask & ', ' & delay & ')'
@@ -59,13 +59,13 @@ thing SoftTimer includes Timer, ThingMLSchedulerMsg
         internal start
             event m : timer?timer_start
             guard m.delay > 0
-            action do //should be implemented as proper ThingML function calls (currently not supported by compiler)
-                'start(' & m.delay & ')'
+            action do
+                start(m.delay)
             end
             
         internal cancel
             event m : timer?timer_cancel
-            action 'cancel()' //should be implemented as proper ThingML function calls (currently not supported by compiler)
+            action cancel()
     
         state default {}
         

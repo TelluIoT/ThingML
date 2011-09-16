@@ -111,6 +111,7 @@ object ScalaGenerator {
     case a: ErrorAction => ErrorActionScalaGenerator(a)
     case a: ReturnAction => ReturnActionScalaGenerator(a)
     case a: LocalVariable => LocalVariableActionScalaGenerator(a)
+    case a: FunctionCallStatement => FunctionCallStatementScalaGenerator(a)
     case _ => ActionScalaGenerator(self)
   }
 
@@ -137,6 +138,7 @@ object ScalaGenerator {
     case exp: EnumLiteralRef => EnumLiteralRefScalaGenerator(exp)
     case exp: ExternExpression => ExternExpressionScalaGenerator(exp)
     case exp: ArrayIndex => ArrayIndexScalaGenerator(exp)
+    case exp: FunctionCallExpression => FunctionCallExpressionScalaGenerator(exp)
     case _ => ExpressionScalaGenerator(self)
   }
   
@@ -237,15 +239,22 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
       i = i + 1
     }
     
+    //define temp arrays
     self.allInstances.foreach{ i =>
       if (self.initExpressionsForInstanceArrays(i).size > 0)
         builder append "//Initializing arrays\n"
       val arrayMap = self.initExpressionsByArrays(i)
       arrayMap.keys.foreach{ init =>
-        var result = "val " + init.scala_var_name + " = new Array[" + init.getType.scala_type + "]()\n"       
+        var result = "val " + init.scala_var_name + " = new Array[" + init.getType.scala_type + "](" 
+        
+        var tempBuilder = new StringBuilder()
+        init.getCardinality.generateScala(tempBuilder)
+        result = result + tempBuilder.toString
+        result = result + ")\n"
+        
         arrayMap.get(init).get.foreach{pair => 
           result = result +  init.scala_var_name + "("
-          var tempBuilder = new StringBuilder()
+          tempBuilder = new StringBuilder()
           pair._1.generateScala(tempBuilder)
           result = result + tempBuilder.toString
           result = result +  ") = "
@@ -858,7 +867,8 @@ case class ReturnActionScalaGenerator(override val self: ReturnAction) extends A
 
 case class LocalVariableActionScalaGenerator(override val self: LocalVariable) extends ActionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {    
-    builder append (if (self.isChangeable) "var " else "val ")
+    //builder append (if (self.isChangeable) "var " else "val ")//uncomment line when bug is fixed in ThingML
+    builder append "var "
     builder append self.scala_var_name + " = "
     if (self.getInit != null) 
       self.getInit.generateScala() 
@@ -868,6 +878,17 @@ case class LocalVariableActionScalaGenerator(override val self: LocalVariable) e
   }
 }
 
+case class FunctionCallStatementScalaGenerator(override val self: FunctionCallStatement) extends ActionScalaGenerator(self) {
+  override def generateScala(builder: StringBuilder = Context.builder) {  
+    builder append self.getFunction().getName + "("
+    builder append self.getParameters().collect{case p => 
+        var tempBuilder = new StringBuilder()
+        p.generateScala(tempBuilder)
+        tempBuilder.toString
+    }.mkString(", ")
+    builder append ")\n"
+  }  
+}
 /**
  * Expression abstract classes
  */
@@ -1045,4 +1066,12 @@ case class ExternExpressionScalaGenerator(override val self: ExternExpression) e
       e => e.generateScala()
     }
   }
+}
+
+case class FunctionCallExpressionScalaGenerator(override val self: FunctionCallExpression) extends ExpressionScalaGenerator(self) {
+  override def generateScala(builder: StringBuilder = Context.builder) {  
+    builder append self.getFunction().getName + "("
+    builder append self.getParameters().collect{case p => p.generateScala()}.mkString(", ")
+    builder append ")\n"
+  }   
 }
