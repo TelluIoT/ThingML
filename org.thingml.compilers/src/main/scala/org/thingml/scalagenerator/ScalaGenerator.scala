@@ -28,8 +28,6 @@ import scala.collection.JavaConversions._
 import java.util.{ArrayList, Hashtable}
 import org.sintef.thingml._
 
-//TODO: better handle naming conventions to avoid duplicating code and ease the maintenance
-
 object Context {
   val builder = new StringBuilder()
   
@@ -228,12 +226,10 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     builder append "object Main {\n\n"
     builder append "def main(args: Array[String]): Unit = {\n"
       
-    builder append "//Connectors\n"
-    var i : Int = 0
+    builder append "//Channels\n"
     self.allConnectors.foreach{ c =>
-      builder append "val " + c.getName + "_" + i + " = new Channel\n"
-      builder append c.getName + "_" + i + ".start\n"
-      i = i + 1
+      builder append "val " + c.instanceName + " = new Channel\n"
+      builder append c.instanceName + ".start\n"
     }
     
     //define temp arrays
@@ -246,18 +242,18 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
         
         var tempBuilder = new StringBuilder()
         init.getCardinality.generateScala(tempBuilder)
-        result = result + tempBuilder.toString
-        result = result + ")\n"
+        result += tempBuilder.toString
+        result += ")\n"
         
         arrayMap.get(init).get.foreach{pair => 
-          result = result +  init.scala_var_name + "("
+          result += init.scala_var_name + "("
           tempBuilder = new StringBuilder()
           pair._1.generateScala(tempBuilder)
-          result = result + tempBuilder.toString
-          result = result +  ") = "
+          result += tempBuilder.toString
+          result += ") = "
           tempBuilder = new StringBuilder()
           pair._2.generateScala(tempBuilder)
-          result = result + tempBuilder.toString + "\n"
+          result += tempBuilder.toString + "\n"
         }
         builder append result
       }
@@ -266,47 +262,39 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     builder append "//Things\n"
     self.allInstances.foreach{ i =>
       builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "("
-      var j = 0
-      self.initExpressionsForInstance(i).foreach{p =>         
-        if (j > 0)
-          builder append ", "
-        var result = p._1.scala_var_name + " = "
-        if (p._2 != null) {
-          var tempbuilder = new StringBuilder()
-          p._2.generateScala(tempbuilder)
-          result = result + tempbuilder.toString
-        } else {
-          result = result + "null.asInstanceOf[" + p._1.getType.scala_type + "]"
+      builder append (self.initExpressionsForInstance(i).collect{case p =>         
+            var result = p._1.scala_var_name + " = "
+            if (p._2 != null) {
+              var tempbuilder = new StringBuilder()
+              p._2.generateScala(tempbuilder)
+              result += tempbuilder.toString
+            } else {
+              result += "null.asInstanceOf[" + p._1.getType.scala_type + "]"
+            }
+            result
+        } 
+        ++ 
+        self.initExpressionsByArrays(i).keys.collect{ case init =>
+            init.scala_var_name + " = " + init.scala_var_name
         }
-        builder append result
-        j = j + 1
-      }
-      // Init array properties
-      self.initExpressionsByArrays(i).keys.foreach{ init =>
-        if (j > 0)
-          builder append ", "
-        builder append init.scala_var_name + " = " + init.scala_var_name
-        j = j + 1
-      }
+      ).mkString(", ")
       builder append ")\n"
     }
     
     builder append "//Bindings\n"
-    i = 0
     self.allConnectors.foreach{ c =>
       c.getCli.getInstance().getType.allStateMachines.foreach{sm1 =>
         c.getSrv.getInstance().getType.allStateMachines.foreach{sm2 =>
-          builder append c.getName + "_" + i + ".connect(\n" 
-          builder append c.getCli.getInstance.instanceName + ".getPort(\"" + c.getRequired.getName + "\").get,\n"
-          builder append c.getSrv.getInstance.instanceName + ".getPort(\"" + c.getProvided.getName + "\").get\n"
+          builder append c.instanceName + ".connect(\n" 
+          builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get,\n"
+          builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get\n"
           builder append")\n"
-          builder append c.getName + "_" + i + ".connect(\n" 
-          builder append c.getSrv.getInstance.instanceName + ".getPort(\"" + c.getProvided.getName + "\").get,\n"
-          builder append c.getCli.getInstance.instanceName + ".getPort(\"" + c.getRequired.getName + "\").get\n"
+          builder append c.instanceName + ".connect(\n" 
+          builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get,\n"
+          builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get\n"
           builder append")\n\n"
         }
       }
-      i = i + 1
     }
     
     builder append "//Starting Things\n"
@@ -324,7 +312,9 @@ case class InstanceScalaGenerator(override val self: Instance) extends ThingMLSc
 }
 
 case class ConnectorScalaGenerator(override val self: Connector) extends ThingMLScalaGenerator(self) {
-
+  val instanceName = "c_" + (if (self.getName != null) self.getName + "_" else "") + self.hashCode 
+  val clientName = self.getCli.getInstance.instanceName
+  val serverName = self.getSrv.getInstance.instanceName
 }
 
 
@@ -447,17 +437,15 @@ case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScal
     return tempbuilder.toString
   }
   
-  override def generateScala(builder: StringBuilder = Context.builder){}
-  
   def printGuard(builder: StringBuilder = Context.builder) {
     if(self.getGuard != null){
       builder append "override def checkGuard() : Boolean = {\n"
-      builder append "try {\n"
+      //builder append "try {\n"
       self.getGuard.generateScala()
-      builder append "}\ncatch {\n"
-      builder append "case nse : java.util.NoSuchElementException => return false\n"
-      builder append "case e : Exception => return false\n"
-      builder append"}\n"
+      //builder append "}\ncatch {\n"
+      //builder append "case nse : java.util.NoSuchElementException => return false\n"
+      //builder append "case e : Exception => return false\n"
+      //builder append"}\n"
       builder append "\n}\n"
     }
   }
@@ -465,7 +453,7 @@ case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScal
   def printAction(builder: StringBuilder = Context.builder) {
     builder append "override def executeActions() = {\n"
     if (Context.debug)
-      builder append "println(this + \".executeActions\")\n"
+      builder append "println(\"" + handlerInstanceName + ".executeActions\")\n"
     Option(self.getAction) match {
       case Some(a) =>
         self.getAction.generateScala()
@@ -491,7 +479,7 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
       case Some(a) =>
         builder append "override def executeBeforeActions() = {\n"
         if (Context.debug)
-          builder append "println(this + \".executeBeforeActions\")\n"
+          builder append "println(\"" + handlerInstanceName + ".executeBeforeActions\")\n"
         self.getBefore.generateScala()
         builder append "}\n\n"
       case None =>
@@ -500,7 +488,7 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
     printAction()
     Option(self.getAfter) match {
       case Some(a) =>
-        builder append "override def executeAfterActions() = {\n"
+        builder append "println(\"" + handlerInstanceName + ".executeAfterActions\")\n"
         if (Context.debug)
           builder append "println(this + \".executeAfterActions\")\n"
         self.getAfter.generateScala()
@@ -544,7 +532,7 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
   def generateActions(builder: StringBuilder = Context.builder) {
     builder append "override def onEntry() = {\n"
     if (Context.debug)
-      builder append "println(this + \".onEntry\")\n"
+      builder append "println(\"" + self.getName + ".onEntry\")\n"
     Option(self.getEntry) match {
       case Some(a) =>  
         self.getEntry.generateScala()
@@ -556,7 +544,7 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
     
     builder append "override def onExit() = {\n"
     if (Context.debug)
-      builder append "println(this + \".onExit\")\n"
+      builder append "println(\"" + self.getName + ".onExit\")\n"
     Option(self.getExit) match {
       case Some(a) =>  
         self.getExit.generateScala()
@@ -725,7 +713,6 @@ case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGener
             temp = temp(0).toUpperCase + temp.substring(1, temp.length)
             temp
         }
-        
     }
     return res
   }
@@ -742,10 +729,12 @@ case class PrimitiveTypeScalaGenerator(override val self: PrimitiveType) extends
 }
 
 case class EnumerationScalaGenerator(override val self: Enumeration) extends TypeScalaGenerator(self) {
+  val enumName = Context.firstToUpper(self.getName) + "_ENUM"
+    
   override def generateScala(builder: StringBuilder = Context.builder) {
     builder append "// Definition of Enumeration  " + self.getName + "\n"
-    builder append "object " + Context.firstToUpper(self.getName) + "_ENUM extends Enumeration {\n"
-    builder append "\ttype " + Context.firstToUpper(self.getName) + "_ENUM = " + scala_type + "\n"
+    builder append "object " + enumName + " extends Enumeration {\n"
+    builder append "\ttype " + enumName + " = " + scala_type + "\n"
     self.getLiterals.foreach {
       l => builder append "val " + l.scala_name + " : " + scala_type + " = " + l.enum_val +"\n"
     }
@@ -775,6 +764,7 @@ case class SendActionScalaGenerator(override val self: SendAction) extends Actio
     builder append "case None => println(\"Warning: no port " + self.getPort.getName + " You may consider revising your ThingML model.\")\n"
     builder append "}\n"
   }
+ 
   
   def concreteMsg(builder: StringBuilder = Context.builder) {
     builder append "new " + Context.firstToUpper(self.getMessage.getName) + "("
@@ -787,6 +777,19 @@ case class SendActionScalaGenerator(override val self: SendAction) extends Actio
     }
     builder append ")"
   }
+
+  
+  //This does not work... for some reasons...
+  /*  def concreteMsg(builder: StringBuilder = Context.builder) {
+   builder append "new " + Context.firstToUpper(self.getMessage.getName) + "("
+   builder append self.getParameters.collect{case p =>
+   val tempBuilder = new StringBuilder()
+   p.generateScala(tempBuilder)
+   tempBuilder.toString
+   }.mkString(", ")
+   builder append ")"
+   }
+   */
 }
 
 case class VariableAssignmentScalaGenerator(override val self: VariableAssignment) extends ActionScalaGenerator(self) {
@@ -794,7 +797,9 @@ case class VariableAssignmentScalaGenerator(override val self: VariableAssignmen
     if (self.getProperty.getCardinality != null) {
       self.getIndex.foreach{i =>
         builder append self.getProperty.scala_var_name
-        builder append "[" + i.generateScala() + "]"
+        val tempBuilder = new StringBuilder
+        i.generateScala(tempBuilder)
+        builder append "(" + tempBuilder.toString + ")"
         builder append " = "
         self.getExpression.generateScala()
         builder append "\n"
@@ -907,6 +912,10 @@ case class ExpressionScalaGenerator(val self: Expression) /*extends ThingMLScala
   }
 }
 
+/**
+ * All Expression concrete classes
+ */
+
 case class ArrayIndexScalaGenerator(override val self: ArrayIndex) extends ExpressionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
     self.getArray.generateScala()
@@ -915,10 +924,6 @@ case class ArrayIndexScalaGenerator(override val self: ArrayIndex) extends Expre
     builder append ")\n"
   }
 }
-
-/**
- * All Expression concrete classes
- */
 
 case class OrExpressionScalaGenerator(override val self: OrExpression) extends ExpressionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
@@ -1033,7 +1038,7 @@ case class ExpressionGroupScalaGenerator(override val self: ExpressionGroup) ext
 
 case class PropertyReferenceScalaGenerator(override val self: PropertyReference) extends ExpressionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append self.getProperty.qname("_") + "_var"
+    builder append self.getProperty.scala_var_name
   }
 }
 
@@ -1063,6 +1068,7 @@ case class BooleanLiteralScalaGenerator(override val self: BooleanLiteral) exten
 
 case class EnumLiteralRefScalaGenerator(override val self: EnumLiteralRef) extends ExpressionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
+    //builder append self.getEnum.enumName + "." + self.getLiteral.scala_name
     builder append Context.firstToUpper(self.getEnum.getName) + "_ENUM." + self.getLiteral.scala_name
   }
 }
