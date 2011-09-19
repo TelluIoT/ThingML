@@ -53,7 +53,7 @@ thing SubstituteServer includes API2 {
 			// its initial state
 			transition -> WaitingForLogin
 				event e: LoginClient?password
-				guard not e.pwd == password // This should be working
+				guard not (e.pwd == password) // This should be working
 				action LoginClient!access(false)
 		}
 		

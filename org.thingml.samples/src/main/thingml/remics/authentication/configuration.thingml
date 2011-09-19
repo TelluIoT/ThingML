@@ -21,14 +21,14 @@ import "mediator.thingml"
  
  
 // Config 1: Simple connection between the client and the server
-configuration OneClientOneServer {
+configuration RemicsOneClientOneServer {
 	instance client: Client
 	instance server: Server
 	connector client.LoginServer => server.LoginClient
 }
 
 // Config 2: Simple connection between five clients and the server
-configuration ManyClientsOneServer {
+configuration RemicsManyClientsOneServer {
 	instance client1: Client
 	instance client2: Client
 	instance client3: Client
@@ -45,8 +45,10 @@ configuration ManyClientsOneServer {
 
 // Config 3: Connection between the client and the alternative server 
 // through the mediator
-configuration Mediator {
+configuration RemicsMediator {
 	instance client: Client
+        set client.login = "bmorin"
+        set client.pwd = "clio"
 	instance substitute: SubstituteServer
 	instance mediator: Mediator
 	
@@ -57,7 +59,7 @@ configuration Mediator {
 // Config 4: Connection between 5 clients and a substitute server, 
 // through a single mediator
 // INFO: This is not supposed to work as there is no support for "session"
-configuration ManyClientsOneMediator {
+configuration RemicsManyClientsOneMediator {
 	instance client1: Client
 	instance client2: Client
 	instance client3: Client

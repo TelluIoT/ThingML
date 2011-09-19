@@ -146,8 +146,26 @@ object ScalaGenerator {
   }
   
   def compileAll(model: ThingMLModel, pack : String): Map[Configuration, String] = {
+    
+    var result = Map[Configuration, String]()
+    model.allConfigurations.filter{c=> !c.isFragment}.foreach {
+      t => result += (t -> compile(t, pack, model))
+    }
+    result
+  }
+
+  def messageDeclaration(m : Message, builder: StringBuilder = Context.builder) {
+    val nameParam = "override val name : String = " + Context.firstToUpper(m.getName) + ".getName"
+    val params = m.getParameters.collect{ case p => Context.protectScalaKeyword(p.getName) + " : " + p.getType.scala_type} += nameParam
+    builder append Context.firstToUpper(m.getName) + "("
+    builder append params.mkString(", ")
+    builder append ")"
+  }
+  
+  def compile(t: Configuration, pack : String, model: ThingMLModel) = {
     Context.init
     Context.pack = pack
+       
     generateHeader()
     
     model.allSimpleTypes.filter{ t => t.isInstanceOf[Enumeration] }.foreach{ e =>
@@ -162,23 +180,7 @@ object ScalaGenerator {
       messageDeclaration(m)
       Context.builder append " extends Event(name)\n"
     }
-    
-    var result = Map[Configuration, String]()
-    model.allConfigurations.filter{c=> !c.isFragment}.foreach {
-      t => result += (t -> compile(t, pack))
-    }
-    result
-  }
-
-  def messageDeclaration(m : Message, builder: StringBuilder = Context.builder) {
-    val nameParam = "override val name : String = " + Context.firstToUpper(m.getName) + ".getName"
-    val params = m.getParameters.collect{ case p => Context.protectScalaKeyword(p.getName) + " : " + p.getType.scala_type} += nameParam
-    builder append Context.firstToUpper(m.getName) + "("
-    builder append params.mkString(", ")
-    builder append ")"
-  }
   
-  def compile(t: Configuration, pack : String) = {
     t.generateScala()
     Context.builder.toString
   }
@@ -1014,8 +1016,9 @@ case class UnaryMinusScalaGenerator(override val self: UnaryMinus) extends Expre
 
 case class NotExpressionScalaGenerator(override val self: NotExpression) extends ExpressionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append " !"
+    builder append " !("
     self.getTerm.generateScala()
+    builder append ")"
   }
 }
 
