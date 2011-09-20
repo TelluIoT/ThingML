@@ -23,8 +23,9 @@ thing SoftTimer includes Timer, ThingMLSchedulerMsg
         timer!timer_timeout()
     end
     
-    function cancel() : Void
+    function cancel() : Integer
     do
+      var status : Integer = 0
       'try {'
       if (not(lastTask == 'null')) 
       do
@@ -34,18 +35,23 @@ thing SoftTimer includes Timer, ThingMLSchedulerMsg
       '} catch {'
       'case _ =>'
       javaTimer = 'new java.util.Timer()'
+      status = 1
       '}'
+      return status
     end
     
-    function start(delay : Integer) : Void
+    function start(delay : Integer) : Integer
     do
-        'cancel()'
+        var status : Integer = 0
+        cancel()
         lastTask = 'this.newTimerTask'
         'try {'
         '' & javaTimer & '.schedule(' & lastTask & ', ' & delay & ')'
         '} catch {'
         'case _ =>'
+        status = -1
         '}'
+        return status
     end
     
     statechart SoftTimer init default {
@@ -53,13 +59,13 @@ thing SoftTimer includes Timer, ThingMLSchedulerMsg
         internal start
             event m : timer?timer_start
             guard m.delay > 0
-            action do //should be implemented as proper ThingML function calls (currently not supported by compiler)
-                'start(' & m.delay & ')'
+            action do
+                start(m.delay)
             end
             
         internal cancel
             event m : timer?timer_cancel
-            action 'cancel()' //should be implemented as proper ThingML function calls (currently not supported by compiler)
+            action cancel()
     
         state default {}
         
