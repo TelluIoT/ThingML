@@ -33,7 +33,6 @@
 package org.thingml.graphexport.test;
 
 import java.io.*;
-import java.util.Hashtable;
 
 import junit.framework.TestCase;
 import org.eclipse.emf.common.util.URI;
@@ -41,7 +40,6 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.junit.Test;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
@@ -49,10 +47,15 @@ import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.cgenerator.*;
 import org.thingml.scalagenerator.*;
-
+import org.thingml.javagenerator.gui.*;
 import org.thingml.graphexport.*;
 
-import javax.lang.model.element.NestingKind;
+
+
+import java.util.AbstractMap.SimpleEntry;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -65,8 +68,6 @@ public class StandaloneParserTestLoadFile extends TestCase {
     public StandaloneParserTestLoadFile(String model_path) {
         this.model_path = model_path;
     }
-
-
 
     @Override
     public void runTest() throws IOException {
@@ -97,7 +98,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
         }
 
         try {
-            Hashtable<String, String> dots = ThingMLGraphExport.allGraphviz((ThingMLModel) model.getContents().get(0));
+            Map<String, String> dots = ThingMLGraphExport.allGraphviz((ThingMLModel) model.getContents().get(0));
             for (String name : dots.keySet()) {
                 System.out.println(" -> Writing file " + name + ".dot");
                 PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(name + ".dot")));
@@ -109,7 +110,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
         }
 
         try {
-            Hashtable<String, String> gml = ThingMLGraphExport.allGraphML((ThingMLModel) model.getContents().get(0));
+            Map<String, String> gml = ThingMLGraphExport.allGraphML((ThingMLModel) model.getContents().get(0));
             for (String name : gml.keySet()) {
                 System.out.println(" -> Writing file " + name + ".graphml");
                 PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(name + ".graphml")));
@@ -121,7 +122,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
         }
 
         try {
-            Hashtable<Configuration, String> ccode = CGenerator.compileAllJava((ThingMLModel) model.getContents().get(0));
+            Map<Configuration, String> ccode = CGenerator.compileAllJava((ThingMLModel) model.getContents().get(0));
             for (Configuration t : ccode.keySet()) {
                 System.out.println(" -> Writing file " + t.getName() + ".pde");
                 PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + ".pde")));
@@ -133,7 +134,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
         }
 
         try {
-            Hashtable<Configuration, String> scalacode = ScalaGenerator.compileAllJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
+            Map<Configuration, String> scalacode = ScalaGenerator.compileAllJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
             for (Configuration t : scalacode.keySet()) {
                 System.out.println(" -> Writing file " + t.getName() + ".scala");
                 PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + ".scala")));
@@ -144,6 +145,41 @@ public class StandaloneParserTestLoadFile extends TestCase {
             t.printStackTrace();
         }
 
+
+        try {
+            Map<Thing, SimpleEntry<String, String>> swingcodeThing = SwingGenerator.compileAllThingJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
+            Map<Configuration, String> swingcodeConf = SwingGenerator.compileAllConfigurationJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
+
+            List<String> alreadyGenerated = new LinkedList<String>();
+
+            for (Thing t : swingcodeThing.keySet()) {
+                if (!alreadyGenerated.contains(t.getName())) {
+                    alreadyGenerated.add(t.getName());
+
+                    System.out.println(" -> Writing file " + t.getName() + ".java");
+                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + ".java")));
+                    w.println(swingcodeThing.get(t).getKey());
+                    w.close();
+
+                    System.out.println(" -> Writing file " + t.getName() + "Mirror.java");
+                    w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + "Mirror.java")));
+                    w.println(swingcodeThing.get(t).getValue());
+                    w.close();
+                }
+            }
+            for (Configuration t : swingcodeConf.keySet()) {
+                if (!alreadyGenerated.contains(t.getName())) {
+                    alreadyGenerated.add(t.getName());
+
+                    System.out.println(" -> Writing file " + t.getName() + ".java");
+                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + "Main.java")));
+                    w.println(swingcodeConf.get(t));
+                    w.close();
+                }
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
 
     }
 
