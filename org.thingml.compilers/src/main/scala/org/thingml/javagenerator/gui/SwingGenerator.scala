@@ -185,7 +185,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
 
   override def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
      
-    builder append "public class Interactive" + self.getName + "DataGUI" + (if (isMirror) "Mirror" else "") + " extends Component implements ActionListener {\n\n"
+    builder append "public class Interactive" + self.getName + "Mock" + (if (isMirror) "Mirror" else "") + " extends Component implements ActionListener {\n\n"
 	
 	
     builder append "private SimpleDateFormat dateFormat = new SimpleDateFormat(\"dd MMM yyy 'at' HH:mm:ss.SSS\");"
@@ -323,7 +323,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append "return editorScrollPane;\n"
     builder append "}\n\n"
 	
-    builder append "private static String formatForPrint(String text) {\n"
+    builder append "private String formatForPrint(String text) {\n"
     builder append "return (text.endsWith(\"\\n\") ? text : text + \"\\n\");\n"
     builder append "}\n\n"
 
@@ -342,7 +342,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
       
     
     builder append "public static void main(String args[]){\n"
-    builder append "Interactive" + self.getName + "DataGUI" + (if (isMirror) "Mirror" else "") + "interactiveGUI = new Interactive" + self.getName + "DataGUI" + (if (isMirror) "Mirror" else "") + "();\n"
+    builder append "Interactive" + self.getName + "Mock" + (if (isMirror) "Mirror" else "") + " mock = new Interactive" + self.getName + "Mock" + (if (isMirror) "Mirror" else "") + "();\n"
     builder append "}\n"
     
     

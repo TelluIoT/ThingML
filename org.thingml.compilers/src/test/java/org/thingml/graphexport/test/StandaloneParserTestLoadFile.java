@@ -156,13 +156,13 @@ public class StandaloneParserTestLoadFile extends TestCase {
                 if (!alreadyGenerated.contains(t.getName())) {
                     alreadyGenerated.add(t.getName());
 
-                    System.out.println(" -> Writing file " + t.getName() + ".java");
-                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + ".java")));
+                    System.out.println(" -> Writing file " + t.getName() + "Mock.java");
+                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + "Mock.java")));
                     w.println(swingcodeThing.get(t).getKey());
                     w.close();
 
-                    System.out.println(" -> Writing file " + t.getName() + "Mirror.java");
-                    w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + "Mirror.java")));
+                    System.out.println(" -> Writing file " + t.getName() + "MockMirror.java");
+                    w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + "MockMirror.java")));
                     w.println(swingcodeThing.get(t).getValue());
                     w.close();
                 }
@@ -171,7 +171,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
                 if (!alreadyGenerated.contains(t.getName())) {
                     alreadyGenerated.add(t.getName());
 
-                    System.out.println(" -> Writing file " + t.getName() + ".java");
+                    System.out.println(" -> Writing file " + t.getName() + "Main.java");
                     PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + "Main.java")));
                     w.println(swingcodeConf.get(t));
                     w.close();
