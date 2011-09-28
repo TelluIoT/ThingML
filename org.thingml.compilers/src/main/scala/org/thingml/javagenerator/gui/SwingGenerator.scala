@@ -189,8 +189,8 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append "public class " + self.getName + "Mock" + (if (isMirror) "Mirror" else "") + " extends ReactiveComponent implements ActionListener {\n\n"
     
     builder append "@Override\n"
-    builder append "public void onIncomingMessage(SignedEvent e) {\n"    
-    builder append "print(e.event().name() + \"_via_\" + e.port(), e.toString());\n"
+    builder append "public void onIncomingMessage(SignedEvent e) {\n"   
+    builder append "print(e.event().name() + \"_via_\" + e.port().name(), e.event().toString());\n"
     builder append "}\n"
     
     generatePortDecl()
@@ -213,7 +213,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append "private JTextPane screen;\n"
     builder append "private JButton clearButton;\n"
     
-    builder append "StyledDocument doc;\n"
+    builder append "private StyledDocument doc;\n"
 	
     
     var messagesToSend = Map[Port, List[Message]]()
@@ -310,7 +310,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
 						
     builder append "c.gridy = 3;\n"
     builder append "c.gridx = 0;\n"
-    builder append "c.gridwidth = " + messagesToSend.size + ";\n"
+    builder append "c.gridwidth = " + messagesToSend.values.flatten.size + ";\n"
     builder append "frame.add(createJTextPane(), c);\n"
 			
     builder append "c.gridy = 4;\n"
@@ -318,6 +318,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
 			
     builder append "frame.pack();\n"
     builder append "clearButton.addActionListener(this);\n"
+    builder append "addListener(this);\n"
     builder append "frame.setVisible(true);\n"
     builder append "}\n\n"
 	
@@ -354,7 +355,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     val rnd = new Random()
     messagesToReceive.foreach{case (port, messages) =>
         messages.foreach{msg =>
-          builder append "Style receive" + msg.getName + "_via_" + port.getName + "Style = doc.addStyle(\"receive" + msg.getName + "_via_" + port.getName + "Style\", def);\n"
+          builder append "Style receive" + msg.getName + "_via_" + port.getName + "Style = doc.addStyle(\"receive" + msg.getName + "_via_" + Context.firstToUpper(self.getName) + "_" + port.getName + "Style\", def);\n"
           builder append "StyleConstants.setForeground(receive" + msg.getName + "_via_" + port.getName + "Style, new Color(" + rnd.nextInt(176) + ", " + rnd.nextInt(176) + ", " + rnd.nextInt(176) + "));\n"
         }        
     }
@@ -374,7 +375,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
         messages.foreach{msg =>
           builder append "else if ( ae.getSource() == getSend" + msg.getName + "_via_" + port.getName + "()) {\n"          
           builder append "port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ".send(new " + Context.firstToUpper(msg.getName) + "("
-          builder append msg.getParameters.collect{case p => "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "()"}.mkString(", ")
+          builder append ((Context.firstToUpper(msg.getName) + "$.MODULE$.getName()") :: msg.getParameters.collect{case p => "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "()"}.toList).mkString(", ")
           builder append "));\n"
           builder append "}\n"
         }
@@ -383,7 +384,16 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
       
     
     builder append "public static void main(String args[]){\n"
-    builder append self.getName + "Mock" + (if (isMirror) "Mirror" else "") + " mock = new " + self.getName + "Mock" + (if (isMirror) "Mirror" else "") + "();\n"
+    builder append self.getName + "Mock mock = new " + self.getName + "Mock();\n"
+    builder append self.getName + "MockMirror mockMirror = new " + self.getName + "MockMirror();\n"
+    
+    self.getPorts.foreach{port =>
+      builder append "Channel c_" + port.getName + "_" + port.hashCode + " = new Channel();\n"
+      builder append "c_" + port.getName + "_" + port.hashCode + ".connect(" + "mock.port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ", " + "mockMirror.port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ");\n"
+      builder append "c_" + port.getName + "_" + port.hashCode + ".connect(" + "mockMirror.port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ", " + "mock.port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ");\n"
+      builder append "c_" + port.getName + "_" + port.hashCode + ".start();\n"
+    }
+    
     builder append "}\n"
     
     
@@ -417,7 +427,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
         else
           builder append "rec = new $colon$colon(\"" + s.getName + "\", sent);\n"
       }
-      builder append "Port " + "port_" + Context.firstToUpper(self.getName) + "_" + p.getName + " = (Port) new Port(\"" + Context.firstToUpper(self.getName) + "_" + p.getName + 
+      builder append "port_" + Context.firstToUpper(self.getName) + "_" + p.getName + " = (Port) new Port(\"" + Context.firstToUpper(self.getName) + "_" + p.getName + 
       "\", rec, sent, this).start();\n"
     }
   }
