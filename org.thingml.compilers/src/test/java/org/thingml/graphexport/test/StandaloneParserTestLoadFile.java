@@ -57,6 +57,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import scala.io.Source$;
+
 /**
  *
  * @author ffl
@@ -136,6 +138,13 @@ public class StandaloneParserTestLoadFile extends TestCase {
         try {
             Map<Configuration, String> scalacode = ScalaGenerator.compileAllJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
             for (Configuration t : scalacode.keySet()) {
+                
+                String pom = Source$.MODULE$.fromInputStream(this.getClass().getClassLoader().getResourceAsStream("pomtemplates/pom.xml"),"utf-8").getLines().mkString("\n");
+                pom = pom.replace("<!--CONFIGURATIONNAME-->", t.getName());
+                PrintWriter pomw = new PrintWriter(new FileWriter(new File("test_out/" + t.getName() + "/pom.xml")));
+                pomw.println(pom);
+                pomw.close();
+                
                 File scaladir = new File("test_out/" + t.getName() + "/src/main/scala/org/thingml/generated/");
                 scaladir.mkdirs();
                 System.out.println(" -> Writing file " + t.getName() + ".scala");

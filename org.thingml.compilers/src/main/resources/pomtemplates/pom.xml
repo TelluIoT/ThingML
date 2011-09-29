@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.thingml.generated</groupId>
-    <artifactId>[$CONFIGURATION_NAME]</artifactId>
+    <artifactId><!--CONFIGURATIONNAME--></artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>ThingML :: [$CONFIGURATION_NAME]</name>
+    <name>ThingML :: <!--CONFIGURATIONNAME--></name>
     <url>http://www.ThingML.org</url>
 
     <properties>
