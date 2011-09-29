@@ -136,8 +136,10 @@ public class StandaloneParserTestLoadFile extends TestCase {
         try {
             Map<Configuration, String> scalacode = ScalaGenerator.compileAllJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
             for (Configuration t : scalacode.keySet()) {
+                File scaladir = new File("test_out/" + t.getName() + "/src/main/scala/org/thingml/generated/");
+                scaladir.mkdirs();
                 System.out.println(" -> Writing file " + t.getName() + ".scala");
-                PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + ".scala")));
+                PrintWriter w = new PrintWriter(new FileWriter(new File("test_out/" + t.getName() + "/src/main/scala/org/thingml/generated/" + t.getName() + ".scala")));
                 w.println(scalacode.get(t));
                 w.close();
             }
@@ -150,32 +152,36 @@ public class StandaloneParserTestLoadFile extends TestCase {
             Map<Thing, SimpleEntry<String, String>> swingcodeThing = SwingGenerator.compileAllThingJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
             Map<Configuration, String> swingcodeConf = SwingGenerator.compileAllConfigurationJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
 
-            List<String> alreadyGenerated = new LinkedList<String>();
+            //List<String> alreadyGenerated = new LinkedList<String>();
 
-            for (Thing t : swingcodeThing.keySet()) {
-                if (!alreadyGenerated.contains(t.getName())) {
+            for (Configuration c : swingcodeConf.keySet()) {
+                File javadir = new File("test_out/" + c.getName() + "/src/main/java/org/thingml/generated/");
+                javadir.mkdirs();
+                //TODO: This is sub-optimal.
+                for (Thing t : swingcodeThing.keySet()) {
+                    /*  if (!alreadyGenerated.contains(t.getName())) {
                     alreadyGenerated.add(t.getName());
-
+                     */
                     System.out.println(" -> Writing file " + t.getName() + "Mock.java");
-                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + "Mock.java")));
+                    PrintWriter w = new PrintWriter(new FileWriter(new File("test_out/" + c.getName() + "/src/main/java/org/thingml/generated/" + t.getName() + "Mock.java")));
                     w.println(swingcodeThing.get(t).getKey());
                     w.close();
 
                     System.out.println(" -> Writing file " + t.getName() + "MockMirror.java");
-                    w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + "MockMirror.java")));
+                    w = new PrintWriter(new FileWriter(new File("test_out/" + c.getName() + "/src/main/java/org/thingml/generated/" + t.getName() + "MockMirror.java")));
                     w.println(swingcodeThing.get(t).getValue());
                     w.close();
+                    //}
                 }
-            }
-            for (Configuration t : swingcodeConf.keySet()) {
-                if (!alreadyGenerated.contains(t.getName())) {
-                    alreadyGenerated.add(t.getName());
 
-                    System.out.println(" -> Writing file " + t.getName() + "Main.java");
-                    PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + "Main.java")));
-                    w.println(swingcodeConf.get(t));
-                    w.close();
-                }
+                /*if (!alreadyGenerated.contains(t.getName())) {
+                alreadyGenerated.add(t.getName());
+                 */
+                System.out.println(" -> Writing file " + c.getName() + "Main.java");
+                PrintWriter w = new PrintWriter(new FileWriter(new File("test_out/" + c.getName() + "/src/main/java/org/thingml/generated/" + "Main.java")));
+                w.println(swingcodeConf.get(c));
+                w.close();
+                //}
             }
         } catch (Throwable t) {
             t.printStackTrace();

@@ -48,7 +48,10 @@
                         **/*.cs
                         </exclude>   
                         <exclude>
-                        **/test_out/*.*
+                        **/test_out/**/*.*
+                        </exclude>   
+                        <exclude>
+                        **/resources/**/**.*
                         </exclude>   
                     </excludes>
                 </configuration>

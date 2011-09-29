@@ -18,6 +18,8 @@
  * see https://github.com/brice-morin/SMAc
  * @author: Brice MORIN <brice.morin@sintef.no>
  */
+
+//TODO: clean the way names are handled
 package org.thingml.javagenerator.gui
 
 import org.thingml.javagenerator.gui.SwingGenerator._
@@ -83,6 +85,7 @@ object Context {
     builder append "import java.awt.event.ActionEvent;\n"
     builder append "import java.awt.event.ActionListener;\n"
     builder append "import java.util.Arrays;\n"
+    builder append "import java.util.Date;\n"
 
     builder append "import javax.swing.JButton;\n"
     builder append "import javax.swing.JComboBox;\n"
@@ -90,6 +93,7 @@ object Context {
     builder append "import javax.swing.JLabel;\n"
     builder append "import javax.swing.JPanel;\n"
     builder append "import javax.swing.JScrollPane;\n"
+    builder append "import javax.swing.JTabbedPane;\n"
     builder append "import javax.swing.JTextField;\n"
     builder append "import javax.swing.JTextPane;\n"
     builder append "import javax.swing.text.BadLocationException;\n"
@@ -190,7 +194,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     
     builder append "@Override\n"
     builder append "public void onIncomingMessage(SignedEvent e) {\n"   
-    builder append "print(e.event().name() + \"_via_\" + e.port().name(), e.event().toString());\n"
+    builder append "print(e.event().name() + \"_via_\" + e.port().name(), dateFormat.format(new Date()) + \": \" + e.event().toString());\n"
     builder append "}\n"
     
     generatePortDecl()
@@ -201,21 +205,6 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append "}\n\n"
     
     //////////////////////////////////////////////////////////////////
-    
-    
-    
-	
-    builder append "private SimpleDateFormat dateFormat = new SimpleDateFormat(\"dd MMM yyy 'at' HH:mm:ss.SSS\");"
-    
-    //TODO: manage one tab for each port
-    //builder append "private JTabbedPane tabbedPane = new JTabbedPane();\n"
-    builder append "private JFrame frame;\n"
-    builder append "private JTextPane screen;\n"
-    builder append "private JButton clearButton;\n"
-    
-    builder append "private StyledDocument doc;\n"
-	
-    
     var messagesToSend = Map[Port, List[Message]]()
     if (!isMirror) 
       self.getPorts.foreach{p => messagesToSend += (p -> p.getSends.toList)} 
@@ -226,7 +215,25 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     if (!isMirror) 
       self.getPorts.foreach{p => messagesToReceive += (p -> p.getReceives.toList)} 
     else 
-      self.getPorts.foreach{p => messagesToReceive += (p -> p.getSends.toList)}
+      self.getPorts.foreach{p => messagesToReceive += (p -> p.getSends.toList)} 
+    
+    
+	
+    builder append "private SimpleDateFormat dateFormat = new SimpleDateFormat(\"dd MMM yyy 'at' HH:mm:ss.SSS\");"
+    
+    //TODO: manage one tab for each port
+    builder append "private JTabbedPane tabbedPane = new JTabbedPane();\n"
+    builder append "private JFrame frame;\n"
+    messagesToSend.foreach{case (port, messages) =>
+        builder append "private JPanel frame_" + port.getName + ";\n"
+    }
+    builder append "private JTextPane screen;\n"
+    builder append "private JButton clearButton;\n"
+    
+    builder append "private StyledDocument doc;\n"
+	
+    
+
 
     messagesToSend.foreach{case (port, messages) =>
         messages.foreach{send =>
@@ -277,43 +284,58 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append "}\n\n"
 	
     builder append "private void init(){\n"
-    builder append "clearButton = new JButton(\"Clear Console\");\n"
-    builder append "frame = new JFrame(\"" + self.getName + " Mock Simulator\");\n"
-    builder append "frame.setLayout(new GridBagLayout());\n"
-    builder append "frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\n"
-			
+    
     builder append "GridBagConstraints c = new GridBagConstraints();\n"
     builder append "c.gridwidth = 1;\n"
     builder append "c.fill = GridBagConstraints.HORIZONTAL;\n"
     builder append "c.insets = new Insets(0,3,0,3);\n"
-			
-    var x = 0
+    
+    builder append "clearButton = new JButton(\"Clear Console\");\n"
+    
+    builder append "c.gridy = 0;\n"
+    builder append "c.gridx = 0;\n"
+    builder append "frame = new JFrame(\"" + self.getName + " Mock Simulator\");\n"
+    builder append "frame.setLayout(new GridBagLayout());\n"
+    builder append "frame.add(tabbedPane, c);\n"
+    
     messagesToSend.foreach{case (port, messages) =>
+        builder append "frame_" + port.getName + " = new JPanel();\n"
+        builder append "frame_" + port.getName + ".setLayout(new GridBagLayout());\n"
+        //builder append "frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\n"
+    }		
+    
+    
+			
+    
+    messagesToSend.foreach{case (port, messages) =>
+        var x = 0
         messages.foreach{msg => 
           builder append "//GUI related to " + port.getName + "_via_" + port.getName + " => " + msg.getName + "\n"
           builder append "c.gridy = 0;\n"
           builder append "c.gridx = " + x + ";\n"
-          builder append "frame.add(createLabel(\"" + port.getName + " => " + msg.getName + "\"), c);\n"
+          builder append "frame_" + port.getName + ".add(createLabel(\"" + msg.getName + "\"), c);\n"
 			
           builder append "c.gridy = 1;\n"
           builder append "c.gridx = " + x + ";\n"
-          builder append "frame.add(create" + msg.getName + "_via_" + port.getName + "Panel(), c);\n"
+          builder append "frame_" + port.getName + ".add(create" + msg.getName + "_via_" + port.getName + "Panel(), c);\n"
 			
           builder append "c.gridy = 2;\n"
           builder append "c.gridx = " + x + ";\n"
           builder append "send" + msg.getName + "_via_" + port.getName + " = createSendButton(\"" + port.getName + " => " + msg.getName + "\");\n"
-          builder append "frame.add(send" + msg.getName + "_via_" + port.getName + ", c);\n"
+          builder append "frame_" + port.getName + ".add(send" + msg.getName + "_via_" + port.getName + ", c);\n"
 			
+          
+          builder append "tabbedPane.addTab(\"" + port.getName + "\", frame_" + port.getName + ");\n"
           x = x+1
         }
     }
 						
-    builder append "c.gridy = 3;\n"
+    builder append "c.gridy = 1;\n"
     builder append "c.gridx = 0;\n"
-    builder append "c.gridwidth = " + messagesToSend.values.flatten.size + ";\n"
+    builder append "c.gridwidth = 1;\n"
     builder append "frame.add(createJTextPane(), c);\n"
 			
-    builder append "c.gridy = 4;\n"
+    builder append "c.gridy = 2;\n"
     builder append "frame.add(clearButton, c);\n"
 			
     builder append "frame.pack();\n"
@@ -375,7 +397,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
         messages.foreach{msg =>
           builder append "else if ( ae.getSource() == getSend" + msg.getName + "_via_" + port.getName + "()) {\n"          
           builder append "port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ".send(new " + Context.firstToUpper(msg.getName) + "("
-          builder append ((Context.firstToUpper(msg.getName) + "$.MODULE$.getName()") :: msg.getParameters.collect{case p => "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "()"}.toList).mkString(", ")
+          builder append (msg.getParameters.collect{case p => "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"}.toList ::: List(Context.firstToUpper(msg.getName) + "$.MODULE$.getName()")).mkString(", ")
           builder append "));\n"
           builder append "}\n"
         }
@@ -457,12 +479,12 @@ case class MessageSwingGenerator(override val self: Message) extends ThingMLSwin
       
       if (p.getType.isInstanceOf[Enumeration]) {
         builder append p.getType.scala_type + "[] values" + self.getName + Context.firstToUpper(p.getName) + " = {"
-        p.getType.asInstanceOf[Enumeration].getLiterals.collect{case l => p.getType.scala_type + "." + l.getName}.mkString(", ") + "};\n"
-        "field" + self.getName + "_" +  Context.firstToUpper(p.getName) + " = new JComboBox(values" + self.getName + Context.firstToUpper(p.getName) + ");\n"	
+        builder append p.getType.asInstanceOf[Enumeration].getLiterals.collect{case l => p.getType.scala_type + "." + l.getName}.mkString(", ") + "};\n"
+        builder append "field" + self.getName + "_via_" + Context.port.getName + "_" +  Context.firstToUpper(p.getName) + " = new JComboBox(values" + self.getName + Context.firstToUpper(p.getName) + ");\n"	
       }
       else {		
-        "field" + self.getName + "_" + Context.firstToUpper(p.getName) + " = new JTextField();\n"
-        "field" + self.getName + "_" + Context.firstToUpper(p.getName) + "setText(" + self.getName + ");\n"
+        builder append "field" + self.getName + "_via_" + Context.port.getName + "_" + Context.firstToUpper(p.getName) + " = new JTextField();\n"
+        builder append "field" + self.getName + "_via_" + Context.port.getName + "_" + Context.firstToUpper(p.getName) + ".setText(\"" + self.getName + "\");\n"
       }
     
       builder append "c.gridx = 1;\n"
@@ -482,10 +504,21 @@ case class TypeSwingGenerator(override val self: Type) extends ThingMLSwingGener
     // Implemented in the sub-classes
   }
 
-  def generateScala_TypeRef(builder: StringBuilder) = {
-    scala_type
+  def java_type(): String = {
+    var res : String = self.getAnnotations.filter {
+      a => a.getName == "java_type"
+    }.headOption match {
+      case Some(a) => 
+        a.asInstanceOf[PlatformAnnotation].getValue
+      case None =>
+        println("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
+        var temp : String = self.getName
+        temp = temp(0).toUpperCase + temp.substring(1, temp.length)
+        temp
+    }
+    return res
   }
-
+  
   def scala_type(): String = {
     var res : String = self.getAnnotations.filter {
       a => a.getName == "scala_type"
@@ -493,17 +526,7 @@ case class TypeSwingGenerator(override val self: Type) extends ThingMLSwingGener
       case Some(a) => 
         a.asInstanceOf[PlatformAnnotation].getValue
       case None => 
-        self.getAnnotations.filter {
-          a => a.getName == "java_type"
-        }.headOption match {
-          case Some(a) => 
-            a.asInstanceOf[PlatformAnnotation].getValue
-          case None =>
-            println("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
-            var temp : String = self.getName
-            temp = temp(0).toUpperCase + temp.substring(1, temp.length)
-            temp
-        }
+        java_type
     }
     return res
   }
