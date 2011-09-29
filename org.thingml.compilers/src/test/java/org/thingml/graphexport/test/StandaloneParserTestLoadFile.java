@@ -136,7 +136,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
         }
 
         try {
-            Map<Configuration, String> scalacode = ScalaGenerator.compileAllJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
+            Map<Configuration, SimpleEntry<String, String>> scalacode = ScalaGenerator.compileAllJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
             for (Configuration t : scalacode.keySet()) {
                 
                 String pom = Source$.MODULE$.fromInputStream(this.getClass().getClassLoader().getResourceAsStream("pomtemplates/pom.xml"),"utf-8").getLines().mkString("\n");
@@ -149,7 +149,13 @@ public class StandaloneParserTestLoadFile extends TestCase {
                 scaladir.mkdirs();
                 System.out.println(" -> Writing file " + t.getName() + ".scala");
                 PrintWriter w = new PrintWriter(new FileWriter(new File("test_out/" + t.getName() + "/src/main/scala/org/thingml/generated/" + t.getName() + ".scala")));
-                w.println(scalacode.get(t));
+                w.println(scalacode.get(t).getKey());
+                w.close();
+                
+                
+                System.out.println(" -> Writing file " + t.getName() + "Main.java");
+                w = new PrintWriter(new FileWriter(new File("test_out/" + t.getName() + "/src/main/scala/org/thingml/generated/Main.scala")));
+                w.println(scalacode.get(t).getValue());
                 w.close();
             }
         } catch (Throwable t) {

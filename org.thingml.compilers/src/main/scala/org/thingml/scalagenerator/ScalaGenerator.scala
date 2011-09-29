@@ -26,6 +26,7 @@ import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import java.util.{ArrayList, Hashtable}
+import java.util.AbstractMap.SimpleEntry
 import org.sintef.thingml._
 
 object Context {
@@ -137,17 +138,17 @@ object ScalaGenerator {
     case _ => ExpressionScalaGenerator(self)
   }
   
-  def compileAllJava(model: ThingMLModel, pack : String): Hashtable[Configuration, String] = {
-    val result = new Hashtable[Configuration, String]()
+  def compileAllJava(model: ThingMLModel, pack : String): Hashtable[Configuration, SimpleEntry[String, String]] = {
+    val result = new Hashtable[Configuration, SimpleEntry[String, String]]()
     compileAll(model, pack).foreach{entry =>
-      result.put(entry._1, entry._2)
+      result.put(entry._1, new SimpleEntry(entry._2._1, entry._2._2))
     }
     result
   }
   
-  def compileAll(model: ThingMLModel, pack : String): Map[Configuration, String] = {
+  def compileAll(model: ThingMLModel, pack : String): Map[Configuration, Pair[String, String]] = {
     
-    var result = Map[Configuration, String]()
+    var result = Map[Configuration, Pair[String, String]]()
     model.allConfigurations.filter{c=> !c.isFragment}.foreach {
       t => result += (t -> compile(t, pack, model))
     }
@@ -162,11 +163,17 @@ object ScalaGenerator {
     builder append ")"
   }
   
-  def compile(t: Configuration, pack : String, model: ThingMLModel) = {
+  def compile(t: Configuration, pack : String, model: ThingMLModel) : Pair[String, String] = {
     Context.init
     Context.pack = pack
        
+    var mainBuilder = new StringBuilder()
+    
+    
     generateHeader()
+    generateHeader(mainBuilder)
+    
+    t.generateScalaMain(mainBuilder)
     
     model.allSimpleTypes.filter{ t => t.isInstanceOf[Enumeration] }.foreach{ e =>
       e.generateScala()
@@ -182,7 +189,7 @@ object ScalaGenerator {
     }
   
     t.generateScala()
-    Context.builder.toString
+    (Context.builder.toString, mainBuilder.toString)
   }
   
   def generateHeader(builder: StringBuilder = Context.builder) = {
@@ -221,7 +228,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
       inst.generateScala()
     }
 
-    generateScalaMain()
+    //generateScalaMain()
   }
 
   def generateScalaMain(builder: StringBuilder = Context.builder) {
