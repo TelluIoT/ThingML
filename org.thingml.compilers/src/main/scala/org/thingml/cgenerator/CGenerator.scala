@@ -125,7 +125,7 @@ object CGenerator {
   def openArduinoIDE(pde_file : String, arduinoDir : String, arduinolibdir : String)  {
 
 
-    var arduino = new File(arduinoDir)
+    val arduino = new File(arduinoDir)
 
     var classpath : String = System.getProperty("java.class.path")
 
@@ -143,7 +143,7 @@ object CGenerator {
       return;
     }
 
-    var libdir = new File(arduino, "lib")
+    val libdir = new File(arduino, "lib")
     if (!libdir.exists() || !libdir.isDirectory) {
       System.err.println("ERROR: Could not find lib directory in arduino installation at " + arduinoDir + ".")
       return;
@@ -158,7 +158,7 @@ object CGenerator {
       }
     }
 
-    var pb: ProcessBuilder = new ProcessBuilder("java")
+    val pb: ProcessBuilder = new ProcessBuilder("java")
 
     pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
     pb.command().add("-Djava.library.path=" + libpath)
@@ -168,7 +168,7 @@ object CGenerator {
 
     println("EXEC : " + pb.command().toString)
 
-    var env = pb.environment
+    val env = pb.environment
 
     env.put("APPDIR", arduino.getAbsolutePath)
     env.put("PATH", arduino.getAbsolutePath + "/java/bin" + File.pathSeparator + env.get("PATH"))
@@ -176,7 +176,7 @@ object CGenerator {
 
     pb.directory(arduino)
 
-    var p: Process = pb.start
+    val p: Process = pb.start
 
     console_out ! p
     console_err ! p

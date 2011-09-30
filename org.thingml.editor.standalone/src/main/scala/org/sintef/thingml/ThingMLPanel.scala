@@ -49,6 +49,7 @@ import org.thingml.scalagenerator.ScalaGenerator
 import java.io._
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
+import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 
 import scala.collection.JavaConversions._
 
@@ -89,36 +90,36 @@ class ThingMLPanel extends JPanel {
         if (targetFile.isEmpty) return;
         //val returnVal = filechooser.showOpenDialog(ThingMLPanel.this);
         //if (returnVal == 0) {
-         // println("cfilechooser.getSelectedFile = " + filechooser.getSelectedFile);
+        // println("cfilechooser.getSelectedFile = " + filechooser.getSelectedFile);
 
-          try {
+        try {
 //            val folder = filechooser.getSelectedFile.toString
 
-            // Load the model
-            var rs: ResourceSet = new ResourceSetImpl
-            var xmiuri: URI = URI.createFileURI(targetFile.get.getAbsolutePath)
-            var model: Resource = rs.createResource(xmiuri)
-            model.load(null)
+          // Load the model
+          var rs: ResourceSet = new ResourceSetImpl
+          var xmiuri: URI = URI.createFileURI(targetFile.get.getAbsolutePath)
+          var model: Resource = rs.createResource(xmiuri)
+          model.load(null)
 
-            var m = model.getContents.get(0).asInstanceOf[ThingMLModel]
+          var m = model.getContents.get(0).asInstanceOf[ThingMLModel]
 
-            var arduino_dir = ThingMLSettings.get_arduino_dir_or_choose_if_not_set(ThingMLPanel.this)
+          var arduino_dir = ThingMLSettings.get_arduino_dir_or_choose_if_not_set(ThingMLPanel.this)
 
-            if (arduino_dir != null) {
-              CGenerator.compileAndRunArduino(m, arduino_dir, ThingMLSettings.get_arduino_lib_dir())
-            }
-            /*
-            CGenerator.compileAll(model.getContents.get(0).asInstanceOf[ThingMLModel]).foreach{entry =>
-              System.out.println(" -> Writing file " + entry._1.getName + ".pde")
-              var w: PrintWriter = new PrintWriter(new FileWriter(folder + "/" + new File(entry._1.getName + ".pde")))
-              w.println(entry._2)
-              w.close
-            }
-            */
+          if (arduino_dir != null) {
+            CGenerator.compileAndRunArduino(m, arduino_dir, ThingMLSettings.get_arduino_lib_dir())
           }
-          catch {
-            case t : Throwable => t.printStackTrace()
-          }
+          /*
+           CGenerator.compileAll(model.getContents.get(0).asInstanceOf[ThingMLModel]).foreach{entry =>
+           System.out.println(" -> Writing file " + entry._1.getName + ".pde")
+           var w: PrintWriter = new PrintWriter(new FileWriter(folder + "/" + new File(entry._1.getName + ".pde")))
+           w.println(entry._2)
+           w.close
+           }
+           */
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
 
         //}
       }
@@ -128,33 +129,25 @@ class ThingMLPanel extends JPanel {
   bScala.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         println("Input file : " + targetFile)
-        if (targetFile.isEmpty) return;
-        val returnVal = filechooser.showOpenDialog(ThingMLPanel.this);
-        if (returnVal == 0) {
-          println("scalafilechooser.getSelectedFile = " + filechooser.getSelectedFile);
+        if (targetFile.isEmpty) 
+          return
+        try {
+          // Load the model
+          var rs: ResourceSet = new ResourceSetImpl
+          var xmiuri: URI = URI.createFileURI(targetFile.get.getAbsolutePath)
+          var model: Resource = rs.createResource(xmiuri)
+          model.load(null)
 
-          try {
-            val folder = filechooser.getSelectedFile.toString
-
-            // Load the model
-            var rs: ResourceSet = new ResourceSetImpl
-            var xmiuri: URI = URI.createFileURI(targetFile.get.getAbsolutePath)
-            var model: Resource = rs.createResource(xmiuri)
-            model.load(null)
-
-            ScalaGenerator.compileAll(model.getContents.get(0).asInstanceOf[ThingMLModel], folder).foreach{entry =>
-              System.out.println(" -> Writing file " + entry._1.getName + ".scala")
-              var w: PrintWriter = new PrintWriter(new FileWriter(folder + "/" + new File(entry._1.getName + ".scala")))
-              w.println(entry._2)
-              w.close
-            }
+          val thingmlModel = model.getContents.get(0).asInstanceOf[ThingMLModel]
+          thingmlModel.allConfigurations.foreach{c =>
+            ScalaGenerator.compileAndRun(c, thingmlModel)                                                                      
           }
-          catch {
-            case t : Throwable => t.printStackTrace()
-          }
-
-        }         
-      }
+          
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+      }         
     })
   arduinoToolBar.add("Compilers", b)
   arduinoToolBar.add("Compilers", bScala)

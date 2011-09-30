@@ -25,8 +25,12 @@ import org.sintef.thingml.constraints.ThingMLHelpers
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
+import scala.io.Source
+import scala.actors._
+import scala.actors.Actor._
 import java.util.{ArrayList, Hashtable}
 import java.util.AbstractMap.SimpleEntry
+import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
 import org.sintef.thingml._
 
 object Context {
@@ -136,6 +140,80 @@ object ScalaGenerator {
     case exp: ArrayIndex => ArrayIndexScalaGenerator(exp)
     case exp: FunctionCallExpression => FunctionCallExpressionScalaGenerator(exp)
     case _ => ExpressionScalaGenerator(self)
+  }
+  
+  private val console_out = actor {
+    loopWhile(true){
+      react {
+        case TIMEOUT =>
+          //caller ! "react timeout"
+        case proc:Process =>
+          println("[PROC] " + proc)
+          val out = new BufferedReader( new InputStreamReader(proc.getInputStream))
+
+          var line:String = null
+          while({line = out.readLine; line != null}){
+            println("["+ proc + " OUT] " + line)
+          }
+
+          out.close
+      }
+    }
+  }
+
+  private val console_err = actor {
+    loopWhile(true){
+      react {
+        case TIMEOUT =>
+          //caller ! "react timeout"
+        case proc:Process =>
+          println("[PROC] " + proc)
+
+          val err = new BufferedReader( new InputStreamReader(proc.getErrorStream))
+          var line:String = null
+
+          while({line = err.readLine; line != null}){
+            println("["+ proc + " ERR] " + line)
+          }
+          err.close
+
+      }
+    }
+  }
+  
+  def compileAndRun(cfg : Configuration, model: ThingMLModel) {
+    val code = compile(cfg, "org.thingml.generated", model)
+    val rootDir = System.getProperty("user.home") + "/ThingML_temp/" + cfg.getName
+    val outputDir = System.getProperty("user.home") + "/ThingML_temp/" + cfg.getName + "/src/main/scala"
+    
+    val outputDirFile = new File(outputDir)
+    outputDirFile.mkdirs
+    
+    var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + cfg.getName() + ".scala")));
+    w.println(code._1);
+    w.close();
+    
+    w = new PrintWriter(new FileWriter(new File(outputDir + "/Main.scala")));
+    w.println(code._2);
+    w.close();
+    
+    val pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/pom.xml"),"utf-8").getLines().mkString("\n").replace("<!--CONFIGURATIONNAME-->", cfg.getName())
+    w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
+    w.println(pom);
+    w.close();
+    
+    val pb: ProcessBuilder = new ProcessBuilder("mvn")
+
+    pb.command().add("mvn clean install")
+    pb.command().add("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
+
+    println("EXEC : " + pb.command().toString)
+
+    pb.directory(new File(System.getProperty("user.home") + "/ThingML_temp/" + cfg.getName))
+
+    val p: Process = pb.start
+    console_out ! p
+    console_err ! p
   }
   
   def compileAllJava(model: ThingMLModel, pack : String): Hashtable[Configuration, SimpleEntry[String, String]] = {
