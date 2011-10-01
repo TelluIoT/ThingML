@@ -16,6 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.version>2.9.0-1</scala.version>
+        <thingml.version>0.6.0-SNAPSHOT</thingml.version>
         <smac.version>0.6.0-SNAPSHOT</smac.version>
         <bundle.vendor>SINTEF</bundle.vendor>
     </properties>
@@ -45,6 +46,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.samples.utils</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.samples.resources</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.sintef</groupId>
             <artifactId>org.sintef.smac</artifactId>
             <version>${smac.version}</version>
@@ -56,18 +67,43 @@
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
-            <artifactId>scala-compiler</artifactId>
-            <version>${scala.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
             <artifactId>scala-swing</artifactId>
             <version>${scala.version}</version>
         </dependency>
     </dependencies>
     
     <build>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${project.build.directory}/generated-resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+ 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-shared-resources</id>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
+                            <includeArtifacIds>org.thingml.samples.resources</includeArtifacIds>
+                            <includeGroupIds>org.thingml</includeGroupIds>
+                            <excludeTransitive>true</excludeTransitive>
+             <!--use as much as needed to be specific...also scope,type,classifier etc-->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
