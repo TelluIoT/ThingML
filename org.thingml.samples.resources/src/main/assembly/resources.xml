@@ -24,7 +24,7 @@
     <fileSets>
         <fileSet>
             <directory>src/main/resources</directory>
-            <outputDirectory></outputDirectory>
+            <outputDirectory></outputDirectory>     
         </fileSet>
     </fileSets>
 </assembly>

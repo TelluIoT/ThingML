@@ -48,12 +48,16 @@
         <dependency>
             <groupId>org.thingml</groupId>
             <artifactId>org.thingml.samples.utils</artifactId>
-            <version>${thingml.version}</version>
+            <version>${thingml.version}</version>     
         </dependency>
         <dependency>
             <groupId>org.thingml</groupId>
             <artifactId>org.thingml.samples.resources</artifactId>
             <version>${thingml.version}</version>
+            <classifier>resources</classifier>
+            <type>zip</type>
+      <!-- Make sure this isn't included on any classpath-->
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.sintef</groupId>
