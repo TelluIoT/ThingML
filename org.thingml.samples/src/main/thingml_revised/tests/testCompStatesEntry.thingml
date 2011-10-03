@@ -1,0 +1,40 @@
+import "../thingml.thingml"
+
+thing TestCompStatesEntry includes Test 
+@test "t # IC1"
+@test "tx # IC1I"
+@test "t2121 # IC12121"
+@test "t21xt # IC121IC1"
+{
+	statechart TestCompStatesEntry init I {
+	
+		state I {
+			on entry harness!testOut('\'I\'')
+			transition -> CS
+			event m : harness?testIn
+			guard m.c == '\'t\''
+		}
+		
+		composite state CS init S1 {
+		
+		on entry harness!testOut('\'C\'')
+		transition -> I
+		event m : harness?testIn
+		guard m.c == '\'x\''
+		
+			state S1 {
+				on entry harness!testOut('\'1\'')
+				transition -> S2
+				event m : harness?testIn
+				guard m.c == '\'2\''
+			}
+			
+			state S2 {
+				on entry harness!testOut('\'2\'')
+				transition -> S1
+				event m : harness?testIn
+				guard m.c == '\'1\''
+			}
+		}
+	}
+}

@@ -1,0 +1,55 @@
+import "../thingml.thingml"
+
+thing TestArray includes Test 
+@test "12345678x12345678 # 12345678e87654321"
+{
+
+	property index : UInt8 = 0
+	
+	property array : Int16[8]
+	
+	// First half of the array initialized here
+	set array[0] = 1
+	set array[1] = 2
+	set array[2] = 3
+	set array[3] = 4
+	// Other half of the array is initialized in the 
+	// configuration in order to make sure that it works too
+    
+    statechart TestPropertyPing init start {
+    	
+    	internal event m : harness?testIn
+		guard m.c > '\'0\'' and m.c < '\'9\'' // 1..8
+		action harness!testOut( array[m.c - 49] + 48 )
+    
+    	state start {
+    		transition -> initialized
+			event m : harness?testIn
+			guard m.c == '\'x\''
+    	}
+    	
+    	state initialized {
+    	on entry do
+            harness!testOut('\'e\'')
+    		// Populate the array
+    		index = 0
+    		while (index < 8) do
+    			array[index] = 8 - index
+                index = index + 1
+    		end
+    	end
+    	}
+
+    }
+}
+
+configuration fragment TestArrays {
+    
+    instance test : TestArray
+    
+    set test.array[7] = 8
+    set test.array[4] = 5
+	set test.array[5] = 6
+	set test.array[6] = 7
+	
+}

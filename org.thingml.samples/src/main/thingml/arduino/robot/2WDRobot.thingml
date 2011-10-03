@@ -1,5 +1,7 @@
 import "../core/arduino.thingml"
 import "../core/analog_input.thingml"
+import "../core/digital_input.thingml"
+
 
 thing fragment 2WDRobotMsg {
     message accelerate(speed : UInt8); 
@@ -9,17 +11,27 @@ thing fragment 2WDRobotMsg {
     message stop(); 
 }
 
-thing 2WDRobot includes 2WDRobotMsg
+thing 2WDRobot includes 2WDRobotMsg, AnalogInputMsgs, DigitalInput
 {
     
     provided port Move {
-        sends temperature    
+        receives accelerate, decelerate, turn_left, turn_right, stop    
+    }
+    
+    provided port Bumbers {
+    	
     }
             
     required port AnalogInput
     {
         receives analog_input_value
         sends read_analog_input    
+    }
+    
+    required port DigitalIO
+    {
+        receives digital_read_result
+        sends digital_read    
     }
 	
 	statechart LM335Impl init Init

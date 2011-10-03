@@ -1,0 +1,27 @@
+import "../datatypes.thingml"
+
+/*****************************************************************************
+ * Definition of the ThingML test framework
+ *****************************************************************************/
+thing fragment TestMsg {
+	message testOut(c : Char);
+	message testIn(c : Char);
+	message testFailure();
+}
+
+thing fragment TestHarness includes TestMsg {
+
+	provided port test {
+		sends testIn
+		receives testOut, testFailure
+	}
+	
+}
+
+thing fragment Test includes TestMsg {
+
+	required port harness {
+		receives testIn
+		sends testOut, testFailure
+	}
+}

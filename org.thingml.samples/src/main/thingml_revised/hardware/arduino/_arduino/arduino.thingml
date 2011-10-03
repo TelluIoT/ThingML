@@ -1,0 +1,52 @@
+import "../arduino.thingml"
+
+thing ArduinoArduino includes Arduino
+@pim "Arduino"
+@platform "arduino"
+{   
+    // Implemetation which maps to extern calls to the arduino lib
+    statechart ArduinoArduino init RunningArduino {
+        state RunningArduino {
+        
+            internal event m : DigitalIO?pin_mode 
+            action 'pinMode(' & m.pin & ', '& m.mode &');'
+            
+            internal event m : DigitalIO?digital_write 
+            action 'digitalWrite(' & m.pin & ', '& m.value &');'
+            
+            internal event m : DigitalIO?digital_read 
+            action DigitalIO!digital_read_result(m.pin, 'digitalRead(' & m.pin &')')
+            
+            internal event m : AnalogIO?analog_reference 
+            action 'analogReference(' & m.type & ');'
+            
+            internal event m : AnalogIO?analog_read 
+            action AnalogIO!analog_read_result(m.pin, 'analogRead(' & m.pin &')')
+            
+            internal event m : AnalogIO?analog_write 
+            action 'analogWrite(' & m.pin & ', '& m.value &');'
+            
+            internal event m : AdvancedIO?tone 
+            action 'tone(' & m.pin & ', '& m.frequency & ', '& m.duration &');'
+            
+            internal event m : AdvancedIO?no_tone 
+            action 'noTone(' & m.pin & ');'
+            
+            internal event m : Ping?ping 
+            action Ping!pong()
+            
+            internal event m : EEPROM?eeprom_read 
+            action EEPROM!eeprom_value('EEPROM.read(' & m.address &')')
+            
+            internal event m : EEPROM?eeprom_write 
+            action 'EEPROM.write('& m.address &', '& m.value &');'
+            
+            internal event m : EEPROM?eeprom_sync_write 
+            action do 
+               'EEPROM.write('& m.address &', '& m.value &');'
+               EEPROM!eeprom_write_ack()
+            end
+                    
+        }
+    }
+}

@@ -1,0 +1,25 @@
+import "../thingml.thingml"
+
+thing TestAfter includes Test 
+@test "t # EA"
+@test "tt # EAEA"
+@test "tdfgt # EAEA"
+@test "t* # EA*"
+{
+	statechart TestAfter init I {
+	
+		state I {
+			transition -> J
+			event m : harness?testIn
+			guard m.c == '\'t\''
+			after harness!testOut('\'A\'')
+		}
+		state J {
+			on entry harness!testOut('\'E\'')
+			transition -> J
+			event m : harness?testIn
+			guard m.c == '\'t\''
+			after harness!testOut('\'A\'')
+		}
+	}
+}

@@ -119,7 +119,7 @@ thing PCFanCtrl includes TinyPWMMsgs, LcdScreenMsgs, FanSensorsMsgs, LM335Msg, T
                 transition -> Auto event Timer?timer_timeout
                 guard t_out < 22
                 action do
-                    pwmin = 27        
+                    pwmin = 27       
                     pwmout = 27
                 end
                 

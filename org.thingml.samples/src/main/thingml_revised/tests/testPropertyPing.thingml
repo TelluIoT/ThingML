@@ -1,0 +1,66 @@
+import "../thingml.thingml"
+
+thing PingMsg {
+    message ping(num : Int16);
+    message pong(num : Int16);        
+}
+
+thing PingServer includes PingMsg {
+    
+    provided port pp {
+         receives ping
+         sends pong
+    }
+    
+    statechart PingServer init Idle {
+    
+        state Idle {
+            internal event p : pp?ping
+            action pp!pong(p.num)    
+        }    
+    } 
+}
+
+thing TestPropertyPing includes Test, PingMsg 
+@test "ppfpppff # P1P1P0P1P1P1P0P0"
+{
+	property num : Int16
+	
+	required port ppclient {
+        sends ping
+        receives pong    
+    }
+    
+    statechart TestPropertyPing init Idle {
+    
+    	state Idle {
+    		transition -> Ping
+    		event m : harness?testIn
+    		guard m.c == '\'p\''
+    		after ppclient!ping(num)
+    		transition -> Ping 
+    		event m : harness?testIn
+    		guard m.c == '\'f\''
+    		after ppclient!ping(0) // 0 != num.
+    	}
+    	
+    	state Ping {
+    		on entry harness!testOut('\'P\'')
+    		transition -> Idle
+    		event p : ppclient?pong
+    		guard p.num == num
+    		after harness!testOut ('\'1\'')
+    		transition -> Idle
+    		event p : ppclient?pong
+    		guard not (p.num == num)
+    		after harness!testOut ('\'0\'')
+    	}
+    }
+}
+
+configuration fragment TestPropertyPingFrag {
+    instance pingServ : PingServer
+    instance test : TestPropertyPing
+    	set test.num = 1
+    connector test.ppclient => pingServ.pp
+}

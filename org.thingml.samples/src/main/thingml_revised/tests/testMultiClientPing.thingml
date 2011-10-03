@@ -1,0 +1,88 @@
+import "../thingml.thingml"
+
+// Two independents client server couples.
+
+thing PingMsg {
+    message ping(num : Int16);
+    message pong(num : Int16);        
+}
+
+thing PingServer includes PingMsg {
+    
+    provided port pp {
+         receives ping
+         sends pong
+    }
+    
+    statechart PingServer init Idle {
+    
+        state Idle {
+            internal event p : pp?ping
+            action pp!pong(p.num)    
+        }    
+    } 
+}
+
+thing TestMultiClientPing includes Test, PingMsg
+@test "1121200221 # P1P1P2P1P2PPP2P2P1" // False
+{
+    required port ppclient1 {
+        sends ping
+        receives pong    
+    }
+    
+    required port ppclient2 {
+        sends ping
+        receives pong    
+    }
+    
+	statechart TestMultiClientPing init Ping {
+	
+		state Ping {
+			internal event m : harness?testIn
+			guard m.c == '\'1\''
+			action do
+                	harness!testOut('\'P\'')
+                	ppclient1!ping(1)
+                end
+            internal event m : harness?testIn
+			guard m.c == '\'2\''
+			action do
+                	harness!testOut('\'P\'')
+                	ppclient2!ping(2)
+            	end
+            internal event m : harness?testIn
+			guard m.c == '\'0\''
+			action do
+                	harness!testOut('\'P\'')
+                	ppclient2!ping(0)
+            	end
+		}
+		
+		region R1 init Idle {
+		
+			state Idle {
+				internal event p : ppclient1?pong
+				guard p.num == 1
+				action harness!testOut('\'1\'')
+			}
+		}
+		
+		region R2 init Idle {
+		
+			state Idle {
+				internal event p : ppclient2?pong
+				guard p.num == 2
+				action harness!testOut('\'2\'')
+			}
+		}
+	}
+}
+
+configuration fragment TestMultiClientPingFrag {
+    instance pingServ1 : PingServer
+    instance pingServ2 : PingServer
+    instance test : TestMultiClientPing
+    connector test.ppclient1 => pingServ1.pp
+    connector test.ppclient2 => pingServ2.pp
+}
