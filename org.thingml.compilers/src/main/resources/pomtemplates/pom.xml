@@ -77,7 +77,7 @@
     </dependencies>
     
     <build>
-        <resources>
+         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
             </resource>
@@ -96,7 +96,9 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <outputDirectory>${basedir}</outputDirectory>
+                            <includes>**/resources/**</includes>
                             <includeArtifacIds>org.thingml.samples.resources</includeArtifacIds>
+                            <excludeArtifacIds>org.thingml.samples.utils</excludeArtifacIds>
                             <includeGroupIds>org.thingml</includeGroupIds>
                             <excludeTransitive>true</excludeTransitive>
                         </configuration>
