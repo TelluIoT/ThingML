@@ -184,7 +184,7 @@ object ScalaGenerator {
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
     val code = compile(cfg, "org.thingml.generated", model)
     val rootDir = System.getProperty("user.home") + "/ThingML_temp/" + cfg.getName
-    val outputDir = System.getProperty("user.home") + "/ThingML_temp/" + cfg.getName + "/src/main/scala"
+    val outputDir = System.getProperty("user.home") + "/ThingML_temp/" + cfg.getName + "/src/main/scala/org/thingml/generated"
     
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
@@ -281,6 +281,7 @@ object ScalaGenerator {
     builder append "package " + Context.pack + "\n"
     builder append "import org.sintef.smac._\n"
     builder append "import org.thingml.devices._\n"
+    builder append "import org.thingml.utils._\n"
   }
 }
 

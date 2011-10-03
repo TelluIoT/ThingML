@@ -33,24 +33,24 @@ case class LedColor(val name: String, val imgOnUrl: String, val imgOffUrl: Strin
 object LedColor{
 
   val BLUE = new LedColor("blue",
-    "target/generated-resources/led/blue_led_on_40px.png",
-    "target/generated-resources/led/blue_led_off_40px.png")
+    "src/main/resources/led/blue_led_on_40px.png",
+    "src/main/resources/led/blue_led_off_40px.png")
 
   val GREEN = new LedColor("green",
-    "target/generated-resources/led/green_led_on_40px.png",
-    "target/generated-resources/led/green_led_off_40px.png")
+    "src/main/resources/led/green_led_on_40px.png",
+    "src/main/resources/led/green_led_off_40px.png")
 
   val ORANGE = new LedColor("orange",
-    "target/generated-resources/led/orange_led_on_40px.png",
-    "target/generated-resources/led/orange_led_off_40px.png")
+    "src/main/resources/led/orange_led_on_40px.png",
+    "src/main/resources/led/orange_led_off_40px.png")
 
   val RED = new LedColor("red",
-    "target/generated-resources/led/red_led_on_40px.png",
-    "target/generated-resources/led/red_led_off_40px.png")
+    "src/main/resources/led/red_led_on_40px.png",
+    "src/main/resources/led/red_led_off_40px.png")
 
   val YELLOW = new LedColor("yellow",
-    "target/generated-resources/led/yellow_led_on_40px.png",
-    "target/generated-resources/led/yellow_led_off_40px.png")
+    "src/main/resources/led/yellow_led_on_40px.png",
+    "src/main/resources/led/yellow_led_off_40px.png")
 }
 
 

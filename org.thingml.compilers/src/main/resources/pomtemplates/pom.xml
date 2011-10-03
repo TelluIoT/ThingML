@@ -81,10 +81,6 @@
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
             </resource>
-            <resource>
-                <directory>${project.build.directory}/generated-resources</directory>
-                <filtering>true</filtering>
-            </resource>
         </resources>
  
         <plugins>
@@ -99,11 +95,10 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
+                            <outputDirectory>${basedir}</outputDirectory>
                             <includeArtifacIds>org.thingml.samples.resources</includeArtifacIds>
                             <includeGroupIds>org.thingml</includeGroupIds>
                             <excludeTransitive>true</excludeTransitive>
-             <!--use as much as needed to be specific...also scope,type,classifier etc-->
                         </configuration>
                     </execution>
                 </executions>

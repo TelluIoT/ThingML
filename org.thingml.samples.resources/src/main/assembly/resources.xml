@@ -23,8 +23,7 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>src/main/resources</directory>
-            <outputDirectory></outputDirectory>     
+            <directory>src/main/resources</directory> 
         </fileSet>
     </fileSets>
 </assembly>

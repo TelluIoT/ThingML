@@ -37,8 +37,8 @@ import java.awt.Dimension
 class Button extends java.awt.Component{
   var isPressed = false
 
-  private val imagePressed: BufferedImage = ImageIO.read(new File("target/generated-resources/button/button_pressed.png"))
-  private val imageReleased: BufferedImage = ImageIO.read(new File("target/generated-resources/button/button_released.png"))
+  private val imagePressed: BufferedImage = ImageIO.read(new File("src/main/resources/button/button_pressed.png"))
+  private val imageReleased: BufferedImage = ImageIO.read(new File("src/main/resources/button/button_released.png"))
 
   override def paint(g: Graphics) = isPressed match {
     case true => g.drawImage(imagePressed, 0, 0, null)
