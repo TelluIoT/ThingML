@@ -1,0 +1,42 @@
+import "../timer.thingml"
+import "../scheduler.thingml"
+
+// Manage a set of software timers.
+thing TimerArduino includes Timer, ThingMLSchedulerMsg
+@pim "Timer"
+@platform "arduino"
+{
+	required port Polling 
+    {
+		receives poll
+	}
+    
+    statechart SoftTimer init Idle 
+    {
+        property target : Long = 0
+    
+        state Idle 
+        {
+            transition start -> Counting
+            event m : timer?timer_start
+            guard m.delay > 0
+            action target = 'millis()' + m.delay
+        }
+        
+        state Counting 
+        {    
+            transition timeout -> Idle 
+            event Polling?poll
+            guard not ('millis()' < target)
+            after timer!timer_timeout()
+                
+            transition cancel -> Idle
+            event m : timer?timer_cancel
+                
+            internal reset
+            event m : timer?timer_start
+            guard m.delay > 0
+            action target = 'millis()' + m.delay
+        }
+    }
+}

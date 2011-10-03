@@ -1,0 +1,40 @@
+import "../test.thingml"
+import "../../hardware/arduino/arduino.thingml"
+
+thing TestHarnessArduino includes TestHarness, ThingMLScheduler 
+@pim "TestArness"
+@platform "arduino"
+{
+	required port polling {
+        receives poll
+    }
+    
+	statechart ArduinoHarness init Testing {
+		
+		on entry 'Serial.begin(9600);'
+		
+		state Testing {
+			
+			internal event polling?poll
+            guard 'Serial.available()' > 0
+            action test!testIn('(char)Serial.read()')
+            
+            internal event m : test?testOut
+            action 'Serial.print(' & m.c & ');'
+            
+            transition -> Failed 
+            event test?testFailure
+            action 'Serial.print(" *FAILURE* ");'
+			
+		}
+		
+		state Failed {
+
+		}
+	}
+}
+
+configuration fragment TestHarnessArduino {
+	instance arduino : Arduino
+	instance harness : TestHarnessArduino
+}

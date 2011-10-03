@@ -1,0 +1,57 @@
+import "../thingml.thingml"
+
+thing TestRegion includes Test 
+@test "t # I^AF^B"
+@test "ttt # I^AF^BI^AF^B"
+@test "tatzzat # I^AF^BIF^ABAIF^B"
+
+
+{
+	statechart TestRegion init I {
+	
+		state I {
+			on entry harness!testOut('\'I\'')
+			transition -> F
+			event m : harness?testIn
+			guard m.c == '\'t\''
+			transition -> F
+			event m : harness?testIn
+			guard m.c == '\'a\''
+		}
+		
+		state F {
+			on entry harness!testOut('\'F\'')
+			transition -> I
+			event m : harness?testIn
+			guard m.c == '\'t\''
+			transition -> I
+			event m : harness?testIn
+			guard m.c == '\'a\''
+		}
+		
+		region R init A {
+		
+			state A {
+				on entry harness!testOut('\'A\'')
+				//on exit harness!testOut('\'X\'')
+				transition -> B
+				event m : harness?testIn
+				guard m.c == '\'t\''
+				transition -> B
+				event m : harness?testIn
+				guard m.c == '\'z\''
+			}
+		
+			state B {
+				on entry harness!testOut('\'B\'')
+				//on exit harness!testOut('\'1\'')
+				transition -> A
+				event m : harness?testIn
+				guard m.c == '\'t\''
+				transition -> A
+				event m : harness?testIn
+				guard m.c == '\'z\''
+			}
+		}			
+	}
+}

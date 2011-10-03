@@ -1,0 +1,118 @@
+import "../thingml.thingml"
+
+thing MyMsg {
+    message a();
+    message b();
+    message c(i : Int16);        
+}
+
+thing A includes MyMsg {
+	
+	property buf : Int16
+	
+    provided port pp {
+         receives a, c
+         sends b, c
+    }
+    
+    statechart A init Idle {
+       
+        state Idle {
+            transition -> Inc 
+            event pp?a
+            after do
+            	pp!b()
+            	pp!c(0)
+            	end    
+        }    
+        
+        state Inc {
+        	transition -> Tmp1
+        	event pp?a
+        	transition -> Tmp2
+        	event c : pp?c
+        	action buf = c.i
+        }
+        
+        state Tmp1 {
+        	transition -> Idle
+        	event c : pp?c
+        	after pp!c(c.i + 1)
+        }
+        
+        state Tmp2 {
+        	transition -> Idle
+        	event pp?a
+        	after pp!c(buf + 1)
+        }
+    } 
+}
+
+thing TestMultiMessages includes Test, MyMsg
+@test "sss # sWRSTsWRSTsWRST"
+{
+	property count : Int16 = 0
+
+    required port pp {
+        sends a, c
+        receives b, c
+    }
+    
+	statechart TestMultiMessages init Idle {
+	
+		state Idle {
+            on entry count = 0
+			on exit harness!testOut('\'s\'')
+			transition -> A
+			event m : harness?testIn
+			guard m.c == '\'s\''
+			after pp!a()
+		}
+
+		state A {
+            on entry harness!testOut('\'W\'')
+			transition -> Tmp1
+			event pp?b
+			transition -> Tmp2
+			event m : pp?c
+			guard m.i == count	
+		}
+		
+		state Tmp1 {
+			on exit harness!testOut('\'R\'')
+			transition -> B
+			event m : pp?c
+			guard m.i == count
+			after do
+                count = count + 1
+				pp!a()
+				pp!c(count - 1)
+				end
+		}
+		
+		state Tmp2 {
+			on exit harness!testOut('\'Q\'')
+			transition -> B
+			event pp?b
+			after do
+                count = count + 1
+				pp!a()
+				pp!c(count - 1)
+				end
+		}
+		
+		state B {
+			on entry harness!testOut('\'S\'')
+			transition -> Idle
+			event m : pp?c
+			guard m.i == count
+			after harness!testOut('\'T\'')	
+		}
+	}
+}
+
+configuration fragment TestMultiMessagesFrag {
+    instance obj : A
+    instance test : TestMultiMessages
+    connector test.pp => obj.pp
+}

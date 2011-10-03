@@ -1,0 +1,36 @@
+import "brickAPI.thingml"
+import "../button.thingml"
+
+
+thing ButtonScala includes BrickSensor, Button
+@pim "Button"
+@platform "scala"
+{
+    set device = 'new org.thingml.devices.ButtonDemo()'
+    
+	statechart behavior init Ready {
+		
+		on entry 
+        do 
+		  'register()'
+		end
+
+        //This is an example to implement push mode (send the last value whenever the mock is udapted)
+        internal 
+        event m : Sensor?update
+        action
+        do
+            if (lastValue == 0) 
+            do
+                Button!press()
+            end
+            if (lastValue == 1)
+            do
+                Button!release()
+            end
+        end
+			
+		state Ready {}
+		
+	}
+}

@@ -1,0 +1,100 @@
+import "../thingml.thingml"
+
+// Three servers on the same port and one client.
+
+thing PingMsg {
+    message ping(num : Int16);
+    message pong(num : Int16);        
+}
+
+thing PingServer includes PingMsg {
+    
+    property num : Int16
+    
+    provided port pp {
+         receives ping
+         sends pong
+    }
+    
+    statechart PingServer init Idle {
+    
+        state Idle {
+            internal event p : pp?ping
+            guard p.num == num
+            action pp!pong(num)    
+        }    
+    } 
+}
+
+thing TestMultiServerPing includes Test, PingMsg
+@test "12221 # P1P2P2P2P1"
+@test "12221011 # P1P2P2P2P1P"
+{
+    required port ppclient {
+        sends ping
+        receives pong    
+    }
+    
+	statechart TestMultiServerPing init Ping {
+	
+		state Ping {
+            transition -> Pong
+			event m : harness?testIn
+			guard m.c == '\'0\''
+			after do
+                	harness!testOut('\'P\'')
+                	ppclient!ping(0)
+                end
+			transition -> Pong
+			event m : harness?testIn
+			guard m.c == '\'1\''
+			after do
+                	harness!testOut('\'P\'')
+                	ppclient!ping(1)
+                end
+            transition -> Pong
+			event m : harness?testIn
+			guard m.c == '\'2\''
+			after do
+                	harness!testOut('\'P\'')
+                	ppclient!ping(2)
+            	end
+            transition -> Pong
+			event m : harness?testIn
+			guard m.c == '\'3\''
+			after do
+                	harness!testOut('\'P\'')
+                	ppclient!ping(3)
+            	end
+		}
+
+		state Pong {
+    
+			transition -> Ping
+			event p : ppclient?pong
+			guard p.num == 1
+			after harness!testOut('\'1\'')
+			transition -> Ping
+			event p : ppclient?pong
+			guard p.num == 2
+			after harness!testOut('\'2\'')
+            transition -> Ping
+			event p : ppclient?pong
+			guard p.num == 3
+			after harness!testOut('\'3\'')
+		}
+	}
+}
+
+configuration fragment TestMultiServerPingFrag {
+    instance pingServ1 : PingServer
+    	set pingServ1.num = 1
+    instance pingServ2 : PingServer
+    	set pingServ2.num = 2
+    instance pingServ3 : PingServer
+    	set pingServ3.num = 3
+    instance test : TestMultiServerPing
+    connector test.ppclient => pingServ1.pp
+    connector test.ppclient => pingServ2.pp
+    connector test.ppclient => pingServ3.pp
+}

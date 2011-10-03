@@ -1,0 +1,16 @@
+import "../datatypes.thingml"
+
+/*****************************************************************************
+ * Definition of the ThingML scheduler messages
+ *****************************************************************************/
+thing fragment ThingMLSchedulerMsg {
+	message setup();
+	message poll();
+}
+
+thing ThingMLScheduler includes ThingMLSchedulerMsg 
+{
+	provided port Polling {
+		sends poll, setup
+	}
+}

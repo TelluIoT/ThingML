@@ -1,0 +1,17 @@
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the LED. 
+//*
+
+import "../led.thingml"
+import "../../io/_arduino/digital_output.thingml"
+
+configuration fragment Led
+{
+    group io : DigitalOutputArduino
+
+    instance led : Led	 
+    connector led.DigitalOutput => io.digital_output.DigitalOutput
+} 

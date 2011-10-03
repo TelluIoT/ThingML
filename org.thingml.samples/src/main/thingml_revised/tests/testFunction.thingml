@@ -1,0 +1,70 @@
+import "../thingml.thingml"
+
+thing TestFunction includes Test 
+@test "11=22=888=999999999= # 2;4;24;81;"
+@test "55 55 55 55 55 55 55 55 55 55 55 01 = # 111;"
+{
+    
+    function sum(a : Int16, b : Int16) : Int16 do
+    	return a + b
+    end
+    
+    function sendChar(c : Char) do
+    	harness!testOut( c )
+    end
+    
+    function sendInt(i : Int16) do
+    	var hundreds : Int8 = i / 100
+    	i = i - (100 * hundreds)
+    	var tens : Int8 = i / 10
+    	i = i - (10 * tens)
+    	harness!testOut( intToChar(hundreds) )
+    	harness!testOut( intToChar(tens) )
+    	harness!testOut( intToChar(i) )
+    end
+    
+    function charToInt(c : Char) : Int8 do
+    	return c - 48
+    end
+    
+    function intToChar(i : Int8) : Char do
+    	if ( i > -1 and i < 10) return i + 48
+    	return -1 // Error
+    end
+    
+    function isDigit(c : Char) : Boolean 
+    	return c > 47 and c < 59
+  
+    statechart TestPropertyPing init ADD {
+    
+    	state ADD {
+			
+			property result : UInt8 = 0
+			
+			on entry do
+				result = 0
+			end
+			
+			internal event m : harness?testIn
+			guard isDigit(m.c)
+			action do
+				result = sum(result, charToInt(m.c))
+			end
+			
+    		transition -> ADD
+			event m : harness?testIn
+			guard m.c == '\'=\''
+			action do
+				sendInt(result)
+				sendChar('\';\'')
+			end
+			    		
+    	}
+    }
+}
+
+configuration fragment TestFunctionFrag {
+    
+    instance test : TestFunction
+
+}

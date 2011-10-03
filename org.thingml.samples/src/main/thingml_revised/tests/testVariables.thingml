@@ -1,0 +1,74 @@
+import "../thingml.thingml"
+
+thing TestVariables includes Test 
+@test "xx # abcdefxxxbxxgabcabcdefxx"
+{
+
+	property pa : Char = '\'a\''
+	
+	readonly property pb : Char = '\'b\''
+    
+    statechart TestPropertyPing init state1 {
+    
+    property pc : Char = '\'c\''
+    
+    	state state1 {
+    		
+    		property pd : Char = '\'d\''
+    		
+    		on entry do
+    			var pe : Char = '\'e\''
+    			if (pa == '\'a\'') do
+    				var pf : Char = '\'f\''
+    				harness!testOut( pa )
+    				harness!testOut( pb )
+    				harness!testOut( pc )
+    				harness!testOut( pd )
+    				harness!testOut( pe )
+    				harness!testOut( pf )
+    				pe = '\'x\''
+    				pf = '\'x\''
+    				harness!testOut( pe )
+    				harness!testOut( pf )
+    			end
+    			pa = '\'x\''
+    			pc = '\'x\''
+    			pd = '\'x\''
+    		end
+    		
+    		transition -> state2
+			event m : harness?testIn
+			guard m.c == '\'x\''
+			action do
+				harness!testOut( pa ) pa = '\'a\''
+				harness!testOut( pb )
+				harness!testOut( pc ) pc = '\'c\''
+				harness!testOut( pd ) pd = '\'d\''
+				var pg : Char
+				pg = '\'g\''
+				harness!testOut( pg )
+			end
+    		
+    	}
+    	
+    	state state2 {
+    		
+    		transition -> state1
+			event m : harness?testIn
+			guard m.c == '\'x\''
+			action do
+				harness!testOut( pa ) 
+				harness!testOut( pb )
+				harness!testOut( pc ) 
+			end
+			
+    	}
+
+    }
+}
+
+configuration fragment TestVariablesFrag {
+    
+    instance test : TestVariables
+
+}

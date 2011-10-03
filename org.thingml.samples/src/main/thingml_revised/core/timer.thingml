@@ -1,0 +1,24 @@
+import "../datatypes.thingml"
+
+
+/*****************************************************************************
+ * Definition of the built-in things and messages
+ *****************************************************************************/
+ 
+thing fragment TimerMsgs {
+	// Start the Timer
+	message timer_start(delay : Integer);
+	// Cancel the Timer
+	message timer_cancel();
+	// Notification that the timer has expired
+	message timer_timeout();
+}
+
+thing Timer includes TimerMsgs
+{
+	provided port timer
+    {
+		sends timer_timeout
+		receives timer_start, timer_cancel
+	}
+}

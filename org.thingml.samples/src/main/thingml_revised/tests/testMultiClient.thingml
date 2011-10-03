@@ -1,0 +1,257 @@
+import "../thingml.thingml"
+
+// One client and twenty five servers on the same port.
+
+thing PingMsg {
+    message ping();
+    message pong();        
+}
+
+thing Server includes PingMsg {
+    
+    provided port pp {
+         receives ping
+         sends pong
+    }
+    
+    statechart Server init Idle {
+    
+        state Idle {
+            internal event p : pp?ping
+            action pp!pong()    
+        }    
+    } 
+}
+
+thing TestMultiClient includes Test, PingMsg
+@test "p # RRRRRRRRRRRRRRRRRRRRRRRRRW"
+@test "pp # RRRRRRRRRRRRRRRRRRRRRRRRRWRRRRRRRRRRRRRRRRRRRRRRRRRW"
+{
+    required port ppclient {
+        sends ping
+        receives pong    
+    }
+     
+	statechart TestMultiClient init Ping {
+	
+		state Ping {
+			transition -> Wait1
+			event m : harness?testIn
+			guard m.c == '\'p\''
+			after ppclient!ping()
+		}
+		
+		state Wait0 {
+			transition -> Wait1
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait1 {
+			transition -> Wait2
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait2 {
+			transition -> Wait3
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait3 {
+			transition -> Wait4
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait4 {
+			transition -> Wait5
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait5 {
+			transition -> Wait6
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait6 {
+			transition -> Wait7
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait7 {
+			transition -> Wait8
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait8 {
+			transition -> Wait9
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait9 {
+			transition -> Wait10
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait10 {
+			transition -> Wait11
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait11 {
+			transition -> Wait12
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait12 {
+			transition -> Wait13
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait13 {
+			transition -> Wait14
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait14 {
+			transition -> Wait15
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait15 {
+			transition -> Wait16
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait16 {
+			transition -> Wait17
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait17 {
+			transition -> Wait18
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait18 {
+			transition -> Wait19
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait19 {
+			transition -> Wait20
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait20 {
+			transition -> Wait21
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait21 {
+			transition -> Wait22
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait22 {
+			transition -> Wait23
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait23 {
+			transition -> Wait24
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait24 {
+			transition -> Wait25
+			event m : ppclient?pong
+			after harness!testOut('\'R\'') 
+		}
+		
+		state Wait25 {
+			transition -> Ping
+			event m : ppclient?pong
+			after do 
+				harness!testOut('\'R\'')
+				harness!testOut('\'W\'')
+				end 
+		}
+	}
+}
+
+configuration fragment TestMultiClientFrag {
+    instance server1 : Server
+    instance server2 : Server
+    instance server3 : Server
+    instance server4 : Server
+    instance server5 : Server
+    instance server6 : Server
+    instance server7 : Server
+    instance server8 : Server
+    instance server9 : Server
+    instance server10 : Server
+    instance server11 : Server
+    instance server12 : Server
+    instance server13 : Server
+    instance server14 : Server
+    instance server15 : Server
+    instance server16 : Server
+    instance server17 : Server
+    instance server18 : Server
+    instance server19 : Server
+    instance server20 : Server
+    instance server21 : Server
+    instance server22 : Server
+    instance server23 : Server
+    instance server24 : Server
+    instance server25 : Server
+    instance test : TestMultiClient
+    connector test.ppclient => server1.pp
+    connector test.ppclient => server2.pp
+    connector test.ppclient => server3.pp
+    connector test.ppclient => server4.pp
+    connector test.ppclient => server5.pp
+    connector test.ppclient => server6.pp
+    connector test.ppclient => server7.pp
+    connector test.ppclient => server8.pp
+    connector test.ppclient => server9.pp
+    connector test.ppclient => server10.pp
+    connector test.ppclient => server11.pp
+    connector test.ppclient => server12.pp
+    connector test.ppclient => server13.pp
+    connector test.ppclient => server14.pp
+    connector test.ppclient => server15.pp
+    connector test.ppclient => server16.pp
+    connector test.ppclient => server17.pp
+    connector test.ppclient => server18.pp
+    connector test.ppclient => server19.pp
+    connector test.ppclient => server20.pp
+    connector test.ppclient => server21.pp
+    connector test.ppclient => server22.pp
+    connector test.ppclient => server23.pp
+    connector test.ppclient => server24.pp
+    connector test.ppclient => server25.pp
+}

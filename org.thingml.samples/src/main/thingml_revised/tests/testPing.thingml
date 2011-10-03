@@ -1,0 +1,60 @@
+import "../thingml.thingml"
+
+// One client server couple.
+
+thing PingMsg {
+    message ping();
+    message pong();        
+}
+
+thing Pingable includes PingMsg {
+    provided port pp {
+         receives ping
+         sends pong
+    }
+    
+    statechart PingableImpl init Idle {
+        state Idle {
+            internal event pp?ping
+            action pp!pong()    
+        }    
+    } 
+}
+
+thing TestPing includes Test, PingMsg
+@test "ppp # epxrepxrepxr"
+{
+    required port ppclient {
+        sends ping
+        receives pong    
+    }
+    
+	statechart TestPingImpl init Ping {
+	
+		state Ping {
+			transition -> Pong
+			event m : harness?testIn
+			guard m.c == '\'p\''
+			after do
+                harness!testOut('\'p\'')
+                ppclient!ping()
+            end
+		}
+
+		state Pong {
+    
+            on entry harness!testOut('\'e\'')
+            on exit harness!testOut('\'x\'')
+
+			transition -> Ping
+			event m : ppclient?pong
+			after harness!testOut('\'r\'')
+		}
+	}
+}
+
+configuration fragment TestPingFrag {
+    instance pingable : Pingable
+    instance test : TestPing
+    connector test.ppclient => pingable.pp
+}
