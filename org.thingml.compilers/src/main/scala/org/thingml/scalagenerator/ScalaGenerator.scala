@@ -182,9 +182,11 @@ object ScalaGenerator {
   }
   
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
+    new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
+    
     val code = compile(cfg, "org.thingml.generated", model)
-    val rootDir = System.getProperty("user.home") + "/ThingML_temp/" + cfg.getName
-    val outputDir = System.getProperty("user.home") + "/ThingML_temp/" + cfg.getName + "/src/main/scala/org/thingml/generated"
+    val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
+    val outputDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/scala/org/thingml/generated"
     
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
