@@ -202,7 +202,9 @@ object ScalaGenerator {
     w.println(pom);
     w.close();
     
-    val pb: ProcessBuilder = new ProcessBuilder("mvn")
+    javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean install\n$>mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+    
+    /*val pb: ProcessBuilder = new ProcessBuilder("mvn")
 
     pb.command().add("mvn clean install")
     pb.command().add("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
@@ -213,7 +215,7 @@ object ScalaGenerator {
 
     val p: Process = pb.start
     console_out ! p
-    console_err ! p
+    console_err ! p*/
   }
   
   def compileAllJava(model: ThingMLModel, pack : String): Hashtable[Configuration, SimpleEntry[String, String]] = {
