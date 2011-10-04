@@ -1,5 +1,4 @@
 import "../timer.thingml"
-import "../scheduler.thingml"
 
 datatype JavaTimer
 @java_type "java.util.Timer";
@@ -8,7 +7,7 @@ datatype JavaTimerTask
 @java_type "java.util.TimerTask";
 
 // Manage a set of software timers.
-thing TimerScala includes Timer, ThingMLSchedulerMsg
+thing TimerScala includes Timer
 @pim "Timer"
 @platform "scala"
 @scala_trait "org.thingml.utils.TimerTaskTrait"
@@ -16,10 +15,6 @@ thing TimerScala includes Timer, ThingMLSchedulerMsg
 
     property javaTimer : JavaTimer = 'new java.util.Timer()'
     property lastTask : JavaTimerTask
-	
-    required port Polling {
-		receives poll
-	}
 
     function run()@override "true" 
     do

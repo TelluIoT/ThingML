@@ -1,6 +1,5 @@
 import "../../hardware/bricks/_scala/led.thingml"
 import "../../core/_scala/timer.thingml"
-import "../../core/_scala/scheduler.thingml"
 
 thing Blink2Leds includes LedMsgs, TimerMsgs
 {
@@ -55,16 +54,11 @@ thing Blink2Leds includes LedMsgs, TimerMsgs
 
 configuration ScalaBlink2LedsSimulator {       
 
-	instance scheduler : ThingMLSchedulerScala
-
 	instance led1 : LedScala
 	instance led2 : LedScala
 	
 	instance timer1 : TimerScala
 	instance timer2 : TimerScala
-	
-	connector timer1.Polling => scheduler.Polling
-	connector timer2.Polling => scheduler.Polling
 	
 	// The blink application
 	instance app : Blink2Leds

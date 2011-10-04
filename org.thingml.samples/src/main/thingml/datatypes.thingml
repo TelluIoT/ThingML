@@ -6,58 +6,61 @@
 datatype Byte	
 	@c_type "uint8_t"
 	@c_byte_size "1"
-	@java_type "byte";
+	@java_type "Byte";
 
 datatype Boolean	
 	@c_type "uint8_t"
 	@c_byte_size "2"
-	@java_type "boolean";
+	@java_type "Boolean";
 
 datatype Integer	
 	@c_type "int"
 	@c_byte_size "2"
-	@java_type "int";
+	@java_type "Integer"
+    @scala_type "Int";
 	
 datatype UInt8	
 	@c_type "uint8_t"
 	@c_byte_size "1"
-	@java_type "short";
+	@java_type "Short";
 	
 datatype Int8	
 	@c_type "int8_t"
 	@c_byte_size "1"
-	@java_type "short";
+	@java_type "Short";
 
 datatype UInt16	
 	@c_type "uint16_t"
 	@c_byte_size "2"
-	@java_type "int";
+	@java_type "Integer"
+    @scala_type "Int";
 
 datatype Int16	
 	@c_type "int"
     @c_byte_size "2"
-	@java_type "int";
+	@java_type "Integer"
+    @scala_type "Int";
 
 
 datatype Long	
 	@c_type "long"
 	@c_byte_size "4"
-	@java_type "long";
+	@java_type "Long";
 	
 datatype ULong	
 	@c_type "unsigned long"
 	@c_byte_size "4"
-	@java_type "long";
+	@java_type "Long";
 
 datatype Double	
 	@c_type "double"
 	@c_byte_size "4"
-	@java_type "double";
+	@java_type "Double";
 
 datatype Char	
 	@c_type "char"
 	@c_byte_size "1"
-	@java_type "char";
+	@java_type "Char";
 
 datatype String	
 	@c_type "char *"
@@ -65,7 +68,7 @@ datatype String
 	@java_type "String";
 	
 enumeration DigitalState 
-	@java_type "byte"
+	@java_type "Byte"
     @c_byte_size "1"
 	@c_type "uint8_t"
 {

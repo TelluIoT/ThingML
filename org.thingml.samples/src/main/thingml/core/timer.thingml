@@ -14,7 +14,7 @@ thing fragment TimerMsgs {
 	message timer_timeout();
 }
 
-thing Timer includes TimerMsgs
+thing fragment Timer includes TimerMsgs
 {
 	provided port timer
     {

@@ -6,7 +6,6 @@
 //*
 
 import "../../thingml.thingml"
-import "../io/digital_output.thingml"
 
 thing fragment LedMsgs
 {
@@ -15,35 +14,10 @@ thing fragment LedMsgs
 	message led_toggle ();
 }
 
-thing Led includes LedMsgs, DigitalOutputMsgs
+thing fragment Led includes LedMsgs
 {   
 	provided port Led 
     {
 		receives led_on, led_off, led_toggle
 	}
-
-    required port DigitalOutput
-    {
-        sends set_digital_output    
-    }
-    
-    statechart LedImpl init LedOff 
-    {    
-        state LedOff 
-        {
-            on entry DigitalOutput!set_digital_output (DigitalState:LOW)
-            transition switch_on -> LedOn 
-            event Led?led_on 
-            event Led?led_toggle
-            
-        }
-        
-        state LedOn 
-        {
-            on entry DigitalOutput!set_digital_output (DigitalState:HIGH)
-            transition switch_off -> LedOff 
-            event Led?led_off 
-            event Led?led_toggle
-        }
-    }
 }
