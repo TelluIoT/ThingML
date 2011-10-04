@@ -39,7 +39,7 @@ object Context {
   var thing : Thing = _
   var pack : String = _
   
-  var debug = false
+  var debug = true
   
   val keywords = scala.List("implicit","match","requires","type","var","abstract","do","finally","import","object","throw","val","case","else","for","lazy","override","return","trait","catch","extends","forSome","match","package","sealed","try","while","class","false","if","new","private","super","true","with","def","final","implicit","null","protected","this","yield","_",":","=","=>","<-","<:","<%",">:","#","@")
   def protectScalaKeyword(value : String) : String = {
@@ -208,16 +208,16 @@ object ScalaGenerator {
     
     /*val pb: ProcessBuilder = new ProcessBuilder("mvn")
 
-    pb.command().add("mvn clean install")
-    pb.command().add("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
+     pb.command().add("mvn clean install")
+     pb.command().add("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
 
-    println("EXEC : " + pb.command().toString)
+     println("EXEC : " + pb.command().toString)
 
-    pb.directory(new File(System.getProperty("user.home") + "/ThingML_temp/" + cfg.getName))
+     pb.directory(new File(System.getProperty("user.home") + "/ThingML_temp/" + cfg.getName))
 
-    val p: Process = pb.start
-    console_out ! p
-    console_err ! p*/
+     val p: Process = pb.start
+     console_out ! p
+     console_err ! p*/
   }
   
   def compileAllJava(model: ThingMLModel, pack : String): Hashtable[Configuration, SimpleEntry[String, String]] = {
@@ -788,25 +788,30 @@ case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGener
   }
 
   def scala_type(): String = {
-    var res : String = self.getAnnotations.filter {
-      a => a.getName == "scala_type"
-    }.headOption match {
-      case Some(a) => 
-        a.asInstanceOf[PlatformAnnotation].getValue
-      case None => 
-        self.getAnnotations.filter {
-          a => a.getName == "java_type"
-        }.headOption match {
-          case Some(a) => 
-            a.asInstanceOf[PlatformAnnotation].getValue
-          case None =>
-            println("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
-            var temp : String = self.getName
-            temp = temp(0).toUpperCase + temp.substring(1, temp.length)
-            temp
-        }
+    if (self == null){
+      return "Unit"
     }
-    return res
+    else {
+      var res : String = self.getAnnotations.filter {
+        a => a.getName == "scala_type"
+      }.headOption match {
+        case Some(a) => 
+          a.asInstanceOf[PlatformAnnotation].getValue
+        case None => 
+          self.getAnnotations.filter {
+            a => a.getName == "java_type"
+          }.headOption match {
+            case Some(a) => 
+              a.asInstanceOf[PlatformAnnotation].getValue
+            case None =>
+              println("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
+              var temp : String = self.getName
+              temp = temp(0).toUpperCase + temp.substring(1, temp.length)
+              temp
+          }
+      }
+      return res
+    }
   }
 }
 
