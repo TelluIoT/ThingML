@@ -1,0 +1,190 @@
+import "thingml.thingml"
+import "arduino/devices/softtimer.thingml"
+
+datatype Param2D
+@scala_type "org.thingml.simulators.sim2d.Param2D";
+
+thing fragment SimulatorMsg {
+    message start();
+    message pause();
+    message stop();
+}
+
+thing fragment MonitoringMsg {
+    message getValue(prop : String, x : Integer, y : Integer);
+    message value(prop : String, x : Integer, y : Integer, v : Integer);    
+}
+
+thing fragment MotionMsg {
+    message forward();
+    message backward();
+    message turn(angle : Integer);    
+}
+
+thing Simulator2DMockUp includes SimulatorMsg
+@mock"true" 
+{
+    required port command {
+        sends start, pause, stop    
+    }   
+}
+
+thing Simulator2D includes SimulatorMsg {
+    provided port command {
+        receives start, pause, stop    
+    }
+    
+    required port control {
+        sends start, pause, stop   
+    }
+    
+    statechart main init default {
+        state default {
+           internal event command?start
+           action control!start()  
+           
+           internal event command?stop
+           action control!stop()  
+           
+           internal event s : command?pause
+           action control!pause()  
+        }    
+    }
+}
+
+thing fragment SimulatedThingMockUp includes SimulatorMsg, MonitoringMsg, MotionMsg 
+@mock "true"
+{
+    required port motion {
+        sends forward, backward, turn    
+    }    
+}
+
+thing fragment SimulatedThing includes SimulatorMsg, MonitoringMsg, MotionMsg {
+    provided port command {
+        receives start, pause, stop    
+    }
+    
+    provided port motion {
+        receives forward, backward, turn    
+    }
+    
+    required port monitoring {
+        sends getValue
+        receives value
+    }
+}
+
+thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
+    
+    readonly property maxX : Integer = 640
+    readonly property maxY : Integer = 640
+    readonly property inc : Integer = 10
+    
+    property x : Integer = 0
+    property y : Integer = 320
+    
+    property isStarted : Boolean = true
+    
+    required port timer {
+        sends timer_start, timer_cancel
+        receives timer_timeout
+    }
+    
+       statechart main init command {
+        state command {
+           internal event command?start
+           action do
+            print("start")
+            isStarted = true
+           end
+           
+           internal event command?stop
+           action do
+            print("stop")
+            isStarted = false
+           end
+           
+           internal event s : command?pause
+           action do
+            print("pause")
+            isStarted = false
+           end
+        }
+        
+        region motion init default{
+            state default {
+                internal event motion?forward
+                guard isStarted
+                action do
+                    if (x < (maxX - inc)) x = x+inc
+                end
+           
+                internal event motion?backward
+                guard isStarted
+                action do
+                    if (x > inc) x = x-inc
+                end
+
+                internal event motion?turn
+                guard isStarted
+                action do
+                    print("I'm not gonna turn!!!")
+                end
+            }
+        }
+        
+        region monitoring init default {
+            state default {
+                on entry timer!timer_start(250)
+                
+                transition -> default
+                event timer?timer_timeout
+                action monitoring!getValue("default", x, y)
+                
+                
+                internal event v : monitoring?value
+                action print(v.v)
+            }    
+        }
+    } 
+}
+
+thing Map includes MonitoringMsg {
+    readonly property prop : String = "default"
+    readonly property image : String = "src/main/resources/default.png"
+    readonly property param2D : Param2D = 'new Param2D(' & image & ')'
+    
+    function getValueFromImage(x : Integer, y : Integer) : Void 
+    do
+        return param2D '.getValue(' & x & ',' & y & ')'
+    end
+    
+    provided port monitoring {
+        receives getValue
+        sends value
+    }
+    
+    statechart main init default {
+        state default {
+            internal event get : monitoring?getValue
+            guard get.prop == prop
+            action monitoring!value(prop, get.x, get.y, getValueFromImage(get.x, get.y))
+        }    
+    }
+}
+
+configuration testSim2D {
+   instance sim : Simulator2D
+   instance simMock : Simulator2DMockUp
+   instance fakeDevice : FakeSimulatedThing
+   instance fakeDeviceMock : SimulatedThingMockUp
+   instance defaultMap : Map
+   instance timer : Timer
+   
+   connector simMock.command => sim.command
+   connector sim.control => fakeDevice.command
+   connector fakeDevice.timer => timer.timer
+   connector fakeDevice.monitoring => defaultMap.monitoring
+   connector fakeDeviceMock.motion => fakeDevice.motion
+}

@@ -31,6 +31,7 @@ import scala.util.Random
 import java.util.{ArrayList, Hashtable}
 import org.sintef.thingml._
 import java.util.AbstractMap.SimpleEntry
+import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
 
 object Context {
   val builder = new StringBuilder()
@@ -116,6 +117,34 @@ object SwingGenerator {
   implicit def swingGeneratorAspect(self: Type): TypeSwingGenerator = TypeSwingGenerator(self)
   implicit def swingGeneratorAspect(self: Configuration): ConfigurationSwingGenerator = ConfigurationSwingGenerator(self)
   implicit def swingGeneratorAspect(self: Instance): InstanceSwingGenerator = InstanceSwingGenerator(self)
+  
+  
+  def compileAndRun(model: ThingMLModel) {
+    new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
+    
+    val code = compileAll(model, "org.thingml.generated")
+
+    code._1.keys.foreach{cfg =>
+
+      val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
+      val outputDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/java/org/thingml/generated"
+    
+      val outputDirFile = new File(outputDir)
+      outputDirFile.mkdirs
+    
+      code._2.foreach{case (thing, (mock, mirror)) =>
+          var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + thing.getName() + "Mock.java")));
+          w.println(mock);
+          w.close();
+        
+          w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + thing.getName() + "MockMirror.java")));
+          w.println(mirror);
+          w.close();
+      }    
+    }
+    javax.swing.JOptionPane.showMessageDialog(null, "Java code generated");
+  }
+  
   
   def compileAllThingJava(model: ThingMLModel, pack : String): Hashtable[Thing, SimpleEntry[String, String]] = {
     val result = new Hashtable[Thing, SimpleEntry[String, String]]()
