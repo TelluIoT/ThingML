@@ -1,0 +1,15 @@
+import "../simple_led.thingml"
+
+import "../../../bricks/_scala/led.thingml"
+import "../../../bricks/_scala/button.thingml"
+import "../../../../core/_scala/timer.thingml"
+
+configuration fragment ScalaSimpleLedSimulatorFragment
+{		
+	instance led : LedScala
+    
+    instance timer : TimerScala
+    instance simple_led : SimpleLed
+    connector simple_led.Timer => timer.timer
+    connector simple_led.Led => led.Led 
+}

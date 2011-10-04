@@ -1,0 +1,82 @@
+//*
+// Fabien Fleurey - 20/08/2011
+// Core library.
+//
+// This file provides an interface with the Arduino core to use digital input. 
+// All more external things which use digital input should pass by this way.
+// 
+// Three modes are available to fit your needs: simple, periodic and on change.
+//*
+
+import "../digital_input.thingml"
+import "../../../hardware/arduino/_arduino/arduino.thingml"
+import "../../../core/_arduino/timer.thingml"
+
+thing fragment DigitalInputArduino includes DigitalInput, ArduinoMsgs
+@pim "DigitalInput"
+@platform "arduino"
+{	
+	readonly property pin : DigitalPin = DigitalPin:PIN_3
+    readonly property pullup : Boolean = false
+	
+	required port DigitalIO
+    {
+        sends pin_mode, digital_read, digital_write
+		receives digital_read_result    
+    }
+    
+    statechart SimpleDigitalInputImpl init Idle 
+    {    
+        // Global initialization of the pin
+        on entry do
+        	DigitalIO!pin_mode (pin, PinMode:INPUT)
+            if (pullup) DigitalIO!digital_write (pin, DigitalState:HIGH) // pull-up
+        end
+        
+        state Idle 
+        { 
+            transition -> Waiting 
+            event DigitalInput?read_digital_input
+            action DigitalIO!digital_read (pin)
+        }
+            
+        state Waiting 
+        {
+            transition -> Idle 
+            event m : DigitalIO?digital_read_result 
+            guard m.pin == pin
+            action DigitalInput!digital_input_value (m.value)
+        }    
+    }       
+}
+
+configuration fragment DigitalInputArduino
+{
+    instance arduino : ArduinoArduino
+    instance digital_input : DigitalInputArduino
+    connector digital_input.DigitalIO => arduino.DigitalIO
+}
+
+configuration fragment PeriodicDigitalInputArduino
+{
+    instance arduino : ArduinoArduino
+	instance timer : TimerArduino
+	
+	instance digital_input : DigitalInputArduino
+    connector digital_input.DigitalIO => arduino.DigitalIO
+
+    instance periodic_digital_input : PeriodicDigitalInput
+    connector periodic_digital_input.DigitalInput => digital_input.DigitalInput
+    connector periodic_digital_input.Timer => timer.timer
+}
+
+configuration fragment OnChangeDigitalInputArduino
+{
+    instance arduino : ArduinoArduino
+
+	instance digital_input : DigitalInputArduino
+    connector digital_input.DigitalIO => arduino.DigitalIO
+
+    instance change_digital_input : OnChangeDigitalInput
+    connector change_digital_input.DigitalInput => digital_input.DigitalInput
+}

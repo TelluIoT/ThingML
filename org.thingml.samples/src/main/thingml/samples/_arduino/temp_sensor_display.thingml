@@ -1,0 +1,52 @@
+import "../../hardware/devices/_arduino/lcd_screen_sensor_disp.thingml"
+import "../../hardware/bricks/_arduino/temperature_sensor.thingml"
+
+thing TempSensorDisplay includes LcdScreenMsgs, TemperatureSensorMsgs
+@c_header "#include <math.h>"
+{
+	function convertTemperature(adc : Int16) : Int16 do
+		var tmp : Double
+ 		tmp = 'log('& (10240000 / adc ) - 10000 &')'
+ 		tmp = 1 / ( '0.001129148' + ('0.000234125' + ('0.0000000876741' * tmp * tmp )) * tmp )
+ 		tmp = tmp - '273.15' // Convert Kelvin to Celcius'
+ 		return '(int)'& tmp	
+	end
+
+	required port Display 
+    {	
+		sends initDisplay, refreshDisplay, setDisplay
+	}
+
+	required port Temp
+	{
+		receives temperature_value
+	}
+	
+   	statechart TempSensorDisplayImpl init Running
+   	{
+   		on entry do
+                Display!initDisplay (0, "Temperature", "C", 0, 20, 35)
+                Display!setDisplay (0)
+                end
+   		state Running
+   		{
+   			internal refresh event m : Temp?temperature_value
+   			action Display!refreshDisplay (0, m.val) 
+   		}	
+   	}
+}
+
+configuration TempSensorDisplay
+{
+	// Temperature sensor configuration.
+	group temp_sensor : TemperatureSensorArduino
+		set temp_sensor.io.analog_input.pin = AnalogPin:A_3
+
+    // Screen declaration.
+	instance screen : LcdScreen
+
+    // Application configuration.
+	instance app : TempSensorDisplay	
+	connector app.Display => screen.Display
+	connector app.Temp => temp_sensor.temperature_sensor.TemperatureSensor
+}

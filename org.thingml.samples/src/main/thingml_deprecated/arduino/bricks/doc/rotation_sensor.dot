@@ -1,0 +1,20 @@
+//To create PNG: dot -Tpng led.dot > led.png
+
+digraph g {
+
+	graph [ rankdir = "LR"];
+	
+	node [ fontsize = "12" shape = "point"];
+	edge [];
+	
+	// Definition of the group
+	"Component" [
+	label = "<f0> RotationSensor | <f1> io.analog_input.pin : AnalogPin \n io.analog_input.refresh_rate : UInt16 [Optional](20)\n io.analog_input.value_precision : UInt8 [Optional](1)"
+	shape = "record"
+	];
+
+	// Definition of one port
+	"PP1" [label = "" shape = "plaintext"];
+	"Component" -> "PP1" [label = "rotation_sensor.RotationSensor" fontsize = "10" arrowhead = "odot"];
+
+}

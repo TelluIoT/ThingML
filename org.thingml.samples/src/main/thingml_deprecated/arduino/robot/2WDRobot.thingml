@@ -1,0 +1,76 @@
+import "../core/arduino.thingml"
+import "../core/analog_input.thingml"
+import "../core/digital_input.thingml"
+
+
+thing fragment 2WDRobotMsg {
+    message accelerate(speed : UInt8); 
+    message decelerate(speed : UInt8);
+    message turn_right(speed : UInt8); 
+    message turn_left(speed : UInt8); 
+    message stop(); 
+}
+
+thing 2WDRobot includes 2WDRobotMsg, AnalogInputMsgs, DigitalInput
+{
+    
+    provided port Move {
+        receives accelerate, decelerate, turn_left, turn_right, stop    
+    }
+    
+    provided port Bumbers {
+    	
+    }
+            
+    required port AnalogInput
+    {
+        receives analog_input_value
+        sends read_analog_input    
+    }
+    
+    required port DigitalIO
+    {
+        receives digital_read_result
+        sends digital_read    
+    }
+	
+	statechart LM335Impl init Init
+	{
+    
+        property temp : Int16
+        
+		on entry AnalogInput!read_analog_input()
+
+        state Init {
+            transition initialize -> Running
+			event m : AnalogInput?analog_input_value
+			action do
+                // Initialize the temp variable
+                temp =  m.value * '0.488' - 273
+            end
+        }
+		
+		state Running
+		{
+			transition refresh -> Running
+			event m : AnalogInput?analog_input_value
+			action do
+                // Compute temperture by averaging with the previous value
+                temp = temp + m.value * '0.488' - 273
+                temp = (temp + 1) / 2
+                Temp!temperature(temp)
+            end
+		}
+	}
+}
+
+configuration fragment LM335
+{
+   group io : PeriodicAnalogInput
+       
+   instance lm335 : LM335
+   connector  lm335.AnalogInput => io.analog_input.AnalogInput
+   
+   set io.analog_input.refresh_rate = 500 // 500 ms sampling rate
+   set io.analog_input.pin = AnalogPin:A_4 // Should be reset when using this fragment
+}

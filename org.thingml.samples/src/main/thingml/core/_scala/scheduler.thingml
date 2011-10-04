@@ -1,0 +1,18 @@
+import "../scheduler.thingml"
+
+thing ThingMLSchedulerScala includes ThingMLScheduler 
+@pim "ThingMLScheduler"
+@platform "scala"
+{
+	
+	statechart Scheduler init default {
+		state default {
+			on entry 'class PollTask(p : Port) extends java.util.TimerTask{
+			  override def run {
+			    p.send(new Poll())
+			  }
+			}
+			new java.util.Timer().scheduleAtFixedRate(new PollTask(getPort("Polling").get), 5, 5)'
+		}
+	}
+}

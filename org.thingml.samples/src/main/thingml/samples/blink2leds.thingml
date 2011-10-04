@@ -1,0 +1,50 @@
+import "../hardware/bricks/led.thingml"
+
+thing Blink2Leds includes LedMsgs, TimerMsgs
+{
+
+	required port timer1
+	{
+		sends timer_start
+        receives timer_timeout
+	}
+	
+	required port timer2
+	{
+		sends timer_start
+        receives timer_timeout
+	}
+	
+	required port led1
+	{
+		sends led_toggle
+	}
+	
+	required port led2
+	{
+		sends led_toggle
+	}
+
+    statechart Blink2LedsImpl init Blinking 
+    {    
+        state Blinking 
+        {    
+            on entry do 
+            	timer1!timer_start(1000)
+            	timer2!timer_start(333)
+            end
+            
+            internal Blink1 event timer1?timer_timeout
+            action do
+            	led1!led_toggle()
+            	timer1!timer_start(1000)
+            end
+            
+            internal Blink2 event timer2?timer_timeout
+            action do
+            	led2!led_toggle()
+            	timer2!timer_start(333)
+            end
+        }
+    }
+}

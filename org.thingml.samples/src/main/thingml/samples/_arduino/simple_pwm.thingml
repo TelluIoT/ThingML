@@ -1,0 +1,59 @@
+import "../../hardware/devices/_arduino/tinypwm.thingml"
+import "../../hardware/bricks/_arduino/rotation_sensor.thingml"
+
+thing SimplePWM includes TinyPWMMsgs, RotationSensorMsgs
+{
+	required port PWM 
+    {	
+		sends set_pwm, set_pwm_a, set_pwm_b
+	}
+
+    required port Pot1
+	{
+		receives rotation_value
+	}
+
+    required port Pot2
+	{
+		receives rotation_value
+	}
+
+    statechart BlinkImpl init Running {
+        
+        on entry PWM!set_pwm(0, 0)
+        
+        state Running {
+            
+            internal event m : Pot1?rotation_value
+            action PWM!set_pwm_a(m.val / 4)
+            
+            internal event m : Pot2?rotation_value
+            action PWM!set_pwm_b(m.val / 4)
+            
+        }
+    }
+}
+
+configuration SimplePWM {       
+
+    // Arduino board
+    instance arduino : Arduino
+    
+    // Pot 1 
+   group pot_sensor_1 : RotationSensorArduino
+   set pot_sensor_1.io.analog_input.pin = AnalogPin:A_4
+	
+    // Pot 2
+   group pot_sensor_2 : RotationSensorArduino
+   set pot_sensor_2.io.analog_input.pin = AnalogPin:A_5
+	
+    // TinyPWM
+    instance tiny_pwm : TinyPWM
+    
+    // Main application
+    instance main : SimplePWM
+    connector main.Pot1 => pot_sensor_1.rotation_sensor.RotationSensor
+    connector main.Pot2 => pot_sensor_2.rotation_sensor.RotationSensor
+    connector main.PWM => tiny_pwm.PWM
+	
+}

@@ -1,0 +1,33 @@
+/* ThingML Framework */
+
+import "../datatypes.thingml"
+
+thing fragment InputByteStreamMsgs {
+	message receive_byte (b : Byte);
+}
+
+thing fragment OutputByteStreamMsgs {
+	message write_byte (b : Byte);
+}
+
+thing fragment FormatedOutputStreamMsgs {
+	message print_message (msg : String);
+	message print_value (v : Int16);
+}
+
+thing fragment IOStream includes InputByteStreamMsgs, OutputByteStreamMsgs
+{
+	provided port IOStream 
+    {
+		sends receive_byte
+        receives write_byte
+	}
+}
+
+thing Serial includes IOStream, FormatedOutputStreamMsgs
+{
+	provided port Serial
+	{
+		receives print_message, print_value
+	}
+}
