@@ -1,0 +1,59 @@
+import "2WDBase.thingml"
+import "../../hardware/io/analog_input.thingml"
+
+thing LightFollower includes TwoWDBaseMsg, AnalogInputMsgs, TimerMsgs
+{
+ 	required port TwoWDBase {
+ 		 sends set_motors_speed
+ 	}
+ 	
+ 	property left_speed : Int16 = 50
+	property right_speed : Int16 = 50
+ 	
+ 	required port RightLight {
+ 		receives analog_input_value
+ 	}
+ 	
+ 	required port LeftLight {
+ 		receives analog_input_value
+ 	}
+ 	
+ 	property left_light : Int16 = 0
+	property right_light : Int16 = 0
+ 	
+ 	required port Timer {
+ 		 sends timer_start
+ 		 receives timer_timeout
+ 	}
+ 	
+ 	function update_motors() do
+ 		var diff : Int16 = left_light - right_light
+ 		if (diff > 25) diff = 25
+ 		//left_speed = 50 - diff
+ 		//right_speed = 50 + diff
+		TwoWDBase!set_motors_speed(left_speed, right_speed)
+	end
+	
+	statechart LightFollowerImpl init Active
+	{	
+		
+		internal event m : RightLight?analog_input_value 
+		action right_light = m.value
+		
+		internal event m : LeftLight?analog_input_value 
+		action left_light = m.value
+		
+		state Active {
+		
+			on entry Timer!timer_start(2000)
+			
+			transition -> Active event Timer?timer_timeout
+			action do 
+                left_speed = -left_speed
+ 		        right_speed = -right_speed
+                update_motors()
+            end
+		
+		}
+	}
+}

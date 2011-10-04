@@ -1,0 +1,25 @@
+import "../LightFollower.thingml"
+import "2WDBase.thingml"
+import "../../../hardware/io/_arduino/analog_input.thingml"
+
+configuration LightFollowerArduino {
+
+	instance robot : LightFollower
+	
+	group motors : TwoWDBaseWithHBridgeArduino
+	connector robot.TwoWDBase => motors.base.TwoWDBase
+	
+	instance timer : TimerArduino
+	connector robot.Timer => timer.timer
+	
+	group l1 : PeriodicAnalogInputArduino
+	set l1.analog_input.pin = AnalogPin:A_0
+	set l1.periodic_analog_input.refresh_rate = 10
+	connector robot.LeftLight => l1.periodic_analog_input.PeriodicAnalogInput
+	
+	group l2 : PeriodicAnalogInputArduino
+	set l2.analog_input.pin = AnalogPin:A_1
+	set l2.periodic_analog_input.refresh_rate = 10
+	connector robot.RightLight => l2.periodic_analog_input.PeriodicAnalogInput
+	
+}
