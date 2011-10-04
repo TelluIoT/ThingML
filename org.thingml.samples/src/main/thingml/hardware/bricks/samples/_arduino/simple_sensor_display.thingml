@@ -24,16 +24,16 @@ import "../../../bricks/_arduino/electricity_meter.thingml"
 
 configuration SimpleSensorDisplay
 {
-    instance lcd_screen : LcdScreen
+    instance lcd_screen : LcdScreenArduino
        
 //* Uncomment only the lines which refer to the sensor you want use. *//
     
-//     // * Rotation sensor *
-//     group rotation_sensor : RotationSensorArduino
-//         set rotation_sensor.io.analog_input.pin = AnalogPin:A_4
-//     instance rot_sensor_display : SimpleRotSensorDisplay
-//     connector rot_sensor_display.RotationSensor => rotation_sensor.rotation_sensor.RotationSensor
-//  	connector rot_sensor_display.LcdScreen => lcd_screen.LcdScreen
+     // * Rotation sensor *
+     group rotation_sensor : RotationSensorArduino
+         set rotation_sensor.io.analog_input.pin = AnalogPin:A_4
+     instance rot_sensor_display : SimpleRotSensorDisplay
+     connector rot_sensor_display.RotationSensor => rotation_sensor.rotation_sensor.RotationSensor
+  	connector rot_sensor_display.LcdScreen => lcd_screen.LcdScreen
     
 //     // * Temperature sensor *
 //     group temperature_sensor : TemperatureSensorArduino
@@ -51,10 +51,10 @@ configuration SimpleSensorDisplay
 // 	connector light_sensor_display.LcdScreen => lcd_screen.LcdScreen
 
     // * Sound  sensor *
-    group sound_sensor : SoundSensorArduino
-        set sound_sensor.io.analog_input.pin = AnalogPin:A_4
-        set sound_sensor.sound_sensor.sample_rate = 500
-	instance sound_sensor_display : SimpleSoundSensorDisplay
-    connector sound_sensor_display.SoundSensor => sound_sensor.sound_sensor.SoundSensor
-    connector sound_sensor_display.LcdScreen => lcd_screen.LcdScreen
+//    group sound_sensor : SoundSensorArduino
+//        set sound_sensor.io.analog_input.pin = AnalogPin:A_4
+//        set sound_sensor.sound_sensor.sample_rate = 500
+//	instance sound_sensor_display : SimpleSoundSensorDisplay
+//    connector sound_sensor_display.SoundSensor => sound_sensor.sound_sensor.SoundSensor
+//    connector sound_sensor_display.LcdScreen => lcd_screen.LcdScreen
 }

@@ -13,5 +13,5 @@ configuration fragment ButtonArduino
     group io : OnChangeDigitalInputArduino
     
     instance button : Button
-    connector button.DigitalInput => io.digital_input.DigitalInput
+    connector button.DigitalInput => io.change_digital_input.OnChangeDigitalInput
 }

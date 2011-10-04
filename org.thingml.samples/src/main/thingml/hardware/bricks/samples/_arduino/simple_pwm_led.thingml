@@ -19,7 +19,7 @@ import "../../../io/_arduino/pwm_output.thingml"
 configuration SimplePwmLed
 {
 	group pwm : PwmOutputArduino
-		set pwm.pwm.pin = PWMPin:PWM_PIN_3
+		set pwm.pwm.pin = PWMPin:PWM_PIN_9
 	group rot_sensor : RotationSensorArduino
 		set rot_sensor.io.analog_input.pin = AnalogPin:A_4
 		
