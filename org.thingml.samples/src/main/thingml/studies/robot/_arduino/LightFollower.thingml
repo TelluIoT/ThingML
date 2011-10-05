@@ -1,6 +1,8 @@
 import "../LightFollower.thingml"
 import "2WDBase.thingml"
+import "Bumper.thingml"
 import "../../../hardware/io/_arduino/analog_input.thingml"
+import "../../../hardware/bricks/_arduino/led.thingml"
 
 configuration LightFollowerArduino {
 
@@ -21,5 +23,16 @@ configuration LightFollowerArduino {
 	set l2.analog_input.pin = AnalogPin:A_1
 	set l2.periodic_analog_input.refresh_rate = 10
 	connector robot.RightLight => l2.periodic_analog_input.PeriodicAnalogInput
+
+    group led : LedArduino
+    set led.io.digital_output.pin = DigitalPin:PIN_13
+    connector robot.Led => led.led.Led
+    
+    group bumper : BumperArduino
+    set bumper.leftin.digital_input.pin = DigitalPin:PIN_5
+    set bumper.leftin.digital_input.pullup = true
+	set bumper.rightin.digital_input.pin = DigitalPin:PIN_6
+    set bumper.rightin.digital_input.pullup = true
+	connector robot.FrontBumper => bumper.bumper.Bumper
 	
 }

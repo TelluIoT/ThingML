@@ -44,7 +44,7 @@ thing HBridgeMotorUC includes HBridgeMotor
     		
     		transition -> backward event m : HBridgeMotor?set_speed
     		guard m.speed > -256 and m.speed < 0
-    		after Pwm!set_pwm_value(m.speed)
+    		after Pwm!set_pwm_value(-m.speed)
     	}
     	
     	state forward {
@@ -63,7 +63,7 @@ thing HBridgeMotorUC includes HBridgeMotor
     		transition -> backward event m : HBridgeMotor?set_speed
     		guard m.speed > -256 and m.speed < 0
     		action Pwm!set_pwm_value(0)
-    		after Pwm!set_pwm_value(m.speed)
+    		after Pwm!set_pwm_value(-m.speed)
     		
     		transition -> stoped event m : HBridgeMotor?set_speed
     		guard m.speed == 0
@@ -85,7 +85,7 @@ thing HBridgeMotorUC includes HBridgeMotor
     		
     		internal event m : HBridgeMotor?set_speed
     		guard m.speed > -256 and m.speed < 0
-    		action Pwm!set_pwm_value(m.speed)
+    		action Pwm!set_pwm_value(-m.speed)
     		
     		transition -> stoped event m : HBridgeMotor?set_speed
     		guard m.speed == 0

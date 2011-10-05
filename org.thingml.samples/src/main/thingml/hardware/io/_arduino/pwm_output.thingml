@@ -16,6 +16,12 @@ thing PwmOutputArduino includes PwmOutput, ArduinoMsgs
 {
 	readonly property pin : PWMPin = PWMPin:PWM_PIN_3
 
+    
+    required port DigitalIO
+	{
+		sends pin_mode
+	}
+
 	required port AnalogIO
 	{
 		sends analog_write
@@ -25,6 +31,8 @@ thing PwmOutputArduino includes PwmOutput, ArduinoMsgs
 	{
 		state Running
 		{
+            on entry DigitalIO!pin_mode(pin, PinMode:OUTPUT)
+    
 			internal event m : Pwm?set_pwm_value
 			action AnalogIO!analog_write (pin, m.value)
 		}
