@@ -283,6 +283,7 @@ object ScalaGenerator {
     builder append " **/\n\n"
 
     builder append "package " + Context.pack + "\n"
+    builder append "import " + Context.pack + "._\n"
     builder append "import org.sintef.smac._\n"
     builder append "import org.thingml.devices._\n"
     builder append "import org.thingml.utils._\n"
@@ -353,24 +354,35 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     
     builder append "//Things\n"
     self.allInstances.foreach{ i =>
-      builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "("
-      builder append (self.initExpressionsForInstance(i).collect{case p =>         
-            var result = p._1.scala_var_name + " = "
-            if (p._2 != null) {
-              var tempbuilder = new StringBuilder()
-              p._2.generateScala(tempbuilder)
-              result += tempbuilder.toString
-            } else {
-              result += "null.asInstanceOf[" + p._1.getType.scala_type + "]"
+      
+      i.getType.getAnnotations.filter{a =>
+        a.getName == "mock"
+      }.headOption match {
+        case Some(a) =>
+          a.getValue match {
+            case "true" => builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "Mock()\n"
+            case "mirror" => builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "MockMirror()\n"
+          }
+        case None => 
+          builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "("
+          builder append (self.initExpressionsForInstance(i).collect{case p =>         
+                var result = p._1.scala_var_name + " = "
+                if (p._2 != null) {
+                  var tempbuilder = new StringBuilder()
+                  p._2.generateScala(tempbuilder)
+                  result += tempbuilder.toString
+                } else {
+                  result += "null.asInstanceOf[" + p._1.getType.scala_type + "]"
+                }
+                result
+            } 
+            ++ 
+            self.initExpressionsByArrays(i).keys.collect{ case init =>
+                init.scala_var_name + " = " + init.scala_var_name
             }
-            result
-        } 
-        ++ 
-        self.initExpressionsByArrays(i).keys.collect{ case init =>
-            init.scala_var_name + " = " + init.scala_var_name
-        }
-      ).mkString(", ")
-      builder append ")\n"
+          ).mkString(", ")
+          builder append ")\n"
+      }
     }
     
     builder append "//Bindings\n"
