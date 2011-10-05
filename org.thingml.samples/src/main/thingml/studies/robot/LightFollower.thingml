@@ -49,8 +49,9 @@ thing LightFollower includes TwoWDBaseMsg, AnalogInputMsgs, TimerMsgs, LedMsgs, 
     }	
  
  	function follow_light() do
- 		var diff : Int16 = (left_light - right_light) / 4
+ 		var diff : Int16 = (left_light - right_light) / 2
  		if (diff > 25) diff = 25
+        if (diff < -25) diff = 25
  		left_speed = 65 - diff
  		right_speed = 65 + diff
 		TwoWDBase!set_motors_speed(left_speed, right_speed)
@@ -102,11 +103,17 @@ thing LightFollower includes TwoWDBaseMsg, AnalogInputMsgs, TimerMsgs, LedMsgs, 
 			
 			state turn {
 				on entry do 
-					if (obstacle == Obstacle:RIGHT) TwoWDBase!set_motors_speed(-50, 50)
-                    if (not obstacle == Obstacle:RIGHT) TwoWDBase!set_motors_speed(50, -50)
-					Timer!timer_start(500)
-                    obstacle = Obstacle:NONE
+					if (obstacle == Obstacle:RIGHT) TwoWDBase!set_motors_speed(-60, 60)
+                    if (not (obstacle == Obstacle:RIGHT)) TwoWDBase!set_motors_speed(60, -60)
+					Timer!timer_start(750)
 				end
+                
+                transition -> turn event Timer?timer_timeout
+                action do
+                    TwoWDBase!set_motors_speed(0, 0)
+                    Timer!timer_start(250)
+                    obstacle = Obstacle:NONE
+                end
 			}
 			
 			transition -> SeekLight event Timer?timer_timeout
