@@ -478,7 +478,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
         else
           builder append "rec = new $colon$colon(\"" + s.getName + "\", sent);\n"
       }
-      builder append "port_" + Context.firstToUpper(self.getName) + "_" + p.getName + " = (Port) new Port(\"" + Context.firstToUpper(self.getName) + "_" + p.getName + 
+      builder append "port_" + Context.firstToUpper(self.getName) + "_" + p.getName + " = (Port) new Port(\"" + p.getName + 
       "\", rec, sent, this).start();\n"
     }
   }
