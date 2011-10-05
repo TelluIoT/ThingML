@@ -1,5 +1,5 @@
 import "../../thingml.thingml"
-import "../../core/timer.thingml"
+import "../../core/_scala/timer.thingml"
 
 datatype Param2D
 @scala_type "org.thingml.simulators.sim2d.Param2D";
@@ -181,7 +181,7 @@ configuration testSim2D {
    instance fakeDevice : FakeSimulatedThing
    instance fakeDeviceMock : SimulatedThingMockUp
    instance defaultMap : Map
-   instance timer : Timer
+   instance timer : TimerScala
    
    connector simMock.command => sim.command
    connector sim.control => fakeDevice.command

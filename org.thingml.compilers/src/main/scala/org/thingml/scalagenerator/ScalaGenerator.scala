@@ -387,18 +387,14 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     
     builder append "//Bindings\n"
     self.allConnectors.foreach{ c =>
-      c.getCli.getInstance().getType.allStateMachines.foreach{sm1 =>
-        c.getSrv.getInstance().getType.allStateMachines.foreach{sm2 =>
-          builder append c.instanceName + ".connect(\n" 
-          builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get,\n"
-          builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get\n"
-          builder append")\n"
-          builder append c.instanceName + ".connect(\n" 
-          builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get,\n"
-          builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get\n"
-          builder append")\n\n"
-        }
-      }
+      builder append c.instanceName + ".connect(\n" 
+      builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get,\n"
+      builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get\n"
+      builder append")\n"
+      builder append c.instanceName + ".connect(\n" 
+      builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get,\n"
+      builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get\n"
+      builder append")\n\n"
     }
     
     builder append "//Starting Things\n"
