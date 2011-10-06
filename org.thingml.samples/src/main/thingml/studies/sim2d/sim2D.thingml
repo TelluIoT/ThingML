@@ -80,6 +80,7 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
     readonly property maxX : Integer = 640
     readonly property maxY : Integer = 640
     readonly property inc : Integer = 10
+    readonly property period : Integer = 1000
     
     property x : Integer = 0
     property y : Integer = 320
@@ -136,7 +137,7 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
         
         region monitoring init default {
             state default {
-                on entry timer!timer_start(250)
+                on entry timer!timer_start(period)
                 
                 transition -> default
                 event timer?timer_timeout
@@ -152,9 +153,7 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
 
 thing Map includes MonitoringMsg {
     readonly property prop : String = "default"
-    readonly property image : String = "src/main/resources/default.png"
-    readonly property param2D : Param2D 
-    set param2D = 'new Param2D(' & image & ')'
+    readonly property param2D : Param2D = 'new org.thingml.simulators.sim2d.Param2D()'
     
     function getValueFromImage(x : Integer, y : Integer) : Integer
     do

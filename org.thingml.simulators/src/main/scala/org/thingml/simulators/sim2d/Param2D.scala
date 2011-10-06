@@ -19,15 +19,11 @@
  */
 package org.thingml.simulators.sim2d
 
-import java.awt.Graphics
-import java.awt.Image
-import java.awt.color.ColorSpace
-import java.awt.image.BufferedImage
-import java.awt.image.ColorConvertOp
-import java.io.File;
+import java.awt.{Color, Image, Graphics, Dimension}
+import java.io.File
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+import javax.imageio.ImageIO
+import javax.swing.{JPanel, JLabel, JFrame, ImageIcon, Icon}
 
 object Param2D {
   val maxX = 639
@@ -35,19 +31,18 @@ object Param2D {
   val precision = 2//we look +/- precision pixels around a given pixel to determine its value
 }
 
-class Param2D(imageURI : String = "src/main/resources/default.png") {
-
-  val cs = ColorSpace.getInstance(ColorSpace.CS_GRAY);
-  val op = new ColorConvertOp(cs, null);
-  val img = new ImageIcon(imageURI).getImage()
-  val bufferedImage = op.filter(new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_RGB), null)
-
-  val g = bufferedImage.createGraphics()
-  g.drawImage(img, 0, 0, null)
-  //g.dispose()
+class Param2D(imageURI : String = "src/main/resources/sim2d/default.png") extends JFrame{
+ 
+  val img = ImageIO.read(new File(imageURI))
+  val panel = new JLabel(new ImageIcon(img))  //new ImageLabel(new ImageIcon(img))  
+  add(panel)
+  setPreferredSize(new Dimension(640, 640))
+  pack
+  setVisible(true)
+  
 
   def save {
-    ImageIO.write(bufferedImage, "png", new File(imageURI + ".save.png"))
+    //ImageIO.write(bufferedImage, "png", new File(imageURI + ".save.png"))
   }
   
   def getValue(x : Int, y : Int) : Int = {
@@ -56,12 +51,29 @@ class Param2D(imageURI : String = "src/main/resources/default.png") {
     
     for(i <- Math.max(0, x-Param2D.precision) to Math.min(Param2D.maxX, x+Param2D.precision)){
       for(j <- Math.max(0, y-Param2D.precision) to Math.min(Param2D.maxY, y+Param2D.precision)){
-        sum = sum + bufferedImage.getRGB(i, j)
+        sum = sum + img.getRGB(i, j)
         div = div + 1
       }
     }
-    
+    //panel.setPosition(x, y)
+    panel.getGraphics.drawRect(x, y, Param2D.precision, Param2D.precision)
     return sum/div
   }
   
 }
+
+/*class ImageLabel(img : Icon) extends JLabel(img : Icon) {
+  var xPosition, yPosition : Int = _
+  
+  def setPosition(x : Int, y : Int) {
+    this.xPosition = x
+    this.yPosition = y
+    paint(img)
+  }
+  
+  override def paintComponent(g : Graphics) {
+    super.paintComponent(g)
+    getGraphics.setColor(Color.RED)
+    getGraphics.drawRect(xPosition, yPosition, Param2D.precision, Param2D.precision)
+  }
+}*/

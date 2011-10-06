@@ -26,9 +26,10 @@ object Main {
     val param2D = new Param2D()
     val builder = new StringBuilder()
     
-    for(i <- 0 to Param2D.maxX){
-      for(j <- 0 to Param2D.maxY){
-        builder append param2D.getValue(i,j) + "; "
+    for(i <- 0 to Param2D.maxX by 10){
+      for(j <- 0 to Param2D.maxY by 10){
+        builder append "%s; ".format(param2D.getValue(i,j))
+        Thread.sleep(25)
       }
       builder append "\n"
     }
