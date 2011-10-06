@@ -158,6 +158,10 @@ object CGenerator {
       }
     }
 
+    classpath = classpath.replaceAll(" ", "\\ ")
+    libpath = libpath.replaceAll(" ", "\\ ")
+
+    /*
     classpath = classpath.split(File.pathSeparator).collect{
       case p : String => if (p.contains(' '))  "\"" + p + "\"" else p
     }.mkString(File.pathSeparator)
@@ -165,7 +169,7 @@ object CGenerator {
     libpath = libpath.split(File.pathSeparator).collect{
       case p : String => if (p.contains(' '))  "\"" + p + "\"" else p
     }.mkString(File.pathSeparator)
-
+    */
     val pb: ProcessBuilder = new ProcessBuilder("java")
 
     pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
