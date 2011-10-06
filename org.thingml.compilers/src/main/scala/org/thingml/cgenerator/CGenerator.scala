@@ -158,8 +158,13 @@ object CGenerator {
       }
     }
 
-    classpath = "\"" + classpath.replaceAll(File.pathSeparator, "\"" + File.pathSeparator + "\"") + "\""
-    libpath = "\"" + libpath.replaceAll(File.pathSeparator, "\"" + File.pathSeparator + "\"") + "\""
+    classpath = classpath.split(File.pathSeparator).collect{
+      case p : String => if (p.contains(' '))  "\"" + p + "\"" else p
+    }.mkString(File.pathSeparator)
+
+    libpath = libpath.split(File.pathSeparator).collect{
+      case p : String => if (p.contains(' '))  "\"" + p + "\"" else p
+    }.mkString(File.pathSeparator)
 
     val pb: ProcessBuilder = new ProcessBuilder("java")
 
