@@ -158,11 +158,14 @@ object CGenerator {
       }
     }
 
+    classpath = "\"" + classpath.replaceAll(File.pathSeparator, "\"" + File.pathSeparator + "\"") + "\""
+    libpath = "\"" + libpath.replaceAll(File.pathSeparator, "\"" + File.pathSeparator + "\"") + "\""
+
     val pb: ProcessBuilder = new ProcessBuilder("java")
 
     pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-    pb.command().add("-Djava.library.path=\"" + libpath + "\"")
-    pb.command().add("-Djava.class.path=\"" + classpath + "\"")
+    pb.command().add("-Djava.library.path=" + libpath)
+    pb.command().add("-Djava.class.path=" + classpath)
     pb.command().add("processing.app.Base")
     pb.command().add(pde_file)
 
