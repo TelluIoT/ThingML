@@ -152,7 +152,7 @@ object CGenerator {
     libdir.listFiles().foreach{ f =>
       if (f.getName.endsWith(".jar")) {
         var fname = f.getAbsolutePath
-        if (fname.indexOf(' ') > 0) fname = "\"" + fname + "\""
+        //if (fname.indexOf(' ') > 0) fname = "\"" + fname + "\""
         if (classpath.length() > 0) classpath = fname + File.pathSeparator + classpath
         else classpath = fname
       }
@@ -161,8 +161,8 @@ object CGenerator {
     val pb: ProcessBuilder = new ProcessBuilder("java")
 
     pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-    pb.command().add("-Djava.library.path=" + libpath)
-    pb.command().add("-Djava.class.path=" + classpath)
+    pb.command().add("-Djava.library.path=\"" + libpath + "\"")
+    pb.command().add("-Djava.class.path=\"" + classpath + "\"")
     pb.command().add("processing.app.Base")
     pb.command().add(pde_file)
 
