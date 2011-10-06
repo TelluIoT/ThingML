@@ -158,8 +158,8 @@ object CGenerator {
       }
     }
 
-    classpath = classpath.replaceAll(" ", "\\ ")
-    libpath = libpath.replaceAll(" ", "\\ ")
+    classpath = classpath.replaceAllLiterally(" ", "\\ ")
+    libpath = libpath.replaceAllLiterally(" ", "\\ ")
 
     /*
     classpath = classpath.split(File.pathSeparator).collect{
