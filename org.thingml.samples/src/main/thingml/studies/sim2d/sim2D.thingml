@@ -11,7 +11,7 @@ thing fragment SimulatorMsg {
 }
 
 thing fragment MonitoringMsg {
-    message getValue(prop : String, x : Integer, y : Integer);
+    message getValue(x : Integer, y : Integer);
     message value(prop : String, x : Integer, y : Integer, v : Integer);    
 }
 
@@ -84,6 +84,7 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
     
     property x : Integer = 0
     property y : Integer = 320
+    property alpha : Integer = 0//angle
     
     property isStarted : Boolean = true
     
@@ -117,20 +118,32 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
             state default {
                 internal event motion?forward
                 guard isStarted
-                action do
-                    if (x < (maxX - inc)) x = x+inc
+                action do//maybe we should include cos and sin in ThingML...
+                    if (x < (maxX - (inc * 'Math.cos(Math.toRadians(' & alpha & '))')) and y < (maxY - (inc * 'Math.sin(Math.toRadians(' & alpha & '))'))) do
+                        x = x + (inc*'Math.cos(' & alpha & ')')'.toInt'
+                        y = y + (inc*'Math.sin(' & alpha & ')')'.toInt'
+                    end
+                    print("x = " + x + ", y = " + y)
                 end
            
                 internal event motion?backward
                 guard isStarted
                 action do
-                    if (x > inc) x = x-inc
+                    if (x > (inc * 'Math.cos(Math.toRadians(' & alpha & '))') and y > (inc * 'Math.sin(Math.toRadians(' & alpha & '))')) do
+                        x = x - (inc*'Math.cos(' & alpha & ')')'.toInt'
+                        y = y - (inc*'Math.sin(' & alpha & ')')'.toInt'
+                    end
+                    print("x = " + x + ", y = " + y)
                 end
 
-                internal event motion?turn
+                internal event t : motion?turn
                 guard isStarted
                 action do
-                    print("I'm not gonna turn!!!")
+                    alpha = alpha + t.angle
+                    while(alpha > 360) do//that would be much easier if ThingML has modulo
+                        alpha = alpha - 360
+                    end
+                    print("alpha = " + alpha)
                 end
             }
         }
@@ -141,7 +154,7 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
                 
                 transition -> default
                 event timer?timer_timeout
-                action monitoring!getValue("default", x, y)
+                action monitoring!getValue(x, y)
                 
                 
                 internal event v : monitoring?value
@@ -150,6 +163,7 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
         }
     } 
 }
+
 
 thing Map includes MonitoringMsg {
     readonly property prop : String = "default"
@@ -168,7 +182,6 @@ thing Map includes MonitoringMsg {
     statechart main init default {
         state default {
             internal event get : monitoring?getValue
-            guard get.prop == prop
             action monitoring!value(prop, get.x, get.y, getValueFromImage(get.x, get.y))
         }    
     }
@@ -180,11 +193,13 @@ configuration testSim2D {
    instance fakeDevice : FakeSimulatedThing
    instance fakeDeviceMock : SimulatedThingMockUp
    instance defaultMap : Map
+   instance defaultMap2 : Map
    instance timer : TimerScala
    
    connector simMock.command => sim.command
    connector sim.control => fakeDevice.command
    connector fakeDevice.timer => timer.timer
    connector fakeDevice.monitoring => defaultMap.monitoring
+   connector fakeDevice.monitoring => defaultMap2.monitoring
    connector fakeDeviceMock.motion => fakeDevice.motion
 }

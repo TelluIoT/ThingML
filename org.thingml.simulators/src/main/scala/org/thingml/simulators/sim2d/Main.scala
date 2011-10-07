@@ -29,7 +29,7 @@ object Main {
     for(i <- 0 to Param2D.maxX by 10){
       for(j <- 0 to Param2D.maxY by 10){
         builder append "%s; ".format(param2D.getValue(i,j))
-        Thread.sleep(25)
+        Thread.sleep(250)
       }
       builder append "\n"
     }
