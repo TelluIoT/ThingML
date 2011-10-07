@@ -81,13 +81,15 @@ thing fragment SimulatedThing includes SimulatorMsg, MonitoringMsg, MotionMsg {
 
 thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
     
-    readonly property maxX : Integer = 640
-    readonly property maxY : Integer = 640
+    readonly property maxX : Integer = 639
+    readonly property maxY : Integer = 639
     readonly property inc : Integer = 10
     readonly property period : Integer = 1000
     
     property x : Integer = 0
     property y : Integer = 320
+    property dx : Integer = 10
+    property dy : Integer = 0
     property alpha : Double = 0//angle in degrees
     property alphaRadians : Double = 0//angle in radians
     
@@ -124,9 +126,9 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
                 internal event motion?forward
                 guard isStarted
                 action do//maybe we should include cos and sin in ThingML...
-                    if (x < (maxX - (inc * 'Math.cos(' & alphaRadians & ')')) and y < (maxY - (inc * 'Math.sin(' & alphaRadians & ')'))) do
-                        x = x + (inc*'Math.cos(' & alphaRadians & ')')'.toInt'
-                        y = y + (inc*'Math.sin(' & alphaRadians & ')')'.toInt'
+                    if ( ((dx > 0 and x < (maxX - dx) or (x > -dx)) and (y < (maxY - dy) or (y > -dy))) ) do
+                        x = x + dx
+                        y = y + dy
                     end
                     print("x = " + x + ", y = " + y)
                 end
@@ -134,9 +136,9 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
                 internal event motion?backward
                 guard isStarted
                 action do
-                    if (x > (inc * 'Math.cos(' & alphaRadians & ')') and y > (inc * 'Math.sin(' & alphaRadians & ')')) do
-                        x = x - (inc*'Math.cos(' & alphaRadians & ')')'.toInt'
-                        y = y - (inc*'Math.sin(' & alphaRadians & ')')'.toInt'
+                    if ( ((dx > 0 and x > dx or (x < (maxX + dx)))) and ((dy > 0 and y > dy) or (y < (maxY + dy))) ) do
+                        x = x - dx
+                        y = y - dy
                     end
                     print("x = " + x + ", y = " + y)
                 end
@@ -149,7 +151,11 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
                         alpha = alpha - 360
                     end
                     alphaRadians = 'Math.toRadians(' & alpha & ')'
+                    dx = '(' & inc * 'Math.cos(' & alphaRadians & ')).toInt'
+                    dy = '(' & inc * 'Math.sin(' & alphaRadians & ')).toInt'
                     print("alpha = " + alpha)
+                    print("dx = " + dx)
+                    print("dy = " + dy)
                 end
             }
         }
