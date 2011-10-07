@@ -57,7 +57,11 @@ thing SimulatedThingMockUp includes SimulatorMsg, MonitoringMsg, MotionMsg
 {
     required port motion {
         sends forward, backward, turn    
-    }    
+    }
+    
+    required port monitoring {
+        receives value    
+    }
 }
 
 thing fragment SimulatedThing includes SimulatorMsg, MonitoringMsg, MotionMsg {
@@ -84,9 +88,10 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
     
     property x : Integer = 0
     property y : Integer = 320
-    property alpha : Integer = 0//angle
+    property alpha : Double = 0//angle in degrees
+    property alphaRadians : Double = 0//angle in radians
     
-    property isStarted : Boolean = true
+    property isStarted : Boolean = false
     
     required port timer {
         sends timer_start, timer_cancel
@@ -119,9 +124,9 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
                 internal event motion?forward
                 guard isStarted
                 action do//maybe we should include cos and sin in ThingML...
-                    if (x < (maxX - (inc * 'Math.cos(Math.toRadians(' & alpha & '))')) and y < (maxY - (inc * 'Math.sin(Math.toRadians(' & alpha & '))'))) do
-                        x = x + (inc*'Math.cos(' & alpha & ')')'.toInt'
-                        y = y + (inc*'Math.sin(' & alpha & ')')'.toInt'
+                    if (x < (maxX - (inc * 'Math.cos(' & alphaRadians & ')')) and y < (maxY - (inc * 'Math.sin(' & alphaRadians & ')'))) do
+                        x = x + (inc*'Math.cos(' & alphaRadians & ')')'.toInt'
+                        y = y + (inc*'Math.sin(' & alphaRadians & ')')'.toInt'
                     end
                     print("x = " + x + ", y = " + y)
                 end
@@ -129,9 +134,9 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
                 internal event motion?backward
                 guard isStarted
                 action do
-                    if (x > (inc * 'Math.cos(Math.toRadians(' & alpha & '))') and y > (inc * 'Math.sin(Math.toRadians(' & alpha & '))')) do
-                        x = x - (inc*'Math.cos(' & alpha & ')')'.toInt'
-                        y = y - (inc*'Math.sin(' & alpha & ')')'.toInt'
+                    if (x > (inc * 'Math.cos(' & alphaRadians & ')') and y > (inc * 'Math.sin(' & alphaRadians & ')')) do
+                        x = x - (inc*'Math.cos(' & alphaRadians & ')')'.toInt'
+                        y = y - (inc*'Math.sin(' & alphaRadians & ')')'.toInt'
                     end
                     print("x = " + x + ", y = " + y)
                 end
@@ -143,6 +148,7 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
                     while(alpha > 360) do//that would be much easier if ThingML has modulo
                         alpha = alpha - 360
                     end
+                    alphaRadians = 'Math.toRadians(' & alpha & ')'
                     print("alpha = " + alpha)
                 end
             }
@@ -202,4 +208,7 @@ configuration testSim2D {
    connector fakeDevice.monitoring => defaultMap.monitoring
    connector fakeDevice.monitoring => defaultMap2.monitoring
    connector fakeDeviceMock.motion => fakeDevice.motion
+   
+   connector fakeDeviceMock.monitoring => defaultMap.monitoring
+   connector fakeDeviceMock.monitoring => defaultMap2.monitoring
 }
