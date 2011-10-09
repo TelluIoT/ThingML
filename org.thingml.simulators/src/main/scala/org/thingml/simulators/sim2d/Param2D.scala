@@ -31,10 +31,9 @@ import scala.actors.Actor._
 object Param2D {
   val maxX = 639
   val maxY = 639
-  val precision = 2//we look +/- precision pixels around a given pixel to determine its value
 }
 
-class Param2D(property : String = "default", imageURI : String = "src/main/resources/sim2d/default.png") extends JFrame {
+class Param2D(val property : String = "default", val imageURI : String = "src/main/resources/sim2d/light_default.png", val precision : Int = 2) extends JFrame {
  
   var points = List[Pair[Int, Int]]()
   
@@ -63,8 +62,8 @@ class Param2D(property : String = "default", imageURI : String = "src/main/resou
   def getValue(x : Int, y : Int) : Int = {
     var sum = 0
     var div = 0
-    for(i <- Math.max(0, x-Param2D.precision) to Math.min(Param2D.maxX, x+Param2D.precision)){
-      for(j <- Math.max(0, y-Param2D.precision) to Math.min(Param2D.maxY, y+Param2D.precision)){
+    for(i <- Math.max(0, x-precision) to Math.min(Param2D.maxX, x+precision)){
+      for(j <- Math.max(0, y-precision) to Math.min(Param2D.maxY, y+precision)){
         sum = sum + grayScalaimage.getRGB(i, j)
         div = div + 1
       }
@@ -90,7 +89,7 @@ class Param2D(property : String = "default", imageURI : String = "src/main/resou
     //panel.setPosition(x, y)
     panel.getGraphics.drawPolyline(points.collect{case p => p._1}.toArray, points.collect{case p => p._2}.toArray, points.length)
     points.lastOption match {
-      case Some(p) => panel.getGraphics.drawRect(p._1 - Param2D.precision, p._2 - Param2D.precision, 2*Param2D.precision, 2*Param2D.precision)
+      case Some(p) => panel.getGraphics.drawRect(p._1 - precision, p._2 - precision, 2*precision, 2*precision)
       case None =>
     }
   }
