@@ -50,14 +50,14 @@ thing LightFollower includes TwoWDBaseMsg, AnalogInputMsgs, TimerMsgs, LedMsgs, 
  
  	function follow_light() do
  		var diff : Int16 = (left_light - right_light) / 2
- 		if (diff > 25) diff = 25
-        if (diff < -25) diff = 25
- 		left_speed = 65 - diff
- 		right_speed = 65 + diff
+ 		if (diff > 50) diff = 50
+        if (diff < -50) diff = -50
+ 		left_speed = 127 - diff
+ 		right_speed = 127 + diff
 		TwoWDBase!set_motors_speed(left_speed, right_speed)
 	end
 	
-	statechart LightFollowerImpl init SeekLight
+	statechart LightFollowerImpl init Init
 	{	
         property obstacle : Obstacle = Obstacle:NONE
         
@@ -68,6 +68,14 @@ thing LightFollower includes TwoWDBaseMsg, AnalogInputMsgs, TimerMsgs, LedMsgs, 
 		
 		internal event m : LeftLight?analog_input_value 
 		action left_light = m.value
+
+        state Init {
+            
+            on entry Timer!timer_start(500)
+            
+            transition -> SeekLight event Timer?timer_timeout
+        }
+
 		
 		state SeekLight {
 		
