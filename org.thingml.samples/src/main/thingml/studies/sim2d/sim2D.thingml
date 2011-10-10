@@ -179,7 +179,7 @@ thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
 
 thing Map includes MonitoringMsg {
     readonly property prop : String = "default"
-    readonly property param2D : Param2D = 'new org.thingml.simulators.sim2d.Param2D()'
+    readonly property param2D : Param2D = 'new org.thingml.simulators.sim2d.Param2D(property = "default", precision = 5)'//property : String, imageURI : String, precision : Int
     
     function getValueFromImage(x : Integer, y : Integer) : Integer
     do

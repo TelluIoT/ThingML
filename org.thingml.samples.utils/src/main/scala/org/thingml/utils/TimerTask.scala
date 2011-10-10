@@ -20,13 +20,24 @@
 
 package org.thingml.utils
 
-class TimerTask(t : TimerTaskTrait) extends java.util.TimerTask() {
-  override def run {
-    t.run
-  }
+import scala.actors.{Actor, TIMEOUT}
+
+trait TimerTask {
+  def onTimeout
+  def onCancel{}
 }
 
-trait TimerTaskTrait {
-  def newTimerTask = new TimerTask(this)
-  def run
+class Timer(t : TimerTask, timeout : Long) extends Actor {
+  override def act {
+    reactWithin(timeout) {
+      case TIMEOUT => t.onTimeout
+      case "cancel" => 
+        t.onCancel
+        exit
+    }
+  }
+  
+  override def start : Timer = {
+    super.start.asInstanceOf[Timer]
+  }
 }

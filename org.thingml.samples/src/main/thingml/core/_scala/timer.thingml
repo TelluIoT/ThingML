@@ -1,55 +1,33 @@
 import "../timer.thingml"
 
-datatype JavaTimer
-@java_type "java.util.Timer";
-
-datatype JavaTimerTask
-@java_type "java.util.TimerTask";
+datatype ScalaTimer
+@scala_type "org.thingml.utils.Timer";
 
 // Manage a set of software timers.
 thing TimerScala includes Timer
 @pim "Timer"
 @platform "scala"
-@scala_trait "org.thingml.utils.TimerTaskTrait"
+@scala_trait "org.thingml.utils.TimerTask"
 {
 
-    property javaTimer : JavaTimer = 'new java.util.Timer()'
-    property lastTask : JavaTimerTask
+    property scalaTimer : ScalaTimer
 
-    function run()@override "true" 
+    function onTimeout()@override "true" 
     do
         timer!timer_timeout()
     end
     
-    function cancel() : Integer
+    function cancel()
     do
-      var status : Integer = 0
-      'try {'
-      if (not(lastTask == 'null')) 
+      if(not (scalaTimer == 'null'))
       do
-      '' & lastTask & '.cancel'            
-      '' & javaTimer & '.purge'
+        '' & scalaTimer & ' ! "cancel"'
       end
-      '} catch {'
-      'case _ =>'
-      javaTimer = 'new java.util.Timer()'
-      status = 1
-      '}'
-      return status
     end
     
     function start(delay : Integer) : Integer
     do
-        var status : Integer = 0
-        cancel()
-        lastTask = 'this.newTimerTask'
-        'try {'
-        '' & javaTimer & '.schedule(' & lastTask & ', ' & delay & ')'
-        '} catch {'
-        'case _ =>'
-        status = -1
-        '}'
-        return status
+        scalaTimer = 'new org.thingml.utils.Timer(this,' & delay & ').start'
     end
     
     statechart SoftTimer init default {
@@ -57,9 +35,7 @@ thing TimerScala includes Timer
         internal start
             event m : timer?timer_start
             guard m.delay > 0
-            action do
-                start(m.delay)
-            end
+            action start(m.delay)
             
         internal cancel
             event m : timer?timer_cancel
