@@ -25,7 +25,7 @@ thing TimerScala includes Timer
       end
     end
     
-    function start(delay : Integer) : Integer
+    function start(delay : Integer)
     do
         scalaTimer = 'new org.thingml.utils.Timer(this,' & delay & ').start'
     end
