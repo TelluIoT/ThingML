@@ -136,6 +136,7 @@
         <module>../org.thingml.editor.eclipse</module>
         <module>../org.thingml.samples.resources</module>
         <module>../org.thingml.samples.utils</module>
+	<module>../org.thingml.simulators</module>
 		<!-- The standolone app can only be built on the server which has the keystore to sign the jar
 		<module>../org.thingml.editor.standaloneApp</module>-->
 		
