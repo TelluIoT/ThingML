@@ -23,13 +23,13 @@ package org.thingml.simulators.sim2d
 object Main {
 
   def main(args: Array[String]): Unit = {
-    val param2D = new Param2D()
+    val param2D = new Param2D(precision = 10)
     val builder = new StringBuilder()
     
-    for(i <- 0 to Param2D.maxX by 10){
-      for(j <- 0 to Param2D.maxY by 10){
+    for(i <- 20 to Param2D.maxX by 25){
+      for(j <- 20 to Param2D.maxY by 25){
         builder append "%s; ".format(param2D.getValue(i,j))
-        Thread.sleep(250)
+        Thread.sleep(50)
       }
       builder append "\n"
     }
