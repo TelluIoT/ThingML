@@ -39,7 +39,7 @@ object Context {
   var thing : Thing = _
   var pack : String = _
   
-  var debug = true
+  var debug = false
   
   val keywords = scala.List("implicit","match","requires","type","var","abstract","do","finally","import","object","throw","val","case","else","for","lazy","override","return","trait","catch","extends","forSome","match","package","sealed","try","while","class","false","if","new","private","super","true","with","def","final","implicit","null","protected","this","yield","_",":","=","=>","<-","<:","<%",">:","#","@")
   def protectScalaKeyword(value : String) : String = {
@@ -884,7 +884,7 @@ case class SendActionScalaGenerator(override val self: SendAction) extends Actio
   }
 
   
-  //This does not work... for some reasons...
+  //This is nicer but does not work... for some reasons...
   /*  def concreteMsg(builder: StringBuilder = Context.builder) {
    builder append "new " + Context.firstToUpper(self.getMessage.getName) + "("
    builder append self.getParameters.collect{case p =>
@@ -990,8 +990,11 @@ case class LocalVariableActionScalaGenerator(override val self: LocalVariable) e
     builder append self.scala_var_name + " = "
     if (self.getInit != null) 
       self.getInit.generateScala() 
-    else 
+    else {
       builder append "_"
+      if (self.isChangeable)
+        println("ERROR: non changeable var " + self + " must be initialized")
+    }
     builder append "\n"
   }
 }
@@ -999,11 +1002,18 @@ case class LocalVariableActionScalaGenerator(override val self: LocalVariable) e
 case class FunctionCallStatementScalaGenerator(override val self: FunctionCallStatement) extends ActionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {  
     builder append self.getFunction().getName + "("
-    builder append self.getParameters().collect{case p => 
-        var tempBuilder = new StringBuilder()
-        p.generateScala(tempBuilder)
-        tempBuilder.toString
-    }.mkString(", ")
+    var i = 0
+    self.getParameters.foreach{ p =>
+      if (i > 0)
+        builder append ", "
+      p.generateScala()
+      i = i+1
+    }
+    /*builder append self.getParameters().collect{case p => 
+     var tempBuilder = new StringBuilder()
+     p.generateScala(tempBuilder)
+     tempBuilder.toString()
+     }.mkString(", ")*/
     builder append ")\n"
   }  
 }
@@ -1191,11 +1201,18 @@ case class ExternExpressionScalaGenerator(override val self: ExternExpression) e
 case class FunctionCallExpressionScalaGenerator(override val self: FunctionCallExpression) extends ExpressionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {  
     builder append self.getFunction().getName + "("
-    builder append self.getParameters().collect{case p => 
-        var tempBuilder = new StringBuilder()
-        p.generateScala(tempBuilder)
-        tempBuilder.toString
-    }.mkString(", ")
+    var i = 0
+    self.getParameters.foreach{ p =>
+      if (i > 0)
+        builder append ", "
+      p.generateScala()
+      i = i+1
+    }
+    /*builder append self.getParameters().collect{case p => 
+     var tempBuilder = new StringBuilder()
+     p.generateScala(tempBuilder)
+     tempBuilder.toString()
+     }.mkString(", ")*/
     builder append ")\n"
   }   
 }
