@@ -53,7 +53,8 @@ thing PIDGyroTest includes TwoWDBaseMsg, AnalogInputMsgs, TimerMsgs, LedMsgs, Bu
                 Led!led_toggle()
                 // PID controller with 2 * P + 1/2 * I + 0 * D
 		        var ctrl : Int16 = m.yaw_rate * 2 + m.gyro_heading / 2
-		        if (ctrl > -30 and ctrl < 30) ctrl = 0 // Cancel noise
+                ctrl = (ctrl * 2) / 3
+		        if (ctrl > -20 and ctrl < 20) ctrl = 0 // Cancel noise
 				TwoWDBase!set_motors_speed(-ctrl, ctrl) // Turn without moving
             end
             

@@ -1,0 +1,211 @@
+import "../../hardware/io/analog_input.thingml"
+import "../../hardware/bricks/led.thingml"
+
+
+enumeration LineStatus	
+    @java_type "byte"
+    @c_byte_size "1"
+	@c_type "uint8_t"
+{
+	NONE @enum_val "0"
+	CENTER @enum_val "1"
+	RIGHT @enum_val "2"
+	LEFT @enum_val "3"
+}
+
+thing fragment LineSensorMsgs 
+{
+	message line_sensor_data(status : LineStatus, deviation : Int16);
+    message calibrate_line_sensor();
+    message line_sensor_ready();
+}
+
+thing LineSensor includes LineSensorMsgs, AnalogInputMsgs, TimerMsgs
+{
+ 	required port LeftSensor {
+ 		sends read_analog_input
+ 		receives analog_input_value
+ 	}
+ 	
+ 	required port CenterSensor {
+ 		sends read_analog_input
+ 		receives analog_input_value
+ 	}
+ 	
+ 	required port RightSensor {
+ 		sends read_analog_input
+ 		receives analog_input_value
+ 	}
+ 	
+ 	required port Timer {
+ 		 sends timer_start, timer_cancel
+ 		 receives timer_timeout
+ 	}
+ 	
+ 	provided port LineSensor {
+ 		sends line_sensor_data, line_sensor_ready
+        receives calibrate_line_sensor
+ 	}
+ 	
+ 	property min : Int16
+ 	property max : Int16
+ 	
+ 	property status : LineStatus
+ 	
+ 	property left : Int16
+	property center : Int16
+	property right : Int16
+
+    property cal_ref : Int16 = 400
+    property cal_left : Int16 = -44
+	property cal_right : Int16 = 23
+ 	
+ 	function sendData() do
+ 	
+ 		if (max - min < 25) do 
+ 			// there is no significant difference 
+ 			LineSensor!line_sensor_data(LineStatus:NONE, 0)
+ 		end
+ 		
+ 		if (max - min > 24) do
+ 			var deviation : Int16
+ 			if (status == LineStatus:CENTER) deviation = left - right
+ 			if (status == LineStatus:RIGHT) deviation = left - right + center - right
+ 			if (status == LineStatus:LEFT) deviation = left - right + left - center
+ 			LineSensor!line_sensor_data(status, deviation)
+ 		end
+ 	
+ 	end
+ 
+	statechart LineSensorImpl init Running
+	{	
+        property cal_cpt : Int8 = 0
+
+        composite state Running init Idle {
+            
+            transition -> CalibrateLeftSensors
+            event LineSensor?calibrate_line_sensor
+            
+            state Idle {
+                on entry do 
+                    Timer!timer_start(50)
+    //                 'Serial.begin(9600);'
+                end
+                
+                transition -> ReadLeftSensors event Timer?timer_timeout
+            }
+    
+    		state ReadLeftSensors 
+    		{
+    			on entry LeftSensor!read_analog_input()
+    			transition -> ReadRightSensors event m : LeftSensor?analog_input_value
+    			action do 
+    				left = m.value + cal_left
+    				min = left
+    				max = left
+    				status = LineStatus:LEFT
+    			end
+    		}
+    		
+    		state ReadRightSensors 
+    		{
+    			on entry RightSensor!read_analog_input()
+    			transition -> ReadCenterSensors event m : RightSensor?analog_input_value
+    			action do
+    				right = m.value + cal_right
+    				if (right < min) do
+    					min = right
+    					status = LineStatus:RIGHT
+    				end
+    				if (right > max) max = right
+    			end
+    		}
+    		
+    		state ReadCenterSensors 
+    		{
+    			on entry CenterSensor!read_analog_input()
+    			
+    			transition -> Idle event m : CenterSensor?analog_input_value
+    			action do
+    				center = m.value
+    				if (m.value < min) do
+    					min = m.value
+    					status = LineStatus:CENTER
+    				end
+    				if (m.value > max) max = m.value
+                    sendData()
+    			end
+    		}
+        }
+
+        state CalibrateLeftSensors 
+		{
+            on entry do 
+                LeftSensor!read_analog_input()
+                cal_cpt = 0
+                left = 0
+            end
+
+            internal event m : LeftSensor?analog_input_value
+            guard cal_cpt < 15
+			action do 
+                left = left + m.value
+                cal_cpt = cal_cpt + 1
+                LeftSensor!read_analog_input()
+            end
+
+			transition -> CalibrateRightSensors event m : LeftSensor?analog_input_value
+            guard cal_cpt == 15
+			action left = (left+ m.value) / 16
+
+		}
+		
+		state CalibrateRightSensors 
+		{
+			on entry do 
+                RightSensor!read_analog_input()
+                cal_cpt = 0
+                right = 0
+            end
+
+            internal event m : RightSensor?analog_input_value
+            guard cal_cpt < 15
+			action do 
+                right = right + m.value
+                cal_cpt = cal_cpt + 1
+                RightSensor!read_analog_input()
+            end
+
+			transition -> CalibrateCenterSensors event m : RightSensor?analog_input_value
+            guard cal_cpt == 15
+			action right = (right + m.value) / 16
+		}
+		
+		state CalibrateCenterSensors 
+		{
+			on entry do 
+                CenterSensor!read_analog_input()
+                cal_cpt = 0
+                center = 0
+            end
+
+            internal event m : CenterSensor?analog_input_value
+            guard cal_cpt < 15
+			action do 
+                center = center + m.value
+                cal_cpt = cal_cpt + 1
+                CenterSensor!read_analog_input()
+            end
+
+			transition -> Running event m : CenterSensor?analog_input_value
+            guard cal_cpt == 15
+			action do 
+                center = (center + m.value) / 16
+                cal_ref = center
+                cal_left = cal_ref - left
+                cal_right = cal_ref - right
+                LineSensor!line_sensor_ready()
+            end
+		}
+	}
+}
