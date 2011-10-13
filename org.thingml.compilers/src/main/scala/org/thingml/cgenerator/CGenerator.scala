@@ -122,14 +122,32 @@ object CGenerator {
         }
     }
 
+
+  def isWindows() : Boolean = {
+		var os = System.getProperty("os.name").toLowerCase();
+    return (os.indexOf( "win" ) >= 0);
+	}
+
+	def isMac() : Boolean = {
+		var os = System.getProperty("os.name").toLowerCase();
+	  return (os.indexOf( "mac" ) >= 0);
+	}
+
+	def isUnix(): Boolean = {
+		var os = System.getProperty("os.name").toLowerCase();
+	  return (os.indexOf( "nix") >=0 || os.indexOf( "nux") >=0);
+	}
+
   def openArduinoIDE(pde_file : String, arduinoDir : String, arduinolibdir : String)  {
 
 
     val arduino = new File(arduinoDir)
 
-    var classpath : String = System.getProperty("java.class.path")
+    //var classpath : String = System.getProperty("java.class.path")
+    var classpath : String = ""
 
-    var libpath : String = System.getProperty("java.library.path")
+    //var libpath : String = System.getProperty("java.library.path")
+    var libpath : String = ""
 
     if (libpath.length() > 0) {
       libpath = File.pathSeparator + libpath
@@ -158,25 +176,27 @@ object CGenerator {
       }
     }
 
-    //classpath = classpath.replaceAllLiterally(" ", "\\ ")
-    //libpath = libpath.replaceAllLiterally(" ", "\\ ")
+    val pb: ProcessBuilder = new ProcessBuilder()
 
-    /*
-    classpath = classpath.split(File.pathSeparator).collect{
-      case p : String => if (p.contains(' '))  "\"" + p + "\"" else p
-    }.mkString(File.pathSeparator)
+    val bindir : File = new File(arduino + File.separator + "java" + File.separator + "bin")
 
-    libpath = libpath.split(File.pathSeparator).collect{
-      case p : String => if (p.contains(' '))  "\"" + p + "\"" else p
-    }.mkString(File.pathSeparator)
-    */
-    val pb: ProcessBuilder = new ProcessBuilder("java")
+    println("Checking for specific vm shipped with arduino in :" + bindir + " exists:" + bindir.exists() + "(isWindows = " + isWindows() + ")")
 
-    pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-    pb.command().add("-Djava.library.path=" + libpath)
-    pb.command().add("-Djava.class.path=" + classpath)
+    // Detect if the arduino IDE comes with a specific java instalation (only for windows)
+    if (isWindows() && new File(arduino + File.separator + "java" + File.separator + "bin").exists()) {
+         pb.command().add("\""+ arduino + File.separator + "java" + File.separator + "bin" + File.separator +"java\"")
+    } else { // just use the java install of the system
+      pb.command().add("java")
+    }
+
+    if (isUnix) pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"); // Just for linux look and feel
+
+    pb.command().add("-Djava.library.path=\"" + libpath + "\"")
+    pb.command().add("-Djava.class.path=\"" + classpath + "\"")
     pb.command().add("processing.app.Base")
-    pb.command().add(pde_file)
+
+    if (pde_file.contains(" ")) pb.command().add("\"" + pde_file + "\"") // Just in case
+    else pb.command().add(pde_file)
 
     println("EXEC : " + pb.command().toString)
 
