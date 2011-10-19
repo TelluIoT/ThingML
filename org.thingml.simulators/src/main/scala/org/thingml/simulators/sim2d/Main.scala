@@ -20,20 +20,30 @@
 
 package org.thingml.simulators.sim2d
 
+import java.awt.{Point}
+
 object Main {
 
   def main(args: Array[String]): Unit = {
-    val param2D = new Param2D(precision = 10)
-    val builder = new StringBuilder()
+    val param2D = new Param2D()
+    val sensor2D = new Sensor2D(param = param2D, increment = 5, init = new Point(150,350))
+    val thing2D = new Thing2D(sensors = List(sensor2D), increment = 5, init = new Point(150,350))
     
-    for(i <- 20 to Param2D.maxX by 25){
-      for(j <- 20 to Param2D.maxY by 25){
-        builder append "%s; ".format(param2D.getValue(i,j))
-        Thread.sleep(50)
-      }
-      builder append "\n"
-    }
-    println(builder.toString)
+    //sensor2D.sense
+    thing2D.moveForward
+    thing2D.moveForward
+    //sensor2D.sense
+    thing2D.moveForward
+    
+    thing2D.turnRight(60)
+    thing2D.moveForward
+    //sensor2D.sense
+    thing2D.moveForward
+    
+    thing2D.turnRight(60)
+    thing2D.moveForward
+    //sensor2D.sense
+    thing2D.moveForward
   }
   
 }
