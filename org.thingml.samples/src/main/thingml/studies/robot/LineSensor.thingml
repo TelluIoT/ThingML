@@ -11,11 +11,12 @@ enumeration LineStatus
 	CENTER @enum_val "1"
 	RIGHT @enum_val "2"
 	LEFT @enum_val "3"
+	ALL @enum_val "0"
 }
 
 thing fragment LineSensorMsgs 
 {
-	message line_sensor_data(status : LineStatus, deviation : Int16);
+	message line_sensor_data(status : LineStatus, deviation : Int16, integral : Int16);
     message calibrate_line_sensor();
     message line_sensor_ready();
 }
@@ -52,6 +53,8 @@ thing LineSensor includes LineSensorMsgs, AnalogInputMsgs, TimerMsgs
  	
  	property status : LineStatus
  	
+ 	property integral : Int16
+ 	
  	property left : Int16
 	property center : Int16
 	property right : Int16
@@ -61,26 +64,33 @@ thing LineSensor includes LineSensorMsgs, AnalogInputMsgs, TimerMsgs
 	property cal_right : Int16 = 23
  	
  	function sendData() do
- 	
+ 	      
+ 
+        //'Serial.print('&left&');' 'Serial.print("\t");' 
+        //'Serial.print('&center&');' 'Serial.print("\t");' 
+        //'Serial.print('&right&');' 'Serial.print("\n");' 
+ 
  		if (max - min < 25) do 
- 			// there is no significant difference 
- 			LineSensor!line_sensor_data(LineStatus:NONE, 0)
+ 			// there is no significant difference
+ 			if (center > cal_ref - 50) LineSensor!line_sensor_data(LineStatus:NONE, 0, integral)
+ 			if (center < cal_ref - 49) LineSensor!line_sensor_data(LineStatus:ALL, 0, integral)
  		end
  		
  		if (max - min > 24) do
- 			var deviation : Int16
- 			if (status == LineStatus:CENTER) deviation = left - right
- 			if (status == LineStatus:RIGHT) deviation = left - right + center - right
- 			if (status == LineStatus:LEFT) deviation = left - right + left - center
- 			LineSensor!line_sensor_data(status, deviation)
+ 			if (status == LineStatus:LEFT) integral = integral - 1
+ 			if (status == LineStatus:RIGHT) integral = integral + 1
+ 			if (status == LineStatus:CENTER) integral = 0
+ 			LineSensor!line_sensor_data(status, left - right, integral)
  		end
  	
  	end
  
 	statechart LineSensorImpl init Running
-	{	
+	{
         property cal_cpt : Int8 = 0
-
+        
+        on entry 'Serial.begin(9600);'
+        
         composite state Running init Idle {
             
             transition -> CalibrateLeftSensors
@@ -88,8 +98,7 @@ thing LineSensor includes LineSensorMsgs, AnalogInputMsgs, TimerMsgs
             
             state Idle {
                 on entry do 
-                    Timer!timer_start(50)
-    //                 'Serial.begin(9600);'
+                    Timer!timer_start(20)
                 end
                 
                 transition -> ReadLeftSensors event Timer?timer_timeout
@@ -99,8 +108,9 @@ thing LineSensor includes LineSensorMsgs, AnalogInputMsgs, TimerMsgs
     		{
     			on entry LeftSensor!read_analog_input()
     			transition -> ReadRightSensors event m : LeftSensor?analog_input_value
-    			action do 
-    				left = m.value + cal_left
+    			action do
+                    //'Serial.print('&m.value&');' 'Serial.print("\t");' 
+    				left = 1024 - m.value + cal_left
     				min = left
     				max = left
     				status = LineStatus:LEFT
@@ -112,7 +122,8 @@ thing LineSensor includes LineSensorMsgs, AnalogInputMsgs, TimerMsgs
     			on entry RightSensor!read_analog_input()
     			transition -> ReadCenterSensors event m : RightSensor?analog_input_value
     			action do
-    				right = m.value + cal_right
+                    //'Serial.print('&m.value&');' 'Serial.print("\t");' 
+    				right = 1024 - m.value + cal_right
     				if (right < min) do
     					min = right
     					status = LineStatus:RIGHT
@@ -127,12 +138,13 @@ thing LineSensor includes LineSensorMsgs, AnalogInputMsgs, TimerMsgs
     			
     			transition -> Idle event m : CenterSensor?analog_input_value
     			action do
-    				center = m.value
-    				if (m.value < min) do
-    					min = m.value
+                    //'Serial.print('&m.value&');' 'Serial.print("\n");' 
+    				center = 1024 - m.value
+    				if (center < min) do
+    					min = center
     					status = LineStatus:CENTER
     				end
-    				if (m.value > max) max = m.value
+    				if (center > max) max = center
                     sendData()
     			end
     		}
@@ -149,14 +161,14 @@ thing LineSensor includes LineSensorMsgs, AnalogInputMsgs, TimerMsgs
             internal event m : LeftSensor?analog_input_value
             guard cal_cpt < 15
 			action do 
-                left = left + m.value
+                left = left + 1024 - m.value
                 cal_cpt = cal_cpt + 1
                 LeftSensor!read_analog_input()
             end
 
 			transition -> CalibrateRightSensors event m : LeftSensor?analog_input_value
             guard cal_cpt == 15
-			action left = (left+ m.value) / 16
+			action left = (left+ 1024 - m.value) / 16
 
 		}
 		
@@ -171,14 +183,14 @@ thing LineSensor includes LineSensorMsgs, AnalogInputMsgs, TimerMsgs
             internal event m : RightSensor?analog_input_value
             guard cal_cpt < 15
 			action do 
-                right = right + m.value
+                right = right + 1024 - m.value
                 cal_cpt = cal_cpt + 1
                 RightSensor!read_analog_input()
             end
 
 			transition -> CalibrateCenterSensors event m : RightSensor?analog_input_value
             guard cal_cpt == 15
-			action right = (right + m.value) / 16
+			action right = (right + 1024 - m.value) / 16
 		}
 		
 		state CalibrateCenterSensors 
@@ -192,7 +204,7 @@ thing LineSensor includes LineSensorMsgs, AnalogInputMsgs, TimerMsgs
             internal event m : CenterSensor?analog_input_value
             guard cal_cpt < 15
 			action do 
-                center = center + m.value
+                center = center + 1024 - m.value
                 cal_cpt = cal_cpt + 1
                 CenterSensor!read_analog_input()
             end
@@ -200,7 +212,7 @@ thing LineSensor includes LineSensorMsgs, AnalogInputMsgs, TimerMsgs
 			transition -> Running event m : CenterSensor?analog_input_value
             guard cal_cpt == 15
 			action do 
-                center = (center + m.value) / 16
+                center = (center + 1024 - m.value) / 16
                 cal_ref = center
                 cal_left = cal_ref - left
                 cal_right = cal_ref - right

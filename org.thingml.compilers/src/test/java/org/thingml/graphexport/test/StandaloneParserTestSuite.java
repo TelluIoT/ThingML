@@ -50,7 +50,7 @@ public class StandaloneParserTestSuite extends TestSuite {
         try {
             TestSuite suite = new TestSuite("Standalone Parser Test Suite");
 
-            File dir = new File(StandaloneParserTestSuite.class.getClassLoader().getResource("thingml").getFile());
+            File dir = new File(StandaloneParserTestSuite.class.getClassLoader().getResource("thingml/tests").getFile());
 
             populate(suite, dir);
 

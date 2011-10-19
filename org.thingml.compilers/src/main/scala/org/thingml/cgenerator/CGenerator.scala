@@ -143,11 +143,11 @@ object CGenerator {
 
     val arduino = new File(arduinoDir)
 
-    //var classpath : String = System.getProperty("java.class.path")
     var classpath : String = ""
+    //if (!isWindows()) classpath=System.getProperty("java.class.path")
 
-    //var libpath : String = System.getProperty("java.library.path")
     var libpath : String = ""
+    //if (!isWindows()) libpath = System.getProperty("java.library.path")
 
     if (libpath.length() > 0) {
       libpath = File.pathSeparator + libpath
@@ -189,10 +189,12 @@ object CGenerator {
       pb.command().add("java")
     }
 
-    if (isUnix) pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"); // Just for linux look and feel
+    //if (isUnix) pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"); // Just for linux look and feel
 
-    pb.command().add("-Djava.library.path=\"" + libpath + "\"")
-    pb.command().add("-Djava.class.path=\"" + classpath + "\"")
+    if (isWindows()) pb.command().add("-Djava.library.path=\"" + libpath + "\"")
+    else pb.command().add("-Djava.library.path=" + libpath)
+    if (isWindows()) pb.command().add("-Djava.class.path=\"" + classpath + "\"")
+    else pb.command().add("-Djava.class.path=" + classpath)
     pb.command().add("processing.app.Base")
 
     if (pde_file.contains(" ")) pb.command().add("\"" + pde_file + "\"") // Just in case
