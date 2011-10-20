@@ -29,13 +29,14 @@ import javax.swing.{JPanel, JLabel, JFrame, ImageIcon, Icon}
 import scala.actors.Actor._
 import scala.collection.mutable.Map
 
+
+
 object Artifact2D {
   val maxX = 639
   val maxY = 639
 }
 
-
-class Param2D(val property : String = "default", val imageURI : String = "src/main/resources/sim2d/light_default.png") extends JFrame {
+class Map2D(val property : String = "default", val imageURI : String = "src/main/resources/sim2d/light_default.png") extends JFrame {
  
   var points = Map[String, List[Pair[Int, Int]]]()
   
@@ -64,6 +65,7 @@ class Param2D(val property : String = "default", val imageURI : String = "src/ma
   def plot(x : Int, y : Int, sensorId : String = "default") {
     if (x >=0 && x <= Artifact2D.maxX && y >=0 && y <= Artifact2D.maxY) {
       println("plot(" + sensorId + ", " + x + ", " + y + ")")
+      Toolkit.getDefaultToolkit().beep
       points.get(sensorId) match {
         case Some(l) => points += (sensorId -> (l :+ ((x,y))))
         case None => points += (sensorId -> List((x,y)))
@@ -103,6 +105,12 @@ class Param2D(val property : String = "default", val imageURI : String = "src/ma
     }
   }
   
+  def paintThing(thing : Thing2D) {
+    println("paintThing(" + thing.origin.getX.toInt + ", " + thing.origin.getY.toInt + ")")
+      panel.getGraphics.drawImage(thing.image, 0, 0, null)
+  }
+  
+  
 }
 
 object Mobile2D {
@@ -115,13 +123,13 @@ abstract class Mobile2D(val increment : Int, val init : Point2D) extends JFrame 
   private val d : Point2D = new Point(increment,0)//distance vector
   private val dR : Point2D = new Point(-increment,0)//distance vector
   
-  private val transform : AffineTransform = new AffineTransform()//to manage rotation and translation
-  transform.translate(init.getX, init.getY)
+  val _transform : AffineTransform = new AffineTransform()//to manage rotation and translation
+  _transform.translate(init.getX, init.getY)
   
-  protected def transform(p : Point2D) : Point2D = transform.transform(p, null)
+  protected def transform(p : Point2D) : Point2D = _transform.transform(p, null)
     
   def turn(alpha : Double) {
-    transform.rotate(Math.toRadians(alpha), (Mobile2D.maxX+1)/2, (Mobile2D.maxY+1)/2)
+    _transform.rotate(Math.toRadians(alpha), (Mobile2D.maxX+1)/2, (Mobile2D.maxY+1)/2)
   }
   
   def turnLeft(alpha : Double) {
@@ -132,14 +140,16 @@ abstract class Mobile2D(val increment : Int, val init : Point2D) extends JFrame 
     turn(alpha)
   }
     
-  def move(dx : Double, dy : Double) {
-    transform.translate(dx, dy)
+  def move(dx : Double, dy : Double) : Boolean = {
+    _transform.translate(dx, dy)
     val p = transform(new Point(0,0))
     if(p.getX >= 0 && p.getX <= Artifact2D.maxX && p.getY >= 0 && p.getY <= Artifact2D.maxY){
       println("move("+ dx + ", " + dy + ") --> (" + p.getX + ", " + p.getY + ")")
+      return true
     } else {//out of bound, we translate back to previous position
       println("trying to move out of bounds...")
-      transform.translate(-dx, -dy)
+      _transform.translate(-dx, -dy)
+      return false
     }
   }
   
@@ -163,7 +173,7 @@ class Thing2D(val sensors : List[Sensor2D], val name : String = "default", val i
   val colorImage = new BufferedImage(Mobile2D.maxX + 1, Mobile2D.maxY + 1, BufferedImage.TYPE_INT_RGB)
   val gColor = colorImage.getGraphics().asInstanceOf[Graphics2D]
   gColor.drawImage(ImageIO.read(new File(imageURI)), 0, 0, null)
-  sensors.foreach{s => gColor.drawImage(ImageHelper.makeColorTransparent(ImageIO.read(new File(s.imageURI)), new Color(255,255,255)), 0, 0, null)}
+  sensors.foreach{s => gColor.drawImage(ImageHelper.makeTransparent(ImageIO.read(new File(s.imageURI))), 0, 0, null)}
   gColor.dispose()
   
   val panel = new JLabel(new ImageIcon(colorImage))
@@ -171,23 +181,43 @@ class Thing2D(val sensors : List[Sensor2D], val name : String = "default", val i
   setPreferredSize(new Dimension(640, 640))
   setTitle(name + " [" + imageURI + "]")
   pack
-  setVisible(true)
+  //setVisible(true)
+  
+  def transformOp = new AffineTransformOp(_transform, AffineTransformOp.TYPE_BILINEAR)
+  
+  def image = ImageHelper.makeTransparent(transformOp.filter(colorImage, null))
   //////////////////////////////////////////////
 
+  val _origin = new Point(0,0)
+  def origin() : Point2D = transform(_origin)
+  
   override def turn(alpha : Double) {
     super.turn(alpha)
-    sensors.foreach{s => s.turn(alpha)}
+    sensors.foreach{s => 
+      s.turn(alpha)
+      s.param.paintThing(this)
+    }
+    
   }
   
-  override def move(dx : Double, dy : Double) {
-    super.move(dx, dy)
-    sensors.foreach{s => s.move(dx, dy)}
+  override def move(dx : Double, dy : Double) : Boolean = {
+    if (super.move(dx, dy)) {
+      sensors.foreach{s => 
+        s.move(dx, dy)
+        s.param.paintThing(this)
+      }
+      return true
+    } else {
+      return false
+    }
   }
   
   
 }
 
-class Sensor2D(val sensorID : String = "default", val param : Param2D, val imageURI : String = "src/main/resources/sim2d/sensor_default.png", override val increment : Int, override val init : Point2D, val precision : Int = 1, val threshold : Double = 0.075) extends Mobile2D(increment, init) {
+class Sensor2D(val sensorID : String = "default", val property : String = "light", val mapURI : String = "src/main/resources/sim2d/light_default.png", val imageURI : String = "src/main/resources/sim2d/sensor_default.png", override val increment : Int, override val init : Point2D, val precision : Int = 1, val threshold : Double = 0.075) extends Mobile2D(increment, init) {
+  
+  val param = new Map2D(property, mapURI)
   
   //////////////////////////////////////////////
   val grayScalaimage = new BufferedImage(Artifact2D.maxX + 1, Artifact2D.maxY + 1, BufferedImage.TYPE_BYTE_GRAY)
@@ -266,7 +296,11 @@ class Sensor2D(val sensorID : String = "default", val param : Param2D, val image
 }
 
 object ImageHelper {
-    def makeColorTransparent(im : Image, color : Color) : Image = {
+  val white = new Color(255,255,255)
+  
+  def makeTransparent(im : Image) : Image = makeColorTransparent(im, white)
+  
+  def makeColorTransparent(im : Image, color : Color) : Image = {
     val filter = new RGBImageFilter() {
       // the color we are looking for... Alpha bits are set to opaque
       val markerRGB = color.getRGB() | 0xFF000000

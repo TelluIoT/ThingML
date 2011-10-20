@@ -1,58 +1,19 @@
 import "../../thingml.thingml"
-import "../../core/_scala/timer.thingml"
 
-datatype Param2D
-@scala_type "org.thingml.simulators.sim2d.Param2D";
-
-thing fragment SimulatorMsg {
-    message start();
-    message pause();
-    message stop();
-}
-
-thing fragment MonitoringMsg {
+thing fragment MonitoringMsgs {
     message getValue(x : Integer, y : Integer);
     message value(prop : String, sensorId : String, x : Integer, y : Integer, v : Integer);    
 }
 
-thing fragment MotionMsg {
+thing fragment MotionMsgs {
     message forward();
     message backward();
     message turn(angle : Integer);    
 }
 
-thing Simulator2DMockUp includes SimulatorMsg
-@mock"true" 
-{
-    required port command {
-        sends start, pause, stop    
-    }   
-}
 
-thing Simulator2D includes SimulatorMsg {
-    provided port command {
-        receives start, pause, stop    
-    }
-    
-    required port control {
-        sends start, pause, stop   
-    }
-    
-    statechart main init default {
-        state default {
-           internal event command?start
-           action control!start()  
-           
-           internal event command?stop
-           action control!stop()  
-           
-           internal event s : command?pause
-           action control!pause()  
-        }    
-    }
-}
 
-thing SimulatedThingMockUp includes SimulatorMsg, MonitoringMsg, MotionMsg 
+thing SimulatedThingMockUp includes MonitoringMsgs, MotionMsgs 
 @mock "true"
 {
     required port motion {
@@ -64,17 +25,9 @@ thing SimulatedThingMockUp includes SimulatorMsg, MonitoringMsg, MotionMsg
     }
 }
 
-thing fragment SimulatedThing includes SimulatorMsg, MonitoringMsg, MotionMsg {
-    provided port command {
-        receives start, pause, stop    
-    }
-    
+thing fragment SimulatedThing includes MonitoringMsgs, MotionMsgs {
     provided port motion {
         receives forward, backward, turn  
-    }
-    
-    provided port motion2 {
-        sends turn
     }
     
     required port monitoring {
@@ -83,196 +36,9 @@ thing fragment SimulatedThing includes SimulatorMsg, MonitoringMsg, MotionMsg {
     }
 }
 
-thing FakeSimulatedThing includes SimulatedThing, TimerMsgs {
-    
-    readonly property maxX : Integer = 639
-    readonly property maxY : Integer = 639
-    readonly property inc : Integer = 10
-    readonly property period : Integer = 1000
-    
-    property x : Integer = 50
-    property y : Integer = 320
-    property dx : Integer = 10
-    property dy : Integer = 0
-    property alpha : Double = 0//angle in degrees
-    property alphaRadians : Double = 0//angle in radians
-    
-    property isStarted : Boolean = false
-    
-    required port timer {
-        sends timer_start, timer_cancel
-        receives timer_timeout
-    }
-    
-       statechart main init command {
-        state command {
-           internal event command?start
-           action do
-            print("start")
-            isStarted = true
-           end
-           
-           internal event command?stop
-           action do
-            print("stop")
-            isStarted = false
-           end
-           
-           internal event s : command?pause
-           action do
-            print("pause")
-            isStarted = false
-           end
-        }
-        
-        region motion init default{
-            state default {
-                internal event motion?forward
-                guard isStarted
-                action do//maybe we should include cos and sin in ThingML...
-                    if ( ((dx > 0 and x < (maxX - dx) or (x > -dx)) and (y < (maxY - dy) or (y > -dy))) ) do
-                        x = x + dx
-                        y = y + dy
-                    end
-                    print("x = " + x + ", y = " + y)
-                end
-           
-                internal event motion?backward
-                guard isStarted
-                action do
-                    if ( ((dx > 0 and x > dx or (x < (maxX + dx)))) and ((dy > 0 and y > dy) or (y < (maxY + dy))) ) do
-                        x = x - dx
-                        y = y - dy
-                    end
-                    print("x = " + x + ", y = " + y)
-                end
-
-                internal event t : motion?turn
-                guard isStarted
-                action do
-                    alpha = alpha + t.angle
-                    while(alpha > 359) do//that would be much easier if ThingML has modulo
-                        alpha = alpha - 360
-                    end
-                    motion2!turn('' & alpha & '.toInt')
-                    alphaRadians = 'Math.toRadians(' & alpha & ')'
-                    dx = '(' & inc * 'Math.cos(' & alphaRadians & ')).toInt'
-                    dy = '(' & inc * 'Math.sin(' & alphaRadians & ')).toInt'
-                    print("alpha = " + alpha)
-                    print("dx = " + dx)
-                    print("dy = " + dy)
-                end
-            }
-        }
-        
-        region monitoring init default {
-            state default {
-                on entry timer!timer_start(period)
-                
-                transition -> default
-                event timer?timer_timeout
-                action monitoring!getValue(x, y)
-                
-                
-                internal event v : monitoring?value
-                action print(v.v)
-            }    
-        }
-    } 
-}
-
-//TODO: avoid duplication with Map
-thing SensorPair includes MonitoringMsg, MotionMsg {
-    readonly property param2D : Param2D = 'new org.thingml.simulators.sim2d.Param2D(property = "default", precision = 5)'//property : String, imageURI : String, precision : Int
-    readonly property prop : String = "default"
-    readonly property distance : Integer = 32
-    property angle : Double = 90
-    property angleRad : Double = 'Math.toRadians(90)'
-    readonly property sensor0 : String = "sensor0"
-    readonly property sensor1 : String = "sensor1"
-    
+thing fragment SimulatedSensor includes MonitoringMsgs {
     provided port monitoring {
         receives getValue
         sends value
     }
-    
-    required port motion {
-        receives turn    
-    }
-    
-    function getValueFromImage(x : Integer, y : Integer, sensorId : String) : Integer
-    do
-        return param2D '.getValue(' & x & ', ' & y & ', ' & sensorId & ')'
-    end
-    
-    statechart main init default {
-        state default {
-            internal event get : monitoring?getValue
-            action do
-                readonly var chord : Integer = (distance * 'Math.sin(' & (angleRad/2) & ')')'.toInt'
-            
-                readonly var dx : Integer = (distance/2 * 'Math.cos(' & angleRad & ')')'.toInt'
-                readonly var dy : Integer = (distance/2 * 'Math.sin(' & angleRad & ')')'.toInt'
-               
-                getValueFromImage(get.x, get.y, "")
-                 
-                monitoring!value(prop, sensor0, get.x + dx, get.y + dy, getValueFromImage(get.x + dx, get.y + dy, sensor0))
-                monitoring!value(prop, sensor1, get.x - dx, get.y - dy, getValueFromImage(get.x - dx, get.y - dy, sensor1))
-            end
-            
-            internal event m : motion?turn
-            action do 
-                angle = angle + m.angle
-                while(angle > 359) do
-                    angle = angle - 360
-                end
-                angleRad = 'Math.toRadians(' & angle & ')'
-            end
-        }    
-    }
-}
-
-thing Map includes MonitoringMsg {
-    readonly property prop : String = "default"
-    readonly property param2D : Param2D = 'new org.thingml.simulators.sim2d.Param2D(property = "default", precision = 5)'//property : String, imageURI : String, precision : Int
-    
-    function getValueFromImage(x : Integer, y : Integer) : Integer
-    do
-        return param2D '.getValue(' & x & ', ' & y & ')'
-    end
-    
-    provided port monitoring {
-        receives getValue
-        sends value
-    }
-    
-    statechart main init default {
-        state default {
-            internal event get : monitoring?getValue
-            action monitoring!value(prop, "", get.x, get.y, getValueFromImage(get.x, get.y))
-        }    
-    }
-}
-
-configuration testSim2D {
-   instance sim : Simulator2D
-   instance simMock : Simulator2DMockUp
-   instance fakeDevice : FakeSimulatedThing
-   instance fakeDeviceMock : SimulatedThingMockUp
-   instance sensorPair : SensorPair
-   //instance defaultMap : Map
-   //instance defaultMap2 : Map
-   instance timer : TimerScala
-   
-   connector simMock.command => sim.command
-   connector sim.control => fakeDevice.command
-   connector fakeDevice.timer => timer.timer
-   connector fakeDevice.monitoring => sensorPair.monitoring
-   //connector fakeDevice.monitoring => defaultMap.monitoring
-   //connector fakeDevice.monitoring => defaultMap2.monitoring
-   connector fakeDeviceMock.motion => fakeDevice.motion
-   connector sensorPair.motion => fakeDevice.motion2
-   
-   //connector fakeDeviceMock.monitoring => defaultMap.monitoring
-   //connector fakeDeviceMock.monitoring => defaultMap2.monitoring
 }
