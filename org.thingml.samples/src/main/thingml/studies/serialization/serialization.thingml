@@ -96,6 +96,7 @@ thing fragment PacketManager {
 	 	buffer[2] = 0 // target addr (not used)
 	 	buffer[3] = 0 // frame num (not used)
         buffer[4] = code
+        finalize(buffer, 5)
         return 5//position of the next byte to be written
 	 end
 
@@ -108,8 +109,9 @@ thing fragment PacketManager {
 
     function pad(buffer : Byte[MAX_PACKET_SIZE], startPosition : Integer, stopPosition : Integer) 
     do
-        var i : Integer = 0
-        while (i < stopPosition) do
+        var i : Integer = startPosition
+        while (i < stopPosition and i < MAX_PACKET_SIZE -1) 
+        do
             buffer[i] = PADDING_BYTE
             i = i +1
         end
@@ -158,7 +160,7 @@ thing MessageSerializer includes DataTypeSerializerScala, Network, testMsgs{
                  
                  var position : Integer = setHeader(buffer, 1)
                  
-                 finalize(buffer, position)
+                 //finalize(buffer, position)
                  network!packet(buffer)
              end
              
@@ -171,7 +173,7 @@ thing MessageSerializer includes DataTypeSerializerScala, Network, testMsgs{
                  serializeInteger(m.i, buffer, position)
                  position = position + lengthInteger()
                  
-                 finalize(buffer, position)
+                 //finalize(buffer, position)
                  network!packet(buffer)
              end
              
@@ -184,7 +186,7 @@ thing MessageSerializer includes DataTypeSerializerScala, Network, testMsgs{
                  serializeString(m.s, buffer, position)
                  position = position + lengthString()
                  
-                 finalize(buffer, position)
+                 //finalize(buffer, position)
                  network!packet(buffer)
              end
              
@@ -200,7 +202,7 @@ thing MessageSerializer includes DataTypeSerializerScala, Network, testMsgs{
                  serializeString(m.s, buffer, position)
                  position = position + lengthString()
                  
-                 finalize(buffer, position)
+                 //finalize(buffer, position)
                  network!packet(buffer)
              end
         }
@@ -211,7 +213,7 @@ thing MessageSerializer includes DataTypeSerializerScala, Network, testMsgs{
 *  This is what we should generate to handler the serialization 
 * of all the remote messages received by an application
 */
-thing MessageDeserializer includes Network, testMsgs {
+thing MessageDeserializer includes DataTypeSerializerScala, Network, testMsgs {
     required port out_serial {
        sends m1, m2, m3, m4
     }

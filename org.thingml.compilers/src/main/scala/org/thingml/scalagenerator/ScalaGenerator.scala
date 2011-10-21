@@ -39,7 +39,7 @@ object Context {
   var thing : Thing = _
   var pack : String = _
   
-  var debug = false
+  var debug = true
   
   val keywords = scala.List("implicit","match","requires","type","var","abstract","do","finally","import","object","throw","val","case","else","for","lazy","override","return","trait","catch","extends","forSome","match","package","sealed","try","while","class","false","if","new","private","super","true","with","def","final","implicit","null","protected","this","yield","_",":","=","=>","<-","<:","<%",">:","#","@")
   def protectScalaKeyword(value : String) : String = {
@@ -771,6 +771,8 @@ case class FunctionScalaGenerator(override val self: Function) extends TypedElem
     var returnType = self.getType.scala_type(self.getCardinality != null)
   
     builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => Context.protectScalaKeyword(p.scala_var_name) + " : " + p.getType.scala_type(p.getCardinality != null)}.mkString(", ") + ") : " + returnType + " = {\n"
+    if (Context.debug)
+      builder append "println(\"Executing " + self.getName + " ...\")\n"
     builder append "val handler = this\n" 
     self.getBody.generateScala()
     builder append "}\n"
@@ -953,8 +955,9 @@ case class LoopActionScalaGenerator(override val self: LoopAction) extends Actio
   override def generateScala(builder: StringBuilder = Context.builder) {
     builder append "while("
     self.getCondition.generateScala()
-    builder append ") "
+    builder append ") {\n"
     self.getAction.generateScala()
+    builder append "\n}\n"
   }
 }
 
@@ -990,7 +993,13 @@ case class LocalVariableActionScalaGenerator(override val self: LocalVariable) e
     if (self.getInit != null) 
       self.getInit.generateScala() 
     else {
-      builder append "null.asInstanceOf[" + self.getType.scala_type(self.getCardinality != null) + "]"
+      if (self.getCardinality != null) {
+        builder append "new " + self.getType.scala_type(self.getCardinality != null) + "(" 
+        self.getCardinality.generateScala()
+        builder append ")"
+      } else {
+        builder append "null.asInstanceOf[" + self.getType.scala_type(self.getCardinality != null) + "]"
+      }
       if (self.isChangeable)
         println("ERROR: non changeable var " + self + " must be initialized")
     }
