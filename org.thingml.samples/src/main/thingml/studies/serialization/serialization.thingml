@@ -14,7 +14,9 @@ thing fragment testMsgs {
     message m4(i : Integer, s : String);
 }
 
-thing testThing includes testMsgs{
+thing TestThing includes testMsgs
+@mock "true"
+{
     required port out {
        sends m1, m2, m3, m4
     }
@@ -86,12 +88,15 @@ thing fragment PacketManager {
 	 readonly property ESCAPE_BYTE : Byte = '0x7D'
      readonly property PAD_BYTE : Byte = '0x00'
      
-     function setHeader(buffer : Byte[MAX_PACKET_SIZE]) : Integer do
+     readonly property CODE_POSITION : Integer = 4
+     
+     function setHeader(buffer : Byte[MAX_PACKET_SIZE], code : Byte) : Integer do
 	 	buffer[0] = START_BYTE
 	 	buffer[1] = 1 // source addr (not used)
 	 	buffer[2] = 0 // target addr (not used)
 	 	buffer[3] = 0 // frame num (not used)
-        return 4//position of the next byte to be written
+        buffer[4] = code
+        return 5//position of the next byte to be written
 	 end
 
     function pad(buffer : Byte[16], startPosition : Integer, stopPosition : Integer) do
@@ -103,7 +108,6 @@ thing fragment PacketManager {
 }
 
 thing Network includes PacketManager 
-@mock "true"
 {
     message packet(p : Byte[MAX_PACKET_SIZE]);
     
@@ -111,22 +115,31 @@ thing Network includes PacketManager
         receives packet    
     }    
 
-    required port in {
+    required port out {
         sends packet    
-    }    
+    }
+    
+    statechart NetworkBehavior init default {
+        state default {
+            internal event p : in?packet
+            action out!packet(p.p)    
+        }    
+    }
 }
 
 /*
 *  This is what we should generate to handler the serialization 
 * of all the remote messages send by an application
 */
-thing MessageSerializer includes DataTypeSerializerScala, testMsgs{
+thing MessageSerializer includes DataTypeSerializerScala, Network, testMsgs{
     
     provided port in {
        receives m1, m2, m3, m4
     }
     
-    //TODO: add a port to send on the network
+    required port network {
+        sends packet    
+    }
     
     statechart SerializerBehavior init Serialize {
         state Serialize{
@@ -139,7 +152,8 @@ thing MessageSerializer includes DataTypeSerializerScala, testMsgs{
                  position = position + 1
                  pad(buffer, position, MAX_PACKET_SIZE - 1)
                  buffer[MAX_PACKET_SIZE - 1] = STOP_BYTE
-                 //TODO: send to network
+                 
+                 network!packet(buffer)
              end
              
              internal event m : in?m2 action 
@@ -155,7 +169,8 @@ thing MessageSerializer includes DataTypeSerializerScala, testMsgs{
                  
                  pad(buffer, position, MAX_PACKET_SIZE - 1)
                  buffer[MAX_PACKET_SIZE - 1] = STOP_BYTE
-                 //TODO: send to network
+                 
+                 network!packet(buffer)
              end
              
              internal event m : in?m3 action 
@@ -171,7 +186,8 @@ thing MessageSerializer includes DataTypeSerializerScala, testMsgs{
                  
                  pad(buffer, position, MAX_PACKET_SIZE - 1)
                  buffer[MAX_PACKET_SIZE - 1] = STOP_BYTE
-                 //TODO: send to network
+                 
+                 network!packet(buffer)
              end
              
              internal event m : in?m4 action 
@@ -190,7 +206,8 @@ thing MessageSerializer includes DataTypeSerializerScala, testMsgs{
                  
                  pad(buffer, position, MAX_PACKET_SIZE - 1)
                  buffer[MAX_PACKET_SIZE - 1] = STOP_BYTE
-                 //TODO: send to network
+                 
+                 network!packet(buffer)
              end
         }
     }
@@ -200,18 +217,80 @@ thing MessageSerializer includes DataTypeSerializerScala, testMsgs{
 *  This is what we should generate to handler the serialization 
 * of all the remote messages received by an application
 */
-thing MessageDeserializer includes testMsgs, PacketManager{
+thing MessageDeserializer includes Network, testMsgs, PacketManager{
     required port out {
        sends m1, m2, m3, m4
     }
     
-    //TODO: add a port to receive from the network
+    provided port network {
+        receives packet    
+    }
+    
+    function deserializeM1(buffer : Byte[MAX_PACKET_SIZE]) 
+    do
+        out!m1()
+    end
+    
+    function deserializeM2(buffer : Byte[MAX_PACKET_SIZE]) 
+    do
+        var position : Integer = CODE_POSITION + 1
+        readonly var i : Integer = deserializeInteger(buffer, position)
+        out!m2(i)
+    end
+    
+    function deserializeM3(buffer : Byte[MAX_PACKET_SIZE]) 
+    do
+        var position : Integer = CODE_POSITION + 1
+        readonly var s : Integer = deserializeString(buffer, position)
+        out!m3(s)
+    end
+    
+    function deserializeM4(buffer : Byte[MAX_PACKET_SIZE]) 
+    do
+        var position : Integer = CODE_POSITION + 1
+        readonly var i : Integer = deserializeInteger(buffer, position)
+        position = position + lengthInteger()
+        readonly var s : Integer = deserializeString(buffer, position)
+        out!m4(i, s)
+    end
             
      statechart DeserializerBehavior init Deserialize {
-        state Deserialize {}    
+        state Deserialize {
+         internal event packet : network?packet action 
+             do
+                 readonly var buffer : Byte[MAX_PACKET_SIZE] = packet.p
+                 readonly var code : Integer = buffer[CODE_POSITION]
+                 if (code == 1) do//we need else in ThingML so that the code generated can be more performant
+                    deserializeM1(buffer)
+                 end
+                 if (code == 2) do
+                    deserializeM2(buffer)
+                 end
+                 if (code == 3) do
+                    deserializeM3(buffer)
+                 end
+                 if (code == 4) do
+                    deserializeM4(buffer)
+                 end
+             end    
+            
+        }    
      }
 }
 
 configuration test {
+    instance test : TestThing
+    
+    instance testRemote : TestThing
+    instance net : Network
+    instance serializer : MessageSerializer
+    instance deserializer : MessageDeserializer
+    
+    connector test.out => test.in
+    
+    connector testRemote.out => serializer.in
+    connector serializer.network => net.in
+    connector net.out => deserializer.in
+    connector deserializer.out => testRemote.in
     
 }
