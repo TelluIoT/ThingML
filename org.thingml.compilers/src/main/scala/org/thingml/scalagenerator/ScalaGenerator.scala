@@ -239,7 +239,7 @@ object ScalaGenerator {
 
   def messageDeclaration(m : Message, builder: StringBuilder = Context.builder) {
     val nameParam = "override val name : String = " + Context.firstToUpper(m.getName) + ".getName"
-    val params = m.getParameters.collect{ case p => Context.protectScalaKeyword(p.getName) + " : " + p.getType.scala_type} += nameParam
+    val params = m.getParameters.collect{ case p => Context.protectScalaKeyword(p.getName) + " : " + p.getType.scala_type(p.getCardinality != null)} += nameParam
     builder append Context.firstToUpper(m.getName) + "("
     builder append params.mkString(", ")
     builder append ")"
@@ -331,7 +331,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
         builder append "//Initializing arrays\n"
       val arrayMap = self.initExpressionsByArrays(i)
       arrayMap.keys.foreach{ init =>
-        var result = "val " + init.scala_var_name + " = new Array[" + init.getType.scala_type + "](" 
+        var result = "val " + init.scala_var_name + " = new " + init.getType.scala_type(init.getCardinality != null) + "(" 
         
         var tempBuilder = new StringBuilder()
         init.getCardinality.generateScala(tempBuilder)
@@ -372,7 +372,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
                   p._2.generateScala(tempbuilder)
                   result += tempbuilder.toString
                 } else {
-                  result += "null.asInstanceOf[" + p._1.getType.scala_type + "]"
+                  result += "null.asInstanceOf[" + p._1.getType.scala_type(p._1.getCardinality != null) + "]"
                 }
                 result
             } 
@@ -491,8 +491,7 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
   def generateProperties(builder: StringBuilder = Context.builder) {
     builder append self.allPropertiesInDepth.collect{case p =>
         (if (p.isChangeable) "val " else "var ") +
-        p.scala_var_name + " : " +
-        (if (p.getCardinality != null) "Array[" + p.getType.scala_type + "]" else  p.getType.scala_type)
+        p.scala_var_name + " : " + p.getType.scala_type(p.getCardinality != null)
     }.mkString(", ")
   }
 }
@@ -769,12 +768,9 @@ case class FunctionScalaGenerator(override val self: Function) extends TypedElem
       case None =>
     }
      
-    var returnType = self.getType.scala_type
-    if (self.getCardinality != null) {
-      returnType = "Array[" + returnType + "]"
-    }
-    
-    builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => Context.protectScalaKeyword(p.scala_var_name) + " : " + p.getType.scala_type}.mkString(", ") + ") : " + returnType + " = {\n"
+    var returnType = self.getType.scala_type(self.getCardinality != null)
+  
+    builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => Context.protectScalaKeyword(p.scala_var_name) + " : " + p.getType.scala_type(p.getCardinality != null)}.mkString(", ") + ") : " + returnType + " = {\n"
     builder append "val handler = this\n" 
     self.getBody.generateScala()
     builder append "}\n"
@@ -792,10 +788,10 @@ case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGener
   }
 
   def generateScala_TypeRef(builder: StringBuilder) = {
-    scala_type
+    scala_type()
   }
 
-  def scala_type(): String = {
+  def scala_type(isArray : Boolean = false): String = {
     if (self == null){
       return "Unit"
     }
@@ -818,6 +814,9 @@ case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGener
               temp
           }
       }
+      if (isArray) {
+        res = "Array[" + res + "]"
+      }
       return res
     }
   }
@@ -829,7 +828,7 @@ case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGener
 
 case class PrimitiveTypeScalaGenerator(override val self: PrimitiveType) extends TypeScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "// ThingML type " + self.getName + " is mapped to " + scala_type + "\n"
+    builder append "// ThingML type " + self.getName + " is mapped to " + scala_type() + "\n"
   }
 }
 
@@ -839,9 +838,9 @@ case class EnumerationScalaGenerator(override val self: Enumeration) extends Typ
   override def generateScala(builder: StringBuilder = Context.builder) {
     builder append "// Definition of Enumeration  " + self.getName + "\n"
     builder append "object " + enumName + " extends Enumeration {\n"
-    builder append "\ttype " + enumName + " = " + scala_type + "\n"
+    builder append "\ttype " + enumName + " = " + scala_type() + "\n"
     self.getLiterals.foreach {
-      l => builder append "val " + l.scala_name + " : " + scala_type + " = " + l.enum_val +"\n"
+      l => builder append "val " + l.scala_name + " : " + scala_type() + " = " + l.enum_val +"\n"
     }
     builder append "}\n"
   }
@@ -987,11 +986,11 @@ case class LocalVariableActionScalaGenerator(override val self: LocalVariable) e
   override def generateScala(builder: StringBuilder = Context.builder) {    
     //builder append (if (self.isChangeable) "var " else "val ")//uncomment line when bug is fixed in ThingML
     builder append "var "
-    builder append self.scala_var_name + " = "
+    builder append self.scala_var_name + " : " + self.getType.scala_type(self.getCardinality != null)  + " = "
     if (self.getInit != null) 
       self.getInit.generateScala() 
     else {
-      builder append "_"
+      builder append "null.asInstanceOf[" + self.getType.scala_type(self.getCardinality != null) + "]"
       if (self.isChangeable)
         println("ERROR: non changeable var " + self + " must be initialized")
     }

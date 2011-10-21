@@ -46,7 +46,7 @@ thing fragment DataTypeSerializerScala  includes PacketManager
     
     function deserializeInteger(bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) : Integer
     do
-        return bytes[startPosition]'.toInt'
+        return 'bytes(startPosition).toInt'
     end    
     
 
@@ -60,22 +60,23 @@ thing fragment DataTypeSerializerScala  includes PacketManager
         var i : Integer = startPosition
         while(i < startPosition+lengthString() and i < MAX_PACKET_SIZE) do
             if (i < '' & d & '.size')
-                bytes[i] = '' & d & '(' & i-startPosition & ').toByte'
-            if (not(i < '' & d & '.size'))//We need an else in ThingML
+                bytes[i] = 'd(' & i-startPosition & ').toByte'
+            if (i > '' & d & '.size' - 1)//We need an else in ThingML
                 bytes[i] = '0.toByte'
             i = i + 1
         end
+        return bytes
     end
     
     function deserializeString(bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) : String 
     do
         var result : String
-        var i : Integer = startPosition
-        while(i < startPosition+lengthString() and i < MAX_PACKET_SIZE) do
-            result = result + bytes'(' & i & ').toChar'
+        var i : Integer = 0
+        while(i < 8) do
+            result = result + 'bytes(i).toChar'
             i = i + 1
         end
-        return result
+        return bytes
     end
 }
 
@@ -85,12 +86,11 @@ thing fragment PacketManager {
      readonly property START_BYTE : Byte = '0x12'
 	 readonly property STOP_BYTE : Byte = '0x13'
 	 readonly property ESCAPE_BYTE : Byte = '0x7D'
-     readonly property PADDING_BYTE : Byte = '0x00'
+     readonly property PAD_BYTE : Byte = '0x00'
      
      readonly property CODE_POSITION : Integer = 4
      
-     function setHeader(buffer : Byte[MAX_PACKET_SIZE], code : Byte) : Integer 
-     do
+     function setHeader(buffer : Byte[MAX_PACKET_SIZE], code : Byte) : Integer do
 	 	buffer[0] = START_BYTE
 	 	buffer[1] = 1 // source addr (not used)
 	 	buffer[2] = 0 // target addr (not used)
@@ -99,19 +99,10 @@ thing fragment PacketManager {
         return 5//position of the next byte to be written
 	 end
 
-    function finalize(buffer : Byte[MAX_PACKET_SIZE], startPosition : Integer)
-    do
-        readonly var endPosition : Integer = MAX_PACKET_SIZE - 1
-        pad(buffer, startPosition, endPosition)
-        buffer[endPosition] = STOP_BYTE
-    end
-
-    function pad(buffer : Byte[MAX_PACKET_SIZE], startPosition : Integer, stopPosition : Integer) 
-    do
+    function pad(buffer : Byte[16], startPosition : Integer, stopPosition : Integer) do
         var i : Integer = 0
         while (i < stopPosition) do
-            buffer[i] = PADDING_BYTE
-            i = i +1
+            buffer[i] = PAD_BYTE
         end
     end
 }
@@ -120,18 +111,18 @@ thing Network includes PacketManager
 {
     message packet(p : Byte[MAX_PACKET_SIZE]);
     
-    provided port in_net {
+    provided port in {
         receives packet    
     }    
 
-    required port out_net {
+    required port out {
         sends packet    
     }
     
     statechart NetworkBehavior init default {
         state default {
-            internal event p : in_net?packet 
-            action out_net!packet(p.p)    
+            internal event p : in?packet
+            action out!packet(p.p)    
         }    
     }
 }
@@ -142,7 +133,7 @@ thing Network includes PacketManager
 */
 thing MessageSerializer includes DataTypeSerializerScala, Network, testMsgs{
     
-    provided port in_serial {
+    provided port in {
        receives m1, m2, m3, m4
     }
     
@@ -152,47 +143,60 @@ thing MessageSerializer includes DataTypeSerializerScala, Network, testMsgs{
     
     statechart SerializerBehavior init Serialize {
         state Serialize{
-             internal event m : in_serial?m1 action 
+             internal event m : in?m1 action 
              do
                  var buffer : Byte[MAX_PACKET_SIZE]
                  
-                 var position : Integer = setHeader(buffer, 1)
+                 var position : Integer = setHeader(buffer)
+                 buffer[position] = 1//code of the message
+                 position = position + 1
+                 pad(buffer, position, MAX_PACKET_SIZE - 1)
+                 buffer[MAX_PACKET_SIZE - 1] = STOP_BYTE
                  
-                 finalize(buffer, position)
                  network!packet(buffer)
              end
              
-             internal event m : in_serial?m2 action 
+             internal event m : in?m2 action 
              do
                  var buffer : Byte[MAX_PACKET_SIZE]
                  
-                 var position : Integer = setHeader(buffer, 2)
+                 var position : Integer = setHeader(buffer)
+                 buffer[position] = 2//code of the message
+                 position = position + 1
                  
                  serializeInteger(m.i, buffer, position)
                  position = position + lengthInteger()
                  
-                 finalize(buffer, position)
+                 pad(buffer, position, MAX_PACKET_SIZE - 1)
+                 buffer[MAX_PACKET_SIZE - 1] = STOP_BYTE
+                 
                  network!packet(buffer)
              end
              
-             internal event m : in_serial?m3 action 
+             internal event m : in?m3 action 
              do
                  var buffer : Byte[MAX_PACKET_SIZE]
                  
-                 var position : Integer = setHeader(buffer, 3)
+                 var position : Integer = setHeader(buffer)
+                 buffer[position] = 2//code of the message
+                 position = position + 1
                  
                  serializeString(m.s, buffer, position)
                  position = position + lengthString()
                  
-                 finalize(buffer, position)
+                 pad(buffer, position, MAX_PACKET_SIZE - 1)
+                 buffer[MAX_PACKET_SIZE - 1] = STOP_BYTE
+                 
                  network!packet(buffer)
              end
              
-             internal event m : in_serial?m4 action 
+             internal event m : in?m4 action 
              do
                  var buffer : Byte[MAX_PACKET_SIZE]
                  
-                 var position : Integer = setHeader(buffer, 4)
+                 var position : Integer = setHeader(buffer)
+                 buffer[position] = 2//code of the message
+                 position = position + 1
                  
                  serializeInteger(m.i, buffer, position)
                  position = position + lengthInteger()
@@ -200,7 +204,9 @@ thing MessageSerializer includes DataTypeSerializerScala, Network, testMsgs{
                  serializeString(m.s, buffer, position)
                  position = position + lengthString()
                  
-                 finalize(buffer, position)
+                 pad(buffer, position, MAX_PACKET_SIZE - 1)
+                 buffer[MAX_PACKET_SIZE - 1] = STOP_BYTE
+                 
                  network!packet(buffer)
              end
         }
@@ -211,8 +217,8 @@ thing MessageSerializer includes DataTypeSerializerScala, Network, testMsgs{
 *  This is what we should generate to handler the serialization 
 * of all the remote messages received by an application
 */
-thing MessageDeserializer includes Network, testMsgs {
-    required port out_serial {
+thing MessageDeserializer includes Network, testMsgs, PacketManager{
+    required port out {
        sends m1, m2, m3, m4
     }
     
@@ -222,21 +228,21 @@ thing MessageDeserializer includes Network, testMsgs {
     
     function deserializeM1(buffer : Byte[MAX_PACKET_SIZE]) 
     do
-        out_serial!m1()
+        out!m1()
     end
     
     function deserializeM2(buffer : Byte[MAX_PACKET_SIZE]) 
     do
         var position : Integer = CODE_POSITION + 1
         readonly var i : Integer = deserializeInteger(buffer, position)
-        out_serial!m2(i)
+        out!m2(i)
     end
     
     function deserializeM3(buffer : Byte[MAX_PACKET_SIZE]) 
     do
         var position : Integer = CODE_POSITION + 1
-        readonly var s : String = deserializeString(buffer, position)
-        out_serial!m3(s)
+        readonly var s : Integer = deserializeString(buffer, position)
+        out!m3(s)
     end
     
     function deserializeM4(buffer : Byte[MAX_PACKET_SIZE]) 
@@ -244,8 +250,8 @@ thing MessageDeserializer includes Network, testMsgs {
         var position : Integer = CODE_POSITION + 1
         readonly var i : Integer = deserializeInteger(buffer, position)
         position = position + lengthInteger()
-        readonly var s : String = deserializeString(buffer, position)
-        out_serial!m4(i, s)
+        readonly var s : Integer = deserializeString(buffer, position)
+        out!m4(i, s)
     end
             
      statechart DeserializerBehavior init Deserialize {
@@ -282,9 +288,9 @@ configuration test {
     
     connector test.out => test.in
     
-    connector testRemote.out => serializer.in_serial
-    connector serializer.network => net.in_net
-    connector net.out_net => deserializer.network
-    connector deserializer.out_serial => testRemote.in
+    connector testRemote.out => serializer.in
+    connector serializer.network => net.in
+    connector net.out => deserializer.in
+    connector deserializer.out => testRemote.in
     
 }
