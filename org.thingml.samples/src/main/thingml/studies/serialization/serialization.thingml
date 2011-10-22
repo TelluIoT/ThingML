@@ -57,24 +57,27 @@ thing fragment DataTypeSerializerScala  includes PacketManager
             
     function serializeString(d : String, bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) 
     do
+        readonly var stop : Integer = startPosition+lengthString()
         var i : Integer = startPosition
-        while(i < startPosition+lengthString() and i < MAX_PACKET_SIZE) do
-            if (i < '' & d & '.size')
+        while(i < stop and i < MAX_PACKET_SIZE) do
+            if (i-startPosition < '' & d & '.size') do
                 bytes[i] = '' & d & '(' & i-startPosition & ').toByte'
-            if (not(i < '' & d & '.size'))//We need an else in ThingML
-                bytes[i] = '0.toByte'
+                print(i + "=" + '' & d & '(' & i-startPosition & ').toByte')
+            end
             i = i + 1
         end
     end
     
     function deserializeString(bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) : String 
     do
-        var result : String
+        var result : String = ""
+        readonly var stop : Integer = startPosition+lengthString()
         var i : Integer = startPosition
-        while(i < startPosition+lengthString() and i < MAX_PACKET_SIZE) do
-            result = result + bytes'(' & i & ').toChar'
+        while(i < stop and i < MAX_PACKET_SIZE) do
+            result = result + '' & bytes[i] & '.toChar'
             i = i + 1
         end
+        print("deserialize = " + result)
         return result
     end
 }
