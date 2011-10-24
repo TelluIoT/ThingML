@@ -56,6 +56,23 @@ case class ConfigurationScalaImpl (self : Configuration) {
    */
 
 
+  def allRemoteMessages() : Map[Port, List[Message]] = {
+    var result = Map[Port, List[Message]]()
+    self.getAnnotations.filter{a => a.getName == "remote"}
+    .foreach{a =>
+      val regex = a.getValue.split("::")
+      self.allInstances.filter{i => i.getName.matches(self.getName+"_"+regex(0)) && i.getType.getName.matches(regex(1))}
+      .foreach{ i => 
+        i.getType.getPorts.filter{p => p.getName.matches(regex(2))}
+        .foreach{p => 
+          val messages = p.getSends.filter{m => m.getName.matches(regex(3))} ++: p.getReceives.filter{m => m.getName.matches(regex(3))}
+          result += (p -> messages.toList)
+        }
+      }
+    }
+    return result
+  }
+  
   def merge() : Configuration = {
 
     if (MergedConfigurationCache.getMergedConfiguration(self) != null) return MergedConfigurationCache.getMergedConfiguration(self)

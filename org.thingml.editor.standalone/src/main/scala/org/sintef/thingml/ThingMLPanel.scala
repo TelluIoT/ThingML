@@ -47,6 +47,7 @@ import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
 import org.thingml.cgenerator.CGenerator
 import org.thingml.scalagenerator.ScalaGenerator
 import org.thingml.javagenerator.gui.SwingGenerator
+import org.thingml.thingmlgenerator.ThingMLGenerator
 import java.io._
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
@@ -82,6 +83,7 @@ class ThingMLPanel extends JPanel {
   var b = new JButton("Compile to Arduino")
   var bScala = new JButton("Compile to Scala")
   var bSwing = new JButton("Compile to Swing")
+  var bThingML = new JButton("Compile to ThingML")
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
   filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -156,9 +158,28 @@ class ThingMLPanel extends JPanel {
         }
       }         
     })
+  
+    bThingML.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        println("Input file : " + targetFile)
+        if (targetFile.isEmpty) 
+          return
+        try {
+          val thingmlModel = loadThingMLmodel(targetFile.get)
+          thingmlModel.allConfigurations.foreach{c =>
+            ThingMLGenerator.compileAndRun(c)                                                                      
+          }
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+      }         
+    })
+  
   arduinoToolBar.add("Compilers", b)
   arduinoToolBar.add("Compilers", bScala)
   arduinoToolBar.add("Compilers", bSwing)
+  arduinoToolBar.add("Compilers", bThingML)
   add(arduinoToolBar, BorderLayout.SOUTH)
 
 
