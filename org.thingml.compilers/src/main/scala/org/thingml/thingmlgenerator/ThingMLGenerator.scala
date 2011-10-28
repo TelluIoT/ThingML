@@ -112,15 +112,15 @@ object ThingMLGenerator {
     
     val code = compile(cfg)
     /*val rootDir = new File(".")
-    val outputDir = new File(rootDir, "/serialization/")
+     val outputDir = new File(rootDir, "/serialization/")
    
-    outputDir.mkdirs
+     outputDir.mkdirs
     
-    var w = new PrintWriter(new FileWriter(new File(outputDir,  cfg.getName() + "_serialization.thingml")))
-    w.println(code._1)
-    w.close()
+     var w = new PrintWriter(new FileWriter(new File(outputDir,  cfg.getName() + "_serialization.thingml")))
+     w.println(code._1)
+     w.close()
         
-    javax.swing.JOptionPane.showMessageDialog(null, "serialization generated in" + outputDir.getPath);*/
+     javax.swing.JOptionPane.showMessageDialog(null, "serialization generated in" + outputDir.getPath);*/
     
     /*val pb: ProcessBuilder = new ProcessBuilder("mvn")
 
@@ -155,9 +155,8 @@ object ThingMLGenerator {
 
   
   def compile(t: Configuration) : Pair[String, String] = {
-    t.allRemoteMessages.foreach{case (p, m) =>
-      println("remote message " + p.getName + "::" + m.collect{case msg => msg.getName}.mkString(", "))
-    }
+    t.generateThingML()
+    println(Context.builder.toString)
     return ("","")
   }
   
@@ -184,6 +183,113 @@ case class ThingMLThingMLGenerator(self: ThingMLElement) {
 case class ConfigurationThingMLGenerator(override val self: Configuration) extends ThingMLThingMLGenerator(self) {
 
   override def generateThingML(builder: StringBuilder = Context.builder) {
+    generateRemoteMsgs(builder)
+    generateSerializer(builder)
+    generateDeserializer(builder)
   }
 
+  def generateRemoteMsgs(builder: StringBuilder = Context.builder) {
+    builder append "thing fragment RemoteMsgs {\n"
+    val allMessages = self.allRemoteMessages.collect{case (p, m) => m._1 ++: m._2}.flatten.toSet
+    allMessages.foreach{m => 
+      builder append "message " + m.getName + "(" + m.getParameters.collect{case p => p.getName + " : " + p.getType.getName}.toList.mkString(", ") + ");\n"
+    }
+    builder append "}\n\n"
+  }
+  
+  def generateSerializer(builder: StringBuilder = Context.builder) {
+    builder append "thing MessageSerializer includes DataTypeSerializerScala, Network, RemoteMsgs {\n"
+    val allMessages = self.allRemoteMessages
+    allMessages.foreach{case (p,m) => 
+        if (m._1.size > 0) {
+          if (p.isInstanceOf[ProvidedPort])
+            builder append "required port " + p.getName + "{\n"
+          else 
+            builder append "provided port " + p.getName + "{\n"
+          generatePort(p,m._1,true)
+          builder append "}\n\n"
+        }
+    }
+    
+    builder append "required port network {\n"
+    builder append "sends packet\n"
+    builder append "}\n\n"
+    
+    
+    //Generates state machine
+    builder append "statechart SerializerBehavior init Serialize {\n"
+    builder append "state Serialize{\n"
+    allMessages.foreach{case (p,msg) => //TODO
+        msg._1.foreach{m => 
+          builder append "internal event m : " + p.getName + "?"+ m.getName +" action\n"
+          builder append "do\n"
+          builder append "var buffer : Byte[MAX_PACKET_SIZE]\n"
+          builder append "var position : Integer = setHeader(buffer, 1)\n"//TODO replace 1 by the message code
+          serializeMessage(m, builder)
+          builder append "//finalize(buffer, position)\n"
+          builder append "network!packet(buffer)\n"       
+          builder append "end\n\n"
+        }
+    }
+    builder append "}\n"
+    builder append "}\n\n"
+    
+    builder append "}\n\n"    
+  }
+  
+  def serializeMessage(m : Message, builder : StringBuilder) {
+    m.getParameters.foreach{p =>
+      builder append "serialize" + p.getType.getName + "(m." + p.getName + ", buffer, position)\n"
+      builder append "position = position + length" + p.getType.getName + "()\n"
+    }
+  }
+  
+  def generatePort(p : Port, m : List[Message], serializer : Boolean, builder: StringBuilder = Context.builder) {
+    val msgs = ((if (serializer) p.getSends.collect{case msg if (m.contains(msg)) => msg.getName} else p.getReceives.collect{case msg if (m.contains(msg)) => msg.getName}))
+    if (msgs.size > 0) {
+      builder append (if (serializer) "receives " else "sends ")
+      builder append msgs.mkString(", ") + "\n"
+    }
+  }
+  
+  def generateDeserializer(builder: StringBuilder = Context.builder) {
+    //TODO: ideally, we should include the things (fragment) where the messages are defined, instead of redefining them...
+    builder append "thing MessageDeserializer includes DataTypeSerializerScala, Network, RemoteMsgs {\n"
+    val allMessages = self.allRemoteMessages
+    allMessages.foreach{case (p,m) => 
+        if (m._2.size > 0) {
+          if (p.isInstanceOf[ProvidedPort])
+            builder append "required port " + p.getName + "{\n"
+          else 
+            builder append "provided port " + p.getName + "{\n"
+          generatePort(p,m._2,false)
+          builder append "}\n\n"
+        }
+    }   
+    
+    builder append "provided port network {\n"
+    builder append "receives packet\n"
+    builder append "}\n\n"
+    
+    
+    
+    allMessages.values.collect{case m => m._2}.flatten.toSet.foreach{m : Message =>
+      builder append "function deserialize" + Context.firstToUpper(m.getName) + "(buffer : Byte[MAX_PACKET_SIZE])\n"
+      builder append "do\n"
+      builder append "var position : Integer = CODE_POSITION + 1\n"
+          
+      m.getParameters.foreach{p =>
+        builder append "readonly var " + p.getName + " : " + p.getType.getName + " = deserialize" + p.getType.getName + "(buffer, position)\n"
+        builder append "position = position + length" + p.getType.getName + "()\n"
+      }
+          
+      allMessages.filter{case (p,msg) => msg._2.contains(m)}.foreach{case (p, msg) => 
+          builder append p.getName + "!" + m.getName + "(" + m.getParameters.collect{case param => param.getName}.mkString(", ") + ")\n"
+      }
+      
+      builder append "end\n\n"
+    }
+    
+    builder append "}\n\n"
+  } 
 }

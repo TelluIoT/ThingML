@@ -56,8 +56,8 @@ case class ConfigurationScalaImpl (self : Configuration) {
    */
 
 
-  def allRemoteMessages() : Map[Port, List[Message]] = {
-    var result = Map[Port, List[Message]]()
+  def allRemoteMessages() : Map[Port, Pair[List[Message], List[Message]]] = {
+    var result = Map[Port, Pair[List[Message], List[Message]]]()
     self.getAnnotations.filter{a => a.getName == "remote"}
     .foreach{a =>
       val regex = a.getValue.split("::")
@@ -65,8 +65,10 @@ case class ConfigurationScalaImpl (self : Configuration) {
       .foreach{ i => 
         i.getType.getPorts.filter{p => p.getName.matches(regex(2))}
         .foreach{p => 
-          val messages = p.getSends.filter{m => m.getName.matches(regex(3))} ++: p.getReceives.filter{m => m.getName.matches(regex(3))}
-          result += (p -> messages.toList)
+          //val messages = p.getSends.filter{m => m.getName.matches(regex(3))} ++: p.getReceives.filter{m => m.getName.matches(regex(3))}
+          //println("DEBUG: " + messages + " : " + messages.size)
+          //if (messages.size > 0)
+            result += (p -> ((p.getSends.filter{m => m.getName.matches(regex(3))}.toList, p.getReceives.filter{m => m.getName.matches(regex(3))}.toList)))
         }
       }
     }
