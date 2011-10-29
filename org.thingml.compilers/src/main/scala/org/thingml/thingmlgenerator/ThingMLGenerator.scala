@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 /**
- * This code generator targets the SMAc Framework
- * see https://github.com/brice-morin/SMAc
+ * This code generator targets ThingML it self
+ * The generated code allows serializing/deserializing messages
+ * at a PIM level. It should then be compiled to a specifi platform
+ * e.g., Arduino/C or Scala/Java
  * @author: Brice MORIN <brice.morin@sintef.no>
  */
 package org.thingml.thingmlgenerator
@@ -34,6 +36,16 @@ import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader
 import org.sintef.thingml._
 
 object Context {
+  
+  def sort(messages : Map[Port, Pair[List[Message],List[Message]]]) : Map[Port, Pair[List[Message],List[Message]]] = {
+    var result = Map[Port, Pair[List[Message],List[Message]]]()
+    messages.foreach{case (p, (send, receive)) => 
+        result += (p -> ((send.sort((e1, e2) => e1.getParameters.size < e2.getParameters.size || e1.getName.compareTo(e2.getName) <= 0), 
+                             receive.sort((e1, e2) => e1.getParameters.size < e2.getParameters.size || e1.getName.compareTo(e2.getName) <= 0))))    
+    }
+    return result
+  }
+  
   val builder = new StringBuilder()
   
   var debug = true
@@ -190,16 +202,16 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
 
   def generateRemoteMsgs(builder: StringBuilder = Context.builder) {
     builder append "thing fragment RemoteMsgs {\n"
-    val allMessages = self.allRemoteMessages.collect{case (p, m) => m._1 ++: m._2}.flatten.toSet
-    allMessages.foreach{m => 
-      builder append "message " + m.getName + "(" + m.getParameters.collect{case p => p.getName + " : " + p.getType.getName}.toList.mkString(", ") + ");\n"
+    val allMessages = Context.sort(self.allRemoteMessages).collect{case (p, m) => m._1 ++: m._2}.flatten.toSet
+    allMessages.zipWithIndex.foreach{case (m,index) => 
+        builder append "message " + m.getName + "(" + m.getParameters.collect{case p => p.getName + " : " + p.getType.getName}.toList.mkString(", ") + ");//code=" + index + "\n"
     }
     builder append "}\n\n"
   }
   
   def generateSerializer(builder: StringBuilder = Context.builder) {
     builder append "thing MessageSerializer includes DataTypeSerializerScala, Network, RemoteMsgs {\n"
-    val allMessages = self.allRemoteMessages
+    val allMessages = Context.sort(self.allRemoteMessages)
     allMessages.foreach{case (p,m) => 
         if (m._1.size > 0) {
           if (p.isInstanceOf[ProvidedPort])
@@ -220,11 +232,11 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
     builder append "statechart SerializerBehavior init Serialize {\n"
     builder append "state Serialize{\n"
     allMessages.foreach{case (p,msg) => //TODO
-        msg._1.foreach{m => 
+        msg._1.zipWithIndex.foreach{case (m, index) => 
           builder append "internal event m : " + p.getName + "?"+ m.getName +" action\n"
           builder append "do\n"
           builder append "var buffer : Byte[MAX_PACKET_SIZE]\n"
-          builder append "var position : Integer = setHeader(buffer, 1)\n"//TODO replace 1 by the message code
+          builder append "var position : Integer = setHeader(buffer, " + index + ")\n"
           serializeMessage(m, builder)
           builder append "//finalize(buffer, position)\n"
           builder append "network!packet(buffer)\n"       
@@ -255,7 +267,7 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
   def generateDeserializer(builder: StringBuilder = Context.builder) {
     //TODO: ideally, we should include the things (fragment) where the messages are defined, instead of redefining them...
     builder append "thing MessageDeserializer includes DataTypeSerializerScala, Network, RemoteMsgs {\n"
-    val allMessages = self.allRemoteMessages
+    val allMessages = Context.sort(self.allRemoteMessages)
     allMessages.foreach{case (p,m) => 
         if (m._2.size > 0) {
           if (p.isInstanceOf[ProvidedPort])
@@ -289,6 +301,20 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
       
       builder append "end\n\n"
     }
+    
+    
+    builder append "statechart DeserializerBehavior init Deserialize {\n"
+    builder append "state Deserialize {\n"
+    builder append "internal event packet : network?packet action\n"
+    builder append "do\n"
+    builder append "readonly var buffer : Byte[MAX_PACKET_SIZE] = packet.p\n"
+    builder append "readonly var code : Integer = buffer[CODE_POSITION]\n"
+    allMessages.values.collect{case m => m._2}.flatten.toSet.toList.zipWithIndex.foreach{case (m,index) =>
+      builder append "if (code == " + index + ")\n"
+      builder append "deserialize" + Context.firstToUpper(m.getName) + "(buffer)\n"
+      builder append "end\n"
+    }
+    
     
     builder append "}\n\n"
   } 

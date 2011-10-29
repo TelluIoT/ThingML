@@ -9,10 +9,10 @@ datatype Byte
 
 //test messages
 thing fragment testMsgs {
-    message m1();
-    message m2(i : Integer);
-    message m3(s : String);
     message m4(i : Integer, s : String);
+    message m2(i : Integer);
+    message m1();
+    message m3(s : String);
 }
 
 //test thing
