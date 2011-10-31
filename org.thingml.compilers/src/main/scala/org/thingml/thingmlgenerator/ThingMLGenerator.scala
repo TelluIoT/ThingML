@@ -310,12 +310,13 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
     builder append "readonly var buffer : Byte[MAX_PACKET_SIZE] = packet.p\n"
     builder append "readonly var code : Integer = buffer[CODE_POSITION]\n"
     allMessages.values.collect{case m => m._2}.flatten.toSet.toList.zipWithIndex.foreach{case (m,index) =>
-      builder append "if (code == " + index + ")\n"
+      builder append "if (code == " + index + ") do\n"
       builder append "deserialize" + Context.firstToUpper(m.getName) + "(buffer)\n"
       builder append "end\n"
     }
-    
-    
+    builder append "end\n"
+    builder append "}\n"
+    builder append "}\n"
     builder append "}\n\n"
   } 
 }

@@ -1,0 +1,44 @@
+import "../serializer.thingml"
+
+//Defines the way the datatypes of the ThingML framework are serialized in Scala
+//TODO: do it for all the remaining datatypes
+thing fragment DataTypeSerializerScala  includes PacketManager
+{
+    //Integer    
+    function serializeInteger(d : Integer, bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer)
+    do
+        bytes[startPosition] = '' & d & '.toByte'
+    end
+    
+    function deserializeInteger(bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) : Integer
+    do
+        return bytes[startPosition]'.toInt'
+    end    
+    
+    //String            
+    function serializeString(d : String, bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) 
+    do
+        readonly var stop : Integer = startPosition+lengthString()
+        var i : Integer = startPosition
+        while(i < stop and i < MAX_PACKET_SIZE) do
+            if (i-startPosition < '' & d & '.size') do
+                bytes[i] = '' & d & '(' & i-startPosition & ').toByte'
+                print(i + "=" + '' & d & '(' & i-startPosition & ').toByte')
+            end
+            i = i + 1
+        end
+    end
+    
+    function deserializeString(bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) : String 
+    do
+        var result : String = ""
+        readonly var stop : Integer = startPosition+lengthString()
+        var i : Integer = startPosition
+        while(i < stop and i < MAX_PACKET_SIZE) do
+            result = result + '' & bytes[i] & '.toChar'
+            i = i + 1
+        end
+        print("deserialize = " + result)
+        return result
+    end
+}
