@@ -25,8 +25,8 @@ import java.awt.{Point}
 object Main {
 
   def main(args: Array[String]): Unit = {
-    val param2D = new Param2D(imageURI = "src/main/resources/sim2d/light_default.png")
-    val sensor2D = new Sensor2D(param = param2D, increment = 12, init = new Point(275, 200))
+    //val param2D = new Map2D(imageURI = "src/main/resources/sim2d/light_default.png")
+    val sensor2D = new Sensor2D(increment = 12, init = new Point(275, 200))
     val thing2D = new Thing2D(sensors = List(sensor2D), increment = 12, init = new Point(275, 200))
     
     sensor2D.sense
