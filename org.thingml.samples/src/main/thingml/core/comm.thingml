@@ -24,6 +24,24 @@ thing fragment IOStream includes InputByteStreamMsgs, OutputByteStreamMsgs
 	}
 }
 
+thing Network includes InputByteStreamMsgs, OutputByteStreamMsgs
+{
+	provided port IOStream 
+    {
+		sends receive_byte
+        receives write_byte
+	}
+    statechart behavior init default {
+        state default {
+            internal event wb : IOStream?write_byte
+            action do
+                print("network forwards: " + wb.b)
+                IOStream!receive_byte(wb.b)
+            end
+        }    
+    }    
+}
+
 thing Serial includes IOStream, FormatedOutputStreamMsgs
 {
 	provided port Serial

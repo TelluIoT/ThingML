@@ -2,40 +2,48 @@ import "../serializer.thingml"
 
 //Defines the way the datatypes of the ThingML framework are serialized in Scala
 //TODO: do it for all the remaining datatypes
-thing fragment DataTypeSerializerScala  includes PacketManager
+thing fragment SerializerScala  includes Serializer
 {
     //Integer    
-    function serializeInteger(d : Integer, bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer)
+    function serializeInteger(d : Integer)
     do
-        bytes[startPosition] = '' & d & '.toByte'
-    end
+        storeByte('' & d & '.toByte')
+    end  
     
-    function deserializeInteger(bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) : Integer
+    //String                            
+    function serializeString(d : String) 
     do
-        return bytes[startPosition]'.toInt'
-    end    
-    
-    //String            
-    function serializeString(d : String, bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) 
-    do
-        readonly var stop : Integer = startPosition+lengthString()
-        var i : Integer = startPosition
-        while(i < stop and i < MAX_PACKET_SIZE) do
-            if (i-startPosition < '' & d & '.size') do
-                bytes[i] = '' & d & '(' & i-startPosition & ').toByte'
-                print(i + "=" + '' & d & '(' & i-startPosition & ').toByte')
+        readonly var stop : Integer = lengthString
+        var i : Integer = 0
+        while(i < stop) do
+            if (i < '' & d & '.size') do
+              storeByte('' & d & '(' & i & ').toByte')
+              print(i + "=" + '' & d & '(' & i & ').toByte')
+            end
+            if (i > '' & d & '.size' - 1) do
+              storeByte(0)
+              print("Padding string")
             end
             i = i + 1
         end
     end
-    
-    function deserializeString(bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) : String 
+}
+
+thing fragment DeserializerScala includes Deserializer {
+    //Integer        
+    function deserializeInteger() : Integer
+    do
+        return readByte()'.toInt'
+    end       
+
+    //String                            
+    function deserializeString() : String 
     do
         var result : String = ""
-        readonly var stop : Integer = startPosition+lengthString()
-        var i : Integer = startPosition
-        while(i < stop and i < MAX_PACKET_SIZE) do
-            result = result + '' & bytes[i] & '.toChar'
+        readonly var stop : Integer = lengthString
+        var i : Integer = 0
+        while(i < stop) do
+            result = result + '' & readByte() & '.toChar'
             i = i + 1
         end
         print("deserialize = " + result)

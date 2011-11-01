@@ -38,5 +38,5 @@ object ThingMLScalaImpl {
   implicit def scalaImplAspect(self:Connector) = ConnectorScalaImpl(self)
   implicit def scalaImplAspect(self:Instance) = InstanceScalaImpl(self)
   implicit def scalaImplAspect(self:Handler) = HandlerScalaImpl(self)
-
+  implicit def scalaImplAspect(self:Message) = MessageScalaImpl(self)
 }

@@ -331,7 +331,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
         builder append "//Initializing arrays\n"
       val arrayMap = self.initExpressionsByArrays(i)
       arrayMap.keys.foreach{ init =>
-        var result = "val " + init.scala_var_name + " = new " + init.getType.scala_type(init.getCardinality != null) + "(" 
+        var result = "val " + init.scala_var_name + "_" + i.getName + " = new " + init.getType.scala_type(init.getCardinality != null) + "(" 
         
         var tempBuilder = new StringBuilder()
         init.getCardinality.generateScala(tempBuilder)
@@ -339,7 +339,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
         result += ")\n"
         
         arrayMap.get(init).get.foreach{pair => 
-          result += init.scala_var_name + "("
+          result += init.scala_var_name + "_" + i.getName + "("
           tempBuilder = new StringBuilder()
           pair._1.generateScala(tempBuilder)
           result += tempBuilder.toString
@@ -378,7 +378,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
             } 
             ++ 
             self.initExpressionsByArrays(i).keys.collect{ case init =>
-                init.scala_var_name + " = " + init.scala_var_name
+                init.scala_var_name + " = " + init.scala_var_name + "_" + i.getName
             }
           ).mkString(", ")
           builder append ")\n"
@@ -602,8 +602,8 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
 
 case class InternalTransitionScalaGenerator(override val self: InternalTransition) extends HandlerScalaGenerator(self) {
   
-  override val handlerInstanceName = "t_self_" + self.hashCode
-  override val handlerTypeName = "InternalTransition" + self.hashCode
+  override val handlerInstanceName = "t_self_" + self.eContainer.asInstanceOf[State].getName + "_" + self.hashCode
+  override val handlerTypeName = "InternalTransition_" + self.eContainer.asInstanceOf[State].getName + "_" + self.hashCode
   
   override def generateScala(builder: StringBuilder = Context.builder) {
     builder append "case class " + handlerTypeName + " extends InternalTransitionAction {\n"

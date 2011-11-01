@@ -1,128 +1,33 @@
-datatype Integer
-@scala_type "Int";
+import "../../core/_scala/serializer.thingml"
+import "../../core/serializer.thingml"
 
-datatype String
-@scala_type "String";
+//test messages
+thing fragment testMsgs {
+    message m4(i : Integer, s : String);
+    message m2(i : Integer);
+    message m1();
+    message m3(s : String);
+}
 
-datatype Byte
-@scala_type "Byte";
-
-thing Network includes PacketManager 
+//test thing
+thing TestThing includes testMsgs
+@mock "true"
 {
-    message packet(p : Byte[MAX_PACKET_SIZE]);
-    
-    provided port in_net {
-        receives packet    
-    }    
-
-    required port out_net {
-        sends packet    
+    required port out {
+       sends m1, m2, m3, m4
     }
     
-    statechart NetworkBehavior init default {
-        state default {
-            internal event p : in_net?packet 
-            action out_net!packet(p.p)    
-        }    
-    }
+    provided port in {
+       receives m1, m2, m3, m4
+    }        
 }
-
-thing fragment PacketManager {
-     readonly property MAX_PACKET_SIZE : Integer = 16   
-     
-     readonly property START_BYTE : Byte = '0x12'
-	 readonly property STOP_BYTE : Byte = '0x13'
-	 readonly property ESCAPE_BYTE : Byte = '0x7D'
-     readonly property PADDING_BYTE : Byte = '0x00'
-     
-     readonly property CODE_POSITION : Integer = 4
-     
-     function setHeader(buffer : Byte[MAX_PACKET_SIZE], code : Byte) : Integer 
-     do
-	 	buffer[0] = START_BYTE
-	 	buffer[1] = 1 // source addr (not used)
-	 	buffer[2] = 0 // target addr (not used)
-	 	buffer[3] = 0 // frame num (not used)
-        buffer[4] = code
-        finalize(buffer, 5)//pads and puts the STOP_BYTE. Note that too long messages will erase the stop byte, meaning that the message will be discarded at some point in the communication chain.
-        return 5//position of the next byte to be written
-	 end
-
-    function finalize(buffer : Byte[MAX_PACKET_SIZE], startPosition : Integer)
-    do
-        readonly var endPosition : Integer = MAX_PACKET_SIZE - 1
-        pad(buffer, startPosition, endPosition)
-        buffer[endPosition] = STOP_BYTE
-    end
-
-    function pad(buffer : Byte[MAX_PACKET_SIZE], startPosition : Integer, stopPosition : Integer) 
-    do
-        var i : Integer = startPosition
-        while (i < stopPosition and i < MAX_PACKET_SIZE -1) 
-        do
-            buffer[i] = PADDING_BYTE
-            i = i +1
-        end
-    end
-}
-
-thing fragment DataTypeSerializerScala  includes PacketManager
-{
-    function lengthInteger() : Integer
-    do
-        return 1
-    end
-    
-    function serializeInteger(d : Integer, bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer)
-    do
-        bytes[startPosition] = '' & d & '.toByte'
-    end
-    
-    function deserializeInteger(bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) : Integer
-    do
-        return bytes[startPosition]'.toInt'
-    end    
-    
-
-    function lengthString() : Integer
-    do
-        return 8
-    end
-            
-    function serializeString(d : String, bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) 
-    do
-        readonly var stop : Integer = startPosition+lengthString()
-        var i : Integer = startPosition
-        while(i < stop and i < MAX_PACKET_SIZE) do
-            if (i-startPosition < '' & d & '.size') do
-                bytes[i] = '' & d & '(' & i-startPosition & ').toByte'
-                print(i + "=" + '' & d & '(' & i-startPosition & ').toByte')
-            end
-            i = i + 1
-        end
-    end
-    
-    function deserializeString(bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) : String 
-    do
-        var result : String = ""
-        readonly var stop : Integer = startPosition+lengthString()
-        var i : Integer = startPosition
-        while(i < stop and i < MAX_PACKET_SIZE) do
-            result = result + '' & bytes[i] & '.toChar'
-            i = i + 1
-        end
-        print("deserialize = " + result)
-        return result
-    end
-}
-
 
 //All the code below is generated
-thing fragment RemoteMsgs {
-message m1();//code=0
-message m2(i : Integer);//code=1
-message m3(s : String);//code=2
-message m4(i : Integer, s : String);//code=3
+thing fragment RemoteMsgs includes testMsgs{
+//message m1();//code=27
+//message m2(i : Integer);//code=1
+//message m3(s : String);//code=2
+//message m4(i : Integer, s : String);//code=12
 }
 
 thing MessageSerializer includes DataTypeSerializerScala, Network, RemoteMsgs {
@@ -139,7 +44,7 @@ state Serialize{
 internal event m : out?m1 action
 do
 var buffer : Byte[MAX_PACKET_SIZE]
-var position : Integer = setHeader(buffer, 0)
+var position : Integer = setHeader(buffer, 27)
 //finalize(buffer, position)
 network!packet(buffer)
 end
@@ -167,7 +72,7 @@ end
 internal event m : out?m4 action
 do
 var buffer : Byte[MAX_PACKET_SIZE]
-var position : Integer = setHeader(buffer, 3)
+var position : Integer = setHeader(buffer, 12)
 serializeInteger(m.i, buffer, position)
 position = position + lengthInteger()
 serializeString(m.s, buffer, position)
@@ -228,7 +133,7 @@ internal event packet : network?packet action
 do
 readonly var buffer : Byte[MAX_PACKET_SIZE] = packet.p
 readonly var code : Integer = buffer[CODE_POSITION]
-if (code == 0) do
+if (code == 27) do
 deserializeM1(buffer)
 end
 if (code == 1) do
@@ -237,10 +142,36 @@ end
 if (code == 2) do
 deserializeM3(buffer)
 end
-if (code == 3) do
+if (code == 12) do
 deserializeM4(buffer)
 end
 end
 }
 }
+}
+
+/**
+ * @remote annotations allows defining which ports are remote
+ * syntax: instanceName::TypeName::PortName::messageName
+ * note: wildcards can be used for any of these elements.
+ */
+configuration test 
+@remote "testRemote::TestThing::.*::.*"
+{
+    //Messages are sent and received without serialization
+    instance test : TestThing
+    connector test.out => test.in
+    
+    //Messages are serialized, sent to (simulated) network, received, deserialized and sent to the former thing
+    //hopefully, this has the same behavior than the configuration above...
+    instance testRemote : TestThing
+    instance net : Network
+    instance serializer : MessageSerializer
+    instance deserializer : MessageDeserializer
+    
+    connector testRemote.out => serializer.out
+    connector serializer.network => net.in_net
+    connector net.out_net => deserializer.network
+    connector deserializer.in => testRemote.in
+    
 }

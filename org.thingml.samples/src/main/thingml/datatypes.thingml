@@ -62,7 +62,7 @@ datatype Char
 	@c_byte_size "1"
 	@java_type "Char";
 
-datatype String	
+datatype String
 	@c_type "char *"
 	@c_byte_size "*"
 	@java_type "String";

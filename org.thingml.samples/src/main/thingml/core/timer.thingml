@@ -22,3 +22,13 @@ thing fragment Timer includes TimerMsgs
 		receives timer_start, timer_cancel
 	}
 }
+
+thing fragment TimerClient includes TimerMsgs
+{
+	required port timer
+    {
+		receives timer_timeout
+		sends timer_start, timer_cancel
+	}
+    
+}

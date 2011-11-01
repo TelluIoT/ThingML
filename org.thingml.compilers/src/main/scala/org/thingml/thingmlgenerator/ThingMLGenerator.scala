@@ -41,7 +41,7 @@ object Context {
     var result = Map[Port, Pair[List[Message],List[Message]]]()
     messages.foreach{case (p, (send, receive)) => 
         result += (p -> ((send.sort((e1, e2) => e1.getParameters.size < e2.getParameters.size || e1.getName.compareTo(e2.getName) <= 0), 
-                             receive.sort((e1, e2) => e1.getParameters.size < e2.getParameters.size || e1.getName.compareTo(e2.getName) <= 0))))    
+                          receive.sort((e1, e2) => e1.getParameters.size < e2.getParameters.size || e1.getName.compareTo(e2.getName) <= 0))))    
     }
     return result
   }
@@ -201,10 +201,12 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
   }
 
   def generateRemoteMsgs(builder: StringBuilder = Context.builder) {
-    builder append "thing fragment RemoteMsgs {\n"
     val allMessages = Context.sort(self.allRemoteMessages).collect{case (p, m) => m._1 ++: m._2}.flatten.toSet
+    val allIncludes = allMessages.collect{case m => m.eContainer.asInstanceOf[Thing].getName}.toSet
+    builder append "thing fragment RemoteMsgs includes " + allIncludes.mkString(", ") + "{\n"
     allMessages.zipWithIndex.foreach{case (m,index) => 
-        builder append "message " + m.getName + "(" + m.getParameters.collect{case p => p.getName + " : " + p.getType.getName}.toList.mkString(", ") + ");//code=" + index + "\n"
+        val code = (if (m.getCode != -1) m.getCode else index)
+        builder append "//message " + m.getName + "(" + m.getParameters.collect{case p => p.getName + " : " + p.getType.getName}.toList.mkString(", ") + ");//code=" + code + "\n"
     }
     builder append "}\n\n"
   }
@@ -233,14 +235,15 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
     builder append "state Serialize{\n"
     allMessages.foreach{case (p,msg) => //TODO
         msg._1.zipWithIndex.foreach{case (m, index) => 
-          builder append "internal event m : " + p.getName + "?"+ m.getName +" action\n"
-          builder append "do\n"
-          builder append "var buffer : Byte[MAX_PACKET_SIZE]\n"
-          builder append "var position : Integer = setHeader(buffer, " + index + ")\n"
-          serializeMessage(m, builder)
-          builder append "//finalize(buffer, position)\n"
-          builder append "network!packet(buffer)\n"       
-          builder append "end\n\n"
+            val code = (if (m.getCode != -1) m.getCode else index)
+            builder append "internal event m : " + p.getName + "?"+ m.getName +" action\n"
+            builder append "do\n"
+            builder append "var buffer : Byte[MAX_PACKET_SIZE]\n"
+            builder append "var position : Integer = setHeader(buffer, " + code + ")\n"
+            serializeMessage(m, builder)
+            builder append "//finalize(buffer, position)\n"
+            builder append "network!packet(buffer)\n"       
+            builder append "end\n\n"
         }
     }
     builder append "}\n"
@@ -310,9 +313,10 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
     builder append "readonly var buffer : Byte[MAX_PACKET_SIZE] = packet.p\n"
     builder append "readonly var code : Integer = buffer[CODE_POSITION]\n"
     allMessages.values.collect{case m => m._2}.flatten.toSet.toList.zipWithIndex.foreach{case (m,index) =>
-      builder append "if (code == " + index + ") do\n"
-      builder append "deserialize" + Context.firstToUpper(m.getName) + "(buffer)\n"
-      builder append "end\n"
+        val code = (if (m.getCode != -1) m.getCode else index)
+        builder append "if (code == " + code + ") do\n"
+        builder append "deserialize" + Context.firstToUpper(m.getName) + "(buffer)\n"
+        builder append "end\n"
     }
     builder append "end\n"
     builder append "}\n"

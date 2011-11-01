@@ -1,30 +1,10 @@
 import "../datatypes.thingml"
+import "./comm.thingml"
 
-//Just a mock for the network
-thing Network includes PacketManager 
-{
-    message packet(p : Byte[MAX_PACKET_SIZE]);
-    
-    provided port in_net {
-        receives packet    
-    }    
-
-    required port out_net {
-        sends packet    
-    }
-    
-    statechart NetworkBehavior init default {
-        state default {
-            internal event p : in_net?packet 
-            action out_net!packet(p.p)    
-        }    
-    }
-}
-
-//Defines constants and methods to manage fixed size packets
+//Defines constants and methods to manage variable size packets (with maximum size defined by MAX_PACKET_SIZE)
 /*
 *  For all serializable datatype called D (D is the name of the ThingML datatype, not the underlying platform-specific datatype), define:
-*  - lengthD() : Integer, which returns the size in bytes of the serialized type. This should be defined here to ensure the consistencies of all serializer.
+*  - lengthD() : Integer, which returns the size in bytes of the serialized type. This should be defined here to ensure the consistencies of all serializer. However, datatypes whose size is determined dynamically (eg, VarString) should define this method in a PSm thing.
 *  - serializeD(d : D, bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer), which puts the serialized datatype in the buffer, starting at bytes[startPosition]. This should be defined in a PSM thing that include this thing.
 *  - deserializeD(bytes : Byte[MAX_PACKET_SIZE], startPosition : Integer) : D, which gets the datatype from its serialized form, starting from bytes[startPosition]. This should be defined in a PSM thing that include this thing.
 *  The idea is inspired by the ByteBuffer provided by Java (http://download.oracle.com/javase/1.4.2/docs/api/java/nio/ByteBuffer.html), 
@@ -34,52 +14,107 @@ thing Network includes PacketManager
 *  User defined datatypes that needs to be serialized should come along these functions.
 */
 thing fragment PacketManager {
-     readonly property MAX_PACKET_SIZE : Integer = 16   
+        //Define the length (in bytes) of all the datatypes
+        //TODO: Do it for all the other datatypes provided by ThingML
+    readonly property lengthInteger : UInt8 = 1    
+    readonly property lengthString : UInt8 = 8
+    
+    
+    readonly property MAX_PACKET_SIZE : Integer = 16   
      
-     readonly property START_BYTE : Byte = '0x12'
-	 readonly property STOP_BYTE : Byte = '0x13'
-	 readonly property ESCAPE_BYTE : Byte = '0x7D'
-     readonly property PADDING_BYTE : Byte = '0x00'
+    readonly property START_BYTE : Byte = '0x12'
+	readonly property STOP_BYTE : Byte = '0x13'
+	readonly property ESCAPE_BYTE : Byte = '0x7D'
      
-     readonly property CODE_POSITION : Integer = 4
+    readonly property DELAY : UInt8 = 5
      
-     function setHeader(buffer : Byte[MAX_PACKET_SIZE], code : Byte) : Integer 
+    property CODE_POSITION : Integer = 3
+    property LENGTH_POSITION : Integer = 4
+    property DATA_POSITION : Integer = 5
+     
+    property buffer : Byte[16]
+    set buffer[0] = '0x13'
+    set buffer[1] = '0x13'
+    set buffer[2] = '0x13'
+    set buffer[3] = '0x13'
+    set buffer[4] = '0x13'
+    set buffer[5] = '0x13'
+    set buffer[6] = '0x13'
+    set buffer[7] = '0x13'
+    set buffer[8] = '0x13'
+    set buffer[9] = '0x13'
+    set buffer[10] = '0x13'
+    set buffer[11] = '0x13'
+    set buffer[12] = '0x13'
+    set buffer[13] = '0x13'
+    set buffer[14] = '0x13'
+    set buffer[15] = '0x13'
+	property index : Integer = 5
+     
+     function setHeader(code : Byte, length : Byte) 
      do
-	 	buffer[0] = START_BYTE
-	 	buffer[1] = 1 // source addr (not used)
-	 	buffer[2] = 0 // target addr (not used)
-	 	buffer[3] = 0 // frame num (not used)
-        buffer[4] = code
-        finalize(buffer, 5)//pads and puts the STOP_BYTE. Note that too long messages will erase the stop byte, meaning that the message will be discarded at some point in the communication chain.
-        return 5//position of the next byte to be written
+        index = 0
+	 	storeByte(1) // source addr (not used)
+	 	storeByte(0) // target addr (not used)
+	 	storeByte(0) // frame num (not used)
+        CODE_POSITION = index
+        storeByte(code)
+        LENGTH_POSITION = index
+        storeByte(length)
+        DATA_POSITION = index
 	 end
 
-    function finalize(buffer : Byte[MAX_PACKET_SIZE], startPosition : Integer)
-    do
-        readonly var endPosition : Integer = MAX_PACKET_SIZE - 1
-        pad(buffer, startPosition, endPosition)
-        buffer[endPosition] = STOP_BYTE
-    end
-
-    function pad(buffer : Byte[MAX_PACKET_SIZE], startPosition : Integer, stopPosition : Integer) 
-    do
-        var i : Integer = startPosition
-        while (i < stopPosition and i < MAX_PACKET_SIZE -1) 
-        do
-            buffer[i] = PADDING_BYTE
-            i = i +1
+    function storeByte(b : Byte) do
+        if (index < MAX_PACKET_SIZE) do
+	 	  buffer[index] = b
+		  index = index + 1
         end
-    end
+        if (index == MAX_PACKET_SIZE) do
+            print("ERROR: BUFFER OVERFLOW: " + b + "has been ignored")
+        end
+	end
+
+    function readByte() : Byte do
+        var b : Byte
+        if (index < MAX_PACKET_SIZE) do
+	 	  b = buffer[index]
+          index = index + 1
+        end
+        if (index == MAX_PACKET_SIZE) do
+          print("ERROR: BUFFER OVERFLOW: trying to read out of buffer boundaries")
+          b = STOP_BYTE
+        end
+        return b
+	end
+}
+
+thing fragment Serializer includes PacketManager, OutputByteStreamMsgs {
+    required port network {
+        sends write_byte    
+    }
     
-    //Define the length of all the datatypes
-    //TODO: do it for all datatypes
-    function lengthInteger() : Integer
-    do
-        return 1
+    function send() do
+        print("send start byte = " + START_BYTE)
+        network!write_byte(START_BYTE)
+        readonly var stop : Integer = DATA_POSITION + buffer[LENGTH_POSITION] - 1
+        var i : Integer = 0
+        while(i < stop) do
+            var b : Byte = buffer[i]
+            if (b == START_BYTE or b == STOP_BYTE or b == ESCAPE_BYTE) network!write_byte(ESCAPE_BYTE)
+            print("send data byte(" + i + ") = " + b)
+            network!write_byte(b)
+            i = i + 1
+        end
+        print("send stop byte = " + STOP_BYTE)
+        network!write_byte(STOP_BYTE)
+        index = 0
     end
+}
+
+thing fragment Deserializer includes PacketManager, InputByteStreamMsgs{
+    required port network {
+        receives receive_byte    
+    }
     
-    function lengthString() : Integer
-    do
-        return 8
-    end
+    //function receive() do end//should be refined in a PSM thing
 }
