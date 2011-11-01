@@ -16,8 +16,8 @@ import "./comm.thingml"
 thing fragment PacketManager {
         //Define the length (in bytes) of all the datatypes
         //TODO: Do it for all the other datatypes provided by ThingML
-    readonly property lengthInteger : UInt8 = 1    
-    readonly property lengthString : UInt8 = 8
+    readonly property lengthInteger : Byte = 1    
+    readonly property lengthString : Byte = 8
     
     
     readonly property MAX_PACKET_SIZE : Integer = 16   
@@ -26,7 +26,7 @@ thing fragment PacketManager {
 	readonly property STOP_BYTE : Byte = '0x13'
 	readonly property ESCAPE_BYTE : Byte = '0x7D'
      
-    readonly property DELAY : UInt8 = 5
+    readonly property DELAY : UInt8 = 1
      
     property CODE_POSITION : Integer = 3
     property LENGTH_POSITION : Integer = 4

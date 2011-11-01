@@ -1011,10 +1011,12 @@ case class FunctionCallStatementScalaGenerator(override val self: FunctionCallSt
   override def generateScala(builder: StringBuilder = Context.builder) {  
     builder append self.getFunction().getName + "("
     var i = 0
-    self.getParameters.foreach{ p =>
+    self.getFunction.getParameters.zip(self.getParameters).foreach{ case (fp, ep) =>
       if (i > 0)
         builder append ", "
-      p.generateScala()
+      builder append "("
+      ep.generateScala()
+      builder append ").to" + fp.getType.scala_type(fp.getCardinality != null)
       i = i+1
     }
     /*builder append self.getParameters().collect{case p => 
@@ -1210,10 +1212,12 @@ case class FunctionCallExpressionScalaGenerator(override val self: FunctionCallE
   override def generateScala(builder: StringBuilder = Context.builder) {  
     builder append self.getFunction().getName + "("
     var i = 0
-    self.getParameters.foreach{ p =>
+    self.getFunction.getParameters.zip(self.getParameters).foreach{ case (fp, ep) =>
       if (i > 0)
         builder append ", "
-      p.generateScala()
+      builder append "("
+      ep.generateScala()
+      builder append ").to" + fp.getType.scala_type(fp.getCardinality != null)
       i = i+1
     }
     /*builder append self.getParameters().collect{case p => 

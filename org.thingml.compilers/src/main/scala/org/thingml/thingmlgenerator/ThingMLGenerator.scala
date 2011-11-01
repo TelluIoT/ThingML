@@ -75,7 +75,6 @@ object Context {
   }
 }
 
-//TOOD: clean implicits
 object ThingMLGenerator {
   implicit def thingMLGeneratorAspect(self: Configuration): ConfigurationThingMLGenerator = ConfigurationThingMLGenerator(self)
   
@@ -119,10 +118,10 @@ object ThingMLGenerator {
   }
   
   //TODO: refactor
-  def compileAndRun(cfg : Configuration) {
+  def compileAndRun(cfg : Configuration, alt : Boolean = false) {
     //new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
     
-    val code = compile(cfg)
+    val code = compile(cfg, alt)
     /*val rootDir = new File(".")
      val outputDir = new File(rootDir, "/serialization/")
    
@@ -166,8 +165,8 @@ object ThingMLGenerator {
   }
 
   
-  def compile(t: Configuration) : Pair[String, String] = {
-    t.generateThingML()
+  def compile(t: Configuration, alt : Boolean = false) : Pair[String, String] = {
+    t.generateThingML(Context.builder, alt)
     println(Context.builder.toString)
     return ("","")
   }
@@ -186,17 +185,16 @@ object ThingMLGenerator {
 }
 
 case class ThingMLThingMLGenerator(self: ThingMLElement) {
-  def generateThingML(builder: StringBuilder = Context.builder) {
+  def generateThingML(builder: StringBuilder = Context.builder, alt : Boolean) {
     // Implemented in the sub-classes
   }
 }
 
-
 case class ConfigurationThingMLGenerator(override val self: Configuration) extends ThingMLThingMLGenerator(self) {
 
-  override def generateThingML(builder: StringBuilder = Context.builder) {
+  override def generateThingML(builder: StringBuilder = Context.builder, alt : Boolean) {
     generateRemoteMsgs(builder)
-    generateSerializer(builder)
+    generateSerializer(builder, alt)
     generateDeserializer(builder)
   }
 
@@ -211,8 +209,8 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
     builder append "}\n\n"
   }
   
-  def generateSerializer(builder: StringBuilder = Context.builder) {
-    builder append "thing MessageSerializer includes DataTypeSerializerScala, Network, RemoteMsgs {\n"
+  def generateSerializer(builder: StringBuilder = Context.builder, alt : Boolean) {
+    builder append "thing MessageSerializer includes SerializerScala, OutputByteStreamMsgs, RemoteMsgs"+ (if (alt) ", TimerClient" else "") + " {\n"
     val allMessages = Context.sort(self.allRemoteMessages)
     allMessages.foreach{case (p,m) => 
         if (m._1.size > 0) {
@@ -225,37 +223,80 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
         }
     }
     
-    builder append "required port network {\n"
-    builder append "sends packet\n"
-    builder append "}\n\n"
+    if(!alt)
+      generateSerializeBehavior(allMessages, builder)
+    else
+      generateSerializeBehaviorAlt(allMessages, builder)
+
     
-    
-    //Generates state machine
+    builder append "}\n\n"    
+  }
+  
+  def generateSerializeBehavior(allMessages : Map[Port, Pair[List[Message],List[Message]]], builder : StringBuilder) {
     builder append "statechart SerializerBehavior init Serialize {\n"
     builder append "state Serialize{\n"
     allMessages.foreach{case (p,msg) => //TODO
         msg._1.zipWithIndex.foreach{case (m, index) => 
             val code = (if (m.getCode != -1) m.getCode else index)
+            val length = (List("0") ::: m.getParameters.collect{case p=> "length" + p.getType.getName}.toList).mkString("+")//TODO: could be improved to avoid generating 0+...
             builder append "internal event m : " + p.getName + "?"+ m.getName +" action\n"
             builder append "do\n"
-            builder append "var buffer : Byte[MAX_PACKET_SIZE]\n"
-            builder append "var position : Integer = setHeader(buffer, " + code + ")\n"
+            builder append "setHeader(" + code + ", " + length + ")\n"
             serializeMessage(m, builder)
-            builder append "//finalize(buffer, position)\n"
-            builder append "network!packet(buffer)\n"       
+            builder append "send()\n"       
             builder append "end\n\n"
         }
     }
     builder append "}\n"
     builder append "}\n\n"
+  }
+  
+  def generateSerializeBehaviorAlt(allMessages : Map[Port, Pair[List[Message],List[Message]]], builder : StringBuilder) {    
+    builder append "statechart SerializerBehavior init Serialize {\n"
+    builder append "state Serialize{\n"
+    allMessages.foreach{case (p,msg) =>
+        msg._1.zipWithIndex.foreach{case (m, index) => 
+            val code = (if (m.getCode != -1) m.getCode else index)
+            val length = (List("0") ::: m.getParameters.collect{case p=> "length" + p.getType.getName}.toList).mkString("+")
+            builder append "transition -> Communication event m : " + p.getName + "?" + m.getName + " action\n"
+            builder append "do\n"
+            builder append "setHeader(" + code + ", " + length + ")\n"
+            serializeMessage(m, builder)
+            builder append "end\n"
+        }
+    }
     
-    builder append "}\n\n"    
+    builder append "}\n"
+    
+    builder append "composite state Communication init send {\n"
+    builder append "on entry do\n"
+    builder append "index = 0\n"
+    builder append "network!write_byte(START_BYTE)\n"
+    builder append "timer!timer_start(DELAY)\n"
+    builder append "end\n"
+            
+    builder append "on exit do\n"
+    builder append "network!write_byte(STOP_BYTE)\n"
+    builder append "end\n"
+            
+    builder append "transition -> Serialize event m : timer?timer_timeout\n"
+    builder append "guard index == DATA_POSITION + buffer[LENGTH_POSITION]\n" 
+            
+    builder append "state send {\n"
+    builder append "internal event t : timer?timer_timeout\n"
+    builder append "guard index < DATA_POSITION + buffer[LENGTH_POSITION]\n"
+    builder append "action do\n"
+    builder append "network!write_byte(readByte())\n"
+    builder append "timer!timer_start(DELAY)\n"
+    builder append "end\n"
+    builder append "}\n"
+    builder append "}\n"
+    builder append "}\n"
   }
   
   def serializeMessage(m : Message, builder : StringBuilder) {
     m.getParameters.foreach{p =>
-      builder append "serialize" + p.getType.getName + "(m." + p.getName + ", buffer, position)\n"
-      builder append "position = position + length" + p.getType.getName + "()\n"
+      builder append "serialize" + p.getType.getName + "(m." + p.getName + ")\n"
     }
   }
   
@@ -269,7 +310,7 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
   
   def generateDeserializer(builder: StringBuilder = Context.builder) {
     //TODO: ideally, we should include the things (fragment) where the messages are defined, instead of redefining them...
-    builder append "thing MessageDeserializer includes DataTypeSerializerScala, Network, RemoteMsgs {\n"
+    builder append "thing MessageDeserializer includes DeserializerScala, InputByteStreamMsgs, RemoteMsgs {\n"
     val allMessages = Context.sort(self.allRemoteMessages)
     allMessages.foreach{case (p,m) => 
         if (m._2.size > 0) {
@@ -282,20 +323,23 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
         }
     }   
     
-    builder append "provided port network {\n"
-    builder append "receives packet\n"
-    builder append "}\n\n"
-    
-    
+    builder append "function forward() do\n"
+    builder append "index = DATA_POSITION\n"
+    builder append "readonly var code : Byte = buffer[CODE_POSITION]\n"
+    allMessages.values.collect{case m => m._2}.flatten.toSet.toList.zipWithIndex.foreach{case (m,index) =>
+        val code = (if (m.getCode != -1) m.getCode else index)
+        builder append "if (code == " + code + ") do\n"
+        builder append "deserialize" + Context.firstToUpper(m.getName) + "()\n"
+        builder append "end\n"
+    }
+    builder append "end\n\n"
     
     allMessages.values.collect{case m => m._2}.flatten.toSet.foreach{m : Message =>
-      builder append "function deserialize" + Context.firstToUpper(m.getName) + "(buffer : Byte[MAX_PACKET_SIZE])\n"
+      builder append "function deserialize" + Context.firstToUpper(m.getName) + "()\n"
       builder append "do\n"
-      builder append "var position : Integer = CODE_POSITION + 1\n"
           
       m.getParameters.foreach{p =>
-        builder append "readonly var " + p.getName + " : " + p.getType.getName + " = deserialize" + p.getType.getName + "(buffer, position)\n"
-        builder append "position = position + length" + p.getType.getName + "()\n"
+        builder append "readonly var " + p.getName + " : " + p.getType.getName + " = deserialize" + p.getType.getName + "()\n"
       }
           
       allMessages.filter{case (p,msg) => msg._2.contains(m)}.foreach{case (p, msg) => 
@@ -306,21 +350,38 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
     }
     
     
-    builder append "statechart DeserializerBehavior init Deserialize {\n"
-    builder append "state Deserialize {\n"
-    builder append "internal event packet : network?packet action\n"
-    builder append "do\n"
-    builder append "readonly var buffer : Byte[MAX_PACKET_SIZE] = packet.p\n"
-    builder append "readonly var code : Integer = buffer[CODE_POSITION]\n"
-    allMessages.values.collect{case m => m._2}.flatten.toSet.toList.zipWithIndex.foreach{case (m,index) =>
-        val code = (if (m.getCode != -1) m.getCode else index)
-        builder append "if (code == " + code + ") do\n"
-        builder append "deserialize" + Context.firstToUpper(m.getName) + "(buffer)\n"
-        builder append "end\n"
-    }
-    builder append "end\n"
+
+    
+    
+    builder append "statechart receive init Idle {\n"
+    builder append "state Idle {\n"
+    builder append "on entry index = 0\n"	
+    builder append "transition -> ReceiveMessage event m : network?receive_byte\n"
+    builder append "guard m.b == START_BYTE\n"
+    builder append "}\n" 
+    builder append "state ReceiveMessage {\n"		
+    builder append "transition -> Escape event m : network?receive_byte\n"
+    builder append "guard m.b == ESCAPE_BYTE\n"
+		 	
+    builder append "internal event m : network?receive_byte\n"
+    builder append "guard not (m.b == ESCAPE_BYTE or m.b == STOP_BYTE)\n"
+    builder append "action storeByte(m.b)\n"
+		 	
+    builder append "transition -> Idle event m : network?receive_byte\n"
+    builder append "guard m.b == STOP_BYTE\n"
+    builder append "action forward()\n"
+		 	
+    builder append "internal event m : network?receive_byte\n"
+    builder append "guard m.b == START_BYTE // Should not happen with a reliable channel\n"
+    builder append "action index = 0 // Reset if it happens (some bytes have been lost at some point)\n"
+    builder append "}\n"
+    builder append "state Escape {\n"
+    builder append "transition receive -> ReceiveMessage\n"
+    builder append "event m : network?receive_byte\n"
+    builder append "action storeByte(m.b)\n"
     builder append "}\n"
     builder append "}\n"
+    
     builder append "}\n\n"
   } 
 }

@@ -83,7 +83,8 @@ class ThingMLPanel extends JPanel {
   var b = new JButton("Compile to Arduino")
   var bScala = new JButton("Compile to Scala")
   var bSwing = new JButton("Compile to Swing")
-  var bThingML = new JButton("Compile to ThingML")
+  var bThingML = new JButton("Generate Comm")
+  var bThingML2 = new JButton("Generate Comm2")
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
   filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -176,10 +177,28 @@ class ThingMLPanel extends JPanel {
       }         
     })
   
+    bThingML2.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        println("Input file : " + targetFile)
+        if (targetFile.isEmpty) 
+          return
+        try {
+          val thingmlModel = loadThingMLmodel(targetFile.get)
+          thingmlModel.allConfigurations.foreach{c =>
+            ThingMLGenerator.compileAndRun(c,true)                                                                      
+          }
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+      }         
+    })
+  
   arduinoToolBar.add("Compilers", b)
   arduinoToolBar.add("Compilers", bScala)
   arduinoToolBar.add("Compilers", bSwing)
   arduinoToolBar.add("Compilers", bThingML)
+  arduinoToolBar.add("Compilers", bThingML2)
   add(arduinoToolBar, BorderLayout.SOUTH)
 
 

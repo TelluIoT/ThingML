@@ -1,5 +1,8 @@
 import "../../core/_scala/serializer.thingml"
 import "../../core/serializer.thingml"
+import "../../core/comm.thingml"
+import "../../core/timer.thingml"
+import "../../core/_scala/timer.thingml"
 
 //test messages
 thing fragment testMsgs {
@@ -30,125 +33,130 @@ thing fragment RemoteMsgs includes testMsgs{
 //message m4(i : Integer, s : String);//code=12
 }
 
-thing MessageSerializer includes DataTypeSerializerScala, Network, RemoteMsgs {
+thing MessageSerializer includes SerializerScala, OutputByteStreamMsgs, RemoteMsgs, TimerClient {
 provided port out{
 receives m1, m2, m3, m4
 }
 
-required port network {
-sends packet
-}
-
 statechart SerializerBehavior init Serialize {
 state Serialize{
-internal event m : out?m1 action
+transition -> Communication event m : out?m1 action
 do
-var buffer : Byte[MAX_PACKET_SIZE]
-var position : Integer = setHeader(buffer, 27)
-//finalize(buffer, position)
-network!packet(buffer)
+setHeader(27, 0)
 end
-
-internal event m : out?m2 action
+transition -> Communication event m : out?m2 action
 do
-var buffer : Byte[MAX_PACKET_SIZE]
-var position : Integer = setHeader(buffer, 1)
-serializeInteger(m.i, buffer, position)
-position = position + lengthInteger()
-//finalize(buffer, position)
-network!packet(buffer)
+setHeader(1, 0+lengthInteger)
+serializeInteger(m.i)
 end
-
-internal event m : out?m3 action
+transition -> Communication event m : out?m3 action
 do
-var buffer : Byte[MAX_PACKET_SIZE]
-var position : Integer = setHeader(buffer, 2)
-serializeString(m.s, buffer, position)
-position = position + lengthString()
-//finalize(buffer, position)
-network!packet(buffer)
+setHeader(2, 0+lengthString)
+serializeString(m.s)
 end
-
-internal event m : out?m4 action
+transition -> Communication event m : out?m4 action
 do
-var buffer : Byte[MAX_PACKET_SIZE]
-var position : Integer = setHeader(buffer, 12)
-serializeInteger(m.i, buffer, position)
-position = position + lengthInteger()
-serializeString(m.s, buffer, position)
-position = position + lengthString()
-//finalize(buffer, position)
-network!packet(buffer)
+setHeader(12, 0+lengthInteger+lengthString)
+serializeInteger(m.i)
+serializeString(m.s)
 end
-
+}
+composite state Communication init send {
+on entry do
+index = 0
+network!write_byte(START_BYTE)
+timer!timer_start(DELAY)
+end
+on exit do
+network!write_byte(STOP_BYTE)
+end
+transition -> Serialize event m : timer?timer_timeout
+guard index == DATA_POSITION + buffer[LENGTH_POSITION]
+state send {
+internal event t : timer?timer_timeout
+guard index < DATA_POSITION + buffer[LENGTH_POSITION]
+action do
+network!write_byte(readByte())
+timer!timer_start(DELAY)
+end
+}
+}
 }
 }
 
-}
-
-thing MessageDeserializer includes DataTypeSerializerScala, Network, RemoteMsgs {
+thing MessageDeserializer includes DeserializerScala, InputByteStreamMsgs, RemoteMsgs {
 required port in{
 sends m1, m2, m3, m4
 }
 
-provided port network {
-receives packet
-}
+function forward() do
+index = DATA_POSITION
+readonly var code : Byte = buffer[CODE_POSITION]
+if (code == 27) do
+deserializeM1()
+end
+if (code == 1) do
+deserializeM2()
+end
+if (code == 2) do
+deserializeM3()
+end
+if (code == 12) do
+deserializeM4()
+end
+end
 
-function deserializeM1(buffer : Byte[MAX_PACKET_SIZE])
+function deserializeM1()
 do
-var position : Integer = CODE_POSITION + 1
 in!m1()
 end
 
-function deserializeM2(buffer : Byte[MAX_PACKET_SIZE])
+function deserializeM2()
 do
-var position : Integer = CODE_POSITION + 1
-readonly var i : Integer = deserializeInteger(buffer, position)
-position = position + lengthInteger()
+readonly var i : Integer = deserializeInteger()
 in!m2(i)
 end
 
-function deserializeM3(buffer : Byte[MAX_PACKET_SIZE])
+function deserializeM3()
 do
-var position : Integer = CODE_POSITION + 1
-readonly var s : String = deserializeString(buffer, position)
-position = position + lengthString()
+readonly var s : String = deserializeString()
 in!m3(s)
 end
 
-function deserializeM4(buffer : Byte[MAX_PACKET_SIZE])
+function deserializeM4()
 do
-var position : Integer = CODE_POSITION + 1
-readonly var i : Integer = deserializeInteger(buffer, position)
-position = position + lengthInteger()
-readonly var s : String = deserializeString(buffer, position)
-position = position + lengthString()
+readonly var i : Integer = deserializeInteger()
+readonly var s : String = deserializeString()
 in!m4(i, s)
 end
 
-statechart DeserializerBehavior init Deserialize {
-state Deserialize {
-internal event packet : network?packet action
-do
-readonly var buffer : Byte[MAX_PACKET_SIZE] = packet.p
-readonly var code : Integer = buffer[CODE_POSITION]
-if (code == 27) do
-deserializeM1(buffer)
-end
-if (code == 1) do
-deserializeM2(buffer)
-end
-if (code == 2) do
-deserializeM3(buffer)
-end
-if (code == 12) do
-deserializeM4(buffer)
-end
-end
+statechart receive init Idle {
+state Idle {
+on entry index = 0
+transition -> ReceiveMessage event m : network?receive_byte
+guard m.b == START_BYTE
+}
+state ReceiveMessage {
+transition -> Escape event m : network?receive_byte
+guard m.b == ESCAPE_BYTE
+internal event m : network?receive_byte
+guard not (m.b == ESCAPE_BYTE or m.b == STOP_BYTE)
+action storeByte(m.b)
+transition -> Idle event m : network?receive_byte
+guard m.b == STOP_BYTE
+action forward()
+internal event m : network?receive_byte
+guard m.b == START_BYTE // Should not happen with a reliable channel
+action index = 0 // Reset if it happens (some bytes have been lost at some point)
+}
+state Escape {
+transition receive -> ReceiveMessage
+event m : network?receive_byte
+action storeByte(m.b)
 }
 }
 }
+
 
 /**
  * @remote annotations allows defining which ports are remote
@@ -165,13 +173,15 @@ configuration test
     //Messages are serialized, sent to (simulated) network, received, deserialized and sent to the former thing
     //hopefully, this has the same behavior than the configuration above...
     instance testRemote : TestThing
-    instance net : Network
+    instance network : Network
     instance serializer : MessageSerializer
     instance deserializer : MessageDeserializer
+    instance timer : TimerScala
     
     connector testRemote.out => serializer.out
-    connector serializer.network => net.in_net
-    connector net.out_net => deserializer.network
+    connector serializer.network => network.IOStream
+    connector serializer.timer => timer.timer
+    connector deserializer.network => network.IOStream
     connector deserializer.in => testRemote.in
     
 }
