@@ -15,7 +15,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <scala.version>2.9.0-1</scala.version>
+        <scala.version>2.9.1</scala.version>
         <thingml.version>0.6.0-SNAPSHOT</thingml.version>
         <smac.version>0.6.0-SNAPSHOT</smac.version>
         <bundle.vendor>SINTEF</bundle.vendor>
@@ -146,6 +146,14 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <args><!--This is where you choose the level of logging-->
+                        <arg>-Xelide-below</arg>
+                        <!--<arg>MINIMUM</arg>-->
+                        <!--<arg>INFO</arg>-->
+                        <arg>WARNING</arg>
+                        <!--<arg>SEVERE</arg>-->
+                        <!--<arg>MAXIMUM</arg>-->
+                    </args>
                     <jvmArgs>
                         <jvmArg>-Xmx1024m</jvmArg>
                     </jvmArgs>

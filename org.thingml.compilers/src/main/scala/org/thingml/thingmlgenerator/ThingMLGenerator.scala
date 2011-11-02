@@ -238,7 +238,7 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
     allMessages.foreach{case (p,msg) => //TODO
         msg._1.zipWithIndex.foreach{case (m, index) => 
             val code = (if (m.getCode != -1) m.getCode else index)
-            val length = (List("0") ::: m.getParameters.collect{case p=> "length" + p.getType.getName}.toList).mkString("+")//TODO: could be improved to avoid generating 0+...
+            val length = (if (m.getParameters.size == 0) "0" else m.getParameters.collect{case p=> "length" + p.getType.getName}.mkString("+"))
             builder append "internal event m : " + p.getName + "?"+ m.getName +" action\n"
             builder append "do\n"
             builder append "setHeader(" + code + ", " + length + ")\n"
@@ -257,7 +257,7 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
     allMessages.foreach{case (p,msg) =>
         msg._1.zipWithIndex.foreach{case (m, index) => 
             val code = (if (m.getCode != -1) m.getCode else index)
-            val length = (List("0") ::: m.getParameters.collect{case p=> "length" + p.getType.getName}.toList).mkString("+")
+            val length = (if (m.getParameters.size == 0) "0" else m.getParameters.collect{case p=> "length" + p.getType.getName}.mkString("+"))
             builder append "transition -> Communication event m : " + p.getName + "?" + m.getName + " action\n"
             builder append "do\n"
             builder append "setHeader(" + code + ", " + length + ")\n"
