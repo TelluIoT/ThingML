@@ -110,6 +110,12 @@
             <artifactId>org.thingml.parser.standalone</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.utils</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>        
 
         <dependency>
             <groupId>org.scala-lang</groupId>

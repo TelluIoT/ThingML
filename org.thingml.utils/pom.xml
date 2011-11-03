@@ -42,9 +42,9 @@
                 <configuration>
                     <args>
                         <arg>-Xelide-below</arg>
-                        <!--<arg>MINIMUM</arg>-->
+                        <arg>MINIMUM</arg>
                         <!--<arg>INFO</arg>-->
-                        <arg>WARNING</arg>
+                        <!--<arg>WARNING</arg>-->
                         <!--<arg>SEVERE</arg>-->
                         <!--<arg>MAXIMUM</arg>-->
                     </args>

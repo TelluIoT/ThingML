@@ -1,6 +1,7 @@
 import "../../core/_scala/serializer.thingml"
 import "../../core/serializer.thingml"
 import "../../core/comm.thingml"
+import "../../core/_scala/comm.thingml"
 import "../../core/timer.thingml"
 import "../../core/_scala/timer.thingml"
 
@@ -178,10 +179,10 @@ configuration test
     instance test : TestThing
     connector test.out => test.in
     
-    //Messages are serialized, sent to (simulated) network, received, deserialized and sent to the former thing
+    //Messages are serialized, sent to network, received, deserialized and sent to the former thing
     //hopefully, this has the same behavior than the configuration above...
     instance testRemote : TestThing
-    instance network : Network
+    instance network : SerialScala
     instance serializer : MessageSerializer
     instance deserializer : MessageDeserializer
     instance timer : TimerScala

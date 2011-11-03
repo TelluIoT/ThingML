@@ -1,0 +1,35 @@
+/* ThingML Framework */
+
+import "../comm.thingml"
+
+datatype SerialPhy
+@scala_type "org.thingml.utils.comm.Serial";
+
+thing SerialScala includes IOStream
+@scala_trait "org.thingml.utils.comm.SerialThingML"
+@thingml_maven_dep "org.thingml.utils"//currently not used in generator...
+{
+    readonly property serialPort : String = "COM8"
+    property serial : SerialPhy  
+        
+	function receive(byte : Byte) 
+    @override "true"
+    do
+        IOStream!receive_byte(byte)
+    end
+
+    statechart behavior init default {
+        on entry 
+        do
+            serial = 'new org.thingml.utils.comm.Serial(' & serialPort & ', root.asInstanceOf[org.thingml.utils.comm.SerialThingML])'
+        end
+        
+        state default {
+            internal event wb : IOStream?write_byte
+            action do
+                print("serial.write: " + wb.b)
+                'root.asInstanceOf[org.thingml.utils.comm.SerialThingML].sendData(' & wb.b & ')'
+            end
+        }    
+    }    
+}

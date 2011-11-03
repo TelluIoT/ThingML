@@ -24,13 +24,9 @@ thing fragment IOStream includes InputByteStreamMsgs, OutputByteStreamMsgs
 	}
 }
 
-thing Network includes InputByteStreamMsgs, OutputByteStreamMsgs
+//Just a simple mock.
+thing Network includes IOStream
 {
-	provided port IOStream 
-    {
-		sends receive_byte
-        receives write_byte
-	}
     statechart behavior init default {
         state default {
             internal event wb : IOStream?write_byte

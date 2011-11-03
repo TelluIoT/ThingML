@@ -33,16 +33,7 @@ import java.util.AbstractMap.SimpleEntry
 import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
 import org.sintef.thingml._
 
-import scala.annotation.elidable
-import scala.annotation.elidable._
-
-object Logger {
-  @elidable(MINIMUM)def debug(s : String) {println("DEBUG:" + s)}
-  @elidable(INFO)def info(s : String) {println("INFO:" + s)}
-  @elidable(WARNING)def warning(s : String) {println("WARNING:" + s)}
-  @elidable(SEVERE)def error(s : String) {println("ERROR:" + s)}
-  @elidable(MAXIMUM)def severe(s : String) {println("KERNEL PANIC:" + s)}
-}
+import org.thingml.utils.log.Logger
 
 object Context {
   val builder = new StringBuilder()
