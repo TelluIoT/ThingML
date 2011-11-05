@@ -427,7 +427,12 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
           builder append "else if ( ae.getSource() == getSend" + msg.getName + "_via_" + port.getName + "()) {\n"          
           builder append "port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ".send(new " + Context.firstToUpper(msg.getName) + "("
           builder append (msg.getParameters.collect{
-              case p if (p.getCardinality == null) => "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"
+              case p if (p.getCardinality == null) => 
+                if (p.getType.isInstanceOf[Enumeration]) {
+                   "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
+                } else {
+                  "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"
+                }
                 //TODO: this is a quick and dirty hack that only works with Byte[]. We need to refactor this code to make it work with any kind of Arrays
               case p if (p.getCardinality != null) => "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText().getBytes()"
             }.toList ::: List(Context.firstToUpper(msg.getName) + "$.MODULE$.getName()")).mkString(", ")
@@ -512,7 +517,7 @@ case class MessageSwingGenerator(override val self: Message) extends ThingMLSwin
       
       if (p.getType.isInstanceOf[Enumeration]) {
         builder append p.getType.scala_type + "[] values" + self.getName + Context.firstToUpper(p.getName) + " = {"
-        builder append p.getType.asInstanceOf[Enumeration].getLiterals.collect{case l => p.getType.scala_type + "." + l.getName}.mkString(", ") + "};\n"
+        builder append p.getType.asInstanceOf[Enumeration].getLiterals.collect{case l => p.getType.getName + "_ENUM" + "." + p.getType.getName.toUpperCase + "_" + l.getName + "()"}.mkString(", ") + "};\n"
         builder append "field" + self.getName + "_via_" + Context.port.getName + "_" +  Context.firstToUpper(p.getName) + " = new JComboBox(values" + self.getName + Context.firstToUpper(p.getName) + ");\n"	
       }
       else {		

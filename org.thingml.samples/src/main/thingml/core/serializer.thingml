@@ -70,7 +70,7 @@ thing fragment PacketManager {
 		  index = index + 1
         end
         if (index == MAX_PACKET_SIZE) do
-            print("ERROR: BUFFER OVERFLOW: " + b + "has been ignored")
+            error("BUFFER OVERFLOW: " + b + "has been ignored")
         end
 	end
 
@@ -81,7 +81,7 @@ thing fragment PacketManager {
           index = index + 1
         end
         if (index == MAX_PACKET_SIZE) do
-          print("ERROR: BUFFER OVERFLOW: trying to read out of buffer boundaries")
+          error("BUFFER OVERFLOW: trying to read out of buffer boundaries")
           b = STOP_BYTE
         end
         return b
@@ -100,7 +100,10 @@ thing fragment Serializer includes PacketManager, OutputByteStreamMsgs {
         var i : Integer = 0
         while(i < stop) do
             var b : Byte = buffer[i]
-            if (b == START_BYTE or b == STOP_BYTE or b == ESCAPE_BYTE) network!write_byte(ESCAPE_BYTE)
+            if (b == START_BYTE or b == STOP_BYTE or b == ESCAPE_BYTE) do
+                print("send escape byte = " + ESCAPE_BYTE)
+                network!write_byte(ESCAPE_BYTE)
+            end
             print("send data byte(" + i + ") = " + b)
             network!write_byte(b)
             i = i + 1
@@ -117,4 +120,64 @@ thing fragment Deserializer includes PacketManager, InputByteStreamMsgs{
     }
     
     //function receive() do end//should be refined in a PSM thing
+}
+
+thing fragment ArraySerializer includes PacketManager, OutputByteArrayMsgs {
+    property packet : Byte[18]
+    set packet[0] = '0x12'
+    set packet[17] = '0x13'
+    required port network {
+        sends write_bytes    
+    }
+    
+    function send() do
+        print("send byte array = " + buffer)
+        var i : Integer = 1
+        while (i < 17) do
+            packet[i] = buffer[i-1]
+            i = i + 1
+        end
+        i = 0
+        while (i < 18) do
+            print("packet " + i + " = " + packet[i])
+            i = i + 1
+        end
+        network!write_bytes(packet)
+    end
+}
+
+thing fragment ArrayDeserializer includes PacketManager, InputByteArrayMsgs{
+    required port network {
+        receives receive_bytes    
+    }
+    
+    function forward()@abstract "true" do end//should be refined in a PSM thing
+    
+    function receive(bytes : Byte[256]) do
+        index = 0
+        print("receive " + bytes)
+        var i : Integer = 0
+        var current : Byte = bytes[i]
+        print("byte " + i + " = " + current)
+        if (current == START_BYTE) do
+            print("Start OK")
+            i = i + 1
+            while(not (current == STOP_BYTE) and i < 256) do
+                current = bytes[i]
+                if (current == ESCAPE_BYTE and i < 255) do
+                    i = i + 1
+                    current = buffer[i]
+                end
+                print("byte " + i + " = " + current)
+                storeByte(current)
+                i = i + 1
+            end
+            if (current == STOP_BYTE) do
+                forward()
+            end
+            if (not(current == STOP_BYTE)) do//ie index>=256
+                error("It seems the packet was too long... (No stop byte was found before index 256)")
+            end
+        end
+    end
 }

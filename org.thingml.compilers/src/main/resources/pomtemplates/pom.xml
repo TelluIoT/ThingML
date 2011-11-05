@@ -42,27 +42,12 @@
             <name>thingml-snapshot</name>
             <url>http://maven.thingml.org/thirdparty/</url>
         </repository>
+        <!--Additional repositories-->
+        <!--REPO-->
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.simulators</artifactId>
-            <version>${thingml.version}</version>     
-        </dependency>
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.samples.utils</artifactId>
-            <version>${thingml.version}</version>     
-        </dependency>
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.samples.resources</artifactId>
-            <version>${thingml.version}</version>
-            <classifier>resources</classifier>
-            <type>zip</type>
-            <scope>provided</scope>
-        </dependency>
+        <!--Mandatory dependencies-->
         <dependency>
             <groupId>org.sintef</groupId>
             <artifactId>org.sintef.smac</artifactId>
@@ -73,10 +58,30 @@
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
-        <dependency>
+        <!--Additional dependencies-->
+        <!--DEP-->
+        <dependency><!--TODO: this should be added only when needed-->
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-swing</artifactId>
             <version>${scala.version}</version>
+        </dependency>
+        <dependency><!--TODO: this should be added only when needed-->
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.simulators</artifactId>
+            <version>${thingml.version}</version>     
+        </dependency>
+        <dependency><!--TODO: this should be added only when needed-->
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.samples.utils</artifactId>
+            <version>${thingml.version}</version>     
+        </dependency>
+        <dependency><!--TODO: this should be added only when needed-->
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.samples.resources</artifactId>
+            <version>${thingml.version}</version>
+            <classifier>resources</classifier>
+            <type>zip</type>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     
@@ -149,8 +154,8 @@
                     <args><!--This is where you choose the level of logging-->
                         <arg>-Xelide-below</arg>
                         <!--<arg>MINIMUM</arg>-->
-                        <!--<arg>INFO</arg>-->
-                        <arg>WARNING</arg>
+                        <arg>INFO</arg>
+                        <!--<arg>WARNING</arg>-->
                         <!--<arg>SEVERE</arg>-->
                         <!--<arg>MAXIMUM</arg>-->
                     </args>

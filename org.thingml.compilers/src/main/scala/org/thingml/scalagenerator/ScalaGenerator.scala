@@ -199,7 +199,18 @@ object ScalaGenerator {
     w.println(code._2);
     w.close();
     
-    val pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/pom.xml"),"utf-8").getLines().mkString("\n").replace("<!--CONFIGURATIONNAME-->", cfg.getName())
+    var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/pom.xml"),"utf-8").getLines().mkString("\n")
+    pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
+    
+    //Add ThingML dependencies
+    val thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n"
+    cfg.allThingMLMavenDep.foreach{dep =>
+      pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"))
+    }
+    pom = pom.replace("<!--DEP-->","")
+    
+    //TODO: add other maven dependencies
+    
     w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
     w.println(pom);
     w.close();
@@ -767,21 +778,32 @@ case class TypedElementScalaGenerator(val self: TypedElement) /*extends ThingMLS
 
 case class FunctionScalaGenerator(override val self: Function) extends TypedElementScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
+    var generate = true
     self.getAnnotations.filter {
-      a => a.getName == "override"
+      a => a.getName == "abstract"
     }.headOption match {
       case Some(a) => 
-        builder append "override "
+        println("ABSTRACT=" + a.getValue)
+        generate = !a.getValue.toLowerCase.equals("true")
       case None =>
     }
+    if (generate) { 
+      self.getAnnotations.filter {
+        a => a.getName == "override"
+      }.headOption match {
+        case Some(a) => 
+          builder append "override "
+        case None =>
+      }
      
-    var returnType = self.getType.scala_type(self.getCardinality != null)
+      var returnType = self.getType.scala_type(self.getCardinality != null)
   
-    builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => Context.protectScalaKeyword(p.scala_var_name) + " : " + p.getType.scala_type(p.getCardinality != null)}.mkString(", ") + ") : " + returnType + " = {\n"
-    builder append "Logger.debug(\"Executing " + self.getName + " ...\")\n"
-    builder append "val handler = this\n" 
-    self.getBody.generateScala()
-    builder append "}\n"
+      builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => Context.protectScalaKeyword(p.scala_var_name) + " : " + p.getType.scala_type(p.getCardinality != null)}.mkString(", ") + ") : " + returnType + " = {\n"
+      builder append "Logger.debug(\"Executing " + self.getName + " ...\")\n"
+      builder append "val handler = this\n" 
+      self.getBody.generateScala()
+      builder append "}\n"
+    }
   }
 }
   
@@ -969,17 +991,17 @@ case class LoopActionScalaGenerator(override val self: LoopAction) extends Actio
 
 case class PrintActionScalaGenerator(override val self: PrintAction) extends ActionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "Logger.info("
+    builder append "Logger.info(("
     self.getMsg.generateScala()
-    builder append ")\n"
+    builder append ").toString)\n"
   }
 }
 
 case class ErrorActionScalaGenerator(override val self: ErrorAction) extends ActionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "Logger.error("
+    builder append "Logger.error(("
     self.getMsg.generateScala()
-    builder append ")\n"
+    builder append ").toString)\n"
   }
 }
 

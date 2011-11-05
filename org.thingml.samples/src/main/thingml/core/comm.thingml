@@ -10,6 +10,14 @@ thing fragment OutputByteStreamMsgs {
 	message write_byte (b : Byte);
 }
 
+thing fragment InputByteArrayMsgs {
+	message receive_bytes(b : Byte[256]);
+}
+
+thing fragment OutputByteArrayMsgs {
+	message write_bytes(b : Byte[256]);
+}
+
 thing fragment FormatedOutputStreamMsgs {
 	message print_message (msg : String);
 	message print_value (v : Int16);
@@ -24,7 +32,16 @@ thing fragment IOStream includes InputByteStreamMsgs, OutputByteStreamMsgs
 	}
 }
 
-//Just a simple mock.
+thing fragment IOByteArray includes InputByteArrayMsgs, OutputByteArrayMsgs
+{
+	provided port IOStream 
+    {
+		sends receive_bytes
+        receives write_bytes
+	}
+}
+
+//Just a simple mock to test serialization without using real comm channel.
 thing Network includes IOStream
 {
     statechart behavior init default {
@@ -33,6 +50,20 @@ thing Network includes IOStream
             action do
                 print("network forwards: " + wb.b)
                 IOStream!receive_byte(wb.b)
+            end
+        }    
+    }    
+}
+
+//Just a simple mock to test serialization without using real comm channel.
+thing NetworkArray includes IOByteArray
+{
+    statechart behavior init default {
+        state default {
+            internal event wb : IOStream?write_bytes
+            action do
+                print("network forwards: " + wb.b)
+                IOStream!receive_bytes(wb.b)
             end
         }    
     }    

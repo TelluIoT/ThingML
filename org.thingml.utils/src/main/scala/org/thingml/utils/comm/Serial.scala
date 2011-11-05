@@ -45,6 +45,21 @@ trait SerialThingML {
   def receive(byte : Byte) {
     //This will be refined in the Serial Thing defined in ThingML
   }
+  
+  def sendData(bytes : Array[Byte]) {
+    try {
+      bytes.foreach{b => 
+        out.write(b.toInt)
+      }
+    } catch {
+      case e : IOException =>
+        e.printStackTrace()
+    }
+  }
+  
+  def receive(byte : Array[Byte]) {
+    //This will be refined in the Serial Thing defined in ThingML
+  }
 }
 
 class Serial(port : String, serialThingML : SerialThingML) {
@@ -138,12 +153,18 @@ class Serial(port : String, serialThingML : SerialThingML) {
    * notifies the ThingML serial component (via the receive method)
    *************************************************************************/
   class SerialReader extends SerialPortEventListener {
+    val buffer = new Array[Byte](256)
+    var index = 0
     def serialEvent(event : SerialPortEvent) {
       var data = in.read()
       while (data > -1) {
         serialThingML.receive(data.toByte)
+        buffer(index) = data.toByte
         data = in.read()
+        index += 1
       }
+      serialThingML.receive(buffer)
+      index = 0
     }
   }
 

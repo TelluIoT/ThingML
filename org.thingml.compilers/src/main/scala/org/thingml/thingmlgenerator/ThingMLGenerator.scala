@@ -166,6 +166,7 @@ object ThingMLGenerator {
 
   
   def compile(t: Configuration, alt : Boolean = false) : Pair[String, String] = {
+    Context.init
     t.generateThingML(Context.builder, alt)
     println(Context.builder.toString)
     return ("","")
@@ -194,8 +195,8 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
 
   override def generateThingML(builder: StringBuilder = Context.builder, alt : Boolean) {
     generateRemoteMsgs(builder)
-    generateSerializer(builder, alt)
-    generateDeserializer(builder)
+    generateSerializer(builder)
+    generateDeserializer(builder, alt)
   }
 
   def generateRemoteMsgs(builder: StringBuilder = Context.builder) {
@@ -209,8 +210,9 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
     builder append "}\n\n"
   }
   
-  def generateSerializer(builder: StringBuilder = Context.builder, alt : Boolean) {
-    builder append "thing MessageSerializer includes SerializerScala, OutputByteStreamMsgs, RemoteMsgs"+ (if (alt) ", TimerClient" else "") + " {\n"
+  def generateSerializer(builder: StringBuilder = Context.builder) {
+    //TODO: We should generate a PIM thing and then one PSM thing for each platform that would include the PIM thing
+    builder append "thing MessageSerializer includes SerializerScala, RemoteMsgs {\n"
     val allMessages = Context.sort(self.allRemoteMessages)
     allMessages.foreach{case (p,m) => 
         if (m._1.size > 0) {
@@ -223,10 +225,8 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
         }
     }
     
-    if(!alt)
-      generateSerializeBehavior(allMessages, builder)
-    else
-      generateSerializeBehaviorAlt(allMessages, builder)
+    generateSerializeBehavior(allMessages, builder)
+
 
     
     builder append "}\n\n"    
@@ -251,49 +251,6 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
     builder append "}\n\n"
   }
   
-  def generateSerializeBehaviorAlt(allMessages : Map[Port, Pair[List[Message],List[Message]]], builder : StringBuilder) {    
-    builder append "statechart SerializerBehavior init Serialize {\n"
-    builder append "state Serialize{\n"
-    allMessages.foreach{case (p,msg) =>
-        msg._1.zipWithIndex.foreach{case (m, index) => 
-            val code = (if (m.getCode != -1) m.getCode else index)
-            val length = (if (m.getParameters.size == 0) "0" else m.getParameters.collect{case p=> "length" + p.getType.getName}.mkString("+"))
-            builder append "transition -> Communication event m : " + p.getName + "?" + m.getName + " action\n"
-            builder append "do\n"
-            builder append "setHeader(" + code + ", " + length + ")\n"
-            serializeMessage(m, builder)
-            builder append "end\n"
-        }
-    }
-    
-    builder append "}\n"
-    
-    builder append "composite state Communication init send {\n"
-    builder append "on entry do\n"
-    builder append "index = 0\n"
-    builder append "network!write_byte(START_BYTE)\n"
-    builder append "timer!timer_start(DELAY)\n"
-    builder append "end\n"
-            
-    builder append "on exit do\n"
-    builder append "network!write_byte(STOP_BYTE)\n"
-    builder append "end\n"
-            
-    builder append "transition -> Serialize event m : timer?timer_timeout\n"
-    builder append "guard index == DATA_POSITION + buffer[LENGTH_POSITION]\n" 
-            
-    builder append "state send {\n"
-    builder append "internal event t : timer?timer_timeout\n"
-    builder append "guard index < DATA_POSITION + buffer[LENGTH_POSITION]\n"
-    builder append "action do\n"
-    builder append "network!write_byte(readByte())\n"
-    builder append "timer!timer_start(DELAY)\n"
-    builder append "end\n"
-    builder append "}\n"
-    builder append "}\n"
-    builder append "}\n"
-  }
-  
   def serializeMessage(m : Message, builder : StringBuilder) {
     m.getParameters.foreach{p =>
       builder append "serialize" + p.getType.getName + "(m." + p.getName + ")\n"
@@ -308,9 +265,9 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
     }
   }
   
-  def generateDeserializer(builder: StringBuilder = Context.builder) {
-    //TODO: ideally, we should include the things (fragment) where the messages are defined, instead of redefining them...
-    builder append "thing MessageDeserializer includes DeserializerScala, InputByteStreamMsgs, RemoteMsgs {\n"
+  def generateDeserializer(builder: StringBuilder = Context.builder, alt : Boolean) {
+    //TODO: We should generate a PIM thing and then one PSM thing for each platform that would include the PIM thing
+    builder append "thing MessageDeserializer includes DeserializerScala, RemoteMsgs {\n"
     val allMessages = Context.sort(self.allRemoteMessages)
     allMessages.foreach{case (p,m) => 
         if (m._2.size > 0) {
@@ -348,39 +305,44 @@ case class ConfigurationThingMLGenerator(override val self: Configuration) exten
       
       builder append "end\n\n"
     }
-    
-    
 
-    
-    
-    builder append "statechart receive init Idle {\n"
-    builder append "state Idle {\n"
-    builder append "on entry index = 0\n"	
-    builder append "transition -> ReceiveMessage event m : network?receive_byte\n"
-    builder append "guard m.b == START_BYTE\n"
-    builder append "}\n" 
-    builder append "state ReceiveMessage {\n"		
-    builder append "transition -> Escape event m : network?receive_byte\n"
-    builder append "guard m.b == ESCAPE_BYTE\n"
+    if (alt) {
+      builder append "statechart receive init Idle {\n"
+      builder append "state Idle {\n"
+      builder append "internal event m : network?receive_bytes\n"
+      builder append "action receive(m.b)\n"
+      builder append "}\n" 
+      builder append "}\n\n" 
+    } else {
+      builder append "statechart receive init Idle {\n"
+      builder append "state Idle {\n"
+      builder append "on entry index = 0\n"	
+      builder append "transition -> ReceiveMessage event m : network?receive_byte\n"
+      builder append "guard m.b == START_BYTE\n"
+      builder append "}\n" 
+      builder append "state ReceiveMessage {\n"		
+      builder append "transition -> Escape event m : network?receive_byte\n"
+      builder append "guard m.b == ESCAPE_BYTE\n"
 		 	
-    builder append "internal event m : network?receive_byte\n"
-    builder append "guard not (m.b == ESCAPE_BYTE or m.b == STOP_BYTE)\n"
-    builder append "action storeByte(m.b)\n"
+      builder append "internal event m : network?receive_byte\n"
+      builder append "guard not (m.b == ESCAPE_BYTE or m.b == STOP_BYTE)\n"
+      builder append "action storeByte(m.b)\n"
 		 	
-    builder append "transition -> Idle event m : network?receive_byte\n"
-    builder append "guard m.b == STOP_BYTE\n"
-    builder append "action forward()\n"
+      builder append "transition -> Idle event m : network?receive_byte\n"
+      builder append "guard m.b == STOP_BYTE\n"
+      builder append "action forward()\n"
 		 	
-    builder append "internal event m : network?receive_byte\n"
-    builder append "guard m.b == START_BYTE // Should not happen with a reliable channel\n"
-    builder append "action index = 0 // Reset if it happens (some bytes have been lost at some point)\n"
-    builder append "}\n"
-    builder append "state Escape {\n"
-    builder append "transition receive -> ReceiveMessage\n"
-    builder append "event m : network?receive_byte\n"
-    builder append "action storeByte(m.b)\n"
-    builder append "}\n"
-    builder append "}\n"
+      builder append "internal event m : network?receive_byte\n"
+      builder append "guard m.b == START_BYTE // Should not happen with a reliable channel\n"
+      builder append "action index = 0 // Reset if it happens (some bytes have been lost at some point)\n"
+      builder append "}\n"
+      builder append "state Escape {\n"
+      builder append "transition receive -> ReceiveMessage\n"
+      builder append "event m : network?receive_byte\n"
+      builder append "action storeByte(m.b)\n"
+      builder append "}\n"
+      builder append "}\n\n"
+    }
     
     builder append "}\n\n"
   } 

@@ -1,19 +1,21 @@
 import "../timer.thingml"
 
 datatype ScalaTimer
-@scala_type "org.thingml.utils.Timer";
+@scala_type "org.thingml.utils.timer.Timer";
 
 // Manage a set of software timers.
 thing TimerScala includes Timer
 @pim "Timer"
 @platform "scala"
-@scala_trait "org.thingml.utils.TimerTask"
+@scala_trait "org.thingml.utils.timer.TimerTask"
+@thingml_maven_dep "org.thingml.utils"
 {
 
     property scalaTimer : ScalaTimer
 
     function onTimeout()@override "true" 
     do
+        print("timeout ")
         timer!timer_timeout()
     end
     
@@ -27,21 +29,25 @@ thing TimerScala includes Timer
     
     function start(delay : Integer)
     do
-        scalaTimer = 'new org.thingml.utils.Timer(this,' & delay & ').start'
+        print("start " + delay)
+        scalaTimer = 'new org.thingml.utils.timer.Timer(this,' & delay & ').start'
     end
     
     statechart SoftTimer init default {
-    
-        internal start
+        state default {
+            on entry print("debug timer on entry")
+            
+          internal start
             event m : timer?timer_start
             guard m.delay > 0
-            action start(m.delay)
+            action do
+                print("debug timer")
+                start(m.delay)
+            end
             
-        internal cancel
+          internal cancel
             event m : timer?timer_cancel
-            action cancel()
-    
-        state default {}
-        
+            action cancel()    
+        }
     }
 }

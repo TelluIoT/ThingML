@@ -5,17 +5,19 @@ import "../comm.thingml"
 datatype SerialPhy
 @scala_type "org.thingml.utils.comm.Serial";
 
-thing SerialScala includes IOStream
+thing SerialScala includes IOByteArray
+@pim "IOStream"
+@platform "scala"
 @scala_trait "org.thingml.utils.comm.SerialThingML"
-@thingml_maven_dep "org.thingml.utils"//currently not used in generator...
+@thingml_maven_dep "org.thingml.utils"
 {
     readonly property serialPort : String = "COM8"
     property serial : SerialPhy  
         
-	function receive(byte : Byte) 
+	function receive(byte : Byte[256]) 
     @override "true"
     do
-        IOStream!receive_byte(byte)
+        IOStream!receive_bytes(byte)
     end
 
     statechart behavior init default {
@@ -25,7 +27,7 @@ thing SerialScala includes IOStream
         end
         
         state default {
-            internal event wb : IOStream?write_byte
+            internal event wb : IOStream?write_bytes
             action do
                 print("serial.write: " + wb.b)
                 'root.asInstanceOf[org.thingml.utils.comm.SerialThingML].sendData(' & wb.b & ')'

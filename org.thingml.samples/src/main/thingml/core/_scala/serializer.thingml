@@ -2,7 +2,7 @@ import "../serializer.thingml"
 
 //Defines the way the datatypes of the ThingML framework are serialized in Scala
 //TODO: do it for all the remaining datatypes
-thing fragment SerializerScala  includes Serializer
+thing fragment SerializerScala  includes ArraySerializer
 {
     //Integer    
     function serializeInteger(d : Integer)
@@ -29,7 +29,7 @@ thing fragment SerializerScala  includes Serializer
     end
 }
 
-thing fragment DeserializerScala includes Deserializer {
+thing fragment DeserializerScala includes ArrayDeserializer {
     //Integer        
     function deserializeInteger() : Integer
     do
