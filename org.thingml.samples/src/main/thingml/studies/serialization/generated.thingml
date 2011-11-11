@@ -3,6 +3,8 @@ import "../../core/serializer.thingml"
 import "../../core/comm.thingml"
 import "../../core/_scala/comm.thingml"
 
+
+
 //test messages
 thing fragment testMsgs {
     message m4(i : Integer, s : String)@code "12";

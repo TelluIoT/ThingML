@@ -296,8 +296,6 @@ object ScalaGenerator {
     builder append "package " + Context.pack + "\n"
     builder append "import " + Context.pack + "._\n"
     builder append "import org.sintef.smac._\n"
-    builder append "import org.thingml.devices._\n"
-    builder append "import org.thingml.utils._\n"
     
     if (!isMain) {
       builder append "import scala.annotation.elidable\n"
