@@ -5,6 +5,40 @@ import "../comm.thingml"
 datatype SerialPhy
 @scala_type "org.thingml.utils.comm.Serial";
 
+datatype CoAPPhy
+@scala_type "org.thingml.utils.comm.CoAP";
+
+thing CoAPScala includes IOByteArray
+@pim "IOStream"
+@platform "scala"
+@scala_trait "org.thingml.utils.comm.CoAPThingML"
+@thingml_maven_dep "org.thingml.utils"
+{
+    readonly property coapPort : String = "61616"//currently not used...
+    property coap : CoAPPhy
+    
+    function receive(byte : Byte[256]) 
+    @override "true"
+    do
+        IOStream!receive_bytes(byte)
+    end
+    
+    statechart behavior init default {
+        on entry 
+        do
+            coap = 'new org.thingml.utils.comm.CoAP(root.asInstanceOf[org.thingml.utils.comm.CoAPThingML])'
+        end
+        
+        state default {
+            internal event wb : IOStream?write_bytes
+            action do
+                print("coap.sendData: " + wb.b)
+                'root.asInstanceOf[org.thingml.utils.comm.CoAPThingML].sendData(' & wb.b & ')'
+            end
+        }    
+    }
+}
+
 thing SerialScala includes IOByteArray
 @pim "IOStream"
 @platform "scala"

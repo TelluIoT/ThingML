@@ -1,10 +1,49 @@
-import "../../core/serializer.thingml"
 import "../../core/comm.thingml"
+import "../../core/serializer.thingml"
+import "../../core/timer.thingml"
 import "../../core/_arduino/comm.thingml"
+import "../../core/_arduino/serializer.thingml"
+import "../../core/_arduino/timer.thingml"
+
+
+//test thing
+thing TestThing includes testMsgs, TimerClient
+{
+    
+    property counter : Integer = 0
+    property delay : Integer = 1000
+    
+    required port out {
+       sends m1, m2
+    }
+    
+    provided port in {
+       receives m1, m2
+    }
+    
+    statechart behavior init default {
+        state default {
+            on entry timer!timer_start(delay)
+            
+            internal event in?m1
+            action do
+              counter = counter + 1
+              out!m2(counter)    
+            end
+            
+            internal event timer?timer_timeout
+            action do
+                out!m1()
+                timer!timer_start(delay)
+            end
+        }   
+    }
+}
 
 //test messages
 thing fragment testMsgs {
     message m1()@code "27";
+    message m2(i : Integer);
 }
 
 thing fragment RemoteMsgs includes testMsgs{
@@ -14,9 +53,9 @@ thing fragment RemoteMsgs includes testMsgs{
 //message m4(i : Integer, s : String);//code=12
 }
 
-thing MessageSerializer includes Serializer, RemoteMsgs {
+thing MessageSerializer includes SerializerArduino, RemoteMsgs {
 provided port out{
-receives m1
+receives m1, m2
 }
 
 statechart SerializerBehavior init Serialize {
@@ -26,14 +65,21 @@ do
 setHeader(27, 0)
 send()
 end
+
+internal event m : out?m2 action
+do
+setHeader(1, lengthInteger)
+serializeInteger(m.i)
+send()
+end
 }
 }
 
 }
 
-thing MessageDeserializer includes Deserializer, RemoteMsgs {
+thing MessageDeserializer includes DeserializerArduino, RemoteMsgs {
 required port in{
-sends m1
+sends m1, m2
 }
 
 function forward() do
@@ -47,6 +93,12 @@ end
 function deserializeM1()
 do
 in!m1()
+end
+
+function deserializeM2()
+do
+readonly var i : Integer = deserializeInteger()
+in!m2(i)
 end
 
 statechart receive init Idle {
@@ -79,16 +131,23 @@ action storeByte(m.b)
 
 configuration test 
 @remote "testRemote::TestThing::.*::.*"
+@debug "true"
+@debug_fifo "true"
+@debug_message_receive "^((?!poll).)*$"//all except *poll*
+@debug_message_send "^((?!poll).)*$"//all except *poll*
 {   
+    instance test : TestThing
+    instance timer : TimerArduino
+    
     //Messages are serialized, sent to network, received, deserialized and sent to the former thing
     //hopefully, this has the same behavior than the configuration above...
     instance network : SerialArduino
     instance serializer : MessageSerializer
-    instance deserializer : MessageDeserializer
-    
+    instance deserializer : MessageDeserializer 
     
     connector serializer.network => network.IOStream
     connector deserializer.network => network.IOStream
-    
-    
+    connector test.timer => timer.timer
+    connector test.out => serializer.out
+    connector deserializer.in => test.in  
 }

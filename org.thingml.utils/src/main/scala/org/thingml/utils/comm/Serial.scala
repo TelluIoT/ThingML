@@ -38,7 +38,7 @@ trait SerialThingML {
    * Serial Port data send and receive operations
    *************************************************************************/
   def sendData(byte : Byte) {
-    Logger.debug("SCALA:sendData(" + byte + ")")
+    Logger.debug("sendData(" + byte + ")")
     out.write(byte)
   }
   
@@ -47,8 +47,10 @@ trait SerialThingML {
   }
   
   def sendData(bytes : Array[Byte]) {
+    Logger.debug("sendData(" + bytes.mkString("[", ", ", "]") + ")")
     try {
       bytes.foreach{b => 
+        Logger.debug("out.write(" + b.toInt + ")")
         out.write(b.toInt)
       }
     } catch {
@@ -73,24 +75,26 @@ class Serial(port : String, serialThingML : SerialThingML) {
     val osName = System.getProperty("os.name")
     val osProc = System.getProperty("os.arch")
     Logger.debug("OS=" + osName + ", proc=" + osProc)
-    if (osName.equals("Mac OS X")) {
-      NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Mac_OS_X/librxtxSerial.jnilib"), "librxtxSerial.jnilib")
-    }
     if (osName.equals("Win32")) {
       NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Windows/win32/rxtxSerial.dll"), "rxtxSerial.dll")
     }
-    if (osName.equals("Win64") || osName.equals("Windows 7")) {
+    else if (osName.equals("Win64") || osName.equals("Windows 7")) {
       NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Windows/win64/rxtxSerial.dll"), "rxtxSerial.dll")
     }
-    if (osName.equals("Linux") && osProc.equals("x86-64")) {
+    else if (osName.equals("Linux") && osProc.equals("x86-64")) {
       NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Linux/x86_64-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so")
     }
-    if (osName.equals("Linux") && osProc.equals("ia64")) {
+    else if (osName.equals("Linux") && osProc.equals("ia64")) {
       NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Linux/ia64-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so")
     }
-    if (osName.equals("Linux") && osProc.equals("x86")) {
+    else if (osName.equals("Linux") && osProc.equals("x86")) {
       NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Linux/i686-unknown-linux-gnu/librxtxParallel.so"), "librxtxParallel.so")
       NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Linux/i686-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so")
+    }
+    else if (osName.equals("Mac OS X")) {
+      NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Mac_OS_X/librxtxSerial.jnilib"), "librxtxSerial.jnilib")
+    } else {
+      Logger.debug("OS=" + osName + ", proc=" + osProc + " not handled. Please contact the development team.")
     }
   } catch {
     case e : Exception => e.printStackTrace()
@@ -163,6 +167,7 @@ class Serial(port : String, serialThingML : SerialThingML) {
         data = in.read()
         index += 1
       }
+      Logger.debug("Byte array received from serial port: " + buffer.mkString("[", ", ", "]"))
       serialThingML.receive(buffer)
       index = 0
     }

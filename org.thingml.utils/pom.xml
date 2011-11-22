@@ -69,6 +69,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>ch.eth</groupId>
+            <artifactId>ch.eth.coap4java</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
             <groupId>org.kevoree.extra</groupId>
             <artifactId>org.kevoree.extra.osgi.rxtx</artifactId>
             <version>2.2.0</version>
