@@ -21,7 +21,7 @@ package org.thingml.utils.comm
 import org.thingml.utils.log.Logger
 
 import ch.eth.coap.endpoint.LocalEndpoint
-import ch.eth.coap.coap.{Request, Message}
+import ch.eth.coap.coap._
 
 trait CoAPThingML {
   
@@ -29,8 +29,14 @@ trait CoAPThingML {
    * Send and receive operations to allow communication between CoAP and ThingML
    *************************************************************************/
   def sendDataViaCoAP(bytes : Array[Byte]) {
-    //TODO
-    Logger.warning("Communication ThingML->CoAP not implemented yet")
+    val request = new POSTRequest()
+    request.setURI("coap://localhost:5683/ThingML")//TODO: this should not be hard wired (at least for the port)
+    request.setPayload(bytes)
+
+    //enable response queue in order to use blocking I/O
+    //request.enableResponseQueue(true)//Let's just fire-n-forget for now...
+
+    request.execute()
   }
   
   def sendData(bytes : Array[Byte]) {

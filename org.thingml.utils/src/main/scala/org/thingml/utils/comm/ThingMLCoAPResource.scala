@@ -20,7 +20,7 @@ package org.thingml.utils.comm
 
 import ch.eth.coap.endpoint.LocalResource
 import org.thingml.utils.log.Logger
-import ch.eth.coap.coap.{POSTRequest, GETRequest, CodeRegistry, Response}
+import ch.eth.coap.coap._
 
 class ThingMLCoAPResource(val resourceIdentifier : String = "ThingML", val coapThingML : CoAPThingML) extends LocalResource(resourceIdentifier) {
 
