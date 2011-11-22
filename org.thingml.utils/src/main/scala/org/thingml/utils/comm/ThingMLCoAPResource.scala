@@ -19,22 +19,32 @@
 package org.thingml.utils.comm
 
 import ch.eth.coap.endpoint.LocalResource
-import ch.eth.coap.coap.{GETRequest, CodeRegistry, Response}
 import org.thingml.utils.log.Logger
+import ch.eth.coap.coap.{POSTRequest, GETRequest, CodeRegistry, Response}
 
 class ThingMLCoAPResource(val resourceIdentifier : String = "ThingML", val coapThingML : CoAPThingML) extends LocalResource(resourceIdentifier) {
 
   setResourceTitle("Generic ThingML Resource")
   setResourceType("ThingMLResource")
 
-  override def performGET(request: GETRequest) {
-    Logger.debug("performGET " + request)
+  override def performPOST(request: POSTRequest) {
+    Logger.debug("performPOST: " + request.getPayload.mkString ("[", ", ", "]"))
     //Send the payload to the ThingML side
     coapThingML.receive(request.getPayload)
 
     //Default response, whatever we do with the request
     val response = new Response(CodeRegistry.RESP_CONTENT)
     response.setPayload("OK!")
+    request.respond(response)
+  }
+
+  override def performGET(request: GETRequest) {
+    Logger.debug("performGET: " + request.getPayload.mkString ("[", ", ", "]"))
+    Logger.warning("performGET not supported")
+
+    //Default response, whatever we do with the request
+    val response = new Response(CodeRegistry.RESP_METHOD_NOT_ALLOWED)
+    response.setPayload("GET not supported by ThingML resources")
     request.respond(response)
   }
 }
