@@ -6,7 +6,7 @@ datatype SerialPhy
 @scala_type "org.thingml.utils.comm.Serial";
 
 datatype CoAPPhy
-@scala_type "org.thingml.utils.comm.CoAP";
+@scala_type "org.thingml.utils.comm.CoAPServer4test";
 
 thing CoAPScala includes IOByteArray
 @pim "IOStream"
@@ -26,7 +26,7 @@ thing CoAPScala includes IOByteArray
     statechart behavior init default {
         on entry 
         do
-            coap = 'new org.thingml.utils.comm.CoAP(root.asInstanceOf[org.thingml.utils.comm.CoAPThingML])'
+            coap = 'new org.thingml.utils.comm.CoAPServer4test(root.asInstanceOf[org.thingml.utils.comm.CoAPThingML])'
         end
         
         state default {

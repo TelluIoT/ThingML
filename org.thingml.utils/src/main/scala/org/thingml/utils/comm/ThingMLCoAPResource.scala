@@ -22,15 +22,20 @@ import ch.eth.coap.endpoint.LocalResource
 import org.thingml.utils.log.Logger
 import ch.eth.coap.coap._
 
-class ThingMLCoAPResource(val resourceIdentifier : String = "ThingML", val coapThingML : CoAPThingML) extends LocalResource(resourceIdentifier) {
+class ThingMLCoAPResource(val resourceIdentifier : String = "ThingML", val code : Byte = 0x00, val server : CoAP) extends LocalResource(resourceIdentifier) {
 
   setResourceTitle("Generic ThingML Resource")
   setResourceType("ThingMLResource")
 
-  override def performPOST(request: POSTRequest) {
-    Logger.debug("performPOST: " + request.getPayload.mkString ("[", ", ", "]"))
+  def addSubResource(resource : ThingMLCoAPResource) {
+    super.addSubResource(resource)
+    server.resourceMap += (resource.code -> resource.getResourcePath)
+  }
+
+  override def performPUT(request: PUTRequest) {
+    Logger.debug("performPUT: " + request.getPayload.mkString ("[", ", ", "]"))
     //Send the payload to the ThingML side
-    coapThingML.receive(request.getPayload)
+    server.coapThingML.receive(request.getPayload)
 
     //Default response, whatever we do with the request
     val response = new Response(CodeRegistry.RESP_CONTENT)
@@ -38,13 +43,23 @@ class ThingMLCoAPResource(val resourceIdentifier : String = "ThingML", val coapT
     request.respond(response)
   }
 
-  override def performGET(request: GETRequest) {
-    Logger.debug("performGET: " + request.getPayload.mkString ("[", ", ", "]"))
-    Logger.warning("performGET not supported")
+  override def performPOST(request: POSTRequest) {
+    Logger.debug("performPOST: " + request.getPayload.mkString ("[", ", ", "]"))
+    Logger.warning("POST not supported")
 
     //Default response, whatever we do with the request
     val response = new Response(CodeRegistry.RESP_METHOD_NOT_ALLOWED)
-    response.setPayload("GET not supported by ThingML resources")
+    response.setPayload("POST not supported by ThingML resources. Please use PUT")
+    request.respond(response)
+  }
+
+  override def performGET(request: GETRequest) {
+    Logger.debug("performGET: " + request.getPayload.mkString ("[", ", ", "]"))
+    Logger.warning("GET not supported")
+
+    //Default response, whatever we do with the request
+    val response = new Response(CodeRegistry.RESP_METHOD_NOT_ALLOWED)
+    response.setPayload("GET not supported by ThingML resources. Please use PUT")
     request.respond(response)
   }
 }

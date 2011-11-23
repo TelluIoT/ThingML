@@ -21,16 +21,23 @@ package org.thingml.utils.comm
 import org.thingml.utils.log.Logger
 
 import ch.eth.coap.endpoint.LocalEndpoint
-import ch.eth.coap.coap._
+import ch.eth.coap.coap.{Request, PUTRequest}
+import java.net.URI
 
 trait CoAPThingML {
-  
+
+  val rootURI = "coap://localhost:5683"//TODO: this should not be hard wired
+
+  var coapServer : CoAP = _
+  def setCoapServer(coapServer : CoAP) {this.coapServer = coapServer}
+
   /************************************************************************
    * Send and receive operations to allow communication between CoAP and ThingML
    *************************************************************************/
-  def sendDataViaCoAP(bytes : Array[Byte]) {
-    val request = new POSTRequest()
-    request.setURI("coap://localhost:5683/ThingML")//TODO: this should not be hard wired (at least for the port)
+  def sendDataViaCoAP(bytes : Array[Byte], resourceURI : String) {
+    val request = new PUTRequest()
+    val uri = new URI(rootURI + "/" + resourceURI)
+    request.setURI(uri)
     request.setPayload(bytes)
 
     //enable response queue in order to use blocking I/O
@@ -41,20 +48,28 @@ trait CoAPThingML {
   
   def sendData(bytes : Array[Byte]) {
     Logger.debug("sendData(" + bytes.mkString("[", ", ", "]") + ")")
-    sendDataViaCoAP(bytes)
+    val uri = coapServer.resourceMap.get(bytes(4)).getOrElse("")//it should be bytes(3) in the 16-bytes array, but this 18-bytes array includes the START and STOP bytes, hence the index++
+    sendDataViaCoAP(bytes, uri)
   }
 
-  def receive(byte : Array[Byte]) {
-    //This will be refined in the Serial Thing defined in ThingML
-  }
+  def receive(byte : Array[Byte])//This will be refined in the Serial Thing defined in ThingML
 }
 
-class CoAP(coapThingML : CoAPThingML) extends LocalEndpoint{
-  addResource(new ThingMLCoAPResource(coapThingML = coapThingML))
+class CoAP(val coapThingML : CoAPThingML) extends LocalEndpoint {
   Logger.info("Californium ThingML server listening at port " + port())
 
+  var resourceMap = Map[Byte, String]()
+  //val rootThingMLresource = new ThingMLCoAPResource(server = this)
+  //addResource(rootThingMLresource)
+  coapThingML.setCoapServer(this)
+
+  def addResource(resource: ThingMLCoAPResource) {
+    super.addResource(resource)
+    resourceMap += (resource.code -> resource.getResourcePath)
+  }
+
   override def handleRequest(request: Request) {
-    System.out.println("Incoming request:")
+    Logger.debug("Incoming request: " + request)
     request.log
     super.handleRequest(request)
   }

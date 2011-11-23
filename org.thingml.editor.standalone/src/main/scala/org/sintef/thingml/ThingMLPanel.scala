@@ -48,6 +48,7 @@ import org.thingml.cgenerator.CGenerator
 import org.thingml.scalagenerator.ScalaGenerator
 import org.thingml.javagenerator.gui.SwingGenerator
 import org.thingml.thingmlgenerator.ThingMLGenerator
+import org.thingml.scalagenerator.coap.ScalaCoAPGenerator
 import java.io._
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
@@ -85,6 +86,7 @@ class ThingMLPanel extends JPanel {
   var bSwing = new JButton("Compile to Swing")
   var bThingML = new JButton("Generate Comm")
   var bThingML2 = new JButton("Generate Comm2")
+  var bCoAP = new JButton("Generate CoAP")
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
   filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -193,12 +195,30 @@ class ThingMLPanel extends JPanel {
         }
       }         
     })
+
+    bCoAP.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        println("Input file : " + targetFile)
+        if (targetFile.isEmpty)
+          return
+        try {
+          val thingmlModel = loadThingMLmodel(targetFile.get)
+          thingmlModel.allConfigurations.foreach{c =>
+            ScalaCoAPGenerator.compileAndRun(c,true)
+          }
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+      }
+    })
   
   arduinoToolBar.add("Compilers", b)
   arduinoToolBar.add("Compilers", bScala)
   arduinoToolBar.add("Compilers", bSwing)
   arduinoToolBar.add("Compilers", bThingML)
   arduinoToolBar.add("Compilers", bThingML2)
+  arduinoToolBar.add("Compilers", bCoAP)
   add(arduinoToolBar, BorderLayout.SOUTH)
 
 
