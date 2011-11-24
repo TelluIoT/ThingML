@@ -155,12 +155,12 @@ thing fragment ArrayDeserializer includes PacketManager, InputByteArrayMsgs{
     
     function receive(bytes : Byte[256]) do
         index = 0
-        print("receive " + bytes)
+        //print("receive " + bytes)
         var i : Integer = 0
         var current : Byte = bytes[i]
-        print("byte " + i + " = " + current)
+        //print("byte " + i + " = " + current)
         if (current == START_BYTE) do
-            print("Start OK")
+            //print("Start OK")
             i = i + 1
             while(not (current == STOP_BYTE) and i < 256) do
                 current = bytes[i]
@@ -168,7 +168,7 @@ thing fragment ArrayDeserializer includes PacketManager, InputByteArrayMsgs{
                     i = i + 1
                     current = buffer[i]
                 end
-                print("byte " + i + " = " + current)
+                //print("byte " + i + " = " + current)
                 storeByte(current)
                 i = i + 1
             end

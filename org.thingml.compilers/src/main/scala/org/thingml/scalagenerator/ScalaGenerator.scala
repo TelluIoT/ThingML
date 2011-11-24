@@ -52,12 +52,7 @@ object Context {
   }
 
   def firstToUpper(value : String) : String = {
-    var result = ""
-    if (value.size > 0)
-      result += value(0).toUpperCase 
-    if (value.size > 1)
-      result += value.substring(1, value.length)
-    return result
+    return value.capitalize
   }
   
   def init {
@@ -838,7 +833,7 @@ case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGener
             case None =>
               Logger.warning("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
               var temp : String = self.getName
-              temp = temp(0).toUpperCase + temp.substring(1, temp.length)
+              temp = temp.capitalize//temp(0).toUpperCase + temp.substring(1, temp.length)
               temp
           }
       }

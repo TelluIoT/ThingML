@@ -56,11 +56,10 @@ trait CoAPThingML {
 }
 
 class CoAP(val coapThingML : CoAPThingML) extends LocalEndpoint {
+  var resourceMap = Map[Byte, String]()
+
   Logger.info("Californium ThingML server listening at port " + port())
 
-  var resourceMap = Map[Byte, String]()
-  //val rootThingMLresource = new ThingMLCoAPResource(server = this)
-  //addResource(rootThingMLresource)
   coapThingML.setCoapServer(this)
 
   def addResource(resource: ThingMLCoAPResource) {

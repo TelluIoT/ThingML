@@ -82,11 +82,30 @@ class M1CoAPResource(override val resourceIdentifier : String = "m1", override v
 setResourceTitle("M1 ThingML resource")
 setResourceType("ThingMLResource")
 
+override def checkParams(params : Map[String, String]) = {
+params.size == 0}
+
+override def doParse(params : Map[String, String]) : Option[Array[Byte]] = {
+   val buffer = new Array[Byte](18)
+  return Some(buffer)
+}
+
 }
 
 class M2CoAPResource(override val resourceIdentifier : String = "m2", override val code : Byte = 1.toByte,  override val server : CoAP) extends ThingMLCoAPResource(resourceIdentifier, code, server) {
 setResourceTitle("M2 ThingML resource")
 setResourceType("ThingMLResource")
+
+override def checkParams(params : Map[String, String]) = {
+params.size == 1 && (params.get("i") match{
+case Some(p) => try {p.toInt
+true} catch {case _ => false}
+case None => false})}
+
+override def doParse(params : Map[String, String]) : Option[Array[Byte]] = {
+   val buffer = new Array[Byte](18)
+  return Some(buffer)
+}
 
 }
 
@@ -94,10 +113,44 @@ class M3CoAPResource(override val resourceIdentifier : String = "m3", override v
 setResourceTitle("M3 ThingML resource")
 setResourceType("ThingMLResource")
 
+override def checkParams(params : Map[String, String]) = {
+params.size == 1 && (params.get("s") match{
+case Some(p) => try {p.toString
+true} catch {case _ => false}
+case None => false})}
+
+override def doParse(params : Map[String, String]) : Option[Array[Byte]] = {
+   val buffer = new Array[Byte](18)
+  return Some(buffer)
+}
+
 }
 
 class M4CoAPResource(override val resourceIdentifier : String = "m4", override val code : Byte = 12.toByte,  override val server : CoAP) extends ThingMLCoAPResource(resourceIdentifier, code, server) {
 setResourceTitle("M4 ThingML resource")
 setResourceType("ThingMLResource")
+
+override def checkParams(params : Map[String, String]) = {
+params.size == 2 && (params.get("i") match{
+case Some(p) => try {p.toInt
+true} catch {case _ => false}
+case None => false}) && (params.get("s") match{
+case Some(p) => try {p.toString
+true} catch {case _ => false}
+case None => false})}
+
+override def doParse(params : Map[String, String]) : Option[Array[Byte]] = {
+  val buffer = new Array[Byte](18)
+  buffer(0) = 0x12
+  buffer(1) = 1.toByte
+  buffer(2) = 0.toByte
+  buffer(3) = 0.toByte
+  buffer(4) = code
+  buffer(5) =  16.toByte//it should normally be the actual size of the message (sum of the parameters)
+
+  buffer(17) = 0x13
+
+  return Some(buffer)
+}
 
 }

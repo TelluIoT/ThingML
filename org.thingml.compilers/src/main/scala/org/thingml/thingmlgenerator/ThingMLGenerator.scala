@@ -62,12 +62,7 @@ object Context {
   }
 
   def firstToUpper(value : String) : String = {
-    var result = ""
-    if (value.size > 0)
-      result += value(0).toUpperCase 
-    if (value.size > 1)
-      result += value.substring(1, value.length)
-    return result
+    return value.capitalize
   }
   
   def init {

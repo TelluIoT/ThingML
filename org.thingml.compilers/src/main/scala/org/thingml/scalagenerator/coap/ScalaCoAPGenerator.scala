@@ -21,8 +21,10 @@ package org.thingml.scalagenerator.coap
  * between ThingML and CoAP. This code will typically run on Gateways.
  * @author: Brice MORIN <brice.morin@sintef.no>
  */
+import org.thingml.scalagenerator.coap.ScalaCoAPGenerator._
 import org.sintef.thingml.constraints.ThingMLHelpers
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
+import org.thingml.scala.types.SerializableTypes._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import scala.io.Source
@@ -30,11 +32,12 @@ import scala.actors._
 import scala.actors.Actor._
 import java.util.{ArrayList, Hashtable}
 import java.util.AbstractMap.SimpleEntry
-import org.sintef.thingml.{ThingMLElement, ThingMLModel, Port, Message, Configuration, Type}
+import org.sintef.thingml.{ThingMLElement, ThingMLModel, Port, Message, Configuration, Type, PlatformAnnotation}
 import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
 import ch.eth.coap.coap.{GETRequest, POSTRequest, PUTRequest, CodeRegistry}
 import ch.eth.coap.endpoint.{LocalEndpoint, LocalResource}
 import org.thingml.utils.comm.{ThingMLCoAPResource, CoAPThingML}
+import org.thingml.utils.log.Logger
 
 object Context {
   
@@ -62,12 +65,7 @@ object Context {
   }
 
   def firstToUpper(value : String) : String = {
-    var result = ""
-    if (value.size > 0)
-      result += value(0).toUpperCase 
-    if (value.size > 1)
-      result += value.substring(1, value.length)
-    return result
+    return value.capitalize
   }
   
   def init {
@@ -77,6 +75,7 @@ object Context {
 
 object ScalaCoAPGenerator {
   implicit def coapGeneratorAspect(self: Configuration): ConfigurationCoAPGenerator = ConfigurationCoAPGenerator(self)
+  implicit def coapGeneratorAspect(self: Type): TypeCoAPGenerator = TypeCoAPGenerator(self)
   
   private val console_out = actor {
     loopWhile(true){
@@ -185,6 +184,7 @@ object ScalaCoAPGenerator {
     builder append "package org.thingml.utils.comm\n\n"//TODO: this should not be hardcoded
 
     builder append "import org.thingml.utils.comm._\n"
+    builder append "import org.thingml.scala.types.SerializableTypes._"//TODO: we should move this file into ThingML utils. The generated code should not depend from the compilers project...
   }
 }
 
@@ -234,6 +234,24 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
       builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val code : Byte = " + code + ".toByte,  override val server : CoAP) extends ThingMLCoAPResource(resourceIdentifier, code, server) {\n"
       builder append "setResourceTitle(\"" + Context.firstToUpper(m.getName) + " ThingML resource\")\n"
       builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
+
+      builder append "override def checkParams(params : Map[String, String]) = {\n"
+      builder append "params.size == " + m.getParameters.size
+      builder append m.getParameters.collect{case p => " && (params.get(\"" + p.getName + "\") match{\ncase Some(p) => try {p.to" + p.getType.scala_type() + "\ntrue} catch {case _ => false}\ncase None => false})"}.mkString("")
+      builder append "}\n\n"
+
+      builder append "override def doParse(params : Map[String, String]) : Option[Array[Byte]] = {\n"
+      builder append "buffer(0) = 0x12\n"
+      builder append "buffer(1) = 1.toByte\n"
+      builder append "buffer(2) = 0.toByte\n"
+      builder append "buffer(3) = 0.toByte\n"
+      builder append "buffer(4) = code\n"
+      builder append "buffer(5) =  16.toByte//it should normally be the actual size of the message (sum of the parameters)"
+
+      builder append "buffer(17) = 0x13"
+      builder append "}\n\n"
+
+
       builder append "}\n\n"
     }
   }
@@ -244,6 +262,44 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
       builder append "setResourceTitle(\"" + Context.firstToUpper(t.getName) + " ThingML resource\")\n"
       builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
       builder append "}\n\n"
+    }
+  }
+}
+
+
+//TODO: avoid code duplication. This is copy/pasted from Scala compiler...
+case class TypeCoAPGenerator(override val self: Type) extends ThingMLCoAPGenerator(self) {
+  override def generateCoAP(builder: StringBuilder = Context.builder, alt : Boolean) {
+    // Implemented in the sub-classes
+  }
+
+  def scala_type(isArray : Boolean = false): String = {
+    if (self == null){
+      return "Unit"
+    }
+    else {
+      var res : String = self.getAnnotations.filter {
+        a => a.getName == "scala_type"
+      }.headOption match {
+        case Some(a) =>
+          a.asInstanceOf[PlatformAnnotation].getValue
+        case None =>
+          self.getAnnotations.filter {
+            a => a.getName == "java_type"
+          }.headOption match {
+            case Some(a) =>
+              a.asInstanceOf[PlatformAnnotation].getValue
+            case None =>
+              Logger.warning("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
+              var temp : String = self.getName
+              temp = temp.capitalize//temp(0).toUpperCase + temp.substring(1, temp.length)
+              temp
+          }
+      }
+      if (isArray) {
+        res = "Array[" + res + "]"
+      }
+      return res
     }
   }
 }
