@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 /*
- * Basic serialization/deserialization facilities for primitive types
- * @author Brice MORIN
+ * This file provides implicits so that we can actually get byte arrays from all
+ * Scala primitive types using the java nio.ByteBuffer (and not just ONE byte) and
+ * also get primitive types out of byte arrays
+ * @author Brice Morin (brice.morin@sintef.no)
  */
-package org.thingml.scala.types
+package org.thingml.utils.comm
 
 import java.nio.ByteBuffer
 
+object SerializableTypes {
+  implicit def serializationAspect(self:String) = SerializableString(self)
+  implicit def serializationAspect(self:Boolean) = SerializableBoolean(self)
+  implicit def serializationAspect(self:Short) = SerializableShort(self)
+  implicit def serializationAspect(self:Int) = SerializableInt(self)
+  implicit def serializationAspect(self:Long) = SerializableLong(self)
+  implicit def serializationAspect(self:Float) = SerializableFloat(self)
+  implicit def serializationAspect(self:Double) = SerializableDouble(self)
 
+  implicit def serializationAspect(self:Array[Byte]) = DeserializableArray(self)
+}
 
 trait Serializable[T] {
   def toBytes : Array[Byte]

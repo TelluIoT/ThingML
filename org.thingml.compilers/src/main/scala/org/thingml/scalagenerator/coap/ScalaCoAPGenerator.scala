@@ -24,7 +24,6 @@ package org.thingml.scalagenerator.coap
 import org.thingml.scalagenerator.coap.ScalaCoAPGenerator._
 import org.sintef.thingml.constraints.ThingMLHelpers
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
-import org.thingml.scala.types.SerializableTypes._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import scala.io.Source
@@ -184,7 +183,7 @@ object ScalaCoAPGenerator {
     builder append "package org.thingml.utils.comm\n\n"//TODO: this should not be hardcoded
 
     builder append "import org.thingml.utils.comm._\n"
-    builder append "import org.thingml.scala.types.SerializableTypes._"//TODO: we should move this file into ThingML utils. The generated code should not depend from the compilers project...
+    builder append "import org.thingml.utils.comm.SerializableTypes._"
   }
 }
 
