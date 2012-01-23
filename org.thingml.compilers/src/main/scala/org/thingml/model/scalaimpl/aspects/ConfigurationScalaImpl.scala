@@ -56,20 +56,27 @@ case class ConfigurationScalaImpl (self : Configuration) {
    */
 
 
-  def allRemoteMessages() : Map[Port, Pair[List[Message], List[Message]]] = {
-    var result = Map[Port, Pair[List[Message], List[Message]]]()
+  def allRemoteInstances() : Map[Instance, Array[String]] = {
+    var result = Map[Instance, Array[String]]()
     self.getAnnotations.filter{a => a.getName == "remote"}
     .foreach{a =>
       val regex = a.getValue.split("::")
-      self.allInstances.filter{i => i.getName.matches(self.getName+"_"+regex(0)) && i.getType.getName.matches(regex(1))}
-      .foreach{ i => 
-        i.getType.getPorts.filter{p => p.getName.matches(regex(2))}
-        .foreach{p => 
-          //val messages = p.getSends.filter{m => m.getName.matches(regex(3))} ++: p.getReceives.filter{m => m.getName.matches(regex(3))}
-          //println("DEBUG: " + messages + " : " + messages.size)
-          //if (messages.size > 0)
-            result += (p -> ((p.getSends.filter{m => m.getName.matches(regex(3))}.toList, p.getReceives.filter{m => m.getName.matches(regex(3))}.toList)))
-        }
+      self.allInstances.filter{i =>
+        i.getName.matches(self.getName+"_"+regex(0)) && i.getType.getName.matches(regex(1))
+      }.foreach{i => result += (i -> regex)}
+    }
+    return result
+  }
+
+  def allRemoteMessages() : Map[Port, Pair[List[Message], List[Message]]] = {
+    var result = Map[Port, Pair[List[Message], List[Message]]]()
+    allRemoteInstances.foreach{ case (i, regex) =>
+      i.getType.getPorts.filter{p => p.getName.matches(regex(2))}
+      .foreach{p =>
+        //val messages = p.getSends.filter{m => m.getName.matches(regex(3))} ++: p.getReceives.filter{m => m.getName.matches(regex(3))}
+        //println("DEBUG: " + messages + " : " + messages.size)
+        //if (messages.size > 0)
+          result += (p -> ((p.getSends.filter{m => m.getName.matches(regex(3))}.toList, p.getReceives.filter{m => m.getName.matches(regex(3))}.toList)))
       }
     }
     return result

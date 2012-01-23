@@ -52,7 +52,7 @@ trait CoAPThingML {
     sendDataViaCoAP(bytes, uri)
   }
 
-  def receive(byte : Array[Byte])//This will be refined in the Serial Thing defined in ThingML
+  def receive(byte : Array[Byte])//This will be refined in the COaP Thing defined in ThingML
 }
 
 class CoAP(val coapThingML : CoAPThingML) extends LocalEndpoint {

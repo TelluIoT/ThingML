@@ -21,7 +21,8 @@
  */
 package org.thingml.utils.comm
 
-import java.nio.ByteBuffer
+import java.nio.{/*ByteOrder, */ByteBuffer}
+
 
 object SerializableTypes {
   implicit def serializationAspect(self:String) = SerializableString(self)
@@ -37,6 +38,7 @@ object SerializableTypes {
 
 trait Serializable[T] {
   def toBytes : Array[Byte]
+  def byteSize : Int
 }
 
 case class DeserializableArray(bytes : Array[Byte]) {
@@ -45,11 +47,11 @@ case class DeserializableArray(bytes : Array[Byte]) {
 
   def toByte : Byte = bytes(0)
   def toBoolean : Boolean = (if (bytes == trueByte) true else if (bytes == falseByte) false else false)
-  def toShort : Short = ByteBuffer.wrap(bytes.toArray).getShort
-  def toInt : Int = ByteBuffer.wrap(bytes.toArray).getInt
-  def toLong : Long = ByteBuffer.wrap(bytes.toArray).getLong
-  def toFloat : Float = ByteBuffer.wrap(bytes.toArray).getFloat
-  def toDouble : Double = ByteBuffer.wrap(bytes.toArray).getDouble
+  def toShort : Short = ByteBuffer.wrap(bytes.toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getShort
+  def toInt : Int = ByteBuffer.wrap(bytes.toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getInt
+  def toLong : Long = ByteBuffer.wrap(bytes.toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getLong
+  def toFloat : Float = ByteBuffer.wrap(bytes.toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getFloat
+  def toDouble : Double = ByteBuffer.wrap(bytes.toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getDouble
   def toChar : Char = bytes(0).toChar
   override def toString : String = bytes.collect{case b => {b}.toChar}.mkString
 }
@@ -61,46 +63,62 @@ case class SerializableBoolean(myBoolean : Boolean) extends Serializable[Boolean
   override def toBytes : Array[Byte] = {
     return (if (myBoolean) trueByte else falseByte)
   }
+
+  override def byteSize = 2
 }
 
 case class SerializableShort(myShort : Short) extends Serializable[Short]{
   override def toBytes : Array[Byte] = {
-    return ByteBuffer.allocate(2).putShort(myShort).array()
+    return ByteBuffer.allocate(byteSize).putShort(myShort).array()
   }
+
+  override def byteSize = 2
 }
 
 case class SerializableInt(myInt : Int) extends Serializable[Int]{
   override def toBytes : Array[Byte] = {
-    return ByteBuffer.allocate(4).putInt(myInt).array()
+    return ByteBuffer.allocate(byteSize).putInt(myInt).array()
   }
+
+  override def byteSize = 4
 }
 
 case class SerializableLong(myLong : Long) extends Serializable[Long]{
   override def toBytes : Array[Byte] = {
-    return ByteBuffer.allocate(8).putLong(myLong).array()
+    return ByteBuffer.allocate(byteSize).putLong(myLong).array()
   }
+
+  override def byteSize = 4
 }
 
 case class SerializableFloat(myFloat : Float) extends Serializable[Float]{
   override def toBytes : Array[Byte] = {
-    return ByteBuffer.allocate(4).putFloat(myFloat).array()
+    return ByteBuffer.allocate(byteSize).putFloat(myFloat).array()
   }
+
+  override def byteSize = 4
 }
 
 case class SerializableDouble(myDouble : Double) extends Serializable[Double]{
   override def toBytes : Array[Byte] = {
-    return ByteBuffer.allocate(8).putDouble(myDouble).array()
+    return ByteBuffer.allocate(byteSize).putDouble(myDouble).array()
   }
+
+  override def byteSize = 8
 }
 
 case class SerializableChar(myChar : Char) extends Serializable[Char]{
   override def toBytes : Array[Byte] = {
     return Array(myChar.toByte)
   }
+
+  override def byteSize = 2
 }
 
 case class SerializableString(myString : String) extends Serializable[String]{
   override def toBytes : Array[Byte] = {
     return myString.toCharArray.collect{case c => c.toByte}.toArray
   }
+
+  override def byteSize = 8
 }

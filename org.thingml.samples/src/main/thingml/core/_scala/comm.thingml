@@ -20,6 +20,7 @@ thing CoAPScala includes IOByteArray
     function receive(byte : Byte[256]) 
     @override "true"
     do
+        print('' & "COaPScala receive: " + byte & '.mkString("[", " ", "]")')
         IOStream!receive_bytes(byte)
     end
     

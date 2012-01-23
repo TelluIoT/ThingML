@@ -195,6 +195,8 @@ case class ThingMLCoAPGenerator(self: ThingMLElement) {
 
 case class ConfigurationCoAPGenerator(override val self: Configuration) extends ThingMLCoAPGenerator(self) {
 
+  val allMessages = Context.sort(self.allRemoteMessages).collect{case (p, m) => m._1 ++: m._2}.flatten.toSet
+
   override def generateCoAP(builder: StringBuilder = Context.builder, alt : Boolean) {
     generateCoAPServer(builder)
     generateCoAPTypeResources(builder)
@@ -204,18 +206,23 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
   def generateCoAPServer(builder: StringBuilder = Context.builder) {
     builder append "class CoAPServer4" + self.getName() + "(coapThingML : CoAPThingML) extends CoAP(coapThingML){\n"
     builder append "//Types\n"
-    self.allInstances.collect{case i => i.getType}.toSet.foreach{t : Type =>
+    self.allRemoteInstances.collect{case (i,r) => i.getType}.toSet.foreach{t : Type =>
       builder append "val " + t.getName + "Resource = new ThingMLCoAPResource(resourceIdentifier = \"" + t.getName + "\", server = this)\n"
       builder append "addResource(" + t.getName + "Resource)\n"
     }
     builder append "\n"
 
-    builder append "//Instances and Messages\n"//TODO: we should only generate this code for remote messages!!!
-    self.allInstances.foreach{i =>
-      builder append "val " + i.getName + "Resource = new " + Context.firstToUpper(i.getType.getName) + "CoAPResource(resourceIdentifier = \"" + i.getName + "\", server = this)\n"
-      builder append i.getType.getName + "Resource.addSubResource(" + i.getName + "Resource)\n"
-      i.getType.allMessages.foreach{m =>
-        builder append i.getName + "Resource.addSubResource(" + "new " + Context.firstToUpper(m.getName) + "CoAPResource(server = this))\n"
+    builder append "//Instances and Messages\n"
+
+    self.allRemoteInstances.foreach{case (i,r) =>
+      if (allMessages.exists{m => i.getType.allMessages.exists{m2 => m == m2}}) {//TODO something better for the filtering
+        builder append "val " + i.getName + "Resource = new " + Context.firstToUpper(i.getType.getName) + "CoAPResource(resourceIdentifier = \"" + i.getName + "\", server = this)\n"
+        builder append i.getType.getName + "Resource.addSubResource(" + i.getName + "Resource)\n"
+        i.getType.allMessages.foreach{m => //TODO something better for the filtering
+          if (allMessages.exists{m2 => m == m2}) {
+            builder append i.getName + "Resource.addSubResource(" + "new " + Context.firstToUpper(m.getName) + "CoAPResource(server = this))\n"
+          }
+        }
       }
     }
     builder append "\n"
@@ -227,7 +234,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
   }
 
   def generateCoAPMessageResources(builder: StringBuilder = Context.builder) {
-    val allMessages = Context.sort(self.allRemoteMessages).collect{case (p, m) => m._1 ++: m._2}.flatten.toSet
+    //val allMessages = Context.sort(self.allRemoteMessages).collect{case (p, m) => m._1 ++: m._2}.flatten.toSet
     allMessages.zipWithIndex.foreach{case (m,index) =>
       val code = (if (m.getCode != -1) m.getCode else index)
       builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val code : Byte = " + code + ".toByte,  override val server : CoAP) extends ThingMLCoAPResource(resourceIdentifier, code, server) {\n"
@@ -239,15 +246,29 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
       builder append m.getParameters.collect{case p => " && (params.get(\"" + p.getName + "\") match{\ncase Some(p) => try {p.to" + p.getType.scala_type() + "\ntrue} catch {case _ => false}\ncase None => false})"}.mkString("")
       builder append "}\n\n"
 
-      builder append "override def doParse(params : Map[String, String]) : Option[Array[Byte]] = {\n"
+      builder append "override def doParse(params : Map[String, String]) {\n"
+      builder append "resetBuffer\n"
       builder append "buffer(0) = 0x12\n"
       builder append "buffer(1) = 1.toByte\n"
       builder append "buffer(2) = 0.toByte\n"
       builder append "buffer(3) = 0.toByte\n"
       builder append "buffer(4) = code\n"
-      builder append "buffer(5) =  16.toByte//it should normally be the actual size of the message (sum of the parameters)"
+      builder append "buffer(5) =  ("
+      builder append (List("0") ::: m.getParameters.collect{case p =>
+        "params.get(\"" + p.getName + "\").get.to" + p.getType.scala_type(false) + ".byteSize"
+      }.toList).mkString(" + ")
+      builder append ").toByte\n"
 
-      builder append "buffer(17) = 0x13"
+      if (m.getParameters.size > 0)
+        builder append "var index = 6\n"
+
+      m.getParameters.foreach{p =>
+        builder append "params.get(\"" + p.getName + "\").get.to" + p.getType.scala_type(false) + ".toBytes.foreach{b => \n" //TODO: handle array as parameter
+        builder append "buffer(index) = b\n"
+        builder append "index = index + 1\n"
+        builder append "}\n\n"
+      }
+
       builder append "}\n\n"
 
 

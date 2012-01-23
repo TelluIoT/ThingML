@@ -142,19 +142,13 @@ configuration test
     //Messages are serialized, sent to network, received, deserialized and sent to the former thing
     //hopefully, this has the same behavior than the configuration above...
     instance testRemote : TestThing
-    instance network : CoAPScala//SerialScala
-    //instance network2 : NetworkArray
+    instance network : CoAPScala
     instance serializer : MessageSerializer
     instance deserializer : MessageDeserializer
-    //instance serializer2 : MessageSerializer
-    //instance deserializer2 : MessageDeserializer
+
     
     connector testRemote.out => serializer.out
     connector serializer.network => network.IOStream
-    //connector testRemote.out => serializer2.out
-    //connector serializer2.network => network2.IOStream
     connector deserializer.network => network.IOStream
     connector deserializer.in => testRemote.in
-    //connector deserializer2.network => network2.IOStream
-    //connector deserializer2.in => testRemote.in
 }

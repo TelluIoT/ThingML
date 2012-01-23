@@ -4,10 +4,12 @@ import "../serializer.thingml"
 //TODO: do it for all the remaining datatypes
 thing fragment SerializerScala  includes ArraySerializer
 {
-    //Integer    
+    //Integer (ThingML Integer are like Java Short (16 bits = 2 bytes)    
     function serializeInteger(d : Integer)
     do
-        storeByte('' & d & '.toByte')
+        readonly var bytes : Byte[2] = '' & d & '.toBytes'
+        storeByte(bytes[0])
+        storeByte(bytes[1])
     end  
     
     //String                            
@@ -33,7 +35,10 @@ thing fragment DeserializerScala includes ArrayDeserializer {
     //Integer        
     function deserializeInteger() : Integer
     do
-        return readByte()'.toInt'
+        var bytes : Byte[2]
+        bytes[0] = readByte()
+        bytes[1] = readByte()
+        return bytes'.toShort'
     end       
 
     //String                            

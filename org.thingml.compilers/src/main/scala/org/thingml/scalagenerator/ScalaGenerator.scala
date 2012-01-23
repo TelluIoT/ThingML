@@ -295,6 +295,7 @@ object ScalaGenerator {
     if (!isMain) {
       builder append "import scala.annotation.elidable\n"
       builder append "import scala.annotation.elidable._\n"
+      builder append "import org.thingml.utils.comm.SerializableTypes._\n"//implicits for proper conversions from/to array of bytes
 
       builder append "object Logger {\n"
       builder append "@elidable(MINIMUM)def debug(s : String) {println(\"DEBUG:\" + s)}\n"
@@ -927,16 +928,16 @@ case class VariableAssignmentScalaGenerator(override val self: VariableAssignmen
         val tempBuilder = new StringBuilder
         i.generateScala(tempBuilder)
         builder append "(" + tempBuilder.toString + ")"
-        builder append " = "
+        builder append " = ("
         self.getExpression.generateScala()
-        builder append "\n"
+        builder append ").asInstanceOf[" + self.getProperty.getType.scala_type(false) + "]\n"
       }
     }
     else {
       builder append self.getProperty.scala_var_name
-      builder append " = "
+      builder append " = ("
       self.getExpression.generateScala()
-      builder append "\n"
+      builder append ").asInstanceOf[" + self.getProperty.getType.scala_type(false) + "]\n"
     }
   }
 }

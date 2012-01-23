@@ -20,20 +20,20 @@ thing fragment PacketManager {
     readonly property lengthString : Byte = 8
     
     
-    readonly property MAX_PACKET_SIZE : Integer = 16   
+    readonly property MAX_PACKET_SIZE : Integer = 18   
      
     readonly property START_BYTE : Byte = '0x12'
 	readonly property STOP_BYTE : Byte = '0x13'
 	readonly property ESCAPE_BYTE : Byte = '0x7D'
      
-    readonly property DELAY : UInt8 = 1
+    //readonly property DELAY : UInt8 = 1
      
-    property CODE_POSITION : Integer = 3
-    property LENGTH_POSITION : Integer = 4
-    property DATA_POSITION : Integer = 5
+    property CODE_POSITION : Integer = 4
+    property LENGTH_POSITION : Integer = 5
+    property DATA_POSITION : Integer = 6
      
-    property buffer : Byte[16]
-    set buffer[0] = '0x13'
+    property buffer : Byte[18]
+    set buffer[0] = '0x12'
     set buffer[1] = '0x13'
     set buffer[2] = '0x13'
     set buffer[3] = '0x13'
@@ -49,11 +49,14 @@ thing fragment PacketManager {
     set buffer[13] = '0x13'
     set buffer[14] = '0x13'
     set buffer[15] = '0x13'
+    set buffer[16] = '0x13'
+    set buffer[17] = '0x13'
 	property index : Integer = 5
      
      function setHeader(code : Byte, length : Byte) 
      do
         index = 0
+        storeByte('0x12')
 	 	storeByte(1) // source addr (not used)
 	 	storeByte(0) // target addr (not used)
 	 	storeByte(0) // frame num (not used)
@@ -62,6 +65,11 @@ thing fragment PacketManager {
         LENGTH_POSITION = index
         storeByte(length)
         DATA_POSITION = index
+        var i : Integer = index
+        while(i < MAX_PACKET_SIZE) do
+            storeByte('0x13')
+            i = i +1
+        end
 	 end
 
     function storeByte(b : Byte) do
@@ -92,7 +100,7 @@ thing fragment Serializer includes PacketManager, OutputByteStreamMsgs {
     required port network {
         sends write_byte    
     }
-    
+    //TODO: this has to be revised
     function send() do
         print("send start byte = " + START_BYTE)
         network!write_byte(START_BYTE)
@@ -123,15 +131,15 @@ thing fragment Deserializer includes PacketManager, InputByteStreamMsgs{
 }
 
 thing fragment ArraySerializer includes PacketManager, OutputByteArrayMsgs {
-    property packet : Byte[18]
+    /*property packet : Byte[18]
     set packet[0] = '0x12'
-    set packet[17] = '0x13'
+    set packet[17] = '0x13'*/
     required port network {
         sends write_bytes    
     }
     
     function send() do
-        print("send byte array = " + buffer)
+        /*print("send byte array = " + buffer)
         var i : Integer = 1
         while (i < 17) do
             packet[i] = buffer[i-1]
@@ -142,7 +150,8 @@ thing fragment ArraySerializer includes PacketManager, OutputByteArrayMsgs {
             print("packet " + i + " = " + packet[i])
             i = i + 1
         end
-        network!write_bytes(packet)
+        network!write_bytes(packet)*/
+        network!write_bytes(buffer)
     end
 }
 
@@ -153,18 +162,19 @@ thing fragment ArrayDeserializer includes PacketManager, InputByteArrayMsgs{
     
     function forward()@abstract "true" do end//should be refined in a PSM thing
     
-    function receive(bytes : Byte[256]) do
+    function receive(bytes : Byte[18]) do
         index = 0
         //print("receive " + bytes)
         var i : Integer = 0
         var current : Byte = bytes[i]
         //print("byte " + i + " = " + current)
         if (current == START_BYTE) do
+            storeByte(current)
             //print("Start OK")
             i = i + 1
-            while(not (current == STOP_BYTE) and i < 256) do
+            while(not (current == STOP_BYTE) and i < 18) do
                 current = bytes[i]
-                if (current == ESCAPE_BYTE and i < 255) do
+                if (current == ESCAPE_BYTE and i < 17) do
                     i = i + 1
                     current = buffer[i]
                 end
@@ -173,10 +183,11 @@ thing fragment ArrayDeserializer includes PacketManager, InputByteArrayMsgs{
                 i = i + 1
             end
             if (current == STOP_BYTE) do
+                storeByte(current)
                 forward()
             end
-            if (not(current == STOP_BYTE)) do//ie index>=256
-                error("It seems the packet was too long... (No stop byte was found before index 256)")
+            if (not(current == STOP_BYTE)) do//ie index>=18
+                error("It seems the packet was too long... (No stop byte was found before index 18)")
             end
         end
     end
