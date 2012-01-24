@@ -390,8 +390,9 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
                   p._2.generateScala(tempbuilder)
                   result += tempbuilder.toString
                 } else {
-                  result += "null.asInstanceOf[" + p._1.getType.scala_type(p._1.getCardinality != null) + "]"
+                  result += "null"
                 }
+                result += ".asInstanceOf[" + p._1.getType.scala_type(p._1.getCardinality != null) + "]"
                 result
             } 
             ++ 

@@ -26,17 +26,24 @@ import java.net.URI
 
 trait CoAPThingML {
 
-  val rootURI = "coap://localhost:5683"//TODO: this should not be hard wired
+  private val rootURI = "coap://localhost:"
 
-  var coapServer : CoAP = _
+  private var coapServer : CoAP = _
   def setCoapServer(coapServer : CoAP) {this.coapServer = coapServer}
+
+  /*
+   * This will be redefined in concrete ThingML things to instantiate their specific (and generated) COaP servers
+   */
+  def initialize() {
+     new CoAP(this, 61616)
+  }
 
   /************************************************************************
    * Send and receive operations to allow communication between CoAP and ThingML
    *************************************************************************/
   def sendDataViaCoAP(bytes : Array[Byte], resourceURI : String) {
     val request = new PUTRequest()
-    val uri = new URI(rootURI + "/" + resourceURI)
+    val uri = new URI(rootURI + coapServer.port + "/" + resourceURI)
     request.setURI(uri)
     request.setPayload(bytes)
 
@@ -55,12 +62,16 @@ trait CoAPThingML {
   def receive(byte : Array[Byte])//This will be refined in the COaP Thing defined in ThingML
 }
 
-class CoAP(val coapThingML : CoAPThingML) extends LocalEndpoint {
+class CoAP(val coapThingML : CoAPThingML, override val port : Int) extends LocalEndpoint(port) {
   var resourceMap = Map[Byte, String]()
-
-  Logger.info("Californium ThingML server listening at port " + port())
-
   coapThingML.setCoapServer(this)
+
+
+  Logger.info("Californium/ThingML server started on port " + port)
+  Logger.info("  https://github.com/brice-morin/californium  ")
+  Logger.info("            http://www.ThingML.org            ")
+
+
 
   def addResource(resource: ThingMLCoAPResource) {
     super.addResource(resource)

@@ -17,7 +17,7 @@ package org.thingml.utils.comm
 
 import org.thingml.utils.comm.SerializableTypes._
 
-class CoAPServer4test(coapThingML : CoAPThingML) extends CoAP(coapThingML){
+class CoAPServer4test(coapThingML : CoAPThingML, port : Int) extends CoAP(coapThingML, port){
 //Types
   val TestThingResource = new ThingMLCoAPResource(resourceIdentifier = "TestThing", server = this)
   addResource(TestThingResource)

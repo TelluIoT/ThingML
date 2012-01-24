@@ -217,7 +217,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
   def allThingMLMavenDep : Set[String] = {
     var result = Set[String]()
     allThings.foreach{t => 
-      t.getAnnotations.filter{a => a.getName == "thingml_maven_dep"}
+      t.allAnnotations.filter{a => a.getName == "thingml_maven_dep"}
       .foreach{a =>
         result = result + a.getValue
       }
