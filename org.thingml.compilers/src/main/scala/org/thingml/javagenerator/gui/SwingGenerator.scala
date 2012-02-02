@@ -522,7 +522,7 @@ case class MessageSwingGenerator(override val self: Message) extends ThingMLSwin
       
       if (p.getType.isInstanceOf[Enumeration]) {
         builder append p.getType.scala_type + "[] values" + self.getName + Context.firstToUpper(p.getName) + " = {"
-        builder append p.getType.asInstanceOf[Enumeration].getLiterals.collect{case l => p.getType.getName + "_ENUM" + "." + p.getType.getName.toUpperCase + "_" + l.getName + "()"}.mkString(", ") + "};\n"
+        builder append p.getType.asInstanceOf[Enumeration].getLiterals.collect{case l => p.getType.getName + "_ENUM" + "." + p.getType.getName.toUpperCase + "_" + l.getName.toUpperCase() + "()"}.mkString(", ") + "};\n"
         builder append "field" + self.getName + "_via_" + Context.port.getName + "_" +  Context.firstToUpper(p.getName) + " = new JComboBox(values" + self.getName + Context.firstToUpper(p.getName) + ");\n"	
       }
       else {		
