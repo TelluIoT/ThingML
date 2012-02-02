@@ -59,6 +59,11 @@
             <version>${scala.version}</version>
         </dependency>
         <!--Additional dependencies-->
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.utils</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
         <!--DEP-->
         <dependency><!--TODO: this should be added only when needed-->
             <groupId>org.scala-lang</groupId>

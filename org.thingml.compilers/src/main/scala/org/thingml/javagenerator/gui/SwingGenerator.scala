@@ -33,6 +33,8 @@ import org.sintef.thingml._
 import java.util.AbstractMap.SimpleEntry
 import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
 
+import org.thingml.utils.log.Logger
+
 object Context {
   val builder = new StringBuilder()
   
@@ -120,8 +122,11 @@ object SwingGenerator {
   
   
   def compileAndRun(model: ThingMLModel) {
+
+    Logger.debug("compile and run Swing code")
+
     new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
-    
+
     val code = compileAll(model, "org.thingml.generated")
 
     code._1.keys.foreach{cfg =>
