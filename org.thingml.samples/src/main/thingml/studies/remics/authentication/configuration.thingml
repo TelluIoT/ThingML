@@ -27,6 +27,21 @@ configuration RemicsOneClientOneServer {
 	connector client.LoginServer => server.LoginClient
 }
 
+// Config 2: Simple connection between a fake client (mock up) and the server
+configuration RemicsOneFakeClientOneServer {
+	instance client: API1FakeClient
+	instance server: Server
+	connector client.LoginServer => server.LoginClient
+}
+
+// Config 3: Simple connection between the client and a fake server (mock up)
+configuration RemicsOneClientOneFakeServer {
+	instance client: Client
+	instance server: API2FakeServer
+	connector client.LoginServer => server.LoginClient
+}
+
+/*
 // Config 2: Simple connection between five clients and the server
 configuration RemicsManyClientsOneServer {
 	instance client1: Client
@@ -76,3 +91,4 @@ configuration RemicsManyClientsOneMediator {
 	connector client5.LoginServer => mediator.Client
 	connector substitute.LoginClient => mediator.Server
 }
+*/

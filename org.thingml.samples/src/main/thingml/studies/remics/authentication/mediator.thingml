@@ -14,12 +14,6 @@
 import "API1.thingml"
 import "API2.thingml"
 
-
-datatype String;
-
-datatype Boolean;
-
-
 thing Mediator includes API1, API2{
 
 	property password: String // Use to store the password
@@ -29,7 +23,7 @@ thing Mediator includes API1, API2{
 		sends ack 
 	}
 	
-	provided port Server {
+	required port Server {
 		sends login, password
 		receives access
 	}
@@ -37,7 +31,7 @@ thing Mediator includes API1, API2{
 	statechart Authentication init Ready {
 	
 		state Ready {
-			on entry print "Ready: Waiting for credential ..."
+			on entry print "Mediator: Ready, Waiting for credential ..."
 			
 			transition -> CheckPassword
 				event e: Client?log
@@ -66,7 +60,7 @@ thing Mediator includes API1, API2{
 		
 		
 		state CheckPassword  {
-			on entry print "Login accepted"
+			on entry print "Mediator: Login accepted"
 			
 			// The password is accepted by the server
 			transition -> LoggedOn
@@ -84,8 +78,8 @@ thing Mediator includes API1, API2{
 		
 		state LoggedOn {
 			on entry do 
-				print "Password accepted"
-				print "You are now logged in"
+				print "Mediator: Password accepted"
+				print "Mediator: You are now logged in"
 			end
 		}
 			

@@ -97,7 +97,7 @@ thing StraitLineTest includes TwoWDBaseMsg, AnalogInputMsgs, TimerMsgs, LedMsgs,
 				end
                 
                 internal event m : Gyro?gyro_data
-                guard m.gyro_heading < -900 or m.gyro_heading > 900 // We have turned by 90Â°
+                guard m.gyro_heading < -900 or m.gyro_heading > 900 // We have turned by 90°
                 action do
                     TwoWDBase!set_motors_speed(0, 0)
                     Gyro!reset_heading()

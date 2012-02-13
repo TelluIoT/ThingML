@@ -11,10 +11,6 @@
 
 import "API1.thingml"
 
-datatype String;
-
-datatype Boolean;
-
 thing Client includes API1{
 
 	readonly property login : String = "toto"
@@ -35,7 +31,7 @@ thing Client includes API1{
 		}
 		
 		state LoggedOn {
-			on entry print "Your are logged in"
+			on entry print "Client side: Your are logged in"
 		}
 	
 	}

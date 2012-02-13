@@ -11,10 +11,6 @@
 
 import "API1.thingml"
 
-datatype String;
-
-datatype Boolean;
-
 thing Server includes API1 {
 
 	readonly property login : String = "toto"
@@ -28,21 +24,21 @@ thing Server includes API1 {
 	statechart Authentication init Ready {
 	
 		state Ready {
-			on entry print "Ready: Waiting for credentials..."
+			on entry print "Server side: Ready, Waiting for credentials..."
 			
 			transition -> LoggedOn 
 				event e : LoginClient?log
 				guard e.password == password and e.login == login
 				action LoginClient!ack(true)
 				
-			transition -> LoggedOn
+			internal
 				event e: LoginClient?log
 				guard not (e.password == password and e.login == login) 
 				action LoginClient!ack(false)
 		}
 		
 		state LoggedOn {
-			on entry print "Your are logged in"
+			on entry print "Server side: Your are logged in"
 		}
 	
 	}
