@@ -7,6 +7,7 @@ thing fragment SerializerScala  includes ArraySerializer
     //Integer (ThingML Integer are like Java Short (16 bits = 2 bytes)    
     function serializeInteger(d : Integer)
     do
+        print("serialize integer: " + d)
         readonly var bytes : Byte[2] = '' & d & '.toBytes'
         storeByte(bytes[0])
         storeByte(bytes[1])
