@@ -180,7 +180,7 @@ configuration testOneInstance
 }
 */
 
-configuration testCOaP
+/*configuration testCOaP
 @remote "testRemote::TestThing::.*::.*"
 {
     //Messages are sent and received without serialization
@@ -199,7 +199,7 @@ configuration testCOaP
     connector serializer.network => network.IOStream
     connector deserializer.network => network.IOStream
     connector deserializer.in => testRemote.in
-}
+}*/
 
 
 

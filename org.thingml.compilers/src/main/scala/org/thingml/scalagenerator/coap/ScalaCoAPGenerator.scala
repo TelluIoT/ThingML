@@ -204,7 +204,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
   }
 
   def generateCoAPServer(builder: StringBuilder = Context.builder) {
-    builder append "class CoAPServer4" + self.getName() + "(coapThingML : CoAPThingML) extends CoAP(coapThingML){\n"
+    builder append "class CoAPServer4" + self.getName() + "(coapThingML : CoAPThingML, port : Int) extends CoAP(coapThingML, port){\n"
     builder append "//Types\n"
     self.allRemoteInstances.collect{case (i,r) => i.getType}.toSet.foreach{t : Type =>
       builder append "val " + t.getName + "Resource = new ThingMLCoAPResource(resourceIdentifier = \"" + t.getName + "\", server = this)\n"
