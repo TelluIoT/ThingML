@@ -53,6 +53,7 @@ import java.io._
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
+import org.thingml.kevoreegenerator.KevoreeGenerator
 
 import scala.collection.JavaConversions._
 
@@ -87,10 +88,13 @@ class ThingMLPanel extends JPanel {
   var bThingML = new JButton("Generate Comm")
   var bThingML2 = new JButton("Generate Comm2")
   var bCoAP = new JButton("Generate CoAP")
+  var bKevoree = new JButton("Generate Kevoree")
+  
+  //TODO: add a button for the kevoree compiler
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
   filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
+  
   b.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         println("Input file : " + targetFile)
@@ -213,12 +217,31 @@ class ThingMLPanel extends JPanel {
       }
     })
   
+    bKevoree.addActionListener(new ActionListener{
+        def actionPerformed(e:ActionEvent){
+        println("Input file : "+targetFile)
+        if(targetFile.isEmpty) return;
+        
+        try{
+          val thingmlModel = loadThingMLmodel(targetFile.get)
+          thingmlModel.allConfigurations.foreach{c => 
+            KevoreeGenerator.compileAndRun(c,thingmlModel)
+          }
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+      }
+    })
+  
   arduinoToolBar.add("Compilers", b)
   arduinoToolBar.add("Compilers", bScala)
   arduinoToolBar.add("Compilers", bSwing)
   arduinoToolBar.add("Compilers", bThingML)
   arduinoToolBar.add("Compilers", bThingML2)
   arduinoToolBar.add("Compilers", bCoAP)
+  arduinoToolBar.add("Compilers", bKevoree)
+  //TODO
   add(arduinoToolBar, BorderLayout.SOUTH)
 
 

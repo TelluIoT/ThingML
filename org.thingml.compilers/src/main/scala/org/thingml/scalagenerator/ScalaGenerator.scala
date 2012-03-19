@@ -77,7 +77,7 @@ object ScalaGenerator {
     case t: PrimitiveType => PrimitiveTypeScalaGenerator(t)
     case t: Enumeration => EnumerationScalaGenerator(t)
     case _ => TypeScalaGenerator(self)
-  }
+  } 
   
   implicit def scalaGeneratorAspect(self: TypedElement) = self match {
     case t: Function => FunctionScalaGenerator(t)
