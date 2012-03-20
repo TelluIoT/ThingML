@@ -16,7 +16,7 @@
 /**
  * This code generator targets the SMAc Framework
  * see https://github.com/brice-morin/SMAc
- * @author: Brice MORIN <brice.morin@sintef.no>
+ * @author: Runze HAO <haoshaochi@gmail.com>
  */
 package org.thingml.kevoreegenerator
 
@@ -149,7 +149,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     self.allPorts.foreach{case p =>
         if(p.getSends.size>0){
           builder append "public Port get"+Context.firstToUpper(self.getName)+"_"+p.getName+"(){\n"
-          builder append "return port_" + Context.firstToUpper(self.getName) + "_" + p.getName + "_wrapper\n"
+          builder append "return port_" + Context.firstToUpper(self.getName) + "_" + p.getName + "_wrapper;\n"
           builder append "}\n"
         }
     }
@@ -184,6 +184,7 @@ case class ThingKevoreeGenerator(val self: Thing){
         if(p.getSends.size>0 || p.getReceives.size>0){
           builder append "Channel c_" + p.getName + "_sent_" + p.hashCode + " = new Channel();\n"
           builder append "c_" + p.getName + "_sent_" + p.hashCode + ".connect(" + " thingML_"+self.getName+"_Component.getPort(\""+p.getName+"\").get(),"+"port_" + Context.firstToUpper(self.getName) + "_" + p.getName+"_wrapper);\n"
+          builder append "c_" + p.getName + "_sent_" + p.hashCode + ".connect(" + "port_" + Context.firstToUpper(self.getName) + "_" + p.getName+"_wrapper,"+" thingML_"+self.getName+"_Component.getPort(\""+p.getName+"\").get()"+");\n"
           builder append "c_" + p.getName + "_sent_" + p.hashCode+".start();\n"
         }
     }
@@ -229,12 +230,12 @@ case class ThingKevoreeGenerator(val self: Thing){
     //generate incoming messages
     builder append "public void onIncomingMessage(Event e) {\n"
     self.allOutgoingMessages.foreach{case m=>
-        builder append "if (e.event() instanceof "+Context.pack +"."+Context.firstToUpper(m.getName)+") {\n"
-        builder append "System.out.println(\"Kevoree4"+self.getName+": "+m.getName+" to send tranferred\");\n"
-        builder append "this.kevoreeComponent.getPortByName(\""+getPortNameWrapper(m)+"_Transfer\",MessagePort.class).process(e.event());\n"
+        builder append "if (e instanceof "+Context.pack +"."+Context.firstToUpper(m.getName)+") {\n"
+        builder append "System.out.println(\"[[Kevoree_"+self.getName+"]]: "+Context.firstToUpper(m.getName)+" message comes!\");\n"
+        builder append "this.getPortByName(\""+getPortNameWrapper(m)+"_Transfer\",MessagePort.class).process(e);\n"
         builder append "}\n"
     }
-  
+    builder append "}\n"
     //generate port to receive messages
     generatePortDef()
     
@@ -254,6 +255,7 @@ case class ThingKevoreeGenerator(val self: Thing){
         builder append Context.pack +"."+Context.firstToUpper(m.getName)+" rcv_"+Context.firstToUpper(m.getName)+" = ("+Context.pack +"."+Context.firstToUpper(m.getName)+") o;\n"
         getPortName(m)
         builder append "wrapper.get"+Context.firstToUpper(self.getName)+"_"+Context.port_name+"().send(rcv_"+Context.firstToUpper(m.getName)+");\n"
+        builder append "System.out.println(\"[[Kevoree_"+self.getName+"]]: "+Context.firstToUpper(m.getName)+" message Transferred!\");\n"
         builder append "}\n"
     }
     builder append "}\n"
