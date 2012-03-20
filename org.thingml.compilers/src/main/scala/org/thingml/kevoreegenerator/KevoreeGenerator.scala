@@ -265,9 +265,20 @@ case class ThingKevoreeGenerator(val self: Thing){
   def generateParameters(builder: StringBuilder = Context.builder) {
     System.out.println("jinlaileme")
     builder append self.allPropertiesInDepth.collect{case p=>
-        (if(p.getType.scala_type(p.getCardinality != null).equals("Short")) "(short)0"
-         else "new "+p.getType.scala_type(p.getCardinality != null)+"()")
+        var valueBuilder = new StringBuilder()
+        p.getInit().generateScala(valueBuilder)
+        println("9999:"+valueBuilder)
+        println(p.toString)
+        (if(p.getType.scala_type(p.getCardinality != null).equals("Short")) {
+            if(valueBuilder.toString.equals("")) valueBuilder append "0"
+            "(short)"+valueBuilder
+        }
+        else {
+           if(valueBuilder.toString.equals("")) valueBuilder append "\"\""
+           "new "+p.getType.scala_type(p.getCardinality != null)+"("+valueBuilder+")"
+        })
     }.mkString(", ")
+    
   }
   def getPortName(m:Message){
     self.allPorts.foreach{p=>
