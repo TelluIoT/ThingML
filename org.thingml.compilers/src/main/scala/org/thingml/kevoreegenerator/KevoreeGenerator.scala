@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 /**
- * This code generator targets the SMAc Framework
- * see https://github.com/brice-morin/SMAc
+ * This code generator targets the Kevoree Framework
  * @author: Runze HAO <haoshaochi@gmail.com>
  */
 package org.thingml.kevoreegenerator
 
 import org.thingml.scalagenerator.ScalaGenerator._
+import org.thingml.javagenerator.gui.SwingGenerator._
 import org.sintef.thingml.constraints.ThingMLHelpers
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
@@ -264,19 +264,43 @@ case class ThingKevoreeGenerator(val self: Thing){
   
   def generateParameters(builder: StringBuilder = Context.builder) {
     System.out.println("jinlaileme")
+
     builder append self.allPropertiesInDepth.collect{case p=>
-        var valueBuilder = new StringBuilder()
+        //println(self.initExpression(p))
+        val valueBuilder = new StringBuilder()
         p.getInit().generateScala(valueBuilder)
-        println("9999:"+valueBuilder)
-        println(p.toString)
-        (if(p.getType.scala_type(p.getCardinality != null).equals("Short")) {
-            if(valueBuilder.toString.equals("")) valueBuilder append "0"
-            "(short)"+valueBuilder
+              
+        val valueString = valueBuilder.toString match {
+          case "" => p.getType.default_value
+          case s : String => 
+            if (s.startsWith("\"") && s.endsWith("\""))
+              s.substring(1, s.size-1)
+            else
+              s
         }
-        else {
-           if(valueBuilder.toString.equals("")) valueBuilder append "\"\""
-           "new "+p.getType.scala_type(p.getCardinality != null)+"("+valueBuilder+")"
-        })
+        
+        
+        println("9999:"+valueBuilder)
+if (p.getType.isInstanceOf[Enumeration]) {
+                   "new " + p.getType.java_type + "(\"" + p.getName + "." + valueString + "\")"//TODO: manage enumeration
+                } else {
+                  "new " + p.getType.java_type + "(\"" + valueString + "\")"
+                }
+//        (if(p.getType.scala_type(p.getCardinality != null).equals("Short")) {
+//            if(valueBuilder.toString.equals("")) valueBuilder append "0"
+//            "(short)"+valueBuilder
+//        }
+//        else {
+//           if(valueBuilder.toString.equals("")) valueBuilder append "\"\""
+//           "new "+p.getType.scala_type(p.getCardinality != null)+"("+valueBuilder+")"
+//        })
+
+//        if(p.getInit()!=null){
+//          
+//        }
+//        else{
+//            
+//        }
     }.mkString(", ")
     
   }
