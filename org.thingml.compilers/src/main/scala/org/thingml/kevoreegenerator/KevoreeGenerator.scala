@@ -257,6 +257,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     builder append Context.wrapper_name+" wrapper;\n\n"
     //generateParameters();
     
+    //TODO: instantiate the wrapper (and the ThingML instance) using the properties defined in the dictionnary (including the readonly properties that should only be used at startup, not in the the update).
     builder append "@Start\n"
     builder append "public void startComponent() {System.out.println(\""+Context.file_name+" component start!\");"
     builder append "wrapper"+" = new "+Context.wrapper_name+"(this);\n"
