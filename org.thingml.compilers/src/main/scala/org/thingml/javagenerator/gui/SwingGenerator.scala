@@ -496,7 +496,6 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
       "\", rec, sent, this).start();\n"
     }
   }
-  
 }
 
 case class MessageSwingGenerator(override val self: Message) extends ThingMLSwingGenerator(self) {
@@ -547,6 +546,17 @@ case class TypeSwingGenerator(override val self: Type) extends ThingMLSwingGener
     // Implemented in the sub-classes
   }
 
+  def default_value(): String = {
+    var res : String = self.getAnnotations.filter {
+      a => a.getName == "default_value"
+    }.headOption match {
+      case Some(a) => 
+        a.asInstanceOf[PlatformAnnotation].getValue
+      case None => ""
+    }
+    return res
+  }
+  
   def java_type(): String = {
     var res : String = self.getAnnotations.filter {
       a => a.getName == "java_type"

@@ -87,10 +87,45 @@ object KevoreeGenerator {
         System.out.println("code generated at "+outputDir  + "\\" + Context.wrapper_name+".java");
         w.println(code._2);
         w.close();
+        
+        compilePom(cfg)
+        
     }
     javax.swing.JOptionPane.showMessageDialog(null, "Kevoree/java code generated");
   }
-
+  def compilePom(cfg:Configuration){
+    var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("kevoreepom/pom.xml"),"utf-8").getLines().mkString("\n")
+    pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
+    
+    //Add ThingML dependencies
+    val thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n"
+    cfg.allThingMLMavenDep.foreach{dep =>
+      pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"))
+    }
+    pom = pom.replace("<!--DEP-->","")
+    
+    //Add Kevoree dependencies
+    val kevoreeRep ="<repository>\n<id>kevoree-release</id>\n<url>http://maven.kevoree.org/release</url>\n</repository>\n<repository>\n<id>kevoree-snapshot</id>\n<url>http://maven.kevoree.org/snapshots</url>\n</repository>\n<!--Additional repositories-->\n"
+    pom = pom.replace("<!--Additional repositories-->", kevoreeRep)
+    
+    val kevoreePluginRep = "</repositories>\n\n<pluginRepositories>\n<pluginRepository>\n<id>kevoree-release</id>\n<url>http://maven.kevoree.org/release</url>\n</pluginRepository>\n<pluginRepository>\n<id>kevoree-snapshot</id>\n<url>http://maven.kevoree.org/snapshots</url>\n</pluginRepository>\n</pluginRepositories>\n"
+    pom = pom.replace("</repositories>",kevoreePluginRep)
+    
+    val kevoreeDep = "<!--Additional dependencies-->\n<dependency>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.javase.framework</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<dependency>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n"
+    pom = pom.replace("<!--Additional dependencies-->",kevoreeDep)
+    
+    val kevoreePlugin = "<plugins>\n<plugin>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.annotation.mavenplugin</artifactId>\n<version>${kevoree.version}</version>\n<extensions>true</extensions>\n<configuration>\n<nodeTypeNames>JavaSENode</nodeTypeNames>\n</configuration>\n<executions>\n<execution>\n<goals>\n<goal>generate</goal>\n<goal>compile</goal>\n</goals>\n</execution>\n</executions>\n</plugin>\n"
+    pom = pom.replace("<plugins>",kevoreePlugin)
+    //println(pom)
+    
+    
+    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" + cfg.getName
+    var w = new PrintWriter(new FileWriter(new File(rootDir+"\\pom.xml")));
+    println(rootDir+"\\pom.xml")
+    w.println(pom);
+    w.close();
+    
+  }
   def compile(t: Thing, pack : String, model: ThingMLModel) : Pair[String, String] = {
     Context.pack = pack
     var wrapperBuilder = new StringBuilder()
@@ -214,6 +249,8 @@ case class ThingKevoreeGenerator(val self: Thing){
     }.mkString(",\n")
     
     builder append "})\n"
+    generateDictionary();
+
     builder append "@ComponentType\n "
     builder append "public class "+ Context.file_name+" extends AbstractComponentType{\n"
     builder append Context.wrapper_name+" wrapper;\n\n"
@@ -221,12 +258,21 @@ case class ThingKevoreeGenerator(val self: Thing){
     
     builder append "@Start\n"
     builder append "public void startComponent() {System.out.println(\""+Context.file_name+" component start!\");"
-    builder append "wrapper"+" = new "+Context.wrapper_name+"(this);\n}\n"
+    builder append "wrapper"+" = new "+Context.wrapper_name+"(this);\n"
+    builder append "updateComponent();\n}\n"
     builder append "@Stop\n"
     builder append "public void stopComponent() {System.out.println(\""+Context.file_name+" component stop!\");}\n"
+ 
     builder append "@Update\n"
-    builder append "public void updateComponent() {System.out.println(\""+Context.file_name+" component update!\");}\n"
-    
+    builder append "public void updateComponent() {System.out.println(\""+Context.file_name+" component update!\");\n"
+    self.allPropertiesInDepth.foreach{case p=>
+        if(!p.isChangeable){
+          builder append p.getType.java_type+" "+p.getName+" = new "+p.getType.java_type+"((String)this.getDictionary().get(\""+p.getName+"\"));\n"
+          builder append "wrapper.getInstance()."+self.getName+"_"+p.getName+"_var_$eq("+p.getName+");\n"
+          //builder append  "System.out.println("after: singleRoomNumber = " + wrapper.getInstance().Server_aSingleRoomNumber_var());"
+        }
+    }
+    builder append "}\n"
     //generate incoming messages
     builder append "public void onIncomingMessage(Event e) {\n"
     self.allOutgoingMessages.foreach{case m=>
@@ -278,31 +324,37 @@ case class ThingKevoreeGenerator(val self: Thing){
             else
               s
         }
-        
-        
         println("9999:"+valueBuilder)
-if (p.getType.isInstanceOf[Enumeration]) {
-                   "new " + p.getType.java_type + "(\"" + p.getName + "." + valueString + "\")"//TODO: manage enumeration
-                } else {
-                  "new " + p.getType.java_type + "(\"" + valueString + "\")"
-                }
-//        (if(p.getType.scala_type(p.getCardinality != null).equals("Short")) {
-//            if(valueBuilder.toString.equals("")) valueBuilder append "0"
-//            "(short)"+valueBuilder
-//        }
-//        else {
-//           if(valueBuilder.toString.equals("")) valueBuilder append "\"\""
-//           "new "+p.getType.scala_type(p.getCardinality != null)+"("+valueBuilder+")"
-//        })
-
-//        if(p.getInit()!=null){
-//          
-//        }
-//        else{
-//            
-//        }
+        if (p.getType.isInstanceOf[Enumeration]) {
+          "new " + p.getType.java_type + "(\"" + p.getName + "." + valueString + "\")"//TODO: manage enumeration
+        } else {
+          "new " + p.getType.java_type + "(\"" + valueString + "\")"
+        }
     }.mkString(", ")
     
+  }
+  def generateDictionary(builder: StringBuilder = Context.builder){
+    if(self.allPropertiesInDepth.size>0)
+    {
+      builder append "@DictionaryType({"   
+      builder append self.allPropertiesInDepth.collect{case p=>
+          
+          val valueBuilder = new StringBuilder()
+          p.getInit().generateScala(valueBuilder)
+          
+          val valueString = valueBuilder.toString match {
+            case "" => p.getType.default_value
+            case s : String => 
+              if (s.startsWith("\"") && s.endsWith("\""))
+                s.substring(1, s.size-1)
+              else
+                s
+          }
+          "@DictionaryAttribute(name = \""+p.getName+"\", "+"defaultValue = \""+valueString+"\", optional = "+p.isChangeable+")"
+          
+      }.mkString(", \n")
+      builder append "})"
+    }
   }
   def getPortName(m:Message){
     self.allPorts.foreach{p=>
