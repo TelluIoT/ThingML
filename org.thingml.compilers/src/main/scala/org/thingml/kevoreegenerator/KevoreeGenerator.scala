@@ -168,7 +168,6 @@ object KevoreeGenerator {
   }
 }
 
-//TODO generate kevoree class + annotation
 case class ThingKevoreeGenerator(val self: Thing){
 
   def generateKevoreeWrapper(builder:StringBuilder = Context.builder){
@@ -301,7 +300,7 @@ case class ThingKevoreeGenerator(val self: Thing){
         builder append Context.pack +"."+Context.firstToUpper(m.getName)+" rcv_"+Context.firstToUpper(m.getName)+" = ("+Context.pack +"."+Context.firstToUpper(m.getName)+") o;\n"
         getPortName(m)
         builder append "wrapper.get"+Context.firstToUpper(self.getName)+"_"+Context.port_name+"().send(rcv_"+Context.firstToUpper(m.getName)+");\n"
-        builder append "System.out.println(\"[[Kevoree_"+self.getName+"]]: "+Context.firstToUpper(m.getName)+" message Transferred!\");\n"
+        builder append "System.out.println(\"[[Kevoree_"+self.getName+"]]: "+Context.firstToUpper(m.getName)+"(\"+rcv_"+Context.firstToUpper(m.getName)+".toString()+\") message Transferred!\");\n"
         builder append "}\n"
     }
     builder append "}\n"
@@ -312,24 +311,25 @@ case class ThingKevoreeGenerator(val self: Thing){
     System.out.println("jinlaileme")
 
     builder append self.allPropertiesInDepth.collect{case p=>
-        //println(self.initExpression(p))
-        val valueBuilder = new StringBuilder()
-        p.getInit().generateScala(valueBuilder)
-              
-        val valueString = valueBuilder.toString match {
-          case "" => p.getType.default_value
-          case s : String => 
-            if (s.startsWith("\"") && s.endsWith("\""))
-              s.substring(1, s.size-1)
-            else
-              s
-        }
-        println("9999:"+valueBuilder)
-        if (p.getType.isInstanceOf[Enumeration]) {
-          "new " + p.getType.java_type + "(\"" + p.getName + "." + valueString + "\")"//TODO: manage enumeration
-        } else {
-          "new " + p.getType.java_type + "(\"" + valueString + "\")"
-        }
+         "new " + p.getType.java_type + "(this.kevoreeComponent.getDictionary().get(\""+p.getName+"\").toString())"
+        
+//        val valueBuilder = new StringBuilder()
+//        p.getInit().generateScala(valueBuilder)
+//              
+//        val valueString = valueBuilder.toString match {
+//          case "" => p.getType.default_value
+//          case s : String => 
+//            if (s.startsWith("\"") && s.endsWith("\""))
+//              s.substring(1, s.size-1)
+//            else
+//
+//        }
+//        println("9999:"+valueBuilder)
+//        if (p.getType.isInstanceOf[Enumeration]) {
+//          "new " + p.getType.java_type + "(\"" + p.getName + "." + valueString + "\")"//TODO: manage enumeration
+//        } else {
+//          "new " + p.getType.java_type + "(\"" + valueString + "\")"
+//        }
     }.mkString(", ")
     
   }
