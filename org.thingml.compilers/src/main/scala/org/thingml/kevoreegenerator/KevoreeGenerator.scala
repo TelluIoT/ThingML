@@ -171,6 +171,7 @@ object KevoreeGenerator {
 //TODO generate kevoree class + annotation
 case class ThingKevoreeGenerator(val self: Thing){
 
+  //TODO: the wrapper constructor should take (in addition to current param), all the parameters needed to create the instance from the values provided in the Kevoree dictionnary
   def generateKevoreeWrapper(builder:StringBuilder = Context.builder){
     builder append "public class "+Context.wrapper_name+" extends ReactiveComponent{\n"
     
