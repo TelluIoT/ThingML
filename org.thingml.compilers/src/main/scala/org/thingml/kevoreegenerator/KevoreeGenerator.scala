@@ -170,6 +170,7 @@ object KevoreeGenerator {
 
 case class ThingKevoreeGenerator(val self: Thing){
 
+  //TODO: the wrapper constructor should take (in addition to current param), all the parameters needed to create the instance from the values provided in the Kevoree dictionnary
   def generateKevoreeWrapper(builder:StringBuilder = Context.builder){
     builder append "public class "+Context.wrapper_name+" extends ReactiveComponent{\n"
     
@@ -255,6 +256,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     builder append Context.wrapper_name+" wrapper;\n\n"
     //generateParameters();
     
+    //TODO: instantiate the wrapper (and the ThingML instance) using the properties defined in the dictionnary (including the readonly properties that should only be used at startup, not in the the update).
     builder append "@Start\n"
     builder append "public void startComponent() {System.out.println(\""+Context.file_name+" component start!\");"
     builder append "wrapper"+" = new "+Context.wrapper_name+"(this);\n"
