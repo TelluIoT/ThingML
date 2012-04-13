@@ -89,10 +89,38 @@ object KevoreeGenerator {
         w.close();
         
         compilePom(cfg)
+        compileKevScript(cfg)
         
     }
     javax.swing.JOptionPane.showMessageDialog(null, "Kevoree/java code generated");
   }
+  def compileKevScript(cfg:Configuration){
+    var kevScript:StringBuilder= new StringBuilder()
+    kevScript append "tblock\n{\n"
+    kevScript append "addNode node0 : JavaSENode\n"
+    kevScript append "addGroup sync: RestGroup \n"
+    kevScript append "addToGroup sync* \n"
+    kevScript append "updateDictionary sync { port=\"8000\"}@node0\n"
+    cfg.allThings.foreach{thing=>
+      kevScript append "addComponent "+thing.getName()+"_KevComponent@node0 : "+cfg.getName+"_"+thing.getName()+"_KV2ThingML {}\n"
+    }
+    cfg.allConnectors.foreach{con=>
+      kevScript append "addChannel c_"+con.hashCode+" : defMSG {}\n"
+      kevScript append "addChannel c_"+con.hashCode+"_re : defMSG {}\n"
+      kevScript append  "bind "+con.getRequired.getOwner.getName+"_KevComponent."+con.getRequired.getName+"_Transfer@node0 => c_"+con.hashCode+"\n"
+      kevScript append  "bind "+con.getProvided.getOwner.getName+"_KevComponent."+con.getProvided.getName+"_rcv@node0 => c_"+con.hashCode+"\n"
+      kevScript append  "bind "+con.getRequired.getOwner.getName+"_KevComponent."+con.getRequired.getName+"_rcv@node0 => c_"+con.hashCode+"_re\n"
+      kevScript append  "bind "+con.getProvided.getOwner.getName+"_KevComponent."+con.getProvided.getName+"_Transfer@node0 => c_"+con.hashCode+"_re\n"
+    }
+    
+    
+    kevScript append "\n}"
+    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" + cfg.getName
+    var w = new PrintWriter(new FileWriter(new File(rootDir+"\\"+cfg.getName+".kevscript")));
+    w.println(kevScript);
+    w.close();
+  }
+  
   def compilePom(cfg:Configuration){
     var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("kevoreepom/pom.xml"),"utf-8").getLines().mkString("\n")
     pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
@@ -170,7 +198,6 @@ object KevoreeGenerator {
 
 case class ThingKevoreeGenerator(val self: Thing){
 
-  //TODO: the wrapper constructor should take (in addition to current param), all the parameters needed to create the instance from the values provided in the Kevoree dictionnary
   def generateKevoreeWrapper(builder:StringBuilder = Context.builder){
     builder append "public class "+Context.wrapper_name+" extends ReactiveComponent{\n"
     
@@ -256,7 +283,6 @@ case class ThingKevoreeGenerator(val self: Thing){
     builder append Context.wrapper_name+" wrapper;\n\n"
     //generateParameters();
     
-    //TODO: instantiate the wrapper (and the ThingML instance) using the properties defined in the dictionnary (including the readonly properties that should only be used at startup, not in the the update).
     builder append "@Start\n"
     builder append "public void startComponent() {System.out.println(\""+Context.file_name+" component start!\");"
     builder append "wrapper"+" = new "+Context.wrapper_name+"(this);\n"
