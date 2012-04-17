@@ -44,6 +44,18 @@ object Context {
   var file_name : String = _
   var wrapper_name :String =_
   
+  
+
+  val keywords = scala.List("abstract","continue","for","new","switch","assert","default","package","synchronized","boolean","do","if","private","this","break","double","implements","protected","throw","byte","else","import","public","throws","case","instanceof","return","transient","catch","extends","int","short","try","char","final","interface","static","void","class","finally","long","volatile","float","native","super","while")
+  def protectJavaKeyword(value : String) : String = {
+    if(keywords.exists(p => p.equals(value))){
+      return "_"+value+"_"
+    } 
+    else {
+      return value
+    }
+  }
+  
   def firstToUpper(value : String) : String = {
     return value.capitalize
   }
@@ -92,6 +104,10 @@ object KevoreeGenerator {
         compileKevScript(cfg)
         
     }
+    
+   cfg.allInstances.foreach{case inst =>
+     
+   }
     javax.swing.JOptionPane.showMessageDialog(null, "Kevoree/java code generated");
   }
   def compileKevScript(cfg:Configuration){
@@ -199,10 +215,31 @@ object KevoreeGenerator {
 case class ThingKevoreeGenerator(val self: Thing){
 
   def generateKevoreeWrapper(builder:StringBuilder = Context.builder){
+    var component_name = ""
     builder append "public class "+Context.wrapper_name+" extends ReactiveComponent{\n"
     
     builder append Context.file_name+" kevoreeComponent;\n"
-    builder append self.getName+" thingML_"+self.getName+"_Component;\n"
+    self.getAnnotations.filter{a=>
+      a.getName == "mock"
+    }.headOption match{
+      case Some(a) =>
+        a.getValue match {
+            case "true" => {
+                component_name = self.getName+"Mock"
+                builder append component_name+" thingML_"+self.getName+"_Component;\n"
+            }
+            case "mirror" => {
+                component_name = self.getName+"Mirror"
+                builder append component_name+" thingML_"+self.getName+"_Component;\n"    
+            }
+          }
+      case none =>{
+          component_name = self.getName
+          builder append self.getName+" thingML_"+self.getName+"_Component;\n"
+      }
+        
+    }
+    
     self.allPorts.foreach{case p =>
         if(p.getSends.size>0){
           builder append "Port " + "port_" + Context.firstToUpper(self.getName) + "_" + p.getName + "_wrapper = null;\n"
@@ -218,7 +255,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     
     builder append "public "+Context.wrapper_name+" (" +Context.file_name+" kevoreeComponent) {\n"
     builder append "this.kevoreeComponent = kevoreeComponent;\n"
-    builder append "thingML_"+self.getName+"_Component = new "+self.getName+"("
+    builder append "thingML_"+self.getName+"_Component = new "+component_name+"("
     generateParameters(builder)
     builder append ");\n"
     
@@ -252,7 +289,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     }
     builder append "thingML_"+self.getName+"_Component.start();\n"
     builder append "}\n"
-    builder append "public "+ self.getName +" getInstance(){\n"
+    builder append "public "+ component_name +" getInstance(){\n"
     builder append "return "+" thingML_"+self.getName+"_Component;\n}\n\n"
     builder append "@Override\n"
     builder append "public void onIncomingMessage(SignedEvent e) {\n"
@@ -294,8 +331,8 @@ case class ThingKevoreeGenerator(val self: Thing){
     builder append "public void updateComponent() {System.out.println(\""+Context.file_name+" component update!\");\n"
     self.allPropertiesInDepth.foreach{case p=>
         if(!p.isChangeable){
-          builder append p.getType.java_type+" "+p.getName+" = new "+p.getType.java_type+"((String)this.getDictionary().get(\""+p.getName+"\"));\n"
-          builder append "wrapper.getInstance()."+self.getName+"_"+p.getName+"_var_$eq("+p.getName+");\n"
+          builder append p.getType.java_type+" "+Context.protectJavaKeyword(p.getName)+" = new "+p.getType.java_type+"((String)this.getDictionary().get(\""+p.getName+"\"));\n"
+          builder append "wrapper.getInstance()."+self.getName+"_"+p.getName+"_var_$eq("+Context.protectJavaKeyword(p.getName)+");\n"
           //builder append  "System.out.println("after: singleRoomNumber = " + wrapper.getInstance().Server_aSingleRoomNumber_var());"
         }
     }
