@@ -76,7 +76,7 @@ public class MacIntegration {
             @Override
             public void handleOpenFile(ApplicationEvent applicationEvent) {
                 System.out.println("open => "+applicationEvent.getFilename());
-                editor.codeEditor().setText(editor.codeEditor()+"\n"+applicationEvent.getFilename());
+                //editor.codeEditor().setText(editor.codeEditor()+"\n"+applicationEvent.getFilename());
             }
 
             @Override
