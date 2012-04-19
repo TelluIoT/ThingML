@@ -77,7 +77,7 @@ object ScalaGenerator {
     case t: PrimitiveType => PrimitiveTypeScalaGenerator(t)
     case t: Enumeration => EnumerationScalaGenerator(t)
     case _ => TypeScalaGenerator(self)
-  }
+  } 
   
   implicit def scalaGeneratorAspect(self: TypedElement) = self match {
     case t: Function => FunctionScalaGenerator(t)
@@ -383,6 +383,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
           }
         case None => 
           builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "("
+          ///////////////////////////////////////////////////////////////////////////////////////////////////////////
           builder append (self.initExpressionsForInstance(i).collect{case p =>         
                 var result = p._1.scala_var_name + " = "
                 if (p._2 != null) {
@@ -394,7 +395,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
                 }
                 result += ".asInstanceOf[" + p._1.getType.scala_type(p._1.getCardinality != null) + "]"
                 result
-            } 
+            }
             ++ 
             self.initExpressionsByArrays(i).keys.collect{ case init =>
                 init.scala_var_name + " = " + init.scala_var_name + "_" + i.getName
