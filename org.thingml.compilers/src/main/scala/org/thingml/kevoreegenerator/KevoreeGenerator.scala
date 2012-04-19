@@ -101,13 +101,15 @@ object KevoreeGenerator {
         w.close();
         
         compilePom(cfg)
-        compileKevScript(cfg)
+        
         
     }
     
-   cfg.allInstances.foreach{case inst =>
+    compileKevScript(cfg)
+    
+  /* cfg.allInstances.foreach{case inst =>
      
-   }
+   }*/
     javax.swing.JOptionPane.showMessageDialog(null, "Kevoree/java code generated");
   }
   def compileKevScript(cfg:Configuration){

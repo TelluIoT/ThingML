@@ -233,7 +233,6 @@ class ThingMLPanel extends JPanel {
         }
       }
     })
-  
   arduinoToolBar.add("Compilers", b)
   arduinoToolBar.add("Compilers", bScala)
   arduinoToolBar.add("Compilers", bSwing)
