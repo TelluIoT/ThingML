@@ -343,19 +343,22 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
       builder append c.instanceName + ".start\n"
     }
     
-    //define temp arrays
+    //define temp arrays   
     self.allInstances.foreach{ i =>
-      if (self.initExpressionsForInstanceArrays(i).size > 0)
+      self.allArrays(i).foreach{ init =>
         builder append "//Initializing arrays\n"
-      val arrayMap = self.initExpressionsByArrays(i)
-      arrayMap.keys.foreach{ init =>
         var result = "val " + init.scala_var_name + "_" + i.getName + " = new " + init.getType.scala_type(init.getCardinality != null) + "(" 
-        
-        var tempBuilder = new StringBuilder()
+        val tempBuilder = new StringBuilder()
         init.getCardinality.generateScala(tempBuilder)
         result += tempBuilder.toString
         result += ")\n"
-        
+        builder append result
+      }
+      
+      val arrayMap = self.initExpressionsByArrays(i)
+      arrayMap.keys.foreach{ init =>
+        var result = ""
+        var tempBuilder = new StringBuilder()
         arrayMap.get(init).get.foreach{pair => 
           result += init.scala_var_name + "_" + i.getName + "("
           tempBuilder = new StringBuilder()
@@ -369,6 +372,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
         builder append result
       }
     }
+   
     
     builder append "//Things\n"
     self.allInstances.foreach{ i =>
@@ -397,7 +401,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
                 result
             }
             ++ 
-            self.initExpressionsByArrays(i).keys.collect{ case init =>
+            self.allArrays(i).collect{ case init =>
                 init.scala_var_name + " = " + init.scala_var_name + "_" + i.getName
             }
           ).mkString(", ")

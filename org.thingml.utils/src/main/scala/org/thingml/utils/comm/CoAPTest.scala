@@ -18,10 +18,9 @@ package org.thingml.utils.comm
 import org.thingml.utils.comm.SerializableTypes._
 
 
-
-
-class CoAPServer4testOneInstance(coapThingML : CoAPThingML, port : Int) extends CoAP(coapThingML, port){
+///////////////////////////////////////////////////
 //Types
+class CoAPServer4testOneInstance(coapThingML : CoAPThingML, port : Int) extends CoAP(coapThingML, port){
 val TestThingResource = new ThingMLCoAPResource(resourceIdentifier = "TestThing", server = this)
 addResource(TestThingResource)
 
@@ -153,8 +152,13 @@ index = index + 1
 }
 
 
+class CoAPServer4testSerialization(coapThingML : CoAPThingML, port : Int) extends CoAP(coapThingML, port){
+//Types
 
+//Instances and Messages
 
+}
+///////////////////////////////////////////////////
 
 
 

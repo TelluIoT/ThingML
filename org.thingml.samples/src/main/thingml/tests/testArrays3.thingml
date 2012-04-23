@@ -1,0 +1,18 @@
+import "../thingml.thingml"
+
+thing TestArray
+{
+
+	property array : Int16[8]
+
+    set array[0] = 0
+	
+}
+
+configuration TestArrays {
+    
+    instance test : TestArray
+    
+    set test.array[7] = 7
+
+}

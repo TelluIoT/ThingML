@@ -27,12 +27,12 @@ configuration RemicsOneClientOneServer {
 	connector client.LoginServer => server.LoginClient
 }
 
-// Config 2: Simple connection between a fake client (mock up) and the server
+/*// Config 2: Simple connection between a fake client (mock up) and the server
 configuration RemicsOneFakeClientOneServer {
 	instance client: API1FakeClient
 	instance server: Server
 	connector client.LoginServer => server.LoginClient
-}
+}*/
 
 // Config 3: Simple connection between the client and a fake server (mock up)
 configuration RemicsOneClientOneFakeServer {
