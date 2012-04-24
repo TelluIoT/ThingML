@@ -39,6 +39,8 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import resource.thingml.IThingmlTextDiagnostic
 import resource.thingml.mopp._
 import scala.collection.JavaConversions._
+import javax.swing.plaf.InternalFrameUI
+import javax.swing.plaf.basic.BasicInternalFrameUI
 import javax.swing.text.{Utilities, JTextComponent}
 import org.eclipse.emf.ecore.util.EcoreUtil
 import javax.swing._
@@ -75,22 +77,33 @@ class ThingMLPanel extends JPanel {
   var toolPane = new JToolBar
   editorKit.asInstanceOf[ThingMLJSyntaxKit].addToolBarActions(codeEditor, toolPane)
 
-
-  add(scrPane, BorderLayout.CENTER)
-  add(toolPane, BorderLayout.NORTH)
-
   //TODO: The integration of new compilers is not really clean. We should think about something more modular...
   // Add the C Compiler toolbar
-  var arduinoToolBar = new JToolBar
-  var b = new JButton("Compile to Arduino")
-  var bScala = new JButton("Compile to Scala")
-  var bSwing = new JButton("Compile to Swing")
-  var bThingML = new JButton("Generate Comm")
-  var bThingML2 = new JButton("Generate Comm2")
-  var bCoAP = new JButton("Generate CoAP")
-  var bKevoree = new JButton("Generate Kevoree")
+  var menubar = new JMenuBar()
+  var menuframe = new JInternalFrame()
+
+  menuframe.setSize(getWidth, getHeight)
+  menuframe.setJMenuBar(menubar)
+
+  menuframe.setLayout(new BorderLayout())
+  menuframe.add(scrPane, BorderLayout.CENTER)
+  menuframe.add(toolPane, BorderLayout.NORTH)
+
+  menuframe.setVisible(true)
+  menuframe.getUI.asInstanceOf[BasicInternalFrameUI].setNorthPane(null)
+  menuframe.setBorder(BorderFactory.createEmptyBorder)
+  add(menuframe,BorderLayout.CENTER)
   
-  //TODO: add a button for the kevoree compiler
+  var compilersMenu = new JMenu("Compile to");
+  
+  var b = new JMenuItem("Arduino")
+  var bScala = new JMenuItem("Scala/SMaC")
+  var bSwing = new JMenuItem("Java/Swing")
+  var bThingML = new JMenuItem("ThingML/Comm")
+  var bThingML2 = new JMenuItem("ThingML/Comm2")
+  var bCoAP = new JMenuItem("Scala/CoAP")
+  var bKevoree = new JMenuItem("Java/Kevoree")
+  
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
   filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -166,7 +179,7 @@ class ThingMLPanel extends JPanel {
       }         
     })
   
-    bThingML.addActionListener(new ActionListener {
+  bThingML.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         println("Input file : " + targetFile)
         if (targetFile.isEmpty) 
@@ -183,7 +196,7 @@ class ThingMLPanel extends JPanel {
       }         
     })
   
-    bThingML2.addActionListener(new ActionListener {
+  bThingML2.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         println("Input file : " + targetFile)
         if (targetFile.isEmpty) 
@@ -200,7 +213,7 @@ class ThingMLPanel extends JPanel {
       }         
     })
 
-    bCoAP.addActionListener(new ActionListener {
+  bCoAP.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         println("Input file : " + targetFile)
         if (targetFile.isEmpty)
@@ -217,8 +230,8 @@ class ThingMLPanel extends JPanel {
       }
     })
   
-    bKevoree.addActionListener(new ActionListener{
-        def actionPerformed(e:ActionEvent){
+  bKevoree.addActionListener(new ActionListener{
+      def actionPerformed(e:ActionEvent){
         println("Input file : "+targetFile)
         if(targetFile.isEmpty) return;
         
@@ -233,17 +246,16 @@ class ThingMLPanel extends JPanel {
         }
       }
     })
-  arduinoToolBar.add("Compilers", b)
-  arduinoToolBar.add("Compilers", bScala)
-  arduinoToolBar.add("Compilers", bSwing)
-  arduinoToolBar.add("Compilers", bThingML)
-  arduinoToolBar.add("Compilers", bThingML2)
-  arduinoToolBar.add("Compilers", bCoAP)
-  arduinoToolBar.add("Compilers", bKevoree)
-  //TODO
-  add(arduinoToolBar, BorderLayout.SOUTH)
 
-
+  compilersMenu.add(b)
+  compilersMenu.add(bScala)
+  compilersMenu.add(bSwing)
+  compilersMenu.add(bThingML)
+  compilersMenu.add(bThingML2)
+  compilersMenu.add(bCoAP)
+  compilersMenu.add(bKevoree)
+  menubar.add(compilersMenu)
+  
   def loadThingMLmodel(file : File) = {
     var rs: ResourceSet = new ResourceSetImpl
     var xmiuri: URI = URI.createFileURI(file.getAbsolutePath)
@@ -263,11 +275,7 @@ class ThingMLPanel extends JPanel {
     } else {
       0
     }
-
-
   }
-
-
   var targetFile: Option[File] = None
 
   def loadText(content: String, tfile: File = null) {
@@ -275,12 +283,9 @@ class ThingMLPanel extends JPanel {
     codeEditor.setText(content)
   }
 
-
   object notificationSeamless extends DaemonActor {
     start()
     var checkNeeded = false
-
-
 
     private def updateMarkers(content: String) {
 

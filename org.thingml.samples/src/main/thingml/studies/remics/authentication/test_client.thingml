@@ -1,0 +1,7 @@
+
+import "../../../datatypes.thingml"
+
+thing fragment API3 {
+    message CtlMsg(msg: String);
+
+}

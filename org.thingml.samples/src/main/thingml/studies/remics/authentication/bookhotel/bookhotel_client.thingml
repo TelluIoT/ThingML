@@ -1,0 +1,124 @@
+// 
+// (c) SINTEF 2011
+//
+// Define the behavior of a simple application that tries to login on a remote service. 
+// It sends credentials (login, password) and waits for resulting ackmowledgment. If 
+// the access is granted, it transitions to the "LoggedOn" state.
+// 
+// by Franck CHAUVEL <franck.chauve@sintef.no>
+// and Brice MORIN <brice.morin@sintef.no>
+//
+
+import "API1.thingml"
+import "API2.thingml"
+
+thing Client includes API1BookHotel{
+
+	readonly property roomRequest : String = "book room"
+    readonly property ID : String = "123456789"
+    readonly property typeRequest : String = "room types"
+    readonly property singleRoomNumber : Integer = 1
+    readonly property doubleRoomNumber : Integer = 2
+    readonly property single : String = "single room"
+    readonly property double : String = "double room"
+
+	required port BookHotel {
+		sends rRequest,inputID,typeRequest,number
+		receives rReply,idReply,typeReply,result
+	}
+    
+	
+	statechart Authentication init Waiting {
+	
+        //Waiting state for Booking room Request
+		state Waiting {
+			on entry do 
+                BookHotel!rRequest(roomRequest)
+                print "Client side: booking room request sent!"
+            end
+			transition -> Waiting4ID 
+				event e : BookHotel?rReply
+				guard e.roomReply
+                action print "Client side: Waiting for ID next"
+
+                
+            internal
+                event e : BookHotel?rReply
+                guard not(e.roomReply)
+                action print "Client side: Room request deny"
+		}
+        
+        // Waiting4ID state for input ID
+        state Waiting4ID{
+            on entry do 
+                BookHotel!inputID(ID)
+                print "Client side : ID sent!"
+            end
+            transition -> AskRoomType
+                event e : BookHotel?idReply
+                guard e.reply
+                action print "Client side: ID accepted, Room type next"    
+            
+        }
+        
+        //AskRoomType state for asking room types
+        state AskRoomType {
+            on entry do 
+                BookHotel!typeRequest(typeRequest)
+                print "Client side: Room type request sent!"
+            end
+            transition -> Waiting4RoomNumber
+                event e: BookHotel?typeReply
+                guard (e.single==single and e.double==double)
+                action print "Client side: got Room types, room number next"
+        }
+		
+        //Waiting4RoomNumber state for deciding room type and number 
+        state Waiting4RoomNumber
+        {
+            on entry do 
+                BookHotel!number(singleRoomNumber,doubleRoomNumber)
+                print "Client side: Room number sent!"
+            end
+            
+            transition -> Booked
+                event e: BookHotel?result
+                guard e.bookresult
+            internal
+                event e: BookHotel?result
+                guard not(e.bookresult)
+                action print "Client side: failed to book a hotel"
+                
+        }
+        
+        //Booked state for room booked
+		state Booked {
+			on entry print "Client side: Your have booked "+singleRoomNumber+" single room, "+doubleRoomNumber+" double room with the ID "+ID
+		}
+	
+	}
+}
+
+thing ChooseClient includes APIChoose{
+    required port choose {
+        sends chooseMsg
+	}
+    property flag:Integer = 2
+    statechart Authentication init sendFlag{
+        state sendFlag{
+            on entry do 
+               choose!chooseMsg(flag)
+               print "ChooseClient : Flag sent"
+            end
+        }    
+    }
+    
+}
+
+thing API1BookHotelFakeClient includes API1BookHotel
+@mock "true" {
+	required port ServerBookPort {
+        sends rRequest,inputID,typeRequest,number
+        receives rReply,idReply,typeReply,result
+	} 
+}
