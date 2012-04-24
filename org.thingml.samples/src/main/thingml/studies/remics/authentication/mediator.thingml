@@ -27,12 +27,13 @@ thing Mediator includes API1, API2{
 		sends login, password
 		receives access
 	}
+	
 	statechart Authentication init Ready {
 	
 		state Ready {
 			on entry print "Mediator: Ready, Waiting for credential ..."
 			
-			transition -> CheckLogin    //wrong here  should be CheckLogin, not CheckPassword
+			transition -> CheckPassword
 				event e: Client?log
 				action do
 					password = e.password
@@ -43,7 +44,6 @@ thing Mediator includes API1, API2{
 		
 		state CheckLogin {
 		
-            on entry print "Mediator: got login, if name accecpt??????????"
 			// The login is accepted by the server
 			transition -> CheckPassword
 				event e: Server?access

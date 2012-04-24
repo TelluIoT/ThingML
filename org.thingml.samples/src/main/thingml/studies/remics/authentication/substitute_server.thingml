@@ -33,20 +33,15 @@ thing SubstituteServer includes API2 {
 				event e: LoginClient?login
 				guard e.login == username
 				action LoginClient!access(true)
-
-            internal
-				event e: LoginClient?login
-				guard not (e.login == username) 
-				action LoginClient!access(false)
 		}
 		
 		
 		state WaitingForPassword  {
-			on entry print "Server side: waiting for Password"
+			
 			// The password received is the good one
 			transition -> LoggedOn
-				//event e: LoginClient?password
-				//guard e.pwd == password
+				event e: LoginClient?password
+				guard e.pwd == password
 				action LoginClient!access(true)
 				
 			// The password received is wrong, so the server rolls back 

@@ -8,44 +8,37 @@
 datatype Byte	
 	@c_type "uint8_t"
 	@c_byte_size "1"
-	@java_type "Byte"
-    @default_value "0x00";
+	@java_type "Byte";
 
 datatype Boolean	
 	@c_type "uint8_t"
 	@c_byte_size "2"
-	@java_type "Boolean"
-    @default_value "false";
+	@java_type "Boolean";
 
 datatype Integer	
 	@c_type "int"
 	@c_byte_size "2"
-	@java_type "Short"
-    @default_value "0";
+	@java_type "Short";
 	
 datatype UInt8	
 	@c_type "uint8_t"
 	@c_byte_size "1"
-	@java_type "Byte"
-    @default_value "0";
+	@java_type "Byte";
 	
 datatype Int8	
 	@c_type "int8_t"
 	@c_byte_size "1"
-	@java_type "Byte"
-    @default_value "0";
+	@java_type "Byte";
 
 datatype UInt16	
 	@c_type "uint16_t"
 	@c_byte_size "2"
-	@java_type "Short"
-    @default_value "0";
+	@java_type "Short";
 
 datatype Int16	
 	@c_type "int"
     @c_byte_size "2"
-	@java_type "Short"
-    @default_value "0";
+	@java_type "Short";
 
 
 datatype Long	

@@ -30,8 +30,9 @@ import scala.actors._
 import scala.actors.Actor._
 import java.util.{ArrayList, Hashtable}
 import java.util.AbstractMap.SimpleEntry
-import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
+import java.io.{File, FileWriter, PrintWriter, BufferedReader, BufferedWriter, InputStreamReader, OutputStream, OutputStreamWriter, PrintStream}
 import org.sintef.thingml._
+import org.apache.maven.cli.MavenCli
 
 import org.thingml.utils.log.Logger
 
@@ -210,20 +211,32 @@ object ScalaGenerator {
     w.println(pom);
     w.close();
     
-    javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean install\n$>mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+    javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean compile exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
     
-    /*val pb: ProcessBuilder = new ProcessBuilder("mvn")
-
-     pb.command().add("mvn clean install")
-     pb.command().add("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
-
-     println("EXEC : " + pb.command().toString)
-
-     pb.directory(new File(System.getProperty("user.home") + "/ThingML_temp/" + cfg.getName))
-
-     val p: Process = pb.start
-     console_out ! p
-     console_err ! p*/
+    compileGeneratedCode(rootDir)
+      
+  }
+  
+  def isWindows() : Boolean = {
+    var os = System.getProperty("os.name").toLowerCase();
+    return (os.indexOf( "win" ) >= 0);
+  }
+  
+  def compileGeneratedCode(rootDir : String) = {
+    val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start " else "") + "mvn clean compile exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"", null, new File(rootDir));
+    
+    val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
+    val out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(runtime.getOutputStream())), true);
+   
+    var line : String = in.readLine()
+    while (line != null) {
+      println(line);
+      line = in.readLine()
+    }
+    runtime.waitFor();
+    in.close();
+    out.close();
+    runtime.destroy(); 
   }
   
   def compileAllJava(model: ThingMLModel, pack : String): Hashtable[Configuration, SimpleEntry[String, String]] = {
@@ -343,19 +356,22 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
       builder append c.instanceName + ".start\n"
     }
     
-    //define temp arrays
+    //define temp arrays   
     self.allInstances.foreach{ i =>
-      if (self.initExpressionsForInstanceArrays(i).size > 0)
+      self.allArrays(i).foreach{ init =>
         builder append "//Initializing arrays\n"
-      val arrayMap = self.initExpressionsByArrays(i)
-      arrayMap.keys.foreach{ init =>
         var result = "val " + init.scala_var_name + "_" + i.getName + " = new " + init.getType.scala_type(init.getCardinality != null) + "(" 
-        
-        var tempBuilder = new StringBuilder()
+        val tempBuilder = new StringBuilder()
         init.getCardinality.generateScala(tempBuilder)
         result += tempBuilder.toString
         result += ")\n"
-        
+        builder append result
+      }
+      
+      val arrayMap = self.initExpressionsByArrays(i)
+      arrayMap.keys.foreach{ init =>
+        var result = ""
+        var tempBuilder = new StringBuilder()
         arrayMap.get(init).get.foreach{pair => 
           result += init.scala_var_name + "_" + i.getName + "("
           tempBuilder = new StringBuilder()
@@ -369,6 +385,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
         builder append result
       }
     }
+   
     
     builder append "//Things\n"
     self.allInstances.foreach{ i =>
@@ -397,7 +414,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
                 result
             }
             ++ 
-            self.initExpressionsByArrays(i).keys.collect{ case init =>
+            self.allArrays(i).collect{ case init =>
                 init.scala_var_name + " = " + init.scala_var_name + "_" + i.getName
             }
           ).mkString(", ")

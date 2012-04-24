@@ -18,10 +18,8 @@ import "client.thingml"
 import "server.thingml"
 import "substitute_server.thingml"
 import "mediator.thingml"
-import "new_mediator.thingml"
-import "new_server.thingml"
  
-/*
+ 
 // Config 1: Simple connection between the client and the server
 configuration RemicsOneClientOneServer {
 	instance client: Client
@@ -29,13 +27,12 @@ configuration RemicsOneClientOneServer {
 	connector client.LoginServer => server.LoginClient
 }
 
-// Config 2: Simple connection between a fake client (mock up) and the server
+/*// Config 2: Simple connection between a fake client (mock up) and the server
 configuration RemicsOneFakeClientOneServer {
 	instance client: API1FakeClient
 	instance server: Server
 	connector client.LoginServer => server.LoginClient
-}
-*/
+}*/
 
 // Config 3: Simple connection between the client and a fake server (mock up)
 configuration RemicsOneClientOneFakeServer {
@@ -44,24 +41,7 @@ configuration RemicsOneClientOneFakeServer {
 	connector client.LoginServer => server.LoginClient
 }
 
-
-// Config 2: Simple connection between five clients and the server
-configuration RemicsManyClientsOneServer {
-	instance client1: Client
-	instance client2: Client
-	instance client3: Client
-	instance client4: Client
-	instance client5: Client
-	instance server: Server
-	
-	connector client1.LoginServer => server.LoginClient
-	connector client2.LoginServer => server.LoginClient
-	connector client3.LoginServer => server.LoginClient
-	connector client4.LoginServer => server.LoginClient
-	connector client5.LoginServer => server.LoginClient
-}
-
-// Config 3: Connection between the client and the alternative server 
+// Config 4: Connection between the client and the alternative server 
 // through the mediator
 configuration RemicsMediator {
 	instance client: Client
@@ -74,95 +54,5 @@ configuration RemicsMediator {
 	connector mediator.Server => substitute.LoginClient
 }
 
-// Config 4: Connection between 5 clients and a substitute server, 
-// through a single mediator
-// INFO: This is not supposed to work as there is no support for "session"
-configuration RemicsManyClientsOneMediator {
-	instance client1: Client
-        set client1.login = "bmorin"
-        set client1.pwd = "clio"
-	instance client2: Client
-        set client2.login = "bmorin"
-        set client2.pwd = "clio"
-	instance client3: Client
-        set client3.login = "bmorin"
-        set client3.pwd = "clio"
-	instance client4: Client
-	instance client5: Client
-	
-	instance substitute: SubstituteServer
-	instance mediator: Mediator
-	
-	connector client1.LoginServer => mediator.Client
-	connector client2.LoginServer => mediator.Client
-	connector client3.LoginServer => mediator.Client
-	connector client4.LoginServer => mediator.Client
-	connector client5.LoginServer => mediator.Client
-	connector mediator.Server => substitute.LoginClient 
-}
-
-//config 5 connection between a fake API1 client and a substitute server,
-//through a single mediator
-//it works,API2Fakeclient is of no use.
-configuration RemicsOneFakeClientOneMediator{
-    instance client: API1FakeClient
-	instance substitute: SubstituteServer
-    instance mediator: Mediator
-
-
-	connector client.LoginServer => mediator.Client
-    connector mediator.Server => substitute.LoginClient    
-}
-
-//config 6 connection between a client and a fake substitute server,
-//through a single mediator
-//it works
-configuration RemicsOneMediatorOneFakeServer{
-    instance client: Client
-	instance substitute: API2FakeServer
-    instance mediator: Mediator
-
-
-	connector client.LoginServer => mediator.Client
-    connector mediator.Server => substitute.LoginClient    
-}
-
-//config 7 connection between a API2 Fake client and a substitute server,
-//without mediator
-//it does not works
-configuration RemicsOneAPI2FakeClientOneSubstituteServer{
-    instance client: API2FakeClient
-	instance substitute: SubstituteServer
-
-
-	connector client.LoginServer => substitute.LoginClient    
-}
-
-//config 8 connection between a client and a new server,
-//through mediator
-
-configuration RemicsNewServer {
-	instance client: Client
-        set client.login = "bmorin"
-        set client.pwd = "clio"
-	instance new: NewServer
-	instance mediator: Mediator
-	
-	connector client.LoginServer => mediator.Client
-	connector mediator.Server => new.LoginClient
-}
-//config 9
-configuration RemicsNewMediatorNewServer {
-	instance client: Client
-        set client.login = "bmorin"
-        set client.pwd = "clio"
-    instance client1: Client
-        set client1.login = "bmorin"
-        set client1.pwd = "clio"
-	instance new: NewServer
-	instance new_mediator: NewMediator
-	
-	connector client.LoginServer => new_mediator.Client
-    connector client1.LoginServer => new_mediator.Client
-	connector new_mediator.Server => new.LoginClient
-}
+//Config 5: Same as config 4, but with a graphical mock-up instead of substitute server
+//TODO

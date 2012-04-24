@@ -8,31 +8,12 @@
 // by Franck CHAUVEL <franck.chauve@sintef.no>
 // and Brice MORIN <brice.morin@sintef.no>
 //
-import "../../../../datatypes.thingml"
+import "../../../datatypes.thingml"
 
 thing fragment API1 {
     message log(login: String, password: String);
 	message ack(access: Boolean);
 }
-
-thing fragment API1BookHotel {//5 messages
-    //ask if have empty rooms
-    message RoomRequest(roomRequest:String);
-	message RoomReply(roomReply: Boolean);
-    
-    //need ID
-    message InputID(ID:String);
-    message IDReply(reply:Boolean);
-    
-    //type of rooms
-    message RoomTypeRequest(RTRequest :String);
-    message RoomTypeReply(single: String, doulbe:String);
-    
-    //number of rooms
-    message RoomNumber(SingleRoomNumber:Integer, DoubleRoomNumber:Integer);
-    message RoomNumberReply(reply:Boolean);
-}
-
 
 thing API1FakeClient includes API1
 @mock "true" {

@@ -75,10 +75,10 @@ object KevoreeGenerator {
   
   //TODO: modification
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
-    new File(System.getProperty("java.io.tmpdir") + "ThingML_temp\\").deleteOnExit
+    new File(System.getProperty("java.io.tmpdir") + "ThingML_temp/").deleteOnExit
     
-    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" + cfg.getName
-    val outputDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" + cfg.getName + "\\src\\main\\java\\org\\thingml\\generated\\kevoree"
+    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName
+    val outputDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName + "/src/main/java/org/thingml/generated/kevoree"
     
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
@@ -90,13 +90,13 @@ object KevoreeGenerator {
         Context.wrapper_name = cfg.getName+"_"+thing.getName()+"_Wrapper"
         val code = compile(thing, "org.thingml.generated", model)
         
-        var w = new PrintWriter(new FileWriter(new File(outputDir  + "\\" + Context.file_name+".java")));
-        System.out.println("code generated at "+outputDir  + "\\" + Context.file_name+".java");
+        var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + Context.file_name+".java")));
+        System.out.println("code generated at "+outputDir  + "/" + Context.file_name+".java");
         w.println(code._1);
         w.close();
     
-        w = new PrintWriter(new FileWriter(new File(outputDir + "\\"+Context.wrapper_name+".java")));
-        System.out.println("code generated at "+outputDir  + "\\" + Context.wrapper_name+".java");
+        w = new PrintWriter(new FileWriter(new File(outputDir + "/"+Context.wrapper_name+".java")));
+        System.out.println("code generated at "+outputDir  + "/" + Context.wrapper_name+".java");
         w.println(code._2);
         w.close();
         
@@ -106,11 +106,14 @@ object KevoreeGenerator {
     }
     
     compileKevScript(cfg)
-
+    
+  /* cfg.allInstances.foreach{case inst =>
+     
+   }*/
     javax.swing.JOptionPane.showMessageDialog(null, "Kevoree/java code generated");
   }
   def compileKevScript(cfg:Configuration){
-    val kevScript:StringBuilder= new StringBuilder()
+    var kevScript:StringBuilder= new StringBuilder()
     kevScript append "tblock\n{\n"
     kevScript append "addNode node0 : JavaSENode\n"
     kevScript append "addGroup sync: RestGroup \n"
@@ -131,7 +134,7 @@ object KevoreeGenerator {
     
     kevScript append "\n}"
     val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" + cfg.getName
-    val w = new PrintWriter(new FileWriter(new File(rootDir+"\\"+cfg.getName+".kevscript")));
+    var w = new PrintWriter(new FileWriter(new File(rootDir+"\\"+cfg.getName+".kevscript")));
     w.println(kevScript);
     w.close();
   }
@@ -171,7 +174,7 @@ object KevoreeGenerator {
   }
   def compile(t: Thing, pack : String, model: ThingMLModel) : Pair[String, String] = {
     Context.pack = pack
-    val wrapperBuilder = new StringBuilder()
+    var wrapperBuilder = new StringBuilder()
     
     generateHeader()
     generateHeader(wrapperBuilder, true)
@@ -376,7 +379,24 @@ case class ThingKevoreeGenerator(val self: Thing){
 
     builder append self.allPropertiesInDepth.collect{case p=>
          "new " + p.getType.java_type + "(this.kevoreeComponent.getDictionary().get(\""+p.getName+"\").toString())"
-     
+        
+//        val valueBuilder = new StringBuilder()
+//        p.getInit().generateScala(valueBuilder)
+//              
+//        val valueString = valueBuilder.toString match {
+//          case "" => p.getType.default_value
+//          case s : String => 
+//            if (s.startsWith("\"") && s.endsWith("\""))
+//              s.substring(1, s.size-1)
+//            else
+//
+//        }
+//        println("9999:"+valueBuilder)
+//        if (p.getType.isInstanceOf[Enumeration]) {
+//          "new " + p.getType.java_type + "(\"" + p.getName + "." + valueString + "\")"//TODO: manage enumeration
+//        } else {
+//          "new " + p.getType.java_type + "(\"" + valueString + "\")"
+//        }
     }.mkString(", ")
     
   }
