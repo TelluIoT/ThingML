@@ -1,0 +1,242 @@
+// 
+// (c) SINTEF 2012
+//
+import "API1.thingml"
+import "API2.thingml"
+
+thing BookhotelMergeMediator includes API1BookHotel, API2BookHotel, API3BookHotel,APIChoose{
+
+	property roomRequest : String
+    property ID : String
+    property typeRequest:String
+    property singleRoomNumber :Integer
+    property doubleRoomNumber :Integer
+    property single : String = "single room"
+    property double : String = "double room"
+    property choose : Integer = 1
+		
+	provided port Client {
+		receives rRequest,inputID,typeRequest,number
+        sends rReply,idReply,typeReply,result
+	}
+	
+	required port Server {
+		sends bookhotel
+        receives result4substitute
+	}
+
+    required port Server2 {
+		sends bookRequest,askNumber
+        receives bookReply,result4sub2
+	}
+    provided port ChoosePort{
+        receives chooseMsg
+    }
+	statechart Authentication init Choose {
+    
+        state Choose {//TODO
+            on entry print "MergeMediator: waiting for the choose signal"
+            internal
+            //transition -> dealWithBooking
+            event e: ChoosePort?chooseMsg
+            action choose = e.chooseFlag
+        }
+        
+//         composite state dealWithBooking init s{
+//             state s{internal}
+            region mediator1 init Ready{
+        	
+        		state Ready {
+        			on entry print "MergeMediator: Ready, Waiting for book request ..."
+        			transition -> CheckID 
+        				event e : Client?rRequest
+        				action do
+        					roomRequest = e.roomRequest
+        					Client!rReply(true)
+        				end
+        		}
+        		
+        		
+        		state CheckID{
+                    
+                    on entry print "MergeMediator: waiting for ID"
+        			transition -> RoomType 
+        				event e : Client?inputID
+                        guard choose == 1
+        				action do 
+                            ID = e.ID
+                            Client!idReply(true)
+                        end
+                
+        			/*transition -> BookRequestToServer2 
+        				event e : Client?inputID
+                        guard choose == 2
+        				action do 
+                            ID = e.ID
+                            print ID
+                            Server2!bookRequest(roomRequest,ID)
+                        end*/
+        		}
+        		
+        		 state BookRequestToServer2 {
+        			on entry print "MergeMediator: Book request to server 2"
+        
+        			transition -> RoomType
+        				event e : Server2?bookReply
+                        guard e.bookReply
+        				action do 
+                            Client!idReply(true)
+                            print "MergeMediator: ID accepted"
+                        end
+                        
+                   
+        		}
+        
+        		state RoomType  {
+        			on entry print "MergeMediator: To show room type"
+        			transition -> RoomNumber
+        				event e : Client?typeRequest
+        				action do 
+                            typeRequest=e.RTRequest
+                            Client!typeReply(single,double)
+                        end
+        		}
+        
+        
+                state RoomNumber  {
+        			 on entry print "MergeMediator: To verify the room number and booking"
+        			 on exit print "MergeMediator: Send all the info to the server to verify"
+        			 transition -> getResult
+        				event e : Client?number
+                        guard choose == 1
+        				action do 
+                            singleRoomNumber=e.SingleRoomNumber
+                            doubleRoomNumber=e.DoubleRoomNumber
+                            
+                            Server!bookhotel(roomRequest,ID,singleRoomNumber,doubleRoomNumber)
+                        end
+                        
+                     /*transition -> getResult
+        				event e : Client?number
+                        guard choose == 2
+        				action do 
+                            singleRoomNumber=e.SingleRoomNumber
+                            doubleRoomNumber=e.DoubleRoomNumber
+                            
+                            Server2!askNumber(singleRoomNumber,doubleRoomNumber)
+                        end*/
+                     
+        		}
+        		
+                state getResult {
+                    on entry print "MergeMediator: get the result from server and send to client"
+                    transition -> BookedOrNot
+        				event e : Server?result4substitute
+                        guard choose == 1
+                        action Client!result(e.bookReply)
+                        
+                    /*transition -> BookedOrNot
+        				event e : Server2?result4sub2
+                        guard choose == 2
+                        action Client!result(e.bookresult)
+                    */
+                }
+        		
+        		state BookedOrNot {
+        			on entry do 
+        				print "MergeMediator ends!"
+        			end
+        		}
+            }
+            region mediator2 init Ready {
+        	
+            	state Ready {
+            			on entry print "MergeMediator2: Ready, Waiting for book request ..."
+            			transition -> CheckID 
+            				event e : Client?rRequest
+            				action do
+            					roomRequest = e.roomRequest
+            					Client!rReply(true)
+            				end
+            		}
+            		state CheckID{
+                        
+                        on entry print "MergeMediator2: waiting for ID"
+            	
+            			transition -> BookRequestToServer2 
+            				event e : Client?inputID
+                            guard choose == 2
+            				action do 
+                                ID = e.ID
+                                print ID
+                                Server2!bookRequest(roomRequest,ID)
+                            end
+            		}
+            		
+            		 state BookRequestToServer2 {
+            			on entry print "MergeMediator2: Book request to server 2"
+            
+            			transition -> RoomType
+            				event e : Server2?bookReply
+                            guard e.bookReply
+            				action do 
+                                Client!idReply(true)
+                                print "MergeMediator: ID accepted"
+                            end
+                            
+                       
+            		}
+            
+            		state RoomType  {
+            			on entry print "MergeMediator2: To show room type"
+            			transition -> RoomNumber
+            				event e : Client?typeRequest
+            				action do 
+                                typeRequest=e.RTRequest
+                                Client!typeReply(single,double)
+                            end
+            		}
+            
+            
+                    state RoomNumber  {
+            			 on entry print "MergeMediator2: To verify the room number and booking"
+            			 on exit print "MergeMediator2: Send all the info to the server to verify"
+                            
+                         transition -> getResult
+            				event e : Client?number
+                            guard choose == 2
+            				action do 
+                                singleRoomNumber=e.SingleRoomNumber
+                                doubleRoomNumber=e.DoubleRoomNumber
+                                
+                                Server2!askNumber(singleRoomNumber,doubleRoomNumber)
+                            end
+                         
+            		}
+            		
+                    state getResult {
+                        on entry print "MergeMediator2: get the result from server and send to client"
+                            
+                        transition -> BookedOrNot
+            				event e : Server2?result4sub2
+                            guard choose == 2
+                            action Client!result(e.bookresult)
+            
+                    }
+            		
+            		state BookedOrNot {
+            			on entry do 
+            				print "MergeMediator2 ends!"
+            			end
+            		}	
+            }
+   //     }
+    }
+}
+
+thing APIFakeChooseClient includes APIChoose
+@mock "true" {
+	required port choose {
+        sends chooseMsg
+	} 
+}

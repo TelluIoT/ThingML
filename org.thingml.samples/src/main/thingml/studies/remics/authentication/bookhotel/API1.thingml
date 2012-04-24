@@ -1,0 +1,31 @@
+// 
+// (c) SINTEF 2011
+//
+// Define the behavior of a simple application that tries to login on a remote service. 
+// It sends credentials (login, password) and waits for resulting ackmowledgment. If 
+// the access is granted, it transitions to the "LoggedOn" state.
+// 
+// by Franck CHAUVEL <franck.chauve@sintef.no>
+// and Brice MORIN <brice.morin@sintef.no>
+//
+import "../../../../datatypes.thingml"
+
+
+//deifine the behavior of the application that try to book hotel on a remote service.
+thing fragment API1BookHotel {//4 messages
+    //ask if have empty rooms
+    message rRequest(roomRequest:String);
+	message rReply(roomReply: Boolean);
+    
+    //need ID
+    message inputID(ID:String);
+    message idReply(reply:Boolean);
+    
+    //type of rooms
+    message typeRequest(RTRequest :String);
+    message typeReply(single: String, double:String);
+    
+    //number of rooms
+    message number(SingleRoomNumber:Integer, DoubleRoomNumber:Integer);
+    message result(bookresult:Boolean);
+}

@@ -1,0 +1,71 @@
+// 
+// (c) SINTEF 2012
+//
+import "API2.thingml"
+
+thing BookhotelSubstituteServer2 includes API3BookHotel {
+
+    property roomRequest : String = "book room"
+    property ID : String = "123456789"
+    property typeRequest : String = "room types"
+    property singleRoomNumber : Integer = 3
+    property doubleRoomNumber : Integer = 4
+    property aSingleRoomNumber : Integer
+    property aDoubleRoomNumber : Integer
+		
+	provided port BookPort {
+        receives bookRequest,askNumber
+        sends result4sub2,bookReply
+	}
+
+	statechart Authentication init Ready {
+	
+		state Ready {
+			on entry print "Server side: Ready, Waiting for booking request ... -----{substitute server 2}"
+			
+			transition -> Number
+				event e: BookPort?bookRequest
+				guard e.bookHotelRequest==roomRequest and e.ID==ID
+				action do
+                    BookPort!bookReply(true)
+                end
+
+            internal
+				event e: BookPort?bookRequest
+				guard not(e.bookHotelRequest==roomRequest and e.ID==ID)
+				action BookPort!bookReply(false)
+		}
+		
+        state Number {
+			on entry print "Server side: Ready, Waiting for room number request ... -----{substitute server 2}"
+			
+			transition -> Booked
+				event e: BookPort?askNumber
+				guard e.SingleRoomNumber<singleRoomNumber and e.DoubleRoomNumber<doubleRoomNumber
+				action do
+                    BookPort!result4sub2(true)
+                    aSingleRoomNumber = e.SingleRoomNumber
+                    aDoubleRoomNumber = e.DoubleRoomNumber
+                end
+
+            internal
+				event e: BookPort?askNumber
+				guard not(e.SingleRoomNumber<singleRoomNumber and e.DoubleRoomNumber<doubleRoomNumber)
+				action BookPort!result4sub2(false)
+		}
+		
+		state Booked {
+			on entry print "Server side: ID("+ID+")booked "+aSingleRoomNumber+" single room, "+aDoubleRoomNumber+" double room -----{substitute server 2}"
+		}
+			
+	}
+}
+
+
+thing API3BookHotelFakeServer includes API3BookHotel
+@mock "true" {
+	provided port BookPort {
+        receives bookRequest,askNumber
+        sends result4sub2,bookReply
+	} 
+}

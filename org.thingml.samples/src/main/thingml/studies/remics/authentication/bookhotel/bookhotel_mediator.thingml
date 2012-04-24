@@ -1,0 +1,104 @@
+// 
+// (c) SINTEF 2012
+//
+import "API1.thingml"
+import "API2.thingml"
+
+thing BookhotelMediator includes API1BookHotel, API2BookHotel{
+
+	property roomRequest : String
+    property ID : String
+    property typeRequest:String
+    property singleRoomNumber :Integer
+    property doubleRoomNumber :Integer
+    property single : String = "single room"
+    property double : String = "double room"
+		
+	provided port Client {
+		receives rRequest,inputID,typeRequest,number
+        sends rReply,idReply,typeReply,result
+	}
+	
+	required port Server {
+		sends bookhotel
+        receives result4substitute
+	}
+	statechart Authentication init Ready {
+	
+		state Ready {
+			on entry print "BookHotelMediator: Ready, Waiting for book request ..."
+			transition -> CheckID 
+				event e : Client?rRequest
+				action do
+					roomRequest = e.roomRequest
+					Client!rReply(true)
+				end
+		}
+		
+		
+		state CheckID{
+            
+            on entry print "BookHotelMediator: waiting for ID"
+			// The login is accepted by the server
+			transition -> RoomType 
+				event e : Client?inputID
+				action do 
+                    ID = e.ID
+                    Client!idReply(true)
+                end
+		}
+		
+		
+		state RoomType  {
+			 on entry print "BookHotelMediator: To show room type"
+			// The login is accepted by the server
+			transition -> RoomNumber
+				event e : Client?typeRequest
+				action do 
+                    typeRequest=e.RTRequest
+                    Client!typeReply(single,double)
+                end
+		}
+
+        state RoomNumber  {
+			 on entry print "BookHotelMediator: To verify the room number and booking"
+			 on exit print "BookHotelMediator: Send all the info to the server to verify"
+			 transition -> getResult
+				event e : Client?number
+				action do 
+                    singleRoomNumber=e.SingleRoomNumber
+                    doubleRoomNumber=e.DoubleRoomNumber
+                    
+                    Server!bookhotel(roomRequest,ID,singleRoomNumber,doubleRoomNumber)
+                end
+		}
+		
+        state getResult {
+            on entry print "BookHotelMediator: get the result from server and send to client"
+            transition -> BookedOrNot
+				event e : Server?result4substitute
+                action Client!result(e.bookReply)
+
+        }
+		
+		state BookedOrNot {
+			on entry do 
+				print "BookHotelMediator ends!"
+			end
+		}
+			
+	}
+}
+
+thing MockBookhotelMediator includes API1BookHotel, API2BookHotel
+@mock "true" {
+	provided port Client {
+		receives rRequest,inputID,typeRequest,number
+        sends rReply,idReply,typeReply,result
+	}
+	
+	required port Server {
+		sends bookhotel
+        receives result4substitute
+	}
+}
