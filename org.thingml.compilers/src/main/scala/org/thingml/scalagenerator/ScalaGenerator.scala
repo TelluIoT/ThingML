@@ -30,9 +30,9 @@ import scala.actors._
 import scala.actors.Actor._
 import java.util.{ArrayList, Hashtable}
 import java.util.AbstractMap.SimpleEntry
-import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader, OutputStream, PrintStream}
+import java.io.{File, FileWriter, PrintWriter, BufferedReader, BufferedWriter, InputStreamReader, OutputStream, OutputStreamWriter, PrintStream}
 import org.sintef.thingml._
-//import org.apache.maven.cli.MavenCli
+import org.apache.maven.cli.MavenCli
 
 import org.thingml.utils.log.Logger
 
@@ -211,65 +211,33 @@ object ScalaGenerator {
     w.println(pom);
     w.close();
     
-    javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean install\n$>mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+    javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean compile exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
     
-    /*if (compileGeneratedCode(rootDir))
-      runGeneratedCode(rootDir)*/
-
+    compileGeneratedCode(rootDir)
+      
   }
   
- /* def compileGeneratedCode(rootDir : String) = {
-    val buffer = new StringBuffer();
-    
-    val outputStream = new OutputStream {
-      def write(p1: Int) {
-        buffer.append(p1.toChar)
-      }
-    }
-    val printStream = new PrintStream(outputStream)
-    
-    val cli: MavenCli = new MavenCli()
-
-    val argsCompile: ArrayList[String] = new ArrayList[String]
-    argsCompile.add("clean")
-    argsCompile.add("compile")
-    cli.doMain(argsCompile.toArray[String](new Array[String](argsCompile.size())), rootDir, printStream, printStream);
-    
-    val argsExec: ArrayList[String] = new ArrayList[String]
-    argsExec.add("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
-    cli.doMain(argsExec.toArray[String](new Array[String](argsExec.size())), rootDir, printStream, printStream);
-    
-    println(buffer.toString)
-    
-    if (buffer.toString.contains("BUILD SUCCESS"))
-      true
-    else
-      false
-  }*/
+  def isWindows() : Boolean = {
+    var os = System.getProperty("os.name").toLowerCase();
+    return (os.indexOf( "win" ) >= 0);
+  }
   
- /* def runGeneratedCode(rootDir : String) {
-    /*val buffer = new StringBuffer();
+  def compileGeneratedCode(rootDir : String) = {
+    val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start ") + "mvn clean compile exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"", null, new File(rootDir));
     
-    val outputStream = new OutputStream {
-      def write(p1: Int) {
-        buffer.append(p1.toChar)
-      }
-    }
-    val printStream = new PrintStream(outputStream)
-    
-    val cli: MavenCli = new MavenCli()
+    val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
+    val out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(runtime.getOutputStream())), true);
    
-    val argsExec: ArrayList[String] = new ArrayList[String]
-    argsExec.add("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
-    cli.doMain(argsExec.toArray[String](new Array[String](argsExec.size())), rootDir, printStream, printStream);
-    
-    println(buffer.toString) 
-    
-    */
-    val runtime = Runtime.getRuntime()
-    runtime.exec("cd " + new File(rootDir).getAbsolutePath());
-    runtime.exec("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
-  }*/
+    var line : String = in.readLine()
+    while (line != null) {
+      println(line);
+      line = in.readLine()
+    }
+    runtime.waitFor();
+    in.close();
+    out.close();
+    runtime.destroy(); 
+  }
   
   def compileAllJava(model: ThingMLModel, pack : String): Hashtable[Configuration, SimpleEntry[String, String]] = {
     val result = new Hashtable[Configuration, SimpleEntry[String, String]]()
