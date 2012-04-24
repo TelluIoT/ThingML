@@ -94,15 +94,15 @@ class ThingMLPanel extends JPanel {
   menuframe.setBorder(BorderFactory.createEmptyBorder)
   add(menuframe,BorderLayout.CENTER)
   
-  var compilersMenu = new JMenu("Compilers");
+  var compilersMenu = new JMenu("Compile to");
   
-  var b = new JMenuItem("Compile to Arduino")
-  var bScala = new JMenuItem("Compile to Scala")
-  var bSwing = new JMenuItem("Compile to Swing")
-  var bThingML = new JMenuItem("Generate Comm")
-  var bThingML2 = new JMenuItem("Generate Comm2")
-  var bCoAP = new JMenuItem("Generate CoAP")
-  var bKevoree = new JMenuItem("Generate Kevoree")
+  var b = new JMenuItem("Arduino")
+  var bScala = new JMenuItem("Scala/SMaC")
+  var bSwing = new JMenuItem("Java/Swing")
+  var bThingML = new JMenuItem("ThingML/Comm")
+  var bThingML2 = new JMenuItem("ThingML/Comm2")
+  var bCoAP = new JMenuItem("Scala/CoAP")
+  var bKevoree = new JMenuItem("Java/Kevoree")
   
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
