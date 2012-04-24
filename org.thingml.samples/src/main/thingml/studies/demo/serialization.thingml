@@ -26,16 +26,7 @@ thing TestThing includes testMsgs
 
 
 
-
-
-
-
-
-
-
-
-
-
+/////////////////////////////////////////////////
 thing fragment RemoteMsgs includes testMsgs{
 //message m1();//code=27
 //message m2(i : Integer);//code=1
@@ -137,7 +128,7 @@ action receive(m.b)
 }
 
 }
-
+/////////////////////////////////////////////////
 
 
 
@@ -155,13 +146,13 @@ action receive(m.b)
  * syntax: instanceName::TypeName::PortName::messageName
  * note: wildcards can be used for any of these elements.
  */
-configuration testOneInstance 
+/*configuration testOneInstance 
 @remote "test::TestThing::.*::.*"
 {
     //Messages are sent and received without serialization
     instance test : TestThing
     connector test.out => test.in
-}
+}*/
 
 /*configuration testSerialization
 @remote "test::TestThing::.*::.*"
@@ -177,10 +168,10 @@ configuration testOneInstance
     connector serializer.network => network.IOStream
     connector deserializer.network => network.IOStream
     connector deserializer.in => testRemote.in    
-}
-*/
+}*/
 
-/*configuration testCOaP
+
+configuration testCOaP
 @remote "testRemote::TestThing::.*::.*"
 {
     //Messages are sent and received without serialization
@@ -199,7 +190,7 @@ configuration testOneInstance
     connector serializer.network => network.IOStream
     connector deserializer.network => network.IOStream
     connector deserializer.in => testRemote.in
-}*/
+}
 
 
 

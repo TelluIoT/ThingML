@@ -5,22 +5,18 @@ import "../comm.thingml"
 datatype SerialPhy
 @scala_type "org.thingml.utils.comm.Serial";
 
-//datatype CoAPPhy
-//@scala_type "org.thingml.utils.comm.CoAP";
-
-thing fragment CoAPScala includes IOByteArray
+thing CoAPScala includes IOByteArray
 @pim "IOStream"
 @platform "scala"
 @scala_trait "org.thingml.utils.comm.CoAPThingML"
 @thingml_maven_dep "org.thingml.utils"
 {
-    readonly property coapPort : Long = 61616//currently not used...
+    readonly property coapPort : Long = 61617
 
-    /*
-     * This function creates the real COaP server that this thing interfaces with    
-     * This function NUST be overriden (with @override "true" in a concrete thing
-     */
-    function initialize()@abstract "true"do end
+    function initialize()
+    do
+        'new org.thingml.generated.coap.CoAPServer(this, ' & coapPort & ')'  
+    end
         
     function receive(byte : Byte[256]) 
     @override "true"
