@@ -11,6 +11,8 @@ target/
 keystore
 /.idea/
 /.idea/*
+.idea/
+.idea/*
 test_out/
 .directory
 org.thingml.compilers/src/test/resources/thingml
