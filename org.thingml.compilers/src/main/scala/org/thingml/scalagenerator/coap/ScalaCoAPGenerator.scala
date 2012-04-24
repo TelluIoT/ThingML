@@ -115,10 +115,10 @@ object ScalaCoAPGenerator {
   }
   
   def getOutputDir(cfg : Configuration) : File = {
-    new File(System.getProperty("java.io.tmpdir") + "ThingML_temp/").deleteOnExit
+    new File(System.getProperty("java.io.tmpdir") + "/" + "ThingML_temp/").deleteOnExit
     
-    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName
-    val outputDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName + "/src/main/scala/org/thingml/generated/coap"
+    val rootDir = System.getProperty("java.io.tmpdir")+ "/" + "ThingML_temp/" + cfg.getName
+    val outputDir = System.getProperty("java.io.tmpdir")+ "/" + "ThingML_temp/" + cfg.getName + "/src/main/scala/org/thingml/generated/coap"
     
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
