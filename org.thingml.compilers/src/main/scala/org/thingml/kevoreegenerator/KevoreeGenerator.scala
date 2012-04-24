@@ -75,10 +75,10 @@ object KevoreeGenerator {
   
   //TODO: modification
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
-    new File(System.getProperty("java.io.tmpdir") + "ThingML_temp\\").deleteOnExit
+    new File(System.getProperty("java.io.tmpdir") + "ThingML_temp/").deleteOnExit
     
-    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" + cfg.getName
-    val outputDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" + cfg.getName + "\\src\\main\\java\\org\\thingml\\generated\\kevoree"
+    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName
+    val outputDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName + "/src/main/java/org/thingml/generated/kevoree"
     
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
@@ -90,13 +90,13 @@ object KevoreeGenerator {
         Context.wrapper_name = cfg.getName+"_"+thing.getName()+"_Wrapper"
         val code = compile(thing, "org.thingml.generated", model)
         
-        var w = new PrintWriter(new FileWriter(new File(outputDir  + "\\" + Context.file_name+".java")));
-        System.out.println("code generated at "+outputDir  + "\\" + Context.file_name+".java");
+        var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + Context.file_name+".java")));
+        System.out.println("code generated at "+outputDir  + "/" + Context.file_name+".java");
         w.println(code._1);
         w.close();
     
-        w = new PrintWriter(new FileWriter(new File(outputDir + "\\"+Context.wrapper_name+".java")));
-        System.out.println("code generated at "+outputDir  + "\\" + Context.wrapper_name+".java");
+        w = new PrintWriter(new FileWriter(new File(outputDir + "/"+Context.wrapper_name+".java")));
+        System.out.println("code generated at "+outputDir  + "/" + Context.wrapper_name+".java");
         w.println(code._2);
         w.close();
         
