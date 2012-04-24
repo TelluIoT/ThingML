@@ -8,7 +8,7 @@
 // by Franck CHAUVEL <franck.chauve@sintef.no>
 // and Brice MORIN <brice.morin@sintef.no>
 //
-import "../../../datatypes.thingml"
+import "../../../../datatypes.thingml"
 
 thing fragment API2 {
     message login(login: String);

@@ -14,7 +14,7 @@
 import "API1.thingml"
 import "API2.thingml"
 
-thing Mediator includes API1, API2{
+thing NewMediator includes API1, API2{
 
 	property password: String // Use to store the password
 		
@@ -61,18 +61,25 @@ thing Mediator includes API1, API2{
 		
 		state CheckPassword  {
 			on entry print "Mediator: Login accepted"
-			
+            on exit print "going to init state"
+
 			// The password is accepted by the server
-			transition -> LoggedOn
+			transition -> Ready
 				event e: Server?access
 				guard e.result
-				action Client!ack(true)
+				action do 
+                    Client!ack(true)
+                    print "Mediator: Password accepted"
+				    print "Mediator: You are now logged in"
+                end
 				
 			// The password is refused by the server
 			transition -> CheckLogin
 				event e: Server?access
 				guard not (e.result)
-				action Client!ack(false)
+				action 
+                    do Client!ack(false)
+                end 
 		}
 		
 		

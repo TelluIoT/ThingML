@@ -1,0 +1,106 @@
+// 
+// (c) SINTEF 2012
+// Define several configurations where clients book hotel on the server
+//
+
+import "bookhotel_client.thingml"
+import "bookhotel_server.thingml"
+import "bookhotel_substitute_server.thingml"
+import "bookhotel_mediator.thingml"
+import "bookhotel_substitute_server2.thingml"
+import "bookhotel_mediator2.thingml"
+import "bookhotel_merge_mediator.thingml"
+
+
+//config 1
+configuration BookhotelOneClientOneServer{
+    instance client: Client
+	instance server: Server
+    instance client1 :Client 
+	connector client.BookHotel => server.CilentBookPort
+}
+
+//config 1.1
+configuration BookhotelOneClientOneFakeServer{
+    instance client: Client
+	instance server: API1BookHotelFakeServer
+	connector client.BookHotel => server.CilentBookPort
+}
+/*
+//config 1.2
+configuration BookhotelOneFakeClientOneFakeServer{
+    instance client: API1BookHotelFakeClient
+	instance server: API1BookHotelFakeServer
+	connector client.ServerBookPort => server.CilentBookPort
+}
+*/
+//config 1.3
+configuration MediatorMock{
+    instance client: API1BookHotelFakeClient
+    instance mediator: MockBookhotelMediator
+	instance server: API2BookHotelFakeServer
+    connector client.ServerBookPort =>mediator.Client
+    connector mediator.Server => server.CilentBookPort
+}
+
+
+//config 2
+configuration BookhotelMediator{
+    instance client: Client
+    instance server: BookhotelSubstituteServer
+    instance mediator: BookhotelMediator
+    
+    connector client.BookHotel =>mediator.Client
+    connector mediator.Server => server.CilentBookPort
+}
+/*
+//config 3
+configuration BookhotelOneFakeSubServer{
+    instance client: Client
+    instance server: API2BookHotelFakeServer
+    instance mediator: BookhotelMediator
+    
+    connector client.BookHotel =>mediator.Client
+    connector mediator.Server => server.CilentBookPort
+}
+*/
+
+/*
+//config 4
+configuration BookhotelOnesubServer2
+{
+    instance client: Client
+    instance server: BookhotelSubstituteServer2
+    instance mediator: BookhotelMediator2
+    
+    connector client.BookHotel =>mediator.Client
+    connector mediator.Server => server.BookPort
+}
+
+//config 4.1
+configuration BookhotelOneFakeSubServer2
+{
+    instance client: Client
+    instance server: API3BookHotelFakeServer
+    instance mediator: BookhotelMediator2
+    
+    connector client.BookHotel =>mediator.Client
+    connector mediator.Server => server.BookPort
+}
+*/
+/*
+//config 5
+configuration BookhotelMergeMediator{
+    
+    instance client: Client
+    instance server1: BookhotelSubstituteServer
+    instance server2: BookhotelSubstituteServer2
+    instance mediator: BookhotelMergeMediator
+    instance chooser:ChooseClient
+    
+    connector client.BookHotel =>mediator.Client
+    connector mediator.Server => server1.CilentBookPort
+    connector mediator.Server2 => server2.BookPort
+    connector chooser.choose => mediator.ChoosePort
+}
+*/

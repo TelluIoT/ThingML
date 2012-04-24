@@ -34,8 +34,8 @@ trait CoAPThingML {
   /*
    * This will be redefined in concrete ThingML things to instantiate their specific (and generated) COaP servers
    */
-  def initialize(port : Int = 61616) {
-     new CoAP(this, port)
+  def initialize() {
+     new CoAP(this, 61616)
   }
 
   /************************************************************************

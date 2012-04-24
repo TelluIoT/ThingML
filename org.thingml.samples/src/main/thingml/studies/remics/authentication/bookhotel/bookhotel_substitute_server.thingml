@@ -1,0 +1,55 @@
+// 
+// (c) SINTEF 2012
+//
+import "API2.thingml"
+
+thing BookhotelSubstituteServer includes API2BookHotel {
+
+    property roomRequest : String = "book room"
+    property ID : String = "123456789"
+    property typeRequest : String = "room types"
+    property singleRoomNumber : Integer = 3
+    property doubleRoomNumber : Integer = 4
+    property aSingleRoomNumber : Integer
+    property aDoubleRoomNumber : Integer
+		
+	provided port CilentBookPort {
+        receives bookhotel
+        sends result4substitute
+	}
+
+	statechart Authentication init Ready {
+	
+		state Ready {
+			on entry print "Server side: Ready, Waiting for booking rooms ...  -----{substitute server 1}"
+			
+			transition -> Booked
+				event e: CilentBookPort?bookhotel
+				guard e.bookHotelRequest==roomRequest and e.ID==ID and e.SingleRoomNumber<singleRoomNumber and e.DoubleRoomNumber<doubleRoomNumber
+				action do
+                    CilentBookPort!result4substitute(true)
+                    aSingleRoomNumber = e.SingleRoomNumber
+                    aDoubleRoomNumber = e.DoubleRoomNumber
+                end
+
+            internal
+				event e: CilentBookPort?bookhotel
+				guard not(e.bookHotelRequest==roomRequest and e.ID==ID and e.SingleRoomNumber<singleRoomNumber and e.DoubleRoomNumber<doubleRoomNumber)
+				action CilentBookPort!result4substitute(false)
+		}
+		
+		
+		state Booked {
+			on entry print "Server 1 side: ID("+ID+")booked "+aSingleRoomNumber+" single room, "+aDoubleRoomNumber+" double room -----{substitute server 1}"
+		}
+			
+	}
+}
+
+thing API2BookHotelFakeServer includes API2BookHotel
+@mock "true" {
+	provided port CilentBookPort {
+        receives bookhotel
+        sends result4substitute
+	} 
+}

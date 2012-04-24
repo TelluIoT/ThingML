@@ -1,28 +1,25 @@
-// 
-// (c) SINTEF 2011
-//
-// Define the behavior of an authentication server, which first waits for a login, 
-// checks (and return an acknowledgement) and then waits for the password and check
-// it as well. The authentication is successful if both the login and password are
-// accepted. 
-//
-// TODO: In this simple example, the server can only authentify one single user. It would
-// better to extend it to several user.
-// 
-// by Franck CHAUVEL <franck.chauve@sintef.no>
-// and Brice MORIN <brice.morin@sintef.no>
-//
+
 import "API2.thingml"
+import "test_client.thingml"
 
-thing SubstituteServer includes API2 {
+thing NewServer includes API2,API3 {
 
-	property username: String = "bmorin"
-	property password: String = "clio"
+	property msg: String = "restart"
+    property username:String = "bmorin"
+    property password:String = "clio"
 		
 	provided port LoginClient {
 		receives login, password
 		sends access
 	}
+/*
+    required port Send{
+        sends CtlMsg
+    } 
+    provided port Receive{
+         receives CtlMsg
+    }
+*/
 	
 	statechart Authentication init WaitingForLogin {
 	
@@ -43,10 +40,12 @@ thing SubstituteServer includes API2 {
 		
 		state WaitingForPassword  {
 			on entry print "Server side: waiting for Password"
+            on exit print "Server side: going to initial state"
 			// The password received is the good one
-			transition -> LoggedOn
-				//event e: LoginClient?password
-				//guard e.pwd == password
+            // turn to initial state
+			transition -> WaitingForLogin
+				event e: LoginClient?password
+				guard e.pwd == password
 				action LoginClient!access(true)
 				
 			// The password received is wrong, so the server rolls back 
@@ -57,10 +56,20 @@ thing SubstituteServer includes API2 {
 				action LoginClient!access(false)
 		}
 		
-		
+		/*
 		state LoggedOn {
-			on entry print "Server side: You are now logged in"
+			on entry do 
+                print "Server side: You are now logged in"
+                Send!CtlMsg(msg)
+            end
+            on exit print "never"
+            
+            transition -> WaitingForLogin
+                event e:Receive?CtlMsg
+                guard (e.msg == "restart")
+                action print "Server side: going to ready state"              
 		}
+        */
 			
 	}
 }

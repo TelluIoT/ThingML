@@ -24,12 +24,11 @@ thing LcdScreen includes LcdScreenMsgs
 # define MAX_LENGHT_UNIT 5
 
 LiquidCrystal lcd (10, 11, 12, 13, 14, 15, 16); 
-//LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
 
-void lcd_init ()  
+void lcd_init (short pin1, short pin2, short pin3, short pin4, short pin5, short pin6, short pin7)  
 { 
   // initialize the library with the numbers of the interface pins
-  //LiquidCrystal lcd (pin1, pin2, pin3, pin4, pin5, pin6, pin7); 
+  LiquidCrystal lcd (pin1, pin2, pin3, pin4, pin5, pin6, pin7); 
   lcd.begin (16, 2);
 } 
 
@@ -189,8 +188,7 @@ void sensor_print_fullscreen (unsigned short id)
 	
 	statechart LcdScreenImp init Running 
 	{
-        //on entry 'lcd_init (10, 11, 12, 13, 14, 15, 16);'
-        on entry 'lcd_init ();'
+        on entry 'lcd_init (10, 11, 12, 13, 14, 15, 16);'
 		
 		state Running
 		{

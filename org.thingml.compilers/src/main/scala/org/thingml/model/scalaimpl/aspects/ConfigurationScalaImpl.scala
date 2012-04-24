@@ -275,10 +275,6 @@ case class ConfigurationScalaImpl (self : Configuration) {
     return result
   }
   
-  def allArrays(i : Instance) : List[Property] = {
-    i.getType.allPropertiesInDepth.filter(p => p.getCardinality != null).toList
-  }
-  
   // This method only initializes Array properties (property, index expression, init expression)
   def initExpressionsForInstanceArrays(i : Instance) : ArrayList[((Property, Expression , Expression))] = {
 

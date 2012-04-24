@@ -24,7 +24,11 @@ thing Client includes API1{
 	statechart Authentication init Waiting {
 	
 		state Waiting {
-			on entry LoginServer!log(login, pwd)
+			on entry do 
+                LoginServer!log(login, pwd)
+                print "Client side: type log"
+                
+            end
 			transition -> LoggedOn 
 				event e : LoginServer?ack
 				guard e.access

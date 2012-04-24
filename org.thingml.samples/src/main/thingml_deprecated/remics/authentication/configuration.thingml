@@ -48,7 +48,7 @@ configuration RemicsManyClientsOneServer {
 configuration RemicsMediator {
 	instance client: Client
         set client.login = "bmorin"
-        set client.pwd = "clio"
+//         set client.pwd = "clio"
 	instance substitute: SubstituteServer
 	instance mediator: Mediator
 	

@@ -1,3 +1,19 @@
+====
+    Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+
+    Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    	http://www.gnu.org/licenses/lgpl-3.0.txt
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+====
+
 /**
  * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
  *
@@ -101,16 +117,17 @@ object KevoreeGenerator {
         w.close();
         
         compilePom(cfg)
-        
+        compileKevScript(cfg)
         
     }
     
-    compileKevScript(cfg)
-
+   cfg.allInstances.foreach{case inst =>
+     
+   }
     javax.swing.JOptionPane.showMessageDialog(null, "Kevoree/java code generated");
   }
   def compileKevScript(cfg:Configuration){
-    val kevScript:StringBuilder= new StringBuilder()
+    var kevScript:StringBuilder= new StringBuilder()
     kevScript append "tblock\n{\n"
     kevScript append "addNode node0 : JavaSENode\n"
     kevScript append "addGroup sync: RestGroup \n"
@@ -131,7 +148,7 @@ object KevoreeGenerator {
     
     kevScript append "\n}"
     val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" + cfg.getName
-    val w = new PrintWriter(new FileWriter(new File(rootDir+"\\"+cfg.getName+".kevscript")));
+    var w = new PrintWriter(new FileWriter(new File(rootDir+"\\"+cfg.getName+".kevscript")));
     w.println(kevScript);
     w.close();
   }
@@ -171,7 +188,7 @@ object KevoreeGenerator {
   }
   def compile(t: Thing, pack : String, model: ThingMLModel) : Pair[String, String] = {
     Context.pack = pack
-    val wrapperBuilder = new StringBuilder()
+    var wrapperBuilder = new StringBuilder()
     
     generateHeader()
     generateHeader(wrapperBuilder, true)
@@ -376,7 +393,24 @@ case class ThingKevoreeGenerator(val self: Thing){
 
     builder append self.allPropertiesInDepth.collect{case p=>
          "new " + p.getType.java_type + "(this.kevoreeComponent.getDictionary().get(\""+p.getName+"\").toString())"
-     
+        
+//        val valueBuilder = new StringBuilder()
+//        p.getInit().generateScala(valueBuilder)
+//              
+//        val valueString = valueBuilder.toString match {
+//          case "" => p.getType.default_value
+//          case s : String => 
+//            if (s.startsWith("\"") && s.endsWith("\""))
+//              s.substring(1, s.size-1)
+//            else
+//
+//        }
+//        println("9999:"+valueBuilder)
+//        if (p.getType.isInstanceOf[Enumeration]) {
+//          "new " + p.getType.java_type + "(\"" + p.getName + "." + valueString + "\")"//TODO: manage enumeration
+//        } else {
+//          "new " + p.getType.java_type + "(\"" + valueString + "\")"
+//        }
     }.mkString(", ")
     
   }

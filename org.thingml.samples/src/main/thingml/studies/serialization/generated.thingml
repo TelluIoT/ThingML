@@ -3,6 +3,15 @@ import "../../core/serializer.thingml"
 import "../../core/comm.thingml"
 import "../../core/_scala/comm.thingml"
 
+//TODO: this should also be generated
+thing COaP4test includes CoAPScala {
+ function initialize()
+ @override "true"
+ do
+   /*coap = */'new org.thingml.utils.comm.CoAPServer4test(this, ' & coapPort & ')'  
+ end    
+}
+
 //test messages
 thing fragment testMsgs {
     message m4(i : Integer, s : String)@code "12";
@@ -140,7 +149,7 @@ configuration test
     //Messages are serialized, sent to network, received, deserialized and sent to the former thing
     //hopefully, this has the same behavior than the configuration above...
     instance testRemote : TestThing
-    instance network : CoAPScala
+    instance network : COaP4test
     instance serializer : MessageSerializer
     instance deserializer : MessageDeserializer
 

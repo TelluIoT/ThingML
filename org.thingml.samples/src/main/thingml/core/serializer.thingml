@@ -56,7 +56,7 @@ thing fragment PacketManager {
      function setHeader(code : Byte, length : Byte) 
      do
         index = 0
-        storeByte(START_BYTE)
+        storeByte('0x12')
 	 	storeByte(1) // source addr (not used)
 	 	storeByte(0) // target addr (not used)
 	 	storeByte(0) // frame num (not used)
@@ -65,23 +65,20 @@ thing fragment PacketManager {
         LENGTH_POSITION = index
         storeByte(length)
         DATA_POSITION = index
-        //We pad the rest with stop byte
-        while(index < MAX_PACKET_SIZE) do
-            //print("padding " + index)
-            storeByte(STOP_BYTE)
-            //i = i +1
+        var i : Integer = index
+        while(i < MAX_PACKET_SIZE) do
+            storeByte('0x13')
+            i = i +1
         end
-        index = DATA_POSITION
 	 end
 
     function storeByte(b : Byte) do
-        //print("store byte " + b + " at index " + index)
-        if (index == MAX_PACKET_SIZE) do
-            error("BUFFER OVERFLOW: " + b + " has been ignored. Current index = " + index)
-        end
         if (index < MAX_PACKET_SIZE) do
 	 	  buffer[index] = b
 		  index = index + 1
+        end
+        if (index == MAX_PACKET_SIZE) do
+            error("BUFFER OVERFLOW: " + b + "has been ignored")
         end
 	end
 
@@ -134,11 +131,26 @@ thing fragment Deserializer includes PacketManager, InputByteStreamMsgs{
 }
 
 thing fragment ArraySerializer includes PacketManager, OutputByteArrayMsgs {
+    /*property packet : Byte[18]
+    set packet[0] = '0x12'
+    set packet[17] = '0x13'*/
     required port network {
         sends write_bytes    
     }
     
     function send() do
+        /*print("send byte array = " + buffer)
+        var i : Integer = 1
+        while (i < 17) do
+            packet[i] = buffer[i-1]
+            i = i + 1
+        end
+        i = 0
+        while (i < 18) do
+            print("packet " + i + " = " + packet[i])
+            i = i + 1
+        end
+        network!write_bytes(packet)*/
         network!write_bytes(buffer)
     end
 }
