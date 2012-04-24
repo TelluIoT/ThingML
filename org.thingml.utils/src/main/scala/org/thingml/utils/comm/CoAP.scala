@@ -20,13 +20,11 @@ package org.thingml.utils.comm
 
 import org.thingml.utils.log.Logger
 
-import ch.eth.coap.endpoint.LocalEndpoint
+import ch.eth.coap.endpoint.{LocalEndpoint, RemoteEndpoint, Endpoint, LocalResource}
 import ch.eth.coap.coap.{Request, PUTRequest}
-import java.net.URI
+import java.net.{InetAddress, URI}
 
 trait CoAPThingML {
-
-  private val rootURI = "coap://localhost:"
 
   private var coapServer : CoAP = _
   def setCoapServer(coapServer : CoAP) {this.coapServer = coapServer}
@@ -35,7 +33,7 @@ trait CoAPThingML {
    * This will be redefined in concrete ThingML things to instantiate their specific (and generated) COaP servers
    */
   def initialize(port : Int = 61616) {
-     new CoAP(this, port)
+     new LocalCoAP(this, port)
   }
 
   /************************************************************************
@@ -43,7 +41,10 @@ trait CoAPThingML {
    *************************************************************************/
   def sendDataViaCoAP(bytes : Array[Byte], resourceURI : String) {
     val request = new PUTRequest()
-    val uri = new URI(rootURI + coapServer.port + "/" + resourceURI)
+    val uri = coapServer match {
+      case l : LocalCoAP => new URI("coap://localhost:" + l.port + "/" + resourceURI)
+      case r : RemoteCoAP => new URI(r.getURI + "/" + resourceURI)
+    }
     request.setURI(uri)
     request.setPayload(bytes)
 
@@ -62,25 +63,57 @@ trait CoAPThingML {
   def receive(byte : Array[Byte])//This will be refined in the COaP Thing defined in ThingML
 }
 
-class CoAP(val coapThingML : CoAPThingML, override val port : Int) extends LocalEndpoint(port) {
+
+abstract trait CoAP {
+  self : Endpoint =>
+  
   var resourceMap = Map[Byte, String]()
-  coapThingML.setCoapServer(this)
-
-
-  Logger.info("Californium/ThingML server started on port " + port)
+  Logger.info("Californium/ThingML server started on " + uriToString)
+  Logger.info(" at " + ipInfo)
   Logger.info("  https://github.com/brice-morin/californium  ")
   Logger.info("            http://www.ThingML.org            ")
+  
+  def uriToString : String
+  def coapThingML : CoAPThingML
+  
+  def ipInfo : String = {
+    val addr = InetAddress.getLocalHost()
+    return addr.getHostAddress + "(" + addr.getHostName() + ")"
+  }
+  
+}
 
+class LocalCoAP(val coapThingML : CoAPThingML, override val port : Int) extends LocalEndpoint(port) with CoAP {
 
+  coapThingML.setCoapServer(this)
 
-  def addResource(resource: ThingMLCoAPResource) {
+  override def uriToString = "port " + port
+
+  def addResource(resource: ThingMLCoAPLocalResource) {
     super.addResource(resource)
     resourceMap += (resource.code -> resource.getResourcePath)
   }
-
+  
   override def handleRequest(request: Request) {
     Logger.debug("Incoming request: " + request)
     request.log
     super.handleRequest(request)
   }
+  
+}
+
+class RemoteCoAP(val coapThingML : CoAPThingML, uri : URI) extends RemoteEndpoint(uri) with CoAP {
+  self : RemoteEndpoint =>
+
+  coapThingML.setCoapServer(this)
+  
+  override def uriToString = "URI " + uri
+  
+  protected[comm] def getURI = uri
+
+  override def handleRequest(request: Request) {
+    Logger.debug("Incoming request: " + request)
+    request.log
+    super.handleRequest(request)
+  }  
 }

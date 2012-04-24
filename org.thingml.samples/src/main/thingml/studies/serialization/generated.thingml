@@ -130,7 +130,7 @@ action receive(m.b)
  * syntax: instanceName::TypeName::PortName::messageName
  * note: wildcards can be used for any of these elements.
  */
-configuration test 
+configuration test
 @remote "testRemote::TestThing::.*::.*"
 {
     //Messages are sent and received without serialization
@@ -141,6 +141,28 @@ configuration test
     //hopefully, this has the same behavior than the configuration above...
     instance testRemote : TestThing
     instance network : CoAPScala
+    instance serializer : MessageSerializer
+    instance deserializer : MessageDeserializer
+
+    
+    connector testRemote.out => serializer.out
+    connector serializer.network => network.IOStream
+    connector deserializer.network => network.IOStream
+    connector deserializer.in => testRemote.in
+}
+
+configuration test2
+@remote "testRemote::TestThing::.*::.*"
+{
+    //Messages are sent and received without serialization
+    //instance test : TestThing
+    //connector test.out => test.in
+    
+    //Messages are serialized, sent to network, received, deserialized and sent to the former thing
+    //hopefully, this has the same behavior than the configuration above...
+    instance testRemote : TestThing
+    instance network : CoAPScala
+        set network.coapPort = 61616
     instance serializer : MessageSerializer
     instance deserializer : MessageDeserializer
 

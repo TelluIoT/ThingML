@@ -199,10 +199,10 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
   }
 
   def generateCoAPServer(builder: StringBuilder = Context.builder) {
-    builder append "class CoAPServer(coapThingML : CoAPThingML, port : Int) extends CoAP(coapThingML, port){\n"
+    builder append "class CoAPServer(coapThingML : CoAPThingML, port : Int) extends LocalCoAP(coapThingML, port){\n"
     builder append "//Types\n"
     self.allRemoteInstances.collect{case (i,r) => i.getType}.toSet.foreach{t : Type =>
-      builder append "val " + t.getName + "Resource = new ThingMLCoAPResource(resourceIdentifier = \"" + t.getName + "\", server = this)\n"
+      builder append "val " + t.getName + "Resource = new ThingMLCoAPLocalResource(resourceIdentifier = \"" + t.getName + "\", server = this)\n"
       builder append "addResource(" + t.getName + "Resource)\n"
     }
     builder append "\n"
@@ -232,7 +232,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
     //val allMessages = Context.sort(self.allRemoteMessages).collect{case (p, m) => m._1 ++: m._2}.flatten.toSet
     allMessages.zipWithIndex.foreach{case (m,index) =>
         val code = (if (m.getCode != -1) m.getCode else index)
-        builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val code : Byte = " + code + ".toByte,  override val server : CoAP) extends ThingMLCoAPResource(resourceIdentifier, code, server) {\n"
+        builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val code : Byte = " + code + ".toByte,  override val server : CoAP) extends ThingMLCoAPLocalResource(resourceIdentifier, code, server) {\n"
         builder append "setResourceTitle(\"" + Context.firstToUpper(m.getName) + " ThingML resource\")\n"
         builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
 
@@ -273,7 +273,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
 
   def generateCoAPTypeResources(builder: StringBuilder = Context.builder) {
     self.allInstances.collect{case i => i.getType}.toSet.foreach{t : Type =>
-      builder append "class " + Context.firstToUpper(t.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + t.getName + "\", override val code : Byte = 0x00,  override val server : CoAP) extends ThingMLCoAPResource(resourceIdentifier, code, server) {\n"
+      builder append "class " + Context.firstToUpper(t.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + t.getName + "\", override val code : Byte = 0x00,  override val server : CoAP) extends ThingMLCoAPLocalResource(resourceIdentifier, code, server) {\n"
       builder append "setResourceTitle(\"" + Context.firstToUpper(t.getName) + " ThingML resource\")\n"
       builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
       builder append "}\n\n"
