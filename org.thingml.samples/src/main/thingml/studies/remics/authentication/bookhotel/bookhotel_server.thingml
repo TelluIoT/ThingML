@@ -1,0 +1,115 @@
+// 
+// (c) SINTEF 2011
+//
+// Define the behavior of a simple authentication server that accepts credentials and 
+// check their validity.
+// 
+// See also client.thingml, AP1.thingml 
+//
+// by Franck CHAUVEL <franck.chauve@sintef.no>
+//
+
+import "API1.thingml"
+
+
+thing Server includes API1BookHotel {
+
+	readonly property roomRequest : String = "book room"
+    readonly property ID : String = "123456789"
+    readonly property typeRequest : String = "room types"
+    readonly property singleRoomNumber : Integer = 3
+    readonly property doubleRoomNumber : Integer = 4
+    readonly property single : String = "single room"
+    readonly property double : String = "double room"
+    property aSingleRoomNumber : Integer
+    property aDoubleRoomNumber : Integer
+	
+	
+    provided port CilentBookPort{
+        receives rRequest,inputID,typeRequest,number
+        sends rReply,idReply,typeReply,result
+	}
+	
+	statechart Authentication init Ready {
+	
+		state Ready {
+			on entry print "Server side: Ready, Waiting for book Request..."
+			
+			transition -> CheckIDService 
+				event e : CilentBookPort?rRequest
+				guard e.roomRequest == roomRequest
+				action CilentBookPort!rReply(true)
+				
+			internal
+				event e: CilentBookPort?rRequest
+				guard not (e.roomRequest == roomRequest) 
+				action CilentBookPort!rReply(false)
+		}
+		
+		//CheckID state
+        state CheckIDService {
+            on entry print "Server side: To check ID"
+            transition -> RoomTypeService
+                event e: CilentBookPort?inputID
+                guard e.ID == ID
+                action CilentBookPort!idReply(true)
+            
+//             internal
+// 				event e: CilentBookPort?InputID
+//                 guard not(e.ID == ID)
+//                 action CilentBookPort!IDReply(false)  
+        }
+		
+        //RoomTypeService state
+        state RoomTypeService
+        {
+            on entry print "Server side: To show room type"
+            transition -> RoomNumberService
+                event e: CilentBookPort?typeRequest
+                //guard e.RTRequest == typeRequest
+                action CilentBookPort!typeReply(single,double)
+            
+//             internal
+// 				event e: CilentBookPort?InputID
+//                 guard not(e.ID == ID)
+//                 action CilentBookPort!IDReply(true)         
+        }
+        
+        //RoomNumberService state
+		state RoomNumberService {
+            on entry print "Server side: To verify the room number and booking"
+            transition -> Booked
+                event e: CilentBookPort?number
+                guard e.SingleRoomNumber < singleRoomNumber and e.DoubleRoomNumber < doubleRoomNumber
+                action do
+                    CilentBookPort!result(true)
+                    aSingleRoomNumber = e.SingleRoomNumber
+                    aDoubleRoomNumber = e.DoubleRoomNumber
+                    print "Server side single number :"+e.SingleRoomNumber+" || "+singleRoomNumber
+                    print "Server side single number :"+e.DoubleRoomNumber+" || "+doubleRoomNumber
+                end
+                
+            transition -> Ready
+                event e: CilentBookPort?number
+                guard not(e.SingleRoomNumber < singleRoomNumber and e.DoubleRoomNumber < doubleRoomNumber)
+                action do
+                    CilentBookPort!result(false)
+                    print "Server side single number :"+e.SingleRoomNumber+" || "+singleRoomNumber
+                    print "Server side single number :"+e.DoubleRoomNumber+" || "+doubleRoomNumber
+                end
+		}
+
+        state Booked {
+			on entry print "Server side:booked "+aSingleRoomNumber+" single room, "+aDoubleRoomNumber+" double room with the ID "+ID
+		}
+	
+	}
+}
+
+thing API1BookHotelFakeServer includes API1BookHotel
+@mock "true" {
+	provided port CilentBookPort {
+        receives rRequest,inputID,typeRequest,number
+        sends rReply,idReply,typeReply,result
+	} 
+}
