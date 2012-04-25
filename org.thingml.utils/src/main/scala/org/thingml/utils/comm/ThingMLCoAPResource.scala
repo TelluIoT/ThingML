@@ -39,6 +39,8 @@ trait ThingMLCoAPResource {
   setResourceType("ThingMLResource")
 
   val buffer = new Array[Byte](18)
+  
+  val statusBuffer = new StringBuilder()
 
   def isThingML(payload : Array[Byte]) : Boolean = {
     payload.size == 18 && payload(4) == code && payload(0) == 0x12 && payload(17) == 0x13
@@ -66,11 +68,13 @@ trait ThingMLCoAPResource {
         doParse(params)
         return Option(buffer)
       } else {
+        statusBuffer append "Payload has NOT the right number of parameters. "
         Logger.warning("payload has NOT the right number of parameters.")
         return None
       }
     } catch {
       case e : Exception =>
+        statusBuffer append "Payload CANNOT be parsed. "
         Logger.error("payload CANNOT be parsed.")
         Logger.error(e.getMessage)
         e.printStackTrace()
@@ -82,27 +86,36 @@ trait ThingMLCoAPResource {
 
   //PUT is the only method supported (currently) by ThingML resources
   override def performPUT(request: PUTRequest) {
+    statusBuffer.clear
     Logger.debug("performPUT: " + request.getPayload.mkString ("[", ", ", "]"))
+    
+    val response = new Response(CodeRegistry.RESP_CONTENT)
+
     //Send the payload to the ThingML side
     if (isThingML(request.getPayload)) {
       server.coapThingML.receive(request.getPayload)
       Logger.info("PUT request can be handled: " + request)
+      response.setPayload("OK!")
     } else {
       parse(request.getPayloadString) match {
         case Some(p) =>
           server.coapThingML.receive(p)
           Logger.info("PUT request can be handled: " + request)
-        case None => Logger.warning("PUT request cannot be handled: " + request)
+          response.setPayload("OK!")
+        case None => 
+          Logger.warning("PUT request cannot be handled: " + request + " Reason: " + statusBuffer.toString)
+          response.setPayload("Request cannot be handled. Reason: " + statusBuffer.toString)
       }
     }
 
     //Default response, whatever we do with the request
-    val response = new Response(CodeRegistry.RESP_CONTENT)
-    response.setPayload("OK!")
+    
+    
     request.respond(response)
   }
 
   override def performPOST(request: POSTRequest) {
+    statusBuffer.clear
     Logger.debug("performPOST: " + request.getPayload.mkString ("[", ", ", "]"))
     Logger.warning("POST not supported")
 
@@ -113,6 +126,7 @@ trait ThingMLCoAPResource {
   }
 
   override def performGET(request: GETRequest) {
+    statusBuffer.clear
     Logger.debug("performGET: " + request.getPayload.mkString ("[", ", ", "]"))
     Logger.warning("GET not supported")
 
