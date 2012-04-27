@@ -21,7 +21,7 @@ package org.thingml.utils.comm
 import org.thingml.utils.log.Logger
 
 import ch.eth.coap.endpoint.{LocalEndpoint, RemoteEndpoint, Endpoint, LocalResource}
-import ch.eth.coap.coap.{Request, PUTRequest}
+import ch.eth.coap.coap.{Request, PUTRequest, Response}
 import java.net.{InetAddress, URI}
 
 trait CoAPThingML {
@@ -36,58 +36,32 @@ trait CoAPThingML {
      new LocalCoAP(this, port)
   }
 
-  /************************************************************************
-   * Send and receive operations to allow communication between CoAP and ThingML
-   *************************************************************************/
-  def sendDataViaCoAP(bytes : Array[Byte], resourceURI : String) {
-    val request = new PUTRequest()
-    val uri = coapServer match {
-      case l : LocalCoAP => new URI("coap://localhost:" + l.port + "/" + resourceURI)
-      case r : RemoteCoAP => new URI(r.getURI + "/" + resourceURI)
-    }
-    request.setURI(uri)
-    request.setPayload(bytes)
-
-    //enable response queue in order to use blocking I/O
-    //request.enableResponseQueue(true)//Let's just fire-n-forget for now...
-
-    request.execute()
-  }
-  
-  def sendData(bytes : Array[Byte]) {
-    Logger.debug("sendData(" + bytes.mkString("[", ", ", "]") + ")")
-    val uri = coapServer.resourceMap.get(bytes(4)).getOrElse("")//it should be bytes(3) in the 16-bytes array, but this 18-bytes array includes the START and STOP bytes, hence the index++
-    sendDataViaCoAP(bytes, uri)
-  }
-
   def receive(byte : Array[Byte])//This will be refined in the COaP Thing defined in ThingML
+  
 }
 
 
 abstract trait CoAP {
   self : Endpoint =>
   
+  val addr = InetAddress.getLocalHost()
+  
   var resourceMap = Map[Byte, String]()
-  Logger.info("Californium/ThingML server started on " + uriToString)
-  Logger.info(" at " + ipInfo)
-  Logger.info("  https://github.com/brice-morin/californium  ")
-  Logger.info("            http://www.ThingML.org            ")
+  Logger.info("           Californium/ThingML server started")
+  Logger.info("Use Copper, the Firefox plugin for CoAP to access this address:")
+  Logger.info("coap://" + addr.getHostAddress + ":" + uriToString)
+  Logger.info("             You can download Copper at:") 
+  Logger.info("https://addons.mozilla.org/fr/firefox/addon/copper-270430/")
   
   def uriToString : String
-  def coapThingML : CoAPThingML
-  
-  def ipInfo : String = {
-    val addr = InetAddress.getLocalHost()
-    return addr.getHostAddress + "(" + addr.getHostName() + ")"
-  }
-  
+  def coapThingML : CoAPThingML  
 }
 
 class LocalCoAP(val coapThingML : CoAPThingML, override val port : Int) extends LocalEndpoint(port) with CoAP {
 
   coapThingML.setCoapServer(this)
 
-  override def uriToString = "port " + port
+  override def uriToString = port.toString
 
   def addResource(resource: ThingMLCoAPLocalResource) {
     super.addResource(resource)
@@ -107,7 +81,7 @@ class RemoteCoAP(val coapThingML : CoAPThingML, uri : URI) extends RemoteEndpoin
 
   coapThingML.setCoapServer(this)
   
-  override def uriToString = "URI " + uri
+  override def uriToString = uri.toString
   
   protected[comm] def getURI = uri
 
@@ -116,4 +90,34 @@ class RemoteCoAP(val coapThingML : CoAPThingML, uri : URI) extends RemoteEndpoin
     request.log
     super.handleRequest(request)
   }  
+}
+
+
+trait CoAPThingMLClient {
+  private var coapClient : CoAPClient = _
+  def setCoapClient(coapClient : CoAPClient) {this.coapClient = coapClient}
+  
+  def send(bytes : Array[Byte]) {
+    coapClient.send(bytes)
+  }
+}
+
+class CoAPClient(thingmlClient : CoAPThingMLClient, serverURI : String) {
+  thingmlClient.setCoapClient(this)
+  
+  var requestMap = Map[Byte, ThingMLCoAPRequest]()
+  
+  def addRequest(request : ThingMLCoAPRequest) {
+    requestMap += (request.code -> request) 
+  }
+  
+  def send(bytes : Array[Byte]) {
+    requestMap.get(bytes(4)) match {
+      case Some(r) =>
+        r.sendData(bytes)
+      case None =>
+        Logger.warning("Request not found. No request with code = " + bytes(4))
+    }
+  }
+  
 }

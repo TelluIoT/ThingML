@@ -193,11 +193,34 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
   val allMessages = Context.sort(self.allRemoteMessages).collect{case (p, m) => m._1 ++: m._2}.flatten.toSet
 
   override def generateCoAP(builder: StringBuilder = Context.builder, alt : Boolean) {
+    generateCoAPClient(builder)
     generateCoAPServer(builder)
     generateCoAPTypeResources(builder)
     generateCoAPMessageResources(builder)
   }
 
+  def generateCoAPClient(builder: StringBuilder = Context.builder) {
+    builder append "class CoAPClientInstance(thingmlClient : CoAPThingMLClient, serverURI : String) extends CoAPClient(thingmlClient, serverURI){\n"
+    builder append "//Requests\n"
+
+    var codes = Map[Message, Int]()
+    allMessages.zipWithIndex.foreach{case (m,index) =>
+        val code : Int = if (m.getCode != -1) m.getCode else index
+        codes += (m -> code)
+    }
+    
+    self.allRemoteInstances.foreach{case (i,r) =>
+        if (allMessages.exists{m => i.getType.allMessages.exists{m2 => m == m2}}) {//TODO something better for the filtering
+          i.getType.allMessages.foreach{m => //TODO something better for the filtering
+            if (allMessages.exists{m2 => m == m2}) {
+              builder append "addRequest(new ThingMLCoAPRequest(" + codes.get(m).get + ", " + "\"" + i.getType.getName + "/" + i.getName + "/" + m.getName + "\"" + ", serverURI))\n"
+            }
+          }
+        }
+    }     
+    builder append "\n}\n\n"
+  }
+  
   def generateCoAPServer(builder: StringBuilder = Context.builder) {
     builder append "class CoAPServer(coapThingML : CoAPThingML, port : Int) extends LocalCoAP(coapThingML, port){\n"
     builder append "//Types\n"
@@ -241,6 +264,19 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
         builder append m.getParameters.collect{case p => " && (params.get(\"" + p.getName + "\") match{\ncase Some(p) => try {p.to" + p.getType.scala_type() + "\ntrue} catch {case _ => false}\ncase None => false})"}.mkString("")
         builder append "}\n\n"
 
+        
+        builder append "override def setAttributes() {\n"
+        builder append "var index : Int = 6\n"
+        builder append "val tempBuffer = new Array[Byte](18-index)\n"
+    
+        m.getParameters.collect{case p => 
+          builder append "Array.copy(buffer, index, tempBuffer, 0, Math.min(buffer.size-index, tempBuffer.size))\n"
+          builder append "val " + p.getName + "_att = tempBuffer.to" + p.getType.scala_type() + "\n"
+          builder append "index = index + " + p.getName + "_att.byteSize\n"
+          builder append "setAttributeValue(\"" + p.getName + "\", "+ p.getName + "_att.toString)\n\n"
+        }
+        builder append "}\n\n"
+    
         builder append "override def doParse(params : Map[String, String]) {\n"
         builder append "resetBuffer\n"
         builder append "buffer(0) = 0x12\n"
@@ -261,7 +297,8 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
           builder append "params.get(\"" + p.getName + "\").get.to" + p.getType.scala_type(false) + ".toBytes.foreach{b => \n" //TODO: handle array as parameter
           builder append "buffer(index) = b\n"
           builder append "index = index + 1\n"
-          builder append "}\n\n"
+          builder append "}\n"
+          builder append "setAttributeValue(\"" + p.getName + "\", params.get(\"" + p.getName + "\").get.to" + p.getType.scala_type(false) + ")\n\n"
         }
 
         builder append "}\n\n"

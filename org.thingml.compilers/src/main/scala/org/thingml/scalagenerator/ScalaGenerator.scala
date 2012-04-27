@@ -213,7 +213,9 @@ object ScalaGenerator {
     
     javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean compile exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
     
-    compileGeneratedCode(rootDir)
+    actor{
+      compileGeneratedCode(rootDir)
+    }
       
   }
   

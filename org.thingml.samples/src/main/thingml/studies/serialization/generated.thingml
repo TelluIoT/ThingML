@@ -140,35 +140,15 @@ configuration test
     //Messages are serialized, sent to network, received, deserialized and sent to the former thing
     //hopefully, this has the same behavior than the configuration above...
     instance testRemote : TestThing
-    instance network : CoAPScala
+    instance network : CoAPServerScala
+    instance network2 : CoAPClientScala
     instance serializer : MessageSerializer
     instance deserializer : MessageDeserializer
 
     
     connector testRemote.out => serializer.out
-    connector serializer.network => network.IOStream
-    connector deserializer.network => network.IOStream
-    connector deserializer.in => testRemote.in
-}
-
-configuration test2
-@remote "testRemote::TestThing::.*::.*"
-{
-    //Messages are sent and received without serialization
-    //instance test : TestThing
-    //connector test.out => test.in
+    connector serializer.network => network2.IOStream
     
-    //Messages are serialized, sent to network, received, deserialized and sent to the former thing
-    //hopefully, this has the same behavior than the configuration above...
-    instance testRemote : TestThing
-    instance network : CoAPScala
-        set network.coapPort = 61616
-    instance serializer : MessageSerializer
-    instance deserializer : MessageDeserializer
-
-    
-    connector testRemote.out => serializer.out
-    connector serializer.network => network.IOStream
     connector deserializer.network => network.IOStream
     connector deserializer.in => testRemote.in
 }

@@ -38,7 +38,7 @@ object SerializableTypes {
 
 trait Serializable[T] {
   def toBytes : Array[Byte]
-  def byteSize : Int
+  val byteSize : Int
 }
 
 case class DeserializableArray(bytes : Array[Byte]) {
@@ -64,15 +64,14 @@ case class SerializableBoolean(myBoolean : Boolean) extends Serializable[Boolean
     return (if (myBoolean) trueByte else falseByte)
   }
 
-  override def byteSize = 2
+  override val byteSize = 1
 }
 
-case class SerializableShort(myShort : Short) extends Serializable[Short]{
+case class SerializableShort(myShort : Short) extends Serializable[Short] {
   override def toBytes : Array[Byte] = {
     return ByteBuffer.allocate(byteSize).putShort(myShort).array()
   }
-
-  override def byteSize = 2
+  override val byteSize = 2
 }
 
 case class SerializableInt(myInt : Int) extends Serializable[Int]{
@@ -80,7 +79,7 @@ case class SerializableInt(myInt : Int) extends Serializable[Int]{
     return ByteBuffer.allocate(byteSize).putInt(myInt).array()
   }
 
-  override def byteSize = 4
+  override val byteSize = 4
 }
 
 case class SerializableLong(myLong : Long) extends Serializable[Long]{
@@ -88,7 +87,7 @@ case class SerializableLong(myLong : Long) extends Serializable[Long]{
     return ByteBuffer.allocate(byteSize).putLong(myLong).array()
   }
 
-  override def byteSize = 4
+  override val byteSize = 4
 }
 
 case class SerializableFloat(myFloat : Float) extends Serializable[Float]{
@@ -96,7 +95,7 @@ case class SerializableFloat(myFloat : Float) extends Serializable[Float]{
     return ByteBuffer.allocate(byteSize).putFloat(myFloat).array()
   }
 
-  override def byteSize = 4
+  override val byteSize = 4
 }
 
 case class SerializableDouble(myDouble : Double) extends Serializable[Double]{
@@ -104,7 +103,7 @@ case class SerializableDouble(myDouble : Double) extends Serializable[Double]{
     return ByteBuffer.allocate(byteSize).putDouble(myDouble).array()
   }
 
-  override def byteSize = 8
+  override val byteSize = 8
 }
 
 case class SerializableChar(myChar : Char) extends Serializable[Char]{
@@ -112,7 +111,7 @@ case class SerializableChar(myChar : Char) extends Serializable[Char]{
     return Array(myChar.toByte)
   }
 
-  override def byteSize = 2
+  override val byteSize = 2
 }
 
 case class SerializableString(myString : String) extends Serializable[String]{
@@ -120,5 +119,5 @@ case class SerializableString(myString : String) extends Serializable[String]{
     return myString.toCharArray.collect{case c => c.toByte}.toArray
   }
 
-  override def byteSize = 8
+  override val byteSize = 8
 }

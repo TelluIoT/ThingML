@@ -5,11 +5,12 @@ import "../comm.thingml"
 datatype SerialPhy
 @scala_type "org.thingml.utils.comm.Serial";
 
-thing CoAPScala includes IOByteArray
+thing CoAPServerScala includes IOByteArray
 @pim "IOStream"
 @platform "scala"
 @scala_trait "org.thingml.utils.comm.CoAPThingML"
 @thingml_maven_dep "org.thingml.utils"
+@coap "server"
 {
     readonly property coapPort : Long = 61617
 
@@ -31,11 +32,35 @@ thing CoAPScala includes IOByteArray
             initialize()
         end
         
+        state default {}    
+    }    
+}
+
+thing CoAPClientScala includes IOByteArray
+@pim "IOStream"
+@platform "scala"
+@scala_trait "org.thingml.utils.comm.CoAPThingMLClient"
+@thingml_maven_dep "org.thingml.utils"
+@coap "client"
+{
+    readonly property coapServer : String = "coap://127.0.0.1:61617"
+
+    function initialize()
+    do
+        'new org.thingml.generated.coap.CoAPClientInstance(this, ' & coapServer & ')'  
+    end
+            
+    statechart behavior init default {
+        on entry 
+        do
+            initialize()
+        end
+        
         state default {
             internal event wb : IOStream?write_bytes
             action do
                 print("coap.sendData: " + wb.b)
-                'root.asInstanceOf[org.thingml.utils.comm.CoAPThingML].sendData(' & wb.b & ')'
+                'root.asInstanceOf[org.thingml.utils.comm.CoAPThingMLClient].send(' & wb.b & ')'
             end
         }    
     }
