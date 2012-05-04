@@ -53,8 +53,6 @@ import org.thingml.graphexport.*;
 
 
 import java.util.AbstractMap.SimpleEntry;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import scala.io.Source$;
@@ -124,7 +122,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
         }
 
         try {
-            Map<Configuration, String> ccode = CGenerator.compileAllJava((ThingMLModel) model.getContents().get(0));
+            Map<Configuration, String> ccode = CGenerator.compileAllArduinoJava((ThingMLModel) model.getContents().get(0));
             for (Configuration t : ccode.keySet()) {
                 System.out.println(" -> Writing file " + t.getName() + ".pde");
                 PrintWriter w = new PrintWriter(new FileWriter("test_out/" + new File(t.getName() + ".pde")));
