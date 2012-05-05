@@ -339,22 +339,23 @@ object CGenerator {
    *    Linux Specific methods
    ****************************************************************************************/
 
-  def compileToLinux(cfg : Configuration, dir : String) = {
+  def compileToLinux(cfg : Configuration, dir : String) {
 
     // Create a folder having the name of the config
     var folder = new File(dir);
     if (!folder.exists() || !folder.isDirectory) {
       println("ERROR: Target folder " + dir + " does not exist.")
-      return _
+      //return _
     }
+    else {
+      val files = compileToLinux(cfg)
 
-    val files = compileToLinux(cfg)
-
-    files.keys.foreach{ fname =>
-      var file = new File(folder, fname)
-      var w: PrintWriter = new PrintWriter(new FileWriter(file))
-      w.print(files.get(fname))
-      w.close
+      files.keys.foreach{ fname =>
+        var file = new File(folder, fname)
+        var w: PrintWriter = new PrintWriter(new FileWriter(file))
+        w.print(files.get(fname))
+        w.close
+      }
     }
   }
 
