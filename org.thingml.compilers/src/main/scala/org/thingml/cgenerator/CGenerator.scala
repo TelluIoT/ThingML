@@ -345,16 +345,21 @@ object CGenerator {
     var folder = new File(dir);
     if (!folder.exists() || !folder.isDirectory) {
       println("ERROR: Target folder " + dir + " does not exist.")
+<<<<<<< HEAD
       return ;
+=======
+      //return _
+>>>>>>> 7d0dd1d71c4a08133463555559bc3fff51c2a696
     }
+    else {
+      val files = compileToLinux(cfg)
 
-    val files = compileToLinux(cfg)
-
-    files.keys.foreach{ fname =>
-      var file = new File(folder, fname)
-      var w: PrintWriter = new PrintWriter(new FileWriter(file))
-      w.print(files.get(fname))
-      w.close
+      files.keys.foreach{ fname =>
+        var file = new File(folder, fname)
+        var w: PrintWriter = new PrintWriter(new FileWriter(file))
+        w.print(files.get(fname))
+        w.close
+      }
     }
   }
 
