@@ -16,4 +16,4 @@
 
 /*HEADER*/
 
-#endif /*NAME*/_H_
+#endif ///*NAME*/_H_

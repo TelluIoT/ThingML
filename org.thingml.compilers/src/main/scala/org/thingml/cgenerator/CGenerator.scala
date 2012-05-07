@@ -30,10 +30,10 @@ import scala.actors._
 import scala.actors.Actor._
 
 import io.Source
-import java.lang.{Boolean, StringBuilder}
 import org.sintef.thingml._
 import org.thingml.model.scalaimpl.aspects.MergedConfigurationCache
 import java.util.{Hashtable, ArrayList}
+import java.lang.{ProcessBuilder, Boolean, StringBuilder}
 
 object SimpleCopyTemplate {
 
@@ -339,6 +339,63 @@ object CGenerator {
    *    Linux Specific methods
    ****************************************************************************************/
 
+  def compileToLinuxAndMake(model : ThingMLModel) {
+    // First look for a configuration in the model
+    model.getConfigs.filter{ c => !c.isFragment }.headOption match {
+      case Some (c) => compileToLinuxAndMake(c)
+      case None =>
+        // look in all configs
+      model.allConfigurations.filter{ c => !c.isFragment }.headOption match {
+        case Some (c) => compileToLinuxAndMake(c)
+        case None => {}
+      }
+    }
+  }
+
+  def out_folder(cfg : Configuration) : File = {
+     cfg.getAnnotations.filter {
+      a => a.getName == "output_folder"
+    }.headOption match {
+      case Some(a) => {
+        var v = a.asInstanceOf[PlatformAnnotation].getValue
+        var result = new File(v)
+        if (result.exists && result.isDirectory) return result
+        else return null
+      }
+      case None => {
+        return null
+      }
+    }
+  }
+
+  def compileToLinuxAndMake(cfg : Configuration) : File = {
+    var out = out_folder(cfg)
+    if (out == null) {
+      // Create a temp folder
+      var folder = File.createTempFile(cfg.getName, null);
+      folder.delete
+      folder.mkdirs
+      folder.deleteOnExit
+
+      // Create a folder having the name of the config
+      out = new File(folder, cfg.getName);
+      out.mkdirs
+    }
+    println("Compiling configuration "+ cfg.getName +" to C into target folder: " + out.getAbsolutePath)
+
+    compileToLinux(cfg, out.getAbsolutePath)
+
+    val pb: ProcessBuilder = new ProcessBuilder("make")
+    pb.directory(out)
+    val p: Process = pb.start
+
+    console_out ! p
+    console_err ! p
+
+    return out
+  }
+
+
   def compileToLinux(cfg : Configuration, dir : String) {
 
     // Create a folder having the name of the config
@@ -382,7 +439,7 @@ object CGenerator {
       result.put(thing.getName + ".h", htemplate)
 
       // GENERATE IMPL
-      var itemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_thing_impl.h")
+      var itemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_thing_impl.c")
       builder = new StringBuilder()
       thing.generateCImpl(builder, context)
       itemplate = itemplate.replace("/*NAME*/", thing.getName)
@@ -410,8 +467,11 @@ object CGenerator {
     //GENERATE THE MAKEFILE
     var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/Makefile")
     mtemplate = mtemplate.replace("/*NAME*/", cfg.getName)
-    val srcs = cfg.allThings.map{ t => t.getName + ".c" }.union(cfg.getName + ".c").mkString(", ")
-    val objs = cfg.allThings.map{ t => t.getName + ".o" }.mkString(", ")
+
+    val list = cfg.allThings.map{ t => t.getName } += cfg.getName
+
+    val srcs = list.map{ t => t + ".c" }.mkString(" ")
+    val objs = list.map{ t => t + ".o" }.mkString(" ")
     mtemplate = mtemplate.replace("/*SOURCES*/", srcs)
     mtemplate = mtemplate.replace("/*OBJECTS*/", objs)
     result.put("Makefile", mtemplate)

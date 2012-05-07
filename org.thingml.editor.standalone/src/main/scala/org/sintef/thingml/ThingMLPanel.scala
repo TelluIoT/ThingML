@@ -97,6 +97,7 @@ class ThingMLPanel extends JPanel {
   var compilersMenu = new JMenu("Compile to");
   
   var b = new JMenuItem("Arduino")
+  var bC = new JMenuItem("Posix C")
   var bScala = new JMenuItem("Scala/SMaC")
   var bSwing = new JMenuItem("Java/Swing")
   var bThingML = new JMenuItem("ThingML/Comm")
@@ -144,6 +145,23 @@ class ThingMLPanel extends JPanel {
       }
     })
 
+  bC.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        println("Input file : " + targetFile)
+        if (targetFile.isEmpty) return;
+               try {
+
+         val thingmlModel = loadThingMLmodel(targetFile.get)
+
+            CGenerator.compileToLinuxAndMake(thingmlModel)
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+
+        //}
+      }
+    })
 
   bScala.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
@@ -248,6 +266,7 @@ class ThingMLPanel extends JPanel {
     })
 
   compilersMenu.add(b)
+  compilersMenu.add(bC)
   compilersMenu.add(bScala)
   compilersMenu.add(bSwing)
   compilersMenu.add(bThingML)
