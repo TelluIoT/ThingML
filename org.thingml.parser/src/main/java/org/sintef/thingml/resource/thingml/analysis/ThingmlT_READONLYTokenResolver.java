@@ -33,16 +33,16 @@ public class ThingmlT_READONLYTokenResolver implements org.sintef.thingml.resour
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultTokenResolver defaultTokenResolver = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultTokenResolver();
 	
 	public java.lang.String deResolve(java.lang.Object value, org.eclipse.emf.ecore.EStructuralFeature feature, org.eclipse.emf.ecore.EObject container) {
-		java.lang.String result = "";
+		java.lang.String result = "readonly ";
 		if (value.toString().equals("true")) {
-			result = "readonly ";
+			result = "";
 		}
 		return result;
 	}
 	
 	public void resolve(java.lang.String lexem, org.eclipse.emf.ecore.EStructuralFeature feature, org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result) {
 		defaultTokenResolver.resolve(lexem, feature, result);
-		result.setResolvedToken(lexem.equals("readonly"));
+		result.setResolvedToken(!lexem.equals("readonly"));
 	}
 	
 	public void setOptions(java.util.Map<?,?> options) {

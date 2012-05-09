@@ -7,6 +7,13 @@
 #ifndef THINGML_TYPEDEFS_H_
 #define THINGML_TYPEDEFS_H_
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <stdint.h>
+
 /*TYPEDEFS*/
 
 typedef unsigned char  uint8;

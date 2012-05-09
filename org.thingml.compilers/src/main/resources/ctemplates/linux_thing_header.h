@@ -7,11 +7,6 @@
 #ifndef /*NAME*/_H_
 #define /*NAME*/_H_
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <unistd.h>
 #include "thingml_typedefs.h"
 
 /*HEADER*/
