@@ -60,7 +60,7 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean CHANGEABLE_EDEFAULT = false;
+	protected static final boolean CHANGEABLE_EDEFAULT = true;
 
 	/**
 	 * The cached value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.

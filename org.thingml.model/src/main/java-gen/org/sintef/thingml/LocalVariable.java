@@ -62,6 +62,7 @@ public interface LocalVariable extends Variable, Action {
 
 	/**
 	 * Returns the value of the '<em><b>Changeable</b></em>' attribute.
+	 * The default value is <code>"true"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Changeable</em>' attribute isn't clear,
@@ -71,7 +72,7 @@ public interface LocalVariable extends Variable, Action {
 	 * @return the value of the '<em>Changeable</em>' attribute.
 	 * @see #setChangeable(boolean)
 	 * @see org.sintef.thingml.ThingmlPackage#getLocalVariable_Changeable()
-	 * @model
+	 * @model default="true"
 	 * @generated
 	 */
 	boolean isChangeable();

@@ -29,6 +29,7 @@ thing SensorsDisplay includes LcdScreenMsgs, RotationSensorMsgs
         internal event m : Rot?rotation_value
         action do 
             // 75..250
+            var x : Integer
             rssi = 'map('&m.val&', 75, 250, 0, 100)'
             if (rssi > 100) rssi = 100
             if (rssi < 0) rssi = 0
