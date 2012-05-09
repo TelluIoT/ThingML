@@ -447,6 +447,20 @@ object CGenerator {
       result.put(thing.getName + ".c", itemplate)
     }
 
+     // GENERATE THE RUNTIME HEADER
+    var rhtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/runtime.h")
+    rhtemplate = rhtemplate.replace("/*NAME*/", cfg.getName)
+    result.put("runtime.h", rhtemplate)
+
+    // GENERATE THE RUNTIME IMPL
+    var rtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/runtime.c")
+    rtemplate = rtemplate.replace("/*NAME*/", cfg.getName)
+    var fifotemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/fifo.c")
+    fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + context.fifoSize());
+    fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + cfg.allInstances.size);
+    rtemplate = rtemplate.replace("/*FIFO*/", fifotemplate)
+    result.put("runtime.c", rtemplate)
+
     // GENERATE THE CONFIGURATION AND A MAIN
     var ctemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_main.c")
     ctemplate = ctemplate.replace("/*NAME*/", cfg.getName)
@@ -558,6 +572,8 @@ class CGeneratorContext( src: Configuration ) {
 
   def init_debug_mode() = "" // Any code to initialize the debug mode
 
+  def sync_fifo() = false;
+
   def print_debug_message(msg : String) = "// DEBUG: " + msg
 }
 
@@ -568,6 +584,8 @@ class LinuxCGeneratorContext ( src: Configuration ) extends CGeneratorContext ( 
 
   // Default size of the fifo (in bytes)
   override def fifoSize() = { 4096 }
+
+  override def sync_fifo() = true;
 
   // output the generated files to the given folder
   override def compile(src: Configuration, dir : File) {
@@ -605,6 +623,11 @@ class ArduinoCGeneratorContext ( src: Configuration ) extends CGeneratorContext 
   // output the generated files to the given folder
   override def compile(src: Configuration, dir : File) {
     var builder = new StringBuilder();
+    var fifotemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/fifo.c")
+    fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + fifoSize());
+    fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + src.allInstances.size);
+    builder append fifotemplate
+    builder append "\n"
     src.generateC(builder, this)
     var code = builder.toString
   }
@@ -666,16 +689,6 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append "/*****************************************************************************\n"
     builder append " * Definitions for configuration : " +  self.getName + "\n"
     builder append " *****************************************************************************/\n\n"
-
-    var fifotemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/fifo.c")
-
-    fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + context.fifoSize());
-
-    fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + self.allInstances.size);
-
-    builder append fifotemplate
-    builder append "\n"
-
 
     builder append "//Declaration of instance variables\n"
     self.allInstances.foreach { inst =>
@@ -872,6 +885,8 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         t.append_formal_parameters(builder, m)
         builder append "{\n"
 
+        if (context.sync_fifo) builder append "fifo_lock();\n"
+
         builder append "if ( fifo_byte_available() > " + message_size(m, context) + " ) {\n\n"
 
         //DEBUG
@@ -900,6 +915,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
           builder append "}\n"
         }
 
+        if (context.sync_fifo) builder append "fifo_unlock_and_notify();\n"
 
         builder append "}\n"
 
@@ -910,8 +926,13 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
   def generateMessageProcessQueue(builder : StringBuilder, context : CGeneratorContext) {
 
     builder append "uint8_t processMessageQueue() {\n"
-    builder append "if (fifo_empty()) return 0; // return if there is nothing to do\n\n"
-
+    if (context.sync_fifo) {
+      builder append "fifo_lock();\n"
+      builder append "while (fifo_empty()) fifo_wait();\n"
+    }
+    else {
+      builder append "if (fifo_empty()) return 0; // return if there is nothing to do\n\n"
+    }
 
     var max_msg_size = 4  // at least the code and the source instance id (2 bytes + 2 bytes)
 
@@ -946,6 +967,8 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         //DEBUG
        // builder append "Serial.println(\"FW MSG "+m.getName+"\");\n"
 
+        if (context.sync_fifo) builder append "fifo_unlock();\n"
+
         builder append "dispatch_" + t.sender_name(p, m) + "("
         builder append "(struct " + t.instance_struct_name() + "*)"
         builder append "instance_by_id((mbuf[0] << 8) + mbuf[1]) /* instance */"
@@ -978,15 +1001,17 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         t.append_formal_parameters(builder, m)
         builder append "{\n"
 
-        var mtable = allMessageDispatch.get(m)
+        val mtable = allMessageDispatch.get(m)
 
         mtable.keySet().foreach{ i =>  // i is the source instance of the message
            builder append "if (_instance == &" + i.c_var_name + ") {\n"
            mtable.get(i).foreach{ tgt =>
-             // dispatch to all connected instances
-             builder append tgt._1.getType.handler_name(tgt._2, m)
-             tgt._1.getType.append_actual_parameters(builder, m, "&" + tgt._1.c_var_name())
-             builder append ";\n"
+              // dispatch to all connected instances whi can handle the message
+              if (tgt._1.getType.composedBehaviour.canHandle(tgt._2, m)) {
+                 builder append tgt._1.getType.handler_name(tgt._2, m)
+                 tgt._1.getType.append_actual_parameters(builder, m, "&" + tgt._1.c_var_name())
+                 builder append ";\n"
+              }
            }
            builder append "}\n"
         }

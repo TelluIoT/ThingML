@@ -13,16 +13,17 @@
 #include <signal.h>
 #include <pthread.h>
 #include "thingml_typedefs.h"
+#include "runtime.h"
 /*INCLUDES*/
 
 /*CONFIGURATION*/
 
 int main(int argc, char *argv[]) {
+  init_runtime();
   /*INIT_CODE*/
 
   while (1) {
     /*POLL_CODE*/
     processMessageQueue();
-    usleep(10000);
   }
 }

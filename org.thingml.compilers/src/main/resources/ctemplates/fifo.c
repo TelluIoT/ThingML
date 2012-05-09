@@ -1,9 +1,9 @@
-
-/*
- * Instance IDs and lookup
- */
-
 #define MAX_INSTANCES 32
+#define FIFO_SIZE 256
+
+/*********************************
+ * Instance IDs and lookup
+ *********************************/
 
 void * instances[MAX_INSTANCES];
 uint16_t instances_count = 0;
@@ -17,14 +17,9 @@ uint16_t add_instance(void * instance_struct) {
   return instances_count++;
 }
 
-
-/*
- * Simple FIFO implementation in C
- */
-
-#define FIFO_SIZE 256
-
-typedef unsigned char byte;
+/******************************************
+ * Simple byte FIFO implementation
+ ******************************************/
 
 byte fifo[FIFO_SIZE];
 int fifo_head = 0;
