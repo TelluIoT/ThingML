@@ -404,7 +404,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
           builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "("
           ///////////////////////////////////////////////////////////////////////////////////////////////////////////
           builder append (self.initExpressionsForInstance(i).collect{case p =>         
-                var result = p._1.scala_var_name + " = "
+                var result = (if (p._1.isChangeable) "_" else "") + p._1.scala_var_name + " = "
                 if (p._2 != null) {
                   var tempbuilder = new StringBuilder()
                   p._2.generateScala(tempbuilder)
@@ -417,7 +417,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
             }
             ++ 
             self.allArrays(i).collect{ case init =>
-                init.scala_var_name + " = " + init.scala_var_name + "_" + i.getName
+                (if (init.isChangeable) "_" else "") + init.scala_var_name + " = " + init.scala_var_name + "_" + i.getName
             }
           ).mkString(", ")
           builder append ")\n"
@@ -477,6 +477,8 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     generateProperties()
     builder append ") extends Component " + traits + "{\n\n"
     
+    generateAccessors()
+    
     builder append "//Companion object\n"
     builder append "object " + Context.firstToUpper(self.getName) + "{\n"
     self.allPorts.foreach{ p => 
@@ -529,9 +531,17 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
   
   def generateProperties(builder: StringBuilder = Context.builder) {
     builder append self.allPropertiesInDepth.collect{case p =>
-        (if (p.isChangeable) "val " else "var ") +
+        (if (!p.isChangeable) "val " else "private var _") +
         p.scala_var_name + " : " + p.getType.scala_type(p.getCardinality != null)
     }.mkString(", ")
+  }
+  
+  def generateAccessors(builder: StringBuilder = Context.builder) {
+    self.allPropertiesInDepth.filter{p => p.isChangeable}.foreach{p =>
+      builder append "//Synchronized accessors of " + p.getName + ":" + p.getType.scala_type(p.getCardinality != null) + "\n"
+      builder append "def " + p.scala_var_name + ":" + p.getType.scala_type(p.getCardinality != null) + " = {synchronized{return _" + p.scala_var_name + "}}\n"
+      builder append "def " + p.scala_var_name + "_=(newValue : " + p.getType.scala_type(p.getCardinality != null) + ") { synchronized{ _" + p.scala_var_name + " = newValue}}\n\n"
+    }
   }
 }
 
@@ -1030,8 +1040,8 @@ case class ReturnActionScalaGenerator(override val self: ReturnAction) extends A
 
 case class LocalVariableActionScalaGenerator(override val self: LocalVariable) extends ActionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {    
-    //builder append (if (self.isChangeable) "var " else "val ")//uncomment line when bug is fixed in ThingML
-    builder append "var "
+    //builder append (if (self.isChangeable) "var " else "val ")
+    builder append "var "//work around until Franck fixes the bug with var and readonly var in ThingML
     builder append self.scala_var_name + " : " + self.getType.scala_type(self.getCardinality != null)  + " = "
     if (self.getInit != null) 
       self.getInit.generateScala() 
@@ -1043,8 +1053,8 @@ case class LocalVariableActionScalaGenerator(override val self: LocalVariable) e
       } else {
         builder append "null.asInstanceOf[" + self.getType.scala_type(self.getCardinality != null) + "]"
       }
-      if (self.isChangeable)
-        Logger.error("ERROR: non changeable var " + self + " must be initialized")
+      if (!self.isChangeable)
+        Logger.error("ERROR: readonly variable " + self + " must be initialized")
     }
     builder append "\n"
   }
