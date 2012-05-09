@@ -587,9 +587,9 @@ class LinuxCGeneratorContext ( src: Configuration ) extends CGeneratorContext ( 
     builder append maintemplate
   }
 
-  override def init_debug_mode() = "printf(\"THINGML: Starting in debug mode...\n\");" // Any code to initialize the debug mode
+  override def init_debug_mode() = "printf(\"THINGML: Starting in debug mode...\\n\");" // Any code to initialize the debug mode
 
-  override def print_debug_message(msg : String) = "printf(\"THINGML: " + msg + "\n\");"
+  override def print_debug_message(msg : String) = "printf(\"THINGML: " + msg + "\\n\");"
 
 }
 
@@ -855,7 +855,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
   def message_size(m : Message, context : CGeneratorContext) = {
 
     var result = 2 // 2 bytes to store the port/message code
-    result += context.pointerSize() // to store the pointer to the source instance
+    result += 2 // to store the id of the source instance
     m.getParameters.foreach{ p =>
       result += p.getType.c_byte_size()
     }
@@ -913,7 +913,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append "if (fifo_empty()) return 0; // return if there is nothing to do\n\n"
 
 
-    var max_msg_size = 2 + context.pointerSize()  // at least the code and the source instance pointer
+    var max_msg_size = 4  // at least the code and the source instance id (2 bytes + 2 bytes)
 
     self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
       var allMessageDispatch = self.allMessageDispatch(t,p)

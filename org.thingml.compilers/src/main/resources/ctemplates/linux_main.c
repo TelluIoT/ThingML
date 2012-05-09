@@ -23,6 +23,6 @@ int main(int argc, char *argv[]) {
   while (1) {
     /*POLL_CODE*/
     processMessageQueue();
-
+    usleep(10000);
   }
 }
