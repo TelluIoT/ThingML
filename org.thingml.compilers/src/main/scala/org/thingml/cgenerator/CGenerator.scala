@@ -34,6 +34,7 @@ import org.sintef.thingml._
 import org.thingml.model.scalaimpl.aspects.MergedConfigurationCache
 import java.util.{Hashtable, ArrayList}
 import java.lang.{ProcessBuilder, Boolean, StringBuilder}
+import org.thingml.graphexport.ThingMLGraphExport
 
 object SimpleCopyTemplate {
 
@@ -385,6 +386,49 @@ object CGenerator {
 
     compileToLinux(cfg, out.getAbsolutePath)
 
+    /*
+     * GENERATE SOME DOCUMENTATION
+     */
+
+    val docfolder = new File(out, "doc")
+    docfolder.mkdirs
+
+    val model = ThingMLHelpers.findContainingModel(cfg)
+
+    try {
+      var dots = ThingMLGraphExport.allGraphviz(model)
+      import scala.collection.JavaConversions._
+      for (name <- dots.keySet) {
+        System.out.println(" -> Writing file " + name + ".dot")
+        var w: PrintWriter = new PrintWriter(new FileWriter(docfolder.getAbsolutePath + File.separator + name + ".dot"))
+        w.println(dots.get(name))
+        w.close
+      }
+    }
+    catch {
+      case t: Throwable => {
+        t.printStackTrace
+      }
+    }
+
+
+
+    try {
+      var gml = ThingMLGraphExport.allGraphML(model)
+      import scala.collection.JavaConversions._
+      for (name <- gml.keySet) {
+        System.out.println(" -> Writing file " + name + ".graphml")
+        var w: PrintWriter = new PrintWriter(new FileWriter(docfolder.getAbsolutePath + File.separator + name + ".graphml"))
+        w.println(gml.get(name))
+        w.close
+      }
+    }
+    catch {
+      case t: Throwable => {
+        t.printStackTrace
+      }
+    }
+
     val pb: ProcessBuilder = new ProcessBuilder("make")
     pb.directory(out)
     val p: Process = pb.start
@@ -721,11 +765,15 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         builder append "register_" + t.sender_name(port, msg) + "_listener("
 
 
+        if (isSyncSend(port)) {
+          // This is for static call of dispatches
+          builder append "dispatch_" + t.sender_name(port, msg) + ");\n"
+        }
+        else {
+          // This is to enquqe the message and let the scheduler forward it
+           builder append "enqueue_" + t.sender_name(port, msg) + ");\n"
+        }
 
-        // This is for static call of dispatches
-        // builder append "dispatch_" + t.sender_name(port, msg) + ");\n"
-        // This is to enquqe the message and let the scheduler forward it
-         builder append "enqueue_" + t.sender_name(port, msg) + ");\n"
       }
     }}}
 
@@ -734,6 +782,10 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     // Generate code to initialize variable for instances
     self.allInstances.foreach { inst =>
        inst.generateC(builder, context)
+    }
+
+    self.allInstances.foreach { inst =>
+       inst.generateOnEntry(builder, context)
     }
 
     builder append "}\n"
@@ -822,10 +874,16 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
           (c.getProvided == port && c.getRequired.getReceives.contains(msg)) }) {
         builder append t.sender_name(port, msg) + "_listener = "
 
-        // This is for static call of dispatches
-        // builder append "dispatch_" + t.sender_name(port, msg) + ";\n"
-        // This is to enquqe the message and let the scheduler forward it
-         builder append "enqueue_" + t.sender_name(port, msg) + ";\n"
+        //println("Initialize port " + port.getName + " sync " + isSyncSend(port))
+
+        if (isSyncSend(port)) {
+          // This is for static call of dispatches
+          builder append "dispatch_" + t.sender_name(port, msg) + ");\n"
+        }
+        else {
+          // This is to enquqe the message and let the scheduler forward it
+           builder append "enqueue_" + t.sender_name(port, msg) + ");\n"
+        }
       }
     }}}
 
@@ -835,6 +893,11 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     self.allInstances.foreach { inst =>
        inst.generateC(builder, context)
     }
+
+    self.allInstances.foreach { inst =>
+       inst.generateOnEntry(builder, context)
+    }
+
 
     builder append "}\n"
 
@@ -875,9 +938,18 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     result
   }
 
+
+  def isSyncSend(p : Port) : Boolean = {
+    p.getAnnotations.filter { a => a.getName == "sync_send" }.headOption match {
+      case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue.trim().equals("true")
+      case None => return false;
+    }
+  }
+
   def generateMessageEnqueue(builder : StringBuilder, context : CGeneratorContext) {
 
-    self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
+    // Generate the Enqueue operation only for ports which are not marked as "sync"
+    self.allThings.foreach{ t=> t.allPorts.filter{ p => !isSyncSend(p) }.foreach{ p=>
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
         builder append "// Enqueue of messages " + t.getName + "::" + p.getName + "::" + m.getName + "\n"
@@ -936,7 +1008,8 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
     var max_msg_size = 4  // at least the code and the source instance id (2 bytes + 2 bytes)
 
-    self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
+    // Generate dequeue code only for non syncronized ports
+    self.allThings.foreach{ t=> t.allPorts.filter{ p => !isSyncSend(p) }.foreach{ p=>
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
         val size = message_size(m, context)
@@ -955,7 +1028,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append "// Switch to call the appropriate handler\n"
     builder append "switch(code) {\n"
 
-    self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
+    self.allThings.foreach{ t=> t.allPorts.filter{ p => !isSyncSend(p) }.foreach{ p=>
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
 
@@ -1108,9 +1181,6 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     if (!things.isEmpty) {
       var arduino = things.head
       var setup_msg : Message = arduino.allMessages.filter{ m => m.getName == "setup" }.head
-
-
-
 
 
       // Send a setup message to all components which can receive it
@@ -1285,10 +1355,13 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
       }
     }
 
-    builder append self.getType.composedBehaviour.qname("_") + "_OnEntry(" + self.getType.state_id(self.getType.composedBehaviour) + ", &" + c_var_name + ");\n"
-
     builder append "\n"
   }
+
+  def generateOnEntry(builder: StringBuilder, context : CGeneratorContext) {
+    builder append self.getType.composedBehaviour.qname("_") + "_OnEntry(" + self.getType.state_id(self.getType.composedBehaviour) + ", &" + c_var_name + ");\n"
+  }
+
 }
 
 case class ConnectorCGenerator(override val self: Connector) extends ThingMLCGenerator(self) {
