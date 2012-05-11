@@ -33,8 +33,8 @@ import io.Source
 import org.sintef.thingml._
 import org.thingml.model.scalaimpl.aspects.MergedConfigurationCache
 import java.util.{Hashtable, ArrayList}
-import java.lang.{ProcessBuilder, Boolean, StringBuilder}
 import org.thingml.graphexport.ThingMLGraphExport
+import java.lang.{StringBuilder, ProcessBuilder, Boolean}
 
 object SimpleCopyTemplate {
 
@@ -619,6 +619,10 @@ class CGeneratorContext( src: Configuration ) {
   def sync_fifo() = false;
 
   def print_debug_message(msg : String) = "// DEBUG: " + msg
+
+  def print_message(msg : String) = "// PRINT: " + msg
+
+  def error_message(msg : String) = "// ERROR: " + msg
 }
 
 class LinuxCGeneratorContext ( src: Configuration ) extends CGeneratorContext ( src ) {
@@ -652,6 +656,10 @@ class LinuxCGeneratorContext ( src: Configuration ) extends CGeneratorContext ( 
   override def init_debug_mode() = "printf(\"THINGML: Starting in debug mode...\\n\");" // Any code to initialize the debug mode
 
   override def print_debug_message(msg : String) = "printf(\"THINGML: " + msg + "\\n\");"
+
+  override def print_message(exp : String) = "fprintf(stdout, "+exp+");\n"
+
+  override def error_message(exp : String) = "fprintf(stderr, "+exp+");\n"
 
 }
 
@@ -2095,17 +2103,17 @@ case class LoopActionCGenerator(override val self: LoopAction) extends ActionCGe
 
 case class PrintActionCGenerator(override val self: PrintAction) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
-    builder append "//TODO: print "
-    self.getMsg.generateC(builder, context)
-    builder append "\n"
+    val b = new StringBuilder()
+    self.getMsg.generateC(b, context)
+    builder append context.print_message (b.toString)
   }
 }
 
 case class ErrorActionCGenerator(override val self: ErrorAction) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
-    builder append "//TODO: report error "
-    self.getMsg.generateC(builder, context)
-    builder append "\n"
+     val b = new StringBuilder()
+    self.getMsg.generateC(b, context)
+    builder append context.error_message (b.toString)
   }
 }
 
