@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 /**
- * This code generator targets the SMAc Framework
- * see https://github.com/brice-morin/SMAc
+ * This code generator targets the PauWare Framework by Barbier et al.
  * @author: Brice MORIN <brice.morin@sintef.no>
  */
-package org.thingml.scalagenerator
+package org.thingml.java.pauwaregenerator
 
-import org.thingml.scalagenerator.ScalaGenerator._
+import org.thingml.java.pauwaregenerator.PauWareGenerator._
 import org.sintef.thingml.constraints.ThingMLHelpers
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
@@ -62,7 +61,7 @@ object Context {
   }
 }
 
-object ScalaGenerator {
+object PauWareGenerator {
   implicit def scalaGeneratorAspect(self: Thing): ThingScalaGenerator = ThingScalaGenerator(self)
 
   implicit def scalaGeneratorAspect(self: Configuration): ConfigurationScalaGenerator = ConfigurationScalaGenerator(self)
@@ -176,46 +175,48 @@ object ScalaGenerator {
     }
   }
   
+  //TODO: update
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
     new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
     
     val code = compile(cfg, "org.thingml.generated", model)
-    val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
-    val outputDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/scala/org/thingml/generated"
+    println(Context.builder.toString)
+    /*val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
+     val outputDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/java/org/thingml/generated"
     
-    val outputDirFile = new File(outputDir)
-    outputDirFile.mkdirs
+     val outputDirFile = new File(outputDir)
+     outputDirFile.mkdirs
     
-    var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + cfg.getName() + ".scala")));
-    w.println(code._1);
-    w.close();
+     /*var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + cfg.getName() + ".scala")));
+      w.println(code._1);
+      w.close();
     
-    w = new PrintWriter(new FileWriter(new File(outputDir + "/Main.scala")));
-    w.println(code._2);
-    w.close();
+      w = new PrintWriter(new FileWriter(new File(outputDir + "/Main.scala")));
+      w.println(code._2);
+      w.close();*/
     
-    var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/pom.xml"),"utf-8").getLines().mkString("\n")
-    pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
+     var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/pom.xml"),"utf-8").getLines().mkString("\n")
+     pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
     
-    //Add ThingML dependencies
-    val thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n"
-    cfg.allThingMLMavenDep.foreach{dep =>
-      pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"))
-    }
-    pom = pom.replace("<!--DEP-->","")
+     //Add ThingML dependencies
+     val thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n"
+     cfg.allThingMLMavenDep.foreach{dep =>
+     pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"))
+     }
+     pom = pom.replace("<!--DEP-->","")
     
-    //TODO: add other maven dependencies
+     //TODO: add other maven dependencies
     
-    w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
-    w.println(pom);
-    w.close();
+     /*    w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
+      w.println(pom);
+      w.close();
+      */  
+     javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean compile exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
     
-    javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean compile exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
-    
-    actor{
-      compileGeneratedCode(rootDir)
-    }
-      
+     actor{
+     compileGeneratedCode(rootDir)
+     }
+     */
   }
   
   def isWindows() : Boolean = {
@@ -257,13 +258,13 @@ object ScalaGenerator {
     result
   }
 
-  def messageDeclaration(m : Message, builder: StringBuilder = Context.builder) {
-    val nameParam = "override val name : String = " + Context.firstToUpper(m.getName) + ".getName"
-    val params = m.getParameters.collect{ case p => Context.protectScalaKeyword(p.getName) + " : " + p.getType.scala_type(p.getCardinality != null)} += nameParam
-    builder append Context.firstToUpper(m.getName) + "("
-    builder append params.mkString(", ")
-    builder append ")"
-  }
+  /*def messageDeclaration(m : Message, builder: StringBuilder = Context.builder) {
+   val nameParam = "override val name : String = " + Context.firstToUpper(m.getName) + ".getName"
+   val params = m.getParameters.collect{ case p => Context.protectScalaKeyword(p.getName) + " : " + p.getType.java_type(p.getCardinality != null)} += nameParam
+   builder append Context.firstToUpper(m.getName) + "("
+   builder append params.mkString(", ")
+   builder append ")"
+   }*/
   
   def compile(t: Configuration, pack : String, model: ThingMLModel) : Pair[String, String] = {
     Context.init
@@ -275,25 +276,26 @@ object ScalaGenerator {
     generateHeader()
     generateHeader(mainBuilder, true)
     
-    t.generateScalaMain(mainBuilder)
+    t.generateJavaMain(mainBuilder)
     
     model.allSimpleTypes.filter{ t => t.isInstanceOf[Enumeration] }.foreach{ e =>
-      e.generateScala()
+      e.generateJava()
     }
 
     // Generate code for things which appear in the configuration
     
-    model.allMessages.foreach{m =>
-      Context.builder append "object " + Context.firstToUpper(m.getName) + "{ def getName = \"" + m.getName + "\" }\n" 
-      Context.builder append "case class " 
-      messageDeclaration(m)
-      Context.builder append " extends Event(name)\n"
-    }
+    /* model.allMessages.foreach{m =>
+     Context.builder append "object " + Context.firstToUpper(m.getName) + "{ def getName = \"" + m.getName + "\" }\n" 
+     Context.builder append "case class " 
+     messageDeclaration(m)
+     Context.builder append " extends Event(name)\n"
+     }*/
   
-    t.generateScala()
+    t.generateJava()
     (Context.builder.toString, mainBuilder.toString)
   }
   
+  //TODO: revise imports
   def generateHeader(builder: StringBuilder = Context.builder, isMain : Boolean = false) = {
     builder append "/**\n"
     builder append " * File generated by the ThingML IDE\n"
@@ -301,29 +303,17 @@ object ScalaGenerator {
     builder append " * In case of a bug in the generated code,\n"
     builder append " * please submit an issue on our GitHub\n"
     builder append " **/\n\n"
-
-    builder append "package " + Context.pack + "\n"
-    builder append "import " + Context.pack + "._\n"
-    builder append "import org.sintef.smac._\n"
     
-    if (!isMain) {
-      builder append "import scala.annotation.elidable\n"
-      builder append "import scala.annotation.elidable._\n"
-      builder append "import org.thingml.utils.comm.SerializableTypes._\n"//implicits for proper conversions from/to array of bytes
-
-      builder append "object Logger {\n"
-      builder append "@elidable(MINIMUM)def debug(s : String) {println(\"DEBUG:\" + s)}\n"
-      builder append "@elidable(INFO)def info(s : String) {println(\"INFO:\" + s)}\n"
-      builder append "@elidable(WARNING)def warning(s : String) {println(\"WARNING:\" + s)}\n"
-      builder append "@elidable(SEVERE)def error(s : String) {println(\"ERROR:\" + s)}\n"
-      builder append "@elidable(MAXIMUM)def severe(s : String) {println(\"KERNEL PANIC:\" + s)}\n"
-      builder append "}\n"
-    }
+    //TODO
   }
 }
 
 case class ThingMLScalaGenerator(self: ThingMLElement) {
-  def generateScala(builder: StringBuilder = Context.builder) {
+  def generateJavaInterface(builder: StringBuilder = Context.builder) {
+    // Implemented in the sub-classes
+  }
+
+  def generateJava(builder: StringBuilder = Context.builder) {
     // Implemented in the sub-classes
   }
 }
@@ -331,114 +321,33 @@ case class ThingMLScalaGenerator(self: ThingMLElement) {
 
 case class ConfigurationScalaGenerator(override val self: Configuration) extends ThingMLScalaGenerator(self) {
 
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    
+    generateConnectorClass()
     
     self.allThings.foreach { thing =>
-      thing.generateScala(/*Context.builder*/)
+      thing.generateJavaInterface()
+      thing.generateJava(/*Context.builder*/)
     }
 
     builder append "\n"
     builder append "// Initialize instance variables and states\n"
     // Generate code to initialize variable for instances
     self.allInstances.foreach { inst =>
-      inst.generateScala()
+      inst.generateJava()
     }
 
-    //generateScalaMain()
+    //generateJavaMain()
   }
 
-  def generateScalaMain(builder: StringBuilder = Context.builder) {
-    builder append "object Main {\n\n"
-    builder append "def main(args: Array[String]): Unit = {\n"
-      
-    builder append "//Channels\n"
-    self.allConnectors.foreach{ c =>
-      builder append "val " + c.instanceName + " = new Channel\n"
-      builder append c.instanceName + ".start\n"
-    }
-    
-    //define temp arrays   
-    self.allInstances.foreach{ i =>
-      self.allArrays(i).foreach{ init =>
-        builder append "//Initializing arrays\n"
-        var result = "val " + init.scala_var_name + "_" + i.getName + " = new " + init.getType.scala_type(init.getCardinality != null) + "(" 
-        val tempBuilder = new StringBuilder()
-        init.getCardinality.generateScala(tempBuilder)
-        result += tempBuilder.toString
-        result += ")\n"
-        builder append result
-      }
-      
-      val arrayMap = self.initExpressionsByArrays(i)
-      arrayMap.keys.foreach{ init =>
-        var result = ""
-        var tempBuilder = new StringBuilder()
-        arrayMap.get(init).get.foreach{pair => 
-          result += init.scala_var_name + "_" + i.getName + "("
-          tempBuilder = new StringBuilder()
-          pair._1.generateScala(tempBuilder)
-          result += tempBuilder.toString
-          result += ") = "
-          tempBuilder = new StringBuilder()
-          pair._2.generateScala(tempBuilder)
-          result += tempBuilder.toString + "\n"
-        }
-        builder append result
-      }
-    }
-   
-    
-    builder append "//Things\n"
-    self.allInstances.foreach{ i =>
-      
-      i.getType.getAnnotations.filter{a =>
-        a.getName == "mock"
-      }.headOption match {
-        case Some(a) =>
-          a.getValue match {
-            case "true" => builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "Mock()\n"
-            case "mirror" => builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "MockMirror()\n"
-          }
-        case None => 
-          builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "("
-          ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-          builder append (self.initExpressionsForInstance(i).collect{case p =>         
-                var result = (if (p._1.isChangeable) "_" else "") + p._1.scala_var_name + " = "
-                if (p._2 != null) {
-                  var tempbuilder = new StringBuilder()
-                  p._2.generateScala(tempbuilder)
-                  result += tempbuilder.toString
-                } else {
-                  result += "null"
-                }
-                result += ".asInstanceOf[" + p._1.getType.scala_type(p._1.getCardinality != null) + "]"
-                result
-            }
-            ++ 
-            self.allArrays(i).collect{ case init =>
-                (if (init.isChangeable) "_" else "") + init.scala_var_name + " = " + init.scala_var_name + "_" + i.getName
-            }
-          ).mkString(", ")
-          builder append ")\n"
-      }
-    }
-    
-    builder append "//Bindings\n"
-    self.allConnectors.foreach{ c =>
-      builder append c.instanceName + ".connect(\n" 
-      builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get,\n"
-      builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get\n"
-      builder append")\n"
-      builder append c.instanceName + ".connect(\n" 
-      builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get,\n"
-      builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get\n"
-      builder append")\n\n"
-    }
-    
-    builder append "//Starting Things\n"
-    self.allInstances.foreach{ i =>
-      builder append i.instanceName + ".asInstanceOf[Component].start\n"
-    }
+  def generateConnectorClass(builder: StringBuilder = Context.builder) {
+    //TODO: create from template
+  }
+  
+  def generateJavaMain(builder: StringBuilder = Context.builder) {
+    builder append "class Main" + Context.firstToUpper(self.getName) + " {\n\n"
+    builder append "public static void main(String[] args) {\n"
+     
     
     builder append "}\n\n"
     builder append "}\n"
@@ -458,90 +367,118 @@ case class ConnectorScalaGenerator(override val self: Connector) extends ThingML
 
 case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGenerator(self) {
 
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJavaInterface(builder: StringBuilder = Context.builder) {
+    
+    builder append "package org.thingml.generated;\n\n"
+
+    builder append "import com.FranckBarbier.Java._PauWare.Manageable;\n"
+    builder append "import com.FranckBarbier.Java._PauWare._Exception.Statechart_exception;\n\n"
+    
+    builder append "\n/**\n"
+    builder append " * Interface for type : " + self.getName + "\n"
+    builder append " **/\n"
+    
+    builder append "interface " + Context.firstToUpper(self.getName) + "Interface extends Manageable {\n\n"
+    self.allIncomingMessages.foreach{m =>
+      builder append "void "
+      builder append m.getName()
+      builder append m.getParameters.collect{case p =>
+          p.getType.java_type(p.getCardinality!=null) + " " + p.scala_var_name
+      }.mkString("(", ", ", ")")
+      builder append " throws Statechart_exception;"
+      builder append "\n"
+    }
+    builder append "}\n"
+  }
+  
+  override def generateJava(builder: StringBuilder = Context.builder) {
     Context.thing = self
     
     builder append "\n/**\n"
     builder append " * Definitions for type : " + self.getName + "\n"
     builder append " **/\n"
     
-    var traits = ""
-    if (self.hasAnnotation("scala_trait")) {
-      traits = "with " + self.annotation("scala_trait")
-    } else if (self.hasAnnotation("java_interface")) {
-      traits = "with " + self.annotation("java_interface")
-    }
+    //TODO: enable generate classes to implement external interfaces
+    /*var traits = ""
+     if (self.hasAnnotation("scala_trait")) {
+     traits = "with " + self.annotation("scala_trait")
+     } else if (self.hasAnnotation("java_interface")) {
+     traits = "with " + self.annotation("java_interface")
+     }*/
 
-    builder append "class " + Context.firstToUpper(self.getName) + "("
+    builder append "class " + Context.firstToUpper(self.getName) + "implements " + Context.firstToUpper(self.getName) + " {\n\n"
+     
     generateProperties()
-    builder append ") extends Component " + traits + "{\n\n"
-    
-    generateAccessors()
-    
-    builder append "//Companion object\n"
-    builder append "object " + Context.firstToUpper(self.getName) + "{\n"
-    self.allPorts.foreach{ p => 
-      builder append "object " + p.getName + "Port{\n"
-      builder append "def getName = \"" + p.getName + "\"\n"
-      builder append "object in {\n" 
-      p.getReceives.foreach{r =>
-        builder append "val " + r.getName + " = " + Context.firstToUpper(r.getName) + ".getName\n"
-      }
-      builder append "}\n"
-      builder append "object out {\n" 
-      p.getSends.foreach{s =>
-        builder append "val " + s.getName + " = " + Context.firstToUpper(s.getName) + ".getName\n"
-      }
-      builder append "}\n"
-      builder append "}\n\n"
-    }
-    builder append "}\n\n"
-    
-       
-    generatePortDef()
-    
+    //generateAccessors()       
+    //generatePortDef()
+    generateConstructor()
+    generateStateDeclaration()   
     
     self.allFunctions.foreach{
-      f => f.generateScala()
+      f => f.generateJava()
     }
     
-    if(self.hasAnnotation("scala_def")) {
-      builder append self.annotation("scala_def")
-    }    
-
-    self.allStateMachines.foreach{b => 
-      builder append "this.behavior ++= List("
-      val hist = if (b.isHistory) "true" else "false"
-      builder append "new " + Context.firstToUpper(b.getName) + "StateMachine(" + hist + ", this).getBehavior)\n"
-    }
+    /*if(self.hasAnnotation("scala_def")) {
+     builder append self.annotation("scala_def")
+     }*/   
     
-    self.allStateMachines.foreach{b => 
-      b.asInstanceOf[StateMachine].generateScala()
-    }
+    /*self.allStateMachines.foreach{b => 
+     b.asInstanceOf[StateMachine].generateJava()
+     }*/
     
     builder append "}\n"
   }
 
-  def generatePortDef(builder: StringBuilder = Context.builder) {
-    self.allPorts.foreach{ p => 
-      builder append "new Port(" + Context.firstToUpper(self.getName) + "." + p.getName + "Port.getName, List(" + p.getReceives.collect{case r => Context.firstToUpper(self.getName) + "." + p.getName + "Port.in." + r.getName}.mkString(", ").toString + "), List(" + p.getSends.collect{case s => Context.firstToUpper(self.getName) + "." + p.getName + "Port.out." + s.getName}.mkString(", ").toString + "), this).start\n"
-    }
+  /*def generatePortDef(builder: StringBuilder = Context.builder) {
+   self.allPorts.foreach{ p => 
+   builder append "new Port(" + Context.firstToUpper(self.getName) + "." + p.getName + "Port.getName, List(" + p.getReceives.collect{case r => Context.firstToUpper(self.getName) + "." + p.getName + "Port.in." + r.getName}.mkString(", ").toString + "), List(" + p.getSends.collect{case s => Context.firstToUpper(self.getName) + "." + p.getName + "Port.out." + s.getName}.mkString(", ").toString + "), this).start\n"
+   }
+   }*/
+  
+  def generateConstructor(builder: StringBuilder = Context.builder) {
+    builder append "//Default Constructor\n"
+    builder append "public " + Context.firstToUpper(self.getName) + "() {\n"
+    self.getPorts.foreach{p => 
+      builder append "connectors.put(\"" + p.getName + "\", new LinkedList<Connector>()" + ");\n"
+    } 
+    builder append "}\n\n"
+    
+    builder append "//Constructor with all parameters\n"
+    builder append "public " + Context.firstToUpper(self.getName)
+    builder append self.allPropertiesInDepth.collect{case p =>
+        p.getType.java_type(p.getCardinality!=null) + " " + p.scala_var_name
+    }.mkString("(", ", ", ")")
+    builder append "{\n"
+    builder append self.allPropertiesInDepth.collect{case p =>
+        "this." + p.scala_var_name + " = " +  p.scala_var_name + ";"
+    }.mkString("\n")
+    builder append "\n}\n\n"
   }
   
   def generateProperties(builder: StringBuilder = Context.builder) {
+    builder append "/**Properties**/"
+    builder append "//Internal properties\n"
+    builder append "private Map<String, List<Connector>> connectors = new HashMap<String, List<Connector>>();\n\n"
+    
+    builder append "//Business properties\n"
     builder append self.allPropertiesInDepth.collect{case p =>
-        (if (!p.isChangeable) "val " else "private var _") +
-        p.scala_var_name + " : " + p.getType.scala_type(p.getCardinality != null)
-    }.mkString(", ")
+        "private " + p.getType.java_type(p.getCardinality!=null) + " " + p.scala_var_name + ";"
+    }.mkString("\n", "\n", "\n\n")
   }
   
-  def generateAccessors(builder: StringBuilder = Context.builder) {
-    self.allPropertiesInDepth.filter{p => p.isChangeable}.foreach{p =>
-      builder append "//Synchronized accessors of " + p.getName + ":" + p.getType.scala_type(p.getCardinality != null) + "\n"
-      builder append "def " + p.scala_var_name + ":" + p.getType.scala_type(p.getCardinality != null) + " = {synchronized{return _" + p.scala_var_name + "}}\n"
-      builder append "def " + p.scala_var_name + "_=(newValue : " + p.getType.scala_type(p.getCardinality != null) + ") { synchronized{ _" + p.scala_var_name + " = newValue}}\n\n"
+  def generateStateDeclaration(builder: StringBuilder = Context.builder) {
+    self.allStateMachines.foreach{b => 
+      b.asInstanceOf[StateMachine].generateJavaDeclaration()
     }
   }
+  
+  /*def generateAccessors(builder: StringBuilder = Context.builder) {
+   self.allPropertiesInDepth.filter{p => p.isChangeable}.foreach{p =>
+   builder append "//Synchronized accessors of " + p.getName + ":" + p.getType.java_type(p.getCardinality != null) + "\n"
+   builder append "def " + p.scala_var_name + ":" + p.getType.java_type(p.getCardinality != null) + " = {synchronized{return _" + p.scala_var_name + "}}\n"
+   builder append "def " + p.scala_var_name + "_=(newValue : " + p.getType.java_type(p.getCardinality != null) + ") { synchronized{ _" + p.scala_var_name + " = newValue}}\n\n"
+   }
+   }*/
 }
 
 case class VariableScalaGenerator(override val self: Variable) extends ThingMLScalaGenerator(self) {
@@ -588,7 +525,7 @@ case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScal
     if(self.getGuard != null){
       builder append "override def checkGuard() : Boolean = {\n"
       //builder append "try {\n"
-      self.getGuard.generateScala()
+      self.getGuard.generateJava()
       //builder append "}\ncatch {\n"
       //builder append "case nse : java.util.NoSuchElementException => return false\n"
       //builder append "case e : Exception => return false\n"
@@ -602,7 +539,7 @@ case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScal
     builder append "Logger.debug(\"" + handlerInstanceName + ".executeActions\")\n"
     Option(self.getAction) match {
       case Some(a) =>
-        self.getAction.generateScala()
+        self.getAction.generateJava()
       case None =>
         builder append "//No action defined for this transition\n"
         Logger.info("no action for transition "+self)
@@ -616,7 +553,7 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
   override val handlerInstanceName = "t_" + self.getSource.getName + "2" + self.getTarget.getName + "_" + self.hashCode
   override val handlerTypeName = "Transition" + self.getSource.getName + "2" + self.getTarget.getName + "_" + self.hashCode
   
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append "case class " + handlerTypeName + " extends TransitionAction {\n"
     
     printGuard()
@@ -625,7 +562,7 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
       case Some(a) =>
         builder append "override def executeBeforeActions() = {\n"
         builder append "Logger.debug(\"" + handlerInstanceName + ".executeBeforeActions\")\n"
-        self.getBefore.generateScala()
+        self.getBefore.generateJava()
         builder append "}\n\n"
       case None =>
         Logger.info("no before action for transition "+self)
@@ -634,7 +571,7 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
     Option(self.getAfter) match {
       case Some(a) =>
         builder append "Logger.debug(\"" + handlerInstanceName + ".executeAfterActions\")\n"
-        self.getAfter.generateScala()
+        self.getAfter.generateJava()
         builder append "}\n\n"
       case None =>
         Logger.info("no after action for transition "+self)
@@ -649,7 +586,7 @@ case class InternalTransitionScalaGenerator(override val self: InternalTransitio
   override val handlerInstanceName = "t_self_" + self.eContainer.asInstanceOf[State].getName + "_" + self.hashCode
   override val handlerTypeName = "InternalTransition_" + self.eContainer.asInstanceOf[State].getName + "_" + self.hashCode
   
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append "case class " + handlerTypeName + " extends InternalTransitionAction {\n"
     printGuard()
     printAction()
@@ -658,6 +595,13 @@ case class InternalTransitionScalaGenerator(override val self: InternalTransitio
 }
 
 case class StateMachineScalaGenerator(override val self: StateMachine) extends CompositeStateScalaGenerator(self) {
+  
+  override def generateJavaDeclaration(builder: StringBuilder = Context.builder) {
+    self.allContainedSimpleStates.foreach{s =>
+      builder append "protected AbstractStatechart _" + s.getName + ";\n"//TODO: we should probably use the qualified name of the state
+    }
+  }
+  
   override def classHeader(builder: StringBuilder = Context.builder) {
     builder append "case class " + Context.firstToUpper(self.getName) + "StateMachine(keepHistory : Boolean, root : Component) extends StateAction {\n"
    
@@ -668,6 +612,8 @@ case class StateMachineScalaGenerator(override val self: StateMachine) extends C
 
 case class StateScalaGenerator(override val self: State) extends ThingMLScalaGenerator(self) {
     
+  def generateJavaDeclaration(builder: StringBuilder = Context.builder) {}
+
   def declareState(builder: StringBuilder = Context.builder) {
     builder append "val " + self.getName + "_state = new State(" + Context.firstToUpper(self.getName) + "State(), root)\n"
   }
@@ -677,7 +623,7 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
     builder append "Logger.debug(\"" + self.getName + ".onEntry\")\n"
     Option(self.getEntry) match {
       case Some(a) =>  
-        self.getEntry.generateScala()
+        self.getEntry.generateJava()
       case None =>
         builder append "//No entry action defined for this state\n"
         Logger.info("no onEntry action for state "+self)
@@ -688,7 +634,7 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
     builder append "Logger.debug(\"" + self.getName + ".onExit\")\n"
     Option(self.getExit) match {
       case Some(a) =>  
-        self.getExit.generateScala()
+        self.getExit.generateJava()
       case None =>
         builder append "//No exit action defined for this state\n"
         Logger.info("no onExit action for state "+self)
@@ -698,11 +644,11 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
     
   def generateInternalTransitions() {
     self.getInternal.foreach{ t => 
-      t.generateScala()
+      t.generateJava()
     }
   }
   
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append "case class " + Context.firstToUpper(self.getName) + "State extends StateAction {\n"
     
     generateActions()
@@ -720,7 +666,7 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
 }
 
 case class CompositeStateScalaGenerator(override val self: CompositeState) extends StateScalaGenerator(self) {  
-
+  
   override def declareState(builder: StringBuilder = Context.builder) {
     val history = if(self.isHistory) "true" else "false"
     builder append "val " + self.getName + "_state = new " + Context.firstToUpper(self.getName) + "State(" + history + ", root).getBehavior\n"
@@ -745,7 +691,7 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
     r.getSubstate.foreach{ sub =>  
       sub.declareState()
       builder append "parent.addSubState(" + sub.getName + "_state" + ")\n"
-      sub.generateScala()
+      sub.generateJava()
     }
     builder append "parent.setInitial(" + r.getInitial.getName + "_state" + ")\n\n"
     
@@ -760,7 +706,7 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
     
     r.getSubstate.foreach{sub => 
       sub.getOutgoing.foreach{ t => 
-        t.generateScala()
+        t.generateJava()
       }
     }
   }
@@ -786,14 +732,14 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
     builder append "}\n"
   }
   
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     classHeader()
     classBody()
   }
 }
 
 case class TypedElementScalaGenerator(val self: TypedElement) /*extends ThingMLScalaGenerator(self)*/ {
-  def generateScala(builder: StringBuilder = Context.builder) {
+  def generateJava(builder: StringBuilder = Context.builder) {
     // Implemented in the sub-classes
   }
 }
@@ -801,13 +747,12 @@ case class TypedElementScalaGenerator(val self: TypedElement) /*extends ThingMLS
   
 
 case class FunctionScalaGenerator(override val self: Function) extends TypedElementScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     var generate = true
     self.getAnnotations.filter {
       a => a.getName == "abstract"
     }.headOption match {
       case Some(a) => 
-        println("ABSTRACT=" + a.getValue)
         generate = !a.getValue.toLowerCase.equals("true")
       case None =>
     }
@@ -816,16 +761,14 @@ case class FunctionScalaGenerator(override val self: Function) extends TypedElem
         a => a.getName == "override"
       }.headOption match {
         case Some(a) => 
-          builder append "override "
+          builder append "@Override\n"
         case None =>
       }
      
-      var returnType = self.getType.scala_type(self.getCardinality != null)
+      var returnType = self.getType.java_type(self.getCardinality != null)
   
-      builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => Context.protectScalaKeyword(p.scala_var_name) + " : " + p.getType.scala_type(p.getCardinality != null)}.mkString(", ") + ") : " + returnType + " = {\n"
-      builder append "Logger.debug(\"Executing " + self.getName + " ...\")\n"
-      builder append "val handler = this\n" 
-      self.getBody.generateScala()
+      builder append "protected " + returnType + " " + self.getName + "(" + self.getParameters.collect{ case p => Context.protectScalaKeyword(p.scala_var_name) + " : " + p.getType.java_type(p.getCardinality != null)}.mkString(", ") + ") {\n"
+      self.getBody.generateJava()
       builder append "}\n"
     }
   }
@@ -837,39 +780,32 @@ case class FunctionScalaGenerator(override val self: Function) extends TypedElem
  */
 
 case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     // Implemented in the sub-classes
   }
 
-  def generateScala_TypeRef(builder: StringBuilder) = {
-    scala_type()
+  def generateJava_TypeRef(builder: StringBuilder) = {
+    java_type()
   }
 
-  def scala_type(isArray : Boolean = false): String = {
+  def java_type(isArray : Boolean = false): String = {
     if (self == null){
-      return "Unit"
+      return "void"
     }
     else {
       var res : String = self.getAnnotations.filter {
-        a => a.getName == "scala_type"
+        a => a.getName == "java_type"
       }.headOption match {
         case Some(a) => 
           a.asInstanceOf[PlatformAnnotation].getValue
         case None => 
-          self.getAnnotations.filter {
-            a => a.getName == "java_type"
-          }.headOption match {
-            case Some(a) => 
-              a.asInstanceOf[PlatformAnnotation].getValue
-            case None =>
-              Logger.warning("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
-              var temp : String = self.getName
-              temp = temp.capitalize//temp(0).toUpperCase + temp.substring(1, temp.length)
-              temp
-          }
+          Logger.warning("Warning: Missing annotation java_type or java_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
+          var temp : String = self.getName
+          temp = temp.capitalize//temp(0).toUpperCase + temp.substring(1, temp.length)
+          temp
       }
       if (isArray) {
-        res = "Array[" + res + "]"
+        res = res + "[]"
       }
       return res
     }
@@ -881,22 +817,49 @@ case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGener
  */
 
 case class PrimitiveTypeScalaGenerator(override val self: PrimitiveType) extends TypeScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "// ThingML type " + self.getName + " is mapped to " + scala_type() + "\n"
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    builder append "// ThingML type " + self.getName + " is mapped to " + java_type() + "\n"
   }
 }
 
 case class EnumerationScalaGenerator(override val self: Enumeration) extends TypeScalaGenerator(self) {
   val enumName = Context.firstToUpper(self.getName) + "_ENUM"
     
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
+
+    builder append "package org.thingml.generated.java;\n\n"
+
+    builder append "import java.util.HashMap;\n"
+    builder append "import java.util.Map;\n\n"
+
     builder append "// Definition of Enumeration  " + self.getName + "\n"
-    builder append "object " + enumName + " extends Enumeration {\n"
-    builder append "\ttype " + enumName + " = " + scala_type() + "\n"
-    self.getLiterals.foreach {
-      l => builder append "val " + l.scala_name + " : " + scala_type() + " = " + l.enum_val +"\n"
+    builder append "public enum " + self.getName + "Enum {\n\n"
+	
+    builder append self.getLiterals.collect{ case l => l.scala_name + "(" + l.enum_val + ")"}.mkString("", ",\n", ";\n\n")
+
+    builder append "private final " + java_type() + " value;\n"
+	
+    builder append "private " + self.getName + "Enum(" + java_type() + " value){\n"
+    builder append "this.value = value;\n"
+    builder append "}\n\n"
+	
+    builder append "public " + java_type() + " getValue(){\n"
+    builder append "return value;\n"
+    builder append "}\n\n"
+	
+    builder append "private static final Map<" + java_type() + ", " + self.getName + "Enum> map;\n\n"
+	
+    builder append "static {\n"
+    builder append "map = new HashMap<" + java_type() + ", " + self.getName + "Enum>();\n"
+    self.getLiterals.foreach{l =>
+      builder append "map.put((" + java_type() + ")" + l.enum_val + ", " + self.getName + "Enum." + l.getName + ");\n"
     }
-    builder append "}\n"
+	
+    builder append "public static " + self.getName + "Enum fromValue(" + java_type() + " b) {\n"
+    builder append "return map.get(b);\n"
+    builder append "}\n\n"
+	
+    builder append "}\n" 
   }
 }
 
@@ -904,7 +867,7 @@ case class EnumerationScalaGenerator(override val self: Enumeration) extends Typ
  * Action abstract class
  */
 case class ActionScalaGenerator(val self: Action) /*extends ThingMLScalaGenerator(self)*/ {
-  def generateScala(builder: StringBuilder = Context.builder) {
+  def generateJava(builder: StringBuilder = Context.builder) {
     // Implemented in the sub-classes
   }
 }
@@ -914,26 +877,26 @@ case class ActionScalaGenerator(val self: Action) /*extends ThingMLScalaGenerato
  */
 
 case class SendActionScalaGenerator(override val self: SendAction) extends ActionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "handler.getPort(\"" + self.getPort.getName + "\") match{\n"
-    builder append "case Some(p) => p.send("
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    builder append "try{\n"
+    builder append "for(Connector c : connectors.get(\"" + self.getPort.getName + "\")) {\n"
+    builder append "c.dispatch("
     concreteMsg()
-    builder append ")\n"
-    builder append "case None => Logger.warning(\"no port " + self.getPort.getName + " You may consider revising your ThingML model. Or contact the development team if you think it is a bug.\")\n"
-    builder append "}\n"
+    builder append ");\n"
+    builder append "} catch (NullPointerException npe) {\nSystem.err(\"no port " + self.getPort.getName + ". You may consider revising your ThingML model. Or contact the development team if you think it is a bug.\");\n}\n"
   }
  
   
   def concreteMsg(builder: StringBuilder = Context.builder) {
-    builder append "new " + Context.firstToUpper(self.getMessage.getName) + "("
+    /*builder append "new " + Context.firstToUpper(self.getMessage.getName) + "("
     var i = 0
     self.getParameters.foreach{ p =>
       if (i > 0)
         builder append ", "
-      p.generateScala()
+      p.generateJava()
       i = i+1
     }
-    builder append ")"
+    builder append ")"*/
   }
 
   
@@ -942,7 +905,7 @@ case class SendActionScalaGenerator(override val self: SendAction) extends Actio
    builder append "new " + Context.firstToUpper(self.getMessage.getName) + "("
    builder append self.getParameters.collect{case p =>
    val tempBuilder = new StringBuilder()
-   p.generateScala(tempBuilder)
+   p.generateJava(tempBuilder)
    tempBuilder.toString
    }.mkString(", ")
    builder append ")"
@@ -951,32 +914,32 @@ case class SendActionScalaGenerator(override val self: SendAction) extends Actio
 }
 
 case class VariableAssignmentScalaGenerator(override val self: VariableAssignment) extends ActionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     if (self.getProperty.getCardinality != null) {
       self.getIndex.foreach{i =>
         builder append self.getProperty.scala_var_name
         val tempBuilder = new StringBuilder
-        i.generateScala(tempBuilder)
-        builder append "(" + tempBuilder.toString + ")"
-        builder append " = ("
-        self.getExpression.generateScala()
-        builder append ").asInstanceOf[" + self.getProperty.getType.scala_type(false) + "]\n"
+        i.generateJava(tempBuilder)
+        builder append "[" + tempBuilder.toString + "]"
+        builder append " = ((" + self.getProperty.getType.java_type(false) + ")"
+        self.getExpression.generateJava()
+        builder append ");\n"
       }
     }
     else {
       builder append self.getProperty.scala_var_name
-      builder append " = ("
-      self.getExpression.generateScala()
-      builder append ").asInstanceOf[" + self.getProperty.getType.scala_type(false) + "]\n"
+      builder append " = ((" + self.getProperty.getType.java_type(false) + ")"
+      self.getExpression.generateJava()
+      builder append ");\n"
     }
   }
 }
 
 case class ActionBlockScalaGenerator(override val self: ActionBlock) extends ActionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     //builder append "{\n"
     self.getActions.foreach {
-      a => a.generateScala()
+      a => a.generateJava()
       //builder append "\n"
     }
     //builder append "}\n"
@@ -984,98 +947,97 @@ case class ActionBlockScalaGenerator(override val self: ActionBlock) extends Act
 }
 
 case class ExternStatementScalaGenerator(override val self: ExternStatement) extends ActionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append self.getStatement
     self.getSegments.foreach {
-      e => e.generateScala()
+      e => e.generateJava()
     }
     builder append "\n"
   }
 }
 
 case class ConditionalActionScalaGenerator(override val self: ConditionalAction) extends ActionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append "if("
-    self.getCondition.generateScala()
+    self.getCondition.generateJava()
     builder append ") {\n"
-    self.getAction.generateScala()
+    self.getAction.generateJava()
     builder append "\n}\n"
   }
 }
 
 case class LoopActionScalaGenerator(override val self: LoopAction) extends ActionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append "while("
-    self.getCondition.generateScala()
+    self.getCondition.generateJava()
     builder append ") {\n"
-    self.getAction.generateScala()
+    self.getAction.generateJava()
     builder append "\n}\n"
   }
 }
 
 case class PrintActionScalaGenerator(override val self: PrintAction) extends ActionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "Logger.info(("
-    self.getMsg.generateScala()
-    builder append ").toString)\n"
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    builder append "System.out.println(("
+    self.getMsg.generateJava()
+    builder append ").toString);\n"
   }
 }
 
 case class ErrorActionScalaGenerator(override val self: ErrorAction) extends ActionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "Logger.error(("
-    self.getMsg.generateScala()
-    builder append ").toString)\n"
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    builder append "System.err.println(("
+    self.getMsg.generateJava()
+    builder append ").toString);\n"
   }
 }
 
 case class ReturnActionScalaGenerator(override val self: ReturnAction) extends ActionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append "return "
-    self.getExp.generateScala()
-    builder append "\n"
+    self.getExp.generateJava()
+    builder append ";\n"
   }
 }
 
 case class LocalVariableActionScalaGenerator(override val self: LocalVariable) extends ActionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {    
-    builder append (if (self.isChangeable) "var " else "val ")
-    builder append self.scala_var_name + " : " + self.getType.scala_type(self.getCardinality != null)  + " = "
+  override def generateJava(builder: StringBuilder = Context.builder) {    
+    builder append self.getType.java_type(self.getCardinality != null) + " " + self.scala_var_name + " = "
     if (self.getInit != null) 
-      self.getInit.generateScala() 
+      self.getInit.generateJava() 
     else {
       if (self.getCardinality != null) {
-        builder append "new " + self.getType.scala_type(self.getCardinality != null) + "(" 
-        self.getCardinality.generateScala()
-        builder append ")"
+        builder append "new " + self.getType.java_type(false) + "[" 
+        self.getCardinality.generateJava()
+        builder append "]"
       } else {
-        builder append "null.asInstanceOf[" + self.getType.scala_type(self.getCardinality != null) + "]"
+        builder append "null"
       }
       if (!self.isChangeable)
         Logger.error("ERROR: readonly variable " + self + " must be initialized")
     }
-    builder append "\n"
+    builder append ";\n"
   }
 }
 
 case class FunctionCallStatementScalaGenerator(override val self: FunctionCallStatement) extends ActionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {  
+  override def generateJava(builder: StringBuilder = Context.builder) {  
     builder append self.getFunction().getName + "("
     var i = 0
     self.getFunction.getParameters.zip(self.getParameters).foreach{ case (fp, ep) =>
         if (i > 0)
           builder append ", "
         builder append "("
-        ep.generateScala()
-        builder append ").to" + fp.getType.scala_type(fp.getCardinality != null)
+        ep.generateJava()
+        builder append ").to" + fp.getType.java_type(fp.getCardinality != null)
         i = i+1
     }
     /*builder append self.getParameters().collect{case p => 
      var tempBuilder = new StringBuilder()
-     p.generateScala(tempBuilder)
+     p.generateJava(tempBuilder)
      tempBuilder.toString()
      }.mkString(", ")*/
-    builder append ")\n"
+    builder append ");\n"
   }  
 }
 /**
@@ -1083,7 +1045,7 @@ case class FunctionCallStatementScalaGenerator(override val self: FunctionCallSt
  */
 
 case class ExpressionScalaGenerator(val self: Expression) /*extends ThingMLScalaGenerator(self)*/ {
-  def generateScala(builder: StringBuilder = Context.builder) {
+  def generateJava(builder: StringBuilder = Context.builder) {
     // Implemented in the sub-classes
   }
 }
@@ -1093,187 +1055,185 @@ case class ExpressionScalaGenerator(val self: Expression) /*extends ThingMLScala
  */
 
 case class ArrayIndexScalaGenerator(override val self: ArrayIndex) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    self.getArray.generateScala()
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    self.getArray.generateJava()
     builder append "("
-    self.getIndex.generateScala()
+    self.getIndex.generateJava()
     builder append ")\n"
   }
 }
 
 case class OrExpressionScalaGenerator(override val self: OrExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateScala()
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    self.getLhs.generateJava()
     builder append " || "
-    self.getRhs.generateScala()
+    self.getRhs.generateJava()
   }
 }
 
 case class AndExpressionScalaGenerator(override val self: AndExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateScala()
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    self.getLhs.generateJava()
     builder append " && "
-    self.getRhs.generateScala()
+    self.getRhs.generateJava()
   }
 }
 
 case class LowerExpressionScalaGenerator(override val self: LowerExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateScala()
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    self.getLhs.generateJava()
     builder append " < "
-    self.getRhs.generateScala()
+    self.getRhs.generateJava()
   }
 }
 
 case class GreaterExpressionScalaGenerator(override val self: GreaterExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateScala()
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    self.getLhs.generateJava()
     builder append " > "
-    self.getRhs.generateScala()
+    self.getRhs.generateJava()
   }
 }
 
 case class EqualsExpressionScalaGenerator(override val self: EqualsExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateScala()
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    self.getLhs.generateJava()
     builder append " == "
-    self.getRhs.generateScala()
+    self.getRhs.generateJava()
   }
 }
 
 case class PlusExpressionScalaGenerator(override val self: PlusExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateScala()
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    self.getLhs.generateJava()
     builder append " + "
-    self.getRhs.generateScala()
+    self.getRhs.generateJava()
   }
 }
 
 case class MinusExpressionScalaGenerator(override val self: MinusExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateScala()
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    self.getLhs.generateJava()
     builder append " - "
-    self.getRhs.generateScala()
+    self.getRhs.generateJava()
   }
 }
 
 case class TimesExpressionScalaGenerator(override val self: TimesExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateScala()
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    self.getLhs.generateJava()
     builder append " * "
-    self.getRhs.generateScala()
+    self.getRhs.generateJava()
   }
 }
 
 case class DivExpressionScalaGenerator(override val self: DivExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateScala()
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    self.getLhs.generateJava()
     builder append " / "
-    self.getRhs.generateScala()
+    self.getRhs.generateJava()
   }
 }
 
 case class ModExpressionScalaGenerator(override val self: ModExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateScala()
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    self.getLhs.generateJava()
     builder append " % "
-    self.getRhs.generateScala()
+    self.getRhs.generateJava()
   }
 }
 
 case class UnaryMinusScalaGenerator(override val self: UnaryMinus) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append " -"
-    self.getTerm.generateScala()
+    self.getTerm.generateJava()
   }
 }
 
 case class NotExpressionScalaGenerator(override val self: NotExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append " !("
-    self.getTerm.generateScala()
+    self.getTerm.generateJava()
     builder append ")"
   }
 }
 
 case class EventReferenceScalaGenerator(override val self: EventReference) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    //TODO: this could cause a null pointer if trying to get an event that does not exists... but this should be checked in the model ;-)
-    //if not, it would be possible to generate a match Some/None to properly handle this...
-    builder append "getEvent(" 
-    builder append Context.firstToUpper(Context.thing.getName) + "." + self.getMsgRef.getPort.getName + "Port.in." + self.getMsgRef.getMessage.getName + ", " + Context.thing.getName + "." + self.getMsgRef.getPort.getName + "Port.getName).get.asInstanceOf[" + Context.firstToUpper(self.getMsgRef.getMessage.getName) + "]." + Context.protectScalaKeyword(self.getParamRef.getName)
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    /*builder append "getEvent(" 
+    builder append Context.firstToUpper(Context.thing.getName) + "." + self.getMsgRef.getPort.getName + "Port.in." + self.getMsgRef.getMessage.getName + ", " + Context.thing.getName + "." + self.getMsgRef.getPort.getName + "Port.getName).get.asInstanceOf[" + Context.firstToUpper(self.getMsgRef.getMessage.getName) + "]." + Context.protectScalaKeyword(self.getParamRef.getName)*/
   }
 }
 
 case class ExpressionGroupScalaGenerator(override val self: ExpressionGroup) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "("
-    self.getExp.generateScala()
-    builder append ")"
+  override def generateJava(builder: StringBuilder = Context.builder) {
+    builder append "{"
+    self.getExp.generateJava()
+    builder append "}"
   }
 }
 
 case class PropertyReferenceScalaGenerator(override val self: PropertyReference) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append self.getProperty.scala_var_name
   }
 }
 
 case class IntegerLiteralScalaGenerator(override val self: IntegerLiteral) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append self.getIntValue.toString
   }
 }
 
 case class DoubleLiteralScalaGenerator(override val self: DoubleLiteral) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append self.getDoubleValue.toString
   }
 }
 
 case class StringLiteralScalaGenerator(override val self: StringLiteral) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append "\"" + CharacterEscaper.escapeEscapedCharacters(self.getStringValue) + "\""
   }
 }
 
 case class BooleanLiteralScalaGenerator(override val self: BooleanLiteral) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append (if (self.isBoolValue) "true" else "false")
   }
 }
 
 case class EnumLiteralRefScalaGenerator(override val self: EnumLiteralRef) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     //builder append self.getEnum.enumName + "." + self.getLiteral.scala_name
-    builder append Context.firstToUpper(self.getEnum.getName) + "_ENUM." + self.getLiteral.scala_name
+    builder append Context.firstToUpper(self.getEnum.getName) + "Enum." + self.getLiteral.scala_name
   }
 }
 
 case class ExternExpressionScalaGenerator(override val self: ExternExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder = Context.builder) {
     builder append self.getExpression
     self.getSegments.foreach {
-      e => e.generateScala()
+      e => e.generateJava()
     }
   }
 }
 
 case class FunctionCallExpressionScalaGenerator(override val self: FunctionCallExpression) extends ExpressionScalaGenerator(self) {
-  override def generateScala(builder: StringBuilder = Context.builder) {  
+  override def generateJava(builder: StringBuilder = Context.builder) {  
     builder append self.getFunction().getName + "("
     var i = 0
     self.getFunction.getParameters.zip(self.getParameters).foreach{ case (fp, ep) =>
         if (i > 0)
           builder append ", "
         builder append "("
-        ep.generateScala()
-        builder append ").to" + fp.getType.scala_type(fp.getCardinality != null)
+        ep.generateJava()
+        builder append ").to" + fp.getType.java_type(fp.getCardinality != null)
         i = i+1
     }
     /*builder append self.getParameters().collect{case p => 
      var tempBuilder = new StringBuilder()
-     p.generateScala(tempBuilder)
+     p.generateJava(tempBuilder)
      tempBuilder.toString()
      }.mkString(", ")*/
     builder append ")\n"

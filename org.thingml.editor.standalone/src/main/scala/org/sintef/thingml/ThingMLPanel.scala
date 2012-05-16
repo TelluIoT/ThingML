@@ -48,6 +48,7 @@ import java.awt.event.{ActionEvent, ActionListener}
 import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
 import org.thingml.cgenerator.CGenerator
 import org.thingml.scalagenerator.ScalaGenerator
+import org.thingml.java.pauwaregenerator.PauWareGenerator
 import org.thingml.javagenerator.gui.SwingGenerator
 import org.thingml.thingmlgenerator.ThingMLGenerator
 import org.thingml.scalagenerator.coap.ScalaCoAPGenerator
@@ -104,6 +105,7 @@ class ThingMLPanel extends JPanel {
   var bThingML2 = new JMenuItem("ThingML/Comm2")
   var bCoAP = new JMenuItem("Scala/CoAP")
   var bKevoree = new JMenuItem("Java/Kevoree")
+  var bPauWare = new JMenuItem("Experimental/PauWare")
   
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
@@ -264,6 +266,23 @@ class ThingMLPanel extends JPanel {
         }
       }
     })
+  
+    bPauWare.addActionListener(new ActionListener{
+      def actionPerformed(e:ActionEvent){
+        println("Input file : "+targetFile)
+        if(targetFile.isEmpty) return;
+        
+        try{
+          val thingmlModel = loadThingMLmodel(targetFile.get)
+          thingmlModel.allConfigurations.foreach{c => 
+            PauWareGenerator.compileAndRun(c,thingmlModel)
+          }
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+      }
+    })
 
   compilersMenu.add(b)
   compilersMenu.add(bC)
@@ -273,6 +292,7 @@ class ThingMLPanel extends JPanel {
   compilersMenu.add(bThingML2)
   compilersMenu.add(bCoAP)
   compilersMenu.add(bKevoree)
+  compilersMenu.add(bPauWare)
   menubar.add(compilersMenu)
   
   def loadThingMLmodel(file : File) = {
