@@ -31,19 +31,19 @@ import java.util.{Hashtable, ArrayList}
 
 case class StateScalaImpl (self : State) {
 
-  def allContainingStates: ArrayList[State] = {
+  def allContainingStates: java.util.List[State] = {
     return ThingMLHelpers.allContainingStates(self)
   }
 
-  def allProperties: ArrayList[Property] = {
+  def allProperties: java.util.List[Property] = {
     return ThingMLHelpers.allProperties(self)
   }
 
-  def allValidTargetStates: ArrayList[State] = {
+  def allValidTargetStates: java.util.List[State] = {
     return ThingMLHelpers.allValidTargetStates(self)
   }
 
-  def allStates : ArrayList[State] = {
+  def allStates : java.util.List[State] = {
     self match {
       case cs : CompositeState => cs.allContainedStates
       case _ => {
@@ -62,14 +62,14 @@ case class StateScalaImpl (self : State) {
     result
   }
 
-  def allHandlers(p : Port, m : Message) : ArrayList[Handler] = {
+  def allHandlers(p : Port, m : Message) : java.util.List[Handler] = {
     val handlers = allMessageHandlers
     if (!handlers.containsKey(p) || !handlers.get(p).containsKey(m)) new ArrayList[Handler]()
     else handlers.get(p).get(m)
   }
 
-  def allMessageHandlers() : Hashtable[Port, Hashtable[Message, ArrayList[Handler]]] = {
-    var result :  Hashtable[Port, Hashtable[Message, ArrayList[Handler]]] = new  Hashtable[Port, Hashtable[Message, ArrayList[Handler]]]()
+  def allMessageHandlers() : Hashtable[Port, Hashtable[Message, java.util.List[Handler]]] = {
+    var result :  Hashtable[Port, Hashtable[Message, java.util.List[Handler]]] = new  Hashtable[Port, Hashtable[Message, java.util.List[Handler]]]()
     allStates.foreach { s =>
       //println("Processisng state " + s.getName)
       s.getOutgoing.union(s.getInternal)foreach{ t =>
@@ -80,7 +80,7 @@ case class StateScalaImpl (self : State) {
               //println("    found handler for " + rm.getPort.getName + "?" + rm.getMessage.getName)
               var phdlrs = result.get(rm.getPort)
               if (phdlrs == null) {
-                phdlrs = new Hashtable[Message, ArrayList[Handler]]()
+                phdlrs = new Hashtable[Message, java.util.List[Handler]]()
                 result.put(rm.getPort, phdlrs)
               }
               var hdlrs = phdlrs.get(rm.getMessage)
@@ -97,4 +97,13 @@ case class StateScalaImpl (self : State) {
     }
     result
   }
+  
+  def qualifiedName(separator : String) : String = {
+    self.eContainer match {
+      case c : State => return c.qualifiedName(separator) + separator + self.getName
+      case r : Region => return r.qualifiedName(separator) + separator + self.getName
+      case _ => return self.getName
+    }
+  }
+  
 }

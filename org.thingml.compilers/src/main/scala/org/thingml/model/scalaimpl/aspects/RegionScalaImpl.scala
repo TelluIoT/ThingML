@@ -16,6 +16,7 @@
 package org.thingml.model.scalaimpl.aspects
 
 import org.sintef.thingml._
+import org.sintef.thingml.impl.StateImpl
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import scala.collection.JavaConversions._
 import java.util.{Hashtable, HashSet, ArrayList}
@@ -33,7 +34,7 @@ case class RegionScalaImpl (self : Region) {
   /**
    * Returns the set of regions defined withing this region (in depth)
    */
-  def allContainedRegions() : ArrayList[Region] = {
+  def allContainedRegions() : java.util.List[Region] = {
     var result : ArrayList[Region] = new ArrayList[Region]()
     result.add(self)
     if (self.isInstanceOf[CompositeState]) {
@@ -45,7 +46,7 @@ case class RegionScalaImpl (self : Region) {
     result
   }
 
-  def directSubRegions() : ArrayList[Region] = {
+  def directSubRegions() : java.util.List[Region] = {
     var result : ArrayList[Region] = new ArrayList[Region]()
     result.add(self)
     if (self.isInstanceOf[CompositeState]) {
@@ -54,7 +55,7 @@ case class RegionScalaImpl (self : Region) {
     result
   }
 
-  def allContainedStates() : ArrayList[State] = {
+  def allContainedStates() : java.util.List[State] = {
     var result : ArrayList[State] = new ArrayList[State]()
     allContainedRegions.foreach{ r =>
       if (r.isInstanceOf[State]) result.add(r.asInstanceOf[State])
@@ -64,19 +65,22 @@ case class RegionScalaImpl (self : Region) {
     result
   }
 
-  def allContainedSimpleStates() : ArrayList[State] = {
-    var result : ArrayList[State] = new ArrayList[State]()
-    allContainedStates.foreach{ s => if (s.getClass == classOf[State]) result.add(s) }
-    result
+  def allContainedSimpleStates() : java.util.List[State] = {
+    /*var result : ArrayList[State] = new ArrayList[State]()
+    allContainedStates.foreach{ s => 
+      if (s.getClass == classOf[State] || s.getClass == classOf[StateImpl]) result.add(s) 
+    }
+    result*/
+    allContainedStates.diff(allContainedCompositeStates).toList
   }
 
-  def allContainedCompositeStates() : ArrayList[CompositeState] = {
+  def allContainedCompositeStates() : java.util.List[CompositeState] = {
     var result : ArrayList[CompositeState] = new ArrayList[CompositeState]()
     allContainedStates.foreach{ s => if (s.isInstanceOf[CompositeState]) result.add(s.asInstanceOf[CompositeState]) }
     result
   }
 
-  def allContainedProperties() : ArrayList[Property] = {
+  def allContainedProperties() : java.util.List[Property] = {
     var result : ArrayList[Property] = new ArrayList[Property]()
     allContainedStates.foreach{ s =>
       result.addAll(s.getProperties)
@@ -90,5 +94,12 @@ case class RegionScalaImpl (self : Region) {
       if (!result.contains(p.getType)) result.add(p.getType)
     }
     result
+  }
+ 
+  def qualifiedName(separator : String) : String = {
+    self.eContainer match {
+      case c : State => return c.qualifiedName(separator) + separator + self.getName
+      case _ => return self.getName
+    }
   }
 }
