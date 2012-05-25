@@ -31,7 +31,7 @@ import java.lang.Boolean
  */
 
 case class ThingScalaImpl (self : Thing) {
-
+  
   def isSingleton : Boolean = {
     self.getAnnotations.filter {
       a => a.getName == "singleton"
@@ -47,7 +47,13 @@ case class ThingScalaImpl (self : Thing) {
     }
   }
 
-
+  def allTransitionsWithAction() : java.util.List[Transition] = {
+    //var result = new ArrayList[Handler]()
+    self.getBehaviour.collect{case b => b.allStates}.flatten.collect{case s => 
+        s.getOutgoing.collect{case o if (o.getAction != null)=> o}
+    }.flatten.toList
+  }
+  
   def allFragments: ArrayList[Thing] = {
     return ThingMLHelpers.allThingFragments(self)
   }

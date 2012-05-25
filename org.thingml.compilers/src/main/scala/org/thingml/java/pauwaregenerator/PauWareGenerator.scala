@@ -408,6 +408,16 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
   override def generateJava(builder: StringBuilder = Context.builder) {
     Context.thing = self
     
+    builder append "import com.FranckBarbier.Java._Composytor.Statechart;\n"
+    builder append "import com.FranckBarbier.Java._Composytor.Statechart_monitor;\n"
+    builder append "import com.FranckBarbier.Java._PauWare.AbstractStatechart;\n"
+    builder append "import com.FranckBarbier.Java._PauWare.AbstractStatechart_monitor;\n"
+    builder append "import com.FranckBarbier.Java._PauWare._Exception.Statechart_exception;\n"
+    builder append "import java.util.HashMap;\n"
+    builder append "import java.util.LinkedList;\n"
+    builder append "import java.util.List;\n"
+    builder append "import java.util.Map;\n\n"
+    
     builder append "\n/**\n"
     builder append " * Definitions for type : " + self.getName + "\n"
     builder append " **/\n"
@@ -428,7 +438,7 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     //generatePortDef()
     generateConstructor()
     initStateMachine()
-    generateIncomingMessages()
+    //generateManagement()
     
     self.allFunctions.foreach{
       f => f.generateJava()
@@ -449,9 +459,52 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
    }
    }*/
   
+  def generateEntryExitActions(builder: StringBuilder = Context.builder) {
+    self.allStateMachines.head.allStatesWithEntry.foreach{s =>
+      builder append "public void onEntry_" + s.qualifiedName("_") + "(){\n"
+      builder append "//TODO: to be generated...\n"
+      builder append "}\n"
+    }
+    
+    self.allStateMachines.head.allStatesWithExit.foreach{s =>
+      builder append "public void onExit_" + s.qualifiedName("_") + "(){\n"
+      builder append "//TODO: to be generated...\n"
+      builder append "}\n"
+    }
+  }
+  
+  def generateOnActions(builder: StringBuilder = Context.builder) {}
+  
+  def generateManagement(builder: StringBuilder = Context.builder) {
+    builder append "/** management interface */\n"
+    builder append "@Override\n"
+    builder append "public String current_state() {\n"
+    builder append "return _" + self.allStateMachines.head.getName + ".current_state();\n"
+    builder append "}\n\n"
+
+    builder append "@Override\n"
+    builder append "public boolean in_state(String name) {\n"
+    builder append "return _" + self.allStateMachines.head.getName + ".in_state(name);\n"
+    builder append "}\n\n"
+
+    builder append "@Override\n"
+    builder append "public void to_state(String name) throws Statechart_exception {\n"
+    builder append "_" + self.allStateMachines.head.getName + ".to_state(name);\n"
+    builder append "}\n\n"
+
+    builder append "@Override\n"
+    builder append "public String name() {\n"
+    builder append "return _" + self.allStateMachines.head.getName + ".name();\n"
+    builder append "}\n\n"
+
+    builder append "@Override\n"
+    builder append "public String verbose() {\n"
+    builder append "return _" + self.allStateMachines.head.getName + ".verbose();\n"
+    builder append "}\n\n"
+  }
 
   def generateIncomingMessages(builder: StringBuilder = Context.builder) {
-      builder append "//incoming messages\n"
+    builder append "//incoming messages\n"
     self.allIncomingMessages.foreach{m =>
       builder append "@Override\n"
       builder append "public void "
@@ -469,32 +522,62 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
   }
   
   def initStateMachine(builder: StringBuilder = Context.builder) {
+    
+    
+    self.allStateMachines.size match {
+      case 0 => 
+        builder append "//No behavior\n\n"
+      case 1 => 
+        doInitStateMachine()
+      case n : Int => 
+        builder append "//" + n + "state machines: will only consider the first one. Please refactor your ThingML model (e.g. by defining // regions in a single state machine instead of top-level state machines\n\n"
+        doInitStateMachine()
+    }
+  }
+  
+  def doInitStateMachine(builder: StringBuilder = Context.builder) {
     builder append "//Init of state machines\n" 
     
     builder append "private void init() throws Statechart_exception {\n"
-    self.allStateMachines.foreach{b => 
-      b.allContainedSimpleStates().foreach{s =>
-        builder append "_" + s.qualifiedName("_") + " = new Statechart(\"" + s.getName + "\");\n"
-      }
-
-      builder append "_" + b.getInitial.qualifiedName("_") + ".inputState();\n"
-      
-      builder append "_" + b.getName + " = new Statechart_monitor(" + b.compose() + ", " + b.getName + ", true);\n\n"
+   
+    self.allStateMachines.head.allContainedSimpleStates().foreach{s =>
+      builder append "_" + s.qualifiedName("_") + " = new Statechart(\"" + s.getName + "\");\n"
     }
+
+    builder append "_" + self.allStateMachines.head.getInitial.qualifiedName("_") + ".inputState();\n"
+      
+    builder append "_" + self.allStateMachines.head.getName + " = new Statechart_monitor(" + self.allStateMachines.head.compose() + ", \"" + self.allStateMachines.head.getName + "\", true);\n\n"
+    
     builder append "}\n\n"
     
     builder append "private void start() throws Statechart_exception {\n"
-    self.allStateMachines.foreach{b => 
-//TODO
+    self.allStateMachines.head.allStates.foreach{ s => 
+      s.allMessageHandlers.foreach{case (port, msg) =>
+          msg.foreach{case (m, handlers) =>
+              handlers.foreach{h =>
+                h match {
+                  case t : Transition =>
+                    builder append "_" + self.allStateMachines.head.getName + ".fires(\"" + m.getName + "\", _" + t.getSource.qualifiedName("_") + ", _" + t.getTarget.qualifiedName("_") + ");\n"
+                  case i : InternalTransition =>
+                  
+                }
+              }
+          }
+      }
     }
-    builder append "}\n\n"
+    builder append "}\n\n" 
+    
+    generateManagement()
+    generateIncomingMessages()
+    generateEntryExitActions()
+    generateOnActions()
   }
   
   def declareStateMachine(builder: StringBuilder = Context.builder) {
     builder append "//Declaration of state machines\n" 
     self.allStateMachines.foreach{b => 
       builder append "protected AbstractStatechart_monitor _" + b.getName + ";\n"
-      b.allContainedStates().foreach{s =>
+      b.allContainedStates().diff(List(b)).foreach{s =>
         builder append "protected AbstractStatechart _" + s.qualifiedName("_") + ";\n"
       }
     }

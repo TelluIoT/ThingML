@@ -1586,7 +1586,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
   def generatePublicPrototypes(builder: StringBuilder) {
     // Message Handlers
     val handlers = composedBehaviour.allMessageHandlers()
-    handlers.keys().foreach {
+    handlers.keys.foreach {
       port => handlers.get(port).keys.foreach {
         msg =>
           builder append "void " + handler_name(port, msg)
@@ -1739,7 +1739,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
   def generateEventHandlers(builder: StringBuilder, cs: StateMachine, context : CGeneratorContext) {
     val handlers = composedBehaviour.allMessageHandlers()
-    handlers.keys().foreach {
+    handlers.keys.foreach {
       port => handlers.get(port).keys.foreach {
         msg =>
           builder append "void " + handler_name(port, msg)

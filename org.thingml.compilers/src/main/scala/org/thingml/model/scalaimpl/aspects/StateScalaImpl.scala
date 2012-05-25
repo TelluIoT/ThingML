@@ -31,6 +31,14 @@ import java.util.{Hashtable, ArrayList}
 
 case class StateScalaImpl (self : State) {
 
+  def allStatesWithEntry: java.util.List[State] = {
+    allStates.filter{s => s.getEntry != null}
+  }
+  
+  def allStatesWithExit: java.util.List[State] = {
+    allStates.filter{s => s.getExit != null}
+  }
+  
   def allContainingStates: java.util.List[State] = {
     return ThingMLHelpers.allContainingStates(self)
   }
@@ -68,8 +76,8 @@ case class StateScalaImpl (self : State) {
     else handlers.get(p).get(m)
   }
 
-  def allMessageHandlers() : Hashtable[Port, Hashtable[Message, java.util.List[Handler]]] = {
-    var result :  Hashtable[Port, Hashtable[Message, java.util.List[Handler]]] = new  Hashtable[Port, Hashtable[Message, java.util.List[Handler]]]()
+  def allMessageHandlers() : java.util.Map[Port, java.util.Map[Message, java.util.List[Handler]]] = {
+    var result :  java.util.Map[Port, java.util.Map[Message, java.util.List[Handler]]] = new  Hashtable[Port, java.util.Map[Message, java.util.List[Handler]]]()
     allStates.foreach { s =>
       //println("Processisng state " + s.getName)
       s.getOutgoing.union(s.getInternal)foreach{ t =>
