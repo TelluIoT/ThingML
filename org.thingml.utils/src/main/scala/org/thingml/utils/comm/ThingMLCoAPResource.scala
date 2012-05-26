@@ -22,6 +22,8 @@ import ch.eth.coap.endpoint.{Resource, RemoteResource, LocalResource}
 import org.thingml.utils.log.Logger
 import ch.eth.coap.coap.{Request, PUTRequest, Response, CodeRegistry, POSTRequest, GETRequest, ResponseHandler}
 
+import org.thingml.utils.comm.coaphttp.CoAPHTTPResource
+
 class ThingMLCoAPRequest(val code : Byte, val resourceURI : String = "ThingML", val serverURI : String) extends ResponseHandler {
 
   def sendData(bytes : Array[Byte]) {
@@ -42,20 +44,9 @@ class ThingMLCoAPRequest(val code : Byte, val resourceURI : String = "ThingML", 
   }  
 }
 
-trait ThingMLCoAPResource {
-  self : Resource =>
-  
-  val code : Byte = self match {
-    case l : ThingMLCoAPLocalResource => l.code
-    case r : ThingMLCoAPRemoteResource => r.code
-  }
-  
-  val server : CoAP = self match {
-    case l : ThingMLCoAPLocalResource => l.server
-    case r : ThingMLCoAPRemoteResource => r.server
-  }
-  
-  setResourceTitle("Generic ThingML Resource")
+class ThingMLCoAPLocalResource(override val resourceIdentifier : String = "ThingML", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], val code : Byte = 0x00, val server : CoAP) extends CoAPHTTPResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs) {
+
+    setResourceTitle("Generic ThingML Resource")
   setResourceType("ThingMLResource")
 
   val buffer = new Array[Byte](18)
@@ -163,18 +154,7 @@ trait ThingMLCoAPResource {
     response.setPayload(builder.toString)
     request.respond(response)
   }
-}
 
-class ThingMLCoAPLocalResource(val resourceIdentifier : String = "ThingML", override val code : Byte = 0x00, override val server : CoAP) extends LocalResource(resourceIdentifier) with ThingMLCoAPResource{
-  def addSubResource(resource : ThingMLCoAPLocalResource) {
-    super.addSubResource(resource)
-    server.resourceMap += (resource.code -> resource.getResourcePath)
-  }
-}
-
-class ThingMLCoAPRemoteResource(val resourceIdentifier : String = "ThingML", override val code : Byte = 0x00, override val server : CoAP) extends RemoteResource with ThingMLCoAPResource{
-  setResourceIdentifier(resourceIdentifier)
-  
   def addSubResource(resource : ThingMLCoAPLocalResource) {
     super.addSubResource(resource)
     server.resourceMap += (resource.code -> resource.getResourcePath)

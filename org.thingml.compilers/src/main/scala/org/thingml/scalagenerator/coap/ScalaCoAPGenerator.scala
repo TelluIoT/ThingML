@@ -35,7 +35,6 @@ import org.sintef.thingml.{ThingMLElement, ThingMLModel, Port, Message, Configur
 import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
 import ch.eth.coap.coap.{GETRequest, POSTRequest, PUTRequest, CodeRegistry}
 import ch.eth.coap.endpoint.{LocalEndpoint, LocalResource}
-import org.thingml.utils.comm.{ThingMLCoAPResource, CoAPThingML}
 import org.thingml.utils.log.Logger
 
 object Context {
@@ -225,7 +224,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
     builder append "class CoAPServer(coapThingML : CoAPThingML, port : Int) extends LocalCoAP(coapThingML, port){\n"
     builder append "//Types\n"
     self.allRemoteInstances.collect{case (i,r) => i.getType}.toSet.foreach{t : Type =>
-      builder append "val " + t.getName + "Resource = new ThingMLCoAPLocalResource(resourceIdentifier = \"" + t.getName + "\", server = this)\n"
+      builder append "val " + t.getName + "Resource = new ThingMLCoAPLocalResource(resourceIdentifier = \"" + t.getName + "\", isPUTallowed = true, isPOSTallowed = true, isGETallowed = true, httpURLs = Set(), server = this)\n"
       builder append "addResource(" + t.getName + "Resource)\n"
     }
     builder append "\n"
@@ -234,11 +233,11 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
 
     self.allRemoteInstances.foreach{case (i,r) =>
         if (allMessages.exists{m => i.getType.allMessages.exists{m2 => m == m2}}) {//TODO something better for the filtering
-          builder append "val " + i.getName + "Resource = new " + Context.firstToUpper(i.getType.getName) + "CoAPResource(resourceIdentifier = \"" + i.getName + "\", server = this)\n"
+          builder append "val " + i.getName + "Resource = new " + Context.firstToUpper(i.getType.getName) + "CoAPResource(resourceIdentifier = \"" + i.getName + "\", isPUTallowed = true, isPOSTallowed = true, isGETallowed = true, httpURLs = Set(), server = this)\n"
           builder append i.getType.getName + "Resource.addSubResource(" + i.getName + "Resource)\n"
           i.getType.allMessages.foreach{m => //TODO something better for the filtering
             if (allMessages.exists{m2 => m == m2}) {
-              builder append i.getName + "Resource.addSubResource(" + "new " + Context.firstToUpper(m.getName) + "CoAPResource(server = this))\n"
+              builder append i.getName + "Resource.addSubResource(" + "new " + Context.firstToUpper(m.getName) + "CoAPResource(isPUTallowed = true, isPOSTallowed = true, isGETallowed = true, httpURLs = Set(), server = this))\n"
             }
           }
         }
@@ -255,7 +254,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
     //val allMessages = Context.sort(self.allRemoteMessages).collect{case (p, m) => m._1 ++: m._2}.flatten.toSet
     allMessages.zipWithIndex.foreach{case (m,index) =>
         val code = (if (m.getCode != -1) m.getCode else index)
-        builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val code : Byte = " + code + ".toByte,  override val server : CoAP) extends ThingMLCoAPLocalResource(resourceIdentifier, code, server) {\n"
+        builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = " + code + ".toByte,  override val server : CoAP) extends ThingMLCoAPLocalResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, code, server) {\n"
         builder append "setResourceTitle(\"" + Context.firstToUpper(m.getName) + " ThingML resource\")\n"
         builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
 
@@ -310,7 +309,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
 
   def generateCoAPTypeResources(builder: StringBuilder = Context.builder) {
     self.allInstances.collect{case i => i.getType}.toSet.foreach{t : Type =>
-      builder append "class " + Context.firstToUpper(t.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + t.getName + "\", override val code : Byte = 0x00,  override val server : CoAP) extends ThingMLCoAPLocalResource(resourceIdentifier, code, server) {\n"
+      builder append "class " + Context.firstToUpper(t.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + t.getName + "\", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = 0x00,  override val server : CoAP) extends ThingMLCoAPLocalResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, code, server) {\n"
       builder append "setResourceTitle(\"" + Context.firstToUpper(t.getName) + " ThingML resource\")\n"
       builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
       builder append "}\n\n"
