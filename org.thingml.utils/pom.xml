@@ -15,6 +15,19 @@
         <relativePath>../org.thingml.root/pom.xml</relativePath>
     </parent>
 
+    <repositories>
+        <repository>
+            <id>spray</id>
+            <name>Spray Repository</name>
+            <url>http://repo.spray.cc/</url>
+        </repository>
+        <repository>
+            <id>Akka</id>
+            <name>Akka Repository</name>
+            <url>http://repo.akka.io/releases/</url>
+        </repository> 
+    </repositories>
+    
     <build>
         <plugins>
 
@@ -84,6 +97,22 @@
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>cc.spray</groupId>
+            <artifactId>spray-json_${scala.version}</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>cc.spray</groupId>
+            <artifactId>spray-client</artifactId>
+            <version>1.0-M2</version>
+        </dependency>  
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor</artifactId>
+            <version>2.0.1</version>
         </dependency>
     </dependencies>
 

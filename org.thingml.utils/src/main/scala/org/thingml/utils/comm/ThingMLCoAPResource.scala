@@ -99,11 +99,11 @@ class ThingMLCoAPLocalResource(override val resourceIdentifier : String = "Thing
   
   
   //PUT is the only method supported (currently) by ThingML resources
-  override def performPUT(request: PUTRequest) {
+  override def performCoAPPut(request: PUTRequest) : String = {
     statusBuffer.clear
     Logger.debug("performPUT: " + request.getPayload.mkString ("[", ", ", "]"))
     
-    val response = new Response(CodeRegistry.RESP_CONTENT)
+    //val response = new Response(CodeRegistry.RESP_CONTENT)
 
     //Send the payload to the ThingML side
     if (isThingML(request.getPayload)) {
@@ -111,48 +111,55 @@ class ThingMLCoAPLocalResource(override val resourceIdentifier : String = "Thing
       setAttributes
       server.coapThingML.receive(request.getPayload)
       Logger.info("PUT request can be handled: " + request)
-      response.setPayload("OK!")
+      //response.setPayload("OK!")
+      return "OK!"
     } else {
       parse(request.getPayloadString) match {
         case Some(p) =>
           server.coapThingML.receive(p)
           setAttributes
           Logger.info("PUT request can be handled: " + request)
-          response.setPayload("OK!")
+          //response.setPayload("OK!")
+          return "OK!"
         case None => 
           Logger.warning("PUT request cannot be handled: " + request + " Reason: " + statusBuffer.toString)
-          response.setPayload("Request cannot be handled. Reason: " + statusBuffer.toString)
+          //response.setPayload("Request cannot be handled. Reason: " + statusBuffer.toString)
+          return "Request cannot be handled. Reason: " + statusBuffer.toString
       }
     }
 
     //Default response, whatever we do with the request
     
     
-    request.respond(response)
+    //request.respond(response)
   }
 
-  override def performPOST(request: POSTRequest) {
+  override def performCoAPPost(request: POSTRequest) : String = {
     statusBuffer.clear
     Logger.debug("performPOST: " + request.getPayload.mkString ("[", ", ", "]"))
     Logger.warning("POST not supported")
+    
+    return "POST not supported by ThingML resources. Please use PUT"
 
     //Default response, whatever we do with the request
-    val response = new Response(CodeRegistry.RESP_METHOD_NOT_ALLOWED)
+    /*val response = new Response(CodeRegistry.RESP_METHOD_NOT_ALLOWED)
     response.setPayload("POST not supported by ThingML resources. Please use PUT")
-    request.respond(response)
+    request.respond(response)*/
   }
 
-  override def performGET(request: GETRequest) {
+  override def performCoAPGet(request: GETRequest) : String = {
     statusBuffer.clear
     Logger.debug("performGET: " + request.getPayload.mkString ("[", ", ", "]"))
     
     val builder = new java.lang.StringBuilder()
     writeAttributes(builder)
     
+    return builder.toString
+    
     //Default response, whatever we do with the request
-    val response = new Response(CodeRegistry.RESP_CONTENT)
+    /*val response = new Response(CodeRegistry.RESP_CONTENT)
     response.setPayload(builder.toString)
-    request.respond(response)
+    request.respond(response)*/
   }
 
   def addSubResource(resource : ThingMLCoAPLocalResource) {

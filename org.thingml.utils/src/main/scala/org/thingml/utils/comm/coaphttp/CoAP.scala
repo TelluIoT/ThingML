@@ -28,56 +28,39 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
   
   setResourceTitle("Generic CoAP/HTTP Resource")
   setResourceType("CoAP-HTTPResource")
-
-  /*
-   * Translate the CoAP REST URI into an HTTP REST URI.
-   * By default, we assume REST URIs are aligned in CoAP and HTTP servers
-   */
-  def translateCoAPtoHTTP() : Option[String] = Some(resourceIdentifier)//getPath()
   
   /*
-   * Extract/infer the SenML representation of a request
-   * managed by this resource.
-   * By default, we assume the payload of the request is a valid
-   * SenML description for this resource
+   * Transforms the CoAP payload into a format the HTTP server,
+   * and associated services, can understand. For example, it could
+   * infer a SenML representation that SensApp can manage
    * 
-   * Returns None if no SenML representation can be extracted
+   * Returns None if no representation can be extracted
+   * By default, we return the CoAP payload as-it-is
    */
-  def transformPayload(payload : String) : Option[String] = Some(payload)
+  def transformPayload(request : Request) : Option[String] = Some(request.getPayloadString)
+  
   
   def check(request : Request) : Boolean = true
   
-  def process(request : Request, lambda : String => String) : String = {
-    transformPayload(request.getPayloadString) match {
-      case Some(senML) =>
-        lambda(senML)
+  private def processHTTP(request : Request, lambda : String => String) : String = {
+    transformPayload(request) match {
+      case Some(readablePayload) =>
+        lambda(readablePayload)
       case None =>
         "Cannot transform payload from request [" + request + "]"
     }    
   }
- 
-  def performHTTPPut(senML : String) : String = {
-    val responses = httpURLs.par.map{ url =>
-      future{ performHTTPPut(senML, url) }
-    }
-    responses.map{r => r()}.mkString("\n")
-  }
-
-  def performHTTPPut(senML : String, url : String) : String = "OK: "+url
-  def performHTTPPost(senML : String) : String = ""
-  def performHTTPGet(senML : String) : String = ""
-  
-  def performCoAPPut(request: PUTRequest) : String = ""
-  def performCoAPPost(request: POSTRequest) : String = ""
-  def performCoAPGet(request: POSTRequest) : String = ""
-
- 
-  override def performPUT(request: PUTRequest) {
-    if (isPUTallowed) {
+    
+  private def process(isMethodAllowed : Boolean, request : Request, httpLambda : String => String) {
+    if (isMethodAllowed) {
       val response = new Response(CodeRegistry.RESP_CONTENT)
       if (check(request)) {
-        val httpResponses = future { process(request, performHTTPPut) }
-        val coapResponse = performCoAPPut(request)
+        val responses = request match{
+          case put : PUTRequest => (performCoAPPut(put), future { processHTTP(request, httpLambda) })
+          case post : POSTRequest => (performCoAPPost(post), future { processHTTP(request, httpLambda) })
+          case get : GETRequest => (performCoAPGet(get), future { processHTTP(request, httpLambda) })
+        }
+        response.setPayload(responses._1 + "\n" + responses._2())
       }
       else {
         response.setPayload("Request cannot be handled. Reason: Request [" + request + "] is invalid")
@@ -86,14 +69,57 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
     }
     else {
        val response = new Response(CodeRegistry.RESP_CONTENT)
+    }    
+  }
+ 
+  /**
+   * Set of private methods to forward the extracted payload to HTTP
+   * These methods should not execute any other business logic
+   * Any other logic, if any, is the sole responsibility of the HTTP REST service
+   * 
+   * For this reason, these def are private.
+   */
+  private def performHTTPPut(payload : String) : String = {
+    val responses = httpURLs.par.map{ url =>
+      future{ performSingleHTTPPut(payload, url) }
     }
+    responses.map{r => r()}.mkString("\n")
+  }
+  
+  private def performSingleHTTPPut(senML : String, url : String) : String = "Should have been forwarded to " + url
+  
+  private def performHTTPPost(senML : String) : String = "Should have been forwarded to " + httpURLs.mkString(", ")
+  
+  private def performHTTPGet(senML : String) : String = "Should have been forwarded to " + httpURLs.mkString(", ")
+  
+  /**
+   * Methods defining the behavior (likely to be locally executed on the CoAP gateway)
+   * They could be overriden to define more advanced logic
+   * 
+   * IMPORTANT: These methods should not directly respond to the request (using request.respond(...))
+   * They should return the payload to be added to the response
+   */
+  def performCoAPPut(request: PUTRequest) : String = "No behavior for CoAP PUT requests"
+  def performCoAPPost(request: POSTRequest) : String = "No behavior for CoAP POST requests"
+  def performCoAPGet(request: GETRequest) : String = "No behavior for CoAP GET requests"
+
+ 
+  /**
+   * Methods inherited from LocalResource (from CoAP API)
+   * They basically execute the local behavior and forward to HTTP
+   * They also respond to the CoAP request by concatenating:
+   * 1/ the response of the associated performCoAPPut/POST/GET
+   * 2/ all the HTTP responses where the extracted payload has been forwarded
+   */
+  override final def performPUT(request: PUTRequest) {
+    process(isPUTallowed, request, performHTTPPut _)
   }
 
-  override def performPOST(request: POSTRequest) {
-    process(request, performHTTPPost)
+  override final def performPOST(request: POSTRequest) {
+    process(isPOSTallowed, request, performHTTPPost _)
   }
 
-  override def performGET(request: GETRequest) {
-    process(request, performHTTPGet)
+  override final def performGET(request: GETRequest) {
+    process(isGETallowed, request, performHTTPGet _)
   }
 }
