@@ -7,6 +7,10 @@
 #ifndef THINGML_TYPEDEFS_H_
 #define THINGML_TYPEDEFS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -21,5 +25,9 @@ typedef unsigned short uint16;
 typedef signed short   int16;
 typedef unsigned long  uint32;
 typedef signed char    int8;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //THINGML_TYPEDEFS_H_
