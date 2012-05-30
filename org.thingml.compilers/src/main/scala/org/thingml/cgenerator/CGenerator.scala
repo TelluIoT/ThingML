@@ -1438,7 +1438,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
     builder append "// Declaration of prototypes:\n"
     builder append "#ifdef __cplusplus\n"
-    builder append "extern "C" {\n"
+    builder append "extern \"C\" {\n"
     builder append "#endif\n"
     generatePrivatePrototypes(builder)
     builder append "#ifdef __cplusplus\n"
