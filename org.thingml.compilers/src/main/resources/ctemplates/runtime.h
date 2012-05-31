@@ -7,6 +7,10 @@
 #ifndef RUNTIME_H_
 #define RUNTIME_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 typedef unsigned char byte;
@@ -41,5 +45,9 @@ void fifo_wait();
 void fifo_unlock_and_notify();
 
 void init_runtime();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*RUNTIME_H_*/
