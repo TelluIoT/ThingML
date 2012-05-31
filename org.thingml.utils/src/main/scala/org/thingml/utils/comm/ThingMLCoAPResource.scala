@@ -18,16 +18,26 @@
  */
 package org.thingml.utils.comm
 
+import org.thingml.utils.comm.SerializableTypes._
+
 import ch.eth.coap.endpoint.{Resource, RemoteResource, LocalResource}
-import org.thingml.utils.log.Logger
 import ch.eth.coap.coap.{Request, PUTRequest, Response, CodeRegistry, POSTRequest, GETRequest, ResponseHandler}
 
+import org.thingml.utils.log.Logger
 import org.thingml.utils.comm.coaphttp.CoAPHTTPResource
+
+import net.modelbased.sensapp.library.system._
+import net.modelbased.sensapp.library.senml._
+import net.modelbased.sensapp.library.senml.export.JsonParser
+import net.modelbased.sensapp.library.senml.export.JsonProtocol._ 
+
+import cc.spray.typeconversion.DefaultUnmarshallers._
+import cc.spray.json._
+import cc.spray.typeconversion.SprayJsonSupport
 
 class ThingMLCoAPRequest(val code : Byte, val resourceURI : String = "ThingML", val serverURI : String) extends ResponseHandler {
 
   def sendData(bytes : Array[Byte]) {
-    Logger.debug("sendData(" + bytes.mkString("[", ", ", "]") + ")")
     val request = new PUTRequest()
     request.setURI(serverURI + "/" + resourceURI)
     request.setPayload(bytes)
@@ -38,21 +48,73 @@ class ThingMLCoAPRequest(val code : Byte, val resourceURI : String = "ThingML", 
   }
   
   override def handleResponse(response : Response) {
-    Logger.debug("handleResponse: " + response)
     Logger.info("Response RTT = " + response.getRTT)
-    response.log();
+    //response.log();
   }  
 }
 
-class ThingMLCoAPLocalResource(override val resourceIdentifier : String = "ThingML", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], val code : Byte = 0x00, val server : CoAP) extends CoAPHTTPResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs) {
+trait ThingMLResource {self : LocalResource =>
+  def code : Byte = 0x00
+}
 
-    setResourceTitle("Generic ThingML Resource")
+class ThingMLTypeResource(val resourceIdentifier : String = "ThingML") extends LocalResource(resourceIdentifier) with ThingMLResource {
+  def addSubResource(resource : ThingMLResource) {
+    super.addSubResource(resource.asInstanceOf[LocalResource])
+    //server.resourceMap += (resource.code -> resource.asInstanceOf[LocalResource].getResourcePath)
+  }  
+}
+
+abstract class ThingMLMessageResource(override val resourceIdentifier : String = "ThingML", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = 0x00, val server : CoAP, val fireAndForgetHTTP : Boolean) extends CoAPHTTPResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, fireAndForgetHTTP) with ThingMLResource {
+
+  setResourceTitle("Generic ThingML Resource")
   setResourceType("ThingMLResource")
 
   val buffer = new Array[Byte](18)
   
-  val statusBuffer = new StringBuilder()
-
+  //TODO: remove the hacks
+  def getBytes[T<:AnyVal](m : MeasurementOrParameter, flag : String) : Array[Byte] = {
+    m.stringValue match {
+      case Some(s) => s.toBytes
+      case None => 
+        val v : Double = m.value.getOrElse(m.valueSum.getOrElse(m.booleanValue.getOrElse(null.asInstanceOf[Unit]))).asInstanceOf[AnyVal].toDouble
+        flag match {
+          case f if (f == "Int")  => v.toInt.toBytes
+          case f if (f == "Long")  => v.toLong.toBytes
+          case f if (f == "Short")  => v.toShort.toBytes
+          case f if (f == "Float")  => v.toFloat.toBytes
+          case f if (f == "Double")  => v.toBytes
+          case f if (f == "Float")  => v.toFloat.toBytes
+          case f if (f == "Char") => v.toChar.toBytes
+          case f if (f == "Boolean") => (v>=1).toBytes
+          case _  => v.toBytes
+        }
+    }
+    
+    
+  }
+  
+  def createMeasurement(name : String, unit : String, value : AnyVal, time : Long) : Option[MeasurementOrParameter] = {
+    try {
+      value match {
+        case b : Boolean => Some(MeasurementOrParameter(Some(name), Some(unit), None, None, Some(b), None, Some(time), None))
+        case c : Char => createMeasurement(name, unit, c.toString, time)
+        case u : Unit => None
+        case n => Some(MeasurementOrParameter(Some(name), Some(unit), Some(n.toDouble), None, None, None, Some(time), None))
+      }
+    } catch {
+      case iae : IllegalArgumentException => None
+      case e : Exception => throw e
+    }
+  }
+  
+  def createMeasurement(name : String, unit : String, value : String, time : Long) : Option[MeasurementOrParameter] = {
+    try {
+      Some(MeasurementOrParameter(Some(name), Some(unit), None, Some(value), None, None, Some(time), None))
+    } catch {
+      case iae : IllegalArgumentException => None
+      case e : Exception => throw e
+    }  
+  }
   def isThingML(payload : Array[Byte]) : Boolean = {
     payload.size == 18 && payload(4) == code && payload(0) == 0x12 && payload(17) == 0x13
   }
@@ -63,107 +125,50 @@ class ThingMLCoAPLocalResource(override val resourceIdentifier : String = "Thing
     }
   }
 
-  //TODO: we should support more standard serialization like JSON
-  def parse(payload : String) : Option[Array[Byte]] = {
-    Logger.debug("parse " + payload)
-    try {
-      var params = Map[String,  String]()
-      payload.split(",").collect{case p => p.trim()}.foreach{p =>
-        val param = p.split(":")
-        if (param.size == 2) {
-          params += (param(0).trim() -> param(1).trim())
+  override def transformPayload(request : Request) : (Option[Root], String) = {
+    super.transformPayload(request) match {
+      case (Some(root), status) => (Some(root), status)
+      case (None, errors) => 
+        if (isThingML(request.getPayload)) {
+          parse(request.getPayload)
         }
-      }
-      Logger.debug("  " + params.size + " param(s)")
-      if (checkParams(params)) {
-        Logger.info("payload has right number of parameters and will be parsed.")
-        doParse(params)
-        return Option(buffer)
-      } else {
-        statusBuffer append "Payload has NOT the right number of parameters or CANNOT be parsed. "
-        Logger.warning("payload has NOT the right number of parameters or CANNOT be parsed.")
-        return None
-      }
-    } catch {
-      case e : Exception =>
-        statusBuffer append "Payload CANNOT be parsed. "
-        Logger.error("payload CANNOT be parsed.")
-        Logger.error(e.getMessage)
-        e.printStackTrace()
-        return None
+        else {
+          (None, "Payload is neither SenML nor ThingML. Please go to:\nhttps://maps.google.com/maps?q=hell&hl=fr&ie=UTF8&ll=63.402534,10.976629&spn=0.018926,0.066047&sll=62.699349,11.678467&sspn=4.967244,16.907959&t=h&hnear=Hell,+Comt%C3%A9+de+Nord-Tr%C3%B8ndelag,+Norv%C3%A8ge&z=15")
+        }
     }
   }
-  def doParse(params : Map[String, String]) {} //This should be overridden in message resource generated by ThingML
-  def checkParams(params : Map[String, String]) = true//This should be overridden in message resource generated by ThingML to check the number and types of params
-  def setAttributes() {} //set the attribute of the CoAP resource from a serialized ThingML message
   
+  def parse(payload : Array[Byte]) : (Option[Root], String) //This should be overridden in message resource generated by ThingML
+  def toThingML(root : Root) : Array[Byte]
+  def setAttributes(root : Root) {} //set the attribute of the CoAP resource from a SenML root
   
-  //PUT is the only method supported (currently) by ThingML resources
   override def performCoAPPut(request: PUTRequest) : String = {
-    statusBuffer.clear
-    Logger.debug("performPUT: " + request.getPayload.mkString ("[", ", ", "]"))
-    
-    //val response = new Response(CodeRegistry.RESP_CONTENT)
-
-    //Send the payload to the ThingML side
-    if (isThingML(request.getPayload)) {
-      Array.copy(request.getPayload, 0, buffer, 0, buffer.size)
-      setAttributes
-      server.coapThingML.receive(request.getPayload)
-      Logger.info("PUT request can be handled: " + request)
-      //response.setPayload("OK!")
-      return "OK!"
-    } else {
-      parse(request.getPayloadString) match {
-        case Some(p) =>
-          server.coapThingML.receive(p)
-          setAttributes
-          Logger.info("PUT request can be handled: " + request)
-          //response.setPayload("OK!")
-          return "OK!"
-        case None => 
-          Logger.warning("PUT request cannot be handled: " + request + " Reason: " + statusBuffer.toString)
-          //response.setPayload("Request cannot be handled. Reason: " + statusBuffer.toString)
-          return "Request cannot be handled. Reason: " + statusBuffer.toString
-      }
+    transformPayload(request) match {
+      case (Some(root), status) =>
+        setAttributes(root)
+        server.coapThingML.receive(toThingML(root))//we should implement a root to ThingML def
+        return "OK!"
+      case (None, errors) => errors
     }
-
-    //Default response, whatever we do with the request
-    
-    
-    //request.respond(response)
   }
 
+  //POST is currently not supported. It will be supported for top-level resources corresponding to ThingML types
+  //so that the gateway could dynamically support new instances of known types
   override def performCoAPPost(request: POSTRequest) : String = {
-    statusBuffer.clear
-    Logger.debug("performPOST: " + request.getPayload.mkString ("[", ", ", "]"))
     Logger.warning("POST not supported")
     
-    return "POST not supported by ThingML resources. Please use PUT"
-
-    //Default response, whatever we do with the request
-    /*val response = new Response(CodeRegistry.RESP_METHOD_NOT_ALLOWED)
-    response.setPayload("POST not supported by ThingML resources. Please use PUT")
-    request.respond(response)*/
+    return "POST not supported (currently) by ThingML resources."
   }
 
   override def performCoAPGet(request: GETRequest) : String = {
-    statusBuffer.clear
-    Logger.debug("performGET: " + request.getPayload.mkString ("[", ", ", "]"))
-    
     val builder = new java.lang.StringBuilder()
     writeAttributes(builder)
-    
+   
     return builder.toString
-    
-    //Default response, whatever we do with the request
-    /*val response = new Response(CodeRegistry.RESP_CONTENT)
-    response.setPayload(builder.toString)
-    request.respond(response)*/
   }
 
-  def addSubResource(resource : ThingMLCoAPLocalResource) {
-    super.addSubResource(resource)
-    server.resourceMap += (resource.code -> resource.getResourcePath)
+  def addSubResource(resource : ThingMLResource) {
+    super.addSubResource(resource.asInstanceOf[LocalResource])
+    server.resourceMap += (resource.code -> resource.asInstanceOf[LocalResource].getResourcePath)
   }
 }

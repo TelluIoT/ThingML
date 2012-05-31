@@ -21,76 +21,101 @@ package org.thingml.utils.comm.coaphttp
 import ch.eth.coap.endpoint.{LocalResource}
 import ch.eth.coap.coap.{Request, PUTRequest, POSTRequest, GETRequest, Response, CodeRegistry}
 
-import scala.actors.Future
-import scala.actors.Futures._
+import scala.actors.Actor._
 
-class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boolean, val isPOSTallowed : Boolean, val isGETallowed : Boolean, httpURLs : Set[String]) extends LocalResource(resourceIdentifier){
+import java.net.URL
+
+import net.modelbased.sensapp.library.system._
+import net.modelbased.sensapp.library.senml._
+import net.modelbased.sensapp.library.senml.export.JsonParser
+import net.modelbased.sensapp.library.senml.export.JsonProtocol._ 
+
+import cc.spray.typeconversion.DefaultUnmarshallers._
+import cc.spray.json._
+import cc.spray.typeconversion.SprayJsonSupport
+import cc.spray.client.{HttpConduit, Get, Put, Post}
+
+import akka.dispatch.Await
+import akka.dispatch.Future
+import akka.util.duration._
+
+
+import cc.spray.typeconversion.SprayJsonSupport
+
+class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boolean, val isPOSTallowed : Boolean, val isGETallowed : Boolean, httpURLs : Set[String], fireAndForgetHTTP : Boolean) extends LocalResource(resourceIdentifier) with HttpSpraySupport  with SprayJsonSupport {
+  
+  def httpClientName = "CoAP2HTTP-"+resourceIdentifier
   
   setResourceTitle("Generic CoAP/HTTP Resource")
   setResourceType("CoAP-HTTPResource")
   
   /*
-   * Transforms the CoAP payload into a format the HTTP server,
-   * and associated services, can understand. For example, it could
-   * infer a SenML representation that SensApp can manage
+   * Transforms the CoAP payload into a SenML representation 
+   * that SensApp can manage
    * 
    * Returns None if no representation can be extracted
    * By default, we return the CoAP payload as-it-is
    */
-  def transformPayload(request : Request) : Option[String] = Some(request.getPayloadString)
-  
+  def transformPayload(request : Request) : (Option[Root], String) = {
+    try {
+      val root = JsonParser.fromJson(request.getPayloadString)
+      (Some(root), "OK!")
+    } catch {
+      case e : Exception => (None, e.getMessage)
+    }
+  }
   
   def check(request : Request) : Boolean = true
   
-  private def processHTTP(request : Request, lambda : String => String) : String = {
+  private def processHTTP(request : Request, fireAndForgetHTTP : Boolean) : String = {
     transformPayload(request) match {
-      case Some(readablePayload) =>
-        lambda(readablePayload)
-      case None =>
-        "Cannot transform payload from request [" + request + "]"
+      case (Some(root), _) =>
+        httpURLs.par.map{ url =>
+          val realURL = new URL(url)
+          val conduit = new HttpConduit(httpClient, realURL.getHost, realURL.getPort) {
+            val pipeline = simpleRequest[Root] ~> sendReceive ~> unmarshal[String]
+          }
+          val response = conduit.pipeline(
+            request match {
+              case put : PUTRequest => Put(url, root)
+              case post : POSTRequest => Post(url, root)
+              case get : GETRequest => Get(url, root)
+            }
+          )
+          
+          var data : String = "Sent to " + url + "\n No response was requested"
+          if (!fireAndForgetHTTP) {
+            data = try {Await.result(response, 4 seconds).toString} catch { case e : Exception => "TIMEOUT:" + url }
+          }
+          conduit.close()
+          data
+        }.mkString("\n")//returns the "\n"-separated list of responses of all the servers
+      case (None, errors) =>
+        "Cannot transform payload from request [" + request + "]\n" + errors
     }    
   }
     
-  private def process(isMethodAllowed : Boolean, request : Request, httpLambda : String => String) {
-    if (isMethodAllowed) {
-      val response = new Response(CodeRegistry.RESP_CONTENT)
-      if (check(request)) {
-        val responses = request match{
-          case put : PUTRequest => (performCoAPPut(put), future { processHTTP(request, httpLambda) })
-          case post : POSTRequest => (performCoAPPost(post), future { processHTTP(request, httpLambda) })
-          case get : GETRequest => (performCoAPGet(get), future { processHTTP(request, httpLambda) })
-        }
-        response.setPayload(responses._1 + "\n" + responses._2())
-      }
-      else {
-        response.setPayload("Request cannot be handled. Reason: Request [" + request + "] is invalid")
-      }
-      request.respond(response)
+  private def process(request : Request, fireAndForgetHTTP : Boolean) {
+    val response = new Response(CodeRegistry.RESP_CONTENT)
+    /*if (check(request)) {*/
+    val responses = request match{
+      case put : PUTRequest if (isPUTallowed) => (performCoAPPut(put), Future{processHTTP(request, fireAndForgetHTTP)})
+      case post : POSTRequest if (isPOSTallowed)  => (performCoAPPost(post), Future{processHTTP(request, fireAndForgetHTTP)})
+      case get : GETRequest if (isGETallowed) => (performCoAPGet(get), Future{processHTTP(request, fireAndForgetHTTP)})
+      case _ => ("Request [" + request + "]: Method not supported.", Future{"Not forwarded to HTTP"})
     }
-    else {
-       val response = new Response(CodeRegistry.RESP_CONTENT)
-    }    
-  }
- 
-  /**
-   * Set of private methods to forward the extracted payload to HTTP
-   * These methods should not execute any other business logic
-   * Any other logic, if any, is the sole responsibility of the HTTP REST service
-   * 
-   * For this reason, these def are private.
-   */
-  private def performHTTPPut(payload : String) : String = {
-    val responses = httpURLs.par.map{ url =>
-      future{ performSingleHTTPPut(payload, url) }
+    var rep = responses._1 + "\n"
+    if(!fireAndForgetHTTP) {
+      try {
+        val httpResponse = Await.result(responses._2, 6 seconds).toString
+        rep = rep + httpResponse
+      } catch {
+        case e : Exception => rep = rep + "HTTP timeout: not able to contact all servers within 5 seconds"
+      }
     }
-    responses.map{r => r()}.mkString("\n")
+    response.setPayload(rep)
+    request.respond(response)
   }
-  
-  private def performSingleHTTPPut(senML : String, url : String) : String = "Should have been forwarded to " + url
-  
-  private def performHTTPPost(senML : String) : String = "Should have been forwarded to " + httpURLs.mkString(", ")
-  
-  private def performHTTPGet(senML : String) : String = "Should have been forwarded to " + httpURLs.mkString(", ")
   
   /**
    * Methods defining the behavior (likely to be locally executed on the CoAP gateway)
@@ -112,14 +137,14 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
    * 2/ all the HTTP responses where the extracted payload has been forwarded
    */
   override final def performPUT(request: PUTRequest) {
-    process(isPUTallowed, request, performHTTPPut _)
+    actor{process(request, fireAndForgetHTTP)}
   }
 
   override final def performPOST(request: POSTRequest) {
-    process(isPOSTallowed, request, performHTTPPost _)
+    actor{process(request, fireAndForgetHTTP)}
   }
 
   override final def performGET(request: GETRequest) {
-    process(isGETallowed, request, performHTTPGet _)
+    actor{process(request, fireAndForgetHTTP)}
   }
 }

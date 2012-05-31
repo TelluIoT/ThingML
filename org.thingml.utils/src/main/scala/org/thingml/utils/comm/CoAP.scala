@@ -63,14 +63,13 @@ class LocalCoAP(val coapThingML : CoAPThingML, override val port : Int) extends 
 
   override def uriToString = port.toString
 
-  def addResource(resource: ThingMLCoAPLocalResource) {
-    super.addResource(resource)
-    resourceMap += (resource.code -> resource.getResourcePath)
+  def addResource(resource: ThingMLResource) {
+    super.addResource(resource.asInstanceOf[LocalResource])
+    resourceMap += (resource.code -> resource.asInstanceOf[LocalResource].getResourcePath)
   }
   
   override def handleRequest(request: Request) {
-    Logger.debug("Incoming request: " + request)
-    request.log
+    //request.log
     super.handleRequest(request)
   }
   
@@ -86,8 +85,7 @@ class RemoteCoAP(val coapThingML : CoAPThingML, uri : URI) extends RemoteEndpoin
   protected[comm] def getURI = uri
 
   override def handleRequest(request: Request) {
-    Logger.debug("Incoming request: " + request)
-    request.log
+    //request.log
     super.handleRequest(request)
   }  
 }

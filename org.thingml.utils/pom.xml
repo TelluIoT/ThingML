@@ -26,6 +26,11 @@
             <name>Akka Repository</name>
             <url>http://repo.akka.io/releases/</url>
         </repository> 
+        <repository>
+            <id>SensApp</id>
+            <name>snapshots</name>
+            <url>https://repository-sintef.forge.cloudbees.com/snapshot/</url>
+        </repository> 
     </repositories>
     
     <build>
@@ -55,9 +60,9 @@
                 <configuration>
                     <args>
                         <arg>-Xelide-below</arg>
-                        <arg>MINIMUM</arg>
+                        <!--<arg>MINIMUM</arg>-->
                         <!--<arg>INFO</arg>-->
-                        <!--<arg>WARNING</arg>-->
+                        <arg>WARNING</arg>
                         <!--<arg>SEVERE</arg>-->
                         <!--<arg>MAXIMUM</arg>-->
                     </args>
@@ -114,6 +119,18 @@
             <artifactId>akka-actor</artifactId>
             <version>2.0.1</version>
         </dependency>
+        
+        <dependency>
+            <groupId>net.modelbased.sensapp.library</groupId>
+            <artifactId>net.modelbased.sensapp.library.system</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.modelbased.sensapp.library</groupId>
+            <artifactId>net.modelbased.sensapp.library.senml</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>    
     </dependencies>
 
 </project>
