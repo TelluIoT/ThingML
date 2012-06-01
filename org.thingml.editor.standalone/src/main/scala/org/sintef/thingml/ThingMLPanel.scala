@@ -106,6 +106,7 @@ class ThingMLPanel extends JPanel {
   var bCoAP = new JMenuItem("Scala/CoAP")
   var bKevoree = new JMenuItem("Java/Kevoree")
   var bPauWare = new JMenuItem("Experimental/PauWare")
+  var bLogger = new JMenuItem("Logger")
   
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
@@ -283,6 +284,24 @@ class ThingMLPanel extends JPanel {
         }
       }
     })
+    bLogger.addActionListener(new ActionListener{
+      def actionPerformed(e:ActionEvent){
+        println("Input file : "+targetFile)
+        if(targetFile.isEmpty) return;
+        
+        try{
+          val thingmlModel = loadThingMLmodel(targetFile.get)
+          var tFilepath :String= targetFile.get.getParent
+          var filename :String = targetFile.get.getName
+          thingmlModel.allConfigurations.foreach{c => 
+            LoggerGenerator.compileAndRun(c, thingmlModel, tFilepath, filename)
+          }
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+      }
+    })
 
   compilersMenu.add(b)
   compilersMenu.add(bC)
@@ -293,6 +312,7 @@ class ThingMLPanel extends JPanel {
   compilersMenu.add(bCoAP)
   compilersMenu.add(bKevoree)
   compilersMenu.add(bPauWare)
+  compilersMenu.add(bLogger)
   menubar.add(compilersMenu)
   
   def loadThingMLmodel(file : File) = {
