@@ -284,6 +284,7 @@ class ThingMLPanel extends JPanel {
         }
       }
     })
+    
     bLogger.addActionListener(new ActionListener{
       def actionPerformed(e:ActionEvent){
         println("Input file : "+targetFile)
@@ -302,7 +303,7 @@ class ThingMLPanel extends JPanel {
         }
       }
     })
-
+    
   compilersMenu.add(b)
   compilersMenu.add(bC)
   compilersMenu.add(bScala)
