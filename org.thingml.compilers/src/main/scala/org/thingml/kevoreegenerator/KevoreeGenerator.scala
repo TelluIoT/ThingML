@@ -332,7 +332,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     builder append "@Update\n"
     builder append "public void updateComponent() {System.out.println(\""+Context.file_name+" component update!\");\n"
     self.allPropertiesInDepth.foreach{case p=>
-        if(!p.isChangeable){
+        if(p.isChangeable){
           builder append p.getType.java_type+" "+Context.protectJavaKeyword(p.getName)+" = new "+p.getType.java_type+"((String)this.getDictionary().get(\""+p.getName+"\"));\n"
           builder append "wrapper.getInstance()."+self.getName+"_"+p.getName+"_var_$eq("+Context.protectJavaKeyword(p.getName)+");\n"
           //builder append  "System.out.println("after: singleRoomNumber = " + wrapper.getInstance().Server_aSingleRoomNumber_var());"
