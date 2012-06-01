@@ -69,7 +69,7 @@ class LocalCoAP(val coapThingML : CoAPThingML, override val port : Int) extends 
   }
   
   override def handleRequest(request: Request) {
-    //request.log
+    request.log
     super.handleRequest(request)
   }
   

@@ -31,7 +31,7 @@ import scala.actors._
 import scala.actors.Actor._
 import java.util.{ArrayList, Hashtable}
 import java.util.AbstractMap.SimpleEntry
-import org.sintef.thingml.{ThingMLElement, ThingMLModel, Port, Message, Configuration, Type, PlatformAnnotation}
+import org.sintef.thingml.{ThingMLElement, ThingMLModel, Port, Message, Configuration, Type, PlatformAnnotation, Parameter}
 import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
 import ch.eth.coap.coap.{GETRequest, POSTRequest, PUTRequest, CodeRegistry}
 import ch.eth.coap.endpoint.{LocalEndpoint, LocalResource}
@@ -175,9 +175,18 @@ object ScalaCoAPGenerator {
     builder append " **/\n\n"
 
     builder append "package org.thingml.generated.coap\n\n"
-
+    
     builder append "import org.thingml.utils.comm._\n"
     builder append "import org.thingml.utils.comm.SerializableTypes._\n\n"
+
+    builder append "import net.modelbased.sensapp.library.system._\n"
+    builder append "import net.modelbased.sensapp.library.senml._\n"
+    builder append "import net.modelbased.sensapp.library.senml.export.JsonParser\n"
+    builder append "import net.modelbased.sensapp.library.senml.export.JsonProtocol._\n\n"
+
+    builder append "import cc.spray.typeconversion.DefaultUnmarshallers._\n"
+    builder append "import cc.spray.json._\n"
+    builder append "import cc.spray.typeconversion.SprayJsonSupport\n\n"
   }
 }
 
@@ -224,7 +233,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
     builder append "class CoAPServer(coapThingML : CoAPThingML, port : Int) extends LocalCoAP(coapThingML, port){\n"
     builder append "//Types\n"
     self.allRemoteInstances.collect{case (i,r) => i.getType}.toSet.foreach{t : Type =>
-      builder append "val " + t.getName + "Resource = new ThingMLCoAPLocalResource(resourceIdentifier = \"" + t.getName + "\", isPUTallowed = true, isPOSTallowed = true, isGETallowed = true, httpURLs = Set(), server = this)\n"
+      builder append "val " + t.getName + "Resource = new ThingMLTypeResource(resourceIdentifier = \"" + t.getName + "\")\n"
       builder append "addResource(" + t.getName + "Resource)\n"
     }
     builder append "\n"
@@ -233,11 +242,11 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
 
     self.allRemoteInstances.foreach{case (i,r) =>
         if (allMessages.exists{m => i.getType.allMessages.exists{m2 => m == m2}}) {//TODO something better for the filtering
-          builder append "val " + i.getName + "Resource = new " + Context.firstToUpper(i.getType.getName) + "CoAPResource(resourceIdentifier = \"" + i.getName + "\", isPUTallowed = true, isPOSTallowed = true, isGETallowed = true, httpURLs = Set(), server = this)\n"
+          builder append "val " + i.getName + "Resource = new " + Context.firstToUpper(i.getType.getName) + "CoAPResource(resourceIdentifier = \"" + i.getName + "\")\n"
           builder append i.getType.getName + "Resource.addSubResource(" + i.getName + "Resource)\n"
           i.getType.allMessages.foreach{m => //TODO something better for the filtering
             if (allMessages.exists{m2 => m == m2}) {
-              builder append i.getName + "Resource.addSubResource(" + "new " + Context.firstToUpper(m.getName) + "CoAPResource(isPUTallowed = true, isPOSTallowed = true, isGETallowed = true, httpURLs = Set(), server = this))\n"
+              builder append i.getName + "Resource.addSubResource(" + "new " + Context.firstToUpper(m.getName) + "CoAPResource(isPUTallowed = true, isPOSTallowed = true, isGETallowed = true, httpURLs = Set(" + getURLs(m).mkString(", ") + "), server = this))\n"
             }
           }
         }
@@ -249,67 +258,81 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
      } */
     builder append "}\n\n"
   }
+  
+  def getURLs(m : Message) : Set[String] = {
+    Set()
+  }
 
   def generateCoAPMessageResources(builder: StringBuilder = Context.builder) {
-    //val allMessages = Context.sort(self.allRemoteMessages).collect{case (p, m) => m._1 ++: m._2}.flatten.toSet
     allMessages.zipWithIndex.foreach{case (m,index) =>
         val code = (if (m.getCode != -1) m.getCode else index)
-        builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = " + code + ".toByte,  override val server : CoAP) extends ThingMLCoAPLocalResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, code, server) {\n"
+        builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = " + code + ".toByte,  override val server : CoAP, override val fireAndForgetHTTP : Boolean = false) extends ThingMLMessageResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, code, server, fireAndForgetHTTP) {\n"
         builder append "setResourceTitle(\"" + Context.firstToUpper(m.getName) + " ThingML resource\")\n"
         builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
 
-        builder append "override def checkParams(params : Map[String, String]) = {\n"
-        builder append "params.size == " + m.getParameters.size
-        builder append m.getParameters.collect{case p => " && (params.get(\"" + p.getName + "\") match{\ncase Some(p) => try {p.to" + p.getType.scala_type() + "\ntrue} catch {case _ => false}\ncase None => false})"}.mkString("")
-        builder append "}\n\n"
-
-        
-        builder append "override def setAttributes() {\n"
+        builder append "override def parse(payload : Array[Byte]) : (Option[Root], String) = {\n"
         builder append "var index : Int = 6\n"
         builder append "val tempBuffer = new Array[Byte](18-index)\n"
-    
-        m.getParameters.collect{case p => 
-          builder append "Array.copy(buffer, index, tempBuffer, 0, Math.min(buffer.size-index, tempBuffer.size))\n"
-          builder append "val " + p.getName + "_att = tempBuffer.to" + p.getType.scala_type() + "\n"
-          builder append "index = index + " + p.getName + "_att.byteSize\n"
-          builder append "setAttributeValue(\"" + p.getName + "\", "+ p.getName + "_att.toString)\n\n"
-        }
-        builder append "}\n\n"
-    
-        builder append "override def doParse(params : Map[String, String]) {\n"
-        builder append "resetBuffer\n"
+        builder append "var measurements : List[MeasurementOrParameter] = List()\n\n"
+         
+        builder append generateParse(m.getParameters.asInstanceOf[java.util.List[Parameter]].toList)
+         
+        builder append "\n}\n\n"
+         
+         
+        builder append "override def toThingML(root : Root) : Array[Byte] = {\n"
+        builder append "val stopByte : Byte = 0x13\n"
+        builder append "val buffer : Array[Byte] = List[Byte]().padTo(18, stopByte).toArray\n"
         builder append "buffer(0) = 0x12\n"
         builder append "buffer(1) = 1.toByte\n"
         builder append "buffer(2) = 0.toByte\n"
         builder append "buffer(3) = 0.toByte\n"
-        builder append "buffer(4) = code\n"
-        builder append "buffer(5) =  ("
+        builder append "buffer(4) = code\n\n"
+          
+        builder append "root.measurementsOrParameters match {"
+        builder append "case Some(measurements) => \n"
         builder append (List("0") ::: m.getParameters.collect{case p =>
-              "params.get(\"" + p.getName + "\").get.to" + p.getType.scala_type(false) + ".byteSize"
-          }.toList).mkString(" + ")
-        builder append ").toByte\n"
-
-        if (m.getParameters.size > 0)
-          builder append "var index = 6\n"
-
-        m.getParameters.foreach{p =>
-          builder append "params.get(\"" + p.getName + "\").get.to" + p.getType.scala_type(false) + ".toBytes.foreach{b => \n" //TODO: handle array as parameter
+              "Serializable" + p.getType.scala_type(false) + ".byteSize"
+          }.toList).mkString("buffer(5) = (", " + ", ").toByte\n")
+        builder append "var index = 6\n"
+       
+        m.getParameters.foreach{m =>
+          builder append "getBytes(measurements.find{m => m.name.get == \"" + m.getName + "\"}.get, \"" +  m.getType.scala_type(false) + "\").foreach{b => \n"
           builder append "buffer(index) = b\n"
           builder append "index = index + 1\n"
-          builder append "}\n"
-          builder append "setAttributeValue(\"" + p.getName + "\", params.get(\"" + p.getName + "\").get.to" + p.getType.scala_type(false) + ")\n\n"
+          builder append "}\n\n"
         }
-
+         
+        builder append "case None =>\n"
+         
         builder append "}\n\n"
-
-
+         
+        builder append "return buffer"
+        builder append "}\n\n"
+         
         builder append "}\n\n"
     }
   }
 
+  def generateParse(params : List[Parameter]) : String = params match {
+    case head :: tail => 
+      val builder = new StringBuilder()
+      builder append "Array.copy(payload, index, tempBuffer, 0, Math.min(payload.size-index, tempBuffer.size))\n"
+      builder append "val " + head.getName + "_att = tempBuffer.to" + head.getType.scala_type() + "\n"
+      builder append "index = index + " + head.getName + "_att.byteSize\n"
+              
+      builder append "createMeasurement(\"" + head.getName + "\", \"V\", " + head.getName + "_att, System.currentTimeMillis) match {\n"//TODO extract SenML units from ThingML annotation
+      builder append "case Some(m) => measurements = measurements :+ m\n"
+      builder append generateParse(tail)
+      builder append "case None => return (None, \"Cannot parse parameter " + head.getName + "\")\n"
+      builder append "}\n"
+      builder.toString
+    case nil => "return (Some(Root(Some(senMLpath), None, None, Some(1), Some(measurements))), \"OK!\")\n"
+  }
+          
   def generateCoAPTypeResources(builder: StringBuilder = Context.builder) {
     self.allInstances.collect{case i => i.getType}.toSet.foreach{t : Type =>
-      builder append "class " + Context.firstToUpper(t.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + t.getName + "\", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = 0x00,  override val server : CoAP) extends ThingMLCoAPLocalResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, code, server) {\n"
+      builder append "class " + Context.firstToUpper(t.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + t.getName + "\") extends ThingMLTypeResource(resourceIdentifier) {\n"
       builder append "setResourceTitle(\"" + Context.firstToUpper(t.getName) + " ThingML resource\")\n"
       builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
       builder append "}\n\n"
