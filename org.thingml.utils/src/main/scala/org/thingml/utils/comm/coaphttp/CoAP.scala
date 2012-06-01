@@ -18,8 +18,8 @@
  */
 package org.thingml.utils.comm.coaphttp
 
-import ch.eth.coap.endpoint.{LocalResource}
-import ch.eth.coap.coap.{Request, PUTRequest, POSTRequest, GETRequest, Response, CodeRegistry}
+import ch.ethz.inf.vs.californium.endpoint.{LocalResource}
+import ch.ethz.inf.vs.californium.coap.{Request, PUTRequest, POSTRequest, GETRequest, Response, CodeRegistry}
 
 import scala.actors.Actor._
 
@@ -46,7 +46,7 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
   
   def httpClientName = "CoAP2HTTP-"+resourceIdentifier
   
-  setResourceTitle("Generic CoAP/HTTP Resource")
+  setTitle("Generic CoAP/HTTP Resource")
   setResourceType("CoAP-HTTPResource")
   
   /*
@@ -96,6 +96,7 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
   }
     
   private def process(request : Request, fireAndForgetHTTP : Boolean) {
+    println("process: " + request + "(" + fireAndForgetHTTP + ")")
     val response = new Response(CodeRegistry.RESP_CONTENT)
     /*if (check(request)) {*/
     val responses = request match{
@@ -113,6 +114,7 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
         case e : Exception => rep = rep + "HTTP timeout: not able to contact all servers within 5 seconds"
       }
     }
+    println("RESPONSE: "+rep)
     response.setPayload(rep)
     request.respond(response)
   }

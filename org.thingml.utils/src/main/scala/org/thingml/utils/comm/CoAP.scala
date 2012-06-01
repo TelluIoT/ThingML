@@ -20,8 +20,8 @@ package org.thingml.utils.comm
 
 import org.thingml.utils.log.Logger
 
-import ch.eth.coap.endpoint.{LocalEndpoint, RemoteEndpoint, Endpoint, LocalResource}
-import ch.eth.coap.coap.{Request, PUTRequest, Response}
+import ch.ethz.inf.vs.californium.endpoint.{LocalEndpoint, RemoteEndpoint, Endpoint, LocalResource}
+import ch.ethz.inf.vs.californium.coap.{Request, PUTRequest, Response}
 import java.net.{InetAddress, URI}
 
 trait CoAPThingML {
@@ -65,11 +65,11 @@ class LocalCoAP(val coapThingML : CoAPThingML, override val port : Int) extends 
 
   def addResource(resource: ThingMLResource) {
     super.addResource(resource.asInstanceOf[LocalResource])
-    resourceMap += (resource.code -> resource.asInstanceOf[LocalResource].getResourcePath)
+    resourceMap += (resource.code -> resource.asInstanceOf[LocalResource].getPath)
   }
   
   override def handleRequest(request: Request) {
-    request.log
+    //request.log
     super.handleRequest(request)
   }
   

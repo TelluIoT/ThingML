@@ -20,8 +20,8 @@ package org.thingml.utils.comm
 
 import org.thingml.utils.comm.SerializableTypes._
 
-import ch.eth.coap.endpoint.{Resource, RemoteResource, LocalResource}
-import ch.eth.coap.coap.{Request, PUTRequest, Response, CodeRegistry, POSTRequest, GETRequest, ResponseHandler}
+import ch.ethz.inf.vs.californium.endpoint.{Resource, RemoteResource, LocalResource}
+import ch.ethz.inf.vs.californium.coap.{Request, PUTRequest, Response, CodeRegistry, POSTRequest, GETRequest, ResponseHandler, LinkAttribute}
 
 import org.thingml.utils.log.Logger
 import org.thingml.utils.comm.coaphttp.CoAPHTTPResource
@@ -34,6 +34,8 @@ import net.modelbased.sensapp.library.senml.export.JsonProtocol._
 import cc.spray.typeconversion.DefaultUnmarshallers._
 import cc.spray.json._
 import cc.spray.typeconversion.SprayJsonSupport
+
+import scala.collection.JavaConversions._
 
 class ThingMLCoAPRequest(val code : Byte, val resourceURI : String = "ThingML", val serverURI : String) extends ResponseHandler {
 
@@ -49,7 +51,7 @@ class ThingMLCoAPRequest(val code : Byte, val resourceURI : String = "ThingML", 
   
   override def handleResponse(response : Response) {
     Logger.info("Response RTT = " + response.getRTT)
-    response.log();
+    //response.log();
   }  
 }
 
@@ -59,17 +61,17 @@ trait ThingMLResource {self : LocalResource =>
 
 class ThingMLTypeResource(val resourceIdentifier : String = "ThingML") extends LocalResource(resourceIdentifier) with ThingMLResource {
   def addSubResource(resource : ThingMLResource) {
-    super.addSubResource(resource.asInstanceOf[LocalResource])
+    super.add(resource.asInstanceOf[LocalResource])
     //server.resourceMap += (resource.code -> resource.asInstanceOf[LocalResource].getResourcePath)
   }  
 }
 
 abstract class ThingMLMessageResource(override val resourceIdentifier : String = "ThingML", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = 0x00, val server : CoAP, val fireAndForgetHTTP : Boolean) extends CoAPHTTPResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, fireAndForgetHTTP) with ThingMLResource {
 
-  setResourceTitle("Generic ThingML Resource")
+  setTitle("Generic ThingML Resource")
   setResourceType("ThingMLResource")
   
-  lazy val senMLpath = List(getResourcePath.split("/")(1), getResourcePath.split("/")(2)).mkString("/")
+  lazy val senMLpath = List(getPath.split("/")(1), getPath.split("/")(2)).mkString("/")
 
   val buffer = new Array[Byte](18)
   
@@ -146,7 +148,9 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
     root.measurementsOrParameters match {
       case Some(params) =>
         params.foreach{p => 
-          setAttributeValue(p.name.getOrElse("Unknown"), p.stringValue.getOrElse(p.value.getOrElse(p.valueSum.getOrElse(p.booleanValue.getOrElse("unknown")))).toString)
+          
+          setAttribute(new LinkAttribute(p.name.getOrElse("Unknown"), p.stringValue.getOrElse(p.value.getOrElse(p.valueSum.getOrElse(p.booleanValue.getOrElse("unknown")))).toString));
+          //setAttributeValue(p.name.getOrElse("Unknown"), p.stringValue.getOrElse(p.value.getOrElse(p.valueSum.getOrElse(p.booleanValue.getOrElse("unknown")))).toString)
         } 
       case _ =>
     } 
@@ -171,14 +175,16 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
   }
 
   override def performCoAPGet(request: GETRequest) : String = {
-    val builder = new java.lang.StringBuilder()
+    /*val builder = new java.lang.StringBuilder()
     writeAttributes(builder)
    
-    return builder.toString
+    return builder.toString*/
+   
+    return getAttributes.mkString("[", ";", "]")
   }
 
   def addSubResource(resource : ThingMLResource) {
-    super.addSubResource(resource.asInstanceOf[LocalResource])
-    server.resourceMap += (resource.code -> resource.asInstanceOf[LocalResource].getResourcePath)
+    super.add(resource.asInstanceOf[LocalResource])
+    server.resourceMap += (resource.code -> resource.asInstanceOf[LocalResource].getPath)
   }
 }

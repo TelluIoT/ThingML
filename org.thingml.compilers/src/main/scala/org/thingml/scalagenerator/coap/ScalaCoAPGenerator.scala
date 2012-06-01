@@ -33,8 +33,6 @@ import java.util.{ArrayList, Hashtable}
 import java.util.AbstractMap.SimpleEntry
 import org.sintef.thingml.{ThingMLElement, ThingMLModel, Port, Message, Configuration, Type, PlatformAnnotation, Parameter}
 import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
-import ch.eth.coap.coap.{GETRequest, POSTRequest, PUTRequest, CodeRegistry}
-import ch.eth.coap.endpoint.{LocalEndpoint, LocalResource}
 import org.thingml.utils.log.Logger
 
 object Context {
@@ -267,7 +265,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
     allMessages.zipWithIndex.foreach{case (m,index) =>
         val code = (if (m.getCode != -1) m.getCode else index)
         builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = " + code + ".toByte,  override val server : CoAP, override val fireAndForgetHTTP : Boolean = false) extends ThingMLMessageResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, code, server, fireAndForgetHTTP) {\n"
-        builder append "setResourceTitle(\"" + Context.firstToUpper(m.getName) + " ThingML resource\")\n"
+        builder append "setTitle(\"" + Context.firstToUpper(m.getName) + " ThingML resource\")\n"
         builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
 
         builder append "override def parse(payload : Array[Byte]) : (Option[Root], String) = {\n"
@@ -333,7 +331,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
   def generateCoAPTypeResources(builder: StringBuilder = Context.builder) {
     self.allInstances.collect{case i => i.getType}.toSet.foreach{t : Type =>
       builder append "class " + Context.firstToUpper(t.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + t.getName + "\") extends ThingMLTypeResource(resourceIdentifier) {\n"
-      builder append "setResourceTitle(\"" + Context.firstToUpper(t.getName) + " ThingML resource\")\n"
+      builder append "setTitle(\"" + Context.firstToUpper(t.getName) + " ThingML resource\")\n"
       builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
       builder append "}\n\n"
     }
