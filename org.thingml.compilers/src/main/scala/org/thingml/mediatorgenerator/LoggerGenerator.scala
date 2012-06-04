@@ -65,6 +65,11 @@ object Util {
 
 object LoggerGenerator {
   def compileAndRun(cfg : Configuration, model: ThingMLModel, outputDir:String,sourcefile:String) {
+    new File(System.getProperty("java.io.tmpdir") + "ThingML_temp/").deleteOnExit
+    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName
+    val rootDirFile = new File(rootDir)
+    rootDirFile.mkdirs    //for log txt and image
+
     new File(outputDir+"/").deleteOnExit
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
@@ -85,7 +90,7 @@ object LoggerGenerator {
   def compile(cfg: Configuration, model: ThingMLModel) : String = {
     generateHeader(cfg)
     generateLogger(cfg)
-    generateThingLogger()
+    generateThingLogger(cfg)
     generateThingControl()
     //generateControlMessage()
     generateConfig(cfg)
@@ -121,10 +126,10 @@ object LoggerGenerator {
     builder append "state Ready{\n"
     builder append "on entry do\n"
     builder append "clearlog()\n"
-    builder append "print \"Ready, Waiting for start trigger\"\n"
+    builder append "print \"Ready, Waiting for startMsg trigger\"\n"
     builder append "end\n"
     builder append "transition->Logging\n"
-    builder append "event e:PrvPort_Control?start\n"
+    builder append "event e:PrvPort_Control?startMsg\n"
     builder append "}\n"
   }
   def generateLoggingState(cfg:Configuration,builder:StringBuilder = Util.lBuilder){
@@ -136,6 +141,7 @@ object LoggerGenerator {
     builder append "on exit do\n"
     builder append "log(\"@enduml\")\n"
     builder append "printlog()\n"
+    builder append "writeFile()\n"
     builder append "end\n\n"
     generateTransitions(cfg)
     builder append "}\n"
@@ -147,7 +153,7 @@ object LoggerGenerator {
   }
   def generateTransitions(cfg:Configuration,builder:StringBuilder = Util.lBuilder){
     builder append "transition-> Ready\n"
-    builder append "event e: PrvPort_Control?stop\n\n"
+    builder append "event e: PrvPort_Control?stopMsg\n\n"
     //here since no mismatches, just got all messages and foward is ok.
     // but for the situation with mismatehes, how to do it
     cfg.allConnectors.foreach{case c=>
@@ -247,7 +253,7 @@ object LoggerGenerator {
   }
   def generateControlPort(builder:StringBuilder = Util.lBuilder){
     builder append "provided port PrvPort_Control{\n"
-    builder append "receives start, stop\n}\n"
+    builder append "receives startMsg, stopMsg\n}\n"
   }
   def getIncludes(cfg:Configuration):String ={
     var inclist = new ArrayList[String]()
@@ -268,8 +274,15 @@ object LoggerGenerator {
     }
     inclist.mkString(",")
   }
-  def generateThingLogger(builder:StringBuilder = Util.lBuilder){
-    builder append "thing Logger{\n"
+  def generateThingLogger(cfg:Configuration, builder:StringBuilder = Util.lBuilder){
+    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" + cfg.getName
+    var log_filename = rootDir+"\\log_"+cfg.getName
+    log_filename = log_filename.replace("\\", "/")
+    
+    builder append "thing Logger\n"
+    builder append "@scala_trait \"org.thingml.utils.log.Access2File\"\n" 
+    builder append "@thingml_maven_dep \"org.thingml.utils\"\n"
+    builder append "{\n"
     builder append "property trace_buffer :String\n"
     builder append "function log(trace:String) do\n"
     builder append "print \"==LOG: \"+trace+\" !==\"\n"
@@ -281,6 +294,10 @@ object LoggerGenerator {
     builder append "end\n"
     builder append "function clearlog() do\n"
     builder append "trace_buffer =\"\"\n"
+    builder append "end\n"
+    builder append "function writeFile() do\n"
+    
+    builder append "'this.asInstanceOf[org.thingml.utils.log.Access2File].writeFile(' & trace_buffer & \',\""+log_filename+"\")'\n"
     builder append "end\n}\n\n"
     
   }
@@ -288,13 +305,13 @@ object LoggerGenerator {
     builder append "thing Control includes ControlMessage\n"
     builder append "@mock \"true\"{\n"
     builder append "required port ControlPort{\n"
-    builder append "sends start, stop\n"
+    builder append "sends startMsg, stopMsg\n"
     builder append "}\n}\n\n"
   }
   def generateControlMessage(builder:StringBuilder = Util.lBuilder){
     builder append "thing fragment ControlMessage{\n"
-    builder append "message start(msg:String);\n"
-    builder append "message stop(msg:String);\n"
+    builder append "message startMsg();\n"
+    builder append "message stopMsg();\n"
     builder append "}\n"
   }
   def generateConfig(cfg:Configuration,builder:StringBuilder = Util.lBuilder){
