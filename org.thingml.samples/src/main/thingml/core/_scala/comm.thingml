@@ -2,8 +2,8 @@
 
 import "../comm.thingml"
 
-datatype SerialPhy
-@scala_type "org.thingml.utils.comm.Serial";
+/*datatype SerialPhy
+@scala_type "org.thingml.utils.comm.Serial";*/
 
 thing CoAPServerScala includes IOByteArray
 @pim "IOStream"
@@ -72,8 +72,8 @@ thing SerialScala includes IOByteArray
 @scala_trait "org.thingml.utils.comm.SerialThingML"
 @thingml_maven_dep "org.thingml.utils"
 {
-    readonly property serialPort : String = "COM8"
-    property serial : SerialPhy  
+    readonly property serialPort : String = "COM4"
+    //property serial : SerialPhy  
         
 	function receive(byte : Byte[256]) 
     @override "true"
@@ -84,7 +84,7 @@ thing SerialScala includes IOByteArray
     statechart behavior init default {
         on entry 
         do
-            serial = 'new org.thingml.utils.comm.Serial(' & serialPort & ', root.asInstanceOf[org.thingml.utils.comm.SerialThingML])'
+            /*serial = */'new org.thingml.comm.rxtx.Serial4ThingML(' & serialPort & ', root.asInstanceOf[org.thingml.utils.comm.SerialThingML])'
         end
         
         state default {

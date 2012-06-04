@@ -130,7 +130,7 @@ action receive(m.b)
  * syntax: instanceName::TypeName::PortName::messageName
  * note: wildcards can be used for any of these elements.
  */
-configuration test
+/*configuration test
 @remote "testRemote::TestThing::.*::.*"
 {
     //Messages are sent and received without serialization
@@ -151,4 +151,18 @@ configuration test
     
     connector deserializer.network => network.IOStream
     connector deserializer.in => testRemote.in
+}*/
+
+configuration serialScala {
+    instance testRemote : TestThing
+    instance network : SerialScala
+    instance serializer : MessageSerializer
+    instance deserializer : MessageDeserializer
+
+    
+    connector testRemote.out => serializer.out
+    
+    
+    connector deserializer.network => network.IOStream
+    connector deserializer.in => testRemote.in    
 }
