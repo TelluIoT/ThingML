@@ -9,7 +9,7 @@ thing CoAPServerScala includes IOByteArray
 @pim "IOStream"
 @platform "scala"
 @scala_trait "org.thingml.utils.comm.CoAPThingML"
-@thingml_maven_dep "org.thingml.utils"
+@thingml_maven_dep "org.thingml.coaphttp"
 @coap "server"
 {
     readonly property coapPort : Long = 61617
