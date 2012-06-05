@@ -199,7 +199,10 @@ object CGenerator {
     var builder = new StringBuilder()
     config.generatePDE(builder, context)
     MergedConfigurationCache.clearCache(); // Cleanup
-    builder.toString
+    var result = builder.toString
+    // Remove extern "C" stuff because Arduino put everyting in cpp files
+    result = result.replaceAll("#ifdef __cplusplus", "#ifdef EXTERN_C_PROTOTYPES")
+    result
   }
 
    def compileAllArduino(model: ThingMLModel): Map[Configuration, String] = {
@@ -818,13 +821,15 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append " *****************************************************************************/\n\n"
     val model = ThingMLHelpers.findContainingModel(self)
 
+    /*
     self.allThings.foreach { t =>
       var h = t.annotation("c_header")
       if (h != null) {
-         builder append "// Header from " + t.getName + "\n"
+         builder append "\n// Header from " + t.getName + "\n"
          builder append h
       }
     }
+    */
 
     // Generate code for enumerations (generate for all enum)
     builder append "\n"
@@ -880,7 +885,9 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
       if (self.allConnectors.exists{ c =>
         (c.getRequired == port && c.getProvided.getReceives.contains(msg)) ||
           (c.getProvided == port && c.getRequired.getReceives.contains(msg)) }) {
-        builder append t.sender_name(port, msg) + "_listener = "
+
+        //builder append t.sender_name(port, msg) + "_listener = "
+        builder append "register_" + t.sender_name(port, msg) + "_listener("
 
         //println("Initialize port " + port.getName + " sync " + isSyncSend(port))
 
@@ -1401,9 +1408,9 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
     var h = self.annotation("c_header")
     if (h != null) {
-       builder append "\n// BEGIN: Code from the c_global annotation " + self.getName + "\n"
+       builder append "\n// BEGIN: Code from the c_header annotation " + self.getName + "\n"
        builder append h
-       builder append "\n// END: Code from the c_global annotation " + self.getName + "\n\n"
+       builder append "\n// END: Code from the c_header annotation " + self.getName + "\n\n"
     }
 
     builder append "// Definition of the instance stuct:\n"
