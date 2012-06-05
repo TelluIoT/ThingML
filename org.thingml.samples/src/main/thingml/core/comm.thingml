@@ -59,18 +59,22 @@ thing Network includes IOStream
 thing NetworkArray includes InputByteArrayMsgs, OutputByteArrayMsgs
 {
 
-	required port forward
+	required port in
     {
 		receives receive_bytes
-        sends write_bytes
 	}
+
+    required port out 
+    {
+        sends write_bytes
+    }
 
     statechart behavior init default {
         state default {            
-            internal event wb : forward?receive_bytes
+            internal event wb : in?receive_bytes
             action do
                 print("network forwards: " + wb.b)
-                forward!write_bytes(wb.b)
+                out!write_bytes(wb.b)
             end
         }    
     }    

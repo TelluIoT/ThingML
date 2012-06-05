@@ -133,7 +133,7 @@ end
  * syntax: instanceName::TypeName::PortName::messageName
  * note: wildcards can be used for any of these elements.
  */
-/*configuration test
+configuration test
 @remote "testRemote::TestThing::.*::.*"
 {
     //Messages are sent and received without serialization
@@ -154,11 +154,9 @@ end
     
     connector deserializer.network => network.IOStream
     connector deserializer.in => testRemote.in
-}*/
+}
 
-/**
- * 
- */
+/*
 configuration serialScala 
 @remote "testRemote::TestThing::.*::.*"
 {
@@ -178,9 +176,9 @@ configuration serialScala
     //connector testRemote.out => serializer.out
     //connector serializer.network => coapClient.IOStream
     
-    connector forward.forward => serial.IOStream
-    connector forward.forward => coapClient.IOStream
+    connector forward.in => serial.IOStream
+    connector forward.out => coapClient.IOStream
     
     connector deserializer.network => coapServer.IOStream
     connector deserializer.in => testRemote.in   
-}
+}*/

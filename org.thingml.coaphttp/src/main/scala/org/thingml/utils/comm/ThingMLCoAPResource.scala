@@ -37,22 +37,27 @@ import cc.spray.typeconversion.SprayJsonSupport
 
 import scala.collection.JavaConversions._
 
-class ThingMLCoAPRequest(val code : Byte, val resourceURI : String = "ThingML", val serverURI : String) extends ResponseHandler {
+class ThingMLCoAPRequest(val code : Byte, val resourceURI : String = "ThingML", val serverURI : String) /*extends ResponseHandler*/ {
 
   def sendData(bytes : Array[Byte]) {
     val request = new PUTRequest()
     request.setURI(serverURI + "/" + resourceURI)
     request.setPayload(bytes)
 
-    request.enableResponseQueue(false)//Asynchronous response
-    request.registerResponseHandler(this)    
+    request.enableResponseQueue(true)
+    //request.registerResponseHandler(this)    
     request.execute()
+    
+    val response = request.receiveResponse()
+    if (response != null) {
+      response.prettyPrint
+    }
   }
   
-  override def handleResponse(response : Response) {
-    Logger.info("Response RTT = " + response.getRTT)
-    //response.log();
-  }  
+  /*override def handleResponse(response : Response) {
+    //Logger.info("Response RTT = " + response.getRTT)
+    response.prettyPrint();
+  } */ 
 }
 
 trait ThingMLResource {self : LocalResource =>
@@ -148,7 +153,7 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
     root.measurementsOrParameters match {
       case Some(params) =>
         params.foreach{p => 
-          
+          clearAttribute(p.name.getOrElse("Unknown"))
           setAttribute(new LinkAttribute(p.name.getOrElse("Unknown"), p.stringValue.getOrElse(p.value.getOrElse(p.valueSum.getOrElse(p.booleanValue.getOrElse("unknown")))).toString));
           //setAttributeValue(p.name.getOrElse("Unknown"), p.stringValue.getOrElse(p.value.getOrElse(p.valueSum.getOrElse(p.booleanValue.getOrElse("unknown")))).toString)
         } 

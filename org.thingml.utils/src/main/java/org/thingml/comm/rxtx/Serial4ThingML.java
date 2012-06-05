@@ -77,15 +77,15 @@ public class Serial4ThingML {
     public Serial4ThingML(String port, org.thingml.utils.comm.SerialThingML thing) {
         this.port = selectSerialPort(port);
         this.thing = thing;
-        connect(port);
+        connect();
     }
 
-    void connect(String portName) {
-        registerPort(portName);
+    void connect() {
+        registerPort(port);
         try {
-            CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
+            CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(port);
             if (portIdentifier.isCurrentlyOwned()) {
-                System.err.println("Error: Port " + portName + " is currently in use");
+                System.err.println("Error: Port " + port + " is currently in use");
             } else {
                 CommPort commPort = portIdentifier.open(this.getClass().getName(), 2000);
 
@@ -101,7 +101,7 @@ public class Serial4ThingML {
                     serialPort.notifyOnDataAvailable(true);
 
                 } else {
-                    System.err.println("Error: Port " + portName + " is not a valid serial port.");
+                    System.err.println("Error: Port " + port + " is not a valid serial port.");
                 }
             }
         } catch (Exception e) {

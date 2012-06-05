@@ -21,7 +21,7 @@ package org.thingml.utils.comm.coaphttp
 import ch.ethz.inf.vs.californium.endpoint.{LocalResource}
 import ch.ethz.inf.vs.californium.coap.{Request, PUTRequest, POSTRequest, GETRequest, Response, CodeRegistry}
 
-import scala.actors.Actor._
+//import scala.actors.Actor._
 
 import java.net.URL
 
@@ -97,7 +97,7 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
     
   private def process(request : Request, fireAndForgetHTTP : Boolean) {
     println("process: " + request + "(" + fireAndForgetHTTP + ")")
-    val response = new Response(CodeRegistry.RESP_CONTENT)
+    val response = new Response(/*CodeRegistry.RESP_CONTENT*/)
     /*if (check(request)) {*/
     val responses = request match{
       case put : PUTRequest if (isPUTallowed) => (performCoAPPut(put), Future{processHTTP(request, fireAndForgetHTTP)})
@@ -139,14 +139,14 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
    * 2/ all the HTTP responses where the extracted payload has been forwarded
    */
   override final def performPUT(request: PUTRequest) {
-    actor{process(request, fireAndForgetHTTP)}
+    process(request, fireAndForgetHTTP)
   }
 
   override final def performPOST(request: POSTRequest) {
-    actor{process(request, fireAndForgetHTTP)}
+    process(request, fireAndForgetHTTP)
   }
 
   override final def performGET(request: GETRequest) {
-    actor{process(request, fireAndForgetHTTP)}
+    process(request, fireAndForgetHTTP)
   }
 }

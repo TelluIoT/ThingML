@@ -33,7 +33,7 @@ trait CoAPThingML {
    * This will be redefined in concrete ThingML things to instantiate their specific (and generated) COaP servers
    */
   def initialize(port : Int = 61616) {
-     new LocalCoAP(this, port)
+    new LocalCoAP(this, port)
   }
 
   def receive(byte : Array[Byte])//This will be refined in the COaP Thing defined in ThingML
@@ -75,20 +75,20 @@ class LocalCoAP(val coapThingML : CoAPThingML, override val port : Int) extends 
   
 }
 
-class RemoteCoAP(val coapThingML : CoAPThingML, uri : URI) extends RemoteEndpoint(uri) with CoAP {
-  self : RemoteEndpoint =>
+/*class RemoteCoAP(val coapThingML : CoAPThingML, uri : URI) extends RemoteEndpoint(uri) with CoAP {
+ self : RemoteEndpoint =>
 
-  coapThingML.setCoapServer(this)
+ coapThingML.setCoapServer(this)
   
-  override def uriToString = uri.toString
+ override def uriToString = uri.toString
   
-  protected[comm] def getURI = uri
+ protected[comm] def getURI = uri
 
-  override def handleRequest(request: Request) {
-    //request.log
-    super.handleRequest(request)
-  }  
-}
+ override def handleRequest(request: Request) {
+ //request.log
+ super.handleRequest(request)
+ }  
+ }*/
 
 
 trait CoAPThingMLClient {
@@ -109,12 +109,18 @@ class CoAPClient(thingmlClient : CoAPThingMLClient, serverURI : String) {
     requestMap += (request.code -> request) 
   }
   
+  def isThingML(payload : Array[Byte]) : Boolean = {
+    payload.length > 5 && payload(0) == 0x12 && payload(payload.length-1) == 0x13
+  }
+  
   def send(bytes : Array[Byte]) {
-    requestMap.get(bytes(4)) match {
-      case Some(r) =>
-        r.sendData(bytes)
-      case None =>
-        Logger.warning("Request not found. No request with code = " + bytes(4))
+    if (isThingML(bytes)) {
+      requestMap.get(bytes(4)) match {
+        case Some(r) =>
+          r.sendData(bytes)
+        case None =>
+          Logger.warning("Request not found. No request with code = " + bytes(4))
+      }
     }
   }
   
