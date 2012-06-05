@@ -192,7 +192,7 @@ public class Serial4ThingML {
                             /*for (int i = 0; i < buffer_idx; i++) {
                                 packet[i] = buffer[i];
                             }*/
-                            System.out.println("Well-formed packet forwarded to thing");
+                            //System.out.println("Well-formed packet forwarded to thing");
                             thing.receive(java.util.Arrays.copyOf(buffer, buffer_idx)/*packet*/);
                             
                             state = RCV_WAIT;

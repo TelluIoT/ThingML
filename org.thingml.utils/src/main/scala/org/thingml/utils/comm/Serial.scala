@@ -35,10 +35,10 @@ trait SerialThingML {
   def setOutputStream(out : OutputStream) {this.out = out}
     
   def sendData(bytes : Array[Byte]) {
-    Logger.debug("sendData(" + bytes.mkString("[", ", ", "]") + ")")
+    //Logger.debug("sendData(" + bytes.mkString("[", ", ", "]") + ")")
     try {
       bytes.foreach{b => 
-        Logger.debug("out.write(" + b.toInt + ")")
+        //Logger.debug("out.write(" + b.toInt + ")")
         out.write(b.toInt)
       }
     } catch {

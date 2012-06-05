@@ -22,7 +22,7 @@ thing CoAPServerScala includes IOByteArray
     function receive(byte : Byte[256]) 
     @override "true"
     do
-        print('' & "COaPScala receive: " + byte & '.mkString("[", " ", "]")')
+        //print('' & "COaPScala receive: " + byte & '.mkString("[", " ", "]")')
         IOStream!receive_bytes(byte)
     end
     
@@ -59,7 +59,7 @@ thing CoAPClientScala includes IOByteArray
         state default {
             internal event wb : IOStream?write_bytes
             action do
-                print("coap.sendData: " + wb.b)
+                //print("coap.sendData: " + wb.b)
                 'root.asInstanceOf[org.thingml.utils.comm.CoAPThingMLClient].send(' & wb.b & ')'
             end
         }    
@@ -78,7 +78,7 @@ thing SerialScala includes IOByteArray
 	function receive(byte : Byte[18]) 
     @override "true"
     do
-        print("receive...")
+        //print("receive...")
         print(byte)
         IOStream!receive_bytes(byte)
     end
@@ -92,7 +92,7 @@ thing SerialScala includes IOByteArray
         state default {
             internal event wb : IOStream?write_bytes
             action do
-                print("serial.write: " + wb.b)
+                //print("serial.write: " + wb.b)
                 'root.asInstanceOf[org.thingml.utils.comm.SerialThingML].sendData(' & wb.b & ')'
             end
         }    

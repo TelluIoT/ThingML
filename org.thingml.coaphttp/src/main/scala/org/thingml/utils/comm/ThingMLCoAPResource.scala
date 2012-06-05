@@ -120,7 +120,7 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
     }  
   }
   def isThingML(payload : Array[Byte]) : Boolean = {
-    payload.size == 18 && payload(4) == code && payload(0) == 0x12 && payload(17) == 0x13
+    payload.length > 5 && payload(4) == code && payload(0) == 0x12 && payload(payload.length-1) == 0x13
   }
 
   def resetBuffer(){
@@ -137,7 +137,7 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
           parse(request.getPayload)
         }
         else {
-          (None, "Payload is neither SenML nor ThingML. Please go to:\nhttps://maps.google.com/maps?q=hell&hl=fr&ie=UTF8&ll=63.402534,10.976629&spn=0.018926,0.066047&sll=62.699349,11.678467&sspn=4.967244,16.907959&t=h&hnear=Hell,+Comt%C3%A9+de+Nord-Tr%C3%B8ndelag,+Norv%C3%A8ge&z=15")
+          (None, "Payload is neither SenML nor ThingML.\nPayload is: "+request.getPayload.mkString("[", ",", "]"))
         }
     }
   }

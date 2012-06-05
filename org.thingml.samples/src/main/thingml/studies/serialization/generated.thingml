@@ -159,10 +159,13 @@ end
 /**
  * 
  */
-configuration serialScala {
+configuration serialScala 
+@remote "testRemote::TestThing::.*::.*"
+{
     instance testRemote : TestThing
     
     instance serial : SerialScala
+    instance forward : NetworkArray
     instance coapServer : CoAPServerScala
     instance coapClient : CoAPClientScala
     
@@ -170,9 +173,14 @@ configuration serialScala {
     instance deserializer : MessageDeserializer
 
     
-    connector testRemote.out => serializer.out
+    //connector testRemote.out => serializer.out
     
+    //connector testRemote.out => serializer.out
+    //connector serializer.network => coapClient.IOStream
     
-    connector deserializer.network => serial.IOStream
-    connector deserializer.in => testRemote.in    
+    connector forward.forward => serial.IOStream
+    connector forward.forward => coapClient.IOStream
+    
+    connector deserializer.network => coapServer.IOStream
+    connector deserializer.in => testRemote.in   
 }

@@ -43,7 +43,7 @@
         <dependency>
             <groupId>ch.ethz.inf.vs</groupId>
             <artifactId>californium</artifactId>
-            <version>0.8.2-SNAPSHOT</version>
+            <version>0.8.3-SNAPSHOT</version>
         </dependency>
         
         <dependency>
