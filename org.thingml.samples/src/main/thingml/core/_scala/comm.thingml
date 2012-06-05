@@ -75,9 +75,11 @@ thing SerialScala includes IOByteArray
     readonly property serialPort : String = "COM4"
     //property serial : SerialPhy  
         
-	function receive(byte : Byte[256]) 
+	function receive(byte : Byte[18]) 
     @override "true"
     do
+        print("receive...")
+        print(byte)
         IOStream!receive_bytes(byte)
     end
 

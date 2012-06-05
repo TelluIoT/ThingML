@@ -5,7 +5,7 @@ thing LedScala includes Brick, Led
 @pim "Led"
 @platform "Scala"
 {
-    set device = 'new org.thingml.devices.LedDemo'
+    set device = 'new org.thingml.devices.LedDemo()'
     
     statechart LedImpl init LedOff 
     {    

@@ -3,10 +3,18 @@ import "../../../thingml.thingml"
 datatype Device
 @scala_type "org.thingml.devices.Device";
 
-
-//Wrapped for the electronic bricks
-//(for actuators)
-thing fragment Brick 
+//Wrapped for the electronic bricks (for actuators)
+thing fragment Brick
+@thingml_maven_dep "org.thingml.samples.utils"
+@maven_dep 
+"<dependency>
+    <groupId>org.thingml</groupId>
+    <artifactId>org.thingml.samples.resources</artifactId>
+    <version>${thingml.version}</version>
+    <classifier>resources</classifier>
+    <type>zip</type>
+    <scope>provided</scope>
+</dependency>"
 {
     //The Scala device mocking the brick
     readonly property device : Device   
@@ -17,25 +25,19 @@ thing fragment SensorMsgs
 	message update(); 
 }
 
-//Wrapped for the electronic bricks
-//(for sensors)
+//Wrapped for the electronic bricks (for sensors)
 thing fragment BrickSensor includes SensorMsgs, Brick
-@scala_trait "org.thingml.devices.Observer" 
+@thingml_maven_dep "org.thingml.samples.utils"
+@maven_dep 
+"<dependency>
+    <groupId>org.thingml</groupId>
+    <artifactId>org.thingml.samples.resources</artifactId>
+    <version>${thingml.version}</version>
+    <classifier>resources</classifier>
+    <type>zip</type>
+    <scope>provided</scope>
+</dependency>"
 {
-    //last value sent by the mock device
-    //can be sent to cliend requesting a value (pull mode)
-    property lastValue : Int16 = 0
-	
-	function newValue(v : Integer)@override "true" 
-	do
-        lastValue = v
-		SensorMockUp!update()
-	end
-	
-	function register() 
-	do
-		'' & device & '.asInstanceOf[org.thingml.devices.Observable].register(this)'
-	end
 	
     /**
      * This makes it possible to notify the concrete Thing

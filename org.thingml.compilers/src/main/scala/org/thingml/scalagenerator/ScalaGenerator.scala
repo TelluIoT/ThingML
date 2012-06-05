@@ -202,6 +202,10 @@ object ScalaGenerator {
     cfg.allThingMLMavenDep.foreach{dep =>
       pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"))
     }
+    cfg.allMavenDep.foreach{dep =>
+      pom = pom.replace("<!--DEP-->", "<!--DEP-->\n"+dep)
+    }
+    
     pom = pom.replace("<!--DEP-->","")
     
     //TODO: add other maven dependencies

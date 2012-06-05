@@ -224,6 +224,17 @@ case class ConfigurationScalaImpl (self : Configuration) {
     }
     return result
   }
+  
+  def allMavenDep : Set[String] = {
+    var result = Set[String]()
+    allThings.foreach{t => 
+      t.allAnnotations.filter{a => a.getName == "maven_dep"}
+      .foreach{a =>
+        result = result + a.getValue
+      }
+    }
+    return result
+  }
 
   // This method only initializes simple properties (not Arrays)
   def initExpressionsForInstance(i : Instance) : ArrayList[((Property, Expression))] = {

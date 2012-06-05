@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.thingml.comm.rxtx;
 
 import gnu.io.CommPort;
@@ -79,7 +75,7 @@ public class Serial4ThingML {
     protected org.thingml.utils.comm.SerialThingML thing;
 
     public Serial4ThingML(String port, org.thingml.utils.comm.SerialThingML thing) {
-        this.port = port;
+        this.port = selectSerialPort(port);
         this.thing = thing;
         connect(port);
     }
@@ -99,6 +95,7 @@ public class Serial4ThingML {
 
                     in = serialPort.getInputStream();
                     out = serialPort.getOutputStream();
+                    thing.setOutputStream(out);
 
                     serialPort.addEventListener(new SerialReader());
                     serialPort.notifyOnDataAvailable(true);
@@ -135,7 +132,7 @@ public class Serial4ThingML {
     protected void sendData(byte[] payload) {
         try {
             // send the start byte
-            out.write((int) START_BYTE);
+            //out.write((int) START_BYTE);
             // send data
             for (int i = 0; i < payload.length; i++) {
                 // escape special bytes
@@ -145,7 +142,7 @@ public class Serial4ThingML {
                 out.write((int) payload[i]);
             }
             // send the stop byte
-            out.write((int) STOP_BYTE);
+            //out.write((int) STOP_BYTE);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -165,40 +162,52 @@ public class Serial4ThingML {
         protected int buffer_idx = 0;
         protected int state = RCV_WAIT;
 
+        @Override
         public void serialEvent(SerialPortEvent arg0) {
 
             int data;
 
             try {
                 while ((data = in.read()) > -1) {
+                    //System.out.println("data: " + data);
                     // we got a byte from the serial port
                     if (state == RCV_WAIT) { // it should be a start byte or we just ignore it
+                        /*System.out.println("WAIT");
+                        System.out.println("data: " + data + " ?= " + START_BYTE);*/
                         if (data == START_BYTE) {
                             state = RCV_MSG;
                             buffer_idx = 0;
+                            buffer[buffer_idx] = (byte) data;
+                            buffer_idx++;
                         }
                     } else if (state == RCV_MSG) {
+                        //System.out.println("RECEIVE");
                         if (data == ESCAPE_BYTE) {
                             state = RCV_ESC;
                         } else if (data == STOP_BYTE) {
+                            buffer[buffer_idx] = (byte) data;
+                            buffer_idx++;
                             // We got a complete frame
-                            byte[] packet = new byte[buffer_idx];
-                            for (int i = 0; i < buffer_idx; i++) {
+                            //byte[] packet = new byte[buffer_idx];
+                            /*for (int i = 0; i < buffer_idx; i++) {
                                 packet[i] = buffer[i];
-                            }
-                            
-                                thing.receive(packet);
+                            }*/
+                            System.out.println("Well-formed packet forwarded to thing");
+                            thing.receive(java.util.Arrays.copyOf(buffer, buffer_idx)/*packet*/);
                             
                             state = RCV_WAIT;
                         } else if (data == START_BYTE) {
                             // Should not happen but we reset just in case
                             state = RCV_MSG;
                             buffer_idx = 0;
+                            buffer[buffer_idx] = (byte) data;
+                            buffer_idx++;
                         } else { // it is just a byte to store
                             buffer[buffer_idx] = (byte) data;
                             buffer_idx++;
                         }
                     } else if (state == RCV_ESC) {
+                        //System.out.println("ESCAPE");
                         // Store the byte without looking at it
                         buffer[buffer_idx] = (byte) data;
                         buffer_idx++;
@@ -261,16 +270,18 @@ public class Serial4ThingML {
         //System.out.println("javax.comm.rxtx.SerialPorts = " + prop);
     }
 
-    public static String selectSerialPort() {
+    public static String selectSerialPort(String defaultPort) {
 
         ArrayList<String> possibilities = new ArrayList<String>();
         for (CommPortIdentifier commportidentifier : getAvailableSerialPorts()) {
             possibilities.add(commportidentifier.getName());
         }
 
-        int startPosition = 0;
-        if (possibilities.size() > 1) {
+        int startPosition = possibilities.indexOf(defaultPort);
+        if (startPosition == -1 && possibilities.size() > 1) {
             startPosition = 1;
+        } else {
+            startPosition = 0;
         }
         
        return (String) JOptionPane.showInputDialog(

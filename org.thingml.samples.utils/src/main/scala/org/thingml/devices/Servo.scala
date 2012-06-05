@@ -26,7 +26,7 @@ import swing._
 /**
  * Simple GUI for a potentiometer that can be connected to ThingML models
  */
-class ServoDemo extends JFrame("Servo Demo") with Device with Observable {
+class ServoDemo extends JFrame("Servo Demo") with Device with Observable[Byte] {
   
   var position : Int = 0
   
@@ -41,7 +41,7 @@ class ServoDemo extends JFrame("Servo Demo") with Device with Observable {
   servo.setPaintLabels(true)
   servo.addChangeListener(new ChangeListener() {
     override def stateChanged(e: ChangeEvent) =
-      notifyObservers(position)
+      notifyObservers(position.toByte)
   })
   getContentPane.add(servo)
   setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)

@@ -47,7 +47,7 @@ class Button extends java.awt.Component{
   
 }
  
-class ButtonDemo() extends JFrame("Button Demo") with Device with Observable {
+class ButtonDemo() extends JFrame("Button Demo") with Device with Observable[Boolean] {
   private val button: Button = new Button()
   
   button.addMouseListener(new MouseListener() {
@@ -57,12 +57,12 @@ class ButtonDemo() extends JFrame("Button Demo") with Device with Observable {
 	override def mousePressed(e: MouseEvent) {
 	  button.isPressed = true
 	  button.repaint
-	  notifyObservers(0)
+	  notifyObservers(true)
 	}
 	override def mouseReleased(e: MouseEvent) {
 	  button.isPressed = false
 	  button.repaint
-	  notifyObservers(1)
+	  notifyObservers(false)
 	}
   })
   

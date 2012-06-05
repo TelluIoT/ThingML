@@ -171,6 +171,7 @@ thing fragment ArrayDeserializer includes PacketManager, InputByteArrayMsgs{
                 i = i + 1
             end
             if (current == STOP_BYTE) do
+                //print("forward")
                 storeByte(current)
                 forward()
             end

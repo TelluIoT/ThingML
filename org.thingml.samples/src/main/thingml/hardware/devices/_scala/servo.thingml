@@ -7,9 +7,9 @@ thing fragment ServoMsgs
 	message setPosition(p : Integer);
 }
 
-thing Servo includes Brick, ServoMsgs
+thing ServoScala includes Brick, ServoMsgs
 {
-    set device = 'new org.thingml.devices.ServoDemo'
+    set device = 'new org.thingml.devices.ServoDemo()'
     
 	provided port Servo 
     {

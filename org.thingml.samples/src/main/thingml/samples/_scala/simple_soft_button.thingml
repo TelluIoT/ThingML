@@ -72,7 +72,7 @@ thing SimpleSoftButton includes LedMsgs, TimerMsgs, SoftButtonMsgs
 configuration ScalaSimpleSoftButtonSimulator
 {       
 	group soft_button : SoftButtonScala
-	instance led : Led
+	instance led : LedScala
 	
 	instance timer : TimerScala 	
 	instance simple_soft_button : SimpleSoftButton

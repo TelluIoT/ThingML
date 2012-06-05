@@ -120,7 +120,10 @@ end
 statechart receive init Idle {
 state Idle {
 internal event m : network?receive_bytes
-action receive(m.b)
+action do
+print("OK")
+receive(m.b)
+end
 }
 }
 
@@ -153,9 +156,16 @@ action receive(m.b)
     connector deserializer.in => testRemote.in
 }*/
 
+/**
+ * 
+ */
 configuration serialScala {
     instance testRemote : TestThing
-    instance network : SerialScala
+    
+    instance serial : SerialScala
+    instance coapServer : CoAPServerScala
+    instance coapClient : CoAPClientScala
+    
     instance serializer : MessageSerializer
     instance deserializer : MessageDeserializer
 
@@ -163,6 +173,6 @@ configuration serialScala {
     connector testRemote.out => serializer.out
     
     
-    connector deserializer.network => network.IOStream
+    connector deserializer.network => serial.IOStream
     connector deserializer.in => testRemote.in    
 }
