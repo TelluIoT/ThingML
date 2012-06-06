@@ -2118,7 +2118,7 @@ case class PrintActionCGenerator(override val self: PrintAction) extends ActionC
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     val b = new StringBuilder()
     self.getMsg.generateC(b, context)
-    builder append context.print_message (b.toString)
+    builder append context.print_message (b.toString) + "\n"
   }
 }
 
@@ -2126,7 +2126,7 @@ case class ErrorActionCGenerator(override val self: ErrorAction) extends ActionC
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
      val b = new StringBuilder()
     self.getMsg.generateC(b, context)
-    builder append context.error_message (b.toString)
+    builder append context.error_message (b.toString) + "\n"
   }
 }
 
