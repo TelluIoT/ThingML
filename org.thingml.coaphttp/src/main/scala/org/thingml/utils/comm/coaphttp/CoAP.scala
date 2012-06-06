@@ -85,7 +85,7 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
           
           var data : String = "Sent to " + url + "\n No response was requested"
           if (!fireAndForgetHTTP) {
-            data = try {Await.result(response, 4 seconds).toString} catch { case e : Exception => "TIMEOUT:" + url }
+            data = try {Await.result(response, 3 seconds).toString} catch { case e : Exception => "TIMEOUT:" + url }
           }
           conduit.close()
           data
@@ -108,7 +108,7 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
     var rep = responses._1 + "\n"
     if(!fireAndForgetHTTP) {
       try {
-        val httpResponse = Await.result(responses._2, 6 seconds).toString
+        val httpResponse = Await.result(responses._2, 4 seconds).toString
         rep = rep + httpResponse
       } catch {
         case e : Exception => rep = rep + "HTTP timeout: not able to contact all servers within 5 seconds"
