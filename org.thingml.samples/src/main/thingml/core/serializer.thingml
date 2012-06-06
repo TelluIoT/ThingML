@@ -16,7 +16,7 @@ import "./comm.thingml"
 thing fragment PacketManager {
         //Define the length (in bytes) of all the datatypes
         //TODO: Do it for all the other datatypes provided by ThingML
-    readonly property lengthInteger : Byte = 1    
+    readonly property lengthInteger : Byte = 2    
     readonly property lengthString : Byte = 8
     
     
@@ -31,22 +31,6 @@ thing fragment PacketManager {
     property DATA_POSITION : Integer = 5
      
     property buffer : Byte[16]
-   /* set buffer[0] = '0x13'
-    set buffer[1] = '0x13'
-    set buffer[2] = '0x13'
-    set buffer[3] = '0x13'
-    set buffer[4] = '0x13'
-    set buffer[5] = '0x13'
-    set buffer[6] = '0x13'
-    set buffer[7] = '0x13'
-    set buffer[8] = '0x13'
-    set buffer[9] = '0x13'
-    set buffer[10] = '0x13'
-    set buffer[11] = '0x13'
-    set buffer[12] = '0x13'
-    set buffer[13] = '0x13'
-    set buffer[14] = '0x13'
-    set buffer[15] = '0x13'*/
 	property index : Integer = 0
      
      function setHeader(code : Byte, length : Byte) 
@@ -100,7 +84,7 @@ thing fragment Serializer includes PacketManager, OutputByteStreamMsgs {
     function send() do
         //print("send start byte = " + START_BYTE)
         network!write_byte(START_BYTE)
-        readonly var stop : Integer = DATA_POSITION + buffer[LENGTH_POSITION] - 1
+        readonly var stop : Integer = DATA_POSITION + buffer[LENGTH_POSITION]
         var i : Integer = 0
         while(i < stop) do
             var b : Byte = buffer[i]

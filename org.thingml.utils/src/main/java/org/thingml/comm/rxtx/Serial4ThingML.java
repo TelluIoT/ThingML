@@ -158,15 +158,17 @@ public class Serial4ThingML {
         /*public static final int RCV_WAIT = 0;
         public static final int RCV_MSG = 1;
         public static final int RCV_ESC = 2;*/
-        private byte[] buffer = new byte[256];
-        protected int buffer_idx = 0;
+        //private byte[] buffer = new byte[256];
+        //protected int buffer_idx = 0;
         //protected int state = RCV_WAIT;
 
         @Override
         public void serialEvent(SerialPortEvent arg0) {
 
             int data;
-
+            byte[] buffer = new byte[1024];
+            int buffer_idx = 0;
+            
             try {
                 while ((data = in.read()) > -1) {
 /*                    System.out.println("data: " + data);
@@ -218,6 +220,7 @@ public class Serial4ThingML {
                     buffer[buffer_idx] = (byte) data;
                     buffer_idx++;
                 }
+                System.out.println("   Packet forwarded to thing. Size = " + buffer_idx);
                 thing.receive(java.util.Arrays.copyOf(buffer, buffer_idx));
             } catch (IOException e) {
                 e.printStackTrace();
