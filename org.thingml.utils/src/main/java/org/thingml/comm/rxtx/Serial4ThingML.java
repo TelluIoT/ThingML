@@ -64,9 +64,9 @@ public class Serial4ThingML {
             e.printStackTrace();
         }
     }
-    public static final byte START_BYTE = 0x12;
+    /*public static final byte START_BYTE = 0x12;
     public static final byte STOP_BYTE = 0x13;
-    public static final byte ESCAPE_BYTE = 0x7D;
+    public static final byte ESCAPE_BYTE = 0x7D;*/
     protected String port;
     protected SerialPort serialPort;
     protected InputStream in;
@@ -136,9 +136,9 @@ public class Serial4ThingML {
             // send data
             for (int i = 0; i < payload.length; i++) {
                 // escape special bytes
-                if (payload[i] == START_BYTE || payload[i] == STOP_BYTE || payload[i] == ESCAPE_BYTE) {
+                /*if (payload[i] == START_BYTE || payload[i] == STOP_BYTE || payload[i] == ESCAPE_BYTE) {
                     out.write((int) ESCAPE_BYTE);
-                }
+                }*/
                 out.write((int) payload[i]);
             }
             // send the stop byte
@@ -155,12 +155,12 @@ public class Serial4ThingML {
      *************************************************************************/
     public class SerialReader implements SerialPortEventListener {
 
-        public static final int RCV_WAIT = 0;
+        /*public static final int RCV_WAIT = 0;
         public static final int RCV_MSG = 1;
-        public static final int RCV_ESC = 2;
+        public static final int RCV_ESC = 2;*/
         private byte[] buffer = new byte[256];
         protected int buffer_idx = 0;
-        protected int state = RCV_WAIT;
+        //protected int state = RCV_WAIT;
 
         @Override
         public void serialEvent(SerialPortEvent arg0) {
@@ -169,12 +169,12 @@ public class Serial4ThingML {
 
             try {
                 while ((data = in.read()) > -1) {
-                    //System.out.println("data: " + data);
+/*                    System.out.println("data: " + data);
                     // we got a byte from the serial port
                     if (state == RCV_WAIT) { // it should be a start byte or we just ignore it
                         /*System.out.println("WAIT");
                         System.out.println("data: " + data + " ?= " + START_BYTE);*/
-                        if (data == START_BYTE) {
+/*                        if (data == START_BYTE) {
                             state = RCV_MSG;
                             buffer_idx = 0;
                             buffer[buffer_idx] = (byte) data;
@@ -192,8 +192,8 @@ public class Serial4ThingML {
                             /*for (int i = 0; i < buffer_idx; i++) {
                                 packet[i] = buffer[i];
                             }*/
-                            //System.out.println("Well-formed packet forwarded to thing");
-                            thing.receive(java.util.Arrays.copyOf(buffer, buffer_idx)/*packet*/);
+ /*                           System.out.println("Well-formed packet forwarded to thing");
+                            thing.receive(java.util.Arrays.copyOf(buffer, buffer_idx)/*packet*//*);
                             
                             state = RCV_WAIT;
                         } else if (data == START_BYTE) {
@@ -213,7 +213,12 @@ public class Serial4ThingML {
                         buffer_idx++;
                         state = RCV_MSG;
                     }
+*/          
+                    //buffer_idx = 0;
+                    buffer[buffer_idx] = (byte) data;
+                    buffer_idx++;
                 }
+                thing.receive(java.util.Arrays.copyOf(buffer, buffer_idx));
             } catch (IOException e) {
                 e.printStackTrace();
             }

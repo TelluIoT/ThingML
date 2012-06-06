@@ -1044,7 +1044,7 @@ case class ReturnActionScalaGenerator(override val self: ReturnAction) extends A
 case class LocalVariableActionScalaGenerator(override val self: LocalVariable) extends ActionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {    
     builder append (if (self.isChangeable) "var " else "val ")
-    builder append self.scala_var_name + " : " + self.getType.scala_type(self.getCardinality != null)  + " = "
+    builder append self.scala_var_name + " : " + self.getType.scala_type(self.getCardinality != null)  + " = ("
     if (self.getInit != null) 
       self.getInit.generateScala() 
     else {
@@ -1058,6 +1058,7 @@ case class LocalVariableActionScalaGenerator(override val self: LocalVariable) e
       if (!self.isChangeable)
         Logger.error("ERROR: readonly variable " + self + " must be initialized")
     }
+    builder append ").to" + self.getType.scala_type(self.getCardinality != null)
     builder append "\n"
   }
 }

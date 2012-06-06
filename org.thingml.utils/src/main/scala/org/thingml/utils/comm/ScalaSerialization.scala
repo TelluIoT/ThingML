@@ -58,6 +58,7 @@ trait DynamicSerializable[T] extends Serializable[T] {
 trait Serializable[T] {
   def toBytes : Array[Byte]
   def toDouble : Double//for SenML serialization
+  def toBoolean : Boolean = throw new java.lang.UnsupportedOperationException("Cannot convert to Boolean")
   val byteSize : Int
 }
 
@@ -116,6 +117,8 @@ case class SerializableBoolean(myBoolean : Boolean) extends Serializable[Boolean
   }
 
   override def toDouble : Double = if(myBoolean) 1 else 0
+  
+  override def toBoolean : Boolean = myBoolean
   
   override val byteSize = SerializableBoolean.byteSize
 }

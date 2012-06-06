@@ -5,6 +5,7 @@ import "../../core/_arduino/comm.thingml"
 import "../../core/_arduino/serializer.thingml"
 import "../../core/_arduino/timer.thingml"
 
+import "./messages.thingml"
 
 //test thing
 thing TestThing includes testMsgs, TimerClient
@@ -28,18 +29,15 @@ thing TestThing includes testMsgs, TimerClient
             transition sendMsgs -> default
             event timer?timer_timeout
             action do
-                out!m1()
-                counter = counter + 1
+                //out!m1()
+                if (counter < 1024)
+                    counter = counter + 1
+                if (counter == 1024)
+                    counter = 0
                 out!m2(counter)    
             end
         }   
     }
-}
-
-//test messages
-thing fragment testMsgs {
-    message m1()@code "27";
-    message m2(i : Integer);
 }
 
 thing fragment RemoteMsgs includes testMsgs{
@@ -56,15 +54,15 @@ receives m1, m2
 
 statechart SerializerBehavior init Serialize {
 state Serialize{
-internal event m : out?m1 action
+/*internal event m : out?m1 action
 do
-setHeader(27, 0)
+setHeader(1, 0)
 send()
-end
+end*/
 
 internal event m : out?m2 action
 do
-setHeader(1, lengthInteger)
+setHeader(2, lengthInteger)
 serializeInteger(m.i)
 send()
 end
@@ -81,7 +79,7 @@ sends m1, m2
 function forward() do
 index = DATA_POSITION
 readonly var code : Byte = buffer[CODE_POSITION]
-if (code == 27) do
+if (code == 1) do
 deserializeM1()
 end
 end
@@ -127,7 +125,7 @@ action storeByte(m.b)
 
 configuration test 
 @remote "testRemote::TestThing::.*::.*"
-@debug "true"
+@debug "false"
 @debug_fifo "true"
 @debug_message_receive "^((?!poll).)*$"//all except *poll*
 @debug_message_send "^((?!poll).)*$"//all except *poll*

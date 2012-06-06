@@ -115,12 +115,15 @@ class CoAPClient(thingmlClient : CoAPThingMLClient, serverURI : String) {
   
   def send(bytes : Array[Byte]) {
     if (isThingML(bytes)) {
+      Logger.debug("Send ThingML data: " + bytes.mkString("[", ", ", "]") + " ...")
       requestMap.get(bytes(4)) match {
         case Some(r) =>
           r.sendData(bytes)
         case None =>
           Logger.warning("Request not found. No request with code = " + bytes(4))
       }
+    } else {
+      Logger.warning("Trying to send non-ThingML data: " + bytes.mkString("[", ", ", "]"))
     }
   }
   
