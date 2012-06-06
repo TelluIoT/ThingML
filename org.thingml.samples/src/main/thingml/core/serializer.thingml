@@ -126,7 +126,7 @@ thing fragment ArraySerializer includes PacketManager, OutputByteArrayMsgs {
         var current : Byte
         while(i < stop) do
           current = buffer[i]
-          if (current == START_BYTE or current == STOP_BYTE) do
+          if (current == START_BYTE or current == STOP_BYTE or current == ESCAPE_BYTE) do
               escaped[j] = ESCAPE_BYTE  
               j = j + 1
           end

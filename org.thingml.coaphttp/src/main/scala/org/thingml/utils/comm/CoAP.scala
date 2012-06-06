@@ -113,7 +113,41 @@ class CoAPClient(thingmlClient : CoAPThingMLClient, serverURI : String) {
     payload.length > 5 && payload(0) == 0x12 && payload(payload.length-1) == 0x13
   }
   
+  def unescape(payload : Array[Byte]) : Array[Byte] = {
+    val result = new Array[Byte](payload.length-2)
+    
+    var i = 0
+    var index = 0
+    
+    var current : Byte = payload(i)
+    if (current == 0x12) {
+      i = i + 1
+      var next = payload(i)
+      if (next != 0x13) {
+        var continue = true
+        while(continue && i < payload.length-1) {
+          current = next
+          i = i + 1
+          next = payload(i)
+          if (current == 0x7D) {
+            current = next
+            i = i + 1
+            next = payload(i)
+          }
+          result(index) = current
+          index = index + 1
+          continue = !(next == 0x13 && !(current == 0x7D))
+        }
+        //result(index) = current
+      }
+    }
+    return result
+  }
+  
   def send(bytes : Array[Byte]) {
+    
+    println("         " + unescape(bytes).mkString("[", ", ", "]"))
+    
     if (isThingML(bytes)) {
       Logger.debug("Send ThingML data: " + bytes.mkString("[", ", ", "]") + " ...")
       requestMap.get(bytes(4)) match {

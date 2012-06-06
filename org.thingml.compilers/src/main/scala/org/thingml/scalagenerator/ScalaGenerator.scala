@@ -358,7 +358,6 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     builder append "//Channels\n"
     self.allConnectors.foreach{ c =>
       builder append "val " + c.instanceName + " = new Channel\n"
-      builder append c.instanceName + ".start\n"
     }
     
     //define temp arrays   
@@ -442,6 +441,10 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     builder append "//Starting Things\n"
     self.allInstances.foreach{ i =>
       builder append i.instanceName + ".asInstanceOf[Component].start\n"
+    }
+    
+    self.allConnectors.foreach{ c =>
+      builder append c.instanceName + ".start\n"
     }
     
     builder append "}\n\n"

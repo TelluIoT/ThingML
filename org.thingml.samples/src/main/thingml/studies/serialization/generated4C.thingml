@@ -34,7 +34,7 @@ thing TestThing includes testMsgs, TimerClient
                     counter = counter + 1
                 if (counter == 1024)
                     counter = 0
-                out!m2(counter)    
+                out!m2(125)//125 = 0x7D = escape byte     
             end
         }   
     }
