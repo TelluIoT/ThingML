@@ -81,7 +81,7 @@ thing CoAPClientScala includes IOByteArray
         state default {
             internal event wb : IOStream?write_bytes
             action do
-                //print("coap.sendData: " + wb.b)
+                print("  coap client has received: " + '' & wb.b & '.mkString("[", ", ", "]")')
                 'root.asInstanceOf[org.thingml.utils.comm.CoAPThingMLClient].send(' & wb.b & ')'
             end
         }    
@@ -100,8 +100,7 @@ thing SerialScala includes IOByteArray
 	function receive(byte : Byte[18]) 
     @override "true"
     do
-        //print("receive...")
-        print(byte)
+        print("  serial has received: " + '' & byte & '.mkString("[", ", ", "]")')
         IOStream!receive_bytes(byte)
     end
 

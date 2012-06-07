@@ -24,6 +24,8 @@ import ch.ethz.inf.vs.californium.endpoint.{LocalEndpoint, RemoteEndpoint, Endpo
 import ch.ethz.inf.vs.californium.coap.{Request, PUTRequest, Response}
 import java.net.{InetAddress, URI}
 
+import scala.collection.JavaConversions._
+
 trait CoAPThingML {
 
   private var coapServer : CoAP = _
@@ -36,7 +38,31 @@ trait CoAPThingML {
     new LocalCoAP(this, port)
   }
 
-  def receive(byte : Array[Byte])//This will be refined in the COaP Thing defined in ThingML
+  def receive(bytes : Array[Byte])//This will be refined in the COaP Thing defined in ThingML
+  
+  def escape(bytes : Array[Byte]) : Array[Byte] = {
+    val escaped = new Array[Byte](34)
+    
+    val stop = 5 + bytes(4)// - 1
+    var i : Integer = 0
+    var j : Integer = 0
+    escaped(j) = 0x12
+    j = j+1
+    var current : Byte = bytes(i)
+    while(i < stop) {
+      current = bytes(i)
+      if (current == 0x12 || current == 0x13 || current == 0x7D) {
+        escaped(j) = 0x7D  
+        j = j + 1
+      }
+      escaped(j) = current
+      j = j+1
+      i = i+1
+    }
+    escaped(j) = 0x13    
+    println("escaped: " + java.util.Arrays.copyOf(escaped, j+1).mkString("[", ", ", "]"))
+    return java.util.Arrays.copyOf(escaped, j+1)
+  }
   
 }
 
@@ -141,20 +167,18 @@ class CoAPClient(thingmlClient : CoAPThingMLClient, serverURI : String) {
         //result(index) = current
       }
     }
-    return result
+    return java.util.Arrays.copyOf(result, index)
   }
   
   def send(bytes : Array[Byte]) {
-    
     println("         " + unescape(bytes).mkString("[", ", ", "]"))
-    
     if (isThingML(bytes)) {
-      Logger.debug("Send ThingML data: " + bytes.mkString("[", ", ", "]") + " ...")
-      requestMap.get(bytes(4)) match {
+      val payload = unescape(bytes)
+      requestMap.get(payload(3)) match {
         case Some(r) =>
-          r.sendData(bytes)
+          r.sendData(payload)
         case None =>
-          Logger.warning("Request not found. No request with code = " + bytes(4))
+          Logger.warning("Request not found. No request with code = " + payload(3))
       }
     } else {
       Logger.warning("Trying to send non-ThingML data: " + bytes.mkString("[", ", ", "]"))

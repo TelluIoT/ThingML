@@ -78,7 +78,7 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
   
   lazy val senMLpath = List(getPath.split("/")(1), getPath.split("/")(2)).mkString("/")
 
-  val buffer = new Array[Byte](18)
+  val buffer = new Array[Byte](16)
   
   //TODO: remove the hacks
   def getBytes[T<:AnyVal](m : MeasurementOrParameter, flag : String) : Array[Byte] = {
@@ -125,11 +125,11 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
     }  
   }
   def isThingML(payload : Array[Byte]) : Boolean = {
-    payload.length > 5 && payload(4) == code && payload(0) == 0x12 && payload(payload.length-1) == 0x13
+    payload.length > 4 && payload(3) == code/* && payload(0) == 0x12 && payload(payload.length-1) == 0x13*/
   }
 
   def resetBuffer(){
-    for(i <- 0 until 18) {
+    for(i <- 0 until 16) {
       buffer(i) = 0x13
     }
   }
@@ -165,7 +165,8 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
     transformPayload(request) match {
       case (Some(root), status) =>
         setAttributes(root)
-        server.coapThingML.receive(toThingML(root))//we should implement a root to ThingML def
+        println("toThingML: " + toThingML(root).mkString("[", ", ", "]"))
+        server.coapThingML.receive(server.coapThingML.escape(toThingML(root)))//we should implement a root to ThingML def
         return "OK!"
       case (None, errors) => errors
     }
