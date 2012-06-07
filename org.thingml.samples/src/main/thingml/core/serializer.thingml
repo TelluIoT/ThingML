@@ -157,7 +157,9 @@ thing fragment ArrayDeserializer includes PacketManager, InputByteArrayMsgs{
     
     function receive(bytes : Byte[34]) do //34 max size with start/stop bytes + all other bytes escaped = 2*16 + 2
         index = 0
-        //print("receive " + bytes)
+        print("receive " + bytes)
+        var size : Integer = DATA_POSITION + bytes[LENGTH_POSITION+1] + 1//bytes contains start/stop/escape bytes
+        print("size = " + size)
         var i : Integer = 0
         var current : Byte = bytes[i]
         if (current == START_BYTE) do
@@ -165,13 +167,15 @@ thing fragment ArrayDeserializer includes PacketManager, InputByteArrayMsgs{
             var next : Byte = bytes[i]
             if (not(next == STOP_BYTE)) do
                 var continue : Boolean = true
-                while(continue) do
+                while(continue and i < size) do
+                    print("i = " + i)
                     current = next
                     i = i + 1
                     next = bytes[i]
                     if (current == ESCAPE_BYTE) do
                         current = next
                         i = i + 1
+                        size = size + 1
                         next = bytes[i]
                     end
                     storeByte(current)    

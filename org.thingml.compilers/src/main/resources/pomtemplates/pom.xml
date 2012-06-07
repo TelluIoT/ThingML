@@ -40,6 +40,11 @@
             <name>thingml-snapshot</name>
             <url>http://maven.thingml.org/thirdparty/</url>
         </repository>
+        <repository><!--TODO: this one should not come by default-->
+            <id>SensApp</id>
+            <name>snapshots</name>
+            <url>https://repository-sintef.forge.cloudbees.com/snapshot/</url>
+        </repository> 
         <!--Additional repositories-->
         <!--REPO-->
     </repositories>

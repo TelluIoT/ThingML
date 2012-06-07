@@ -71,8 +71,10 @@ sends m1, m2, m3, m4
 }
 
 function forward() do
+print("forward")
 index = DATA_POSITION
 readonly var code : Byte = buffer[CODE_POSITION]
+print("code = " + code)
 if (code == 1) do
 deserializeM1()
 end
@@ -151,7 +153,7 @@ end
 }*/
 
 
-configuration serialScala 
+/*configuration serialCoAPScala 
 @remote "testRemote::TestThing::.*::.*"
 {
     instance testRemote : TestThing
@@ -174,5 +176,16 @@ configuration serialScala
     connector forward.out => coapClient.IOStream
     
     connector deserializer.network => coapServer.IOStream
+    connector deserializer.in => testRemote.in   
+}*/
+
+configuration serialScala 
+@remote "testRemote::TestThing::.*::.*"
+{
+    instance testRemote : TestThing
+    instance serial : SerialScala
+    instance deserializer : MessageDeserializer
+    
+    connector deserializer.network => serial.IOStream
     connector deserializer.in => testRemote.in   
 }

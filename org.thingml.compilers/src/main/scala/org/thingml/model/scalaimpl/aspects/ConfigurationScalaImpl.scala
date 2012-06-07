@@ -219,7 +219,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
     allThings.foreach{t => 
       t.allAnnotations.filter{a => a.getName == "thingml_maven_dep"}
       .foreach{a =>
-        result = result + a.getValue
+        result = result + a.getValue.replace(" ", "").replace("\n", "").replace("\t", "")
       }
     }
     return result
@@ -230,7 +230,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
     allThings.foreach{t => 
       t.allAnnotations.filter{a => a.getName == "maven_dep"}
       .foreach{a =>
-        result = result + a.getValue
+        result = result + a.getValue.replace(" ", "").replace("\n", "").replace("\t", "")
       }
     }
     return result

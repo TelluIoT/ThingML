@@ -11,6 +11,17 @@ thing CoAPServerScala includes IOByteArray
 @scala_trait "org.thingml.utils.comm.CoAPThingML"
 @thingml_maven_dep "org.thingml.coaphttp"
 @coap "server"
+@maven_dep
+"<dependency>
+   <groupId>net.modelbased.sensapp.library</groupId>
+   <artifactId>net.modelbased.sensapp.library.system</artifactId>
+   <version>0.0.1-SNAPSHOT</version>
+</dependency>       
+<dependency>
+   <groupId>net.modelbased.sensapp.library</groupId>
+   <artifactId>net.modelbased.sensapp.library.senml</artifactId>
+   <version>0.0.1-SNAPSHOT</version>
+</dependency>"
 {
     readonly property coapPort : Long = 61617
 
@@ -42,6 +53,17 @@ thing CoAPClientScala includes IOByteArray
 @scala_trait "org.thingml.utils.comm.CoAPThingMLClient"
 @thingml_maven_dep "org.thingml.utils"
 @coap "client"
+@maven_dep
+"<dependency>
+   <groupId>net.modelbased.sensapp.library</groupId>
+   <artifactId>net.modelbased.sensapp.library.system</artifactId>
+   <version>0.0.1-SNAPSHOT</version>
+</dependency>       
+<dependency>
+   <groupId>net.modelbased.sensapp.library</groupId>
+   <artifactId>net.modelbased.sensapp.library.senml</artifactId>
+   <version>0.0.1-SNAPSHOT</version>
+</dependency>"
 {
     readonly property coapServer : String = "coap://127.0.0.1:61617"
 
