@@ -279,20 +279,20 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
          
          
         builder append "override def toThingML(root : Root) : Array[Byte] = {\n"
-        builder append "val stopByte : Byte = 0x13\n"
-        builder append "val buffer : Array[Byte] = List[Byte]().padTo(18, stopByte).toArray\n"
-        builder append "buffer(0) = 0x12\n"
-        builder append "buffer(1) = 1.toByte\n"
+        //builder append "val stopByte : Byte = 0x13\n"
+        builder append "val buffer = new Array[Byte](16)\n"// = List[Byte]().padTo(18, stopByte).toArray\n"
+        //builder append "buffer(0) = 0x12\n"
+        builder append "buffer(0) = 1.toByte\n"
+        builder append "buffer(1) = 0.toByte\n"
         builder append "buffer(2) = 0.toByte\n"
-        builder append "buffer(3) = 0.toByte\n"
-        builder append "buffer(4) = code\n\n"
+        builder append "buffer(3) = code\n\n"
           
         builder append "root.measurementsOrParameters match {"
         builder append "case Some(measurements) => \n"
         builder append (List("0") ::: m.getParameters.collect{case p =>
               "Serializable" + p.getType.scala_type(false) + ".byteSize"
-          }.toList).mkString("buffer(5) = (", " + ", ").toByte\n")
-        builder append "var index = 6\n"
+          }.toList).mkString("buffer(4) = (", " + ", ").toByte\n")
+        builder append "var index = 5\n"
        
         m.getParameters.foreach{m =>
           builder append "getBytes(measurements.find{m => m.name.get == \"" + m.getName + "\"}.get, \"" +  m.getType.scala_type(false) + "\").foreach{b => \n"
