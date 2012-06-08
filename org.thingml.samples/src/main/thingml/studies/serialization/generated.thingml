@@ -3,13 +3,7 @@ import "../../core/serializer.thingml"
 import "../../core/comm.thingml"
 import "../../core/_scala/comm.thingml"
 
-//test messages
-thing fragment testMsgs {
-    message m4(i : Integer, s : String)@code "12";
-    message m2(i : Integer);
-    message m1()@code "27";
-    message m3(s : String);
-}
+import "./messages.thingml"
 
 //test thing
 thing TestThing includes testMsgs
@@ -40,27 +34,27 @@ statechart SerializerBehavior init Serialize {
 state Serialize{
 internal event m : out?m1 action
 do
-setHeader(27, 0)
+setHeader(1, 0)
 send()
 end
 
 internal event m : out?m2 action
 do
-setHeader(1, lengthInteger)
+setHeader(2, lengthInteger)
 serializeInteger(m.i)
 send()
 end
 
 internal event m : out?m3 action
 do
-setHeader(2, lengthString)
+setHeader(3, lengthString)
 serializeString(m.s)
 send()
 end
 
 internal event m : out?m4 action
 do
-setHeader(12, lengthInteger+lengthString)
+setHeader(4, lengthInteger+lengthString)
 serializeInteger(m.i)
 serializeString(m.s)
 send()
@@ -77,18 +71,20 @@ sends m1, m2, m3, m4
 }
 
 function forward() do
+print("forward")
 index = DATA_POSITION
 readonly var code : Byte = buffer[CODE_POSITION]
-if (code == 27) do
+print("code = " + code)
+if (code == 1) do
 deserializeM1()
 end
-if (code == 1) do
+if (code == 2) do
 deserializeM2()
 end
-if (code == 2) do
+if (code == 3) do
 deserializeM3()
 end
-if (code == 12) do
+if (code == 4) do
 deserializeM4()
 end
 end
@@ -120,7 +116,10 @@ end
 statechart receive init Idle {
 state Idle {
 internal event m : network?receive_bytes
-action receive(m.b)
+action do
+print("OK")
+receive(m.b)
+end
 }
 }
 
@@ -130,7 +129,7 @@ action receive(m.b)
  * syntax: instanceName::TypeName::PortName::messageName
  * note: wildcards can be used for any of these elements.
  */
-configuration test
+/*configuration test
 @remote "testRemote::TestThing::.*::.*"
 {
     //Messages are sent and received without serialization
@@ -151,4 +150,42 @@ configuration test
     
     connector deserializer.network => network.IOStream
     connector deserializer.in => testRemote.in
+}*/
+
+
+configuration serialCoAPScala 
+@remote "testRemote::TestThing::.*::.*"
+{
+    instance testRemote : TestThing
+    
+    instance serial : SerialScala
+    instance forward : NetworkArray
+    instance coapServer : CoAPServerScala
+    instance coapClient : CoAPClientScala
+    
+    instance serializer : MessageSerializer
+    instance deserializer : MessageDeserializer
+
+    
+    //connector testRemote.out => serializer.out
+    
+    //connector testRemote.out => serializer.out
+    //connector serializer.network => coapClient.IOStream
+    
+    connector forward.in => serial.IOStream
+    connector forward.out => coapClient.IOStream
+    
+    connector deserializer.network => coapServer.IOStream
+    connector deserializer.in => testRemote.in   
 }
+
+/*configuration serialScala 
+@remote "testRemote::TestThing::.*::.*"
+{
+    instance testRemote : TestThing
+    instance serial : SerialScala
+    instance deserializer : MessageDeserializer
+    
+    connector deserializer.network => serial.IOStream
+    connector deserializer.in => testRemote.in   
+}*/

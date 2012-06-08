@@ -6,7 +6,7 @@
     <groupId>org.thingml</groupId>
     <artifactId>org.thingml.samples.resources</artifactId>
     <name>ThingML :: Samples :: Resources</name>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <parent>
         <artifactId>org.thingml.root</artifactId>

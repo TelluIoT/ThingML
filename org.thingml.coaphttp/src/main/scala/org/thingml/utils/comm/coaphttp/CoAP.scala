@@ -18,10 +18,10 @@
  */
 package org.thingml.utils.comm.coaphttp
 
-import ch.eth.coap.endpoint.{LocalResource}
-import ch.eth.coap.coap.{Request, PUTRequest, POSTRequest, GETRequest, Response, CodeRegistry}
+import ch.ethz.inf.vs.californium.endpoint.{LocalResource}
+import ch.ethz.inf.vs.californium.coap.{Request, PUTRequest, POSTRequest, GETRequest, Response, CodeRegistry}
 
-import scala.actors.Actor._
+//import scala.actors.Actor._
 
 import java.net.URL
 
@@ -46,7 +46,7 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
   
   def httpClientName = "CoAP2HTTP-"+resourceIdentifier
   
-  setResourceTitle("Generic CoAP/HTTP Resource")
+  setTitle("Generic CoAP/HTTP Resource")
   setResourceType("CoAP-HTTPResource")
   
   /*
@@ -85,7 +85,7 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
           
           var data : String = "Sent to " + url + "\n No response was requested"
           if (!fireAndForgetHTTP) {
-            data = try {Await.result(response, 4 seconds).toString} catch { case e : Exception => "TIMEOUT:" + url }
+            data = try {Await.result(response, 3 seconds).toString} catch { case e : Exception => "TIMEOUT:" + url }
           }
           conduit.close()
           data
@@ -96,7 +96,8 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
   }
     
   private def process(request : Request, fireAndForgetHTTP : Boolean) {
-    val response = new Response(CodeRegistry.RESP_CONTENT)
+    println("process: " + request + "(" + fireAndForgetHTTP + ")")
+    val response = new Response(/*CodeRegistry.RESP_CONTENT*/)
     /*if (check(request)) {*/
     val responses = request match{
       case put : PUTRequest if (isPUTallowed) => (performCoAPPut(put), Future{processHTTP(request, fireAndForgetHTTP)})
@@ -107,12 +108,13 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
     var rep = responses._1 + "\n"
     if(!fireAndForgetHTTP) {
       try {
-        val httpResponse = Await.result(responses._2, 6 seconds).toString
+        val httpResponse = Await.result(responses._2, 4 seconds).toString
         rep = rep + httpResponse
       } catch {
         case e : Exception => rep = rep + "HTTP timeout: not able to contact all servers within 5 seconds"
       }
     }
+    println("RESPONSE: "+rep)
     response.setPayload(rep)
     request.respond(response)
   }
@@ -137,14 +139,14 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
    * 2/ all the HTTP responses where the extracted payload has been forwarded
    */
   override final def performPUT(request: PUTRequest) {
-    actor{process(request, fireAndForgetHTTP)}
+    process(request, fireAndForgetHTTP)
   }
 
   override final def performPOST(request: POSTRequest) {
-    actor{process(request, fireAndForgetHTTP)}
+    process(request, fireAndForgetHTTP)
   }
 
   override final def performGET(request: GETRequest) {
-    actor{process(request, fireAndForgetHTTP)}
+    process(request, fireAndForgetHTTP)
   }
 }

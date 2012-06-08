@@ -40,7 +40,10 @@ thing ChangingFrequencyLed includes LedMsgs, TimerMsgs, RotationSensorMsgs, Serv
 			
 			transition update -> Running
 				event e: Potentiometer?rotation_value
-				action frequency = e.val
+				action do
+                    print("R1")
+                    frequency = e.val
+                end
 		}
 
         region Servo init Running
@@ -50,6 +53,7 @@ thing ChangingFrequencyLed includes LedMsgs, TimerMsgs, RotationSensorMsgs, Serv
              internal
 				event e: Potentiometer?rotation_value
 				action do
+                    print("R2")
                     if (e.val > 180) do
                         Servo!setPosition(180)
                     end
@@ -64,8 +68,8 @@ thing ChangingFrequencyLed includes LedMsgs, TimerMsgs, RotationSensorMsgs, Serv
 
 configuration ScalaChangingFrequencyLedSimulator
 {
-	instance led : Led
-    instance servo : Servo
+	instance led : LedScala
+    instance servo : ServoScala
 	instance potentiometer: RotationSensorScala
     connector potentiometer.Sensor => potentiometer.SensorMockUp
 	instance timer : TimerScala

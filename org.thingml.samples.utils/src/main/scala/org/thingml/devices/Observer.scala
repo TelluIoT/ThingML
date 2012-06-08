@@ -20,20 +20,20 @@ import scala.util.Random
 
 trait Device {}
 
-abstract trait Observer {
-  def newValue(v: Int)
+abstract trait Observer[T] {
+  def newValue(v: T)
 }
 
-trait Observable {
-  var observers = Set[Observer]()
+trait Observable[T] {
+  var observers = Set[Observer[T]]()
 
-  protected def notifyObservers(newValue: Int) = 
+  protected def notifyObservers(newValue: T) = 
     observers.foreach(_.newValue(newValue))
 
-  def register(observer: Observer) =
+  def register(observer: Observer[T]) =
     observers += observer
 
-  def unregister(observer: Observer) =
+  def unregister(observer: Observer[T]) =
     observers -= observer
 }
 

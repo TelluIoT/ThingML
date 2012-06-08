@@ -26,14 +26,16 @@ import swing._
 /**
  * Simple GUI for a potentiometer that can be connected to ThingML models
  */
-class PotentiometerDemo(val min: Int, val max: Int) extends JFrame("Potentiometer Demo") with Device with Observable {
+class PotentiometerDemo(val min: Int, val max: Int) extends JFrame("Potentiometer Demo") with Device with Observable[Short] {
   val potentiometer = new JSlider(min.toInt, max.toInt, ((max - min) / 2).toInt)
   potentiometer.setMajorTickSpacing((max-min) / 10)
   potentiometer.setPaintTicks(true)
   potentiometer.setPaintLabels(true)
   potentiometer.addChangeListener(new ChangeListener() {
-    override def stateChanged(e: ChangeEvent) =
-      notifyObservers(potentiometer.getValue())
+    override def stateChanged(e: ChangeEvent) {
+      println("stateChanged: " + potentiometer.getValue().toShort)
+      notifyObservers(potentiometer.getValue().toShort)
+    }
   })
   getContentPane.add(potentiometer)
   setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)

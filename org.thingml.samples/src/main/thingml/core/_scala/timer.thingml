@@ -21,6 +21,7 @@ thing TimerScala includes Timer
     
     function cancel()
     do
+      print("cancel ")
       if(not (scalaTimer == 'null'))
       do
         '' & scalaTimer & ' ! "cancel"'
@@ -30,18 +31,19 @@ thing TimerScala includes Timer
     function start(delay : Integer)
     do
         print("start " + delay)
+        cancel()
         scalaTimer = 'new org.thingml.utils.timer.Timer(this,' & delay & ').start'
     end
     
     statechart SoftTimer init default {
         state default {
-            on entry print("debug timer on entry")
+          //on entry print("debug timer on entry")
             
           internal start
             event m : timer?timer_start
             guard m.delay > 0
             action do
-                print("debug timer")
+                //print("debug timer")
                 start(m.delay)
             end
             

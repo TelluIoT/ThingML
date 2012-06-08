@@ -22,7 +22,7 @@
 package org.thingml.utils.comm
 
 import org.thingml.utils.comm.SerializableTypes._
-import java.nio.{/*ByteOrder, */ByteBuffer}
+import java.nio.{ByteOrder, ByteBuffer}
 
 
 object SerializableTypes {
@@ -58,13 +58,14 @@ trait DynamicSerializable[T] extends Serializable[T] {
 trait Serializable[T] {
   def toBytes : Array[Byte]
   def toDouble : Double//for SenML serialization
+  def toBoolean : Boolean = throw new java.lang.UnsupportedOperationException("Cannot convert to Boolean")
   val byteSize : Int
 }
 
 case class DeserializableArray(bytes : Array[Byte]) {
   def toByte : Byte = bytes(0)
   def toBoolean : Boolean = (if (bytes == SerializableBoolean.trueByte) true else if (bytes == SerializableBoolean.falseByte) false else false)
-  def toShort : Short = ByteBuffer.wrap(SerializableShort.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getShort
+  def toShort : Short = ByteBuffer.wrap(SerializableShort.adjust(bytes).toArray).order(ByteOrder.LITTLE_ENDIAN).getShort
   def toInt : Int = ByteBuffer.wrap(SerializableInt.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getInt
   def toLong : Long = ByteBuffer.wrap(SerializableByte.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getLong
   def toFloat : Float = ByteBuffer.wrap(SerializableFloat.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getFloat
@@ -117,6 +118,8 @@ case class SerializableBoolean(myBoolean : Boolean) extends Serializable[Boolean
 
   override def toDouble : Double = if(myBoolean) 1 else 0
   
+  override def toBoolean : Boolean = myBoolean
+  
   override val byteSize = SerializableBoolean.byteSize
 }
 
@@ -128,7 +131,8 @@ object SerializableShort {
 
 case class SerializableShort(myShort : Short) extends Serializable[Short] {
   override def toBytes : Array[Byte] = {
-    return ByteBuffer.allocate(byteSize).putShort(myShort).array()
+    println("Short.toBytes = " + ByteBuffer.allocate(byteSize).putShort(myShort).array().mkString("[", ", ", "]"))
+    return ByteBuffer.allocate(byteSize).order(ByteOrder.LITTLE_ENDIAN).putShort(myShort).array()
   }
   
   override def toDouble : Double = myShort.toDouble

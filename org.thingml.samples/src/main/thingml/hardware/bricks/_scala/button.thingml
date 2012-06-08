@@ -5,8 +5,25 @@ import "../button.thingml"
 thing ButtonScala includes BrickSensor, Button
 @pim "Button"
 @platform "scala"
+@scala_trait "org.thingml.devices.Observer[Boolean]" 
 {
     set device = 'new org.thingml.devices.ButtonDemo()'
+    
+    
+    //last value sent by the mock device
+    //can be sent to cliend requesting a value (pull mode)
+    property lastValue : Boolean = 'null'
+	
+	function newValue(v : Boolean)@override "true" 
+	do
+        lastValue = v
+		SensorMockUp!update()
+	end
+	
+	function register() 
+	do
+		'' & device & '.asInstanceOf[org.thingml.devices.Observable[Boolean]].register(this)'
+	end
     
 	statechart behavior init Ready {
 		
@@ -20,11 +37,11 @@ thing ButtonScala includes BrickSensor, Button
         event m : Sensor?update
         action
         do
-            if (lastValue == 0) 
+            if (lastValue) 
             do
                 Button!press()
             end
-            if (lastValue == 1)
+            if (lastValue)
             do
                 Button!release()
             end

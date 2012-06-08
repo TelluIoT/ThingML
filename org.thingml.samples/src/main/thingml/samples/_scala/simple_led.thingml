@@ -81,8 +81,8 @@ thing SimpleLed includes LedMsgs, ButtonMsgs, TimerMsgs
 configuration fragment ScalaSimpleLedSimulatorFragment
 {		
 	// Led configuration.
-	instance led : Led
-    instance led2 : Led
+	instance led : LedScala
+    instance led2 : LedScala
 		
 	// Timer configuration.
 	instance timer : TimerScala

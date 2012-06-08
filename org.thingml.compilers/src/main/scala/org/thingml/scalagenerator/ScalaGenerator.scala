@@ -202,6 +202,10 @@ object ScalaGenerator {
     cfg.allThingMLMavenDep.foreach{dep =>
       pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"))
     }
+    cfg.allMavenDep.foreach{dep =>
+      pom = pom.replace("<!--DEP-->", "<!--DEP-->\n"+dep)
+    }
+    
     pom = pom.replace("<!--DEP-->","")
     
     //TODO: add other maven dependencies
@@ -354,7 +358,6 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     builder append "//Channels\n"
     self.allConnectors.foreach{ c =>
       builder append "val " + c.instanceName + " = new Channel\n"
-      builder append c.instanceName + ".start\n"
     }
     
     //define temp arrays   
@@ -438,6 +441,10 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     builder append "//Starting Things\n"
     self.allInstances.foreach{ i =>
       builder append i.instanceName + ".asInstanceOf[Component].start\n"
+    }
+    
+    self.allConnectors.foreach{ c =>
+      builder append c.instanceName + ".start\n"
     }
     
     builder append "}\n\n"
@@ -661,7 +668,7 @@ case class StateMachineScalaGenerator(override val self: StateMachine) extends C
   override def classHeader(builder: StringBuilder = Context.builder) {
     builder append "case class " + Context.firstToUpper(self.getName) + "StateMachine(keepHistory : Boolean, root : Component) extends StateAction {\n"
    
-    builder append "def getBehavior = parent\n"
+    builder append "override def getBehavior = parent\n"
     builder append "val parent : StateMachine = new StateMachine(this, keepHistory, root)\n"
   }
 }
@@ -669,7 +676,9 @@ case class StateMachineScalaGenerator(override val self: StateMachine) extends C
 case class StateScalaGenerator(override val self: State) extends ThingMLScalaGenerator(self) {
     
   def declareState(builder: StringBuilder = Context.builder) {
-    builder append "val " + self.getName + "_state = new State(" + Context.firstToUpper(self.getName) + "State(), root)\n"
+    builder append "private val _" + self.getName + "_state = " + Context.firstToUpper(self.getName) + "State()\n"
+    builder append "val " + self.getName + "_state = new State(_" + self.getName + "_state, root)\n"
+    builder append "_" + self.getName + "_state.init\n"
   }
   
   def generateActions(builder: StringBuilder = Context.builder) {
@@ -706,16 +715,19 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
     builder append "case class " + Context.firstToUpper(self.getName) + "State extends StateAction {\n"
     
     generateActions()
+    
+    builder append "def init {\n"
     self.getInternal.foreach{t =>
       generateDeclaration(t)
     }
+    builder append "}\n\n"
     generateInternalTransitions()
 
     builder append "}\n\n"
   }
   
   def generateDeclaration(t : InternalTransition, builder: StringBuilder = Context.builder){
-    builder append "val " + t.handlerInstanceName  + " = new InternalTransition(getBehavior, " + "new " + t.handlerTypeName + "(), " + t.generateHandler + ")\n"
+    builder append /*"val " + t.handlerInstanceName  + " = */"new InternalTransition(getBehavior, " + "new " + t.handlerTypeName + "(), " + t.generateHandler + ")\n"
   }
 }
 
@@ -731,7 +743,7 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
     builder append "parent.addRegion(new " + Context.firstToUpper(r.getName) + "Region(" + history + ")" + ".getBehavior)\n"
     builder append "case class " + Context.firstToUpper(r.getName) + "Region(keepHistory : Boolean) extends EmptyStateAction{\n"
    
-    builder append "def getBehavior = parent\n"
+    builder append "override def getBehavior = parent\n"
     builder append "val parent : CompositeState = new CompositeState(this, keepHistory, root)\n"
       
     generateSub(r)
@@ -767,7 +779,7 @@ case class CompositeStateScalaGenerator(override val self: CompositeState) exten
   
   def classHeader(builder: StringBuilder = Context.builder) {
     builder append "case class " + Context.firstToUpper(self.getName) + "State(keepHistory : Boolean, root : Component) extends StateAction {\n"    
-    builder append "def getBehavior = parent\n"
+    builder append "override def getBehavior = parent\n"
     builder append "val parent : CompositeState = new CompositeState(this, keepHistory, root)\n"
   }
   
@@ -1040,7 +1052,7 @@ case class ReturnActionScalaGenerator(override val self: ReturnAction) extends A
 case class LocalVariableActionScalaGenerator(override val self: LocalVariable) extends ActionScalaGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {    
     builder append (if (self.isChangeable) "var " else "val ")
-    builder append self.scala_var_name + " : " + self.getType.scala_type(self.getCardinality != null)  + " = "
+    builder append self.scala_var_name + " : " + self.getType.scala_type(self.getCardinality != null)  + " = ("
     if (self.getInit != null) 
       self.getInit.generateScala() 
     else {
@@ -1054,6 +1066,7 @@ case class LocalVariableActionScalaGenerator(override val self: LocalVariable) e
       if (!self.isChangeable)
         Logger.error("ERROR: readonly variable " + self + " must be initialized")
     }
+    builder append ").to" + self.getType.scala_type(self.getCardinality != null)
     builder append "\n"
   }
 }

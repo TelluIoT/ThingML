@@ -1,0 +1,136 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.thingml</groupId>
+    <artifactId>org.thingml.coaphttp</artifactId>
+    <version>0.6.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <parent>
+        <artifactId>org.thingml.root</artifactId>
+        <groupId>org.thingml</groupId>
+        <version>0.6.0-SNAPSHOT</version>
+        <relativePath>../org.thingml.root/pom.xml</relativePath>
+    </parent>
+  
+    <repositories>
+        <repository>
+            <id>spray</id>
+            <name>Spray Repository</name>
+            <url>http://repo.spray.cc/</url>
+        </repository>
+        <repository>
+            <id>Akka</id>
+            <name>Akka Repository</name>
+            <url>http://repo.akka.io/releases/</url>
+        </repository> 
+        <repository>
+            <id>SensApp</id>
+            <name>snapshots</name>
+            <url>https://repository-sintef.forge.cloudbees.com/snapshot/</url>
+        </repository> 
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.utils</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>ch.ethz.inf.vs</groupId>
+            <artifactId>californium</artifactId>
+            <version>0.8.3-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>cc.spray</groupId>
+            <artifactId>spray-json_${scala.version}</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>cc.spray</groupId>
+            <artifactId>spray-client</artifactId>
+            <version>1.0-M2</version>
+        </dependency>  
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.modelbased.sensapp.library</groupId>
+            <artifactId>net.modelbased.sensapp.library.system</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.modelbased.sensapp.library</groupId>
+            <artifactId>net.modelbased.sensapp.library.senml</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>    
+    </dependencies>
+    
+    <build>
+        <plugins>
+
+            <!-- Scala plugin : allow to compile Scala file -->
+            <plugin>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <args>
+                        <arg>-Xelide-below</arg>
+                        <arg>MINIMUM</arg>
+                        <!--<arg>INFO</arg>-->
+                        <!--<arg>WARNING</arg>-->
+                        <!--<arg>SEVERE</arg>-->
+                        <!--<arg>MAXIMUM</arg>-->
+                    </args>
+                    <jvmArgs>
+                        <jvmArg>-Xmx1024m</jvmArg>
+                    </jvmArgs>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*TestSuite.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+        
+</project>

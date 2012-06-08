@@ -33,24 +33,12 @@ trait SerialThingML {
   protected var out : OutputStream = _
   
   def setOutputStream(out : OutputStream) {this.out = out}
-  
-  /* ***********************************************************************
-   * Serial Port data send and receive operations
-   *************************************************************************/
-  def sendData(byte : Byte) {
-    Logger.debug("sendData(" + byte + ")")
-    out.write(byte)
-  }
-  
-  def receive(byte : Byte) {
-    //This will be refined in the Serial Thing defined in ThingML
-  }
-  
+    
   def sendData(bytes : Array[Byte]) {
-    Logger.debug("sendData(" + bytes.mkString("[", ", ", "]") + ")")
+    //Logger.debug("sendData(" + bytes.mkString("[", ", ", "]") + ")")
     try {
       bytes.foreach{b => 
-        Logger.debug("out.write(" + b.toInt + ")")
+        //Logger.debug("out.write(" + b.toInt + ")")
         out.write(b.toInt)
       }
     } catch {
@@ -61,148 +49,5 @@ trait SerialThingML {
   
   def receive(byte : Array[Byte]) {
     //This will be refined in the Serial Thing defined in ThingML
-  }
-}
-
-class Serial(port : String, serialThingML : SerialThingML) {
-  Logger.debug("Load RxTx")
-  
-  protected var serialPort : SerialPort = _
-  protected var in : InputStream = _
-  protected var out : OutputStream = _
-  
-  try {
-    val osName = System.getProperty("os.name")
-    val osProc = System.getProperty("os.arch")
-    Logger.debug("OS=" + osName + ", proc=" + osProc)
-    if (osName.equals("Win32")) {
-      NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Windows/win32/rxtxSerial.dll"), "rxtxSerial.dll")
-    }
-    else if (osName.equals("Win64") || osName.equals("Windows 7")) {
-      NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Windows/win64/rxtxSerial.dll"), "rxtxSerial.dll")
-    }
-    else if (osName.equals("Linux") && osProc.equals("x86-64")) {
-      NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Linux/x86_64-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so")
-    }
-    else if (osName.equals("Linux") && osProc.equals("ia64")) {
-      NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Linux/ia64-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so")
-    }
-    else if (osName.equals("Linux") && osProc.equals("x86")) {
-      NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Linux/i686-unknown-linux-gnu/librxtxParallel.so"), "librxtxParallel.so")
-      NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Linux/i686-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so")
-    }
-    else if (osName.equals("Mac OS X")) {
-      NativeLibUtil.copyFile(classOf[Serial].getClassLoader().getResourceAsStream("nativelib/Mac_OS_X/librxtxSerial.jnilib"), "librxtxSerial.jnilib")
-    } else {
-      Logger.debug("OS=" + osName + ", proc=" + osProc + " not handled. Please contact the development team.")
-    }
-  } catch {
-    case e : Exception => e.printStackTrace()
-  }
-
-  connect()
-    
-  def connect() {
-    registerPort()
-    try {
-      val portIdentifier = CommPortIdentifier.getPortIdentifier(port)
-      if (portIdentifier.isCurrentlyOwned()) {
-        Logger.error("Port " + port + " is currently in use")
-      } else {
-        val commPort = portIdentifier.open("SerialThingML", 2000)
-
-        commPort match {
-          case s : SerialPort => 
-            serialPort = s
-            serialPort.setSerialPortParams(9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE)
-
-            in = serialPort.getInputStream()
-            out = serialPort.getOutputStream()
-            serialThingML.setOutputStream(out)
-
-            serialPort.addEventListener(new SerialReader());
-            serialPort.notifyOnDataAvailable(true);
-
-          case _ => Logger.error("Port " + port + " is not a valid serial port.");
-        }
-      }
-    } catch {
-      case e : Exception => e.printStackTrace()
-    } finally {
-      close()
-    }
-  }
-    
-
-  def close() {
-    try {
-      if (in != null) {
-        in.close()
-      }
-      if (out != null) {
-        out.close()
-      }
-      if (serialPort != null) {
-        serialPort.notifyOnDataAvailable(false)
-        serialPort.removeEventListener()
-        serialPort.close()
-      }
-    } catch {
-      case e : Exception => e.printStackTrace()
-    }
-  }
-
-  /* ***********************************************************************
-   * Serial Port Listener - reads bytes from the serial line and
-   * notifies the ThingML serial component (via the receive method)
-   *************************************************************************/
-  class SerialReader extends SerialPortEventListener {
-    val buffer = new Array[Byte](256)
-    var index = 0
-    def serialEvent(event : SerialPortEvent) {
-      var data = in.read()
-      while (data > -1) {
-        serialThingML.receive(data.toByte)
-        buffer(index) = data.toByte
-        data = in.read()
-        index += 1
-      }
-      Logger.debug("Byte array received from serial port: " + buffer.mkString("[", ", ", "]"))
-      serialThingML.receive(buffer)
-      index = 0
-    }
-  }
-
-  def registerPort() {
-    var prop = System.getProperty("gnu.io.rxtx.SerialPorts")
-    if (prop == null) {
-      prop = ""
-    }
-    if (!prop.contains(port)) {
-      prop += port + File.pathSeparator
-      System.setProperty("gnu.io.rxtx.SerialPorts", prop)
-    }
-
-    prop = System.getProperty("javax.comm.rxtx.SerialPorts")
-    if (prop == null) {
-      prop = ""
-    }
-    if (!prop.contains(port)) {
-      prop += port + File.pathSeparator
-      System.setProperty("javax.comm.rxtx.SerialPorts", prop)
-    }
-  }
-}
-
-object NativeLibUtil {
-  def copyFile(in : InputStream, to : String) {
-    val out = new FileOutputStream(to)
-    var data = in.read()
-    while (data > -1) {
-      out.write(data)
-      data = in.read()
-    } 
-    in.close()
-    out.close()
   }
 }

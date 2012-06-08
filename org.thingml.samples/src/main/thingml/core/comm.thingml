@@ -56,14 +56,25 @@ thing Network includes IOStream
 }
 
 //Just a simple mock to test serialization without using real comm channel.
-thing NetworkArray includes IOByteArray
+thing NetworkArray includes InputByteArrayMsgs, OutputByteArrayMsgs
 {
+
+	required port in
+    {
+		receives receive_bytes
+	}
+
+    required port out 
+    {
+        sends write_bytes
+    }
+
     statechart behavior init default {
-        state default {
-            internal event wb : IOStream?write_bytes
+        state default {            
+            internal event wb : in?receive_bytes
             action do
                 print("network forwards: " + wb.b)
-                IOStream!receive_bytes(wb.b)
+                out!write_bytes(wb.b)
             end
         }    
     }    

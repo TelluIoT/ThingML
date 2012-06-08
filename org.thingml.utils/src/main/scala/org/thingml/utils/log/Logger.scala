@@ -24,9 +24,9 @@ import scala.annotation.elidable
 import scala.annotation.elidable._
 
 object Logger {
-  @elidable(MINIMUM)def debug(s : String) {println("DEBUG:" + s)}
-  @elidable(INFO)def info(s : String) {println("INFO:" + s)}
-  @elidable(WARNING)def warning(s : String) {println("WARNING:" + s)}
-  @elidable(SEVERE)def error(s : String) {println("ERROR:" + s)}
-  @elidable(MAXIMUM)def severe(s : String) {println("KERNEL PANIC:" + s)}
+  @elidable(MINIMUM)def debug(s : String) {println("DEBUG: " + s)}
+  @elidable(INFO)def info(s : String) {println("INFO: " + s)}
+  @elidable(WARNING)def warning(s : String) {println("WARNING: " + s)}
+  @elidable(SEVERE)def error(s : String) {println("ERROR: " + s)}
+  @elidable(MAXIMUM)def severe(s : String) {println("KERNEL PANIC: " + s)}
 }
