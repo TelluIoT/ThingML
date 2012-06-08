@@ -15,11 +15,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <scala.version>2.10.0-m2</scala.version><!--TODO-->
+        <scala.version>2.9.2</scala.version><!--TODO-->
         <thingml.version>0.6.0-SNAPSHOT</thingml.version>
         <smac.version>0.6.0-SNAPSHOT</smac.version>
         <bundle.vendor>SINTEF</bundle.vendor>
-        <kevoree.version>1.6.0-BETA5</kevoree.version><!--TODO-->
+        <kevoree.version>1.7.5</kevoree.version><!--TODO-->
         <kevoree.include>*:*</kevoree.include>
     </properties>
 

@@ -130,6 +130,11 @@ object LoggerGenerator {
     builder append "end\n"
     builder append "transition->Logging\n"
     builder append "event e:PrvPort_Control?startMsg\n"
+     //put it in "on entry do"
+//    builder append "action do\n" 
+//    builder append "print \"Logger start!\"\n"
+//    builder append "log(\"@startuml\")\n"
+//    builder append "end\n"
     builder append "}\n"
   }
   def generateLoggingState(cfg:Configuration,builder:StringBuilder = Util.lBuilder){
@@ -154,6 +159,12 @@ object LoggerGenerator {
   def generateTransitions(cfg:Configuration,builder:StringBuilder = Util.lBuilder){
     builder append "transition-> Ready\n"
     builder append "event e: PrvPort_Control?stopMsg\n\n"
+    //put it in "on exit do"
+//    builder append "action do\n"
+//    builder append "log(\"@enduml\")\n"
+//    builder append "printlog()\n"
+//    builder append "writeFile()\n"
+//    builder append "end\n\n"
     //here since no mismatches, just got all messages and foward is ok.
     // but for the situation with mismatehes, how to do it
     cfg.allConnectors.foreach{case c=>
@@ -164,6 +175,7 @@ object LoggerGenerator {
             if(c.getProvided.getReceives.contains(m)){
               var inPort = "PrvPort_"+cli_name+"_"+c.getRequired.getName
               var outPort = "ReqPort_"+srv_name+"_"+c.getProvided.getName
+              //builder append "internal\n"
               builder append "internal\n"
               builder append "event e: "+inPort+"?"+m.getName+"\n"
               builder append "action do\n"
@@ -275,7 +287,7 @@ object LoggerGenerator {
     inclist.mkString(",")
   }
   def generateThingLogger(cfg:Configuration, builder:StringBuilder = Util.lBuilder){
-    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" + cfg.getName
+    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" + "Config_Logger_"+cfg.getName
     var log_filename = rootDir+"\\log_"+cfg.getName
     log_filename = log_filename.replace("\\", "/")
     

@@ -14,7 +14,9 @@ import "../../../../datatypes.thingml"
 //deifine the behavior of the application that try to book hotel on a remote service.
 thing fragment API1BookHotel {//4 messages
     //ask if have empty rooms
+    
     message rRequest(roomRequest:String);
+    
 	message rReply(roomReply: Boolean);
     
     //need ID

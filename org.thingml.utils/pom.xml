@@ -131,6 +131,11 @@
             <artifactId>net.modelbased.sensapp.library.senml</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>    
+        <dependency>
+            <groupId>net.sourceforge.plantuml</groupId>
+            <artifactId>plantuml</artifactId>
+            <version>7929</version>
+        </dependency>
     </dependencies>
 
 </project>

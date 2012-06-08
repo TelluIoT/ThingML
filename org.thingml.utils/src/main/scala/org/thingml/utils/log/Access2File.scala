@@ -21,30 +21,29 @@
 package org.thingml.utils.log
 
 import java.io._
+import net.sourceforge.plantuml.SourceStringReader
 import org.thingml.utils.ImageDrawingApplet
+
+import scala.actors.Actor._
 
 trait Access2File {
   def writeFile(s:String,filename:String){
     writeText(s,filename)
-    writeImage(filename)
+    
+    writeImage(s,filename)
   }
   def writeText(s:String,filename:String){
     var w = new PrintWriter(new FileWriter(new File(filename+".txt")))
     w.println(s)
     w.close()
   }
-  def writeImage(filename:String){
-    var jarfile = System.getProperty("java.io.tmpdir")+"ThingML_temp/"+"plantuml.jar"
-    if(new File(jarfile).exists){
-      Runtime.getRuntime.exec((if(isWindows) "cmd /c start " else "")+"java -jar "+jarfile+" "+filename+".txt")
-      println(filename+".png")
-      ImageDrawingApplet.popupImage(filename+".png")
+  def writeImage(s:String,filename:String){
+    actor{
+      var reader:SourceStringReader = new SourceStringReader(s)
+      var desc = reader.generateImage(new File(filename+".png"))
+      if(desc!=null)
+        ImageDrawingApplet.popupImage(filename+".png")
     }
-    else{
-      println("plantuml.jar not exist in "+jarfile)
-      System.exit(0)
-    }
-      
   }
   def isWindows() : Boolean = {
     var os = System.getProperty("os.name").toLowerCase();

@@ -1,0 +1,76 @@
+import "message_mismatches.thingml"
+
+
+//client send begin 
+//server receive begin
+//client receive extraMsg
+thing Client_Extra includes ExtraMessage,ControlMessage
+{
+    readonly property begin : String = "begin message"
+    required port ExtraPort {
+		sends begin
+        receives begin_r
+	}
+    required port aaaPort {
+        sends begin
+    }
+    provided port PrvPort_Control{
+        receives startMsg
+    }
+    statechart Authentication init Ready {
+        state Ready{
+            transition->Begin
+                event e:PrvPort_Control?startMsg
+        }
+		state Begin {
+			on entry do 
+                ExtraPort!begin(begin)
+                print "Client side: begin sent"
+            end
+            
+            transition ->Next
+                event e:ExtraPort?begin_r
+                action do 
+                    print "Client side : begin_r received"
+                end
+		}
+        state Next{
+            on entry do
+                print "Client side: finished"
+            end
+        }
+    }
+    
+}
+thing Client_Extra_Fake includes ExtraMessage
+@mock "true" {
+	required port ExtraPort {
+		sends begin
+        receives begin_r
+	}
+}
+
+thing Server_Extra includes ExtraMessage
+{
+    provided port ExtraPort {
+		receives begin
+        sends begin_r,extraMsg
+	}
+    statechart Authentication init Begin {
+	    on entry print "Server Waiting"
+		state Begin {
+            transition ->Next
+				event e : ExtraPort?begin
+                action do
+                    print "Server side : begin message received"
+                    ExtraPort!begin_r("reply")
+                end
+        }
+        state Next{
+            on entry do
+                //ExtraPort!extraMsg("hehe")
+                print "Server side : finish"
+            end
+        }
+    }
+}
