@@ -52,7 +52,7 @@ LedClient, ButtonClient
             Led!led_toggle()
             RemoteControl!report_temperature(temp)
             RemoteControl!report_light(light)
-            RemoteControl!report_rotation(rotation)
+            RemoteControl!report_rotation(rotation*46/10000)//gives approximately the value in radians
             Led!led_toggle()
         end
    	    

@@ -2,11 +2,32 @@ import "../../datatypes.thingml"
 
 thing fragment RemoteMonitoringMsgs
 {
-    message report_temperature(t : UInt16)@code "10";
-    message report_light(t : UInt16)@code "11";
-    message report_rotation(t : UInt16)@code "12";
+    message report_temperature(t : UInt16)
+    @code "10"
+    @http ""
+    @senML_unit "degC";
     
-    message remote_changeDisplay()@code "20";
-    message remote_turnOn()@code "21";
-    message remote_turnOff()@code "22";
+    message report_light(t : UInt16)
+    @code "11"
+    @http ""
+    @senML_unit "lx";
+    
+    message report_rotation(t : UInt16)
+    @code "12"
+    @http ""
+    @senML_unit "rad";
+    
+    
+    message remote_changeDisplay()
+    @code "20"
+    @http "";
+    
+    message remote_turnOn()
+    @code "21"
+    @http "";
+    
+    message remote_turnOff()
+    @code "22"
+    @http "";
+    
 }
