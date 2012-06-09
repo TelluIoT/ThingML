@@ -44,8 +44,8 @@ trait CoAPThingML {
     val escaped = new Array[Byte](34)
     
     val stop = 5 + bytes(4)// - 1
-    var i : Integer = 0
-    var j : Integer = 0
+    var i = 0
+    var j = 0
     escaped(j) = 0x12
     j = j+1
     var current : Byte = bytes(i)

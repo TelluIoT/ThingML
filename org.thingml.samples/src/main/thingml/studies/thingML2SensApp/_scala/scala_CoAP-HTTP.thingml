@@ -126,11 +126,15 @@ configuration CoAPHTTPTempSensorDisplay
     instance serializer : MessageSerializer
     instance serial : SerialScala
     instance forward : NetworkArray
+    instance forward2 : NetworkArray
     instance coapServer : CoAPServerScala
     instance coapClient : CoAPClientScala
     
     connector forward.in => serial.IOStream
     connector forward.out => coapClient.IOStream
+    
+    connector forward2.in => coapServer.IOStream
+    connector forward2.out => serial.IOStream
     
     connector deserializer.network => coapServer.IOStream
     connector deserializer.RemoteControl => stub.RemoteControl

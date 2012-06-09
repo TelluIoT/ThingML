@@ -268,12 +268,22 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
         builder append "setTitle(\"" + Context.firstToUpper(m.getName) + " ThingML resource\")\n"
         builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
 
+        if (m.getParameters.size == 0) {
+          builder append "override def transformPayload(request : ch.ethz.inf.vs.californium.coap.Request) : (Option[Root], String) = {\n"
+          builder append "return parse(request.getPayload)\n"
+          builder append "}\n\n"
+        }
+        
         builder append "override def parse(payload : Array[Byte]) : (Option[Root], String) = {\n"
-        builder append "var index : Int = 6\n"
-        builder append "val tempBuffer = new Array[Byte](18-index)\n"
         builder append "var measurements : List[MeasurementOrParameter] = List()\n\n"
          
-        builder append generateParse(m.getParameters.asInstanceOf[java.util.List[Parameter]].toList)
+        if (m.getParameters.size > 0) {
+          builder append "var index : Int = 6\n"
+          builder append "val tempBuffer = new Array[Byte](18-index)\n"
+          builder append generateParse(m.getParameters.asInstanceOf[java.util.List[Parameter]].toList)
+        } else {
+          builder append generateParseNoParam(m.getName)
+        }
          
         builder append "\n}\n\n"
          
@@ -287,29 +297,43 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
         builder append "buffer(2) = 0.toByte\n"
         builder append "buffer(3) = code\n\n"
           
-        builder append "root.measurementsOrParameters match {"
-        builder append "case Some(measurements) => \n"
-        builder append (List("0") ::: m.getParameters.collect{case p =>
-              "Serializable" + p.getType.scala_type(false) + ".byteSize"
-          }.toList).mkString("buffer(4) = (", " + ", ").toByte\n")
-        builder append "var index = 5\n"
+        if (m.getParameters.size > 0) {
+          builder append "root.measurementsOrParameters match {"
+          builder append "case Some(measurements) => \n"
+          builder append (List("0") ::: m.getParameters.collect{case p =>
+                "Serializable" + p.getType.scala_type(false) + ".byteSize"
+            }.toList).mkString("buffer(4) = (", " + ", ").toByte\n")
+          builder append "var index = 5\n"
        
-        m.getParameters.foreach{m =>
-          builder append "getBytes(measurements.find{m => m.name.get == \"" + m.getName + "\"}.get, \"" +  m.getType.scala_type(false) + "\").foreach{b => \n"
-          builder append "buffer(index) = b\n"
-          builder append "index = index + 1\n"
+          m.getParameters.foreach{m =>
+            builder append "getBytes(measurements.find{m => m.name.get == \"" + m.getName + "\"}.get, \"" +  m.getType.scala_type(false) + "\").foreach{b => \n"
+            builder append "buffer(index) = b\n"
+            builder append "index = index + 1\n"
+            builder append "}\n\n"
+          }
+         
+          builder append "case None =>\n"
+         
           builder append "}\n\n"
+        } else {
+          builder append "buffer(4) = 0\n\n"
         }
-         
-        builder append "case None =>\n"
-         
-        builder append "}\n\n"
          
         builder append "return buffer"
         builder append "}\n\n"
          
         builder append "}\n\n"
     }
+  }
+  
+  def generateParseNoParam(name : String) : String = {
+    val builder = new StringBuilder()
+    builder append "createMeasurement(\"" + name + "\", \"\", true, System.currentTimeMillis/1000) match {\n"//TODO extract SenML units from ThingML annotation
+    builder append "case Some(m) => measurements = measurements :+ m\n"
+    builder append "return (Some(Root(Some(senMLpath), None, None, Some(1), Some(measurements))), \"OK!\")\n"
+    builder append "case None => return (None, \"Cannot parse parameter " + name + "\")\n"
+    builder append "}\n"
+    builder.toString
   }
 
   def generateParse(params : List[Parameter]) : String = params match {
@@ -319,7 +343,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
       builder append "val " + head.getName + "_att = tempBuffer.to" + head.getType.scala_type() + "\n"
       builder append "index = index + " + head.getName + "_att.byteSize\n"
               
-      builder append "createMeasurement(\"" + head.getName + "\", \"V\", " + head.getName + "_att, System.currentTimeMillis) match {\n"//TODO extract SenML units from ThingML annotation
+      builder append "createMeasurement(\"" + head.getName + "\", \"V\", " + head.getName + "_att, System.currentTimeMillis/1000) match {\n"//TODO extract SenML units from ThingML annotation
       builder append "case Some(m) => measurements = measurements :+ m\n"
       builder append generateParse(tail)
       builder append "case None => return (None, \"Cannot parse parameter " + head.getName + "\")\n"

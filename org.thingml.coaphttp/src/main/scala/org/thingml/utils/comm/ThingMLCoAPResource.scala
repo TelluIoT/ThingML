@@ -105,7 +105,9 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
   def createMeasurement(name : String, unit : String, value : AnyVal, time : Long) : Option[MeasurementOrParameter] = {
     try {
       value match {
-        case b : Boolean => Some(MeasurementOrParameter(Some(name), Some(unit), None, None, Some(b), None, Some(time), None))
+        case b : Boolean => 
+          println("     Create measurement from boolean")
+          Some(MeasurementOrParameter(Some(name), None, None, None, Some(b), None, Some(time), None))
         case c : Char => createMeasurement(name, unit, c.toString, time)
         case u : Unit => None
         case n => Some(MeasurementOrParameter(Some(name), Some(unit), Some(n.toDouble), None, None, None, Some(time), None))
