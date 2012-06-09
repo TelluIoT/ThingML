@@ -18,6 +18,7 @@ thing fragment PacketManager {
         //TODO: Do it for all the other datatypes provided by ThingML
     readonly property lengthInteger : Byte = 2    
     readonly property lengthString : Byte = 8
+    readonly property lengthUInt16 : Byte = 2
     
     
     readonly property MAX_PACKET_SIZE : Integer = 16
@@ -118,7 +119,7 @@ thing fragment ArraySerializer includes PacketManager, OutputByteArrayMsgs {
     function escape() : Byte[34] do
         var escaped : Byte[34]
     
-        readonly var stop : Integer = DATA_POSITION + buffer[LENGTH_POSITION] - 1
+        readonly var stop : Integer = DATA_POSITION + buffer[LENGTH_POSITION]// - 1
         var i : Integer = 0
         var j : Integer = 0
         escaped[j] = START_BYTE

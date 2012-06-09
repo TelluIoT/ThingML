@@ -9,6 +9,13 @@ thing fragment SerializerArduino  includes Serializer
     do
         storeByte('('& d &' >> 8) & 0x00ff')
         storeByte('('& d &') & 0x00ff')
+    end
+    
+    //UInt16
+    function serializeUInt16(d : UInt16)
+    do
+        storeByte('('& d &' >> 8) & 0x00ff')
+        storeByte('('& d &') & 0x00ff')    
     end  
 }
 

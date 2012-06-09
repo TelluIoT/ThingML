@@ -18,33 +18,26 @@
  */
 package org.thingml.utils.comm
 
-import gnu.io.{CommPort, CommPortIdentifier, PortInUseException, SerialPort, SerialPortEvent, SerialPortEventListener}
+/*import gnu.io.{CommPort, CommPortIdentifier, PortInUseException, SerialPort, SerialPortEvent, SerialPortEventListener}
 
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
-import java.io.OutputStream
+import java.io.OutputStream*/
 
+import org.thingml.comm.rxtx.Serial4ThingML
 import org.thingml.utils.log.Logger
 
 trait SerialThingML {
   
-  protected var out : OutputStream = _
+  protected var serial : Serial4ThingML = _
   
-  def setOutputStream(out : OutputStream) {this.out = out}
+  def setSerial4ThingML(serial : Serial4ThingML) {this.serial = serial}
     
   def sendData(bytes : Array[Byte]) {
     //Logger.debug("sendData(" + bytes.mkString("[", ", ", "]") + ")")
-    try {
-      bytes.foreach{b => 
-        //Logger.debug("out.write(" + b.toInt + ")")
-        out.write(b.toInt)
-      }
-    } catch {
-      case e : IOException =>
-        e.printStackTrace()
-    }
+    serial.sendData(bytes)
   }
   
   def receive(byte : Array[Byte]) {

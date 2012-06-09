@@ -15,6 +15,14 @@ thing fragment LedMsgs
 	message led_toggle ();
 }
 
+thing fragment LedClient includes LedMsgs
+{   
+	required port Led 
+    {
+		sends led_on, led_off, led_toggle
+	}
+}
+
 thing fragment Led includes LedMsgs
 {   
 	provided port Led 

@@ -14,6 +14,15 @@ thing fragment LightSensorMsgs
 	message light_value (val : UInt16);
 }
 
+thing fragment LightSensorClient includes LightSensorMsgs 
+{
+	required port LightSensor 
+    {
+		sends read_light
+		receives light_value
+	}    
+}
+
 thing LightSensor includes LightSensorMsgs, AnalogInputMsgs
 {  
 	provided port LightSensor 

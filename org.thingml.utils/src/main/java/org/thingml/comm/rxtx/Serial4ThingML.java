@@ -78,6 +78,7 @@ public class Serial4ThingML {
         this.port = selectSerialPort(port);
         this.thing = thing;
         connect();
+        thing.setSerial4ThingML(this);
     }
 
     void connect() {
@@ -95,7 +96,7 @@ public class Serial4ThingML {
 
                     in = serialPort.getInputStream();
                     out = serialPort.getOutputStream();
-                    thing.setOutputStream(out);
+                    
 
                     serialPort.addEventListener(new SerialReader());
                     serialPort.notifyOnDataAvailable(true);
@@ -129,7 +130,7 @@ public class Serial4ThingML {
     /* ***********************************************************************
      * Serial Port data send operation
      *************************************************************************/
-    protected void sendData(byte[] payload) {
+    public void sendData(byte[] payload) {
         try {
             // send the start byte
             //out.write((int) START_BYTE);
@@ -139,6 +140,7 @@ public class Serial4ThingML {
                 /*if (payload[i] == START_BYTE || payload[i] == STOP_BYTE || payload[i] == ESCAPE_BYTE) {
                     out.write((int) ESCAPE_BYTE);
                 }*/
+                //System.out.println("Serial.Write[" + i + "] = " + (int) payload[i]);
                 out.write((int) payload[i]);
             }
             // send the stop byte
@@ -220,8 +222,16 @@ public class Serial4ThingML {
                     buffer[buffer_idx] = (byte) data;
                     buffer_idx++;
                 }
-                System.out.println("   Packet forwarded to thing. Size = " + buffer_idx);
-                thing.receive(java.util.Arrays.copyOf(buffer, buffer_idx));
+                
+                int start = 0;
+                for(int i = 0; i < buffer.length; i++) {
+                    byte current = buffer[i];
+                    if (current == 0x13) {//stop => send packet
+                        thing.receive(java.util.Arrays.copyOfRange(buffer, start, i + 1));
+                        start = i + 1;
+                    }
+                }
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }

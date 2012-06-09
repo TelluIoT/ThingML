@@ -15,4 +15,3 @@ configuration fragment RotationSensorArduino
     instance rotation_sensor : RotationSensor
     connector rotation_sensor.AnalogInput => io.analog_input.AnalogInput
 } 
-

@@ -14,6 +14,14 @@ thing fragment ButtonMsgs
 	message release ();
 }
 
+thing fragment ButtonClient includes ButtonMsgs 
+{
+	required port Button 
+	{
+		receives press, release
+	}    
+}
+
 thing Button includes ButtonMsgs, DigitalInputMsgs
 {		
 	provided port Button 

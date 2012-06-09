@@ -40,7 +40,16 @@ thing fragment DeserializerScala includes ArrayDeserializer {
         bytes[0] = readByte()
         bytes[1] = readByte()
         return bytes'.toShort'
-    end       
+    end
+    
+    //UInt16
+    function deserializeUInt16() : UInt16
+    do
+        var bytes : Byte[2]
+        bytes[0] = readByte()
+        bytes[1] = readByte()
+        return bytes'.toShort'
+    end         
 
     //String                            
     function deserializeString() : String 

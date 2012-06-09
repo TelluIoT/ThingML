@@ -155,4 +155,3 @@ thing SimpleTest includes SimpleSensorDisplay, ElectricityMeterMsgs
 		}
 	}
 }
-
