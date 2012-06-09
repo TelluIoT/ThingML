@@ -23,6 +23,8 @@ LedClient, ButtonClient
     property temp : UInt16
     property light : UInt16
     property rotation : UInt16
+    
+    readonly property period : UInt16 = 2000
 	
 	required port Display 
     {	
@@ -41,16 +43,17 @@ LedClient, ButtonClient
             Display!initDisplay (potDisplay, "Position", "", 0, 0, 1023)
         	Display!initDisplay (tempDisplay, "Temperature", "C", 25, 20, 30)  
             Display!initDisplay (lightDisplay, "Light", "", 0, 0, 1023)
-            timer!timer_start(2000)
+            timer!timer_start(period)
         end
         
         internal event timer?timer_timeout
         action do
-            timer!timer_start(2000)
-            //Led!led_toggle()
+            timer!timer_start(period)
+            Led!led_toggle()
             RemoteControl!report_temperature(temp)
             RemoteControl!report_light(light)
             RemoteControl!report_rotation(rotation)
+            Led!led_toggle()
         end
    	    
    	    internal event m : TemperatureSensor?temperature_value
