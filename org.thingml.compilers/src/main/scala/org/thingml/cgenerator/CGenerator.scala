@@ -463,11 +463,7 @@ object CGenerator {
     }
   }
 
-  def compileToLinux(cfg : Configuration) : Hashtable[String, String] = {
-
-    val result = new Hashtable[String, String]()
-    val context = new LinuxCGeneratorContext(cfg)
-
+  def compileCModules(cfg : Configuration, context : LinuxCGeneratorContext, result : Hashtable[String, String] ) {
     // GENERATE THE TYPEDEFS HEADER
     var typedefs_template = SimpleCopyTemplate.copyFromClassPath("ctemplates/thingml_typedefs.h")
     var builder = new StringBuilder()
@@ -507,11 +503,20 @@ object CGenerator {
     fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + cfg.allInstances.size);
     rtemplate = rtemplate.replace("/*FIFO*/", fifotemplate)
     result.put("runtime.c", rtemplate)
+  }
+
+
+  def compileToLinux(cfg : Configuration) : Hashtable[String, String] = {
+
+    val result = new Hashtable[String, String]()
+    val context = new LinuxCGeneratorContext(cfg)
+
+    compileCModules(cfg, context, result)
 
     // GENERATE THE CONFIGURATION AND A MAIN
     var ctemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_main.c")
     ctemplate = ctemplate.replace("/*NAME*/", cfg.getName)
-    builder = new StringBuilder()
+    var builder = new StringBuilder()
     cfg.generateIncludes(builder, context)
     ctemplate = ctemplate.replace("/*INCLUDES*/", builder.toString)
     builder = new StringBuilder()
@@ -524,6 +529,55 @@ object CGenerator {
     ctemplate = ctemplate.replace("/*INIT_CODE*/", initb.toString)
     ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString)
     result.put(cfg.getName + ".c", ctemplate)
+
+    //GENERATE THE MAKEFILE
+    var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/Makefile")
+    mtemplate = mtemplate.replace("/*NAME*/", cfg.getName)
+
+    val list = cfg.allThings.map{ t => t.getName } += cfg.getName
+
+    val srcs = list.map{ t => t + ".c" }.mkString(" ")
+    val objs = list.map{ t => t + ".o" }.mkString(" ")
+    mtemplate = mtemplate.replace("/*SOURCES*/", srcs)
+    mtemplate = mtemplate.replace("/*OBJECTS*/", objs)
+    result.put("Makefile", mtemplate)
+
+    MergedConfigurationCache.clearCache(); // Cleanup
+
+    result
+  }
+
+    def compileToROSNode(cfg : Configuration) : Hashtable[String, String] = {
+
+    val result = new Hashtable[String, String]()
+    val context = new LinuxCGeneratorContext(cfg)
+
+    compileCModules(cfg, context, result)
+
+    // GENERATE THE CONFIGURATION AND A MAIN
+    var ctemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/ros_main.c")
+    ctemplate = ctemplate.replace("/*NAME*/", cfg.getName)
+    var builder = new StringBuilder()
+    cfg.generateIncludes(builder, context)
+    ctemplate = ctemplate.replace("/*INCLUDES*/", builder.toString)
+    builder = new StringBuilder()
+    cfg.generateC(builder, context)
+    ctemplate = ctemplate.replace("/*CONFIGURATION*/", builder.toString)
+    var initb = new StringBuilder()
+    cfg.generateInitializationCode(initb, context)
+    var pollb = new StringBuilder()
+    cfg.generatePollingCode(pollb)
+    ctemplate = ctemplate.replace("/*INIT_CODE*/", initb.toString)
+    ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString)
+    result.put(cfg.getName + ".c", ctemplate)
+
+
+    // GENERATE ROS HANDLERS
+
+    // GENERATE ROS MESSAGES
+
+
+
 
     //GENERATE THE MAKEFILE
     var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/Makefile")
