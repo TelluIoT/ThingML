@@ -1,0 +1,39 @@
+import "../../datatypes.thingml"
+import "../timer.thingml"
+import "clock.thingml"
+
+/*****************************************************************************
+ * Definition of the built-in things and messages
+ *****************************************************************************/
+
+thing TimerLinux includes Timer, ClockMsgs 
+@pim "Timer"
+@platform "linux"
+{
+
+	required port clock { receives clock_tick }
+	
+	statechart ClockTimerImpl init Idle {
+		
+		property remaining : Integer = 0
+		
+		state Idle {
+			transition -> Counting event m : timer?timer_start action remaining = m.delay
+		}
+		
+		state Counting {
+			transition -> Idle event timer?timer_cancel
+			transition -> Idle event clock?clock_tick guard remaining == 0 action timer!timer_timeout()
+			internal event clock?clock_tick guard remaining > 0 action remaining = remaining - 1
+		}
+	
+	}
+
+}
+
+configuration fragment TimerLinux {
+	instance clock : ClockLinux
+	set clock.period = 1000
+	instance timer : TimerLinux
+	connector timer.clock => clock.signal
+}

@@ -1,0 +1,50 @@
+import "../../core/_linux/timer.thingml"
+
+thing fragment SimpleROSPublisherMsgs {
+	message hello(count : Integer);
+}
+
+thing SimpleROSPublisher includes SimpleROSPublisherMsgs, TimerMsgs {
+
+	required port timer
+    {
+		receives timer_timeout
+		sends timer_start, timer_cancel
+	}
+	
+	provided port publisher_hello {
+		sends hello
+	}
+	
+	statechart 	LinuxTimerTestAppImpl init T1 {
+		
+		property count : Integer = 0
+		
+		state T1 {
+			on entry timer!timer_start(10) // 1 second with a 100ms clock
+			internal event timer?timer_timeout
+			action do
+				print "Publish!\n"
+				publisher_hello!hello(count)
+				count = count + 1
+			end
+		}
+	}
+}
+
+configuration SimpleROSPublisher 
+  @output_folder "/home/franck/thingml_out/ros_publisher"
+  @debug "false"
+  @debug_fifo "true"
+  @debug_message_send ".*"
+  @debug_message_receive ".*"
+  @rostopic "app:publisher_hello:hello"
+{
+	// Create a timer with a 100ms clock
+	group t : TimerLinux
+	set t.clock.period = 100
+
+	// Create and connect the test app
+	instance app : SimpleROSPublisher
+	connector app.timer => t.timer.timer
+}
