@@ -34,6 +34,9 @@ import net.modelbased.sensapp.library.senml.export.JsonProtocol._
 import cc.spray.typeconversion.DefaultUnmarshallers._
 import cc.spray.json._
 import cc.spray.typeconversion.SprayJsonSupport
+import cc.spray.json.DefaultJsonProtocol.StringJsonFormat
+import cc.spray.json.DefaultJsonProtocol.StringJsonFormat._
+
 
 import scala.collection.JavaConversions._
 
@@ -55,20 +58,27 @@ class ThingMLCoAPRequest(val code : Byte, val resourceURI : String = "ThingML", 
   }
   
   /*override def handleResponse(response : Response) {
-    //Logger.info("Response RTT = " + response.getRTT)
-    response.prettyPrint();
-  } */ 
+   //Logger.info("Response RTT = " + response.getRTT)
+   response.prettyPrint();
+   } */ 
 }
 
 trait ThingMLResource {self : LocalResource =>
   def code : Byte = 0x00
+  //def registryURL : Option[String]
 }
 
 class ThingMLTypeResource(val resourceIdentifier : String = "ThingML") extends LocalResource(resourceIdentifier) with ThingMLResource {
   def addSubResource(resource : ThingMLResource) {
     super.add(resource.asInstanceOf[LocalResource])
+    registerToHTTP(resource)
     //server.resourceMap += (resource.code -> resource.asInstanceOf[LocalResource].getResourcePath)
-  }  
+  }
+
+  def registerToHTTP(resource : ThingMLResource) {
+    val json = "{\"id\": \"myVeryOwnSensor\", \"descr\": \"ThingML device\", \"schema\": { \"backend\": \"raw\", \"template\": \"Numerical\"}}" 
+    //TODO: send a post request to HTTP.
+  }
 }
 
 abstract class ThingMLMessageResource(override val resourceIdentifier : String = "ThingML", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = 0x00, val server : CoAP, val fireAndForgetHTTP : Boolean) extends CoAPHTTPResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, fireAndForgetHTTP) with ThingMLResource {
@@ -76,7 +86,9 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
   setTitle("Generic ThingML Resource")
   setResourceType("ThingMLResource")
   
-  lazy val senMLpath = List(getPath.split("/")(1), getPath.split("/")(2)).mkString("/")
+  lazy val senMLpath = List(getPath.split("/")(1), getPath.split("/")(2)).mkString("-")
+  
+  
 
   val buffer = new Array[Byte](16)
   
@@ -184,9 +196,9 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
 
   override def performCoAPGet(request: GETRequest) : String = {
     /*val builder = new java.lang.StringBuilder()
-    writeAttributes(builder)
+     writeAttributes(builder)
    
-    return builder.toString*/
+     return builder.toString*/
    
     return getAttributes.mkString("[", ";", "]")
   }

@@ -244,7 +244,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
           builder append i.getType.getName + "Resource.addSubResource(" + i.getName + "Resource)\n"
           i.getType.allMessages.foreach{m => //TODO something better for the filtering
             if (allMessages.exists{m2 => m == m2}) {
-              builder append i.getName + "Resource.addSubResource(" + "new " + Context.firstToUpper(m.getName) + "CoAPResource(isPUTallowed = true, isPOSTallowed = true, isGETallowed = true, httpURLs = Set(" + getURLs(m).mkString(", ") + "), server = this))\n"
+              builder append i.getName + "Resource.addSubResource(" + "new " + Context.firstToUpper(m.getName) + "CoAPResource(isPUTallowed = true, isPOSTallowed = true, isGETallowed = true, httpURLs = Set(" + m.getHTTPurls.map("\"" + _ + "\"").mkString(", ") + "), server = this))\n"
             }
           }
         }
@@ -255,10 +255,6 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
      builder append "addResource(new " + Context.firstToUpper(m.getName) + "CoAPResource(coapThingML = coapThingML))\n"
      } */
     builder append "}\n\n"
-  }
-  
-  def getURLs(m : Message) : Set[String] = {
-    Set()
   }
 
   def generateCoAPMessageResources(builder: StringBuilder = Context.builder) {
@@ -280,7 +276,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
         if (m.getParameters.size > 0) {
           builder append "var index : Int = 6\n"
           builder append "val tempBuffer = new Array[Byte](18-index)\n"
-          builder append generateParse(m.getParameters.asInstanceOf[java.util.List[Parameter]].toList)
+          builder append generateParse(m.getParameters.asInstanceOf[java.util.List[Parameter]].toList.zip(m.getSenMLunits))
         } else {
           builder append generateParseNoParam(m.getName)
         }
@@ -336,17 +332,17 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
     builder.toString
   }
 
-  def generateParse(params : List[Parameter]) : String = params match {
+  def generateParse(params : List[(Parameter, String)]) : String = params match {
     case head :: tail => 
       val builder = new StringBuilder()
       builder append "Array.copy(payload, index, tempBuffer, 0, Math.min(payload.size-index, tempBuffer.size))\n"
-      builder append "val " + head.getName + "_att = tempBuffer.to" + head.getType.scala_type() + "\n"
-      builder append "index = index + " + head.getName + "_att.byteSize\n"
+      builder append "val " + head._1.getName + "_att = tempBuffer.to" + head._1.getType.scala_type() + "\n"
+      builder append "index = index + " + head._1.getName + "_att.byteSize\n"
               
-      builder append "createMeasurement(\"" + head.getName + "\", \"V\", " + head.getName + "_att, System.currentTimeMillis/1000) match {\n"//TODO extract SenML units from ThingML annotation
+      builder append "createMeasurement(\"" + head._1.getName + "\", \"" + head._2 + "\", " + head._1.getName + "_att, System.currentTimeMillis/1000) match {\n"//TODO extract SenML units from ThingML annotation
       builder append "case Some(m) => measurements = measurements :+ m\n"
       builder append generateParse(tail)
-      builder append "case None => return (None, \"Cannot parse parameter " + head.getName + "\")\n"
+      builder append "case None => return (None, \"Cannot parse parameter " + head._1.getName + "\")\n"
       builder append "}\n"
       builder.toString
     case nil => "return (Some(Root(Some(senMLpath), None, None, Some(1), Some(measurements))), \"OK!\")\n"

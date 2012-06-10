@@ -31,7 +31,7 @@ import java.lang.Boolean
  */
 
 case class MessageScalaImpl (self : Message) {
-  def getCode : Integer = {
+  def getCode : Int = {
     self.getAnnotations.filter {
       a => a.getName == "code"
     }.headOption match {
@@ -43,4 +43,31 @@ case class MessageScalaImpl (self : Message) {
         }
     }
   }
+  
+  def getSenMLunits : List[String] = {
+    self.getAnnotations.filter {
+      a => a.getName == "senML_unit"
+    }.headOption match {
+      case Some(a) => {
+          return a.asInstanceOf[PlatformAnnotation].getValue.split(",").toList.map(_.trim)
+        }
+      case None => {
+          return Nil
+        }
+    }
+  }
+  
+  def getHTTPurls : Set[String] = {
+    self.getAnnotations.filter {
+      a => a.getName == "http"
+    }.headOption match {
+      case Some(a) => {
+          return a.asInstanceOf[PlatformAnnotation].getValue.split(",").toList.map(_.trim).toSet
+        }
+      case None => {
+          return Set()
+        }
+    }
+  }
+  
 }

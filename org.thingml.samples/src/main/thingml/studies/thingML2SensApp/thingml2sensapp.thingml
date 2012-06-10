@@ -1,33 +1,34 @@
 import "../../datatypes.thingml"
 
 thing fragment RemoteMonitoringMsgs
+@http_registry "http://46.51.169.123:8080/registry/sensors"
 {
-    message report_temperature(t : UInt16)
+    message report_temperature(temp : UInt16)
     @code "10"
-    @http ""
+    @http "http://46.51.169.123:8080/dispatch"
     @senML_unit "degC";
     
-    message report_light(t : UInt16)
+    message report_light(light : UInt16)
     @code "11"
-    @http ""
+    @http "http://46.51.169.123:8080/dispatch"
     @senML_unit "lx";
     
-    message report_rotation(t : UInt16)
+    message report_rotation(angle : UInt16)
     @code "12"
-    @http ""
+    @http "http://46.51.169.123:8080/dispatch"
     @senML_unit "rad";
     
     
     message remote_changeDisplay()
     @code "20"
-    @http "";
+    @http "http://46.51.169.123:8080/dispatch";
     
     message remote_turnOn()
     @code "21"
-    @http "";
+    @http "http://46.51.169.123:8080/dispatch";
     
     message remote_turnOff()
     @code "22"
-    @http "";
+    @http "http://46.51.169.123:8080/dispatch";
     
 }

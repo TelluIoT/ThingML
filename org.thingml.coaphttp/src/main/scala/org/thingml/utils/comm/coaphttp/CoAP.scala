@@ -39,7 +39,6 @@ import akka.dispatch.Await
 import akka.dispatch.Future
 import akka.util.duration._
 
-
 import cc.spray.typeconversion.SprayJsonSupport
 
 class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boolean, val isPOSTallowed : Boolean, val isGETallowed : Boolean, httpURLs : Set[String], fireAndForgetHTTP : Boolean) extends LocalResource(resourceIdentifier) with HttpSpraySupport  with SprayJsonSupport {
