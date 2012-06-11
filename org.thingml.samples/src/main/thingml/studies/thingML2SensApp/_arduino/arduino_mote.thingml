@@ -137,21 +137,21 @@ state Serialize{
 internal event m : RemoteControl?report_light action
 do
 setHeader(11, lengthUInt16)
-serializeUInt16(m.t)
+serializeUInt16(m.light)
 send()
 end
 
 internal event m : RemoteControl?report_rotation action
 do
 setHeader(12, lengthUInt16)
-serializeUInt16(m.t)
+serializeUInt16(m.angle)
 send()
 end
 
 internal event m : RemoteControl?report_temperature action
 do
 setHeader(10, lengthUInt16)
-serializeUInt16(m.t)
+serializeUInt16(m.temp)
 send()
 end
 

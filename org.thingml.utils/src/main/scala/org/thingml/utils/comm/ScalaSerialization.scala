@@ -65,7 +65,7 @@ trait Serializable[T] {
 case class DeserializableArray(bytes : Array[Byte]) {
   def toByte : Byte = bytes(0)
   def toBoolean : Boolean = (if (bytes == SerializableBoolean.trueByte) true else if (bytes == SerializableBoolean.falseByte) false else false)
-  def toShort : Short = ByteBuffer.wrap(SerializableShort.adjust(bytes).toArray).order(ByteOrder.LITTLE_ENDIAN).getShort
+  def toShort : Short = ByteBuffer.wrap(SerializableShort.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getShort
   def toInt : Int = ByteBuffer.wrap(SerializableInt.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getInt
   def toLong : Long = ByteBuffer.wrap(SerializableByte.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getLong
   def toFloat : Float = ByteBuffer.wrap(SerializableFloat.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getFloat
@@ -132,7 +132,7 @@ object SerializableShort {
 case class SerializableShort(myShort : Short) extends Serializable[Short] {
   override def toBytes : Array[Byte] = {
     println("Short.toBytes = " + ByteBuffer.allocate(byteSize).putShort(myShort).array().mkString("[", ", ", "]"))
-    return ByteBuffer.allocate(byteSize).order(ByteOrder.LITTLE_ENDIAN).putShort(myShort).array()
+    return ByteBuffer.allocate(byteSize)./*order(ByteOrder.LITTLE_ENDIAN).*/putShort(myShort).array()
   }
   
   override def toDouble : Double = myShort.toDouble

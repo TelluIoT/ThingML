@@ -152,7 +152,7 @@ end
     connector deserializer.in => testRemote.in
 }*/
 
-
+/*
 configuration serialCoAPScala 
 @remote "testRemote::TestThing::.*::.*"
 {
@@ -177,7 +177,7 @@ configuration serialCoAPScala
     
     connector deserializer.network => coapServer.IOStream
     connector deserializer.in => testRemote.in   
-}
+}*/
 
 /*configuration serialScala 
 @remote "testRemote::TestThing::.*::.*"
@@ -189,3 +189,18 @@ configuration serialCoAPScala
     connector deserializer.network => serial.IOStream
     connector deserializer.in => testRemote.in   
 }*/
+
+configuration serialScala2
+@remote "testRemote::TestThing::.*::.*"
+{
+    instance testRemote : TestThing
+    instance serial : SerialScala
+    instance serializer : MessageSerializer
+    instance deserializer : MessageDeserializer
+    
+    connector deserializer.network => serial.IOStream
+    connector deserializer.in => testRemote.in
+    
+    connector serializer.network => serial.IOStream
+    connector testRemote.out => serializer.out    
+}
