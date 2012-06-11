@@ -50,7 +50,7 @@ public class Serial4ThingML {
             if (osName.equals("Win64") || osName.equals("Windows 7")) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Windows/win64/rxtxSerial.dll"), "rxtxSerial.dll");
             }
-            if (osName.equals("Linux") && osProc.equals("x86-64")) {
+            if (osName.equals("Linux") && (osProc.equals("x86-64") || osProc.equals("amd64"))) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/x86_64-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so");
             }
             if (osName.equals("Linux") && osProc.equals("ia64")) {
