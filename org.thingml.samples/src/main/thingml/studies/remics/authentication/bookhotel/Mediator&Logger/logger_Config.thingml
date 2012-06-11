@@ -1,0 +1,148 @@
+/*
+*This is a logger for Configratrion(Config) generated automatically
+*/
+import "configs.thingml"
+thing Logger_Config includes ControlMessage,Logger,API1BookHotel,API2BookHotel
+{
+provided port PrvPort_Config_c1_ServerBookPort {
+receives rRequest,inputID,typeRequest,number
+sends rReply,idReply,typeReply,result
+}
+required port ReqPort_Config_m1_Client {
+sends rRequest,inputID,typeRequest,number
+receives rReply,idReply,typeReply,result
+}
+provided port PrvPort_Config_m1_Server {
+receives bookhotel
+sends result4substitute
+}
+required port ReqPort_Config_s1_CilentBookPort {
+sends rRequest,inputID,typeRequest,number
+receives rReply,idReply,typeReply,result
+}
+provided port PrvPort_Control{
+receives startMsg, stopMsg
+}
+statechart Logger init Ready {
+state Ready{
+on entry do
+clearlog()
+print "Ready, Waiting for startMsg trigger"
+end
+transition->Logging
+event e:PrvPort_Control?startMsg
+}
+state Logging{
+on entry do
+print "Logger start!"
+log("@startuml")
+end
+on exit do
+log("@enduml")
+printlog()
+writeFile()
+end
+
+transition-> Ready
+event e: PrvPort_Control?stopMsg
+
+internal
+event e: PrvPort_Config_c1_ServerBookPort?rRequest
+action do
+log("Config_c1 -> Logger_Config : rRequest")
+ReqPort_Config_m1_Client!rRequest(e.roomRequest)
+log("Logger_Config -> Config_m1 : rRequest")
+end
+internal
+event e: PrvPort_Config_c1_ServerBookPort?inputID
+action do
+log("Config_c1 -> Logger_Config : inputID")
+ReqPort_Config_m1_Client!inputID(e.ID)
+log("Logger_Config -> Config_m1 : inputID")
+end
+internal
+event e: PrvPort_Config_c1_ServerBookPort?typeRequest
+action do
+log("Config_c1 -> Logger_Config : typeRequest")
+ReqPort_Config_m1_Client!typeRequest(e.RTRequest)
+log("Logger_Config -> Config_m1 : typeRequest")
+end
+internal
+event e: PrvPort_Config_c1_ServerBookPort?number
+action do
+log("Config_c1 -> Logger_Config : number")
+ReqPort_Config_m1_Client!number(e.SingleRoomNumber,e.DoubleRoomNumber)
+log("Logger_Config -> Config_m1 : number")
+end
+internal
+event e: ReqPort_Config_m1_Client?rReply
+action do
+log("Config_m1 -> Logger_Config : rReply")
+PrvPort_Config_c1_ServerBookPort!rReply(e.roomReply)
+log("Logger_Config -> Config_c1 : rReply")
+end
+internal
+event e: ReqPort_Config_m1_Client?idReply
+action do
+log("Config_m1 -> Logger_Config : idReply")
+PrvPort_Config_c1_ServerBookPort!idReply(e.reply)
+log("Logger_Config -> Config_c1 : idReply")
+end
+internal
+event e: ReqPort_Config_m1_Client?typeReply
+action do
+log("Config_m1 -> Logger_Config : typeReply")
+PrvPort_Config_c1_ServerBookPort!typeReply(e.single,e.double)
+log("Logger_Config -> Config_c1 : typeReply")
+end
+internal
+event e: ReqPort_Config_m1_Client?result
+action do
+log("Config_m1 -> Logger_Config : result")
+PrvPort_Config_c1_ServerBookPort!result(e.bookresult)
+log("Logger_Config -> Config_c1 : result")
+end
+}
+}
+}
+
+thing Logger
+@scala_trait "org.thingml.utils.log.Access2File"
+@thingml_maven_dep "org.thingml.utils"
+{
+property trace_buffer :String
+function log(trace:String) do
+print "==LOG: "+trace+" !=="
+trace_buffer = trace_buffer + trace +"\n"
+end
+function printlog() do
+print "====TRACE====\n"
+print trace_buffer
+end
+function clearlog() do
+trace_buffer =""
+end
+function writeFile() do
+'this.asInstanceOf[org.thingml.utils.log.Access2File].writeFile(' & trace_buffer & ',"C:/Users/HAOSHA~1/AppData/Local/Temp/ThingML_temp/Config_Logger_Config/log_Config")'
+end
+}
+
+thing Control includes ControlMessage
+@mock "true"{
+required port ControlPort{
+sends startMsg, stopMsg
+}
+}
+
+configuration Config_Logger_Config{
+instance control: Control
+instance logger: Logger_Config
+instance ins_Config_m1: BookhotelMediator
+instance ins_Config_s1: Server
+instance ins_Config_c1: API1BookHotelFakeClient
+connector control.ControlPort => logger.PrvPort_Control
+connector ins_Config_c1.ServerBookPort=> logger.PrvPort_Config_c1_ServerBookPort
+connector logger.ReqPort_Config_m1_Client=> ins_Config_m1.Client
+connector ins_Config_m1.Server=> logger.PrvPort_Config_m1_Server
+connector logger.ReqPort_Config_s1_CilentBookPort=> ins_Config_s1.CilentBookPort
+}

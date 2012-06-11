@@ -1,0 +1,82 @@
+/*
+*This is a logger for Configratrion(Config) generated automatically
+*/
+import "configs.thingml"
+thing Logger_Config includes ControlMessage,Logger,API1BookHotel,API2BookHotel
+{
+provided port PrvPort_Config_c1_ServerBookPort {
+receives rRequest,inputID,typeRequest,number
+sends rReply,idReply,typeReply,result
+}
+required port ReqPort_Config_s1_CilentBookPort {
+sends bookhotel
+receives result4substitute
+}
+provided port PrvPort_Control{
+receives startMsg, stopMsg
+}
+statechart Logger init Ready {
+state Ready{
+on entry do
+clearlog()
+print "Ready, Waiting for startMsg trigger"
+end
+transition->Logging
+event e:PrvPort_Control?startMsg
+}
+state Logging{
+on entry do
+print "Logger start!"
+log("@startuml")
+end
+on exit do
+log("@enduml")
+printlog()
+writeFile()
+end
+
+transition-> Ready
+event e: PrvPort_Control?stopMsg
+
+}
+}
+}
+
+thing Logger
+@scala_trait "org.thingml.utils.log.Access2File"
+@thingml_maven_dep "org.thingml.utils"
+{
+property trace_buffer :String
+function log(trace:String) do
+print "==LOG: "+trace+" !=="
+trace_buffer = trace_buffer + trace +"\n"
+end
+function printlog() do
+print "====TRACE====\n"
+print trace_buffer
+end
+function clearlog() do
+trace_buffer =""
+end
+function writeFile() do
+'this.asInstanceOf[org.thingml.utils.log.Access2File].writeFile(' & trace_buffer & ',"C:/Users/HAOSHA~1/AppData/Local/Temp/ThingML_temp/Config_Logger_Config/log_Config")'
+end
+}
+
+thing Control includes ControlMessage
+@mock "true"{
+required port ControlPort{
+sends startMsg, stopMsg
+}
+}
+
+configuration Config_Logger_Config{
+instance control: Control
+instance logger: Logger_Config
+instance ins_Config_s1: BookhotelSubstituteServer
+instance ins_Config_c1: API1BookHotelFakeClient
+connector control.ControlPort => logger.PrvPort_Control
+connector ins_Config_c1.ServerBookPort=> logger.PrvPort_Config_c1_ServerBookPort
+connector logger.ReqPort_Config_s1_CilentBookPort=> ins_Config_s1.CilentBookPort
+}
+

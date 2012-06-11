@@ -1,12 +1,11 @@
 // 
-// (c) SINTEF 2011
+// (c) SINTEF 2012
 //
-// Define the behavior of a simple authentication server that accepts credentials and 
-// check their validity.
+// Define the behavior of a simple server that deal with booking hotel request from a client
 // 
-// See also client.thingml, AP1.thingml 
+// See also bookhotel_client.thingml, API1.thingml
 //
-// by Franck CHAUVEL <franck.chauve@sintef.no>
+// by Runze Hao (haoshaochi@gmail.com)
 //
 
 import "API1.thingml"
@@ -37,8 +36,13 @@ thing Server includes API1BookHotel {
 			
 			transition -> CheckIDService 
 				event e : CilentBookPort?rRequest
-				//guard e.roomRequest == roomRequest
+				guard e.roomRequest == roomRequest
 				action CilentBookPort!rReply(true)
+				
+			internal
+				event e: CilentBookPort?rRequest
+				guard not (e.roomRequest == roomRequest) 
+				action CilentBookPort!rReply(false)
 		}
 		
 		//CheckID state
@@ -46,9 +50,13 @@ thing Server includes API1BookHotel {
             on entry print "Server side: To check ID"
             transition -> RoomTypeService
                 event e: CilentBookPort?inputID
-                //guard e.ID == ID
+                guard e.ID == ID
                 action CilentBookPort!idReply(true)
             
+//             internal
+// 				event e: CilentBookPort?InputID
+//                 guard not(e.ID == ID)
+//                 action CilentBookPort!IDReply(false)  
         }
 		
         //RoomTypeService state
@@ -71,7 +79,7 @@ thing Server includes API1BookHotel {
             on entry print "Server side: To verify the room number and booking"
             transition -> Booked
                 event e: CilentBookPort?number
-                //guard e.SingleRoomNumber < singleRoomNumber and e.DoubleRoomNumber < doubleRoomNumber
+                guard e.SingleRoomNumber < singleRoomNumber and e.DoubleRoomNumber < doubleRoomNumber
                 action do
                     CilentBookPort!result(true)
                     aSingleRoomNumber = e.SingleRoomNumber
@@ -82,7 +90,7 @@ thing Server includes API1BookHotel {
                 
             transition -> Ready
                 event e: CilentBookPort?number
-                //guard not(e.SingleRoomNumber < singleRoomNumber and e.DoubleRoomNumber < doubleRoomNumber)
+                guard not(e.SingleRoomNumber < singleRoomNumber and e.DoubleRoomNumber < doubleRoomNumber)
                 action do
                     CilentBookPort!result(false)
                     print "Server side single number :"+e.SingleRoomNumber+" || "+singleRoomNumber

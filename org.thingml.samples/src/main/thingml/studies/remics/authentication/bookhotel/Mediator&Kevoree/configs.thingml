@@ -1,0 +1,20 @@
+// 
+// (c) SINTEF 2012
+//
+// Define the configuration how client connect to server
+//
+// by Runze Hao (haoshaochi@gmail.com)
+//
+
+import "bookhotel_client.thingml"
+import "bookhotel_server.thingml"
+import "bookhotel_mediator.thingml"
+
+configuration Config{
+    instance c1:Client
+    instance s1:Server
+    instance m1:BookhotelMediator
+    connector c1.BookHotel => m1.Client
+    connector m1.Server =>s1.CilentBookPort
+    
+}

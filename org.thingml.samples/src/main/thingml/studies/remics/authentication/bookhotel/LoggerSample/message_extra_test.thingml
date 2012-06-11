@@ -1,4 +1,13 @@
+// 
+// (c) SINTEF 2012
+//
+// Define the simple client and server 
+// 
+// by Runze Hao (haoshaochi@gmail.com)
+//
+
 import "message_mismatches.thingml"
+import "API1.thingml"
 
 
 //client send begin 

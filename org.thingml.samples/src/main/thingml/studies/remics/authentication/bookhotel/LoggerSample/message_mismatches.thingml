@@ -1,4 +1,11 @@
-import "../../../../datatypes.thingml"
+// 
+// (c) SINTEF 2012
+//
+// Define some message, some are used for mismatches
+// 
+// by Runze Hao (haoshaochi@gmail.com)
+//
+import "../../../../../datatypes.thingml"
 
 thing fragment ExtraMessage {
     message begin(msg:String);     //client sends, server requires
@@ -44,10 +51,6 @@ thing fragment SpiltMessage{
     
     //if not in order?   
     //@spilt "spiltMsg1(1),spiltMsg2(2,3)"
-}
-thing fragment ControlMessage{
-message startMsg();
-message stopMsg();
 }
 
 thing fragment OrderMessage{

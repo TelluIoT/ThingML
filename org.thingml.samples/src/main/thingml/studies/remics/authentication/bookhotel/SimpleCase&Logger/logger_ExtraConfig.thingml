@@ -2,16 +2,8 @@
 *This is a logger for Configratrion(ExtraConfig) generated automatically
 */
 import "configs.thingml"
-thing Logger_ExtraConfig includes ControlMessage,Logger,ExtraMessage,API1BookHotel
+thing Logger_ExtraConfig includes ControlMessage,Logger,API1BookHotel
 {
-provided port PrvPort_ExtraConfig_c_ExtraPort {
-receives begin
-sends begin_r
-}
-required port ReqPort_ExtraConfig_s_ExtraPort {
-sends begin
-receives begin_r,extraMsg
-}
 provided port PrvPort_ExtraConfig_c1_ServerBookPort {
 receives rRequest,inputID,typeRequest,number
 sends rReply,idReply,typeReply,result
@@ -46,20 +38,6 @@ end
 transition-> Ready
 event e: PrvPort_Control?stopMsg
 
-internal
-event e: PrvPort_ExtraConfig_c_ExtraPort?begin
-action do
-log("ExtraConfig_c -> Logger_ExtraConfig : begin")
-ReqPort_ExtraConfig_s_ExtraPort!begin(e.msg)
-log("Logger_ExtraConfig -> ExtraConfig_s : begin")
-end
-internal
-event e: ReqPort_ExtraConfig_s_ExtraPort?begin_r
-action do
-log("ExtraConfig_s -> Logger_ExtraConfig : begin_r")
-PrvPort_ExtraConfig_c_ExtraPort!begin_r(e.msg)
-log("Logger_ExtraConfig -> ExtraConfig_c : begin_r")
-end
 internal
 event e: PrvPort_ExtraConfig_c1_ServerBookPort?rRequest
 action do
@@ -151,13 +129,9 @@ sends startMsg, stopMsg
 configuration Config_Logger_ExtraConfig{
 instance control: Control
 instance logger: Logger_ExtraConfig
-instance ins_ExtraConfig_s: Server_Extra
 instance ins_ExtraConfig_s1: Server
 instance ins_ExtraConfig_c1: API1BookHotelFakeClient
-instance ins_ExtraConfig_c: Client_Extra_Fake
 connector control.ControlPort => logger.PrvPort_Control
-connector ins_ExtraConfig_c.ExtraPort=> logger.PrvPort_ExtraConfig_c_ExtraPort
-connector logger.ReqPort_ExtraConfig_s_ExtraPort=> ins_ExtraConfig_s.ExtraPort
 connector ins_ExtraConfig_c1.ServerBookPort=> logger.PrvPort_ExtraConfig_c1_ServerBookPort
 connector logger.ReqPort_ExtraConfig_s1_CilentBookPort=> ins_ExtraConfig_s1.CilentBookPort
 }

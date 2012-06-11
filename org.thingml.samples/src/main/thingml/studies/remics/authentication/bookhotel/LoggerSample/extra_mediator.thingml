@@ -1,3 +1,11 @@
+// 
+// (c) SINTEF 2012
+//
+// Define the logger by hand to compare with the generated one for test
+// 
+// by Runze Hao (haoshaochi@gmail.com)
+//
+
 import "message_extra_test.thingml"
 
 thing ExtraMediator includes ExtraMessage,Logger
