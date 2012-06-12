@@ -15,10 +15,9 @@
 #include "thingml_typedefs.h"
 #include "runtime.h"
 #include "ros/ros.h"
-/* ROS_MSG_INCLUDES*/
 /*INCLUDES*/
 
-/*ROS_VARIABLES*/
+/*ROS_HEADERS*/
 
 /*ROS_HANDLERS*/
 
@@ -27,7 +26,7 @@
 int main(int argc, char *argv[]) {
   init_runtime();
   /*INIT_CODE*/
-  /*INIT_ROS*/
+  /*ROS_INIT*/
 
   while (1) {
     /*POLL_CODE*/

@@ -34,6 +34,7 @@ import org.sintef.thingml._
 import org.thingml.model.scalaimpl.aspects.MergedConfigurationCache
 import java.util.{Hashtable, ArrayList}
 import org.thingml.graphexport.ThingMLGraphExport
+import collection.mutable.ListBuffer
 import java.lang.{StringBuilder, ProcessBuilder, Boolean}
 
 object SimpleCopyTemplate {
@@ -356,6 +357,21 @@ object CGenerator {
     }
   }
 
+
+
+  def compileToROSNodeAndMake(model : ThingMLModel) {
+    // First look for a configuration in the model
+    model.getConfigs.filter{ c => !c.isFragment }.headOption match {
+      case Some (c) => compileToROSNode(c)
+      case None =>
+        // look in all configs
+      model.allConfigurations.filter{ c => !c.isFragment }.headOption match {
+        case Some (c) => compileToROSNode(c)
+        case None => {}
+      }
+    }
+  }
+
   def out_folder(cfg : Configuration) : File = {
      cfg.getAnnotations.filter {
       a => a.getName == "output_folder"
@@ -364,7 +380,11 @@ object CGenerator {
         var v = a.asInstanceOf[PlatformAnnotation].getValue
         var result = new File(v)
         if (result.exists && result.isDirectory) return result
-        else return null
+        else {
+          result.mkdirs
+          if (result.exists && result.isDirectory) return result
+          else return null
+        }
       }
       case None => {
         return null
@@ -447,6 +467,7 @@ object CGenerator {
 
     // Create a folder having the name of the config
     var folder = new File(dir);
+    folder.mkdir
     if (!folder.exists() || !folder.isDirectory) {
       println("ERROR: Target folder " + dir + " does not exist.")
       return ;
@@ -463,13 +484,13 @@ object CGenerator {
     }
   }
 
-  def compileCModules(cfg : Configuration, context : LinuxCGeneratorContext, result : Hashtable[String, String] ) {
+  def compileCModules(cfg : Configuration, context : LinuxCGeneratorContext, result : Hashtable[String, String], prefix : String) {
     // GENERATE THE TYPEDEFS HEADER
     var typedefs_template = SimpleCopyTemplate.copyFromClassPath("ctemplates/thingml_typedefs.h")
     var builder = new StringBuilder()
     cfg.generateTypedefs(builder, context)
     typedefs_template = typedefs_template.replace("/*TYPEDEFS*/", builder.toString)
-    result.put("thingml_typedefs.h", typedefs_template)
+    result.put(prefix + "thingml_typedefs.h", typedefs_template)
 
     // GENERATE A MODULE FOR EACH THING
     cfg.allThings.foreach { thing =>
@@ -479,7 +500,7 @@ object CGenerator {
       thing.generateCHeader(builder, context)
       htemplate = htemplate.replace("/*NAME*/", thing.getName)
       htemplate = htemplate.replace("/*HEADER*/", builder.toString)
-      result.put(thing.getName + ".h", htemplate)
+      result.put(prefix + thing.getName + ".h", htemplate)
 
       // GENERATE IMPL
       var itemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_thing_impl.c")
@@ -487,13 +508,13 @@ object CGenerator {
       thing.generateCImpl(builder, context)
       itemplate = itemplate.replace("/*NAME*/", thing.getName)
       itemplate = itemplate.replace("/*CODE*/", builder.toString)
-      result.put(thing.getName + ".c", itemplate)
+      result.put(prefix + thing.getName + ".c", itemplate)
     }
 
      // GENERATE THE RUNTIME HEADER
     var rhtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/runtime.h")
     rhtemplate = rhtemplate.replace("/*NAME*/", cfg.getName)
-    result.put("runtime.h", rhtemplate)
+    result.put(prefix + "runtime.h", rhtemplate)
 
     // GENERATE THE RUNTIME IMPL
     var rtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/runtime.c")
@@ -502,7 +523,7 @@ object CGenerator {
     fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + context.fifoSize());
     fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + cfg.allInstances.size);
     rtemplate = rtemplate.replace("/*FIFO*/", fifotemplate)
-    result.put("runtime.c", rtemplate)
+    result.put(prefix + "runtime.c", rtemplate)
   }
 
 
@@ -511,7 +532,7 @@ object CGenerator {
     val result = new Hashtable[String, String]()
     val context = new LinuxCGeneratorContext(cfg)
 
-    compileCModules(cfg, context, result)
+    compileCModules(cfg, context, result, "")
 
     // GENERATE THE CONFIGURATION AND A MAIN
     var ctemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_main.c")
@@ -549,51 +570,194 @@ object CGenerator {
 
     def compileToROSNode(cfg : Configuration) : Hashtable[String, String] = {
 
-    val result = new Hashtable[String, String]()
-    val context = new LinuxCGeneratorContext(cfg)
+      val result = new Hashtable[String, String]()
 
-    compileCModules(cfg, context, result)
+      if (!cfg.getAnnotations.exists{ a=> a.getName == "ros_workspace"}) {
+        println("ERROR: Missing annotation ros_workspace on configuration " + cfg.getName)
+        return result;
+      }
+      val ros_workspace = cfg.getAnnotations.filter{ a=> a.getName == "ros_workspace"}.head.getValue.trim
+      val ros_workspace_file = new File(ros_workspace)
+      if (! (ros_workspace_file.exists && ros_workspace_file.isDirectory) ) {
+        println("ERROR: Invalid ros_workspace (" + ros_workspace + ").")
+        return result;
+      }
 
-    // GENERATE THE CONFIGURATION AND A MAIN
-    var ctemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/ros_main.c")
-    ctemplate = ctemplate.replace("/*NAME*/", cfg.getName)
-    var builder = new StringBuilder()
-    cfg.generateIncludes(builder, context)
-    ctemplate = ctemplate.replace("/*INCLUDES*/", builder.toString)
-    builder = new StringBuilder()
-    cfg.generateC(builder, context)
-    ctemplate = ctemplate.replace("/*CONFIGURATION*/", builder.toString)
-    var initb = new StringBuilder()
-    cfg.generateInitializationCode(initb, context)
-    var pollb = new StringBuilder()
-    cfg.generatePollingCode(pollb)
-    ctemplate = ctemplate.replace("/*INIT_CODE*/", initb.toString)
-    ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString)
-    result.put(cfg.getName + ".c", ctemplate)
+      val ros_package = if (cfg.getAnnotations.exists{ a=> a.getName == "ros_package"})
+        cfg.getAnnotations.filter{ a=> a.getName == "ros_package"}.head.getValue.trim
+        else cfg.getName
 
 
-    // GENERATE ROS HANDLERS
+      val context = new LinuxCGeneratorContext(cfg)
 
-    // GENERATE ROS MESSAGES
+      compileCModules(cfg, context, result, "src/")
+
+      // GENERATE ROS HANDLERS
+      val publish_list : scala.collection.mutable.Map[String, (Thing, Port, Message, ListBuffer[(Instance, String)])] = scala.collection.mutable.Map[String, (Thing, Port, Message, ListBuffer[(Instance, String)])]()
 
 
+      // The annotoation rostopic_publish is support to contain "instance::port::message [-> topicname]"
+      cfg.getAnnotations.filter{ a=> a.getName == "rostopic_publish"}.foreach{ ann =>
+        var params = ann.getValue.trim.split("->")
+        val topicname = if (params.size == 2) params(1).trim else params(0).replace("::", "_")
+        params = params(0).trim.split("::")
+        if (params.size != 3) {
+          println("ERROR: Invalid rostopic_publish annotation (" + ann.getValue + "). Expecting \"instance::port::message [-> topicname]\"")
+        }
+        else {
+          var iname = cfg.getName + "_" + params(0).trim
+          if (iname.contains(".")) {
+            // The instance is within a group
+            iname = iname.replace(".", "_")
+          }
+          val pname = params(1).trim
+          val mname = params(2).trim
+
+          // Find the instance
+          val instances = cfg.allInstances.filter(i=> i.getName == iname)
+          if (instances.size != 1) {
+            println("ERROR: Invalid rostopic_publish annotation, instance " + iname + " not found.")
+          }
+          else {
+            val instance = instances.head
+            val ports = instance.getType.allPorts.filter(_.getName == pname)
+            if (instances.size != 1) {
+              println("ERROR: Invalid rostopic_publish annotation, port " + pname + " not found in thing " + instance.getType.getName + ".")
+            }
+            else {
+              val port = ports.head
+              val messages = port.getSends.filter(_.getName == mname)
+              if(messages.size != 1) {
+                 println("ERROR: Invalid rostopic_publish annotation, message " + mname + " not found in port " + port.getName + ".")
+              }
+              else {
+                val message = messages.head
+                val thing = instance.getType
+                val id = "ros_" + thing.getName + "_" + port.getName + "_publish_" + message.getName
+                println("INFO: found ROS publisher " + id)
+                // Now we have all the info. Store it in publish_list for bellow code generation.
+                val tuple : (Thing, Port, Message, ListBuffer[(Instance, String)]) =
+                  if (publish_list.contains(id)) publish_list.get(id).head else (thing, port, message, new ListBuffer[(Instance, String)]())
+                tuple._4.append( (instance, topicname) )
+                publish_list.put(id, tuple)
+      }}}}}
+
+      val ros_pub_builder = new StringBuilder()
+      val topics = scala.collection.mutable.Map[String, Message]()
+      val messages = ListBuffer[Message]()
+
+      // GENRATE CODE TO PUBLISH MESSAGES ON ROS TOPICS
+      publish_list.keys.foreach{ id =>
+        println("INFO: Generate for ROS publisher " + id)
+        val tuple = publish_list.get(id).head
+        val thing = tuple._1
+        val port = tuple._2
+        val message = tuple._3
+        val instances = tuple._4.toList
+        ros_pub_builder append "// Publish ROS messages for" + thing.getName + "::" + port.getName + "::" + message.getName + "\n"
+        ros_pub_builder append "void " + id
+        thing.append_formal_parameters(ros_pub_builder, message)
+        ros_pub_builder append "{\n"
+
+        instances.foreach{ case(instance, topic) =>
+           ros_pub_builder append "if (_instance == &" + instance.c_var_name + ") {\n"
+           ros_pub_builder append "// Publish the data on ROS topic " + topic + "\n"
+           ros_pub_builder append ros_package + "::" + message.getName + " rosmsg;\n"
+           message.getParameters.foreach{p=>
+             ros_pub_builder append "rosmsg." + p.getName + " = " +  p.getName + ";\n"
+           }
+           ros_pub_builder append topic + "_rospub.publish(rosmsg);\n"
+           ros_pub_builder append "}\n"
+
+           topics.put(topic, message)
+           if (!messages.toList.contains(message)) messages.append(message)
+        }
+        ros_pub_builder append "}\n"
+      }
+
+      // GENERATE ROS MESSAGES
+      messages.foreach{ message =>
+        println("INFO: Generate for ROS message " + message.getName)
+        val b = new StringBuilder()
+        message.getParameters.foreach{ p =>
+          b append p.getType.ros_type() + " " + p.getName + "\n"
+        }
+        result.put("msg/" + message.getName + ".msg", b.toString)
+      }
+
+      // GENERATE HEADERS AND VARIABLES
+      val ros_head_builder = new StringBuilder()
+      ros_head_builder append "// Include ROS messages\n"
+      messages.foreach{ message =>
+        ros_head_builder append "#include \""+ ros_package + "/"+ message.getName +"\"\n"
+      }
+      ros_head_builder append "\n"
+      ros_head_builder append "// Declare variables for ROS topic publishers\n"
+      topics.foreach{ case(topic, message) =>
+        ros_head_builder append "ros::Publisher " + topic + "_rospub;\n"
+      }
+
+      // GENERATE ROS INITIALIZATION
+      val ros_init_builder = new StringBuilder()
+      ros_init_builder append "ros::init(argc, argv, \""+ ros_package +"\");\n"
+      ros_init_builder append  "ros::NodeHandle rosnode;\n"
+      ros_init_builder append "//Initialize publisher topics\n"
+      topics.foreach{ case(topic, message) =>
+        ros_init_builder append topic + "_rospub = rosnode.advertise<" + ros_package + "::" + message.getName + ">(\""+topic+"\", 1024);\n"
+      }
 
 
-    //GENERATE THE MAKEFILE
-    var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/Makefile")
-    mtemplate = mtemplate.replace("/*NAME*/", cfg.getName)
+      // GENERATE THE CONFIGURATION AND A MAIN
+      var ctemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/ros_main.cpp")
+      ctemplate = ctemplate.replace("/*NAME*/", cfg.getName)
+      var builder = new StringBuilder()
+      cfg.generateIncludes(builder, context)
+      ctemplate = ctemplate.replace("/*INCLUDES*/", builder.toString)
+      builder = new StringBuilder()
+      cfg.generateC(builder, context)
+      ctemplate = ctemplate.replace("/*CONFIGURATION*/", builder.toString)
+      var initb = new StringBuilder()
+      cfg.generateInitializationCode(initb, context)
+      var pollb = new StringBuilder()
+      cfg.generatePollingCode(pollb)
+      ctemplate = ctemplate.replace("/*INIT_CODE*/", initb.toString)
+      ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString)
+      ctemplate = ctemplate.replace("/*ROS_HEADERS*/", ros_head_builder.toString)
+      ctemplate = ctemplate.replace("/*ROS_HANDLERS*/", ros_pub_builder.toString)
+      ctemplate = ctemplate.replace("/*ROS_INIT*/", ros_init_builder.toString)
 
-    val list = cfg.allThings.map{ t => t.getName } += cfg.getName
+      result.put("src/" + cfg.getName + ".cpp", ctemplate)
 
-    val srcs = list.map{ t => t + ".c" }.mkString(" ")
-    val objs = list.map{ t => t + ".o" }.mkString(" ")
-    mtemplate = mtemplate.replace("/*SOURCES*/", srcs)
-    mtemplate = mtemplate.replace("/*OBJECTS*/", objs)
-    result.put("Makefile", mtemplate)
 
-    MergedConfigurationCache.clearCache(); // Cleanup
+      //GENERATE THE MAKEFILE
+      /*
+      var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/Makefile")
+      mtemplate = mtemplate.replace("/*NAME*/", cfg.getName)
 
-    result
+      val list = cfg.allThings.map{ t => t.getName } += cfg.getName
+
+      val srcs = list.map{ t => t + ".c" }.mkString(" ")
+      val objs = list.map{ t => t + ".o" }.mkString(" ")
+      mtemplate = mtemplate.replace("/*SOURCES*/", srcs)
+      mtemplate = mtemplate.replace("/*OBJECTS*/", objs)
+      result.put("Makefile", mtemplate)
+      */
+      MergedConfigurationCache.clearCache(); // Cleanup
+
+      // Create the package folder
+      val folder = new File(ros_workspace + "/" + ros_package)
+      folder.mkdir // TODO: should be done through ROS
+      new File(ros_workspace + "/" + ros_package + "/src").mkdir
+      new File(ros_workspace + "/" + ros_package + "/msg").mkdir
+
+      result.keys.foreach{ fname =>
+        var file = new File(ros_workspace + "/" + ros_package + "/" + fname)
+        var w: PrintWriter = new PrintWriter(new FileWriter(file))
+        w.print(result.get(fname))
+        w.close
+      }
+
+      result
   }
 
 }
@@ -1983,6 +2147,18 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
       case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
       case None => {
         println("Warning: Missing annotation c_type for type " + self.getName + ", using " + self.getName + " as the C type.")
+        return self.getName
+      }
+    }
+  }
+
+  def ros_type(): String = {
+    self.getAnnotations.filter {
+      a => a.getName == "ros_type"
+    }.headOption match {
+      case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
+      case None => {
+        println("Warning: Missing annotation ros_type for type " + self.getName + ", using " + self.getName + " as the ROS type.")
         return self.getName
       }
     }

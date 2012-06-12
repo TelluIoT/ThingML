@@ -99,6 +99,7 @@ class ThingMLPanel extends JPanel {
   
   var b = new JMenuItem("Arduino")
   var bC = new JMenuItem("Posix C")
+  var rosC = new JMenuItem("ROS Node")
   var bScala = new JMenuItem("Scala/SMaC")
   var bSwing = new JMenuItem("Java/Swing")
   var bThingML = new JMenuItem("ThingML/Comm")
@@ -156,6 +157,24 @@ class ThingMLPanel extends JPanel {
          val thingmlModel = loadThingMLmodel(targetFile.get)
 
             CGenerator.compileToLinuxAndMake(thingmlModel)
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+
+        //}
+      }
+    })
+
+    rosC.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        println("Input file : " + targetFile)
+        if (targetFile.isEmpty) return;
+               try {
+
+         val thingmlModel = loadThingMLmodel(targetFile.get)
+
+            CGenerator.compileToROSNodeAndMake(thingmlModel)
         }
         catch {
           case t : Throwable => t.printStackTrace()
@@ -286,6 +305,7 @@ class ThingMLPanel extends JPanel {
 
   compilersMenu.add(b)
   compilersMenu.add(bC)
+  compilersMenu.add(rosC)
   compilersMenu.add(bScala)
   compilersMenu.add(bSwing)
   compilersMenu.add(bThingML)
