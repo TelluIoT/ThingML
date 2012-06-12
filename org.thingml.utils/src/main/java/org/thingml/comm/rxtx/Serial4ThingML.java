@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *     http://www.gnu.org/licenses/lgpl-3.0.txt
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,14 +33,13 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 public class Serial4ThingML {
-    
-    
 
     static {
         System.out.println("Load RxTx");
+        String osName = System.getProperty("os.name");
+        String osProc = System.getProperty("os.arch");
         try {
-            String osName = System.getProperty("os.name");
-            String osProc = System.getProperty("os.arch");
+            System.out.println("osName=" + osName + ", osProc=" + osProc);
             if (osName.equals("Mac OS X")) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Mac_OS_X/librxtxSerial.jnilib"), "librxtxSerial.jnilib");
             }
@@ -51,7 +50,9 @@ public class Serial4ThingML {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Windows/win64/rxtxSerial.dll"), "rxtxSerial.dll");
             }
             if (osName.equals("Linux") && (osProc.equals("x86-64") || osProc.equals("amd64"))) {
+                System.out.println("Loading native rxtx libs...");
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/x86_64-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so");
+                System.out.println("Done!");
             }
             if (osName.equals("Linux") && osProc.equals("ia64")) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/ia64-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so");
@@ -61,7 +62,9 @@ public class Serial4ThingML {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/i686-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so");
             }
         } catch (Exception e) {
+            System.err.println("Cannot Load RxTx on " + osName + "(" + osProc + ")");
             e.printStackTrace();
+            System.exit(1);
         }
     }
     /*public static final byte START_BYTE = 0x12;
@@ -71,7 +74,6 @@ public class Serial4ThingML {
     protected SerialPort serialPort;
     protected InputStream in;
     protected OutputStream out;
-    
     protected org.thingml.utils.comm.SerialThingML thing;
 
     public Serial4ThingML(String port, org.thingml.utils.comm.SerialThingML thing) {
@@ -96,7 +98,7 @@ public class Serial4ThingML {
 
                     in = serialPort.getInputStream();
                     out = serialPort.getOutputStream();
-                    
+
 
                     serialPort.addEventListener(new SerialReader());
                     serialPort.notifyOnDataAvailable(true);
@@ -125,7 +127,7 @@ public class Serial4ThingML {
             }
         } catch (Exception e) {
         }
-    }  
+    }
 
     /* ***********************************************************************
      * Serial Port data send operation
@@ -138,7 +140,7 @@ public class Serial4ThingML {
             for (int i = 0; i < payload.length; i++) {
                 // escape special bytes
                 /*if (payload[i] == START_BYTE || payload[i] == STOP_BYTE || payload[i] == ESCAPE_BYTE) {
-                    out.write((int) ESCAPE_BYTE);
+                out.write((int) ESCAPE_BYTE);
                 }*/
                 //System.out.println("Serial.Write[" + i + "] = " + (int) payload[i]);
                 out.write((int) payload[i]);
@@ -163,75 +165,74 @@ public class Serial4ThingML {
         //private byte[] buffer = new byte[256];
         //protected int buffer_idx = 0;
         //protected int state = RCV_WAIT;
-
         @Override
         public void serialEvent(SerialPortEvent arg0) {
 
             int data;
             byte[] buffer = new byte[1024];
             int buffer_idx = 0;
-            
+
             try {
                 while ((data = in.read()) > -1) {
-/*                    System.out.println("data: " + data);
+                    /*                    System.out.println("data: " + data);
                     // we got a byte from the serial port
                     if (state == RCV_WAIT) { // it should be a start byte or we just ignore it
-                        /*System.out.println("WAIT");
-                        System.out.println("data: " + data + " ?= " + START_BYTE);*/
-/*                        if (data == START_BYTE) {
-                            state = RCV_MSG;
-                            buffer_idx = 0;
-                            buffer[buffer_idx] = (byte) data;
-                            buffer_idx++;
-                        }
-                    } else if (state == RCV_MSG) {
-                        //System.out.println("RECEIVE");
-                        if (data == ESCAPE_BYTE) {
-                            state = RCV_ESC;
-                        } else if (data == STOP_BYTE) {
-                            buffer[buffer_idx] = (byte) data;
-                            buffer_idx++;
-                            // We got a complete frame
-                            //byte[] packet = new byte[buffer_idx];
-                            /*for (int i = 0; i < buffer_idx; i++) {
-                                packet[i] = buffer[i];
-                            }*/
- /*                           System.out.println("Well-formed packet forwarded to thing");
-                            thing.receive(java.util.Arrays.copyOf(buffer, buffer_idx)/*packet*//*);
-                            
-                            state = RCV_WAIT;
-                        } else if (data == START_BYTE) {
-                            // Should not happen but we reset just in case
-                            state = RCV_MSG;
-                            buffer_idx = 0;
-                            buffer[buffer_idx] = (byte) data;
-                            buffer_idx++;
-                        } else { // it is just a byte to store
-                            buffer[buffer_idx] = (byte) data;
-                            buffer_idx++;
-                        }
-                    } else if (state == RCV_ESC) {
-                        //System.out.println("ESCAPE");
-                        // Store the byte without looking at it
-                        buffer[buffer_idx] = (byte) data;
-                        buffer_idx++;
-                        state = RCV_MSG;
-                    }
-*/          
-                    //buffer_idx = 0;
+                    /*System.out.println("WAIT");
+                    System.out.println("data: " + data + " ?= " + START_BYTE);*/
+                    /*                        if (data == START_BYTE) {
+                    state = RCV_MSG;
+                    buffer_idx = 0;
                     buffer[buffer_idx] = (byte) data;
                     buffer_idx++;
-                }
-                
-                int start = 0;
-                for(int i = 0; i < buffer.length; i++) {
-                    byte current = buffer[i];
-                    if (current == 0x13) {//stop => send packet
-                        thing.receive(java.util.Arrays.copyOfRange(buffer, start, i + 1));
-                        start = i + 1;
+                    }
+                    } else if (state == RCV_MSG) {
+                    //System.out.println("RECEIVE");
+                    if (data == ESCAPE_BYTE) {
+                    state = RCV_ESC;
+                    } else if (data == STOP_BYTE) {
+                    buffer[buffer_idx] = (byte) data;
+                    buffer_idx++;
+                    // We got a complete frame
+                    //byte[] packet = new byte[buffer_idx];
+                    /*for (int i = 0; i < buffer_idx; i++) {
+                    packet[i] = buffer[i];
+                    }*/
+                    /*                           System.out.println("Well-formed packet forwarded to thing");
+                    thing.receive(java.util.Arrays.copyOf(buffer, buffer_idx)/*packet*//*);
+
+                    state = RCV_WAIT;
+                    } else if (data == START_BYTE) {
+                    // Should not happen but we reset just in case
+                    state = RCV_MSG;
+                    buffer_idx = 0;
+                    buffer[buffer_idx] = (byte) data;
+                    buffer_idx++;
+                    } else { // it is just a byte to store
+                    buffer[buffer_idx] = (byte) data;
+                    buffer_idx++;
+                    }
+                    } else if (state == RCV_ESC) {
+                    //System.out.println("ESCAPE");
+                    // Store the byte without looking at it
+                    buffer[buffer_idx] = (byte) data;
+                    buffer_idx++;
+                    state = RCV_MSG;
+                    }
+                     */
+                    //buffer_idx = 0;
+                    System.out.println("byte[" + buffer_idx + "]" + (byte) data);
+                    buffer[buffer_idx] = (byte) data;
+
+                    if (buffer[buffer_idx] == 0x13) {
+                        System.out.println("  forward");
+                        thing.receive(java.util.Arrays.copyOfRange(buffer, 0, buffer_idx + 1));
+                        buffer_idx = 0;
+                    } else {
+                        buffer_idx++;
                     }
                 }
-                
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -301,15 +302,28 @@ public class Serial4ThingML {
         } else {
             startPosition = 0;
         }
-        
-       return (String) JOptionPane.showInputDialog(
-               null,
-               "ThingML Serial",
-               "Select serial port",
-               JOptionPane.PLAIN_MESSAGE,
-               null,
-               possibilities.toArray(),
-               possibilities.toArray()[startPosition]);
-        
+
+        String serialPort = (String) JOptionPane.showInputDialog(
+                null,
+                "ThingML Serial",
+                "Select serial port",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                possibilities.toArray(),
+                possibilities.toArray()[startPosition]);
+
+        if (serialPort == null) {
+            serialPort = (String) JOptionPane.showInputDialog(
+                    null,
+                    "ThingML Serial",
+                    "Enter serial port",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    null);
+        }
+
+        return serialPort;
+
     }
 }
