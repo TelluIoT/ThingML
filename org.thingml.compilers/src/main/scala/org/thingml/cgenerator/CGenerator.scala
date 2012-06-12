@@ -1066,13 +1066,13 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
   def generateMessageProcessQueue(builder : StringBuilder, context : CGeneratorContext) {
 
-    builder append "uint8_t processMessageQueue() {\n"
+    builder append "void processMessageQueue() {\n"
     if (context.sync_fifo) {
       builder append "fifo_lock();\n"
       builder append "while (fifo_empty()) fifo_wait();\n"
     }
     else {
-      builder append "if (fifo_empty()) return 0; // return if there is nothing to do\n\n"
+      builder append "if (fifo_empty()) return; // return if there is nothing to do\n\n"
     }
 
     var max_msg_size = 4  // at least the code and the source instance id (2 bytes + 2 bytes)
@@ -1651,6 +1651,9 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
   // Prototypes which should go in the header file
   def generatePublicPrototypes(builder: StringBuilder) {
+    // Entry actions
+    builder append "void " + composedBehaviour.qname("_") + "_OnEntry(int state, "
+    builder append "struct " + instance_struct_name + " *" + instance_var_name + ");\n"
     // Message Handlers
     val handlers = composedBehaviour.allMessageHandlers()
     handlers.keys.foreach {
@@ -1666,9 +1669,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
   // Prototypes which should go at the begining of the implementation C file
   def generatePrivatePrototypes(builder: StringBuilder) {
-    // Entry and Exit actions
-    builder append "void " + composedBehaviour.qname("_") + "_OnEntry(int state, "
-    builder append "struct " + instance_struct_name + " *" + instance_var_name + ");\n"
+    // Exit actions
     builder append "void " + composedBehaviour.qname("_") + "_OnExit(int state, "
     builder append "struct " + instance_struct_name + " *" + instance_var_name + ");\n"
 
