@@ -744,17 +744,59 @@ object CGenerator {
       */
       MergedConfigurationCache.clearCache(); // Cleanup
 
-      // Create the package folder
-      val folder = new File(ros_workspace + "/" + ros_package)
-      folder.mkdir // TODO: should be done through ROS
-      new File(ros_workspace + "/" + ros_package + "/src").mkdir
-      new File(ros_workspace + "/" + ros_package + "/msg").mkdir
+      // CREATING THE ROS PACKAGE AND WRITING THE FILES:
+      //************************************************
 
-      result.keys.foreach{ fname =>
-        var file = new File(ros_workspace + "/" + ros_package + "/" + fname)
-        var w: PrintWriter = new PrintWriter(new FileWriter(file))
-        w.print(result.get(fname))
-        w.close
+      // package folder
+      val folder = new File(ros_workspace + "/" + ros_package)
+      // Delete the package if it exists
+      if (folder.exists()) {
+        println("INFO: Deleting exiting package in " + ros_workspace + "/" + ros_package + ".")
+        folder.delete
+      }
+
+      // Create the ros package with ros:
+      println("INFO: Creating ROS package with: " + "roscreate-pkg "+ros_package+" std_msgs rospy roscpp")
+      //val pb: ProcessBuilder = new ProcessBuilder("/bin/bash -c \"roscreate-pkg "+ros_package+" std_msgs rospy roscpp\"")
+
+      /*
+      val pb: ProcessBuilder = new ProcessBuilder("make")
+      pb.directory(ros_workspace_file)
+      val p: Process = pb.start
+      console_out ! p
+      console_err ! p
+      p.waitFor
+
+      //val p2: Process = Runtime.getRuntime().exec("/bin/bash -c \\\"roscreate-pkg "+ros_package+" std_msgs rospy roscpp\\\"", null, ros_workspace_file);
+      var cmd = "/bin/bash"
+      var param = Array("-c", "\"roscreate-pkg " + ros_package + " std_msgs rospy roscpp\"")
+
+      println("INFO: Executing " + cmd + " " + param.mkString (" "))
+      val p2: Process = Runtime.getRuntime().exec(cmd, param, ros_workspace_file);
+      //console_out ! p2
+      //console_err ! p2
+      p2.waitFor
+*/
+      // TODO; Replace with proper creation of the package
+      folder.mkdirs
+
+      // The ros package should have been created
+      if (!folder.exists()) {
+        println("ERROR: The ROS package " + ros_package + " could not be created with roscreate-pkg (see error message above).")
+      }
+      else {
+        // Create folders for src and messages
+        new File(ros_workspace + "/" + ros_package + "/src").mkdir
+        new File(ros_workspace + "/" + ros_package + "/msg").mkdir
+
+        // Write generated files
+        result.keys.foreach{ fname =>
+          var file = new File(ros_workspace + "/" + ros_package + "/" + fname)
+          var w: PrintWriter = new PrintWriter(new FileWriter(file))
+          w.print(result.get(fname))
+          w.close
+        }
+
       }
 
       result
