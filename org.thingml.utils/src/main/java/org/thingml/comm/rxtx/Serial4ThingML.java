@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.gnu.org/licenses/lgpl-3.0.txt
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -220,11 +220,11 @@ public class Serial4ThingML {
                     }
                      */
                     //buffer_idx = 0;
-                    System.out.println("byte[" + buffer_idx + "]" + (byte) data);
+                    //System.out.println("byte[" + buffer_idx + "]" + (byte) data);
                     buffer[buffer_idx] = (byte) data;
 
                     if (buffer[buffer_idx] == 0x13) {
-                        System.out.println("  forward");
+                        //System.out.println("  forward");
                         thing.receive(java.util.Arrays.copyOfRange(buffer, 0, buffer_idx + 1));
                         buffer_idx = 0;
                     } else {

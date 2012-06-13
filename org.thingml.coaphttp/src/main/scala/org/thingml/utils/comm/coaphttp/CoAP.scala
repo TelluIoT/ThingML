@@ -80,13 +80,14 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
               case post : POSTRequest => Post(url, root)
               case get : GETRequest => Get(url, root)
             }
-          )
+          ).onSuccess { case _ => conduit.close() }
+          .onFailure { case _ => conduit.close(); println("Error while notifiying ["+url+"] for ["+root+"]")}
           
           var data : String = "Sent to " + url + "\n No response was requested"
           if (!fireAndForgetHTTP) {
             data = try {Await.result(response, 3 seconds).toString} catch { case e : Exception => "TIMEOUT:" + url }
-          }
-          conduit.close()
+            //conduit.close()
+          } 
           data
         }.mkString("\n")//returns the "\n"-separated list of responses of all the servers
       case (None, errors) =>

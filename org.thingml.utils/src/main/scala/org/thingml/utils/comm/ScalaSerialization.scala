@@ -56,7 +56,8 @@ trait DynamicSerializable[T] extends Serializable[T] {
 }
 
 trait Serializable[T] {
-  def toBytes : Array[Byte]
+  def toBytes() : Array[Byte] = toBytes(ByteOrder.BIG_ENDIAN)
+  def toBytes(order : ByteOrder) : Array[Byte]
   def toDouble : Double//for SenML serialization
   def toBoolean : Boolean = throw new java.lang.UnsupportedOperationException("Cannot convert to Boolean")
   val byteSize : Int
@@ -65,11 +66,19 @@ trait Serializable[T] {
 case class DeserializableArray(bytes : Array[Byte]) {
   def toByte : Byte = bytes(0)
   def toBoolean : Boolean = (if (bytes == SerializableBoolean.trueByte) true else if (bytes == SerializableBoolean.falseByte) false else false)
-  def toShort : Short = ByteBuffer.wrap(SerializableShort.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getShort
-  def toInt : Int = ByteBuffer.wrap(SerializableInt.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getInt
-  def toLong : Long = ByteBuffer.wrap(SerializableByte.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getLong
-  def toFloat : Float = ByteBuffer.wrap(SerializableFloat.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getFloat
-  def toDouble : Double = ByteBuffer.wrap(SerializableDouble.adjust(bytes).toArray)/*.order(ByteOrder.LITTLE_ENDIAN)*/.getDouble
+  
+  def toShort() : Short = toShort(ByteOrder.BIG_ENDIAN)
+  def toInt() : Int = toInt(ByteOrder.BIG_ENDIAN)
+  def toLong() : Long = toLong(ByteOrder.BIG_ENDIAN)
+  def toFloat() : Float = toFloat(ByteOrder.BIG_ENDIAN)
+  def toDouble() : Double = toDouble(ByteOrder.BIG_ENDIAN)
+  
+  def toShort(order : ByteOrder) : Short = ByteBuffer.wrap(SerializableShort.adjust(bytes).toArray).order(order).getShort
+  def toInt(order : ByteOrder) : Int = ByteBuffer.wrap(SerializableInt.adjust(bytes).toArray).order(order).getInt
+  def toLong(order : ByteOrder) : Long = ByteBuffer.wrap(SerializableByte.adjust(bytes).toArray).order(order).getLong
+  def toFloat(order : ByteOrder) : Float = ByteBuffer.wrap(SerializableFloat.adjust(bytes).toArray).order(order).getFloat
+  def toDouble(order : ByteOrder) : Double = ByteBuffer.wrap(SerializableDouble.adjust(bytes).toArray).order(order).getDouble
+  
   def toChar : Char = bytes(0).toChar
   override def toString : String = bytes.collect{case b => {b}.toChar}.mkString
 }
@@ -81,7 +90,7 @@ case object SerializableByte {
 }
 
 case class SerializableByte(myByte : Byte) extends Serializable[Byte] {
-  override def toBytes : Array[Byte] = {
+  override def toBytes(order : ByteOrder) : Array[Byte] = {
     return Array(myByte)
   }
   
@@ -97,7 +106,7 @@ case object SerializableUnit {
 }
 
 case class SerializableUnit(void : Unit) extends Serializable[Unit] {
-  override def toBytes : Array[Byte] = throw new java.lang.UnsupportedOperationException("Cannot serialize Unit (void) type")
+  override def toBytes(order : ByteOrder) : Array[Byte] = throw new java.lang.UnsupportedOperationException("Cannot serialize Unit (void) type")
   override def toDouble : Double = throw new java.lang.UnsupportedOperationException("Cannot convert Unit (void) to Double")
   override val byteSize = SerializableUnit.byteSize
 }
@@ -112,7 +121,7 @@ object SerializableBoolean {
 }
 
 case class SerializableBoolean(myBoolean : Boolean) extends Serializable[Boolean]{
-  override def toBytes : Array[Byte] = {
+  override def toBytes(order : ByteOrder) : Array[Byte] = {
     return (if (myBoolean) SerializableBoolean.trueByte else SerializableBoolean.falseByte)
   }
 
@@ -130,9 +139,9 @@ object SerializableShort {
 }
 
 case class SerializableShort(myShort : Short) extends Serializable[Short] {
-  override def toBytes : Array[Byte] = {
-    println("Short.toBytes = " + ByteBuffer.allocate(byteSize).putShort(myShort).array().mkString("[", ", ", "]"))
-    return ByteBuffer.allocate(byteSize)./*order(ByteOrder.LITTLE_ENDIAN).*/putShort(myShort).array()
+  override def toBytes(order : ByteOrder) : Array[Byte] = {
+    //println("Short.toBytes = " + ByteBuffer.allocate(byteSize).putShort(myShort).array().mkString("[", ", ", "]"))
+    return ByteBuffer.allocate(byteSize).order(order).putShort(myShort).array()
   }
   
   override def toDouble : Double = myShort.toDouble
@@ -147,8 +156,8 @@ object SerializableInt {
 }
 
 case class SerializableInt(myInt : Int) extends Serializable[Int]{
-  override def toBytes : Array[Byte] = {
-    return ByteBuffer.allocate(byteSize).putInt(myInt).array()
+  override def toBytes(order : ByteOrder) : Array[Byte] = {
+    return ByteBuffer.allocate(byteSize).order(order).putInt(myInt).array()
   }
 
   override def toDouble : Double = myInt.toDouble
@@ -163,8 +172,8 @@ object SerializableLong {
 }
 
 case class SerializableLong(myLong : Long) extends Serializable[Long]{
-  override def toBytes : Array[Byte] = {
-    return ByteBuffer.allocate(byteSize).putLong(myLong).array()
+  override def toBytes(order : ByteOrder) : Array[Byte] = {
+    return ByteBuffer.allocate(byteSize).order(order).putLong(myLong).array()
   }
 
   override def toDouble : Double = myLong.toDouble
@@ -179,8 +188,8 @@ object SerializableFloat {
 }
 
 case class SerializableFloat(myFloat : Float) extends Serializable[Float]{
-  override def toBytes : Array[Byte] = {
-    return ByteBuffer.allocate(byteSize).putFloat(myFloat).array()
+  override def toBytes(order : ByteOrder) : Array[Byte] = {
+    return ByteBuffer.allocate(byteSize).order(order).putFloat(myFloat).array()
   }
 
   override def toDouble : Double = myFloat.toDouble
@@ -195,8 +204,8 @@ object SerializableDouble {
 }
 
 case class SerializableDouble(myDouble : Double) extends Serializable[Double]{
-  override def toBytes : Array[Byte] = {
-    return ByteBuffer.allocate(byteSize).putDouble(myDouble).array()
+  override def toBytes(order : ByteOrder) : Array[Byte] = {
+    return ByteBuffer.allocate(byteSize).order(order).putDouble(myDouble).array()
   }
 
   override def toDouble : Double = myDouble
@@ -211,7 +220,7 @@ object SerializableChar {
 }
 
 case class SerializableChar(myChar : Char) extends Serializable[Char]{
-  override def toBytes : Array[Byte] = {
+  override def toBytes(order : ByteOrder) : Array[Byte] = {
     return Array(myChar.toByte)
   }
 
@@ -227,13 +236,13 @@ object SerializableString {
 }
 
 case class SerializableString(myString : String) extends DynamicSerializable[String]{
-  override def toBytes : Array[Byte] = {
+  override def toBytes(order : ByteOrder) : Array[Byte] = {
     val buffer = new Array[Byte](byteSize)
     Array.copy(toVarBytes, 0, buffer, 0, Math.min(byteSize, dynamicByteSize))
     return buffer
   }
   
-  override def toDouble : Double = toBytes.toDouble//TODO: not the right way to do...
+  override def toDouble : Double = toBytes().toDouble()//TODO: not the right way to do...
   
   def toVarBytes : Array[Byte] = myString.toCharArray.collect{case c => c.toByte}.toArray
 

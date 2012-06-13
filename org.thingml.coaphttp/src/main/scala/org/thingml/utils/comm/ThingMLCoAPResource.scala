@@ -95,19 +95,19 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
   //TODO: remove the hacks
   def getBytes[T<:AnyVal](m : MeasurementOrParameter, flag : String) : Array[Byte] = {
     m.stringValue match {
-      case Some(s) => s.toBytes
+      case Some(s) => s.toBytes()
       case None => 
         val v : Double = m.value.getOrElse(m.valueSum.getOrElse(m.booleanValue.getOrElse(null.asInstanceOf[Unit]))).asInstanceOf[AnyVal].toDouble
         flag match {
-          case f if (f == "Int")  => v.toInt.toBytes
-          case f if (f == "Long")  => v.toLong.toBytes
-          case f if (f == "Short")  => v.toShort.toBytes
-          case f if (f == "Float")  => v.toFloat.toBytes
-          case f if (f == "Double")  => v.toBytes
-          case f if (f == "Float")  => v.toFloat.toBytes
-          case f if (f == "Char") => v.toChar.toBytes
-          case f if (f == "Boolean") => (v>=1).toBytes
-          case _  => v.toBytes
+          case f if (f == "Int")  => v.toInt.toBytes()
+          case f if (f == "Long")  => v.toLong.toBytes()
+          case f if (f == "Short")  => v.toShort.toBytes()
+          case f if (f == "Float")  => v.toFloat.toBytes()
+          case f if (f == "Double")  => v.toBytes()
+          case f if (f == "Float")  => v.toFloat.toBytes()
+          case f if (f == "Char") => v.toChar.toBytes()
+          case f if (f == "Boolean") => (v>=1).toBytes()
+          case _  => v.toBytes()
         }
     }
     

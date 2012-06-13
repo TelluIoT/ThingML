@@ -13,6 +13,7 @@ thing RemoteMonitoringStub includes RemoteMonitoringMsgs
     provided port RemoteControl
     {
         sends remote_turnOn, remote_turnOff, remote_changeDisplay
+        receives remote_turnOn, remote_turnOff, remote_changeDisplay
         receives report_temperature, report_light, report_rotation    
     }
 	     
@@ -63,7 +64,7 @@ end
 
 }
 
-thing MessageDeserializer includes DeserializerScala, RemoteMsgs {
+thing MessageDeserializer includes DeserializerScala, ArraySerializer, RemoteMsgs {
 required port RemoteControl{
 sends report_temperature, report_light, report_rotation
 }
@@ -86,23 +87,73 @@ function deserializeReport_light()
 do
 readonly var t : UInt16 = deserializeUInt16()
 RemoteControl!report_light(t)
+out!write_bytes(escape())
 end
 
 function deserializeReport_rotation()
 do
 readonly var t : UInt16 = deserializeUInt16()
 RemoteControl!report_rotation(t)
+out!write_bytes(escape())
 end
 
 function deserializeReport_temperature()
 do
 readonly var t : UInt16 = deserializeUInt16()
 RemoteControl!report_temperature(t)
+out!write_bytes(escape())
 end
 
 statechart receive init Idle {
 state Idle {
-internal event m : network?receive_bytes
+internal event m : in?receive_bytes
+action receive(m.b)
+}
+}
+
+}
+
+
+thing MessageDeserializer2 includes DeserializerScala, ArraySerializer, RemoteMsgs {
+required port RemoteControl{
+sends remote_turnOn, remote_turnOff, remote_changeDisplay
+}
+
+function forward() do
+index = DATA_POSITION
+readonly var code : Byte = buffer[CODE_POSITION]
+if (code == 20) do
+deserializeRemote_changeDisplay()
+end
+if (code == 22) do
+deserializeRemote_turnOff()
+end
+if (code == 21) do
+deserializeRemote_turnOn()
+end
+end
+
+function deserializeRemote_changeDisplay()
+do
+RemoteControl!remote_changeDisplay()
+out!write_bytes(escape())
+end
+
+function deserializeRemote_turnOff()
+do
+RemoteControl!remote_turnOff()
+out!write_bytes(escape())
+end
+
+function deserializeRemote_turnOn()
+do
+RemoteControl!remote_turnOn()
+out!write_bytes(escape())
+end
+
+statechart receive init Idle {
+state Idle {
+internal event m : in?receive_bytes
 action receive(m.b)
 }
 }
@@ -122,23 +173,27 @@ configuration CoAPHTTPTempSensorDisplay
 @remote "stub::.*::RemoteControl::.*"
 {
     instance stub : RemoteMonitoringStub
-    instance deserializer : MessageDeserializer
-    instance serializer : MessageSerializer
+    
+    instance serializer : MessageSerializer//ThingML messages to byte[]
+    instance deserializer : MessageDeserializer//byte[] to ThingML messages
+    instance deserializer2 : MessageDeserializer2//byte[] to ThingML messages
+    
     instance serial : SerialScala
-    instance forward : NetworkArray
-    instance forward2 : NetworkArray
+
     instance coapServer : CoAPServerScala
     instance coapClient : CoAPClientScala
     
-    connector forward.in => serial.IOStream
-    connector forward.out => coapClient.IOStream
-    
-    connector forward2.in => coapServer.IOStream
-    connector forward2.out => serial.IOStream
-    
-    connector deserializer.network => coapServer.IOStream
+    //Telemetry: Serial -> CoAP (-> SensApp)
+    connector deserializer.in => serial.IOStream
+    connector deserializer.out => coapClient.IOStream
     connector deserializer.RemoteControl => stub.RemoteControl
-    connector serializer.network => serial.IOStream
+    
+    //Remote control: (SensApp ->) CoAP -> Serial
+    connector deserializer2.in => coapServer.IOStream
+    connector deserializer2.out => serial.IOStream
+    connector deserializer2.RemoteControl => stub.RemoteControl
+    
+    connector serializer.out => serial.IOStream
     connector serializer.RemoteControl => stub.RemoteControl
 }
 

@@ -17,7 +17,7 @@ thing fragment LedMsgs
 
 thing fragment LedClient includes LedMsgs
 {   
-	required port Led 
+	required port Led @sync_send "true"
     {
 		sends led_on, led_off, led_toggle
 	}

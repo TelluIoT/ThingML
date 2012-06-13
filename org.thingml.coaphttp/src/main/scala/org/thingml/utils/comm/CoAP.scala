@@ -136,7 +136,7 @@ class CoAPClient(thingmlClient : CoAPThingMLClient, serverURI : String) {
   }
   
   def isThingML(payload : Array[Byte]) : Boolean = {
-    payload.length > 5 && payload(0) == 0x12 && payload(payload.length-1) == 0x13
+    payload.length > 6 //&& payload(0) == 0x12 && payload(payload.length-1) == 0x13
   }
   
   def unescape(payload : Array[Byte]) : Array[Byte] = {
@@ -171,7 +171,7 @@ class CoAPClient(thingmlClient : CoAPThingMLClient, serverURI : String) {
   }
   
   def send(bytes : Array[Byte]) {
-    println("         " + unescape(bytes).mkString("[", ", ", "]"))
+    //println("         " + unescape(bytes).mkString("[", ", ", "]"))
     if (isThingML(bytes)) {
       val payload = unescape(bytes)
       requestMap.get(payload(3)) match {

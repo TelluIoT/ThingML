@@ -26,12 +26,12 @@ LedClient, ButtonClient
     
     readonly property period : UInt16 = 2000
 	
-	required port Display 
+	required port Display @sync_send "true"
     {	
 		sends initDisplay, refreshDisplay, setDisplay
 	}
 
-    provided port RemoteControl
+    provided port RemoteControl @sync_send "true"
     {
         receives remote_turnOn, remote_turnOff, remote_changeDisplay
         sends report_temperature, report_light, report_rotation    

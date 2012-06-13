@@ -112,7 +112,7 @@ thing fragment Deserializer includes PacketManager, InputByteStreamMsgs{
 }
 
 thing fragment ArraySerializer includes PacketManager, OutputByteArrayMsgs {
-    required port network {
+    required port out {
         sends write_bytes    
     }
     
@@ -145,12 +145,12 @@ thing fragment ArraySerializer includes PacketManager, OutputByteArrayMsgs {
     end
     
     function send() do
-        network!write_bytes(escape())
+        out!write_bytes(escape())
     end
 }
 
 thing fragment ArrayDeserializer includes PacketManager, InputByteArrayMsgs{
-    required port network {
+    required port in {
         receives receive_bytes    
     }
     
@@ -158,9 +158,9 @@ thing fragment ArrayDeserializer includes PacketManager, InputByteArrayMsgs{
     
     function receive(bytes : Byte[34]) do //34 max size with start/stop bytes + all other bytes escaped = 2*16 + 2
         index = 0
-        print("receive " + bytes)
+        //print("receive " + bytes)
         var size : Integer = DATA_POSITION + bytes[LENGTH_POSITION+1] + 1//bytes contains start/stop/escape bytes
-        print("size = " + size)
+        //print("size = " + size)
         var i : Integer = 0
         var current : Byte = bytes[i]
         if (current == START_BYTE) do
@@ -169,7 +169,7 @@ thing fragment ArrayDeserializer includes PacketManager, InputByteArrayMsgs{
             if (not(next == STOP_BYTE)) do
                 var continue : Boolean = true
                 while(continue and i < size) do
-                    print("i = " + i)
+                    //print("i = " + i)
                     current = next
                     i = i + 1
                     next = bytes[i]
