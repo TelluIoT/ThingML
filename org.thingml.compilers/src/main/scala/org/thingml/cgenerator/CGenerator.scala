@@ -372,32 +372,30 @@ object CGenerator {
     }
   }
 
-  def out_folder(cfg : Configuration) : File = {
-     cfg.getAnnotations.filter {
-      a => a.getName == "output_folder"
-    }.headOption match {
-      case Some(a) => {
-        var v = a.asInstanceOf[PlatformAnnotation].getValue
-        var result = new File(v)
-        if (result.exists && result.isDirectory) return result
-        else {
-          result.mkdirs
-          if (result.exists && result.isDirectory) return result
-          else return null
+  /**
+     * By default File#delete fails for non-empty directories, it works like "rm".
+     * We need something a little more brutual - this does the equivalent of "rm -r"
+     * @param path Root File Path
+     * @return true iff the file and all sub files/directories have been removed
+     * @throws FileNotFoundException
+     */
+    def deleteRecursive(path : File ) : Boolean = {
+        //if (!path.exists()) throw new FileNotFoundException(path.getAbsolutePath());
+        var ret = true;
+        if (path.isDirectory()) {
+            path.listFiles().foreach{ f =>
+                ret = ret && deleteRecursive(f)
+            }
         }
-      }
-      case None => {
-        return null
-      }
+        return ret && path.delete();
     }
-  }
 
-  def compileToLinuxAndMake(cfg : Configuration) : File = {
-    var out = out_folder(cfg)
+  def createEmptyOutputDir(cfg : Configuration) : File = {
+    var out = cfg.out_folder
     if (out == null) {
       // Create a temp folder
       var folder = File.createTempFile(cfg.getName, null);
-      folder.delete
+      deleteRecursive(folder)
       folder.mkdirs
       folder.deleteOnExit
 
@@ -405,6 +403,17 @@ object CGenerator {
       out = new File(folder, cfg.getName);
       out.mkdirs
     }
+    else {
+      out = new File(out, cfg.getName)
+      if (out.exists) out.delete
+      out.mkdir
+    }
+    out
+  }
+
+
+  def compileToLinuxAndMake(cfg : Configuration) : File = {
+    var out = createEmptyOutputDir(cfg)
     println("Compiling configuration "+ cfg.getName +" to C into target folder: " + out.getAbsolutePath)
 
     compileToLinux(cfg, out.getAbsolutePath)
@@ -572,6 +581,10 @@ object CGenerator {
 
       val result = new Hashtable[String, String]()
 
+      var out = createEmptyOutputDir(cfg)
+      println("Compiling configuration "+ cfg.getName +" to ROS node into target folder: " + out.getAbsolutePath)
+
+      /*
       if (!cfg.getAnnotations.exists{ a=> a.getName == "ros_workspace"}) {
         println("ERROR: Missing annotation ros_workspace on configuration " + cfg.getName)
         return result;
@@ -582,6 +595,7 @@ object CGenerator {
         println("ERROR: Invalid ros_workspace (" + ros_workspace + ").")
         return result;
       }
+      */
 
       val ros_package = if (cfg.getAnnotations.exists{ a=> a.getName == "ros_package"})
         cfg.getAnnotations.filter{ a=> a.getName == "ros_package"}.head.getValue.trim
@@ -643,6 +657,7 @@ object CGenerator {
       }}}}}
 
       val ros_pub_builder = new StringBuilder()
+      val ros_init_listeners = new StringBuilder()
       val topics = scala.collection.mutable.Map[String, Message]()
       val messages = ListBuffer[Message]()
 
@@ -654,6 +669,12 @@ object CGenerator {
         val port = tuple._2
         val message = tuple._3
         val instances = tuple._4.toList
+
+        // Generate the line to connect the port whcih publishes on the topic
+        ros_init_listeners append "register_" + thing.sender_name(port, message) + "_listener("
+        ros_init_listeners append id + ");\n"
+
+
         ros_pub_builder append "// Publish ROS messages for" + thing.getName + "::" + port.getName + "::" + message.getName + "\n"
         ros_pub_builder append "void " + id
         thing.append_formal_parameters(ros_pub_builder, message)
@@ -689,7 +710,7 @@ object CGenerator {
       val ros_head_builder = new StringBuilder()
       ros_head_builder append "// Include ROS messages\n"
       messages.foreach{ message =>
-        ros_head_builder append "#include \""+ ros_package + "/"+ message.getName +"\"\n"
+        ros_head_builder append "#include \""+ ros_package + "/"+ message.getName +".h\"\n"
       }
       ros_head_builder append "\n"
       ros_head_builder append "// Declare variables for ROS topic publishers\n"
@@ -724,29 +745,31 @@ object CGenerator {
       ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString)
       ctemplate = ctemplate.replace("/*ROS_HEADERS*/", ros_head_builder.toString)
       ctemplate = ctemplate.replace("/*ROS_HANDLERS*/", ros_pub_builder.toString)
+      ctemplate = ctemplate.replace("/*ROS_CONNECTORS*/", ros_init_listeners.toString)
       ctemplate = ctemplate.replace("/*ROS_INIT*/", ros_init_builder.toString)
 
       result.put("src/" + cfg.getName + ".cpp", ctemplate)
 
 
-      //GENERATE THE MAKEFILE
-      /*
-      var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/Makefile")
-      mtemplate = mtemplate.replace("/*NAME*/", cfg.getName)
+      //GENERATE THE CONTENT TO APPEND TO ROS CMakeLists.txt
+      var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/ros_cmakelists.txt")
+      mtemplate = mtemplate.replaceAll("<PACKAGE>", ros_package)
+      var srcs = result.keys.filter(k=> k.startsWith("src")).mkString(" \n")
+      mtemplate = mtemplate.replaceAll("<SOURCES>", srcs)
+      result.put("CMakeLists.txt", mtemplate)
 
-      val list = cfg.allThings.map{ t => t.getName } += cfg.getName
+      // GENERATE AN INSTALL SCRIPT TO CREATE THE ROS NODE AND COMPILE IT
+      var installtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/ros_install.sh")
+      installtemplate = installtemplate.replaceAll("<PACKAGE>", ros_package)
+      result.put("install.sh", installtemplate)
 
-      val srcs = list.map{ t => t + ".c" }.mkString(" ")
-      val objs = list.map{ t => t + ".o" }.mkString(" ")
-      mtemplate = mtemplate.replace("/*SOURCES*/", srcs)
-      mtemplate = mtemplate.replace("/*OBJECTS*/", objs)
-      result.put("Makefile", mtemplate)
-      */
+
+
       MergedConfigurationCache.clearCache(); // Cleanup
 
       // CREATING THE ROS PACKAGE AND WRITING THE FILES:
       //************************************************
-
+/*
       // package folder
       val folder = new File(ros_workspace + "/" + ros_package)
       // Delete the package if it exists
@@ -759,7 +782,7 @@ object CGenerator {
       println("INFO: Creating ROS package with: " + "roscreate-pkg "+ros_package+" std_msgs rospy roscpp")
       //val pb: ProcessBuilder = new ProcessBuilder("/bin/bash -c \"roscreate-pkg "+ros_package+" std_msgs rospy roscpp\"")
 
-      /*
+
       val pb: ProcessBuilder = new ProcessBuilder("make")
       pb.directory(ros_workspace_file)
       val p: Process = pb.start
@@ -777,27 +800,20 @@ object CGenerator {
       //console_err ! p2
       p2.waitFor
 */
-      // TODO; Replace with proper creation of the package
-      folder.mkdirs
 
-      // The ros package should have been created
-      if (!folder.exists()) {
-        println("ERROR: The ROS package " + ros_package + " could not be created with roscreate-pkg (see error message above).")
-      }
-      else {
         // Create folders for src and messages
-        new File(ros_workspace + "/" + ros_package + "/src").mkdir
-        new File(ros_workspace + "/" + ros_package + "/msg").mkdir
+        new File(out + "/src").mkdir
+        new File(out + "/msg").mkdir
 
         // Write generated files
         result.keys.foreach{ fname =>
-          var file = new File(ros_workspace + "/" + ros_package + "/" + fname)
+          var file = new File(out + "/" + fname)
           var w: PrintWriter = new PrintWriter(new FileWriter(file))
           w.print(result.get(fname))
           w.close
         }
 
-      }
+
 
       result
   }
@@ -971,6 +987,26 @@ case class ThingMLCGenerator(self: ThingMLElement) {
 }
 
 case class ConfigurationCGenerator(override val self: Configuration) extends ThingMLCGenerator(self) {
+
+  def out_folder() : File = {
+     self.getAnnotations.filter {
+      a => a.getName == "output_folder"
+    }.headOption match {
+      case Some(a) => {
+        var v = a.asInstanceOf[PlatformAnnotation].getValue
+        var result = new File(v)
+        if (result.exists && result.isDirectory) return result
+        else {
+          result.mkdirs
+          if (result.exists && result.isDirectory) return result
+          else return null
+        }
+      }
+      case None => {
+        return null
+      }
+    }
+  }
 
   def generateTypedefs(builder: StringBuilder, context : CGeneratorContext) {
     val model = ThingMLHelpers.findContainingModel(self)

@@ -21,7 +21,8 @@ datatype Integer
 	@c_type "int"
 	@c_byte_size "2"
 	@java_type "Short"
-    @SenML_type "Double";
+    @SenML_type "Double"
+    @ros_type "int16";
 	
 datatype UInt8	
 	@c_type "uint8_t"
