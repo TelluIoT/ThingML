@@ -4,7 +4,7 @@ thing fragment SimpleROSPublisherMsgs {
 	message hello(count : Integer);
 }
 
-thing SimpleROSPublisher includes SimpleROSPublisherMsgs, TimerMsgs {
+thing SimpleROSPublisherApp includes SimpleROSPublisherMsgs, TimerMsgs {
 
 	required port timer
     {
@@ -22,7 +22,7 @@ thing SimpleROSPublisher includes SimpleROSPublisherMsgs, TimerMsgs {
 		
 		state T1 {
 			on entry timer!timer_start(10) // 1 second with a 100ms clock
-			internal event timer?timer_timeout
+			transition -> T1 event timer?timer_timeout
 			action do
 				print "Publish!\n"
 				publisher!hello(count)
@@ -33,14 +33,16 @@ thing SimpleROSPublisher includes SimpleROSPublisherMsgs, TimerMsgs {
 }
 
 configuration SimpleROSPublisher 
-  //@output_folder "/home/franck/thingml_out/ros_publisher"
+  //Debug Annotations
   @debug "false"
   @debug_fifo "true"
   @debug_message_send ".*"
   @debug_message_receive ".*"
   
+  // Output Folder for the generated file
+  @output_folder "/home/franck/thingml_out"
+  
   // ROS Configuration
-  @ros_workspace "/home/franck/ros_workspace"
   @ros_package "SimpleROSPublisher"
   @rostopic_publish "app::publisher::hello -> hello"
 {
@@ -49,6 +51,6 @@ configuration SimpleROSPublisher
 	set t.clock.period = 100
 
 	// Create and connect the test app
-	instance app : SimpleROSPublisher
+	instance app : SimpleROSPublisherApp
 	connector app.timer => t.timer.timer
 }

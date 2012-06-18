@@ -19,18 +19,24 @@
 
 /*ROS_HEADERS*/
 
+/*CONFIGURATION*/
+
 /*ROS_HANDLERS*/
 
-/*CONFIGURATION*/
+void initialize_ROS_connectors() {
+/*ROS_CONNECTORS*/
+}
 
 int main(int argc, char *argv[]) {
   init_runtime();
+  initialize_ROS_connectors();
   /*INIT_CODE*/
   /*ROS_INIT*/
 
-  while (1) {
+  while (ros::ok()) {
     /*POLL_CODE*/
     processMessageQueue();
     ros::spinOnce();
   }
+  exit(0);
 }
