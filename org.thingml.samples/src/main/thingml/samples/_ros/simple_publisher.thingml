@@ -1,7 +1,9 @@
 import "../../core/_linux/timer.thingml"
 
 thing fragment SimpleROSPublisherMsgs {
-	message hello(count : Integer);
+	message hello(count : Integer)
+    @ros_message "std_msgs/Int32(data=count)"
+    ;
 }
 
 thing SimpleROSPublisherApp includes SimpleROSPublisherMsgs, TimerMsgs {
