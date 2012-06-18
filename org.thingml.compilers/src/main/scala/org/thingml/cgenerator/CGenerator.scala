@@ -1101,8 +1101,13 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
       e.generateC(builder, context)
     }
 
+    self.allInstances.foreach{ instance =>
+      println("| - I " + instance.getName + " : " + instance.getType.getName)
+    }
+
     // Generate code for things which appear in the configuration
     self.allThings.foreach { thing =>
+       println("Generating code for Thing: " + thing.getName)
        thing.generateC(builder, context)
     }
 

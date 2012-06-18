@@ -129,10 +129,11 @@ thing AdvancedSerial includes IsDigitMsgs, AdvancedSerialMsgs, ArduinoMsgs, Thin
 
 configuration fragment AdvancedSerial 
 {
-	instance serial : Serial
+	instance serial : SerialArduino
     instance testdigit : IsDigit
     
     instance advanced_serial : AdvancedSerial
-	connector advanced_serial.Serial => serial.Serial
+	connector advanced_serial.Serial => serial.IOStream
+    connector advanced_serial.Serial => serial.Serial
     connector advanced_serial.TestDigit => testdigit.TestDigit 
 }
