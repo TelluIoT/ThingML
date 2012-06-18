@@ -16,7 +16,7 @@
     </parent>
   
     <repositories>
-        <repository>
+        <!--<repository>
             <id>spray</id>
             <name>Spray Repository</name>
             <url>http://repo.spray.cc/</url>
@@ -25,7 +25,7 @@
             <id>Akka</id>
             <name>Akka Repository</name>
             <url>http://repo.akka.io/releases/</url>
-        </repository> 
+        </repository> -->
         <repository>
             <id>SensApp</id>
             <name>snapshots</name>
@@ -52,7 +52,7 @@
             <version>${scala.version}</version>
         </dependency>
         
-        <dependency>
+        <!--<dependency>
             <groupId>cc.spray</groupId>
             <artifactId>spray-json_${scala.version}</artifactId>
             <version>1.1.1</version>
@@ -66,7 +66,7 @@
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-actor</artifactId>
             <version>2.0.1</version>
-        </dependency>
+        </dependency>-->
         
         <dependency>
             <groupId>net.modelbased.sensapp.library</groupId>

@@ -261,7 +261,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
   def generateCoAPMessageResources(builder: StringBuilder = Context.builder) {
     allMessages.zipWithIndex.foreach{case (m,index) =>
         val code = (if (m.getCode != -1) m.getCode else index)
-        builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = " + code + ".toByte,  override val server : CoAP, override val fireAndForgetHTTP : Boolean = true) extends ThingMLMessageResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, code, server, fireAndForgetHTTP) {\n"
+        builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = " + code + ".toByte,  override val server : CoAP) extends ThingMLMessageResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, code, server) {\n"
         builder append "setTitle(\"" + Context.firstToUpper(m.getName) + " ThingML resource\")\n"
         builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
 

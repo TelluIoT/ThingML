@@ -21,27 +21,17 @@ package org.thingml.utils.comm.coaphttp
 import ch.ethz.inf.vs.californium.endpoint.{LocalResource}
 import ch.ethz.inf.vs.californium.coap.{Request, PUTRequest, POSTRequest, GETRequest, Response, CodeRegistry}
 
-//import scala.actors.Actor._
-
 import java.net.URL
 
-import net.modelbased.sensapp.library.system._
-import net.modelbased.sensapp.library.senml._
+import net.modelbased.sensapp.library.senml.Root
+import net.modelbased.sensapp.library.senml.MeasurementOrParameter
 import net.modelbased.sensapp.library.senml.export.JsonParser
-import net.modelbased.sensapp.library.senml.export.JsonProtocol._ 
 
-import cc.spray.typeconversion.DefaultUnmarshallers._
-import cc.spray.json._
-import cc.spray.typeconversion.SprayJsonSupport
-import cc.spray.client.{HttpConduit, Get, Put, Post}
+import org.thingml.utils.http.SensAppHelper
 
-import akka.dispatch.Await
-import akka.dispatch.Future
-import akka.util.duration._
+import scala.actors.Actor._
 
-import cc.spray.typeconversion.SprayJsonSupport
-
-class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boolean, val isPOSTallowed : Boolean, val isGETallowed : Boolean, httpURLs : Set[String], fireAndForgetHTTP : Boolean) extends LocalResource(resourceIdentifier) with HttpSpraySupport  with SprayJsonSupport {
+class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boolean, val isPOSTallowed : Boolean, val isGETallowed : Boolean, httpURLs : Set[String]) extends LocalResource(resourceIdentifier) {
   
   def httpClientName = "CoAP2HTTP-"+resourceIdentifier
   
@@ -66,54 +56,32 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
   
   def check(request : Request) : Boolean = true
   
-  private def processHTTP(request : Request, fireAndForgetHTTP : Boolean) : String = {
+  private def processHTTP(request : Request) : String = {
     transformPayload(request) match {
       case (Some(root), _) =>
         httpURLs.par.map{ url =>
-          val realURL = new URL(url)
-          val conduit = new HttpConduit(httpClient, realURL.getHost, realURL.getPort) {
-            val pipeline = simpleRequest[Root] ~> sendReceive ~> unmarshal[String]
-          }
-          val response = conduit.pipeline(
-            request match {
-              case put : PUTRequest => Put(url, root)
-              case post : POSTRequest => Post(url, root)
-              case get : GETRequest => Get(url, root)
-            }
-          ).onSuccess { case _ => conduit.close() }
-          .onFailure { case _ => conduit.close(); println("Error while notifiying ["+url+"] for ["+root+"]")}
-          
+          val realURL = new URL(url)          
+          actor{SensAppHelper.pushData(realURL, JsonParser.toJson(root))}
           var data : String = "Sent to " + url + "\n No response was requested"
-          if (!fireAndForgetHTTP) {
-            data = try {Await.result(response, 3 seconds).toString} catch { case e : Exception => "TIMEOUT:" + url }
-            //conduit.close()
-          } 
           data
-        }.mkString("\n")//returns the "\n"-separated list of responses of all the servers
+        }.mkString("\n")
       case (None, errors) =>
         "Cannot transform payload from request [" + request + "]\n" + errors
     }    
   }
     
-  private def process(request : Request, fireAndForgetHTTP : Boolean) {
-    println("process: " + request + "(" + fireAndForgetHTTP + ")")
+  private def process(request : Request) {
+    println("process: " + request)
     val response = new Response(/*CodeRegistry.RESP_CONTENT*/)
-    /*if (check(request)) {*/
+    
     val responses = request match{
-      case put : PUTRequest if (isPUTallowed) => (performCoAPPut(put), Future{processHTTP(request, fireAndForgetHTTP)})
-      case post : POSTRequest if (isPOSTallowed)  => (performCoAPPost(post), Future{processHTTP(request, fireAndForgetHTTP)})
-      case get : GETRequest if (isGETallowed) => (performCoAPGet(get), Future{processHTTP(request, fireAndForgetHTTP)})
-      case _ => ("Request [" + request + "]: Method not supported.", Future{"Not forwarded to HTTP"})
+      case put : PUTRequest if (isPUTallowed) => (performCoAPPut(put), processHTTP(request))
+      case post : POSTRequest if (isPOSTallowed)  => (performCoAPPost(post), processHTTP(request))
+      case get : GETRequest if (isGETallowed) => (performCoAPGet(get), processHTTP(request))
+      case _ => ("Request [" + request + "]: Method not supported.", "Not forwarded to HTTP")
     }
-    var rep = responses._1 + "\n"
-    if(!fireAndForgetHTTP) {
-      try {
-        val httpResponse = Await.result(responses._2, 4 seconds).toString
-        rep = rep + httpResponse
-      } catch {
-        case e : Exception => rep = rep + "HTTP timeout: not able to contact all servers within 5 seconds"
-      }
-    }
+    var rep = responses._1 + "\n" + responses._2
+    
     println("RESPONSE: "+rep)
     response.setPayload(rep)
     request.respond(response)
@@ -139,14 +107,14 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
    * 2/ all the HTTP responses where the extracted payload has been forwarded
    */
   override final def performPUT(request: PUTRequest) {
-    process(request, fireAndForgetHTTP)
+    process(request)
   }
 
   override final def performPOST(request: POSTRequest) {
-    process(request, fireAndForgetHTTP)
+    process(request)
   }
 
   override final def performGET(request: GETRequest) {
-    process(request, fireAndForgetHTTP)
+    process(request)
   }
 }

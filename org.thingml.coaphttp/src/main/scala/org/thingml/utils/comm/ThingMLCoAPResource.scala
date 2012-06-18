@@ -26,17 +26,8 @@ import ch.ethz.inf.vs.californium.coap.{Request, PUTRequest, Response, CodeRegis
 import org.thingml.utils.log.Logger
 import org.thingml.utils.comm.coaphttp.CoAPHTTPResource
 
-import net.modelbased.sensapp.library.system._
-import net.modelbased.sensapp.library.senml._
-import net.modelbased.sensapp.library.senml.export.JsonParser
-import net.modelbased.sensapp.library.senml.export.JsonProtocol._ 
-
-import cc.spray.typeconversion.DefaultUnmarshallers._
-import cc.spray.json._
-import cc.spray.typeconversion.SprayJsonSupport
-import cc.spray.json.DefaultJsonProtocol.StringJsonFormat
-import cc.spray.json.DefaultJsonProtocol.StringJsonFormat._
-
+import net.modelbased.sensapp.library.senml.Root
+import net.modelbased.sensapp.library.senml.MeasurementOrParameter
 
 import scala.collection.JavaConversions._
 
@@ -81,7 +72,7 @@ class ThingMLTypeResource(val resourceIdentifier : String = "ThingML") extends L
   }
 }
 
-abstract class ThingMLMessageResource(override val resourceIdentifier : String = "ThingML", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = 0x00, val server : CoAP, val fireAndForgetHTTP : Boolean) extends CoAPHTTPResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, fireAndForgetHTTP) with ThingMLResource {
+abstract class ThingMLMessageResource(override val resourceIdentifier : String = "ThingML", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = 0x00, val server : CoAP) extends CoAPHTTPResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs) with ThingMLResource {
 
   setTitle("Generic ThingML Resource")
   setResourceType("ThingMLResource")
