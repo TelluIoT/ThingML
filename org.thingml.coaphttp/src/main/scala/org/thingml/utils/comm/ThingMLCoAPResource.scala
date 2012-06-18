@@ -23,6 +23,7 @@ import org.thingml.utils.comm.SerializableTypes._
 import ch.ethz.inf.vs.californium.endpoint.{Resource, RemoteResource, LocalResource}
 import ch.ethz.inf.vs.californium.coap.{Request, PUTRequest, Response, CodeRegistry, POSTRequest, GETRequest, ResponseHandler, LinkAttribute}
 
+import org.thingml.utils.http.SensAppHelper
 import org.thingml.utils.log.Logger
 import org.thingml.utils.comm.coaphttp.CoAPHTTPResource
 
@@ -30,6 +31,8 @@ import net.modelbased.sensapp.library.senml.Root
 import net.modelbased.sensapp.library.senml.MeasurementOrParameter
 
 import scala.collection.JavaConversions._
+
+import java.net.URL
 
 class ThingMLCoAPRequest(val code : Byte, val resourceURI : String = "ThingML", val serverURI : String) /*extends ResponseHandler*/ {
 
@@ -62,23 +65,21 @@ trait ThingMLResource {self : LocalResource =>
 class ThingMLTypeResource(val resourceIdentifier : String = "ThingML") extends LocalResource(resourceIdentifier) with ThingMLResource {
   def addSubResource(resource : ThingMLResource) {
     super.add(resource.asInstanceOf[LocalResource])
-    registerToHTTP(resource)
-    //server.resourceMap += (resource.code -> resource.asInstanceOf[LocalResource].getResourcePath)
-  }
-
-  def registerToHTTP(resource : ThingMLResource) {
-    val json = "{\"id\": \"myVeryOwnSensor\", \"descr\": \"ThingML device\", \"schema\": { \"backend\": \"raw\", \"template\": \"Numerical\"}}" 
-    //TODO: send a post request to HTTP.
   }
 }
 
-abstract class ThingMLMessageResource(override val resourceIdentifier : String = "ThingML", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = 0x00, val server : CoAP) extends CoAPHTTPResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs) with ThingMLResource {
+abstract class ThingMLMessageResource(override val resourceIdentifier : String = "ThingML", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], httpRegistryURLs : Set[String], override val code : Byte = 0x00, val server : CoAP) extends CoAPHTTPResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, httpRegistryURLs) with ThingMLResource {
 
   setTitle("Generic ThingML Resource")
   setResourceType("ThingMLResource")
   
   lazy val senMLpath = List(getPath.split("/")(1), getPath.split("/")(2)).mkString("-")
   
+  def register {
+    httpRegistryURLs.par.foreach{url =>
+      println(SensAppHelper.registerSensor(new URL(url), senMLpath, "ThingML device", "raw", "Numerical"))//TODO: we should handle different types of template (esp. Boolean)
+    }
+  }
   
 
   val buffer = new Array[Byte](16)

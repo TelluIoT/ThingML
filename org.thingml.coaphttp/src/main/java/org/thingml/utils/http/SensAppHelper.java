@@ -69,7 +69,7 @@ public class SensAppHelper {
 	return result.toString();
     }
 
-    public static void pushData(URL target, String data) throws Exception {
+    public static String pushData(URL target, String data) throws Exception {
 	//URL target = new URL("http", server, port, "/dispatch");
 	HttpURLConnection c = (HttpURLConnection) target.openConnection();
 	c.setDoOutput(true);
@@ -78,11 +78,11 @@ public class SensAppHelper {
 	OutputStreamWriter wr = new OutputStreamWriter(c.getOutputStream());
 	wr.write(data);
 	wr.flush();
-	/*BufferedReader rd = new BufferedReader(new InputStreamReader(c.getInputStream()));
+	BufferedReader rd = new BufferedReader(new InputStreamReader(c.getInputStream()));
 	String result = rd.readLine();
-	rd.close();*/
+	rd.close();
 	wr.close();
-	//return result;
+	return result;
     }
 
     public static String getData(URL target, String contentType) throws Exception {

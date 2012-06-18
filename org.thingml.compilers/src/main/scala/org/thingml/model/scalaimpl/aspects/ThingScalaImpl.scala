@@ -46,6 +46,19 @@ case class ThingScalaImpl (self : Thing) {
         }
     }
   }
+  
+  def getHTTPRegistry : Option[String] = {
+    self.allAnnotations.filter {
+      a => a.getName == "http_registry"
+    }.headOption match {
+      case Some(a) => {
+          return Some(a.asInstanceOf[PlatformAnnotation].getValue)
+        }
+      case None => {
+          return None
+        }
+    }
+  }  
 
   def allTransitionsWithAction() : java.util.List[Transition] = {
     //var result = new ArrayList[Handler]()

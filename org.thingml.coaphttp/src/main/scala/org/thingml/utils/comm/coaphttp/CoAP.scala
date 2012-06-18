@@ -31,7 +31,7 @@ import org.thingml.utils.http.SensAppHelper
 
 import scala.actors.Actor._
 
-class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boolean, val isPOSTallowed : Boolean, val isGETallowed : Boolean, httpURLs : Set[String]) extends LocalResource(resourceIdentifier) {
+class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boolean, val isPOSTallowed : Boolean, val isGETallowed : Boolean, httpURLs : Set[String], httpRegistryURLs : Set[String]) extends LocalResource(resourceIdentifier) {
   
   def httpClientName = "CoAP2HTTP-"+resourceIdentifier
   
@@ -62,7 +62,7 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
         httpURLs.par.map{ url =>
           val realURL = new URL(url)          
           actor{SensAppHelper.pushData(realURL, JsonParser.toJson(root))}
-          var data : String = "Sent to " + url + "\n No response was requested"
+          var data : String = "Sent " + JsonParser.toJson(root) + "\n to " + url + "\n"
           data
         }.mkString("\n")
       case (None, errors) =>

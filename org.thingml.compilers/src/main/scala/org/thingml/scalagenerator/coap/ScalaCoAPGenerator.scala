@@ -31,7 +31,7 @@ import scala.actors._
 import scala.actors.Actor._
 import java.util.{ArrayList, Hashtable}
 import java.util.AbstractMap.SimpleEntry
-import org.sintef.thingml.{ThingMLElement, ThingMLModel, Port, Message, Configuration, Type, PlatformAnnotation, Parameter}
+import org.sintef.thingml.{ThingMLElement, ThingMLModel, Port, Message, Configuration, Type, PlatformAnnotation, Parameter, Thing}
 import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
 import org.thingml.utils.log.Logger
 
@@ -245,7 +245,9 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
           builder append i.getType.getName + "Resource.addSubResource(" + i.getName + "Resource)\n"
           i.getType.allMessages.foreach{m => //TODO something better for the filtering
             if (allMessages.exists{m2 => m == m2}) {
-              builder append i.getName + "Resource.addSubResource(" + "new " + Context.firstToUpper(m.getName) + "CoAPResource(isPUTallowed = true, isPOSTallowed = true, isGETallowed = true, httpURLs = Set(" + m.getHTTPurls.map("\"" + _ + "\"").mkString(", ") + "), server = this))\n"
+              builder append "val _" + Context.firstToUpper(m.getName) + "CoAPResource = new " + Context.firstToUpper(m.getName) + "CoAPResource(isPUTallowed = true, isPOSTallowed = true, isGETallowed = true, httpURLs = Set(" + m.getHTTPurls.map("\"" + _ + "\"").mkString(", ") + "), httpRegistryURLs = Set(" + i.getType.asInstanceOf[Thing].getHTTPRegistry.map("\"" + _ + "\"").mkString(", ") + "), server = this)\n"
+              builder append i.getName + "Resource.addSubResource(_" + Context.firstToUpper(m.getName) + "CoAPResource)\n"
+              //builder append "_" + Context.firstToUpper(m.getName) + "CoAPResource.register\n\n"
             }
           }
         }
@@ -261,7 +263,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
   def generateCoAPMessageResources(builder: StringBuilder = Context.builder) {
     allMessages.zipWithIndex.foreach{case (m,index) =>
         val code = (if (m.getCode != -1) m.getCode else index)
-        builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], override val code : Byte = " + code + ".toByte,  override val server : CoAP) extends ThingMLMessageResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, code, server) {\n"
+        builder append "class " + Context.firstToUpper(m.getName) + "CoAPResource(override val resourceIdentifier : String = \"" + m.getName + "\", override val isPUTallowed : Boolean, override val isPOSTallowed : Boolean, override val isGETallowed : Boolean, httpURLs : Set[String], httpRegistryURLs : Set[String], override val code : Byte = " + code + ".toByte,  override val server : CoAP) extends ThingMLMessageResource(resourceIdentifier, isPUTallowed, isPOSTallowed, isGETallowed, httpURLs, httpRegistryURLs, code, server) {\n"
         builder append "setTitle(\"" + Context.firstToUpper(m.getName) + " ThingML resource\")\n"
         builder append "setResourceType(\"ThingMLResource\")\n\n"//TODO check what resource type should really be...
 
