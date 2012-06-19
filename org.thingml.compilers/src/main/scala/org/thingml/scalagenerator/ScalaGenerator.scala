@@ -228,7 +228,7 @@ object ScalaGenerator {
   }
   
   def compileGeneratedCode(rootDir : String) = {
-    val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start " else "") + "mvn clean compile exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"", null, new File(rootDir));
+    val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start " else "") + "mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"", null, new File(rootDir));
     
     val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
     val out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(runtime.getOutputStream())), true);
