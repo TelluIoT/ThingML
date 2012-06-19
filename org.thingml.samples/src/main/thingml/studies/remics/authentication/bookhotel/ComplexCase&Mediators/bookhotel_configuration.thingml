@@ -1,8 +1,10 @@
 // 
 // (c) SINTEF 2012
-// Define several configurations where clients book hotel on the server
 //
-
+// Define the configurations
+// 
+// by Runze Hao (haoshaochi@gmail.com)
+//
 import "bookhotel_client.thingml"
 import "bookhotel_server.thingml"
 import "bookhotel_substitute_server.thingml"

@@ -1,14 +1,11 @@
 // 
-// (c) SINTEF 2011
+// (c) SINTEF 2012
 //
-// Define the behavior of a simple application that tries to login on a remote service. 
-// It sends credentials (login, password) and waits for resulting ackmowledgment. If 
-// the access is granted, it transitions to the "LoggedOn" state.
+// Define the messages for trying to book hotel on a remote service.
 // 
-// by Franck CHAUVEL <franck.chauve@sintef.no>
-// and Brice MORIN <brice.morin@sintef.no>
+// by Runze Hao (haoshaochi@gmail.com)
 //
-import "../../../../datatypes.thingml"
+import "../../../../../datatypes.thingml"
 
 
 //deifine the behavior of the application that try to book hotel on a remote service.

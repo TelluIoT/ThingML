@@ -1,14 +1,10 @@
 // 
-// (c) SINTEF 2011
+// (c) SINTEF 2012
 //
-// Define the behavior of a simple authentication server that accepts credentials and 
-// check their validity.
+// Define the server
 // 
-// See also client.thingml, AP1.thingml 
+// by Runze Hao (haoshaochi@gmail.com)
 //
-// by Franck CHAUVEL <franck.chauve@sintef.no>
-//
-
 import "API1.thingml"
 
 

@@ -1,6 +1,10 @@
 // 
 // (c) SINTEF 2012
 //
+// Define the substitute server
+// 
+// by Runze Hao (haoshaochi@gmail.com)
+//
 import "API2.thingml"
 
 thing BookhotelSubstituteServer includes API2BookHotel {

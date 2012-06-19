@@ -1,0 +1,127 @@
+/*
+* This is a mediator for Configratrion(ExtraConfig) generated automatically
+* by Runze Hao (haoshaochi@gmail.com)
+*/
+import "Configs.thingml"
+thing Mediator_ExtraConfig includes ControlMessage,Logger,MissingMessage
+{
+provided port PrvPort_ExtraConfig_c1_Toserver {
+receives rRequest,inputID
+sends rReply,idReply,rMiM2,rMiM4
+}
+required port ReqPort_ExtraConfig_s1_Toclient {
+sends rRequest,inputID,rMiM1,rMiM3
+receives rReply,idReply
+}
+provided port PrvPort_Control{
+receives startMsg, stopMsg
+}
+statechart Mediator init Ready {
+state Ready{
+on entry do
+clearlog()
+print "Ready, Waiting for startMsg trigger"
+end
+transition->Working
+event e:PrvPort_Control?startMsg
+}
+state Working{
+on entry do
+print " start!"
+log("@startuml")
+createAndSend("rMiM1")
+end
+on exit do
+log("@enduml")
+printlog()
+writeFile()
+end
+
+transition-> Ready
+event e: PrvPort_Control?stopMsg
+
+internal
+event e: PrvPort_ExtraConfig_c1_Toserver?rRequest
+action do
+log("ExtraConfig_c1 -> Mediator_ExtraConfig : rRequest")
+ReqPort_ExtraConfig_s1_Toclient!rRequest(e.msg)
+log("Mediator_ExtraConfig -> ExtraConfig_s1 : rRequest")
+createAndSend("rMiM2")
+createAndSend("rMiM4")
+createAndSend("rMiM3")
+end
+internal
+event e: PrvPort_ExtraConfig_c1_Toserver?inputID
+action do
+log("ExtraConfig_c1 -> Mediator_ExtraConfig : inputID")
+ReqPort_ExtraConfig_s1_Toclient!inputID(e.msg)
+log("Mediator_ExtraConfig -> ExtraConfig_s1 : inputID")
+end
+internal
+event e: ReqPort_ExtraConfig_s1_Toclient?rReply
+action do
+log("ExtraConfig_s1 -> Mediator_ExtraConfig : rReply")
+PrvPort_ExtraConfig_c1_Toserver!rReply(e.msg)
+log("Mediator_ExtraConfig -> ExtraConfig_c1 : rReply")
+end
+internal
+event e: ReqPort_ExtraConfig_s1_Toclient?idReply
+action do
+log("ExtraConfig_s1 -> Mediator_ExtraConfig : idReply")
+PrvPort_ExtraConfig_c1_Toserver!idReply(e.msg)
+log("Mediator_ExtraConfig -> ExtraConfig_c1 : idReply")
+end
+}
+}
+function swallow(m:String) do
+print"extra message "+m+" received and swallowed! "
+end
+function createAndSend(m:String) do
+if(m == "rMiM4") do
+PrvPort_ExtraConfig_c1_Toserver!rMiM4("rMiM4")
+log("Mediator_ExtraConfig -> ExtraConfig_c1 : rMiM4")
+end
+if(m == "rMiM1") do
+ReqPort_ExtraConfig_s1_Toclient!rMiM1("rMiM1")
+log("Mediator_ExtraConfig -> ExtraConfig_s1 : rMiM1")
+end
+if(m == "rMiM2") do
+PrvPort_ExtraConfig_c1_Toserver!rMiM2("rMiM2", true)
+log("Mediator_ExtraConfig -> ExtraConfig_c1 : rMiM2")
+end
+if(m == "rMiM3") do
+ReqPort_ExtraConfig_s1_Toclient!rMiM3("rMiM3")
+log("Mediator_ExtraConfig -> ExtraConfig_s1 : rMiM3")
+end
+end
+}
+
+thing Logger
+@scala_trait "org.thingml.utils.log.Access2File"
+@thingml_maven_dep "org.thingml.utils"
+{
+property trace_buffer :String
+function log(trace:String) do
+print "==LOG: "+trace+" !=="
+trace_buffer = trace_buffer + trace +"\n"
+end
+function printlog() do
+print "====TRACE====\n"
+print trace_buffer
+end
+function clearlog() do
+trace_buffer =""
+end
+function writeFile() do
+'this.asInstanceOf[org.thingml.utils.log.Access2File].writeFile(' & trace_buffer & ',"C:/Users/HAOSHA~1/AppData/Local/Temp/ThingML_temp/Config_Logger_ExtraConfig/log_ExtraConfig")'
+end
+}
+
+thing Control includes ControlMessage
+@mock "true"{
+required port ControlPort{
+sends startMsg, stopMsg
+}
+}
+
+

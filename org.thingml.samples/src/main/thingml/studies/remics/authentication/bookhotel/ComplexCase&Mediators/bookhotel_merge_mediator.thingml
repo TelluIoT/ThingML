@@ -1,6 +1,10 @@
 // 
 // (c) SINTEF 2012
 //
+// Define the mediator for letting client and substitute server and sbustitute server2
+// 
+// by Runze Hao (haoshaochi@gmail.com)
+//
 import "API1.thingml"
 import "API2.thingml"
 

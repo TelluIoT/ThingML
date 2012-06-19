@@ -2,15 +2,23 @@
 *This is a logger for Configratrion(ExtraConfig) generated automatically
 */
 import "configs.thingml"
-thing Logger_ExtraConfig includes ControlMessage,Logger,API1BookHotel
+thing Logger_ExtraConfig includes ControlMessage,Logger,API1BookHotel,ExtraMessage
 {
-provided port PrvPort_ExtraConfig_c1_ServerBookPort {
+provided port PrvPort_ExtraConfig_c1_BookHotel {
 receives rRequest,inputID,typeRequest,number
 sends rReply,idReply,typeReply,result
 }
 required port ReqPort_ExtraConfig_s1_CilentBookPort {
 sends rRequest,inputID,typeRequest,number
 receives rReply,idReply,typeReply,result
+}
+provided port PrvPort_ExtraConfig_c_ExtraPort {
+receives begin
+sends begin_r
+}
+required port ReqPort_ExtraConfig_s_ExtraPort {
+sends begin
+receives begin_r,extraMsg
 }
 provided port PrvPort_Control{
 receives startMsg, stopMsg
@@ -39,28 +47,28 @@ transition-> Ready
 event e: PrvPort_Control?stopMsg
 
 internal
-event e: PrvPort_ExtraConfig_c1_ServerBookPort?rRequest
+event e: PrvPort_ExtraConfig_c1_BookHotel?rRequest
 action do
 log("ExtraConfig_c1 -> Logger_ExtraConfig : rRequest")
 ReqPort_ExtraConfig_s1_CilentBookPort!rRequest(e.roomRequest)
 log("Logger_ExtraConfig -> ExtraConfig_s1 : rRequest")
 end
 internal
-event e: PrvPort_ExtraConfig_c1_ServerBookPort?inputID
+event e: PrvPort_ExtraConfig_c1_BookHotel?inputID
 action do
 log("ExtraConfig_c1 -> Logger_ExtraConfig : inputID")
 ReqPort_ExtraConfig_s1_CilentBookPort!inputID(e.ID)
 log("Logger_ExtraConfig -> ExtraConfig_s1 : inputID")
 end
 internal
-event e: PrvPort_ExtraConfig_c1_ServerBookPort?typeRequest
+event e: PrvPort_ExtraConfig_c1_BookHotel?typeRequest
 action do
 log("ExtraConfig_c1 -> Logger_ExtraConfig : typeRequest")
 ReqPort_ExtraConfig_s1_CilentBookPort!typeRequest(e.RTRequest)
 log("Logger_ExtraConfig -> ExtraConfig_s1 : typeRequest")
 end
 internal
-event e: PrvPort_ExtraConfig_c1_ServerBookPort?number
+event e: PrvPort_ExtraConfig_c1_BookHotel?number
 action do
 log("ExtraConfig_c1 -> Logger_ExtraConfig : number")
 ReqPort_ExtraConfig_s1_CilentBookPort!number(e.SingleRoomNumber,e.DoubleRoomNumber)
@@ -70,29 +78,43 @@ internal
 event e: ReqPort_ExtraConfig_s1_CilentBookPort?rReply
 action do
 log("ExtraConfig_s1 -> Logger_ExtraConfig : rReply")
-PrvPort_ExtraConfig_c1_ServerBookPort!rReply(e.roomReply)
+PrvPort_ExtraConfig_c1_BookHotel!rReply(e.roomReply)
 log("Logger_ExtraConfig -> ExtraConfig_c1 : rReply")
 end
 internal
 event e: ReqPort_ExtraConfig_s1_CilentBookPort?idReply
 action do
 log("ExtraConfig_s1 -> Logger_ExtraConfig : idReply")
-PrvPort_ExtraConfig_c1_ServerBookPort!idReply(e.reply)
+PrvPort_ExtraConfig_c1_BookHotel!idReply(e.reply)
 log("Logger_ExtraConfig -> ExtraConfig_c1 : idReply")
 end
 internal
 event e: ReqPort_ExtraConfig_s1_CilentBookPort?typeReply
 action do
 log("ExtraConfig_s1 -> Logger_ExtraConfig : typeReply")
-PrvPort_ExtraConfig_c1_ServerBookPort!typeReply(e.single,e.double)
+PrvPort_ExtraConfig_c1_BookHotel!typeReply(e.single,e.double)
 log("Logger_ExtraConfig -> ExtraConfig_c1 : typeReply")
 end
 internal
 event e: ReqPort_ExtraConfig_s1_CilentBookPort?result
 action do
 log("ExtraConfig_s1 -> Logger_ExtraConfig : result")
-PrvPort_ExtraConfig_c1_ServerBookPort!result(e.bookresult)
+PrvPort_ExtraConfig_c1_BookHotel!result(e.bookresult)
 log("Logger_ExtraConfig -> ExtraConfig_c1 : result")
+end
+internal
+event e: PrvPort_ExtraConfig_c_ExtraPort?begin
+action do
+log("ExtraConfig_c -> Logger_ExtraConfig : begin")
+ReqPort_ExtraConfig_s_ExtraPort!begin(e.msg)
+log("Logger_ExtraConfig -> ExtraConfig_s : begin")
+end
+internal
+event e: ReqPort_ExtraConfig_s_ExtraPort?begin_r
+action do
+log("ExtraConfig_s -> Logger_ExtraConfig : begin_r")
+PrvPort_ExtraConfig_c_ExtraPort!begin_r(e.msg)
+log("Logger_ExtraConfig -> ExtraConfig_c : begin_r")
 end
 }
 }
@@ -129,9 +151,14 @@ sends startMsg, stopMsg
 configuration Config_Logger_ExtraConfig{
 instance control: Control
 instance logger: Logger_ExtraConfig
+instance ins_ExtraConfig_s: Server_Extra
 instance ins_ExtraConfig_s1: Server
-instance ins_ExtraConfig_c1: API1BookHotelFakeClient
+instance ins_ExtraConfig_c1: Client
+instance ins_ExtraConfig_c: Client_Extra_Fake
 connector control.ControlPort => logger.PrvPort_Control
-connector ins_ExtraConfig_c1.ServerBookPort=> logger.PrvPort_ExtraConfig_c1_ServerBookPort
+connector ins_ExtraConfig_c1.BookHotel=> logger.PrvPort_ExtraConfig_c1_BookHotel
 connector logger.ReqPort_ExtraConfig_s1_CilentBookPort=> ins_ExtraConfig_s1.CilentBookPort
+connector ins_ExtraConfig_c.ExtraPort=> logger.PrvPort_ExtraConfig_c_ExtraPort
+connector logger.ReqPort_ExtraConfig_s_ExtraPort=> ins_ExtraConfig_s.ExtraPort
 }
+

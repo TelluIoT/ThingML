@@ -1,0 +1,10 @@
+/*
+* This is a utils for mediator (Mediator_ExtraConfig) generated automatically
+* by Runze Hao (haoshaochi@gmail.com)
+*/
+import "Configs.thingml"
+thing Utils_Mediator_ExtraConfig{
+function swallow(m:String) do
+print"extra message "+m+" received and swallowed! "
+end
+}
