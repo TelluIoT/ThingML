@@ -47,6 +47,19 @@ case class ThingScalaImpl (self : Thing) {
     }
   }
   
+  def isMockUp : Boolean = {
+    self.getAnnotations.filter {
+      a => a.getName == "mock"
+    }.headOption match {
+      case Some(a) => {
+          return a.asInstanceOf[PlatformAnnotation].getValue == "true"
+        }
+      case None => {
+          return false
+        }
+    }
+  }
+  
   def getHTTPRegistry : Option[String] = {
     self.allAnnotations.filter {
       a => a.getName == "http_registry"
@@ -150,7 +163,7 @@ case class ThingScalaImpl (self : Thing) {
       var imports = self.getIncludes.filter{t => t.allProperties.contains(p)}
 
       imports.foreach{ t =>
-         result.addAll(t.initExpressionsForArray(p))
+        result.addAll(t.initExpressionsForArray(p))
       }
 
       // collect assignments in this thing
@@ -160,7 +173,7 @@ case class ThingScalaImpl (self : Thing) {
       result.addAll(assigns)
     }
     else { // It is a property of a state machine
-       // No way to initialize arrays in state machines (so far)
+      // No way to initialize arrays in state machines (so far)
     }
     return result
   }

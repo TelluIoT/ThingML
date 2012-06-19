@@ -162,7 +162,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
         }
 
 
-        try {
+        /*try {
             Map<Thing, SimpleEntry<String, String>> swingcodeThing = SwingGenerator.compileAllThingJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
             Map<Configuration, String> swingcodeConf = SwingGenerator.compileAllConfigurationJava((ThingMLModel) model.getContents().get(0), "org.thingml.generated");
 
@@ -176,7 +176,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
                     /*  if (!alreadyGenerated.contains(t.getName())) {
                     alreadyGenerated.add(t.getName());
                      */
-                    System.out.println(" -> Writing file " + t.getName() + "Mock.java");
+                   /* System.out.println(" -> Writing file " + t.getName() + "Mock.java");
                     PrintWriter w = new PrintWriter(new FileWriter(new File("test_out/" + c.getName() + "/src/main/java/org/thingml/generated/" + t.getName() + "Mock.java")));
                     w.println(swingcodeThing.get(t).getKey());
                     w.close();
@@ -191,7 +191,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
                 /*if (!alreadyGenerated.contains(t.getName())) {
                 alreadyGenerated.add(t.getName());
                  */
-                System.out.println(" -> Writing file " + c.getName() + "Main.java");
+        /*        System.out.println(" -> Writing file " + c.getName() + "Main.java");
                 PrintWriter w = new PrintWriter(new FileWriter(new File("test_out/" + c.getName() + "/src/main/java/org/thingml/generated/" + "Main.java")));
                 w.println(swingcodeConf.get(c));
                 w.close();
@@ -199,7 +199,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
             }
         } catch (Throwable t) {
             t.printStackTrace();
-        }
+        }*/
 
     }
 

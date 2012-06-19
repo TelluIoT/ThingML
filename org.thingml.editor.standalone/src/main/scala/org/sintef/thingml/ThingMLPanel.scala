@@ -209,8 +209,9 @@ class ThingMLPanel extends JPanel {
           return
         try {
           val thingmlModel = loadThingMLmodel(targetFile.get)
-          SwingGenerator.compileAndRun(thingmlModel)                                                                      
-          
+          thingmlModel.allConfigurations.foreach{c =>
+            SwingGenerator.compileAndRun(c, thingmlModel)                                                                      
+          }
         }
         catch {
           case t : Throwable => t.printStackTrace()

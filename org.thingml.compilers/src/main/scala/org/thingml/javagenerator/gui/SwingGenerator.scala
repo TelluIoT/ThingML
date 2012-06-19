@@ -117,11 +117,10 @@ object SwingGenerator {
   implicit def swingGeneratorAspect(self: Thing): ThingSwingGenerator = ThingSwingGenerator(self)
   implicit def swingGeneratorAspect(self: Message): MessageSwingGenerator = MessageSwingGenerator(self)
   implicit def swingGeneratorAspect(self: Type): TypeSwingGenerator = TypeSwingGenerator(self)
-  implicit def swingGeneratorAspect(self: Configuration): ConfigurationSwingGenerator = ConfigurationSwingGenerator(self)
   implicit def swingGeneratorAspect(self: Instance): InstanceSwingGenerator = InstanceSwingGenerator(self)
   
   
-  def compileAndRun(model: ThingMLModel) {
+  def compileAndRun(cfg : Configuration, model: ThingMLModel) {
 
     Logger.debug("compile and run Swing code")
 
@@ -129,65 +128,44 @@ object SwingGenerator {
 
     val code = compileAll(model, "org.thingml.generated")
 
-    code._1.keys.foreach{cfg =>
-
-      val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
-      val outputDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/java/org/thingml/generated"
+    val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
+    val outputDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/java/org/thingml/generated"
     
-      val outputDirFile = new File(outputDir)
-      outputDirFile.mkdirs
+    val outputDirFile = new File(outputDir)
+    outputDirFile.mkdirs
     
-      code._2.foreach{case (thing, (mock, mirror)) =>
-          var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + thing.getName() + "Mock.java")));
-          w.println(mock);
-          w.close();
+    code.foreach{case (thing, (mock, mirror)) =>
+        var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + thing.getName() + "Mock.java")));
+        w.println(mock);
+        w.close();
         
-          w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + thing.getName() + "MockMirror.java")));
-          w.println(mirror);
-          w.close();
-      }    
-    }
+        w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + thing.getName() + "MockMirror.java")));
+        w.println(mirror);
+        w.close();
+    }    
+
     javax.swing.JOptionPane.showMessageDialog(null, "Java code generated");
   }
   
   
   def compileAllThingJava(model: ThingMLModel, pack : String): Hashtable[Thing, SimpleEntry[String, String]] = {
     val result = new Hashtable[Thing, SimpleEntry[String, String]]()
-    compileAll(model, pack)._2.foreach{entry =>
-      result.put(entry._1, new SimpleEntry(entry._2._1, entry._2._2))
+    compileAll(model, pack).foreach{case (t, entry) =>
+        result.put(t, new SimpleEntry(entry._1, entry._2))
     }
     result
   }
   
-  def compileAllConfigurationJava(model: ThingMLModel, pack : String): Hashtable[Configuration, String] = {
-    val result = new Hashtable[Configuration, String]()
-    compileAll(model, pack)._1.foreach{entry =>
-      result.put(entry._1, entry._2)
-    }
-    result
-  }
-  
-  def compileAll(model: ThingMLModel, pack : String): ((Map[Configuration, String], Map[Thing, (String, String)])) = {
+  def compileAll(model: ThingMLModel, pack : String): Map[Thing, (String, String)] = {
     Context.pack = pack
     
-    var configMap = Map[Configuration, String]()
-    model.allConfigurations.filter{c=> !c.isFragment}.foreach { t => 
-      configMap += (t -> compile(t, pack))
-    }
-    
     var thingMap = Map[Thing, (String, String)]()
-    model.allThings.filter{t=> !t.isFragment}.foreach {t => 
+    model.allThings.filter{t=> !t.isFragment && t.isMockUp}.foreach {t => 
       val thingCode = compile(t, pack)
       val mirrorCode = compile(t, pack, true)
       thingMap += (t -> ((thingCode, mirrorCode)))
     }
-    return (configMap, thingMap)
-  }
-  
-  def compile(t: Configuration, pack : String) = {
-    Context.init
-    t.generateSwing()
-    Context.builder.toString
+    return thingMap
   }
   
   def compile(t: Thing, pack : String, isMirror : Boolean = false) = {
@@ -202,17 +180,6 @@ object SwingGenerator {
 case class ThingMLSwingGenerator(self: ThingMLElement) {
   def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
     // Implemented in the sub-classes
-  }
-}
-
-
-case class ConfigurationSwingGenerator(override val self: Configuration) extends ThingMLSwingGenerator(self) {
-
-  override def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
-    generateSwingMain()
-  }
-
-  def generateSwingMain(builder: StringBuilder = Context.builder) {
   }
 }
 
@@ -434,7 +401,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
           builder append (msg.getParameters.collect{
               case p if (p.getCardinality == null) => 
                 if (p.getType.isInstanceOf[Enumeration]) {
-                   "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
+                  "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
                 } else {
                   "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"
                 }
