@@ -1612,24 +1612,32 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
 
     builder append "// Definition of function " + self.getName + "\n"
 
-    if (self.getType != null) {
-      builder append self.getType.c_type()
-      if (self.getCardinality != null) builder append "[]"
+    if (self.getAnnotations.filter(a=>a.getName == "c_prototype").size == 1) {
+      // generate the given prototype. Any parameters are ignored.
+      builder append self.getAnnotations.filter(a=>a.getName == "c_prototype").head.getValue
     }
-    else builder append "void"
+    else {
+      // Generate the normal prototype
+      if (self.getType != null) {
+        builder append self.getType.c_type()
+        if (self.getCardinality != null) builder append "[]"
+      }
+      else builder append "void"
 
-    builder append " " + self.c_name + "("
+      builder append " " + self.c_name + "("
 
-    builder append "struct " + thing.instance_struct_name + " *" + thing.instance_var_name
+      builder append "struct " + thing.instance_struct_name + " *" + thing.instance_var_name
 
-    self.getParameters.foreach{ p =>
-      //if (p != self.getParameters.head)
-      builder append ", "
-      builder append p.getType.c_type()
-      if (p.getCardinality != null) builder append "[]"
-      builder append " " + p.getName
+      self.getParameters.foreach{ p =>
+        //if (p != self.getParameters.head)
+        builder append ", "
+        builder append p.getType.c_type()
+        if (p.getCardinality != null) builder append "[]"
+        builder append " " + p.getName
+      }
+      builder append ")"
     }
-    builder append ") {\n"
+    builder append " {\n"
 
     self.getBody.generateC(builder, context)
 
