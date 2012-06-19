@@ -128,6 +128,22 @@
         <plugins>
             
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>uber</finalName>
+                </configuration>
+            </plugin>
+ 
+            <plugin>
                 <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
                 <executions>
@@ -139,7 +155,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <injar>${project.build.finalName}.jar</injar>
+                    <injar>uber.jar</injar>
                     <outjar>${project.build.finalName}.jar</outjar>
                     <obfuscate>false</obfuscate>
                     <maxMemory>1024m</maxMemory>
@@ -191,19 +207,11 @@
                         <option>-keepattributes **</option>
 
                     </options>
-                    <assembly>
-                        <inclusions>
-                            <inclusion>
-                                <groupId>org.scala-lang</groupId>
-                                <artifactId>scala-library</artifactId>
-                            </inclusion>
-                        </inclusions>
-                    </assembly>
                     <libs>
                         <lib>${java.lib.location}</lib>
                     </libs>
                 </configuration>
-            </plugin>             
+            </plugin>
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
