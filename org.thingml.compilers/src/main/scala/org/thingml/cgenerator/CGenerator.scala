@@ -577,7 +577,12 @@ object CGenerator {
     result
   }
 
-    def compileToROSNode(cfg : Configuration) : Hashtable[String, String] = {
+  /****************************************************************************************
+   *    ROS Specific methods
+   ****************************************************************************************/
+
+
+  def compileToROSNode(cfg : Configuration) : Hashtable[String, String] = {
 
       val result = new Hashtable[String, String]()
 
@@ -607,7 +612,7 @@ object CGenerator {
       compileCModules(cfg, context, result, "src/")
 
       // GENERATE ROS HANDLERS
-      val publish_list : scala.collection.mutable.Map[String, (Thing, Port, Message, ListBuffer[(Instance, String)])] = scala.collection.mutable.Map[String, (Thing, Port, Message, ListBuffer[(Instance, String)])]()
+      val publish_list : scala.collection.mutable.Map[String, (Thing, Port, ROSMessage, ListBuffer[(Instance, String)])] = scala.collection.mutable.Map[String, (Thing, Port, ROSMessage, ListBuffer[(Instance, String)])]()
 
 
       // The annotoation rostopic_publish is support to contain "instance::port::message [-> topicname]"
@@ -650,8 +655,8 @@ object CGenerator {
                 val id = "ros_" + thing.getName + "_" + port.getName + "_publish_" + message.getName
                 println("INFO: found ROS publisher " + id)
                 // Now we have all the info. Store it in publish_list for bellow code generation.
-                val tuple : (Thing, Port, Message, ListBuffer[(Instance, String)]) =
-                  if (publish_list.contains(id)) publish_list.get(id).head else (thing, port, message, new ListBuffer[(Instance, String)]())
+                val tuple : (Thing, Port, ROSMessage, ListBuffer[(Instance, String)]) =
+                  if (publish_list.contains(id)) publish_list.get(id).head else (thing, port, new ROSMessage(ros_package, message), new ListBuffer[(Instance, String)]())
                 tuple._4.append( (instance, topicname) )
                 publish_list.put(id, tuple)
       }}}}}
@@ -667,7 +672,8 @@ object CGenerator {
         val tuple = publish_list.get(id).head
         val thing = tuple._1
         val port = tuple._2
-        val message = tuple._3
+        val rosmessage = tuple._3
+        val message = tuple._3.message
         val instances = tuple._4.toList
 
         // Generate the line to connect the port whcih publishes on the topic
@@ -683,10 +689,14 @@ object CGenerator {
         instances.foreach{ case(instance, topic) =>
            ros_pub_builder append "if (_instance == &" + instance.c_var_name + ") {\n"
            ros_pub_builder append "// Publish the data on ROS topic " + topic + "\n"
-           ros_pub_builder append ros_package + "::" + message.getName + " rosmsg;\n"
+           ros_pub_builder append rosmessage.cpptype + " rosmsg;\n"
+
+           ros_pub_builder append rosmessage.assign_params
+           /*
            message.getParameters.foreach{p=>
              ros_pub_builder append "rosmsg." + p.getName + " = " +  p.getName + ";\n"
            }
+           */
            ros_pub_builder append topic + "_rospub.publish(rosmsg);\n"
            ros_pub_builder append "}\n"
 
@@ -710,7 +720,7 @@ object CGenerator {
       val ros_head_builder = new StringBuilder()
       ros_head_builder append "// Include ROS messages\n"
       messages.foreach{ message =>
-        ros_head_builder append "#include \""+ ros_package + "/"+ message.getName +".h\"\n"
+        ros_head_builder append "#include \"" + new ROSMessage(ros_package, message).header + "\"\n"
       }
       ros_head_builder append "\n"
       ros_head_builder append "// Declare variables for ROS topic publishers\n"
@@ -724,7 +734,7 @@ object CGenerator {
       ros_init_builder append  "ros::NodeHandle rosnode;\n"
       ros_init_builder append "//Initialize publisher topics\n"
       topics.foreach{ case(topic, message) =>
-        ros_init_builder append topic + "_rospub = rosnode.advertise<" + ros_package + "::" + message.getName + ">(\""+topic+"\", 1024);\n"
+        ros_init_builder append topic + "_rospub = rosnode.advertise<" + new ROSMessage(ros_package, message).cpptype + ">(\""+topic+"\", 1024);\n"
       }
 
 
@@ -820,6 +830,50 @@ object CGenerator {
 
 }
 
+class ROSMessage( pack : String, m: Message) {
+
+  val message = m
+
+  var header = pack + "/" + message.getName + ".h"
+  var cpptype = pack + "::" + message.getName
+
+  var builder = new StringBuilder()
+  message.getParameters.foreach{p=>
+    builder append "rosmsg." + p.getName + " = " +  p.getName + ";\n"
+  }
+
+  var assign_params = builder.toString
+
+  message.getAnnotations.filter { a => a.getName == "ros_message" }.headOption match {
+      case Some(a) => {
+        val ann =  a.asInstanceOf[PlatformAnnotation].getValue.trim
+
+        if (ann.indexOf("(") > 0 && ann.charAt(ann.length() - 1) == ')') {
+          val rosmsg = ann.substring(0, ann.indexOf("("))
+          var params = ann.substring(ann.indexOf("(")+1)
+          params = params.substring(0, params.length()-1)
+          builder = new StringBuilder()
+          params.split(", ").foreach { assign =>
+            val a = assign.trim.split("=")
+            if (a.size == 2) {
+              builder append "rosmsg." + a(0) + " = " +  a(1) + ";\n"
+            }
+          }
+          assign_params = builder.toString
+          header = rosmsg + ".h"
+          cpptype = rosmsg.replaceAll("/", "::")
+        }
+        else {
+          println("WARN: Invalid ros_message annotation " + ann + " on message " + m.getName + ".")
+        }
+      }
+      case None => {
+
+      }
+    }
+
+
+}
 
 class CGeneratorContext( src: Configuration ) {
   // The configuration
