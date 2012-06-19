@@ -178,14 +178,14 @@ object ScalaCoAPGenerator {
     builder append "import org.thingml.utils.comm.SerializableTypes._\n\n"
     builder append "import java.nio.ByteOrder\n\n"
 
-    builder append "import net.modelbased.sensapp.library.system._\n"
+    //builder append "import net.modelbased.sensapp.library.system._\n"
     builder append "import net.modelbased.sensapp.library.senml._\n"
-    builder append "import net.modelbased.sensapp.library.senml.export.JsonParser\n"
-    builder append "import net.modelbased.sensapp.library.senml.export.JsonProtocol._\n\n"
+//    builder append "import net.modelbased.sensapp.library.senml.export.JsonParser\n"
+//    builder append "import net.modelbased.sensapp.library.senml.export.JsonProtocol._\n\n"
 
-    builder append "import cc.spray.typeconversion.DefaultUnmarshallers._\n"
+    /*builder append "import cc.spray.typeconversion.DefaultUnmarshallers._\n"
     builder append "import cc.spray.json._\n"
-    builder append "import cc.spray.typeconversion.SprayJsonSupport\n\n"
+    builder append "import cc.spray.typeconversion.SprayJsonSupport\n\n"*/
   }
 }
 

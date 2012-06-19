@@ -18,6 +18,31 @@
         <smac.version>0.6.0-SNAPSHOT</smac.version>
         <bundle.vendor>SINTEF</bundle.vendor>
     </properties>
+    
+    <profiles>
+        <profile>
+            <id>org.thingml.editor.standaloneApp.mac</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <java.lib.location>&lt;java.home&gt;/../Classes/classes.jar</java.lib.location>
+            </properties>
+        </profile>
+        <profile>
+            <id>org.thingml.editor.standaloneApp.other</id>
+            <activation>
+                <os>
+                    <family>!mac</family>
+                </os>
+            </activation>
+            <properties>
+                <java.lib.location>${java.home}/lib/rt.jar</java.lib.location>
+            </properties>
+        </profile>
+    </profiles>      
 
     <repositories>
         <repository>
@@ -101,6 +126,85 @@
         </resources>
  
         <plugins>
+            
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <injar>${project.build.finalName}.jar</injar>
+                    <outjar>${project.build.finalName}.jar</outjar>
+                    <obfuscate>false</obfuscate>
+                    <maxMemory>1024m</maxMemory>
+                    <proguardVersion>4.5</proguardVersion>
+                    <options>
+                        <option>-dontwarn scala.**</option>
+                        <option>-dontskipnonpubliclibraryclasses</option>
+                        <option>-dontskipnonpubliclibraryclassmembers</option>
+                        <option>-dontoptimize</option>
+
+                        <option>-ignorewarnings</option>
+                        <option>-keepclassmembers class * { ** MODULE$; }</option>
+                        <option>-keep class * implements org.xml.sax.EntityResolver</option>
+                        <option>-keep public class org.thingml.generated.** { *; }</option> 
+                        <option>-keep class org.sintef.smac.Component { *; }</option>
+                        
+                        <option>
+                            -keepclassmembernames class scala.concurrent.forkjoin.ForkJoinPool {
+                            long eventCount;
+                            int  workerCounts;
+                            int  runControl;
+                            scala.concurrent.forkjoin.ForkJoinPool$WaitQueueNode syncStack;
+                            scala.concurrent.forkjoin.ForkJoinPool$WaitQueueNode spareStack;
+                            }
+                        </option>
+                        <option>
+                            -keepclassmembernames class scala.concurrent.forkjoin.ForkJoinPool {
+                            long eventCount;
+                            int  workerCounts;
+                            int  runControl;
+                            scala.concurrent.forkjoin.ForkJoinPool$WaitQueueNode syncStack;
+                            scala.concurrent.forkjoin.ForkJoinPool$WaitQueueNode spareStack;
+                            }                           
+                        </option>
+                        <option>
+                            -keepclassmembernames class scala.concurrent.forkjoin.ForkJoinTask {
+                            int status;
+                            }
+                        </option>
+                        <option>
+                            -keepclassmembernames class scala.concurrent.forkjoin.LinkedTransferQueue {
+                            scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference head;
+                            scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference tail;
+                            scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference cleanMe;
+                            }
+                        </option>
+                                                       
+                        <option>-keepattributes *Annotation*</option>
+                        <option>-keepattributes **</option>
+
+                    </options>
+                    <assembly>
+                        <inclusions>
+                            <inclusion>
+                                <groupId>org.scala-lang</groupId>
+                                <artifactId>scala-library</artifactId>
+                            </inclusion>
+                        </inclusions>
+                    </assembly>
+                    <libs>
+                        <lib>${java.lib.location}</lib>
+                    </libs>
+                </configuration>
+            </plugin>             
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>

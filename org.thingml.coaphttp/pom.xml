@@ -14,23 +14,45 @@
         <version>0.6.0-SNAPSHOT</version>
         <relativePath>../org.thingml.root/pom.xml</relativePath>
     </parent>
+    
+    
+    <profiles>
+        <profile>
+            <id>org.thingml.editor.standaloneApp.mac</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <java.lib.location>&lt;java.home&gt;/../Classes/classes.jar</java.lib.location>
+            </properties>
+        </profile>
+        <profile>
+            <id>org.thingml.editor.standaloneApp.other</id>
+            <activation>
+                <os>
+                    <family>!mac</family>
+                </os>
+            </activation>
+            <properties>
+                <java.lib.location>${java.home}/lib/rt.jar</java.lib.location>
+            </properties>
+        </profile>
+    </profiles>    
   
     <repositories>
-        <!--<repository>
-            <id>spray</id>
-            <name>Spray Repository</name>
-            <url>http://repo.spray.cc/</url>
-        </repository>
-        <repository>
-            <id>Akka</id>
-            <name>Akka Repository</name>
-            <url>http://repo.akka.io/releases/</url>
-        </repository> -->
         <repository>
             <id>SensApp</id>
             <name>snapshots</name>
             <url>https://repository-sintef.forge.cloudbees.com/snapshot/</url>
-        </repository> 
+        </repository>
+        
+        <repository>
+  	  <id>spray</id>
+  	  <name>Spray Repository</name>
+      <url>http://repo.spray.cc/</url>
+	</repository>
     </repositories>
 
     <dependencies>
@@ -53,26 +75,10 @@
         </dependency>
         
         <!--<dependency>
-            <groupId>cc.spray</groupId>
-            <artifactId>spray-json_${scala.version}</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>cc.spray</groupId>
-            <artifactId>spray-client</artifactId>
-            <version>1.0-M2</version>
-        </dependency>  
-        <dependency>
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-actor</artifactId>
-            <version>2.0.1</version>
-        </dependency>-->
-        
-        <dependency>
             <groupId>net.modelbased.sensapp.library</groupId>
             <artifactId>net.modelbased.sensapp.library.system</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+        </dependency>-->
         
         <dependency>
             <groupId>net.modelbased.sensapp.library</groupId>
@@ -84,6 +90,10 @@
     
     <build>
         <plugins>
+            
+            
+  
+            
 
             <!-- Scala plugin : allow to compile Scala file -->
             <plugin>
