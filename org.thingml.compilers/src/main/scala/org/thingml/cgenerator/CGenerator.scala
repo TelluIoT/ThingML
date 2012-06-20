@@ -894,6 +894,24 @@ class CGeneratorContext( src: Configuration ) {
     /* To be implemented by sub-classes */
   }
 
+  // The following allow changing the name of the instance variable for generating
+  // some action code which works with a specific instance.
+  // This is useful to define some callbacks with specific signature and route
+  // message to a specific ThingML instance.
+  var instance_var_names: Option[String] = None
+
+  def change_instance_var_name(n : String) {
+     instance_var_names = Option(n)
+  }
+
+  def clear_instance_var_names() {
+     instance_var_names = None
+  }
+
+  def instance_var_name() : String = {
+    instance_var_names.getOrElse("_instance")
+  }
+
   var debug : Boolean = _debug
 
   def _debug() : Boolean = {
@@ -1615,6 +1633,13 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
     if (self.getAnnotations.filter(a=>a.getName == "c_prototype").size == 1) {
       // generate the given prototype. Any parameters are ignored.
       builder append self.getAnnotations.filter(a=>a.getName == "c_prototype").head.getValue
+
+      if (self.getAnnotations.filter(a=>a.getName == "c_instance_var_name").size == 1) {
+      // generate the given prototype. Any parameters are ignored.
+        val nname = self.getAnnotations.filter(a=>a.getName == "c_instance_var_name").head.getValue.trim()
+      context.change_instance_var_name (nname)
+      println("INFO: Instance variable name changed to " + nname + " in function " + self.getName)
+      }
     }
     else {
       // Generate the normal prototype
@@ -1637,9 +1662,12 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
       }
       builder append ")"
     }
+
     builder append " {\n"
 
     self.getBody.generateC(builder, context)
+
+    context.clear_instance_var_names()
 
     builder append  "}\n"
   }
@@ -2415,7 +2443,7 @@ case class SendActionCGenerator(override val self: SendAction) extends ActionCGe
 
     builder append thing.sender_name(self.getPort, self.getMessage)
 
-    builder append "(" + "_instance"
+    builder append "(" + context.instance_var_name
     self.getParameters.foreach {
       p =>
         builder append ", "
@@ -2433,7 +2461,7 @@ case class VariableAssignmentCGenerator(override val self: VariableAssignment) e
          builder append  p.getName
       }
       case p : Property => {
-         builder.append("_instance->" + self.getProperty.qname("_") + "_var")
+         builder.append(context.instance_var_name + "->" + self.getProperty.qname("_") + "_var")
       }
       case v : LocalVariable => {
          builder append  v.getName
