@@ -36,13 +36,9 @@ thing Server includes API1BookHotel {
 			
 			transition -> CheckIDService 
 				event e : CilentBookPort?rRequest
-				guard e.roomRequest == roomRequest
+				//guard e.roomRequest == roomRequest
 				action CilentBookPort!rReply(true)
 				
-			internal
-				event e: CilentBookPort?rRequest
-				guard not (e.roomRequest == roomRequest) 
-				action CilentBookPort!rReply(false)
 		}
 		
 		//CheckID state
@@ -50,13 +46,10 @@ thing Server includes API1BookHotel {
             on entry print "Server side: To check ID"
             transition -> RoomTypeService
                 event e: CilentBookPort?inputID
-                guard e.ID == ID
+                //guard e.ID == ID
                 action CilentBookPort!idReply(true)
             
-//             internal
-// 				event e: CilentBookPort?InputID
-//                 guard not(e.ID == ID)
-//                 action CilentBookPort!IDReply(false)  
+
         }
 		
         //RoomTypeService state
@@ -68,10 +61,6 @@ thing Server includes API1BookHotel {
                 //guard e.RTRequest == typeRequest
                 action CilentBookPort!typeReply(single,double)
             
-//             internal
-// 				event e: CilentBookPort?InputID
-//                 guard not(e.ID == ID)
-//                 action CilentBookPort!IDReply(true)         
         }
         
         //RoomNumberService state

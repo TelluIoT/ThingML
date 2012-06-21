@@ -142,6 +142,9 @@ object LoggerGenerator {
     builder append "on entry do\n" 
     builder append "print \"Logger start!\"\n"
     builder append "log(\"@startuml\")\n"
+    builder append "log(\"autonumber \\\"<b>[000]\\\"\")\n"
+    var thing_logger_name :String = "Logger_"+cfg.getName    //thing mediator name
+    builder append "log(\"participant Logger as \\\""+thing_logger_name+" \\\" <<(L,#EEEEEE)>> #99FF99\")\n"
     builder append "end\n"
     builder append "on exit do\n"
     builder append "log(\"@enduml\")\n"
@@ -156,6 +159,14 @@ object LoggerGenerator {
         "e."+p.getName
     }.mkString(",")
   }
+  def getMessageInfo(m:Message):String = {
+    m.getName+"(\""+m.getParameters.collect{case p=>
+        if(p.getType.java_type == "String")
+          "+\"\\\"\"+"+"e."+p.getName+"+\"\\\"\"+"
+        else 
+          "+"+"e."+p.getName+"+"
+    }.mkString("\",\"")+"\")"
+  }
   def generateTransitions(cfg:Configuration,builder:StringBuilder = Util.lBuilder){
     builder append "transition-> Ready\n"
     builder append "event e: PrvPort_Control?stopMsg\n\n"
@@ -167,21 +178,25 @@ object LoggerGenerator {
 //    builder append "end\n\n"
     //here since no mismatches, just got all messages and foward is ok.
     // but for the situation with mismatehes, how to do it
+    var thing_logger_name :String = "Logger_"+cfg.getName    //thing mediator name
     cfg.allConnectors.foreach{case c=>
-        var thing_logger_name :String = "Logger_"+cfg.getName    //thing mediator name
+        
         var cli_name = c.getCli.getInstance.getName
         var srv_name = c.getSrv.getInstance.getName
+        var cli_sd = "\\\""+cli_name+":"+c.getCli.getInstance.getType.getName+"\\\"" // name for the client instance shown in the sequence diagram
+        var srv_sd = "\\\""+srv_name+":"+c.getSrv.getInstance.getType.getName+"\\\"" //
         c.getRequired.getSends.foreach{case m=>
             if(c.getProvided.getReceives.contains(m)){
               var inPort = "PrvPort_"+cli_name+"_"+c.getRequired.getName
               var outPort = "ReqPort_"+srv_name+"_"+c.getProvided.getName
+              var mInfo = getMessageInfo(m)  // message info like m(p1,p2,p3)
               //builder append "internal\n"
               builder append "internal\n"
               builder append "event e: "+inPort+"?"+m.getName+"\n"
               builder append "action do\n"
-              builder append "log(\""+cli_name+" -> "+thing_logger_name+" : "+m.getName+"\")\n"
+              builder append "log(\""+cli_sd+" -> Logger : "+mInfo+"\")\n"
               builder append outPort+"!"+m.getName+"("+getParameters(m)+")\n"
-              builder append "log(\""+thing_logger_name+" -> "+srv_name+" : "+m.getName+"\")\n"
+              builder append "log(\"Logger -> "+srv_sd+" : "+mInfo+"\")\n"
               builder append "end\n"
             }
         }
@@ -189,12 +204,13 @@ object LoggerGenerator {
             if(c.getRequired.getReceives.contains(m)){
               var outPort = "PrvPort_"+cli_name+"_"+c.getRequired.getName
               var inPort = "ReqPort_"+srv_name+"_"+c.getProvided.getName
+              var mInfo = getMessageInfo(m)  // message info like m(p1,p2,p3)
               builder append "internal\n"
               builder append "event e: "+inPort+"?"+m.getName+"\n"
               builder append "action do\n"
-              builder append "log(\""+srv_name+" -> "+thing_logger_name+" : "+m.getName+"\")\n"
+              builder append "log(\""+srv_sd+" -> Logger : "+mInfo+"\")\n"
               builder append outPort+"!"+m.getName+"("+getParameters(m)+")\n"
-              builder append "log(\""+thing_logger_name+" -> "+cli_name+" : "+m.getName+"\")\n"
+              builder append "log(\"Logger -> "+cli_sd+" : "+mInfo+"\")\n"
               builder append "end\n"
             }
         }

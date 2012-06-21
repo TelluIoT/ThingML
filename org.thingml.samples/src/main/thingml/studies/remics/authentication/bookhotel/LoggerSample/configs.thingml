@@ -13,8 +13,8 @@ import "message_extra_test.thingml"
 configuration ExtraConfig{
     instance c: Client_Extra_Fake
     instance s: Server_Extra
-    instance c1:Client
+    instance c1:API1BookHotelFakeClient
     instance s1:Server
-    connector c1.BookHotel => s1.CilentBookPort
+    connector c1.ServerBookPort => s1.CilentBookPort
     connector c.ExtraPort => s.ExtraPort
 }
