@@ -126,7 +126,8 @@
         </resources>
  
         <plugins>
-            
+
+            <!--OPTIMIZATION BEGIN
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -164,7 +165,6 @@
                         <option>-dontwarn scala.**</option>
                         <option>-dontskipnonpubliclibraryclasses</option>
                         <option>-dontskipnonpubliclibraryclassmembers</option>
-                        <!--<option>-dontoptimize</option>-->
                         <option>-optimizations method/inlining,class/merging/*,!code/simplification/advanced,code/simplification/*,!code/remove/advanced,code/removal/*</option>
                         <option>-optimizationpasses 2</option>
 
@@ -214,6 +214,8 @@
                     </libs>
                 </configuration>
             </plugin>
+            OPTIMIZATION BEGIN-->
+            
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
