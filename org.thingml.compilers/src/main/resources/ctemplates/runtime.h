@@ -15,7 +15,9 @@ extern "C" {
 
 typedef unsigned char byte;
 
-#define PTR_MAX_SIZE 8
+/* Queuing of pointers (size is different depending of the platform)*/
+
+#define PTR_MAX_SIZE 8  // Code generator should adjust this
 
 typedef union {
    uint8_t buffer[PTR_MAX_SIZE];
@@ -23,25 +25,11 @@ typedef union {
 } ptr_union_t;
 
 /*
-
-proxy_t proxy;
-proxy.pointer = the_pointer;
-
-// call to the function, cannot be generic here
-f(proxy.buffer[0], proxy.buffer[1], proxy.buffer[2], proxy.buffer[3]);
-
-// how to recover the value of the pointer
-void f(int b0, int b1, int b2, int b3) {
-
-  proxy_t proxy = { { b0, b1, b2, b3 } };
-
-  the_pointer = proxy.pointer;
-
-}
-
+void _fifo_enqueue_ptr(void * ptr);
+void * _fifo_dequeue_ptr();
+static_assert(sizeof(void*) <= PTR_MAX_SIZE*sizeof(uint8_t));
 */
 
-static_assert(sizeof(void*) <= PTR_MAX_SIZE*sizeof(uint8_t));
 
 /* Adds and instance to the runtime and returns its id */
 uint16_t add_instance(void * instance_struct);

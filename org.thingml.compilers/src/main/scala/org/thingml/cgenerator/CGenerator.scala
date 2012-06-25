@@ -566,6 +566,14 @@ object CGenerator {
 
     val list = cfg.allThings.map{ t => t.getName } += cfg.getName
 
+    if (cfg.getAnnotations.filter(a=> a.getName == "add_c_modules").size>0) {
+      cfg.getAnnotations.filter(a=> a.getName == "add_c_modules").head.getValue.trim.split(" ").foreach(m =>
+         list += m.trim
+      )
+    }
+
+
+
     val srcs = list.map{ t => t + ".c" }.mkString(" ")
     val objs = list.map{ t => t + ".o" }.mkString(" ")
     mtemplate = mtemplate.replace("/*SOURCES*/", srcs)
@@ -1321,7 +1329,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     var result = 2 // 2 bytes to store the port/message code
     result += 2 // to store the id of the source instance
     m.getParameters.foreach{ p =>
-      result += p.getType.c_byte_size()
+      result += p.getType.c_byte_size(context)
     }
     result
   }
@@ -1362,9 +1370,13 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         m.getParameters.foreach{ pt =>
           //result += p.getType.c_byte_size()
           builder append "\n// parameter " + pt.getName + "\n"
-          pt.getType.bytes_to_serialize(pt.getName).foreach { l =>
+
+          pt.getType.bytes_to_serialize(builder, context, pt.getName)
+
+          /*
+          pt.getType.bytes_to_serialize(pt.getName, context).foreach { l =>
             builder append "_fifo_enqueue( "+l+" );\n"
-          }
+          } */
         }
         builder append "}\n"
 
@@ -1437,8 +1449,8 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         var idx = 2
 
         m.getParameters.foreach{ pt =>
-          builder append ",\n" + pt.getType.deserialize_from_byte("mbuf", idx) + " /* " + pt.getName + " */ "
-          idx = idx + pt.getType.c_byte_size()
+          builder append ",\n" + pt.getType.deserialize_from_byte("mbuf", idx, context) + " /* " + pt.getName + " */ "
+          idx = idx + pt.getType.c_byte_size(context)
         }
 
         builder append ");\n"
@@ -2337,13 +2349,29 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
     }
   }
 
-  def c_byte_size(): Integer = {
+  def c_byte_size(context : CGeneratorContext): Integer = {
     self.getAnnotations.filter {
       a => a.getName == "c_byte_size"
     }.headOption match {
       case Some(a) => {
         var v = a.asInstanceOf[PlatformAnnotation].getValue
-        if (v == "*") return 2; // pointer size for arduino
+        if (v == "*") return context.pointerSize(); // pointer size for the target platform
+        else return Integer.parseInt(a.asInstanceOf[PlatformAnnotation].getValue)
+      }
+      case None => {
+        println("Warning: Missing annotation c_byte_size for type " + self.getName + ", using 2 as the type size.")
+        return 2
+      }
+    }
+  }
+
+  def c_datatype_byte_size(): Integer = {
+    self.getAnnotations.filter {
+      a => a.getName == "c_byte_size"
+    }.headOption match {
+      case Some(a) => {
+        var v = a.asInstanceOf[PlatformAnnotation].getValue
+        if (v == "*") throw new Error("Unknown pointer size (use c_byte_size instead of c_datatype_byte_size)")
         else return Integer.parseInt(a.asInstanceOf[PlatformAnnotation].getValue)
       }
       case None => {
@@ -2369,31 +2397,81 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
     }
   }
 
-  def deserialize_from_byte(buffer : String, idx : Integer) = {
+  def has_byte_buffer() : Boolean = {
+     self.getAnnotations.filter {
+      a => a.getName == "c_byte_buffer"
+    }.headOption match {
+      case Some(a) => return true
+      case None => return false
+    }
+  }
+
+  def byte_buffer_name() : String = {
+     self.getAnnotations.filter {
+      a => a.getName == "c_byte_buffer"
+    }.headOption match {
+      case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
+      case None => return null
+    }
+  }
+
+  def deserialize_from_byte(buffer : String, idx : Integer, context : CGeneratorContext) = {
     var result =  ""
-    if (is_pointer) result += "(" + c_type + ")"
-    var i = c_byte_size
+    var i = c_byte_size(context)
     var index = idx
-    while (i>0) {
-      i = i-1
-      if(i==0) result += buffer + "[" + index + "]"
-      else result += "(" + buffer + "[" + index + "]" + "<<" + (8*i) + ") + "
-      index = index + 1
+
+    if (is_pointer) {
+      result += "(" + c_type + ")((ptr_union_t*)("+buffer+" + "+idx+"))->pointer"
+    } /*
+    else if (has_byte_buffer) {
+      result += "("+ c_type +"){{"
+      while (i>0) {
+        i = i-1
+        if(i==0) result += buffer + "[" + index + "]"
+        else result +=     buffer + "[" + index + "], "
+        index = index + 1
+      }
+      result += "}}"
+    }  */
+    else {
+      while (i>0) {
+        i = i-1
+        if(i==0) result += buffer + "[" + index + "]"
+        else result += "(" + buffer + "[" + index + "]" + "<<" + (8*i) + ") + "
+        index = index + 1
+      }
     }
     result
   }
 
-  def bytes_to_serialize(variable : String) : ArrayList[String] = {
-    var result = new ArrayList[String]()
+  def bytes_to_serialize(builder : StringBuilder, context : CGeneratorContext, variable : String) {
+    //var result = new ArrayList[String]()
+    var i = c_byte_size(context)
     var v = variable
-    if (is_pointer) v = "(uint16_t)" + v
-    var i = c_byte_size
-    while (i>0) {
-      i = i-1
-      if(i==0) result.add(v + " & 0xFF")
-      else result.add("(" + v + ">>" + (8*i) + ") & 0xFF")
+    if (is_pointer) {
+
+      builder append "ptr_union_t __ptrunion_"+variable+";\n__ptrunion_"+variable+".pointer = (void*)"+variable+";\n"
+
+      while (i>0) {
+        i = i-1
+        builder.append("_fifo_enqueue( __ptrunion_"+variable+".buffer[" + (context.pointerSize - i - 1) + "] );\n")
+      }
+    }   /*
+    else if (has_byte_buffer) {
+      val buf = byte_buffer_name
+      while (i>0) {
+        i = i-1
+        builder.append(v + "." + buf + "[" + i + "]")
+      }
+    }     */
+    else {
+
+      while (i>0) {
+        i = i-1
+        if(i==0) builder.append("_fifo_enqueue("+v + " & 0xFF);\n")
+        else builder.append("_fifo_enqueue((" + v + ">>" + (8*i) + ") & 0xFF);\n")
+      }
     }
-    result
   }
 
 }

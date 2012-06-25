@@ -1,6 +1,6 @@
 CC = cc
 LIBS = -lpthread
-FLAGS = -O -w
+CFLAGS = -O -w
 SRCS = /*SOURCES*/ runtime.c
 OBJS = /*OBJECTS*/ runtime.o
 
