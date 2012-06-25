@@ -144,7 +144,7 @@ object LoggerGenerator {
     builder append "log(\"@startuml\")\n"
     builder append "log(\"autonumber \\\"<b>[000]\\\"\")\n"
     var thing_logger_name :String = "Logger_"+cfg.getName    //thing mediator name
-    builder append "log(\"participant Logger as \\\""+thing_logger_name+" \\\" <<(L,#EEEEEE)>> #99FF99\")\n"
+    //builder append "log(\"participant Logger as \\\""+thing_logger_name+" \\\" <<(L,#EEEEEE)>> #99FF99\")\n"
     builder append "end\n"
     builder append "on exit do\n"
     builder append "log(\"@enduml\")\n"
@@ -194,9 +194,9 @@ object LoggerGenerator {
               builder append "internal\n"
               builder append "event e: "+inPort+"?"+m.getName+"\n"
               builder append "action do\n"
-              builder append "log(\""+cli_sd+" -> Logger : "+mInfo+"\")\n"
+              builder append "log(\""+cli_sd+" -> "+srv_sd+" : "+mInfo+"\")\n"
               builder append outPort+"!"+m.getName+"("+getParameters(m)+")\n"
-              builder append "log(\"Logger -> "+srv_sd+" : "+mInfo+"\")\n"
+              //builder append "log(\"Logger -> "+srv_sd+" : "+mInfo+"\")\n"
               builder append "end\n"
             }
         }
@@ -208,9 +208,9 @@ object LoggerGenerator {
               builder append "internal\n"
               builder append "event e: "+inPort+"?"+m.getName+"\n"
               builder append "action do\n"
-              builder append "log(\""+srv_sd+" -> Logger : "+mInfo+"\")\n"
+              builder append "log(\""+srv_sd+" -> "+cli_sd+" : "+mInfo+"\")\n"
               builder append outPort+"!"+m.getName+"("+getParameters(m)+")\n"
-              builder append "log(\"Logger -> "+cli_sd+" : "+mInfo+"\")\n"
+              //builder append "log(\"Logger -> "+cli_sd+" : "+mInfo+"\")\n"
               builder append "end\n"
             }
         }
