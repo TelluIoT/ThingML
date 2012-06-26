@@ -461,9 +461,9 @@ object CGenerator {
       }
     }
 
-    val pb: ProcessBuilder = new ProcessBuilder("make")
+    var pb: ProcessBuilder = new ProcessBuilder("make")
     pb.directory(out)
-    val p: Process = pb.start
+    var p: Process = pb.start
 
     console_out ! p
     console_err ! p
@@ -564,6 +564,13 @@ object CGenerator {
     var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/Makefile")
     mtemplate = mtemplate.replace("/*NAME*/", cfg.getName)
 
+    if (context.debug) {
+      mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -DDEBUG")
+    }
+    else {
+      mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -O -w")
+    }
+
     val list = cfg.allThings.map{ t => t.getName } += cfg.getName
 
     if (cfg.getAnnotations.filter(a=> a.getName == "add_c_modules").size>0) {
@@ -571,8 +578,6 @@ object CGenerator {
          list += m.trim
       )
     }
-
-
 
     val srcs = list.map{ t => t + ".c" }.mkString(" ")
     val objs = list.map{ t => t + ".o" }.mkString(" ")
