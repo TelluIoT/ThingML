@@ -43,23 +43,21 @@ public class Serial4ThingML {
             if (osName.equals("Mac OS X")) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Mac_OS_X/librxtxSerial.jnilib"), "librxtxSerial.jnilib");
             }
-            if (osName.equals("Win32")) {
+            else if (osName.equals("Win32")) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Windows/win32/rxtxSerial.dll"), "rxtxSerial.dll");
             }
-            if (osName.equals("Win64") || osName.equals("Windows 7")) {
+            else if (osName.equals("Win64") || osName.equals("Windows 7")) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Windows/win64/rxtxSerial.dll"), "rxtxSerial.dll");
             }
-            if (osName.equals("Linux") && (osProc.equals("x86-64") || osProc.equals("amd64"))) {
-                System.out.println("Loading native rxtx libs...");
+            else if (osName.equals("Linux") && (osProc.equals("x86-64") || osProc.equals("amd64"))) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/x86_64-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so");
-                System.out.println("Done!");
             }
-            if (osName.equals("Linux") && osProc.equals("ia64")) {
+            else if (osName.equals("Linux") && osProc.equals("ia64")) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/ia64-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so");
             }
-            if (osName.equals("Linux") && osProc.equals("x86")) {
+            else if (osName.equals("Linux") && (osProc.equals("x86") || osProc.equals("i386"))) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/i686-unknown-linux-gnu/librxtxParallel.so"), "librxtxParallel.so");
-                NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/i686-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so");
+                NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAcdsStream("nativelib/Linux/i686-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so");
             }
         } catch (Exception e) {
             System.err.println("Cannot Load RxTx on " + osName + "(" + osProc + ")");
