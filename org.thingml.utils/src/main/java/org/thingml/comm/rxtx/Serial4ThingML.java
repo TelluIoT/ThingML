@@ -221,7 +221,7 @@ public class Serial4ThingML {
                     //System.out.println("byte[" + buffer_idx + "]" + (byte) data);
                     buffer[buffer_idx] = (byte) data;
 
-                    if (buffer[buffer_idx] == 0x13) {
+                    if (buffer[buffer_idx] == 0x13 && buffer[buffer_idx-1] != 0x7D) {
                         //System.out.println("  forward");
                         thing.receive(java.util.Arrays.copyOfRange(buffer, 0, buffer_idx + 1));
                         buffer_idx = 0;
