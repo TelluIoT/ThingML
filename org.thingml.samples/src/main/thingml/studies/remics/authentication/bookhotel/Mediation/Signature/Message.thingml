@@ -1,0 +1,38 @@
+// 
+// (c) SINTEF 2012
+//
+// Define the messages trying to book hotel on a remote service.
+// 
+// by Runze Hao (haoshaochi@gmail.com)
+//
+import "../../../../../../datatypes.thingml"
+
+//description for signature messages: client send message a, but server need message b, and a,b take same data 
+//but have simple type mismatches,so this mediator do the transformation
+// 2 parameters separated by semicolon ";"
+// the first one is 
+
+thing fragment SignatureMessage {//4 messages
+    
+    //ask if have empty rooms
+    message rSiM1(msg:Integer,msg1:String,msg2:Double,msg3:String)
+    @signature "rSiM1_;(msg-msg),(msg1-msg1),(null-msg2),(msg2-msg3),(msg3-null)";  //client send rSiM1, but server receives rSiM1_ 
+    message rSiM1_(msg:String,msg1:Integer,msg2:String,msg3:Integer); 
+    
+    message rRequest(msg:String);
+	message rReply(msg: String)
+    @signature "rReply_;(msg-msg)";
+    message rReply_(msg:String);
+    
+    //need ID
+    message inputID(msg:String);
+    message idReply(msg:Boolean);
+}
+
+
+//control to start and stop mediator
+thing fragment ControlMessage{
+    message startMsg();
+    message stopMsg();
+    
+}

@@ -1,0 +1,68 @@
+// 
+// (c) SINTEF 2012
+//
+// Define the messages trying to book hotel on a remote service.
+// 
+// by Runze Hao (haoshaochi@gmail.com)
+//
+import "../../../../../../datatypes.thingml"
+
+//description for merge messages: client send message b(a1),c(a2),d(a3) with parameters a1,a2,a3, 
+//but server need message a(a1,a2,a3)
+//so we need a mediator to transform this message mismatch
+//for the annotation @merge, we need  3 parameters separated by semicolon ";"
+// the first one is sequence number
+// the second is merged message infomation
+// the third is reply type, showing if mediator should create a reply and how to create it.
+
+thing fragment MergeMessage {
+    
+    // in this sample, client send rSpM1_1, rSpM1_2, rSpM1_3 but server receives rSpM1
+    // so the mediator need to do the following things 
+    // 1. client send rSpM1_1 , and mediator receive it, and log the parameters, 
+    //    create rSpM1_1_re and send back to cilent,  waiting for next messages to merge
+    // 2. client send rSpM1_2 , and mediator tranform it to rSpM1_2_, and log the parameters, 
+    //    create rSpM1_2_re and send back to cilent,  waiting for next messages to merge
+    // 3. client send rSpM1_3 , and mediator receive it, and merge all these three messages to rSpM1 message,
+    //    and send it to server
+    message rSpM1(msg:Integer,msg1:String,msg2:String,msg3:String); 
+     
+    message rSpM1_1(msg:Integer,msg1:String)
+    @merge "1/3;rSpM1,(msg-msg|msg1-msg1);rSpM1_1_re,(true)";  // first of three, target msg is rSpM1 and reply msg is rSpM1_1_re
+       
+    message rSpM1_1_re(msg:Boolean); 
+    
+    message rSpM1_2_re()@extra""; 
+    
+    message rSpM1_2(msg2:Double)
+    @signature "rSpM1_2_;(msg2-msg)"
+    @merge "2/3;rSpM1,(msg-msg2);rSpM1_2_re,()";
+    
+    
+    message rSpM1_2_(msg:String);
+    
+    message rSpM1_3(msg3:String)
+    @merge "3/3;rSpM1,(msg3-msg3);null";  // here see if need to create a reply or server will return one?
+    
+    message rSpM1_re(msg:Boolean);
+    
+
+    
+    
+    message rRequest(msg:String);
+	message rReply(msg: String)
+    @signature "rReply_;(msg-msg)";
+    message rReply_(msg:String);
+    
+    //need ID
+    message inputID(msg:String);
+    message idReply(msg:Boolean);
+}
+
+
+//control to start and stop mediator
+thing fragment ControlMessage{
+    message startMsg();
+    message stopMsg();
+    
+}

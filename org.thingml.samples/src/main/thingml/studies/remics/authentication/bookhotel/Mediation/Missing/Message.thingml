@@ -9,8 +9,8 @@ import "../../../../../../datatypes.thingml"
 
 // three situations for missing messages
 // 1. server or client receives at the first place, so no former message sent or received
-// 2. client(server) receives after sending a message, so has former message that server(client) sends
-// 3. client(server) receives after receiving a meesage, so has former message that client(server) sends
+// 2. client(server) receives after sending a message, so has former message that client(server) sends
+// 3. client(server) receives after receiving a meesage, so has former message that server(client) sends
 // so the annotation should be like (@missing "1;null;Server;rMiM1")
 // four parameters, the first means which situation, the second refers to former message name and "null" for no
 // the third : thing name and port name who receive this missing message, see examples below.
