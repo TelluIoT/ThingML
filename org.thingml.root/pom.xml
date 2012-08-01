@@ -13,7 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <thingml.version>${project.version}</thingml.version>
-        <eclipse.version>3.7.0</eclipse.version>
+        <eclipse.version>3.8.0</eclipse.version>
         <emf.version>2.7.0</emf.version>
         <scala.version>2.9.1</scala.version>
         <bundle.vendor>SINTEF</bundle.vendor>
