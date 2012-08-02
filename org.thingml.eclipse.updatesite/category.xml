@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.thingml.eclipse.feature_0.6.0.201208020847.jar" id="org.thingml.eclipse.feature" version="0.6.0.201208020847">
+   <feature url="features/org.thingml.eclipse.feature_0.6.0.qualifier.jar" id="org.thingml.eclipse.feature" version="0.6.0.qualifier">
       <category name="org.thingml"/>
    </feature>
    <category-def name="org.thingml" label="ThingML"/>
