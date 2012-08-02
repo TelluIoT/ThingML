@@ -13,4 +13,37 @@
 	<packaging>eclipse-repository</packaging>
 
 	<name>ThingML Eclipse Update Site</name>
+
+	<build>
+		<plugins>
+			<plugin>
+                <groupId>com.goldin.plugins</groupId>
+                <artifactId>maven-copy-plugin</artifactId>
+                <version>0.2.3</version>
+                <executions>
+                    <execution>
+                        <id>create-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+
+                                <resource>
+                                    <targetPath>/var/www/dist</targetPath>
+                                    <file>${basedir}/target/repository</file>
+                                    <destFileName>update</destFileName>
+                                </resource>
+
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>	        
+		</plugins>
+	</build>  
+
 </project> 
+
+     
