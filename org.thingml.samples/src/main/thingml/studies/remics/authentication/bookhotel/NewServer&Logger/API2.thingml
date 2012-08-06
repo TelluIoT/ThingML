@@ -13,7 +13,3 @@ thing fragment API2BookHotel {
     message bookhotel(bookHotelRequest:String, ID:String, SingleRoomNumber:Integer, DoubleRoomNumber:Integer);
 	message result4substitute(bookReply: Boolean);
 }
-
-
-// WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// the initial letter of a message name can't be capital.

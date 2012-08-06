@@ -98,7 +98,7 @@ thing Client includes API1BookHotel{
 
 thing API1BookHotelFakeClient includes API1BookHotel
 @mock "true" {
-	required port ServerBookPort {
+	required port BookHotel {
         sends rRequest,inputID,typeRequest,number
         receives rReply,idReply,typeReply,result
 	} 

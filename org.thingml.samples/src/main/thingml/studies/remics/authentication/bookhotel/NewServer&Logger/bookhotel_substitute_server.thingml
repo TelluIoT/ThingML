@@ -59,3 +59,11 @@ thing API2BookHotelFakeServer includes API2BookHotel
         sends result4substitute
 	} 
 }
+
+thing API2BookHotelFakeClient includes API2BookHotel
+@mock "true" {
+	required port CilentBookPort {
+        sends bookhotel
+        receives result4substitute
+	} 
+}
