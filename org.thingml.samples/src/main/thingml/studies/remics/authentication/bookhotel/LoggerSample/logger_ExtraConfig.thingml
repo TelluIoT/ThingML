@@ -37,7 +37,6 @@ on entry do
 print "Logger start!"
 log("@startuml")
 log("autonumber \"<b>[000]\"")
-log("participant Logger as \"Logger_ExtraConfig \" <<(L,#EEEEEE)>> #99FF99")
 end
 on exit do
 log("@enduml")
@@ -51,72 +50,62 @@ event e: PrvPort_Control?stopMsg
 internal
 event e: PrvPort_ExtraConfig_c1_ServerBookPort?rRequest
 action do
-log("\"ExtraConfig_c1:API1BookHotelFakeClient\" -> Logger : rRequest("+"\""+e.roomRequest+"\""+")")
+log("\"ExtraConfig_c1:API1BookHotelFakeClient\" -> \"ExtraConfig_s1:Server\" : rRequest("+"\""+e.roomRequest+"\""+")")
 ReqPort_ExtraConfig_s1_CilentBookPort!rRequest(e.roomRequest)
-log("Logger -> \"ExtraConfig_s1:Server\" : rRequest("+"\""+e.roomRequest+"\""+")")
 end
 internal
 event e: PrvPort_ExtraConfig_c1_ServerBookPort?inputID
 action do
-log("\"ExtraConfig_c1:API1BookHotelFakeClient\" -> Logger : inputID("+"\""+e.ID+"\""+")")
+log("\"ExtraConfig_c1:API1BookHotelFakeClient\" -> \"ExtraConfig_s1:Server\" : inputID("+"\""+e.ID+"\""+")")
 ReqPort_ExtraConfig_s1_CilentBookPort!inputID(e.ID)
-log("Logger -> \"ExtraConfig_s1:Server\" : inputID("+"\""+e.ID+"\""+")")
 end
 internal
 event e: PrvPort_ExtraConfig_c1_ServerBookPort?typeRequest
 action do
-log("\"ExtraConfig_c1:API1BookHotelFakeClient\" -> Logger : typeRequest("+"\""+e.RTRequest+"\""+")")
+log("\"ExtraConfig_c1:API1BookHotelFakeClient\" -> \"ExtraConfig_s1:Server\" : typeRequest("+"\""+e.RTRequest+"\""+")")
 ReqPort_ExtraConfig_s1_CilentBookPort!typeRequest(e.RTRequest)
-log("Logger -> \"ExtraConfig_s1:Server\" : typeRequest("+"\""+e.RTRequest+"\""+")")
 end
 internal
 event e: PrvPort_ExtraConfig_c1_ServerBookPort?number
 action do
-log("\"ExtraConfig_c1:API1BookHotelFakeClient\" -> Logger : number("+e.SingleRoomNumber+","+e.DoubleRoomNumber+")")
+log("\"ExtraConfig_c1:API1BookHotelFakeClient\" -> \"ExtraConfig_s1:Server\" : number("+e.SingleRoomNumber+","+e.DoubleRoomNumber+")")
 ReqPort_ExtraConfig_s1_CilentBookPort!number(e.SingleRoomNumber,e.DoubleRoomNumber)
-log("Logger -> \"ExtraConfig_s1:Server\" : number("+e.SingleRoomNumber+","+e.DoubleRoomNumber+")")
 end
 internal
 event e: ReqPort_ExtraConfig_s1_CilentBookPort?rReply
 action do
-log("\"ExtraConfig_s1:Server\" -> Logger : rReply("+e.roomReply+")")
+log("\"ExtraConfig_s1:Server\" -> \"ExtraConfig_c1:API1BookHotelFakeClient\" : rReply("+e.roomReply+")")
 PrvPort_ExtraConfig_c1_ServerBookPort!rReply(e.roomReply)
-log("Logger -> \"ExtraConfig_c1:API1BookHotelFakeClient\" : rReply("+e.roomReply+")")
 end
 internal
 event e: ReqPort_ExtraConfig_s1_CilentBookPort?idReply
 action do
-log("\"ExtraConfig_s1:Server\" -> Logger : idReply("+e.reply+")")
+log("\"ExtraConfig_s1:Server\" -> \"ExtraConfig_c1:API1BookHotelFakeClient\" : idReply("+e.reply+")")
 PrvPort_ExtraConfig_c1_ServerBookPort!idReply(e.reply)
-log("Logger -> \"ExtraConfig_c1:API1BookHotelFakeClient\" : idReply("+e.reply+")")
 end
 internal
 event e: ReqPort_ExtraConfig_s1_CilentBookPort?typeReply
 action do
-log("\"ExtraConfig_s1:Server\" -> Logger : typeReply("+"\""+e.single+"\""+","+"\""+e.double+"\""+")")
+log("\"ExtraConfig_s1:Server\" -> \"ExtraConfig_c1:API1BookHotelFakeClient\" : typeReply("+"\""+e.single+"\""+","+"\""+e.double+"\""+")")
 PrvPort_ExtraConfig_c1_ServerBookPort!typeReply(e.single,e.double)
-log("Logger -> \"ExtraConfig_c1:API1BookHotelFakeClient\" : typeReply("+"\""+e.single+"\""+","+"\""+e.double+"\""+")")
 end
 internal
 event e: ReqPort_ExtraConfig_s1_CilentBookPort?result
 action do
-log("\"ExtraConfig_s1:Server\" -> Logger : result("+e.bookresult+")")
+log("\"ExtraConfig_s1:Server\" -> \"ExtraConfig_c1:API1BookHotelFakeClient\" : result("+e.bookresult+")")
 PrvPort_ExtraConfig_c1_ServerBookPort!result(e.bookresult)
-log("Logger -> \"ExtraConfig_c1:API1BookHotelFakeClient\" : result("+e.bookresult+")")
 end
 internal
 event e: PrvPort_ExtraConfig_c_ExtraPort?begin
 action do
-log("\"ExtraConfig_c:Client_Extra_Fake\" -> Logger : begin("+"\""+e.msg+"\""+")")
+log("\"ExtraConfig_c:Client_Extra_Fake\" -> \"ExtraConfig_s:Server_Extra\" : begin("+"\""+e.msg+"\""+")")
 ReqPort_ExtraConfig_s_ExtraPort!begin(e.msg)
-log("Logger -> \"ExtraConfig_s:Server_Extra\" : begin("+"\""+e.msg+"\""+")")
 end
 internal
 event e: ReqPort_ExtraConfig_s_ExtraPort?begin_r
 action do
-log("\"ExtraConfig_s:Server_Extra\" -> Logger : begin_r("+"\""+e.msg+"\""+")")
+log("\"ExtraConfig_s:Server_Extra\" -> \"ExtraConfig_c:Client_Extra_Fake\" : begin_r("+"\""+e.msg+"\""+")")
 PrvPort_ExtraConfig_c_ExtraPort!begin_r(e.msg)
-log("Logger -> \"ExtraConfig_c:Client_Extra_Fake\" : begin_r("+"\""+e.msg+"\""+")")
 end
 }
 }

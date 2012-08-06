@@ -120,6 +120,9 @@ object KevoreeGenerator {
   def compileKevScript(cfg:Configuration){
     var kevScript:StringBuilder= new StringBuilder()
     kevScript append "tblock\n{\n"
+    kevScript append "merge \"mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.javaseNode/{kevoree.version}\"\n"
+    kevScript append "merge \"mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.nanohttp/{kevoree.version}\"\n"
+    kevScript append "merge \"mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.defaultChannels/{kevoree.version}\"\n"
     kevScript append "addNode node0 : JavaSENode\n"
     kevScript append "addGroup sync: NanoRestGroup \n"
     kevScript append "addToGroup sync* \n"

@@ -1,34 +1,34 @@
 /*
-* This is a mediator for Configratrion(ExtraConfig) generated automatically
-* by Runze Hao (haoshaochi@gmail.com)
+*This is a logger for Configratrion(ExtraConfig) generated automatically
 */
 import "Configs.thingml"
-thing Mediator_ExtraConfig includes ControlMessage,Logger,ExtraMessage
+thing Logger_ExtraConfig includes ControlMessage,Logger,SplitMessage
 {
 provided port PrvPort_ExtraConfig_c1_Toserver {
-receives rRequest,inputID,rExtra
-sends rReply,idReply
+receives rRequest,inputID,rSpM1
+sends rReply_,idReply,rSpM1_3_re
 }
 required port ReqPort_ExtraConfig_s1_Toclient {
-sends rRequest,inputID
-receives rReply,idReply
+sends rRequest,inputID,rSpM1_1,rSpM1_2_,rSpM1_3
+receives rReply,idReply,rSpM1_1_re,rSpM1_2_re,rSpM1_3_re
 }
 provided port PrvPort_Control{
 receives startMsg, stopMsg
 }
-statechart Mediator init Ready {
+statechart Logger init Ready {
 state Ready{
 on entry do
 clearlog()
 print "Ready, Waiting for startMsg trigger"
 end
-transition->Working
+transition->Logging
 event e:PrvPort_Control?startMsg
 }
-state Working{
+state Logging{
 on entry do
-print " start!"
+print "Logger start!"
 log("@startuml")
+log("autonumber \"<b>[000]\"")
 end
 on exit do
 log("@enduml")
@@ -42,42 +42,29 @@ event e: PrvPort_Control?stopMsg
 internal
 event e: PrvPort_ExtraConfig_c1_Toserver?rRequest
 action do
-log("ExtraConfig_c1 -> Mediator_ExtraConfig : rRequest")
+log("\"ExtraConfig_c1:FakeClient\" -> \"ExtraConfig_s1:Server\" : rRequest("+"\""+e.msg+"\""+")")
 ReqPort_ExtraConfig_s1_Toclient!rRequest(e.msg)
-log("Mediator_ExtraConfig -> ExtraConfig_s1 : rRequest")
 end
 internal
 event e: PrvPort_ExtraConfig_c1_Toserver?inputID
 action do
-log("ExtraConfig_c1 -> Mediator_ExtraConfig : inputID")
+log("\"ExtraConfig_c1:FakeClient\" -> \"ExtraConfig_s1:Server\" : inputID("+"\""+e.msg+"\""+")")
 ReqPort_ExtraConfig_s1_Toclient!inputID(e.msg)
-log("Mediator_ExtraConfig -> ExtraConfig_s1 : inputID")
-end
-internal
-event e: PrvPort_ExtraConfig_c1_Toserver?rExtra
-action do
-log("ExtraConfig_c1 -> Mediator_ExtraConfig : rExtra")
-swallow("rExtra")
-end
-internal
-event e: ReqPort_ExtraConfig_s1_Toclient?rReply
-action do
-log("ExtraConfig_s1 -> Mediator_ExtraConfig : rReply")
-PrvPort_ExtraConfig_c1_Toserver!rReply(e.msg)
-log("Mediator_ExtraConfig -> ExtraConfig_c1 : rReply")
 end
 internal
 event e: ReqPort_ExtraConfig_s1_Toclient?idReply
 action do
-log("ExtraConfig_s1 -> Mediator_ExtraConfig : idReply")
+log("\"ExtraConfig_s1:Server\" -> \"ExtraConfig_c1:FakeClient\" : idReply("+e.msg+")")
 PrvPort_ExtraConfig_c1_Toserver!idReply(e.msg)
-log("Mediator_ExtraConfig -> ExtraConfig_c1 : idReply")
+end
+internal
+event e: ReqPort_ExtraConfig_s1_Toclient?rSpM1_3_re
+action do
+log("\"ExtraConfig_s1:Server\" -> \"ExtraConfig_c1:FakeClient\" : rSpM1_3_re("+e.msg+")")
+PrvPort_ExtraConfig_c1_Toserver!rSpM1_3_re(e.msg)
 end
 }
 }
-function swallow(m:String) do
-print"extra message "+m+" received and swallowed! "
-end
 }
 
 thing Logger
@@ -106,4 +93,14 @@ thing Control includes ControlMessage
 required port ControlPort{
 sends startMsg, stopMsg
 }
+}
+
+configuration Config_Logger_ExtraConfig{
+instance control: Control
+instance logger: Logger_ExtraConfig
+instance ins_ExtraConfig_s1: Server
+instance ins_ExtraConfig_c1: FakeClient
+connector control.ControlPort => logger.PrvPort_Control
+connector ins_ExtraConfig_c1.Toserver=> logger.PrvPort_ExtraConfig_c1_Toserver
+connector logger.ReqPort_ExtraConfig_s1_Toclient=> ins_ExtraConfig_s1.Toclient
 }

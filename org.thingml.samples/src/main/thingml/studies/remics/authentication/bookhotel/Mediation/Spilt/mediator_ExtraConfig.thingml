@@ -3,15 +3,15 @@
 * by Runze Hao (haoshaochi@gmail.com)
 */
 import "Configs.thingml"
-thing Mediator_ExtraConfig includes ControlMessage,Logger,MissingMessage
+thing Mediator_ExtraConfig includes ControlMessage,Logger,SplitMessage
 {
 provided port PrvPort_ExtraConfig_c1_Toserver {
-receives rRequest,inputID
-sends rReply,idReply,rMiM2,rMiM4
+receives rRequest,inputID,rSpM1
+sends rReply_,idReply,rSpM1_3_re
 }
 required port ReqPort_ExtraConfig_s1_Toclient {
-sends rRequest,inputID,rMiM1,rMiM3
-receives rReply,idReply
+sends rRequest,inputID,rSpM1_1,rSpM1_2_,rSpM1_3
+receives rReply,idReply,rSpM1_1_re,rSpM1_2_re,rSpM1_3_re
 }
 provided port PrvPort_Control{
 receives startMsg, stopMsg
@@ -29,7 +29,6 @@ print " start!"
 log("@startuml")
 log("autonumber \"<b>[000]\"")
 log("participant Mediator_ExtraConfig <<(M,#EEEEEE)>> #99FF99")
-createAndSendrMiM1()
 end
 }
 state Working{
@@ -55,9 +54,6 @@ action do
 log("\"ExtraConfig_c1:FakeClient\" -> Mediator_ExtraConfig : rRequest("+"\""+e.msg+"\""+")")
 ReqPort_ExtraConfig_s1_Toclient!rRequest(e.msg)
 log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : rRequest("+"\""+e.msg+"\""+")")
-createAndSendrMiM2()
-createAndSendrMiM4()
-createAndSendrMiM3()
 end
 internal
 event e: PrvPort_ExtraConfig_c1_Toserver?inputID
@@ -67,11 +63,16 @@ ReqPort_ExtraConfig_s1_Toclient!inputID(e.msg)
 log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : inputID("+"\""+e.msg+"\""+")")
 end
 internal
+event e: PrvPort_ExtraConfig_c1_Toserver?rSpM1
+action do
+log("\"ExtraConfig_c1:FakeClient\" -> Mediator_ExtraConfig : rSpM1("+e.msg+","+"\""+e.msg1+"\""+","+e.msg2+","+"\""+e.msg3+"\""+")")
+splitrSpM1_PrvPort_ExtraConfig_c1_Toserver(e.msg,e.msg1,e.msg2,e.msg3)
+end
+internal
 event e: ReqPort_ExtraConfig_s1_Toclient?rReply
 action do
 log("\"ExtraConfig_s1:Server\" -> Mediator_ExtraConfig : rReply("+"\""+e.msg+"\""+")")
-PrvPort_ExtraConfig_c1_Toserver!rReply(e.msg)
-log("Mediator_ExtraConfig -> \"ExtraConfig_c1:FakeClient\" : rReply("+"\""+e.msg+"\""+")")
+transformrReply_ReqPort_ExtraConfig_s1_Toclient(e.msg)
 end
 internal
 event e: ReqPort_ExtraConfig_s1_Toclient?idReply
@@ -80,26 +81,46 @@ log("\"ExtraConfig_s1:Server\" -> Mediator_ExtraConfig : idReply("+e.msg+")")
 PrvPort_ExtraConfig_c1_Toserver!idReply(e.msg)
 log("Mediator_ExtraConfig -> \"ExtraConfig_c1:FakeClient\" : idReply("+e.msg+")")
 end
+internal
+event e: ReqPort_ExtraConfig_s1_Toclient?rSpM1_1_re
+action do
+log("\"ExtraConfig_s1:Server\" -> Mediator_ExtraConfig : rSpM1_1_re()")
+swallow("rSpM1_1_re")
+end
+internal
+event e: ReqPort_ExtraConfig_s1_Toclient?rSpM1_2_re
+action do
+log("\"ExtraConfig_s1:Server\" -> Mediator_ExtraConfig : rSpM1_2_re()")
+swallow("rSpM1_2_re")
+end
+internal
+event e: ReqPort_ExtraConfig_s1_Toclient?rSpM1_3_re
+action do
+log("\"ExtraConfig_s1:Server\" -> Mediator_ExtraConfig : rSpM1_3_re("+e.msg+")")
+PrvPort_ExtraConfig_c1_Toserver!rSpM1_3_re(e.msg)
+log("Mediator_ExtraConfig -> \"ExtraConfig_c1:FakeClient\" : rSpM1_3_re("+e.msg+")")
+end
 }
 }
 function swallow(m:String) do
 print"extra message "+m+" received and swallowed! "
 end
-function createAndSendrMiM4() do
-PrvPort_ExtraConfig_c1_Toserver!rMiM4("rMiM4")
-log("Mediator_ExtraConfig -> \"ExtraConfig_c1:FakeClient\" : rMiM4(\"rMiM4\")")
+function transformrSpM1_2_PrvPort_ExtraConfig_c1_Toserver(msg2:Double) do
+var msg1587861567 :String = ''&msg2&'.toString'
+ReqPort_ExtraConfig_s1_Toclient!rSpM1_2_(msg1587861567)
+log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : rSpM1_2_("+"\""+msg1587861567+"\""+")")
 end
-function createAndSendrMiM1() do
-ReqPort_ExtraConfig_s1_Toclient!rMiM1("rMiM1")
-log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : (rMiM1(\"rMiM1\")")
+function transformrReply_ReqPort_ExtraConfig_s1_Toclient(msg:String) do
+var msg885558881 :String = msg
+PrvPort_ExtraConfig_c1_Toserver!rReply_(msg885558881)
+log("Mediator_ExtraConfig -> \"ExtraConfig_c1:FakeClient\" : rReply_("+"\""+msg885558881+"\""+")")
 end
-function createAndSendrMiM2() do
-PrvPort_ExtraConfig_c1_Toserver!rMiM2("rMiM2", true)
-log("Mediator_ExtraConfig -> \"ExtraConfig_c1:FakeClient\" : rMiM2(\"rMiM2\", true)")
-end
-function createAndSendrMiM3() do
-ReqPort_ExtraConfig_s1_Toclient!rMiM3("rMiM3")
-log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : (rMiM3(\"rMiM3\")")
+function splitrSpM1_PrvPort_ExtraConfig_c1_Toserver(msg:Integer,msg1:String,msg2:Double,msg3:String) do
+ReqPort_ExtraConfig_s1_Toclient!rSpM1_1(msg,msg1)
+log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : rSpM1_1("+msg+","+"\""+msg1+"\""+")")
+transformrSpM1_2_PrvPort_ExtraConfig_c1_Toserver(msg2)
+ReqPort_ExtraConfig_s1_Toclient!rSpM1_3(msg3)
+log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : rSpM1_3("+"\""+msg3+"\""+")")
 end
 }
 

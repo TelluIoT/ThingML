@@ -62,7 +62,8 @@ public class ImageDrawingApplet extends JApplet {
 
     public void buildUI() {
         final ImageDrawingComponent id = new ImageDrawingComponent(imageSrc);
-        add("Center", id);
+        JScrollPane jsp = new JScrollPane(id);
+        add(jsp);
         id.repaint();
     }
 
@@ -77,6 +78,7 @@ public class ImageDrawingApplet extends JApplet {
                 System.exit(0);
             }
         });
+        
         URL imageSrc = null;
         try {
             imageSrc = ((new File(filename)).toURI()).toURL();
@@ -85,7 +87,8 @@ public class ImageDrawingApplet extends JApplet {
         }
         ImageDrawingApplet id = new ImageDrawingApplet(imageSrc);
         id.buildUI();
-        f.add("Center", id);
+
+       f.add("Center", id);
         f.pack();
         f.setVisible(true);
     }
