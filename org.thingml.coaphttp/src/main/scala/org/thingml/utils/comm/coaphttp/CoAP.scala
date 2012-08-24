@@ -62,7 +62,7 @@ class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boole
         httpURLs.par.map{ url =>
           val realURL = new URL(url)          
           actor{SensAppHelper.pushData(realURL, JsonParser.toJson(root))}
-          var data : String = "Sent " + JsonParser.toJson(root) + "\n to " + url + "\n"
+          var data : String = "Sent " + JsonParser.toJson(root) + "\n to " + url + "\n\t#Measurements: " + root.measurementsOrParameters.get.size
           data
         }.mkString("\n")
       case (None, errors) =>

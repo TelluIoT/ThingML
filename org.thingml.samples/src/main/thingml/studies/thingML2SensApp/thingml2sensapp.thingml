@@ -1,34 +1,34 @@
 import "../../datatypes.thingml"
 
 thing fragment RemoteMonitoringMsgs
-@http_registry "http://46.51.169.123:8080/registry/sensors"
+@http_registry "http://46.51.169.123:8080/sensapp/registry/sensors"
 {
-    message report_temperature(temp : UInt16)
+    message temperature(temp : UInt16)
     @code "10"
-    @http "http://46.51.169.123:8080/dispatch"
+    @http "http://46.51.169.123:8080/sensapp/dispatch"
     @senML_unit "degC";
     
-    message report_light(light : UInt16)
+    message light(light : UInt16)
     @code "11"
-    @http "http://46.51.169.123:8080/dispatch"
+    @http "http://46.51.169.123:8080/sensapp/dispatch"
     @senML_unit "lx";
     
-    message report_rotation(angle : UInt16)
+    /*message rotation(angle : UInt16)
     @code "12"
-    @http "http://46.51.169.123:8080/dispatch"
-    @senML_unit "rad";
+    @http "http://46.51.169.123:8080/sensapp/dispatch"
+    @senML_unit "rad";*/
     
     
-    message remote_changeDisplay()
+    message changeDisplay()
     @code "20"
-    @http "http://46.51.169.123:8080/dispatch";
+    @http "http://46.51.169.123:8080/sensapp/dispatch";
     
-    message remote_turnOn()
+    message turnOn()
     @code "21"
-    @http "http://46.51.169.123:8080/dispatch";
+    @http "http://46.51.169.123:8080/sensapp/dispatch";
     
-    message remote_turnOff()
+    message turnOff()
     @code "22"
-    @http "http://46.51.169.123:8080/dispatch";
+    @http "http://46.51.169.123:8080/sensapp/dispatch";
     
 }

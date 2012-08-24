@@ -60,7 +60,7 @@ trait CoAPThingML {
       i = i+1
     }
     escaped(j) = 0x13    
-    println("escaped: " + java.util.Arrays.copyOf(escaped, j+1).mkString("[", ", ", "]"))
+    //println("escaped: " + java.util.Arrays.copyOf(escaped, j+1).mkString("[", ", ", "]"))
     return java.util.Arrays.copyOf(escaped, j+1)
   }
   

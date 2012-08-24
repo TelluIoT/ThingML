@@ -7,14 +7,14 @@ import "../thingml2sensapp.thingml"
 
 
 //test thing
-thing RemoteMonitoringStub includes RemoteMonitoringMsgs
+thing WeatherStation includes RemoteMonitoringMsgs
 @mock "true"
 {
     provided port RemoteControl
     {
-        sends remote_turnOn, remote_turnOff, remote_changeDisplay
-        receives remote_turnOn, remote_turnOff, remote_changeDisplay
-        receives report_temperature, report_light, report_rotation    
+        sends turnOn, turnOff, changeDisplay
+        receives turnOn, turnOff, changeDisplay
+        receives temperature, light//, rotation    
     }
 	     
 }
@@ -36,24 +36,24 @@ thing fragment RemoteMsgs includes RemoteMonitoringMsgs{
 
 thing MessageSerializer includes SerializerScala, RemoteMsgs {
 required port RemoteControl{
-receives remote_turnOn, remote_turnOff, remote_changeDisplay
+receives turnOn, turnOff, changeDisplay
 }
 
 statechart SerializerBehavior init Serialize {
 state Serialize{
-internal event m : RemoteControl?remote_changeDisplay action
+internal event m : RemoteControl?changeDisplay action
 do
 setHeader(20, 0)
 send()
 end
 
-internal event m : RemoteControl?remote_turnOff action
+internal event m : RemoteControl?turnOff action
 do
 setHeader(22, 0)
 send()
 end
 
-internal event m : RemoteControl?remote_turnOn action
+internal event m : RemoteControl?turnOn action
 do
 setHeader(21, 0)
 send()
@@ -66,7 +66,7 @@ end
 
 thing MessageDeserializer includes DeserializerScala, ArraySerializer, RemoteMsgs {
 required port RemoteControl{
-sends report_temperature, report_light, report_rotation
+sends temperature, light//, report_rotation
 }
 
 function forward() do
@@ -75,9 +75,9 @@ readonly var code : Byte = buffer[CODE_POSITION]
 if (code == 11) do
 deserializeReport_light()
 end
-if (code == 12) do
+/*if (code == 12) do
 deserializeReport_rotation()
-end
+end*/
 if (code == 10) do
 deserializeReport_temperature()
 end
@@ -86,21 +86,21 @@ end
 function deserializeReport_light()
 do
 readonly var t : UInt16 = deserializeUInt16()
-RemoteControl!report_light(t)
+RemoteControl!light(t)
 out!write_bytes(escape())
 end
 
-function deserializeReport_rotation()
+/*function deserializeReport_rotation()
 do
 readonly var t : UInt16 = deserializeUInt16()
 RemoteControl!report_rotation(t)
 out!write_bytes(escape())
-end
+end*/
 
 function deserializeReport_temperature()
 do
 readonly var t : UInt16 = deserializeUInt16()
-RemoteControl!report_temperature(t)
+RemoteControl!temperature(t)
 out!write_bytes(escape())
 end
 
@@ -116,7 +116,7 @@ action receive(m.b)
 
 thing MessageDeserializer2 includes DeserializerScala, ArraySerializer, RemoteMsgs {
 required port RemoteControl{
-sends remote_turnOn, remote_turnOff, remote_changeDisplay
+sends turnOn, turnOff, changeDisplay
 }
 
 function forward() do
@@ -135,19 +135,19 @@ end
 
 function deserializeRemote_changeDisplay()
 do
-RemoteControl!remote_changeDisplay()
+RemoteControl!changeDisplay()
 out!write_bytes(escape())
 end
 
 function deserializeRemote_turnOff()
 do
-RemoteControl!remote_turnOff()
+RemoteControl!turnOff()
 out!write_bytes(escape())
 end
 
 function deserializeRemote_turnOn()
 do
-RemoteControl!remote_turnOn()
+RemoteControl!turnOn()
 out!write_bytes(escape())
 end
 
@@ -169,10 +169,10 @@ action receive(m.b)
 
 
 
-configuration CoAPHTTPTempSensorDisplay
-@remote "stub::.*::RemoteControl::.*"
+configuration WeatherStation
+@remote "lab::.*::RemoteControl::.*"
 {
-    instance stub : RemoteMonitoringStub
+    instance lab : WeatherStation
     
     instance serializer : MessageSerializer//ThingML messages to byte[]
     instance deserializer : MessageDeserializer//byte[] to ThingML messages
@@ -186,28 +186,28 @@ configuration CoAPHTTPTempSensorDisplay
     //Telemetry: Serial -> CoAP (-> SensApp)
     connector deserializer.in => serial.IOStream
     connector deserializer.out => coapClient.IOStream
-    connector deserializer.RemoteControl => stub.RemoteControl
+    connector deserializer.RemoteControl => lab.RemoteControl
     
     //Remote control: (SensApp ->) CoAP -> Serial
     connector deserializer2.in => coapServer.IOStream
     connector deserializer2.out => serial.IOStream
-    connector deserializer2.RemoteControl => stub.RemoteControl
+    connector deserializer2.RemoteControl => lab.RemoteControl
     
     connector serializer.out => serial.IOStream
-    connector serializer.RemoteControl => stub.RemoteControl
+    connector serializer.RemoteControl => lab.RemoteControl
 }
 
-
-/*configuration SerialTempSensorDisplay
+/*
+configuration SerialTempSensorDisplay
 @remote "stub::.*::RemoteControl::.*"
 {
     instance stub : RemoteMonitoringStub
-    //instance deserializer : MessageDeserializer
+    instance deserializer : MessageDeserializer
     instance serializer : MessageSerializer
     instance serial : SerialScala
     
-    //connector deserializer.network => serial.IOStream
-    //connector deserializer.RemoteControl => stub.RemoteControl
-    connector serializer.network => serial.IOStream
+    connector deserializer.in => serial.IOStream
+    connector deserializer.RemoteControl => stub.RemoteControl
+    connector serializer.out => serial.IOStream
     connector serializer.RemoteControl => stub.RemoteControl
 }*/

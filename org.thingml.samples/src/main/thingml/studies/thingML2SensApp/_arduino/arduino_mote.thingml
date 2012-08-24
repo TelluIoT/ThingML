@@ -1,6 +1,6 @@
 import "../../../hardware/devices/_arduino/lcd_screen_sensor_disp.thingml"
 import "../../../hardware/bricks/_arduino/temperature_sensor.thingml"
-import "../../../hardware/bricks/_arduino/rotation_sensor.thingml"
+//import "../../../hardware/bricks/_arduino/rotation_sensor.thingml"
 import "../../../hardware/bricks/_arduino/light_sensor.thingml"
 import "../../../hardware/bricks/_arduino/led.thingml"
 import "../../../hardware/bricks/_arduino/button.thingml"
@@ -13,18 +13,18 @@ import "../thingml2sensapp.thingml"
 
 thing SensorsDisplay includes RemoteMonitoringMsgs,
 LcdScreenMsgs, TimerClient,
-RotationSensorClient, TemperatureSensorClient, LightSensorClient,
+/*RotationSensorClient, */TemperatureSensorClient, LightSensorClient,
 LedClient, ButtonClient
 {		
 	readonly property tempDisplay : UInt8 = 0
-	readonly property potDisplay : UInt8 = 1
+	//readonly property potDisplay : UInt8 = 1
     readonly property lightDisplay : UInt8 = 2
     
     property temp : UInt16
     property light : UInt16
-    property rotation : UInt16
+    //property rotation : UInt16
     
-    readonly property period : UInt16 = 2000
+    readonly property period : UInt16 = 5000
 	
 	required port Display @sync_send "true"
     {	
@@ -34,13 +34,13 @@ LedClient, ButtonClient
     provided port RemoteControl @sync_send "true"
     {
         receives remote_turnOn, remote_turnOff, remote_changeDisplay
-        sends report_temperature, report_light, report_rotation    
+        sends report_temperature, report_light//, report_rotation    
     }
 	
-   	statechart SensorsDisplayImpl init Pot
+   	statechart SensorsDisplayImpl init Temp
    	{
    		on entry do
-            Display!initDisplay (potDisplay, "Position", "", 0, 0, 1023)
+            //Display!initDisplay (potDisplay, "Position", "", 0, 0, 1023)
         	Display!initDisplay (tempDisplay, "Temperature", "C", 25, 20, 30)  
             Display!initDisplay (lightDisplay, "Light", "", 0, 0, 1023)
             timer!timer_start(period)
@@ -52,7 +52,7 @@ LedClient, ButtonClient
             Led!led_toggle()
             RemoteControl!report_temperature(temp)
             RemoteControl!report_light(light)
-            RemoteControl!report_rotation(rotation*46/10000)//gives approximately the value in radians
+            //RemoteControl!report_rotation(rotation*46/10000)//gives approximately the value in radians
             Led!led_toggle()
         end
    	    
@@ -68,11 +68,11 @@ LedClient, ButtonClient
             light = m.val        
         end
         	
-        internal event m : RotationSensor?rotation_value
+        /*internal event m : RotationSensor?rotation_value
         action do
             Display!refreshDisplay (potDisplay, m.val)
             rotation = m.val
-        end
+        end*/
 
         internal event m : RemoteControl?remote_turnOn
         action Led!led_on()
@@ -84,19 +84,19 @@ LedClient, ButtonClient
         {		
         	on entry Display!setDisplay (tempDisplay)
         	
-        	transition switch -> Pot
+        	transition switch -> Light//Pot
         	event Button?press
             event RemoteControl?remote_changeDisplay
         }
         
-        state Pot
+        /*state Pot
         {		
         	on entry Display!setDisplay (potDisplay)
         
         	transition switch -> Light
         	event Button?press
             event RemoteControl?remote_changeDisplay
-        }
+        }*/
         
         state Light
         {		
@@ -129,7 +129,7 @@ thing fragment RemoteMsgs includes RemoteMonitoringMsgs{
 
 thing MessageSerializer includes SerializerArduino, RemoteMsgs {
 required port RemoteControl{
-receives report_temperature, report_light, report_rotation
+receives report_temperature, report_light//, report_rotation
 }
 
 statechart SerializerBehavior init Serialize {
@@ -141,12 +141,12 @@ serializeUInt16(m.light)
 send()
 end
 
-internal event m : RemoteControl?report_rotation action
+/*internal event m : RemoteControl?report_rotation action
 do
 setHeader(12, lengthUInt16)
 serializeUInt16(m.angle)
 send()
-end
+end*/
 
 internal event m : RemoteControl?report_temperature action
 do
@@ -245,8 +245,8 @@ configuration TempSensorDisplay
 		set temp_sensor.io.analog_input.pin = AnalogPin:A_3
 
 	// Rotation sensor configuration.
-	group rot_sensor : RotationSensorArduino
-		set rot_sensor.io.analog_input.pin = AnalogPin:A_5
+	/*group rot_sensor : RotationSensorArduino
+		set rot_sensor.io.analog_input.pin = AnalogPin:A_5*/
 	
 	// Led device configuration.
 	group led : LedArduino
@@ -265,7 +265,7 @@ configuration TempSensorDisplay
 	connector app.Display => screen.Display
 	connector app.TemperatureSensor => temp_sensor.temperature_sensor.TemperatureSensor
     connector app.LightSensor => light_sensor.light_sensor.LightSensor
-    connector app.RotationSensor => rot_sensor.rotation_sensor.RotationSensor
+    //connector app.RotationSensor => rot_sensor.rotation_sensor.RotationSensor
     connector app.Button => button.button.Button
     connector app.Led => led.led.Led
     connector app.timer => timer.timer
