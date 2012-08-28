@@ -328,7 +328,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
   def generateParseNoParam(name : String) : String = {
     val builder = new StringBuilder()
     builder append "createMeasurement(\"" + name + "\", \"\", true, System.currentTimeMillis/1000) match {\n"//TODO extract SenML units from ThingML annotation
-    builder append "case Some(m) => measurements = measurements :+ m\n"
+    builder append "case Some(m) => measurements = m :: measurements\n"
     builder append "return (Some(Root(Some(senMLpath), None, None, Some(1), Some(measurements))), \"OK!\")\n"
     builder append "case None => return (None, \"Cannot parse parameter " + name + "\")\n"
     builder append "}\n"
@@ -343,7 +343,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
       builder append "index = index + " + head._1.getName + "_att.byteSize\n"
               
       builder append "createMeasurement(\"" + head._1.getName + "\", \"" + head._2 + "\", " + head._1.getName + "_att, System.currentTimeMillis/1000) match {\n"//TODO extract SenML units from ThingML annotation
-      builder append "case Some(m) => measurements = measurements :+ m\n"
+      builder append "case Some(m) => measurements = m :: measurements\n"
       builder append generateParse(tail)
       builder append "case None => return (None, \"Cannot parse parameter " + head._1.getName + "\")\n"
       builder append "}\n"
