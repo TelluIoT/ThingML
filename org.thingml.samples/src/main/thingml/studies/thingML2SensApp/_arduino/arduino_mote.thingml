@@ -33,8 +33,8 @@ LedClient, ButtonClient
 
     provided port RemoteControl @sync_send "true"
     {
-        receives remote_turnOn, remote_turnOff, remote_changeDisplay
-        sends report_temperature, report_light//, report_rotation    
+        receives turnOn, turnOff, changeDisplay
+        sends temperature, light//, rotation    
     }
 	
    	statechart SensorsDisplayImpl init Temp
@@ -50,8 +50,8 @@ LedClient, ButtonClient
         action do
             timer!timer_start(period)
             Led!led_toggle()
-            RemoteControl!report_temperature(temp)
-            RemoteControl!report_light(light)
+            RemoteControl!temperature(temp)
+            RemoteControl!light(light)
             //RemoteControl!report_rotation(rotation*46/10000)//gives approximately the value in radians
             Led!led_toggle()
         end
@@ -74,10 +74,10 @@ LedClient, ButtonClient
             rotation = m.val
         end*/
 
-        internal event m : RemoteControl?remote_turnOn
+        internal event m : RemoteControl?turnOn
         action Led!led_on()
         
-        internal event m : RemoteControl?remote_turnOff
+        internal event m : RemoteControl?turnOff
         action Led!led_off()
                 	
    	    state Temp
@@ -86,7 +86,7 @@ LedClient, ButtonClient
         	
         	transition switch -> Light//Pot
         	event Button?press
-            event RemoteControl?remote_changeDisplay
+            event RemoteControl?changeDisplay
         }
         
         /*state Pot
@@ -95,7 +95,7 @@ LedClient, ButtonClient
         
         	transition switch -> Light
         	event Button?press
-            event RemoteControl?remote_changeDisplay
+            event RemoteControl?changeDisplay
         }*/
         
         state Light
@@ -104,7 +104,7 @@ LedClient, ButtonClient
         
         	transition switch -> Temp
         	event Button?press
-            event RemoteControl?remote_changeDisplay
+            event RemoteControl?changeDisplay
         }
         
    	}
@@ -129,26 +129,26 @@ thing fragment RemoteMsgs includes RemoteMonitoringMsgs{
 
 thing MessageSerializer includes SerializerArduino, RemoteMsgs {
 required port RemoteControl{
-receives report_temperature, report_light//, report_rotation
+receives temperature, light//, report_rotation
 }
 
 statechart SerializerBehavior init Serialize {
 state Serialize{
-internal event m : RemoteControl?report_light action
+internal event m : RemoteControl?light action
 do
 setHeader(11, lengthUInt16)
 serializeUInt16(m.light)
 send()
 end
 
-/*internal event m : RemoteControl?report_rotation action
+/*internal event m : RemoteControl?rotation action
 do
 setHeader(12, lengthUInt16)
 serializeUInt16(m.angle)
 send()
 end*/
 
-internal event m : RemoteControl?report_temperature action
+internal event m : RemoteControl?temperature action
 do
 setHeader(10, lengthUInt16)
 serializeUInt16(m.temp)
@@ -162,7 +162,7 @@ end
 
 thing MessageDeserializer includes DeserializerArduino, RemoteMsgs {
 required port RemoteControl{
-sends remote_turnOn, remote_turnOff, remote_changeDisplay
+sends turnOn, turnOff, changeDisplay
 }
 
 function forward() do
@@ -181,17 +181,17 @@ end
 
 function deserializeRemote_changeDisplay()
 do
-RemoteControl!remote_changeDisplay()
+RemoteControl!changeDisplay()
 end
 
 function deserializeRemote_turnOff()
 do
-RemoteControl!remote_turnOff()
+RemoteControl!turnOff()
 end
 
 function deserializeRemote_turnOn()
 do
-RemoteControl!remote_turnOn()
+RemoteControl!turnOn()
 end
 
 statechart receive init Idle {
