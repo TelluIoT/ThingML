@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -32,70 +33,79 @@ import java.net.URL;
  * Inspired by http://www.gitpaste.com/paste/727/E1kSdBqXD7efNO4x5LlZ2T
  */
 public class SensAppHelper {
-    
-    
-    /*private static String server = "localhost";
+
+	public static void main(String[] args) throws Exception {
+		URL regURL = new URL("http://46.51.169.123/sensapp/registry/sensors");
+		String status = SensAppHelper.registerSensor(regURL, "test", "just a test", "raw", "Numerical");
+		System.out.println(status);
+	}
+
+
+	/*private static String server = "localhost";
     private static int port = 8080;*/
 
-    public static String registerSensor(URL target, String id, String descr, String backend, String tpl) throws Exception {
-	StringBuilder req = new StringBuilder();
-	req.append("{\"id\": \""+id+"\", \"descr\": \""+descr+"\",");
-	req.append("\"schema\": { \"backend\": \""+backend+"\", \"template\": \""+ tpl +"\"}}");
-	//URL target = new URL("http", server, port, "/registry/sensors");
-	HttpURLConnection c = (HttpURLConnection) target.openConnection();
-	c.setDoOutput(true);
-	c.setRequestMethod("POST");
-	c.addRequestProperty("Content-type", "application/json");
-	OutputStreamWriter wr = new OutputStreamWriter(c.getOutputStream());
-	wr.write(req.toString());
-	wr.flush();
+	public static String registerSensor(URL target, String id, String descr, String backend, String tpl) throws Exception {
+		StringBuilder req = new StringBuilder();
+		req.append("{\"id\": \""+id+"\", \"descr\": \""+descr+"\",");
+		req.append("\"schema\": { \"backend\": \""+backend+"\", \"template\": \""+ tpl +"\"}}");
+		
+		System.out.println(req.toString());
+		
+		//URL target = new URL("http", server, port, "/registry/sensors");
+		HttpURLConnection c = (HttpURLConnection) target.openConnection();
+		c.setDoOutput(true);
+		c.setRequestMethod("POST");
+		c.addRequestProperty("Content-type", "application/json");
+		OutputStreamWriter wr = new OutputStreamWriter(c.getOutputStream());
+		wr.write(req.toString());
+		wr.flush();
 
-	BufferedReader rd = new BufferedReader(new InputStreamReader(c.getInputStream()));
-	String result = rd.readLine();
-	rd.close();
-	wr.close();
-	return result;
-    }
+		BufferedReader rd = new BufferedReader(new InputStreamReader(c.getInputStream()));
+		String result = rd.readLine();
+		rd.close();
+		wr.close();
+		return result;
+	}
 
-    public static String getSensorDetails(URL target, String url)  throws Exception {
-	//URL target = new URL("http", server, port, url);
-	HttpURLConnection c = (HttpURLConnection) target.openConnection();
-	BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
-	String inputLine;
-	StringWriter result = new StringWriter();
-	while ((inputLine = in.readLine()) != null)
-            result.append(inputLine +"\n");
-        in.close();
-	return result.toString();
-    }
+	public static String getSensorDetails(URL target, String url)  throws Exception {
+		//URL target = new URL("http", server, port, url);
+		HttpURLConnection c = (HttpURLConnection) target.openConnection();
+		BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+		String inputLine;
+		StringWriter result = new StringWriter();
+		while ((inputLine = in.readLine()) != null)
+			result.append(inputLine +"\n");
+		in.close();
+		return result.toString();
+	}
 
-    public static String pushData(URL target, String data) throws Exception {
-	//URL target = new URL("http", server, port, "/dispatch");
-	HttpURLConnection c = (HttpURLConnection) target.openConnection();
-	c.setDoOutput(true);
-	c.setRequestMethod("PUT");
-	c.addRequestProperty("Content-type", "application/json");
-	OutputStreamWriter wr = new OutputStreamWriter(c.getOutputStream());
-	wr.write(data);
-	wr.flush();
-	BufferedReader rd = new BufferedReader(new InputStreamReader(c.getInputStream()));
-	String result = rd.readLine();
-	rd.close();
-	wr.close();
-	return result;
-    }
+	public static String pushData(URL target, String data) throws Exception {
+		//URL target = new URL("http", server, port, "/dispatch");
+		HttpURLConnection c = (HttpURLConnection) target.openConnection();
+		c.setDoOutput(true);
+		c.setRequestMethod("PUT");
+		c.addRequestProperty("Content-type", "application/json");
+		OutputStreamWriter wr = new OutputStreamWriter(c.getOutputStream());
+		wr.write(data);
+		wr.flush();
+		BufferedReader rd = new BufferedReader(new InputStreamReader(c.getInputStream()));
+		String result = rd.readLine();
+		rd.close();
+		wr.close();
+		return result;
+	}
 
-    public static String getData(URL target, String contentType) throws Exception {
-	//URL target = new URL("http", server, port, url);
-	HttpURLConnection c = (HttpURLConnection) target.openConnection();
-	c.addRequestProperty("Accept", contentType);
-	BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
-	String inputLine;
-	StringWriter result = new StringWriter();
-	while ((inputLine = in.readLine()) != null)
-	    result.append(inputLine+"\n");
-        in.close();
-	return result.toString();
-    }    
-    
+	public static String getData(URL target, String contentType) throws Exception {
+		//URL target = new URL("http", server, port, url);
+		HttpURLConnection c = (HttpURLConnection) target.openConnection();
+		c.addRequestProperty("Accept", contentType);
+		BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+		String inputLine;
+		StringWriter result = new StringWriter();
+		while ((inputLine = in.readLine()) != null)
+			result.append(inputLine+"\n");
+		in.close();
+		return result.toString();
+	}    
+
 }

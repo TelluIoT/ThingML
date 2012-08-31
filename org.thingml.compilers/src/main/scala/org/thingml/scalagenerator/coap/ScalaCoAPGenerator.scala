@@ -244,10 +244,10 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
           builder append "val " + i.getName + "Resource = new " + Context.firstToUpper(i.getType.getName) + "CoAPResource(resourceIdentifier = \"" + i.getName + "\")\n"
           builder append i.getType.getName + "Resource.addSubResource(" + i.getName + "Resource)\n"
           i.getType.allMessages.foreach{m => //TODO something better for the filtering
-            if (allMessages.exists{m2 => m == m2}) {
+            if (allMessages.exists{m2 => m == m2}) {              
               builder append "val _" + Context.firstToUpper(m.getName) + "CoAPResource = new " + Context.firstToUpper(m.getName) + "CoAPResource(isPUTallowed = true, isPOSTallowed = true, isGETallowed = true, httpURLs = Set(" + m.getHTTPurls.map("\"" + _ + "\"").mkString(", ") + "), httpRegistryURLs = Set(" + i.getType.asInstanceOf[Thing].getHTTPRegistry.map("\"" + _ + "\"").mkString(", ") + "), server = this)\n"
               builder append i.getName + "Resource.addSubResource(_" + Context.firstToUpper(m.getName) + "CoAPResource)\n"
-              //builder append "_" + Context.firstToUpper(m.getName) + "CoAPResource.register\n\n"
+              builder append "_" + Context.firstToUpper(m.getName) + "CoAPResource.register\n\n"
             }
           }
         }
@@ -327,7 +327,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
   
   def generateParseNoParam(name : String) : String = {
     val builder = new StringBuilder()
-    builder append "createMeasurement(\"" + name + "\", \"\", true, System.currentTimeMillis/1000) match {\n"//TODO extract SenML units from ThingML annotation
+    builder append "createMeasurement(\"\", true, System.currentTimeMillis/1000) match {\n"//TODO extract SenML units from ThingML annotation
     builder append "case Some(m) => measurements = m :: measurements\n"
     builder append "return (Some(Root(Some(senMLpath), None, None, Some(1), Some(measurements))), \"OK!\")\n"
     builder append "case None => return (None, \"Cannot parse parameter " + name + "\")\n"
@@ -342,7 +342,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
       builder append "val " + head._1.getName + "_att = tempBuffer.to" + head._1.getType.scala_type() + "(ByteOrder.LITTLE_ENDIAN)\n"
       builder append "index = index + " + head._1.getName + "_att.byteSize\n"
               
-      builder append "createMeasurement(\"" + head._1.getName + "\", \"" + head._2 + "\", " + head._1.getName + "_att, System.currentTimeMillis/1000) match {\n"//TODO extract SenML units from ThingML annotation
+      builder append "createMeasurement(\"" + head._2 + "\", " + head._1.getName + "_att, System.currentTimeMillis/1000) match {\n"//TODO extract SenML units from ThingML annotation
       builder append "case Some(m) => measurements = m :: measurements\n"
       builder append generateParse(tail)
       builder append "case None => return (None, \"Cannot parse parameter " + head._1.getName + "\")\n"
