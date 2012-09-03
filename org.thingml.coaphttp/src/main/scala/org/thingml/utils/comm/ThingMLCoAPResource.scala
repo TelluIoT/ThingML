@@ -73,11 +73,19 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
   setTitle("Generic ThingML Resource")
   setResourceType("ThingMLResource")
   
-  lazy val senMLpath = List(getPath.split("/")(1), getPath.split("/")(2)).mkString("-")
+  def senMLpath = List(getPath.split("/")(1), getPath.split("/")(2), resourceIdentifier).mkString("/")
   
   def register {
+    try {
     httpRegistryURLs.par.foreach{url =>
       println(SensAppHelper.registerSensor(new URL(url), senMLpath, "ThingML device", "raw", "Numerical"))//TODO: we should handle different types of template (esp. Boolean)
+    }
+    } catch {
+      case ioe : java.io.IOException if (ioe.getLocalizedMessage().contains("code: 409"))=> println("Sensor already registered")
+      case e : Exception => 
+        println("Unexpected Error while registering the sensor. Please check on the SensApp server if sensor is properly registered")
+        println(e.getLocalizedMessage)
+        e.printStackTrace
     }
   }
   
@@ -106,15 +114,15 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
     
   }
   
-  def createMeasurement(name : String, unit : String, value : AnyVal, time : Long) : Option[MeasurementOrParameter] = {
+  def createMeasurement(unit : String, value : AnyVal, time : Long) : Option[MeasurementOrParameter] = {
     try {
       value match {
         case b : Boolean => 
           println("     Create measurement from boolean")
-          Some(MeasurementOrParameter(Some(name), None, None, None, Some(b), None, Some(time), None))
-        case c : Char => createMeasurement(name, unit, c.toString, time)
+          Some(MeasurementOrParameter(None, None, None, None, Some(b), None, Some(time), None))
+        case c : Char => createMeasurement(unit, c.toString, time)
         case u : Unit => None
-        case n => Some(MeasurementOrParameter(Some(name), Some(unit), Some(n.toDouble), None, None, None, Some(time), None))
+        case n => Some(MeasurementOrParameter(None, Some(unit), Some(n.toDouble), None, None, None, Some(time), None))
       }
     } catch {
       case iae : IllegalArgumentException => None
@@ -122,9 +130,9 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
     }
   }
   
-  def createMeasurement(name : String, unit : String, value : String, time : Long) : Option[MeasurementOrParameter] = {
+  def createMeasurement(unit : String, value : String, time : Long) : Option[MeasurementOrParameter] = {
     try {
-      Some(MeasurementOrParameter(Some(name), Some(unit), None, Some(value), None, None, Some(time), None))
+      Some(MeasurementOrParameter(None, Some(unit), None, Some(value), None, None, Some(time), None))
     } catch {
       case iae : IllegalArgumentException => None
       case e : Exception => throw e

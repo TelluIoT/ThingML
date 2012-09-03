@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ThingML :: Model
 Bundle-SymbolicName: org.sintef.thingml.model;singleton:=true
-Bundle-Version: 0.5.0.qualifier
+Bundle-Version: 0.6.0.qualifier
 Bundle-ClassPath: .
-Bundle-Vendor: SINTEF
+Bundle-Vendor: SINTEF-9012
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.sintef.thingml,
