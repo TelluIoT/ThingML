@@ -439,6 +439,7 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     generateConstructor()
     initStateMachine()
     //generateManagement()
+    generateEntryExitActions()
     
     self.allFunctions.foreach{
       f => f.generateJava()
@@ -460,17 +461,17 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
    }*/
   
   def generateEntryExitActions(builder: StringBuilder = Context.builder) {
-    self.allStateMachines.head.allStatesWithEntry.foreach{s =>
+    self.allStateMachines.headOption.foreach{sm => sm.allStatesWithEntry.foreach{s =>
       builder append "public void onEntry_" + s.qualifiedName("_") + "(){\n"
-      builder append "//TODO: to be generated...\n"
+      s.getEntry.generateJava()
       builder append "}\n"
-    }
+    }}
     
-    self.allStateMachines.head.allStatesWithExit.foreach{s =>
+    self.allStateMachines.headOption.foreach{sm => sm.allStatesWithExit.foreach{s =>
       builder append "public void onExit_" + s.qualifiedName("_") + "(){\n"
-      builder append "//TODO: to be generated...\n"
+      s.getEntry.generateJava()
       builder append "}\n"
-    }
+    }}
   }
   
   def generateOnActions(builder: StringBuilder = Context.builder) {}
@@ -551,17 +552,19 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     builder append "private void start() throws Statechart_exception {\n"
     builder append "_" + self.allStateMachines.head.getName + " = new Statechart_monitor(" + self.allStateMachines.head.compose() + ", \"" + self.allStateMachines.head.getName + "\", true);\n\n"
     self.allStateMachines.head.allStates.foreach{ s => 
-      s.allMessageHandlers.foreach{case (port, msg) =>
-          msg.foreach{case (m, handlers) =>
-              handlers.foreach{h =>
-                h match {
-                  case t : Transition =>
-                    builder append "_" + self.allStateMachines.head.getName + ".fires(\"" + m.getName + "\", _" + t.getSource.qualifiedName("_") + ", _" + t.getTarget.qualifiedName("_") + ");\n"
-                  case i : InternalTransition =>
-                  
-                }
-              }
-          }
+      s.getOutgoing.union(s.getInternal)foreach{ h =>
+        h match {
+          case t : Transition =>
+            self.allStateMachines.foreach{sm => 
+              t.getEvent.headOption match {
+                case Some(e) =>
+                  builder append "_" + sm.getName + ".fires(\"" + e.asInstanceOf[ReceiveMessage].getMessage.getName + "\", _" + t.getSource.qualifiedName("_") + ", _" + t.getTarget.qualifiedName("_") + ");\n"
+                case None => //systematic transition with no associated event
+                  builder append "_" + sm.getName + ".fires(\"default\", _" + t.getSource.qualifiedName("_") + ", _" + t.getTarget.qualifiedName("_") + ");\n"
+              }  
+            }
+          case i : InternalTransition =>
+        }
       }
     }
     builder append "}\n\n" 
