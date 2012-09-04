@@ -305,7 +305,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
           builder append "var index = 5\n"
        
           m.getParameters.foreach{m =>
-            builder append "getBytes(measurements.find{m => m.name.get == \"" + m.getName + "\"}.get, \"" +  m.getType.scala_type(false) + "\").foreach{b => \n"
+            builder append "getBytes(measurements.head/*find{m => m.name.get == \"" + m.getName + "\"}.get*/, \"" +  m.getType.scala_type(false) + "\").foreach{b => \n"
             builder append "buffer(index) = b\n"
             builder append "index = index + 1\n"
             builder append "}\n\n"
