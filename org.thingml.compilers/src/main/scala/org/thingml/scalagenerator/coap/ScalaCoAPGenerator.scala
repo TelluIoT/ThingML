@@ -277,7 +277,7 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
         builder append "var measurements : List[MeasurementOrParameter] = List()\n\n"
          
         if (m.getParameters.size > 0) {
-          builder append "var index : Int = 6\n"
+          builder append "var index : Int = 5\n"
           builder append "val tempBuffer = new Array[Byte](18-index)\n"
           builder append generateParse(m.getParameters.asInstanceOf[java.util.List[Parameter]].toList.zip(m.getSenMLunits))
         } else {
@@ -338,8 +338,8 @@ case class ConfigurationCoAPGenerator(override val self: Configuration) extends 
   def generateParse(params : List[(Parameter, String)]) : String = params match {
     case head :: tail => 
       val builder = new StringBuilder()
-      builder append "Array.copy(payload, index, tempBuffer, 0, Math.min(payload.size-index, tempBuffer.size))\n"
-      builder append "val " + head._1.getName + "_att = tempBuffer.to" + head._1.getType.scala_type() + "(ByteOrder.LITTLE_ENDIAN)\n"
+      builder append "Array.copy(payload, index, tempBuffer, 0,  Serializable" + head._1.getType.scala_type() + ".byteSize)\n"
+      builder append "val " + head._1.getName + "_att = tempBuffer.to" + head._1.getType.scala_type() + "()\n"
       builder append "index = index + " + head._1.getName + "_att.byteSize\n"
               
       builder append "createMeasurement(\"" + head._2 + "\", " + head._1.getName + "_att, System.currentTimeMillis/1000) match {\n"//TODO extract SenML units from ThingML annotation

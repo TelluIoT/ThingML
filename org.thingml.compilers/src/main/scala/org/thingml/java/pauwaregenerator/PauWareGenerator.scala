@@ -545,12 +545,11 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     }
 
     builder append "_" + self.allStateMachines.head.getInitial.qualifiedName("_") + ".inputState();\n"
-      
-    builder append "_" + self.allStateMachines.head.getName + " = new Statechart_monitor(" + self.allStateMachines.head.compose() + ", \"" + self.allStateMachines.head.getName + "\", true);\n\n"
-    
+          
     builder append "}\n\n"
     
     builder append "private void start() throws Statechart_exception {\n"
+    builder append "_" + self.allStateMachines.head.getName + " = new Statechart_monitor(" + self.allStateMachines.head.compose() + ", \"" + self.allStateMachines.head.getName + "\", true);\n\n"
     self.allStateMachines.head.allStates.foreach{ s => 
       s.allMessageHandlers.foreach{case (port, msg) =>
           msg.foreach{case (m, handlers) =>

@@ -97,8 +97,9 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
     m.stringValue match {
       case Some(s) => s.toBytes()
       case None => 
-        val v : Double = m.value.getOrElse(m.valueSum.getOrElse(m.booleanValue.getOrElse(null.asInstanceOf[Unit]))).asInstanceOf[AnyVal].toDouble
-        flag match {
+        val v : AnyVal = m.value.getOrElse(m.valueSum.getOrElse(m.booleanValue.getOrElse(null.asInstanceOf[Unit]))).asInstanceOf[AnyVal]//.toDouble
+        v.toBytes()
+        /*flag match {
           case f if (f == "Int")  => v.toInt.toBytes()
           case f if (f == "Long")  => v.toLong.toBytes()
           case f if (f == "Short")  => v.toShort.toBytes()
@@ -108,7 +109,7 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
           case f if (f == "Char") => v.toChar.toBytes()
           case f if (f == "Boolean") => (v>=1).toBytes()
           case _  => v.toBytes()
-        }
+        }*/
     }
     
     
@@ -118,11 +119,13 @@ abstract class ThingMLMessageResource(override val resourceIdentifier : String =
     try {
       value match {
         case b : Boolean => 
-          println("     Create measurement from boolean")
+          //println("     Create measurement from boolean")
           Some(MeasurementOrParameter(None, None, None, None, Some(b), None, Some(time), None))
         case c : Char => createMeasurement(unit, c.toString, time)
         case u : Unit => None
-        case n => Some(MeasurementOrParameter(None, Some(unit), Some(n.toDouble), None, None, None, Some(time), None))
+        case n => 
+          //println("value: " + n + "    converted into: " + n.toDouble)
+          Some(MeasurementOrParameter(None, Some(unit), Some(n.toDouble), None, None, None, Some(time), None))
       }
     } catch {
       case iae : IllegalArgumentException => None
