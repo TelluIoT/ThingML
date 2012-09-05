@@ -440,6 +440,7 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     initStateMachine()
     //generateManagement()
     generateEntryExitActions()
+    generationTransitionAction()
     
     self.allFunctions.foreach{
       f => f.generateJava()
@@ -460,18 +461,34 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
    }
    }*/
   
+  def generationTransitionAction(builder: StringBuilder = Context.builder) {
+    var names : List[String] = List()
+    self.allStateMachines.headOption.foreach{sm => sm.allStates.foreach{s => 
+        s.getOutgoing.union(s.getInternal)foreach{t =>
+          if (!names.contains(t.getName)) {
+            names = t.getName :: names
+            val params = if (t.getEvent.headOption.isDefined) t.getEvent.head.asInstanceOf[ReceiveMessage].getMessage.getParameters.collect{case p => p.getType.java_type(p.getCardinality!=null) + " " + p.getName}.mkString(", ") else ""      
+            builder append "public void t_action_" + t.getName + "(" + params + ") {\n"
+            if (t.getAction!=null) t.getAction.generateJava() else builder append "//no behavior\n"
+            builder append "}\n"
+          }
+        }
+      }
+    }
+  }
+  
   def generateEntryExitActions(builder: StringBuilder = Context.builder) {
     self.allStateMachines.headOption.foreach{sm => sm.allStatesWithEntry.foreach{s =>
-      builder append "public void onEntry_" + s.qualifiedName("_") + "(){\n"
-      s.getEntry.generateJava()
-      builder append "}\n"
-    }}
+        builder append "public void onEntry_" + s.qualifiedName("_") + "(){\n"
+        s.getEntry.generateJava()
+        builder append "}\n"
+      }}
     
     self.allStateMachines.headOption.foreach{sm => sm.allStatesWithExit.foreach{s =>
-      builder append "public void onExit_" + s.qualifiedName("_") + "(){\n"
-      s.getEntry.generateJava()
-      builder append "}\n"
-    }}
+        builder append "public void onExit_" + s.qualifiedName("_") + "(){\n"
+        s.getEntry.generateJava()
+        builder append "}\n"
+      }}
   }
   
   def generateOnActions(builder: StringBuilder = Context.builder) {}
@@ -506,20 +523,39 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
 
   def generateIncomingMessages(builder: StringBuilder = Context.builder) {
     builder append "//incoming messages\n"
-    self.allIncomingMessages.foreach{m =>
-      builder append "@Override\n"
-      builder append "public void "
-      builder append m.getName()
-      builder append m.getParameters.collect{case p =>
-          p.getType.java_type(p.getCardinality!=null) + " " + p.scala_var_name
-      }.mkString("(", ", ", ")")
-      builder append " throws Statechart_exception{\n"
+    
+    self.allStateMachines.head.allMessageHandlers.foreach{case (p, mh) =>
+        mh.foreach{case (m, handlers) =>
+            builder append "@Override\n"
+            builder append "public void "
+            builder append m.getName()
+            builder append m.getParameters.collect{case p =>
+                p.getType.java_type(p.getCardinality!=null) + " " + p.scala_var_name
+            }.mkString("(", ", ", ")")
+            builder append " throws Statechart_exception{\n"
       
-      self.allStateMachines.foreach{b => 
-        builder append "_" + b.getName + ".run_to_completion(\"" + m.getName + "\");\n"
-      }
-      builder append "}\n\n"
+            self.allStateMachines.foreach{b => 
+              builder append "Object[] args = new Object[" + m.getParameters.size + "];\n"
+              m.getParameters.zipWithIndex.foreach{case (p, i) =>
+                  builder append "args[" + i + "] = " + p.scala_var_name + ";\n"
+              }
+              //TODO: for each transition able to manage this event
+              handlers.foreach{h => 
+                h match {
+                  case t : Transition => builder append "_" + b.getName + ".fires(\"" + m.getName() + "\", " + t.getSource.getName + ", " + t.getSource.getName + ", true, this, \"t_action_" + t.getName + "\", args);\n"
+                  case it : InternalTransition => 
+                }
+                
+              }
+              builder append "_" + b.getName + ".run_to_completion(\"" + m.getName + "\");\n"
+            }
+            builder append "}\n\n"
+        }
     }
+    
+    /*self.allIncomingMessages.foreach{m =>
+
+    }*/
   }
   
   def initStateMachine(builder: StringBuilder = Context.builder) {
@@ -543,6 +579,12 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
    
     self.allStateMachines.head.allContainedSimpleStates().foreach{s =>
       builder append "_" + s.qualifiedName("_") + " = new Statechart(\"" + s.getName + "\");\n"
+      if (s.getEntry != null) {
+        builder append "_" + s.qualifiedName("_") + ".entryAction(this, \"onEntry_" + s.qualifiedName("_") + "\", null, AbstractStatechart.Broadcast);\n"
+      }
+      if (s.getExit != null) {
+        builder append "_" + s.qualifiedName("_") + ".exitAction(this, \"onExit_" + s.qualifiedName("_") + "\", null, AbstractStatechart.Broadcast);\n"
+      }
     }
 
     builder append "_" + self.allStateMachines.head.getInitial.qualifiedName("_") + ".inputState();\n"
@@ -556,17 +598,25 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
         h match {
           case t : Transition =>
             self.allStateMachines.foreach{sm => 
+              val action = if(t.getAction!=null) ", true, this, \"t_action_" + t.getName + "\", null, AbstractStatechart.Broadcast" else ""
               t.getEvent.headOption match {
                 case Some(e) =>
-                  builder append "_" + sm.getName + ".fires(\"" + e.asInstanceOf[ReceiveMessage].getMessage.getName + "\", _" + t.getSource.qualifiedName("_") + ", _" + t.getTarget.qualifiedName("_") + ");\n"
+                  builder append "_" + sm.getName + ".fires(\"" + e.asInstanceOf[ReceiveMessage].getMessage.getName + "\", _" + t.getSource.qualifiedName("_") + ", _" + t.getTarget.qualifiedName("_") + action +");\n"
                 case None => //systematic transition with no associated event
-                  builder append "_" + sm.getName + ".fires(\"default\", _" + t.getSource.qualifiedName("_") + ", _" + t.getTarget.qualifiedName("_") + ");\n"
+                  builder append "_" + sm.getName + ".fires(\"default\", _" + t.getSource.qualifiedName("_") + ", _" + t.getTarget.qualifiedName("_") + action + ");\n"
               }  
             }
           case i : InternalTransition =>
         }
       }
     }
+    
+    builder append "com.FranckBarbier.Java._PauWareView.Statechart_monitor_viewer viewer = new com.FranckBarbier.Java._PauWareView.Statechart_monitor_viewer(com.FranckBarbier.Java._PauWareView.Statechart_context.ORTHOGONAL_LAYOUT_STRATEGY);\n"
+    builder append "// ORTHOGONAL_LAYOUT_STRATEGY or FORCE_LAYOUT_STRATEGY\n"
+    builder append "_" + self.allStateMachines.head.getName + ".add_listener(viewer);\n"
+    builder append "_" + self.allStateMachines.head.getName + ".initialize_listener();\n"
+    builder append "viewer.show();\n\n"
+    
     builder append "}\n\n" 
     
     generateManagement()
@@ -588,6 +638,7 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
   def generateConstructor(builder: StringBuilder = Context.builder) {
     builder append "//Default Constructor\n"
     builder append "public " + Context.firstToUpper(self.getName) + "() {\n"
+    builder append "init()\n"
     self.getPorts.foreach{p => 
       builder append "connectors.put(\"" + p.getName + "\", new LinkedList<Connector>()" + ");\n"
     } 
@@ -1029,9 +1080,9 @@ case class LoopActionScalaGenerator(override val self: LoopAction) extends Actio
 
 case class PrintActionScalaGenerator(override val self: PrintAction) extends ActionScalaGenerator(self) {
   override def generateJava(builder: StringBuilder = Context.builder) {
-    builder append "System.out.println(("
+    builder append "System.out.println("
     self.getMsg.generateJava()
-    builder append ").toString);\n"
+    builder append ");\n"
   }
 }
 
@@ -1211,16 +1262,15 @@ case class NotExpressionScalaGenerator(override val self: NotExpression) extends
 
 case class EventReferenceScalaGenerator(override val self: EventReference) extends ExpressionScalaGenerator(self) {
   override def generateJava(builder: StringBuilder = Context.builder) {
-    /*builder append "getEvent(" 
-     builder append Context.firstToUpper(Context.thing.getName) + "." + self.getMsgRef.getPort.getName + "Port.in." + self.getMsgRef.getMessage.getName + ", " + Context.thing.getName + "." + self.getMsgRef.getPort.getName + "Port.getName).get.asInstanceOf[" + Context.firstToUpper(self.getMsgRef.getMessage.getName) + "]." + Context.protectScalaKeyword(self.getParamRef.getName)*/
+    builder append self.getParamRef.getName
   }
 }
 
 case class ExpressionGroupScalaGenerator(override val self: ExpressionGroup) extends ExpressionScalaGenerator(self) {
   override def generateJava(builder: StringBuilder = Context.builder) {
-    builder append "{"
+    //builder append "{"
     self.getExp.generateJava()
-    builder append "}"
+    //builder append "}"
   }
 }
 
