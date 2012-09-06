@@ -537,7 +537,7 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
               //TODO: for each transition able to manage this event
               handlers.foreach{h => 
                 h match {
-                  case t : Transition => builder append "_" + b.getName + ".fires(\"" + m.getName() + "\", _" + t.getSource.qualifiedName("_") + ", _" + t.getSource.qualifiedName("_") + ", true, this, \"t_action_" + t.getName + "\", args);\n"
+                  case t : Transition => builder append "_" + b.getName + ".fires(\"" + m.getName() + "\", _" + t.getSource.qualifiedName("_") + ", _" + t.getTarget.qualifiedName("_") + ", true, this, \"t_action_" + t.getName + "\", args);\n"
                   case it : InternalTransition => 
                 }
                 
