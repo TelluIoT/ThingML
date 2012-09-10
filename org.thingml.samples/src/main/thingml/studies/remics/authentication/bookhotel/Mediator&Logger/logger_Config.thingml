@@ -137,9 +137,11 @@ sends startMsg, stopMsg
 configuration Config_Logger_Config{
 instance control: Control
 instance logger: Logger_Config
+
 instance ins_Config_m1: BookhotelMediator
 instance ins_Config_s1: Server
 instance ins_Config_c1: API1BookHotelFakeClient
+
 connector control.ControlPort => logger.PrvPort_Control
 connector ins_Config_c1.ServerBookPort=> logger.PrvPort_Config_c1_ServerBookPort
 connector logger.ReqPort_Config_m1_Client=> ins_Config_m1.Client

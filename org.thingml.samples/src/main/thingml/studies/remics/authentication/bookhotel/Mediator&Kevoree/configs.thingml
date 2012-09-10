@@ -9,12 +9,14 @@
 import "bookhotel_client.thingml"
 import "bookhotel_server.thingml"
 import "bookhotel_mediator.thingml"
+import "bookhotel_substitute_server.thingml"
 
-configuration Config{
-    instance c1:Client
-    instance s1:Server
-    instance m1:BookhotelMediator
-    connector c1.BookHotel => m1.Client
-    connector m1.Server =>s1.CilentBookPort
+configuration BookingDynamicMediation {
+    instance c1 : API1BookHotelFakeClient
+    instance s1 : Server
     
+    instance m1 : BookhotelMediator
+    instance s2 : BookhotelSubstituteServer
+    
+    connector c1.BookHotel => s1.CilentBookPort
 }
