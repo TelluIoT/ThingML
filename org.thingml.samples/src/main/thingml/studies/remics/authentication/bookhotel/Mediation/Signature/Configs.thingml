@@ -10,10 +10,11 @@ import "Client.thingml"
 import "Server.thingml"
 //
 //
-
+/*
 configuration ExtraConfig{
     instance c1:FakeClient
     instance s1:Server
     connector c1.Toserver => s1.Toclient
     
 }
+*/

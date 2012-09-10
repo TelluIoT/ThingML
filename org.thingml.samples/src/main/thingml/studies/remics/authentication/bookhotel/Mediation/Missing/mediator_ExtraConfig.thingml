@@ -86,8 +86,8 @@ function swallow(m:String) do
 print"extra message "+m+" received and swallowed! "
 end
 function createAndSendrMiM4() do
-PrvPort_ExtraConfig_c1_Toserver!rMiM4("rMiM4")
-log("Mediator_ExtraConfig -> \"ExtraConfig_c1:FakeClient\" : rMiM4(\"rMiM4\")")
+    PrvPort_ExtraConfig_c1_Toserver!rMiM4("rMiM4")
+    log("Mediator_ExtraConfig -> \"ExtraConfig_c1:FakeClient\" : rMiM4(\"rMiM4\")")
 end
 function createAndSendrMiM1() do
 ReqPort_ExtraConfig_s1_Toclient!rMiM1("rMiM1")
@@ -130,4 +130,3 @@ required port ControlPort{
 sends startMsg, stopMsg
 }
 }
-

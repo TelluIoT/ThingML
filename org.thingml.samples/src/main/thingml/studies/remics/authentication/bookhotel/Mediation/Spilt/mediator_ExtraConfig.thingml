@@ -115,13 +115,14 @@ var msg885558881 :String = msg
 PrvPort_ExtraConfig_c1_Toserver!rReply_(msg885558881)
 log("Mediator_ExtraConfig -> \"ExtraConfig_c1:FakeClient\" : rReply_("+"\""+msg885558881+"\""+")")
 end
-function splitrSpM1_PrvPort_ExtraConfig_c1_Toserver(msg:Integer,msg1:String,msg2:Double,msg3:String) do
-ReqPort_ExtraConfig_s1_Toclient!rSpM1_1(msg,msg1)
-log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : rSpM1_1("+msg+","+"\""+msg1+"\""+")")
-transformrSpM1_2_PrvPort_ExtraConfig_c1_Toserver(msg2)
-ReqPort_ExtraConfig_s1_Toclient!rSpM1_3(msg3)
-log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : rSpM1_3("+"\""+msg3+"\""+")")
+
+function splitrSpM1_PrvPort_ExtraConfig_c1_Toserver(msg:Integer,msg1:String,msg2:String) do
+    ReqPort_ExtraConfig_s1_Toclient!rSpM1_1(msg,msg1)
+    log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : rSpM1_1("+msg+","+"\""+msg1+"\""+")")
+    ReqPort_ExtraConfig_s1_Toclient!rSpM1_3(msg2)
+    log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : rSpM1_3("+"\""+msg2+"\""+")")
 end
+
 }
 
 thing Logger
@@ -151,4 +152,3 @@ required port ControlPort{
 sends startMsg, stopMsg
 }
 }
-

@@ -19,14 +19,16 @@ import "../../../../../../datatypes.thingml"
 thing fragment MissingMessage {//4 messages
     
     //ask if have empty rooms
-    message rMiM1(msg:String)@missing "1;null;Server,Toclient;rMiM1";  // server receives at first place
+    message rMiM1(msg:String)@missing "1;null;Server,Toclient;rMiM1"; 
+                                                              // server receives at first place
     message rRequest(msg:String);
-    message rMiM2(msg:String,msg1:Boolean)                  // client receives after sending rRequest, 
-    @missing "2;MissingMessage.rRequest;FakeClient,Toserver;rMiM2,true"; //so mediator receives rRequest, and create rMiM2 and send to client
+    message rMiM2(msg:String,msg1:Boolean)                                // client receives after sending rRequest, 
+    @missing "2;MissingMessage.rRequest;FakeClient,Toserver;rMiM2,true";  //so mediator receives rRequest, and create rMiM2 and send to client
     message rMiM4(msg:String)
-    @missing "3;MissingMessage.rMiM2;FakeClient,Toserver;rMiM4";                                                                                  
-    message rMiM3(msg:String)                              // server receives after receiving rRequest                                                          
-    @missing "3;MissingMessage.rRequest;Server,Toclient;rMiM3";     //so mediator resend rRequest to server, and create rMiM3 and send to server
+    @missing "3;MissingMessage.rMiM2;FakeClient,Toserver;rMiM4"; 
+                                                                                                                                                          
+    message rMiM3(msg:String)                                             // server receives after receiving rRequest                                                          
+    @missing "3;MissingMessage.rRequest;Server,Toclient;rMiM3";           //so mediator resend rRequest to server, and create rMiM3 and send to server
     
 	message rReply(msg: String); 
     

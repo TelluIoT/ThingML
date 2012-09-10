@@ -15,8 +15,10 @@ import "../../../../../../datatypes.thingml"
 thing fragment SignatureMessage {//4 messages
     
     //ask if have empty rooms
+    
     message rSiM1(msg:Integer,msg1:String,msg2:Double,msg3:String)
     @signature "rSiM1_;(msg-msg),(msg1-msg1),(null-msg2),(msg2-msg3),(msg3-null)";  //client send rSiM1, but server receives rSiM1_ 
+    
     message rSiM1_(msg:String,msg1:Integer,msg2:String,msg3:Integer); 
     
     message rRequest(msg:String);

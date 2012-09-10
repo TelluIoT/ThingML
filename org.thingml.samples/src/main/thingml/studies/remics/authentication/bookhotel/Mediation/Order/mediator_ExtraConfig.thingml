@@ -5,16 +5,16 @@
 import "Configs.thingml"
 thing Mediator_ExtraConfig includes ControlMessage,Logger,OrderMessage
 {
-property msg2_rSpM1_2_rSpM1_1_2 : Double = 0
-property msg3_rSpM1_3_rSpM1_1_3 : String = ""
 property msg_rSpM1_1_rSpM1_1_1 : Integer = 0
 property msg1_rSpM1_1_rSpM1_1_1 : String = ""
+property msg3_rSpM1_3_rSpM1_1_3 : String = ""
+property msg2_rSpM1_2_rSpM1_1_2 : Double = 0
 provided port PrvPort_ExtraConfig_c1_Toserver {
 receives rRequest,inputID,rSpM1_1,rSpM1_2,rSpM1_3
 sends rReply_,idReply,rSpM1_re,rSpM1_1_re,rSpM1_2_re
 }
 required port ReqPort_ExtraConfig_s1_Toclient {
-sends rRequest,inputID,rSpM1_1,rSpM1_2,rSpM1_3
+sends rRequest,inputID,rSpM1_1,rSpM1_2_,rSpM1_3
 receives rReply,idReply,rSpM1_re,rSpM1_1_re,rSpM1_2_re
 }
 provided port PrvPort_Control{
@@ -134,17 +134,21 @@ function swallow(m:String) do
 print"extra message "+m+" received and swallowed! "
 end
 function transformrReply_ReqPort_ExtraConfig_s1_Toclient(msg:String) do
-var msg1337053163 :String = msg
-PrvPort_ExtraConfig_c1_Toserver!rReply_(msg1337053163)
-log("Mediator_ExtraConfig -> \"ExtraConfig_c1:FakeClient\" : rReply_("+"\""+msg1337053163+"\""+")")
+var msg773110290 :String = msg
+PrvPort_ExtraConfig_c1_Toserver!rReply_(msg773110290)
+log("Mediator_ExtraConfig -> \"ExtraConfig_c1:FakeClient\" : rReply_("+"\""+msg773110290+"\""+")")
+end
+function transformrSpM1_2_PrvPort_ExtraConfig_c1_Toserver(msg2:Double) do
+var msg326878717 :String = ''&msg2&'.toString'
+ReqPort_ExtraConfig_s1_Toclient!rSpM1_2_(msg326878717)
+log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : rSpM1_2_("+"\""+msg326878717+"\""+")")
 end
 function sendOrMsg_rSpM1_1_3() do
 ReqPort_ExtraConfig_s1_Toclient!rSpM1_1(msg_rSpM1_1_rSpM1_1_1,msg1_rSpM1_1_rSpM1_1_1)
 log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : rSpM1_1("+msg_rSpM1_1_rSpM1_1_1+","+"\""+msg1_rSpM1_1_rSpM1_1_1+"\""+")")
 end
 function sendOrMsg_rSpM1_1_2() do
-ReqPort_ExtraConfig_s1_Toclient!rSpM1_2(msg2_rSpM1_2_rSpM1_1_2)
-log("Mediator_ExtraConfig -> \"ExtraConfig_s1:Server\" : rSpM1_2("+msg2_rSpM1_2_rSpM1_1_2+")")
+transformrSpM1_2_PrvPort_ExtraConfig_c1_Toserver(msg2_rSpM1_2_rSpM1_1_2)
 end
 function sendOrMsg_rSpM1_1_1() do
 ReqPort_ExtraConfig_s1_Toclient!rSpM1_3(msg3_rSpM1_3_rSpM1_1_3)
@@ -179,4 +183,3 @@ required port ControlPort{
 sends startMsg, stopMsg
 }
 }
-

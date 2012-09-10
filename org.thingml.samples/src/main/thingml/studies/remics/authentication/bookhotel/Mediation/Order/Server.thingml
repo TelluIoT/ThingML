@@ -14,7 +14,7 @@ thing Server includes OrderMessage{
 
 
 	provided port Toclient {
-		receives rRequest,inputID,rSpM1_1,rSpM1_2,rSpM1_3
+		receives rRequest,inputID,rSpM1_1,rSpM1_2_,rSpM1_3
 		sends rReply,idReply,rSpM1_re,rSpM1_1_re,rSpM1_2_re
 	}
     
@@ -33,9 +33,9 @@ thing Server includes OrderMessage{
                     Toclient!rSpM1_1_re(true)
                 end   
             internal
-                event e :Toclient?rSpM1_2
+                event e :Toclient?rSpM1_2_
 				action do
-                    print"Server side: receive rSpM1_2"
+                    print"Server side: receive rSpM1_2_"
                     Toclient!rSpM1_2_re("true")
                 end    
 
@@ -85,7 +85,7 @@ thing Server includes OrderMessage{
 thing FakeServer includes OrderMessage
 @mock "true" {
 	provided port Toclient {
-		receives rRequest,inputID,rSpM1_1,rSpM1_2,rSpM1_3
+		receives rRequest,inputID,rSpM1_1,rSpM1_2_,rSpM1_3
 		sends rReply,idReply,rSpM1_re,rSpM1_1_re,rSpM1_2_re
 	}
 }

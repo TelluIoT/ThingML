@@ -66,6 +66,7 @@ log("ExtraConfig_c1 -> Logger_ExtraConfig : number")
 ReqPort_ExtraConfig_s1_CilentBookPort!number(e.SingleRoomNumber,e.DoubleRoomNumber)
 log("Logger_ExtraConfig -> ExtraConfig_s1 : number")
 end
+
 internal
 event e: ReqPort_ExtraConfig_s1_CilentBookPort?rReply
 action do
@@ -73,6 +74,7 @@ log("ExtraConfig_s1 -> Logger_ExtraConfig : rReply")
 PrvPort_ExtraConfig_c1_ServerBookPort!rReply(e.roomReply)
 log("Logger_ExtraConfig -> ExtraConfig_c1 : rReply")
 end
+
 internal
 event e: ReqPort_ExtraConfig_s1_CilentBookPort?idReply
 action do

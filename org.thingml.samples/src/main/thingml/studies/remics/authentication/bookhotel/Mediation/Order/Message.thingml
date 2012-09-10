@@ -29,7 +29,8 @@ thing fragment OrderMessage {
      
     message rSpM1_1(msg:Integer,msg1:String)
     @order "1/3/3;rSpM1_1;rSpM1_1_re,(true)";  // first sent by client, third to receive by server, total is 3, flag msg is rSpM1_1, 
-                                               //reply msg is rSpM1_1_re, default parameters are (true)
+    message rSpM1_re(msg:Boolean);
+                                         //reply msg is rSpM1_1_re, default parameters are (true)
     message rSpM1_2(msg2:Double)
     @signature "rSpM1_2_;(msg2-msg)"
     @order "2/2/3;rSpM1_1;rSpM1_2_re,()";
@@ -39,7 +40,7 @@ thing fragment OrderMessage {
     message rSpM1_3(msg3:String)
     @order "3/1/3;rSpM1_1;null";  // here see if need to create a reply or server will return one?
     
-    message rSpM1_re(msg:Boolean);
+    
     
     message rSpM1_1_re(msg:Boolean)@extra ""; 
     

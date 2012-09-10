@@ -130,6 +130,7 @@ object AnotatedMessages{
       }
     isExist
   }
+
   /*
    * to check if message m is a  Split message 
    */
@@ -431,27 +432,28 @@ object MediatorGenerator {
         builder append "action do\n"
         builder append "log(\""+inIns+" -> "+thing_mediator_name+" : "+getMessageInfo(m)+"\")\n"
         builder append "transform"+m.getName+"_"+inPort+"("+getParameters(m)+")\n"
-        checkMiM(m)
+
+        checkMiM(m,builder)
         builder append "end\n"
       }
-      if(AnotatedMessages.isExistInSpMList(m)){
+      if(AnotatedMessages.isExistInSpMList(m) && !AnotatedMessages.isExistInOrMList(m)){
         builder append "internal\n"
         builder append "event e: "+inPort+"?"+m.getName+"\n"
         builder append "action do\n"
         builder append "log(\""+inIns+" -> "+thing_mediator_name+" : "+getMessageInfo(m)+"\")\n"
         builder append "split"+m.getName+"_"+inPort+"("+getParameters(m)+")\n"
         generateSpFunction(m)
-        checkMiM(m)
+        checkMiM(m,builder)
         builder append "end\n"
       }
-      if(AnotatedMessages.isExistInMeMList(m)){
+      if(AnotatedMessages.isExistInMeMList(m) && !AnotatedMessages.isExistInOrMList(m)){
         dealWithMeMsg(cfg,m,inPort,outPort,inIns,outIns,thing_mediator_name)
 
       }
       if(AnotatedMessages.isExistInOrMList(m)){
 
         var oa = AnotatedMessages.getOrAByMsg(m)
-
+        
         if(oa.seq == 1 && oa.seq<oa.amount){
           
           builder append "transition -> OutOfOrderState_"+oa.flag+"_"+oa.seq+"\n"
@@ -464,7 +466,9 @@ object MediatorGenerator {
           if(oa.replyMsg!=null){
             builder append inPort+"!"+oa.replyMsg.getName+"("+oa.replyMsgParaValues.mkString(",")+")\n"
             builder append "log(\""+thing_mediator_name+" -> "+inIns+" : "+getMiMsgInfo(oa.replyMsg,oa.replyMsgParaValues)+"\")\n"
+            checkMiM(oa.replyMsg,builder)
           }
+
           builder append "end\n"
           generateSendingFunc(oa.seq_re)
 
@@ -482,6 +486,7 @@ object MediatorGenerator {
           if(oa.replyMsg!=null){
             statesBuilder append inPort+"!"+oa.replyMsg.getName+"("+oa.replyMsgParaValues.mkString(",")+")\n"
             statesBuilder append "log(\""+thing_mediator_name+" -> "+inIns+" : "+getMiMsgInfo(oa.replyMsg,oa.replyMsgParaValues)+"\")\n"
+            checkMiM(oa.replyMsg,statesBuilder)
           }
           statesBuilder append "end\n"
           statesBuilder append "}\n"
@@ -502,10 +507,13 @@ object MediatorGenerator {
           if(oa.replyMsg!=null){
             statesBuilder append inPort+"!"+oa.replyMsg.getName+"("+oa.replyMsgParaValues.mkString(",")+")\n"
             statesBuilder append "log(\""+thing_mediator_name+" -> "+inIns+" : "+getMiMsgInfo(oa.replyMsg,oa.replyMsgParaValues)+"\")\n"
+            checkMiM(oa.replyMsg,statesBuilder)
           }
           
-          for(i<-1 to oa.amount)
+          for(i<-1 to oa.amount){
             statesBuilder append "sendOrMsg_"+oa.flag+"_"+i+"() \n"
+            
+          }
           statesBuilder append "end\n"
           statesBuilder append "}\n"
           
@@ -514,8 +522,17 @@ object MediatorGenerator {
         def generateSendingFunc(seq:Int){
           var ubuilder = Context.uBuilder
           ubuilder append "function sendOrMsg_"+oa.flag+"_"+seq+"() do\n"
-          ubuilder append outPort+"!"+m.getName+"("+m.getParameters.collect{case p=> p.getName+"_"+m.getName+"_"+oa.flag+"_"+oa.seq}.mkString(",")+")\n"
-          ubuilder append "log(\""+thing_mediator_name+" -> "+outIns+" : "+getOrMsfInfo(m)+"\")\n"
+          if(AnotatedMessages.isExistInSpMList(m)){
+            ubuilder append "split"+m.getName+"_"+inPort+"("+m.getParameters.collect{case p=> p.getName+"_"+m.getName+"_"+oa.flag+"_"+oa.seq}.mkString(",")+")\n"
+            generateSpFunction(m)
+          }
+          else if(AnotatedMessages.isExistInSiMList(m)){
+            ubuilder append "transform"+m.getName+"_"+inPort+"("+m.getParameters.collect{case p=> p.getName+"_"+m.getName+"_"+oa.flag+"_"+oa.seq}.mkString(",")+")\n"
+          }else{
+            ubuilder append outPort+"!"+m.getName+"("+m.getParameters.collect{case p=> p.getName+"_"+m.getName+"_"+oa.flag+"_"+oa.seq}.mkString(",")+")\n"
+            ubuilder append "log(\""+thing_mediator_name+" -> "+outIns+" : "+getOrMsfInfo(m)+"\")\n"
+            checkMiM(m,ubuilder)
+          }
           ubuilder append "end\n"
         }
         def getOrMsfInfo(msg:Message):String={
@@ -548,6 +565,7 @@ object MediatorGenerator {
                     }else{
                       builder append outPort+"!"+m.getName+"("+target._3.mkString(",")+")\n"
                       builder append "log(\""+thing_mediator_name+" -> "+outIns+" : "+getSpMsgInfo()+"\")\n"
+                      checkMiM(m,builder)
                     }
                     
                     def getSpMsgInfo():String = {
@@ -610,6 +628,7 @@ object MediatorGenerator {
       if(ma.replyMsg!=null){
         builder append inPort+"!"+ma.replyMsg.getName+"("+ma.replyMsgParaValues.mkString(",")+")\n"
         builder append "log(\""+thing_mediator_name+" -> "+inIns+" : "+getMiMsgInfo(ma.replyMsg,ma.replyMsgParaValues)+"\")\n"
+        checkMiM(ma.replyMsg,statesBuilder)
       }
       builder append "end\n"
       
@@ -623,6 +642,7 @@ object MediatorGenerator {
       if(ma.replyMsg!=null){
         statesBuilder append inPort+"!"+ma.replyMsg.getName+"("+ma.replyMsgParaValues.mkString(",")+")\n"
         statesBuilder append "log(\""+thing_mediator_name+" -> "+inIns+" : "+getMiMsgInfo(ma.replyMsg,ma.replyMsgParaValues)+"\")\n"
+        checkMiM(ma.replyMsg,statesBuilder)
       }
       transform(statesBuilder)
       statesBuilder append "end\n"
@@ -637,10 +657,12 @@ object MediatorGenerator {
       if(ma.replyMsg!=null){
         statesBuilder append inPort+"!"+ma.replyMsg.getName+"("+ma.replyMsgParaValues.mkString(",")+")\n"
         statesBuilder append "log(\""+thing_mediator_name+" -> "+inIns+" : "+getMiMsgInfo(ma.replyMsg,ma.replyMsgParaValues)+"\")\n"
+        checkMiM(ma.replyMsg,statesBuilder)
       }
       transform(statesBuilder)
       statesBuilder append outPort+"!"+ma.targetMsg.getName+"("+ma.targetMsg.getParameters.collect{case p=> p.getName+"_"+ma.targetMsg.getName}.mkString(",")+")\n"
       statesBuilder append "log(\""+thing_mediator_name+" -> "+outIns+" : "+getMeMsgInfo()+"\")\n"
+      checkMiM(ma.targetMsg,statesBuilder)
       statesBuilder append "end\n"
       statesBuilder append "}\n"
       def getMeMsgInfo():String = {
@@ -723,7 +745,9 @@ object MediatorGenerator {
                   }
                   ubuilder append outPort+"!"+targetMsg.getName+"("+targetMsg.getParameters.collect{case p=> p.getName+p.hashCode}.mkString(",")+")\n"
                   ubuilder append "log(\""+thing_mediator_name+" -> "+outIns+" : "+getSiMsgInfo(targetMsg)+"\")\n"
+                  checkMiM(targetMsg,ubuilder)
                   ubuilder append "end\n"
+
                 }
                 else if(/*c.getProvided.getSends.contains(sa.m) &&*/ c.getRequired.getReceives.contains(targetMsg)){
                   var outPort = "PrvPort_"+cli_name+"_"+c.getRequired.getName
@@ -746,6 +770,7 @@ object MediatorGenerator {
                   }
                   ubuilder append outPort+"!"+targetMsg.getName+"("+targetMsg.getParameters.collect{case p=> p.getName+p.hashCode}.mkString(",")+")\n"
                   ubuilder append "log(\""+thing_mediator_name+" -> "+outIns+" : "+getSiMsgInfo(targetMsg)+"\")\n"
+                  checkMiM(targetMsg,ubuilder)
                   ubuilder append "end\n"
                 }
                 def getSiMsgInfo(msg:Message):String = {
@@ -1067,7 +1092,7 @@ object MediatorGenerator {
 
   
   def generateThingLogger(cfg:Configuration, builder:StringBuilder = Context.mBuilder){
-    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" + "Config_Logger_"+cfg.getName
+    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp\\" +cfg.getName
     var log_filename = rootDir+"\\log_"+cfg.getName
     log_filename = log_filename.replace("\\", "/")
     

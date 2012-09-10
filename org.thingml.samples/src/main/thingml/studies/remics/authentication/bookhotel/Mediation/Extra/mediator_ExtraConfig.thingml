@@ -53,12 +53,14 @@ log("ExtraConfig_c1 -> Mediator_ExtraConfig : inputID")
 ReqPort_ExtraConfig_s1_Toclient!inputID(e.msg)
 log("Mediator_ExtraConfig -> ExtraConfig_s1 : inputID")
 end
+
 internal
 event e: PrvPort_ExtraConfig_c1_Toserver?rExtra
 action do
 log("ExtraConfig_c1 -> Mediator_ExtraConfig : rExtra")
 swallow("rExtra")
 end
+
 internal
 event e: ReqPort_ExtraConfig_s1_Toclient?rReply
 action do
@@ -75,9 +77,11 @@ log("Mediator_ExtraConfig -> ExtraConfig_c1 : idReply")
 end
 }
 }
+
 function swallow(m:String) do
-print"extra message "+m+" received and swallowed! "
+    log ("extra message "+m+" received and swallowed! ")
 end
+
 }
 
 thing Logger

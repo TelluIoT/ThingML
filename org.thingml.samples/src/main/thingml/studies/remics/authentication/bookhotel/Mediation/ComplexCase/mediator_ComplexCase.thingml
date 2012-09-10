@@ -1,0 +1,154 @@
+/*
+* This is a mediator for Configratrion(ComplexCase) generated automatically
+* by Runze Hao (haoshaochi@gmail.com)
+*/
+import "Configs.thingml"
+thing Mediator_ComplexCase includes ControlMessage,Logger,Messages
+{
+property ID_userinfo_email_2 : Integer = 0
+property username_userinfo_email_2 : String = ""
+property age_userinfo_email_2 : Integer = 0
+property ack_welcome : Boolean = false
+property welcome_welcome : String = ""
+property email_email_email_1 : String = ""
+provided port PrvPort_ComplexCase_c1_Toserver {
+receives email,userinfo
+sends email_ack,welcome
+}
+required port ReqPort_ComplexCase_s1_Toclient {
+sends startService,id,userinfo_,email
+receives id_ack,userinfo_ack,welcome_
+}
+provided port PrvPort_Control{
+receives startMsg, stopMsg
+}
+statechart Mediator init Ready {
+state Ready{
+on entry do
+clearlog()
+print "Ready, Waiting for startMsg trigger"
+end
+transition->Working
+event e:PrvPort_Control?startMsg
+action do
+print " start!"
+log("@startuml")
+log("autonumber \"<b>[000]\"")
+log("participant Mediator_ComplexCase <<(M,#EEEEEE)>> #99FF99")
+createAndSendstartService()
+end
+}
+state Working{
+on entry do
+print "enter working state"
+end
+on exit do
+print "exit working state"
+end
+
+transition-> Ready
+event e: PrvPort_Control?stopMsg
+
+action do
+log("@enduml")
+printlog()
+writeFile()
+end
+
+transition -> OutOfOrderState_email_1
+event e: PrvPort_ComplexCase_c1_Toserver?email
+action do
+log("\"ComplexCase_c1:FakeClient\" -> Mediator_ComplexCase : email("+"\""+e.email+"\""+")")
+email_email_email_1 = e.email
+PrvPort_ComplexCase_c1_Toserver!email_ack(true)
+log("Mediator_ComplexCase -> \"ComplexCase_c1:FakeClient\" : email_ack(true)")
+end
+internal
+event e: ReqPort_ComplexCase_s1_Toclient?id_ack
+action do
+log("\"ComplexCase_s1:Server\" -> Mediator_ComplexCase : id_ack("+e.ID_ack+")")
+swallow("id_ack")
+end
+transition -> MergeState_welcome_1
+event e: ReqPort_ComplexCase_s1_Toclient?userinfo_ack
+action do
+log("\"ComplexCase_s1:Server\" -> Mediator_ComplexCase : userinfo_ack("+e.ack+")")
+ack_welcome= e.ack
+end
+}
+state OutOfOrderState_email_1{
+transition -> Working
+event e: PrvPort_ComplexCase_c1_Toserver?userinfo
+action do
+log("\"ComplexCase_c1:FakeClient\" -> Mediator_ComplexCase : userinfo("+e.ID+","+"\""+e.username+"\""+","+e.age+")")
+ID_userinfo_email_2 = e.ID
+username_userinfo_email_2 = e.username
+age_userinfo_email_2 = e.age
+sendOrMsg_email_1() 
+sendOrMsg_email_2() 
+end
+}
+state MergeState_welcome_1{
+transition -> Working
+event e: ReqPort_ComplexCase_s1_Toclient?welcome_
+action do
+log("\"ComplexCase_s1:Server\" -> Mediator_ComplexCase : welcome_("+"\""+e.welcome+"\""+")")
+welcome_welcome= e.welcome
+PrvPort_ComplexCase_c1_Toserver!welcome(ack_welcome,welcome_welcome)
+log("Mediator_ComplexCase -> \"ComplexCase_c1:FakeClient\" : welcome("+ack_welcome+","+"\""+welcome_welcome+"\""+")")
+end
+}
+}
+function swallow(m:String) do
+print"extra message "+m+" received and swallowed! "
+end
+function createAndSendstartService() do
+ReqPort_ComplexCase_s1_Toclient!startService("start")
+log("Mediator_ComplexCase -> \"ComplexCase_s1:Server\" : (startService(\"start\")")
+end
+function transformid__PrvPort_ComplexCase_c1_Toserver(ID:Integer) do
+var ID1212693618 :String = ''&ID&'.toString'
+ReqPort_ComplexCase_s1_Toclient!id(ID1212693618)
+log("Mediator_ComplexCase -> \"ComplexCase_s1:Server\" : id("+"\""+ID1212693618+"\""+")")
+end
+function sendOrMsg_email_2() do
+ReqPort_ComplexCase_s1_Toclient!email(email_email_email_1)
+log("Mediator_ComplexCase -> \"ComplexCase_s1:Server\" : email("+"\""+email_email_email_1+"\""+")")
+end
+function sendOrMsg_email_1() do
+splituserinfo_PrvPort_ComplexCase_c1_Toserver(ID_userinfo_email_2,username_userinfo_email_2,age_userinfo_email_2)
+end
+function splituserinfo_PrvPort_ComplexCase_c1_Toserver(ID:Integer,username:String,age:Integer) do
+transformid__PrvPort_ComplexCase_c1_Toserver(ID)
+ReqPort_ComplexCase_s1_Toclient!userinfo_(username,age)
+log("Mediator_ComplexCase -> \"ComplexCase_s1:Server\" : userinfo_("+"\""+username+"\""+","+age+")")
+end
+}
+
+thing Logger
+@scala_trait "org.thingml.utils.log.Access2File"
+@thingml_maven_dep "org.thingml.utils"
+{
+property trace_buffer :String
+function log(trace:String) do
+print "==LOG: "+trace+" !=="
+trace_buffer = trace_buffer + trace +"\n"
+end
+function printlog() do
+print "====TRACE====\n"
+print trace_buffer
+end
+function clearlog() do
+trace_buffer =""
+end
+function writeFile() do
+'this.asInstanceOf[org.thingml.utils.log.Access2File].writeFile(' & trace_buffer & ',"C:/Users/HAOSHA~1/AppData/Local/Temp/ThingML_temp/ComplexCase/log_ComplexCase")'
+end
+}
+
+thing Control includes ControlMessage
+@mock "true"{
+required port ControlPort{
+sends startMsg, stopMsg
+}
+}

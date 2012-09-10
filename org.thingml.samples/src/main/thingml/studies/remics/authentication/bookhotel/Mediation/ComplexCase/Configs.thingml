@@ -10,21 +10,24 @@ import "Client.thingml"
 import "Server.thingml"
 //
 //
+/*
+configuration ServerMonitor{
+    instance c1:Mockup_Client
+    instance s1:FakeServer
+    connector c1.Toserver => s1.Toclient
+}
+*/
 
-configuration ExtraConfig{
+/*
+configuration ClientMonitor{
+    instance s1:Mockup_Server
+    instance c1:FakeClient
+    connector c1.Toserver => s1.Toclient
+}
+
+
+configuration ComplexCase{
     instance c1:FakeClient
     instance s1:Server
     connector c1.Toserver => s1.Toclient
-    
-}
-
-thing Server2{}
-
-configuration Config{
-    instance c1:Client
-    instance s1:Server
-    instance s2:Server2
-    connector c1.Toserver => s1.Toclient
-    connector c1.Toserver => s2.toclient
-    
-}
+}*/
