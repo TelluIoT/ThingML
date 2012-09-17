@@ -29,7 +29,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Set;
 import javax.swing.JOptionPane;
 
 public class Serial4ThingML {
@@ -42,20 +41,15 @@ public class Serial4ThingML {
             System.out.println("osName=" + osName + ", osProc=" + osProc);
             if (osName.equals("Mac OS X")) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Mac_OS_X/librxtxSerial.jnilib"), "librxtxSerial.jnilib");
-            }
-            else if (osName.equals("Win32")) {
+            } else if (osName.equals("Win32")) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Windows/win32/rxtxSerial.dll"), "rxtxSerial.dll");
-            }
-            else if (osName.equals("Win64") || osName.equals("Windows 7")) {
+            } else if (osName.equals("Win64") || osName.equals("Windows 7")) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Windows/win64/rxtxSerial.dll"), "rxtxSerial.dll");
-            }
-            else if (osName.equals("Linux") && (osProc.equals("x86-64") || osProc.equals("amd64"))) {
+            } else if (osName.equals("Linux") && (osProc.equals("x86-64") || osProc.equals("amd64"))) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/x86_64-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so");
-            }
-            else if (osName.equals("Linux") && osProc.equals("ia64")) {
+            } else if (osName.equals("Linux") && osProc.equals("ia64")) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/ia64-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so");
-            }
-            else if (osName.equals("Linux") && (osProc.equals("x86") || osProc.equals("i386"))) {
+            } else if (osName.equals("Linux") && (osProc.equals("x86") || osProc.equals("i386"))) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/i686-unknown-linux-gnu/librxtxParallel.so"), "librxtxParallel.so");
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/i686-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so");
             }
@@ -65,9 +59,10 @@ public class Serial4ThingML {
             System.exit(1);
         }
     }
-    /*public static final byte START_BYTE = 0x12;
-    public static final byte STOP_BYTE = 0x13;
-    public static final byte ESCAPE_BYTE = 0x7D;*/
+    /*
+     * public static final byte START_BYTE = 0x12; public static final byte
+     * STOP_BYTE = 0x13; public static final byte ESCAPE_BYTE = 0x7D;
+     */
     protected String port;
     protected SerialPort serialPort;
     protected InputStream in;
@@ -106,11 +101,13 @@ public class Serial4ThingML {
                 }
             }
         } catch (Exception e) {
+            System.err.println("Cannot open serial port. Abort!");
             e.printStackTrace();
+            close();
         }
     }
 
-    public void close() {
+    public boolean close() {
         try {
             if (in != null) {
                 in.close();
@@ -123,13 +120,17 @@ public class Serial4ThingML {
                 serialPort.removeEventListener();
                 serialPort.close();
             }
+            return true;
         } catch (Exception e) {
+            return false;
         }
     }
 
-    /* ***********************************************************************
+    /*
+     * ***********************************************************************
      * Serial Port data send operation
-     *************************************************************************/
+     ************************************************************************
+     */
     public void sendData(byte[] payload) {
         try {
             // send the start byte
@@ -137,29 +138,36 @@ public class Serial4ThingML {
             // send data
             for (int i = 0; i < payload.length; i++) {
                 // escape special bytes
-                /*if (payload[i] == START_BYTE || payload[i] == STOP_BYTE || payload[i] == ESCAPE_BYTE) {
-                out.write((int) ESCAPE_BYTE);
-                }*/
+                /*
+                 * if (payload[i] == START_BYTE || payload[i] == STOP_BYTE ||
+                 * payload[i] == ESCAPE_BYTE) { out.write((int) ESCAPE_BYTE);
+                }
+                 */
                 //System.out.println("Serial.Write[" + i + "] = " + (int) payload[i]);
                 out.write((int) payload[i]);
             }
             // send the stop byte
             //out.write((int) STOP_BYTE);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.err.println("Error while writing on serial port. Trying to close and reconnect...");
+            close();
+            connect();
         }
     }
 
-    /* ***********************************************************************
-     * Serial Port Listener - reads packets from the serial line and
-     * notifies listeners of incoming packets
-     *************************************************************************/
+    /*
+     * ***********************************************************************
+     * Serial Port Listener - reads packets from the serial line and notifies
+     * listeners of incoming packets
+     ************************************************************************
+     */
     public class SerialReader implements SerialPortEventListener {
 
-        /*public static final int RCV_WAIT = 0;
-        public static final int RCV_MSG = 1;
-        public static final int RCV_ESC = 2;*/
+        /*
+         * public static final int RCV_WAIT = 0; public static final int RCV_MSG
+         * = 1; public static final int RCV_ESC = 2;
+         */
         //private byte[] buffer = new byte[256];
         //protected int buffer_idx = 0;
         //protected int state = RCV_WAIT;
@@ -172,56 +180,46 @@ public class Serial4ThingML {
 
             try {
                 while ((data = in.read()) > -1) {
-                    /*                    System.out.println("data: " + data);
-                    // we got a byte from the serial port
-                    if (state == RCV_WAIT) { // it should be a start byte or we just ignore it
-                    /*System.out.println("WAIT");
-                    System.out.println("data: " + data + " ?= " + START_BYTE);*/
-                    /*                        if (data == START_BYTE) {
-                    state = RCV_MSG;
-                    buffer_idx = 0;
-                    buffer[buffer_idx] = (byte) data;
-                    buffer_idx++;
+                    /*
+                     * System.out.println("data: " + data); // we got a byte
+                     * from the serial port if (state == RCV_WAIT) { // it
+                     * should be a start byte or we just ignore it
+                     * /*System.out.println("WAIT"); System.out.println("data: "
+                     * + data + " ?= " + START_BYTE);
+                     */
+                    /*
+                     * if (data == START_BYTE) { state = RCV_MSG; buffer_idx =
+                     * 0; buffer[buffer_idx] = (byte) data; buffer_idx++; } }
+                     * else if (state == RCV_MSG) {
+                     * //System.out.println("RECEIVE"); if (data == ESCAPE_BYTE)
+                     * { state = RCV_ESC; } else if (data == STOP_BYTE) {
+                     * buffer[buffer_idx] = (byte) data; buffer_idx++; // We got
+                     * a complete frame //byte[] packet = new byte[buffer_idx];
+                     * /*for (int i = 0; i < buffer_idx; i++) { packet[i] =
+                     * buffer[i];
                     }
-                    } else if (state == RCV_MSG) {
-                    //System.out.println("RECEIVE");
-                    if (data == ESCAPE_BYTE) {
-                    state = RCV_ESC;
-                    } else if (data == STOP_BYTE) {
-                    buffer[buffer_idx] = (byte) data;
-                    buffer_idx++;
-                    // We got a complete frame
-                    //byte[] packet = new byte[buffer_idx];
-                    /*for (int i = 0; i < buffer_idx; i++) {
-                    packet[i] = buffer[i];
-                    }*/
-                    /*                           System.out.println("Well-formed packet forwarded to thing");
-                    thing.receive(java.util.Arrays.copyOf(buffer, buffer_idx)/*packet*//*);
-
-                    state = RCV_WAIT;
-                    } else if (data == START_BYTE) {
-                    // Should not happen but we reset just in case
-                    state = RCV_MSG;
-                    buffer_idx = 0;
-                    buffer[buffer_idx] = (byte) data;
-                    buffer_idx++;
-                    } else { // it is just a byte to store
-                    buffer[buffer_idx] = (byte) data;
-                    buffer_idx++;
-                    }
-                    } else if (state == RCV_ESC) {
-                    //System.out.println("ESCAPE");
-                    // Store the byte without looking at it
-                    buffer[buffer_idx] = (byte) data;
-                    buffer_idx++;
-                    state = RCV_MSG;
-                    }
+                     */
+                    /*
+                     * System.out.println("Well-formed packet forwarded to
+                     * thing"); thing.receive(java.util.Arrays.copyOf(buffer, buffer_idx)/*packet
+                     *//*
+                     * );
+                     *
+                     * state = RCV_WAIT; } else if (data == START_BYTE) { //
+                     * Should not happen but we reset just in case state =
+                     * RCV_MSG; buffer_idx = 0; buffer[buffer_idx] = (byte)
+                     * data; buffer_idx++; } else { // it is just a byte to
+                     * store buffer[buffer_idx] = (byte) data; buffer_idx++; } }
+                     * else if (state == RCV_ESC) {
+                     * //System.out.println("ESCAPE"); // Store the byte without
+                     * looking at it buffer[buffer_idx] = (byte) data;
+                     * buffer_idx++; state = RCV_MSG; }
                      */
                     //buffer_idx = 0;
                     //System.out.println("byte[" + buffer_idx + "]" + (byte) data);
                     buffer[buffer_idx] = (byte) data;
 
-                    if (buffer[buffer_idx] == 0x13 && buffer[buffer_idx-1] != 0x7D) {
+                    if (buffer[buffer_idx] == 0x13 && buffer[buffer_idx - 1] != 0x7D) {
                         //System.out.println("  forward");
                         thing.receive(java.util.Arrays.copyOfRange(buffer, 0, buffer_idx + 1));
                         buffer_idx = 0;
@@ -232,16 +230,22 @@ public class Serial4ThingML {
 
 
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.err.println("Error while reading from serial port. Trying to close and reconnect...");
+                close();
+                connect();
             }
         }
     }
 
-    /* ***********************************************************************
+    /*
+     * ***********************************************************************
      * Serial port utilities: listing
-     *************************************************************************/
+     ************************************************************************
+     */
     /**
-     * @return    A HashSet containing the CommPortIdentifier for all serial ports that are not currently being used.
+     * @return A HashSet containing the CommPortIdentifier for all serial ports
+     * that are not currently being used.
      */
     public static HashSet<CommPortIdentifier> getAvailableSerialPorts() {
         HashSet<CommPortIdentifier> h = new HashSet<CommPortIdentifier>();
