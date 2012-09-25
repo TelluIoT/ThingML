@@ -1,0 +1,15 @@
+// 
+// (c) SINTEF 2012
+//
+// Define the messages for a substitute server
+// 
+// by Runze Hao (haoshaochi@gmail.com)
+//
+import "../../../../../datatypes.thingml"
+
+
+//deifine the behavior of the application that try to book hotel on a remote service.
+thing fragment API2BookHotel {
+    message bookhotel(bookHotelRequest:String, ID:String, SingleRoomNumber:Integer, DoubleRoomNumber:Integer);
+	message result4substitute(bookReply: Boolean);
+}
