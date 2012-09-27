@@ -73,7 +73,9 @@ object Context {
 object KevoreeGenerator {
   implicit def kevoreeGeneratorAspect(self: Thing): ThingKevoreeGenerator = ThingKevoreeGenerator(self)
   
-  //TODO: modification
+  /*
+   * 
+   */
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
     new File(System.getProperty("java.io.tmpdir") + "ThingML_temp/").deleteOnExit
     
@@ -107,28 +109,38 @@ object KevoreeGenerator {
     
     compileKevScript(cfg)
     
-  /* cfg.allInstances.foreach{case inst =>
+    /* cfg.allInstances.foreach{case inst =>
      
-   }*/
+     }*/
     javax.swing.JOptionPane.showMessageDialog(null, "Kevoree/java code generated");
   }
+  /*
+   * 
+   */
   def compileKevScript(cfg:Configuration){
     var kevScript:StringBuilder= new StringBuilder()
     kevScript append "tblock\n{\n"
+    kevScript append "merge \"mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.javaseNode/{kevoree.version}\"\n"
+    kevScript append "merge \"mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.nanohttp/{kevoree.version}\"\n"
+    kevScript append "merge \"mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.defaultChannels/{kevoree.version}\"\n"
     kevScript append "addNode node0 : JavaSENode\n"
-    kevScript append "addGroup sync: RestGroup \n"
+    kevScript append "addGroup sync: NanoRestGroup \n"
     kevScript append "addToGroup sync* \n"
     kevScript append "updateDictionary sync { port=\"8000\"}@node0\n"
     cfg.allThings.foreach{thing=>
       kevScript append "addComponent "+thing.getName()+"_KevComponent@node0 : "+cfg.getName+"_"+thing.getName()+"_KV2ThingML {}\n"
     }
-    cfg.allConnectors.foreach{con=>
-      kevScript append "addChannel c_"+con.hashCode+" : defMSG {}\n"
-      kevScript append "addChannel c_"+con.hashCode+"_re : defMSG {}\n"
-      kevScript append  "bind "+con.getRequired.getOwner.getName+"_KevComponent."+con.getRequired.getName+"_Transfer@node0 => c_"+con.hashCode+"\n"
-      kevScript append  "bind "+con.getProvided.getOwner.getName+"_KevComponent."+con.getProvided.getName+"_rcv@node0 => c_"+con.hashCode+"\n"
-      kevScript append  "bind "+con.getRequired.getOwner.getName+"_KevComponent."+con.getRequired.getName+"_rcv@node0 => c_"+con.hashCode+"_re\n"
-      kevScript append  "bind "+con.getProvided.getOwner.getName+"_KevComponent."+con.getProvided.getName+"_Transfer@node0 => c_"+con.hashCode+"_re\n"
+    cfg.allConnectors.foreach{con=>   
+      if(con.getRequired.getSends.size>0 && con.getProvided.getReceives.size>0){
+        kevScript append "addChannel c_"+con.hashCode+" : defMSG {}\n"
+        kevScript append  "bind "+con.getRequired.getOwner.getName+"_KevComponent."+con.getRequired.getName+"_Transfer@node0 => c_"+con.hashCode+"\n"
+        kevScript append  "bind "+con.getProvided.getOwner.getName+"_KevComponent."+con.getProvided.getName+"_rcv@node0 => c_"+con.hashCode+"\n"
+      }
+      if(con.getRequired.getReceives.size>0 && con.getProvided.getSends.size>0){
+        kevScript append "addChannel c_"+con.hashCode+"_re : defMSG {}\n"
+        kevScript append  "bind "+con.getRequired.getOwner.getName+"_KevComponent."+con.getRequired.getName+"_rcv@node0 => c_"+con.hashCode+"_re\n"
+        kevScript append  "bind "+con.getProvided.getOwner.getName+"_KevComponent."+con.getProvided.getName+"_Transfer@node0 => c_"+con.hashCode+"_re\n"
+      }
     }
     
     
@@ -226,29 +238,29 @@ case class ThingKevoreeGenerator(val self: Thing){
     }.headOption match{
       case Some(a) =>
         a.getValue match {
-            case "true" => {
-                component_name = self.getName+"Mock"
-                builder append component_name+" thingML_"+self.getName+"_Component;\n"
+          case "true" => {
+              component_name = self.getName+"Mock"
+              builder append component_name+" thingML_"+self.getName+"_Component;\n"
             }
-            case "mirror" => {
-                component_name = self.getName+"Mirror"
-                builder append component_name+" thingML_"+self.getName+"_Component;\n"    
+          case "mirror" => {
+              component_name = self.getName+"Mirror"
+              builder append component_name+" thingML_"+self.getName+"_Component;\n"    
             }
-          }
+        }
       case none =>{
           component_name = self.getName
           builder append self.getName+" thingML_"+self.getName+"_Component;\n"
-      }
+        }
         
     }
     
     self.allPorts.foreach{case p =>
-        if(p.getSends.size>0){
+        if(p.getSends.size>0 || p.getReceives.size>0){
           builder append "Port " + "port_" + Context.firstToUpper(self.getName) + "_" + p.getName + "_wrapper = null;\n"
         }
     }
     self.allPorts.foreach{case p =>
-        if(p.getSends.size>0){
+        if(p.getSends.size>0 || p.getReceives.size>0){
           builder append "public Port get"+Context.firstToUpper(self.getName)+"_"+p.getName+"(){\n"
           builder append "return port_" + Context.firstToUpper(self.getName) + "_" + p.getName + "_wrapper;\n"
           builder append "}\n"
@@ -262,10 +274,10 @@ case class ThingKevoreeGenerator(val self: Thing){
     builder append ");\n"
     
     self.allPorts.foreach{case p=>
-        builder append "scala.collection.immutable.List<String> "+p.getName+"_sent = null;\n"
-        builder append "scala.collection.immutable.List<String> "+p.getName+"_rcv = null;\n"
+        builder append "scala.collection.immutable.List<String> "+p.getName+"_sent = scala.collection.immutable.List$.MODULE$.empty();\n"
+        builder append "scala.collection.immutable.List<String> "+p.getName+"_rcv = scala.collection.immutable.List$.MODULE$.empty();\n"
         if(p.getSends.size>0){
-          builder append p.getName+"_sent = scala.collection.immutable.List$.MODULE$.empty();\n"
+          //builder append p.getName+"_sent = scala.collection.immutable.List$.MODULE$.empty();\n"
           // builder append p.getName+"_sent = scala.collection.immutable.List$.MODULE$.empty();\n"
           p.getSends.foreach{case s=>
               builder append p.getName+"_sent = new $colon$colon(\"" + s.getName + "\", "+p.getName+"_sent);\n"
@@ -273,7 +285,7 @@ case class ThingKevoreeGenerator(val self: Thing){
           }
         }
         if(p.getReceives.size>0){    
-          builder append p.getName+"_rcv = scala.collection.immutable.List$.MODULE$.empty();\n"
+         // builder append p.getName+"_rcv = scala.collection.immutable.List$.MODULE$.empty();\n"
           p.getReceives.foreach{case s=>
               builder append p.getName+"_rcv = new $colon$colon(\"" + s.getName + "\", "+p.getName+"_rcv);\n" 
           }
@@ -303,18 +315,30 @@ case class ThingKevoreeGenerator(val self: Thing){
   def generateKevoree(builder: StringBuilder = Context.builder) {
     println(self.getName)
     Context.thing = self
-    
-    builder append "\n@Provides({\n"
-    builder append self.allPorts.collect{case p=>
-        if(p.getReceives.size>0) "@ProvidedPort(name = \""+p.getName+"_rcv\", type = PortType.MESSAGE)" 
-    }.mkString(",\n")
-    
-    builder append "})\n@Requires({\n"
-    builder append self.allPorts.collect{case p=>
-        if(p.getSends.size>0) "@RequiredPort(name = \""+p.getName+"_Transfer\", type = PortType.MESSAGE)"
-    }.mkString(",\n")
-    
-    builder append "})\n"
+    var providedPortSize = 0
+    var requiredPortSize = 0
+    self.allPorts.collect{case p=> 
+        if(p.getReceives.size>0) providedPortSize+=1
+    }
+    self.allPorts.collect{case p=> 
+        if(p.getSends.size>0) requiredPortSize+=1
+    }
+    if(providedPortSize>0){
+      builder append "\n@Provides({\n"
+      builder append self.allPorts.collect{case p=>
+          if(p.getReceives.size>0) "@ProvidedPort(name = \""+p.getName+"_rcv\", type = PortType.MESSAGE)" 
+          else ""
+      }.mkString(",\n")
+      builder append "})\n"
+    }
+    if(requiredPortSize>0){
+      builder append "\n@Requires({\n"
+      builder append self.allPorts.collect{case p=>
+          if(p.getSends.size>0) "@RequiredPort(name = \""+p.getName+"_Transfer\", type = PortType.MESSAGE)"
+          else ""
+      }.mkString(",\n")
+      builder append "})\n"
+    }
     generateDictionary();
 
     builder append "@ComponentType\n "
@@ -332,9 +356,9 @@ case class ThingKevoreeGenerator(val self: Thing){
     builder append "@Update\n"
     builder append "public void updateComponent() {System.out.println(\""+Context.file_name+" component update!\");\n"
     self.allPropertiesInDepth.foreach{case p=>
-        if(!p.isChangeable){
+        if(p.isChangeable){
           builder append p.getType.java_type+" "+Context.protectJavaKeyword(p.getName)+" = new "+p.getType.java_type+"((String)this.getDictionary().get(\""+p.getName+"\"));\n"
-          builder append "wrapper.getInstance()."+self.getName+"_"+p.getName+"_var_$eq("+Context.protectJavaKeyword(p.getName)+");\n"
+          builder append "wrapper.getInstance()."+p.scala_var_name+"_$eq("+Context.protectJavaKeyword(p.getName)+");\n"
           //builder append  "System.out.println("after: singleRoomNumber = " + wrapper.getInstance().Server_aSingleRoomNumber_var());"
         }
     }
@@ -355,42 +379,34 @@ case class ThingKevoreeGenerator(val self: Thing){
   }
 
   def generatePortDef(builder: StringBuilder = Context.builder) {
-    builder append "@Ports({\n"
-    builder append self.allPorts.collect{case p=>
-        if(p.getReceives.size>0) "@Port(name = \""+p.getName+"_rcv\")"
-    }.mkString(",\n")
-    
-    builder append "\n})\n"
-    builder append "public void tranferMessages(Object o) {\n"
-    self.allIncomingMessages.foreach{case m=>
-        builder append "if (o instanceof "+Context.pack +"."+Context.firstToUpper(m.getName)+") {\n"
-        builder append Context.pack +"."+Context.firstToUpper(m.getName)+" rcv_"+Context.firstToUpper(m.getName)+" = ("+Context.pack +"."+Context.firstToUpper(m.getName)+") o;\n"
-        getPortName(m)
-        builder append "wrapper.get"+Context.firstToUpper(self.getName)+"_"+Context.port_name+"().send(rcv_"+Context.firstToUpper(m.getName)+");\n"
-        builder append "System.out.println(\"[[Kevoree_"+self.getName+"]]: "+Context.firstToUpper(m.getName)+"(\"+rcv_"+Context.firstToUpper(m.getName)+".toString()+\") message Transferred!\");\n"
-        builder append "}\n"
+    var portsSize = 0;
+    self.allPorts.collect{case p=>
+        if(p.getReceives.size>0) portsSize+=1
     }
-    builder append "}\n"
-
+    if(portsSize>0){
+      builder append "@Ports({\n"
+      builder append self.allPorts.collect{case p=>
+          if(p.getReceives.size>0) "@Port(name = \""+p.getName+"_rcv\")"
+      }.mkString(",\n")
+    
+      builder append "\n})\n"
+      builder append "public void tranferMessages(Object o) {\n"
+      self.allIncomingMessages.foreach{case m=>
+          builder append "if (o instanceof "+Context.pack +"."+Context.firstToUpper(m.getName)+") {\n"
+          builder append Context.pack +"."+Context.firstToUpper(m.getName)+" rcv_"+Context.firstToUpper(m.getName)+" = ("+Context.pack +"."+Context.firstToUpper(m.getName)+") o;\n"
+          getPortName(m)
+          builder append "wrapper.get"+Context.firstToUpper(self.getName)+"_"+Context.port_name+"().send(rcv_"+Context.firstToUpper(m.getName)+");\n"
+          builder append "System.out.println(\"[[Kevoree_"+self.getName+"]]: "+Context.firstToUpper(m.getName)+"(\"+rcv_"+Context.firstToUpper(m.getName)+".toString()+\") message Transferred!\");\n"
+          builder append "}\n"
+      }
+      builder append "}\n"
+    }
   }
   
   def generateParameters(builder: StringBuilder = Context.builder) {
-    System.out.println("jinlaileme")
 
-    builder append self.allPropertiesInDepth.collect{case p=>
-         "new " + p.getType.java_type + "(this.kevoreeComponent.getDictionary().get(\""+p.getName+"\").toString())"
-        
-//        val valueBuilder = new StringBuilder()
-//        p.getInit().generateScala(valueBuilder)
-//              
-//        val valueString = valueBuilder.toString match {
-//          case "" => p.getType.default_value
-//          case s : String => 
-//            if (s.startsWith("\"") && s.endsWith("\""))
-//              s.substring(1, s.size-1)
-//            else
-//
-//        }
+    builder append self.allPropertiesInDepth.collect{case p=>      
+        "new " + p.getType.java_type + "("+"this.kevoreeComponent.getDictionary().get(\""+p.getName+"\").toString()"+")"
 //        println("9999:"+valueBuilder)
 //        if (p.getType.isInstanceOf[Enumeration]) {
 //          "new " + p.getType.java_type + "(\"" + p.getName + "." + valueString + "\")"//TODO: manage enumeration
@@ -399,6 +415,17 @@ case class ThingKevoreeGenerator(val self: Thing){
 //        }
     }.mkString(", ")
     
+  }
+  def initParameter(s:String):String ={
+    s match{
+      case "Byte" => "0"
+      case "Boolean" => "false"
+      case "Short" => "0"
+      case "Integer" => "0"
+      case "Float" => "0.0"
+      case "String" => ""
+      
+    }
   }
   def generateDictionary(builder: StringBuilder = Context.builder){
     if(self.allPropertiesInDepth.size>0)
@@ -410,7 +437,7 @@ case class ThingKevoreeGenerator(val self: Thing){
           p.getInit().generateScala(valueBuilder)
           
           val valueString = valueBuilder.toString match {
-            case "" => p.getType.default_value
+            case "" => initParameter(p.getType.java_type)
             case s : String => 
               if (s.startsWith("\"") && s.endsWith("\""))
                 s.substring(1, s.size-1)
