@@ -1662,7 +1662,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
       // Generate the normal prototype
       if (self.getType != null) {
         builder append self.getType.c_type()
-        if (self.getCardinality != null) builder append "[]"
+        if (self.getCardinality != null) builder append "*"
       }
       else builder append "void"
 
@@ -1674,7 +1674,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
         //if (p != self.getParameters.head)
         builder append ", "
         builder append p.getType.c_type()
-        if (p.getCardinality != null) builder append "[]"
+        if (p.getCardinality != null) builder append "*"
         builder append " " + p.getName
       }
       builder append ")"
@@ -1709,7 +1709,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
       //if (p != self.getParameters.head)
       b_params append ", "
       b_params append p.getType.c_type()
-      if (p.getCardinality != null) builder append "[]"
+      if (p.getCardinality != null) builder append "*"
       b_params append " " + p.getName
     }
     template = template.replace("/*PARAMS*/", b_params.toString)
