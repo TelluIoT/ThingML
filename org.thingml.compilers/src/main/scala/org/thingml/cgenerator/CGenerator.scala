@@ -724,7 +724,13 @@ object CGenerator {
         println("INFO: Generate for ROS message " + message.getName)
         val b = new StringBuilder()
         message.getParameters.foreach{ p =>
-          b append p.getType.ros_type() + " " + p.getName + "\n"
+          b append p.getType.ros_type()
+          if (p.getCardinality != null) {
+            builder append  "["
+            p.getCardinality.generateC(builder, context)
+            builder append  "]"
+          }
+          b append " " + p.getName + "\n"
         }
         result.put("msg/" + message.getName + ".msg", b.toString)
       }
@@ -851,8 +857,16 @@ class ROSMessage( pack : String, m: Message) {
   var cpptype = pack + "::" + message.getName
 
   var builder = new StringBuilder()
+
   message.getParameters.foreach{p=>
-    builder append "rosmsg." + p.getName + " = " +  p.getName + ";\n"
+
+        if (p.getCardinality != null) {
+          builder append  "int " + p.getName + "_idx;\n"
+          builder append "for("+ p.getName +"_idx=0; "+ p.getName +"_idx<"+p.getCardinality.asInstanceOf[IntegerLiteral].getIntValue+"; "+ p.getName +"_idx++) rosmsg."+ p.getName +"["+ p.getName +"_idx] = "+ p.getName +"["+ p.getName +"_idx];\n"
+        }
+        else {
+          builder append "rosmsg." + p.getName + " = " +  p.getName + ";\n"
+        }
   }
 
   var assign_params = builder.toString
