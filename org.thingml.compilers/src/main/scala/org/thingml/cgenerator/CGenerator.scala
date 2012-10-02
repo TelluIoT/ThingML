@@ -1908,7 +1908,9 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     m.getParameters.foreach {
       p =>
         builder.append(", ")
-        builder.append(p.getType.c_type() + " " + p.getName)
+        builder.append(p.getType.c_type())
+        if (p.getCardinality != null) builder append "*"
+        builder append " " + p.getName
     }
     builder append ")"
   }
@@ -1931,6 +1933,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
       p =>
         builder.append(", ")
         builder.append(p.getType.c_type())
+        if (p.getCardinality != null) builder append "*"
     }
     builder append ")"
   }
@@ -2334,7 +2337,11 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
     self.getAnnotations.filter {
       a => a.getName == "c_type"
     }.headOption match {
-      case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
+      case Some(a) => {
+        var result =  a.asInstanceOf[PlatformAnnotation].getValue
+        //if (self.isInstanceof[PrimitiveType] && .getCardinality != null) builder append "*"
+        return result;
+      }
       case None => {
         println("Warning: Missing annotation c_type for type " + self.getName + ", using " + self.getName + " as the C type.")
         return self.getName
@@ -2426,6 +2433,7 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
     var index = idx
 
     if (is_pointer) {
+      // TODO: Should probably handle arrays here
       result += "(" + c_type + ")((ptr_union_t*)("+buffer+" + "+idx+"))->pointer"
     } /*
     else if (has_byte_buffer) {
