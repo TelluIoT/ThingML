@@ -727,7 +727,7 @@ object CGenerator {
           b append p.getType.ros_type()
           if (p.getCardinality != null) {
             builder append  "["
-            p.getCardinality.generateC(builder, context)
+            p.getCardinality.generateC(b, context)
             builder append  "]"
           }
           b append " " + p.getName + "\n"
