@@ -726,9 +726,9 @@ object CGenerator {
         message.getParameters.foreach{ p =>
           b append p.getType.ros_type()
           if (p.getCardinality != null) {
-            builder append  "["
+            b append  "["
             p.getCardinality.generateC(b, context)
-            builder append  "]"
+            b append  "]"
           }
           b append " " + p.getName + "\n"
         }
