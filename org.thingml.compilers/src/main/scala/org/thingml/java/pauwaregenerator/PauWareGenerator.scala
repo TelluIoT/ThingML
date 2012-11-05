@@ -323,7 +323,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
 
   override def generateJava(builder: StringBuilder = Context.builder) {
     
-    generateConnectorClass()
+    //generateConnectorClass()
     
     self.allThings.foreach { thing =>
       thing.generateJavaInterface()
@@ -333,11 +333,11 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     builder append "\n"
     builder append "// Initialize instance variables and states\n"
     // Generate code to initialize variable for instances
-    self.allInstances.foreach { inst =>
+    /*self.allInstances.foreach { inst =>
       inst.generateJava()
-    }
+    }*/
 
-    //generateJavaMain()
+    generateJavaMain()
   }
 
   def generateConnectorClass(builder: StringBuilder = Context.builder) {
@@ -347,7 +347,44 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
   def generateJavaMain(builder: StringBuilder = Context.builder) {
     builder append "class Main" + Context.firstToUpper(self.getName) + " {\n\n"
     builder append "public static void main(String[] args) {\n"
-     
+    builder append "MBeanServer mbean_server = MBeanServerFactory.createMBeanServer();\n"
+    builder append "com.sun.jdmk.comm.HtmlAdaptorServer html_adaptor_server = new com.sun.jdmk.comm.HtmlAdaptorServer(8082);\n"
+    builder append "mbean_server.registerMBean(html_adaptor_server, new ObjectName(\"Adaptor:name=ReMiCS,port=8082\"));\n"
+    
+    self.allInstances.foreach{i => 
+      builder append i.getType.getName + " _activity_" + i.getName + " = new " + i.getType.getName + "(" 
+      //TODO: need to handle arrays
+      builder append (self.initExpressionsForInstance(i).collect{case p =>         
+                if (p._2 != null) {
+                  var tempbuilder = new StringBuilder()
+                  println("DEBUG  " + p._2 + " :  " + p._2.getClass)
+                  p._2.generateJava(tempbuilder)
+                  println("DEBUG  " + tempbuilder.toString)
+                  tempbuilder.toString
+                } else {
+                  "null"
+                }
+            }
+          ).mkString(", ")
+      builder append ");\n"
+    }
+    
+    builder append "try {\n"
+    
+    self.allInstances.foreach{i => 
+      builder append "mbean_server.registerMBean((" + i.getType.getName + ")_activity_" + i.getName + ", new ObjectName(\"ReMiCS models@runtime:name=" + i.getType.getName + "\"));\n"
+    }
+    
+    
+    builder append "html_adaptor_server.start();\n"
+    self.allInstances.foreach{i => 
+      builder append "_activity_" + i.getName + ".start();\n"
+    }
+      
+    builder append "} catch (Throwable t) {\n"
+    builder append "t.printStackTrace();\n"
+    builder append "System.exit(1);\n"
+    builder append "}\n\n"
     
     builder append "}\n\n"
     builder append "}\n"
