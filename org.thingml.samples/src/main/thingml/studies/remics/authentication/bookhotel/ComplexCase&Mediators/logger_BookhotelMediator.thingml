@@ -1,0 +1,157 @@
+/*
+*This is a logger for Configratrion(BookhotelMediator) generated automatically
+*/
+import "bookhotel_configuration.thingml"
+thing Logger_BookhotelMediator includes ControlMessage,Logger,API1BookHotel,API2BookHotel
+{
+provided port PrvPort_BookhotelMediator_client_BookHotel {
+receives rRequest,inputID,typeRequest,number
+sends rReply,idReply,typeReply,result
+}
+required port ReqPort_BookhotelMediator_mediator_Client {
+sends rRequest,inputID,typeRequest,number
+receives rReply,idReply,typeReply,result
+}
+provided port PrvPort_BookhotelMediator_mediator_Server {
+receives bookhotel
+sends result4substitute
+}
+required port ReqPort_BookhotelMediator_server_CilentBookPort {
+sends bookhotel
+receives result4substitute
+}
+provided port PrvPort_Control{
+receives start, stop
+}
+statechart Logger init Ready {
+state Ready{
+on entry do
+clearlog()
+print "Ready, Waiting for start trigger"
+end
+transition->Logging
+event e:PrvPort_Control?start
+}
+state Logging{
+on entry do
+print "Logger start!"
+log("@startuml")
+end
+on exit do
+log("@enduml")
+printlog()
+end
+
+transition-> Ready
+event e: PrvPort_Control?stop
+
+internal
+event e: PrvPort_BookhotelMediator_client_BookHotel?rRequest
+action do
+log("BookhotelMediator_client -> Logger_BookhotelMediator : rRequest")
+ReqPort_BookhotelMediator_mediator_Client!rRequest(e.roomRequest)
+log("Logger_BookhotelMediator -> BookhotelMediator_mediator : rRequest")
+end
+internal
+event e: PrvPort_BookhotelMediator_client_BookHotel?inputID
+action do
+log("BookhotelMediator_client -> Logger_BookhotelMediator : inputID")
+ReqPort_BookhotelMediator_mediator_Client!inputID(e.ID)
+log("Logger_BookhotelMediator -> BookhotelMediator_mediator : inputID")
+end
+internal
+event e: PrvPort_BookhotelMediator_client_BookHotel?typeRequest
+action do
+log("BookhotelMediator_client -> Logger_BookhotelMediator : typeRequest")
+ReqPort_BookhotelMediator_mediator_Client!typeRequest(e.RTRequest)
+log("Logger_BookhotelMediator -> BookhotelMediator_mediator : typeRequest")
+end
+internal
+event e: PrvPort_BookhotelMediator_client_BookHotel?number
+action do
+log("BookhotelMediator_client -> Logger_BookhotelMediator : number")
+ReqPort_BookhotelMediator_mediator_Client!number(e.SingleRoomNumber,e.DoubleRoomNumber)
+log("Logger_BookhotelMediator -> BookhotelMediator_mediator : number")
+end
+internal
+event e: ReqPort_BookhotelMediator_mediator_Client?rReply
+action do
+log("BookhotelMediator_mediator -> Logger_BookhotelMediator : rReply")
+PrvPort_BookhotelMediator_client_BookHotel!rReply(e.roomReply)
+log("Logger_BookhotelMediator -> BookhotelMediator_client : rReply")
+end
+internal
+event e: ReqPort_BookhotelMediator_mediator_Client?idReply
+action do
+log("BookhotelMediator_mediator -> Logger_BookhotelMediator : idReply")
+PrvPort_BookhotelMediator_client_BookHotel!idReply(e.reply)
+log("Logger_BookhotelMediator -> BookhotelMediator_client : idReply")
+end
+internal
+event e: ReqPort_BookhotelMediator_mediator_Client?typeReply
+action do
+log("BookhotelMediator_mediator -> Logger_BookhotelMediator : typeReply")
+PrvPort_BookhotelMediator_client_BookHotel!typeReply(e.single,e.double)
+log("Logger_BookhotelMediator -> BookhotelMediator_client : typeReply")
+end
+internal
+event e: ReqPort_BookhotelMediator_mediator_Client?result
+action do
+log("BookhotelMediator_mediator -> Logger_BookhotelMediator : result")
+PrvPort_BookhotelMediator_client_BookHotel!result(e.bookresult)
+log("Logger_BookhotelMediator -> BookhotelMediator_client : result")
+end
+internal
+event e: PrvPort_BookhotelMediator_mediator_Server?bookhotel
+action do
+log("BookhotelMediator_mediator -> Logger_BookhotelMediator : bookhotel")
+ReqPort_BookhotelMediator_server_CilentBookPort!bookhotel(e.bookHotelRequest,e.ID,e.SingleRoomNumber,e.DoubleRoomNumber)
+log("Logger_BookhotelMediator -> BookhotelMediator_server : bookhotel")
+end
+internal
+event e: ReqPort_BookhotelMediator_server_CilentBookPort?result4substitute
+action do
+log("BookhotelMediator_server -> Logger_BookhotelMediator : result4substitute")
+PrvPort_BookhotelMediator_mediator_Server!result4substitute(e.bookReply)
+log("Logger_BookhotelMediator -> BookhotelMediator_mediator : result4substitute")
+end
+}
+}
+}
+
+thing Logger{
+property trace_buffer :String
+function log(trace:String) do
+print "==LOG: "+trace+" !=="
+trace_buffer = trace_buffer + trace +"\n"
+end
+function printlog() do
+print "====TRACE====\n"
+print trace_buffer
+end
+function clearlog() do
+trace_buffer =""
+end
+}
+
+thing Control includes ControlMessage
+@mock "true"{
+required port ControlPort{
+sends start, stop
+}
+}
+
+configuration Config_Logger_BookhotelMediator{
+instance control: Control
+instance logger: Logger_BookhotelMediator
+instance ins_BookhotelMediator_server: BookhotelSubstituteServer
+instance ins_BookhotelMediator_mediator: BookhotelMediator
+instance ins_BookhotelMediator_client: Client
+connector control.ControlPort => logger.PrvPort_Control
+connector control.ControlPort => ins_BookhotelMediator_client.PrvPort_Control
+connector ins_BookhotelMediator_client.BookHotel=> logger.PrvPort_BookhotelMediator_client_BookHotel
+connector logger.ReqPort_BookhotelMediator_mediator_Client=> ins_BookhotelMediator_mediator.Client
+connector control.ControlPort => ins_BookhotelMediator_mediator.PrvPort_Control
+connector ins_BookhotelMediator_mediator.Server=> logger.PrvPort_BookhotelMediator_mediator_Server
+connector logger.ReqPort_BookhotelMediator_server_CilentBookPort=> ins_BookhotelMediator_server.CilentBookPort
+}

@@ -724,7 +724,13 @@ object CGenerator {
         println("INFO: Generate for ROS message " + message.getName)
         val b = new StringBuilder()
         message.getParameters.foreach{ p =>
-          b append p.getType.ros_type() + " " + p.getName + "\n"
+          b append p.getType.ros_type()
+          if (p.getCardinality != null) {
+            b append  "["
+            p.getCardinality.generateC(b, context)
+            b append  "]"
+          }
+          b append " " + p.getName + "\n"
         }
         result.put("msg/" + message.getName + ".msg", b.toString)
       }
@@ -851,8 +857,16 @@ class ROSMessage( pack : String, m: Message) {
   var cpptype = pack + "::" + message.getName
 
   var builder = new StringBuilder()
+
   message.getParameters.foreach{p=>
-    builder append "rosmsg." + p.getName + " = " +  p.getName + ";\n"
+
+        if (p.getCardinality != null) {
+          builder append  "int " + p.getName + "_idx;\n"
+          builder append "for("+ p.getName +"_idx=0; "+ p.getName +"_idx<"+p.getCardinality.asInstanceOf[IntegerLiteral].getIntValue+"; "+ p.getName +"_idx++) rosmsg."+ p.getName +"["+ p.getName +"_idx] = "+ p.getName +"["+ p.getName +"_idx];\n"
+        }
+        else {
+          builder append "rosmsg." + p.getName + " = " +  p.getName + ";\n"
+        }
   }
 
   var assign_params = builder.toString
@@ -1662,7 +1676,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
       // Generate the normal prototype
       if (self.getType != null) {
         builder append self.getType.c_type()
-        if (self.getCardinality != null) builder append "[]"
+        if (self.getCardinality != null) builder append "*"
       }
       else builder append "void"
 
@@ -1674,7 +1688,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
         //if (p != self.getParameters.head)
         builder append ", "
         builder append p.getType.c_type()
-        if (p.getCardinality != null) builder append "[]"
+        if (p.getCardinality != null) builder append "*"
         builder append " " + p.getName
       }
       builder append ")"
@@ -1709,7 +1723,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
       //if (p != self.getParameters.head)
       b_params append ", "
       b_params append p.getType.c_type()
-      if (p.getCardinality != null) builder append "[]"
+      if (p.getCardinality != null) builder append "*"
       b_params append " " + p.getName
     }
     template = template.replace("/*PARAMS*/", b_params.toString)
@@ -1908,7 +1922,9 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     m.getParameters.foreach {
       p =>
         builder.append(", ")
-        builder.append(p.getType.c_type() + " " + p.getName)
+        builder.append(p.getType.c_type())
+        if (p.getCardinality != null) builder append "*"
+        builder append " " + p.getName
     }
     builder append ")"
   }
@@ -1931,6 +1947,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
       p =>
         builder.append(", ")
         builder.append(p.getType.c_type())
+        if (p.getCardinality != null) builder append "*"
     }
     builder append ")"
   }
@@ -2334,7 +2351,11 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
     self.getAnnotations.filter {
       a => a.getName == "c_type"
     }.headOption match {
-      case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
+      case Some(a) => {
+        var result =  a.asInstanceOf[PlatformAnnotation].getValue
+        //if (self.isInstanceof[PrimitiveType] && .getCardinality != null) builder append "*"
+        return result;
+      }
       case None => {
         println("Warning: Missing annotation c_type for type " + self.getName + ", using " + self.getName + " as the C type.")
         return self.getName
@@ -2426,6 +2447,7 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
     var index = idx
 
     if (is_pointer) {
+      // TODO: Should probably handle arrays here
       result += "(" + c_type + ")((ptr_union_t*)("+buffer+" + "+idx+"))->pointer"
     } /*
     else if (has_byte_buffer) {

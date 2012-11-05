@@ -80,6 +80,11 @@
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.sourceforge.plantuml</groupId>
+            <artifactId>plantuml</artifactId>
+            <version>7929</version>
+        </dependency>
          
     </dependencies>
 
