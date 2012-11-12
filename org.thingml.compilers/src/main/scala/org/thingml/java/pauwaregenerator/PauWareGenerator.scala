@@ -328,6 +328,10 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     val outputDirFile = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + self.getName + "/src/main/java/org/thingml/generated")
     outputDirFile.mkdirs
     
+    val conn = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("Connector.java"),"utf-8").getLines().mkString("\n")
+    val connWriter = new PrintWriter(new FileWriter(new File(outputDirFile, "Connector.java")));
+    connWriter.println(conn);
+    connWriter.close();
     
     var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pauwaretemplates/pom.xml"),"utf-8").getLines().mkString("\n")
     pom = pom.replace("<!--CONFIGURATIONNAME-->", self.getName())
