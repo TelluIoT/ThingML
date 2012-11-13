@@ -939,10 +939,11 @@ case class SendActionScalaGenerator(override val self: SendAction) extends Actio
   def concreteMsg(builder: StringBuilder = Context.builder) {
     builder append "new " + Context.firstToUpper(self.getMessage.getName) + "("
     var i = 0
-    self.getParameters.foreach{ p =>
+    self.getParameters.zip(self.getMessage.getParameters).foreach{ case (p, fp) =>
       if (i > 0)
         builder append ", "
       p.generateScala()
+      builder append ".to" + fp.getType.scala_type(fp.getCardinality != null)
       i = i+1
     }
     builder append ")"

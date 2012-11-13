@@ -160,6 +160,9 @@ object KevoreeGenerator {
     cfg.allThingMLMavenDep.foreach{dep =>
       pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"))
     }
+    cfg.allMavenDep.foreach{dep =>
+      pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep)
+    }
     pom = pom.replace("<!--DEP-->","")
     
     //Add Kevoree dependencies
@@ -216,13 +219,13 @@ object KevoreeGenerator {
     if(!isWrapper){
       builder append "import org.kevoree.annotation.*;\n"
       builder append "import org.kevoree.framework.AbstractComponentType;\n"
-      builder append "import org.sintef.smac.Event;"
+      builder append "import org.sintef.smac.Event;\n"
     }
     else{
       builder append "import scala.collection.immutable.$colon$colon;\n"
       builder append "import org.sintef.smac.*;\n"
-      
     }
+    builder append "\n\n"
   }
 }
 
@@ -285,7 +288,7 @@ case class ThingKevoreeGenerator(val self: Thing){
           }
         }
         if(p.getReceives.size>0){    
-         // builder append p.getName+"_rcv = scala.collection.immutable.List$.MODULE$.empty();\n"
+          // builder append p.getName+"_rcv = scala.collection.immutable.List$.MODULE$.empty();\n"
           p.getReceives.foreach{case s=>
               builder append p.getName+"_rcv = new $colon$colon(\"" + s.getName + "\", "+p.getName+"_rcv);\n" 
           }
@@ -315,29 +318,23 @@ case class ThingKevoreeGenerator(val self: Thing){
   def generateKevoree(builder: StringBuilder = Context.builder) {
     println(self.getName)
     Context.thing = self
-    var providedPortSize = 0
-    var requiredPortSize = 0
-    self.allPorts.collect{case p=> 
-        if(p.getReceives.size>0) providedPortSize+=1
-    }
-    self.allPorts.collect{case p=> 
-        if(p.getSends.size>0) requiredPortSize+=1
-    }
+    val providedPortSize = self.allPorts.filter{p => p.getReceives.size>0}.size
+    val requiredPortSize = self.allPorts.filter{p => p.getSends.size>0}.size
+    /*self.allPorts.collect{case p=> 
+     if(p.getReceives.size>0) providedPortSize+=1
+     }
+     self.allPorts.collect{case p=> 
+     if(p.getSends.size>0) requiredPortSize+=1
+     }*/
     if(providedPortSize>0){
-      builder append "\n@Provides({\n"
-      builder append self.allPorts.collect{case p=>
-          if(p.getReceives.size>0) "@ProvidedPort(name = \""+p.getName+"_rcv\", type = PortType.MESSAGE)" 
-          else ""
-      }.mkString(",\n")
-      builder append "})\n"
+      builder append "@Provides({\n"
+      builder append self.allPorts.filter{p => p.getReceives.size>0}.collect{case p=> "@ProvidedPort(name = \"" + p.getName + "_rcv\", type = PortType.MESSAGE)"}.mkString(",\n")
+      builder append "\n})\n"
     }
     if(requiredPortSize>0){
-      builder append "\n@Requires({\n"
-      builder append self.allPorts.collect{case p=>
-          if(p.getSends.size>0) "@RequiredPort(name = \""+p.getName+"_Transfer\", type = PortType.MESSAGE)"
-          else ""
-      }.mkString(",\n")
-      builder append "})\n"
+      builder append "@Requires({\n"
+      builder append self.allPorts.filter{p => p.getSends.size>0}.collect{case p=> "@RequiredPort(name = \"" + p.getName + "_Transfer\", type = PortType.MESSAGE)"}.mkString(",\n")
+      builder append "\n})\n"
     }
     generateDictionary();
 
@@ -385,10 +382,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     }
     if(portsSize>0){
       builder append "@Ports({\n"
-      builder append self.allPorts.collect{case p=>
-          if(p.getReceives.size>0) "@Port(name = \""+p.getName+"_rcv\")"
-      }.mkString(",\n")
-    
+      builder append self.allPorts.filter{p => p.getReceives.size>0}.collect{case p=> "@Port(name = \"" + p.getName + "_rcv\")"}.mkString(",\n")
       builder append "\n})\n"
       builder append "public void tranferMessages(Object o) {\n"
       self.allIncomingMessages.foreach{case m=>
@@ -403,53 +397,35 @@ case class ThingKevoreeGenerator(val self: Thing){
     }
   }
   
-  def generateParameters(builder: StringBuilder = Context.builder) {
-
+  def generateParameters(builder: StringBuilder = Context.builder) {    
     builder append self.allPropertiesInDepth.collect{case p=>      
-        "new " + p.getType.java_type + "("+"this.kevoreeComponent.getDictionary().get(\""+p.getName+"\").toString()"+")"
-//        println("9999:"+valueBuilder)
-//        if (p.getType.isInstanceOf[Enumeration]) {
-//          "new " + p.getType.java_type + "(\"" + p.getName + "." + valueString + "\")"//TODO: manage enumeration
-//        } else {
-//          "new " + p.getType.java_type + "(\"" + valueString + "\")"
-//        }
-    }.mkString(", ")
-    
+        "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? (" + p.getType.java_type + ") this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") : " + initParameter(p.getType.java_type)
+    }.mkString(", ")  
   }
-  def initParameter(s:String):String ={
-    s match{
-      case "Byte" => "0"
-      case "Boolean" => "false"
-      case "Short" => "0"
-      case "Integer" => "0"
-      case "Float" => "0.0"
-      case "String" => ""
-      
-    }
+  
+  def initParameter(s:String):String = s match{
+    case "Byte" => "0x00"
+    case "Boolean" => "false"
+    case "Short" => "0"
+    case "Integer" => "0"
+    case "Float" => "0.0f"
+    case "String" => "\"\""
+    case _ => "new " + s + "()"
   }
+  
   def generateDictionary(builder: StringBuilder = Context.builder){
     if(self.allPropertiesInDepth.size>0)
     {
-      builder append "@DictionaryType({"   
+      builder append "@DictionaryType({\n"   
       builder append self.allPropertiesInDepth.collect{case p=>
-          
           val valueBuilder = new StringBuilder()
-          p.getInit().generateScala(valueBuilder)
-          
-          val valueString = valueBuilder.toString match {
-            case "" => initParameter(p.getType.java_type)
-            case s : String => 
-              if (s.startsWith("\"") && s.endsWith("\""))
-                s.substring(1, s.size-1)
-              else
-                s
-          }
-          "@DictionaryAttribute(name = \""+p.getName+"\", "+"defaultValue = \""+valueString+"\", optional = "+p.isChangeable+")"
-          
-      }.mkString(", \n")
-      builder append "})"
+          p.getInit().generateScala(valueBuilder)          
+          "@DictionaryAttribute(name = \""+p.getName+"\"" + (if (valueBuilder.toString == "") "" else { ", defaultValue = \"" + valueBuilder.toString + "\""}) + ", optional = "+p.isChangeable+")"
+      }.mkString(",\n")
+      builder append "\n})\n"
     }
   }
+  
   def getPortName(m:Message){
     self.allPorts.foreach{p=>
       if(p.getReceives.contains(m)){
@@ -457,6 +433,7 @@ case class ThingKevoreeGenerator(val self: Thing){
       }
     }
   }
+  
   def getPortNameWrapper(m:Message):String = {
     var name =""
     self.allPorts.foreach{p=>
