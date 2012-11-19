@@ -420,7 +420,7 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
     
     
     self.allInstances.foreach{i => 
-      builder append "mbean_server.registerMBean((" + i.getType.getName + ")_activity_" + i.getName + ", new ObjectName(\"ReMiCS models@runtime:name=" + i.getType.getName + "\"));\n"
+      builder append "mbean_server.registerMBean((" + i.getType.getName + ")_activity_" + i.getName + ", new ObjectName(\"ReMiCS models@runtime:name=" + i.getName + "\"));\n"
     }
     
     var i = 0
