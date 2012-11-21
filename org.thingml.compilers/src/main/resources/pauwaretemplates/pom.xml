@@ -115,9 +115,9 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
+                <!--<configuration>
                     <mainClass>org.thingml.generated.MainPauWare</mainClass>
-                </configuration>
+                </configuration>-->
             </plugin>
             <!-- Java compiler plugin -->
             <plugin>
