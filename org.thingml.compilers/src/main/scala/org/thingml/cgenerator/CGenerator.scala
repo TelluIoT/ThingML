@@ -1657,11 +1657,8 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
 
   }
 
-  def generateCforThingDirect(builder: StringBuilder, context : CGeneratorContext, thing : Thing) {
-
-    builder append "// Definition of function " + self.getName + "\n"
-
-    if (self.getAnnotations.filter(a=>a.getName == "c_prototype").size == 1) {
+  def generatePrototypeforThingDirect(builder: StringBuilder, context : CGeneratorContext, thing : Thing) {
+        if (self.getAnnotations.filter(a=>a.getName == "c_prototype").size == 1) {
       // generate the given prototype. Any parameters are ignored.
       builder append self.getAnnotations.filter(a=>a.getName == "c_prototype").head.getValue
 
@@ -1693,6 +1690,13 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
       }
       builder append ")"
     }
+  }
+
+  def generateCforThingDirect(builder: StringBuilder, context : CGeneratorContext, thing : Thing) {
+
+    builder append "// Definition of function " + self.getName + "\n"
+
+    generatePrototypeforThingDirect(builder, context, thing)
 
     builder append " {\n"
 
@@ -1840,7 +1844,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     builder append "\n"
 
     builder append "// Declaration of prototypes outgoing messages:\n"
-    generatePublicPrototypes(builder)
+    generatePublicPrototypes(builder, context)
     builder append "// Declaration of callbacks for incomming messages:\n"
     generatePublicMessageSendingOperations(builder)
     builder append "\n"
@@ -1869,7 +1873,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     builder append "#ifdef __cplusplus\n"
     builder append "extern \"C\" {\n"
     builder append "#endif\n"
-    generatePrivatePrototypes(builder)
+    generatePrivatePrototypes(builder, context)
     builder append "#ifdef __cplusplus\n"
     builder append "}\n"
     builder append "#endif\n"
@@ -2014,14 +2018,14 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
   }
 
 
-  def generatePrototypes(builder: StringBuilder) {
-    generatePublicPrototypes(builder)
-    generatePrivatePrototypes(builder)
+  def generatePrototypes(builder: StringBuilder, context : CGeneratorContext) {
+    generatePublicPrototypes(builder, context)
+    generatePrivatePrototypes(builder, context)
   }
 
 
   // Prototypes which should go in the header file
-  def generatePublicPrototypes(builder: StringBuilder) {
+  def generatePublicPrototypes(builder: StringBuilder, context : CGeneratorContext) {
     // Entry actions
     builder append "void " + composedBehaviour.qname("_") + "_OnEntry(int state, "
     builder append "struct " + instance_struct_name + " *" + instance_var_name + ");\n"
@@ -2039,7 +2043,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
   }
 
   // Prototypes which should go at the begining of the implementation C file
-  def generatePrivatePrototypes(builder: StringBuilder) {
+  def generatePrivatePrototypes(builder: StringBuilder, context : CGeneratorContext) {
     // Exit actions
     builder append "void " + composedBehaviour.qname("_") + "_OnExit(int state, "
     builder append "struct " + instance_struct_name + " *" + instance_var_name + ");\n"
@@ -2050,6 +2054,12 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
           append_formal_parameters(builder, msg)
           builder append ";\n"
     }}
+
+    self.allFunctions.foreach{ f=>
+      f.generatePrototypeforThingDirect(builder, context, self)
+      builder append ";\n"
+    }
+
   }
 
 
