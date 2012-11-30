@@ -503,6 +503,7 @@ object CGenerator {
 
     // GENERATE A MODULE FOR EACH THING
     cfg.allThings.foreach { thing =>
+       context.set_concrete_thing(thing)
       // GENERATE HEADER
       var htemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_thing_header.h")
       builder = new StringBuilder()
@@ -519,6 +520,7 @@ object CGenerator {
       itemplate = itemplate.replace("/*CODE*/", builder.toString)
       result.put(prefix + thing.getName + ".c", itemplate)
     }
+    context.clear_concrete_thing()
 
      // GENERATE THE RUNTIME HEADER
     var rhtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/runtime.h")
@@ -921,6 +923,22 @@ class CGeneratorContext( src: Configuration ) {
     /* To be implemented by sub-classes */
   }
 
+  // The concrete thing for which the code is being generated
+  var concrete_thing_opt : Option[Thing] = None
+
+  def set_concrete_thing(t : Thing) {
+        concrete_thing_opt = Option(t)
+  }
+
+  def get_concrete_thing() : Thing = {
+    //TODO: Should print an internal error if "null". It should never happen
+     concrete_thing_opt.getOrElse(null)
+  }
+
+    def clear_concrete_thing() {
+     concrete_thing_opt = None
+  }
+
   // The following allow changing the name of the instance variable for generating
   // some action code which works with a specific instance.
   // This is useful to define some callbacks with specific signature and route
@@ -1160,7 +1178,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     // Generate code to initialize connectors
     builder append "// Initialize connectors\n"
     self.allThings.foreach{t => t.allPorts.foreach{ port => port.getSends.foreach{ msg =>
-
+      context.set_concrete_thing(t)
       // check if there is an connector for this message
       if (self.allConnectors.exists{ c =>
         (c.getRequired == port && c.getProvided.getReceives.contains(msg)) ||
@@ -1182,6 +1200,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
       }
     }}}
+    context.clear_concrete_thing()
 
     builder append "\n"
     //builder append "// Initialize instance variables and states\n"
@@ -1242,10 +1261,11 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
     // Generate code for things which appear in the configuration
     self.allThings.foreach { thing =>
+       context.set_concrete_thing(thing)
        println("Generating code for Thing: " + thing.getName)
        thing.generateC(builder, context)
     }
-
+    context.clear_concrete_thing()
 
     builder append "\n"
     builder append "/*****************************************************************************\n"
@@ -1280,7 +1300,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     // Generate code to initialize connectors
     builder append "// Initialize connectors\n"
     self.allThings.foreach{t => t.allPorts.foreach{ port => port.getSends.foreach{ msg =>
-
+      context.set_concrete_thing(t)
       // check if there is an connector for this message
       if (self.allConnectors.exists{ c =>
         (c.getRequired == port && c.getProvided.getReceives.contains(msg)) ||
@@ -1301,7 +1321,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         }
       }
     }}}
-
+    context.clear_concrete_thing()
     builder append "\n"
     //builder append "// Initialize instance variables and states\n"
     // Generate code to initialize variable for instances
@@ -1373,6 +1393,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
     // Generate the Enqueue operation only for ports which are not marked as "sync"
     self.allThings.foreach{ t=> t.allPorts.filter{ p => !isSyncSend(p) }.foreach{ p=>
+      context.set_concrete_thing(t)
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
         builder append "// Enqueue of messages " + t.getName + "::" + p.getName + "::" + m.getName + "\n"
@@ -1420,6 +1441,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
       }
     }}
+    context.clear_concrete_thing()
   }
 
   def generateMessageProcessQueue(builder : StringBuilder, context : CGeneratorContext) {
@@ -1437,12 +1459,13 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
     // Generate dequeue code only for non syncronized ports
     self.allThings.foreach{ t=> t.allPorts.filter{ p => !isSyncSend(p) }.foreach{ p=>
+      context.set_concrete_thing(t)
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
         val size = message_size(m, context)
         if ( size > max_msg_size) max_msg_size = size
       }}}
-
+      context.clear_concrete_thing()
     // Allocate a buffer to store the message bytes.
     // Size of the buffer is "size-2" because we have already read 2 bytes
     builder append "byte mbuf[" + (max_msg_size-2) + "];\n"
@@ -1456,6 +1479,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append "switch(code) {\n"
 
     self.allThings.foreach{ t=> t.allPorts.filter{ p => !isSyncSend(p) }.foreach{ p=>
+       context.set_concrete_thing(t)
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
 
@@ -1485,6 +1509,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         builder append "break;\n"
       }
     }}
+    context.clear_concrete_thing()
     builder append "}\n"
     builder append "}\n"
   }
@@ -1492,6 +1517,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
   def generateMessageDispatchers(builder : StringBuilder, context : CGeneratorContext) {
 
     self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
+       context.set_concrete_thing(t)
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
         // definition of handler for message m coming from instances of t thought port p
@@ -1518,6 +1544,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         builder append "}\n"
       }
     }}
+    context.clear_concrete_thing()
   }
   /*
   def generateArduinoPDEMain(builder : StringBuilder) {
@@ -2564,10 +2591,7 @@ case class ActionCGenerator(val self: Action) /*extends ThingMLCGenerator(self)*
 case class SendActionCGenerator(override val self: SendAction) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
-    // TODO: This might be a problem if the state machine is "included" from another thing.
-    // Probably the "instantiated" thing should be used here but it is unknown here
-    // should probably be added to the context.
-    val thing = ThingMLHelpers.findContainingThing(self.getPort)
+    val thing = context.get_concrete_thing()
 
     if (context.debug_message_send(self.getMessage)) {
       builder append context.print_debug_message("-> " + thing.sender_name(self.getPort, self.getMessage)) + "\n"
@@ -2693,8 +2717,7 @@ case class LocalVariableActionCGenerator(override val self: LocalVariable) exten
 case class FunctionCallStatementCGenerator(override val self: FunctionCallStatement) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
-    // TODO: This will not work is the containing thing is not the "concrete" thing
-    builder append self.getFunction.c_name(ThingMLHelpers.findContainingThing(self))
+    builder append self.getFunction.c_name(context.get_concrete_thing())
 
     builder append "(_instance"
     self.getParameters.foreach{ p =>
@@ -2732,8 +2755,7 @@ case class ArrayIndexCGenerator(override val self: ArrayIndex) extends Expressio
 case class FunctionCallExpressionCGenerator(override val self: FunctionCallExpression) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
-    // TODO: This will not work if the containing thing is not the "concrete" thing
-    builder append self.getFunction.c_name(ThingMLHelpers.findContainingThing(self))
+    builder append self.getFunction.c_name(context.get_concrete_thing())
 
     builder append "(_instance"
     self.getParameters.foreach{ p =>
