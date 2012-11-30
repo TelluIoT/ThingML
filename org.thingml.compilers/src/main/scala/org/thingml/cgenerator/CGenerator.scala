@@ -32,10 +32,10 @@ import scala.actors.Actor._
 import io.Source
 import org.sintef.thingml._
 import org.thingml.model.scalaimpl.aspects.MergedConfigurationCache
-import java.util.{Hashtable, ArrayList}
 import org.thingml.graphexport.ThingMLGraphExport
 import collection.mutable.ListBuffer
 import java.lang.{StringBuilder, ProcessBuilder, Boolean}
+import java.util.{Hashtable, ArrayList}
 
 object SimpleCopyTemplate {
 
@@ -1326,9 +1326,17 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
   }
 
-  val handler_codes = new Hashtable[Port, Hashtable[Message, Integer]]()
+  val handler_thing_codes = new Hashtable[Thing, Hashtable[Port, Hashtable[Message, Integer]]]()
   var handler_code_cpt = 1;
-  def handler_code (p : Port, m : Message) = {
+
+  def handler_code (t : Thing, p : Port, m : Message) = {
+
+    var handler_codes = handler_thing_codes.get(t)
+    if (handler_codes == null) {
+      handler_codes = new Hashtable[Port, Hashtable[Message, Integer]]()
+      handler_thing_codes.put(t, handler_codes)
+    }
+
     var table : Hashtable[Message, Integer] =  handler_codes.get(p)
     if (table == null) {
       table = new Hashtable[Message, Integer]()
@@ -1379,8 +1387,8 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         //DEBUG
        // builder append "Serial.println(\"QU MSG "+m.getName+"\");\n"
 
-        builder append "_fifo_enqueue( ("+handler_code(p,m)+" >> 8) & 0xFF );\n"
-        builder append "_fifo_enqueue( "+handler_code(p,m)+" & 0xFF );\n\n"
+        builder append "_fifo_enqueue( ("+handler_code(t,p,m)+" >> 8) & 0xFF );\n"
+        builder append "_fifo_enqueue( "+handler_code(t,p,m)+" & 0xFF );\n\n"
 
         builder append "// ID of the source instance\n"
         builder append "_fifo_enqueue( (_instance->id >> 8) & 0xFF );\n"
@@ -1451,7 +1459,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
 
-        builder append "case " + handler_code(p,m) + ":\n"
+        builder append "case " + handler_code(t,p,m) + ":\n"
 
         builder append "while (mbufi < "+(message_size(m, context)-2)+") mbuf[mbufi++] = fifo_dequeue();\n"
         // Fill the buffer
@@ -2556,6 +2564,9 @@ case class ActionCGenerator(val self: Action) /*extends ThingMLCGenerator(self)*
 case class SendActionCGenerator(override val self: SendAction) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
+    // TODO: This might be a problem if the state machine is "included" from another thing.
+    // Probably the "instantiated" thing should be used here but it is unknown here
+    // should probably be added to the context.
     val thing = ThingMLHelpers.findContainingThing(self.getPort)
 
     if (context.debug_message_send(self.getMessage)) {
