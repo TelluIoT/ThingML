@@ -1651,7 +1651,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
     }
   }
 
-  def c_name() = "f_" + self.qname("_")
+  def c_name(thing : Thing) = "f_" + thing.getName() + "_" + self.getName
 
   def generateCforThing(builder: StringBuilder, context : CGeneratorContext, thing : Thing) {
 
@@ -1685,7 +1685,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
       }
       else builder append "void"
 
-      builder append " " + self.c_name + "("
+      builder append " " + self.c_name(thing) + "("
 
       builder append "struct " + thing.instance_struct_name + " *" + thing.instance_var_name
 
@@ -1723,7 +1723,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
 
     var template = SimpleCopyTemplate.copyFromClassPath("ctemplates/fork.c")
 
-    template = template.replace("/*NAME*/", self.c_name)
+    template = template.replace("/*NAME*/", self.c_name(thing))
 
     val b_code = new StringBuilder()
     self.getBody.generateC(b_code, context)
@@ -2693,7 +2693,8 @@ case class LocalVariableActionCGenerator(override val self: LocalVariable) exten
 case class FunctionCallStatementCGenerator(override val self: FunctionCallStatement) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
-    builder append self.getFunction.c_name
+    // TODO: This will not work is the containing thing is not the "concrete" thing
+    builder append self.getFunction.c_name(ThingMLHelpers.findContainingThing(self))
 
     builder append "(_instance"
     self.getParameters.foreach{ p =>
@@ -2731,7 +2732,8 @@ case class ArrayIndexCGenerator(override val self: ArrayIndex) extends Expressio
 case class FunctionCallExpressionCGenerator(override val self: FunctionCallExpression) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
-    builder append self.getFunction.c_name
+    // TODO: This will not work if the containing thing is not the "concrete" thing
+    builder append self.getFunction.c_name(ThingMLHelpers.findContainingThing(self))
 
     builder append "(_instance"
     self.getParameters.foreach{ p =>
