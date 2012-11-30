@@ -1907,10 +1907,16 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     generateCHeader(builder, context)
     generateCImpl(builder, context)
   }
-
+ /*
   def handler_name(p: Port, m: Message) = ThingMLHelpers.findContainingThing(p).qname("_") + "_handle_" + p.getName + "_" + m.getName
 
   def sender_name(p: Port, m: Message) = ThingMLHelpers.findContainingThing(p).qname("_") + "_send_" + p.getName + "_" + m.getName
+ */
+  def handler_name(p: Port, m: Message) = self.qname("_") + "_handle_" + p.getName + "_" + m.getName
+
+    def sender_name(p: Port, m: Message) = self.qname("_") + "_send_" + p.getName + "_" + m.getName
+
+
 
   def state_var_name(r: Region) = r.qname("_") + "_State"
 
