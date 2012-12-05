@@ -581,11 +581,11 @@ object CGenerator {
       )
     }
 
-    val liblist : MutableList[String] = MutableList()
+    var liblist = List[String]()
 
     if (cfg.getAnnotations.filter(a=> a.getName == "add_c_libraries").size>0) {
       cfg.getAnnotations.filter(a=> a.getName == "add_c_libraries").head.getValue.trim.split(" ").foreach(m =>
-         liblist += m.trim
+         liblist = m.trim :: liblist
       )
     }
 
