@@ -33,9 +33,9 @@ import io.Source
 import org.sintef.thingml._
 import org.thingml.model.scalaimpl.aspects.MergedConfigurationCache
 import org.thingml.graphexport.ThingMLGraphExport
-import collection.mutable.ListBuffer
 import java.lang.{StringBuilder, ProcessBuilder, Boolean}
 import java.util.{Hashtable, ArrayList}
+import collection.mutable.{MutableList, ListBuffer}
 
 object SimpleCopyTemplate {
 
@@ -581,10 +581,20 @@ object CGenerator {
       )
     }
 
+    val liblist : MutableList[String] = MutableList()
+
+    if (cfg.getAnnotations.filter(a=> a.getName == "add_c_libraries").size>0) {
+      cfg.getAnnotations.filter(a=> a.getName == "add_c_libraries").head.getValue.trim.split(" ").foreach(m =>
+         liblist += m.trim
+      )
+    }
+
     val srcs = list.map{ t => t + ".c" }.mkString(" ")
     val objs = list.map{ t => t + ".o" }.mkString(" ")
+    val libs =  liblist.map{ t => "-l" + t }.mkString(" ")
     mtemplate = mtemplate.replace("/*SOURCES*/", srcs)
     mtemplate = mtemplate.replace("/*OBJECTS*/", objs)
+    mtemplate = mtemplate.replace("/*LIBS*/", libs)
     result.put("Makefile", mtemplate)
 
     MergedConfigurationCache.clearCache(); // Cleanup

@@ -1,5 +1,5 @@
 CC = cc
-LIBS = -lpthread
+LIBS = -lpthread /*LIBS*/
 /*CFLAGS*/
 SRCS = /*SOURCES*/ runtime.c
 OBJS = /*OBJECTS*/ runtime.o
