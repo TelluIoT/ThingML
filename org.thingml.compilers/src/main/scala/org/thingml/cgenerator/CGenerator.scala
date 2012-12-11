@@ -32,10 +32,10 @@ import scala.actors.Actor._
 import io.Source
 import org.sintef.thingml._
 import org.thingml.model.scalaimpl.aspects.MergedConfigurationCache
-import java.util.{Hashtable, ArrayList}
 import org.thingml.graphexport.ThingMLGraphExport
-import collection.mutable.ListBuffer
 import java.lang.{StringBuilder, ProcessBuilder, Boolean}
+import java.util.{Hashtable, ArrayList}
+import collection.mutable.{MutableList, ListBuffer}
 
 object SimpleCopyTemplate {
 
@@ -503,6 +503,7 @@ object CGenerator {
 
     // GENERATE A MODULE FOR EACH THING
     cfg.allThings.foreach { thing =>
+       context.set_concrete_thing(thing)
       // GENERATE HEADER
       var htemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_thing_header.h")
       builder = new StringBuilder()
@@ -519,6 +520,7 @@ object CGenerator {
       itemplate = itemplate.replace("/*CODE*/", builder.toString)
       result.put(prefix + thing.getName + ".c", itemplate)
     }
+    context.clear_concrete_thing()
 
      // GENERATE THE RUNTIME HEADER
     var rhtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/runtime.h")
@@ -579,10 +581,20 @@ object CGenerator {
       )
     }
 
+    var liblist = List[String]()
+
+    if (cfg.getAnnotations.filter(a=> a.getName == "add_c_libraries").size>0) {
+      cfg.getAnnotations.filter(a=> a.getName == "add_c_libraries").head.getValue.trim.split(" ").foreach(m =>
+         liblist = m.trim :: liblist
+      )
+    }
+
     val srcs = list.map{ t => t + ".c" }.mkString(" ")
     val objs = list.map{ t => t + ".o" }.mkString(" ")
+    val libs =  liblist.map{ t => "-l" + t }.mkString(" ")
     mtemplate = mtemplate.replace("/*SOURCES*/", srcs)
     mtemplate = mtemplate.replace("/*OBJECTS*/", objs)
+    mtemplate = mtemplate.replace("/*LIBS*/", libs)
     result.put("Makefile", mtemplate)
 
     MergedConfigurationCache.clearCache(); // Cleanup
@@ -921,6 +933,22 @@ class CGeneratorContext( src: Configuration ) {
     /* To be implemented by sub-classes */
   }
 
+  // The concrete thing for which the code is being generated
+  var concrete_thing_opt : Option[Thing] = None
+
+  def set_concrete_thing(t : Thing) {
+        concrete_thing_opt = Option(t)
+  }
+
+  def get_concrete_thing() : Thing = {
+    //TODO: Should print an internal error if "null". It should never happen
+     concrete_thing_opt.getOrElse(null)
+  }
+
+    def clear_concrete_thing() {
+     concrete_thing_opt = None
+  }
+
   // The following allow changing the name of the instance variable for generating
   // some action code which works with a specific instance.
   // This is useful to define some callbacks with specific signature and route
@@ -1160,7 +1188,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     // Generate code to initialize connectors
     builder append "// Initialize connectors\n"
     self.allThings.foreach{t => t.allPorts.foreach{ port => port.getSends.foreach{ msg =>
-
+      context.set_concrete_thing(t)
       // check if there is an connector for this message
       if (self.allConnectors.exists{ c =>
         (c.getRequired == port && c.getProvided.getReceives.contains(msg)) ||
@@ -1182,6 +1210,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
       }
     }}}
+    context.clear_concrete_thing()
 
     builder append "\n"
     //builder append "// Initialize instance variables and states\n"
@@ -1242,10 +1271,11 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
     // Generate code for things which appear in the configuration
     self.allThings.foreach { thing =>
+       context.set_concrete_thing(thing)
        println("Generating code for Thing: " + thing.getName)
        thing.generateC(builder, context)
     }
-
+    context.clear_concrete_thing()
 
     builder append "\n"
     builder append "/*****************************************************************************\n"
@@ -1280,7 +1310,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     // Generate code to initialize connectors
     builder append "// Initialize connectors\n"
     self.allThings.foreach{t => t.allPorts.foreach{ port => port.getSends.foreach{ msg =>
-
+      context.set_concrete_thing(t)
       // check if there is an connector for this message
       if (self.allConnectors.exists{ c =>
         (c.getRequired == port && c.getProvided.getReceives.contains(msg)) ||
@@ -1301,7 +1331,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         }
       }
     }}}
-
+    context.clear_concrete_thing()
     builder append "\n"
     //builder append "// Initialize instance variables and states\n"
     // Generate code to initialize variable for instances
@@ -1326,9 +1356,17 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
   }
 
-  val handler_codes = new Hashtable[Port, Hashtable[Message, Integer]]()
+  val handler_thing_codes = new Hashtable[Thing, Hashtable[Port, Hashtable[Message, Integer]]]()
   var handler_code_cpt = 1;
-  def handler_code (p : Port, m : Message) = {
+
+  def handler_code (t : Thing, p : Port, m : Message) = {
+
+    var handler_codes = handler_thing_codes.get(t)
+    if (handler_codes == null) {
+      handler_codes = new Hashtable[Port, Hashtable[Message, Integer]]()
+      handler_thing_codes.put(t, handler_codes)
+    }
+
     var table : Hashtable[Message, Integer] =  handler_codes.get(p)
     if (table == null) {
       table = new Hashtable[Message, Integer]()
@@ -1365,6 +1403,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
     // Generate the Enqueue operation only for ports which are not marked as "sync"
     self.allThings.foreach{ t=> t.allPorts.filter{ p => !isSyncSend(p) }.foreach{ p=>
+      context.set_concrete_thing(t)
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
         builder append "// Enqueue of messages " + t.getName + "::" + p.getName + "::" + m.getName + "\n"
@@ -1379,8 +1418,8 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         //DEBUG
        // builder append "Serial.println(\"QU MSG "+m.getName+"\");\n"
 
-        builder append "_fifo_enqueue( ("+handler_code(p,m)+" >> 8) & 0xFF );\n"
-        builder append "_fifo_enqueue( "+handler_code(p,m)+" & 0xFF );\n\n"
+        builder append "_fifo_enqueue( ("+handler_code(t,p,m)+" >> 8) & 0xFF );\n"
+        builder append "_fifo_enqueue( "+handler_code(t,p,m)+" & 0xFF );\n\n"
 
         builder append "// ID of the source instance\n"
         builder append "_fifo_enqueue( (_instance->id >> 8) & 0xFF );\n"
@@ -1412,6 +1451,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
       }
     }}
+    context.clear_concrete_thing()
   }
 
   def generateMessageProcessQueue(builder : StringBuilder, context : CGeneratorContext) {
@@ -1429,12 +1469,13 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
 
     // Generate dequeue code only for non syncronized ports
     self.allThings.foreach{ t=> t.allPorts.filter{ p => !isSyncSend(p) }.foreach{ p=>
+      context.set_concrete_thing(t)
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
         val size = message_size(m, context)
         if ( size > max_msg_size) max_msg_size = size
       }}}
-
+      context.clear_concrete_thing()
     // Allocate a buffer to store the message bytes.
     // Size of the buffer is "size-2" because we have already read 2 bytes
     builder append "byte mbuf[" + (max_msg_size-2) + "];\n"
@@ -1448,10 +1489,11 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     builder append "switch(code) {\n"
 
     self.allThings.foreach{ t=> t.allPorts.filter{ p => !isSyncSend(p) }.foreach{ p=>
+       context.set_concrete_thing(t)
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
 
-        builder append "case " + handler_code(p,m) + ":\n"
+        builder append "case " + handler_code(t,p,m) + ":\n"
 
         builder append "while (mbufi < "+(message_size(m, context)-2)+") mbuf[mbufi++] = fifo_dequeue();\n"
         // Fill the buffer
@@ -1477,6 +1519,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         builder append "break;\n"
       }
     }}
+    context.clear_concrete_thing()
     builder append "}\n"
     builder append "}\n"
   }
@@ -1484,6 +1527,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
   def generateMessageDispatchers(builder : StringBuilder, context : CGeneratorContext) {
 
     self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
+       context.set_concrete_thing(t)
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
         // definition of handler for message m coming from instances of t thought port p
@@ -1510,6 +1554,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         builder append "}\n"
       }
     }}
+    context.clear_concrete_thing()
   }
   /*
   def generateArduinoPDEMain(builder : StringBuilder) {
@@ -1643,7 +1688,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
     }
   }
 
-  def c_name() = "f_" + self.qname("_")
+  def c_name(thing : Thing) = "f_" + thing.getName() + "_" + self.getName
 
   def generateCforThing(builder: StringBuilder, context : CGeneratorContext, thing : Thing) {
 
@@ -1657,11 +1702,8 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
 
   }
 
-  def generateCforThingDirect(builder: StringBuilder, context : CGeneratorContext, thing : Thing) {
-
-    builder append "// Definition of function " + self.getName + "\n"
-
-    if (self.getAnnotations.filter(a=>a.getName == "c_prototype").size == 1) {
+  def generatePrototypeforThingDirect(builder: StringBuilder, context : CGeneratorContext, thing : Thing) {
+        if (self.getAnnotations.filter(a=>a.getName == "c_prototype").size == 1) {
       // generate the given prototype. Any parameters are ignored.
       builder append self.getAnnotations.filter(a=>a.getName == "c_prototype").head.getValue
 
@@ -1680,7 +1722,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
       }
       else builder append "void"
 
-      builder append " " + self.c_name + "("
+      builder append " " + self.c_name(thing) + "("
 
       builder append "struct " + thing.instance_struct_name + " *" + thing.instance_var_name
 
@@ -1693,6 +1735,13 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
       }
       builder append ")"
     }
+  }
+
+  def generateCforThingDirect(builder: StringBuilder, context : CGeneratorContext, thing : Thing) {
+
+    builder append "// Definition of function " + self.getName + "\n"
+
+    generatePrototypeforThingDirect(builder, context, thing)
 
     builder append " {\n"
 
@@ -1711,7 +1760,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
 
     var template = SimpleCopyTemplate.copyFromClassPath("ctemplates/fork.c")
 
-    template = template.replace("/*NAME*/", self.c_name)
+    template = template.replace("/*NAME*/", self.c_name(thing))
 
     val b_code = new StringBuilder()
     self.getBody.generateC(b_code, context)
@@ -1840,7 +1889,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     builder append "\n"
 
     builder append "// Declaration of prototypes outgoing messages:\n"
-    generatePublicPrototypes(builder)
+    generatePublicPrototypes(builder, context)
     builder append "// Declaration of callbacks for incomming messages:\n"
     generatePublicMessageSendingOperations(builder)
     builder append "\n"
@@ -1869,7 +1918,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     builder append "#ifdef __cplusplus\n"
     builder append "extern \"C\" {\n"
     builder append "#endif\n"
-    generatePrivatePrototypes(builder)
+    generatePrivatePrototypes(builder, context)
     builder append "#ifdef __cplusplus\n"
     builder append "}\n"
     builder append "#endif\n"
@@ -1903,10 +1952,16 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     generateCHeader(builder, context)
     generateCImpl(builder, context)
   }
-
+ /*
   def handler_name(p: Port, m: Message) = ThingMLHelpers.findContainingThing(p).qname("_") + "_handle_" + p.getName + "_" + m.getName
 
   def sender_name(p: Port, m: Message) = ThingMLHelpers.findContainingThing(p).qname("_") + "_send_" + p.getName + "_" + m.getName
+ */
+  def handler_name(p: Port, m: Message) = self.qname("_") + "_handle_" + p.getName + "_" + m.getName
+
+    def sender_name(p: Port, m: Message) = self.qname("_") + "_send_" + p.getName + "_" + m.getName
+
+
 
   def state_var_name(r: Region) = r.qname("_") + "_State"
 
@@ -2014,14 +2069,14 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
   }
 
 
-  def generatePrototypes(builder: StringBuilder) {
-    generatePublicPrototypes(builder)
-    generatePrivatePrototypes(builder)
+  def generatePrototypes(builder: StringBuilder, context : CGeneratorContext) {
+    generatePublicPrototypes(builder, context)
+    generatePrivatePrototypes(builder, context)
   }
 
 
   // Prototypes which should go in the header file
-  def generatePublicPrototypes(builder: StringBuilder) {
+  def generatePublicPrototypes(builder: StringBuilder, context : CGeneratorContext) {
     // Entry actions
     builder append "void " + composedBehaviour.qname("_") + "_OnEntry(int state, "
     builder append "struct " + instance_struct_name + " *" + instance_var_name + ");\n"
@@ -2039,7 +2094,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
   }
 
   // Prototypes which should go at the begining of the implementation C file
-  def generatePrivatePrototypes(builder: StringBuilder) {
+  def generatePrivatePrototypes(builder: StringBuilder, context : CGeneratorContext) {
     // Exit actions
     builder append "void " + composedBehaviour.qname("_") + "_OnExit(int state, "
     builder append "struct " + instance_struct_name + " *" + instance_var_name + ");\n"
@@ -2050,6 +2105,12 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
           append_formal_parameters(builder, msg)
           builder append ";\n"
     }}
+
+    self.allFunctions.foreach{ f=>
+      f.generatePrototypeforThingDirect(builder, context, self)
+      builder append ";\n"
+    }
+
   }
 
 
@@ -2540,7 +2601,7 @@ case class ActionCGenerator(val self: Action) /*extends ThingMLCGenerator(self)*
 case class SendActionCGenerator(override val self: SendAction) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
-    val thing = ThingMLHelpers.findContainingThing(self.getPort)
+    val thing = context.get_concrete_thing()
 
     if (context.debug_message_send(self.getMessage)) {
       builder append context.print_debug_message("-> " + thing.sender_name(self.getPort, self.getMessage)) + "\n"
@@ -2666,7 +2727,7 @@ case class LocalVariableActionCGenerator(override val self: LocalVariable) exten
 case class FunctionCallStatementCGenerator(override val self: FunctionCallStatement) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
-    builder append self.getFunction.c_name
+    builder append self.getFunction.c_name(context.get_concrete_thing())
 
     builder append "(_instance"
     self.getParameters.foreach{ p =>
@@ -2704,7 +2765,7 @@ case class ArrayIndexCGenerator(override val self: ArrayIndex) extends Expressio
 case class FunctionCallExpressionCGenerator(override val self: FunctionCallExpression) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
 
-    builder append self.getFunction.c_name
+    builder append self.getFunction.c_name(context.get_concrete_thing())
 
     builder append "(_instance"
     self.getParameters.foreach{ p =>
