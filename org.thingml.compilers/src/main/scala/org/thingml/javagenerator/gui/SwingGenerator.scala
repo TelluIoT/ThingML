@@ -135,11 +135,11 @@ object SwingGenerator {
     outputDirFile.mkdirs
     
     code.foreach{case (thing, (mock, mirror)) =>
-        var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + thing.getName() + "Mock.java")));
+        var w = new PrintWriter(new FileWriter(new File(outputDir, Context.firstToUpper(thing.getName()) + "Mock.java")));
         w.println(mock);
         w.close();
         
-        w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + thing.getName() + "MockMirror.java")));
+        w = new PrintWriter(new FileWriter(new File(outputDir, Context.firstToUpper(thing.getName()) + "MockMirror.java")));
         w.println(mirror);
         w.close();
     }    
@@ -191,7 +191,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
 
   override def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
      
-    builder append "public class " + self.getName + "Mock" + (if (isMirror) "Mirror" else "") + " extends ReactiveComponent implements ActionListener {\n\n"
+    builder append "public class " + Context.firstToUpper(self.getName) + "Mock" + (if (isMirror) "Mirror" else "") + " extends ReactiveComponent implements ActionListener {\n\n"
     
     builder append "@Override\n"
     builder append "public void onIncomingMessage(SignedEvent e) {\n"   
@@ -200,7 +200,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     
     generatePortDecl()
     
-    builder append "public " + self.getName + "Mock" + (if (isMirror) "Mirror" else "") + "(){\n"
+    builder append "public " + Context.firstToUpper(self.getName) + "Mock" + (if (isMirror) "Mirror" else "") + "(){\n"
     generatePortDef(isMirror = isMirror)
     builder append "init();"
     builder append "}\n\n"
@@ -430,8 +430,8 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
       
     
     builder append "public static void main(String args[]){\n"
-    builder append self.getName + "Mock mock = new " + self.getName + "Mock();\n"
-    builder append self.getName + "MockMirror mockMirror = new " + self.getName + "MockMirror();\n"
+    builder append Context.firstToUpper(self.getName) + "Mock mock = new " + Context.firstToUpper(self.getName) + "Mock();\n"
+    builder append Context.firstToUpper(self.getName) + "MockMirror mockMirror = new " + Context.firstToUpper(self.getName) + "MockMirror();\n"
     
     self.getPorts.foreach{port =>
       builder append "Channel c_" + port.getName + "_" + port.hashCode + " = new Channel();\n"
