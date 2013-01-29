@@ -208,15 +208,15 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     //////////////////////////////////////////////////////////////////
     var messagesToSend = Map[Port, List[Message]]()
     if (!isMirror) 
-      self.getPorts.foreach{p => messagesToSend += (p -> p.getSends.toList)} 
+      self.allPorts.foreach{p => messagesToSend += (p -> p.getSends.toList)} 
     else 
-      self.getPorts.foreach{p => messagesToSend +=(p -> p.getReceives.toList)}
+      self.allPorts.foreach{p => messagesToSend +=(p -> p.getReceives.toList)}
     
     var messagesToReceive = Map[Port, List[Message]]()
     if (!isMirror) 
-      self.getPorts.foreach{p => messagesToReceive += (p -> p.getReceives.toList)} 
+      self.allPorts.foreach{p => messagesToReceive += (p -> p.getReceives.toList)} 
     else 
-      self.getPorts.foreach{p => messagesToReceive += (p -> p.getSends.toList)} 
+      self.allPorts.foreach{p => messagesToReceive += (p -> p.getSends.toList)} 
     
     
 	
@@ -493,7 +493,7 @@ case class MessageSwingGenerator(override val self: Message) extends ThingMLSwin
       }
       else {		
         builder append "field" + self.getName + "_via_" + Context.port.getName + "_" + Context.firstToUpper(p.getName) + " = new JTextField();\n"
-        builder append "field" + self.getName + "_via_" + Context.port.getName + "_" + Context.firstToUpper(p.getName) + ".setText(\"" + self.getName + "\");\n"
+        builder append "field" + self.getName + "_via_" + Context.port.getName + "_" + Context.firstToUpper(p.getName) + ".setText(\"" + p.getName + "\");\n"
       }
     
       builder append "c.gridx = 1;\n"
