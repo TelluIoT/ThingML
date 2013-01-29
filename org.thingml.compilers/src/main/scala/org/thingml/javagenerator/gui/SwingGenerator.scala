@@ -231,15 +231,12 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append "private JTextPane screen;\n"
     builder append "private JButton clearButton;\n"
     
-    builder append "private StyledDocument doc;\n"
+    builder append "private StyledDocument doc;\n\n"
 	
-    
-
-
     messagesToSend.foreach{case (port, messages) =>
         messages.foreach{send =>
           builder append "//Attributes related to " + send.getName + " via " + port.getName +"\n"
-          builder append "private JButton send" + send.getName + "_via_" + port.getName + ";\n"
+          builder append "public JButton send" + send.getName + "_via_" + port.getName + ";\n"
           send.getParameters.foreach{ p => 
             if (p.getType.isInstanceOf[Enumeration]) {
               builder append "private JComboBox field" + send.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ ";\n"
@@ -267,6 +264,23 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
           }
         }
     }
+    
+    builder append "public void disableAll() {\n"
+    messagesToSend.foreach{case (port, messages) =>
+        messages.foreach{send =>
+          builder append "send" + send.getName + "_via_" + port.getName + ".setEnabled(false);\n"
+        }
+    }
+    builder append "}\n\n"
+    
+    builder append "public void enableAll() {\n"
+    messagesToSend.foreach{case (port, messages) =>
+        messages.foreach{send =>
+          builder append "send" + send.getName + "_via_" + port.getName + ".setEnabled(true);\n"
+        }
+    }
+    builder append "}\n\n"
+    
     builder append "public void print(String id, String data){\n"
     builder append "try {\n"
     builder append "doc.insertString(doc.getLength(), formatForPrint(data), doc.getStyle(\"receive\"+id+\"Style\"));\n"
