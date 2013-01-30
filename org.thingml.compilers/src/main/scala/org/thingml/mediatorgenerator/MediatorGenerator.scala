@@ -20,7 +20,6 @@
 package org.thingml.mediatorgenerator
 
 import org.thingml.scalagenerator.ScalaGenerator._
-import org.thingml.javagenerator.gui.SwingGenerator._
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import scala.collection.JavaConversions._
 import scala.actors._
@@ -537,7 +536,7 @@ object MediatorGenerator {
         }
         def getOrMsfInfo(msg:Message):String={
           msg.getName+"(\""+msg.getParameters.collect{case p=>
-              if(p.getType.java_type == "String")
+              if(p.getType.java_type() == "String")
                 "+\"\\\"\"+"+p.getName+"_"+m.getName+"_"+oa.flag+"_"+oa.seq+"+\"\\\"\"+"
               else 
                 "+"+p.getName+"_"+m.getName+"_"+oa.flag+"_"+oa.seq+"+"
@@ -574,7 +573,7 @@ object MediatorGenerator {
                             var str =""
                             m.getParameters.foreach{case p =>
                                 if(rp == p.getName){
-                                  if(p.getType.java_type == "String")
+                                  if(p.getType.java_type() == "String")
                                     str = "+\"\\\"\"+"+p.getName+"+\"\\\"\"+"
                                   else 
                                     str = "+"+p.getName+"+"
@@ -601,7 +600,7 @@ object MediatorGenerator {
           var str =""
           paras.foreach{case rp =>
               if(rp == p.getName){
-                if(p.getType.java_type == "String")
+                if(p.getType.java_type() == "String")
                   str ="+\"\\\"\"+"+p.getName+"+\"\\\"\"+"
                 else 
                   str ="+"+p.getName+"+"
@@ -668,7 +667,7 @@ object MediatorGenerator {
       def getMeMsgInfo():String = {
         if(ma.targetMsg.getParameters.size>0){
           ma.targetMsg.getName+"(\""+ma.targetMsg.getParameters.collect{case p=>
-              if(p.getType.java_type == "String")
+              if(p.getType.java_type() == "String")
                 "+\"\\\"\"+"+p.getName+"_"+ma.targetMsg.getName+"+\"\\\"\"+"
               else 
                 "+"+p.getName+"_"+ma.targetMsg.getName+"+"
@@ -702,7 +701,7 @@ object MediatorGenerator {
                 builder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = e."+sa.parades.get(p.getName)+"\n"
                     
               }else
-                builder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = ''&e."+sa.parades.get(p.getName)+"&'.to"+p.getType.java_type+"'\n"
+                builder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = ''&e."+sa.parades.get(p.getName)+"&'.to"+p.getType.java_type()+"'\n"
               builder append ma.targetMsgParaNames.get(p.getName)+"_"+ma.targetMsg.getName+"="+p.getName+p.hashCode+"\n"
                
             case None => println("Parameters wrong in the annotation Error") 
@@ -737,11 +736,11 @@ object MediatorGenerator {
                             if(a.getType.getName == p.getType.getName){
                               ubuilder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = "+sa.parades.get(p.getName)+"\n"
                             }else
-                              ubuilder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = ''&"+sa.parades.get(p.getName)+"&'.to"+p.getType.java_type+"'\n"
+                              ubuilder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = ''&"+sa.parades.get(p.getName)+"&'.to"+p.getType.java_type()+"'\n"
                           case None => println("Parameters wrong in the annotation Error") 
                         }
                       }else
-                        ubuilder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = "+initParameter(p.getType.java_type)+"\n"
+                        ubuilder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = "+initParameter(p.getType.java_type())+"\n"
                   }
                   ubuilder append outPort+"!"+targetMsg.getName+"("+targetMsg.getParameters.collect{case p=> p.getName+p.hashCode}.mkString(",")+")\n"
                   ubuilder append "log(\""+thing_mediator_name+" -> "+outIns+" : "+getSiMsgInfo(targetMsg)+"\")\n"
@@ -762,11 +761,11 @@ object MediatorGenerator {
                             if(a.getType.getName == p.getType.getName){
                               ubuilder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = "+sa.parades.get(p.getName)+"\n"
                             }else
-                              ubuilder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = ''&"+sa.parades.get(p.getName)+"&'.to"+p.getType.java_type+"'\n"
+                              ubuilder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = ''&"+sa.parades.get(p.getName)+"&'.to"+p.getType.java_type()+"'\n"
                           case None => println("Parameters wrong in the annotation Error") 
                         }
                       }else
-                        ubuilder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = "+initParameter(p.getType.java_type)+"\n"
+                        ubuilder append "var "+p.getName+p.hashCode+" :"+p.getType.getName+" = "+initParameter(p.getType.java_type())+"\n"
                   }
                   ubuilder append outPort+"!"+targetMsg.getName+"("+targetMsg.getParameters.collect{case p=> p.getName+p.hashCode}.mkString(",")+")\n"
                   ubuilder append "log(\""+thing_mediator_name+" -> "+outIns+" : "+getSiMsgInfo(targetMsg)+"\")\n"
@@ -776,7 +775,7 @@ object MediatorGenerator {
                 def getSiMsgInfo(msg:Message):String = {
                   if(msg.getParameters.size>0){
                     msg.getName+"(\""+msg.getParameters.collect{case p=>
-                        if(p.getType.java_type == "String")
+                        if(p.getType.java_type() == "String")
                           "+\"\\\"\"+"+p.getName+p.hashCode+"+\"\\\"\"+"
                         else 
                           "+"+p.getName+p.hashCode+"+"
@@ -873,7 +872,7 @@ object MediatorGenerator {
     sb append m.getName+"("
     if(m.getParameters.size>0){
       for(i<-0 to m.getParameters.size-1){
-        m.getParameters.get(i).getType.java_type match{
+        m.getParameters.get(i).getType.java_type() match{
           case "Byte" => sb append paras(i).toByte
           case "Boolean" => sb append paras(i).toBoolean
           case "Short" => sb append paras(i).toShort
@@ -899,7 +898,7 @@ object MediatorGenerator {
     var sb:StringBuilder = new StringBuilder()
     if(mim.getParameters.size>0){
       for(i<-0 to mim.getParameters.size-1){
-        mim.getParameters.get(i).getType.java_type match{
+        mim.getParameters.get(i).getType.java_type() match{
           case "Byte" => sb append ma.paraList(i).toByte
           case "Boolean" => sb append ma.paraList(i).toBoolean
           case "Short" => sb append ma.paraList(i).toShort
@@ -1081,7 +1080,7 @@ object MediatorGenerator {
   def getMessageInfo(m:Message):String = {
     if(m.getParameters.size>0){
       m.getName+"(\""+m.getParameters.collect{case p=>
-          if(p.getType.java_type == "String")
+          if(p.getType.java_type() == "String")
             "+\"\\\"\"+"+"e."+p.getName+"+\"\\\"\"+"
           else 
             "+"+"e."+p.getName+"+"
@@ -1225,7 +1224,7 @@ case class MergeAnotation(val pfa:PlatformAnnotation,val m:Message){
           if(!AnotatedMessages.meMInitFlags.contains(m)){
             AnotatedMessages.meMInitFlags.add(m)
             m.getParameters.foreach{case p=>
-                AnotatedMessages.parasBuilder append "property "+p.getName+"_"+m.getName+" : "+p.getType.getName+" = "+MediatorGenerator.initParameter(p.getType.java_type)+"\n"
+                AnotatedMessages.parasBuilder append "property "+p.getName+"_"+m.getName+" : "+p.getType.getName+" = "+MediatorGenerator.initParameter(p.getType.java_type())+"\n"
           
             }
           }
@@ -1268,7 +1267,7 @@ case class OutOfOrderAnotation(val pfa:PlatformAnnotation,val m:Message){
     //arr(1)
     flag = arr(1)
     m.getParameters.foreach{case p=>
-        AnotatedMessages.parasBuilder append "property "+p.getName+"_"+m.getName+"_"+flag+"_"+seq+" : "+p.getType.getName+" = "+MediatorGenerator.initParameter(p.getType.java_type)+"\n"
+        AnotatedMessages.parasBuilder append "property "+p.getName+"_"+m.getName+"_"+flag+"_"+seq+" : "+p.getType.getName+" = "+MediatorGenerator.initParameter(p.getType.java_type())+"\n"
         
     }
     //arr(2)

@@ -20,7 +20,6 @@
 package org.thingml.kevoreegenerator
 
 import org.thingml.scalagenerator.ScalaGenerator._
-import org.thingml.javagenerator.gui.SwingGenerator._
 import org.sintef.thingml.constraints.ThingMLHelpers
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
@@ -229,6 +228,7 @@ object KevoreeGenerator {
   }
 }
 
+
 case class ThingKevoreeGenerator(val self: Thing){
 
   def generateKevoreeWrapper(builder:StringBuilder = Context.builder){
@@ -355,7 +355,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     builder append "try {\n"
     self.allPropertiesInDepth.foreach{case p=>
         if(p.isChangeable){
-          builder append p.getType.java_type+" "+Context.protectJavaKeyword(p.getName)+" = new "+p.getType.java_type+"((String)this.getDictionary().get(\""+p.getName+"\"));\n"
+          builder append p.getType.java_type()+" "+Context.protectJavaKeyword(p.getName)+" = new "+p.getType.java_type()+"((String)this.getDictionary().get(\""+p.getName+"\"));\n"
           builder append "wrapper.getInstance()."+p.scala_var_name+"_$eq("+Context.protectJavaKeyword(p.getName)+");\n"
           //builder append  "System.out.println("after: singleRoomNumber = " + wrapper.getInstance().Server_aSingleRoomNumber_var());"
         }
@@ -404,20 +404,20 @@ case class ThingKevoreeGenerator(val self: Thing){
   
   def generateParameters(builder: StringBuilder = Context.builder) {    
     builder append self.allPropertiesInDepth.collect{case p=>      
-        //"this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : " + initParameter(p.getType.java_type)
+        //"this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : " + initParameter(p.getType.java_type())
         initParameter(p)
     }.mkString(", ")  
   }
   
   def initParameter(p : Property):String = {
-    p.getType.java_type match{
-    case "Byte" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0x00"
-    case "Boolean" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : false"
-    case "Short" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0"
-    case "Integer" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0"
-    case "Float" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0.0f"
-    case "String" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : \"\""
-    case _ => "new " + p.getType.java_type + "()"
+    p.getType.java_type() match{
+    case "Byte" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0x00"
+    case "Boolean" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : false"
+    case "Short" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0"
+    case "Integer" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0"
+    case "Float" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0.0f"
+    case "String" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : \"\""
+    case _ => "new " + p.getType.java_type() + "()"
   }
   }
   

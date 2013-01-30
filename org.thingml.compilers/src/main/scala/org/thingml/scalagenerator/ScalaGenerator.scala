@@ -832,9 +832,12 @@ case class FunctionScalaGenerator(override val self: Function) extends TypedElem
         case None =>
       }
      
-      var returnType = self.getType.scala_type(self.getCardinality != null)
+      val returnType = self.getType.scala_type(self.getCardinality != null)
   
-      builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => Context.protectScalaKeyword(p.scala_var_name) + " : " + p.getType.scala_type(p.getCardinality != null)}.mkString(", ") + ") : " + returnType + " = {\n"
+      if (self.getAnnotations.filter{a => a.getName == "implements"}.headOption.isDefined)//TODO: This is a dirty trick to work around the stupid, unacceptable, uninteroperability between java and scala primitive types.
+        builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => Context.protectScalaKeyword(p.scala_var_name) + " : java.lang." + p.getType.java_type(p.getCardinality != null)}.mkString(", ") + ") : " + returnType + " = {\n"
+      else
+        builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => Context.protectScalaKeyword(p.scala_var_name) + " : " + p.getType.scala_type(p.getCardinality != null)}.mkString(", ") + ") : " + returnType + " = {\n"
       builder append "Logger.debug(\"Executing " + self.getName + " ...\")\n"
       builder append "val handler = this\n" 
       self.getBody.generateScala()
@@ -857,6 +860,29 @@ case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGener
     scala_type()
   }
 
+  def java_type(isArray : Boolean = false): String = {
+    if (self == null){
+      return "Unit"
+    }
+    else {
+      var res : String =  self.getAnnotations.filter {
+        a => a.getName == "java_type"
+      }.headOption match {
+        case Some(a) => 
+          a.asInstanceOf[PlatformAnnotation].getValue
+        case None =>
+          Logger.warning("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
+          var temp : String = self.getName
+          temp = temp.capitalize//temp(0).toUpperCase + temp.substring(1, temp.length)
+          temp
+      }
+      if (isArray) {
+        res = "Array[" + res + "]"
+      }
+      return res
+    }
+  }
+  
   def scala_type(isArray : Boolean = false): String = {
     if (self == null){
       return "Unit"
@@ -940,11 +966,11 @@ case class SendActionScalaGenerator(override val self: SendAction) extends Actio
     builder append "new " + Context.firstToUpper(self.getMessage.getName) + "("
     var i = 0
     self.getParameters.zip(self.getMessage.getParameters).foreach{ case (p, fp) =>
-      if (i > 0)
-        builder append ", "
-      p.generateScala()
-      builder append ".to" + fp.getType.scala_type(fp.getCardinality != null)
-      i = i+1
+        if (i > 0)
+          builder append ", "
+        p.generateScala()
+        //builder append ".to" + fp.getType.scala_type(fp.getCardinality != null)
+        i = i+1
     }
     builder append ")"
   }

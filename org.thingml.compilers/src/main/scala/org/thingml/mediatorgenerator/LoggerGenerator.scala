@@ -20,7 +20,6 @@
 
 package org.thingml.mediatorgenerator
 import org.thingml.scalagenerator.ScalaGenerator._
-import org.thingml.javagenerator.gui.SwingGenerator._
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import scala.collection.JavaConversions._
 import scala.actors._
@@ -161,7 +160,7 @@ object LoggerGenerator {
   }
   def getMessageInfo(m:Message):String = {
     m.getName+"(\""+m.getParameters.collect{case p=>
-        if(p.getType.java_type == "String")
+        if(p.getType.java_type() == "String")
           "+\"\\\"\"+"+"e."+p.getName+"+\"\\\"\"+"
         else 
           "+"+"e."+p.getName+"+"
