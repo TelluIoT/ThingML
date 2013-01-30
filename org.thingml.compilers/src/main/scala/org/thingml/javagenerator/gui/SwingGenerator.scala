@@ -142,6 +142,18 @@ object SwingGenerator {
         w = new PrintWriter(new FileWriter(new File(outputDir, Context.firstToUpper(thing.getName()) + "MockMirror.java")));
         w.println(mirror);
         w.close();
+        
+        w = new PrintWriter(new FileWriter(new File(outputDir, Context.firstToUpper(thing.getName()) + "Listener.java")));
+        var b = new StringBuilder()
+        thing.generateListener(b, false)
+        w.println(b.toString);
+        w.close();
+        
+        w = new PrintWriter(new FileWriter(new File(outputDir, Context.firstToUpper(thing.getName()) + "ListenerMirror.java")));
+        b = new StringBuilder()
+        thing.generateListener(b, true)
+        w.println(b.toString);
+        w.close();
     }    
 
     javax.swing.JOptionPane.showMessageDialog(null, "Java code generated");
@@ -188,6 +200,31 @@ case class InstanceSwingGenerator(override val self: Instance) extends ThingMLSw
 }
 
 case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGenerator(self) {
+  
+  def generateListener(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
+    builder append "package org.thingml.generated;\n\n"
+    builder append "public interface " + Context.firstToUpper(self.getName) + "Listener" + (if (isMirror) "Mirror" else "") + " {\n\n"
+    
+    var messagesToSend = Map[Port, List[Message]]()
+    if (!isMirror) 
+      self.allPorts.foreach{p => messagesToSend += (p -> p.getSends.toList)} 
+    else 
+      self.allPorts.foreach{p => messagesToSend +=(p -> p.getReceives.toList)}
+    
+    /*var messagesToReceive = Map[Port, List[Message]]()
+     if (!isMirror) 
+     self.allPorts.foreach{p => messagesToReceive += (p -> p.getReceives.toList)} 
+     else 
+     self.allPorts.foreach{p => messagesToReceive += (p -> p.getSends.toList)} */
+    
+    messagesToSend.foreach{case (port, messages) =>
+        messages.foreach{send =>
+          builder append "void on" + Context.firstToUpper(send.getName) + "_via_" + port.getName + "(" + send.getParameters.collect{case p => p.getType.java_type + " " + p.getName}.mkString(", ") + ");\n"
+        }
+    }
+    
+    builder append "}\n\n"
+  }
 
   override def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
      
@@ -199,6 +236,8 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append "}\n"
     
     generatePortDecl()
+    
+    builder append "\njava.util.List<" + Context.firstToUpper(self.getName) + "Listener" + (if (isMirror) "Mirror" else "") + "> listeners = new java.util.LinkedList<" + Context.firstToUpper(self.getName) + "Listener" + (if (isMirror) "Mirror" else "") + ">();\n\n"
     
     builder append "public " + Context.firstToUpper(self.getName) + "Mock" + (if (isMirror) "Mirror" else "") + "(){\n"
     generatePortDef(isMirror = isMirror)
@@ -216,9 +255,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     if (!isMirror) 
       self.allPorts.foreach{p => messagesToReceive += (p -> p.getReceives.toList)} 
     else 
-      self.allPorts.foreach{p => messagesToReceive += (p -> p.getSends.toList)} 
-    
-    
+      self.allPorts.foreach{p => messagesToReceive += (p -> p.getSends.toList)}
 	
     builder append "private SimpleDateFormat dateFormat = new SimpleDateFormat(\"dd MMM yyy 'at' HH:mm:ss.SSS\");"
     
@@ -423,6 +460,21 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
               case p if (p.getCardinality != null) => "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText().getBytes()"
             }.toList ::: List(Context.firstToUpper(msg.getName) + "$.MODULE$.getName()")).mkString(", ")
           builder append "));\n"
+          
+          builder append "for(" + Context.firstToUpper(self.getName) + "Listener" + (if (isMirror) "Mirror" else "") + " l : listeners)\n"
+          builder append "l.on" + Context.firstToUpper(msg.getName) + "_via_" + port.getName + "("
+          builder append (msg.getParameters.collect{//TODO: This code is duplicated from above...
+              case p if (p.getCardinality == null) => 
+                if (p.getType.isInstanceOf[Enumeration]) {
+                  "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
+                } else {
+                  "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"
+                }
+                //TODO: this is a quick and dirty hack that only works with Byte[]. We need to refactor this code to make it work with any kind of Arrays
+              case p if (p.getCardinality != null) => "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText().getBytes()"
+            }.toList).mkString(", ")
+          builder append ");\n"
+          
           builder append "}\n"
         }
     }
