@@ -1,23 +1,6 @@
 import "../../datatypes.thingml"
 
-/*datatype Crisis
-@java_type "bcms.Crisis";
-
-datatype Route
-@java_type "bcms.Route";
-
-datatype TimeoutLog
-@java_type "bcms.TimeoutLog";*/
-
-
-thing fragment bCMSMsgs 
-/*@maven_dep
-"<dependency>
-   <groupId>aom</groupId>
-   <artifactId>aom.bcms</artifactId>
-   <version>0.0.1-SNAPSHOT</version>
-</dependency>"*/
-{
+thing fragment bCMSMsgs {
     //1.
     message initCom(id : String);
     //2.
@@ -123,7 +106,27 @@ thing fragment GUIbCMSMsgs {
     //6.
     message gui_done(activate : Boolean);
     //7.
-    message gui_close(activate : Boolean);    
+    message gui_close(activate : Boolean);   
+}
+
+thing fragment GUIbCMS_Controller includes GUIbCMSMsgs {
+    message initComOK();
+    message crisisDetailsOK();
+    message numberOfTrucksOK();
+    message dispatchedOK();
+    message arrivedOK();
+    message doneOK();
+    message closeOK();
+    
+    provided port internIN {
+        receives initComOK, crisisDetailsOK, numberOfTrucksOK, dispatchedOK, arrivedOK, doneOK, closeOK
+    }    
+    
+    required port internOUT {
+        sends initComOK, crisisDetailsOK, numberOfTrucksOK, dispatchedOK, arrivedOK, doneOK, closeOK
+    } 
+    
+              
 }
 
 ////////////////////////PSC////////////////////////
@@ -162,7 +165,6 @@ thing PSC_GUI includes GUIbCMSMsgs, bCMSMsgs
     function onNumberOfTrucks_via_out(number : Long) @implements "true"
     do 
         out!numberOfTrucks(number)
-        //numberPolicsTrucks = number
     end
     
     function onRoute_via_out(crisisID : String, pVehicles : Long, fVehicles : Long, path : String) @implements "true"
@@ -194,7 +196,6 @@ thing PSC_GUI includes GUIbCMSMsgs, bCMSMsgs
 	
 		on entry do
             '' & gui & '.listeners.add(root.asInstanceOf[org.thingml.generated.PSC_MockListener]);'
-            //'' & gui & '.sendinitCom_via_out.setEnabled(true);'
 		end
 	
 		state Init {}
@@ -228,7 +229,7 @@ thing PSC_GUI includes GUIbCMSMsgs, bCMSMsgs
          
 }
 
-thing PSC includes PSC_Interface, GUIbCMSMsgs {
+thing PSC includes PSC_Interface, GUIbCMS_Controller {
 
     required port control {
         sends gui_initCom, gui_crisisDetails, gui_numberOfTrucks, gui_route, gui_dispatched, gui_arrived, gui_done, gui_close
@@ -237,22 +238,6 @@ thing PSC includes PSC_Interface, GUIbCMSMsgs {
     provided port feedback {
     	receives initCom, crisisDetails, numberOfTrucks, route, dispatched, arrived, done, close
     }
-    
-    message initComOK();
-    message crisisDetailsOK();
-    message numberOfTrucksOK();
-    message dispatchedOK();
-    message arrivedOK();
-    message doneOK();
-    message closeOK();
-    
-    provided port internIN {
-        receives initComOK, crisisDetailsOK, numberOfTrucksOK, dispatchedOK, arrivedOK, doneOK, closeOK
-    }    
-    
-    required port internOUT {
-        sends initComOK, crisisDetailsOK, numberOfTrucksOK, dispatchedOK, arrivedOK, doneOK, closeOK
-    }    
     
     property fscID : String
     property numberFireTrucks : Long
@@ -324,7 +309,10 @@ thing PSC includes PSC_Interface, GUIbCMSMsgs {
 			end     
 
             transition -> WaitAckRoute
-			event feedback?route
+			event r : feedback?route
+            action do
+                out!route(r.crisisID, r.pVehicles, r.fVehicles, r.path)
+            end
         }
             
         //3.3
@@ -408,23 +396,19 @@ thing PSC includes PSC_Interface, GUIbCMSMsgs {
                 end
                 
                 internal event ic : feedback?initCom
-                guard not fire
                 action do 
                     gui = true
                     out!initCom(ic.id)
                 end
                 
                 internal event com : in?initCom
-                guard not gui
                 action do 
                     fire = true
                     fscID = com.id
                 end
                 
                 transition -> Wait4CrisisDetails
-                event in?initCom
-                event feedback?initCom
-                //guard gui and fire
+                guard (gui and fire)
                 action do
                     internOUT!initComOK()
                 end
@@ -443,22 +427,18 @@ thing PSC includes PSC_Interface, GUIbCMSMsgs {
                 end
                 
                 internal event cd : feedback?crisisDetails
-                guard not fire
                 action do 
                     gui = true
                     out!crisisDetails(cd.id, cd.lat, cd.lon, cd.time, cd.isActive, cd.desc)
                 end
                 
                 internal event in?crisisDetails
-                guard not gui
                 action do 
                     fire = true
                 end
                 
                 transition -> Wait4NumberOfTrucks
-                event in?crisisDetails
-                event feedback?crisisDetails
-                //guard gui and fire
+                guard (gui and fire)
                 action do
                     internOUT!crisisDetailsOK()
                 end
@@ -477,22 +457,18 @@ thing PSC includes PSC_Interface, GUIbCMSMsgs {
                 end
                 
                 internal event nt : feedback?numberOfTrucks
-                guard not fire
                 action do 
                     gui = true
                     out!numberOfTrucks(nt.number)
                 end
                 
                 internal event in?numberOfTrucks
-                guard not gui
                 action do 
                     fire = true
                 end
                 
                 transition -> Wait4Dispatch
-                event in?numberOfTrucks
-                event feedback?numberOfTrucks
-                //guard gui and fire
+                guard (gui and fire)
                 action do 
                     internOUT!numberOfTrucksOK()
                 end
@@ -511,22 +487,18 @@ thing PSC includes PSC_Interface, GUIbCMSMsgs {
                 end
                 
                 internal event feedback?dispatched
-                guard not fire
                 action do 
                     gui = true
                     out!dispatched()
                 end
                 
                 internal event in?dispatched
-                guard not gui
                 action do 
                     fire = true
                 end
                 
                 transition -> Wait4Arrival
-                event in?dispatched
-                event feedback?dispatched
-                //guard gui and fire
+                guard (gui and fire)
                 action do 
                     internOUT!dispatchedOK()
                 end
@@ -546,22 +518,18 @@ thing PSC includes PSC_Interface, GUIbCMSMsgs {
                 end
                 
                 internal event feedback?arrived
-                guard not fire
                 action do 
                     gui = true
                     out!arrived()
                 end
                 
                 internal event in?arrived
-                guard not gui
                 action do 
                     fire = true
                 end
                 
-                transition -> Wait4CrisisDetails
-                event in?arrived
-                event feedback?arrived
-                //guard gui and fire
+                transition -> Wait4Completion
+                guard (gui and fire)
                 action do 
                     internOUT!arrivedOK()
                 end
@@ -581,22 +549,18 @@ thing PSC includes PSC_Interface, GUIbCMSMsgs {
                 end
                 
                 internal event feedback?done
-                guard not fire
                 action do 
                     gui = true
                     out!done()
                 end
                 
                 internal event in?done
-                guard not gui
                 action do 
                     fire = true
                 end
                 
-                transition -> Wait4CrisisDetails
-                event in?done
-                event feedback?done
-                //guard gui and fire
+                transition -> Wait4Close
+                guard (gui and fire)
                 action do 
                     internOUT!doneOK()
                 end
@@ -616,22 +580,18 @@ thing PSC includes PSC_Interface, GUIbCMSMsgs {
                 end
                 
                 internal event feedback?close
-                guard not fire
                 action do 
                     gui = true
                     out!close()
                 end
                 
                 internal event in?close
-                guard not gui
                 action do 
                     fire = true
                 end
                 
                 transition -> Wait4Com
-                event in?done
-                event feedback?done
-                //guard gui and fire
+                guard (gui and fire)
                 action do 
                     internOUT!closeOK()
                 end
@@ -647,7 +607,7 @@ thing PSC includes PSC_Interface, GUIbCMSMsgs {
 }
 
 
-configuration mainScenario {
+/*configuration testPSC {
     instance psc_gui : PSC_GUI    
     instance psc : PSC  
     instance bcms : bCMS_Mock
@@ -657,6 +617,527 @@ configuration mainScenario {
     connector psc.out => bcms.fromPSC
     connector psc.internOUT => psc.internIN
     connector bcms.toPSC => psc.in
-}
+}*/
 
 //////////////////////PSC END//////////////////////
+
+
+
+////////////////////////PSC////////////////////////
+
+datatype FSC_GUI
+@java_type "org.thingml.generated.FSC_MockMock";
+
+thing FSC_GUI includes GUIbCMSMsgs, bCMSMsgs 
+@java_interface "org.thingml.generated.FSC_MockListener" 
+{
+
+	readonly property gui : FSC_GUI = 'new org.thingml.generated.FSC_MockMock()'
+
+    provided port control {
+        receives gui_initCom, gui_crisisDetails, gui_numberOfTrucks, gui_ackRoute, gui_dispatched, gui_arrived, gui_done, gui_close
+    }
+    
+    required port out {
+    	sends initCom, crisisDetails, numberOfTrucks, ackRoute, dispatched, arrived, done, close
+    }    
+    
+      
+    /**
+    * Call backs for the GUI
+    */
+    function onInitCom_via_out(id : String) @implements "true"
+    do 
+        out!initCom(id)
+    end
+    
+    function onCrisisDetails_via_out(id : String, lat : Double, lon : Double, time : Long, isActive : Boolean, desc : String) @implements "true"
+    do 
+        out!crisisDetails(id, lat, lon, time, isActive, desc)
+    end
+    
+    function onNumberOfTrucks_via_out(number : Long) @implements "true"
+    do 
+        out!numberOfTrucks(number)
+    end
+    
+    function onAckRoute_via_out() @implements "true"
+    do 
+        out!ackRoute()
+    end
+    
+    function onDispatched_via_out() @implements "true"
+    do 
+        out!dispatched()
+    end
+    
+    function onArrived_via_out() @implements "true"
+    do 
+        out!arrived()
+    end
+    
+    function onDone_via_out() @implements "true"
+    do 
+        out!done()
+    end
+    
+    function onClose_via_out() @implements "true"
+    do 
+        out!close()
+    end
+
+	statechart behavior init Init {
+	
+		on entry do
+            '' & gui & '.listeners.add(root.asInstanceOf[org.thingml.generated.FSC_MockListener]);'
+		end
+	
+		state Init {}
+
+        internal event c : control?gui_initCom
+        action '' & gui & '.sendinitCom_via_out.setEnabled(' & c.activate & ');'
+        
+        internal event c : control?gui_crisisDetails
+        action '' & gui & '.sendcrisisDetails_via_out.setEnabled(' & c.activate & ');'
+
+        internal event c : control?gui_numberOfTrucks
+        action '' & gui & '.sendnumberOfTrucks_via_out.setEnabled(' & c.activate & ');'
+
+        internal event c : control?gui_ackRoute
+        action '' & gui & '.sendackRoute_via_out.setEnabled(' & c.activate & ');'
+        
+        internal event c : control?gui_dispatched
+        action '' & gui & '.senddispatched_via_out.setEnabled(' & c.activate & ');'
+        
+        internal event c : control?gui_arrived
+        action '' & gui & '.sendarrived_via_out.setEnabled(' & c.activate & ');'
+
+        internal event c : control?gui_done
+        action '' & gui & '.senddone_via_out.setEnabled(' & c.activate & ');'
+        
+        internal event c : control?gui_close
+        action '' & gui & '.sendclose_via_out.setEnabled(' & c.activate & ');'
+               
+	}
+
+         
+}
+
+thing FSC includes FSC_Interface, GUIbCMS_Controller {
+
+    required port control {
+        sends gui_initCom, gui_crisisDetails, gui_numberOfTrucks, gui_ackRoute, gui_dispatched, gui_arrived, gui_done, gui_close
+    }
+    
+    provided port feedback {
+    	receives initCom, crisisDetails, numberOfTrucks, ackRoute, dispatched, arrived, done, close
+    }   
+    
+    property pscID : String
+    property numberFireTrucks : Long
+    property numberPolicsTrucks : Long
+    
+    	statechart behavior init Wait4Com {
+	
+		on entry do
+            //control!gui_initCom(false)
+            control!gui_crisisDetails(false)
+            control!gui_numberOfTrucks(false)
+            control!gui_ackRoute(false)
+            control!gui_dispatched(false)
+            control!gui_arrived(false)
+            control!gui_done(false)
+            control!gui_close(false)
+		end
+	
+        //1.
+		state Wait4Com {
+			on entry do
+				control!gui_initCom(true)
+			end
+			
+			on exit do
+				control!gui_initCom(false)
+			end
+			
+			transition -> Wait4CrisisDetails
+			event internIN?initComOK
+		}
+		
+        //2.
+		state Wait4CrisisDetails {
+			on entry do
+				control!gui_crisisDetails(true)
+			end
+
+            on exit do
+				control!gui_crisisDetails(false)
+			end
+
+            transition -> Wait4NumberOfTrucks
+			event internIN?crisisDetailsOK
+	   }
+
+        //3.1
+        state Wait4NumberOfTrucks {
+        	on entry do
+				control!gui_numberOfTrucks(true)
+			end
+
+            on exit do
+				control!gui_numberOfTrucks(false)
+			end    
+
+            transition -> WaitRoute
+			event internIN?numberOfTrucksOK
+        }
+        
+        //3.2
+        state WaitRoute {
+        	on entry do
+				print("Waiting for route...")
+			end
+
+            on exit do
+				print("Route received!")
+			end                
+            
+            transition -> AckRoute
+			event in?route
+        }
+            
+        //3.3
+        state AckRoute {
+            on entry do
+				control!gui_ackRoute(true)
+			end
+
+            on exit do
+				control!gui_ackRoute(false)
+			end     
+            
+            transition -> Wait4Dispatch
+			event feedback?ackRoute
+            action do
+                out!ackRoute()
+            end    
+        }
+        
+        //4.
+        state Wait4Dispatch {
+            on entry do
+				control!gui_dispatched(true)
+			end
+
+            on exit do
+				control!gui_dispatched(false)
+			end  
+            
+            transition -> Wait4Arrival
+            event internIN?dispatchedOK
+
+        }
+        
+        state Wait4Arrival {
+            on entry do
+				control!gui_arrived(true)
+			end
+
+            on exit do
+				control!gui_arrived(false)
+			end  
+            
+            transition -> Wait4Completion
+            event internIN?arrivedOK
+
+        }
+        
+        state Wait4Completion {
+            on entry do
+				control!gui_done(true)
+			end
+
+            on exit do
+				control!gui_done(false)
+			end  
+            
+            transition -> Wait4Close
+            event internIN?doneOK
+
+        }
+        
+        state Wait4Close {
+            on entry do
+				control!gui_close(true)
+			end
+
+            on exit do
+				control!gui_close(false)
+			end  
+            
+            transition -> Wait4Com
+            event internIN?closeOK            
+        }
+        
+        /**
+         *  This regions does some "Complex" Event Processing
+         *  i.e., relate several messages to produce higher level messages.
+         *  This way, we can keep the main state machine free from any noise.
+         */
+        region CEP init Wait4Com {    
+            
+            //1.
+            state Wait4Com{
+                property gui : Boolean
+                property fire : Boolean
+                
+                on entry
+                do
+                 gui = false
+                 fire = false
+                end
+                
+                internal event ic : feedback?initCom
+                action do 
+                    gui = true
+                    out!initCom(ic.id)
+                end
+                
+                internal event com : in?initCom
+                action do 
+                    fire = true
+                    pscID = com.id
+                end
+                
+                transition -> Wait4CrisisDetails
+                guard (gui and fire)
+                action do
+                    internOUT!initComOK()
+                end
+                
+            }
+            
+            //2
+            state Wait4CrisisDetails {
+                property gui : Boolean
+                property fire : Boolean
+                
+                on entry
+                do
+                 gui = false
+                 fire = false
+                end
+                
+                internal event cd : feedback?crisisDetails
+                action do 
+                    gui = true
+                    out!crisisDetails(cd.id, cd.lat, cd.lon, cd.time, cd.isActive, cd.desc)
+                end
+                
+                internal event in?crisisDetails
+                action do 
+                    fire = true
+                end
+                
+                transition -> Wait4NumberOfTrucks
+                guard (gui and fire)
+                action do
+                    internOUT!crisisDetailsOK()
+                end
+                
+            }
+            
+            //3.1
+            state Wait4NumberOfTrucks {
+                property gui : Boolean
+                property fire : Boolean
+                
+                on entry
+                do
+                 gui = false
+                 fire = false
+                end
+                
+                internal event nt : feedback?numberOfTrucks
+                action do 
+                    gui = true
+                    out!numberOfTrucks(nt.number)
+                end
+                
+                internal event in?numberOfTrucks
+                action do 
+                    fire = true
+                end
+                
+                transition -> Wait4Dispatch
+                guard (gui and fire)
+                action do 
+                    internOUT!numberOfTrucksOK()
+                end
+                
+            }
+            
+            //4.
+            state Wait4Dispatch {
+                property gui : Boolean
+                property fire : Boolean
+                
+                on entry
+                do
+                 gui = false
+                 fire = false
+                end
+                
+                internal event feedback?dispatched
+                action do 
+                    gui = true
+                    out!dispatched()
+                end
+                
+                internal event in?dispatched
+                action do 
+                    fire = true
+                end
+                
+                transition -> Wait4Arrival
+                guard (gui and fire)
+                action do 
+                    internOUT!dispatchedOK()
+                end
+                
+            }
+            
+            
+            //5.
+            state Wait4Arrival {
+                property gui : Boolean
+                property fire : Boolean
+                
+                on entry
+                do
+                 gui = false
+                 fire = false
+                end
+                
+                internal event feedback?arrived
+                action do 
+                    gui = true
+                    out!arrived()
+                end
+                
+                internal event in?arrived
+                action do 
+                    fire = true
+                end
+                
+                transition -> Wait4Completion
+                guard (gui and fire)
+                action do 
+                    internOUT!arrivedOK()
+                end
+                
+            }
+            
+            
+            //6.
+            state Wait4Completion {
+                property gui : Boolean
+                property fire : Boolean
+                
+                on entry
+                do
+                 gui = false
+                 fire = false
+                end
+                
+                internal event feedback?done
+                action do 
+                    gui = true
+                    out!done()
+                end
+                
+                internal event in?done
+                action do 
+                    fire = true
+                end
+                
+                transition -> Wait4Close
+                guard (gui and fire)
+                action do 
+                    internOUT!doneOK()
+                end
+                
+            }
+            
+            
+            //7.
+            state Wait4Close {
+                property gui : Boolean
+                property fire : Boolean
+                
+                on entry
+                do
+                 gui = false
+                 fire = false
+                end
+                
+                internal event feedback?close
+                action do 
+                    gui = true
+                    out!close()
+                end
+                
+                internal event in?close
+                action do 
+                    fire = true
+                end
+                
+                transition -> Wait4Com
+                guard (gui and fire)
+                action do 
+                    internOUT!closeOK()
+                end
+                
+            }
+                        
+            
+        }
+                        
+	
+	}
+
+}
+
+
+/*configuration testFSC {
+    instance fsc_gui : FSC_GUI    
+    instance fsc : FSC  
+    instance bcms : bCMS_Mock
+    
+    connector fsc_gui.out => fsc.feedback
+    connector fsc.control => fsc_gui.control
+    connector fsc.out => bcms.fromFSC
+    connector fsc.internOUT => fsc.internIN
+    connector bcms.toFSC => fsc.in
+}*/
+
+//////////////////////FSC END//////////////////////
+
+
+configuration bCMS {
+    instance fsc_gui : FSC_GUI    
+    instance fsc : FSC  
+    instance psc_gui : PSC_GUI    
+    instance psc : PSC  
+    
+    connector fsc_gui.out => fsc.feedback
+    connector fsc.control => fsc_gui.control
+    connector fsc.internOUT => fsc.internIN
+    
+    connector psc_gui.out => psc.feedback
+    connector psc.control => psc_gui.control
+    connector psc.internOUT => psc.internIN
+    
+    connector fsc.out => psc.in
+    connector psc.out => fsc.in
+}
