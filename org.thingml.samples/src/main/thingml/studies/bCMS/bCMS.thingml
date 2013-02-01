@@ -118,11 +118,11 @@ thing fragment GUIbCMS_Controller includes GUIbCMSMsgs {
     message doneOK();
     message closeOK();
     
-    provided port internIN @internal "true" {
+    provided port internIN @internal "channel1" {
         receives initComOK, crisisDetailsOK, numberOfTrucksOK, dispatchedOK, arrivedOK, doneOK, closeOK
     }    
     
-    required port internOUT @internal "true" {
+    required port internOUT @internal "channel1" {
         sends initComOK, crisisDetailsOK, numberOfTrucksOK, dispatchedOK, arrivedOK, doneOK, closeOK
     } 
     

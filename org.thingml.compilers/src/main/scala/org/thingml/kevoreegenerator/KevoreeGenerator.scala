@@ -16,6 +16,7 @@
 /**
  * This code generator targets the Kevoree Framework
  * @author: Runze HAO <haoshaochi@gmail.com>
+ * @author: Brice MORIN <brice.morin@sintef.no>
  */
 package org.thingml.kevoreegenerator
 
@@ -219,6 +220,7 @@ object KevoreeGenerator {
       builder append "import org.kevoree.annotation.*;\n"
       builder append "import org.kevoree.framework.AbstractComponentType;\n"
       builder append "import org.sintef.smac.Event;\n"
+      builder append "import org.sintef.smac.SignedEvent;\n"
     }
     else{
       builder append "import scala.collection.immutable.$colon$colon;\n"
@@ -257,12 +259,12 @@ case class ThingKevoreeGenerator(val self: Thing){
         
     }
     
-    self.allPorts.foreach{case p =>
+    self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal" && a.getValue == "true"}.isDefined)}.foreach{case p =>
         if(p.getSends.size>0 || p.getReceives.size>0){
           builder append "Port " + "port_" + Context.firstToUpper(self.getName) + "_" + p.getName + "_wrapper = null;\n"
         }
     }
-    self.allPorts.foreach{case p =>
+    self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal" && a.getValue == "true"}.isDefined)}.foreach{case p =>
         if(p.getSends.size>0 || p.getReceives.size>0){
           builder append "public Port get"+Context.firstToUpper(self.getName)+"_"+p.getName+"(){\n"
           builder append "return port_" + Context.firstToUpper(self.getName) + "_" + p.getName + "_wrapper;\n"
@@ -276,7 +278,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     generateParameters(builder)
     builder append ");\n"
     
-    self.allPorts.foreach{case p=>
+    self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal" && a.getValue == "true"}.isDefined)}.foreach{case p=>
         builder append "scala.collection.immutable.List<String> "+p.getName+"_sent = scala.collection.immutable.List$.MODULE$.empty();\n"
         builder append "scala.collection.immutable.List<String> "+p.getName+"_rcv = scala.collection.immutable.List$.MODULE$.empty();\n"
         if(p.getSends.size>0){
@@ -292,7 +294,7 @@ case class ThingKevoreeGenerator(val self: Thing){
         builder append "port_" + Context.firstToUpper(self.getName) + "_" + p.getName+"_wrapper = (Port) new Port(\"" + p.getName + "\", "+p.getName+"_sent, "+p.getName+"_rcv, this).start();\n"
      
     }
-    self.allPorts.foreach{case p=>
+    self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.foreach{case p=>
         if(p.getSends.size>0 || p.getReceives.size>0){
           builder append "Channel c_" + p.getName + "_sent_" + p.hashCode + " = new Channel();\n"
           builder append "c_" + p.getName + "_sent_" + p.hashCode + ".connect(" + " thingML_"+self.getName+"_Component.getPort(\""+p.getName+"\").get(),"+"port_" + Context.firstToUpper(self.getName) + "_" + p.getName+"_wrapper);\n"
@@ -300,13 +302,25 @@ case class ThingKevoreeGenerator(val self: Thing){
           builder append "c_" + p.getName + "_sent_" + p.hashCode+".start();\n"
         }
     }
+    
+    //Note: we assume only 2 ports are connected to a given internal channel...
+    builder append "//Connecting internal channels (not exposed to Kevoree)\n"
+    self.allPorts.filter{p => p.getAnnotations.find{a => a.getName == "internal"}.isDefined}.groupBy{p => p.getAnnotations.find{a => a.getName == "internal"}.get.getValue}.foreach{pair => 
+      var i = 0
+      builder append "Channel i_" + i + " = new Channel();\n"
+      builder append "i_" + i + ".connect(thingML_" + self.getName + "_Component.getPort(\"" + pair._2.head.getName  +"\").get(), thingML_" + self.getName + "_Component.getPort(\"" + pair._2.tail.head.getName + "\").get());\n"       
+      builder append "i_" + i + ".connect(thingML_" + self.getName + "_Component.getPort(\"" + pair._2.tail.head.getName + "\").get(), thingML_" + self.getName + "_Component.getPort(\"" + pair._2.head.getName + "\").get());\n"      
+      builder append "i_" + i + ".start();\n"       
+      i = i + 1
+    }
+    
     builder append "thingML_"+self.getName+"_Component.start();\n"
     builder append "}\n"
     builder append "public "+ component_name +" getInstance(){\n"
     builder append "return "+" thingML_"+self.getName+"_Component;\n}\n\n"
     builder append "@Override\n"
     builder append "public void onIncomingMessage(SignedEvent e) {\n"
-    builder append "kevoreeComponent.onIncomingMessage(e.event());\n"
+    builder append "kevoreeComponent.onIncomingMessage(e);\n"
   
     builder append "}\n"
     builder append "}\n"
@@ -314,8 +328,8 @@ case class ThingKevoreeGenerator(val self: Thing){
   def generateKevoree(builder: StringBuilder = Context.builder) {
     println(self.getName)
     Context.thing = self
-    val providedPortSize = self.allPorts.filter{p => p.getReceives.size>0}.size
-    val requiredPortSize = self.allPorts.filter{p => p.getSends.size>0}.size
+    val providedPortSize = self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getReceives.size>0}.size
+    val requiredPortSize = self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getSends.size>0}.size
     /*self.allPorts.collect{case p=> 
      if(p.getReceives.size>0) providedPortSize+=1
      }
@@ -324,12 +338,12 @@ case class ThingKevoreeGenerator(val self: Thing){
      }*/
     if(providedPortSize>0){
       builder append "@Provides({\n"
-      builder append self.allPorts.filter{p => p.getReceives.size>0}.collect{case p=> "@ProvidedPort(name = \"" + p.getName + "_rcv\", type = PortType.MESSAGE)"}.mkString(",\n")
+      builder append self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getReceives.size>0}.collect{case p=> "@ProvidedPort(name = \"" + p.getName + "_rcv\", type = PortType.MESSAGE)"}.mkString(",\n")
       builder append "\n})\n"
     }
     if(requiredPortSize>0){
       builder append "@Requires({\n"
-      builder append self.allPorts.filter{p => p.getSends.size>0}.collect{case p=> "@RequiredPort(name = \"" + p.getName + "_Transfer\", type = PortType.MESSAGE)"}.mkString(",\n")
+      builder append self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getSends.size>0}.collect{case p=> "@RequiredPort(name = \"" + p.getName + "_Transfer\", type = PortType.MESSAGE)"}.mkString(",\n")
       builder append "\n})\n"
     }
     generateDictionary();
@@ -361,12 +375,14 @@ case class ThingKevoreeGenerator(val self: Thing){
     builder append "}\n\n"
     
 //generate incoming messages
-    builder append "public void onIncomingMessage(Event e) {\n"
-    self.allOutgoingMessages.foreach{case m=>
-        builder append "if (e instanceof "+Context.pack +"."+Context.firstToUpper(m.getName)+") {\n"
-        builder append "System.out.println(\"[[Kevoree_"+self.getName+"]]: "+Context.firstToUpper(m.getName)+" message comes!\");\n"
-        builder append "this.getPortByName(\""+getPortNameWrapper(m)+"_Transfer\",MessagePort.class).process(e);\n"
-        builder append "}\n"
+    builder append "public void onIncomingMessage(SignedEvent e) {\n"
+    self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.collect{case p => (p, p.getSends)}.foreach{case (p, msg) =>
+        msg.foreach{m => 
+          builder append "if (e.event() instanceof "+Context.pack +"."+Context.firstToUpper(m.getName)+") {\n"
+          builder append "System.out.println(\"[[Kevoree_"+self.getName+"]]: "+Context.firstToUpper(m.getName)+" ==> \" + e.port().name());\n"
+          builder append "this.getPortByName(e.port().name() + \"_Transfer\",MessagePort.class).process(e.event());\n"
+          builder append "}\n"
+        }
     }
     builder append "}\n"
     //generate port to receive messages
@@ -376,25 +392,33 @@ case class ThingKevoreeGenerator(val self: Thing){
   }
 
   def generatePortDef(builder: StringBuilder = Context.builder) {
-    var portsSize = 0;
-    self.allPorts.collect{case p=>
+    /*var portsSize = 0;
+    self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.collect{case p=>
         if(p.getReceives.size>0) portsSize+=1
     }
-    if(portsSize>0){
-      builder append "@Ports({\n"
-      builder append self.allPorts.filter{p => p.getReceives.size>0}.collect{case p=> "@Port(name = \"" + p.getName + "_rcv\")"}.mkString(",\n")
-      builder append "\n})\n"
-      builder append "public void tranferMessages(Object o) {\n"
-      self.allIncomingMessages.foreach{case m=>
-          builder append "if (o instanceof "+Context.pack +"."+Context.firstToUpper(m.getName)+") {\n"
-          builder append Context.pack +"."+Context.firstToUpper(m.getName)+" rcv_"+Context.firstToUpper(m.getName)+" = ("+Context.pack +"."+Context.firstToUpper(m.getName)+") o;\n"
-          getPortName(m)
-          builder append "wrapper.get"+Context.firstToUpper(self.getName)+"_"+Context.port_name+"().send(rcv_"+Context.firstToUpper(m.getName)+");\n"
-          builder append "System.out.println(\"[[Kevoree_"+self.getName+"]]: "+Context.firstToUpper(m.getName)+"(\"+rcv_"+Context.firstToUpper(m.getName)+".toString()+\") message Transferred!\");\n"
-          builder append "}\n"
+    if(portsSize>0){*/
+            
+      self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.collect{case p => (p, p.getReceives)}.foreach{case (p, msg) =>
+          if (msg.size > 0) {
+            builder append "@Ports({\n@Port(name = \"" + p.getName + "_rcv\")\n})\n"
+            builder append "public void transferMessagesVia" + p.getName + "(Object o) {\n"
+            var i = 0
+            msg.foreach{m => 
+              if (i > 0)
+                builder append "else "
+              builder append "if (o instanceof "+Context.pack +"."+Context.firstToUpper(m.getName)+") {\n"
+              builder append Context.pack +"."+Context.firstToUpper(m.getName)+" rcv_"+Context.firstToUpper(m.getName)+" = ("+Context.pack +"."+Context.firstToUpper(m.getName)+") o;\n"
+              //getPortName(m)
+              builder append "wrapper.get"+Context.firstToUpper(self.getName)+"_" + p.getName + "().send(rcv_"+Context.firstToUpper(m.getName)+");\n"
+              builder append "System.out.println(\"[[Kevoree_"+self.getName+"]]: " + Context.firstToUpper(m.getName) + "(\"+rcv_"+Context.firstToUpper(m.getName)+".toString()+\") message Transferred!\");\n"
+              builder append "}\n"
+              i = i + 1
+            }
+            builder append "}\n"
+          }
       }
-      builder append "}\n"
-    }
+      
+    //}
   }
   
   def generateParameters(builder: StringBuilder = Context.builder) {    
@@ -406,14 +430,14 @@ case class ThingKevoreeGenerator(val self: Thing){
   
   def initParameter(p : Property):String = {
     p.getType.java_type() match{
-    case "Byte" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0x00"
-    case "Boolean" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : false"
-    case "Short" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0"
-    case "Integer" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0"
-    case "Float" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0.0f"
-    case "String" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : \"\""
-    case _ => "new " + p.getType.java_type() + "()"
-  }
+      case "Byte" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0x00"
+      case "Boolean" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : false"
+      case "Short" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0"
+      case "Integer" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0"
+      case "Float" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : 0.0f"
+      case "String" => "this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\") != null ? new " + p.getType.java_type() + "((String) this.kevoreeComponent.getDictionary().get(\"" + p.getName + "\")) : \"\""
+      case _ => "new " + p.getType.java_type() + "()"
+    }
   }
   
   def generateDictionary(builder: StringBuilder = Context.builder){
@@ -427,23 +451,5 @@ case class ThingKevoreeGenerator(val self: Thing){
       }.mkString(",\n")
       builder append "\n})\n"
     }
-  }
-  
-  def getPortName(m:Message){
-    self.allPorts.foreach{p=>
-      if(p.getReceives.contains(m)){
-        Context.port_name = p.getName
-      }
-    }
-  }
-  
-  def getPortNameWrapper(m:Message):String = {
-    var name =""
-    self.allPorts.foreach{p=>
-      if(p.getSends.contains(m)){
-        name = p.getName
-      }
-    }
-    (name)
   }
 }
