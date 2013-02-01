@@ -280,15 +280,11 @@ case class ThingKevoreeGenerator(val self: Thing){
         builder append "scala.collection.immutable.List<String> "+p.getName+"_sent = scala.collection.immutable.List$.MODULE$.empty();\n"
         builder append "scala.collection.immutable.List<String> "+p.getName+"_rcv = scala.collection.immutable.List$.MODULE$.empty();\n"
         if(p.getSends.size>0){
-          //builder append p.getName+"_sent = scala.collection.immutable.List$.MODULE$.empty();\n"
-          // builder append p.getName+"_sent = scala.collection.immutable.List$.MODULE$.empty();\n"
           p.getSends.foreach{case s=>
               builder append p.getName+"_sent = new $colon$colon(\"" + s.getName + "\", "+p.getName+"_sent);\n"
-              //builder append p.getName+"_sent = new $colon$colon("result", "+p.getName+"_sent);\n"
           }
         }
         if(p.getReceives.size>0){    
-          // builder append p.getName+"_rcv = scala.collection.immutable.List$.MODULE$.empty();\n"
           p.getReceives.foreach{case s=>
               builder append p.getName+"_rcv = new $colon$colon(\"" + s.getName + "\", "+p.getName+"_rcv);\n" 
           }
@@ -353,11 +349,10 @@ case class ThingKevoreeGenerator(val self: Thing){
     builder append "@Update\n"
     builder append "public void updateComponent() {System.out.println(\""+Context.file_name+" component update!\");\n"
     builder append "try {\n"
-    self.allPropertiesInDepth.foreach{case p=>
+    self.allProperties/*InDepth*/.foreach{case p=>
         if(p.isChangeable){
           builder append p.getType.java_type()+" "+Context.protectJavaKeyword(p.getName)+" = new "+p.getType.java_type()+"((String)this.getDictionary().get(\""+p.getName+"\"));\n"
           builder append "wrapper.getInstance()."+p.scala_var_name+"_$eq("+Context.protectJavaKeyword(p.getName)+");\n"
-          //builder append  "System.out.println("after: singleRoomNumber = " + wrapper.getInstance().Server_aSingleRoomNumber_var());"
         }
     }
     builder append "} catch (NullPointerException npe) {\n"
@@ -425,7 +420,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     if(self.allPropertiesInDepth.size>0)
     {
       builder append "@DictionaryType({\n"   
-      builder append self.allPropertiesInDepth.collect{case p=>
+      builder append self.allProperties/*InDepth*/.collect{case p=>
           val valueBuilder = new StringBuilder()
           p.getInit().generateScala(valueBuilder)          
           "@DictionaryAttribute(name = \""+p.getName+"\"" + (if (valueBuilder.toString == "") "" else { ", defaultValue = \"" + valueBuilder.toString + "\""}) + ", optional = "+p.isChangeable+")"
