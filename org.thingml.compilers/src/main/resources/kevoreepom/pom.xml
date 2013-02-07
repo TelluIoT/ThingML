@@ -19,7 +19,7 @@
         <thingml.version>0.6.0-SNAPSHOT</thingml.version>
         <smac.version>0.6.0-SNAPSHOT</smac.version>
         <bundle.vendor>SINTEF</bundle.vendor>
-        <kevoree.version>1.8.9</kevoree.version><!--TODO-->
+        <kevoree.version>1.9.0</kevoree.version><!--TODO-->
         <kevoree.include>*:*</kevoree.include>
     </properties>
 
