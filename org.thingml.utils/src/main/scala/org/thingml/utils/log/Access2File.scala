@@ -19,7 +19,7 @@
  */
 
 package org.thingml.utils.log
-
+/*
 import java.io._
 import net.sourceforge.plantuml.SourceStringReader
 import org.thingml.utils.ImageDrawingApplet
@@ -50,3 +50,4 @@ trait Access2File {
     return (os.indexOf( "win" ) >= 0);
   }
 }
+*/
