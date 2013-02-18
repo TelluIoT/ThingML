@@ -291,7 +291,7 @@ object ScalaGenerator {
       Context.builder append "object " + Context.firstToUpper(m.getName) + "{ def getName = \"" + m.getName + "\" }\n" 
       Context.builder append "case class " 
       messageDeclaration(m)
-      Context.builder append " extends Event(name) with java.io.Serializable\n"
+      Context.builder append " extends Event(name)/* with java.io.Serializable*/\n"
     }
   
     t.generateScala()
