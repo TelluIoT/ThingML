@@ -588,13 +588,23 @@ object CGenerator {
          liblist = m.trim :: liblist
       )
     }
+    
+    var preProclist = List[String]()
+
+    if (cfg.getAnnotations.filter(a=> a.getName == "add_c_directives").size>0) {
+      cfg.getAnnotations.filter(a=> a.getName == "add_c_directives").head.getValue.trim.split(" ").foreach(m =>
+         preProclist = m.trim :: preProclist
+      )
+    }
 
     val srcs = list.map{ t => t + ".c" }.mkString(" ")
     val objs = list.map{ t => t + ".o" }.mkString(" ")
     val libs =  liblist.map{ t => "-l" + t }.mkString(" ")
+    val preproc =  preProclist.map{ t => "-D" + t }.mkString(" ")
     mtemplate = mtemplate.replace("/*SOURCES*/", srcs)
     mtemplate = mtemplate.replace("/*OBJECTS*/", objs)
     mtemplate = mtemplate.replace("/*LIBS*/", libs)
+    mtemplate = mtemplate.replace("/*PREPROC_DIRECTIVES*/", preproc)
     result.put("Makefile", mtemplate)
 
     MergedConfigurationCache.clearCache(); // Cleanup

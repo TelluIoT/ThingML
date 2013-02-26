@@ -7,7 +7,7 @@ OBJS = /*OBJECTS*/ runtime.o
 all : /*NAME*/
 
 .c.o :
-	${CC} ${CFLAGS} -c $<
+	${CC} ${CFLAGS} -c $< /*PREPROC_DIRECTIVES*/
 
 /*NAME*/ : $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LIBS) -lm
