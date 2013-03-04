@@ -1,56 +1,6 @@
+import "../blink2leds.thingml"
 import "../../hardware/bricks/_scala/led.thingml"
 import "../../core/_scala/timer.thingml"
-
-thing Blink2Leds includes LedMsgs, TimerMsgs
-{
-
-    readonly property periods : Integer[2]    
-
-	required port timer1
-	{
-            sends timer_start
-            receives timer_timeout
-	}
-	
-	required port timer2
-	{
-		sends timer_start
-            receives timer_timeout
-	}
-	
-	required port led1
-	{
-		sends led_toggle
-	}
-	
-	required port led2
-	{
-		sends led_toggle
-	}
-
-    statechart Blink2LedsImpl init Blinking {
-        
-        state Blinking {
-            
-            on entry do 
-             	timer1!timer_start(periods[0])
-            	timer2!timer_start(periods[1])
-            end
-            
-            internal Blink1 event timer1?timer_timeout
-            action do
-            	led1!led_toggle()
-            	timer1!timer_start(periods[0])
-            end
-            
-            internal Blink2 event timer2?timer_timeout
-            action do
-            	led2!led_toggle()
-            	timer2!timer_start(periods[1])
-            end
-        }
-    }
-}
 
 configuration ScalaBlink2LedsSimulator {       
 
@@ -62,8 +12,8 @@ configuration ScalaBlink2LedsSimulator {
 	
 	// The blink application
 	instance app : Blink2Leds
-        set app.periods[0] = 1000
-        set app.periods[1] = 333
+       /* set app.periods[0] = 1000
+        set app.periods[1] = 333*/
 	connector app.led1 => led1.Led
 	connector app.timer1 => timer1.timer
 	connector app.led2 => led2.Led

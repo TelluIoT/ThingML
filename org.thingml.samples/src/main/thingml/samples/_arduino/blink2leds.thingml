@@ -5,9 +5,9 @@ import "../../core/_arduino/timer.thingml"
 configuration Blink2Leds 
 {       
 	group led1 : LedArduino
-		set led1.io.digital_output.pin = DigitalPin:PIN_8
+		set led1.io.digital_output.pin = DigitalPin:PIN_9
 	group led2 : LedArduino
-		set led2.io.digital_output.pin = DigitalPin:PIN_13
+		set led2.io.digital_output.pin = DigitalPin:PIN_10
 		
 	instance timer1 : TimerArduino
 	instance timer2 : TimerArduino
