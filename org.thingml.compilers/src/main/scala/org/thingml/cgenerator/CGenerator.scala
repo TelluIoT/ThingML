@@ -1047,7 +1047,7 @@ class LinuxCGeneratorContext ( src: Configuration ) extends CGeneratorContext ( 
   override def pointerSize() = { 8 }
 
   // Default size of the fifo (in bytes)
-  override def fifoSize() = { 4096 }
+  override def fifoSize() = { 32768 }
 
   override def sync_fifo() = true;
 
