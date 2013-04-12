@@ -17,6 +17,8 @@
 #include "ros/ros.h"
 /*INCLUDES*/
 
+/*C_HEADERS*/
+
 /*ROS_HEADERS*/
 
 /*CONFIGURATION*/
@@ -26,6 +28,8 @@
 void initialize_ROS_connectors() {
 /*ROS_CONNECTORS*/
 }
+
+/*C_GLOBALS*/
 
 int main(int argc, char *argv[]) {
   init_runtime();

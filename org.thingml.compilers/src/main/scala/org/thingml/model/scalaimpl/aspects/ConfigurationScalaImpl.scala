@@ -370,4 +370,11 @@ case class ConfigurationScalaImpl (self : Configuration) {
     result
   }
 
+  def annotation(name : String): String = {
+    self.getAnnotations().filter { a => a.getName == name }.headOption match {
+      case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
+      case None => return null;
+    }
+  }
+
 }

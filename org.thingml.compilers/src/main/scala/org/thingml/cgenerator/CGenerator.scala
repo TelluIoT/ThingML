@@ -549,6 +549,13 @@ object CGenerator {
     var ctemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_main.c")
     ctemplate = ctemplate.replace("/*NAME*/", cfg.getName)
     var builder = new StringBuilder()
+
+     val c_global = cfg.annotation("c_global")
+      if (c_global != null) ctemplate = ctemplate.replace("/*C_GLOBALS*/", c_global)
+
+      val c_header = cfg.annotation("c_header")
+      if (c_header != null) ctemplate = ctemplate.replace("/*C_HEADERS*/", c_header)
+
     cfg.generateIncludes(builder, context)
     ctemplate = ctemplate.replace("/*INCLUDES*/", builder.toString)
     builder = new StringBuilder()
@@ -792,6 +799,13 @@ object CGenerator {
       cfg.generateInitializationCode(initb, context)
       var pollb = new StringBuilder()
       cfg.generatePollingCode(pollb)
+
+      val c_global = cfg.annotation("c_global")
+      if (c_global != null) ctemplate = ctemplate.replace("/*C_GLOBALS*/", c_global)
+
+      val c_header = cfg.annotation("c_header")
+      if (c_header != null) ctemplate = ctemplate.replace("/*C_HEADERS*/", c_header)
+
       ctemplate = ctemplate.replace("/*INIT_CODE*/", initb.toString)
       ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString)
       ctemplate = ctemplate.replace("/*ROS_HEADERS*/", ros_head_builder.toString)

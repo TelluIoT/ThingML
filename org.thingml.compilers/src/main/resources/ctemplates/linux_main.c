@@ -16,7 +16,11 @@
 #include "runtime.h"
 /*INCLUDES*/
 
+/*C_HEADERS*/
+
 /*CONFIGURATION*/
+
+/*C_GLOBALS*/
 
 int main(int argc, char *argv[]) {
   init_runtime();
