@@ -36,8 +36,8 @@ int main(int argc, char *argv[]) {
   init_runtime();
   /*C_MAIN*/
   initialize_ROS_connectors();
-  /*INIT_CODE*/
   /*ROS_INIT*/
+  /*INIT_CODE*/
   while (ros::ok()) {
     /*POLL_CODE*/
     processMessageQueue();
