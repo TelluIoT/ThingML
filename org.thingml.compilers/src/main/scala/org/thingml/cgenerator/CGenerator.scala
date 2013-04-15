@@ -550,11 +550,17 @@ object CGenerator {
     ctemplate = ctemplate.replace("/*NAME*/", cfg.getName)
     var builder = new StringBuilder()
 
-     val c_global = cfg.annotation("c_global")
-      if (c_global != null) ctemplate = ctemplate.replace("/*C_GLOBALS*/", c_global)
+    var c_global = cfg.annotation("c_global")
+    if (c_global == null) c_global = "// NO C_GLOBALS Annotation"
+    ctemplate = ctemplate.replace("/*C_GLOBALS*/", c_global)
 
-      val c_header = cfg.annotation("c_header")
-      if (c_header != null) ctemplate = ctemplate.replace("/*C_HEADERS*/", c_header)
+    var c_header = cfg.annotation("c_header")
+    if (c_header == null) c_header = "// NO C_HEADERS Annotation"
+    ctemplate = ctemplate.replace("/*C_HEADERS*/", c_header)
+
+    var c_main = cfg.annotation("c_main")
+    if (c_main == null) c_main = "// NO C_MAIN Annotation"
+    ctemplate = ctemplate.replace("/*C_MAIN*/", c_main)
 
     cfg.generateIncludes(builder, context)
     ctemplate = ctemplate.replace("/*INCLUDES*/", builder.toString)
@@ -800,11 +806,17 @@ object CGenerator {
       var pollb = new StringBuilder()
       cfg.generatePollingCode(pollb)
 
-      val c_global = cfg.annotation("c_global")
-      if (c_global != null) ctemplate = ctemplate.replace("/*C_GLOBALS*/", c_global)
+      var c_global = cfg.annotation("c_global")
+      if (c_global == null) c_global = "// NO C_GLOBALS Annotation"
+      ctemplate = ctemplate.replace("/*C_GLOBALS*/", c_global)
 
-      val c_header = cfg.annotation("c_header")
-      if (c_header != null) ctemplate = ctemplate.replace("/*C_HEADERS*/", c_header)
+      var c_header = cfg.annotation("c_header")
+      if (c_header == null) c_header = "// NO C_HEADERS Annotation"
+      ctemplate = ctemplate.replace("/*C_HEADERS*/", c_header)
+
+      var c_main = cfg.annotation("c_main")
+      if (c_main == null) c_main = "// NO C_MAIN Annotation"
+      ctemplate = ctemplate.replace("/*C_MAIN*/", c_main)
 
       ctemplate = ctemplate.replace("/*INIT_CODE*/", initb.toString)
       ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString)

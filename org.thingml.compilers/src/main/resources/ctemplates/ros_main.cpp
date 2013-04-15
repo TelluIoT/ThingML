@@ -17,6 +17,7 @@
 #include "ros/ros.h"
 /*INCLUDES*/
 
+// From annotation C_HEADERS:
 /*C_HEADERS*/
 
 /*ROS_HEADERS*/
@@ -33,10 +34,10 @@ void initialize_ROS_connectors() {
 
 int main(int argc, char *argv[]) {
   init_runtime();
+  /*C_MAIN*/
   initialize_ROS_connectors();
   /*INIT_CODE*/
   /*ROS_INIT*/
-
   while (ros::ok()) {
     /*POLL_CODE*/
     processMessageQueue();
