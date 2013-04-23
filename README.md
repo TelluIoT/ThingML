@@ -4,4 +4,5 @@ It is distributed under the LGPL licence.
 
 Visit http://www.thingml.org to find out more about ThingML !
 
-Build status: ![Build status](http://build.thingml.org/job/Build%20ThingML%20Components/lastBuild/buildStatus)
+## Build status
+![Build status](http://build.thingml.org/job/Build%20ThingML%20Components/lastBuild/buildStatus)
