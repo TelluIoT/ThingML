@@ -492,12 +492,12 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
       builder append "def getName = \"" + p.getName + "\"\n"
       builder append "object in {\n" 
       p.getReceives.foreach{r =>
-        builder append "val " + r.getName + " = " + Context.firstToUpper(r.getName) + ".getName\n"
+        builder append "val " + r.getName + "_i = " + Context.firstToUpper(r.getName) + ".getName\n"
       }
       builder append "}\n"
       builder append "object out {\n" 
       p.getSends.foreach{s =>
-        builder append "val " + s.getName + " = " + Context.firstToUpper(s.getName) + ".getName\n"
+        builder append "val " + s.getName + "_o = " + Context.firstToUpper(s.getName) + ".getName\n"
       }
       builder append "}\n"
       builder append "}\n\n"
@@ -531,7 +531,7 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
 
   def generatePortDef(builder: StringBuilder = Context.builder) {
     self.allPorts.foreach{ p => 
-      builder append "new Port(" + Context.firstToUpper(self.getName) + "." + p.getName + "Port.getName, List(" + p.getReceives.collect{case r => Context.firstToUpper(self.getName) + "." + p.getName + "Port.in." + r.getName}.mkString(", ").toString + "), List(" + p.getSends.collect{case s => Context.firstToUpper(self.getName) + "." + p.getName + "Port.out." + s.getName}.mkString(", ").toString + "), this).start\n"
+      builder append "new Port(" + Context.firstToUpper(self.getName) + "." + p.getName + "Port.getName, List(" + p.getReceives.collect{case r => Context.firstToUpper(self.getName) + "." + p.getName + "Port.in." + r.getName + "_i"}.mkString(", ").toString + "), List(" + p.getSends.collect{case s => Context.firstToUpper(self.getName) + "." + p.getName + "Port.out." + s.getName + "_o"}.mkString(", ").toString + "), this).start\n"
     }
   }
   
@@ -585,7 +585,7 @@ case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScal
     var tempbuilder = new StringBuilder()
     tempbuilder append "List("
     tempbuilder append self.allTriggeringPorts.collect{case pair =>
-        "(" + Context.thing.getName + "." + pair._1.getName + "Port.getName, " + Context.thing.getName + "." + pair._1.getName + "Port.in." + pair._2.getMessage.getName + ")"
+        "(" + Context.thing.getName + "." + pair._1.getName + "Port.getName, " + Context.thing.getName + "." + pair._1.getName + "Port.in." + pair._2.getMessage.getName + "_i)"
     }.mkString(", ")
     tempbuilder append ")"
     return tempbuilder.toString
@@ -1241,7 +1241,7 @@ case class EventReferenceScalaGenerator(override val self: EventReference) exten
     //TODO: this could cause a null pointer if trying to get an event that does not exists... but this should be checked in the model ;-)
     //if not, it would be possible to generate a match Some/None to properly handle this...
     builder append "getEvent(" 
-    builder append Context.firstToUpper(Context.thing.getName) + "." + self.getMsgRef.getPort.getName + "Port.in." + self.getMsgRef.getMessage.getName + ", " + Context.thing.getName + "." + self.getMsgRef.getPort.getName + "Port.getName).get.asInstanceOf[" + Context.firstToUpper(self.getMsgRef.getMessage.getName) + "]." + Context.protectScalaKeyword(self.getParamRef.getName)
+    builder append Context.firstToUpper(Context.thing.getName) + "." + self.getMsgRef.getPort.getName + "Port.in." + self.getMsgRef.getMessage.getName + "_i, " + Context.thing.getName + "." + self.getMsgRef.getPort.getName + "Port.getName).get.asInstanceOf[" + Context.firstToUpper(self.getMsgRef.getMessage.getName) + "]." + Context.protectScalaKeyword(self.getParamRef.getName)
   }
 }
 
