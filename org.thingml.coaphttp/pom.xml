@@ -42,12 +42,6 @@
   
     <repositories>
         <repository>
-            <id>SensApp</id>
-            <name>snapshots</name>
-            <url>https://repository-sintef.forge.cloudbees.com/snapshot/</url>
-        </repository>
-        
-        <repository>
   	  <id>spray</id>
   	  <name>Spray Repository</name>
       <url>http://repo.spray.cc/</url>
@@ -82,7 +76,7 @@
         <dependency>
             <groupId>net.modelbased.sensapp.library</groupId>
             <artifactId>net.modelbased.sensapp.library.senml</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.1</version>
         </dependency>    
 
     </dependencies>
