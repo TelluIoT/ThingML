@@ -89,6 +89,8 @@ object Context {
     builder append "import java.awt.event.ActionListener;\n"
     builder append "import java.util.Arrays;\n"
     builder append "import java.util.Date;\n"
+    builder append "import java.util.HashMap;\n"
+    builder append "import java.util.Map;\n"
 
     builder append "import javax.swing.JButton;\n"
     builder append "import javax.swing.JComboBox;\n"
@@ -227,8 +229,36 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
   }
 
   override def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
+    
+    var messagesToSend = Map[Port, List[Message]]()
+    if (!isMirror) 
+      self.allPorts.foreach{p => messagesToSend += (p -> p.getSends.toList)} 
+    else 
+      self.allPorts.foreach{p => messagesToSend +=(p -> p.getReceives.toList)}
+    
+    var messagesToReceive = Map[Port, List[Message]]()
+    if (!isMirror) 
+      self.allPorts.foreach{p => messagesToReceive += (p -> p.getReceives.toList)} 
+    else 
+      self.allPorts.foreach{p => messagesToReceive += (p -> p.getSends.toList)}
      
     builder append "public class " + Context.firstToUpper(self.getName) + "Mock" + (if (isMirror) "Mirror" else "") + " extends ReactiveComponent implements ActionListener {\n\n"
+    
+    	
+    messagesToSend.foreach{case (port, messages) =>
+        messages.foreach{send =>          
+          send.getParameters.foreach{ p => 
+            if (p.getType.isInstanceOf[Enumeration]) {
+              builder append "private static final Map<String, " + p.getType.scala_type + "> values_" + p.getType.getName + " = new HashMap<String, " + p.getType.scala_type + ">();\n"
+              builder append "static {\n"
+              p.getType.asInstanceOf[Enumeration].getLiterals.foreach{l =>
+                builder append "values_" + p.getType.getName + ".put(\"" + p.getType.getName + "_ENUM" + "." + p.getType.getName.toUpperCase + "_" + l.getName.toUpperCase + "\", " + p.getType.getName + "_ENUM" + "." + p.getType.getName.toUpperCase + "_" + l.getName.toUpperCase() + "()" + ");\n"
+              }
+              builder append "}\n\n"
+            }
+          }
+        }
+    }
     
     builder append "@Override\n"
     builder append "public void onIncomingMessage(SignedEvent e) {\n"   
@@ -245,17 +275,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append "}\n\n"
     
     //////////////////////////////////////////////////////////////////
-    var messagesToSend = Map[Port, List[Message]]()
-    if (!isMirror) 
-      self.allPorts.foreach{p => messagesToSend += (p -> p.getSends.toList)} 
-    else 
-      self.allPorts.foreach{p => messagesToSend +=(p -> p.getReceives.toList)}
-    
-    var messagesToReceive = Map[Port, List[Message]]()
-    if (!isMirror) 
-      self.allPorts.foreach{p => messagesToReceive += (p -> p.getReceives.toList)} 
-    else 
-      self.allPorts.foreach{p => messagesToReceive += (p -> p.getSends.toList)}
+
 	
     builder append "private SimpleDateFormat dateFormat = new SimpleDateFormat(\"dd MMM yyy 'at' HH:mm:ss.SSS\");"
     
@@ -448,30 +468,38 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     messagesToSend.foreach{case (port, messages) =>
         messages.foreach{msg =>
           builder append "else if ( ae.getSource() == getSend" + msg.getName + "_via_" + port.getName + "()) {\n"          
-          builder append "port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ".send(new " + Context.firstToUpper(msg.getName) + "("
-          builder append (msg.getParameters.collect{
-              case p if (p.getCardinality == null) => 
+          builder append "port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ".send("
+          builder append (msg.getParameters.collect{ case p =>
+              "new " + Context.firstToUpper(msg.getName) + "("  + (if (p.getCardinality == null) {
                 if (p.getType.isInstanceOf[Enumeration]) {
-                  "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
+                  "values_" + p.getType.getName + ".get(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
+                  //"new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
                 } else {
                   "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"
                 }
-                //TODO: this is a quick and dirty hack that only works with Byte[]. We need to refactor this code to make it work with any kind of Arrays
-              case p if (p.getCardinality != null) => "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText().getBytes()"
+              }
+              //TODO: this is a quick and dirty hack that only works with Byte[]. We need to refactor this code to make it work with any kind of Arrays
+              else {
+                "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText().getBytes()"
+              })
             }.toList ::: List(Context.firstToUpper(msg.getName) + "$.MODULE$.getName()")).mkString(", ")
           builder append "));\n"
           
           builder append "for(" + Context.firstToUpper(self.getName) + "Listener" + (if (isMirror) "Mirror" else "") + " l : listeners)\n"
           builder append "l.on" + Context.firstToUpper(msg.getName) + "_via_" + port.getName + "("
-          builder append (msg.getParameters.collect{//TODO: This code is duplicated from above...
-              case p if (p.getCardinality == null) => 
+          builder append (msg.getParameters.collect{ case p =>
+              (if (p.getCardinality == null) {
                 if (p.getType.isInstanceOf[Enumeration]) {
-                  "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
+                  "values_" + p.getType.getName + ".get(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
+                  //"new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
                 } else {
                   "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"
                 }
-                //TODO: this is a quick and dirty hack that only works with Byte[]. We need to refactor this code to make it work with any kind of Arrays
-              case p if (p.getCardinality != null) => "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText().getBytes()"
+              }
+              //TODO: this is a quick and dirty hack that only works with Byte[]. We need to refactor this code to make it work with any kind of Arrays
+              else {
+                "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText().getBytes()"
+              })
             }.toList).mkString(", ")
           builder append ");\n"
           
@@ -553,9 +581,9 @@ case class MessageSwingGenerator(override val self: Message) extends ThingMLSwin
       
       
       if (p.getType.isInstanceOf[Enumeration]) {
-        builder append p.getType.scala_type + "[] values" + self.getName + Context.firstToUpper(p.getName) + " = {"
-        builder append p.getType.asInstanceOf[Enumeration].getLiterals.collect{case l => p.getType.getName + "_ENUM" + "." + p.getType.getName.toUpperCase + "_" + l.getName.toUpperCase() + "()"}.mkString(", ") + "};\n"
-        builder append "field" + self.getName + "_via_" + Context.port.getName + "_" +  Context.firstToUpper(p.getName) + " = new JComboBox(values" + self.getName + Context.firstToUpper(p.getName) + ");\n"	
+        //builder append p.getType.scala_type + "[] values" + self.getName + Context.firstToUpper(p.getName) + " = {"
+        //builder append p.getType.asInstanceOf[Enumeration].getLiterals.collect{case l => p.getType.getName + "_ENUM" + "." + p.getType.getName.toUpperCase + "_" + l.getName.toUpperCase() + "()"}.mkString(", ") + "};\n"
+        builder append "field" + self.getName + "_via_" + Context.port.getName + "_" +  Context.firstToUpper(p.getName) + " = new JComboBox(values_" + p.getType.getName + ".keySet().toArray());\n"	
       }
       else {		
         builder append "field" + self.getName + "_via_" + Context.port.getName + "_" + Context.firstToUpper(p.getName) + " = new JTextField();\n"
