@@ -252,7 +252,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
               builder append "private static final Map<String, " + p.getType.scala_type + "> values_" + p.getType.getName + " = new HashMap<String, " + p.getType.scala_type + ">();\n"
               builder append "static {\n"
               p.getType.asInstanceOf[Enumeration].getLiterals.foreach{l =>
-                builder append "values_" + p.getType.getName + ".put(\"" + p.getType.getName + "_ENUM" + "." + p.getType.getName.toUpperCase + "_" + l.getName.toUpperCase + "\", " + p.getType.getName + "_ENUM" + "." + p.getType.getName.toUpperCase + "_" + l.getName.toUpperCase() + "()" + ");\n"
+                builder append "values_" + p.getType.getName + ".put(\"" + l.getName.toUpperCase + "\", " + p.getType.getName + "_ENUM" + "." + p.getType.getName.toUpperCase + "_" + l.getName.toUpperCase() + "()" + ");\n"
               }
               builder append "}\n\n"
             }
