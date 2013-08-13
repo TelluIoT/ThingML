@@ -468,14 +468,14 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     messagesToSend.foreach{case (port, messages) =>
         messages.foreach{msg =>
           builder append "else if ( ae.getSource() == getSend" + msg.getName + "_via_" + port.getName + "()) {\n"          
-          builder append "port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ".send("
+          builder append "port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ".send(new " + Context.firstToUpper(msg.getName) + "(" 
           builder append (msg.getParameters.collect{ case p =>
-              "new " + Context.firstToUpper(msg.getName) + "("  + (if (p.getCardinality == null) {
+              (if (p.getCardinality == null) {
                 if (p.getType.isInstanceOf[Enumeration]) {
                   "values_" + p.getType.getName + ".get(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
                   //"new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
                 } else {
-                  "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"
+                   "new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"
                 }
               }
               //TODO: this is a quick and dirty hack that only works with Byte[]. We need to refactor this code to make it work with any kind of Arrays
