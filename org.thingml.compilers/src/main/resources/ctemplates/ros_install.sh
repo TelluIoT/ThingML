@@ -10,6 +10,7 @@
 
 # Name of the ROS package to create
 PACKAGE="<PACKAGE>"
+PACKAGESUBPATH="<PACKAGESUBPATH>"
 
 # Directory in which the code was generated
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -26,11 +27,11 @@ echo "---------------------------------------------------------"
 echo "[STEP 1]: Create ROS package $PACKAGE ..."
 echo "---------------------------------------------------------"
 
-cd $ROS_WORKSPACE
+cd $ROS_WORKSPACE/$PACKAGESUBPATH
 # Remove existing package if it exists
 rm -rf $PACKAGE
 roscreate-pkg $PACKAGE std_msgs rospy roscpp
-PACKAGEDIR=$ROS_WORKSPACE/$PACKAGE
+PACKAGEDIR=$ROS_WORKSPACE/$PACKAGESUBPATH/$PACKAGE
 
 echo ""
 echo "---------------------------------------------------------"

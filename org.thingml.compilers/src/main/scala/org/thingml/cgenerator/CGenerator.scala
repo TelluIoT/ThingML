@@ -654,6 +654,9 @@ object CGenerator {
         cfg.getAnnotations.filter{ a=> a.getName == "ros_package"}.head.getValue.trim
         else cfg.getName
 
+      val ros_package_subPath = if (cfg.getAnnotations.exists{ a=> a.getName == "ros_package_subpath"})
+        Some(cfg.getAnnotations.filter{ a=> a.getName == "ros_package_subpath"}.head.getValue.trim)
+        else None
 
       val context = new LinuxCGeneratorContext(cfg)
 
@@ -838,6 +841,12 @@ object CGenerator {
       // GENERATE AN INSTALL SCRIPT TO CREATE THE ROS NODE AND COMPILE IT
       var installtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/ros_install.sh")
       installtemplate = installtemplate.replaceAll("<PACKAGE>", ros_package)
+      ros_package_subPath match {
+        case Some(s) => installtemplate = installtemplate.replaceAll("<PACKAGESUBPATH>", s)
+        case None =>
+          installtemplate = installtemplate.replaceAll("PACKAGESUBPATH=\"<PACKAGESUBPATH>\"", "")
+          installtemplate = installtemplate.replaceAll("/$PACKAGESUBPATH", "")
+      }
       result.put("install.sh", installtemplate)
 
 
