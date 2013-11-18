@@ -416,7 +416,8 @@ object CGenerator {
     var out = createEmptyOutputDir(cfg)
     println("Compiling configuration "+ cfg.getName +" to C into target folder: " + out.getAbsolutePath)
 
-    compileToLinux(cfg, out.getAbsolutePath)
+
+      compileToLinux(cfg, out.getAbsolutePath)
 
     /*
      * GENERATE SOME DOCUMENTATION
@@ -578,6 +579,13 @@ object CGenerator {
     //GENERATE THE MAKEFILE
     var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/Makefile")
     mtemplate = mtemplate.replace("/*NAME*/", cfg.getName)
+
+    if (context.gpp) {
+      mtemplate = mtemplate.replace("/*CC*/", "g++")
+    }
+    else {
+      mtemplate = mtemplate.replace("/*CC*/", "cc")
+    }
 
     if (context.debug) {
       mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -DDEBUG")
@@ -962,6 +970,10 @@ class ROSMessage( pack : String, m: Message) {
 class CGeneratorContext( src: Configuration ) {
   // The configuration
   var cfg = src
+
+
+  //use g++ compiler?
+  val gpp = cfg.getAnnotations.exists{ a=> a.getName == "g++"}
 
   // pointer size in bytes of the target platform
   def pointerSize() = { 2 }
@@ -1960,13 +1972,17 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     }
 
     builder append "// Declaration of prototypes:\n"
-    builder append "#ifdef __cplusplus\n"
-    builder append "extern \"C\" {\n"
-    builder append "#endif\n"
+    if (!context.gpp) {
+      builder append "#ifdef __cplusplus\n"
+      builder append "extern \"C\" {\n"
+      builder append "#endif\n"
+    }
     generatePrivatePrototypes(builder, context)
-    builder append "#ifdef __cplusplus\n"
-    builder append "}\n"
-    builder append "#endif\n"
+    if (!context.gpp) {
+      builder append "#ifdef __cplusplus\n"
+      builder append "}\n"
+      builder append "#endif\n"
+    }
     builder append "\n"
 
     builder append "// Declaration of functions:\n"
