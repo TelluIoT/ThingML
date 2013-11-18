@@ -973,7 +973,7 @@ class CGeneratorContext( src: Configuration ) {
 
 
   //use g++ compiler?
-  val gpp = cfg.getAnnotations.exists{ a=> a.getName == "g++"}
+  val gpp = cfg.getAnnotations.exists{ a=> a.getName == "gpp"}
 
   // pointer size in bytes of the target platform
   def pointerSize() = { 2 }
