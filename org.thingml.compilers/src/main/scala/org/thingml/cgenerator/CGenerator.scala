@@ -507,6 +507,9 @@ object CGenerator {
        context.set_concrete_thing(thing)
       // GENERATE HEADER
       var htemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_thing_header.h")
+      if(context.gpp) {
+        htemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_thing_header_externC_less.h")
+      }
       builder = new StringBuilder()
       thing.generateCHeader(builder, context)
       htemplate = htemplate.replace("/*NAME*/", thing.getName)
@@ -578,10 +581,14 @@ object CGenerator {
 
     //GENERATE THE MAKEFILE
     var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/Makefile")
+    if(context.gpp) {
+	mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/Makefile_gcc_gpp")
+    }
     mtemplate = mtemplate.replace("/*NAME*/", cfg.getName)
 
     if (context.gpp) {
-      mtemplate = mtemplate.replace("/*CC*/", "g++")
+      mtemplate = mtemplate.replace("/*GCC*/", "gcc")
+      mtemplate = mtemplate.replace("/*GPP*/", "g++")
     }
     else {
       mtemplate = mtemplate.replace("/*CC*/", "cc")
