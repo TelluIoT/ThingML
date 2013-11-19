@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.cgenerator
+package org.thingml.cppgenerator
 
 import org.sintef.thingml.constraints.ThingMLHelpers
-import org.thingml.cgenerator.CGenerator._
+import org.thingml.cppgenerator.CPPGenerator._
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
@@ -44,7 +44,7 @@ object SimpleCopyTemplate {
     }
 }
 
-object CGenerator {
+object CPPGenerator {
 
   /****************************************************************************************
    *    Injection of implicits for C code generation in the ThingML metamodel
@@ -193,154 +193,6 @@ object CGenerator {
 	}
 
   /****************************************************************************************
-   *    Arduino Specific methods
-   ****************************************************************************************/
-
-  def compileArduino(config: Configuration, context : CGeneratorContext) = {
-    var builder = new StringBuilder()
-    config.generatePDE(builder, context)
-    MergedConfigurationCache.clearCache(); // Cleanup
-    var result = builder.toString
-    // Remove extern "C" stuff because Arduino put everyting in cpp files
-    result = result.replaceAll("#ifdef __cplusplus", "#ifdef EXTERN_C_PROTOTYPES")
-    result
-  }
-
-   def compileAllArduino(model: ThingMLModel): Map[Configuration, String] = {
-    var result = Map[Configuration, String]()
-    model.allConfigurations.filter{c=> !c.isFragment}.foreach {
-      t => result += (t -> compileArduino(t, new ArduinoCGeneratorContext(t)))
-    }
-    result
-  }
-
-  def compileAllArduinoJava(model: ThingMLModel): Hashtable[Configuration, String] = {
-    val result = new Hashtable[Configuration, String]()
-    compileAllArduino(model).foreach{entry =>
-      result.put(entry._1, entry._2)
-    }
-    result
-  }
-
-  def compileAndRunArduino(model : ThingMLModel, arduinoDir : String, libdir : String) {
-    // First look for a configuration in the model
-    model.getConfigs.filter{ c => !c.isFragment }.headOption match {
-      case Some (c) => compileAndRunArduino(c, arduinoDir, libdir)
-      case None =>
-        // look in all configs
-      model.allConfigurations.filter{ c => !c.isFragment }.headOption match {
-        case Some (c) => compileAndRunArduino(c, arduinoDir, libdir)
-        case None => {}
-      }
-    }
-  }
-
-  def compileAndRunArduino(cfg : Configuration, arduinoDir : String, libdir : String) {
-
-    // Create a temp folder
-    var folder = File.createTempFile(cfg.getName, null);
-    folder.delete
-    folder.mkdirs
-    folder.deleteOnExit
-
-    // Create a folder having the name of the config
-    folder = new File(folder, cfg.getName);
-    folder.mkdirs
-
-    // Compile the configuration:
-    var pde_code =  CGenerator.compileArduino(cfg, new ArduinoCGeneratorContext(cfg))
-
-    // Write the code in a pde file
-    var pde_file = new File(folder, cfg.getName + ".pde")
-    var w: PrintWriter = new PrintWriter(new FileWriter(pde_file))
-    w.print(pde_code)
-    w.close
-
-    // Open the arduino environment on the generated file
-    openArduinoIDE(pde_file.getAbsolutePath, arduinoDir, libdir)
-
-  }
-
-  def openArduinoIDE(pde_file : String, arduinoDir : String, arduinolibdir : String)  {
-
-
-    val arduino = new File(arduinoDir)
-
-    var classpath : String = ""
-    //if (!isWindows()) classpath=System.getProperty("java.class.path")
-
-    var libpath : String = ""
-    //if (!isWindows()) libpath = System.getProperty("java.library.path")
-
-    if (libpath.length() > 0) {
-      libpath = File.pathSeparator + libpath
-    }
-    libpath = arduinolibdir + libpath
-
-
-
-    if (!arduino.exists() || !arduino.isDirectory) {
-      System.err.println("ERROR: Arduino installation directory " + arduinoDir + " does not exist.")
-      return;
-    }
-
-    val libdir = new File(arduino, "lib")
-    if (!libdir.exists() || !libdir.isDirectory) {
-      System.err.println("ERROR: Could not find lib directory in arduino installation at " + arduinoDir + ".")
-      return;
-    }
-
-    libdir.listFiles().foreach{ f =>
-      if (f.getName.endsWith(".jar")) {
-        var fname = f.getAbsolutePath
-        //if (fname.indexOf(' ') > 0) fname = "\"" + fname + "\""
-        if (classpath.length() > 0) classpath = fname + File.pathSeparator + classpath
-        else classpath = fname
-      }
-    }
-
-    val pb: ProcessBuilder = new ProcessBuilder()
-
-    val bindir : File = new File(arduino + File.separator + "java" + File.separator + "bin")
-
-    println("Checking for specific vm shipped with arduino in :" + bindir + " exists:" + bindir.exists() + "(isWindows = " + isWindows() + ")")
-
-    // Detect if the arduino IDE comes with a specific java instalation (only for windows)
-    if (isWindows() && new File(arduino + File.separator + "java" + File.separator + "bin").exists()) {
-         pb.command().add("\""+ arduino + File.separator + "java" + File.separator + "bin" + File.separator +"java\"")
-    } else { // just use the java install of the system
-      pb.command().add("java")
-    }
-
-    //if (isUnix) pb.command().add("-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"); // Just for linux look and feel
-
-    if (isWindows()) pb.command().add("-Djava.library.path=\"" + libpath + "\"")
-    else pb.command().add("-Djava.library.path=" + libpath)
-    if (isWindows()) pb.command().add("-Djava.class.path=\"" + classpath + "\"")
-    else pb.command().add("-Djava.class.path=" + classpath)
-    pb.command().add("processing.app.Base")
-
-    if (pde_file.contains(" ")) pb.command().add("\"" + pde_file + "\"") // Just in case
-    else pb.command().add(pde_file)
-
-    println("EXEC : " + pb.command().toString)
-
-    val env = pb.environment
-
-    env.put("APPDIR", arduino.getAbsolutePath)
-    env.put("PATH", arduino.getAbsolutePath + "/java/bin" + File.pathSeparator + env.get("PATH"))
-    env.put("LD_LIBRARY_PATH", arduinolibdir + File.pathSeparator + env.get("LD_LIBRARY_PATH"))
-
-    pb.directory(arduino)
-
-    val p: Process = pb.start
-
-    console_out ! p
-    console_err ! p
-
-  }
-
-  /****************************************************************************************
    *    Linux Specific methods
    ****************************************************************************************/
 
@@ -352,21 +204,6 @@ object CGenerator {
         // look in all configs
       model.allConfigurations.filter{ c => !c.isFragment }.headOption match {
         case Some (c) => compileToLinuxAndMake(c)
-        case None => {}
-      }
-    }
-  }
-
-
-
-  def compileToROSNodeAndMake(model : ThingMLModel) {
-    // First look for a configuration in the model
-    model.getConfigs.filter{ c => !c.isFragment }.headOption match {
-      case Some (c) => compileToROSNode(c)
-      case None =>
-        // look in all configs
-      model.allConfigurations.filter{ c => !c.isFragment }.headOption match {
-        case Some (c) => compileToROSNode(c)
         case None => {}
       }
     }
@@ -496,7 +333,7 @@ object CGenerator {
 
   def compileCModules(cfg : Configuration, context : LinuxCGeneratorContext, result : Hashtable[String, String], prefix : String) {
     // GENERATE THE TYPEDEFS HEADER
-    var typedefs_template = SimpleCopyTemplate.copyFromClassPath("ctemplates/thingml_typedefs.h")
+    var typedefs_template = SimpleCopyTemplate.copyFromClassPath("ctemplates/thingml_typedefs_cpp.h")
     var builder = new StringBuilder()
     cfg.generateTypedefs(builder, context)
     typedefs_template = typedefs_template.replace("/*TYPEDEFS*/", builder.toString)
@@ -506,7 +343,7 @@ object CGenerator {
     cfg.allThings.foreach { thing =>
        context.set_concrete_thing(thing)
       // GENERATE HEADER
-      var htemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_thing_header.h")
+      var htemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_thing_header_cpp.h")
 
       builder = new StringBuilder()
       thing.generateCHeader(builder, context)
@@ -515,28 +352,28 @@ object CGenerator {
       result.put(prefix + thing.getName + ".h", htemplate)
 
       // GENERATE IMPL
-      var itemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_thing_impl.c")
+      var itemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_thing_impl.cpp")
       builder = new StringBuilder()
       thing.generateCImpl(builder, context)
       itemplate = itemplate.replace("/*NAME*/", thing.getName)
       itemplate = itemplate.replace("/*CODE*/", builder.toString)
-      result.put(prefix + thing.getName + ".c", itemplate)
+      result.put(prefix + thing.getName + ".cpp", itemplate)
     }
     context.clear_concrete_thing()
 
      // GENERATE THE RUNTIME HEADER
-    var rhtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/runtime.h")
+    var rhtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/runtime_cpp.h")
     rhtemplate = rhtemplate.replace("/*NAME*/", cfg.getName)
     result.put(prefix + "runtime.h", rhtemplate)
 
     // GENERATE THE RUNTIME IMPL
-    var rtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/runtime.c")
+    var rtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/runtime.cpp")
     rtemplate = rtemplate.replace("/*NAME*/", cfg.getName)
-    var fifotemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/fifo.c")
+    var fifotemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/fifo.cpp")
     fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + context.fifoSize());
     fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + cfg.allInstances.size);
     rtemplate = rtemplate.replace("/*FIFO*/", fifotemplate)
-    result.put(prefix + "runtime.c", rtemplate)
+    result.put(prefix + "runtime.cpp", rtemplate)
   }
 
 
@@ -548,7 +385,7 @@ object CGenerator {
     compileCModules(cfg, context, result, "")
 
     // GENERATE THE CONFIGURATION AND A MAIN
-    var ctemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_main.c")
+    var ctemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_main.cpp")
     ctemplate = ctemplate.replace("/*NAME*/", cfg.getName)
     var builder = new StringBuilder()
 
@@ -575,15 +412,15 @@ object CGenerator {
     cfg.generatePollingCode(pollb)
     ctemplate = ctemplate.replace("/*INIT_CODE*/", initb.toString)
     ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString)
-    result.put(cfg.getName + ".c", ctemplate)
+    result.put(cfg.getName + ".cpp", ctemplate)
 
     //GENERATE THE MAKEFILE
-    var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/Makefile")
+    var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/Makefile_gpp")
 
     mtemplate = mtemplate.replace("/*NAME*/", cfg.getName)
 
-    mtemplate = mtemplate.replace("/*CC*/", "cc")
-
+    mtemplate = mtemplate.replace("/*GPP*/", "g++")
+    
     if (context.debug) {
       mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -DDEBUG")
     }
@@ -615,7 +452,7 @@ object CGenerator {
       )
     }
 
-    val srcs = list.map{ t => t + ".c" }.mkString(" ")
+    val srcs = list.map{ t => t + ".cpp" }.mkString(" ")
     val objs = list.map{ t => t + ".o" }.mkString(" ")
     val libs =  liblist.map{ t => "-l" + t }.mkString(" ")
     val preproc =  preProclist.map{ t => "-D" + t }.mkString(" ")
@@ -629,338 +466,6 @@ object CGenerator {
 
     result
   }
-
-  /****************************************************************************************
-   *    ROS Specific methods
-   ****************************************************************************************/
-
-
-  def compileToROSNode(cfg : Configuration) : Hashtable[String, String] = {
-
-      val result = new Hashtable[String, String]()
-
-      var out = createEmptyOutputDir(cfg)
-      println("Compiling configuration "+ cfg.getName +" to ROS node into target folder: " + out.getAbsolutePath)
-
-      /*
-      if (!cfg.getAnnotations.exists{ a=> a.getName == "ros_workspace"}) {
-        println("ERROR: Missing annotation ros_workspace on configuration " + cfg.getName)
-        return result;
-      }
-      val ros_workspace = cfg.getAnnotations.filter{ a=> a.getName == "ros_workspace"}.head.getValue.trim
-      val ros_workspace_file = new File(ros_workspace)
-      if (! (ros_workspace_file.exists && ros_workspace_file.isDirectory) ) {
-        println("ERROR: Invalid ros_workspace (" + ros_workspace + ").")
-        return result;
-      }
-      */
-
-      val ros_package = if (cfg.getAnnotations.exists{ a=> a.getName == "ros_package"})
-        cfg.getAnnotations.filter{ a=> a.getName == "ros_package"}.head.getValue.trim
-        else cfg.getName
-
-      val ros_package_subPath = if (cfg.getAnnotations.exists{ a=> a.getName == "ros_package_subpath"})
-        Some(cfg.getAnnotations.filter{ a=> a.getName == "ros_package_subpath"}.head.getValue.trim)
-        else None
-
-      val context = new LinuxCGeneratorContext(cfg)
-
-      compileCModules(cfg, context, result, "src/")
-
-      // GENERATE ROS HANDLERS
-      val publish_list : scala.collection.mutable.Map[String, (Thing, Port, ROSMessage, ListBuffer[(Instance, String)])] = scala.collection.mutable.Map[String, (Thing, Port, ROSMessage, ListBuffer[(Instance, String)])]()
-
-
-      // The annotoation rostopic_publish is support to contain "instance::port::message [-> topicname]"
-      cfg.getAnnotations.filter{ a=> a.getName == "rostopic_publish"}.foreach{ ann =>
-        var params = ann.getValue.trim.split("->")
-        val topicname = if (params.size == 2) params(1).trim else params(0).replace("::", "_")
-        params = params(0).trim.split("::")
-        if (params.size != 3) {
-          println("ERROR: Invalid rostopic_publish annotation (" + ann.getValue + "). Expecting \"instance::port::message [-> topicname]\"")
-        }
-        else {
-          var iname = cfg.getName + "_" + params(0).trim
-          if (iname.contains(".")) {
-            // The instance is within a group
-            iname = iname.replace(".", "_")
-          }
-          val pname = params(1).trim
-          val mname = params(2).trim
-
-          // Find the instance
-          val instances = cfg.allInstances.filter(i=> i.getName == iname)
-          if (instances.size != 1) {
-            println("ERROR: Invalid rostopic_publish annotation, instance " + iname + " not found.")
-          }
-          else {
-            val instance = instances.head
-            val ports = instance.getType.allPorts.filter(_.getName == pname)
-            if (instances.size != 1) {
-              println("ERROR: Invalid rostopic_publish annotation, port " + pname + " not found in thing " + instance.getType.getName + ".")
-            }
-            else {
-              val port = ports.head
-              val messages = port.getSends.filter(_.getName == mname)
-              if(messages.size != 1) {
-                 println("ERROR: Invalid rostopic_publish annotation, message " + mname + " not found in port " + port.getName + ".")
-              }
-              else {
-                val message = messages.head
-                val thing = instance.getType
-                val id = "ros_" + thing.getName + "_" + port.getName + "_publish_" + message.getName
-                println("INFO: found ROS publisher " + id)
-                // Now we have all the info. Store it in publish_list for bellow code generation.
-                val tuple : (Thing, Port, ROSMessage, ListBuffer[(Instance, String)]) =
-                  if (publish_list.contains(id)) publish_list.get(id).head else (thing, port, new ROSMessage(ros_package, message), new ListBuffer[(Instance, String)]())
-                tuple._4.append( (instance, topicname) )
-                publish_list.put(id, tuple)
-      }}}}}
-
-      val ros_pub_builder = new StringBuilder()
-      val ros_init_listeners = new StringBuilder()
-      val topics = scala.collection.mutable.Map[String, Message]()
-      val messages = ListBuffer[Message]()
-
-      // GENRATE CODE TO PUBLISH MESSAGES ON ROS TOPICS
-      publish_list.keys.foreach{ id =>
-        println("INFO: Generate for ROS publisher " + id)
-        val tuple = publish_list.get(id).head
-        val thing = tuple._1
-        val port = tuple._2
-        val rosmessage = tuple._3
-        val message = tuple._3.message
-        val instances = tuple._4.toList
-
-        // Generate the line to connect the port whcih publishes on the topic
-        ros_init_listeners append "register_" + thing.sender_name(port, message) + "_listener("
-        ros_init_listeners append id + ");\n"
-
-
-        ros_pub_builder append "// Publish ROS messages for" + thing.getName + "::" + port.getName + "::" + message.getName + "\n"
-        ros_pub_builder append "void " + id
-        thing.append_formal_parameters(ros_pub_builder, message)
-        ros_pub_builder append "{\n"
-
-        instances.foreach{ case(instance, topic) =>
-           ros_pub_builder append "if (_instance == &" + instance.c_var_name + ") {\n"
-           ros_pub_builder append "// Publish the data on ROS topic " + topic + "\n"
-           ros_pub_builder append rosmessage.cpptype + " rosmsg;\n"
-
-           ros_pub_builder append rosmessage.assign_params
-           /*
-           message.getParameters.foreach{p=>
-             ros_pub_builder append "rosmsg." + p.getName + " = " +  p.getName + ";\n"
-           }
-           */
-           ros_pub_builder append topic + "_rospub.publish(rosmsg);\n"
-           ros_pub_builder append "}\n"
-
-           topics.put(topic, message)
-           if (!messages.toList.contains(message)) messages.append(message)
-        }
-        ros_pub_builder append "}\n"
-      }
-
-      // GENERATE ROS MESSAGES
-      messages.foreach{ message =>
-        println("INFO: Generate for ROS message " + message.getName)
-        val b = new StringBuilder()
-        message.getParameters.foreach{ p =>
-          b append p.getType.ros_type()
-          if (p.getCardinality != null) {
-            b append  "["
-            p.getCardinality.generateC(b, context)
-            b append  "]"
-          }
-          b append " " + p.getName + "\n"
-        }
-        result.put("msg/" + message.getName + ".msg", b.toString)
-      }
-
-      // GENERATE HEADERS AND VARIABLES
-      val ros_head_builder = new StringBuilder()
-      ros_head_builder append "// Include ROS messages\n"
-      messages.foreach{ message =>
-        ros_head_builder append "#include \"" + new ROSMessage(ros_package, message).header + "\"\n"
-      }
-      ros_head_builder append "\n"
-      ros_head_builder append "// Declare variables for ROS topic publishers\n"
-      topics.foreach{ case(topic, message) =>
-        ros_head_builder append "ros::Publisher " + topic + "_rospub;\n"
-      }
-
-      // GENERATE ROS INITIALIZATION
-      val ros_init_builder = new StringBuilder()
-      ros_init_builder append "ros::init(argc, argv, \""+ ros_package +"\");\n"
-      ros_init_builder append  "ros::NodeHandle rosnode;\n"
-      ros_init_builder append "//Initialize publisher topics\n"
-      topics.foreach{ case(topic, message) =>
-        ros_init_builder append topic + "_rospub = rosnode.advertise<" + new ROSMessage(ros_package, message).cpptype + ">(\""+topic+"\", 1024);\n"
-      }
-
-
-      // GENERATE THE CONFIGURATION AND A MAIN
-      var ctemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/ros_main.cpp")
-      ctemplate = ctemplate.replace("/*NAME*/", cfg.getName)
-      var builder = new StringBuilder()
-      cfg.generateIncludes(builder, context)
-      ctemplate = ctemplate.replace("/*INCLUDES*/", builder.toString)
-      builder = new StringBuilder()
-      cfg.generateC(builder, context)
-      ctemplate = ctemplate.replace("/*CONFIGURATION*/", builder.toString)
-      var initb = new StringBuilder()
-      cfg.generateInitializationCode(initb, context)
-      var pollb = new StringBuilder()
-      cfg.generatePollingCode(pollb)
-
-      var c_global = cfg.annotation("c_global")
-      if (c_global == null) c_global = "// NO C_GLOBALS Annotation"
-      ctemplate = ctemplate.replace("/*C_GLOBALS*/", c_global)
-
-      var c_header = cfg.annotation("c_header")
-      if (c_header == null) c_header = "// NO C_HEADERS Annotation"
-      ctemplate = ctemplate.replace("/*C_HEADERS*/", c_header)
-
-      var c_main = cfg.annotation("c_main")
-      if (c_main == null) c_main = "// NO C_MAIN Annotation"
-      ctemplate = ctemplate.replace("/*C_MAIN*/", c_main)
-
-      ctemplate = ctemplate.replace("/*INIT_CODE*/", initb.toString)
-      ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString)
-      ctemplate = ctemplate.replace("/*ROS_HEADERS*/", ros_head_builder.toString)
-      ctemplate = ctemplate.replace("/*ROS_HANDLERS*/", ros_pub_builder.toString)
-      ctemplate = ctemplate.replace("/*ROS_CONNECTORS*/", ros_init_listeners.toString)
-      ctemplate = ctemplate.replace("/*ROS_INIT*/", ros_init_builder.toString)
-
-      result.put("src/" + cfg.getName + ".cpp", ctemplate)
-
-
-      //GENERATE THE CONTENT TO APPEND TO ROS CMakeLists.txt
-      var mtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/ros_cmakelists.txt")
-      mtemplate = mtemplate.replaceAll("<PACKAGE>", ros_package)
-      var srcs = result.keys.filter(k=> k.startsWith("src")).mkString(" \n")
-      mtemplate = mtemplate.replaceAll("<SOURCES>", srcs)
-      result.put("CMakeLists.txt", mtemplate)
-
-      // GENERATE AN INSTALL SCRIPT TO CREATE THE ROS NODE AND COMPILE IT
-      var installtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/ros_install.sh")
-      installtemplate = installtemplate.replaceAll("<PACKAGE>", ros_package)
-      ros_package_subPath match {
-        case Some(s) => installtemplate = installtemplate.replaceAll("<PACKAGESUBPATH>", s)
-        case None =>
-          installtemplate = installtemplate.replaceAll("PACKAGESUBPATH=\"<PACKAGESUBPATH>\"", "")
-          installtemplate = installtemplate.replaceAll("/$PACKAGESUBPATH", "")
-      }
-      result.put("install.sh", installtemplate)
-
-
-
-      MergedConfigurationCache.clearCache(); // Cleanup
-
-      // CREATING THE ROS PACKAGE AND WRITING THE FILES:
-      //************************************************
-/*
-      // package folder
-      val folder = new File(ros_workspace + "/" + ros_package)
-      // Delete the package if it exists
-      if (folder.exists()) {
-        println("INFO: Deleting exiting package in " + ros_workspace + "/" + ros_package + ".")
-        folder.delete
-      }
-
-      // Create the ros package with ros:
-      println("INFO: Creating ROS package with: " + "roscreate-pkg "+ros_package+" std_msgs rospy roscpp")
-      //val pb: ProcessBuilder = new ProcessBuilder("/bin/bash -c \"roscreate-pkg "+ros_package+" std_msgs rospy roscpp\"")
-
-
-      val pb: ProcessBuilder = new ProcessBuilder("make")
-      pb.directory(ros_workspace_file)
-      val p: Process = pb.start
-      console_out ! p
-      console_err ! p
-      p.waitFor
-
-      //val p2: Process = Runtime.getRuntime().exec("/bin/bash -c \\\"roscreate-pkg "+ros_package+" std_msgs rospy roscpp\\\"", null, ros_workspace_file);
-      var cmd = "/bin/bash"
-      var param = Array("-c", "\"roscreate-pkg " + ros_package + " std_msgs rospy roscpp\"")
-
-      println("INFO: Executing " + cmd + " " + param.mkString (" "))
-      val p2: Process = Runtime.getRuntime().exec(cmd, param, ros_workspace_file);
-      //console_out ! p2
-      //console_err ! p2
-      p2.waitFor
-*/
-
-        // Create folders for src and messages
-        new File(out + "/src").mkdir
-        new File(out + "/msg").mkdir
-
-        // Write generated files
-        result.keys.foreach{ fname =>
-          var file = new File(out + "/" + fname)
-          var w: PrintWriter = new PrintWriter(new FileWriter(file))
-          w.print(result.get(fname))
-          w.close
-        }
-
-
-
-      result
-  }
-
-}
-
-class ROSMessage( pack : String, m: Message) {
-
-  val message = m
-
-  var header = pack + "/" + message.getName + ".h"
-  var cpptype = pack + "::" + message.getName
-
-  var builder = new StringBuilder()
-
-  message.getParameters.foreach{p=>
-
-        if (p.getCardinality != null) {
-          builder append  "int " + p.getName + "_idx;\n"
-          builder append "for("+ p.getName +"_idx=0; "+ p.getName +"_idx<"+p.getCardinality.asInstanceOf[IntegerLiteral].getIntValue+"; "+ p.getName +"_idx++) rosmsg."+ p.getName +"["+ p.getName +"_idx] = "+ p.getName +"["+ p.getName +"_idx];\n"
-        }
-        else {
-          builder append "rosmsg." + p.getName + " = " +  p.getName + ";\n"
-        }
-  }
-
-  var assign_params = builder.toString
-
-  message.getAnnotations.filter { a => a.getName == "ros_message" }.headOption match {
-      case Some(a) => {
-        val ann =  a.asInstanceOf[PlatformAnnotation].getValue.trim
-
-        if (ann.indexOf("(") > 0 && ann.charAt(ann.length() - 1) == ')') {
-          val rosmsg = ann.substring(0, ann.indexOf("("))
-          var params = ann.substring(ann.indexOf("(")+1)
-          params = params.substring(0, params.length()-1)
-          builder = new StringBuilder()
-          params.split(", ").foreach { assign =>
-            val a = assign.trim.split("=")
-            if (a.size == 2) {
-              builder append "rosmsg." + a(0) + " = " +  a(1) + ";\n"
-            }
-          }
-          assign_params = builder.toString
-          header = rosmsg + ".h"
-          cpptype = rosmsg.replaceAll("/", "::")
-        }
-        else {
-          println("WARN: Invalid ros_message annotation " + ann + " on message " + m.getName + ".")
-        }
-      }
-      case None => {
-
-      }
-    }
-
 
 }
 
@@ -1119,44 +624,6 @@ class LinuxCGeneratorContext ( src: Configuration ) extends CGeneratorContext ( 
 
 }
 
-
-class ArduinoCGeneratorContext ( src: Configuration ) extends CGeneratorContext ( src ) {
-
-  // pointer size in bytes of the target platform
-  override def pointerSize() = { 2 }
-
-  // Default size of the fifo (in bytes)
-  override def fifoSize() = { 256 }
-
-  // output the generated files to the given folder
-  override def compile(src: Configuration, dir : File) {
-    var builder = new StringBuilder();
-    var fifotemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/fifo.c")
-    fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + fifoSize());
-    fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + src.allInstances.size);
-    builder append fifotemplate
-    builder append "\n"
-    src.generateC(builder, this)
-    var code = builder.toString
-  }
-
-  override def generateMain(builder: StringBuilder, cfg : Configuration) {
-    var initb = new StringBuilder()
-    cfg.generateInitializationCode(initb, this)
-    var pollb = new StringBuilder()
-    cfg.generatePollingCode(pollb)
-    var maintemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/arduino_main.c")
-    maintemplate = maintemplate.replace("/* INIT_CODE */", initb.toString);
-    maintemplate = maintemplate.replace("/* POLL_CODE */", pollb.toString);
-    builder append maintemplate
-  }
-
-  override def init_debug_mode() = "Serial.begin(9600);" // Any code to initialize the debug mode
-
-  override def print_debug_message(msg : String) = "Serial.println(\"DB: " + msg + "\");"
-
-}
-
 case class ThingMLCGenerator(self: ThingMLElement) {
   def generateC(builder: StringBuilder, context : CGeneratorContext) {
     // Implemented in the sub-classes
@@ -1284,126 +751,6 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     //generateArduinoPDEMain(builder);
     context.generateMain(builder, self)
     */
-  }
-
-  // Generate all in one PDE file (This is for Arduino)
-  def generatePDE(builder: StringBuilder, context : CGeneratorContext) {
-
-    builder append "\n"
-    builder append "/***************************************************************************** \n"
-    builder append " * File generated from ThingML (Do not edit this file) \n"
-    builder append " *****************************************************************************/\n\n"
-    val model = ThingMLHelpers.findContainingModel(self)
-
-    /*
-    self.allThings.foreach { t =>
-      var h = t.annotation("c_header")
-      if (h != null) {
-         builder append "\n// Header from " + t.getName + "\n"
-         builder append h
-      }
-    }
-    */
-
-    // Generate code for enumerations (generate for all enum)
-    builder append "\n"
-    builder append "/*****************************************************************************\n"
-    builder append " * Definition of simple types and enumerations\n"
-    builder append " *****************************************************************************/\n\n"
-
-    model.allSimpleTypes.filter{ t => t.isInstanceOf[Enumeration] }.foreach{ e =>
-      e.generateC(builder, context)
-    }
-
-    self.allInstances.foreach{ instance =>
-      println("| - I " + instance.getName + " : " + instance.getType.getName)
-    }
-
-    // Generate code for things which appear in the configuration
-    self.allThings.foreach { thing =>
-       context.set_concrete_thing(thing)
-       println("Generating code for Thing: " + thing.getName)
-       thing.generateC(builder, context)
-    }
-    context.clear_concrete_thing()
-
-    builder append "\n"
-    builder append "/*****************************************************************************\n"
-    builder append " * Definitions for configuration : " +  self.getName + "\n"
-    builder append " *****************************************************************************/\n\n"
-
-    var fifotemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/fifo.c")
-
-    fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + context.fifoSize());
-
-    builder append fifotemplate
-    builder append "\n"
-
-
-    builder append "//Declaration of instance variables\n"
-    self.allInstances.foreach { inst =>
-       builder append inst.c_var_decl() + "\n"
-    }
-
-    builder append "\n"
-
-    generateMessageEnqueue(builder, context)
-    builder append "\n"
-    generateMessageDispatchers(builder, context)
-    builder append "\n"
-    generateMessageProcessQueue(builder, context)
-
-    builder append "\n"
-
-    builder append "void initialize_configuration_" + self.getName + "() {\n"
-
-    // Generate code to initialize connectors
-    builder append "// Initialize connectors\n"
-    self.allThings.foreach{t => t.allPorts.foreach{ port => port.getSends.foreach{ msg =>
-      context.set_concrete_thing(t)
-      // check if there is an connector for this message
-      if (self.allConnectors.exists{ c =>
-        (c.getRequired == port && c.getProvided.getReceives.contains(msg)) ||
-          (c.getProvided == port && c.getRequired.getReceives.contains(msg)) }) {
-
-        //builder append t.sender_name(port, msg) + "_listener = "
-        builder append "register_" + t.sender_name(port, msg) + "_listener("
-
-        //println("Initialize port " + port.getName + " sync " + isSyncSend(port))
-
-        if (isSyncSend(port)) {
-          // This is for static call of dispatches
-          builder append "dispatch_" + t.sender_name(port, msg) + ");\n"
-        }
-        else {
-          // This is to enquqe the message and let the scheduler forward it
-           builder append "enqueue_" + t.sender_name(port, msg) + ");\n"
-        }
-      }
-    }}}
-    context.clear_concrete_thing()
-    builder append "\n"
-    //builder append "// Initialize instance variables and states\n"
-    // Generate code to initialize variable for instances
-    self.allInstances.foreach { inst =>
-       inst.generateC(builder, context)
-    }
-
-    self.allInstances.foreach { inst =>
-       inst.generateOnEntry(builder, context)
-    }
-
-
-    builder append "}\n"
-
-    builder append "\n"
-    builder append "/*****************************************************************************\n"
-    builder append " * Main for configuration : " +  self.getName + "\n"
-    builder append " *****************************************************************************/\n\n"
-
-    //generateArduinoPDEMain(builder);
-    context.generateMain(builder, self)
-
   }
 
   val handler_thing_codes = new Hashtable[Thing, Hashtable[Port, Hashtable[Message, Integer]]]()
@@ -1606,78 +953,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
     }}
     context.clear_concrete_thing()
   }
-  /*
-  def generateArduinoPDEMain(builder : StringBuilder) {
-
-      var model = ThingMLHelpers.findContainingModel(self)
-      // Serach for the ThingMLSheduler Thing
-      var things = model.allThings.filter{ t => t.getName == "ThingMLScheduler" }
-
-      //println("*******>   things.size : " + things.size)
-
-      if (!things.isEmpty) {
-        var arduino = things.head
-        var setup_msg : Message = arduino.allMessages.filter{ m => m.getName == "setup" }.head
-        var poll_msg : Message = arduino.allMessages.filter{ m => m.getName == "poll" }.head
-
-        // generate the setup operation
-        builder append "void setup() {\n"
-        builder append "initialize_configuration_" + self.getName + "();\n"
-        self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
-          if (p.getReceives.contains(setup_msg)) {
-             builder append i.getType.handler_name(p, setup_msg) +  "(&" + i.c_var_name() + ");\n"
-          }
-        }}
-        builder append "}\n"
-        // generate the loop operation
-         builder append "void loop() {\n"
-        builder append "processMessageQueue();\n"
-        self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
-          p.getReceives.foreach{ msg =>
-          }
-          if (p.getReceives.contains(poll_msg)) {
-             builder append i.getType.handler_name(p, poll_msg) +  "(&" + i.c_var_name() + ");\n"
-          }
-        }}
-        builder append "}\n"
-      }
-  }
-      */
-  /*
-  def generateArduinoLinuxCMain(builder : StringBuilder) {
-
-    var model = ThingMLHelpers.findContainingModel(self)
-    // Serach for the ThingMLSheduler Thing
-    var things = model.allThings.filter{ t => t.getName == "ThingMLScheduler" }
-
-    //println("*******>   things.size : " + things.size)
-
-    if (!things.isEmpty) {
-      var arduino = things.head
-      var setup_msg : Message = arduino.allMessages.filter{ m => m.getName == "setup" }.head
-      var poll_msg : Message = arduino.allMessages.filter{ m => m.getName == "poll" }.head
-
-      builder append "int main() {\n"
-      builder append "initialize_configuration_" + self.getName + "();\n"
-      self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
-        if (p.getReceives.contains(setup_msg)) {
-           builder append i.getType.handler_name(p, setup_msg) +  "(&" + i.c_var_name() + ");\n"
-        }
-      }}
-
-       builder append "while(1) {\n"
-      self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
-        p.getReceives.foreach{ msg =>
-        }
-        if (p.getReceives.contains(poll_msg)) {
-           builder append i.getType.handler_name(p, poll_msg) +  "(&" + i.c_var_name() + ");\n"
-        }
-      }}
-      builder append "}\n"
-      builder append "}\n"
-    }
-  }
-       */
+ 
   def generateInitializationCode(builder : StringBuilder, context : CGeneratorContext) {
 
     var model = ThingMLHelpers.findContainingModel(self)
@@ -1808,7 +1084,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
       println("WARNING: function with annotation fork_linux_thread must return void");
     }
 
-    var template = SimpleCopyTemplate.copyFromClassPath("ctemplates/fork.c")
+    var template = SimpleCopyTemplate.copyFromClassPath("ctemplates/fork.cpp")
 
     template = template.replace("/*NAME*/", self.c_name(thing))
 
@@ -1966,16 +1242,8 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
     builder append "// Declaration of prototypes:\n"
 
-    builder append "#ifdef __cplusplus\n"
-    builder append "extern \"C\" {\n"
-    builder append "#endif\n"
-
     generatePrivatePrototypes(builder, context)
-
-    builder append "#ifdef __cplusplus\n"
-    builder append "}\n"
-    builder append "#endif\n"
-
+    
     builder append "\n"
 
     builder append "// Declaration of functions:\n"
@@ -2068,21 +1336,6 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
       builder append "#define " + state_id(states.get(i)) + " " + i.toString + "\n"
     }
   }
- /*
-  def generateInstanceVariables(builder: StringBuilder) {
-    // Variables for each region to store its current state
-    composedBehaviour.allContainedRegions.foreach {
-      r =>
-        builder append "int " + state_var_name(r) + " = " + state_id(r.getInitial) + ";\n"
-    }
-    builder append "\n"
-    // Create variables for all the properties defined in the Thing and States
-    self.allPropertiesInDepth.foreach {
-      p =>
-        builder append p.getType.c_type + " " + p.c_var_name + ";\n"
-    }
-  }
-  */
 
   def generateInstanceStruct(builder: StringBuilder, context : CGeneratorContext) {
 
@@ -2109,15 +1362,6 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
         builder append  ";\n"
     }
 
-    /*
-    builder append "// Function pointers for outgoing messages\n"
-    self.allPorts.foreach{ port => port.getSends.foreach{ msg =>
-      // Variable for the function pointer
-      builder append "void (*" + sender_name(port, msg) + "_listener)"
-      append_formal_type_signature(builder, msg)
-      builder append ";\n"
-    }}
-    */
 
     builder append "};\n"
   }

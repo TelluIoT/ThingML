@@ -1,14 +1,13 @@
-GCC = /*GCC*/
 GPP = /*GPP*/
 LIBS = -lpthread /*LIBS*/
 /*CFLAGS*/
-SRCS = /*SOURCES*/ runtime.c
+SRCS = /*SOURCES*/ runtime.cpp
 OBJS = /*OBJECTS*/ runtime.o
 
 all : /*NAME*/
 
-.c.o :
-	${GCC} ${CFLAGS} -c $< /*PREPROC_DIRECTIVES*/
+.cpp.o :
+	${GPP} ${CFLAGS} -c $< /*PREPROC_DIRECTIVES*/
 
 /*NAME*/ : $(OBJS)
 	$(GPP) -g -o $@ $(OBJS) $(LIBS) -lm

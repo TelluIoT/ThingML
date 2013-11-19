@@ -47,6 +47,7 @@ import javax.swing._
 import java.awt.event.{ActionEvent, ActionListener}
 import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
 import org.thingml.cgenerator.CGenerator
+import org.thingml.cppgenerator.CPPGenerator
 import org.thingml.scalagenerator.ScalaGenerator
 import org.thingml.java.pauwaregenerator.PauWareGenerator
 import org.thingml.javagenerator.gui.SwingGenerator
@@ -100,6 +101,7 @@ class ThingMLPanel extends JPanel {
   
   var b = new JMenuItem("Arduino")
   var bC = new JMenuItem("Posix C")
+  var bCPP = new JMenuItem("C++")
   var rosC = new JMenuItem("ROS Node")
   var bScala = new JMenuItem("Scala/SMaC")
   var bSwing = new JMenuItem("Java/Swing")
@@ -159,6 +161,24 @@ class ThingMLPanel extends JPanel {
          val thingmlModel = loadThingMLmodel(targetFile.get)
 
             CGenerator.compileToLinuxAndMake(thingmlModel)
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+
+        //}
+      }
+    })
+    
+    bCPP.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        println("Input file : " + targetFile)
+        if (targetFile.isEmpty) return;
+               try {
+
+         val thingmlModel = loadThingMLmodel(targetFile.get)
+
+            CPPGenerator.compileToLinuxAndMake(thingmlModel)
         }
         catch {
           case t : Throwable => t.printStackTrace()
@@ -327,6 +347,7 @@ class ThingMLPanel extends JPanel {
     
   compilersMenu.add(b)
   compilersMenu.add(bC)
+  compilersMenu.add(bCPP)
   compilersMenu.add(rosC)
   compilersMenu.add(bScala)
   compilersMenu.add(bSwing)
