@@ -1,0 +1,72 @@
+import "../datatypes.thingml"
+
+enumeration WS_ERR
+	@java_type "Byte"
+    @c_byte_size "1"
+	@c_type "uint8_t"
+{
+	CONNECTION_REFUSED @enum_val "0"
+    //TODO: to be completed
+}
+
+thing fragment WebSocketMsgs {
+    
+    message start();
+    message stop();
+    message send(msg : String);
+    
+    //call backs
+    message onOpen();    
+    message onClose();
+    message onMessage(msg : String);
+    message onError(errorMsg : String);
+    
+}
+
+thing fragment WebSocket includes WebSocketMsgs {
+    
+    readonly property _port : String
+    
+    provided port lifecycle {
+        receives start, stop
+        sends onOpen, onClose
+    }
+    
+    provided port err {
+        sends onError    
+    }
+    
+    provided port messaging {
+        receives send
+        sends onMessage
+    }
+    
+}
+
+//To be refined into a platform-specific thing
+thing fragment WebSocketClient includes WebSocket {
+    set _port = "ws://localhost:8887"
+}
+
+//To be refined into a platform-specific thing
+thing fragment WebSocketServer includes WebSocket {
+    set _port = "8887"
+}
+
+thing fragment WebSocketTest includes WebSocketMsgs {
+    
+    required port lifecycle {
+        sends start, stop
+        receives onOpen, onClose
+    }
+    
+    required port err {
+        receives onError    
+    }
+    
+    required port messaging {
+        sends send
+        receives onMessage
+    }    
+    
+}
