@@ -34,6 +34,7 @@ import java.io.{File, FileWriter, PrintWriter, BufferedReader, BufferedWriter, I
 import org.sintef.thingml._
 
 import org.thingml.utils.log.Logger
+import org.thingml.graphexport.ThingMLGraphExport
 
 object Context {
   val builder = new StringBuilder()
@@ -215,6 +216,49 @@ object ScalaGenerator {
     w.close();
     
     javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+
+    /*
+     * GENERATE SOME DOCUMENTATION
+     */
+
+    val docfolder = new File(rootDir, "doc")
+    docfolder.mkdirs
+
+
+
+    try {
+      val dots = ThingMLGraphExport.allGraphviz(ThingMLHelpers.findContainingModel(cfg))
+      import scala.collection.JavaConversions._
+      for (name <- dots.keySet) {
+        System.out.println(" -> Writing file " + name + ".dot")
+        var w: PrintWriter = new PrintWriter(new FileWriter(docfolder.getAbsolutePath + File.separator + name + ".dot"))
+        w.println(dots.get(name))
+        w.close
+      }
+    }
+    catch {
+      case t: Throwable => {
+        t.printStackTrace
+      }
+    }
+
+
+
+    try {
+      val gml = ThingMLGraphExport.allGraphML(ThingMLHelpers.findContainingModel(cfg))
+      import scala.collection.JavaConversions._
+      for (name <- gml.keySet) {
+        System.out.println(" -> Writing file " + name + ".graphml")
+        var w: PrintWriter = new PrintWriter(new FileWriter(docfolder.getAbsolutePath + File.separator + name + ".graphml"))
+        w.println(gml.get(name))
+        w.close
+      }
+    }
+    catch {
+      case t: Throwable => {
+        t.printStackTrace
+      }
+    }
     
     actor{
       compileGeneratedCode(rootDir)
