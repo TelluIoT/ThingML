@@ -221,17 +221,14 @@ object ScalaGenerator {
      * GENERATE SOME DOCUMENTATION
      */
 
-    val docfolder = new File(rootDir, "doc")
-    docfolder.mkdirs
-
-
+    new File(rootDir + "/doc").mkdirs();
 
     try {
       val dots = ThingMLGraphExport.allGraphviz(ThingMLHelpers.findContainingModel(cfg))
       import scala.collection.JavaConversions._
       for (name <- dots.keySet) {
         System.out.println(" -> Writing file " + name + ".dot")
-        var w: PrintWriter = new PrintWriter(new FileWriter(docfolder.getAbsolutePath + File.separator + name + ".dot"))
+        var w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".dot"))
         w.println(dots.get(name))
         w.close
       }
@@ -242,14 +239,12 @@ object ScalaGenerator {
       }
     }
 
-
-
     try {
       val gml = ThingMLGraphExport.allGraphML(ThingMLHelpers.findContainingModel(cfg))
       import scala.collection.JavaConversions._
       for (name <- gml.keySet) {
         System.out.println(" -> Writing file " + name + ".graphml")
-        var w: PrintWriter = new PrintWriter(new FileWriter(docfolder.getAbsolutePath + File.separator + name + ".graphml"))
+        var w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".graphml"))
         w.println(gml.get(name))
         w.close
       }
