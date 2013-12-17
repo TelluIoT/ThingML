@@ -6,5 +6,4 @@ Visit http://www.thingml.org to find out more about ThingML !
 
 ## Build status
 
-<a href="http://build.thingml.org/job/Build%20ThingML%20Components/lastBuild" target="_blank"><img src="http://build.thingml.org/job/Build%20ThingML%20Components/lastBuild/buildStatus" 
-alt="Build status" width="40" height="40" border="10" /></a>
+[![Build Status](https://drone.io/github.com/SINTEF-9012/ThingML/status.png)](https://drone.io/github.com/SINTEF-9012/ThingML/latest)
