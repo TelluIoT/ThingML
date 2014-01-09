@@ -12,7 +12,13 @@ enumeration WS_ERR
 thing fragment WebSocketMsgs {
     
     message start();
+    message start_server();
+    message start_client();
+    message server_launched();
     message stop();
+    message stop_server();
+    message stop_client();
+    message client_launched();
     message send(msg : String);
     
     //call backs
@@ -28,8 +34,8 @@ thing fragment WebSocket includes WebSocketMsgs {
     readonly property _port : String
     
     provided port lifecycle {
-        receives start, stop
-        sends onOpen, onClose
+        receives start, stop, start_client, start_server, stop_client, stop_server
+        sends onOpen, onClose, server_launched, client_launched
     }
     
     provided port err {
@@ -56,8 +62,8 @@ thing fragment WebSocketServer includes WebSocket {
 thing fragment WebSocketTest includes WebSocketMsgs {
     
     required port lifecycle {
-        sends start, stop
-        receives onOpen, onClose
+        sends start, stop, start_client, start_server, stop_client, stop_server
+        receives onOpen, onClose, server_launched, client_launched
     }
     
     required port err {
