@@ -135,6 +135,7 @@
         <module>../org.thingml.editor.standalone</module>
         <module>../org.thingml.editor.eclipse</module>
         <module>../org.thingml.utils</module>
+		<module>../org.thingml.utils.ws</module>
         <module>../org.thingml.coaphttp</module>
         <module>../org.thingml.samples.resources</module>
         <module>../org.thingml.samples.utils</module>
