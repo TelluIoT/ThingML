@@ -52,6 +52,7 @@
             <plugin>
                <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.0.6</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -65,7 +66,7 @@
                     <outjar>${project.build.finalName}-small.jar</outjar>
                     <obfuscate>false</obfuscate>
                     <maxMemory>1024m</maxMemory>
-                    <proguardVersion>4.5</proguardVersion>
+                    <proguardVersion>4.9</proguardVersion>
                     <options>
                         <option>-dontskipnonpubliclibraryclasses</option>
                         <option>-dontskipnonpubliclibraryclassmembers</option>
