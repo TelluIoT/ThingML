@@ -49,24 +49,6 @@
     <build>
         <plugins>
 
-            <!--
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-shade-plugin</artifactId>
-                            <version>1.4</version>
-                            <executions>
-                                <execution>
-                                    <phase>package</phase>
-                                    <goals>
-                                        <goal>shade</goal>
-                                    </goals>
-                                    <configuration>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-            -->
-
             <plugin>
                 <groupId>com.pyx4me</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
@@ -214,12 +196,5 @@
 
         </plugins>
     </build>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>evgeny-goldin.org</id>
-            <url>http://evgeny-goldin.org/artifactory/repo/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
 </project>
