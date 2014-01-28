@@ -50,7 +50,7 @@
         <plugins>
 
             <plugin>
-                <groupId>com.pyx4me</groupId>
+               <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
                 <executions>
                     <execution>
