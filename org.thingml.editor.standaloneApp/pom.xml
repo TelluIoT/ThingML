@@ -183,7 +183,7 @@
             <plugin>
                 <groupId>com.goldin.plugins</groupId>
                 <artifactId>maven-copy-plugin</artifactId>
-                <version>0.2.3</version>
+                <version>0.2.5</version>
                 <executions>
                     <execution>
                         <id>create-archive</id>
