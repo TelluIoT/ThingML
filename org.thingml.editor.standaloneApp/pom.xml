@@ -73,7 +73,7 @@
                     <injar>${project.build.finalName}.jar</injar>
                     <outjar>${project.build.finalName}-small.jar</outjar>
                     <obfuscate>false</obfuscate>
-                    <maxMemory>1024m</maxMemory>
+                    <maxMemory>512m</maxMemory>
                     <proguardVersion>4.9</proguardVersion>
                     <options>
                         <option>-dontskipnonpubliclibraryclasses</option>
