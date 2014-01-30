@@ -1,7 +1,23 @@
+/**
+ * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ *
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.thingml.utils;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.java_websocket.drafts.Draft;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -35,8 +51,13 @@ public class WSClient extends WebSocketClient {
         this.observer = observer;
     }
 
+    public WSClient(String serverURI, WSClientObserver observer, Draft draft) throws URISyntaxException {
+		super(new URI(serverURI), draft, null, 0);
+        this.observer = observer;
+    }
+
     public WSClient(URI serverURI) {
-        super(serverURI);
+		super(serverURI);
     }
 
     public void start() {

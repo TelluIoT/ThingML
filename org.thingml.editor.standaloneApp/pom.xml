@@ -49,27 +49,18 @@
     <build>
         <plugins>
 
-            <!--
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-shade-plugin</artifactId>
-                            <version>1.4</version>
-                            <executions>
-                                <execution>
-                                    <phase>package</phase>
-                                    <goals>
-                                        <goal>shade</goal>
-                                    </goals>
-                                    <configuration>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-            -->
-
             <plugin>
-                <groupId>com.pyx4me</groupId>
+               <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.0.6</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <version>4.9</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -82,8 +73,8 @@
                     <injar>${project.build.finalName}.jar</injar>
                     <outjar>${project.build.finalName}-small.jar</outjar>
                     <obfuscate>false</obfuscate>
-                    <maxMemory>1024m</maxMemory>
-                    <proguardVersion>4.5</proguardVersion>
+                    <maxMemory>512m</maxMemory>
+                    <proguardVersion>4.9</proguardVersion>
                     <options>
                         <option>-dontskipnonpubliclibraryclasses</option>
                         <option>-dontskipnonpubliclibraryclassmembers</option>
@@ -180,10 +171,11 @@
                 </executions>
 
             </plugin>
+            <!--
             <plugin>
-                <groupId>com.goldin.plugins</groupId>
-                <artifactId>maven-copy-plugin</artifactId>
-                <version>0.2.3</version>
+                <groupId>com.github.goldin</groupId>
+		<artifactId>copy-maven-plugin</artifactId>
+		<version>0.2.5</version>
                 <executions>
                     <execution>
                         <id>create-archive</id>
@@ -211,15 +203,9 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
 
         </plugins>
     </build>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>evgeny-goldin.org</id>
-            <url>http://evgeny-goldin.org/artifactory/repo/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
 </project>

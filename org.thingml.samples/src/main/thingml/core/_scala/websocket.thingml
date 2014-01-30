@@ -8,13 +8,7 @@ thing WebSocketServerScala includes WebSocketServer
 @pim "WebSocketServer"
 @platform "scala"
 @scala_trait "org.thingml.utils.WSServerObserver"
-@maven_dep "
-<dependency>
-    <groupId>org.thingml.utils</groupId>
-    <artifactId>org.thingml.utils.ws</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
-</dependency>
-"
+@thingml_maven_dep "org.thingml.utils.ws"
 {
     
     property server : WSServer
@@ -85,13 +79,7 @@ thing WebSocketClientScala includes WebSocketServer
 @pim "WebSocketClient"
 @platform "scala"
 @scala_trait "org.thingml.utils.WSClientObserver"
-@maven_dep "
-<dependency>
-    <groupId>org.thingml.utils</groupId>
-    <artifactId>org.thingml.utils.ws</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
-</dependency>
-"
+@thingml_maven_dep "org.thingml.utils.ws"
 {
     property client : WSClient
     
