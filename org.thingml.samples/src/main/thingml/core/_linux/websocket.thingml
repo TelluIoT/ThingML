@@ -1,6 +1,6 @@
 //IMPORTANT NOTE to run this example:
 // 0) folder testWS in /home/tmp
-// 1) copy tiny-web-sockets from https://github.com/SINTEF-9012/TinyWebSockets/tree/master/examples/testWS
+// 1) copy tiny-web-sockets from https://github.com/SINTEF-9012/TinyWebSockets/tree/master/example/testWS
 // 2) install the lib libtinyws.so.1.0 from https://github.com/SINTEF-9012/TinyWebSockets (copy to your /usr/libs and create a symbolic link, i.e. to libtinyws.so -> libtinyws.so.1.0)
 // 3) install libs from https://github.com/warmcat/libwebsockets (to install follow their instructions)
 
