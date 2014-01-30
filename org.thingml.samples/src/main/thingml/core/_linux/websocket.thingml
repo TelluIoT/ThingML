@@ -1,3 +1,9 @@
+//IMPORTANT NOTE to run this example:
+// 0) folder testWS in /home/tmp
+// 1) copy tiny-web-sockets from https://github.com/SINTEF-9012/TinyWebSockets/tree/master/examples/testWS
+// 2) install the lib libtinyws.so.1.0 from https://github.com/SINTEF-9012/TinyWebSockets (copy to your /usr/libs and create a symbolic link, i.e. to libtinyws.so -> libtinyws.so.1.0)
+// 3) install libs from https://github.com/warmcat/libwebsockets (to install follow their instructions)
+
 import "../websocket.thingml"
 import "timer.thingml"
 
@@ -7,6 +13,7 @@ datatype WebSocketMirrorServer
 thing WebSMirrorServer includes WebSocketServer
 @c_header "
 #include <stdlib.h>
+#include <cstdarg>
 #include \"tiny-web-sockets/client-server/WebSocketFacade.h\"
 #include \"tiny-web-sockets/client-server/WebSocketClient.h\"
 #include \"tiny-web-sockets/client-server/WebSocketMirrorServer.h\"
@@ -18,37 +25,41 @@ using namespace WebSockets;
     property server : WebSocketMirrorServer
     
 	function on_open_callback()
-		@c_prototype "void on_open_callback(void *_instance)"
+		@c_prototype "void on_open_callback(void *_instance, ...)"
 		@c_instance_var_name "(WebSMirrorServer_Instance *) _instance"
     do
-    	//print("\tWebSocketMirrorServer: on_open_callback")
     	'printf("\tWebSocketMirrorServer: on_open_callback");'
     	lifecycle!onOpen()
     end
     
     function on_close_callback()
-		@c_prototype "void on_close_callback(void *_instance)"
+		@c_prototype "void on_close_callback(void *_instance, ...)"
 		@c_instance_var_name "(WebSMirrorServer_Instance *) _instance"
     do
-    	//print("\tWebSocketMirrorServer: on_close_callback")
     	'printf("\tWebSocketMirrorServer: on_close_callback");'
     	lifecycle!onClose()
     end
     
     function on_error_callback()
-		@c_prototype "void on_error_callback(void *_instance, char* message)"
+		@c_prototype "void on_error_callback(void *_instance, ...)"
 		@c_instance_var_name "(WebSMirrorServer_Instance *) _instance"
     do
-    	//print("\tWebSocketMirrorServer: on_error_callback with message ->" + '& message &')
+        'va_list arguments;'
+        'va_start(arguments, _instance);'
+        'char* message = va_arg(arguments, char*);'
+    	'va_end(arguments);'
     	'printf("\tWebSocketMirrorServer: on_error_callback with message -> %s\n", message);'
     	err!onError('message')
     end
     
     function on_message_callback()
-		@c_prototype "void on_message_callback(void *_instance, char* message)"
+		@c_prototype "void on_message_callback(void *_instance, ...)"
 		@c_instance_var_name "(WebSMirrorServer_Instance *) _instance"
     do
-    	//print("\tWebSocketMirrorServer: on_message_callback with message ->" + '& message &')
+        'va_list arguments;'
+        'va_start(arguments, _instance);'
+        'char* message = va_arg(arguments, char*);'
+    	'va_end(arguments);'
     	'printf("\tWebSocketMirrorServer: on_message_callback with message -> %s\n", message);'
     	messaging!onMessage('message')
     end
@@ -110,6 +121,7 @@ datatype WebSocketClient
 thing WebSClient includes WebSocketServer
 @c_header "
 #include <stdlib.h>
+#include <cstdarg>
 #include \"tiny-web-sockets/client-server/WebSocketFacade.h\"
 #include \"tiny-web-sockets/client-server/WebSocketClient.h\"
 
@@ -122,7 +134,7 @@ using namespace WebSockets;
     property status : WS_ERR
     
     function on_open_callback_client()
-		@c_prototype "void on_open_callback_client(void *_instance)"
+		@c_prototype "void on_open_callback_client(void *_instance, ...)"
 		@c_instance_var_name "(WebSClient_Instance *) _instance"
     do
     	//print("\tWebSocketClient: on_open_callback")
@@ -131,7 +143,7 @@ using namespace WebSockets;
     end
     
     function on_close_callback_client()
-		@c_prototype "void on_close_callback_client(void *_instance)"
+		@c_prototype "void on_close_callback_client(void *_instance, ...)"
 		@c_instance_var_name "(WebSClient_Instance *) _instance"
     do
     	//print("\tWebSocketClient: on_close_callback")
@@ -140,19 +152,25 @@ using namespace WebSockets;
     end
     
     function on_error_callback_client()
-		@c_prototype "void on_error_callback_client(void *_instance, char* message)"
+		@c_prototype "void on_error_callback_client(void *_instance, ...)"
 		@c_instance_var_name "(WebSClient_Instance *) _instance"
     do
-    	//print("\tWebSocketClient: on_error_callback with message ->" + '& message &')
+        'va_list arguments;'
+        'va_start(arguments, _instance);'
+        'char* message = va_arg(arguments, char*);'
+    	'va_end(arguments);'
     	'printf("\tWebSocketClient: on_error_callback with message -> %s\n", message);'
     	err!onError('message')
     end
     
     function on_message_callback_client()
-		@c_prototype "void on_message_callback_client(void *_instance, char* message)"
+		@c_prototype "void on_message_callback_client(void *_instance, ...)"
 		@c_instance_var_name "(WebSClient_Instance *) _instance"
     do
-    	//print("\tWebSocketClient: on_message_callback with message ->" + '& message &')
+        'va_list arguments;'
+        'va_start(arguments, _instance);'
+        'char* message = va_arg(arguments, char*);'
+    	'va_end(arguments);'
     	'printf("\tWebSocketClient: on_message_callback with message -> %s\n", message);'
     	messaging!onMessage('message')
     end
@@ -172,7 +190,6 @@ using namespace WebSockets;
         state Init {
             
             on entry do
-                //print("\tINIT CLIENT ON HOST:" + _host + "PORT: " + _port)
                 'printf("\tINIT CLIENT ON HOST: %s %s\n",'& _host &', '& _port& ');'
                	init_client()
             end
@@ -267,11 +284,12 @@ thing Test includes WebSocketTest, ClockMsgs {
 }
 
 configuration testWS
-  @output_folder "/home/vassik/ThingML/examples"
+  @output_folder "/home/tmp"
   @debug "true"
   @debug_fifo "true"
   @debug_message_send ".*"
   @debug_message_receive ".*"
+  @add_c_libraries "pthread websockets tinyws"
 {
 
     instance server : WebSMirrorServer    
