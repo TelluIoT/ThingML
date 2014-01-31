@@ -506,6 +506,45 @@ case class ConnectorKotlinGenerator(override val self: Connector) extends ThingM
 
 case class ThingKotlinGenerator(override val self: Thing) extends ThingMLKotlinGenerator(self) {
 
+  def buildState(builder: StringBuilder = Context.builder, s : State) {
+    s match {
+      case c : CompositeState =>
+        builder append "val states_" + c.getName + " : MutableList<State> = ArrayList()\n"
+        c.getSubstate.foreach{s => buildState(builder, s)}
+        builder append "val regions_" + c.getName + " : MutableList<Region> = ArrayList()\n"
+        c.getRegion.foreach{r => 
+          buildRegion(builder, r)
+          builder append "regions_" + c.getName + ".add(reg_" + r.getName + ")\n"
+        }
+        if (c.isInstanceOf[StateMachine]) 
+          builder append "val state_" + c.getName + ": State = StateMachine(action = DefaultStateAction(), states = states_" + c.getName + ", initial = " + c.getInitial.getName + ", internals = internals, transitions = transitions, name = \"" + c.getName + "\")\n"//TODO: transitions
+        else
+          builder append "val state_" + c.getName + ": State = CompositeState(action = DefaultStateAction(), states = states_" + c.getName  + ", initial = " + c.getInitial.getName + ", internals = internals, transitions = transitions, name = \"" + c.getName + "\")\n"//TODO: transitions
+        builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(" + c.getName + ")\n"
+      case s : State => 
+        builder append "val state_" + s.getName + " : State = AtomicState(name = \"" + s.getName + "\", action = DebugStateAction())\n"//TODO: point to proper action (to be generated)
+        builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(" + s.getName + ")\n"
+    }
+    
+    builder append "val transitions_" + s.getName + " : MutableList<Transition> = ArrayList()\n"
+    s.getOutgoing.foreach{t =>
+      if (t.getEvent != null)
+        builder append "val t_" + t.getName + " : Transition = Transition(source = state_" + t.getSource.getName + ", target = " + t.getTarget.getName + ", action = DefaultHandlerAction())\n"
+      else
+        builder append "val t_" + t.getName + " : Transition = AutoTransition(source = state_" + t.getSource.getName + ", target = " + t.getTarget.getName + ", action = DefaultHandlerAction(), event = TODO)\n"
+      builder append "transitions_" + s.getName + ".add(t_" + t.getName + ")\n"    
+    }
+    
+  }
+  
+  def buildRegion(builder: StringBuilder = Context.builder, r : Region) {
+    builder append "val states_" + r.getName + " : MutableList<State> = ArrayList()\n"
+    r.getSubstate.foreach{s => 
+      buildState(builder, s)
+    }
+    builder append "val reg_" + r.getName + " : Region = Region(states_" + r.getName + ", state_" + r.getInitial.getName + ", internals, transitions_" + r.getName + ", false)"
+  }
+  
   override def generateScala(builder: StringBuilder = Context.builder) {
     Context.thing = self
     
