@@ -1,8 +1,11 @@
 //IMPORTANT NOTE to run this example:
-// 0) folder testWS in /home/tmp
-// 1) copy tiny-web-sockets from https://github.com/SINTEF-9012/TinyWebSockets/tree/master/example/testWS
-// 2) install the lib libtinyws.so.1.0 from https://github.com/SINTEF-9012/TinyWebSockets (copy to your /usr/libs and create a symbolic link, i.e. to libtinyws.so -> libtinyws.so.1.0)
-// 3) install libs from https://github.com/warmcat/libwebsockets (to install follow their instructions)
+// 0) download and install https://github.com/warmcat/libwebsockets (follow their instructions)
+// 1) download and install from https://github.com/SINTEF-9012/TinyWebSockets/ (make && make install)
+
+
+//NOTE:
+//make sure that the dynamic linker is set to look up /usr/local/lib
+//for more details see http://lonesysadmin.net/2013/02/22/error-while-loading-shared-libraries-cannot-open-shared-object-file/
 
 import "../websocket.thingml"
 import "timer.thingml"
@@ -14,9 +17,9 @@ thing WebSMirrorServer includes WebSocketServer
 @c_header "
 #include <stdlib.h>
 #include <cstdarg>
-#include \"tiny-web-sockets/client-server/WebSocketFacade.h\"
-#include \"tiny-web-sockets/client-server/WebSocketClient.h\"
-#include \"tiny-web-sockets/client-server/WebSocketMirrorServer.h\"
+#include \"tinyws/client-server/WebSocketFacade.h\"
+#include \"tinyws/client-server/WebSocketClient.h\"
+#include \"tinyws/client-server/WebSocketMirrorServer.h\"
 
 using namespace WebSockets;
 "
@@ -122,8 +125,8 @@ thing WebSClient includes WebSocketServer
 @c_header "
 #include <stdlib.h>
 #include <cstdarg>
-#include \"tiny-web-sockets/client-server/WebSocketFacade.h\"
-#include \"tiny-web-sockets/client-server/WebSocketClient.h\"
+#include \"tinyws/client-server/WebSocketFacade.h\"
+#include \"tinyws/client-server/WebSocketClient.h\"
 
 using namespace WebSockets;
 "

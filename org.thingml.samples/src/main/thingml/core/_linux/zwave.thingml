@@ -6,6 +6,10 @@
 //5) Run: make && make install
 //6) install the udev library, make sure that pthread is also installed
 
+//NOTE:
+//make sure that the dynamic linker is set to look up /usr/local/lib
+//for more details see http://lonesysadmin.net/2013/02/22/error-while-loading-shared-libraries-cannot-open-shared-object-file/
+
 import "../../thingml.thingml"
 import "clock.thingml"
 
@@ -53,7 +57,7 @@ using namespace TinyOpenZWaveApi;
 "
 {
 	property pport : String = "/dev/ttyUSB0"
-	property config : String = "/usr/share/openzwave/config/"
+	property config : String = "/usr/local/share/openzwave/config/"
 	property zwdir : String = ""
 	property domo_log : String = "./DomoZWave_Log"
 	property enableLog : Boolean = true
