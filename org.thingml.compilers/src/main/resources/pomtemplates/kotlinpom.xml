@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.thingml.generated</groupId>
+    <artifactId><!--CONFIGURATIONNAME--></artifactId>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+    
+	<properties>
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            <kotlin.version>0.6.1910</kotlin.version>
+            <thingml.version>0.6.0-SNAPSHOT</thingml.version>
+            <kosm.version>0.1.0-SNAPSHOT</kosm.version>
+        </properties>
+	
+	<repositories>        
+    
+        <repository>
+            <id>thingml-snapshot</id>
+            <name>thingml-snapshot</name>
+            <url>http://maven.thingml.org/thingml-snapshot/</url>
+        </repository>
+        
+        <repository>
+            <id>thingml-release</id>
+            <name>thingml-release</name>
+            <url>http://maven.thingml.org/thingml-release/</url>
+        </repository>
+        
+        <repository>
+            <id>thirdparty</id>
+            <name>thingml-snapshot</name>
+            <url>http://maven.thingml.org/thirdparty/</url>
+        </repository>
+		
+	<repository>
+            <id>jetbrains-release</id>
+            <url>http://repository.jetbrains.com/all</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+		
+        <repository>
+            <id>jetbrains-snapshots</id>
+            <url>http://repository.jetbrains.com/all</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+		
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+        
+        <!--Additional repositories-->
+        <!--REPO-->
+		
+    </repositories>
+	
+	
+    <dependencies>
+
+        <!--<dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-runtime</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
+	<dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>-->
+        
+        <dependency>
+            <groupId>org.sintef</groupId>
+            <artifactId>org.sintef.kosm</artifactId>
+            <version>${kosm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!--Additional dependencies-->
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.utils</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+        <!--DEP-->		
+    </dependencies>
+
+	
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+		<plugins>
+
+            <plugin>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <version>${kotlin.version}</version>
+                <configuration />
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-js-library</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>js</id>
+                        <goals>
+                            <goal>js</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>1.7.2</version>
+                <executions>
+
+                    <execution>
+                        <phase>package</phase>
+                        <id>js</id>
+                        <configuration>
+                            <jsSourceDir>../../../target/js</jsSourceDir>
+                            <jsTargetDir>../js</jsTargetDir>
+                            <jsEngine>CLOSURE</jsEngine>
+                            <jsFinalFile><!--CONFIGURATIONNAME-->.merged.min.js</jsFinalFile>
+                            <jsSourceFiles>
+                                <jsSourceFile>kotlin-lib-ecma5.js</jsSourceFile>
+                                <jsSourceFile>kotlin-lib.js</jsSourceFile>
+                                <jsSourceFile>kotlin-maps.js</jsSourceFile>
+                                <jsSourceFile><!--CONFIGURATIONNAME-->.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <!--<verbose>true</verbose>-->
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+			
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>kotlin-maven-plugin</artifactId>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <version>${kotlin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+    </build>
+    
+</project>

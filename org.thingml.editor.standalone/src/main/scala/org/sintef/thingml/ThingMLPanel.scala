@@ -49,10 +49,11 @@ import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
 import org.thingml.cgenerator.CGenerator
 import org.thingml.cppgenerator.CPPGenerator
 import org.thingml.scalagenerator.ScalaGenerator
-import org.thingml.java.pauwaregenerator.PauWareGenerator
+//import org.thingml.java.pauwaregenerator.PauWareGenerator
 import org.thingml.javagenerator.gui.SwingGenerator
 import org.thingml.thingmlgenerator.ThingMLGenerator
-import org.thingml.scalagenerator.coap.ScalaCoAPGenerator
+import org.thingml.kotlingenerator.KotlinGenerator
+//import org.thingml.scalagenerator.coap.ScalaCoAPGenerator
 //import org.thingml.mediatorgenerator.LoggerGenerator
 import java.io._
 import java.util.Hashtable
@@ -97,19 +98,20 @@ class ThingMLPanel extends JPanel {
   menuframe.setBorder(BorderFactory.createEmptyBorder)
   add(menuframe,BorderLayout.CENTER)
   
-  var compilersMenu = new JMenu("Compile to");
+  val compilersMenu = new JMenu("Compile to");
   
-  var b = new JMenuItem("Arduino")
-  var bC = new JMenuItem("Posix C")
-  var bCPP = new JMenuItem("C++")
-  var rosC = new JMenuItem("ROS Node")
-  var bScala = new JMenuItem("Scala/SMaC")
-  var bSwing = new JMenuItem("Java/Swing")
-  var bThingML = new JMenuItem("ThingML/Comm")
-  var bThingML2 = new JMenuItem("ThingML/Comm2")
-  var bCoAP = new JMenuItem("Scala/CoAP")
+  val b = new JMenuItem("Arduino")
+  val bC = new JMenuItem("Posix C")
+  val bCPP = new JMenuItem("C++")
+  val rosC = new JMenuItem("ROS Node")
+  val bScala = new JMenuItem("Scala/SMaC")
+  val bSwing = new JMenuItem("Java/Swing")
+  val bThingML = new JMenuItem("ThingML/Comm")
+  val bThingML2 = new JMenuItem("ThingML/Comm2")
+  val bKotlin = new JMenuItem("Kotlin")
+  //var bCoAP = new JMenuItem("Scala/CoAP")
   var bKevoree = new JMenuItem("Java/Kevoree")
-  var bPauWare = new JMenuItem("Experimental/PauWare")
+  //var bPauWare = new JMenuItem("Experimental/PauWare")
   //var bLogger = new JMenuItem("Logger")
   
   val filechooser = new JFileChooser();
@@ -275,7 +277,7 @@ class ThingMLPanel extends JPanel {
       }         
     })
 
-  bCoAP.addActionListener(new ActionListener {
+  /*bCoAP.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         println("Input file : " + targetFile)
         if (targetFile.isEmpty)
@@ -290,7 +292,7 @@ class ThingMLPanel extends JPanel {
           case t : Throwable => t.printStackTrace()
         }
       }
-    })
+    })*/
   
   bKevoree.addActionListener(new ActionListener{
       def actionPerformed(e:ActionEvent){
@@ -309,7 +311,24 @@ class ThingMLPanel extends JPanel {
       }
     })
   
-    bPauWare.addActionListener(new ActionListener{
+    bKotlin.addActionListener(new ActionListener{
+      def actionPerformed(e:ActionEvent){
+        println("Input file : "+targetFile)
+        if(targetFile.isEmpty) return;
+        
+        try{
+          val thingmlModel = loadThingMLmodel(targetFile.get)
+          thingmlModel.allConfigurations.foreach{c => 
+            KotlinGenerator.compileAndRun(c,thingmlModel)
+          }
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+      }
+    })
+  
+    /*bPauWare.addActionListener(new ActionListener{
       def actionPerformed(e:ActionEvent){
         println("Input file : "+targetFile)
         if(targetFile.isEmpty) return;
@@ -324,7 +343,7 @@ class ThingMLPanel extends JPanel {
           case t : Throwable => t.printStackTrace()
         }
       }
-    })
+    })*/
     
     /*bLogger.addActionListener(new ActionListener{
       def actionPerformed(e:ActionEvent){
@@ -353,9 +372,10 @@ class ThingMLPanel extends JPanel {
   compilersMenu.add(bSwing)
   compilersMenu.add(bThingML)
   compilersMenu.add(bThingML2)
-  compilersMenu.add(bCoAP)
+  //compilersMenu.add(bCoAP)
   compilersMenu.add(bKevoree)
-  compilersMenu.add(bPauWare)
+  compilersMenu.add(bKotlin)
+  //compilersMenu.add(bPauWare)
   //compilersMenu.add(bLogger)
   menubar.add(compilersMenu)
   
