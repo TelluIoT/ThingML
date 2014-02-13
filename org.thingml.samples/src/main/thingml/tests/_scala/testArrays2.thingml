@@ -1,0 +1,14 @@
+import "../../core/_scala/test.thingml"
+import "../testArrays2.thingml"
+import "../tester.thingml"
+import "../../core/_scala/timer.thingml"
+
+configuration testArrays2 {
+	instance timer : TimerScala
+	instance harness : Tester
+	instance dump : TestDumpScala
+	instance test : TestArrays2
+	connector test.harness => dump.dump
+	connector test.harness => harness.test
+	connector harness.timer => timer.timer
+}

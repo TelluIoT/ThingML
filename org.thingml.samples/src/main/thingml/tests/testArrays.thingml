@@ -1,6 +1,6 @@
 import "../thingml.thingml"
 
-thing TestArray includes Test 
+thing TestArrays includes Test 
 @test "12345678x12345678 # 12345678e87654321"
 {
 
@@ -45,7 +45,7 @@ thing TestArray includes Test
 
 configuration fragment TestArrays {
     
-    instance test : TestArray
+    instance test : TestArrays
     
     set test.array[7] = 8
     set test.array[4] = 5

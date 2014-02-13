@@ -1,0 +1,8 @@
+import "../../core/_arduino/test.thingml"
+import "../testMaskProperty.thingml"
+
+configuration testMaskProperty {
+    instance test : TestMaskProperty
+    group harness : TestHarnessArduino 
+    connector test.harness => harness.harness.test
+}

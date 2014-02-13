@@ -1,6 +1,7 @@
 import "../hardware/bricks/led.thingml"
+import "../core/tracer.thingml"
 
-thing Blink2Leds includes LedMsgs, TimerMsgs
+thing Blink2Leds includes LedMsgs, TimerMsgs, TracerMsgs
 {
 
 	required port timer1
@@ -24,14 +25,20 @@ thing Blink2Leds includes LedMsgs, TimerMsgs
 	{
 		sends led_toggle
 	}
+	
+	required port tracer
+	{
+		sends write
+	}
 
     statechart Blink2LedsImpl init Blinking 
     {    
         state Blinking 
         {    
             on entry do 
-            	timer1!timer_start(1000)
-            	timer2!timer_start(333)
+            	//timer1!timer_start(1000)
+            	//timer2!timer_start(333)
+            	tracer!write()
             end
             
             internal Blink1 event timer1?timer_timeout

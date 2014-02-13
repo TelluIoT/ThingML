@@ -1,6 +1,6 @@
 import "../thingml.thingml"
 
-thing TestArray
+thing TestArrays3 includes Test
 {
 
 	property array : Int16[8]
@@ -9,9 +9,9 @@ thing TestArray
 	
 }
 
-configuration TestArrays {
+configuration TestArrays3 {
     
-    instance test : TestArray
+    instance test : TestArrays3
     
     set test.array[7] = 7
 

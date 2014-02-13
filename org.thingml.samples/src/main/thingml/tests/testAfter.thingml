@@ -23,3 +23,12 @@ thing TestAfter includes Test
 		}
 	}
 }
+
+thing TersterAfter includes TestHarness
+{
+	statechart TesterAfter init T{
+		state T {
+			
+		}
+	}
+}

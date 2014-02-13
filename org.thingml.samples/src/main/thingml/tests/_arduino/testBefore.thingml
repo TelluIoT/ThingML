@@ -1,0 +1,8 @@
+import "../../core/_arduino/test.thingml"
+import "../testBefore.thingml"
+
+configuration testBefore {
+    instance test : TestBefore
+    group harness : TestHarnessArduino 
+    connector test.harness => harness.harness.test
+}

@@ -1,0 +1,14 @@
+import "../../core/_scala/test.thingml"
+import "../testOnExit.thingml"
+import "../tester.thingml"
+import "../../core/_scala/timer.thingml"
+
+configuration testOnExit {
+	instance timer : TimerScala
+	instance harness : Tester
+	instance dump : TestDumpScala
+	instance test : TestOnExit
+	connector test.harness => dump.dump
+	connector test.harness => harness.test
+	connector harness.timer => timer.timer
+}

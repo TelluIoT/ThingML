@@ -10,12 +10,9 @@ thing fragment TestMsg {
 }
 
 thing fragment TestHarness includes TestMsg {
-
 	provided port test {
 		sends testIn
-		receives testOut, testFailure
 	}
-	
 }
 
 thing fragment Test includes TestMsg {
@@ -24,4 +21,13 @@ thing fragment Test includes TestMsg {
 		receives testIn
 		sends testOut, testFailure
 	}
+}
+
+
+thing fragment TestDump includes TestMsg {
+
+	provided port dump {
+		receives testOut, testFailure
+	}
+	
 }

@@ -1,6 +1,6 @@
 import "../thingml.thingml"
 
-thing TestArray2 includes Test 
+thing TestArrays2 includes Test 
 @test "xxx # helloworldworld"
 {
 
@@ -56,6 +56,6 @@ thing TestArray2 includes Test
 
 configuration fragment TestArrays2 {
     
-    instance test : TestArray2
+    instance test : TestArrays2
 
 }

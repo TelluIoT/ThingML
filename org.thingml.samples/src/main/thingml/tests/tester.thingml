@@ -1,0 +1,29 @@
+import "../thingml.thingml"
+
+//Input: ttt
+
+thing Tester includes TestHarness, TimerClient
+{
+	statechart Tester init e0 {
+		state e0 {
+			on entry timer!timer_start(500)
+			transition -> e1
+			event timer?timer_timeout
+			action test!testIn('\'t\'')
+		}
+		state e1 {
+			on entry timer!timer_start(500)
+			transition -> e2
+			event timer?timer_timeout
+			action test!testIn('\'t\'')
+		}
+		state e2 {
+			on entry timer!timer_start(500)
+			transition -> e3
+			event timer?timer_timeout
+			action test!testIn('\'t\'')
+		}
+		state e3 {
+		}
+	}
+}

@@ -1,0 +1,40 @@
+import "../test.thingml"
+
+//datatype Tracer
+//@scala_type "org.thingml.devices.Tracer";
+
+thing TestDumpScala includes TestDump
+@pim "TestHarness"
+@platform "scala"
+{
+   // property device : Tracer   
+	
+	function write(string : String) 
+	do
+		//'' & device & '.asInstanceOf[org.thingml.devices.Tracer].writeToFile("' & string & '")'
+		print(string)
+	end
+	
+	statechart ScalaHarness init Testing {
+		
+		
+		state Testing {
+			
+			//internal event polling?poll
+            //guard 'Serial.available()' > 0
+            //action test!testIn('(char)Serial.read()')
+            
+            internal event m : dump?testOut
+            action write(m.c)//write(m.c)
+            
+            transition -> Failed 
+            event dump?testFailure
+            action write("*FAILURE*")
+			
+		}
+		
+		state Failed {
+
+		}
+	}
+}

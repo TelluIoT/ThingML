@@ -1,0 +1,14 @@
+import "../../core/_scala/test.thingml"
+import "../testCompositeStates.thingml"
+import "../tester.thingml"
+import "../../core/_scala/timer.thingml"
+
+configuration testCompositeStates {
+	instance timer : TimerScala
+	instance harness : Tester
+	instance dump : TestDumpScala
+	instance test : TestCompositeStates
+	connector test.harness => dump.dump
+	connector test.harness => harness.test
+	connector harness.timer => timer.timer
+}
