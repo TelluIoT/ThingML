@@ -36,7 +36,7 @@
                 <version>1.9.0</version>
                 <configuration>
                     <basedir>${basedir}</basedir>
-                    <header>${basedir}/HEADER</header>
+                    <header>HEADER</header>
                     <strictCheck>true</strictCheck>
                     <properties>
                         <owner>SINTEF</owner>
