@@ -3,7 +3,7 @@ import "../testMultiMessages.thingml"
 import "../tester.thingml"
 import "../../core/_scala/timer.thingml"
 
-configuration testMultiMessages {
+configuration TestMultiMessages {
 	instance timer : TimerScala
 	instance harness : Tester
 	instance dump : TestDumpScala

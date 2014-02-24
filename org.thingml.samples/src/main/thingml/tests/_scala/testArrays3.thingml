@@ -3,7 +3,7 @@ import "../testArrays3.thingml"
 import "../tester.thingml"
 import "../../core/_scala/timer.thingml"
 
-configuration testArrays3 {
+configuration TestArrays3 {
 	instance timer : TimerScala
 	instance harness : Tester
 	instance dump : TestDumpScala

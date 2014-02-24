@@ -1,7 +1,7 @@
 import "../../core/_arduino/test.thingml"
 import "../testMultiClient.thingml"
 
-configuration testMultiClient {
+configuration TestMultiClient {
     instance test : TestMultiClient
     group harness : TestHarnessArduino 
     connector test.harness => harness.harness.test

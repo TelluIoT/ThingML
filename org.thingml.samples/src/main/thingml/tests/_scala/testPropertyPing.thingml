@@ -3,7 +3,7 @@ import "../testPropertyPing.thingml"
 import "../tester.thingml"
 import "../../core/_scala/timer.thingml"
 
-configuration testPropertyPing {
+configuration TestPropertyPing {
 	instance timer : TimerScala
 	instance harness : Tester
 	instance dump : TestDumpScala

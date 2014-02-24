@@ -3,7 +3,7 @@ import "../testMultiClientPing.thingml"
 import "../tester.thingml"
 import "../../core/_scala/timer.thingml"
 
-configuration testMultiClientPing {
+configuration TestMultiClientPing {
 	instance timer : TimerScala
 	instance harness : Tester
 	instance dump : TestDumpScala

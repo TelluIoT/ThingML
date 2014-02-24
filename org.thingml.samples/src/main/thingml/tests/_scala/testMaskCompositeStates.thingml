@@ -3,7 +3,7 @@ import "../testMaskCompositeStates.thingml"
 import "../tester.thingml"
 import "../../core/_scala/timer.thingml"
 
-configuration testMaskCompositeStates {
+configuration TestMaskCompositeStates {
 	instance timer : TimerScala
 	instance harness : Tester
 	instance dump : TestDumpScala

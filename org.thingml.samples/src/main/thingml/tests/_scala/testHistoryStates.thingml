@@ -3,7 +3,7 @@ import "../testHistoryStates.thingml"
 import "../tester.thingml"
 import "../../core/_scala/timer.thingml"
 
-configuration testHistoryStates {
+configuration TestHistoryStates {
 	instance timer : TimerScala
 	instance harness : Tester
 	instance dump : TestDumpScala

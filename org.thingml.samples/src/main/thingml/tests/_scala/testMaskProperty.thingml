@@ -3,7 +3,7 @@ import "../testMaskProperty.thingml"
 import "../tester.thingml"
 import "../../core/_scala/timer.thingml"
 
-configuration testMaskProperty {
+configuration TestMaskProperty {
 	instance timer : TimerScala
 	instance harness : Tester
 	instance dump : TestDumpScala

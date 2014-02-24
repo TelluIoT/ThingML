@@ -1,7 +1,7 @@
 import "../../core/_arduino/test.thingml"
 import "../testMultiMessages.thingml"
 
-configuration testMultiMessages {
+configuration TestMultiMessages {
     instance test : TestMultiMessages
     group harness : TestHarnessArduino 
     connector test.harness => harness.harness.test

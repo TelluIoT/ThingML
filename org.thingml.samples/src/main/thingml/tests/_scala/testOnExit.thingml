@@ -3,7 +3,7 @@ import "../testOnExit.thingml"
 import "../tester.thingml"
 import "../../core/_scala/timer.thingml"
 
-configuration testOnExit {
+configuration TestOnExit {
 	instance timer : TimerScala
 	instance harness : Tester
 	instance dump : TestDumpScala

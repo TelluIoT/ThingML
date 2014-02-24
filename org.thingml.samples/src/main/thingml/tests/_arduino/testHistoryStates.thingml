@@ -1,7 +1,7 @@
 import "../../core/_arduino/test.thingml"
 import "../testHistoryStates.thingml"
 
-configuration testHistoryStates {
+configuration TestHistoryStates {
     instance test : TestHistoryStates
     group harness : TestHarnessArduino 
     connector test.harness => harness.harness.test
