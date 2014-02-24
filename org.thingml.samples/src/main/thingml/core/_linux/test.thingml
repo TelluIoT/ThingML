@@ -1,0 +1,31 @@
+import "../test.thingml"
+
+
+thing TestDumpLinux includes TestDump
+{
+	
+	function write(string : String) 
+	do
+		print(string)
+		print("no c dump yet")
+	end
+	
+	statechart ScalaHarness init Testing {
+		
+		
+		state Testing {
+            
+            internal event m : dump?testOut
+            action write(m.c)
+            
+            transition -> Failed 
+            event dump?testFailure
+            action write("*FAILURE*")
+			
+		}
+		
+		state Failed {
+
+		}
+	}
+}

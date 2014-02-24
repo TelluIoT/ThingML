@@ -61,6 +61,9 @@ import javax.management.remote.rmi._RMIConnection_Stub
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.thingml.kevoreegenerator.KevoreeGenerator
 
+import java.nio.file.Path
+import java.nio.file.Paths
+
 import scala.collection.JavaConversions._
 
 class ThingMLPanel extends JPanel {
@@ -210,12 +213,20 @@ class ThingMLPanel extends JPanel {
 
   bScala.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
+			val path = "org.thingml.samples/src/main/thingml/tests/_scala/testHello.thingml"
+			val realPath : Path = Paths.get("").toAbsolutePath().getParent().toAbsolutePath().resolve(path)
+			val file : File = realPath.toFile()
+			targetFile = Some(file)
         println("Input file : " + targetFile)
+		
         if (targetFile.isEmpty) 
           return
         try {
           val thingmlModel = loadThingMLmodel(targetFile.get)
+			println("Input file : " + targetFile.get.getAbsolutePath)
           thingmlModel.allConfigurations.foreach{c =>
+			val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
+			javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
             ScalaGenerator.compileAndRun(c, thingmlModel)                                                                      
           }
           
@@ -391,7 +402,6 @@ class ThingMLPanel extends JPanel {
     val lineStart = codeEditor.getDocument.getDefaultRootElement.getElement(line - 1).getStartOffset
     lineStart + column
   }
-
   def getNextIndex(offset: Int) = {
     if (codeEditor.getDocument.getEndPosition.getOffset > (offset + 1)) {
       offset + 1

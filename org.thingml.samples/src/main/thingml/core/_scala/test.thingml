@@ -1,17 +1,16 @@
 import "../test.thingml"
 
-//datatype Tracer
-//@scala_type "org.thingml.devices.Tracer";
+datatype Dumper
+@scala_type "org.thingml.devices.Dumper";
 
 thing TestDumpScala includes TestDump
-@pim "TestHarness"
-@platform "scala"
+@thingml_maven_dep "org.thingml.samples.utils"
 {
-   // property device : Tracer   
+   property device : Dumper  
 	
 	function write(string : String) 
 	do
-		//'' & device & '.asInstanceOf[org.thingml.devices.Tracer].writeToFile("' & string & '")'
+		'' & device & '.asInstanceOf[org.thingml.devices.Dumper].write(' & string & ')'
 		print(string)
 	end
 	
@@ -19,13 +18,13 @@ thing TestDumpScala includes TestDump
 		
 		
 		state Testing {
-			
+			on entry device = 'new org.thingml.devices.Dumper()'
 			//internal event polling?poll
             //guard 'Serial.available()' > 0
             //action test!testIn('(char)Serial.read()')
             
             internal event m : dump?testOut
-            action write(m.c)//write(m.c)
+            action write(m.c)
             
             transition -> Failed 
             event dump?testFailure

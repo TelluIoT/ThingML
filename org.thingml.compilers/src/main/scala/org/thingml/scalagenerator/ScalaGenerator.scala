@@ -215,7 +215,7 @@ object ScalaGenerator {
     w.println(pom);
     w.close();
     
-    javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+    //javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
 
     /*
      * GENERATE SOME DOCUMENTATION
