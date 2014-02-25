@@ -1,8 +1,0 @@
-import "../../core/_arduino/test.thingml"
-import "../testArrays2.thingml"
-
-configuration TestArrays2 {
-    instance test : TestArrays2
-    group harness : TestHarnessArduino 
-    connector test.harness => harness.harness.test
-}

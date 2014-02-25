@@ -1,8 +1,0 @@
-import "../../core/_arduino/test.thingml"
-import "../testOnExit.thingml"
-
-configuration TestOnExit {
-    instance test : TestOnExit
-    group harness : TestHarnessArduino 
-    connector test.harness => harness.harness.test
-}

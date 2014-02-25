@@ -1,0 +1,15 @@
+import "../../../../../../org.thingml.samples/src/main/thingml/core/_scala/test.thingml"
+import "../testTransition.thingml"
+import "../tester.thingml"
+import "../../../../../../org.thingml.samples/src/main/thingml/core/_scala/timer.thingml"
+
+configuration TestTransition {
+	instance timer : TimerScala
+	instance harness : Tester
+	instance dump : TestDumpScala
+	instance test : TestTransition
+	connector test.harness => dump.dump
+	connector test.harness => harness.test
+	connector harness.testEnd => dump.dump
+	connector harness.timer => timer.timer
+}

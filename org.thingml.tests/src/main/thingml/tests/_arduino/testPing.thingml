@@ -1,0 +1,10 @@
+import "../../../../../../org.thingml.samples/src/main/thingml/core/_arduino/test.thingml"
+import "../testPing.thingml"
+
+configuration TestPing {
+    instance test : TestPing
+    group harness : TestHarnessArduino 
+    connector test.harness => harness.harness.test
+	instance pingable : Pingable
+	connector test.ppclient => pingable.pp
+}

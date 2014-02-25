@@ -1,8 +1,0 @@
-import "../../core/_arduino/test.thingml"
-import "../testMultiClientPing.thingml"
-
-configuration TestMultiClientPing {
-    instance test : TestMultiClientPing
-    group harness : TestHarnessArduino 
-    connector test.harness => harness.harness.test
-}
