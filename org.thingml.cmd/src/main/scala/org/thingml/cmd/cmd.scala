@@ -103,13 +103,14 @@ object Cmd {
           val thingmlModel = loadThingMLmodel(targetFile.get)
 			println("Input file : " + targetFile.get.getAbsolutePath)
           thingmlModel.allConfigurations.foreach{c =>
-            ScalaGenerator.compileAndRun(c, thingmlModel)                                                                      
+            ScalaGenerator.compileAndNotRun(c, thingmlModel)                                                                      
           }
           
         }
         catch {
           case t : Throwable => t.printStackTrace()
         }
+		System.exit(0)
       }         
       
   
@@ -119,17 +120,5 @@ object Cmd {
     var model: Resource = rs.createResource(xmiuri)
     model.load(null)
     model.getContents.get(0).asInstanceOf[ThingMLModel]
-  }/*
-  
-  def loadThingMLmodel(file : File) = {
-			println("file.exists(): "+file.exists())
-    var rs: ResourceSet = new ResourceSetImpl
-			println("file.getAbsolutePath: "+file.getAbsolutePath)
-    var xmiuri: URI = URI.createFileURI(file.getAbsolutePath())
-	println("xmiuri: "+xmiuri)
-    var model: Resource = rs.createResource(xmiuri)
-	println("model: "+model)
-    model.load(null)
-    model.getContents.get(0).asInstanceOf[ThingMLModel]
-  }*/
+  }
 }

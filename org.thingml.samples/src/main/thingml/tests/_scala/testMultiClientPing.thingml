@@ -10,5 +10,10 @@ configuration TestMultiClientPing {
 	instance test : TestMultiClientPing
 	connector test.harness => dump.dump
 	connector test.harness => harness.test
+	connector harness.testEnd => dump.dump
 	connector harness.timer => timer.timer
+	instance pingServ1 : PingServer
+	instance pingServ2 : PingServer
+	connector test.ppclient1 => pingServ1.pp
+	connector test.ppclient2 => pingServ2.pp
 }

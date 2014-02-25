@@ -62,9 +62,3 @@ thing TestFunction includes Test
     	}
     }
 }
-
-configuration fragment TestFunctionFrag {
-    
-    instance test : TestFunction
-
-}

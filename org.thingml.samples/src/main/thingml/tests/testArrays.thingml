@@ -1,7 +1,12 @@
 import "../thingml.thingml"
 
+
 thing TestArrays includes Test 
 @test "12345678x12345678 # 12345678e87654321"
+@conf "set test.array[7] = 8"
+@conf "set test.array[4] = 5"
+@conf "set test.array[5] = 6"
+@conf "set test.array[6] = 7"
 {
 
 	property index : UInt8 = 0
@@ -41,15 +46,4 @@ thing TestArrays includes Test
     	}
 
     }
-}
-
-configuration fragment TestArrays {
-    
-    instance test : TestArrays
-    
-    set test.array[7] = 8
-    set test.array[4] = 5
-	set test.array[5] = 6
-	set test.array[6] = 7
-	
 }

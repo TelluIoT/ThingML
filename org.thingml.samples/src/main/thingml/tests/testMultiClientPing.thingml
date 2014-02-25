@@ -25,6 +25,10 @@ thing PingServer includes PingMsg {
 
 thing TestMultiClientPing includes Test, PingMsg
 @test "1121200221 # P1P1P2P1P2PPP2P2P1" // False
+@conf "instance pingServ1 : PingServer"
+@conf "instance pingServ2 : PingServer"
+@conf "connector test.ppclient1 => pingServ1.pp"
+@conf "connector test.ppclient2 => pingServ2.pp"
 {
     required port ppclient1 {
         sends ping
@@ -77,12 +81,4 @@ thing TestMultiClientPing includes Test, PingMsg
 			}
 		}
 	}
-}
-
-configuration fragment TestMultiClientPingFrag {
-    instance pingServ1 : PingServer
-    instance pingServ2 : PingServer
-    instance test : TestMultiClientPing
-    connector test.ppclient1 => pingServ1.pp
-    connector test.ppclient2 => pingServ2.pp
 }

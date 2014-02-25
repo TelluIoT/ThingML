@@ -53,9 +53,3 @@ thing TestArrays2 includes Test
 
     }
 }
-
-configuration fragment TestArrays2 {
-    
-    instance test : TestArrays2
-
-}

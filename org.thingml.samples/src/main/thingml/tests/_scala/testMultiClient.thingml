@@ -10,5 +10,6 @@ configuration TestMultiClient {
 	instance test : TestMultiClient
 	connector test.harness => dump.dump
 	connector test.harness => harness.test
+	connector harness.testEnd => dump.dump
 	connector harness.timer => timer.timer
 }

@@ -10,5 +10,8 @@ configuration TestMultiMessages {
 	instance test : TestMultiMessages
 	connector test.harness => dump.dump
 	connector test.harness => harness.test
+	connector harness.testEnd => dump.dump
 	connector harness.timer => timer.timer
+	instance obj : A
+	connector test.pp => obj.pp
 }

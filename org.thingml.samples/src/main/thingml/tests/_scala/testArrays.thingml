@@ -10,5 +10,10 @@ configuration TestArrays {
 	instance test : TestArrays
 	connector test.harness => dump.dump
 	connector test.harness => harness.test
+	connector harness.testEnd => dump.dump
 	connector harness.timer => timer.timer
+	set test.array[7] = 8
+	set test.array[4] = 5
+	set test.array[5] = 6
+	set test.array[6] = 7
 }

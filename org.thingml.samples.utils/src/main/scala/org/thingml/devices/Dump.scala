@@ -25,5 +25,9 @@ class Dumper{
 		printer.append(string)
 		printer.flush()
 	}
+	
+	def stop() = {
+		System.exit(0)
+	}
 }
 

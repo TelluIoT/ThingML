@@ -8,6 +8,7 @@ thing fragment Obj {
 
 thing TestMaskProperty includes Test, Obj 
 @test "ttt # 111"
+@conf "set test.conf = 2"
 {
 	set obj = 1
 	statechart TestMaskProperty init I {
@@ -20,9 +21,4 @@ thing TestMaskProperty includes Test, Obj
 				end 		
 		}
 	}
-}
-
-configuration fragment TestMaskPropertyFrag {
-    instance test : TestMaskProperty
-    	set test.conf = 2
 }

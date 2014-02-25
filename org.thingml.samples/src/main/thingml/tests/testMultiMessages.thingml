@@ -50,6 +50,8 @@ thing A includes MyMsg {
 
 thing TestMultiMessages includes Test, MyMsg
 @test "sss # sWRSTsWRSTsWRST"
+@conf "instance obj : A"
+@conf "connector test.pp => obj.pp"
 {
 	property count : Int16 = 0
 
@@ -109,10 +111,4 @@ thing TestMultiMessages includes Test, MyMsg
 			after harness!testOut('\'T\'')	
 		}
 	}
-}
-
-configuration fragment TestMultiMessagesFrag {
-    instance obj : A
-    instance test : TestMultiMessages
-    connector test.pp => obj.pp
 }

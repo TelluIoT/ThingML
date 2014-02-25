@@ -176,6 +176,89 @@ object ScalaGenerator {
       }
     }
   }
+  def compileAndNotRun(cfg : Configuration, model: ThingMLModel) {
+    new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
+    
+    val code = compile(cfg, "org.thingml.generated", model)
+    val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
+    val outputDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/scala/org/thingml/generated"
+    
+    val outputDirFile = new File(outputDir)
+    outputDirFile.mkdirs
+    
+    var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + cfg.getName() + ".scala")));
+    w.println(code._1);
+    w.close();
+    
+    w = new PrintWriter(new FileWriter(new File(outputDir + "/Main.scala")));
+    w.println(code._2);
+    w.close();
+    
+    var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/pom.xml"),"utf-8").getLines().mkString("\n")
+    pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
+    
+    //Add ThingML dependencies
+    val thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n"
+    cfg.allThingMLMavenDep.foreach{dep =>
+      pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"))
+    }
+    cfg.allMavenDep.foreach{dep =>
+      pom = pom.replace("<!--DEP-->", "<!--DEP-->\n"+dep)
+    }
+    
+    pom = pom.replace("<!--DEP-->","")
+    
+    //TODO: add other maven dependencies
+    
+    w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
+    w.println(pom);
+    w.close();
+    
+    //javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+
+    /*
+     * GENERATE SOME DOCUMENTATION
+     */
+
+    new File(rootDir + "/doc").mkdirs();
+
+    try {
+      val dots = ThingMLGraphExport.allGraphviz(ThingMLHelpers.findContainingModel(cfg))
+      import scala.collection.JavaConversions._
+      for (name <- dots.keySet) {
+        System.out.println(" -> Writing file " + name + ".dot")
+        var w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".dot"))
+        w.println(dots.get(name))
+        w.close
+      }
+    }
+    catch {
+      case t: Throwable => {
+        t.printStackTrace
+      }
+    }
+
+    try {
+      val gml = ThingMLGraphExport.allGraphML(ThingMLHelpers.findContainingModel(cfg))
+      import scala.collection.JavaConversions._
+      for (name <- gml.keySet) {
+        System.out.println(" -> Writing file " + name + ".graphml")
+        var w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".graphml"))
+        w.println(gml.get(name))
+        w.close
+      }
+    }
+    catch {
+      case t: Throwable => {
+        t.printStackTrace
+      }
+    }
+    
+    actor{
+      //compileGeneratedCode(rootDir)
+    }
+      
+  }
   
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
     new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit

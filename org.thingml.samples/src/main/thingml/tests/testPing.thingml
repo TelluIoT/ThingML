@@ -23,6 +23,8 @@ thing Pingable includes PingMsg {
 
 thing TestPing includes Test, PingMsg
 @test "ppp # epxrepxrepxr"
+@conf "instance pingable : Pingable"
+@conf "connector test.ppclient => pingable.pp"
 {
     required port ppclient {
         sends ping
@@ -51,10 +53,4 @@ thing TestPing includes Test, PingMsg
 			after harness!testOut('\'r\'')
 		}
 	}
-}
-
-configuration fragment TestPingFrag {
-    instance pingable : Pingable
-    instance test : TestPing
-    connector test.ppclient => pingable.pp
 }

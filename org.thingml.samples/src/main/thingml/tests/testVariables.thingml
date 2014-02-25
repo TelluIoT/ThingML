@@ -66,9 +66,3 @@ thing TestVariables includes Test
 
     }
 }
-
-configuration fragment TestVariablesFrag {
-    
-    instance test : TestVariables
-
-}

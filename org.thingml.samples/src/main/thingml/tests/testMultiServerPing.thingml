@@ -29,6 +29,15 @@ thing PingServer includes PingMsg {
 thing TestMultiServerPing includes Test, PingMsg
 @test "12221 # P1P2P2P2P1"
 @test "12221011 # P1P2P2P2P1P"
+@conf "instance pingServ1 : PingServer"
+@conf "	set pingServ1.num = 1"
+@conf "instance pingServ2 : PingServer"
+@conf "	set pingServ2.num = 2"
+@conf "instance pingServ3 : PingServer"
+@conf "	set pingServ3.num = 3"
+@conf "connector test.ppclient => pingServ1.pp"
+@conf "connector test.ppclient => pingServ2.pp"
+@conf "connector test.ppclient => pingServ3.pp"
 {
     required port ppclient {
         sends ping
@@ -84,17 +93,4 @@ thing TestMultiServerPing includes Test, PingMsg
 			after harness!testOut('\'3\'')
 		}
 	}
-}
-
-configuration fragment TestMultiServerPingFrag {
-    instance pingServ1 : PingServer
-    	set pingServ1.num = 1
-    instance pingServ2 : PingServer
-    	set pingServ2.num = 2
-    instance pingServ3 : PingServer
-    	set pingServ3.num = 3
-    instance test : TestMultiServerPing
-    connector test.ppclient => pingServ1.pp
-    connector test.ppclient => pingServ2.pp
-    connector test.ppclient => pingServ3.pp
 }

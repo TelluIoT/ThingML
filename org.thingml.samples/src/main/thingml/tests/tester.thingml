@@ -1,6 +1,6 @@
 import "../thingml.thingml"
 
-//Input: hello
+//Input: 12221
 
 thing Tester includes TestHarness, TimerClient
 {
@@ -9,33 +9,39 @@ thing Tester includes TestHarness, TimerClient
 			on entry timer!timer_start(500)
 			transition -> e1
 			event timer?timer_timeout
-			action test!testIn('\'h\'')
+			action test!testIn('\'1\'')
 		}
 		state e1 {
 			on entry timer!timer_start(500)
 			transition -> e2
 			event timer?timer_timeout
-			action test!testIn('\'e\'')
+			action test!testIn('\'2\'')
 		}
 		state e2 {
 			on entry timer!timer_start(500)
 			transition -> e3
 			event timer?timer_timeout
-			action test!testIn('\'l\'')
+			action test!testIn('\'2\'')
 		}
 		state e3 {
 			on entry timer!timer_start(500)
 			transition -> e4
 			event timer?timer_timeout
-			action test!testIn('\'l\'')
+			action test!testIn('\'2\'')
 		}
 		state e4 {
 			on entry timer!timer_start(500)
 			transition -> e5
 			event timer?timer_timeout
-			action test!testIn('\'o\'')
+			action test!testIn('\'1\'')
 		}
 		state e5 {
+			on entry timer!timer_start(500)
+			transition -> e6
+			event timer?timer_timeout
+		}
+		state e6 {
+			on entry testEnd!testEnd()
 		}
 	}
 }

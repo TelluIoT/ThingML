@@ -23,6 +23,9 @@ thing PingServer includes PingMsg {
 
 thing TestPropertyPing includes Test, PingMsg 
 @test "ppfpppff # P1P1P0P1P1P1P0P0"
+@conf "instance pingServ : PingServer"
+@conf "	set test.num = 1"
+@conf "connector test.ppclient => pingServ.pp"
 {
 	property num : Int16
 	
@@ -56,11 +59,4 @@ thing TestPropertyPing includes Test, PingMsg
     		after harness!testOut ('\'0\'')
     	}
     }
-}
-
-configuration fragment TestPropertyPingFrag {
-    instance pingServ : PingServer
-    instance test : TestPropertyPing
-    	set test.num = 1
-    connector test.ppclient => pingServ.pp
 }

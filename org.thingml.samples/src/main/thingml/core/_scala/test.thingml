@@ -19,9 +19,6 @@ thing TestDumpScala includes TestDump
 		
 		state Testing {
 			on entry device = 'new org.thingml.devices.Dumper()'
-			//internal event polling?poll
-            //guard 'Serial.available()' > 0
-            //action test!testIn('(char)Serial.read()')
             
             internal event m : dump?testOut
             action write(m.c)
@@ -29,11 +26,20 @@ thing TestDumpScala includes TestDump
             transition -> Failed 
             event dump?testFailure
             action write("*FAILURE*")
-			
+            
+            transition -> End
+            event dump?testEnd
 		}
 		
 		state Failed {
 
+		}
+
+		state End {
+			on entry do
+				print("End of thingml processus") 
+				'' & device & '.asInstanceOf[org.thingml.devices.Dumper].stop()'
+			end
 		}
 	}
 }
