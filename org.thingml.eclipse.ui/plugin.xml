@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.thingml.eclipse.ui.contribution1"
+            nameFilter="*.thingml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="ThingML"
+               path="additions"
+               id="org.thingml.eclipse.ui.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Compile"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompile"
+               menubarPath="org.thingml.eclipse.ui.menu1/group1"
+               enablesFor="1"
+               id="org.thingml.eclipse.ui.newAction">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>

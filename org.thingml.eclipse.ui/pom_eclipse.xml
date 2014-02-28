@@ -26,8 +26,8 @@
 		<version>0.6.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>org.sintef.thingml.resource.thingml</artifactId>
+	<artifactId>org.thingml.eclipse.ui</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
-	<name>ThingML Resource Eclipse Plugin</name>
+	<name>ThingML UI Eclipse Plugin</name>
 </project> 

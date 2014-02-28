@@ -20,7 +20,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<relativePath>../org.thingml.eclipse/pom.xml</relativePath>
+		<relativePath>../org.thingml.eclipse/pom_eclipse.xml</relativePath>
 		<groupId>org.thingml</groupId>
 		<artifactId>eclipse_parent</artifactId>
 		<version>0.6.0-SNAPSHOT</version>
