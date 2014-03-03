@@ -52,13 +52,16 @@ for f in onlyfiles:
 			'import "../'+name+'.thingml"\n'+
 			'import "../tester.thingml"\n'+
 			'import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timer.thingml"\n\n'+
-			'configuration '+bigname+' {\n'+
-			'	instance timer : TimerLinux\n'+
+			'configuration '+bigname+'C \n@output_folder "/home/thingml_out/" {\n'+
+			'	group timer : TimerLinux\n'+
+			'		set timer.timer.millisecond = true\n'+
+			'		set timer.timer.period = 100\n'+
+			'		set timer.clock.period = 100\n\n'+
 			'	instance harness : Tester\n'+
 			'	instance dump : TestDumpLinux\n'+
 			'	instance test : '+bigname+'\n'+
 			'	connector test.harness => dump.dump\n'+
 			'	connector test.harness => harness.test\n'+
 			'	connector harness.testEnd => dump.dump\n'+
-			'	connector harness.timer => timer.timer\n'+
+			'	connector harness.timer => timer.timer.timer\n'+
 			confLines+'}')

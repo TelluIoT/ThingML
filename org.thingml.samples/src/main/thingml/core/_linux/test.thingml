@@ -2,30 +2,46 @@ import "../test.thingml"
 
 
 thing TestDumpLinux includes TestDump
+@c_header "#include <stdio.h>"
+@c_global "FILE* testFile = NULL;"
 {
-	
-	function write(string : String) 
+	function write(c : Char) 
 	do
-		print(string)
-		print("no c dump yet")
+		
+    'if (testFile != NULL)
+    {
+        fprintf(testFile,"%c",c); 
+    }
+	printf("%c\n",c);'
+ 
 	end
 	
-	statechart ScalaHarness init Testing {
+	statechart LinuxHarness init Testing {
 		
 		
 		state Testing {
-            
+            on entry 'testFile = fopen("dump", "w+");'
             internal event m : dump?testOut
             action write(m.c)
             
             transition -> Failed 
             event dump?testFailure
-            action write("*FAILURE*")
-			
+            action 'printf("*FAILURE*");'
+            
+            
+            transition -> End
+            event dump?testEnd
 		}
 		
 		state Failed {
 
+		}
+		
+		state End {
+			on entry do
+				'fclose(testFile);
+				exit(0);'
+			end
 		}
 	}
 }

@@ -357,7 +357,18 @@ object CGenerator {
     }
   }
 
-
+  def compileToLinuxAndNotMake(model : ThingMLModel) {
+    // First look for a configuration in the model
+    model.getConfigs.filter{ c => !c.isFragment }.headOption match {
+      case Some (c) => compileToLinuxAndNotMake(c)
+      case None =>
+        // look in all configs
+      model.allConfigurations.filter{ c => !c.isFragment }.headOption match {
+        case Some (c) => compileToLinuxAndNotMake(c)
+        case None => {}
+      }
+    }
+  }
 
   def compileToROSNodeAndMake(model : ThingMLModel) {
     // First look for a configuration in the model
@@ -471,6 +482,57 @@ object CGenerator {
 
     return out
   }
+  
+  def compileToLinuxAndNotMake(cfg : Configuration) {
+    var out = createEmptyOutputDir(cfg)
+    println("Compiling configuration "+ cfg.getName +" to C into target folder: " + out.getAbsolutePath)
+
+
+      compileToLinux(cfg, out.getAbsolutePath)
+
+    /*
+     * GENERATE SOME DOCUMENTATION
+     */
+
+    val docfolder = new File(out, "doc")
+    docfolder.mkdirs
+
+    val model = ThingMLHelpers.findContainingModel(cfg)
+
+    try {
+      var dots = ThingMLGraphExport.allGraphviz(model)
+      import scala.collection.JavaConversions._
+      for (name <- dots.keySet) {
+        System.out.println(" -> Writing file " + name + ".dot")
+        var w: PrintWriter = new PrintWriter(new FileWriter(docfolder.getAbsolutePath + File.separator + name + ".dot"))
+        w.println(dots.get(name))
+        w.close
+      }
+    }
+    catch {
+      case t: Throwable => {
+        t.printStackTrace
+      }
+    }
+
+
+
+    try {
+      var gml = ThingMLGraphExport.allGraphML(model)
+      import scala.collection.JavaConversions._
+      for (name <- gml.keySet) {
+        System.out.println(" -> Writing file " + name + ".graphml")
+        var w: PrintWriter = new PrintWriter(new FileWriter(docfolder.getAbsolutePath + File.separator + name + ".graphml"))
+        w.println(gml.get(name))
+        w.close
+      }
+    }
+    catch {
+      case t: Throwable => {
+        t.printStackTrace
+      }
+    }
+  }
 
 
   def compileToLinux(cfg : Configuration, dir : String) {
@@ -492,6 +554,7 @@ object CGenerator {
         w.close
       }
     }
+	return null
   }
 
   def compileCModules(cfg : Configuration, context : LinuxCGeneratorContext, result : Hashtable[String, String], prefix : String) {

@@ -14,42 +14,90 @@
 # limitations under the License.
 #
 
-from parseTest import Parser
-from Tester import tester
+from Parser import Parser
+from Tester import Tester
 import tempfile
 import os
+import re
+from os import listdir
+from os.path import isfile, join
 
 #tester creates the test file from a string
 #Parser gets (input,output) list from a file
 def testFile(fileName):
-	results = Parser.parse(fileName)
+	
+	results = Parser().parse(fileName)
 
-	fdump = open('results.dump', 'w')
+	
+	fdump = open('../dump/'+fileName+'.dump', 'w')
+	fdumpC = open('../dump/'+fileName+'C.dump', 'w')
+	fdumpScala = open('../dump/'+fileName+'Scala.dump', 'w')
 
-	fdump.write('Fichier '+fileName+":\n")
+	#fdump.write('Fichier '+fileName+":\n")
+
 
 	rootDirectory = os.getcwd()
-
 	os.chdir(r"../../../../../../org.thingml.cmd")
 	compilerDirectory = os.getcwd()
 
 	for (a,b) in results:
+		fdump.write(a+'\n'+b+'\n')
 		os.chdir(rootDirectory)
-		tester.create(a)
+		Tester().create(a)
+			
 		
+		#!Test C
+		os.chdir(compilerDirectory)
+		os.system("mvn clean package exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"c org.thingml.tests/src/main/thingml/tests/_linux/"+fileName+".thingml\"")
+		bigName = fileName[0].upper()+fileName[1:]+"C"
+		os.chdir("/home/thingml_out/"+bigName)
+		os.system("make")
+		os.system("./"+bigName)
+		try:
+			f = open('dump', 'r')
+			res = f.readline()
+			f.close()
+			fdumpC.write(res+'\n')
+		except IOError:
+			fdumpC.write("ErrorAtCompilation\n")
+		
+		#!Test scala
 		os.chdir(compilerDirectory)
 		os.system("mvn clean package exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"scala org.thingml.tests/src/main/thingml/tests/_scala/"+fileName+".thingml\"")
 
-		os.chdir(tempfile.gettempdir()+"/ThingML_temp/"+fileName)
+		os.chdir(tempfile.gettempdir()+"/ThingML_temp/"+fileName[0].upper()+fileName[1:])
 		os.system("mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
-		f = open('dump', 'r')
-		res = f.readline()
-		f.close()
-		
-		fdump.write('Expected result for "'+a+'" was "'+b+'", got "'+res+'"\n')
+		try:
+			f = open('dump', 'r')
+			res = f.readline()
+			f.close()
+			fdumpScala.write(res+'\n')
+		except IOError:
+			fdumpScala.write("ErrorAtCompilation\n")
 
 	fdump.close()
+	fdumpC.close()
+	fdumpScala.close()
+	
 	os.chdir(rootDirectory)
 	
-	
-testFile("testHello")
+def launch():
+	print(os.getcwd())
+	os.chdir("..")
+	mypath = "."
+	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
+	os.chdir("Tester")
+	fileList = open("../dump/fileList.dump","w+")
+	for f in onlyfiles:
+		match = re.match(r"(.*)\.thingml",f)
+		if match is not None:
+			name = re.sub(r"(.*)\.thingml",r"\1",f)
+			if name != "tester":
+				testFile(name)
+				fileList.write(name+'\n')
+	fileList.close()
+				
+os.chdir("../org.thingml.tests/src/main/thingml/tests/Tester/") #when called from org.thingml.tests
+launch()
+
+

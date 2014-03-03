@@ -1,6 +1,5 @@
 import "../blink2leds.thingml"
 import "../../hardware/bricks/_scala/led.thingml"
-import "../../core/_scala/tracer.thingml"
 import "../../core/_scala/timer.thingml"
 
 configuration ScalaBlink2LedsSimulator {       
@@ -19,7 +18,4 @@ configuration ScalaBlink2LedsSimulator {
 	connector app.timer1 => timer1.timer
 	connector app.led2 => led2.Led
 	connector app.timer2 => timer2.timer
-	
-	instance tracer1 : TracerScala
-	connector app.tracer => tracer1.tracer
 }

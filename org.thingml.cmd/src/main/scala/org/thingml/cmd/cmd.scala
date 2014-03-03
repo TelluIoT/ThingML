@@ -82,12 +82,12 @@ object Cmd {
                try {
 
          val thingmlModel = loadThingMLmodel(targetFile.get)
-
-            CGenerator.compileToLinuxAndMake(thingmlModel)
+            CGenerator.compileToLinuxAndNotMake(thingmlModel)
         }
         catch {
           case t : Throwable => t.printStackTrace()
         }
+		System.exit(0)
 	}
 
    

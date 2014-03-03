@@ -7,7 +7,7 @@ thing TestHello includes Test
 {
 	statechart TestHello init H {
 	
-		state H {
+		state H {	
 			transition -> E 
 			event m : harness?testIn
 			guard m.c == '\'h\''

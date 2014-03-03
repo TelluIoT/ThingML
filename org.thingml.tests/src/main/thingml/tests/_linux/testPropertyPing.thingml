@@ -3,15 +3,20 @@ import "../testPropertyPing.thingml"
 import "../tester.thingml"
 import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timer.thingml"
 
-configuration TestPropertyPing {
-	instance timer : TimerLinux
+configuration TestPropertyPingC 
+@output_folder "/home/thingml_out/" {
+	group timer : TimerLinux
+		set timer.timer.millisecond = true
+		set timer.timer.period = 100
+		set timer.clock.period = 100
+
 	instance harness : Tester
 	instance dump : TestDumpLinux
 	instance test : TestPropertyPing
 	connector test.harness => dump.dump
 	connector test.harness => harness.test
 	connector harness.testEnd => dump.dump
-	connector harness.timer => timer.timer
+	connector harness.timer => timer.timer.timer
 	instance pingServ : PingServer
 		set test.num = 1
 	connector test.ppclient => pingServ.pp

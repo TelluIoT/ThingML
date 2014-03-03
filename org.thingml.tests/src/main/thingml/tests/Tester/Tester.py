@@ -19,8 +19,8 @@
 
 import sys
 import re
-class tester:
-	def create(inputString):
+class Tester:
+	def create(self,inputString):
 		testerFile = open('../tester.thingml', 'w')
 		i=0
 

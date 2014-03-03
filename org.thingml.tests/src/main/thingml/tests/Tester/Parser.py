@@ -20,7 +20,7 @@ import sys
 import re
 
 class Parser:
-	def parse(fileName):
+	def parse(self,fileName):
 		f = open('../'+fileName+'.thingml', 'r')
 		result=[]
 		for line in f:
