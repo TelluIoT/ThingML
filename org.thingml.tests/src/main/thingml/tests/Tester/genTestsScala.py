@@ -41,6 +41,9 @@ def parse(fileName):
 mypath = "."
 onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 
+if not os.path.exists("_scala"):
+    os.makedirs("_scala")
+	
 for f in onlyfiles:
 	match = re.match(r"(.*)\.thingml",f)
 	if match is not None:

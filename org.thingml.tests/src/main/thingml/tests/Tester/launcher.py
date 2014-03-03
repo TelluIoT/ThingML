@@ -104,6 +104,8 @@ def launch():
 os.chdir("../org.thingml.tests/src/main/thingml/tests/Tester/") #when called from org.thingml.tests
 if not os.path.exists("../dump"):
     os.makedirs("../dump")
+os.system("python genTestsLinux.py")
+os.system("python genTestsScala.py")
 launch()
 
 

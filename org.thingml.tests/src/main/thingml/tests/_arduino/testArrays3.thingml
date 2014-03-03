@@ -1,9 +1,0 @@
-import "../../../../../../org.thingml.samples/src/main/thingml/core/_arduino/test.thingml"
-import "../testArrays3.thingml"
-
-configuration TestArrays3 {
-    instance test : TestArrays3
-    group harness : TestHarnessArduino 
-    connector test.harness => harness.harness.test
-	set test.array[7] = 7
-}
