@@ -102,8 +102,8 @@ def launch():
 	fileList.close()
 				
 os.chdir("../org.thingml.tests/src/main/thingml/tests/Tester/") #when called from org.thingml.tests
-if not os.path.exists("dump"):
-    os.makedirs("dump")
+if not os.path.exists("../dump"):
+    os.makedirs("../dump")
 launch()
 
 
