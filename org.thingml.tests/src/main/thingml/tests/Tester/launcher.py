@@ -45,10 +45,14 @@ def testFile(fileName):
 		os.chdir(rootDirectory)
 		Tester().create(a)
 			
+		os.chdir(compilerDirectory)
+		os.system("mvn clean install")
+		os.system("mvn compile")
+		os.chdir(rootDirectory)
 		
 		#!Test C
 		os.chdir(compilerDirectory)
-		os.system("mvn clean package exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"c org.thingml.tests/src/main/thingml/tests/_linux/"+fileName+".thingml\"")
+		os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"c org.thingml.tests/src/main/thingml/tests/_linux/"+fileName+".thingml\"")
 		bigName = fileName[0].upper()+fileName[1:]+"C"
 		os.chdir("/home/thingml_out/"+bigName)
 		os.system("make")
@@ -63,7 +67,7 @@ def testFile(fileName):
 		
 		#!Test scala
 		os.chdir(compilerDirectory)
-		os.system("mvn clean package exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"scala org.thingml.tests/src/main/thingml/tests/_scala/"+fileName+".thingml\"")
+		os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"scala org.thingml.tests/src/main/thingml/tests/_scala/"+fileName+".thingml\"")
 
 		os.chdir(tempfile.gettempdir()+"/ThingML_temp/"+fileName[0].upper()+fileName[1:])
 		os.system("mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
@@ -87,7 +91,7 @@ def launch():
 	mypath = "."
 	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 	os.chdir("Tester")
-	fileList = open("../dump/fileList.dump","w+")
+	fileList = open("../dump/fileList.dump","w")
 	for f in onlyfiles:
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
@@ -98,6 +102,8 @@ def launch():
 	fileList.close()
 				
 os.chdir("../org.thingml.tests/src/main/thingml/tests/Tester/") #when called from org.thingml.tests
+if not os.path.exists("dump"):
+    os.makedirs("dump")
 launch()
 
 
