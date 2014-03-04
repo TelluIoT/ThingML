@@ -86,7 +86,7 @@ def launch():
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
-			if name == "testHello": #!= "tester":
+			if name != "tester":
 				testFile(name)
 				fileList.write(name+'\n')
 	fileList.close()
