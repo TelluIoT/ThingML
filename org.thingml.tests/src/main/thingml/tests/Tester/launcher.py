@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+# Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
 #
 # Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
 # you may not use this file except in compliance with the License.
@@ -24,31 +24,22 @@ from os.path import isfile, join
 
 #tester creates the test file from a string
 #Parser gets (input,output) list from a file
+
+rootDirectory = ""
+compilerDirectory = ""
+
 def testFile(fileName):
 	
 	results = Parser().parse(fileName)
 
-	
 	fdump = open('../dump/'+fileName+'.dump', 'w')
 	fdumpC = open('../dump/'+fileName+'C.dump', 'w')
 	fdumpScala = open('../dump/'+fileName+'Scala.dump', 'w')
-
-	#fdump.write('Fichier '+fileName+":\n")
-
-
-	rootDirectory = os.getcwd()
-	os.chdir(r"../../../../../../org.thingml.cmd")
-	compilerDirectory = os.getcwd()
 
 	for (a,b) in results:
 		fdump.write(a+'\n'+b+'\n')
 		os.chdir(rootDirectory)
 		Tester().create(a)
-			
-		os.chdir(compilerDirectory)
-		os.system("mvn clean install")
-		os.system("mvn compile")
-		os.chdir(rootDirectory)
 		
 		#!Test C
 		os.chdir(compilerDirectory)
@@ -86,26 +77,32 @@ def testFile(fileName):
 	os.chdir(rootDirectory)
 	
 def launch():
-	print(os.getcwd())
 	os.chdir("..")
 	mypath = "."
 	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 	os.chdir("Tester")
-	fileList = open("../dump/fileList.dump","w")
+	fileList = open("../dump/fileList.dump","w")	
 	for f in onlyfiles:
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
-			if name != "tester":
+			if name == "testHello": #!= "tester":
 				testFile(name)
 				fileList.write(name+'\n')
 	fileList.close()
 				
-os.chdir("../org.thingml.tests/src/main/thingml/tests/Tester/") #when called from org.thingml.tests
+
+os.chdir("../org.thingml.tests/src/main/thingml/tests/Tester/") #when called from org.thingml.tester
 if not os.path.exists("../dump"):
     os.makedirs("../dump")
 os.system("python genTestsLinux.py")
 os.system("python genTestsScala.py")
+
+rootDirectory = os.getcwd()
+os.chdir(r"../../../../../../org.thingml.cmd")
+compilerDirectory = os.getcwd()
+os.system("mvn clean install")
+os.chdir(rootDirectory)
 launch()
 
 

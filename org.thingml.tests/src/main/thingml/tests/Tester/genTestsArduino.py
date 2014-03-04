@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+# Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
 #
 # Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
 # you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ def parse(fileName):
 		if re.match(r"@conf \".*\"",line):
 			confLine = re.sub(r"@conf \"(.*)\"",r"\1",line)
 			result=result+'\t'+confLine
-			print ("reading"+line)
 	file.close()
 	return result
 
@@ -58,3 +57,4 @@ for f in onlyfiles:
 			'    instance test : '+bigname+'\n'+
 			'    group harness : TestHarnessArduino \n'+
 			'    connector test.harness => harness.harness.test\n'+confLines+'}')
+print ("Successful generation of arduino tests")
