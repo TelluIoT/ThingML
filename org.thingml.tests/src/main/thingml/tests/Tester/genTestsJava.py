@@ -70,6 +70,8 @@ public class '+name+'Test extends TestCase {\n\
 				output = dump.readLine();\n\
 				outputC = dumpC.readLine();\n\
 				outputScala = dumpScala.readLine();\n\
+				assertEquals("C compiler error",output,outputC);\n\
+				assertEquals("Scala compiler error",output,outputScala);\n\
 			}\n\
 		}catch(Exception e){System.err.println("Error: " + e.getMessage());}\n\
 	}\n\
