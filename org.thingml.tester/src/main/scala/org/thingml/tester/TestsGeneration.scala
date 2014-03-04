@@ -33,6 +33,7 @@ import java.lang.AssertionError
 import java.io._
 import java.util._
 import scala.sys.process._
+/*
 class Tester {
 	def test(fileName: String, input: String, output : String, dumpC: String, dumpScala: String){
 		try{
@@ -49,9 +50,11 @@ class Tester {
 		}
 		print("All compilers tests for " + fileName + " with input \"" + input + "\" are successful.\n")
 	}
-}
-object TestAnalyser {
+}*/
+object TestsGeneration {
 	def main(args: Array[String]) {
+		"python ../org.thingml.tests/src/main/thingml/tests/Tester/genTests.py".!
+		/*
 		//Runtime.getRuntime().exec("python ../org.thingml.tests/src/main/thingml/tests/Tester/launcher.py")
 		//val pb = new ProcessBuilder("python", "launcher.py")
 		//pb.directory(new File("../org.thingml.tests/src/main/thingml/tests/Tester/"))
@@ -72,6 +75,6 @@ object TestAnalyser {
     			val output = dump.next()
         		tester.test(fileName,input,output,dumpC.next(),dumpScala.next())
     		}
-        }
+        }*/
     }
 }
