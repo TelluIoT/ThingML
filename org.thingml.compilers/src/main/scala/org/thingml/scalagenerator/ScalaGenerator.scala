@@ -749,6 +749,7 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
     printAction()
     Option(self.getAfter) match {
       case Some(a) =>
+        builder append "override def executeAfterActions() = {\n"
         builder append "Logger.debug(\"" + handlerInstanceName + ".executeAfterActions\")\n"
         self.getAfter.generateScala()
         builder append "}\n\n"
