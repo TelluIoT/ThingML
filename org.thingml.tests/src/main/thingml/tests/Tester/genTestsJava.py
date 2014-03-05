@@ -33,11 +33,12 @@ def run():
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
-			if name != "tester":#in ("testHello","testArrays2","testAfter"): #
+			if name != "tester": #in ("testHello","testArrays2","testAfter"): #
 				fichier = open('../../../../../org.thingml.tester/src/test/java/tests/'+name+'Test.java', 'w')
 				fichier.write('package org.thingml.tester;\n\n\
 import junit.framework.TestCase;\n\
 import org.junit.Test;\n\
+import org.junit.Before;\n\
 import org.junit.runner.RunWith;\n\
 import org.junit.runners.JUnit4;\n\
 \n\
@@ -48,8 +49,8 @@ import java.io.*;\n\
 @RunWith(JUnit4.class)\n\
 public class '+name+'Test extends TestCase {\n\
 	\n\
-	@Test\n\
-	public void test(){\n\
+	@Before\n\
+	public void init(){\n\
 		try{\n\
 			Process p = Runtime.getRuntime().exec("python execute.py '+name+'",null,new File("src/test/java/tests"));\n\
 			String line;\n\
@@ -59,18 +60,34 @@ public class '+name+'Test extends TestCase {\n\
 				System.out.println(line);\n\
 			}\n\
 			in.close();\n\
+		}catch(Exception e){System.err.println("Error: " + e.getMessage());}\n\
+	}\n\
+	@Test\n\
+	public void testC(){\n\
+		try{\n\
 			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'.dump")));\n\
 			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'C.dump")));\n\
-			BufferedReader dumpScala = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'Scala.dump")));\n\
 			String input;\n\
 			String output;\n\
 			String outputC;\n\
-			String outputScala;\n\
 			while ((input = dump.readLine()) != null){\n\
 				output = dump.readLine();\n\
 				outputC = dumpC.readLine();\n\
-				outputScala = dumpScala.readLine();\n\
 				assertEquals("C compiler error",output,outputC);\n\
+			}\n\
+		}catch(Exception e){System.err.println("Error: " + e.getMessage());}\n\
+	}\n\
+	@Test\n\
+	public void testScala(){\n\
+		try{\n\
+			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'.dump")));\n\
+			BufferedReader dumpScala = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'Scala.dump")));\n\
+			String input;\n\
+			String output;\n\
+			String outputScala;\n\
+			while ((input = dump.readLine()) != null){\n\
+				output = dump.readLine();\n\
+				outputScala = dumpScala.readLine();\n\
 				assertEquals("Scala compiler error",output,outputScala);\n\
 			}\n\
 		}catch(Exception e){System.err.println("Error: " + e.getMessage());}\n\
