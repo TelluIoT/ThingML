@@ -1,5 +1,5 @@
 @REM
-@REM Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+@REM Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
 @REM
 @REM Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
 @REM you may not use this file except in compliance with the License.

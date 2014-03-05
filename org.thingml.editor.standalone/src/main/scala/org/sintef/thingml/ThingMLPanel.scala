@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
  *
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
  * you may not use this file except in compliance with the License.
@@ -213,23 +213,16 @@ class ThingMLPanel extends JPanel {
 
   bScala.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
-			val path = "org.thingml.samples/src/main/thingml/tests/_scala/testHello.thingml"
-			val realPath : Path = Paths.get("").toAbsolutePath().getParent().toAbsolutePath().resolve(path)
-			val file : File = realPath.toFile()
-			targetFile = Some(file)
         println("Input file : " + targetFile)
-		
         if (targetFile.isEmpty) 
           return
         try {
           val thingmlModel = loadThingMLmodel(targetFile.get)
-			println("Input file : " + targetFile.get.getAbsolutePath)
           thingmlModel.allConfigurations.foreach{c =>
-			val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
-			javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+			      val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
+			      javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
             ScalaGenerator.compileAndRun(c, thingmlModel)                                                                      
           }
-          
         }
         catch {
           case t : Throwable => t.printStackTrace()

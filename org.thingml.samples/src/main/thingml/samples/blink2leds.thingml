@@ -30,8 +30,8 @@ thing Blink2Leds includes LedMsgs, TimerMsgs
         state Blinking 
         {    
             on entry do 
-            	//timer1!timer_start(1000)
-            	//timer2!timer_start(333)
+            	timer1!timer_start(1000)
+            	timer2!timer_start(333)
             end
             
             internal Blink1 event timer1?timer_timeout

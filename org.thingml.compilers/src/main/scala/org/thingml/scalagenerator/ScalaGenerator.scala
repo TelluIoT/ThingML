@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
  *
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
  * you may not use this file except in compliance with the License.
@@ -476,11 +476,6 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
   def generateScalaMain(builder: StringBuilder = Context.builder) {
     builder append "object Main {\n\n"
     builder append "def main(args: Array[String]): Unit = {\n"
-      
-    builder append "//Channels\n"
-    self.allConnectors.foreach{ c =>
-      builder append "val " + c.instanceName + " = new Channel\n"
-    }
     
     //define temp arrays   
     self.allInstances.foreach{ i =>
@@ -547,28 +542,20 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
           builder append ")\n"
       }
     }
-    
-    builder append "//Bindings\n"
+
+    builder append "//Channels\n"
     self.allConnectors.foreach{ c =>
-      builder append c.instanceName + ".connect(\n" 
+      builder append "val " + c.instanceName + " = new Channel(\n"
       builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get,\n"
       builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get\n"
-      builder append")\n"
-      builder append c.instanceName + ".connect(\n" 
-      builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get,\n"
-      builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get\n"
-      builder append")\n\n"
+      builder append ")\n"
     }
     
     builder append "//Starting Things\n"
     self.allInstances.foreach{ i =>
       builder append i.instanceName + ".asInstanceOf[Component].start\n"
     }
-    
-    self.allConnectors.foreach{ c =>
-      builder append c.instanceName + ".start\n"
-    }
-    
+
     builder append "}\n\n"
     builder append "}\n"
   }
