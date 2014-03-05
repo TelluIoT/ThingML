@@ -61,9 +61,6 @@ import javax.management.remote.rmi._RMIConnection_Stub
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.thingml.kevoreegenerator.KevoreeGenerator
 
-import java.nio.file.Path
-import java.nio.file.Paths
-
 import scala.collection.JavaConversions._
 
 class ThingMLPanel extends JPanel {
