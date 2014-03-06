@@ -1,14 +1,14 @@
 import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 
 thing TestRegion includes Test 
-@test "t # I^AF^B"
-@test "ttt # I^AF^BI^AF^B"
-@test "tatzzat # I^AF^BIF^ABAIF^B"
+@test "t # (AI|IA)(BF|FB)"
+@test "ttt # (AI|IA)(BF|FB)(AI|IA)(BF|FB)"
+@test "tatzzat # (AI|IA)(BF|FB)I(AF|FA)BAI(BF|FB)"
 
 
 {
 	statechart TestRegion init I {
-	
+	                                  
 		state I {
 			on entry harness!testOut('\'I\'')
 			transition -> F

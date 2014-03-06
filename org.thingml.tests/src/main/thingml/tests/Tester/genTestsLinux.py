@@ -58,8 +58,8 @@ def run():
 				'configuration '+bigname+'C \n@output_folder "/home/thingml_out/" {\n'+
 				'	group timer : TimerLinux\n'+
 				'		set timer.timer.millisecond = true\n'+
-				'		set timer.timer.period = 100\n'+
-				'		set timer.clock.period = 100\n\n'+
+				'		set timer.timer.period = 10\n'+
+				'		set timer.clock.period = 10\n\n'+
 				'	instance harness : Tester\n'+
 				'	instance dump : TestDumpLinux\n'+
 				'	instance test : '+bigname+'\n'+

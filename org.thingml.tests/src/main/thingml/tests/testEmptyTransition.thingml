@@ -1,0 +1,31 @@
+import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+
+thing TestEmptyTransition includes Test 
+@test "ttt # IJK"
+{
+	statechart TestEmptyTransition init I {
+		state I {
+			on entry harness!testOut('\'I\'')
+			
+			transition -> J
+			
+			transition -> K
+			event m : harness?testIn
+			guard m.c == '\'t\''
+		}
+		state J {
+			on entry harness!testOut('\'J\'')
+			
+			transition -> K
+			event m : harness?testIn
+			guard m.c == '\'t\''
+		}
+		state K {
+			on entry harness!testOut('\'K\'')
+			
+			transition -> K
+			event m : harness?testIn
+			guard m.c == '\'t\''
+		}
+	}
+}

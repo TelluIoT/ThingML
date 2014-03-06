@@ -18,6 +18,7 @@ import tempfile
 import os
 import sys
 import re
+import exrex
 from os import listdir
 from os.path import isfile, join
 
@@ -26,11 +27,12 @@ from os.path import isfile, join
 
 fileName = sys.argv[1]
 rootDirectory = os.getcwd()
+sys.stderr = sys.stdout
 
 #Initializing dump
 if not os.path.exists("dump"):
     os.makedirs("dump")
-
+	
 fdump = open('dump/'+fileName+'.dump', 'w')
 fdumpC = open('dump/'+fileName+'C.dump', 'w')
 fdumpScala = open('dump/'+fileName+'Scala.dump', 'w')
@@ -47,10 +49,11 @@ from Tester import Tester
 results = Parser().parse(fileName)
 
 for (a,b) in results:
-	fdump.write(a+'\n'+b+'\n')
+	input = exrex.getone(a)
+	fdump.write(a+'\n'+input+'\n'+b+'\n')
 	os.chdir(testsDirectory)
 	#Creating input file
-	Tester().create(a)
+	Tester().create(input)
 	
 	#!Test C
 	os.chdir(compilerDirectory)
@@ -86,5 +89,3 @@ fdumpC.close()
 fdumpScala.close()
 
 os.chdir(rootDirectory)
-	
-
