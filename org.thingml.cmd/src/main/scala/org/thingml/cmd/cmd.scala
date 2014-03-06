@@ -48,8 +48,8 @@ import org.thingml.kotlingenerator.KotlinGenerator
 //import org.thingml.scalagenerator.coap.ScalaCoAPGenerator
 //import org.thingml.mediatorgenerator.LoggerGenerator
 import java.io._
-import java.nio.file.Path
-import java.nio.file.Paths
+//import java.nio.file.Path
+//import java.nio.file.Paths
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
 import org.thingml.model.scalaimpl.ThingMLScalaImpl._
@@ -74,8 +74,8 @@ object Cmd {
     
     
 	def compileToC(path : String) {
-			val realPath : Path = Paths.get("").toAbsolutePath().getParent().toAbsolutePath().resolve(path)
-			val file : File = realPath.toFile()
+			val currentDirectory = new File(System.getProperty("user.dir"))
+			val file : File = new File(currentDirectory.getParent(),path)
 			targetFile = Some(file)
         println("Input file : " + targetFile)
         if (targetFile.isEmpty) return;
@@ -92,8 +92,8 @@ object Cmd {
 
    
     def compileToScala(path : String) {
-			val realPath : Path = Paths.get("").toAbsolutePath().getParent().toAbsolutePath().resolve(path)
-			val file : File = realPath.toFile()
+			val currentDirectory = new File(System.getProperty("user.dir"))
+			val file : File = new File(currentDirectory.getParent(),path)
 			targetFile = Some(file)
         println("Input file : " + targetFile)
 		
