@@ -4,12 +4,12 @@ thing TestFunction includes Test
 @test "x # xxxxxxxx;"
 {
     //Test function call from a function
-    function foo(a : Int16, b : Int16) : Int16 do
+    function foo(a : UInt16, b : UInt16) : ULong do
     	return a + bar(b)
     end
     
     //Test recursive function
-    function bar(a : Int16) : Int16 do
+    function bar(a : UInt16) : ULong do
         if (a == 0) do
             return 0
         end
@@ -32,7 +32,7 @@ thing TestFunction includes Test
 			event m : harness?testIn
 			guard m.c == '\'x\''
 			action do
-				var result : UInt16 = foo(a, 5)
+				var result : ULong = foo(a, 5)
                 var index : UInt16 = 0
                 while (index < result) do
 				    harness!testOut('\'x\'')
