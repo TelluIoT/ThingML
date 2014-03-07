@@ -32,10 +32,23 @@ import junit.framework.Assert
 import java.lang.AssertionError
 import java.io._
 import java.util._
-import scala.sys.process._
 
 object TestsGeneration {
 	def main(args: Array[String]) {
-		"python ../org.thingml.tests/src/main/thingml/tests/Tester/genTests.py".!
+		var p: Process = Runtime.getRuntime().exec("mvn clean install",null,new File((new File(System.getProperty("user.dir"))).getParentFile(),"org.thingml.cmd"))
+		var line = ""
+		var in: BufferedReader = new BufferedReader(
+		new InputStreamReader(p.getInputStream()) )
+		while ({line = in.readLine(); line!= null}) {
+			System.out.println(line)
+		}
+		in.close();
+		p = Runtime.getRuntime().exec("python ../org.thingml.tests/src/main/thingml/tests/Tester/genTests.py")
+		in = new BufferedReader(
+		new InputStreamReader(p.getInputStream()) )
+		while ({line = in.readLine(); line!= null}) {
+			System.out.println(line)
+		}
+		in.close();
     }
 }
