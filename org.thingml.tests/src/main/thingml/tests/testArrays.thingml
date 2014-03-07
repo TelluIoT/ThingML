@@ -4,10 +4,10 @@ import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 thing TestArrays includes Test 
 //@test "12345678x12345678 # 12345678e87654321"
 @test "x # e1827364554637281e1w2w3w4w5w6w7w8w"
-@conf "set test.array[7] = '8'"
-@conf "set test.array[4] = '5'"
-@conf "set test.array[5] = '6'"
-@conf "set test.array[6] = '7'"
+@conf "set test.array[7] = '\'8\''"
+@conf "set test.array[4] = '\'5\''"
+@conf "set test.array[5] = '\'6\''"
+@conf "set test.array[6] = '\'7\''"
 {
 
 	property index : UInt16 = 0
@@ -15,10 +15,10 @@ thing TestArrays includes Test
 	property array : Char[8]
 	
 	// First half of the array initialized here
-	set array[0] = '1'
-	set array[1] = '2'
-	set array[2] = '3'
-	set array[3] = '4'
+	set array[0] = '\'1\''
+	set array[1] = '\'2\''
+	set array[2] = '\'3\''
+	set array[3] = '\'4\''
 	// Other half of the array is initialized in the 
 	// configuration in order to make sure that it works too
     
