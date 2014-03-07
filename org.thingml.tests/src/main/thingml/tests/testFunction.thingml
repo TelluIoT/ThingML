@@ -35,7 +35,7 @@ thing TestFunction includes Test
 				var result : UInt16 = foo(a, 5)
                 var index : UInt16 = 0
                 while (index < result) do
-				    harness!testOut('x')
+				    harness!testOut('\'x\'')
                     index = index + 1
                 end
 			end

@@ -49,7 +49,7 @@ thing TestArrays includes Test
             while (index < 8) do
                 var v : Char = array2[index]
                 harness!testOut(v)
-                array[index] = 'w'
+                array[index] = '\'w\''
                 harness!testOut(array[index])
                 index = index + 1
             end
