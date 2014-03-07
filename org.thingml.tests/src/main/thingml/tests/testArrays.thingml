@@ -10,7 +10,7 @@ thing TestArrays includes Test
 @conf "set test.array[6] = '7'"
 {
 
-	property index : UInt8 = 0
+	property index : UInt16 = 0
 	
 	property array : Char[8]
 	

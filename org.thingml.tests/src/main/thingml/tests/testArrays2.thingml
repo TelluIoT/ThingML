@@ -4,7 +4,7 @@ thing TestArrays2 includes Test
 @test "xxx # helloworldworld"
 {
 
-	property index : UInt8 = 0
+	property index : UInt16 = 0
 	
 	property hello : Char[5]
 	
