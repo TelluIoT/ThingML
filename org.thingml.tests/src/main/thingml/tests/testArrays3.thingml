@@ -1,11 +1,10 @@
 import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 
+//Test if we can interpret the size of array at construction time
 thing TestArrays3 includes Test
-@conf "set test.array[7] = 7"
 {
 
-	property array : Int16[8]
+    property size : UInt8 = 8
 
-    set array[0] = 0
-	
+	property array : Int16[size]	
 }

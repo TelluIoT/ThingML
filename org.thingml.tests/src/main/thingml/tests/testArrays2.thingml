@@ -14,8 +14,6 @@ thing TestArrays2 includes Test
 	set hello[2] = '\'l\''
 	set hello[3] = '\'l\''
 	set hello[4] = '\'o\''
-	// Other half of the array is initialized in the 
-	// configuration in order to make sure that it works too
     
     statechart TestPropertyPing init state1 {
     
@@ -34,6 +32,7 @@ thing TestArrays2 includes Test
 				hello[0] = '\'w\''
 				hello[1] = '\'o\''
 				hello[2] = '\'r\''
+                hello[3] = '\'l\''
 				hello[4] = '\'d\''
 			end
     	}
