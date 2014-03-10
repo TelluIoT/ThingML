@@ -39,6 +39,40 @@ object TestsGeneration {
 		var line = ""
 		var in: BufferedReader = new BufferedReader(
 		new InputStreamReader(p.getInputStream()) )
+		
+		var result : BufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/test/java/tests/results.html")))
+		result.write("<!DOCTYPE html>\n"+
+"<html>\n"+
+"	<head>\n"+
+"		<meta charset=\"utf-8\" />\n"+
+"		<title>ThingML tests results</title>\n"+
+"		<style>\n"+
+"		table\n"+
+"		{\n"+
+"			border-collapse: collapse;\n"+
+"		}\n"+
+"		td, th \n"+
+"		{\n"+
+"			border: 1px solid black;\n"+
+"		}\n"+
+"		.green\n"+
+"		{\n"+
+"			background: lightgreen\n"+
+"		}\n"+
+"		.red\n"+
+"		{\n"+
+"			background: red\n"+
+"		}\n"+
+"		</style>\n"+
+"	</head>\n"+
+"	<body>\n"+
+"		<Table>\n"+
+"	<tr>\n"+
+"		<th>Test name</th>\n"+
+"		<th>Compiler</th>\n"+
+"		<th>Result</th>\n"+
+"	</tr>\n")
+		result.close();
 		while ({line = in.readLine(); line!= null}) {
 			System.out.println(line)
 		}

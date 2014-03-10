@@ -38,12 +38,13 @@ def run():
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
 			if name != "tester": 
-			# if name in ("testBefore"): 
+			# if name in ("testHello","testArrays"): 
 				fichier = open('../../../../../org.thingml.tester/src/test/java/tests/'+name+'Test.java', 'w')
 				fichier.write('package org.thingml.tester;\n\n\
 import junit.framework.TestCase;\n\
 import org.junit.Test;\n\
 import org.junit.Before;\n\
+import org.junit.After;\n\
 import java.util.regex.Pattern;\n\
 import java.util.regex.Matcher;\n\
 import org.junit.runner.RunWith;\n\
@@ -57,6 +58,12 @@ import java.io.*;\n\
 public class '+name+'Test extends TestCase {\n\
 	\n\
 	private static boolean setUpIsNotDone = true;\n\
+	private static boolean CTried = false;\n\
+	private static boolean ScalaTried = false;\n\
+	private static boolean successC = true;\n\
+	private static boolean successScala = true;\n\
+	private static String messageC = "";\n\
+	private static String messageScala = "";\n\
 	@Before\n\
 	public void init(){\n\
 		if (setUpIsNotDone)\n\
@@ -75,6 +82,7 @@ public class '+name+'Test extends TestCase {\n\
 	@Test\n\
 	public void testC(){\n\
 		try{\n\
+			CTried = true;\n\
 			System.out.println(System.getProperty("user.dir"));\n\
 			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'.dump")));\n\
 			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'C.dump")));\n\
@@ -90,13 +98,22 @@ public class '+name+'Test extends TestCase {\n\
 				Pattern.compile(output);\n\
 				Matcher matcher = \n\
 				pattern.matcher(outputC);\n\
-				assertTrue("C compiler error: "+outputC+" does not match "+output+" for input "+input+" ("+regex+")",matcher.find());\n\
+				boolean success = matcher.find();\n\
+				if(!success){\n\
+					successC=false;\n\
+					if(outputC == "ErrorAtCompilation")\n\
+						messageC = "Error at compilation";\n\
+					else\n\
+						messageC = outputC+" does not match "+output+" for input "+input+" ("+regex+")";\n\
+				}\n\
+				assertTrue("C compiler error: "+outputC+" does not match "+output+" for input "+input+" ("+regex+")",success);\n\
 			}\n\
 		}catch(Exception e){System.err.println("Error: " + e.getMessage());}\n\
 	}\n\
 	@Test\n\
 	public void testScala(){\n\
 		try{\n\
+			ScalaTried = true;\n\
 			System.out.println(System.getProperty("user.dir"));\n\
 			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'.dump")));\n\
 			BufferedReader dumpScala = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'Scala.dump")));\n\
@@ -112,8 +129,43 @@ public class '+name+'Test extends TestCase {\n\
 				Pattern.compile(output);\n\
 				Matcher matcher = \n\
 				pattern.matcher(outputScala);\n\
-				assertTrue("Scala compiler error: "+outputScala+" does not match "+output+" for input "+input+" ("+regex+")",matcher.find());\n\
+				boolean success = matcher.find();\n\
+				if(!success){\n\
+					successScala=false;\n\
+					if(outputScala == "ErrorAtCompilation")\n\
+						messageScala = "Error at compilation";\n\
+					else\n\
+						messageScala = outputScala+" does not match "+output+" for input "+input+" ("+regex+")";\n\
+				}\n\
+				assertTrue("Scala compiler error: "+outputScala+" does not match "+output+" for input "+input+" ("+regex+")",success);\n\
 			}\n\
+			dump.close();\n\
+			dumpScala.close();\n\
+		}catch(Exception e){System.err.println("Error: " + e.getMessage());}\n\
+	}\n\
+	@After\n\
+	public void dump(){\n\
+		if(CTried && ScalaTried)\n\
+		try{\n\
+			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("src/test/java/tests/results.html", true)));\n\
+			result.write("<tr><th></th></tr>\\n");\n\
+			if (successC){\n\
+				result.write("<tr class=\\"green\\">\\n");\n\
+				result.write("<th>'+name+'</th><th>C</th><th>Success</th>\\n");\n\
+			}else{\n\
+				result.write("<tr class=\\"red\\">\\n");\n\
+				result.write("<th>'+name+'</th><th>C</th><th>"+messageC+"</th>\\n");\n\
+			}\n\
+			result.write("</tr>\\n<tr>\\n");\n\
+			if (successScala){\n\
+				result.write("<tr class=\\"green\\">\\n");\n\
+				result.write("<th>'+name+'</th><th>Scala</th><th>Success</th>\\n");\n\
+			}else{\n\
+				result.write("<tr class=\\"red\\">\\n");\n\
+				result.write("<th>'+name+'</th><th>Scala</th><th>"+messageScala+"</th>\\n");\n\
+			}\n\
+			result.write("</tr>\\n");\n\
+			result.close();\n\
 		}catch(Exception e){System.err.println("Error: " + e.getMessage());}\n\
 	}\n\
 }')
