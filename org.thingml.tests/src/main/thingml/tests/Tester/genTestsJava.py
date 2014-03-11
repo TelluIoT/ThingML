@@ -37,8 +37,8 @@ def run():
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
-			# if name != "tester": 
-			if name in ("testHello","testArrays"): 
+			if name != "tester": 
+			# if name in ("testHello","testArrays"): 
 				fichier = open('../../../../../org.thingml.tester/src/test/java/tests/'+name+'Test.java', 'w')
 				fichier.write('package org.thingml.tester;\n\n\
 import junit.framework.TestCase;\n\
@@ -77,7 +77,7 @@ public class '+name+'Test extends TestCase {\n\
 				System.out.println(line);\n\
 			}\n\
 			in.close();\n\
-		}catch(Exception e){System.err.println("Error: " + e.getMessage());}\n\
+		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
 	}\n\
 	@Test\n\
 	public void testC(){\n\
@@ -108,7 +108,7 @@ public class '+name+'Test extends TestCase {\n\
 				}\n\
 				assertTrue("C compiler error: "+outputC+" does not match "+output+" for input "+input+" ("+regex+")",success);\n\
 			}\n\
-		}catch(Exception e){System.err.println("Error: " + e.getMessage());}\n\
+		}catch(Exception e){fail("Error: " + e.getMessage());}\n\
 	}\n\
 	@Test\n\
 	public void testScala(){\n\
@@ -141,7 +141,7 @@ public class '+name+'Test extends TestCase {\n\
 			}\n\
 			dump.close();\n\
 			dumpScala.close();\n\
-		}catch(Exception e){System.err.println("Error: " + e.getMessage());}\n\
+		}catch(Exception e){fail("Error: " + e.getMessage());}\n\
 	}\n\
 	@After\n\
 	public void dump(){\n\
@@ -166,7 +166,7 @@ public class '+name+'Test extends TestCase {\n\
 			}\n\
 			result.write("</tr>\\n");\n\
 			result.close();\n\
-		}catch(Exception e){System.err.println("Error: " + e.getMessage());}\n\
+		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
 	}\n\
 }')
 				fichier.close()

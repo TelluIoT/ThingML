@@ -177,7 +177,7 @@ object ScalaGenerator {
     }
   }
   def compileAndNotRun(cfg : Configuration, model: ThingMLModel) {
-	val tmpFolder = "/tmp/ThingML_Scala/"
+	val tmpFolder = "tmp/ThingML_Scala/"
     new File(tmpFolder).deleteOnExit
     
     val code = compile(cfg, "org.thingml.generated", model)

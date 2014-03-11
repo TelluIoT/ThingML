@@ -57,9 +57,13 @@ for (a,b) in results:
 	
 	#!Test C
 	os.chdir(compilerDirectory)
+	if not os.path.exists("tmp"):
+		os.makedirs("tmp")
+	if not os.path.exists("tmp/ThingML_C"):
+		os.makedirs("tmp/ThingML_C")
 	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"c org.thingml.tests/src/main/thingml/tests/_linux/"+fileName+".thingml\"")
 	bigName = fileName[0].upper()+fileName[1:]+"C"
-	os.chdir("/tmp/ThingML_C/"+bigName)
+	os.chdir("tmp/ThingML_C/"+bigName)
 	os.system("make")
 	os.system("./"+bigName)
 	try:
@@ -72,9 +76,11 @@ for (a,b) in results:
 	
 	#!Test scala
 	os.chdir(compilerDirectory)
+	if not os.path.exists("tmp/ThingML_Scala"):
+		os.makedirs("tmp/ThingML_Scala")
 	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"scala org.thingml.tests/src/main/thingml/tests/_scala/"+fileName+".thingml\"")
 
-	os.chdir("/tmp/ThingML_Scala/"+fileName[0].upper()+fileName[1:])
+	os.chdir("tmp/ThingML_Scala/"+fileName[0].upper()+fileName[1:])
 	os.system("mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
 	try:
 		f = open('dump', 'r')
