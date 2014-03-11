@@ -37,10 +37,9 @@ object TestsGeneration {
 	def main(args: Array[String]) {
 		var p: Process = Runtime.getRuntime().exec("mvn clean install",null,new File((new File(System.getProperty("user.dir"))).getParentFile(),"org.thingml.cmd"))
 		var line = ""
-		var in: BufferedReader = new BufferedReader(
-		new InputStreamReader(p.getInputStream()) )
+		var in: BufferedReader = new BufferedReader( new InputStreamReader(p.getInputStream()) )
 		
-		var result : BufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/test/java/tests/results.html")))
+		var result : BufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/test/resources/results.html")))
 		result.write("<!DOCTYPE html>\n"+
 "<html>\n"+
 "	<head>\n"+

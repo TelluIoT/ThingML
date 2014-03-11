@@ -37,7 +37,7 @@ fdump = open('dump/'+fileName+'.dump', 'w')
 fdumpC = open('dump/'+fileName+'C.dump', 'w')
 fdumpScala = open('dump/'+fileName+'Scala.dump', 'w')
 
-os.chdir(r"../../../../../org.thingml.cmd")
+os.chdir(r"../../../../org.thingml.cmd")
 compilerDirectory = os.getcwd()
 
 os.chdir(r"../org.thingml.tests/src/main/thingml/tests/Tester")

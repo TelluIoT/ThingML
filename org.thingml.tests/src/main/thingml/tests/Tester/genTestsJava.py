@@ -23,7 +23,10 @@ import os
 from os import listdir
 from os.path import isfile, join
 startDir = os.getcwd()
-os.chdir("../org.thingml.tester/src/test/java/tests")
+
+if not os.path.exists("../org.thingml.tester/src/test/java"):
+	os.makedirs("../org.thingml.tester/src/test/java")
+os.chdir("../org.thingml.tester/src/test/java")
 os.system("rm *.java")
 os.system("rm -r dump")
 os.chdir(startDir)
@@ -37,9 +40,9 @@ def run():
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
-			if name != "tester": 
-			# if name in ("testHello","testArrays"): 
-				fichier = open('../../../../../org.thingml.tester/src/test/java/tests/'+name+'Test.java', 'w')
+			# if name != "tester": 
+			if name in ("testHello","testArrays"): 
+				fichier = open('../../../../../org.thingml.tester/src/test/java/'+name+'Test.java', 'w')
 				fichier.write('package org.thingml.tester;\n\n\
 import junit.framework.TestCase;\n\
 import org.junit.Test;\n\
@@ -69,7 +72,7 @@ public class '+name+'Test extends TestCase {\n\
 		if (setUpIsNotDone)\n\
 		try{\n\
 			setUpIsNotDone = false;\n\
-			Process p = Runtime.getRuntime().exec("python execute.py '+name+'",null,new File("src/test/java/tests"));\n\
+			Process p = Runtime.getRuntime().exec("python execute.py '+name+'",null,new File("src/test/resources"));\n\
 			String line;\n\
 			BufferedReader in = new BufferedReader(\n\
 			new InputStreamReader(p.getInputStream()) );\n\
@@ -84,8 +87,8 @@ public class '+name+'Test extends TestCase {\n\
 		try{\n\
 			CTried = true;\n\
 			System.out.println(System.getProperty("user.dir"));\n\
-			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'.dump")));\n\
-			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'C.dump")));\n\
+			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/resources/dump/'+name+'.dump")));\n\
+			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/resources/dump/'+name+'C.dump")));\n\
 			String regex;\n\
 			String input;\n\
 			String output;\n\
@@ -115,8 +118,8 @@ public class '+name+'Test extends TestCase {\n\
 		try{\n\
 			ScalaTried = true;\n\
 			System.out.println(System.getProperty("user.dir"));\n\
-			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'.dump")));\n\
-			BufferedReader dumpScala = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/java/tests/dump/'+name+'Scala.dump")));\n\
+			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/resources/dump/'+name+'.dump")));\n\
+			BufferedReader dumpScala = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/resources/dump/'+name+'Scala.dump")));\n\
 			String regex;\n\
 			String input;\n\
 			String output;\n\
@@ -147,7 +150,7 @@ public class '+name+'Test extends TestCase {\n\
 	public void dump(){\n\
 		if(CTried && ScalaTried)\n\
 		try{\n\
-			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("src/test/java/tests/results.html", true)));\n\
+			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("src/test/resources/results.html", true)));\n\
 			result.write("<tr><th></th></tr>\\n");\n\
 			if (successC){\n\
 				result.write("<tr class=\\"green\\">\\n");\n\
