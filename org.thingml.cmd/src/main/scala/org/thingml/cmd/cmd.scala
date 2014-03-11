@@ -60,9 +60,6 @@ import scala.collection.JavaConversions._
 object Cmd {
   var targetFile: Option[File] = None
 	def main(args: Array[String]) {
-	val reg = Resource.Factory.Registry.INSTANCE;
-	reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
-
 		if (args.length==2)
 		{
 	    	if (args(0) == "c")
@@ -70,6 +67,7 @@ object Cmd {
 	    	if (args(0) == "scala")
 	      		compileToScala(args(1))
 	    }
+		System.exit(0)
     }
     
     
@@ -87,7 +85,6 @@ object Cmd {
         catch {
           case t : Throwable => t.printStackTrace()
         }
-		System.exit(0)
 	}
 
    
@@ -110,11 +107,13 @@ object Cmd {
         catch {
           case t : Throwable => t.printStackTrace()
         }
-		System.exit(0)
       }         
       
   
   def loadThingMLmodel(file : File) = {
+	val reg = Resource.Factory.Registry.INSTANCE;
+	reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
+
     var rs: ResourceSet = new ResourceSetImpl
     var xmiuri: URI = URI.createFileURI(file.getAbsolutePath)
     var model: Resource = rs.createResource(xmiuri)

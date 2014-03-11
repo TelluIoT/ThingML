@@ -58,33 +58,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.kevoree.extra</groupId>
-            <artifactId>org.kevoree.extra.jsyntaxpane</artifactId>
-            <version>0.9.7</version>
-        </dependency>
-        <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.parser.standalone</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.model</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-         <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.compilers</artifactId>
-            <version>${project.version}</version>
-        </dependency>
          <dependency>
             <groupId>org.thingml</groupId>
             <artifactId>org.thingml.cmd</artifactId>
@@ -95,11 +73,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
-        </dependency>
-        <dependency>
-            <groupId>com.apple</groupId>
-            <artifactId>AppleJavaExtensions</artifactId>
-            <version>1.4</version>
         </dependency>
 
     </dependencies>

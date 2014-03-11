@@ -37,8 +37,8 @@ def run():
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
-			if name != "tester": 
-			# if name in ("testHello","testArrays"): 
+			# if name != "tester": 
+			if name in ("testHello","testArrays"): 
 				fichier = open('../../../../../org.thingml.tester/src/test/java/tests/'+name+'Test.java', 'w')
 				fichier.write('package org.thingml.tester;\n\n\
 import junit.framework.TestCase;\n\
