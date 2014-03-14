@@ -7,15 +7,15 @@ This module automatically generates JUnit tests ready for integration in tools s
 User manual:
 ------------
 Creation of a new test:
-  * Tests are defined in the folder org.thingml.tests/src/main/thingml/tests
+  * Tests are defined in the folder `org.thingml.tests/src/main/thingml/tests`
   * To make the automatic compilation possible, follow the following conventions:
   * The thing describing your test should have the same name as the file, starting with a capital letter (thing TestExample in file testExample.thingml), and should include Test
   * Inputs and outputs send and receive one Char at a time.
-  * You can define inputs to send to your state machine with @test "input # expectedOutput" annotations.
-  * Your state machine receives inputs on harness?testIn port, and sends outputs on harness!testOut port.
+  * You can define inputs to send to your state machine with `@test "input # expectedOutput"` annotations.
+  * Your state machine receives inputs on `harness?testIn` port, and sends outputs on `harness!testOut` port.
 	
 Automatic run using Maven:
-  * To run automatically all the tests using Maven, run the command "mvn clean install" in the folder org.thingml.tester.
+  * To run automatically all the tests using Maven, run the command `mvn clean install` in the folder `org.thingml.tester`
 	
 Selection of tests run by Maven:
   * File org.thingml.tests/src/main/thingml/tests/Tester/genTestsJava.py contains the following line : "if name != "tester": ".
@@ -36,7 +36,7 @@ org.thingml.tester module:
   * Maven automatically compiles the generated JUnit tests, which themselves use org.thingml.tester/src/resources python files to run each @test described in the original thingml file.
 
 org.thingml.cmd module: 
-  * Provides command line compilation of thingml files through the command 'mvn exec:java -Dexec.mainClass="org.thingml.cmd.Cmd" -Dexec.args="language path"'.
+  * Provides command line compilation of thingml files through the command `mvn exec:java -Dexec.mainClass="org.thingml.cmd.Cmd" -Dexec.args="language path`
   * Provides java interface for compilation by using the import "import org.thingml.cmd.Cmd" and the function calls "Cmd.compileToC(path)" and "Cmd.compileToScala(path)".
   * Note that language is either "c" or "scala", and path starts from the root of the project Thingml.
 
