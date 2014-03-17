@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
  *
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ import scala.collection.JavaConversions._
 import scala.io.Source
 import scala.actors._
 import scala.actors.Actor._
-import java.util.{ArrayList, Hashtable}
+import java.util.{ ArrayList, Hashtable }
 import java.util.AbstractMap.SimpleEntry
-import java.io.{File, FileWriter, PrintWriter, BufferedReader, BufferedWriter, InputStreamReader, OutputStream, OutputStreamWriter, PrintStream}
+import java.io.{ File, FileWriter, PrintWriter, BufferedReader, BufferedWriter, InputStreamReader, OutputStream, OutputStreamWriter, PrintStream }
 import org.sintef.thingml._
 
 import org.thingml.utils.log.Logger
@@ -38,24 +38,23 @@ import org.thingml.graphexport.ThingMLGraphExport
 
 object Context {
   val builder = new StringBuilder()
-  
-  var thing : Thing = _
-  var pack : String = _
-  
-  val keywords = scala.List("implicit","match","requires","type","var","abstract","do","finally","import","object","throw","val","case","else","for","lazy","override","return","trait","catch","extends","forSome","match","package","sealed","try","while","class","false","if","new","private","super","true","with","def","final","implicit","null","protected","this","yield","_",":","=","=>","<-","<:","<%",">:","#","@")
-  def protectKotlinKeyword(value : String) : String = {
-    if(keywords.exists(p => p.equals(value))){
-      return "`"+value+"`"
-    } 
-    else {
+
+  var thing: Thing = _
+  var pack: String = _
+
+  val keywords = scala.List("implicit", "match", "requires", "type", "var", "abstract", "do", "finally", "import", "object", "throw", "val", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "with", "def", "final", "implicit", "null", "protected", "this", "yield", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@")
+  def protectKotlinKeyword(value: String): String = {
+    if (keywords.exists(p => p.equals(value))) {
+      return "`" + value + "`"
+    } else {
       return value
     }
   }
 
-  def firstToUpper(value : String) : String = {
+  def firstToUpper(value: String): String = {
     return value.capitalize
   }
-  
+
   def init {
     builder.clear
     thing = null
@@ -76,80 +75,80 @@ object KotlinGenerator {
 
   implicit def kotlinGeneratorAspect(self: Type) = self match {
     case t: PrimitiveType => PrimitiveTypeKotlinGenerator(t)
-    case t: Enumeration => EnumerationKotlinGenerator(t)
-    case _ => TypeKotlinGenerator(self)
-  } 
-  
+    case t: Enumeration   => EnumerationKotlinGenerator(t)
+    case _                => TypeKotlinGenerator(self)
+  }
+
   implicit def kotlinGeneratorAspect(self: TypedElement) = self match {
     case t: Function => FunctionKotlinGenerator(t)
-    case _ => TypedElementKotlinGenerator(self)
-  } 
+    case _           => TypedElementKotlinGenerator(self)
+  }
 
   implicit def kotlinGeneratorAspect(self: Handler) = self match {
-    case h: Transition => TransitionKotlinGenerator(h)
-    case h: InternalTransition => InternalTransitionKotlinGenerator(h)
-  }  
-    
-  implicit def kotlinGeneratorAspect(self: State) = self match {
-    case s: StateMachine => StateMachineKotlinGenerator(s)
-    case s: CompositeState => CompositeStateKotlinGenerator(s)
-    case s: State => StateKotlinGenerator(s)
+    case h: Transition         => HandlerKotlinGenerator(h)
+    case h: InternalTransition => HandlerKotlinGenerator(h)
   }
-  
+
+  implicit def kotlinGeneratorAspect(self: State) = self match {
+    case s: StateMachine   => StateMachineKotlinGenerator(s)
+    case s: CompositeState => CompositeStateKotlinGenerator(s)
+    case s: State          => StateKotlinGenerator(s)
+  }
+
   implicit def kotlinGeneratorAspect(self: Action) = self match {
-    case a: SendAction => SendActionKotlinGenerator(a)
-    case a: VariableAssignment => VariableAssignmentKotlinGenerator(a)
-    case a: ActionBlock => ActionBlockKotlinGenerator(a)
-    case a: ExternStatement => ExternStatementKotlinGenerator(a)
-    case a: ConditionalAction => ConditionalActionKotlinGenerator(a)
-    case a: LoopAction => LoopActionKotlinGenerator(a)
-    case a: PrintAction => PrintActionKotlinGenerator(a)
-    case a: ErrorAction => ErrorActionKotlinGenerator(a)
-    case a: ReturnAction => ReturnActionKotlinGenerator(a)
-    case a: LocalVariable => LocalVariableActionKotlinGenerator(a)
+    case a: SendAction            => SendActionKotlinGenerator(a)
+    case a: VariableAssignment    => VariableAssignmentKotlinGenerator(a)
+    case a: ActionBlock           => ActionBlockKotlinGenerator(a)
+    case a: ExternStatement       => ExternStatementKotlinGenerator(a)
+    case a: ConditionalAction     => ConditionalActionKotlinGenerator(a)
+    case a: LoopAction            => LoopActionKotlinGenerator(a)
+    case a: PrintAction           => PrintActionKotlinGenerator(a)
+    case a: ErrorAction           => ErrorActionKotlinGenerator(a)
+    case a: ReturnAction          => ReturnActionKotlinGenerator(a)
+    case a: LocalVariable         => LocalVariableActionKotlinGenerator(a)
     case a: FunctionCallStatement => FunctionCallStatementKotlinGenerator(a)
-    case _ => ActionKotlinGenerator(self)
+    case _                        => ActionKotlinGenerator(self)
   }
 
   implicit def kotlinGeneratorAspect(self: Expression) = self match {
-    case exp: OrExpression => OrExpressionKotlinGenerator(exp)
-    case exp: AndExpression => AndExpressionKotlinGenerator(exp)
-    case exp: LowerExpression => LowerExpressionKotlinGenerator(exp)
-    case exp: GreaterExpression => GreaterExpressionKotlinGenerator(exp)
-    case exp: EqualsExpression => EqualsExpressionKotlinGenerator(exp)
-    case exp: PlusExpression => PlusExpressionKotlinGenerator(exp)
-    case exp: MinusExpression => MinusExpressionKotlinGenerator(exp)
-    case exp: TimesExpression => TimesExpressionKotlinGenerator(exp)
-    case exp: DivExpression => DivExpressionKotlinGenerator(exp)
-    case exp: ModExpression => ModExpressionKotlinGenerator(exp)
-    case exp: UnaryMinus => UnaryMinusKotlinGenerator(exp)
-    case exp: NotExpression => NotExpressionKotlinGenerator(exp)
-    case exp: EventReference => EventReferenceKotlinGenerator(exp)
-    case exp: ExpressionGroup => ExpressionGroupKotlinGenerator(exp)
-    case exp: PropertyReference => PropertyReferenceKotlinGenerator(exp)
-    case exp: IntegerLiteral => IntegerLiteralKotlinGenerator(exp)
-    case exp: DoubleLiteral => DoubleLiteralKotlinGenerator(exp)
-    case exp: StringLiteral => StringLiteralKotlinGenerator(exp)
-    case exp: BooleanLiteral => BooleanLiteralKotlinGenerator(exp)
-    case exp: EnumLiteralRef => EnumLiteralRefKotlinGenerator(exp)
-    case exp: ExternExpression => ExternExpressionKotlinGenerator(exp)
-    case exp: ArrayIndex => ArrayIndexKotlinGenerator(exp)
+    case exp: OrExpression           => OrExpressionKotlinGenerator(exp)
+    case exp: AndExpression          => AndExpressionKotlinGenerator(exp)
+    case exp: LowerExpression        => LowerExpressionKotlinGenerator(exp)
+    case exp: GreaterExpression      => GreaterExpressionKotlinGenerator(exp)
+    case exp: EqualsExpression       => EqualsExpressionKotlinGenerator(exp)
+    case exp: PlusExpression         => PlusExpressionKotlinGenerator(exp)
+    case exp: MinusExpression        => MinusExpressionKotlinGenerator(exp)
+    case exp: TimesExpression        => TimesExpressionKotlinGenerator(exp)
+    case exp: DivExpression          => DivExpressionKotlinGenerator(exp)
+    case exp: ModExpression          => ModExpressionKotlinGenerator(exp)
+    case exp: UnaryMinus             => UnaryMinusKotlinGenerator(exp)
+    case exp: NotExpression          => NotExpressionKotlinGenerator(exp)
+    case exp: EventReference         => EventReferenceKotlinGenerator(exp)
+    case exp: ExpressionGroup        => ExpressionGroupKotlinGenerator(exp)
+    case exp: PropertyReference      => PropertyReferenceKotlinGenerator(exp)
+    case exp: IntegerLiteral         => IntegerLiteralKotlinGenerator(exp)
+    case exp: DoubleLiteral          => DoubleLiteralKotlinGenerator(exp)
+    case exp: StringLiteral          => StringLiteralKotlinGenerator(exp)
+    case exp: BooleanLiteral         => BooleanLiteralKotlinGenerator(exp)
+    case exp: EnumLiteralRef         => EnumLiteralRefKotlinGenerator(exp)
+    case exp: ExternExpression       => ExternExpressionKotlinGenerator(exp)
+    case exp: ArrayIndex             => ArrayIndexKotlinGenerator(exp)
     case exp: FunctionCallExpression => FunctionCallExpressionKotlinGenerator(exp)
-    case _ => ExpressionKotlinGenerator(self)
+    case _                           => ExpressionKotlinGenerator(self)
   }
-  
+
   private val console_out = actor {
-    loopWhile(true){
+    loopWhile(true) {
       react {
         case TIMEOUT =>
-          //caller ! "react timeout"
-        case proc:Process =>
+        //caller ! "react timeout"
+        case proc: Process =>
           println("[PROC] " + proc)
-          val out = new BufferedReader( new InputStreamReader(proc.getInputStream))
+          val out = new BufferedReader(new InputStreamReader(proc.getInputStream))
 
-          var line:String = null
-          while({line = out.readLine; line != null}){
-            println("["+ proc + " OUT] " + line)
+          var line: String = null
+          while ({ line = out.readLine; line != null }) {
+            println("[" + proc + " OUT] " + line)
           }
 
           out.close
@@ -158,63 +157,63 @@ object KotlinGenerator {
   }
 
   private val console_err = actor {
-    loopWhile(true){
+    loopWhile(true) {
       react {
         case TIMEOUT =>
-          //caller ! "react timeout"
-        case proc:Process =>
+        //caller ! "react timeout"
+        case proc: Process =>
           println("[PROC] " + proc)
 
-          val err = new BufferedReader( new InputStreamReader(proc.getErrorStream))
-          var line:String = null
+          val err = new BufferedReader(new InputStreamReader(proc.getErrorStream))
+          var line: String = null
 
-          while({line = err.readLine; line != null}){
-            println("["+ proc + " ERR] " + line)
+          while ({ line = err.readLine; line != null }) {
+            println("[" + proc + " ERR] " + line)
           }
           err.close
 
       }
     }
   }
-  
-  def compileAndRun(cfg : Configuration, model: ThingMLModel) {
+
+  def compileAndRun(cfg: Configuration, model: ThingMLModel) {
     new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
-    
+
     val code = compile(cfg, "org.thingml.generated", model)
     val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
-    val outputDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/scala/org/thingml/generated"
-    
+    val outputDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/java/org/thingml/generated"
+
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
-    
-    var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + cfg.getName() + ".scala")));
+
+    var w = new PrintWriter(new FileWriter(new File(outputDir + "/" + cfg.getName() + ".kt")));
     w.println(code._1);
     w.close();
-    
-    w = new PrintWriter(new FileWriter(new File(outputDir + "/Main.scala")));
+
+    w = new PrintWriter(new FileWriter(new File(outputDir + "/Main.kt")));
     w.println(code._2);
     w.close();
-    
-    var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/pom.xml"),"utf-8").getLines().mkString("\n")
+
+    var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/kotlinpom.xml"), "utf-8").getLines().mkString("\n")
     pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
-    
+
     //Add ThingML dependencies
     val thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n"
-    cfg.allThingMLMavenDep.foreach{dep =>
+    cfg.allThingMLMavenDep.foreach { dep =>
       pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"))
     }
-    cfg.allMavenDep.foreach{dep =>
-      pom = pom.replace("<!--DEP-->", "<!--DEP-->\n"+dep)
+    cfg.allMavenDep.foreach { dep =>
+      pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep)
     }
-    
-    pom = pom.replace("<!--DEP-->","")
-    
+
+    pom = pom.replace("<!--DEP-->", "")
+
     //TODO: add other maven dependencies
-    
+
     w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
     w.println(pom);
     w.close();
-    
+
     javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
 
     /*
@@ -232,8 +231,7 @@ object KotlinGenerator {
         w.println(dots.get(name))
         w.close
       }
-    }
-    catch {
+    } catch {
       case t: Throwable => {
         t.printStackTrace
       }
@@ -248,31 +246,30 @@ object KotlinGenerator {
         w.println(gml.get(name))
         w.close
       }
-    }
-    catch {
+    } catch {
       case t: Throwable => {
         t.printStackTrace
       }
     }
-    
-    actor{
+
+    actor {
       compileGeneratedCode(rootDir)
     }
-      
+
   }
-  
-  def isWindows() : Boolean = {
+
+  def isWindows(): Boolean = {
     var os = System.getProperty("os.name").toLowerCase();
-    return (os.indexOf( "win" ) >= 0);
+    return (os.indexOf("win") >= 0);
   }
-  
-  def compileGeneratedCode(rootDir : String) = {
+
+  def compileGeneratedCode(rootDir: String) = {
     val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start " else "") + "mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"", null, new File(rootDir));
-    
+
     val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
     val out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(runtime.getOutputStream())), true);
-   
-    var line : String = in.readLine()
+
+    var line: String = in.readLine()
     while (line != null) {
       println(line);
       line = in.readLine()
@@ -280,68 +277,59 @@ object KotlinGenerator {
     runtime.waitFor();
     in.close();
     out.close();
-    runtime.destroy(); 
+    runtime.destroy();
   }
-  
-  def compileAllJava(model: ThingMLModel, pack : String): Hashtable[Configuration, SimpleEntry[String, String]] = {
+
+  def compileAllJava(model: ThingMLModel, pack: String): Hashtable[Configuration, SimpleEntry[String, String]] = {
     val result = new Hashtable[Configuration, SimpleEntry[String, String]]()
-    compileAll(model, pack).foreach{entry =>
+    compileAll(model, pack).foreach { entry =>
       result.put(entry._1, new SimpleEntry(entry._2._1, entry._2._2))
     }
     result
   }
-  
-  def compileAll(model: ThingMLModel, pack : String): Map[Configuration, Pair[String, String]] = {
-    
+
+  def compileAll(model: ThingMLModel, pack: String): Map[Configuration, Pair[String, String]] = {
+
     var result = Map[Configuration, Pair[String, String]]()
-    model.allConfigurations.filter{c=> !c.isFragment}.foreach {
+    model.allConfigurations.filter { c => !c.isFragment }.foreach {
       t => result += (t -> compile(t, pack, model))
     }
     result
   }
 
-  /*def messageDeclaration(m : Message, builder: StringBuilder = Context.builder) {
-    val nameParam = "override val name : String = " + Context.firstToUpper(m.getName) + ".getName"
-    val params = m.getParameters.collect{ case p => Context.protectKotlinKeyword(p.getName) + " : " + p.getType.scala_type(p.getCardinality != null)} += nameParam
-    builder append Context.firstToUpper(m.getName) + "("
-    builder append params.mkString(", ")
-    builder append ")"
-  } */
-  
-  def compile(t: Configuration, pack : String, model: ThingMLModel) : Pair[String, String] = {
+  def compile(t: Configuration, pack: String, model: ThingMLModel): Pair[String, String] = {
     Context.init
     Context.pack = pack
-       
+
     var mainBuilder = new StringBuilder()
-    
-    
+
     generateHeader()
     generateHeader(mainBuilder, true)
-    
+
     t.generateScalaMain(mainBuilder)
-    
-    model.allSimpleTypes.filter{ t => t.isInstanceOf[Enumeration] }.foreach{ e =>
+
+    model.allSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
       e.generateScala()
     }
 
     // Generate code for things which appear in the configuration
-    
-    model.allMessages.foreach{ m =>
-      Context.builder append "object " + Context.firstToUpper(m.getName()) + "Type : EventType(name = " + m.getName + ")\n"
-      
-      
-      Context.builder append "class " + Context.firstToUpper(m.getName()) + "Event ("
-      m.getParameters.foreach{ p =>
-        Context.builder append "val" + Context.protectKotlinKeyword(p.getName) + " : " + p.getType.scala_type(p.getCardinality != null)
-      }
-      Context.builder append "} : Event(eType : " + Context.firstToUpper(m.getName()) + "Type)/* with java.io.Serializable*/\n"
+
+    model.allMessages.foreach { m =>
+      Context.builder append "object " + Context.firstToUpper(m.getName()) + "Type : EventType(name = \"" + m.getName + "\")\n"
+
+      Context.builder append "class " + Context.firstToUpper(m.getName()) + "Event("
+      m.getParameters.collect {
+        case p =>
+          Context.builder append "val " + Context.protectKotlinKeyword(p.getName) + " : " + p.getType.scala_type(p.getCardinality != null)
+      }.mkString(", ")
+      Context.builder append ") : Event(eType = " + Context.firstToUpper(m.getName()) + "Type)/*, java.io.Serializable*/\n"
     }
-  
+
     t.generateScala()
     (Context.builder.toString, mainBuilder.toString)
   }
-  
-  def generateHeader(builder: StringBuilder = Context.builder, isMain : Boolean = false) = {
+
+  def generateHeader(builder: StringBuilder = Context.builder, isMain: Boolean = false) = {
     builder append "/**\n"
     builder append " * File generated by the ThingML IDE\n"
     builder append " * /!\\Do not edit this file/!\\\n"
@@ -350,22 +338,10 @@ object KotlinGenerator {
     builder append " **/\n\n"
 
     builder append "package " + Context.pack + "\n"
-    //builder append "import " + Context.pack + "._\n"
     builder append "import org.sintef.kosm.*\n"
-    
-    /*if (!isMain) {
-      builder append "import scala.annotation.elidable\n"
-      builder append "import scala.annotation.elidable._\n"
-      builder append "import org.thingml.utils.comm.SerializableTypes._\n"//implicits for proper conversions from/to array of bytes
-
-      builder append "object Logger {\n"
-      builder append "@elidable(MINIMUM)def debug(s : String) {println(\"DEBUG:\" + s)}\n"
-      builder append "@elidable(INFO)def info(s : String) {println(\"INFO:\" + s)}\n"
-      builder append "@elidable(WARNING)def warning(s : String) {println(\"WARNING:\" + s)}\n"
-      builder append "@elidable(SEVERE)def error(s : String) {println(\"ERROR:\" + s)}\n"
-      builder append "@elidable(MAXIMUM)def severe(s : String) {println(\"KERNEL PANIC:\" + s)}\n"
-      builder append "}\n"
-    }*/
+    builder append "import jet.List\n"
+    builder append "import java.util.HashMap\n"
+    builder append "import java.util.ArrayList\n\n"
   }
 }
 
@@ -375,13 +351,12 @@ case class ThingMLKotlinGenerator(self: ThingMLElement) {
   }
 }
 
-
 case class ConfigurationKotlinGenerator(override val self: Configuration) extends ThingMLKotlinGenerator(self) {
 
   override def generateScala(builder: StringBuilder = Context.builder) {
-    
+
     self.allThings.foreach { thing =>
-      thing.generateScala(/*Context.builder*/)
+      thing.generateScala( /*Context.builder*/ )
     }
 
     builder append "\n"
@@ -396,101 +371,9 @@ case class ConfigurationKotlinGenerator(override val self: Configuration) extend
 
   def generateScalaMain(builder: StringBuilder = Context.builder) {
     builder append "fun main(args: Array<String>) {\n"
-      
-    /*builder append "//Channels\n"
-    self.allConnectors.foreach{ c =>
-      builder append "val " + c.instanceName + " = new Channel\n"
-    }
-    
-    //define temp arrays   
-    self.allInstances.foreach{ i =>
-      self.allArrays(i).foreach{ init =>
-        builder append "//Initializing arrays\n"
-        var result = "val " + init.scala_var_name + "_" + i.getName + " = new " + init.getType.scala_type(init.getCardinality != null) + "(" 
-        val tempBuilder = new StringBuilder()
-        init.getCardinality.generateScala(tempBuilder)
-        result += tempBuilder.toString
-        result += ")\n"
-        builder append result
-      }
-      
-      val arrayMap = self.initExpressionsByArrays(i)
-      arrayMap.keys.foreach{ init =>
-        var result = ""
-        var tempBuilder = new StringBuilder()
-        arrayMap.get(init).get.foreach{pair => 
-          result += init.scala_var_name + "_" + i.getName + "("
-          tempBuilder = new StringBuilder()
-          pair._1.generateScala(tempBuilder)
-          result += tempBuilder.toString
-          result += ") = "
-          tempBuilder = new StringBuilder()
-          pair._2.generateScala(tempBuilder)
-          result += tempBuilder.toString + "\n"
-        }
-        builder append result
-      }
-    }     */
-   
-    
-    /*builder append "//Things\n"
-    self.allInstances.foreach{ i =>
-      
-      i.getType.getAnnotations.filter{a =>
-        a.getName == "mock"
-      }.headOption match {
-        case Some(a) =>
-          a.getValue match {
-            case "true" => builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "Mock()\n"
-            case "mirror" => builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "MockMirror()\n"
-          }
-        case None => 
-          builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "("
-          ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-          builder append (self.initExpressionsForInstance(i).collect{case p =>         
-                var result = (if (p._1.isChangeable) "_" else "") + p._1.scala_var_name + " = "
-                if (p._2 != null) {
-                  var tempbuilder = new StringBuilder()
-                  p._2.generateScala(tempbuilder)
-                  result += tempbuilder.toString
-                } else {
-                  result += "null"
-                }
-                result += ".asInstanceOf[" + p._1.getType.scala_type(p._1.getCardinality != null) + "]"
-                result
-            }
-            ++ 
-            self.allArrays(i).collect{ case init =>
-                (if (init.isChangeable) "_" else "") + init.scala_var_name + " = " + init.scala_var_name + "_" + i.getName
-            }
-          ).mkString(", ")
-          builder append ")\n"
-      }
-    }
-    
-    builder append "//Bindings\n"
-    self.allConnectors.foreach{ c =>
-      builder append c.instanceName + ".connect(\n" 
-      builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get,\n"
-      builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get\n"
-      builder append")\n"
-      builder append c.instanceName + ".connect(\n" 
-      builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get,\n"
-      builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get\n"
-      builder append")\n\n"
-    }
-    
-    builder append "//Starting Things\n"
-    self.allInstances.foreach{ i =>
-      builder append i.instanceName + ".asInstanceOf[Component].start\n"
-    }
-    
-    self.allConnectors.foreach{ c =>
-      builder append c.instanceName + ".start\n"
-    }
-    
-    builder append "}\n\n"*/
-  }     
+
+    //TODO
+  }
 }
 
 case class InstanceKotlinGenerator(override val self: Instance) extends ThingMLKotlinGenerator(self) {
@@ -498,156 +381,123 @@ case class InstanceKotlinGenerator(override val self: Instance) extends ThingMLK
 }
 
 case class ConnectorKotlinGenerator(override val self: Connector) extends ThingMLKotlinGenerator(self) {
-  val instanceName = "c_" + (if (self.getName != null) self.getName + "_" else "") + self.hashCode 
+  val instanceName = "c_" + (if (self.getName != null) self.getName + "_" else "") + self.hashCode
   val clientName = self.getCli.getInstance.instanceName
   val serverName = self.getSrv.getInstance.instanceName
 }
 
-
 case class ThingKotlinGenerator(override val self: Thing) extends ThingMLKotlinGenerator(self) {
 
-  def buildState(builder: StringBuilder = Context.builder, s : State) {
+  def buildState(builder: StringBuilder = Context.builder, s: State) {
     s match {
-      case c : CompositeState =>
+      case c: CompositeState =>
         builder append "val states_" + c.getName + " : MutableList<State> = ArrayList()\n"
-        c.getSubstate.foreach{s => buildState(builder, s)}
+        c.getSubstate.foreach { s => buildState(builder, s) }
         builder append "val regions_" + c.getName + " : MutableList<Region> = ArrayList()\n"
-        c.getRegion.foreach{r => 
+        c.getRegion.foreach { r =>
           buildRegion(builder, r)
           builder append "regions_" + c.getName + ".add(reg_" + r.getName + ")\n"
         }
-        if (c.isInstanceOf[StateMachine]) 
-          builder append "val state_" + c.getName + ": State = StateMachine(action = DefaultStateAction(), states = states_" + c.getName + ", initial = " + c.getInitial.getName + ", internals = internals, transitions = transitions, name = \"" + c.getName + "\")\n"//TODO: transitions
+        if (c.isInstanceOf[StateMachine])
+          builder append "val state_" + c.getName + ": State = StateMachine(action = DefaultStateAction(), states = states_" + c.getName + ", initial = state_" + c.getInitial.getName + ", internals = internals_" + c.getName + ", transitions = transitions_" + c.getName + ", name = \"" + c.getName + "\")\n"
         else
-          builder append "val state_" + c.getName + ": State = CompositeState(action = DefaultStateAction(), states = states_" + c.getName  + ", initial = " + c.getInitial.getName + ", internals = internals, transitions = transitions, name = \"" + c.getName + "\")\n"//TODO: transitions
-        builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(" + c.getName + ")\n"
-      case s : State => 
-        builder append "val state_" + s.getName + " : State = AtomicState(name = \"" + s.getName + "\", action = DebugStateAction())\n"//TODO: point to proper action (to be generated)
-        builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(" + s.getName + ")\n"
+          builder append "val state_" + c.getName + ": State = CompositeState(action = DefaultStateAction(), states = states_" + c.getName + ", initial = state_" + c.getInitial.getName + ", internals = internals_" + c.getName + ", transitions = transitions_" + c.getName + ", name = \"" + c.getName + "\")\n"
+        builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + c.getName + ")\n"
+      case s: State =>
+        builder append "val state_" + s.getName + " : State = AtomicState(name = \"" + s.getName + "\", action = DebugStateAction())\n" //TODO: point to proper action (to be generated)
+        builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + s.getName + ")\n"
     }
-    
+
     builder append "val transitions_" + s.getName + " : MutableList<Transition> = ArrayList()\n"
-    s.getOutgoing.foreach{t =>
+    s.getOutgoing.foreach { t =>
       if (t.getEvent != null)
-        builder append "val t_" + t.getName + " : Transition = Transition(source = state_" + t.getSource.getName + ", target = " + t.getTarget.getName + ", action = DefaultHandlerAction())\n"
+        builder append "val t_" + t.getName + " : Transition = Transition(source = state_" + t.getSource.getName + ", target = state_" + t.getTarget.getName + ", action = DefaultHandlerAction())\n"
       else
-        builder append "val t_" + t.getName + " : Transition = AutoTransition(source = state_" + t.getSource.getName + ", target = " + t.getTarget.getName + ", action = DefaultHandlerAction(), event = TODO)\n"
-      builder append "transitions_" + s.getName + ".add(t_" + t.getName + ")\n"    
+        builder append "val t_" + t.getName + " : Transition = AutoTransition(source = state_" + t.getSource.getName + ", target = state_" + t.getTarget.getName + ", action = DefaultHandlerAction(), event = TODO)\n"
+      builder append "transitions_" + s.getName + ".add(t_" + t.getName + ")\n"
     }
-    
+
   }
-  
-  def buildRegion(builder: StringBuilder = Context.builder, r : Region) {
+
+  def buildRegion(builder: StringBuilder = Context.builder, r: Region) {
     builder append "val states_" + r.getName + " : MutableList<State> = ArrayList()\n"
-    r.getSubstate.foreach{s => 
+    r.getSubstate.foreach { s =>
       buildState(builder, s)
     }
     builder append "val reg_" + r.getName + " : Region = Region(states_" + r.getName + ", state_" + r.getInitial.getName + ", internals, transitions_" + r.getName + ", false)"
   }
-  
+
   override def generateScala(builder: StringBuilder = Context.builder) {
     Context.thing = self
-    
+
     builder append "\n/**\n"
     builder append " * Definition for type : " + self.getName + "\n"
     builder append " **/\n"
-    
-    builder append "object " + Context.firstToUpper(self.getName) + "Builder {"  
+
+    builder append "object " + Context.firstToUpper(self.getName) + "Builder {"
     builder append "fun build("
-    builder append self.allPropertiesInDepth.collect{case p =>
+    builder append self.allPropertiesInDepth.collect {
+      case p =>
         p.scala_var_name + " : " + p.getType.scala_type(p.getCardinality != null)
     }.mkString(", ")
-    builder append ") : " + Context.firstToUpper(self.getName) + " {\n"  
-    
+    builder append ") : " + Context.firstToUpper(self.getName) + " {\n"
+
     builder append "val ports : MutableMap<String, Port> = HashMap()\n"
-    self.allPorts.foreach{ p => 
+    self.allPorts.foreach { p =>
       builder append "val inEvents_" + p.getName + " : MutableList<EventType> = ArrayList()\n"
       builder append "val outEvents_" + p.getName + " : MutableList<EventType> = ArrayList()\n"
-      p.getReceives.foreach{ r =>
-        builder append "inEvents_" + p.getName + ".add(" + r.getName + "Type)\n"
+      p.getReceives.foreach { r =>
+        builder append "inEvents_" + p.getName + ".add(" + Context.firstToUpper(r.getName) + "Type)\n"
       }
-      p.getSends.foreach{ s =>
-        builder append "outEvents_" + p.getName + ".add(" + s.getName + "Type)\n"
+      p.getSends.foreach { s =>
+        builder append "outEvents_" + p.getName + ".add(" + Context.firstToUpper(s.getName) + "Type)\n"
       }
-        
-      builder append "val " + p.getName + "_port : Port(" + p.getName + ", " + (if (p.isInstanceOf[ProvidedPort]) "PortType.PROVIDED" else "PortType.REQUIRED") + "inEvents, outEvents)\n"
-      builder append "ports.put(\"" + p.getName + "\", " + p.getName + "_port)\n"
+
+      builder append "val " + p.getName + "_port = Port(\"" + p.getName + "\", " + (if (p.isInstanceOf[ProvidedPort]) "PortType.PROVIDED" else "PortType.REQUIRED") + ", inEvents_" + p.getName + ", outEvents_" + p.getName + ")\n"
+      builder append "ports.put(" + p.getName + "_port.name, " + p.getName + "_port)\n"
     }
-      
-    //TODO: restart from here
-    self.allStateMachines.foreach{b => 
-      builder append "this.behavior ++= List("
-      val hist = if (b.isHistory) "true" else "false"
-      builder append "new " + Context.firstToUpper(b.getName) + "StateMachine(" + hist + ", this).getBehavior)\n"
-    }
-    
-    self.allStateMachines.foreach{b => 
-      b.asInstanceOf[StateMachine].generateScala()
+
+    self.allStateMachines.foreach { b =>
+      buildState(builder, b)
     }
     
     builder append "}\n"
     builder append "}\n\n"
-      
-      
+
+    //TODO: restart from here
+    self.allStateMachines.foreach { b =>
+      b.generateScala()
+    }
+
     var traits = ""
     if (self.hasAnnotation("kotlin_trait")) {
-      traits = " : " + self.annotation("kotlin_trait")
+      traits = ", " + self.annotation("kotlin_trait")
     } else if (self.hasAnnotation("java_interface")) {
-      traits = " : " + self.annotation("java_interface")
+      traits = ", " + self.annotation("java_interface")
     } else if (self.hasAnnotation("scala_trait")) {
-      traits = " : " + self.annotation("scala_trait")
+      traits = ", " + self.annotation("scala_trait")
     }
-    
 
-    builder append "class " + Context.firstToUpper(self.getName) + "("
+    builder append "class " + Context.firstToUpper(self.getName) + "(ports : Map<String, Port>, behavior : StateMachine"
     generateProperties()
-    builder append ") extends Component " + traits + "{\n\n"
-    
-    //generateAccessors()
-    
-/*    builder append "//Companion object\n"
-    builder append "object " + Context.firstToUpper(self.getName) + "{\n"
-    self.allPorts.foreach{ p => 
-      builder append "object " + p.getName + "Port{\n"
-      builder append "def getName = \"" + p.getName + "\"\n"
-      builder append "object in {\n" 
-      p.getReceives.foreach{r =>
-        builder append "val " + r.getName + "_i = " + Context.firstToUpper(r.getName) + ".getName\n"
-      }
-      builder append "}\n"
-      builder append "object out {\n" 
-      p.getSends.foreach{s =>
-        builder append "val " + s.getName + "_o = " + Context.firstToUpper(s.getName) + ".getName\n"
-      }
-      builder append "}\n"
-      builder append "}\n\n"
-    }
-    builder append "}\n\n"
-*/    
-       
-    self.allFunctions.foreach{
+    builder append ") : Component(\"" + self.getName + "\", ports, behavior) " + traits + "{\n\n"
+
+    self.allFunctions.foreach {
       f => f.generateScala()
     }
-    
+
     /*if(self.hasAnnotation("scala_def")) {
-      builder append self.annotation("scala_def")
-    } */   
-    
+     builder append self.annotation("scala_def")
+     } */
+
     builder append "}\n"
   }
-  
+
   def generateProperties(builder: StringBuilder = Context.builder) {
-    builder append self.allPropertiesInDepth.collect{case p =>
-        (if (!p.isChangeable) "val " else "private var _") +
-        p.scala_var_name + " : " + p.getType.scala_type(p.getCardinality != null)
-    }.mkString(", ")
-  }
-  
-  def generateAccessors(builder: StringBuilder = Context.builder) {
-    self.allPropertiesInDepth.filter{p => p.isChangeable}.foreach{p =>
-      builder append "//Synchronized accessors of " + p.getName + ":" + p.getType.scala_type(p.getCardinality != null) + "\n"
-      builder append "def " + p.scala_var_name + ":" + p.getType.scala_type(p.getCardinality != null) + " = {synchronized{return _" + p.scala_var_name + "}}\n"
-      builder append "def " + p.scala_var_name + "_=(newValue : " + p.getType.scala_type(p.getCardinality != null) + ") { synchronized{ _" + p.scala_var_name + " = newValue}}\n\n"
+    builder append self.allPropertiesInDepth.collect {
+      case p =>
+        ", " + (if (!p.isChangeable) "val " else "var ") 
+          p.scala_var_name + " : " + p.getType.scala_type(p.getCardinality != null)//TODO
     }
   }
 }
@@ -666,9 +516,9 @@ case class EnumerationLiteralKotlinGenerator(override val self: EnumerationLiter
     }.headOption match {
       case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
       case None => {
-          Logger.warning("Missing annotation enum_val on litteral " + self.getName + " in enum " + self.eContainer().asInstanceOf[ThingMLElement].getName + ", will use default value 0.")
-          return "0"
-        }
+        Logger.warning("Missing annotation enum_val on litteral " + self.getName + " in enum " + self.eContainer().asInstanceOf[ThingMLElement].getName + ", will use default value 0.")
+        return "0"
+      }
     }
   }
 
@@ -678,231 +528,91 @@ case class EnumerationLiteralKotlinGenerator(override val self: EnumerationLiter
 }
 
 case class HandlerKotlinGenerator(override val self: Handler) extends ThingMLKotlinGenerator(self) {
-  
+
   val handlerInstanceName = "handler_" + self.hashCode
-  val handlerTypeName = "Handler" + self.hashCode
-    
-  def generateHandler : String = {
-    var tempbuilder = new StringBuilder()
-    tempbuilder append "List("
-    tempbuilder append self.allTriggeringPorts.collect{case pair =>
-        "(" + Context.thing.getName + "." + pair._1.getName + "Port.getName, " + Context.thing.getName + "." + pair._1.getName + "Port.in." + pair._2.getMessage.getName + "_i)"
-    }.mkString(", ")
-    tempbuilder append ")"
-    return tempbuilder.toString
+  val handlerTypeName = "Handler_" + self.hashCode //TODO: find prettier names for handlers
+
+  override def generateScala(builder: StringBuilder = Context.builder) {
+    builder append "object " + handlerTypeName + " : HandlerAction {\n"
+    builder append "override var state : State? = null\n"
+    builder append "override var component : Component? = null\n\n"
+
+    builder append "override fun check(e: Event): Boolean {\n"
+    builder append "return e is " + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Event && e.port == component!!.ports.get(\"" + self.getEvent.first.asInstanceOf[ReceiveMessage].getPort.getName + "\")" //TODO: multiple events should be split into different transitions
+    printGuard(builder)
+    builder append "\n"
+    builder append "}\n\n"
+
+    builder append "override fun execute(e : Event) {\n"
+    builder append "val e = e as " + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Event\n"
+    printAction(builder)
+    builder append "}\n\n"
+    builder append "}\n\n"
   }
-  
+
   def printGuard(builder: StringBuilder = Context.builder) {
-    if(self.getGuard != null){
-      builder append "override def checkGuard() : Boolean = {\n"
-      //builder append "try {\n"
-      self.getGuard.generateScala()
-      //builder append "}\ncatch {\n"
-      //builder append "case nse : java.util.NoSuchElementException => return false\n"
-      //builder append "case e : Exception => return false\n"
-      //builder append"}\n"
-      builder append "\n}\n"
+    if (self.getGuard != null) {
+      builder append " && "
+      self.getGuard.generateScala(builder)
     }
   }
-  
+
   def printAction(builder: StringBuilder = Context.builder) {
-    builder append "override def executeActions() = {\n"
-    builder append "Logger.debug(\"" + handlerInstanceName + ".executeActions\")\n"
+    //builder append "Logger.debug(\"" + handlerInstanceName + ".executeActions\")\n"
     Option(self.getAction) match {
       case Some(a) =>
         self.getAction.generateScala()
       case None =>
         builder append "//No action defined for this transition\n"
-        Logger.info("no action for transition "+self)
+        Logger.info("no action for transition " + self)
     }
     builder append "}\n\n"
   }
 }
 
 case class TransitionKotlinGenerator(override val self: Transition) extends HandlerKotlinGenerator(self) {
-  
-  override val handlerInstanceName = "t_" + self.getSource.getName + "2" + self.getTarget.getName + "_" + self.hashCode
-  override val handlerTypeName = "Transition" + self.getSource.getName + "2" + self.getTarget.getName + "_" + self.hashCode
-  
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "case class " + handlerTypeName + " extends TransitionAction {\n"
-    
-    printGuard()
-    
-    Option(self.getBefore) match {
-      case Some(a) =>
-        builder append "override def executeBeforeActions() = {\n"
-        builder append "Logger.debug(\"" + handlerInstanceName + ".executeBeforeActions\")\n"
-        self.getBefore.generateScala()
-        builder append "}\n\n"
-      case None =>
-        Logger.info("no before action for transition "+self)
-    }
-    printAction()
-    Option(self.getAfter) match {
-      case Some(a) =>
-        builder append "Logger.debug(\"" + handlerInstanceName + ".executeAfterActions\")\n"
-        self.getAfter.generateScala()
-        builder append "}\n\n"
-      case None =>
-        Logger.info("no after action for transition "+self)
-    }
-    
-    builder append "}\n"
-  }
+
 }
 
 case class InternalTransitionKotlinGenerator(override val self: InternalTransition) extends HandlerKotlinGenerator(self) {
-  
-  override val handlerInstanceName = "t_self_" + self.eContainer.asInstanceOf[State].getName + "_" + self.hashCode
-  override val handlerTypeName = "InternalTransition_" + self.eContainer.asInstanceOf[State].getName + "_" + self.hashCode
-  
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "case class " + handlerTypeName + " extends InternalTransitionAction {\n"
-    printGuard()
-    printAction()
-    builder append "}\n"
-  }
+
 }
 
 case class StateMachineKotlinGenerator(override val self: StateMachine) extends CompositeStateKotlinGenerator(self) {
-  override def classHeader(builder: StringBuilder = Context.builder) {
-    builder append "case class " + Context.firstToUpper(self.getName) + "StateMachine(keepHistory : Boolean, root : Component) extends StateAction {\n"
-   
-    builder append "override def getBehavior = parent\n"
-    builder append "val parent : StateMachine = new StateMachine(this, keepHistory, root)\n"
-  }
 }
 
 case class StateKotlinGenerator(override val self: State) extends ThingMLKotlinGenerator(self) {
-    
-  def declareState(builder: StringBuilder = Context.builder) {
-    builder append "val _" + self.getName + "_state : State = " + Context.firstToUpper(self.getName) + "State()\n"
-    builder append "val " + self.getName + "_state = new State(_" + self.getName + "_state, root)\n"
-    builder append "_" + self.getName + "_state.init\n"
-  }
-  
-  def generateActions(builder: StringBuilder = Context.builder) {
-    builder append "override def onEntry() = {\n"
-    builder append "Logger.debug(\"" + self.getName + ".onEntry\")\n"
+  override def generateScala(builder: StringBuilder = Context.builder) {
+    //TODO: Some optimizations
+    builder append "object " + Context.firstToUpper(self.getName) + "Action : StateAction {\n"
+    builder append "override var state: State? = null\n"
+    builder append "override var component: Component? = null\n\n"
+
+    builder append "override fun onEntry() {\n"
     Option(self.getEntry) match {
-      case Some(a) =>  
+      case Some(a) =>
         self.getEntry.generateScala()
       case None =>
         builder append "//No entry action defined for this state\n"
-        Logger.info("no onEntry action for state "+self)
+        Logger.info("no onEntry action for state " + self)
     }
     builder append "}\n\n"
-    
-    builder append "override def onExit() = {\n"
-    builder append "Logger.debug(\"" + self.getName + ".onExit\")\n"
-    Option(self.getExit) match {
-      case Some(a) =>  
-        self.getExit.generateScala()
-      case None =>
-        builder append "//No exit action defined for this state\n"
-        Logger.info("no onExit action for state "+self)
-    }
-    builder append "}\n\n"
-  }
-    
-  def generateInternalTransitions() {
-    self.getInternal.foreach{ t => 
-      t.generateScala()
-    }
-  }
-  
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "case class " + Context.firstToUpper(self.getName) + "State extends StateAction {\n"
-    
-    generateActions()
-    
-    builder append "def init {\n"
-    self.getInternal.foreach{t =>
-      generateDeclaration(t)
-    }
-    builder append "}\n\n"
-    generateInternalTransitions()
 
+    builder append "override fun onExit() {\n"
+    Option(self.getExit) match {
+      case Some(a) =>
+        self.getEntry.generateScala()
+      case None =>
+        builder append "//No entry action defined for this state\n"
+        Logger.info("no onEntry action for state " + self)
+    }
     builder append "}\n\n"
-  }
-  
-  def generateDeclaration(t : InternalTransition, builder: StringBuilder = Context.builder){
-    builder append /*"val " + t.handlerInstanceName  + " = */"new InternalTransition(getBehavior, " + "new " + t.handlerTypeName + "(), " + t.generateHandler + ")\n"
+    builder append "}\n\n"
   }
 }
 
-case class CompositeStateKotlinGenerator(override val self: CompositeState) extends StateKotlinGenerator(self) {  
+case class CompositeStateKotlinGenerator(override val self: CompositeState) extends StateKotlinGenerator(self) {
 
-  override def declareState(builder: StringBuilder = Context.builder) {
-    val history = if(self.isHistory) "true" else "false"
-    builder append "val " + self.getName + "_state = new " + Context.firstToUpper(self.getName) + "State(" + history + ", root).getBehavior\n"
-  }
-  
-  def generateRegion(r : ParallelRegion, builder: StringBuilder = Context.builder) {
-    val history = if(r.isHistory) "true" else "false"
-    builder append "parent.addRegion(new " + Context.firstToUpper(r.getName) + "Region(" + history + ")" + ".getBehavior)\n"
-    builder append "case class " + Context.firstToUpper(r.getName) + "Region(keepHistory : Boolean) extends EmptyStateAction{\n"
-   
-    builder append "override def getBehavior = parent\n"
-    builder append "val parent : CompositeState = new CompositeState(this, keepHistory, root)\n"
-      
-    generateSub(r)
-    
-    builder append "}\n"
-  }
-  
-  def generateSub(r : Region, builder: StringBuilder = Context.builder) {
-    if (r.getSubstate.size > 0)
-      builder append "//create sub-states\n"
-    r.getSubstate.foreach{ sub =>  
-      sub.declareState()
-      builder append "parent.addSubState(" + sub.getName + "_state" + ")\n"
-      sub.generateScala()
-    }
-    builder append "parent.setInitial(" + r.getInitial.getName + "_state" + ")\n\n"
-    
-    if (r.getSubstate.size > 0)
-      builder append "//create transitions among sub-states\n"
-    
-    r.getSubstate.foreach{sub => sub.getOutgoing.foreach{ t => 
-        builder append "val " + t.handlerInstanceName  + " = new Transition(" + t.getSource.getName + "_state, " + t.getTarget.getName + "_state, " + "new " + t.handlerTypeName + "(), " + t.generateHandler + ")\n"
-        builder append "parent.addTransition(" + t.handlerInstanceName + ")\n"
-      }
-    }
-    
-    r.getSubstate.foreach{sub => 
-      sub.getOutgoing.foreach{ t => 
-        t.generateScala()
-      }
-    }
-  }
-  
-  def classHeader(builder: StringBuilder = Context.builder) {
-    builder append "case class " + Context.firstToUpper(self.getName) + "State(keepHistory : Boolean, root : Component) extends StateAction {\n"    
-    builder append "override def getBehavior = parent\n"
-    builder append "val parent : CompositeState = new CompositeState(this, keepHistory, root)\n"
-  }
-  
-  def classBody(builder: StringBuilder = Context.builder) {
-    generateActions()
-    self.getInternal.foreach{t =>
-      generateDeclaration(t)
-    }
-    generateInternalTransitions
-    generateSub(self)
-    
-    self.getRegion.foreach{r =>
-      generateRegion(r)
-    }
-    
-    builder append "}\n"
-  }
-  
-  override def generateScala(builder: StringBuilder = Context.builder) {
-    classHeader()
-    classBody()
-  }
 }
 
 case class TypedElementKotlinGenerator(val self: TypedElement) /*extends ThingMLKotlinGenerator(self)*/ {
@@ -978,7 +688,7 @@ case class TypeKotlinGenerator(override val self: Type) extends ThingMLKotlinGen
           temp
       }
       if (isArray) {
-        res = "Array[" + res + "]"
+        res = "Array<" + res + ">"
       }
       return res
     }
@@ -1008,7 +718,7 @@ case class TypeKotlinGenerator(override val self: Type) extends ThingMLKotlinGen
           }
       }
       if (isArray) {
-        res = "Array[" + res + "]"
+        res = "Array<" + res + ">"
       }
       return res
     }
@@ -1030,12 +740,12 @@ case class EnumerationKotlinGenerator(override val self: Enumeration) extends Ty
     
   override def generateScala(builder: StringBuilder = Context.builder) {
     builder append "// Definition of Enumeration  " + self.getName + "\n"
-    builder append "object " + enumName + " extends Enumeration {\n"
-    builder append "\ttype " + enumName + " = " + scala_type() + "\n"
+    builder append "//TODO\n"//TODO
+    /*builder append "enum class " + enumName + "(val id : " + scala_type() + ") {\n"
     self.getLiterals.foreach {
-      l => builder append "val " + l.scala_name + " : " + scala_type() + " = " + l.enum_val +"\n"
+      l => builder append l.scala_name + " : " + scala_type() + "(" + l.enum_val +")\n"
     }
-    builder append "}\n"
+    builder append "}\n"*/
   }
 }
 

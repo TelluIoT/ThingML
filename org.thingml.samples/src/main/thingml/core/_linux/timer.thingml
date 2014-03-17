@@ -13,18 +13,26 @@ thing TimerLinux includes Timer, ClockMsgs
 
 	required port clock { receives clock_tick }
 	
+	//To use timer in millisecond, set "millisecond" to true and "period" to the period of the clock
+	readonly property millisecond : Boolean = false
+	readonly property period : Integer = 100
+	
 	statechart ClockTimerImpl init Idle {
 		
 		property remaining : Integer = 0
 		
 		state Idle {
-			transition -> Counting event m : timer?timer_start action remaining = m.delay
+			transition -> Counting event m : timer?timer_start action remaining = m.delay 
 		}
 		
 		state Counting {
 			transition -> Idle event timer?timer_cancel
 			transition -> Idle event clock?clock_tick guard remaining == 0 action timer!timer_timeout()
-			internal event clock?clock_tick guard remaining > 0 action remaining = remaining - 1
+			internal event clock?clock_tick guard remaining > 0 action do 
+				if (not millisecond) remaining = remaining - 1
+				if (millisecond) remaining = remaining - period
+			end 
+			
 		}
 	
 	}

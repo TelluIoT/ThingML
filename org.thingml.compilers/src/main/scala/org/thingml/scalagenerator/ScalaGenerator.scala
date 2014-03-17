@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 SINTEF <franck.fleurey@sintef.no>
+ * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
  *
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
  * you may not use this file except in compliance with the License.
@@ -176,6 +176,90 @@ object ScalaGenerator {
       }
     }
   }
+  def compileAndNotRun(cfg : Configuration, model: ThingMLModel) {
+	val tmpFolder = "tmp/ThingML_Scala/"
+    new File(tmpFolder).deleteOnExit
+    
+    val code = compile(cfg, "org.thingml.generated", model)
+    val rootDir = tmpFolder + cfg.getName
+    val outputDir = tmpFolder + cfg.getName + "/src/main/scala/org/thingml/generated"
+    
+    val outputDirFile = new File(outputDir)
+    outputDirFile.mkdirs
+    
+    var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + cfg.getName() + ".scala")));
+    w.println(code._1);
+    w.close();
+    
+    w = new PrintWriter(new FileWriter(new File(outputDir + "/Main.scala")));
+    w.println(code._2);
+    w.close();
+    
+    var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/pom.xml"),"utf-8").getLines().mkString("\n")
+    pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
+    
+    //Add ThingML dependencies
+    val thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n"
+    cfg.allThingMLMavenDep.foreach{dep =>
+      pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"))
+    }
+    cfg.allMavenDep.foreach{dep =>
+      pom = pom.replace("<!--DEP-->", "<!--DEP-->\n"+dep)
+    }
+    
+    pom = pom.replace("<!--DEP-->","")
+    
+    //TODO: add other maven dependencies
+    
+    w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
+    w.println(pom);
+    w.close();
+    
+    //javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+
+    /*
+     * GENERATE SOME DOCUMENTATION
+     */
+
+    new File(rootDir + "/doc").mkdirs();
+
+    try {
+      val dots = ThingMLGraphExport.allGraphviz(ThingMLHelpers.findContainingModel(cfg))
+      import scala.collection.JavaConversions._
+      for (name <- dots.keySet) {
+        System.out.println(" -> Writing file " + name + ".dot")
+        var w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".dot"))
+        w.println(dots.get(name))
+        w.close
+      }
+    }
+    catch {
+      case t: Throwable => {
+        t.printStackTrace
+      }
+    }
+
+    try {
+      val gml = ThingMLGraphExport.allGraphML(ThingMLHelpers.findContainingModel(cfg))
+      import scala.collection.JavaConversions._
+      for (name <- gml.keySet) {
+        System.out.println(" -> Writing file " + name + ".graphml")
+        var w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".graphml"))
+        w.println(gml.get(name))
+        w.close
+      }
+    }
+    catch {
+      case t: Throwable => {
+        t.printStackTrace
+      }
+    }
+    
+    actor{
+      //compileGeneratedCode(rootDir)
+    }
+      
+  }
   
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
     new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
@@ -215,7 +299,7 @@ object ScalaGenerator {
     w.println(pom);
     w.close();
     
-    javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+    //javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
 
     /*
      * GENERATE SOME DOCUMENTATION
@@ -393,11 +477,6 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
   def generateScalaMain(builder: StringBuilder = Context.builder) {
     builder append "object Main {\n\n"
     builder append "def main(args: Array[String]): Unit = {\n"
-      
-    builder append "//Channels\n"
-    self.allConnectors.foreach{ c =>
-      builder append "val " + c.instanceName + " = new Channel\n"
-    }
     
     //define temp arrays   
     self.allInstances.foreach{ i =>
@@ -464,28 +543,20 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
           builder append ")\n"
       }
     }
-    
-    builder append "//Bindings\n"
+
+    builder append "//Channels\n"
     self.allConnectors.foreach{ c =>
-      builder append c.instanceName + ".connect(\n" 
+      builder append "val " + c.instanceName + " = new Channel(\n"
       builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get,\n"
       builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get\n"
-      builder append")\n"
-      builder append c.instanceName + ".connect(\n" 
-      builder append c.serverName + ".getPort(\"" + c.getProvided.getName + "\").get,\n"
-      builder append c.clientName + ".getPort(\"" + c.getRequired.getName + "\").get\n"
-      builder append")\n\n"
+      builder append ")\n"
     }
     
     builder append "//Starting Things\n"
     self.allInstances.foreach{ i =>
       builder append i.instanceName + ".asInstanceOf[Component].start\n"
     }
-    
-    self.allConnectors.foreach{ c =>
-      builder append c.instanceName + ".start\n"
-    }
-    
+
     builder append "}\n\n"
     builder append "}\n"
   }
@@ -679,6 +750,7 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
     printAction()
     Option(self.getAfter) match {
       case Some(a) =>
+        builder append "override def executeAfterActions() = {\n"
         builder append "Logger.debug(\"" + handlerInstanceName + ".executeAfterActions\")\n"
         self.getAfter.generateScala()
         builder append "}\n\n"

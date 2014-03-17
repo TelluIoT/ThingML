@@ -1,0 +1,99 @@
+#
+# Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+#
+# Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# 	http://www.gnu.org/licenses/lgpl-3.0.txt
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+import tempfile
+import os
+import sys
+import re
+import exrex
+from os import listdir
+from os.path import isfile, join
+
+#Tester creates the test file from a string
+#Parser gets (input,output) list from a file
+
+fileName = sys.argv[1]
+rootDirectory = os.getcwd()
+sys.stderr = sys.stdout
+
+#Initializing dump
+if not os.path.exists("dump"):
+    os.makedirs("dump")
+	
+fdump = open('dump/'+fileName+'.dump', 'w')
+fdumpC = open('dump/'+fileName+'C.dump', 'w')
+fdumpScala = open('dump/'+fileName+'Scala.dump', 'w')
+
+os.chdir(r"../../../../org.thingml.cmd")
+compilerDirectory = os.getcwd()
+
+os.chdir(r"../org.thingml.tests/src/main/thingml/tests/Tester")
+testsDirectory = os.getcwd()
+from Parser import Parser
+from Tester import Tester
+
+#Getting expected results
+results = Parser().parse(fileName)
+
+for (a,b) in results:
+	input = exrex.getone(a)
+	fdump.write(a+'\n'+input+'\n'+b+'\n')
+	os.chdir(testsDirectory)
+	#Creating input file
+	Tester().create(input)
+	
+	#!Test C
+	os.chdir(compilerDirectory)
+	if not os.path.exists("tmp"):
+		os.makedirs("tmp")
+	if not os.path.exists("tmp/ThingML_C"):
+		os.makedirs("tmp/ThingML_C")
+	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"c org.thingml.tests/src/main/thingml/tests/_linux/"+fileName+".thingml\"")
+	bigName = fileName[0].upper()+fileName[1:]+"C"
+	os.chdir("tmp/ThingML_C/"+bigName)
+	print("Make")
+	os.system("make")
+	print("Execution of generated file")
+	os.system("./"+bigName)
+	try:
+		f = open('dump', 'r')
+		res = f.readline()
+		f.close()
+		fdumpC.write(res+'\n')
+	except IOError:
+		fdumpC.write("ErrorAtCompilation\n")
+	
+	#!Test scala
+	os.chdir(compilerDirectory)
+	if not os.path.exists("tmp/ThingML_Scala"):
+		os.makedirs("tmp/ThingML_Scala")
+	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"scala org.thingml.tests/src/main/thingml/tests/_scala/"+fileName+".thingml\"")
+
+	os.chdir("tmp/ThingML_Scala/"+fileName[0].upper()+fileName[1:])
+	os.system("mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
+	try:
+		f = open('dump', 'r')
+		res = f.readline()
+		f.close()
+		fdumpScala.write(res+'\n')
+	except IOError:
+		fdumpScala.write("ErrorAtCompilation\n")
+
+fdump.close()
+fdumpC.close()
+fdumpScala.close()
+
+os.chdir(rootDirectory)

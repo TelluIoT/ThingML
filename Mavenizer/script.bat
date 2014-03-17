@@ -1,3 +1,19 @@
+@REM
+@REM Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+@REM
+@REM Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+@REM you may not use this file except in compliance with the License.
+@REM You may obtain a copy of the License at
+@REM
+@REM 	http://www.gnu.org/licenses/lgpl-3.0.txt
+@REM
+@REM Unless required by applicable law or agreed to in writing, software
+@REM distributed under the License is distributed on an "AS IS" BASIS,
+@REM WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@REM See the License for the specific language governing permissions and
+@REM limitations under the License.
+@REM
+
 C:\home\opt\apache-maven-3.0.3\bin\mvn.bat deploy:deploy-file  -Dfile=C:\home\eclipses\eclipse3.7\plugins\com.ibm.icu.source_4.4.2.v20110208.jar -DgroupId=org.eclipse.maven -DartifactId=com.ibm.icu.source -Dversion=3.7.0 -DrepositoryId=thingml -Dpackaging=jar -DgeneratePom=true -Durl=http://thingml.org:8081/artifactory/ext-release-local
 C:\home\opt\apache-maven-3.0.3\bin\mvn.bat deploy:deploy-file  -Dfile=C:\home\eclipses\eclipse3.7\plugins\com.ibm.icu_4.4.2.v20110208.jar -DgroupId=org.eclipse.maven -DartifactId=com.ibm.icu -Dversion=3.7.0 -DrepositoryId=thingml -Dpackaging=jar -DgeneratePom=true -Durl=http://thingml.org:8081/artifactory/ext-release-local
 C:\home\opt\apache-maven-3.0.3\bin\mvn.bat deploy:deploy-file  -Dfile=C:\home\eclipses\eclipse3.7\plugins\com.jcraft.jsch.source_0.1.41.v201101211617.jar -DgroupId=org.eclipse.maven -DartifactId=com.jcraft.jsch.source -Dversion=3.7.0 -DrepositoryId=thingml -Dpackaging=jar -DgeneratePom=true -Durl=http://thingml.org:8081/artifactory/ext-release-local

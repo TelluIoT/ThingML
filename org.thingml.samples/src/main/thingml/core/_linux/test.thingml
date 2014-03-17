@@ -1,0 +1,47 @@
+import "../test.thingml"
+
+
+thing TestDumpLinux includes TestDump
+@c_header "#include <stdio.h>"
+@c_global "FILE* testFile = NULL;"
+{
+	function write(c : Char) 
+	do
+		
+    'if (testFile != NULL)
+    {
+        fprintf(testFile,"%c",c); 
+    }
+	printf("%c\n",c);'
+ 
+	end
+	
+	statechart LinuxHarness init Testing {
+		
+		
+		state Testing {
+            on entry 'testFile = fopen("dump", "w+");'
+            internal event m : dump?testOut
+            action write(m.c)
+            
+            transition -> Failed 
+            event dump?testFailure
+            action 'printf("*FAILURE*");'
+            
+            
+            transition -> End
+            event dump?testEnd
+		}
+		
+		state Failed {
+
+		}
+		
+		state End {
+			on entry do
+				'fclose(testFile);
+				exit(0);'
+			end
+		}
+	}
+}

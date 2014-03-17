@@ -7,15 +7,16 @@ thing fragment TestMsg {
 	message testOut(c : Char);
 	message testIn(c : Char);
 	message testFailure();
+	message testEnd();
 }
 
 thing fragment TestHarness includes TestMsg {
-
 	provided port test {
 		sends testIn
-		receives testOut, testFailure
 	}
-	
+	required port testEnd {
+		sends testEnd
+	}
 }
 
 thing fragment Test includes TestMsg {
@@ -23,5 +24,13 @@ thing fragment Test includes TestMsg {
 	required port harness {
 		receives testIn
 		sends testOut, testFailure
+	}
+}
+
+
+thing fragment TestDump includes TestMsg {
+
+	provided port dump {
+		receives testOut, testFailure, testEnd
 	}
 }

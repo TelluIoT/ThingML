@@ -1,0 +1,10 @@
+import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+
+//Test if we can interpret the size of array at construction time
+thing TestArrays3 includes Test
+{
+
+    property size : UInt16 = 8
+
+	property array : Int16[size]	
+}

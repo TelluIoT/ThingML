@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ThingML :: EclipseUI
+Bundle-SymbolicName: org.thingml.eclipse.ui;singleton:=true
+Bundle-Version: 0.6.0.qualifier
+Bundle-Activator: org.thingml.eclipse.ui.Activator
+Bundle-Vendor: SINTEF-9012
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
