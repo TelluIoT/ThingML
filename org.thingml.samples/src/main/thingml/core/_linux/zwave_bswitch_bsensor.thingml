@@ -11,13 +11,15 @@
 //for more details see http://lonesysadmin.net/2013/02/22/error-while-loading-shared-libraries-cannot-open-shared-object-file/
 
 import "../../thingml.thingml"
-import "clock.thingml"
+
+datatype CString
+@c_type "const char*";
 
 thing fragment Config {
-	property pport : String = "/dev/ttyUSB0"
-	property config : String = "/usr/local/share/openzwave/config/"
-	property zwdir : String = ""
-	property domo_log : String = "./DomoZWave_Log"
+	property pport : CString = "/dev/ttyUSB0"
+	property config : CString = "/usr/local/share/openzwave/config/"
+	property zwdir : CString = ""
+	property domo_log : CString = "./DomoZWave_Log"
 	property enableLog : Boolean = true
 	property enableZWLog : Boolean = false
 	property polltime : Integer = 0
@@ -132,6 +134,154 @@ using namespace TinyOpenZWaveApi;
 	end
 }
 
+thing fragment DoorWindowMsg{
+	message init_dw();
+	message dw_init();
+	message dw_closed();
+	message dw_opened();
+	message start_monitoring();
+	message ready_to_monitor();
+	
+	//internal messages
+	message dw_changed(dwstate : Integer);
+	message dw_ready();
+}
+
+datatype BinarySensor
+@c_type "BinarySensor*";
+
+thing fragment DoorWindow includes DoorWindowMsg {
+	property nodeId : Integer
+	property cInstance : Integer
+	property cIndex : Integer
+    property bs : BinarySensor
+    property dwstate : Integer
+    
+    provided port doorwindowport {
+    	sends dw_closed, dw_opened, dw_init, ready_to_monitor
+    	receives init_dw, start_monitoring
+    }
+    
+    provided port dwintsendport {
+    	sends dw_changed, dw_ready
+    }
+    
+    required port dwintrecport {
+    	receives dw_changed, dw_ready
+    }
+    
+    statechart behavior init Start {
+    
+    	state Start {
+    		on entry do
+				print "DoorWindow: starting...\n"
+			end
+    		transition->Init
+    		event doorwindowport?init_dw
+    	}
+    	
+    	state Init {
+			on entry do 
+				print "DoorWindow: initializing...\n"
+				init_doorwindow()
+				doorwindowport!dw_init()
+            end
+            
+            transition -> Ready
+            event dwintrecport?dw_ready
+            action do
+                dwstate = getState()
+            end
+		}
+				
+		state Ready {
+			on entry do
+				print "DoorWindow: ready ...\n"
+				doorwindowport!ready_to_monitor()
+			end
+			
+			transition->Closed
+			event doorwindowport?start_monitoring
+			guard dwstate == 0
+			
+			transition->Opened
+			event doorwindowport?start_monitoring
+			guard dwstate == 1
+		}
+		
+		state Closed {
+			on entry do
+				print "DoorWindow: closed...\n"
+			end
+			
+			transition->Opened
+			event e : dwintrecport?dw_changed
+			guard e.dwstate == 0
+			action do
+				doorwindowport!dw_opened()
+			end
+		}
+		
+		state Opened {
+			on entry do
+				print "DoorWindow: opened...\n"
+			end
+			
+			transition->Closed
+			event e : dwintrecport?dw_changed
+			guard e.dwstate == 1
+			action do
+				doorwindowport!dw_closed()
+			end
+		}
+    }
+}
+
+thing FibaroDoorWindow includes DoorWindow, Config
+@c_header "
+#include <stdlib.h>
+#include <cstdarg>
+#include \"tinyozw/TinyZWaveFacade.h\"
+#include \"tinyozw/devices/BinarySensor.h\"
+#include \"tinyozw/libs/Utility.h\"
+
+using namespace TinyOpenZWaveApi;
+"
+{	
+	function init_binarysensor_callback()
+    @c_prototype "void init_binarysensor_callback(void *_instance, ...)"
+    @c_instance_var_name "(FibaroDoorWindow_Instance *) _instance"
+    do
+    	dwintsendport!dw_ready()
+    end
+    
+    function value_change_binarysensor_callback()
+    @c_prototype "void value_change_binarysensor_callback(void *_instance, ...)"
+    @c_instance_var_name "(FibaroDoorWindow_Instance *) _instance"
+    do
+		'va_list arguments;'
+        'va_start(arguments, _instance);'
+        'int state = va_arg(arguments, int);'
+    	'va_end(arguments);'
+    	dwintsendport!dw_changed('state')
+    end
+	
+	function init_doorwindow() do
+        print "FibaroDoorWindow: initializing ... \n"
+        'ThingMLCallback* value_changed = new ThingMLCallback(value_change_binarysensor_callback, _instance);'
+        'ThingMLCallback* device_init = new ThingMLCallback(init_binarysensor_callback, _instance);'
+        bs = 'new BinarySensor();'
+        bs = ''&bs&'->BinarySensor::Init(OpenZWaveFacade::GetController(' & pport & '), (uint8)' & nodeId & ',(uint8)' & cInstance & ', (uint8)'& cIndex &');'
+        ''&bs&'->setDeviceInitCallback(device_init);'
+		''&bs&'->setValueUpdatedCallback(value_changed);'
+	end
+
+	function getState() : Integer do
+		return ''&bs&'->getCurrentValue()'
+	end
+}
+
+
 thing fragment PlugMsg {
 	message turn_on();
 	message turn_off();
@@ -180,8 +330,12 @@ thing fragment Plug includes PlugMsg {
 	statechart behavior init Start {
 		
 		state Start {
+			on entry do
+				print "Plug: starting...\n"
+			end
+			
 			transition -> Ready
-			event e : plugport?init_plug
+			event plugport?init_plug
 		}
 		
 		state Ready {
@@ -360,9 +514,29 @@ using namespace TinyOpenZWaveApi;
     end
 }
 
-thing fragment HomeCenter includes PlugMsg, ControllerMsg, ClockMsgs, Config {
+thing fragment HomeMsg {
+	message devicesinitialized();
+	message devicesquiried();
+}
+
+thing fragment HomeCenter includes PlugMsg, ControllerMsg, DoorWindowMsg, HomeMsg, Config {
 	
 	property plugid : Integer
+	property doorwindowid : Integer
+	
+	property plugIsInitialized : Boolean = false
+	property doorwindowInitialized : Boolean = false
+	
+	property plugIsQuiried : Boolean = false
+	property doorwindowIsQuiried : Boolean = false
+	
+	provided port homeintsendport {
+		sends devicesinitialized, devicesquiried
+	}
+	
+	required port homeintrecport {
+		receives devicesinitialized, devicesquiried
+	}
 	
 	required port switchport {
 		sends turn_on, turn_off
@@ -378,11 +552,12 @@ thing fragment HomeCenter includes PlugMsg, ControllerMsg, ClockMsgs, Config {
 		sends initialize, start
 		receives initialized, started, node_quiried, all_nodes_quiried, controller_ready
 	}
+		
+	required port doorwindowport {
+		sends init_dw, start_monitoring
+		receives dw_init, dw_closed, dw_opened, ready_to_monitor
+	}
 
-    required port signal {
-        receives clock_tick
-    }
-	
 	statechart behavior init Start {
 		state Start {
 			on entry do
@@ -391,17 +566,37 @@ thing fragment HomeCenter includes PlugMsg, ControllerMsg, ClockMsgs, Config {
 				ctrlport!initialize()
 			end
 			
-			transition -> InitPlug
+			transition -> InitDevice
 			event e : ctrlport?initialized
 		}
 		
-		state InitPlug {
+		state InitDevice {
 			on entry do
-				print "HomeCenter: initialize home plug ...\n"
+				print "HomeCenter: initialize home device ...\n"
 				plugport!init_plug()
+				doorwindowport!init_dw()
 			end
+			
+			internal event plugport?plug_init
+			action do
+				print "HomeCenter: plug is ready \n"
+				plugIsInitialized = true
+				if(plugIsInitialized and doorwindowInitialized) do
+					homeintsendport!devicesinitialized()
+				end
+			end
+			
+			internal event doorwindowport?dw_init
+			action do
+				print "HomeCenter: doorwindow is ready \n"
+				doorwindowInitialized = true
+				if(plugIsInitialized and doorwindowInitialized) do
+					homeintsendport!devicesinitialized()
+				end
+			end
+			
 			transition->StartController
-			event plugport?plug_init action print "HomeCenter: plug is ready \n"
+			event homeintrecport?devicesinitialized
 		}
 		
 		state StartController {
@@ -410,33 +605,56 @@ thing fragment HomeCenter includes PlugMsg, ControllerMsg, ClockMsgs, Config {
 				ctrlport!start()
 			end
 			
-			transition->WaitForSwitch
+			transition->WaitForDevices
 			event ctrlport?controller_ready
 		}
 		
-		state WaitForSwitch {
+		state WaitForDevices {
 			on entry do
-				print "HomeCenter: waiting for plug to be initialized ...\n"
+				print "HomeCenter: waiting for device to be quiried ...\n"
 			end
 			
-			transition->PlugIsReady
-			event e : ctrlport?node_quiried
+			internal event e : ctrlport?node_quiried
 			guard e.nodeid == plugid
+			action do
+				print "HomeCenter: plug is quiried ...\n"
+				plugIsQuiried = true
+				if(plugIsQuiried and doorwindowIsQuiried) do
+					homeintsendport!devicesquiried()
+				end
+			end
 			
-			transition->WaitForSwitch
-			event e : ctrlport?node_quiried
-			guard not e.nodeid == plugid
+			internal event e : ctrlport?node_quiried
+			guard e.nodeid == doorwindowid
+			action do
+				print "HomeCenter: doorwindow is quiried ...\n"
+				doorwindowIsQuiried = true
+				if(plugIsQuiried and doorwindowIsQuiried) do
+					homeintsendport!devicesquiried()
+				end
+			end
+			
+			transition->DevicesAreReady
+			event homeintrecport?devicesquiried
 		}
 		
-		state PlugIsReady {
+		state DevicesAreReady {
 			on entry do
-				print "HomeCenter: sending on and off signal"
+				print "HomeCenter: all devices are ready to use"
+				doorwindowport!start_monitoring()
+			end
+		
+			internal event doorwindowport?dw_closed
+			action do
 				switchport!turn_on()
 				switchport!turn_off()
 			end
-		
-			transition->PlugIsReady
-			event signal?clock_tick
+			
+			internal event doorwindowport?dw_opened
+			action do
+				switchport!turn_on()
+				switchport!turn_off()
+			end
 
             transition->Quit
             event plugport?plug_exit
@@ -471,7 +689,7 @@ using namespace TinyOpenZWaveApi;
 		end
 }
 
-configuration LinuxHomeCenterTest
+configuration LinuxHomeCenterBSwitchBSensor
   @output_folder "/home/tmp/"
   @debug "true"
   @debug_fifo "true"
@@ -484,20 +702,24 @@ configuration LinuxHomeCenterTest
 	set p1.cInstance = 1
 	set p1.cIndex = 0
 	
+	instance dw : FibaroDoorWindow
+	set dw.nodeId = 3
+	set dw.cInstance = 1
+	set dw.cIndex = 0
+	
 	instance app : ZWaveHomeCenter
 	set app.plugid = 2
+	set app.doorwindowid = 3
 		
 	instance n : ZWaveController
 
-
-    instance clock : ClockLinux
-    set clock.period = 5000
-	
 	// Create and connect the test app
 	connector app.switchport => p1.switchport
 	connector app.ctrlport => n.ctrlport
     connector app.plugport => p1.plugport
-    connector app.signal => clock.signal
-    
+    connector app.doorwindowport => dw.doorwindowport
+
     connector p1.swintrecport => p1.swintsendport
+    connector dw.dwintrecport => dw.dwintsendport
+    connector app.homeintrecport => app.homeintsendport
 }
