@@ -514,10 +514,9 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append Context.firstToUpper(self.getName) + "MockMirror mockMirror = new " + Context.firstToUpper(self.getName) + "MockMirror();\n"
     
     self.getPorts.foreach{port =>
-      builder append "Channel c_" + port.getName + "_" + port.hashCode + " = new Channel();\n"
-      builder append "c_" + port.getName + "_" + port.hashCode + ".connect(" + "mock.port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ", " + "mockMirror.port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ");\n"
-      builder append "c_" + port.getName + "_" + port.hashCode + ".connect(" + "mockMirror.port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ", " + "mock.port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ");\n"
-      builder append "c_" + port.getName + "_" + port.hashCode + ".start();\n"
+      builder append "Channel c_" + port.getName + "_" + port.hashCode + " = new Channel("
+      builder append "mock.port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ", " + "mockMirror.port_" + Context.firstToUpper(self.getName) + "_" + port.getName
+      builder append ");\n"
     }
     
     builder append "}\n"
