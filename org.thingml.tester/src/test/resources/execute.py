@@ -64,7 +64,9 @@ for (a,b) in results:
 	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"c org.thingml.tests/src/main/thingml/tests/_linux/"+fileName+".thingml\"")
 	bigName = fileName[0].upper()+fileName[1:]+"C"
 	os.chdir("tmp/ThingML_C/"+bigName)
+	print("Make")
 	os.system("make")
+	print("Execution of generated file")
 	os.system("./"+bigName)
 	try:
 		f = open('dump', 'r')
