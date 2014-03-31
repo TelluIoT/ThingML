@@ -74,8 +74,7 @@ public class '+name+'Test extends TestCase {\n\
 			setUpIsNotDone = false;\n\
 			Process p = Runtime.getRuntime().exec("python execute.py '+name+'",null,new File("src/test/resources"));\n\
 			String line;\n\
-			BufferedReader in = new BufferedReader(\n\
-			new InputStreamReader(p.getInputStream()) );\n\
+			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));\n\
 			while ((line = in.readLine()) != null) {\n\
 				System.out.println(line);\n\
 			}\n\
@@ -151,7 +150,7 @@ public class '+name+'Test extends TestCase {\n\
 		if(CTried && ScalaTried)\n\
 		try{\n\
 			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("src/test/resources/results.html", true)));\n\
-			result.write("<tr><th></th></tr>\\n");\n\
+			result.write("<tr><th></th><th></th><th></th></tr>\\n");\n\
 			if (successC){\n\
 				result.write("<tr class=\\"green\\">\\n");\n\
 				result.write("<th>'+name+'</th><th>C</th><th>Success</th>\\n");\n\

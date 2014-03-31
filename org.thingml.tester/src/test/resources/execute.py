@@ -21,6 +21,13 @@ import re
 import exrex
 from os import listdir
 from os.path import isfile, join
+from fileUtilities import insertLine
+from fileUtilities import find
+from fileUtilities import findAfter
+from fileUtilities import replaceLine
+
+from htmldump import dumpHTML
+
 
 #Tester creates the test file from a string
 #Parser gets (input,output) list from a file
@@ -32,15 +39,24 @@ sys.stderr = sys.stdout
 #Initializing dump
 if not os.path.exists("dump"):
     os.makedirs("dump")
-	
+
 fdump = open('dump/'+fileName+'.dump', 'w')
 fdumpC = open('dump/'+fileName+'C.dump', 'w')
 fdumpScala = open('dump/'+fileName+'Scala.dump', 'w')
 
 os.chdir(r"../../../../org.thingml.cmd")
 compilerDirectory = os.getcwd()
+os.chdir("../org.thingml.tester")
+if not os.path.exists("target/results"):
+    os.makedirs("target/results")
+os.chdir("target/results")
+resultsDirectory = os.getcwd()
+if not os.path.exists("C"):
+    os.makedirs("C")
+if not os.path.exists("Scala"):
+    os.makedirs("Scala")
 
-os.chdir(r"../org.thingml.tests/src/main/thingml/tests/Tester")
+os.chdir(r"../../../org.thingml.tests/src/main/thingml/tests/Tester")
 testsDirectory = os.getcwd()
 from Parser import Parser
 from Tester import Tester
@@ -48,12 +64,15 @@ from Tester import Tester
 #Getting expected results
 results = Parser().parse(fileName)
 
+resultCounter=0
+resultsData = []
 for (a,b) in results:
 	input = exrex.getone(a)
 	fdump.write(a+'\n'+input+'\n'+b+'\n')
 	os.chdir(testsDirectory)
 	#Creating input file
 	Tester().create(input)
+	bigName = fileName[0].upper()+fileName[1:]+"C"
 	
 	#!Test C
 	os.chdir(compilerDirectory)
@@ -62,12 +81,22 @@ for (a,b) in results:
 	if not os.path.exists("tmp/ThingML_C"):
 		os.makedirs("tmp/ThingML_C")
 	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"c org.thingml.tests/src/main/thingml/tests/_linux/"+fileName+".thingml\"")
-	bigName = fileName[0].upper()+fileName[1:]+"C"
+	
 	os.chdir("tmp/ThingML_C/"+bigName)
+	insertLine("#include <google/profiler.h>",bigName+".c","#include <pthread.h>")
+	insertLine("  ProfilerStart(\""+bigName+".prof\");",bigName+".c","  initialize_configuration_"+bigName+"();")
+	insertLine("#include <google/profiler.h>","TestDumpLinux.c","#include \"TestDumpLinux.h\"")
+	replaceLine("LIBS = -lpthread -lprofiler","Makefile","LIBS = -lpthread")
 	print("Make")
 	os.system("make")
 	print("Execution of generated file")
-	os.system("./"+bigName)
+	if os.path.exists(bigName):
+		binsize=str(os.path.getsize(bigName))
+	else:
+		binsize="error"
+	os.system("env CPUPROFILE="+resultsDirectory+"/C/"+bigName+".prof ./"+bigName)
+	os.system("pprof --text "+bigName+" "+resultsDirectory+"/C/"+bigName+".prof > "+resultsDirectory+"/C/"+bigName+str(resultCounter))
+	os.system("rm "+resultsDirectory+"/C/*.prof")
 	try:
 		f = open('dump', 'r')
 		res = f.readline()
@@ -76,14 +105,33 @@ for (a,b) in results:
 	except IOError:
 		fdumpC.write("ErrorAtCompilation\n")
 	
+	cpu="error"
+	mem="error"
+	try:
+		cpu=findAfter("%CPU","stats")
+		mem=findAfter("%MEM","stats")
+		cpu=cpu[:-1]+"%"
+		mem=mem[:-1]+" MB"
+	except IOError:
+		fdumpC.write("ErrorAtCompilation\n")
+	resultsData.append(("C",fileName[0].upper()+fileName[1:]+" "+str(resultCounter),cpu,mem,binsize))
+	os.chdir("..")
+	# os.system("rm -r "+bigName)
+	
 	#!Test scala
+	bigName = fileName[0].upper()+fileName[1:]
 	os.chdir(compilerDirectory)
 	if not os.path.exists("tmp/ThingML_Scala"):
 		os.makedirs("tmp/ThingML_Scala")
 	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"scala org.thingml.tests/src/main/thingml/tests/_scala/"+fileName+".thingml\"")
-
 	os.chdir("tmp/ThingML_Scala/"+fileName[0].upper()+fileName[1:])
-	os.system("mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
+	insertLine("import scala.sys.process._","src/main/scala/org/thingml/generated/Main.scala","package org.thingml.generated")
+	insertLine("\"java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp-controller-api-redist.jar localhost 10001 start-cpu-sampling\".!","src/main/scala/org/thingml/generated/Main.scala","def main")
+	os.system("mvn clean package")
+	
+	os.environ['MAVEN_OPTS'] = "-agentpath:/usr/local/lib/yjp-2013-build-13074/bin/linux-x86-32/libyjpagent.so=port=10001,dir="+resultsDirectory+"/Scala/"
+	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
+	del os.environ['MAVEN_OPTS']
 	try:
 		f = open('dump', 'r')
 		res = f.readline()
@@ -91,9 +139,44 @@ for (a,b) in results:
 		fdumpScala.write(res+'\n')
 	except IOError:
 		fdumpScala.write("ErrorAtCompilation\n")
+	if os.path.exists("target/"+bigName+"-1.0-SNAPSHOT.jar"):
+		binsize=str(os.path.getsize("target/"+bigName+"-1.0-SNAPSHOT.jar"))
+	else:
+		binsize="error"
+	binsize=os.path.getsize("target/"+bigName+"-1.0-SNAPSHOT.jar")
+	os.chdir("..")
+	os.system("rm -r "+bigName)
+	os.chdir("../../../org.thingml.tester/target/results/Scala")
+	mypath = "."
+	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
+	for f in onlyfiles:
+		match = re.match(r"(.*)\.snapshot",f)
+		if match is not None:
+			snapshotName = re.sub(r"(.*\.thingml)",r"\1",f)
+	if not os.path.exists(bigName+str(resultCounter)):
+		os.makedirs(bigName+str(resultCounter))
+		os.system("java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp.jar -export "+snapshotName+" "+bigName+str(resultCounter))
+		if os.path.exists(bigName+str(resultCounter)+"/Summary.txt"):
+			cputime = find("Runtime & Agent: CPU time",bigName+str(resultCounter)+"/Summary.txt")
+			cputime = re.sub(r"Runtime & Agent: CPU time: (.*) sec","\1",cputime)
+			uptime = find("Runtime & Agent: Uptime",bigName+str(resultCounter)+"/Summary.txt")
+			uptime = re.sub(r"Runtime & Agent: Uptime: (.*) sec","\1",uptime)
+			heap = find("Heap Memory: Used:",bigName+str(resultCounter)+"/Summary.txt")
+			heap = re.sub(r"Heap Memory: Used: (.*) MB","\1",heap)
+			nonheap = find("Non-Heap Memory: Used:",bigName+str(resultCounter)+"/Summary.txt")
+			nonheap = re.sub(r"Non-Heap Memory: Used: (.*) MB","\1",nonheap)
+			resultsData.append(("Scala",bigName+" "+str(resultCounter),str(float(cputime)/float(uptime))+"%",str(float(heap)+float(nonheap))+" MB",binsize))
+		else:
+			resultsData.append(("Scala",bigName+" "+str(resultCounter),"error","error","error"))
+		os.system("rm *.snapshot")
+	resultCounter = resultCounter + 1
 
 fdump.close()
 fdumpC.close()
 fdumpScala.close()
-
+for r in resultsData:
+	type,name,cpu,mem,size=r
+	print("type: "+type+", name: "+name+", cpu: "+cpu+", memory: "+mem+", size: "+size)
 os.chdir(rootDirectory)
+
+dumpHTML("stats.html",resultsData)
