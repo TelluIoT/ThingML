@@ -2,7 +2,7 @@
 //1) Clone https://github.com/SINTEF-9012/TinyOpenZWaveApi
 //2) Navigate to open-zwave/install
 //3) Run: make && make install
-//4) Navigate to tiny-open-zwave-api/
+//4) Navigate to TinyOpenZWaveApi
 //5) Run: make && make install
 //6) install the udev library, make sure that pthread is also installed
 
