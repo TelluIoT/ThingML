@@ -122,7 +122,7 @@ for (a,b) in results:
 		print("Impossible to run ps command")
 	resultsData.append(("C",fileName[0].upper()+fileName[1:]+" "+str(resultCounter),cpu,mem,binsize))
 	os.chdir("..")
-	# os.system("rm -r "+bigName)
+	os.system("rm -r "+bigName)
 	
 	#!Test scala
 	bigName = fileName[0].upper()+fileName[1:]
@@ -152,7 +152,7 @@ for (a,b) in results:
 		binsize=str(os.path.getsize("target/"+bigName+"-1.0-SNAPSHOT.jar"))
 	else:
 		binsize="error"
-	binsize=os.path.getsize("target/"+bigName+"-1.0-SNAPSHOT.jar")
+	binsize=str(os.path.getsize("target/"+bigName+"-1.0-SNAPSHOT.jar"))
 	os.chdir("..")
 	os.system("rm -r "+bigName)
 	os.chdir("../../../org.thingml.tester/target/results/Scala")
@@ -168,14 +168,15 @@ for (a,b) in results:
 			os.system("java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp.jar -export "+snapshotName+" "+bigName+str(resultCounter))
 		if os.path.exists(bigName+str(resultCounter)+"/Summary.txt"):
 			cputime = find("Runtime & Agent: CPU time",bigName+str(resultCounter)+"/Summary.txt")
-			cputime = re.sub(r"Runtime & Agent: CPU time: (.*) sec","\1",cputime)
+			cputime = re.sub(r"Runtime & Agent: CPU time: (.*) sec",r"\1",cputime)
 			uptime = find("Runtime & Agent: Uptime",bigName+str(resultCounter)+"/Summary.txt")
-			uptime = re.sub(r"Runtime & Agent: Uptime: (.*) sec","\1",uptime)
+			uptime = re.sub(r"Runtime & Agent: Uptime: (.*) sec",r"\1",uptime)
 			heap = find("Heap Memory: Used:",bigName+str(resultCounter)+"/Summary.txt")
-			heap = re.sub(r"Heap Memory: Used: (.*) MB","\1",heap)
+			heap = re.sub(r"Heap Memory: Used: (.*) MB",r"\1",heap)
 			nonheap = find("Non-Heap Memory: Used:",bigName+str(resultCounter)+"/Summary.txt")
-			nonheap = re.sub(r"Non-Heap Memory: Used: (.*) MB","\1",nonheap)
-			resultsData.append(("Scala",bigName+" "+str(resultCounter),str(float(cputime)/float(uptime))+"%",str(float(heap)+float(nonheap))+" MB",binsize))
+			nonheap = re.sub(r"Non-Heap Memory: Used: (.*) MB",r"\1",nonheap)
+			# print("cpu: "+cputime+"uptime: "+uptime+", heap: "+heap+", nonheap: "+nonheap)
+			resultsData.append(("Scala",bigName+" "+str(resultCounter),str(round(float(cputime)/float(uptime),2))+"%",str(float(heap)+float(nonheap))+" MB",binsize))
 		else:
 			resultsData.append(("Scala",bigName+" "+str(resultCounter),"error","error","error"))
 		os.system("rm *.snapshot")
