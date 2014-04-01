@@ -4,6 +4,16 @@ org.thingml.tester
 org.thingml.tester module manages tests defined in org.thingml.tests. 
 This module automatically generates JUnit tests ready for integration in tools such as Maven, and provides several ways of running some or all the tests manually.
 
+Installation:
+-------------
+This modules requires Gperftools and Yourkit frameworks to give performance measures. The maven build tries to install them automatically, but may fail for the following reasons:
+  * Denied permission to install libraries: either run `maven clean install` with root rights, or install the libraries manually.
+  * Wrong installation folder: this module assumes the libraries are installed in the folder /usr/local/lib. 
+  * Wrong version of the libraries: this module uses Gperftools 2.1 and Yourkit YourKit Java Profiler 2013, build 13074.
+  * Yourkit requires a valid license key to run. 
+You can find instructions to install gperftools at this page: [gperftools](http://gperftools.googlecode.com/svn/trunk/INSTALL), since you have to `./configure`, `make` and `make install` this library.
+Gperftools may also require third party libraries, especially on x64 systems. Please refer to the previous link for more informations.
+
 User manual:
 ------------
 Creation of a new test:

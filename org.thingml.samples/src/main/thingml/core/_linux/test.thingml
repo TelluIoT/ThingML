@@ -39,8 +39,14 @@ thing TestDumpLinux includes TestDump
 		
 		state End {
 			on entry do
-				'fclose(testFile);
-				exit(0);'
+				'char cmd[80];
+sprintf(cmd, "ps -p %d -o %ccpu > stats",getpid(),\'%\');
+system(cmd);
+sprintf(cmd, "ps -p %d -o %cmem >> stats",getpid(),\'%\');
+system(cmd);
+fclose(testFile);
+ProfilerStop();
+exit(0);'
 			end
 		}
 	}
