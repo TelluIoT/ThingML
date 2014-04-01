@@ -9,6 +9,10 @@ enumeration WS_ERR
     //TODO: to be completed
 }
 
+datatype CString
+    @c_type "const char*"
+    @java_type "String";
+
 thing fragment WebSocketMsgs {
     
     message start();
@@ -31,7 +35,7 @@ thing fragment WebSocketMsgs {
 
 thing fragment WebSocket includes WebSocketMsgs {
     
-    readonly property _port : String
+    readonly property _port : CString
     
     provided port lifecycle {
         receives start, stop, start_client, start_server, stop_client, stop_server

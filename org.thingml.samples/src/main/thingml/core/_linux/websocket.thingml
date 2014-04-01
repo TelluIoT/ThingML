@@ -1,6 +1,9 @@
 //IMPORTANT NOTE to run this example:
 // 0) download and install https://github.com/warmcat/libwebsockets (follow their instructions)
-// 1) download and install from https://github.com/SINTEF-9012/TinyWebSockets/ (make && make install)
+//      NOTE : command 'cmake ..' must be run from the libwebsockets/build directory (build should be created manually)
+// 1) download and install from https://github.com/SINTEF-9012/TinyWebSockets (make && make install && make installwebsockets)
+//      NOTE : both libwebsockets and TinyWebSockets should be in the same directory
+
 
 
 //NOTE:
@@ -132,7 +135,7 @@ using namespace WebSockets;
 "
 {
     property client : WebSocketClient
-    property _host : String
+    property _host : CString
     
     property status : WS_ERR
     
@@ -236,6 +239,8 @@ thing Test includes WebSocketTest, ClockMsgs {
         receives clock_tick
     }
     
+    property pingmessage : String = "ping message"
+    
     statechart behavior init RunServer {
 
         internal event e : lifecycle?onOpen
@@ -280,7 +285,7 @@ thing Test includes WebSocketTest, ClockMsgs {
             event t : signal?clock_tick
             action do
                 print "sending ping...\n"
-                messaging!send("ping message")
+                messaging!send(pingmessage)
             end
         }
     }
