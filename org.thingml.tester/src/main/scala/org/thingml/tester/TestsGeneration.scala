@@ -132,6 +132,7 @@ object TestsGeneration {
 		var gperfDir = new File("/usr/local/lib/gperftools-2.1/")
 		println("Checking libraries")
 		if(!(gperfDir.exists())){
+			try{
 			println("Downloading gperftools")
 			org.apache.commons.io.FileUtils.copyURLToFile(new java.net.URL("http://gperftools.googlecode.com/files/gperftools-2.1.tar.gz"), new File("/usr/local/lib/gperftools-2.1.tar.gz"))
 			println("Extracting gperftools")
@@ -140,14 +141,21 @@ object TestsGeneration {
 			exec("make",gperfDir)
 			exec("make install",gperfDir)
 			exec("rm gperftools-2.1.tar.gz",new File("/usr/local/lib/"))
+			}catch{
+			case ioe: IOException => ioe.printStackTrace()
+			}
 		}
 		var yourkitDir = new File("/usr/local/lib/yjp-2013-build-13074/")
 		if(!(yourkitDir.exists())){
+			try{
 			println("Downloading yourkit")
 			org.apache.commons.io.FileUtils.copyURLToFile(new java.net.URL("http://www.yourkit.com/download/yjp-2013-build-13074-linux.tar.bz2"), new File("/usr/local/lib/yjp-2013-build-13074-linux.tar.bz2"))
 			println("Extracting yourkit")
 			exec("tar xfj yjp-2013-build-13074-linux.tar.bz2",new File("/usr/local/lib/"))
 			exec("rm yjp-2013-build-13074-linux.tar.bz2",new File("/usr/local/lib/"))
+			}catch{
+			case ioe: IOException => ioe.printStackTrace()
+			}
 		}
 		println("Libraries seem fine")
 	}

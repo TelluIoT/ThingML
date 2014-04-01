@@ -83,10 +83,13 @@ for (a,b) in results:
 	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"c org.thingml.tests/src/main/thingml/tests/_linux/"+fileName+".thingml\"")
 	
 	os.chdir("tmp/ThingML_C/"+bigName)
-	insertLine("#include <google/profiler.h>",bigName+".c","#include <pthread.h>")
-	insertLine("  ProfilerStart(\""+bigName+".prof\");",bigName+".c","  initialize_configuration_"+bigName+"();")
-	insertLine("#include <google/profiler.h>","TestDumpLinux.c","#include \"TestDumpLinux.h\"")
-	replaceLine("LIBS = -lpthread -lprofiler","Makefile","LIBS = -lpthread")
+	if os.path.exists("/usr/local/lib/gperftools-2.1/"):
+		insertLine("#include <google/profiler.h>",bigName+".c","#include <pthread.h>")
+		insertLine("  ProfilerStart(\""+bigName+".prof\");",bigName+".c","  initialize_configuration_"+bigName+"();")
+		insertLine("#include <google/profiler.h>","TestDumpLinux.c","#include \"TestDumpLinux.h\"")
+		replaceLine("LIBS = -lpthread -lprofiler","Makefile","LIBS = -lpthread")
+	else:
+		replaceLine("","TestDumpLinux.c","ProfilerStop();")
 	print("Make")
 	os.system("make")
 	print("Execution of generated file")
@@ -94,8 +97,11 @@ for (a,b) in results:
 		binsize=str(os.path.getsize(bigName))
 	else:
 		binsize="error"
-	os.system("env CPUPROFILE="+resultsDirectory+"/C/"+bigName+".prof ./"+bigName)
-	os.system("pprof --text "+bigName+" "+resultsDirectory+"/C/"+bigName+".prof > "+resultsDirectory+"/C/"+bigName+str(resultCounter))
+	if os.path.exists("/usr/local/lib/gperftools-2.1/"):
+		os.system("env CPUPROFILE="+resultsDirectory+"/C/"+bigName+".prof ./"+bigName)
+		os.system("pprof --text "+bigName+" "+resultsDirectory+"/C/"+bigName+".prof > "+resultsDirectory+"/C/"+bigName+str(resultCounter))
+	else:
+		os.system("./"+bigName)
 	os.system("rm "+resultsDirectory+"/C/*.prof")
 	try:
 		f = open('dump', 'r')
@@ -113,7 +119,7 @@ for (a,b) in results:
 		cpu=cpu[:-1]+"%"
 		mem=mem[:-1]+" MB"
 	except IOError:
-		fdumpC.write("ErrorAtCompilation\n")
+		print("Impossible to run ps command")
 	resultsData.append(("C",fileName[0].upper()+fileName[1:]+" "+str(resultCounter),cpu,mem,binsize))
 	os.chdir("..")
 	# os.system("rm -r "+bigName)
@@ -126,12 +132,15 @@ for (a,b) in results:
 	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"scala org.thingml.tests/src/main/thingml/tests/_scala/"+fileName+".thingml\"")
 	os.chdir("tmp/ThingML_Scala/"+fileName[0].upper()+fileName[1:])
 	insertLine("import scala.sys.process._","src/main/scala/org/thingml/generated/Main.scala","package org.thingml.generated")
-	insertLine("\"java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp-controller-api-redist.jar localhost 10001 start-cpu-sampling\".!","src/main/scala/org/thingml/generated/Main.scala","def main")
+	if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+		insertLine("\"java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp-controller-api-redist.jar localhost 10001 start-cpu-sampling\".!","src/main/scala/org/thingml/generated/Main.scala","def main")
 	os.system("mvn clean package")
 	
-	os.environ['MAVEN_OPTS'] = "-agentpath:/usr/local/lib/yjp-2013-build-13074/bin/linux-x86-32/libyjpagent.so=port=10001,dir="+resultsDirectory+"/Scala/"
+	if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+		os.environ['MAVEN_OPTS'] = "-agentpath:/usr/local/lib/yjp-2013-build-13074/bin/linux-x86-32/libyjpagent.so=port=10001,dir="+resultsDirectory+"/Scala/"
 	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
-	del os.environ['MAVEN_OPTS']
+	if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+		del os.environ['MAVEN_OPTS']
 	try:
 		f = open('dump', 'r')
 		res = f.readline()
@@ -155,7 +164,8 @@ for (a,b) in results:
 			snapshotName = re.sub(r"(.*\.thingml)",r"\1",f)
 	if not os.path.exists(bigName+str(resultCounter)):
 		os.makedirs(bigName+str(resultCounter))
-		os.system("java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp.jar -export "+snapshotName+" "+bigName+str(resultCounter))
+		if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+			os.system("java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp.jar -export "+snapshotName+" "+bigName+str(resultCounter))
 		if os.path.exists(bigName+str(resultCounter)+"/Summary.txt"):
 			cputime = find("Runtime & Agent: CPU time",bigName+str(resultCounter)+"/Summary.txt")
 			cputime = re.sub(r"Runtime & Agent: CPU time: (.*) sec","\1",cputime)
