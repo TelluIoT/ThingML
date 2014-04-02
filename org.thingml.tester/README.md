@@ -26,6 +26,7 @@ Creation of a new test:
 	
 Automatic run using Maven:
   * To run automatically all the tests using Maven, run the command `mvn clean install` in the folder `org.thingml.tester`
+	If you wish to run the tests with root rights, use `sudo -E` to ensure consistency of home directory.
 	
 Selection of tests run by Maven:
   * File org.thingml.tests/src/main/thingml/tests/Tester/genTestsJava.py contains the following line : "if name != "tester": ".

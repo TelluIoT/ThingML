@@ -28,7 +28,7 @@ from fileUtilities import replaceLine
 
 from htmldump import dumpHTML
 
-
+from os.path import expanduser
 #Tester creates the test file from a string
 #Parser gets (input,output) list from a file
 
@@ -37,13 +37,17 @@ rootDirectory = os.getcwd()
 sys.stderr = sys.stdout
 
 #Initializing dump
-if not os.path.exists("dump"):
-    os.makedirs("dump")
+os.chdir(os.environ['HOME'])
+if not os.path.exists(".thingml"):
+    os.makedirs(".thingml")
+if not os.path.exists(".thingml/dump"):
+    os.makedirs(".thingml/dump")
 
-fdump = open('dump/'+fileName+'.dump', 'w')
-fdumpC = open('dump/'+fileName+'C.dump', 'w')
-fdumpScala = open('dump/'+fileName+'Scala.dump', 'w')
+fdump = open('.thingml/dump/'+fileName+'.dump', 'w')
+fdumpC = open('.thingml/dump/'+fileName+'C.dump', 'w')
+fdumpScala = open('.thingml/dump/'+fileName+'Scala.dump', 'w')
 
+os.chdir(rootDirectory)
 os.chdir(r"../../../../org.thingml.cmd")
 compilerDirectory = os.getcwd()
 os.chdir("../org.thingml.tester")

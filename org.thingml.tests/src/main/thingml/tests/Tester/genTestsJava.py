@@ -28,7 +28,8 @@ if not os.path.exists("../org.thingml.tester/src/test/java"):
 	os.makedirs("../org.thingml.tester/src/test/java")
 os.chdir("../org.thingml.tester/src/test/java")
 os.system("rm *.java")
-os.system("rm -r dump")
+os.chdir(os.environ['HOME'])
+os.system("rm -r .thingml")
 os.chdir(startDir)
 def run():
 	os.chdir(r"..")
@@ -40,8 +41,8 @@ def run():
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
-			if name != "tester": 
-			# if name in ("testHello","testArrays"): 
+			# if name != "tester": 
+			if name in ("testHello","testArrays"): 
 				fichier = open('../../../../../org.thingml.tester/src/test/java/'+name+'Test.java', 'w')
 				fichier.write('package org.thingml.tester;\n\n\
 import junit.framework.TestCase;\n\
@@ -86,8 +87,8 @@ public class '+name+'Test extends TestCase {\n\
 		try{\n\
 			CTried = true;\n\
 			System.out.println(System.getProperty("user.dir"));\n\
-			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/resources/dump/'+name+'.dump")));\n\
-			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/resources/dump/'+name+'C.dump")));\n\
+			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream(System.getProperty("user.home")+"/.thingml/dump/'+name+'.dump")));\n\
+			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream(System.getProperty("user.home")+"/.thingml/dump/'+name+'C.dump")));\n\
 			String regex;\n\
 			String input;\n\
 			String output;\n\
@@ -117,8 +118,8 @@ public class '+name+'Test extends TestCase {\n\
 		try{\n\
 			ScalaTried = true;\n\
 			System.out.println(System.getProperty("user.dir"));\n\
-			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/resources/dump/'+name+'.dump")));\n\
-			BufferedReader dumpScala = new BufferedReader(new InputStreamReader(new FileInputStream("src/test/resources/dump/'+name+'Scala.dump")));\n\
+			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream(System.getProperty("user.home")+"/.thingml/dump/'+name+'.dump")));\n\
+			BufferedReader dumpScala = new BufferedReader(new InputStreamReader(new FileInputStream(System.getProperty("user.home")+"/.thingml/dump/'+name+'Scala.dump")));\n\
 			String regex;\n\
 			String input;\n\
 			String output;\n\
