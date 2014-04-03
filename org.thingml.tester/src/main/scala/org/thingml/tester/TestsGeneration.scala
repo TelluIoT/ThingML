@@ -157,6 +157,12 @@ object TestsGeneration {
 			case ioe: IOException => ioe.printStackTrace()
 			}
 		}
-		println("Libraries seem fine")
+		if (yourkitDir.exists() && gperfDir.exists()){
+			println("Libraries seem fine")
+		}
+		else
+		{
+			println("Couldn't install libraries, performance measures will be unavailable")
+		}
 	}
 }

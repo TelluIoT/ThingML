@@ -192,8 +192,6 @@ fdumpScala.close()
 for r in resultsData:
 	type,name,cpu,mem,size=r
 	print("type: "+type+", name: "+name+", cpu: "+cpu+", memory: "+mem+", size: "+size)
-os.chdir("/tmp/")
-os.system("rm -r thingml")
 os.chdir(rootDirectory)
 
 dumpHTML("stats.html",resultsData)
