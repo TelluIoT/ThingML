@@ -37,15 +37,15 @@ rootDirectory = os.getcwd()
 sys.stderr = sys.stdout
 
 #Initializing dump
-os.chdir(os.environ['HOME'])
-if not os.path.exists(".thingml"):
-    os.makedirs(".thingml")
-if not os.path.exists(".thingml/dump"):
-    os.makedirs(".thingml/dump")
+os.chdir("/tmp/")
+if not os.path.exists("thingml"):
+    os.makedirs("thingml")
+if not os.path.exists("thingml/dump"):
+    os.makedirs("thingml/dump")
 
-fdump = open('.thingml/dump/'+fileName+'.dump', 'w')
-fdumpC = open('.thingml/dump/'+fileName+'C.dump', 'w')
-fdumpScala = open('.thingml/dump/'+fileName+'Scala.dump', 'w')
+fdump = open('/tmp/thingml/dump/'+fileName+'.dump', 'w')
+fdumpC = open('/tmp/thingml/dump/'+fileName+'C.dump', 'w')
+fdumpScala = open('/tmp/thingml/dump/'+fileName+'Scala.dump', 'w')
 
 os.chdir(rootDirectory)
 os.chdir(r"../../../../org.thingml.cmd")
@@ -192,6 +192,8 @@ fdumpScala.close()
 for r in resultsData:
 	type,name,cpu,mem,size=r
 	print("type: "+type+", name: "+name+", cpu: "+cpu+", memory: "+mem+", size: "+size)
+os.chdir("/tmp/")
+os.system("rm -r thingml")
 os.chdir(rootDirectory)
 
 dumpHTML("stats.html",resultsData)

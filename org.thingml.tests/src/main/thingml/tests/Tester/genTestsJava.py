@@ -28,8 +28,8 @@ if not os.path.exists("../org.thingml.tester/src/test/java"):
 	os.makedirs("../org.thingml.tester/src/test/java")
 os.chdir("../org.thingml.tester/src/test/java")
 os.system("rm *.java")
-os.chdir(os.environ['HOME'])
-os.system("rm -r .thingml")
+os.chdir("/tmp/")
+os.system("rm -r thingml")
 os.chdir(startDir)
 def run():
 	os.chdir(r"..")
@@ -87,8 +87,8 @@ public class '+name+'Test extends TestCase {\n\
 		try{\n\
 			CTried = true;\n\
 			System.out.println(System.getProperty("user.dir"));\n\
-			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream(System.getProperty("user.home")+"/.thingml/dump/'+name+'.dump")));\n\
-			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream(System.getProperty("user.home")+"/.thingml/dump/'+name+'C.dump")));\n\
+			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/thingml/dump/'+name+'.dump")));\n\
+			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/thingml/dump/'+name+'C.dump")));\n\
 			String regex;\n\
 			String input;\n\
 			String output;\n\
@@ -118,8 +118,8 @@ public class '+name+'Test extends TestCase {\n\
 		try{\n\
 			ScalaTried = true;\n\
 			System.out.println(System.getProperty("user.dir"));\n\
-			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream(System.getProperty("user.home")+"/.thingml/dump/'+name+'.dump")));\n\
-			BufferedReader dumpScala = new BufferedReader(new InputStreamReader(new FileInputStream(System.getProperty("user.home")+"/.thingml/dump/'+name+'Scala.dump")));\n\
+			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/thingml/dump/'+name+'.dump")));\n\
+			BufferedReader dumpScala = new BufferedReader(new InputStreamReader(new FileInputStream("/tmp/thingml/dump/'+name+'Scala.dump")));\n\
 			String regex;\n\
 			String input;\n\
 			String output;\n\
