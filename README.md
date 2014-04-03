@@ -1,13 +1,54 @@
-ThingML is a modelling language for embedded and distributed systems (Internet of Things).
-It is developped by the Networked Systems and Services department of SINTEF in Oslo, Norway.
-It is distributed under the LGPL licence.
+org.thingml.tester
+==================
 
-Visit http://www.thingml.org to find out more about ThingML !
+org.thingml.tester module manages tests defined in org.thingml.tests. 
+This module automatically generates JUnit tests ready for integration in tools such as Maven, and provides several ways of running some or all the tests manually.
 
-## Build status
+Installation:
+-------------
+This modules requires Gperftools and Yourkit frameworks to give performance measures. The maven build tries to install them automatically, but may fail for the following reasons:
+  * Denied permission to install libraries: either run `maven clean install` with root rights, or install the libraries manually.
+  * Wrong installation folder: this module assumes the libraries are installed in the folder /usr/local/lib. 
+  * Wrong version of the libraries: this module uses Gperftools 2.1 and Yourkit YourKit Java Profiler 2013, build 13074.
+  * Yourkit requires a valid license key to run. 
+You can find instructions to install gperftools at this page: [gperftools](http://gperftools.googlecode.com/svn/trunk/INSTALL), since you have to `./configure`, `make` and `make install` this library.
+Gperftools may also require third party libraries, especially on x64 systems. Please refer to the previous link for more informations.
 
-[![Build Status](https://drone.io/github.com/SINTEF-9012/ThingML/status.png)](https://drone.io/github.com/SINTEF-9012/ThingML/latest)
+User manual:
+------------
+Creation of a new test:
+  * Tests are defined in the folder `org.thingml.tests/src/main/thingml/tests`
+  * To make the automatic compilation possible, follow the following conventions:
+  * The thing describing your test should have the same name as the file, starting with a capital letter (thing TestExample in file testExample.thingml), and should include Test
+  * Inputs and outputs send and receive one Char at a time.
+  * You can define inputs to send to your state machine with `@test "input # expectedOutput"` annotations.
+  * Your state machine receives inputs on `harness?testIn` port, and sends outputs on `harness!testOut` port.
+	
+Automatic run using Maven:
+  * To run automatically all the tests using Maven, run the command `mvn clean install` in the folder `org.thingml.tester`
+	
+Selection of tests run by Maven:
+  * File org.thingml.tests/src/main/thingml/tests/Tester/genTestsJava.py contains the following line : "if name != "tester": ".
+  * Change it into "if name in ("testHello","testArrays"): " if you wish to run only a subsets of all the tests.
 
+Manual run:
+  * Execute the manualGeneration.py file in the folder org.thingml.tests/src/main/thingml/tests/Tester. It will ask for the input sent to the test.
+  * You can now run the generated files in folders org.thingml.tests/src/main/thingml/tests/_linux and _scala using the thingml editor.
+	
+	
+Description of the module architecture:
+----------------------------------------
+The org.thingml.tester module contains tools to run and analyse outputs from tests defined in the org.thingml.tests module.
+It uses the org.thingml.cmd module to compile the tests in command line.
+	
+org.thingml.tester module:
+  * This project first runs org.thingml.tester/src/main/scala/org/thingml/tester/TestsGeneration.scala, which calls python files in org.thingml.tests/src/main/thingml/tests/Tester folder to generate linux and scala configurations and JUnit tests.
+  * Maven automatically compiles the generated JUnit tests, which themselves use org.thingml.tester/src/resources python files to run each @test described in the original thingml file.
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/SINTEF-9012/thingml/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+org.thingml.cmd module: 
+  * Provides command line compilation of thingml files through the command `mvn exec:java -Dexec.mainClass="org.thingml.cmd.Cmd" -Dexec.args="language path`
+  * Provides java interface for compilation by using the import "import org.thingml.cmd.Cmd" and the function calls "Cmd.compileToC(path)" and "Cmd.compileToScala(path)".
+  * Note that language is either "c" or "scala", and path starts from the root of the project Thingml.
 
+org.thingml.tests module:
+  * Contains user defined tests as well as some files useful to manually launch a specific test.

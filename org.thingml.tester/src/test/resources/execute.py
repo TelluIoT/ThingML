@@ -36,21 +36,20 @@ fileName = sys.argv[1]
 rootDirectory = os.getcwd()
 sys.stderr = sys.stdout
 
-#Initializing dump
-os.chdir("/tmp/")
-if not os.path.exists("thingml"):
-    os.makedirs("thingml")
-if not os.path.exists("thingml/dump"):
-    os.makedirs("thingml/dump")
 
-fdump = open('/tmp/thingml/dump/'+fileName+'.dump', 'w')
-fdumpC = open('/tmp/thingml/dump/'+fileName+'C.dump', 'w')
-fdumpScala = open('/tmp/thingml/dump/'+fileName+'Scala.dump', 'w')
 
 os.chdir(rootDirectory)
 os.chdir(r"../../../../org.thingml.cmd")
 compilerDirectory = os.getcwd()
+if not os.path.exists("tmp"):
+	os.makedirs("tmp")
 os.chdir("../org.thingml.tester")
+if not os.path.exists("target/dump"):
+    os.makedirs("target/dump")
+
+fdump = open('target/dump/'+fileName+'.dump', 'w')
+fdumpC = open('target/dump/'+fileName+'C.dump', 'w')
+fdumpScala = open('target/dump/'+fileName+'Scala.dump', 'w')
 if not os.path.exists("target/results"):
     os.makedirs("target/results")
 os.chdir("target/results")
@@ -80,8 +79,6 @@ for (a,b) in results:
 	
 	#!Test C
 	os.chdir(compilerDirectory)
-	if not os.path.exists("tmp"):
-		os.makedirs("tmp")
 	if not os.path.exists("tmp/ThingML_C"):
 		os.makedirs("tmp/ThingML_C")
 	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"c org.thingml.tests/src/main/thingml/tests/_linux/"+fileName+".thingml\"")
