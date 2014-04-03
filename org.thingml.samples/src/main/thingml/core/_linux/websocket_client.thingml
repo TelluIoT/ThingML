@@ -1,6 +1,7 @@
 //IMPORTANT NOTE to run this example:
 // 0) download and install https://github.com/warmcat/libwebsockets (follow their instructions)
 //      NOTE : command 'cmake ..' must be run from the libwebsockets/build directory (build should be created manually)
+//	NOTE : libssl-dev should be installed before
 // 1) download and install from https://github.com/SINTEF-9012/TinyWebSockets (make installwebsockets && make && make install)
 //      NOTE : both libwebsockets and TinyWebSockets should be in the same directory
 
