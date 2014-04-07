@@ -71,12 +71,18 @@ public class '+name+'Test extends TestCase {\n\
 		if (setUpIsNotDone)\n\
 		try{\n\
 			setUpIsNotDone = false;\n\
-			Process p = Runtime.getRuntime().exec("python execute.py '+name+'",null,new File("src/test/resources"));\n\
+			System.out.println("hello"+(new File(".")).getAbsolutePath());\n\
+			ProcessBuilder pb = new ProcessBuilder("python","execute.py","'+name+'");\n\
+			pb.directory(new File("src/test/resources"));\n\
+			pb.redirectErrorStream(true);\n\
+			Process proc = pb.start();\n\
+			System.out.println("Process started !");\n\
 			String line;\n\
-			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));\n\
+			BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));\n\
 			while ((line = in.readLine()) != null) {\n\
 				System.out.println(line);\n\
 			}\n\
+			proc.destroy();\n\
 			in.close();\n\
 		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
 	}\n\

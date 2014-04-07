@@ -166,7 +166,7 @@ for (a,b) in results:
 	if not os.path.exists(bigName+str(resultCounter)):
 		os.makedirs(bigName+str(resultCounter))
 		if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
-			os.system("java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp.jar -export "+snapshotName+" "+bigName+str(resultCounter))
+			os.system("java -Dexport.summary -Dexport.class.list -Dexport.apply.filters -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp.jar -export "+snapshotName+" "+bigName+str(resultCounter))
 		if os.path.exists(bigName+str(resultCounter)+"/Summary.txt"):
 			cputime = find("Runtime & Agent: CPU time",bigName+str(resultCounter)+"/Summary.txt")
 			cputime = re.sub(r"Runtime & Agent: CPU time: (.*) sec",r"\1",cputime)
