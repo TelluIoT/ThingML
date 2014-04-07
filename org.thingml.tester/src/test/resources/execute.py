@@ -34,13 +34,11 @@ from os.path import expanduser
 
 fileName = sys.argv[1]
 rootDirectory = os.getcwd()
-sys.stderr = sys.stdout
+print("Starting test in "+rootDirectory)
 
-
-
-os.chdir(rootDirectory)
 os.chdir(r"../../../../org.thingml.cmd")
 compilerDirectory = os.getcwd()
+print("Compiling test in "+compilerDirectory)
 if not os.path.exists("tmp"):
 	os.makedirs("tmp")
 os.chdir("../org.thingml.tester")
@@ -54,6 +52,8 @@ if not os.path.exists("target/results"):
     os.makedirs("target/results")
 os.chdir("target/results")
 resultsDirectory = os.getcwd()
+print("Ready to write results in "+resultsDirectory)
+
 if not os.path.exists("C"):
     os.makedirs("C")
 if not os.path.exists("Scala"):
@@ -61,6 +61,7 @@ if not os.path.exists("Scala"):
 
 os.chdir(r"../../../org.thingml.tests/src/main/thingml/tests/Tester")
 testsDirectory = os.getcwd()
+print("Getting thingml file in "+testsDirectory)
 from Parser import Parser
 from Tester import Tester
 
@@ -131,7 +132,7 @@ for (a,b) in results:
 	if not os.path.exists("tmp/ThingML_Scala"):
 		os.makedirs("tmp/ThingML_Scala")
 	os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\"scala org.thingml.tests/src/main/thingml/tests/_scala/"+fileName+".thingml\"")
-	os.chdir("tmp/ThingML_Scala/"+fileName[0].upper()+fileName[1:])
+	os.chdir("tmp/ThingML_Scala/"+bigName)
 	insertLine("import scala.sys.process._","src/main/scala/org/thingml/generated/Main.scala","package org.thingml.generated")
 	if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
 		insertLine("\"java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp-controller-api-redist.jar localhost 10001 start-cpu-sampling\".!","src/main/scala/org/thingml/generated/Main.scala","def main")
@@ -153,9 +154,8 @@ for (a,b) in results:
 		binsize=str(os.path.getsize("target/"+bigName+"-1.0-SNAPSHOT.jar"))
 	else:
 		binsize="error"
-	binsize=str(os.path.getsize("target/"+bigName+"-1.0-SNAPSHOT.jar"))
 	os.chdir("..")
-	os.system("rm -r "+bigName)
+	# os.system("rm -r "+bigName)
 	os.chdir("../../../org.thingml.tester/target/results/Scala")
 	mypath = "."
 	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]

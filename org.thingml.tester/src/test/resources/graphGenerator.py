@@ -8,6 +8,8 @@ class Content:
 		self.inputs=[]
 		self.outputs = []
 		self.outputsNumber = 0
+		self.final=False
+		self.parent=None
 		Element.__init__(self)
 	def accept(self,visitor):
 		visitor.process(self)
@@ -152,8 +154,12 @@ class OutGenerator:
 			if element.isContent:#thus is a composite
 				for _ in range(0,element.outputsNumber):
 					element.finalStates.append(element.content[random.randint(0,len(element.content)-1)])
+					element.finalStates[-1].final=True
+					element.finalStates[-1].parent=element
 			else:#region
 				element.finalStates.append(element.init)
+				element.finalStates[-1].final=True
+				element.finalStates[-1].parent=element
 	def finalize(self):
 		self.conf.depth = self.conf.depth+1
 # """
@@ -256,10 +262,10 @@ class TransitionSolver:
 		return nonReachables
 # """
 class DumpThingml:
-	def __init(self,regions):
+	def __init__(self,regions):
 		self.regions=regions
-		f=open('test.thingml')
-		f.write("import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"\n\n\
+		self.file=open("test.thingml",'w')
+		self.file.write("import \"../../../../../org.thingml.samples/src/main/thingml/thingml.thingml\"\n\n\
 thing BigTest includes Test\n\
 {\n\
 	statechart BigTest {\n")
@@ -267,22 +273,63 @@ thing BigTest includes Test\n\
 			r.accept(self)
 	def process(self,element):
 		if element.isGroup and not element.isContent:#region
-			f.write("region "+element.ID+" init "+element.init.ID+" {\n")
+			self.file.write("region "+str(element.ID)+" init "+str(element.init.ID)+" {\n")
 		elif element.isGroup:#composite
-			f.write("composite state "+element.ID+" init "+element.init.ID+" {\n")
+			self.file.write("composite state "+str(element.ID)+" init "+str(element.init.ID)+" {\n")
+			self.file.write("property done : Boolean = false\n\n")
+			i=0
+			for e in element.outputs:
+				self.file.write("transition -> "+str(e.ID)+"\n")
+				self.file.write("event m : harness?testIn\n")
+				self.file.write("guard m.c%"+str(element.outputsNumber)+" == "+str(i)+" && (")
+				first = True
+				for f in element.finalStates:
+					if not first:
+						self.file.write(" || ")
+					self.file.write(str(f.ID)+".done")
+					first = False
+				self.file.write(")\n\n")
+				i=i+1
 		else:#State
+			self.file.write("state "+str(element.ID)+" {\n")
+			self.file.write("property done : Boolean = false\n\n")
+			i=0
+			if element.final:
+				outputsNumber=element.outputsNumber+element.parent.finalStates.count(element)
+			else:
+				outputsNumber=element.outputsNumber
+			for e in element.outputs:
+				self.file.write("transition -> "+str(e.ID)+"\n")
+				self.file.write("event m : harness?testIn\n")
+				self.file.write("guard m.c%"+str(outputsNumber)+" == "+str(i)+"\n")
+				if i<outputsNumber-1:
+					self.file.write("\n")
+				i=i+1
+			
+			if element.final:
+				for e in element.parent.finalStates:
+					if e == element:
+						self.file.write("transition -> "+str(element.ID)+"\n")
+						self.file.write("event m : harness?testIn\n")
+						self.file.write("guard m.c%"+str(outputsNumber)+" == "+str(i)+"\n")
+						self.file.write("action done = true\n")
+						if i<outputsNumber-1:
+							self.file.write("\n")
+						i=i+1
+			self.file.write("}\n")
 	def finalize(self):
+		self.file.write("}\n")
 	
-		
 	
 conf = Configuration()
-conf.setRegions(10,15)
-conf.setStates(5,10)
-conf.setOutputs(2,3)
-conf.setDepth(4)
-conf.setCompositeRatio(0.3)
+conf.setRegions(1,1)
+conf.setStates(2,2)
+conf.setOutputs(1,2)
+conf.setDepth(2)
+conf.setCompositeRatio(0.8)
 
 tree=Initializer(conf).regions
+DumpThingml(tree)
 print("\n\n\n")
 for r in tree:
 	r.dump()

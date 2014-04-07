@@ -71,7 +71,6 @@ public class '+name+'Test extends TestCase {\n\
 		if (setUpIsNotDone)\n\
 		try{\n\
 			setUpIsNotDone = false;\n\
-			System.out.println("hello"+(new File(".")).getAbsolutePath());\n\
 			ProcessBuilder pb = new ProcessBuilder("python","execute.py","'+name+'");\n\
 			pb.directory(new File("src/test/resources"));\n\
 			pb.redirectErrorStream(true);\n\
