@@ -6,13 +6,14 @@ import "../datatypes.thingml"
 thing fragment TestMsg {
 	message testOut(c : Char);
 	message testIn(c : Char);
+	message bigTestIn(i : Integer);
 	message testFailure();
 	message testEnd();
 }
 
 thing fragment TestHarness includes TestMsg {
 	provided port test {
-		sends testIn
+		sends testIn, bigTestIn
 	}
 	required port testEnd {
 		sends testEnd
@@ -22,7 +23,7 @@ thing fragment TestHarness includes TestMsg {
 thing fragment Test includes TestMsg {
 
 	required port harness {
-		receives testIn
+		receives testIn, bigTestIn
 		sends testOut, testFailure
 	}
 }

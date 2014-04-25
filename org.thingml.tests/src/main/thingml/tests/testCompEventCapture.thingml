@@ -1,0 +1,50 @@
+import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+
+thing TestCompEventCapture includes Test
+@test "00 # 12b3c4"
+@test "000 # 12b3c4a5"
+{
+statechart TestCompEventCapture init s1{
+	composite state s1 init s2 {
+		on entry harness!testOut('\'1\'')
+		
+		transition -> s5
+		event m : harness?testIn
+		guard m.c == '\'0\''
+		action harness!testOut('\'a\'')
+
+		state s2 {
+			on entry harness!testOut('\'2\'')
+
+			transition -> s3
+			event m : harness?testIn
+			guard m.c == '\'0\''
+			action harness!testOut('\'b\'')
+		}
+
+		state s3 {
+			on entry harness!testOut('\'3\'')
+
+			transition -> s4
+			event m : harness?testIn
+			guard m.c == '\'0\''
+			action harness!testOut('\'c\'')
+		}
+		
+		state s4 {
+			on entry harness!testOut('\'4\'')
+		}
+
+	}//end of composite
+
+	state s5 {
+		on entry harness!testOut('\'5\'')
+
+		transition -> s1
+		event m : harness?testIn
+		guard m.c == '\'0\''
+		action harness!testOut('\'e\'')
+	}
+
+}//end of statechart
+}//end of thing

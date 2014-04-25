@@ -32,6 +32,8 @@ from os.path import expanduser
 #Tester creates the test file from a string
 #Parser gets (input,output) list from a file
 
+deleteTemporaryFiles = True
+
 fileName = sys.argv[1]
 rootDirectory = os.getcwd()
 print("Starting test in "+rootDirectory)
@@ -64,6 +66,7 @@ testsDirectory = os.getcwd()
 print("Getting thingml file in "+testsDirectory)
 from Parser import Parser
 from Tester import Tester
+from BigTester import BigTester
 
 #Getting expected results
 results = Parser().parse(fileName)
@@ -75,7 +78,10 @@ for (a,b) in results:
 	fdump.write(a+'\n'+input+'\n'+b+'\n')
 	os.chdir(testsDirectory)
 	#Creating input file
-	Tester().create(input)
+	if fileName.startswith('big'):
+		BigTester().create(input)
+	else:
+		Tester().create(input)
 	bigName = fileName[0].upper()+fileName[1:]+"C"
 	
 	#!Test C
@@ -124,7 +130,8 @@ for (a,b) in results:
 		print("Impossible to run ps command")
 	resultsData.append(("C",fileName[0].upper()+fileName[1:]+" "+str(resultCounter),cpu,mem,binsize))
 	os.chdir("..")
-	os.system("rm -r "+bigName)
+	if deleteTemporaryFiles:
+		os.system("rm -r "+bigName)
 	
 	#!Test scala
 	bigName = fileName[0].upper()+fileName[1:]
@@ -155,7 +162,8 @@ for (a,b) in results:
 	else:
 		binsize="error"
 	os.chdir("..")
-	# os.system("rm -r "+bigName)
+	if deleteTemporaryFiles:
+		os.system("rm -r "+bigName)
 	os.chdir("../../../org.thingml.tester/target/results/Scala")
 	mypath = "."
 	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]

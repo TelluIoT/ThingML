@@ -25,7 +25,10 @@ class Dumper{
 		printer.flush()
 	}
 	
-	def stop() = {
+	def stop(transitionsCount : Integer) = {
+		printer = new PrintWriter("transitionsCount")
+		printer.append(transitionsCount.toString)
+		printer.flush()
 		System.exit(0)
 	}
 }

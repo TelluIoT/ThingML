@@ -17,12 +17,14 @@ thing TestDumpLinux includes TestDump
 	end
 	
 	statechart LinuxHarness init Testing {
-		
+		property transitionsCount : Integer = 0
 		
 		state Testing {
             on entry 'testFile = fopen("dump", "w+");'
             internal event m : dump?testOut
-            action write(m.c)
+            action do write(m.c)
+            	transitionsCount=transitionsCount+1
+            end
             
             transition -> Failed 
             event dump?testFailure
@@ -43,7 +45,9 @@ thing TestDumpLinux includes TestDump
 sprintf(cmd, "ps -p %d -o %ccpu > stats",getpid(),\'%\');
 system(cmd);
 sprintf(cmd, "ps -p %d -o %cmem >> stats",getpid(),\'%\');
-system(cmd);
+system(cmd);'
+'sprintf(cmd, "echo \"%d\" > transitionsCount",' & transitionsCount & ');'
+'system(cmd);
 fclose(testFile);
 ProfilerStop();
 exit(0);'

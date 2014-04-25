@@ -40,7 +40,9 @@ def run():
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
 			if name != "tester": 
-			# if name in ("testInit"): 
+			# if name in ("bigTestExample"): 
+			# if name == "testCompEventCapture": 
+			# if name in ("testHello"): 
 				fichier = open('../../../../../org.thingml.tester/src/test/java/'+name+'Test.java', 'w')
 				fichier.write('package org.thingml.tester;\n\n\
 import junit.framework.TestCase;\n\
@@ -104,7 +106,7 @@ public class '+name+'Test extends TestCase {\n\
 				Pattern.compile(output);\n\
 				Matcher matcher = \n\
 				pattern.matcher(outputC);\n\
-				boolean success = matcher.find();\n\
+				boolean success = matcher.matches();\n\
 				if(!success){\n\
 					successC=false;\n\
 					if(outputC == "ErrorAtCompilation")\n\
@@ -135,7 +137,7 @@ public class '+name+'Test extends TestCase {\n\
 				Pattern.compile(output);\n\
 				Matcher matcher = \n\
 				pattern.matcher(outputScala);\n\
-				boolean success = matcher.find();\n\
+				boolean success = matcher.matches();\n\
 				if(!success){\n\
 					successScala=false;\n\
 					if(outputScala == "ErrorAtCompilation")\n\

@@ -15,13 +15,16 @@ thing TestDumpScala includes TestDump
 	end
 	
 	statechart ScalaHarness init Testing {
+		property transitionsCount : Integer = 0
 		
 		
 		state Testing {
 			on entry device = 'new org.thingml.devices.Dumper()'
             
             internal event m : dump?testOut
-            action write(m.c)
+            action do write(m.c)
+            	transitionsCount=transitionsCount+1
+            end
             
             transition -> Failed 
             event dump?testFailure
@@ -38,7 +41,7 @@ thing TestDumpScala includes TestDump
 		state End {
 			on entry do
 				print("End of thingml processus") 
-				'' & device & '.asInstanceOf[org.thingml.devices.Dumper].stop()'
+				'' & device & '.asInstanceOf[org.thingml.devices.Dumper].stop('&transitionsCount&')'
 			end
 		}
 	}

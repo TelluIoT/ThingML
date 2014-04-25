@@ -1,5 +1,5 @@
 import random
-
+import sys
 class Element:
 	def __init__(self):
 		self.ID=None
@@ -36,7 +36,7 @@ class Group:
 		visitor.process(self)
 		for e in self.content:
 			e.accept(visitor)
-		visitor.finalize()
+		visitor.finalize(self)
 		
 class Region(Group):
 	def __init__(self):
@@ -134,7 +134,7 @@ class Initializer:
 					element.content.append(State())
 				element.content[-1].ID=self.currentID
 				self.currentID=self.currentID+1
-	def finalize(self):
+	def finalize(self,element):
 		self.conf.depth = self.conf.depth+1
 		
 # """
@@ -151,16 +151,15 @@ class OutGenerator:
 			element.init = element.content[random.randint(0,len(element.content)-1)]
 			for e in element.content:
 				e.outputsNumber=random.randint(self.conf.minOutputs,self.conf.maxOutputs)
+				e.parent=element
 			if element.isContent:#thus is a composite
 				for _ in range(0,element.outputsNumber):
 					element.finalStates.append(element.content[random.randint(0,len(element.content)-1)])
 					element.finalStates[-1].final=True
-					element.finalStates[-1].parent=element
 			else:#region
 				element.finalStates.append(element.init)
 				element.finalStates[-1].final=True
-				element.finalStates[-1].parent=element
-	def finalize(self):
+	def finalize(self,element):
 		self.conf.depth = self.conf.depth+1
 # """
 class TransitionGenerator:
@@ -178,7 +177,7 @@ class TransitionGenerator:
 					newOutput=element.content[random.randint(0,len(element.content)-1)]
 					e.outputs.append(newOutput)
 					newOutput.inputs.append(e)
-	def finalize(self):
+	def finalize(self,element):
 		self.conf.depth = self.conf.depth+1
 # """
 class TransitionSolver:
@@ -219,7 +218,7 @@ class TransitionSolver:
 						newOutput.inputs.append(switch)
 				blockers=self.getBlockers(element)
 				nonReachables=self.getNonReachables(element)
-	def finalize(self):
+	def finalize(self,element):
 		self.conf.depth = self.conf.depth+1
 	def getBlockers(self,element):
 		nonBlockers=[]
@@ -263,62 +262,97 @@ class TransitionSolver:
 # """
 class DumpThingml:
 	def __init__(self,regions):
+		self.depth = 1
 		self.regions=regions
-		self.file=open("test.thingml",'w')
+		self.file=open("bigTestExample.thingml",'w')
+		self.file.write("/** Abstract tree:\n")
+		oldstdout=sys.stdout
+		sys.stdout=self.file
+		for r in tree:
+			r.dump()
+		sys.stdout=oldstdout
+			
+		self.file.write("*/\n\n\n")
+		
 		self.file.write("import \"../../../../../org.thingml.samples/src/main/thingml/thingml.thingml\"\n\n\
-thing BigTest includes Test\n\
+thing BigTestExample includes Test\n\
+@test \" # \"\n\
 {\n\
-	statechart BigTest {\n")
+statechart BigTestExample init s"+str(self.regions[0].init.ID)+"{\n")
+		self.firstRegion=True
 		for r in self.regions:
 			r.accept(self)
+		self.file.write("}//end of statechart\n")
+		self.file.write("}//end of thing\n")
 	def process(self,element):
 		if element.isGroup and not element.isContent:#region
-			self.file.write("region "+str(element.ID)+" init "+str(element.init.ID)+" {\n")
-		elif element.isGroup:#composite
-			self.file.write("composite state "+str(element.ID)+" init "+str(element.init.ID)+" {\n")
-			self.file.write("property done : Boolean = false\n\n")
-			i=0
-			for e in element.outputs:
-				self.file.write("transition -> "+str(e.ID)+"\n")
-				self.file.write("event m : harness?testIn\n")
-				self.file.write("guard m.c%"+str(element.outputsNumber)+" == "+str(i)+" && (")
-				first = True
-				for f in element.finalStates:
-					if not first:
-						self.file.write(" || ")
-					self.file.write(str(f.ID)+".done")
-					first = False
-				self.file.write(")\n\n")
-				i=i+1
-		else:#State
-			self.file.write("state "+str(element.ID)+" {\n")
-			self.file.write("property done : Boolean = false\n\n")
-			i=0
-			if element.final:
-				outputsNumber=element.outputsNumber+element.parent.finalStates.count(element)
+			if self.firstRegion:
+				self.file.write("\t/** First region is implicit\n\tregion s"+str(element.ID)+" init s"+str(element.init.ID)+" {*/\n")
 			else:
+				self.file.write("\tregion s"+str(element.ID)+" init s"+str(element.init.ID)+" {\n")
+			self.depth=self.depth+1
+		elif element.isGroup:#composite
+			tabs=""
+			for _ in range(0,self.depth):
+				tabs=tabs+"\t"
+			self.file.write(tabs+"composite state s"+str(element.ID)+" init s"+str(element.init.ID)+" {\n")
+			tabs=tabs+"\t"
+			self.file.write(tabs+"on entry harness!testOut('\\'"+str(element.ID)+"\\'')\n")
+			i=0
+			if element.parent.isContent: # Composite parent
+				outputsNumber=element.outputsNumber+element.parent.finalStates.count(element)
+			else: # Region parent
 				outputsNumber=element.outputsNumber
 			for e in element.outputs:
-				self.file.write("transition -> "+str(e.ID)+"\n")
-				self.file.write("event m : harness?testIn\n")
-				self.file.write("guard m.c%"+str(outputsNumber)+" == "+str(i)+"\n")
-				if i<outputsNumber-1:
-					self.file.write("\n")
+				self.file.write(tabs+"transition -> s"+str(e.ID)+"\n")
+				self.file.write(tabs+"event m : harness?bigTestIn\n")
+				self.file.write(tabs+"guard m.i%"+str(element.outputsNumber)+" == "+str(i)+"\n")
+				self.file.write(tabs+"\n")
 				i=i+1
+			if element.parent.isContent and element.parent.finalStates.count(element)>0: # Composite parent
+				self.file.write(tabs+"transition -> final_"+str(element.parent.ID)+"\n")
+				self.file.write(tabs+"event m : harness?bigTestIn\n")
+				self.file.write(tabs+"guard m.i%"+str(outputsNumber)+" > "+str(i-1)+"\n")
 			
-			if element.final:
-				for e in element.parent.finalStates:
-					if e == element:
-						self.file.write("transition -> "+str(element.ID)+"\n")
-						self.file.write("event m : harness?testIn\n")
-						self.file.write("guard m.c%"+str(outputsNumber)+" == "+str(i)+"\n")
-						self.file.write("action done = true\n")
-						if i<outputsNumber-1:
-							self.file.write("\n")
-						i=i+1
-			self.file.write("}\n")
-	def finalize(self):
-		self.file.write("}\n")
+			self.file.write(tabs+"state final_"+str(element.ID)+" {}\n\n")
+			self.depth=self.depth+1
+		else:#State
+			outertabs=""
+			for _ in range(0,self.depth):
+				outertabs=outertabs+"\t"
+			self.file.write(outertabs+"state s"+str(element.ID)+" {\n")
+			tabs=outertabs+"\t"
+			self.file.write(tabs+"on entry harness!testOut('\\'"+str(element.ID)+"\\'')\n\n")
+			i=0
+			if element.parent.isContent: # Composite parent
+				outputsNumber=element.outputsNumber+element.parent.finalStates.count(element)
+			else: # Region parent
+				outputsNumber=element.outputsNumber
+			for e in element.outputs:
+				self.file.write(tabs+"transition -> s"+str(e.ID)+"\n")
+				self.file.write(tabs+"event m : harness?bigTestIn\n")
+				self.file.write(tabs+"guard m.i%"+str(outputsNumber)+" == "+str(i)+"\n")
+				if e != element.outputs[-1]:
+					self.file.write(tabs+"\n")
+				i=i+1
+			if element.parent.isContent and element.parent.finalStates.count(element)>0: # Composite parent
+				self.file.write("\n"+tabs+"transition -> final_"+str(element.parent.ID)+"\n")
+				self.file.write(tabs+"event m : harness?bigTestIn\n")
+				self.file.write(tabs+"guard m.i%"+str(outputsNumber)+" > "+str(i-1)+"\n")
+			
+			self.file.write(outertabs+"}\n\n")
+	def finalize(self,element):
+		self.depth=self.depth-1
+		tabs=""
+		for _ in range(0,self.depth):
+			tabs=tabs+"\t"
+		if self.firstRegion and not element.isContent:
+			self.file.write("\t//} End of first implicit region\n\n")
+			self.firstRegion = False
+		elif element.isContent: 
+			self.file.write(tabs+"}//end of composite\n\n")
+		else: 
+			self.file.write(tabs+"}//end of region\n\n")
 	
 	
 conf = Configuration()
@@ -326,7 +360,7 @@ conf.setRegions(1,1)
 conf.setStates(2,2)
 conf.setOutputs(1,2)
 conf.setDepth(2)
-conf.setCompositeRatio(0.8)
+conf.setCompositeRatio(0.5)
 
 tree=Initializer(conf).regions
 DumpThingml(tree)
