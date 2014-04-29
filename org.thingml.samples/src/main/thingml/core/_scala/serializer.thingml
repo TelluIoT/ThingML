@@ -1,5 +1,9 @@
 import "../serializer.thingml"
 
+datatype SInteger	
+	@java_type "static Short";
+
+
 //Defines the way the datatypes of the ThingML framework are serialized in Scala
 //TODO: do it for all the remaining datatypes
 thing fragment SerializerScala  includes ArraySerializer

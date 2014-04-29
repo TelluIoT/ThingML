@@ -55,7 +55,8 @@ thing fragment PacketManager {
     function storeByte(b : Byte) do
         //print("store byte " + b + " at index " + index)
         if (index == MAX_PACKET_SIZE) do
-            error("BUFFER OVERFLOW: " + b + " has been ignored. Current index = " + index)
+            //error("BUFFER OVERFLOW: " + b + " has been ignored. Current index = " + index)
+            error("BUFFER OVERFLOW: a byte has been ignored")
         end
         if (index < MAX_PACKET_SIZE) do
 	 	  buffer[index] = b

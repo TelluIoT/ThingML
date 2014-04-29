@@ -3,6 +3,10 @@ import "../serializer.thingml"
 //Defines the way the datatypes of the ThingML framework are serialized in cpp
 //TODO: do it for all the remaining datatypes
 
+datatype SInteger	
+	@c_type "static int"
+	@c_byte_size "2";
+
 thing fragment ArraySerializerCPP includes PacketManager, OutputByteArrayMsgs
 @c_header "
 #include <string>

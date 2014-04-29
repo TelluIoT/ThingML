@@ -31,14 +31,14 @@ thing ThingSerializer includes ArraySerializerCPP, InputByteArrayMsgs {
 thing ThingDeserializer includes ArrayDeserializerCPP {
 
     function forward() do
-    	'printf("forwar is called...\n");'
+    	'printf("forward is called...\n");'
 		index = DATA_POSITION
 		readonly var code : Byte = buffer[CODE_POSITION]
-		'printf("code is called %d...\n", ' & code & ');'
+		'printf("code is  %d...\n", ' & code & ');'
 		if (code == 1) do
 			var chars : Char[1024]
 			var data : String = deserializeString(chars)
-			'printf("data is called \'%s\'...\n", ' & data & ');'
+			'printf("data is received  \'%s\'...\n", ' & data & ');'
 		end
 	end
 
@@ -58,7 +58,6 @@ configuration SerializeDeserialize
   @debug_fifo "true"
   @debug_message_send ".*"
   @debug_message_receive ".*"
-  @add_c_libraries "pthread websockets tinyws"
 {
 
 	instance serializer : ThingSerializer
