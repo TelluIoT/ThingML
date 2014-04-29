@@ -30,6 +30,26 @@ thing fragment SerializerScala  includes ArraySerializer
             i = i + 1
         end
     end
+    
+    //String with length
+    function serializeStringWithLength(str : String) 
+    do
+    	var remain : SInteger = lengthString
+        var size : UInt8 = '' & str & '.size;'
+        if(size + 1 > remain) do // 1 byte is used to store the length of a string
+        	print "string is too long, cutting the string"
+        	size = remain	
+        end
+        storeByte(size)
+        remain = remain - 1
+        var bytes_to_write : Integer = remain
+        var i : Integer = 0
+        while(i < bytes_to_write) do
+            storeByte('' & str & '(' & i & ').toByte')
+            remain = remain -1
+            i = i + 1
+        end
+    end
 }
 
 thing fragment DeserializerScala includes ArrayDeserializer {
@@ -62,6 +82,23 @@ thing fragment DeserializerScala includes ArrayDeserializer {
             i = i + 1
         end
         //print("deserialize = " + result)
+        return result
+    end
+    
+    //String with length
+    function deserializeStringWithLength() : String 
+    do
+        var size : UInt8 = readByte()
+        if(size > lengthString) do
+        	print "something other than the length byte of the string is read..."
+        	size = lengthString
+        end
+        var result : String = ""
+        var i : Integer = 0
+        while(i < size) do
+        	result = result + '' & readByte() & '.toChar'
+            i = i + 1
+        end
         return result
     end
 }
