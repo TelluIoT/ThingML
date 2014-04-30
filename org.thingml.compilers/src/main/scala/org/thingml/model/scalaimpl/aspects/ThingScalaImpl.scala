@@ -60,7 +60,7 @@ case class ThingScalaImpl (self : Thing) {
     }
   }
   
-  def getHTTPRegistry : Option[String] = {
+  /*def getHTTPRegistry : Option[String] = {
     self.allAnnotations.filter {
       a => a.getName == "http_registry"
     }.headOption match {
@@ -71,7 +71,7 @@ case class ThingScalaImpl (self : Thing) {
           return None
         }
     }
-  }  
+  }*/
 
   def allTransitionsWithAction() : java.util.List[Transition] = {
     //var result = new ArrayList[Handler]()
