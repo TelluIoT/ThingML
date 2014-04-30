@@ -321,11 +321,11 @@ object JavaGenerator {
           case p =>
             "final " + p.getType.Java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
         }.mkString(", ")
-        Context.builder append ") { return new " + Context.firstToUpper(m.getName()) + "Event(this, "
+        Context.builder append ") { return new " + Context.firstToUpper(m.getName()) + "Event(this"
         Context.builder append m.getParameters.collect {
           case p =>
             Context.protectJavaKeyword(p.getName)
-        }.mkString(", ")
+        }.mkString(", ", ", ", "")
         Context.builder append "); }\n\n"
         Context.builder append "}\n\n"
 
@@ -428,15 +428,15 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         } else {
           builder append "final List<Region> regions_" + c.getName + " : = Collections.EMPTY_LIST;\n"
         }
-        if (c.isInstanceOf[StateMachine]) {
+        /*if (c.isInstanceOf[StateMachine]) {
           builder append "return "
-        } else {
-          builder append "final Composite state_" + c.getName + " = "
-        }
+        } else {*/
+          builder append "final CompositeState state_" + c.getName + " = "
+        //}
         if (numReg>1) {//TODO: we should also use annotations to avoid parallel stuff on single threaded platforms.
-          "new CompositeStateMT(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + " new NullStateAction(), regions_" + c.getName + ", false);\n"//TODO Action and history
+          builder append "new CompositeStateMT(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + " new NullStateAction(), regions_" + c.getName + ", false);\n"//TODO Action and history
         } else {
-          "new CompositeStateST(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + " new NullStateAction(), regions_" + c.getName + ", false);\n"//TODO Action and history
+          builder append "new CompositeStateST(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + " new NullStateAction(), regions_" + c.getName + ", false);\n"//TODO Action and history
         }
         builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + c.getName + ");\n"
       case s: State =>
@@ -489,6 +489,9 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     builder append "public class " + Context.firstToUpper(self.getName) + "extends Component " + traits + " {\n\n"
 
+    builder append "//Behavior\n"
+    builder append "private CompositeState state_" + self.allStateMachines.first.getName + ";\n\n"
+
     builder append "//Attributes\n"
     self.allPropertiesInDepth.foreach {p =>
         builder append "private "
@@ -539,17 +542,17 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       buildState(builder, b)
     }
     
-    builder append "}\n"
+    //builder append "}\n"
     builder append "}\n\n"
 
     //TODO: restart from here
-    self.allStateMachines.foreach { b =>
+    /*self.allStateMachines.foreach { b =>
       b.generateJava()
     }
 
     self.allFunctions.foreach {
       f => f.generateJava()
-    }
+    } */
 
     /*if(self.hasAnnotation("Java_def")) {
      builder append self.annotation("Java_def")
