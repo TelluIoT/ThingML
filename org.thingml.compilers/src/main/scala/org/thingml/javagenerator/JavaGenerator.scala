@@ -321,7 +321,7 @@ object JavaGenerator {
           case p =>
             "final " + p.getType.Java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
         }.mkString(", ")
-        Context.builder append "{ return new " + Context.firstToUpper(m.getName()) + "Event(this, "
+        Context.builder append ") { return new " + Context.firstToUpper(m.getName()) + "Event(this, "
         Context.builder append m.getParameters.collect {
           case p =>
             Context.protectJavaKeyword(p.getName)
@@ -339,7 +339,7 @@ object JavaGenerator {
         }.mkString(", ")
         Context.builder append ") {\n\n"
         Context.builder append "super(type);\n"
-        Context.builder append m.getParameters.foreach {
+        m.getParameters.foreach {
           p =>
             Context.builder append "params.put("
             Context.builder append "\"" + Context.protectJavaKeyword(p.getName) + "\", " + Context.protectJavaKeyword(p.getName)
@@ -444,7 +444,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + s.getName + ");\n"
     }
 
-    builder append "final List<Handler> transitions_" + s.getName + " = new ArrayList()\n"
+    builder append "final List<Handler> transitions_" + s.getName + " = new ArrayList();\n"
     s.getOutgoing.foreach { t =>
       if (t.getEvent != null) {
         t.getEvent.foreach {
@@ -490,7 +490,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     builder append "public class " + Context.firstToUpper(self.getName) + "extends Component " + traits + " {\n\n"
 
     builder append "//Attributes\n"
-    builder append self.allPropertiesInDepth.foreach {p =>
+    self.allPropertiesInDepth.foreach {p =>
         builder append "private "
         if (!p.isChangeable) {
           builder append "final "
@@ -503,7 +503,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       p => builder append "private Port " + p.getName + "_port;\n"
     }
 
-    builder append "//Constructor"
+    builder append "//Constructor\n"
     builder append "public " + Context.firstToUpper(self.getName) + "("
     builder append "super();\n"
     builder append self.allPropertiesInDepth.collect {
@@ -511,7 +511,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         p.getType.Java_type(p.getCardinality != null) + " " + p.Java_var_name
     }.mkString(", ")
     builder append ") {\n"
-    builder append self.allPropertiesInDepth.foreach { p =>
+    self.allPropertiesInDepth.foreach { p =>
       builder append "this." + p.Java_var_name + " = " + p.Java_var_name + ";\n"
     }
     builder append "}\n\n"

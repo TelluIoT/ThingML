@@ -46,15 +46,16 @@ import org.eclipse.emf.ecore.util.EcoreUtil
 import javax.swing._
 import java.awt.event.{ActionEvent, ActionListener}
 import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
+
 import org.thingml.cgenerator.CGenerator
 import org.thingml.cppgenerator.CPPGenerator
+import org.thingml.javagenerator.JavaGenerator
 import org.thingml.scalagenerator.ScalaGenerator
 //import org.thingml.java.pauwaregenerator.PauWareGenerator
 import org.thingml.javagenerator.gui.SwingGenerator
 import org.thingml.thingmlgenerator.ThingMLGenerator
-import org.thingml.kotlingenerator.KotlinGenerator
-//import org.thingml.scalagenerator.coap.ScalaCoAPGenerator
-//import org.thingml.mediatorgenerator.LoggerGenerator
+//import org.thingml.kotlingenerator.KotlinGenerator
+
 import java.io._
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
@@ -104,16 +105,16 @@ class ThingMLPanel extends JPanel {
   val bC = new JMenuItem("Posix C")
   val bCPP = new JMenuItem("C++")
   val rosC = new JMenuItem("ROS Node")
-  val bScala = new JMenuItem("Scala/SMaC")
+  val bJava = new JMenuItem("Java/JaSM")
   val bSwing = new JMenuItem("Java/Swing")
+  val bScala = new JMenuItem("Scala/SMaC")
   val bThingML = new JMenuItem("ThingML/Comm")
   val bThingML2 = new JMenuItem("ThingML/Comm2")
-  val bKotlin = new JMenuItem("Kotlin")
-  //var bCoAP = new JMenuItem("Scala/CoAP")
-  var bKevoree = new JMenuItem("Java/Kevoree")
+
+  //val bKotlin = new JMenuItem("Kotlin")
+  //var bKevoree = new JMenuItem("Java/Kevoree")
   //var bPauWare = new JMenuItem("Experimental/PauWare")
-  //var bLogger = new JMenuItem("Logger")
-  
+
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
   filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -209,23 +210,42 @@ class ThingMLPanel extends JPanel {
     })
 
   bScala.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
-        println("Input file : " + targetFile)
-        if (targetFile.isEmpty) 
-          return
-        try {
-          val thingmlModel = loadThingMLmodel(targetFile.get)
-          thingmlModel.allConfigurations.foreach{c =>
-			      val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
-			      javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
-            ScalaGenerator.compileAndRun(c, thingmlModel)                                                                      
-          }
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty)
+        return
+      try {
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        thingmlModel.allConfigurations.foreach{c =>
+          val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
+          javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+          ScalaGenerator.compileAndRun(c, thingmlModel)
         }
-        catch {
-          case t : Throwable => t.printStackTrace()
+      }
+      catch {
+        case t : Throwable => t.printStackTrace()
+      }
+    }
+  })
+
+  bJava.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty)
+        return
+      try {
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        thingmlModel.allConfigurations.foreach{c =>
+          val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
+          javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+          JavaGenerator.compileAndRun(c, thingmlModel)
         }
-      }         
-    })
+      }
+      catch {
+        case t : Throwable => t.printStackTrace()
+      }
+    }
+  })
   
   bSwing.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
@@ -277,25 +297,8 @@ class ThingMLPanel extends JPanel {
         }
       }         
     })
-
-  /*bCoAP.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
-        println("Input file : " + targetFile)
-        if (targetFile.isEmpty)
-          return
-        try {
-          val thingmlModel = loadThingMLmodel(targetFile.get)
-          thingmlModel.allConfigurations.foreach{c =>
-            ScalaCoAPGenerator.compileAndRun(c,true)
-          }
-        }
-        catch {
-          case t : Throwable => t.printStackTrace()
-        }
-      }
-    })*/
   
-  bKevoree.addActionListener(new ActionListener{
+   /*bKevoree.addActionListener(new ActionListener{
       def actionPerformed(e:ActionEvent){
         println("Input file : "+targetFile)
         if(targetFile.isEmpty) return;
@@ -310,9 +313,9 @@ class ThingMLPanel extends JPanel {
           case t : Throwable => t.printStackTrace()
         }
       }
-    })
+    })*/
   
-    bKotlin.addActionListener(new ActionListener{
+    /*bKotlin.addActionListener(new ActionListener{
       def actionPerformed(e:ActionEvent){
         println("Input file : "+targetFile)
         if(targetFile.isEmpty) return;
@@ -327,7 +330,7 @@ class ThingMLPanel extends JPanel {
           case t : Throwable => t.printStackTrace()
         }
       }
-    })
+    })*/
   
     /*bPauWare.addActionListener(new ActionListener{
       def actionPerformed(e:ActionEvent){
@@ -346,38 +349,18 @@ class ThingMLPanel extends JPanel {
       }
     })*/
     
-    /*bLogger.addActionListener(new ActionListener{
-      def actionPerformed(e:ActionEvent){
-        println("Input file : "+targetFile)
-        if(targetFile.isEmpty) return;
-        
-        try{
-          val thingmlModel = loadThingMLmodel(targetFile.get)
-          var tFilepath :String= targetFile.get.getParent
-          var filename :String = targetFile.get.getName
-          thingmlModel.allConfigurations.foreach{c => 
-            LoggerGenerator.compileAndRun(c, thingmlModel, tFilepath, filename)
-          }
-        }
-        catch {
-          case t : Throwable => t.printStackTrace()
-        }
-      }
-    })*/
-    
   compilersMenu.add(b)
   compilersMenu.add(bC)
   compilersMenu.add(bCPP)
   compilersMenu.add(rosC)
-  compilersMenu.add(bScala)
+  compilersMenu.add(bJava)
   compilersMenu.add(bSwing)
+  compilersMenu.add(bScala)
   compilersMenu.add(bThingML)
   compilersMenu.add(bThingML2)
-  //compilersMenu.add(bCoAP)
-  compilersMenu.add(bKevoree)
-  compilersMenu.add(bKotlin)
+  //compilersMenu.add(bKevoree)
+  //compilersMenu.add(bKotlin)
   //compilersMenu.add(bPauWare)
-  //compilersMenu.add(bLogger)
   menubar.add(compilersMenu)
   
   def loadThingMLmodel(file : File) = {
