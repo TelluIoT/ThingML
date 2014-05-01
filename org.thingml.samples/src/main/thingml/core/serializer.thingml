@@ -19,6 +19,7 @@ thing fragment PacketManager {
     readonly property lengthInteger : Byte = 2    
     readonly property lengthString : Byte = 8
     readonly property lengthUInt16 : Byte = 2
+    readonly property remainLengthString : Byte = 8 //should be equal to lengthString
     
     
     readonly property MAX_PACKET_SIZE : Integer = 16
@@ -38,8 +39,8 @@ thing fragment PacketManager {
      do
         index = 0
 	 	storeByte(1) // source addr (not used)
-	 	storeByte(0) // target addr (not used)
-	 	storeByte(0) // frame num (not used)
+	 	storeByte(1) // target addr (not used)
+	 	storeByte(1) // frame num (not used)
         CODE_POSITION = index
         storeByte(code)
         LENGTH_POSITION = index
@@ -129,7 +130,7 @@ thing fragment ArraySerializer includes PacketManager, OutputByteArrayMsgs {
         while(i < stop) do
           current = buffer[i]
           if (current == START_BYTE or current == STOP_BYTE or current == ESCAPE_BYTE) do
-              escaped[j] = ESCAPE_BYTE  
+              escaped[j] = ESCAPE_BYTE 
               j = j + 1
           end
           escaped[j] = current
@@ -146,6 +147,7 @@ thing fragment ArraySerializer includes PacketManager, OutputByteArrayMsgs {
     end
     
     function send() do
+    	remainLengthString = lengthString
         out!write_bytes(escape())
     end
 }
