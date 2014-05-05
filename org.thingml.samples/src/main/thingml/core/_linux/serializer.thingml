@@ -3,10 +3,6 @@ import "../serializer.thingml"
 //Defines the way the datatypes of the ThingML framework are serialized in cpp
 //TODO: do it for all the remaining datatypes
 
-datatype SInteger	
-	@c_type "static int"
-	@c_byte_size "2";
-
 thing fragment ArraySerializerCPP includes PacketManager, OutputByteArrayMsgs
 @c_header "
 #include <string>
@@ -15,6 +11,24 @@ thing fragment ArraySerializerCPP includes PacketManager, OutputByteArrayMsgs
     required port out @sync_send "true" {
         sends write_bytes    
     }
+    
+    function bytesToString(bytes : Byte[256], str : String) : String 
+    do
+    	var i : Integer = 0
+    	var current : Byte
+    	var leave : Boolean = false
+    	while(i < 256 and not leave) do
+    		current = bytes[i]
+    		str[i] = bytes[i]
+    		i = i + 1
+    		if((not (current == ESCAPE_BYTE)) and (bytes[i] == STOP_BYTE)) do
+    			str[i] = bytes[i]
+    			str[i+1] = '\'\0\''
+    			leave = true
+    		end
+    	end
+    	return str
+    end
     
     function escape(escaped : Byte[34]) : Byte[34] do
     
@@ -27,7 +41,7 @@ thing fragment ArraySerializerCPP includes PacketManager, OutputByteArrayMsgs
         while(i < stop) do
           current = buffer[i]
           if (current == START_BYTE or current == STOP_BYTE or current == ESCAPE_BYTE) do
-              escaped[j] = ESCAPE_BYTE  
+              escaped[j] = ESCAPE_BYTE
               j = j + 1
           end
           escaped[j] = current
@@ -55,19 +69,18 @@ thing fragment ArraySerializerCPP includes PacketManager, OutputByteArrayMsgs
     //String
     function serializeString(str : String) 
     do
-    	var remain : SInteger = lengthString
         var size : UInt8 = 'strlen(' & str & ');'
-        if(size + 1 > remain) do // 1 byte is used to store the length of a string
+        if(size + 1 > remainLengthString) do // 1 byte is used to store the length of a string
         	'printf("string is too long, cutting the string\n");'
-        	size = remain	
+        	size = remainLengthString	
         end
         storeByte(''& size &' & 0xff')
-        remain = remain - 1
-        var bytes_to_write : Integer = remain
+        remainLengthString = remainLengthString - 1
+        var bytes_to_write : Integer = remainLengthString
         var i : Integer = 0
         while(i < bytes_to_write) do
             storeByte('' & str[i] & ' & 0xff')
-            remain = remain -1
+            remainLengthString = remainLengthString -1
             i = i + 1
         end
     end
@@ -75,6 +88,7 @@ thing fragment ArraySerializerCPP includes PacketManager, OutputByteArrayMsgs
     function send() do
     	var escaped : Byte[34]
         out!write_bytes(escape(escaped))
+        remainLengthString = lengthString
     end
     
     function ssetHeader(code : Byte, length : Byte) do
@@ -105,13 +119,26 @@ thing fragment ArrayDeserializerCPP includes PacketManager, InputByteArrayMsgs
         	'printf("something other than the length byte of the string is read...\n");'
         	size = lengthString
         end
+        remainLengthString = remainLengthString + 1
     	'strcpy(' & str & ', "");'
         var i : Integer = 0
         while(i < size) do
         	str[i] = readByte()
             i = i + 1
+            remainLengthString = remainLengthString + 1
         end
+        str[i] = '\'\0\''
         return str
+    end
+    
+    function stringToBytes(str : String, bytes : Byte[256]) : Byte[256]
+    do
+		var i : Integer = 0
+		while(not(str[i] == '\'\0\'') and i < 256) do
+			bytes[i] = str[i]
+			i = i + 1
+		end
+		return bytes
     end
     
     function receive(bytes : Byte[34]) do //34 max size with start/stop bytes + all other bytes escaped = 2*16 + 2

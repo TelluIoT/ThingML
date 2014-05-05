@@ -12,121 +12,17 @@
 //for more details see http://lonesysadmin.net/2013/02/22/error-while-loading-shared-libraries-cannot-open-shared-object-file/
 
 import "../websocket.thingml"
+import "serializer.thingml"
 import "timer.thingml"
-
-datatype WebSocketMirrorServer
-@c_type "WebSocketMirrorServer*";
-
-thing WebSMirrorServer includes WebSocketServer
-@c_header "
-#include <stdlib.h>
-#include <cstdarg>
-#include \"tinyws/client-server/WebSocketFacade.h\"
-#include \"tinyws/client-server/WebSocketClient.h\"
-#include \"tinyws/client-server/WebSocketMirrorServer.h\"
-
-using namespace WebSockets;
-"
-{
-    
-    property server : WebSocketMirrorServer
-    
-	function on_open_callback()
-		@c_prototype "void on_open_callback(void *_instance, ...)"
-		@c_instance_var_name "(WebSMirrorServer_Instance *) _instance"
-    do
-    	'printf("\tWebSocketMirrorServer: on_open_callback");'
-    	lifecycle!onOpen()
-    end
-    
-    function on_close_callback()
-		@c_prototype "void on_close_callback(void *_instance, ...)"
-		@c_instance_var_name "(WebSMirrorServer_Instance *) _instance"
-    do
-    	'printf("\tWebSocketMirrorServer: on_close_callback");'
-    	lifecycle!onClose()
-    end
-    
-    function on_error_callback()
-		@c_prototype "void on_error_callback(void *_instance, ...)"
-		@c_instance_var_name "(WebSMirrorServer_Instance *) _instance"
-    do
-        'va_list arguments;'
-        'va_start(arguments, _instance);'
-        'char* message = va_arg(arguments, char*);'
-    	'va_end(arguments);'
-    	'printf("\tWebSocketMirrorServer: on_error_callback with message -> %s\n", message);'
-    	err!onError('message')
-    end
-    
-    function on_message_callback()
-		@c_prototype "void on_message_callback(void *_instance, ...)"
-		@c_instance_var_name "(WebSMirrorServer_Instance *) _instance"
-    do
-        'va_list arguments;'
-        'va_start(arguments, _instance);'
-        'char* message = va_arg(arguments, char*);'
-    	'va_end(arguments);'
-    	'printf("\tWebSocketMirrorServer: on_message_callback with message -> %s\n", message);'
-    	messaging!onMessage('message')
-    end
-    
-    function init_server()
-    do
-    	server = 'WebSocketFacade::InitWebSocketMirrorServer(atoi('& _port &'), NULL);'
-    	'ThingMLCallback* tml_op_open_callback = new ThingMLCallback(on_open_callback, _instance);'
-		'ThingMLCallback* tml_op_close_callback = new ThingMLCallback(on_close_callback, _instance);'
-		'ThingMLCallback* tml_op_error_callback = new ThingMLCallback(on_error_callback, _instance);'
-		'ThingMLCallback* tml_op_message_callback = new ThingMLCallback(on_message_callback, _instance);'
-		''& server &'->setCallbacks(tml_op_open_callback, tml_op_close_callback, tml_op_message_callback, tml_op_error_callback);'
-    end
-      
-    statechart behavior init Init {
-    
-        state Init {
-            
-            on entry do
-            	//print("\tINIT ON PORT: " + _port)
-                'printf("\tINIT ON PORT: %s\n",'& _port &');'
-            	init_server()
-            end
-            
-            transition -> Started
-            event lifecycle?start_server
-            
-        }
-        
-        state Started {
-            
-            on entry do
-            	'printf("\tserver attempts to start\n");'
-            	'' & server & '->open();'
-                lifecycle!server_launched()
-            end
-            
-            transition -> Stopped
-            event lifecycle?stop_server
-            
-        }
-        
-        state Stopped {
-            
-            on entry '' & server & '->close();'
-            
-            transition -> Started
-            event lifecycle?start
-            
-        }
-                
-    }
-    
-}
 
 datatype WebSocketClient
 @c_type "WebSocketClient*";
 
-thing WebSClient includes WebSocketServer
+thing WebSClient includes WebSocketServer, ArraySerializerCPP, ArrayDeserializerCPP
 @c_header "
+#include <stdio.h>
+#include <string>
+#include <iostream>
 #include <stdlib.h>
 #include <cstdarg>
 #include \"tinyws/client-server/WebSocketFacade.h\"
@@ -140,11 +36,15 @@ using namespace WebSockets;
     
     property status : WS_ERR
     
+    provided port serialized @sync_send "true" {
+    	sends receive_bytes
+    	receives write_bytes
+    }
+        
     function on_open_callback_client()
 		@c_prototype "void on_open_callback_client(void *_instance, ...)"
 		@c_instance_var_name "(WebSClient_Instance *) _instance"
     do
-    	//print("\tWebSocketClient: on_open_callback")
     	'printf("\tWebSocketClient: on_open_callback\n");'
     	lifecycle!onOpen()
     end
@@ -153,7 +53,6 @@ using namespace WebSockets;
 		@c_prototype "void on_close_callback_client(void *_instance, ...)"
 		@c_instance_var_name "(WebSClient_Instance *) _instance"
     do
-    	//print("\tWebSocketClient: on_close_callback")
     	'printf("\tWebSocketClient: on_close_callback\n");'
     	lifecycle!onClose()
     end
@@ -179,7 +78,10 @@ using namespace WebSockets;
         'char* message = va_arg(arguments, char*);'
     	'va_end(arguments);'
     	'printf("\tWebSocketClient: on_message_callback with message -> %s\n", message);'
-    	messaging!onMessage('message')
+    	var bytes : Byte[256]
+    	'f_WebSClient_stringToBytes((WebSClient_Instance *) _instance, message, ' & bytes & ');'
+    	//stringToBytes('message', bytes)
+    	serialized!receive_bytes(bytes)
     end
     
     function init_client()
@@ -192,6 +94,20 @@ using namespace WebSockets;
 		''& client &'->setCallbacks(tml_op_open_callback, tml_op_close_callback, tml_op_message_callback, tml_op_error_callback);'
     end
     
+    function forward()
+    do
+    	'printf("forward is called...\n");'
+		index = DATA_POSITION
+		var code : Byte = buffer[CODE_POSITION]
+		'printf("code is  %d...\n", ' & code & ');'
+		if (code == 1) do
+			var chars : Char[1024]
+			var data : String = deserializeString(chars)
+			'printf("data is received  \'%s\'...\n", ' & data & ');'
+			messaging!onMessage(data)
+		end
+	end
+    
     statechart behavior init Init {
     
         state Init {
@@ -201,48 +117,70 @@ using namespace WebSockets;
                	init_client()
             end
             
-            transition -> Started
+            transition -> Start
             event lifecycle?start_client
             
         }
         
-        state Started {
-            
+        state Start {
             on entry do
             	'printf("\tclient attempts to establish connection\n");'
-            	'' & client & '->open();'
+                 '' & client & '->open();'
                 lifecycle!client_launched()
             end
             
+            transition -> Serve
+            event messaging?send
+        }
+        
+        state Serve {
+            on entry do
+            	'printf("\tclient is in a serving state\n");'
+            end
+            
             internal event s : messaging?send
-            action '' & client & '->sendMessage(' & s.msg & ');'
+            action do
+                ssetHeader(1, 5) //length of the data chunck + 1 byte to stor a string length
+                serializeString("ping")
+                send()
+            end
             
             transition -> Stopped
             event lifecycle?stop_client
             
+            internal event e : serialized?write_bytes
+            action do
+				var mess : Char[1024] = ""
+				bytesToString(e.b, mess)
+				'' & client & '->sendMessage('& mess &');'
+            end
+            
+            internal event e: in?receive_bytes
+            action do
+            	print "receieved bytes on IN port\n"
+            	receive(e.b)
+            end
         }
         
         state Stopped {
             
             on entry '' & client & '->close();'
             
-            transition -> Started
+            transition -> Start
             event lifecycle?start_client
         }
                 
-    }
-    
-    
+    }  
 }
 
-thing Test includes WebSocketTest, ClockMsgs {
+thing Lifecicle includes WebSocketTest, ClockMsgs {
     required port signal {
         receives clock_tick
     }
     
-    property pingmessage : String = "ping message"
+    property pingmessage : String = "ping"
     
-    statechart behavior init RunServer {
+    statechart behavior init RunClient {
 
         internal event e : lifecycle?onOpen
         action print("test::onOpen")
@@ -256,19 +194,9 @@ thing Test includes WebSocketTest, ClockMsgs {
         internal event m : messaging?onMessage
         action
         do
-        	//print("test::onMessage" + m.msg)
         	'printf("test::onMessage %s\n",' & m.msg &');'
         end
         
-        state RunServer {
-            on entry do
-                print "\trunning server...\n"
-                lifecycle!start_server()
-            end
-            
-            transition -> RunClient
-            event e : lifecycle?server_launched
-        }
         
         state RunClient {
             on entry do
@@ -292,7 +220,7 @@ thing Test includes WebSocketTest, ClockMsgs {
     }
 }
 
-configuration testWS
+configuration WSClientSerialization
   @output_folder "/home/tmp"
   @debug "true"
   @debug_fifo "true"
@@ -301,22 +229,20 @@ configuration testWS
   @add_c_libraries "pthread websockets tinyws"
 {
 
-    instance server : WebSMirrorServer    
-       set server._port = "7681"    
+ 
     instance client : WebSClient
        set client._port = "7681"
        set client._host = "localhost"
        
+    connector client.out => client.serialized
+    connector client.in =>client.serialized
+       
     instance clock : ClockLinux
     	set clock.period = 5000    
-    instance test : Test
+    instance lifecicle : Lifecicle
      
-    connector test.signal => clock.signal
-    connector test.err => client.err
-    connector test.lifecycle => client.lifecycle
-    connector test.messaging => client.messaging
-    
-    connector test.err => server.err
-    connector test.lifecycle => server.lifecycle
-    connector test.messaging => server.messaging
+    connector lifecicle.signal => clock.signal
+    connector lifecicle.err => client.err
+    connector lifecicle.lifecycle => client.lifecycle
+    connector lifecicle.messaging => client.messaging
 }
