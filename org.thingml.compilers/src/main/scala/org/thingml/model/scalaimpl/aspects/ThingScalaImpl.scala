@@ -79,6 +79,13 @@ case class ThingScalaImpl (self : Thing) {
         s.getOutgoing.collect{case o if (o.getAction != null)=> o}
     }.flatten.toList
   }
+
+  def allInternalTransitionsWithAction() : java.util.List[InternalTransition] = {
+    //var result = new ArrayList[Handler]()
+    self.getBehaviour.collect{case b => b.allStates}.flatten.collect{case s =>
+      s.getInternal.collect{case o if (o.getAction != null)=> o}
+    }.flatten.toList
+  }
   
   def allFragments: ArrayList[Thing] = {
     return ThingMLHelpers.allThingFragments(self)

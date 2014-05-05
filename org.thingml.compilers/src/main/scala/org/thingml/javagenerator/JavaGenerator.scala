@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 /**
- * This code generator targets the KOSM Framework
- * see https://github.com/brice-morin/kosm
+ * This code generator targets the JaSM Framework
+ * see https://github.com/brice-morin/jasm
  * @author: Brice MORIN <brice.morin@sintef.no>
  */
 package org.thingml.javagenerator
@@ -35,9 +35,11 @@ import org.sintef.thingml._
 
 import org.thingml.utils.log.Logger
 import org.thingml.graphexport.ThingMLGraphExport
+import scala.collection.immutable.HashMap
 
 object Context {
-  val builder = new StringBuilder()
+
+  val builder = new Hashtable[String, StringBuilder]()
 
   var thing: Thing = _
   var pack: String = _
@@ -60,42 +62,52 @@ object Context {
     thing = null
     pack = null
   }
+
+  def getBuilder(name : String) : StringBuilder = {
+    if (builder.get(name) == null) {
+      println("--debug--- " + name)
+      val b: StringBuilder = new StringBuilder()
+      builder.put(name, b)
+      return b
+    } else
+      return builder.get(name)
+  }
 }
 
 object JavaGenerator {
-  implicit def kotlinGeneratorAspect(self: Thing): ThingJavaGenerator = ThingJavaGenerator(self)
+  implicit def javaGeneratorAspect(self: Thing): ThingJavaGenerator = ThingJavaGenerator(self)
 
-  implicit def kotlinGeneratorAspect(self: Configuration): ConfigurationJavaGenerator = ConfigurationJavaGenerator(self)
-  implicit def kotlinGeneratorAspect(self: Instance): InstanceJavaGenerator = InstanceJavaGenerator(self)
-  implicit def kotlinGeneratorAspect(self: Connector): ConnectorJavaGenerator = ConnectorJavaGenerator(self)
+  implicit def javaGeneratorAspect(self: Configuration): ConfigurationJavaGenerator = ConfigurationJavaGenerator(self)
+  implicit def javaGeneratorAspect(self: Instance): InstanceJavaGenerator = InstanceJavaGenerator(self)
+  implicit def javaGeneratorAspect(self: Connector): ConnectorJavaGenerator = ConnectorJavaGenerator(self)
 
-  implicit def kotlinGeneratorAspect(self: EnumerationLiteral): EnumerationLiteralJavaGenerator = EnumerationLiteralJavaGenerator(self)
+  implicit def javaGeneratorAspect(self: EnumerationLiteral): EnumerationLiteralJavaGenerator = EnumerationLiteralJavaGenerator(self)
 
-  implicit def kotlinGeneratorAspect(self: Variable): VariableJavaGenerator = VariableJavaGenerator(self)
+  implicit def javaGeneratorAspect(self: Variable): VariableJavaGenerator = VariableJavaGenerator(self)
 
-  implicit def kotlinGeneratorAspect(self: Type) = self match {
+  implicit def javaGeneratorAspect(self: Type) = self match {
     case t: PrimitiveType => PrimitiveTypeJavaGenerator(t)
     case t: Enumeration   => EnumerationJavaGenerator(t)
     case _                => TypeJavaGenerator(self)
   }
 
-  implicit def kotlinGeneratorAspect(self: TypedElement) = self match {
+  implicit def javaGeneratorAspect(self: TypedElement) = self match {
     case t: Function => FunctionJavaGenerator(t)
     case _           => TypedElementJavaGenerator(self)
   }
 
-  implicit def kotlinGeneratorAspect(self: Handler) = self match {
+  implicit def javaGeneratorAspect(self: Handler) = self match {
     case h: Transition         => HandlerJavaGenerator(h)
     case h: InternalTransition => HandlerJavaGenerator(h)
   }
 
-  implicit def kotlinGeneratorAspect(self: State) = self match {
+  implicit def javaGeneratorAspect(self: State) = self match {
     case s: StateMachine   => StateMachineJavaGenerator(s)
     case s: CompositeState => CompositeStateJavaGenerator(s)
     case s: State          => StateJavaGenerator(s)
   }
 
-  implicit def kotlinGeneratorAspect(self: Action) = self match {
+  implicit def javaGeneratorAspect(self: Action) = self match {
     case a: SendAction            => SendActionJavaGenerator(a)
     case a: VariableAssignment    => VariableAssignmentJavaGenerator(a)
     case a: ActionBlock           => ActionBlockJavaGenerator(a)
@@ -110,7 +122,7 @@ object JavaGenerator {
     case _                        => ActionJavaGenerator(self)
   }
 
-  implicit def kotlinGeneratorAspect(self: Expression) = self match {
+  implicit def javaGeneratorAspect(self: Expression) = self match {
     case exp: OrExpression           => OrExpressionJavaGenerator(exp)
     case exp: AndExpression          => AndExpressionJavaGenerator(exp)
     case exp: LowerExpression        => LowerExpressionJavaGenerator(exp)
@@ -186,14 +198,13 @@ object JavaGenerator {
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
 
-    var w = new PrintWriter(new FileWriter(new File(outputDir + "/" + cfg.getName() + ".kt")));
-    w.println(code._1);
-    w.close();
+    code.foreach{case (file, code) =>
+      val w = new PrintWriter(new FileWriter(new File(outputDir + "/" + file)));
+      w.println(code.toString);
+      w.close();
+    }
 
-    w = new PrintWriter(new FileWriter(new File(outputDir + "/Main.kt")));
-    w.println(code._2);
-    w.close();
-
+    //TODO: update POM
     var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/kotlinpom.xml"), "utf-8").getLines().mkString("\n")
     pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
 
@@ -210,7 +221,7 @@ object JavaGenerator {
 
     //TODO: add other maven dependencies
 
-    w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
+    val w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
     w.println(pom);
     w.close();
 
@@ -226,7 +237,7 @@ object JavaGenerator {
       val dots = ThingMLGraphExport.allGraphviz(ThingMLHelpers.findContainingModel(cfg))
       for (name <- dots.keySet) {
         System.out.println(" -> Writing file " + name + ".dot")
-        var w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".dot"))
+        val w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".dot"))
         w.println(dots.get(name))
         w.close
       }
@@ -240,7 +251,7 @@ object JavaGenerator {
       val gml = ThingMLGraphExport.allGraphML(ThingMLHelpers.findContainingModel(cfg))
       for (name <- gml.keySet) {
         System.out.println(" -> Writing file " + name + ".graphml")
-        var w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".graphml"))
+        val w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".graphml"))
         w.println(gml.get(name))
         w.close
       }
@@ -278,81 +289,65 @@ object JavaGenerator {
     runtime.destroy();
   }
 
-  def compileAllJava(model: ThingMLModel, pack: String): Hashtable[Configuration, SimpleEntry[String, String]] = {
-    val result = new Hashtable[Configuration, SimpleEntry[String, String]]()
-    compileAll(model, pack).foreach { entry =>
-      result.put(entry._1, new SimpleEntry(entry._2._1, entry._2._2))
-    }
-    result
-  }
-
-  def compileAll(model: ThingMLModel, pack: String): Map[Configuration, Pair[String, String]] = {
-
-    var result = Map[Configuration, Pair[String, String]]()
-    model.allConfigurations.filter { c => !c.isFragment }.foreach {
-      t => result += (t -> compile(t, pack, model))
-    }
-    result
-  }
-
-  def compile(t: Configuration, pack: String, model: ThingMLModel): Pair[String, String] = {
+  def compile(t: Configuration, pack: String, model: ThingMLModel): java.util.Map[String, StringBuilder] = {
     Context.init
     Context.pack = pack
 
-    var mainBuilder = new StringBuilder()
-
-    generateHeader()
+    var mainBuilder = Context.getBuilder("Main.java")
     generateHeader(mainBuilder, true)
 
     t.generateJavaMain(mainBuilder)
 
     model.allSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
-      e.generateJava()
+      e.generateJava(Context.getBuilder(Context.firstToUpper(e.getName) + ".java"))
     }
 
     // Generate code for things which appear in the configuration
 
     model.allMessages.foreach {
       m =>
-        Context.builder append "public class " + Context.firstToUpper(m.getName()) + "EventType extends EventType {\n"
-        Context.builder append "public " + Context.firstToUpper(m.getName()) + "EventType() {name = \"" + m.getName + "\";}\n\n"
-        Context.builder append "public Event instantiate("
-        Context.builder append m.getParameters.collect {
+        var builder = Context.getBuilder(Context.firstToUpper(m.getName()) + "EventType.java")
+        generateHeader(builder)
+        builder append "public class " + Context.firstToUpper(m.getName()) + "EventType extends EventType {\n"
+        builder append "public " + Context.firstToUpper(m.getName()) + "EventType() {name = \"" + m.getName + "\";}\n\n"
+        builder append "public Event instantiate("
+        builder append m.getParameters.collect {
           case p =>
             "final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
         }.mkString(", ")
-        Context.builder append ") { return new " + Context.firstToUpper(m.getName()) + "Event(this"
-        Context.builder append m.getParameters.collect {
+        builder append ") { return new " + Context.firstToUpper(m.getName()) + "Event(this"
+        builder append m.getParameters.collect {
           case p =>
             Context.protectJavaKeyword(p.getName)
         }.mkString(", ", ", ", "")
-        Context.builder append "); }\n"
-        Context.builder append "}\n\n"
+        builder append "); }\n"
 
-
-
-        Context.builder append "public class " + Context.firstToUpper(m.getName()) + "Event extends Event {\n\n"
-        Context.builder append "protected " + Context.firstToUpper(m.getName()) + "Event(EventType type, "
-        Context.builder append m.getParameters.collect {
+        //builder = Context.getBuilder(Context.firstToUpper(m.getName()) + "Event.java")
+        //generateHeader(builder)
+        builder append "public class " + Context.firstToUpper(m.getName()) + "Event extends Event {\n\n"
+        builder append "protected " + Context.firstToUpper(m.getName()) + "Event(EventType type, "
+        builder append m.getParameters.collect {
           case p =>
             "final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
         }.mkString(", ")
-        Context.builder append ") {\n"
-        Context.builder append "super(type);\n"
+        builder append ") {\n"
+        builder append "super(type);\n"
         m.getParameters.foreach {
           p =>
-            Context.builder append "params.put("
-            Context.builder append "\"" + Context.protectJavaKeyword(p.getName) + "\", " + Context.protectJavaKeyword(p.getName)
-            Context.builder append ");\n"
+            builder append "params.put("
+            builder append "\"" + Context.protectJavaKeyword(p.getName) + "\", " + Context.protectJavaKeyword(p.getName)
+            builder append ");\n"
         }
-        Context.builder append "}\n"
-        Context.builder append "}\n\n"
+        builder append "}\n"
+        builder append "}\n\n"
+
+        builder append "}\n\n"
     }
     t.generateJava()
-    (Context.builder.toString, mainBuilder.toString)
+    return Context.builder
   }
 
-  def generateHeader(builder: StringBuilder = Context.builder, isMain: Boolean = false) = {
+  def generateHeader(builder: StringBuilder, isMain: Boolean = false) = {
     builder append "/**\n"
     builder append " * File generated by the ThingML IDE\n"
     builder append " * /!\\Do not edit this file/!\\\n"
@@ -371,33 +366,85 @@ object JavaGenerator {
 }
 
 case class ThingMLJavaGenerator(self: ThingMLElement) {
-  def generateJava(builder: StringBuilder = Context.builder) {
+  def generateJava() {
     // Implemented in the sub-classes
   }
 }
 
 case class ConfigurationJavaGenerator(override val self: Configuration) extends ThingMLJavaGenerator(self) {
 
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava() {
 
     self.allThings.foreach { thing =>
-      thing.generateJava( /*Context.builder*/ )
+      thing.generateJava(Context.getBuilder(Context.firstToUpper(thing.getName) + ".java") )
     }
 
-    builder append "\n"
-    builder append "// Initialize instance variables and states\n"
+    //builder append "\n"
+    /*builder append "// Initialize instance variables and states\n"
     // Generate code to initialize variable for instances
     self.allInstances.foreach { inst =>
-      inst.generateJava()
-    }
+      inst.generateJava(builder)
+    }*/
 
     //generateJavaMain()
   }
 
-  def generateJavaMain(builder: StringBuilder = Context.builder) {
+  def generateJavaMain(builder: StringBuilder) {
     builder append "public static void main(String args[]) {\n"
 
-    //TODO
+    builder append "//Things\n"
+    self.allInstances.foreach{ i =>
+
+      i.getType.getAnnotations.filter{a =>
+        a.getName == "mock"
+      }.headOption match {
+        case Some(a) =>
+          a.getValue match {
+            case "true" => builder append "final " + Context.firstToUpper(i.getType.getName) + "Mock " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "Mock();\n"
+            case "mirror" => builder append "final " + Context.firstToUpper(i.getType.getName) + "MockMirror " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "MockMirror();\n"
+          }
+        case None =>
+          builder append "final " + Context.firstToUpper(i.getType.getName) + " " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "("
+          ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+          builder append (self.initExpressionsForInstance(i).collect{case p =>
+            var result = ""//(if (p._1.isChangeable) "_" else "") + p._1.scala_var_name + " = "
+            if (p._2 != null) {
+              var tempbuilder = new StringBuilder()
+              p._2.generateJava(tempbuilder)
+              result += tempbuilder.toString
+            } else {
+              result += "null"
+            }
+            //result += ".asInstanceOf[" + p._1.getType.scala_type(p._1.getCardinality != null) + "]"
+            result
+          }
+            /*++
+            self.allArrays(i).collect{ case init =>
+              (if (init.isChangeable) "_" else "") + init.scala_var_name + " = " + init.scala_var_name + "_" + i.getName
+            }*/
+            ).mkString(", ")
+          builder append ");\n"
+      }
+    }
+
+
+    builder append "//Connectors\n"
+    self.allConnectors.foreach{ c =>
+      builder append "final Connector " + c.instanceName + " = new Connector("
+      builder append c.getCli.getInstance.instanceName + "." + c.getRequired.getName + "_port, "
+      builder append c.getSrv.getInstance.instanceName + "." + c.getProvided.getName + "_port, "
+      builder append c.getCli.getInstance.instanceName + ", "
+      builder append c.getSrv.getInstance.instanceName + ");\n"
+    }
+
+    builder append "//Starting Things\n"
+    self.allInstances.foreach{ i =>
+      builder append i.instanceName + ".start();\n"
+    }
+
+
+
+    builder append "}\n"
   }
 }
 
@@ -413,7 +460,10 @@ case class ConnectorJavaGenerator(override val self: Connector) extends ThingMLJ
 
 case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGenerator(self) {
 
-  def buildState(builder: StringBuilder = Context.builder, s: State) {
+  def buildState(builder: StringBuilder, s: State) {
+
+    val actionName = if (s.getEntry != null || s.getExit != null) Context.firstToUpper(s.getName) + "Action" else "NullStateAction"
+
     s match {
       case c: CompositeState =>
         builder append "final List<IState> states_" + c.getName + " = new ArrayList();\n"
@@ -433,16 +483,16 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         } else {
           builder append "final CompositeState state_" + c.getName + " = "
         }
-        if (numReg>1) {//TODO: we should also use annotations to avoid parallel stuff on single threaded platforms.
-          builder append "new CompositeStateMT(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new NullStateAction(), regions_" + c.getName + ", false);\n"//TODO Action and history
+        if (numReg>1) {//TODO: we should also use annotations to avoid parallel overhead on single threaded platforms.
+          builder append "new CompositeStateMT(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO Action and history
         } else {
-          builder append "new CompositeStateST(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new NullStateAction(), regions_" + c.getName + ", false);\n"//TODO Action and history
+          builder append "new CompositeStateST(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO Action and history
         }
         if (s.eContainer.isInstanceOf[State]) {
           builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + c.getName + ");\n"
         }
       case s: State =>
-        builder append "final AtomicState state_" + s.getName + " = new AtomicState(\"" + s.getName + "\", new DebugStateAction());\n" //TODO: point to proper action (to be generated)
+        builder append "final AtomicState state_" + s.getName + " = new AtomicState(\"" + s.getName + "\", new " + actionName + "());\n" //TODO: point to proper action (to be generated)
         if (s.eContainer.isInstanceOf[State]) {
           builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + s.getName + ");\n"
         }
@@ -457,7 +507,11 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
             i.getEvent.foreach {
               e => e match {
                 case r: ReceiveMessage =>
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + i.getName + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n"//TODO: Handler action and event
+                  if (i.getAction != null) {
+                    builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + i.getName + "\", new " + i.getName + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n" //TODO: Handler action and event
+                  } else {
+                    builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + i.getName + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n" //TODO: Handler action and event
+                  }
               }
 
             }
@@ -469,7 +523,11 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
             t.getEvent.foreach {
               e => e match {
                 case r: ReceiveMessage =>
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"//TODO: Handler action and event
+                  if (t.getAction != null) {
+                    builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new " + t.getName + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n" //TODO: Handler action and event
+                  } else {
+                    builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n" //TODO: Handler action and event
+                  }
               }
 
             }
@@ -479,7 +537,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     }
   }
 
-  def buildRegion(builder: StringBuilder = Context.builder, r: Region) {
+  def buildRegion(builder: StringBuilder, r: Region) {
     builder append "val states_" + r.getName + " : MutableList<State> = ArrayList()\n"
     r.getSubstate.foreach { s =>
       buildState(builder, s)
@@ -487,9 +545,10 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     builder append "val reg_" + r.getName + " : Region = Region(states_" + r.getName + ", state_" + r.getInitial.getName + ", internals, transitions_" + r.getName + ", false)"
   }
 
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  def generateJava(builder: StringBuilder) {
     Context.thing = self
 
+    generateHeader(builder)
     builder append "\n/**\n"
     builder append " * Definition for type : " + self.getName + "\n"
     builder append " **/\n"
@@ -507,9 +566,6 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     builder append "public class " + Context.firstToUpper(self.getName) + "extends Component " + traits + " {\n\n"
 
-    /*builder append "//Behavior\n"
-    builder append "private CompositeState state_" + self.allStateMachines.first.getName + ";\n\n"*/
-
     builder append "//Attributes\n"
     self.allPropertiesInDepth.foreach {p =>
         builder append "private "
@@ -522,6 +578,11 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     builder append "//Ports\n"
     self.allPorts.foreach {
       p => builder append "private Port " + p.getName + "_port;\n"
+    }
+
+    builder append "//Message types\n"
+    self.allMessages.foreach {
+      m => builder append "private final " + Context.firstToUpper(m.getName) + "Type " + m.getName + "Type = new " + Context.firstToUpper(m.getName) + "Type();\n"
     }
 
     builder append "//Constructor\n"
@@ -539,11 +600,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     builder append "protected CompositeState buildBehavior() {\n"
 
-    builder append "//Messages\n"
-    self.allMessages.foreach {
-      m => builder append "final " + Context.firstToUpper(m.getName) + "Type " + m.getName + "Type = new " + Context.firstToUpper(m.getName) + "Type();\n"
-    }
-
+    builder append "//Init ports\n"
     self.allPorts.foreach { p =>
       builder append "final List<EventType> inEvents_" + p.getName + " = new ArrayList();\n"
       builder append "final List<EventType> outEvents_" + p.getName + " = new ArrayList();\n"
@@ -556,6 +613,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       builder append p.getName + "_port = new Port(" + (if (p.isInstanceOf[ProvidedPort]) "PortType.PROVIDED" else "PortType.REQUIRED") + ", \"" + p.getName + "\", inEvents_" + p.getName + ", outEvents_" + p.getName + ");\n"
     }
 
+    builder append "//Init state machine\n"
     self.allStateMachines.foreach { b =>
       buildState(builder, b)
     }
@@ -563,24 +621,22 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     //builder append "}\n"
     builder append "}\n\n"
 
-    //TODO: restart from here
-    self.allStateMachines.foreach { b =>
-      b.generateJava()
-    }
-
-
     self.allFunctions.foreach {
-      f => f.generateJava()
+      f => f.generateJava(builder)
     }
 
-    /*if(self.hasAnnotation("Java_def")) {
-     builder append self.annotation("Java_def")
-     } */
+    self.allStateMachines.foreach { b =>
+      b.generateJava(builder)
+    }
+
+    self.allInternalTransitionsWithAction.foreach{t => t.generateJava(builder)}
+    self.allTransitionsWithAction.foreach{t => t.generateJava(builder)}
+
 
     builder append "}\n"
   }
 
-  def generateProperties(builder: StringBuilder = Context.builder) {
+  def generateProperties(builder: StringBuilder) {
     builder append self.allPropertiesInDepth.collect {
       case p =>
         ", " + (if (!p.isChangeable) "val " else "var ") 
@@ -619,7 +675,7 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
   val handlerInstanceName = "handler_" + self.hashCode
   val handlerTypeName = "Handler_" + self.hashCode //TODO: find prettier names for handlers
 
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  def generateJava(builder: StringBuilder) {
     builder append "private final class " + handlerTypeName + " implements IHandlerAction {\n"
 
     if (self.getGuard != null) {
@@ -636,7 +692,7 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
         builder append "@Override\n"
         builder append "public void execute(final Event e) {\n"
         builder append "final " + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + " e = (" + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + ") e;\n"
-        self.getAction.generateJava()
+        self.getAction.generateJava(builder)
         builder append "}\n\n"
       case None =>
         builder append "//No action defined for this transition\n"
@@ -658,31 +714,33 @@ case class StateMachineJavaGenerator(override val self: StateMachine) extends Co
 }
 
 case class StateJavaGenerator(override val self: State) extends ThingMLJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    builder append "private final class " + Context.firstToUpper(self.getName) + "Action implements IStateAction {\n"
+  def generateJava(builder: StringBuilder) {
+    if (self.getEntry != null || self.getExit != null) {
+      builder append "private final class " + Context.firstToUpper(self.getName) + "Action implements IStateAction {\n"
 
-    builder append "public " + Context.firstToUpper(self.getName) + "Action(){}\n\n"
+      builder append "public " + Context.firstToUpper(self.getName) + "Action(){}\n\n"
 
-    builder append "public void onEntry() {\n"
-    Option(self.getEntry) match {
-      case Some(a) =>
-        self.getEntry.generateJava()
-      case None =>
-        builder append "//No entry action defined for this state\n"
-        Logger.info("no onEntry action for state " + self)
+      builder append "public void onEntry() {\n"
+      Option(self.getEntry) match {
+        case Some(a) =>
+          self.getEntry.generateJava(builder)
+        case None =>
+          builder append "//No entry action defined for this state\n"
+          Logger.info("no onEntry action for state " + self)
+      }
+      builder append "}\n\n"
+
+      builder append "public void onExit() {\n"
+      Option(self.getExit) match {
+        case Some(a) =>
+          self.getEntry.generateJava(builder)
+        case None =>
+          builder append "//No entry action defined for this state\n"
+          Logger.info("no onEntry action for state " + self)
+      }
+      builder append "}\n\n"
+      builder append "}\n\n"
     }
-    builder append "}\n\n"
-
-    builder append "public void onExit() {\n"
-    Option(self.getExit) match {
-      case Some(a) =>
-        self.getEntry.generateJava()
-      case None =>
-        builder append "//No entry action defined for this state\n"
-        Logger.info("no onEntry action for state " + self)
-    }
-    builder append "}\n\n"
-    builder append "}\n\n"
   }
 }
 
@@ -691,7 +749,7 @@ case class CompositeStateJavaGenerator(override val self: CompositeState) extend
 }
 
 case class TypedElementJavaGenerator(val self: TypedElement) /*extends ThingMLJavaGenerator(self)*/ {
-  def generateJava(builder: StringBuilder = Context.builder) {
+  def generateJava(builder: StringBuilder) {
     // Implemented in the sub-classes
   }
 }
@@ -699,7 +757,7 @@ case class TypedElementJavaGenerator(val self: TypedElement) /*extends ThingMLJa
   
 
 case class FunctionJavaGenerator(override val self: Function) extends TypedElementJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     var generate = true
     self.getAnnotations.filter {
       a => a.getName == "abstract"
@@ -720,7 +778,7 @@ case class FunctionJavaGenerator(override val self: Function) extends TypedEleme
       val returnType = self.getType.java_type(self.getCardinality != null)
   
       builder append "private " + returnType + " " + self.getName + "(" + self.getParameters.collect{ case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
-      self.getBody.generateJava()
+      self.getBody.generateJava(builder)
       builder append "}\n"
     }
   }
@@ -732,7 +790,7 @@ case class FunctionJavaGenerator(override val self: Function) extends TypedEleme
  */
 
 case class TypeJavaGenerator(override val self: Type) extends ThingMLJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  def generateJava(builder: StringBuilder) {
     // Implemented in the sub-classes
   }
 
@@ -769,7 +827,7 @@ case class TypeJavaGenerator(override val self: Type) extends ThingMLJavaGenerat
  */
 
 case class PrimitiveTypeJavaGenerator(override val self: PrimitiveType) extends TypeJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append "// ThingML type " + self.getName + " is mapped to " + java_type() + "\n"
   }
 }
@@ -777,11 +835,11 @@ case class PrimitiveTypeJavaGenerator(override val self: PrimitiveType) extends 
 case class EnumerationJavaGenerator(override val self: Enumeration) extends TypeJavaGenerator(self) {
   val enumName = Context.firstToUpper(self.getName) + "_ENUM"
     
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append "// Definition of Enumeration  " + self.getName + "\n"
     builder append "public enum " + enumName + " {\n"
-    self.getLiterals.collect {case l =>
-      builder append l.Java_name + " (" + l.enum_val +")\n"
+    builder append self.getLiterals.collect {case l =>
+      l.Java_name + " (" + l.enum_val +")"
     }.mkString("", ",\n", ";\n\n")
     builder append "private final " + java_type() + " id;\n\n"
     builder append enumName + "(" + java_type() + " id) {\n"
@@ -795,7 +853,7 @@ case class EnumerationJavaGenerator(override val self: Enumeration) extends Type
  * Action abstract class
  */
 case class ActionJavaGenerator(val self: Action) /*extends ThingMLJavaGenerator(self)*/ {
-  def generateJava(builder: StringBuilder = Context.builder) {
+  def generateJava(builder: StringBuilder) {
     // Implemented in the sub-classes
   }
 }
@@ -805,20 +863,20 @@ case class ActionJavaGenerator(val self: Action) /*extends ThingMLJavaGenerator(
  */
 
 case class SendActionJavaGenerator(override val self: SendAction) extends ActionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append self.getPort.getName + "_port.send("
-    concreteMsg()
+    concreteMsg(builder)
     builder append ");\n"
   }
  
   
-  def concreteMsg(builder: StringBuilder = Context.builder) {
-    builder append "new " + Context.firstToUpper(self.getMessage.getName) + "("
+  def concreteMsg(builder: StringBuilder) {
+    builder append Context.firstToUpper(self.getMessage.getName) + "Type.instantiate("
     var i = 0
     self.getParameters.zip(self.getMessage.getParameters).foreach{ case (p, fp) =>
         if (i > 0)
           builder append ", "
-        p.generateJava()
+        p.generateJava(builder)
         //builder append ".to" + fp.getType.java_type(fp.getCardinality != null)
         i = i+1
     }
@@ -827,7 +885,7 @@ case class SendActionJavaGenerator(override val self: SendAction) extends Action
 
   
   //This is nicer but does not work... for some reasons...
-  /*  def concreteMsg(builder: StringBuilder = Context.builder) {
+  /*  def concreteMsg(builder: StringBuilder) {
    builder append "new " + Context.firstToUpper(self.getMessage.getName) + "("
    builder append self.getParameters.collect{case p =>
    val tempBuilder = new StringBuilder()
@@ -840,7 +898,7 @@ case class SendActionJavaGenerator(override val self: SendAction) extends Action
 }
 
 case class VariableAssignmentJavaGenerator(override val self: VariableAssignment) extends ActionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     if (self.getProperty.getCardinality != null) {
       self.getIndex.foreach{i =>
         builder append self.getProperty.Java_var_name
@@ -848,93 +906,93 @@ case class VariableAssignmentJavaGenerator(override val self: VariableAssignment
         i.generateJava(tempBuilder)
         builder append "[" + tempBuilder.toString + "]"
         builder append " = "
-        self.getExpression.generateJava()
+        self.getExpression.generateJava(builder)
         builder append ";\n"
       }
     }
     else {
       builder append self.getProperty.Java_var_name
       builder append " = "
-      self.getExpression.generateJava()
+      self.getExpression.generateJava(builder)
       builder append ";\n"
     }
   }
 }
 
 case class ActionBlockJavaGenerator(override val self: ActionBlock) extends ActionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append "{\n"
     self.getActions.foreach {
-      a => a.generateJava()
+      a => a.generateJava(builder)
     }
     builder append "}\n"
   }
 }
 
 case class ExternStatementJavaGenerator(override val self: ExternStatement) extends ActionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append self.getStatement
     self.getSegments.foreach {
-      e => e.generateJava()
+      e => e.generateJava(builder)
     }
     builder append "\n"
   }
 }
 
 case class ConditionalActionJavaGenerator(override val self: ConditionalAction) extends ActionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append "if("
-    self.getCondition.generateJava()
+    self.getCondition.generateJava(builder)
     builder append ") {\n"
-    self.getAction.generateJava()
+    self.getAction.generateJava(builder)
     builder append "\n}\n"
   }
 }
 
 case class LoopActionJavaGenerator(override val self: LoopAction) extends ActionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append "while("
-    self.getCondition.generateJava()
+    self.getCondition.generateJava(builder)
     builder append ") {\n"
-    self.getAction.generateJava()
+    self.getAction.generateJava(builder)
     builder append "\n}\n"
   }
 }
 
 case class PrintActionJavaGenerator(override val self: PrintAction) extends ActionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append "System.out.println("
-    self.getMsg.generateJava()
+    self.getMsg.generateJava(builder)
     builder append ");\n"
   }
 }
 
 case class ErrorActionJavaGenerator(override val self: ErrorAction) extends ActionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append "System.err.println("
-    self.getMsg.generateJava()
+    self.getMsg.generateJava(builder)
     builder append ");\n"
   }
 }
 
 case class ReturnActionJavaGenerator(override val self: ReturnAction) extends ActionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append "return "
-    self.getExp.generateJava()
+    self.getExp.generateJava(builder)
     builder append ";\n"
   }
 }
 
 case class LocalVariableActionJavaGenerator(override val self: LocalVariable) extends ActionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {    
+  override def generateJava(builder: StringBuilder) {    
     builder append (if (self.isChangeable) "" else "final ")
     builder append self.getType.java_type(self.getCardinality != null) + " " + self.Java_var_name + " = "
     if (self.getInit != null) 
-      self.getInit.generateJava() 
+      self.getInit.generateJava(builder) 
     else {
       if (self.getCardinality != null) {
         builder append "new " + self.getType.java_type(self.getCardinality != null) + "(" 
-        self.getCardinality.generateJava()
+        self.getCardinality.generateJava(builder)
         builder append ");"
       } else {
         builder append "null;"
@@ -947,13 +1005,13 @@ case class LocalVariableActionJavaGenerator(override val self: LocalVariable) ex
 }
 
 case class FunctionCallStatementJavaGenerator(override val self: FunctionCallStatement) extends ActionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {  
+  override def generateJava(builder: StringBuilder) {  
     builder append self.getFunction().getName + "("
     var i = 0
     self.getFunction.getParameters.zip(self.getParameters).foreach{ case (fp, ep) =>
         if (i > 0)
           builder append ", "
-        ep.generateJava()
+        ep.generateJava(builder)
         i = i+1
     }
     /*builder append self.getParameters().collect{case p => 
@@ -969,7 +1027,7 @@ case class FunctionCallStatementJavaGenerator(override val self: FunctionCallSta
  */
 
 case class ExpressionJavaGenerator(val self: Expression) /*extends ThingMLJavaGenerator(self)*/ {
-  def generateJava(builder: StringBuilder = Context.builder) {
+  def generateJava(builder: StringBuilder) {
     // Implemented in the sub-classes
   }
 }
@@ -979,177 +1037,177 @@ case class ExpressionJavaGenerator(val self: Expression) /*extends ThingMLJavaGe
  */
 
 case class ArrayIndexJavaGenerator(override val self: ArrayIndex) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    self.getArray.generateJava()
+  override def generateJava(builder: StringBuilder) {
+    self.getArray.generateJava(builder)
     builder append "("
-    self.getIndex.generateJava()
+    self.getIndex.generateJava(builder)
     builder append ")\n"
   }
 }
 
 case class OrExpressionJavaGenerator(override val self: OrExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateJava()
+  override def generateJava(builder: StringBuilder) {
+    self.getLhs.generateJava(builder)
     builder append " || "
-    self.getRhs.generateJava()
+    self.getRhs.generateJava(builder)
   }
 }
 
 case class AndExpressionJavaGenerator(override val self: AndExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateJava()
+  override def generateJava(builder: StringBuilder) {
+    self.getLhs.generateJava(builder)
     builder append " && "
-    self.getRhs.generateJava()
+    self.getRhs.generateJava(builder)
   }
 }
 
 case class LowerExpressionJavaGenerator(override val self: LowerExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateJava()
+  override def generateJava(builder: StringBuilder) {
+    self.getLhs.generateJava(builder)
     builder append " < "
-    self.getRhs.generateJava()
+    self.getRhs.generateJava(builder)
   }
 }
 
 case class GreaterExpressionJavaGenerator(override val self: GreaterExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateJava()
+  override def generateJava(builder: StringBuilder) {
+    self.getLhs.generateJava(builder)
     builder append " > "
-    self.getRhs.generateJava()
+    self.getRhs.generateJava(builder)
   }
 }
 
 case class EqualsExpressionJavaGenerator(override val self: EqualsExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateJava()
+  override def generateJava(builder: StringBuilder) {
+    self.getLhs.generateJava(builder)
     builder append " == "
-    self.getRhs.generateJava()
+    self.getRhs.generateJava(builder)
   }
 }
 
 case class PlusExpressionJavaGenerator(override val self: PlusExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateJava()
+  override def generateJava(builder: StringBuilder) {
+    self.getLhs.generateJava(builder)
     builder append " + "
-    self.getRhs.generateJava()
+    self.getRhs.generateJava(builder)
   }
 }
 
 case class MinusExpressionJavaGenerator(override val self: MinusExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateJava()
+  override def generateJava(builder: StringBuilder) {
+    self.getLhs.generateJava(builder)
     builder append " - "
-    self.getRhs.generateJava()
+    self.getRhs.generateJava(builder)
   }
 }
 
 case class TimesExpressionJavaGenerator(override val self: TimesExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateJava()
+  override def generateJava(builder: StringBuilder) {
+    self.getLhs.generateJava(builder)
     builder append " * "
-    self.getRhs.generateJava()
+    self.getRhs.generateJava(builder)
   }
 }
 
 case class DivExpressionJavaGenerator(override val self: DivExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateJava()
+  override def generateJava(builder: StringBuilder) {
+    self.getLhs.generateJava(builder)
     builder append " / "
-    self.getRhs.generateJava()
+    self.getRhs.generateJava(builder)
   }
 }
 
 case class ModExpressionJavaGenerator(override val self: ModExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    self.getLhs.generateJava()
+  override def generateJava(builder: StringBuilder) {
+    self.getLhs.generateJava(builder)
     builder append " % "
-    self.getRhs.generateJava()
+    self.getRhs.generateJava(builder)
   }
 }
 
 case class UnaryMinusJavaGenerator(override val self: UnaryMinus) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append " -"
-    self.getTerm.generateJava()
+    self.getTerm.generateJava(builder)
   }
 }
 
 case class NotExpressionJavaGenerator(override val self: NotExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append " !("
-    self.getTerm.generateJava()
+    self.getTerm.generateJava(builder)
     builder append ")"
   }
 }
 
 case class EventReferenceJavaGenerator(override val self: EventReference) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
-    builder append "e.get(" + Context.protectJavaKeyword(self.getParamRef.getName) + ")"
+  override def generateJava(builder: StringBuilder) {
+    builder append "e.get(\"" + Context.protectJavaKeyword(self.getParamRef.getName) + "\")"
   }
 }
 
 case class ExpressionGroupJavaGenerator(override val self: ExpressionGroup) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append "("
-    self.getExp.generateJava()
+    self.getExp.generateJava(builder)
     builder append ")"
   }
 }
 
 case class PropertyReferenceJavaGenerator(override val self: PropertyReference) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append self.getProperty.Java_var_name
   }
 }
 
 case class IntegerLiteralJavaGenerator(override val self: IntegerLiteral) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append self.getIntValue.toString
   }
 }
 
 case class DoubleLiteralJavaGenerator(override val self: DoubleLiteral) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append self.getDoubleValue.toString
   }
 }
 
 case class StringLiteralJavaGenerator(override val self: StringLiteral) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append "\"" + CharacterEscaper.escapeEscapedCharacters(self.getStringValue) + "\""
   }
 }
 
 case class BooleanLiteralJavaGenerator(override val self: BooleanLiteral) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append (if (self.isBoolValue) "true" else "false")
   }
 }
 
 case class EnumLiteralRefJavaGenerator(override val self: EnumLiteralRef) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     //builder append self.getEnum.enumName + "." + self.getLiteral.Java_name
     builder append Context.firstToUpper(self.getEnum.getName) + "_ENUM." + self.getLiteral.Java_name
   }
 }
 
 case class ExternExpressionJavaGenerator(override val self: ExternExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {
+  override def generateJava(builder: StringBuilder) {
     builder append self.getExpression
     self.getSegments.foreach {
-      e => e.generateJava()
+      e => e.generateJava(builder)
     }
   }
 }
 
 case class FunctionCallExpressionJavaGenerator(override val self: FunctionCallExpression) extends ExpressionJavaGenerator(self) {
-  override def generateJava(builder: StringBuilder = Context.builder) {  
+  override def generateJava(builder: StringBuilder) {  
     builder append self.getFunction().getName + "("
     var i = 0
     self.getFunction.getParameters.zip(self.getParameters).foreach{ case (fp, ep) =>
         if (i > 0)
           builder append ", "
-        ep.generateJava()
+        ep.generateJava(builder)
         i = i+1
     }
     /*builder append self.getParameters().collect{case p => 
