@@ -205,7 +205,7 @@ object JavaGenerator {
     }
 
     //TODO: update POM
-    var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/kotlinpom.xml"), "utf-8").getLines().mkString("\n")
+    var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/javapom.xml"), "utf-8").getLines().mkString("\n")
     pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
 
     //Add ThingML dependencies
@@ -218,6 +218,7 @@ object JavaGenerator {
     }
 
     pom = pom.replace("<!--DEP-->", "")
+    pom = pom.replace("<!--COMPACT_PROFILE-->", "compact1")//TODO: this might be overriden by an annotation.
 
     //TODO: add other maven dependencies
 
@@ -299,44 +300,47 @@ object JavaGenerator {
     t.generateJavaMain(mainBuilder)
 
     model.allSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
-      e.generateJava(Context.getBuilder(Context.firstToUpper(e.getName) + ".java"))
+      e.generateJava(Context.getBuilder(Context.firstToUpper(e.getName) + "_ENUM.java"))
     }
 
     // Generate code for things which appear in the configuration
 
     model.allMessages.foreach {
       m =>
-        var builder = Context.getBuilder(Context.firstToUpper(m.getName()) + "EventType.java")
+        var builder = Context.getBuilder(Context.firstToUpper(m.getName()) + "MessageType.java")
         generateHeader(builder)
-        builder append "public class " + Context.firstToUpper(m.getName()) + "EventType extends EventType {\n"
-        builder append "public " + Context.firstToUpper(m.getName()) + "EventType() {name = \"" + m.getName + "\";}\n\n"
+        builder append "public class " + Context.firstToUpper(m.getName()) + "MessageType extends EventType {\n"
+        builder append "public " + Context.firstToUpper(m.getName()) + "MessageType() {name = \"" + m.getName + "\";}\n\n"
         builder append "public Event instantiate("
         builder append m.getParameters.collect {
           case p =>
             "final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
         }.mkString(", ")
-        builder append ") { return new " + Context.firstToUpper(m.getName()) + "Event(this"
+        builder append ") { return new " + Context.firstToUpper(m.getName()) + "Message(this"
         builder append m.getParameters.collect {
           case p =>
-            Context.protectJavaKeyword(p.getName)
-        }.mkString(", ", ", ", "")
+            ", " + Context.protectJavaKeyword(p.getName)
+        }.mkString("")
         builder append "); }\n"
 
         //builder = Context.getBuilder(Context.firstToUpper(m.getName()) + "Event.java")
         //generateHeader(builder)
-        builder append "public class " + Context.firstToUpper(m.getName()) + "Event extends Event {\n\n"
-        builder append "protected " + Context.firstToUpper(m.getName()) + "Event(EventType type, "
+        builder append "public class " + Context.firstToUpper(m.getName()) + "Message extends Event {\n\n"
+
+        m.getParameters.foreach { p =>
+            builder append "public final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName) + ";\n"
+        }
+
+        builder append "protected " + Context.firstToUpper(m.getName()) + "Message(EventType type"
         builder append m.getParameters.collect {
           case p =>
-            "final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
-        }.mkString(", ")
+            ", final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
+        }.mkString("")
         builder append ") {\n"
         builder append "super(type);\n"
         m.getParameters.foreach {
           p =>
-            builder append "params.put("
-            builder append "\"" + Context.protectJavaKeyword(p.getName) + "\", " + Context.protectJavaKeyword(p.getName)
-            builder append ");\n"
+            builder append "this." + Context.protectJavaKeyword(p.getName) + " = " + Context.protectJavaKeyword(p.getName) + ";\n"
         }
         builder append "}\n"
         builder append "}\n\n"
@@ -390,6 +394,7 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
   }
 
   def generateJavaMain(builder: StringBuilder) {
+    builder append "public class Main {\n"
     builder append "public static void main(String args[]) {\n"
 
     builder append "//Things\n"
@@ -431,8 +436,8 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
     builder append "//Connectors\n"
     self.allConnectors.foreach{ c =>
       builder append "final Connector " + c.instanceName + " = new Connector("
-      builder append c.getCli.getInstance.instanceName + "." + c.getRequired.getName + "_port, "
-      builder append c.getSrv.getInstance.instanceName + "." + c.getProvided.getName + "_port, "
+      builder append c.getCli.getInstance.instanceName + ".get" + Context.firstToUpper(c.getRequired.getName) + "_port(), "
+      builder append c.getSrv.getInstance.instanceName + ".get" + Context.firstToUpper(c.getProvided.getName) + "_port(), "
       builder append c.getCli.getInstance.instanceName + ", "
       builder append c.getSrv.getInstance.instanceName + ");\n"
     }
@@ -444,6 +449,7 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
 
 
 
+    builder append "}\n"
     builder append "}\n"
   }
 }
@@ -478,6 +484,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         } else {
           builder append "final List<Region> regions_" + c.getName + " = Collections.EMPTY_LIST;\n"
         }
+        buildTransitions(builder, c)
         if (c.isInstanceOf[StateMachine]) {
           builder append "return "
         } else {
@@ -497,43 +504,44 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
           builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + s.getName + ");\n"
         }
     }
+  }
 
-
-    if (s.eContainer.isInstanceOf[State]) {
-      builder append "final List<Handler> transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + " = new ArrayList();\n"
-      s.getInternal.foreach {
-        i =>
-          if (i.getEvent != null) {
-            i.getEvent.foreach {
-              e => e match {
-                case r: ReceiveMessage =>
-                  if (i.getAction != null) {
-                    builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + i.getName + "\", new " + i.getName + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n" //TODO: Handler action and event
-                  } else {
-                    builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + i.getName + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n" //TODO: Handler action and event
-                  }
-              }
-
+  def buildTransitions(builder: StringBuilder, r : CompositeState) {
+    builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList();\n"
+    r.getSubstate.foreach{s =>
+    s.getInternal.foreach {
+      i =>
+        if (i.getEvent != null) {
+          i.getEvent.foreach {
+            e => e match {
+              case r: ReceiveMessage =>
+                if (i.getAction != null) {
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + i.getName + "\", new " + i.getName + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n" //TODO: Handler action and event
+                } else {
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + i.getName + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n" //TODO: Handler action and event
+                }
             }
-          }
-      }
-      s.getOutgoing.foreach {
-        t =>
-          if (t.getEvent != null) {
-            t.getEvent.foreach {
-              e => e match {
-                case r: ReceiveMessage =>
-                  if (t.getAction != null) {
-                    builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new " + t.getName + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n" //TODO: Handler action and event
-                  } else {
-                    builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n" //TODO: Handler action and event
-                  }
-              }
 
-            }
           }
-          else {builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new NullHandlerAction(), new NullEventType(), null, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"}//TODO: Handler action
-      }
+        }
+    }
+    s.getOutgoing.foreach {
+      t =>
+        if (t.getEvent != null) {
+          t.getEvent.foreach {
+            e => e match {
+              case r: ReceiveMessage =>
+                if (t.getAction != null) {
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new " + t.getName + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n" //TODO: Handler action and event
+                } else {
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n" //TODO: Handler action and event
+                }
+            }
+
+          }
+        }
+        else {builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new NullHandlerAction(), new NullEventType(), null, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"}//TODO: Handler action
+    }
     }
   }
 
@@ -564,7 +572,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     }
 
 
-    builder append "public class " + Context.firstToUpper(self.getName) + "extends Component " + traits + " {\n\n"
+    builder append "public class " + Context.firstToUpper(self.getName) + " extends Component " + traits + " {\n\n"
 
     builder append "//Attributes\n"
     self.allPropertiesInDepth.foreach {p =>
@@ -582,7 +590,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     builder append "//Message types\n"
     self.allMessages.foreach {
-      m => builder append "private final " + Context.firstToUpper(m.getName) + "Type " + m.getName + "Type = new " + Context.firstToUpper(m.getName) + "Type();\n"
+      m => builder append "private final " + Context.firstToUpper(m.getName) + "MessageType " + m.getName + "Type = new " + Context.firstToUpper(m.getName) + "MessageType();\n"
     }
 
     builder append "//Constructor\n"
@@ -598,6 +606,12 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     }
     builder append "}\n\n"
 
+
+    builder append "//Getters for Ports\n"
+    self.allPorts.foreach {
+      p => builder append "public Port get" + Context.firstToUpper(p.getName) + "_port() {\nreturn " + p.getName + "_port;\n}\n"
+    }
+
     builder append "protected CompositeState buildBehavior() {\n"
 
     builder append "//Init ports\n"
@@ -605,10 +619,10 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       builder append "final List<EventType> inEvents_" + p.getName + " = new ArrayList();\n"
       builder append "final List<EventType> outEvents_" + p.getName + " = new ArrayList();\n"
       p.getReceives.foreach { r =>
-        builder append "inEvents_" + p.getName + ".add(" + Context.firstToUpper(r.getName) + "Type);\n"
+        builder append "inEvents_" + p.getName + ".add(" + r.getName + "Type);\n"
       }
       p.getSends.foreach { s =>
-        builder append "outEvents_" + p.getName + ".add(" + Context.firstToUpper(s.getName) + "Type);\n"
+        builder append "outEvents_" + p.getName + ".add(" + s.getName + "Type);\n"
       }
       builder append p.getName + "_port = new Port(" + (if (p.isInstanceOf[ProvidedPort]) "PortType.PROVIDED" else "PortType.REQUIRED") + ", \"" + p.getName + "\", inEvents_" + p.getName + ", outEvents_" + p.getName + ");\n"
     }
@@ -676,11 +690,12 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
   val handlerTypeName = "Handler_" + self.hashCode //TODO: find prettier names for handlers
 
   def generateJava(builder: StringBuilder) {
-    builder append "private final class " + handlerTypeName + " implements IHandlerAction {\n"
+    builder append "private final class " + (if (self.getName != null) self.getName else handlerTypeName) + "Action implements IHandlerAction {\n"
 
     if (self.getGuard != null) {
       builder append "@Override\n"
       builder append "public boolean check(final Event e, final EventType t) {\n"
+      builder append "final " + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "MessageType." + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Message ce = (" + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "MessageType." + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Message) e;\n"
       builder append "return e.getType() == t && "
       self.getGuard.generateJava(builder)
       builder append ";\n"
@@ -691,7 +706,7 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
       case Some(a) =>
         builder append "@Override\n"
         builder append "public void execute(final Event e) {\n"
-        builder append "final " + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + " e = (" + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + ") e;\n"
+        builder append "final " + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "MessageType." + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Message ce = (" + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "MessageType." + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Message) e;\n"
         self.getAction.generateJava(builder)
         builder append "}\n\n"
       case None =>
@@ -745,7 +760,10 @@ case class StateJavaGenerator(override val self: State) extends ThingMLJavaGener
 }
 
 case class CompositeStateJavaGenerator(override val self: CompositeState) extends StateJavaGenerator(self) {
-
+     override def generateJava(builder: StringBuilder) {
+        super.generateJava(builder)
+        self.getSubstate.foreach {s => s.generateJava(builder)}
+     }
 }
 
 case class TypedElementJavaGenerator(val self: TypedElement) /*extends ThingMLJavaGenerator(self)*/ {
@@ -836,10 +854,11 @@ case class EnumerationJavaGenerator(override val self: Enumeration) extends Type
   val enumName = Context.firstToUpper(self.getName) + "_ENUM"
     
   override def generateJava(builder: StringBuilder) {
+    generateHeader(builder, false)
     builder append "// Definition of Enumeration  " + self.getName + "\n"
     builder append "public enum " + enumName + " {\n"
     builder append self.getLiterals.collect {case l =>
-      l.Java_name + " (" + l.enum_val +")"
+      l.Java_name + " ((" + java_type() + ") " + l.enum_val +")"
     }.mkString("", ",\n", ";\n\n")
     builder append "private final " + java_type() + " id;\n\n"
     builder append enumName + "(" + java_type() + " id) {\n"
@@ -864,18 +883,19 @@ case class ActionJavaGenerator(val self: Action) /*extends ThingMLJavaGenerator(
 
 case class SendActionJavaGenerator(override val self: SendAction) extends ActionJavaGenerator(self) {
   override def generateJava(builder: StringBuilder) {
-    builder append self.getPort.getName + "_port.send("
+    builder append "send("
     concreteMsg(builder)
-    builder append ");\n"
+    builder append ", " + self.getPort.getName + "_port);\n"
   }
  
   
   def concreteMsg(builder: StringBuilder) {
-    builder append Context.firstToUpper(self.getMessage.getName) + "Type.instantiate("
+    builder append self.getMessage.getName + "Type.instantiate("
     var i = 0
     self.getParameters.zip(self.getMessage.getParameters).foreach{ case (p, fp) =>
         if (i > 0)
           builder append ", "
+        builder append "(" + fp.getType.java_type(fp.getCardinality != null) + ") "
         p.generateJava(builder)
         //builder append ".to" + fp.getType.java_type(fp.getCardinality != null)
         i = i+1
@@ -1142,7 +1162,7 @@ case class NotExpressionJavaGenerator(override val self: NotExpression) extends 
 
 case class EventReferenceJavaGenerator(override val self: EventReference) extends ExpressionJavaGenerator(self) {
   override def generateJava(builder: StringBuilder) {
-    builder append "e.get(\"" + Context.protectJavaKeyword(self.getParamRef.getName) + "\")"
+    builder append "ce." + Context.protectJavaKeyword(self.getParamRef.getName)
   }
 }
 

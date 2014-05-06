@@ -8,71 +8,71 @@
 datatype Byte	
 	@c_type "uint8_t"
 	@c_byte_size "1"
-	@java_type "Byte"
+	@java_type "byte"
     @SenML_type "Double";
 
 datatype Boolean	
 	@c_type "uint8_t"
 	@c_byte_size "2"
-	@java_type "Boolean"
+	@java_type "boolean"
     @SenML_type "Boolean";
 
 datatype Integer	
 	@c_type "int"
 	@c_byte_size "2"
-	@java_type "Short"
+	@java_type "short"
     @SenML_type "Double"
     @ros_type "int16";
 	
 datatype UInt8	
 	@c_type "uint8_t"
 	@c_byte_size "1"
-	@java_type "Byte"
+	@java_type "byte"
     @SenML_type "Double";
 	
 datatype Int8	
 	@c_type "int8_t"
 	@c_byte_size "1"
-	@java_type "Byte"
+	@java_type "byte"
     @SenML_type "Double";
 
 datatype UInt16	
 	@c_type "uint16_t"
 	@c_byte_size "2"
-	@java_type "Short"
+	@java_type "short"
     @SenML_type "Double";
 
 datatype Int16	
 	@c_type "int"
     @c_byte_size "2"
-	@java_type "Short"
+	@java_type "short"
     @SenML_type "Double";
 
 
 datatype Long	
 	@c_type "long"
 	@c_byte_size "4"
-	@java_type "Integer"
+	@java_type "int"
     @scala_type "Int"
     @SenML_type "Double";
 	
 datatype ULong	
 	@c_type "unsigned long"
 	@c_byte_size "4"
-	@java_type "Integer"
+	@java_type "int"
     @scala_type "Int"
     @SenML_type "Double";
 
 datatype Double	
 	@c_type "double"
 	@c_byte_size "4"
-	@java_type "Float"
+	@java_type "float"
     @SenML_type "Double";
 
 datatype Char	
 	@c_type "char"
 	@c_byte_size "1"
-	@java_type "Char"
+	@java_type "char"
     @SenML_type "String";
 
 datatype String
@@ -82,7 +82,7 @@ datatype String
     @SenML_type "String";
 	
 enumeration DigitalState 
-	@java_type "Byte"
+	@java_type "byte"
     @c_byte_size "1"
 	@c_type "uint8_t"
 {

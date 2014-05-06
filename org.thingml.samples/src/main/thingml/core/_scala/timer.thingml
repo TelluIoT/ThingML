@@ -1,7 +1,8 @@
 import "../timer.thingml"
 
 datatype ScalaTimer
-@scala_type "org.thingml.utils.timer.Timer";
+@scala_type "org.thingml.utils.timer.Timer"
+@java_type "org.thingml.utils.timer.Timer";
 
 // Manage a set of software timers.
 thing TimerScala includes Timer

@@ -9,7 +9,7 @@
 	<properties>
             <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
             <thingml.version>0.6.0-SNAPSHOT</thingml.version>
-            <jasm.version>0.1.0-SNAPSHOT</kosm.version>
+            <jasm.version>0.1.0-SNAPSHOT</jasm.version>
         </properties>
 	
 	<repositories>        
