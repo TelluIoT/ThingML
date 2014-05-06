@@ -1,0 +1,12 @@
+# *****************************************************************
+# * GENERATED FROM THINGML (http://www.thingml.org) (DO NOT EDIT) *
+# *****************************************************************
+
+# Generate messages
+rosbuild_genmsg()
+
+# Compile ROS executable for package <PACKAGE>
+rosbuild_add_executable(<PACKAGE>
+<SOURCES>)
+
+# END OF GENERATED CODE
