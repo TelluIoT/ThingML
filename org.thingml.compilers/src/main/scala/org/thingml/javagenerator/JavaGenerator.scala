@@ -33,7 +33,6 @@ import java.util.AbstractMap.SimpleEntry
 import java.io.{ File, FileWriter, PrintWriter, BufferedReader, BufferedWriter, InputStreamReader, OutputStream, OutputStreamWriter, PrintStream }
 import org.sintef.thingml._
 
-import org.thingml.utils.log.Logger
 import org.thingml.graphexport.ThingMLGraphExport
 import scala.collection.immutable.HashMap
 
@@ -673,7 +672,7 @@ case class EnumerationLiteralJavaGenerator(override val self: EnumerationLiteral
     }.headOption match {
       case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
       case None => {
-        Logger.warning("Missing annotation enum_val on litteral " + self.getName + " in enum " + self.eContainer().asInstanceOf[ThingMLElement].getName + ", will use default value 0.")
+        println("[WARNING] Missing annotation enum_val on litteral " + self.getName + " in enum " + self.eContainer().asInstanceOf[ThingMLElement].getName + ", will use default value 0.")
         return "0"
       }
     }
@@ -711,7 +710,6 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
         builder append "}\n\n"
       case None =>
         builder append "//No action defined for this transition\n"
-        Logger.info("no action for transition " + self)
     }
     builder append "}\n\n"
   }
@@ -741,7 +739,6 @@ case class StateJavaGenerator(override val self: State) extends ThingMLJavaGener
           self.getEntry.generateJava(builder)
         case None =>
           builder append "//No entry action defined for this state\n"
-          Logger.info("no onEntry action for state " + self)
       }
       builder append "}\n\n"
 
@@ -751,7 +748,6 @@ case class StateJavaGenerator(override val self: State) extends ThingMLJavaGener
           self.getEntry.generateJava(builder)
         case None =>
           builder append "//No entry action defined for this state\n"
-          Logger.info("no onEntry action for state " + self)
       }
       builder append "}\n\n"
       builder append "}\n\n"
@@ -827,7 +823,7 @@ case class TypeJavaGenerator(override val self: Type) extends ThingMLJavaGenerat
         case Some(a) => 
           a.asInstanceOf[PlatformAnnotation].getValue
         case None =>
-          Logger.warning("Warning: Missing annotation java_type or java_type for type " + self.getName + ", using " + self.getName + " as the Java/Java type.")
+          println("[WARNING] Missing annotation java_type or java_type for type " + self.getName + ", using " + self.getName + " as the Java/Java type.")
           var temp : String = self.getName
           temp = temp.capitalize//temp(0).toUpperCase + temp.substring(1, temp.length)
           temp
@@ -1018,7 +1014,7 @@ case class LocalVariableActionJavaGenerator(override val self: LocalVariable) ex
         builder append "null;"
       }
       if (!self.isChangeable)
-        Logger.error("ERROR: readonly variable " + self + " must be initialized")
+        println("[ERROR] readonly variable " + self + " must be initialized")
     }
     builder append "\n"
   }

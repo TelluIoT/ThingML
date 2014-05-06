@@ -33,8 +33,6 @@ import java.util.AbstractMap.SimpleEntry
 import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
 import org.sintef.thingml._
 
-import org.thingml.utils.log.Logger
-
 object Context {
   val builder = new StringBuilder()
   

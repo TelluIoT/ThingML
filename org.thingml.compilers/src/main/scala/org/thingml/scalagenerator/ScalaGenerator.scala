@@ -33,7 +33,6 @@ import java.util.AbstractMap.SimpleEntry
 import java.io.{File, FileWriter, PrintWriter, BufferedReader, BufferedWriter, InputStreamReader, OutputStream, OutputStreamWriter, PrintStream}
 import org.sintef.thingml._
 
-import org.thingml.utils.log.Logger
 import org.thingml.graphexport.ThingMLGraphExport
 
 object Context {
@@ -675,7 +674,7 @@ case class EnumerationLiteralScalaGenerator(override val self: EnumerationLitera
     }.headOption match {
       case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
       case None => {
-          Logger.warning("Missing annotation enum_val on litteral " + self.getName + " in enum " + self.eContainer().asInstanceOf[ThingMLElement].getName + ", will use default value 0.")
+          println("[WARNING] Missing annotation enum_val on litteral " + self.getName + " in enum " + self.eContainer().asInstanceOf[ThingMLElement].getName + ", will use default value 0.")
           return "0"
         }
     }
@@ -716,13 +715,12 @@ case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScal
   
   def printAction(builder: StringBuilder = Context.builder) {
     builder append "override def executeActions() = {\n"
-    builder append "Logger.debug(\"" + handlerInstanceName + ".executeActions\")\n"
+    //builder append "Logger.debug(\"" + handlerInstanceName + ".executeActions\")\n"
     Option(self.getAction) match {
       case Some(a) =>
         self.getAction.generateScala()
       case None =>
         builder append "//No action defined for this transition\n"
-        Logger.info("no action for transition "+self)
     }
     builder append "}\n\n"
   }
@@ -741,21 +739,21 @@ case class TransitionScalaGenerator(override val self: Transition) extends Handl
     Option(self.getBefore) match {
       case Some(a) =>
         builder append "override def executeBeforeActions() = {\n"
-        builder append "Logger.debug(\"" + handlerInstanceName + ".executeBeforeActions\")\n"
+        //builder append "Logger.debug(\"" + handlerInstanceName + ".executeBeforeActions\")\n"
         self.getBefore.generateScala()
         builder append "}\n\n"
       case None =>
-        Logger.info("no before action for transition "+self)
+
     }
     printAction()
     Option(self.getAfter) match {
       case Some(a) =>
         builder append "override def executeAfterActions() = {\n"
-        builder append "Logger.debug(\"" + handlerInstanceName + ".executeAfterActions\")\n"
+        //builder append "Logger.debug(\"" + handlerInstanceName + ".executeAfterActions\")\n"
         self.getAfter.generateScala()
         builder append "}\n\n"
       case None =>
-        Logger.info("no after action for transition "+self)
+
     }
     
     builder append "}\n"
@@ -794,24 +792,22 @@ case class StateScalaGenerator(override val self: State) extends ThingMLScalaGen
   
   def generateActions(builder: StringBuilder = Context.builder) {
     builder append "override def onEntry() = {\n"
-    builder append "Logger.debug(\"" + self.getName + ".onEntry\")\n"
+    //builder append "Logger.debug(\"" + self.getName + ".onEntry\")\n"
     Option(self.getEntry) match {
       case Some(a) =>  
         self.getEntry.generateScala()
       case None =>
         builder append "//No entry action defined for this state\n"
-        Logger.info("no onEntry action for state "+self)
     }
     builder append "}\n\n"
     
     builder append "override def onExit() = {\n"
-    builder append "Logger.debug(\"" + self.getName + ".onExit\")\n"
+    //builder append "Logger.debug(\"" + self.getName + ".onExit\")\n"
     Option(self.getExit) match {
       case Some(a) =>  
         self.getExit.generateScala()
       case None =>
         builder append "//No exit action defined for this state\n"
-        Logger.info("no onExit action for state "+self)
     }
     builder append "}\n\n"
   }
@@ -982,7 +978,7 @@ case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGener
         case Some(a) => 
           a.asInstanceOf[PlatformAnnotation].getValue
         case None =>
-          Logger.warning("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
+          println("[WARNING] Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
           var temp : String = self.getName
           temp = temp.capitalize//temp(0).toUpperCase + temp.substring(1, temp.length)
           temp
@@ -1011,7 +1007,7 @@ case class TypeScalaGenerator(override val self: Type) extends ThingMLScalaGener
             case Some(a) => 
               a.asInstanceOf[PlatformAnnotation].getValue
             case None =>
-              Logger.warning("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
+              println("[WARNING] Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
               var temp : String = self.getName
               temp = temp.capitalize//temp(0).toUpperCase + temp.substring(1, temp.length)
               temp
@@ -1202,7 +1198,7 @@ case class LocalVariableActionScalaGenerator(override val self: LocalVariable) e
         builder append "null.asInstanceOf[" + self.getType.scala_type(self.getCardinality != null) + "]"
       }
       if (!self.isChangeable)
-        Logger.error("ERROR: readonly variable " + self + " must be initialized")
+        println("[ERROR] readonly variable " + self + " must be initialized")
     }
     builder append ").to" + self.getType.scala_type(self.getCardinality != null)
     builder append "\n"

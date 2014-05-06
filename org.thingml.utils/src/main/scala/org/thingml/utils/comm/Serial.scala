@@ -27,7 +27,6 @@ import java.io.InputStream
 import java.io.OutputStream*/
 
 import org.thingml.comm.rxtx.Serial4ThingML
-import org.thingml.utils.log.Logger
 
 trait SerialThingML {
   

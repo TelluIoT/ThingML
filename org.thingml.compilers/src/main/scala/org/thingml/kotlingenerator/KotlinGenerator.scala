@@ -33,7 +33,6 @@ import java.util.AbstractMap.SimpleEntry
 import java.io.{ File, FileWriter, PrintWriter, BufferedReader, BufferedWriter, InputStreamReader, OutputStream, OutputStreamWriter, PrintStream }
 import org.sintef.thingml._
 
-import org.thingml.utils.log.Logger
 import org.thingml.graphexport.ThingMLGraphExport
 
 object Context {
@@ -516,7 +515,7 @@ case class EnumerationLiteralKotlinGenerator(override val self: EnumerationLiter
     }.headOption match {
       case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
       case None => {
-        Logger.warning("Missing annotation enum_val on litteral " + self.getName + " in enum " + self.eContainer().asInstanceOf[ThingMLElement].getName + ", will use default value 0.")
+        println("[WARNING] Missing annotation enum_val on litteral " + self.getName + " in enum " + self.eContainer().asInstanceOf[ThingMLElement].getName + ", will use default value 0.")
         return "0"
       }
     }
@@ -564,7 +563,6 @@ case class HandlerKotlinGenerator(override val self: Handler) extends ThingMLKot
         self.getAction.generateScala()
       case None =>
         builder append "//No action defined for this transition\n"
-        Logger.info("no action for transition " + self)
     }
     builder append "}\n\n"
   }
@@ -594,7 +592,6 @@ case class StateKotlinGenerator(override val self: State) extends ThingMLKotlinG
         self.getEntry.generateScala()
       case None =>
         builder append "//No entry action defined for this state\n"
-        Logger.info("no onEntry action for state " + self)
     }
     builder append "}\n\n"
 
@@ -604,7 +601,6 @@ case class StateKotlinGenerator(override val self: State) extends ThingMLKotlinG
         self.getEntry.generateScala()
       case None =>
         builder append "//No entry action defined for this state\n"
-        Logger.info("no onEntry action for state " + self)
     }
     builder append "}\n\n"
     builder append "}\n\n"
@@ -649,7 +645,7 @@ case class FunctionKotlinGenerator(override val self: Function) extends TypedEle
         builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => Context.protectKotlinKeyword(p.scala_var_name) + " : java.lang." + p.getType.java_type(p.getCardinality != null)}.mkString(", ") + ") : " + returnType + " = {\n"
       else
         builder append "def " + self.getName + "(" + self.getParameters.collect{ case p => Context.protectKotlinKeyword(p.scala_var_name) + " : " + p.getType.scala_type(p.getCardinality != null)}.mkString(", ") + ") : " + returnType + " = {\n"
-      builder append "Logger.debug(\"Executing " + self.getName + " ...\")\n"
+      //builder append "Logger.debug(\"Executing " + self.getName + " ...\")\n"
       builder append "val handler = this\n" 
       self.getBody.generateScala()
       builder append "}\n"
@@ -682,7 +678,7 @@ case class TypeKotlinGenerator(override val self: Type) extends ThingMLKotlinGen
         case Some(a) => 
           a.asInstanceOf[PlatformAnnotation].getValue
         case None =>
-          Logger.warning("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
+          println("[WARNING] Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
           var temp : String = self.getName
           temp = temp.capitalize//temp(0).toUpperCase + temp.substring(1, temp.length)
           temp
@@ -711,7 +707,7 @@ case class TypeKotlinGenerator(override val self: Type) extends ThingMLKotlinGen
             case Some(a) => 
               a.asInstanceOf[PlatformAnnotation].getValue
             case None =>
-              Logger.warning("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
+              println("[WARNING] Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
               var temp : String = self.getName
               temp = temp.capitalize//temp(0).toUpperCase + temp.substring(1, temp.length)
               temp
@@ -764,12 +760,13 @@ case class ActionKotlinGenerator(val self: Action) /*extends ThingMLKotlinGenera
 
 case class SendActionKotlinGenerator(override val self: SendAction) extends ActionKotlinGenerator(self) {
   override def generateScala(builder: StringBuilder = Context.builder) {
-    builder append "handler.getPort(\"" + self.getPort.getName + "\") match{\n"
+    //TODO: port to kotlin
+    /*builder append "handler.getPort(\"" + self.getPort.getName + "\") match{\n"
     builder append "case Some(p) => p.send("
     concreteMsg()
     builder append ")\n"
     builder append "case None => Logger.warning(\"no port " + self.getPort.getName + " You may consider revising your ThingML model. Or contact the development team if you think it is a bug.\")\n"
-    builder append "}\n"
+    builder append "}\n"*/
   }
  
   
@@ -902,7 +899,7 @@ case class LocalVariableActionKotlinGenerator(override val self: LocalVariable) 
         builder append "null.asInstanceOf[" + self.getType.scala_type(self.getCardinality != null) + "]"
       }
       if (!self.isChangeable)
-        Logger.error("ERROR: readonly variable " + self + " must be initialized")
+        println("[ERROR] readonly variable " + self + " must be initialized")
     }
     builder append ").to" + self.getType.scala_type(self.getCardinality != null)
     builder append "\n"
