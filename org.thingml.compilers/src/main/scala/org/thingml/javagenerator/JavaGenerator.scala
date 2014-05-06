@@ -562,9 +562,9 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     var traits = ""
     if (self.hasAnnotation("java_interface")) {
-      traits = ", " + self.annotation("java_interface")
-    } else if (self.hasAnnotation("Java_trait")) {
-      traits = ", " + self.annotation("Java_trait")
+      traits = self.annotation("java_interface")
+    } else if (self.hasAnnotation("scala_trait")) {
+      traits = self.annotation("scala_trait")
     }
     if (traits != "") {
       traits = "implements " + traits
@@ -785,13 +785,14 @@ case class FunctionJavaGenerator(override val self: Function) extends TypedEleme
         a => a.getName == "override"
       }.headOption match {
         case Some(a) => 
-          builder append "@Override\n"
+          builder append "@Override\npublic "
         case None =>
+          builder append "private "
       }
      
       val returnType = self.getType.java_type(self.getCardinality != null)
   
-      builder append "private " + returnType + " " + self.getName + "(" + self.getParameters.collect{ case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
+      builder append returnType + " " + self.getName + "(" + self.getParameters.collect{ case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
       self.getBody.generateJava(builder)
       builder append "}\n"
     }

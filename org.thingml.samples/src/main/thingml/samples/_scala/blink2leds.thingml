@@ -1,14 +1,14 @@
 import "../blink2leds.thingml"
 import "../../hardware/bricks/_scala/led.thingml"
-import "../../core/_scala/timer.thingml"
+import "../../core/_java/timer.thingml"
 
 configuration ScalaBlink2LedsSimulator {       
 
 	instance led1 : LedScala
 	instance led2 : LedScala
 	
-	instance timer1 : TimerScala
-	instance timer2 : TimerScala
+	instance timer1 : TimerJava
+	instance timer2 : TimerJava
 	
 	// The blink application
 	instance app : Blink2Leds

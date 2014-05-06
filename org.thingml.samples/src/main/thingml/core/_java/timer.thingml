@@ -1,0 +1,57 @@
+import "../timer.thingml"
+
+datatype JavaTimer
+@java_type "java.util.Timer";
+
+// Manage a set of software timers.
+thing TimerJava includes Timer
+@pim "Timer"
+@platform "java"
+@java_interface "org.thingml.timer.TimerObserver"
+@thingml_maven_dep "org.thingml.utils"
+{
+
+    property javaTimer : JavaTimer
+
+    function onTimeout()@override "true" 
+    do
+        print("timeout ")
+        timer!timer_timeout()
+    end
+    
+    function cancel() 
+    do
+        print("cancel ")
+        if(not (javaTimer == 'null'))
+      do
+        '' & javaTimer & '.cancel();'
+        '' & javaTimer & '.purge();'
+      end
+    end
+    
+    function start(delay : Integer)
+    do
+        print("start " + delay)
+        cancel()
+        javaTimer = 'new java.util.Timer();'
+        '' & javaTimer & '.scheduleAtFixedRate(new org.thingml.timer.ThingMLTimerTask(this), 0, (long)' & delay & ');'
+    end
+    
+    statechart SoftTimer init default {
+        state default {
+          //on entry print("debug timer on entry")
+            
+          internal start
+            event m : timer?timer_start
+            guard m.delay > 0
+            action do
+                //print("debug timer")
+                start(m.delay)
+            end
+            
+          internal cancel
+            event m : timer?timer_cancel
+            action cancel()    
+        }
+    }
+}
