@@ -408,10 +408,10 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
             case "mirror" => builder append "final " + Context.firstToUpper(i.getType.getName) + "MockMirror " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "MockMirror();\n"
           }
         case None =>
-          builder append "final " + Context.firstToUpper(i.getType.getName) + " " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "("
+          builder append "final " + Context.firstToUpper(i.getType.getName) + " " + i.instanceName + " = (" + Context.firstToUpper(i.getType.getName) + ") new " + Context.firstToUpper(i.getType.getName) + "(\"" + i.getName + ": " + i.getType.getName + "\""
           ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-          builder append (self.initExpressionsForInstance(i).collect{case p =>
-            var result = ""//(if (p._1.isChangeable) "_" else "") + p._1.scala_var_name + " = "
+          self.initExpressionsForInstance(i).foreach{case p =>
+            var result = ""
             if (p._2 != null) {
               var tempbuilder = new StringBuilder()
               p._2.generateJava(tempbuilder)
@@ -419,22 +419,21 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
             } else {
               result += "null"
             }
-            //result += ".asInstanceOf[" + p._1.getType.scala_type(p._1.getCardinality != null) + "]"
-            result
+            builder append ", " + result
           }
-            /*++
-            self.allArrays(i).collect{ case init =>
+          //TODO: init arrays
+          /*self.allArrays(i).collect{ case init =>
               (if (init.isChangeable) "_" else "") + init.scala_var_name + " = " + init.scala_var_name + "_" + i.getName
-            }*/
-            ).mkString(", ")
-          builder append ");\n"
+          } */
+
+          builder append ").buildBehavior();\n"
       }
     }
 
 
     builder append "//Connectors\n"
     self.allConnectors.foreach{ c =>
-      builder append "final Connector " + c.instanceName + " = new Connector("
+      builder append "/*final Connector " + c.instanceName + " = */new Connector("
       builder append c.getCli.getInstance.instanceName + ".get" + Context.firstToUpper(c.getRequired.getName) + "_port(), "
       builder append c.getSrv.getInstance.instanceName + ".get" + Context.firstToUpper(c.getProvided.getName) + "_port(), "
       builder append c.getCli.getInstance.instanceName + ", "
@@ -485,7 +484,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         }
         buildTransitions(builder, c)
         if (c.isInstanceOf[StateMachine]) {
-          builder append "return "
+          builder append "behavior = "
         } else {
           builder append "final CompositeState state_" + c.getName + " = "
         }
@@ -593,13 +592,12 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     }
 
     builder append "//Constructor\n"
-    builder append "public " + Context.firstToUpper(self.getName) + "("
-    builder append self.allPropertiesInDepth.collect {
-      case p =>
-        "final " + p.getType.java_type(p.getCardinality != null) + " " + p.Java_var_name
-    }.mkString(", ")
+    builder append "public " + Context.firstToUpper(self.getName) + "(String name"
+    self.allPropertiesInDepth.foreach { p =>
+        builder append ", final " + p.getType.java_type(p.getCardinality != null) + " " + p.Java_var_name
+    }
     builder append ") {\n"
-    builder append "super();\n"
+    builder append "super(name);\n"
     self.allPropertiesInDepth.foreach { p =>
       builder append "this." + p.Java_var_name + " = " + p.Java_var_name + ";\n"
     }
@@ -611,7 +609,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       p => builder append "public Port get" + Context.firstToUpper(p.getName) + "_port() {\nreturn " + p.getName + "_port;\n}\n"
     }
 
-    builder append "protected CompositeState buildBehavior() {\n"
+    builder append "protected Component buildBehavior() {\n"
 
     builder append "//Init ports\n"
     self.allPorts.foreach { p =>
@@ -632,6 +630,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     }
     
     //builder append "}\n"
+    builder append "return this;\n"
     builder append "}\n\n"
 
     self.allFunctions.foreach {
@@ -695,7 +694,8 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
       builder append "@Override\n"
       builder append "public boolean check(final Event e, final EventType t) {\n"
       builder append "final " + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "MessageType." + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Message ce = (" + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "MessageType." + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Message) e;\n"
-      builder append "return e.getType() == t && "
+      //builder append "return e.getType().equals(t) && "
+      builder append "return "
       self.getGuard.generateJava(builder)
       builder append ";\n"
       builder append "}\n\n"

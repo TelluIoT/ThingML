@@ -32,12 +32,6 @@ import scala.collection.JavaConversions._
 import java.io.File
 import javax.swing.{SwingUtilities, JFrame}
 
-/**
- * User: ffouquet
- * Date: 29/06/11
- * Time: 16:02
- */
-
 object ThingMLApp {
 
   def main(args: scala.Array[scala.Predef.String]): scala.Unit = {

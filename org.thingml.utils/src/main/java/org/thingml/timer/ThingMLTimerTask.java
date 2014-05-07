@@ -15,6 +15,7 @@
  */
 package org.thingml.timer;
 
+import java.util.Timer;
 import java.util.TimerTask;
 
 /**
@@ -31,5 +32,16 @@ public class ThingMLTimerTask extends TimerTask {
     @Override
     public void run() {
         client.onTimeout();
+    }
+
+    public static void main(String args[]) {
+        TimerObserver observer = new TimerObserver() {
+            @Override
+            public void onTimeout() {
+                System.out.println("timeout!");
+            }
+        };
+
+        new Timer().scheduleAtFixedRate(new ThingMLTimerTask(observer), 0, 2000);
     }
 }
