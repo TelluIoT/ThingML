@@ -24,7 +24,7 @@ from os import listdir
 from os.path import isfile, join
 
 
-def run():
+def run(type):
 	os.chdir(r"..")
 
 
@@ -43,31 +43,34 @@ def run():
 
 	if not os.path.exists("_linux"):
 		os.makedirs("_linux")
+	os.system("rm _linux/*")
+	
 	for f in onlyfiles:
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
 			if name != "tester":
-				bigname = name[:0]+name[0].upper()+name[1:]
-				fichier = open('_linux/'+name+'.thingml', 'w')
-				confLines = parse(name+'.thingml')
-				fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/test.thingml"\n'+
-				'import "../'+name+'.thingml"\n'+
-				'import "../tester.thingml"\n'+
-				'import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timer.thingml"\n\n'+
-				'configuration '+bigname+'C \n@output_folder "/home/thingml_out/" {\n'+
-				'	group timer : TimerLinux\n'+
-				'		set timer.timer.millisecond = true\n'+
-				'		set timer.timer.period = 10\n'+
-				'		set timer.clock.period = 10\n\n'+
-				'	instance harness : Tester\n'+
-				'	instance dump : TestDumpLinux\n'+
-				'	instance test : '+bigname+'\n'+
-				'	connector test.harness => dump.dump\n'+
-				'	connector test.harness => harness.test\n'+
-				'	connector harness.testEnd => dump.dump\n'+
-				'	connector harness.timer => timer.timer.timer\n'+
-				confLines+'}')
-				fichier.close()
+				if (type == "perf" and name.startswith("perf")) or (type == "functional" and not name.startswith("perf")):
+					bigname = name[:0]+name[0].upper()+name[1:]
+					fichier = open('_linux/'+name+'.thingml', 'w')
+					confLines = parse(name+'.thingml')
+					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/test.thingml"\n'+
+					'import "../'+name+'.thingml"\n'+
+					'import "../tester.thingml"\n'+
+					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timer.thingml"\n\n'+
+					'configuration '+bigname+'C \n@output_folder "/home/thingml_out/" {\n'+
+					'	group timer : TimerLinux\n'+
+					'		set timer.timer.millisecond = true\n'+
+					'		set timer.timer.period = 10\n'+
+					'		set timer.clock.period = 10\n\n'+
+					'	instance harness : Tester\n'+
+					'	instance dump : TestDumpLinux\n'+
+					'	instance test : '+bigname+'\n'+
+					'	connector test.harness => dump.dump\n'+
+					'	connector test.harness => harness.test\n'+
+					'	connector harness.testEnd => dump.dump\n'+
+					'	connector harness.timer => timer.timer.timer\n'+
+					confLines+'}')
+					fichier.close()
 	print ("Successful generation of linux tests")
 	os.chdir("Tester")

@@ -32,7 +32,8 @@ from os.path import expanduser
 #Tester creates the test file from a string
 #Parser gets (input,output) list from a file
 
-deleteTemporaryFiles = True
+# deleteTemporaryFiles = True
+deleteTemporaryFiles = False
 
 fileName = sys.argv[1]
 rootDirectory = os.getcwd()
@@ -43,7 +44,7 @@ compilerDirectory = os.getcwd()
 print("Compiling test in "+compilerDirectory)
 if not os.path.exists("tmp"):
 	os.makedirs("tmp")
-os.chdir("../org.thingml.tester")
+os.chdir("../org.thingml.perf")
 if not os.path.exists("target/dump"):
     os.makedirs("target/dump")
 
@@ -79,12 +80,13 @@ for (a,b) in results:
 	os.chdir(testsDirectory)
 	#Creating input file
 	if fileName.startswith('perf'):
-		PerfTester().create(input)
+		PerfTester().create()
 	else:
 		Tester().create(input)
 	bigName = fileName[0].upper()+fileName[1:]+"C"
 	
 	#!Test C
+	
 	os.chdir(compilerDirectory)
 	if not os.path.exists("tmp/ThingML_C"):
 		os.makedirs("tmp/ThingML_C")
@@ -132,7 +134,7 @@ for (a,b) in results:
 	os.chdir("..")
 	if deleteTemporaryFiles:
 		os.system("rm -r "+bigName)
-	
+		
 	#!Test scala
 	bigName = fileName[0].upper()+fileName[1:]
 	os.chdir(compilerDirectory)
@@ -164,7 +166,7 @@ for (a,b) in results:
 	os.chdir("..")
 	if deleteTemporaryFiles:
 		os.system("rm -r "+bigName)
-	os.chdir("../../../org.thingml.tester/target/results/Scala")
+	os.chdir("../../../org.thingml.perf/target/results/Scala")
 	mypath = "."
 	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 	for f in onlyfiles:

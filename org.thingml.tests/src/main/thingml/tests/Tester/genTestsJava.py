@@ -22,14 +22,20 @@ import re
 import os
 from os import listdir
 from os.path import isfile, join
-startDir = os.getcwd()
 
-if not os.path.exists("../org.thingml.tester/src/test/java"):
-	os.makedirs("../org.thingml.tester/src/test/java")
-os.chdir("../org.thingml.tester/src/test/java")
-os.system("rm *.java")
-os.chdir(startDir)
-def run():
+def run(type):
+	currentDir=os.getcwd()
+	if type == "perf":
+		if not os.path.exists("../../../../../../org.thingml.perf/src/test/java"):
+			os.makedirs("../../../../../../org.thingml.perf/src/test/java")
+		os.chdir("../../../../../../org.thingml.perf/src/test/java")
+		os.system("rm *.java")
+	elif type == "functional":
+		if not os.path.exists("../../../../../../org.thingml.tester/src/test/java"):
+			os.makedirs("../../../../../../org.thingml.tester/src/test/java")
+		os.chdir("../../../../../../org.thingml.tester/src/test/java")
+		os.system("rm *.java")
+	os.chdir(currentDir)
 	os.chdir(r"..")
 
 	mypath = "."
@@ -40,12 +46,17 @@ def run():
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
 			if name != "tester": 
-			# if name in ("bigTestExample"): 
+			# if name in ("perfTestExample","testHello"):
 			# if name == "testCompEventCapture": 
 			# if name in ("testHello"): 
-				fichier = open('../../../../../org.thingml.tester/src/test/java/'+name+'Test.java', 'w')
-				fichier.write('package org.thingml.tester;\n\n\
-import junit.framework.TestCase;\n\
+				if type == "perf" and name.startswith("perf"):
+					fichier = open('../../../../../org.thingml.perf/src/test/java/'+name+'Test.java', 'w')
+					fichier.write('package org.thingml.perf;\n\n')
+				if type == "functional" and not name.startswith("perf"):
+					fichier = open('../../../../../org.thingml.tester/src/test/java/'+name+'Test.java', 'w')
+					fichier.write('package org.thingml.tester;\n\n')
+				if (type == "perf" and name.startswith("perf")) or (type == "functional" and not name.startswith("perf")):
+					fichier.write('import junit.framework.TestCase;\n\
 import org.junit.Test;\n\
 import org.junit.Before;\n\
 import org.junit.After;\n\
@@ -177,6 +188,6 @@ public class '+name+'Test extends TestCase {\n\
 		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
 	}\n\
 }')
-				fichier.close()
+					fichier.close()
 	print ("Successful generation of java testers")
 	os.chdir("Tester")

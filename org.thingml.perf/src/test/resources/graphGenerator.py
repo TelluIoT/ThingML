@@ -261,10 +261,10 @@ class TransitionSolver:
 		return nonReachables
 # """
 class DumpThingml:
-	def __init__(self,regions,id):
+	def __init__(self,regions):
 		self.depth = 1
 		self.regions=regions
-		self.file=open("perfTest"+str(id)+".thingml",'w')
+		self.file=open("bigTestExample.thingml",'w')
 		self.file.write("/** Abstract tree:\n")
 		oldstdout=sys.stdout
 		sys.stdout=self.file
@@ -275,10 +275,10 @@ class DumpThingml:
 		self.file.write("*/\n\n\n")
 		
 		self.file.write("import \"../../../../../org.thingml.samples/src/main/thingml/thingml.thingml\"\n\n\
-thing perfTest"+str(id)+" includes Test\n\
+thing BigTestExample includes Test\n\
 @test \" # \"\n\
 {\n\
-statechart perfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
+statechart BigTestExample init s"+str(self.regions[0].init.ID)+"{\n")
 		self.firstRegion=True
 		for r in self.regions:
 			r.accept(self)
@@ -305,13 +305,13 @@ statechart perfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 				outputsNumber=element.outputsNumber
 			for e in element.outputs:
 				self.file.write(tabs+"transition -> s"+str(e.ID)+"\n")
-				self.file.write(tabs+"event m : harness?perfTestIn\n")
+				self.file.write(tabs+"event m : harness?bigTestIn\n")
 				self.file.write(tabs+"guard m.i%"+str(element.outputsNumber)+" == "+str(i)+"\n")
 				self.file.write(tabs+"\n")
 				i=i+1
 			if element.parent.isContent and element.parent.finalStates.count(element)>0: # Composite parent
 				self.file.write(tabs+"transition -> final_"+str(element.parent.ID)+"\n")
-				self.file.write(tabs+"event m : harness?perfTestIn\n")
+				self.file.write(tabs+"event m : harness?bigTestIn\n")
 				self.file.write(tabs+"guard m.i%"+str(outputsNumber)+" > "+str(i-1)+"\n")
 			
 			self.file.write(tabs+"state final_"+str(element.ID)+" {}\n\n")
@@ -330,14 +330,14 @@ statechart perfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 				outputsNumber=element.outputsNumber
 			for e in element.outputs:
 				self.file.write(tabs+"transition -> s"+str(e.ID)+"\n")
-				self.file.write(tabs+"event m : harness?perfTestIn\n")
+				self.file.write(tabs+"event m : harness?bigTestIn\n")
 				self.file.write(tabs+"guard m.i%"+str(outputsNumber)+" == "+str(i)+"\n")
 				if e != element.outputs[-1]:
 					self.file.write(tabs+"\n")
 				i=i+1
 			if element.parent.isContent and element.parent.finalStates.count(element)>0: # Composite parent
 				self.file.write("\n"+tabs+"transition -> final_"+str(element.parent.ID)+"\n")
-				self.file.write(tabs+"event m : harness?perfTestIn\n")
+				self.file.write(tabs+"event m : harness?bigTestIn\n")
 				self.file.write(tabs+"guard m.i%"+str(outputsNumber)+" > "+str(i-1)+"\n")
 			
 			self.file.write(outertabs+"}\n\n")
@@ -353,12 +353,8 @@ statechart perfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 			self.file.write(tabs+"}//end of composite\n\n")
 		else: 
 			self.file.write(tabs+"}//end of region\n\n")
-def launch(number,regions,states,outputs,depths,compositeRatio):
-	for i in range (0,number):
-		
-		tree=Initializer(conf).regions
-		DumpThingml(tree)
-"""
+	
+	"""
 conf = Configuration()
 conf.setRegions(1,1)
 conf.setStates(2,2)
@@ -371,5 +367,5 @@ DumpThingml(tree)
 print("\n\n\n")
 for r in tree:
 	r.dump()
-
+"""
 # """

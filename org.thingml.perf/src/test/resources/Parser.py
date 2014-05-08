@@ -14,25 +14,27 @@
 # limitations under the License.
 #
 
-import os
+# -*-coding:Latin-1 -*
+
 import sys
-import genTestsLinux
-import genTestsScala
-import genTestsJava
-import graphGenerator
+import re
 
-type = sys.argv[1]
-
-# os.chdir("../org.thingml.tests/src/main/thingml/tests/Tester/")
-if type == "perf":
-	os.system("rm ../perf*")
-	conf = graphGenerator.Configuration()
-	conf.setRegions(1,1)
-	conf.setStates(2,2)
-	conf.setOutputs(1,2)
-	conf.setDepth(2)
-	conf.setCompositeRatio(0.5)
-	graphGenerator.launch(conf,2)
-genTestsLinux.run(type)
-genTestsScala.run(type)
-genTestsJava.run(type)
+class Parser:
+	def parse(self,fileName):
+		f = open('../'+fileName+'.thingml', 'r')
+		result=[]
+		for line in f:
+			if re.match(r"^@test \".* # .*\".*",line):
+				
+				input = re.sub(r"^@test \"(.*) # (.*)\".*",r"\1",line)
+				output = re.sub(r"^@test \"(.*) # (.*)\".*",r"\2",line)
+				if re.match(".*\n",output):
+					output = output[:-1]
+				if re.match(".*\n",input):
+					input = input[:-1]
+				result.append((input,output))
+		f.close()
+		for tuple in result:
+			print (tuple)
+		return result
+			

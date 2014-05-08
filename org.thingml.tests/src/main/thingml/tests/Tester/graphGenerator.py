@@ -1,9 +1,25 @@
+#
+# Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+#
+# Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# 	http://www.gnu.org/licenses/lgpl-3.0.txt
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 import random
 import sys
 class Element:
 	def __init__(self):
 		self.ID=None
-class Content:
+class Content(Element):
 	def __init__(self):
 		self.inputs=[]
 		self.outputs = []
@@ -26,7 +42,7 @@ class Content:
 				list=i.getNonBlockers(list)
 		return list
 		
-class Group:
+class Group(Element):
 	def __init__(self):
 		self.content = []
 		self.init = None
@@ -261,10 +277,10 @@ class TransitionSolver:
 		return nonReachables
 # """
 class DumpThingml:
-	def __init__(self,regions,id):
+	def __init__(self,tree,id):
 		self.depth = 1
-		self.regions=regions
-		self.file=open("perfTest"+str(id)+".thingml",'w')
+		self.regions=tree
+		self.file=open("../perfTest"+str(id)+".thingml",'w')
 		self.file.write("/** Abstract tree:\n")
 		oldstdout=sys.stdout
 		sys.stdout=self.file
@@ -275,10 +291,10 @@ class DumpThingml:
 		self.file.write("*/\n\n\n")
 		
 		self.file.write("import \"../../../../../org.thingml.samples/src/main/thingml/thingml.thingml\"\n\n\
-thing perfTest"+str(id)+" includes Test\n\
-@test \" # \"\n\
+thing PerfTest"+str(id)+" includes Test\n\
+@test \" # .*\"\n\
 {\n\
-statechart perfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
+statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 		self.firstRegion=True
 		for r in self.regions:
 			r.accept(self)
@@ -353,21 +369,22 @@ statechart perfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 			self.file.write(tabs+"}//end of composite\n\n")
 		else: 
 			self.file.write(tabs+"}//end of region\n\n")
-def launch(number,regions,states,outputs,depths,compositeRatio):
-	for i in range (0,number):
-		
-		tree=Initializer(conf).regions
-		DumpThingml(tree)
-"""
+def launch(conf,number):
+	# for i in range (0,number):
+	tree=Initializer(conf).regions
+	DumpThingml(tree,0)
+
 conf = Configuration()
 conf.setRegions(1,1)
 conf.setStates(2,2)
 conf.setOutputs(1,2)
 conf.setDepth(2)
 conf.setCompositeRatio(0.5)
+launch(conf,2)
 
+"""
 tree=Initializer(conf).regions
-DumpThingml(tree)
+DumpThingml(tree,0)
 print("\n\n\n")
 for r in tree:
 	r.dump()

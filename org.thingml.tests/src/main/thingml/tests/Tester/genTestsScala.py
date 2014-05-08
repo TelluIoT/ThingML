@@ -23,7 +23,7 @@ import os
 from os import listdir
 from os.path import isfile, join
 
-def run():
+def run(type):
 	os.chdir(r"..")
 
 	def parse(fileName):
@@ -42,28 +42,29 @@ def run():
 
 	if not os.path.exists("_scala"):
 		os.makedirs("_scala")
-		
+	os.system("rm _scala/*")
 	for f in onlyfiles:
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
 			if name != "tester":
-				bigname = name[:0]+name[0].upper()+name[1:]
-				fichier = open('_scala/'+name+'.thingml', 'w')
-				confLines = parse(name+'.thingml')
-				fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_scala/test.thingml"\n'+
-				'import "../'+name+'.thingml"\n'+
-				'import "../tester.thingml"\n'+
-				'import "../../../../../../org.thingml.samples/src/main/thingml/core/_scala/timer.thingml"\n\n'+
-				'configuration '+bigname+' {\n'+
-				'	instance timer : TimerScala\n'+
-				'	instance harness : Tester\n'+
-				'	instance dump : TestDumpScala\n'+
-				'	instance test : '+bigname+'\n'+
-				'	connector test.harness => dump.dump\n'+
-				'	connector test.harness => harness.test\n'+
-				'	connector harness.testEnd => dump.dump\n'+
-				'	connector harness.timer => timer.timer\n'+confLines+'}')
-				fichier.close()
+				if (type == "perf" and name.startswith("perf")) or (type == "functional" and not name.startswith("perf")):
+					bigname = name[:0]+name[0].upper()+name[1:]
+					fichier = open('_scala/'+name+'.thingml', 'w')
+					confLines = parse(name+'.thingml')
+					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_scala/test.thingml"\n'+
+					'import "../'+name+'.thingml"\n'+
+					'import "../tester.thingml"\n'+
+					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_scala/timer.thingml"\n\n'+
+					'configuration '+bigname+' {\n'+
+					'	instance timer : TimerScala\n'+
+					'	instance harness : Tester\n'+
+					'	instance dump : TestDumpScala\n'+
+					'	instance test : '+bigname+'\n'+
+					'	connector test.harness => dump.dump\n'+
+					'	connector test.harness => harness.test\n'+
+					'	connector harness.testEnd => dump.dump\n'+
+					'	connector harness.timer => timer.timer\n'+confLines+'}')
+					fichier.close()
 	print ("Successful generation of scala tests")
 	os.chdir("Tester")

@@ -26,7 +26,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.tester
+package org.thingml.perf
 import scala.io.Source
 import junit.framework.Assert
 import java.lang.AssertionError
@@ -126,7 +126,7 @@ object TestsGeneration {
 "	</tr>\n")
 		stats.close();
 		
-		var pb  = new ProcessBuilder("python","genTests.py","functional");
+		var pb  = new ProcessBuilder("python","genTests.py","perf");
 		pb.directory(new File("../org.thingml.tests/src/main/thingml/tests/Tester"));
 		pb.redirectErrorStream(true);
 		var proc  = pb.start();
