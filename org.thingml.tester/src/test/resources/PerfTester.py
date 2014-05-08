@@ -19,7 +19,7 @@
 
 import sys
 import re
-class BigTester:
+class PerfTester:
 	def create(self,inputString):
 		testerFile = open('../tester.thingml', 'w')
 		i=0
@@ -33,7 +33,7 @@ class BigTester:
 				'\t\t\ton entry timer!timer_start(50)\n'
 				'\t\t\ttransition -> e'+str(i+1)+'\n'
 				'\t\t\tevent timer?timer_timeout\n'
-				"\t\t\taction test!bigTestIn("+inputString[0]+")\n\t\t}\n")
+				"\t\t\taction test!perfTestIn("+inputString[0]+")\n\t\t}\n")
 			if (len(inputString) > 1):
 				inputString=inputString[1:]
 			i=i+1

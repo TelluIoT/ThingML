@@ -1,7 +1,7 @@
 import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 
 thing TestEmptyTransition includes Test 
-@test "ttt # IJK"
+@test "ttt # IJKKK"
 {
 	statechart TestEmptyTransition init I {
 		state I {
