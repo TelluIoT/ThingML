@@ -92,6 +92,7 @@ datatype String
 	
 enumeration DigitalState 
 	@java_type "byte"
+    @scala_type "Byte"
     @c_byte_size "1"
 	@c_type "uint8_t"
 {
