@@ -414,6 +414,7 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
             var result = ""
             if (p._2 != null) {
               var tempbuilder = new StringBuilder()
+              tempbuilder append "(" + p._1.getType.java_type() + ")"
               p._2.generateJava(tempbuilder)
               result += tempbuilder.toString
             } else {
@@ -514,12 +515,11 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
             e => e match {
               case r: ReceiveMessage =>
                 if (i.getAction != null) {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + i.getName + "\", new " + i.getName + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n" //TODO: Handler action and event
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + i.getName + "\", new " + (if (i.getName != null) i.getName else i.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n"
                 } else {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + i.getName + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n" //TODO: Handler action and event
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + i.getName + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n"
                 }
             }
-
           }
         }
     }
@@ -530,12 +530,11 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
             e => e match {
               case r: ReceiveMessage =>
                 if (t.getAction != null) {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new " + t.getName + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n" //TODO: Handler action and event
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new " + t.getName + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"
                 } else {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n" //TODO: Handler action and event
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"
                 }
             }
-
           }
         }
         else {builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + t.getName + "\", new NullHandlerAction(), new NullEventType(), null, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"}//TODO: Handler action
@@ -929,9 +928,11 @@ case class VariableAssignmentJavaGenerator(override val self: VariableAssignment
     }
     else {
       builder append self.getProperty.Java_var_name
-      builder append " = "
+      builder append " = ("
+      builder append self.getProperty.getType.java_type()
+      builder append ") ("
       self.getExpression.generateJava(builder)
-      builder append ";\n"
+      builder append ");\n"
     }
   }
 }

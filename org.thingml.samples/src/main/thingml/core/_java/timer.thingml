@@ -3,6 +3,9 @@ import "../timer.thingml"
 datatype JavaTimer
 @java_type "java.util.Timer";
 
+datatype JavaTimerTask
+@java_type "java.util.TimerTask";
+
 // Manage a set of software timers.
 thing TimerJava includes Timer
 @pim "Timer"
@@ -11,30 +14,32 @@ thing TimerJava includes Timer
 @thingml_maven_dep "org.thingml.utils"
 {
 
-    property javaTimer : JavaTimer
+    readonly property javaTimer : JavaTimer = 'new java.util.Timer()'
+    property javaTimerTask : JavaTimerTask
 
     function onTimeout()@override "true" 
     do
-        print("timeout ")
+        print("timeout")
         timer!timer_timeout()
     end
     
     function cancel() 
     do
-        print("cancel ")
-        if(not (javaTimer == 'null'))
+      print("cancel")
+      if(not (javaTimerTask == 'null'))
       do
-        '' & javaTimer & '.cancel();'
-        '' & javaTimer & '.purge();'
+        '' & javaTimerTask & '.cancel();'
+        '' & javaTimerTask & ' = null;'
       end
+      '' & javaTimer & '.purge();'
     end
     
     function start(delay : Integer)
     do
         print("start " + delay)
         cancel()
-        javaTimer = 'new java.util.Timer();'
-        '' & javaTimer & '.scheduleAtFixedRate(new org.thingml.timer.ThingMLTimerTask(this), 0, (long)' & delay & ');'
+        javaTimerTask = 'new org.thingml.timer.ThingMLTimerTask(this)'
+        '' & javaTimer & '.schedule(' & javaTimerTask & ', (long)' & delay & ');'
     end
     
     statechart SoftTimer init default {
@@ -54,4 +59,42 @@ thing TimerJava includes Timer
             action cancel()    
         }
     }
+}
+
+thing TimerClientJava includes TimerClient 
+{
+    statechart Default init Tick {
+        
+        property counter : Integer = 0
+        
+        state Tick {
+            on entry timer!timer_start(1000)
+            
+            transition tock -> Tick
+            event timer?timer_timeout
+            guard '' & counter & '%2 == 0'
+            action do 
+                print("tick")
+                print(counter)
+                counter = counter + 1
+            end
+            
+            internal event tick : timer?timer_timeout
+            guard '' & counter & '%2 == 1'
+            action do
+                print("tock")
+                print(counter)
+                counter = counter + 1
+                timer!timer_start(5000)
+            end
+        }         
+           
+    }   
+
+}
+
+configuration TestTimerJava {
+    instance timer : TimerJava
+    instance client : TimerClientJava
+    connector client.timer => timer.timer    
 }
