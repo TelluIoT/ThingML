@@ -2,10 +2,7 @@
 
 import "../comm.thingml"
 
-/*datatype SerialPhy
-@scala_type "org.thingml.utils.comm.Serial";*/
-
-thing CoAPServerScala includes IOByteArray
+/*thing CoAPServerScala includes IOByteArray
 @pim "IOStream"
 @platform "scala"
 @scala_trait "org.thingml.utils.comm.CoAPThingML"
@@ -86,7 +83,7 @@ thing CoAPClientScala includes IOByteArray
             end
         }    
     }
-}
+}*/
 
 thing SerialScala includes IOByteArray
 @pim "IOStream"

@@ -67,13 +67,13 @@ public class Serial4ThingML {
     protected SerialPort serialPort;
     protected InputStream in;
     protected OutputStream out;
-    protected org.thingml.utils.comm.SerialThingML thing;
+    protected SerialObserver thing;
 
-    public Serial4ThingML(String port, org.thingml.utils.comm.SerialThingML thing) {
+    public Serial4ThingML(String port, SerialObserver thing) {
         this.port = selectSerialPort(port);
         this.thing = thing;
         connect();
-        thing.setSerial4ThingML(this);
+        //thing.setSerial4ThingML(this);
     }
 
     void connect() {
