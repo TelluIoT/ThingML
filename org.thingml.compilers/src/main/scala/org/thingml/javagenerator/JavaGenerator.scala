@@ -471,17 +471,13 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     s match {
       case c: CompositeState =>
-        builder append "final List<IState> states_" + c.getName + " = new ArrayList();\n"
+        builder append "final List<IState> states_" + c.getName + " = new ArrayList<IState>();\n"
         c.getSubstate.foreach { s => buildState(builder, s) }
         val numReg = c.getRegion.size
-        if (numReg>0) {
-          builder append "final List<Region> regions_" + c.getName + " = new ArrayList();\n"
-          c.getRegion.foreach { r =>
-            buildRegion(builder, r)
-            builder append "regions_" + c.getName + ".add(reg_" + r.getName + ");\n"
-          }
-        } else {
-          builder append "final List<Region> regions_" + c.getName + " = Collections.EMPTY_LIST;\n"
+        builder append "final List<Region> regions_" + c.getName + " = new ArrayList<Region>();\n"
+        c.getRegion.foreach { r =>
+          buildRegion(builder, r)
+          builder append "regions_" + c.getName + ".add(reg_" + r.getName + ");\n"
         }
         buildTransitions(builder, c)
         if (c.isInstanceOf[StateMachine]) {
@@ -489,11 +485,12 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         } else {
           builder append "final CompositeState state_" + c.getName + " = "
         }
-        if (numReg>1) {//TODO: we should also use annotations to avoid parallel overhead on single threaded platforms.
-          builder append "new CompositeStateMT(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO Action and history
+        /*if (numReg>1) {//TODO: we should also use annotations to avoid parallel overhead on single threaded platforms.
+          builder append "new CompositeStateMT(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
         } else {
-          builder append "new CompositeStateST(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO Action and history
-        }
+          builder append "new CompositeStateST(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
+        }*/
+        builder append "new CompositeState(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
         if (s.eContainer.isInstanceOf[State]) {
           builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + c.getName + ");\n"
         }
@@ -506,7 +503,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
   }
 
   def buildTransitions(builder: StringBuilder, r : CompositeState) {
-    builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList();\n"
+    builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList<Handler>();\n"
     r.getSubstate.foreach{s =>
     s.getInternal.foreach {
       i =>
@@ -543,11 +540,12 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
   }
 
   def buildRegion(builder: StringBuilder, r: Region) {
-    builder append "val states_" + r.getName + " : MutableList<State> = ArrayList()\n"
+    builder append "final List<IState> states_" + r.getName + " = new ArrayList<IState>()\n"
+    builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList<Handler>()\n"
     r.getSubstate.foreach { s =>
       buildState(builder, s)
     }
-    builder append "val reg_" + r.getName + " : Region = Region(states_" + r.getName + ", state_" + r.getInitial.getName + ", internals, transitions_" + r.getName + ", false)"
+    builder append "final Region reg_" + r.getName + " = new Region(\"" + r.getName + "\", states_" + r.getName + ", state_" + r.getInitial.getName + ", transitions_" + r.getName + ", false)"
   }
 
   def generateJava(builder: StringBuilder) {
@@ -612,8 +610,8 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     builder append "//Init ports\n"
     self.allPorts.foreach { p =>
-      builder append "final List<EventType> inEvents_" + p.getName + " = new ArrayList();\n"
-      builder append "final List<EventType> outEvents_" + p.getName + " = new ArrayList();\n"
+      builder append "final List<EventType> inEvents_" + p.getName + " = new ArrayList<EventType>();\n"
+      builder append "final List<EventType> outEvents_" + p.getName + " = new ArrayList<EventType>();\n"
       p.getReceives.foreach { r =>
         builder append "inEvents_" + p.getName + ".add(" + r.getName + "Type);\n"
       }
@@ -689,16 +687,18 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
   def generateJava(builder: StringBuilder) {
     builder append "private final class " + (if (self.getName != null) self.getName else handlerTypeName) + "Action implements IHandlerAction {\n"
 
+    builder append "@Override\n"
+    builder append "public boolean check(final Event e, final EventType t) {\n"
     if (self.getGuard != null) {
-      builder append "@Override\n"
-      builder append "public boolean check(final Event e, final EventType t) {\n"
       builder append "final " + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "MessageType." + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Message ce = (" + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "MessageType." + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Message) e;\n"
       //builder append "return e.getType().equals(t) && "
       builder append "return "
       self.getGuard.generateJava(builder)
       builder append ";\n"
-      builder append "}\n\n"
+    } else {
+      builder append "return true;"
     }
+    builder append "}\n\n"
 
     Option(self.getAction) match {
       case Some(a) =>
