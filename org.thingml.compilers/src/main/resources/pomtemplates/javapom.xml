@@ -84,6 +84,28 @@
                     </compilerArguments>--><!--For Java8 only-->
                 </configuration>
             </plugin>
+
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+            <execution>
+                <id>unpack-shared-resources</id>
+                <goals>
+                    <goal>unpack-dependencies</goal>
+                </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                    <outputDirectory>${basedir}</outputDirectory>
+                    <includes>**/resources/**</includes>
+                    <includeArtifacIds>org.thingml.samples.resources</includeArtifacIds>
+                    <excludeArtifacIds>org.thingml.samples.utils</excludeArtifacIds>
+                    <includeGroupIds>org.thingml</includeGroupIds>
+                    <excludeTransitive>true</excludeTransitive>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
         </plugins>
     </build>
     

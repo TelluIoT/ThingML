@@ -5,7 +5,7 @@ thing LedJava includes Brick, Led
 @pim "Led"
 @platform "Java"
 {
-    set device = 'new org.thingml.devices.Led()'
+    set device = 'new org.thingml.devices.LedJ()'
     
     statechart LedImpl init LedOff 
     {    
@@ -13,7 +13,7 @@ thing LedJava includes Brick, Led
     
         state LedOff 
         {
-            on entry '((org.thingml.devices.Led)' & device & ').turnOff();'
+            on entry '((org.thingml.devices.LedJ)' & device & ').turnOff();'
             transition switch_on -> LedOn 
             event Led?led_on 
             event Led?led_toggle
@@ -22,7 +22,7 @@ thing LedJava includes Brick, Led
         
         state LedOn 
         {
-            on entry '((org.thingml.devices.Led)' & device & ').turnOn();'
+            on entry '((org.thingml.devices.LedJ)' & device & ').turnOn();'
             transition switch_off -> LedOff 
             event Led?led_off 
             event Led?led_toggle

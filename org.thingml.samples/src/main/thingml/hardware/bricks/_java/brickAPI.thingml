@@ -1,8 +1,7 @@
 import "../../../thingml.thingml"
 
 datatype Device
-@scala_type "org.thingml.devices.Device"
-@java_type "org.thingml.devices.Device";
+@java_type "org.thingml.devices.DeviceJ";
 
 //Wrapped for the electronic bricks (for actuators)
 thing fragment Brick

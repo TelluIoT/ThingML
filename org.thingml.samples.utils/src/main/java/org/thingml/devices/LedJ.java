@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class LedJ implements Device {
+public class LedJ implements DeviceJ {
     //TODO chose color of LED
 
     private final JFrame frame = new JFrame();
