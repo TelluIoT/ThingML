@@ -124,7 +124,7 @@ class Led(val color: LedColor) extends Component with LedModel {
  * 
  * @author Franck CHAUVEL - <franck.chauvel@sintef.no>
  */
-class LedDemo(color: LedColor) extends LedModel with Device {
+class LedDemo(color: LedColor) extends LedModel with DeviceJ {
   private val led: Led = new Led(color)
   val frame = new scala.swing.Frame()
   frame.contents = led

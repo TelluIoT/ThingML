@@ -136,10 +136,8 @@
         <module>org.thingml.editor.eclipse</module>
         <module>org.thingml.utils</module>
 		<module>org.thingml.utils.ws</module>
-        <!--<module>org.thingml.coaphttp</module>--><!--DEPRECATED-->
-        <module>org.thingml.samples.resources</module>
+		<module>org.thingml.samples.resources</module>
         <module>org.thingml.samples.utils</module>
-		<!--<module>org.thingml.simulators</module>--><!--DEPRECATED-->
 		<!-- The standalone app can only be built on the server which has the keystore to sign the jar
 		<module>../org.thingml.editor.standaloneApp</module>-->
 		<module>org.thingml.cmd</module>

@@ -39,12 +39,11 @@
                             <includeArtifacIds>org.thingml.samples.resources</includeArtifacIds>
                             <includeGroupIds>org.thingml</includeGroupIds>
                             <excludeTransitive>true</excludeTransitive>
-             <!--use as much as needed to be specific...also scope,type,classifier etc-->
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <!-- Scala plugin : allow to compile Scala file -->
+			            <!-- Scala plugin : allow to compile Scala file -->
             <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
@@ -64,7 +63,6 @@
                     </jvmArgs>
                 </configuration>
             </plugin>
-
         </plugins>
 
     </build>
@@ -79,8 +77,8 @@
       <!-- Make sure this isn't included on any classpath-->
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
+		
+		        <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
@@ -91,7 +89,6 @@
             <artifactId>scala-swing</artifactId>
             <version>${scala.version}</version>
         </dependency>
-
     </dependencies>
 
 </project>
