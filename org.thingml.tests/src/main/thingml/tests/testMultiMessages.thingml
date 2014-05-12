@@ -64,15 +64,15 @@ thing TestMultiMessages includes Test, MyMsg
 	
 		state Idle {
             on entry count = 0
-			on exit harness!testOut('\'s\'')
+			on exit harnessOut!testOut('\'s\'')
 			transition -> A
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'s\''
 			after pp!a()
 		}
 
 		state A {
-            on entry harness!testOut('\'W\'')
+            on entry harnessOut!testOut('\'W\'')
 			transition -> Tmp1
 			event pp?b
 			transition -> Tmp2
@@ -81,7 +81,7 @@ thing TestMultiMessages includes Test, MyMsg
 		}
 		
 		state Tmp1 {
-			on exit harness!testOut('\'R\'')
+			on exit harnessOut!testOut('\'R\'')
 			transition -> B
 			event m : pp?c
 			guard m.i == count
@@ -93,7 +93,7 @@ thing TestMultiMessages includes Test, MyMsg
 		}
 		
 		state Tmp2 {
-			on exit harness!testOut('\'Q\'')
+			on exit harnessOut!testOut('\'Q\'')
 			transition -> B
 			event pp?b
 			after do
@@ -104,11 +104,11 @@ thing TestMultiMessages includes Test, MyMsg
 		}
 		
 		state B {
-			on entry harness!testOut('\'S\'')
+			on entry harnessOut!testOut('\'S\'')
 			transition -> Idle
 			event m : pp?c
 			guard m.i == count
-			after harness!testOut('\'T\'')	
+			after harnessOut!testOut('\'T\'')	
 		}
 	}
 }

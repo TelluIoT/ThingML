@@ -10,13 +10,13 @@ thing TestOnEntry includes Test
 	
 		state I {
 			transition -> J
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'t\''
 		}
 		state J {
-			on entry harness!testOut('\'E\'')
+			on entry harnessOut!testOut('\'E\'')
 			transition -> J
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'t\''
 		}
 	}

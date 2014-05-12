@@ -41,6 +41,7 @@ import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
 import org.thingml.cgenerator.CGenerator
 import org.thingml.cppgenerator.CPPGenerator
 import org.thingml.scalagenerator.ScalaGenerator
+import org.thingml.javagenerator.JavaGenerator
 //import org.thingml.java.pauwaregenerator.PauWareGenerator
 import org.thingml.javagenerator.gui.SwingGenerator
 import org.thingml.thingmlgenerator.ThingMLGenerator
@@ -66,6 +67,8 @@ object Cmd {
 	      		compileToC(args(1))
 	    	if (args(0) == "scala")
 	      		compileToScala(args(1))
+	    	if (args(0) == "java")
+	      		compileToJava(args(1))
 	    }
 		System.exit(0)
     }
@@ -101,6 +104,26 @@ object Cmd {
 			println("Input file : " + targetFile.get.getAbsolutePath)
           thingmlModel.allConfigurations.foreach{c =>
             ScalaGenerator.compileAndNotRun(c, thingmlModel)                                                                      
+          }
+          
+        }
+        catch {
+          case t : Throwable => t.printStackTrace()
+        }
+      }       
+	  def compileToJava(path : String) {
+			val currentDirectory = new File(System.getProperty("user.dir"))
+			val file : File = new File(currentDirectory.getParent(),path)
+			targetFile = Some(file)
+        println("Input file : " + targetFile)
+		
+        if (targetFile.isEmpty) 
+          return
+        try {
+          val thingmlModel = loadThingMLmodel(targetFile.get)
+			println("Input file : " + targetFile.get.getAbsolutePath)
+          thingmlModel.allConfigurations.foreach{c =>
+            JavaGenerator.compileAndRun(c, thingmlModel, false)                                                                      
           }
           
         }

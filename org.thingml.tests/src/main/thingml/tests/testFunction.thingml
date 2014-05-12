@@ -29,13 +29,13 @@ thing TestFunction includes Test
 			property a : UInt16 = 8
 			
     		transition -> INIT
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'x\''
 			action do
 				var result : ULong = foo(a, 5)
                 var index : UInt16 = 0
                 while (index < result) do
-				    harness!testOut('\'x\'')
+				    harnessOut!testOut('\'x\'')
                     index = index + 1
                 end
 			end

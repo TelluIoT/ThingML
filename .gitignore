@@ -8,6 +8,7 @@ target/
 *.iml
 *.ipr
 *.iws
+*.pyc
 keystore
 /.idea/
 /.idea/*

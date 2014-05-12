@@ -19,6 +19,7 @@ import sys
 import genTestsLinux
 import genTestsScala
 import genTestsJava
+import genTestsJunit
 import graphGenerator
 
 type = sys.argv[1]
@@ -36,3 +37,4 @@ if type == "perf":
 genTestsLinux.run(type)
 genTestsScala.run(type)
 genTestsJava.run(type)
+genTestsJunit.run(type)

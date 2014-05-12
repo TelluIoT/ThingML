@@ -32,7 +32,7 @@ thing TestDumpLinux includes TestDump
             
             
             transition -> End
-            event dump?testEnd
+            event dumpEnd?testEnd
 		}
 		
 		state Failed {

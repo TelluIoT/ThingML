@@ -38,25 +38,25 @@ thing TestPropertyPing includes Test, PingMsg
     
     	state Idle {
     		transition -> Ping
-    		event m : harness?testIn
+    		event m : harnessIn?testIn
     		guard m.c == '\'p\''
     		after ppclient!ping(num)
     		transition -> Ping 
-    		event m : harness?testIn
+    		event m : harnessIn?testIn
     		guard m.c == '\'f\''
     		after ppclient!ping(0) // 0 != num.
     	}
     	
     	state Ping {
-    		on entry harness!testOut('\'P\'')
+    		on entry harnessOut!testOut('\'P\'')
     		transition -> Idle
     		event p : ppclient?pong
     		guard p.num == num
-    		after harness!testOut ('\'1\'')
+    		after harnessOut!testOut ('\'1\'')
     		transition -> Idle
     		event p : ppclient?pong
     		guard not (p.num == num)
-    		after harness!testOut ('\'0\'')
+    		after harnessOut!testOut ('\'0\'')
     	}
     }
 }

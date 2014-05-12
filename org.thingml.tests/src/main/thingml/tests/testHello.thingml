@@ -9,41 +9,41 @@ thing TestHello includes Test
 	
 		state H {	
 			transition -> E 
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'h\''
-			action harness!testOut('\'w\'')
+			action harnessOut!testOut('\'w\'')
 			
-			internal event m : harness?testIn
+			internal event m : harnessIn?testIn
 			guard not (m.c == '\'h\'')
-			action harness!testFailure()
+			action harnessOut!testFailure()
 		}
 		
 		state E {
 			transition -> L1 
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'e\''
-			action harness!testOut('\'o\'')
+			action harnessOut!testOut('\'o\'')
 		}
 		
 		state L1 {
 			transition -> L2 
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'l\''
-			action harness!testOut('\'r\'')
+			action harnessOut!testOut('\'r\'')
 		}
 		
 		state L2 {
 			transition -> O 
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'l\''
-			action harness!testOut('\'l\'')
+			action harnessOut!testOut('\'l\'')
 		}
 		
 		state O {
 			transition -> H 
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'o\''
-			action harness!testOut('\'d\'')
+			action harnessOut!testOut('\'d\'')
 		}
 	}
 }

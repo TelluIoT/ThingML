@@ -36,7 +36,7 @@ thing TestMultiClient includes Test, PingMsg
 	
 		state Ping {
 			transition -> Wait1
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'p\''
 			after ppclient!ping()
 		}
@@ -44,159 +44,159 @@ thing TestMultiClient includes Test, PingMsg
 		state Wait0 {
 			transition -> Wait1
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait1 {
 			transition -> Wait2
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait2 {
 			transition -> Wait3
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait3 {
 			transition -> Wait4
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait4 {
 			transition -> Wait5
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait5 {
 			transition -> Wait6
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait6 {
 			transition -> Wait7
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait7 {
 			transition -> Wait8
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait8 {
 			transition -> Wait9
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait9 {
 			transition -> Wait10
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait10 {
 			transition -> Wait11
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait11 {
 			transition -> Wait12
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait12 {
 			transition -> Wait13
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait13 {
 			transition -> Wait14
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait14 {
 			transition -> Wait15
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait15 {
 			transition -> Wait16
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait16 {
 			transition -> Wait17
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait17 {
 			transition -> Wait18
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait18 {
 			transition -> Wait19
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait19 {
 			transition -> Wait20
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait20 {
 			transition -> Wait21
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait21 {
 			transition -> Wait22
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait22 {
 			transition -> Wait23
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait23 {
 			transition -> Wait24
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait24 {
 			transition -> Wait25
 			event m : ppclient?pong
-			after harness!testOut('\'R\'') 
+			after harnessOut!testOut('\'R\'') 
 		}
 		
 		state Wait25 {
 			transition -> Ping
 			event m : ppclient?pong
 			after do 
-				harness!testOut('\'R\'')
-				harness!testOut('\'W\'')
+				harnessOut!testOut('\'R\'')
+				harnessOut!testOut('\'W\'')
 				end 
 		}
 	}

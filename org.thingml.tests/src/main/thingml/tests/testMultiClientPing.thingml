@@ -43,22 +43,22 @@ thing TestMultiClientPing includes Test, PingMsg
 	statechart TestMultiClientPing init Ping {
 	
 		state Ping {
-			internal event m : harness?testIn
+			internal event m : harnessIn?testIn
 			guard m.c == '\'1\''
 			action do
-                	harness!testOut('\'P\'')
+                	harnessOut!testOut('\'P\'')
                 	ppclient1!ping(1)
                 end
-            internal event m : harness?testIn
+            internal event m : harnessIn?testIn
 			guard m.c == '\'2\''
 			action do
-                	harness!testOut('\'P\'')
+                	harnessOut!testOut('\'P\'')
                 	ppclient2!ping(2)
             	end
-            internal event m : harness?testIn
+            internal event m : harnessIn?testIn
 			guard m.c == '\'0\''
 			action do
-                	harness!testOut('\'P\'')
+                	harnessOut!testOut('\'P\'')
                 	ppclient2!ping(0)
             	end
 		}
@@ -68,7 +68,7 @@ thing TestMultiClientPing includes Test, PingMsg
 			state Idle {
 				internal event p : ppclient1?pong
 				guard p.num == 1
-				action harness!testOut('\'1\'')
+				action harnessOut!testOut('\'1\'')
 			}
 		}
 		
@@ -77,7 +77,7 @@ thing TestMultiClientPing includes Test, PingMsg
 			state Idle {
 				internal event p : ppclient2?pong
 				guard p.num == 2
-				action harness!testOut('\'2\'')
+				action harnessOut!testOut('\'2\'')
 			}
 		}
 	}

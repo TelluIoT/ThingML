@@ -187,12 +187,19 @@ object JavaGenerator {
     }
   }
 
-  def compileAndRun(cfg: Configuration, model: ThingMLModel) {
-    new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
+  def compileAndRun(cfg: Configuration, model: ThingMLModel, run: Boolean = true) {
+	var tmpFolder = ""
+	if (run){
+		tmpFolder=System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
+	}
+	else{
+		tmpFolder="tmp/ThingML_Java/"
+	}
+    new File(tmpFolder).deleteOnExit
 
     val code = compile(cfg, "org.thingml.generated", model)
-    val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
-    val outputDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/java/org/thingml/generated"
+    val rootDir = tmpFolder + cfg.getName
+    val outputDir = tmpFolder + cfg.getName + "/src/main/java/org/thingml/generated"
 
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
@@ -224,9 +231,9 @@ object JavaGenerator {
     val w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
     w.println(pom);
     w.close();
-
-    javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
-
+	if (run){
+    	javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+	}
     /*
      * GENERATE SOME DOCUMENTATION
      */
@@ -260,11 +267,11 @@ object JavaGenerator {
         t.printStackTrace
       }
     }
-
-    actor {
-      compileGeneratedCode(rootDir)
-    }
-
+	if (run){
+		actor {
+		  compileGeneratedCode(rootDir)
+		}
+	}
   }
 
   def isWindows(): Boolean = {
