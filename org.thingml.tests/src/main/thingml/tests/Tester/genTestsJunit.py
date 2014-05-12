@@ -130,7 +130,10 @@ public class '+name+'Test extends TestCase {\n\
 				}\n\
 				assertTrue("C compiler error: "+outputC+" does not match "+output+" for input "+input+" ("+regex+")",success);\n\
 			}\n\
-		}catch(Exception e){fail("Error: " + e.getMessage());}\n\
+		}catch(Exception e){\n\
+		successC=false;\n\
+		messageC = "NoDumpFound";\n\
+		fail("Error: " + e.getMessage());}\n\
 	}\n\
 	@Test\n\
 	public void testScala(){\n\
@@ -163,7 +166,10 @@ public class '+name+'Test extends TestCase {\n\
 			}\n\
 			dump.close();\n\
 			dumpScala.close();\n\
-		}catch(Exception e){fail("Error: " + e.getMessage());}\n\
+		}catch(Exception e){\n\
+		successScala=false;\n\
+		messageScala = "NoDumpFound";\n\
+		fail("Error: " + e.getMessage());}\n\
 	}\n\
 	@Test\n\
 	public void testJava(){\n\
@@ -196,7 +202,10 @@ public class '+name+'Test extends TestCase {\n\
 			}\n\
 			dump.close();\n\
 			dumpJava.close();\n\
-		}catch(Exception e){fail("Error: " + e.getMessage());}\n\
+		}catch(Exception e){\n\
+		successJava=false;\n\
+		messageJava = "NoDumpFound";\n\
+		fail("Error: " + e.getMessage());}\n\
 	}\n\
 	@After\n\
 	public void dump(){\n\
