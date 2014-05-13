@@ -6,7 +6,7 @@ datatype Dumper
 thing TestDumpJava includes TestDump
 @thingml_maven_dep "org.thingml.samples.utils"
 {
-   property device : Dumper  
+   property device : Dumper = 'new org.thingml.devices.Dumper()'
 	
 	function write(string : String) 
 	do
@@ -17,9 +17,6 @@ thing TestDumpJava includes TestDump
 	statechart JavaHarness init Testing {
 		property transitionsCount : Integer = 0
 		state Testing {
-			on entry do device = 'new org.thingml.devices.Dumper()'
-				print("starting")
-			 end
             internal event m : dump?testOut
             action do write('Character.toString('&m.c&')')
             	transitionsCount=transitionsCount+1

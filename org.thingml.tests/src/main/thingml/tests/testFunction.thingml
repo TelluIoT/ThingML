@@ -1,7 +1,7 @@
 import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 
 thing TestFunction includes Test 
-@test "x # xxxxxxxx;"
+@test "x # xxxxxxxx"
 {
     //Test function call from a function
     function foo(a : UInt16, b : UInt16) : ULong do
