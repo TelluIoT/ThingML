@@ -645,8 +645,11 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       b.generateJava(builder)
     }
 
-    self.allInternalTransitionsWithAction.foreach{t => t.generateJava(builder)}
-    self.allTransitionsWithAction.foreach{t => t.generateJava(builder)}
+
+    self.getBehaviour.head.allMessageHandlers.foreach{case (k, v) => v.foreach{case (k2, v2) => v2.foreach{t =>  t.generateJava(builder)}}}
+
+    /*self.allInternalTransitionsWithAction().foreach{t => t.generateJava(builder)}
+    self.allTransitions.foreachWithAction(){t => t.generateJava(builder)}*///BUG: we want to generate handlers with no action but with a guard!!!
 
 
     builder append "}\n"
@@ -692,10 +695,12 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
   val handlerTypeName = "Handler_" + self.hashCode //TODO: find prettier names for handlers
 
   def generateJava(builder: StringBuilder) {
+    //if (self.getGuard != null || self.getAction != null) {
     builder append "private final class " + (if (self.getName != null) self.getName else handlerTypeName) + "Action implements IHandlerAction {\n"
 
-    builder append "@Override\n"
-    builder append "public boolean check(final Event e, final EventType t) {\n"
+
+      builder append "@Override\n"
+      builder append "public boolean check(final Event e, final EventType t) {\n"
     if (self.getGuard != null) {
       builder append "final " + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "MessageType." + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Message ce = (" + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "MessageType." + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Message) e;\n"
       //builder append "return e.getType().equals(t) && "
@@ -703,22 +708,23 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
       self.getGuard.generateJava(builder)
       builder append ";\n"
     } else {
-      builder append "return true;"
+      builder append "return true;\n"
     }
-    builder append "}\n\n"
+      builder append "}\n\n"
 
+    builder append "@Override\n"
+    builder append "public void execute(final Event e) {\n"
     Option(self.getAction) match {
       case Some(a) =>
-        builder append "@Override\n"
-        builder append "public void execute(final Event e) {\n"
         builder append "final " + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "MessageType." + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Message ce = (" + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "MessageType." + Context.firstToUpper(self.getEvent.first.asInstanceOf[ReceiveMessage].getMessage.getName) + "Message) e;\n"
         self.getAction.generateJava(builder)
-        builder append "}\n\n"
       case None =>
         builder append "//No action defined for this transition\n"
     }
     builder append "}\n\n"
-  }
+    builder append "}\n\n"
+  //}
+}
 }
 
 case class TransitionJavaGenerator(override val self: Transition) extends HandlerJavaGenerator(self) {
