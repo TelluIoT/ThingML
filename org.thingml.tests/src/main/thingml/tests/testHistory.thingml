@@ -1,8 +1,8 @@
 import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 
 thing TestHistory includes Test 
-@test "t # C0"
-@test "tntt # C0123XIC2"
+@test "t # IC0"
+@test "tntt # IC0123XIC2"
 
 {
 	statechart TestHistory init I {

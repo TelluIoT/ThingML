@@ -4,7 +4,7 @@ thing TestBefore includes Test
 @test "t # BX"
 @test "tt # BXBX"
 @test "tdfgt # BXBX"
-@test "t* # BX*"
+@test "t* # (BX)*"
 {
 	statechart TestBefore init I {
 	

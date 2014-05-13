@@ -4,7 +4,7 @@ thing TestAfter includes Test
 @test "t # EA"
 @test "tt # EAEA"
 @test "tdfgt # EAEA"
-@test "t* # EA*"
+@test "t* # (EA)*"
 {
 	statechart TestAfter init I {
 	

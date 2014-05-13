@@ -3,7 +3,7 @@ import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 thing TestCompositeStates includes Test 
 @test "n # 01"
 @test "nn # 0123"
-@test "nni # 01232"
+@test "nni # 012320"
 @test "nnn # 012345"
 @test "nnnoip # 012345543210"
 
