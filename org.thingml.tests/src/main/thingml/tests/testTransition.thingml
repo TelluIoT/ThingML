@@ -9,19 +9,19 @@ thing TestTransition includes Test
 	statechart TestTransition init I {
 	
 		state I {
-			on entry harness!testOut('\'I\'')
+			on entry harnessOut!testOut('\'I\'')
 			transition -> F
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'t\''
 		}
 		
 		state F {
-			on entry harness!testOut('\'I\'')
+			on entry harnessOut!testOut('\'I\'')
 			transition -> I
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'t\''
 			transition -> F
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'b\''
 		}
 	}

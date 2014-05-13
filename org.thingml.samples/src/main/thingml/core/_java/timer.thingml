@@ -93,8 +93,8 @@ thing TimerClientJava includes TimerClient
 
 }
 
-configuration TestTimerJava {
+/*configuration TestTimerJava {
     instance timer : TimerJava
     instance client : TimerClientJava
     connector client.timer => timer.timer    
-}
+}*/

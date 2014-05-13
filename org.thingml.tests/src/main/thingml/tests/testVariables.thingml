@@ -20,16 +20,16 @@ thing TestVariables includes Test
     			var pe : Char = '\'e\''
     			if (pa == '\'a\'') do
     				var pf : Char = '\'f\''
-    				harness!testOut( pa )
-    				harness!testOut( pb )
-    				harness!testOut( pc )
-    				harness!testOut( pd )
-    				harness!testOut( pe )
-    				harness!testOut( pf )
+    				harnessOut!testOut( pa )
+    				harnessOut!testOut( pb )
+    				harnessOut!testOut( pc )
+    				harnessOut!testOut( pd )
+    				harnessOut!testOut( pe )
+    				harnessOut!testOut( pf )
     				pe = '\'x\''
     				pf = '\'x\''
-    				harness!testOut( pe )
-    				harness!testOut( pf )
+    				harnessOut!testOut( pe )
+    				harnessOut!testOut( pf )
     			end
     			pa = '\'x\''
     			pc = '\'x\''
@@ -37,16 +37,16 @@ thing TestVariables includes Test
     		end
     		
     		transition -> state2
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'x\''
 			action do
-				harness!testOut( pa ) pa = '\'a\''
-				harness!testOut( pb )
-				harness!testOut( pc ) pc = '\'c\''
-				harness!testOut( pd ) pd = '\'d\''
+				harnessOut!testOut( pa ) pa = '\'a\''
+				harnessOut!testOut( pb )
+				harnessOut!testOut( pc ) pc = '\'c\''
+				harnessOut!testOut( pd ) pd = '\'d\''
 				var pg : Char
 				pg = '\'g\''
-				harness!testOut( pg )
+				harnessOut!testOut( pg )
 			end
     		
     	}
@@ -54,12 +54,12 @@ thing TestVariables includes Test
     	state state2 {
     		
     		transition -> state1
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'x\''
 			action do
-				harness!testOut( pa ) 
-				harness!testOut( pb )
-				harness!testOut( pc ) 
+				harnessOut!testOut( pa ) 
+				harnessOut!testOut( pb )
+				harnessOut!testOut( pc ) 
 			end
 			
     	}

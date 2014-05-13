@@ -9,9 +9,9 @@ thing TestOnExit includes Test
 	statechart TestOnExit init I {
 	
 		state I {
-			on exit harness!testOut('\'X\'')
+			on exit harnessOut!testOut('\'X\'')
 			transition -> I
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'t\''
 		}
 	}

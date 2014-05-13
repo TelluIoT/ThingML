@@ -35,22 +35,22 @@ thing TestPing includes Test, PingMsg
 	
 		state Ping {
 			transition -> Pong
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'p\''
 			after do
-                harness!testOut('\'p\'')
+                harnessOut!testOut('\'p\'')
                 ppclient!ping()
             end
 		}
 
 		state Pong {
     
-            on entry harness!testOut('\'e\'')
-            on exit harness!testOut('\'x\'')
+            on entry harnessOut!testOut('\'e\'')
+            on exit harnessOut!testOut('\'x\'')
 
 			transition -> Ping
 			event m : ppclient?pong
-			after harness!testOut('\'r\'')
+			after harnessOut!testOut('\'r\'')
 		}
 	}
 }

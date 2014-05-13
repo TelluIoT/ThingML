@@ -1,47 +1,45 @@
 import "../test.thingml"
 
 datatype Dumper
-@scala_type "org.thingml.devices.Dumper";
+@java_type "org.thingml.devices.Dumper";
 
-thing TestDumpScala includes TestDump
+thing TestDumpJava includes TestDump
 @thingml_maven_dep "org.thingml.samples.utils"
 {
    property device : Dumper  
 	
 	function write(string : String) 
 	do
-		'' & device & '.asInstanceOf[org.thingml.devices.Dumper].write(' & string & ')'
+		'((org.thingml.devices.Dumper)' & device & ').write(' & string & ');'
 		print(string)
 	end
 	
-	statechart ScalaHarness init Testing {
+	statechart JavaHarness init Testing {
 		property transitionsCount : Integer = 0
-		
-		
 		state Testing {
-			on entry device = 'new org.thingml.devices.Dumper()'
-            
+			on entry do device = 'new org.thingml.devices.Dumper()'
+				print("starting")
+			 end
             internal event m : dump?testOut
-            action do write(m.c)
+            action do write('Character.toString('&m.c&')')
             	transitionsCount=transitionsCount+1
             end
             
             transition -> Failed 
             event dump?testFailure
-            action write("*FAILURE*")
             
             transition -> End
             event dumpEnd?testEnd
 		}
 		
 		state Failed {
-
+			on entry write("*FAILURE*")
 		}
 
 		state End {
 			on entry do
 				print("End of thingml processus") 
-				'' & device & '.asInstanceOf[org.thingml.devices.Dumper].stop('&transitionsCount&')'
+				'((org.thingml.devices.Dumper)' & device & ').stop((int)'&transitionsCount&');'
 			end
 		}
 	}

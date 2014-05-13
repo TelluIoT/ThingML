@@ -24,170 +24,47 @@ from os import listdir
 from os.path import isfile, join
 
 def run(type):
-	currentDir=os.getcwd()
-	if type == "perf":
-		if not os.path.exists("../../../../../../org.thingml.perf/src/test/java"):
-			os.makedirs("../../../../../../org.thingml.perf/src/test/java")
-		os.chdir("../../../../../../org.thingml.perf/src/test/java")
-		os.system("rm *.java")
-	elif type == "functional":
-		if not os.path.exists("../../../../../../org.thingml.tester/src/test/java"):
-			os.makedirs("../../../../../../org.thingml.tester/src/test/java")
-		os.chdir("../../../../../../org.thingml.tester/src/test/java")
-		os.system("rm *.java")
-	os.chdir(currentDir)
 	os.chdir(r"..")
+
+	def parse(fileName):
+		file = open(fileName)
+		result=''
+		for line in file:
+			if re.match(r"@conf \".*\"",line):
+				confLine = re.sub(r"@conf \"(.*)\"",r"\1",line)
+				result=result+'\t'+confLine
+		file.close()
+		return result
+
 
 	mypath = "."
 	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
-		
+
+	if not os.path.exists("_java"):
+		os.makedirs("_java")
+	os.system("rm _java/*")
 	for f in onlyfiles:
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
-			if name != "tester": 
-			# if name in ("perfTestExample","testHello"):
-			# if name == "testCompEventCapture": 
-			# if name in ("testHello"): 
-				if type == "perf" and name.startswith("perf"):
-					fichier = open('../../../../../org.thingml.perf/src/test/java/'+name+'Test.java', 'w')
-					fichier.write('package org.thingml.perf;\n\n')
-				if type == "functional" and not name.startswith("perf"):
-					fichier = open('../../../../../org.thingml.tester/src/test/java/'+name+'Test.java', 'w')
-					fichier.write('package org.thingml.tester;\n\n')
+			if name != "tester":
 				if (type == "perf" and name.startswith("perf")) or (type == "functional" and not name.startswith("perf")):
-					fichier.write('import junit.framework.TestCase;\n\
-import org.junit.Test;\n\
-import org.junit.Before;\n\
-import org.junit.After;\n\
-import java.util.regex.Pattern;\n\
-import java.util.regex.Matcher;\n\
-import org.junit.runner.RunWith;\n\
-import org.junit.runners.JUnit4;\n\
-\n\
-import java.util.ArrayList;\n\
-import java.util.List;\n\
-import java.io.*;\n\
-\n\
-@RunWith(JUnit4.class)\n\
-public class '+name+'Test extends TestCase {\n\
-	\n\
-	private static boolean setUpIsNotDone = true;\n\
-	private static boolean CTried = false;\n\
-	private static boolean ScalaTried = false;\n\
-	private static boolean successC = true;\n\
-	private static boolean successScala = true;\n\
-	private static String messageC = "";\n\
-	private static String messageScala = "";\n\
-	@Before\n\
-	public void init(){\n\
-		if (setUpIsNotDone)\n\
-		try{\n\
-			setUpIsNotDone = false;\n\
-			ProcessBuilder pb = new ProcessBuilder("python","execute.py","'+name+'");\n\
-			pb.directory(new File("src/test/resources"));\n\
-			pb.redirectErrorStream(true);\n\
-			Process proc = pb.start();\n\
-			System.out.println("Process started !");\n\
-			String line;\n\
-			BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));\n\
-			while ((line = in.readLine()) != null) {\n\
-				System.out.println(line);\n\
-			}\n\
-			proc.destroy();\n\
-			in.close();\n\
-		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
-	}\n\
-	@Test\n\
-	public void testC(){\n\
-		try{\n\
-			CTried = true;\n\
-			System.out.println(System.getProperty("user.dir"));\n\
-			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'.dump")));\n\
-			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'C.dump")));\n\
-			String regex;\n\
-			String input;\n\
-			String output;\n\
-			String outputC;\n\
-			while ((regex = dump.readLine()) != null){\n\
-				input = dump.readLine();\n\
-				output = dump.readLine();\n\
-				outputC = dumpC.readLine();\n\
-				Pattern pattern = \n\
-				Pattern.compile(output);\n\
-				Matcher matcher = \n\
-				pattern.matcher(outputC);\n\
-				boolean success = matcher.matches();\n\
-				if(!success){\n\
-					successC=false;\n\
-					if(outputC == "ErrorAtCompilation")\n\
-						messageC = "Error at compilation";\n\
-					else\n\
-						messageC = outputC+" does not match "+output+" for input "+input+" ("+regex+")";\n\
-				}\n\
-				assertTrue("C compiler error: "+outputC+" does not match "+output+" for input "+input+" ("+regex+")",success);\n\
-			}\n\
-		}catch(Exception e){fail("Error: " + e.getMessage());}\n\
-	}\n\
-	@Test\n\
-	public void testScala(){\n\
-		try{\n\
-			ScalaTried = true;\n\
-			System.out.println(System.getProperty("user.dir"));\n\
-			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'.dump")));\n\
-			BufferedReader dumpScala = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'Scala.dump")));\n\
-			String regex;\n\
-			String input;\n\
-			String output;\n\
-			String outputScala;\n\
-			while ((regex = dump.readLine()) != null){\n\
-				input = dump.readLine();\n\
-				output = dump.readLine();\n\
-				outputScala = dumpScala.readLine();\n\
-				Pattern pattern = \n\
-				Pattern.compile(output);\n\
-				Matcher matcher = \n\
-				pattern.matcher(outputScala);\n\
-				boolean success = matcher.matches();\n\
-				if(!success){\n\
-					successScala=false;\n\
-					if(outputScala == "ErrorAtCompilation")\n\
-						messageScala = "Error at compilation";\n\
-					else\n\
-						messageScala = outputScala+" does not match "+output+" for input "+input+" ("+regex+")";\n\
-				}\n\
-				assertTrue("Scala compiler error: "+outputScala+" does not match "+output+" for input "+input+" ("+regex+")",success);\n\
-			}\n\
-			dump.close();\n\
-			dumpScala.close();\n\
-		}catch(Exception e){fail("Error: " + e.getMessage());}\n\
-	}\n\
-	@After\n\
-	public void dump(){\n\
-		if(CTried && ScalaTried)\n\
-		try{\n\
-			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("src/test/resources/results.html", true)));\n\
-			result.write("<tr><th></th><th></th><th></th></tr>\\n");\n\
-			if (successC){\n\
-				result.write("<tr class=\\"green\\">\\n");\n\
-				result.write("<th>'+name+'</th><th>C</th><th>Success</th>\\n");\n\
-			}else{\n\
-				result.write("<tr class=\\"red\\">\\n");\n\
-				result.write("<th>'+name+'</th><th>C</th><th>"+messageC+"</th>\\n");\n\
-			}\n\
-			result.write("</tr>\\n<tr>\\n");\n\
-			if (successScala){\n\
-				result.write("<tr class=\\"green\\">\\n");\n\
-				result.write("<th>'+name+'</th><th>Scala</th><th>Success</th>\\n");\n\
-			}else{\n\
-				result.write("<tr class=\\"red\\">\\n");\n\
-				result.write("<th>'+name+'</th><th>Scala</th><th>"+messageScala+"</th>\\n");\n\
-			}\n\
-			result.write("</tr>\\n");\n\
-			result.close();\n\
-		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
-	}\n\
-}')
+					bigname = name[:0]+name[0].upper()+name[1:]
+					fichier = open('_java/'+name+'.thingml', 'w')
+					confLines = parse(name+'.thingml')
+					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/test.thingml"\n'+
+					'import "../'+name+'.thingml"\n'+
+					'import "../tester.thingml"\n'+
+					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/timer.thingml"\n\n'+
+					'configuration '+bigname+' {\n'+
+					'	instance timer : TimerJava\n'+
+					'	instance harness : Tester\n'+
+					'	instance dump : TestDumpJava\n'+
+					'	instance test : '+bigname+'\n'+
+					'	connector test.harnessOut => dump.dump\n'+
+					'	connector test.harnessIn => harness.test\n'+
+					'	connector harness.testEnd => dump.dumpEnd\n'+
+					'	connector harness.timer => timer.timer\n'+confLines+'}')
 					fichier.close()
-	print ("Successful generation of java testers")
+	print ("Successful generation of scala tests")
 	os.chdir("Tester")

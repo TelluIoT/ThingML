@@ -6,7 +6,7 @@ thing TestInit includes Test
 	statechart TestInit init I {
 	
 		state I {
-			on entry harness!testOut('\'E\'')
+			on entry harnessOut!testOut('\'E\'')
 		}
 	}
 }

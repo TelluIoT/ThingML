@@ -8,33 +8,33 @@ thing TestHistory includes Test
 	statechart TestHistory init I {
 	
 		state I {
-			on entry harness!testOut('\'I\'')
+			on entry harnessOut!testOut('\'I\'')
 			transition -> C
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'t\''
 		}
 		
 		composite state C init C1 keeps history {
 		
-		on entry harness!testOut('\'C\'')
-		on exit harness!testOut('\'X\'')
+		on entry harnessOut!testOut('\'C\'')
+		on exit harnessOut!testOut('\'X\'')
 		transition -> I
-		event m : harness?testIn
+		event m : harnessIn?testIn
 		guard m.c == '\'t\''
 		
 			state C1 {
-				on entry harness!testOut('\'0\'')
-				on exit harness!testOut('\'1\'')
+				on entry harnessOut!testOut('\'0\'')
+				on exit harnessOut!testOut('\'1\'')
 				transition -> C2
-				event m : harness?testIn
+				event m : harnessIn?testIn
 				guard m.c == '\'n\''
 			}
 			
 			state C2 {
-				on entry harness!testOut('\'2\'')
-				on exit harness!testOut('\'3\'')
+				on entry harnessOut!testOut('\'2\'')
+				on exit harnessOut!testOut('\'3\'')
 				transition -> C1
-				event m : harness?testIn
+				event m : harnessIn?testIn
 				guard m.c == '\'n\''
 			}
 		}			

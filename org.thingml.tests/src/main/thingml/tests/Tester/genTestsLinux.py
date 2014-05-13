@@ -66,9 +66,9 @@ def run(type):
 					'	instance harness : Tester\n'+
 					'	instance dump : TestDumpLinux\n'+
 					'	instance test : '+bigname+'\n'+
-					'	connector test.harness => dump.dump\n'+
-					'	connector test.harness => harness.test\n'+
-					'	connector harness.testEnd => dump.dump\n'+
+					'	connector test.harnessOut => dump.dump\n'+
+					'	connector test.harnessIn => harness.test\n'+
+					'	connector harness.testEnd => dump.dumpEnd\n'+
 					'	connector harness.timer => timer.timer.timer\n'+
 					confLines+'}')
 					fichier.close()

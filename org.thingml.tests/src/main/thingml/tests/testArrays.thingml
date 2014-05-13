@@ -26,21 +26,21 @@ thing TestArrays includes Test
     
     	state start {
     		transition -> initialized
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'x\''
     	}
     	
     	state initialized {
     	on entry do
-            harness!testOut('\'e\'')
+            harnessOut!testOut('\'e\'')
     		// Test sequential read in both directions and that index are properly interpreted
     		index = 0
     		while (index < 8) do
-                harness!testOut(array[index])
-                harness!testOut(array[7-index])
+                harnessOut!testOut(array[index])
+                harnessOut!testOut(array[7-index])
                 index = index + 1
     		end
-            harness!testOut('\'e\'')
+            harnessOut!testOut('\'e\'')
             // Test affectation of an array to another one
             // and affection of a variable from an array entry
             // and write into an array
@@ -48,9 +48,9 @@ thing TestArrays includes Test
             var array2 : Char[8] = array
             while (index < 8) do
                 var v : Char = array2[index]
-                harness!testOut(v)
+                harnessOut!testOut(v)
                 array[index] = '\'w\''
-                harness!testOut(array[index])
+                harnessOut!testOut(array[index])
                 index = index + 1
             end
     	end

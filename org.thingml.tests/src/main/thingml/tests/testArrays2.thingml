@@ -19,14 +19,14 @@ thing TestArrays2 includes Test
     
     	state state1 {
     		transition -> state2
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'x\''
 			action do
 				var array : Char[5]
 				var index : Int8 = 0
 				while (index < 5) do 
 					array[index] = hello[index]
-					harness!testOut( array[index] )
+					harnessOut!testOut( array[index] )
                     index = index + 1
 				end
 				hello[0] = '\'w\''
@@ -39,12 +39,12 @@ thing TestArrays2 includes Test
     	
     	state state2 {
     	transition -> state1
-			event m : harness?testIn
+			event m : harnessIn?testIn
 			guard m.c == '\'x\''
 			action do
 				var index : Int8 = 0
 				while (index < 5) do 
-					harness!testOut( hello[index] )
+					harnessOut!testOut( hello[index] )
                     index = index + 1
 				end
 			end
