@@ -744,7 +744,7 @@ case class StateJavaGenerator(override val self: State) extends ThingMLJavaGener
       builder append "public void onExit() {\n"
       Option(self.getExit) match {
         case Some(a) =>
-          self.getEntry.generateJava(builder)
+          self.getExit.generateJava(builder)
         case None =>
           builder append "//No entry action defined for this state\n"
       }
