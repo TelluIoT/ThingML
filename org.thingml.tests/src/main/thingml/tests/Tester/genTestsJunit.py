@@ -23,6 +23,14 @@ import os
 from os import listdir
 from os.path import isfile, join
 
+def load_src(name, fpath):
+    import os, imp
+    return imp.load_source(name, os.path.join(os.path.dirname(__file__), fpath))
+load_src("configuration", "../../../../../../org.thingml.tester/configuration.py")
+from configuration import useBlacklist    
+from configuration import blacklist    
+from configuration import whitelist    
+
 def run(type):
 	currentDir=os.getcwd()
 	if type == "perf":
@@ -45,10 +53,7 @@ def run(type):
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
-			if name != "tester": 
-			# if name in ("perfTestExample","testHello"):
-			# if name == "testCompEventCapture": 
-			# if name in ("testHello"): 
+			if (useBlacklist and (name not in blacklist)) or ((not useBlacklist) and (name in whitelist)):
 				if type == "perf" and name.startswith("perf"):
 					fichier = open('../../../../../org.thingml.perf/src/test/java/'+name+'Test.java', 'w')
 					fichier.write('package org.thingml.perf;\n\n')
