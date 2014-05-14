@@ -518,7 +518,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
           i.getEvent.foreach {
             e => e match {
               case r: ReceiveMessage =>
-                if (i.getAction != null) {
+                if (i.getAction != null   || i.getGuard != null) {
                   builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new " + (if (i.getName != null) i.getName else i.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n"
                 } else {
                   builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n"
@@ -533,7 +533,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
           t.getEvent.foreach {
             e => e match {
               case r: ReceiveMessage =>
-                if (t.getAction != null) {
+                if (t.getAction != null  || t.getGuard != null) {
                   builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new " + (if (t.getName != null) t.getName else t.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"
                 } else {
                   builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"
