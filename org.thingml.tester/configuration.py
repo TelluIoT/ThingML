@@ -15,15 +15,17 @@
 #
 
 
-
-deleteTemporaryFiles = True 
 #When set to False, does not remove source code after execution. 
 #May cause secondary inputs to use files from the first input
+deleteTemporaryFiles = True 
 
+#Chooses which compilers should be used
 testC = True
 testScala = True
 testJava = True
 
+#If useBlacklist is True, runs all tests not present in blacklist
+#If useBlacklist is False, runs all tests present in whitelist
 useBlacklist=True
 blacklist=("tester")
 whitelist=("testInit")
