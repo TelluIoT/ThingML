@@ -32,10 +32,14 @@ from os.path import expanduser
 #Tester creates the test file from a string
 #Parser gets (input,output) list from a file
 
-deleteTemporaryFiles = True
-testC = True
-testScala = True
-testJava = True
+def load_src(name, fpath):
+    import os, imp
+    return imp.load_source(name, os.path.join(os.path.dirname(__file__), fpath))
+load_src("configuration", "../../../configuration.py")
+from configuration import deleteTemporaryFiles    
+from configuration import testC    
+from configuration import testScala    
+from configuration import testJava    
 
 fileName = sys.argv[1]
 rootDirectory = os.getcwd()
