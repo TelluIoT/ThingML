@@ -645,12 +645,15 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       b.generateJava(builder)
     }
 
-
-    self.getBehaviour.head.allMessageHandlers.foreach{case (k, v) => v.foreach{case (k2, v2) => v2.foreach{t =>  t.generateJava(builder)}}}
-
-    /*self.allInternalTransitionsWithAction().foreach{t => t.generateJava(builder)}
-    self.allTransitions.foreachWithAction(){t => t.generateJava(builder)}*///BUG: we want to generate handlers with no action but with a guard!!!
-
+    self.allStateMachines.foreach { b => b.getSubstate.foreach { s =>
+      s.getInternal.foreach { t =>
+        t.generateJava(builder)
+      }
+      s.getOutgoing.foreach { t =>
+        t.generateJava(builder)
+      }
+    }
+    }
 
     builder append "}\n"
   }
@@ -695,7 +698,7 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
   val handlerTypeName = "Handler_" + self.hashCode //TODO: find prettier names for handlers
 
   def generateJava(builder: StringBuilder) {
-    //if (self.getGuard != null || self.getAction != null) {
+    if (self.getGuard != null || self.getAction != null) {
     builder append "private final class " + (if (self.getName != null) self.getName else handlerTypeName) + "Action implements IHandlerAction {\n"
 
 
@@ -723,7 +726,7 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
     }
     builder append "}\n\n"
     builder append "}\n\n"
-  //}
+  }
 }
 }
 
