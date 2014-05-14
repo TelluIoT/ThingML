@@ -645,7 +645,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       b.generateJava(builder)
     }
 
-    self.allStateMachines.foreach { b => b.getSubstate.foreach { s =>
+    self.allStateMachines.foreach { b => b.allStates.foreach { s =>
       s.getInternal.foreach { t =>
         t.generateJava(builder)
       }
