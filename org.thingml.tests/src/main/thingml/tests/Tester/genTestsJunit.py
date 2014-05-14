@@ -30,6 +30,9 @@ load_src("configuration", "../../../../../../org.thingml.tester/configuration.py
 from configuration import useBlacklist    
 from configuration import blacklist    
 from configuration import whitelist    
+from configuration import testC    
+from configuration import testJava    
+from configuration import testScala
 
 def run(type):
 	currentDir=os.getcwd()
@@ -105,8 +108,9 @@ public class '+name+'Test extends TestCase {\n\
 			proc.destroy();\n\
 			in.close();\n\
 		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
-	}\n\
-	@Test\n\
+	}\n')
+					if testC:
+						fichier.write('@Test\n\
 	public void testC(){\n\
 		try{\n\
 			CTried = true;\n\
@@ -139,8 +143,9 @@ public class '+name+'Test extends TestCase {\n\
 		successC=false;\n\
 		messageC = "NoDumpFound";\n\
 		fail("Error: " + e.getMessage());}\n\
-	}\n\
-	@Test\n\
+	}\n')
+					if testScala:
+						fichier.write('@Test\n\
 	public void testScala(){\n\
 		try{\n\
 			ScalaTried = true;\n\
@@ -175,8 +180,9 @@ public class '+name+'Test extends TestCase {\n\
 		successScala=false;\n\
 		messageScala = "NoDumpFound";\n\
 		fail("Error: " + e.getMessage());}\n\
-	}\n\
-	@Test\n\
+	}\n')
+					if testJava:
+						fichier.write('@Test\n\
 	public void testJava(){\n\
 		try{\n\
 			JavaTried = true;\n\
@@ -214,38 +220,48 @@ public class '+name+'Test extends TestCase {\n\
 	}\n\
 	@After\n\
 	public void dump(){\n\
-		if(CTried && ScalaTried && JavaTried)\n\
+		if(true && ') 		
+					if testC:
+						fichier.write('CTried && ')
+					if testScala:
+						fichier.write('ScalaTried && ')
+					if testJava:
+						fichier.write('JavaTried && ')
+					fichier.write('true)\n\
 		try{\n\
 			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("src/test/resources/results.html", true)));\n\
-			result.write("<tr><th></th><th></th><th></th></tr>\\n");\n\
-			if (successC){\n\
+			result.write("<tr><th></th><th></th><th></th></tr>\\n");\n')
+					if testC:
+						fichier.write('\t\t\tif (successC){\n\
 				result.write("<tr class=\\"green\\">\\n");\n\
 				result.write("<th>'+name+'</th><th>C</th><th>Success</th>\\n");\n\
 			}else{\n\
 				result.write("<tr class=\\"red\\">\\n");\n\
 				result.write("<th>'+name+'</th><th>C</th><th>"+messageC+"</th>\\n");\n\
 			}\n\
-			result.write("</tr>\\n<tr>\\n");\n\
-			if (successScala){\n\
+			result.write("</tr>\\n");\n')
+					if testScala:
+						fichier.write('\t\t\tif (successScala){\n\
 				result.write("<tr class=\\"green\\">\\n");\n\
 				result.write("<th>'+name+'</th><th>Scala</th><th>Success</th>\\n");\n\
 			}else{\n\
 				result.write("<tr class=\\"red\\">\\n");\n\
 				result.write("<th>'+name+'</th><th>Scala</th><th>"+messageScala+"</th>\\n");\n\
 			}\n\
-			result.write("</tr>\\n<tr>\\n");\n\
-			if (successJava){\n\
+			result.write("</tr>\\n");\n')
+					if testJava:
+						fichier.write('\t\t\tif (successJava){\n\
 				result.write("<tr class=\\"green\\">\\n");\n\
 				result.write("<th>'+name+'</th><th>Java</th><th>Success</th>\\n");\n\
 			}else{\n\
 				result.write("<tr class=\\"red\\">\\n");\n\
 				result.write("<th>'+name+'</th><th>Java</th><th>"+messageJava+"</th>\\n");\n\
 			}\n\
-			result.write("</tr>\\n");\n\
-			result.close();\n\
+			result.write("</tr>\\n");\n')
+					fichier.write('\t\t\tresult.close();\n\
 		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
 	}\n\
 }')
 					fichier.close()
-	print ("Successful generation of java testers")
+	print ("Successful generation of junit testers")
 	os.chdir("Tester")
