@@ -547,12 +547,12 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
   }
 
   def buildRegion(builder: StringBuilder, r: Region) {
-    builder append "final List<IState> states_" + r.getName + " = new ArrayList<IState>()\n"
-    builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList<Handler>()\n"
+    builder append "final List<IState> states_" + r.getName + " = new ArrayList<IState>();\n"
+    builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList<Handler>();\n"
     r.getSubstate.foreach { s =>
       buildState(builder, s)
     }
-    builder append "final Region reg_" + r.getName + " = new Region(\"" + r.getName + "\", states_" + r.getName + ", state_" + r.getInitial.getName + ", transitions_" + r.getName + ", false)"
+    builder append "final Region reg_" + r.getName + " = new Region(\"" + r.getName + "\", states_" + r.getName + ", state_" + r.getInitial.getName + ", transitions_" + r.getName + ", false);\n"
   }
 
   def generateJava(builder: StringBuilder) {
