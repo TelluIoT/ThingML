@@ -540,8 +540,13 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
                 }
             }
           }
+        } else {//auto-transition
+          if (t.getAction != null  || t.getGuard != null) {
+            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new " + (if (t.getName != null) t.getName else t.handlerTypeName) + "Action(), new NullEventType(), null, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"
+          } else {
+            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new NullHandlerAction(), new NullEventType(), null, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"
+          }
         }
-        else {builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new NullHandlerAction(), new NullEventType(), null, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"}//TODO: Handler action
     }
     }
   }
