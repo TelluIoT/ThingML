@@ -646,8 +646,9 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       f => f.generateJava(builder)
     }
 
-    self.allStateMachines.foreach { b =>
-      b.generateJava(builder)
+    self.allStateMachines.foreach { b => b.allStates.foreach { s =>
+        b.generateJava(builder)
+      }
     }
 
     self.allStateMachines.foreach { b => b.allStates.foreach { s =>
@@ -1026,8 +1027,10 @@ case class LocalVariableActionJavaGenerator(override val self: LocalVariable) ex
   override def generateJava(builder: StringBuilder) {    
     builder append (if (self.isChangeable) "" else "final ")
     builder append self.getType.java_type(self.getCardinality != null) + " " + self.Java_var_name + " = "
-    if (self.getInit != null) 
-      self.getInit.generateJava(builder) 
+    if (self.getInit != null) {
+      self.getInit.generateJava(builder)
+      builder append ";"
+    }
     else {
       if (self.getCardinality != null) {
         builder append "new " + self.getType.java_type(self.getCardinality != null) + "(" 
@@ -1254,6 +1257,6 @@ case class FunctionCallExpressionJavaGenerator(override val self: FunctionCallEx
      p.generateJava(tempBuilder)
      tempBuilder.toString()
      }.mkString(", ")*/
-    builder append ")\n"
+    builder append ");\n"
   }   
 }
