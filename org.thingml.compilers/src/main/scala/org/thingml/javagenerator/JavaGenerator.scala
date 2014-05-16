@@ -646,12 +646,11 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       f => f.generateJava(builder)
     }
 
-    self.allStateMachines.foreach { b => b.allStates.foreach { s =>
-        b.generateJava(builder)
+    self.allStateMachines.foreach { b =>
+      b.generateJava(builder)
       }
-    }
 
-    self.allStateMachines.foreach { b => b.allStates.foreach { s =>
+    /*self.allStateMachines.foreach { b => b.allStates.foreach { s =>
       s.getInternal.foreach { t =>
         t.generateJava(builder)
       }
@@ -659,7 +658,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         t.generateJava(builder)
       }
     }
-    }
+    }*/
 
     builder append "}\n"
   }
@@ -773,13 +772,20 @@ case class StateJavaGenerator(override val self: State) extends ThingMLJavaGener
       builder append "}\n\n"
       builder append "}\n\n"
     }
+
+    self.getInternal.foreach { t =>
+      t.generateJava(builder)
+    }
+    self.getOutgoing.foreach { t =>
+      t.generateJava(builder)
+    }
   }
 }
 
 case class CompositeStateJavaGenerator(override val self: CompositeState) extends StateJavaGenerator(self) {
      override def generateJava(builder: StringBuilder) {
         super.generateJava(builder)
-        //self.getSubstate.foreach {s => s.generateJava(builder)}
+        self.getSubstate.foreach {s => s.generateJava(builder)}
      }
 }
 
