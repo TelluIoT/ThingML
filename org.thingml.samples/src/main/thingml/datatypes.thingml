@@ -9,6 +9,7 @@ datatype Byte
 	@c_type "uint8_t"
 	@c_byte_size "1"
 	@java_type "byte"
+	@java_primitive "true"
     @scala_type "Byte"
     @SenML_type "Double";
 
@@ -16,6 +17,7 @@ datatype Boolean
 	@c_type "uint8_t"
 	@c_byte_size "2"
 	@java_type "boolean"
+	@java_primitive "true"
     @scala_type "Boolean"
     @SenML_type "Boolean";
 
@@ -23,6 +25,7 @@ datatype Integer
 	@c_type "int"
 	@c_byte_size "2"
 	@java_type "short"
+	@java_primitive "true"
     @scala_type "Short"
     @SenML_type "Double"
     @ros_type "int16";
@@ -31,6 +34,7 @@ datatype UInt8
 	@c_type "uint8_t"
 	@c_byte_size "1"
 	@java_type "byte"
+	@java_primitive "true"
     @scala_type "Byte"
     @SenML_type "Double";
 	
@@ -38,6 +42,7 @@ datatype Int8
 	@c_type "int8_t"
 	@c_byte_size "1"
 	@java_type "byte"
+	@java_primitive "true"
     @scala_type "Byte"
     @SenML_type "Double";
 
@@ -45,6 +50,7 @@ datatype UInt16
 	@c_type "uint16_t"
 	@c_byte_size "2"
 	@java_type "short"
+	@java_primitive "true"
     @scala_type "Short"
     @SenML_type "Double";
 
@@ -52,6 +58,7 @@ datatype Int16
 	@c_type "int"
     @c_byte_size "2"
 	@java_type "short"
+	@java_primitive "true"
     @scala_type "Short"
     @SenML_type "Double";
 
@@ -60,6 +67,7 @@ datatype Long
 	@c_type "long"
 	@c_byte_size "4"
 	@java_type "int"
+	@java_primitive "true"
     @scala_type "Int"
     @SenML_type "Double";
 	
@@ -67,6 +75,7 @@ datatype ULong
 	@c_type "unsigned long"
 	@c_byte_size "4"
 	@java_type "int"
+	@java_primitive "true"
     @scala_type "Int"
     @SenML_type "Double";
 
@@ -74,6 +83,7 @@ datatype Double
 	@c_type "double"
 	@c_byte_size "4"
 	@java_type "float"
+	@java_primitive "true"
     @scala_type "Float"
     @SenML_type "Double";
 
@@ -81,6 +91,7 @@ datatype Char
 	@c_type "char"
 	@c_byte_size "1"
 	@java_type "char"
+	@java_primitive "true"
     @scala_type "Character"
     @SenML_type "String";
 
@@ -92,6 +103,7 @@ datatype String
 	
 enumeration DigitalState 
 	@java_type "byte"
+	@java_primitive "true"
     @scala_type "Byte"
     @c_byte_size "1"
 	@c_type "uint8_t"

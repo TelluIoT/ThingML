@@ -4,12 +4,12 @@ thing TestFunction includes Test
 @test "x # xxxxxxxx"
 {
     //Test function call from a function
-    function foo(a : UInt16, b : UInt16) : ULong do
+    function foo(a : ULong, b : ULong) : ULong do
     	return a + bar(b)
     end
     
     //Test recursive function
-    function bar(a : UInt16) : ULong do
+    function bar(a : ULong) : ULong do
         if (a == 0) do
             return 0
         end
