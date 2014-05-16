@@ -505,18 +505,18 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
           builder append "new CompositeStateST(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
         }*/
         builder append "new CompositeState(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
-        if (s.eContainer.isInstanceOf[State]) {
+        if (s.eContainer.isInstanceOf[State] || s.eContainer.isInstanceOf[Region]) {
           builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + c.getName + ");\n"
         }
       case s: State =>
         builder append "final AtomicState state_" + s.getName + " = new AtomicState(\"" + s.getName + "\", new " + actionName + "());\n" //TODO: point to proper action (to be generated)
-        if (s.eContainer.isInstanceOf[State]) {
+        if (s.eContainer.isInstanceOf[State] || s.eContainer.isInstanceOf[Region]) {
           builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + s.getName + ");\n"
         }
     }
   }
 
-  def buildTransitions(builder: StringBuilder, r : CompositeState) {
+  def buildTransitions(builder: StringBuilder, r : Region) {
     builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList<Handler>();\n"
     r.getSubstate.foreach{s =>
     s.getInternal.foreach {
@@ -567,10 +567,11 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
   def buildRegion(builder: StringBuilder, r: Region) {
     builder append "final List<IState> states_" + r.getName + " = new ArrayList<IState>();\n"
-    builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList<Handler>();\n"
+    //builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList<Handler>();\n"
     r.getSubstate.foreach { s =>
       buildState(builder, s)
     }
+    buildTransitions(builder, r)
     builder append "final Region reg_" + r.getName + " = new Region(\"" + r.getName + "\", states_" + r.getName + ", state_" + r.getInitial.getName + ", transitions_" + r.getName + ", false);\n"
   }
 
