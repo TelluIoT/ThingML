@@ -650,16 +650,6 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       b.generateJava(builder)
       }
 
-    /*self.allStateMachines.foreach { b => b.allStates.foreach { s =>
-      s.getInternal.foreach { t =>
-        t.generateJava(builder)
-      }
-      s.getOutgoing.foreach { t =>
-        t.generateJava(builder)
-      }
-    }
-    }*/
-
     builder append "}\n"
   }
 
@@ -786,6 +776,11 @@ case class CompositeStateJavaGenerator(override val self: CompositeState) extend
      override def generateJava(builder: StringBuilder) {
         super.generateJava(builder)
         self.getSubstate.foreach {s => s.generateJava(builder)}
+        self.getRegion.foreach{r =>
+          r.getSubstate.foreach{s =>
+            s.generateJava(builder)
+          }
+        }
      }
 }
 
@@ -1024,8 +1019,13 @@ case class ErrorActionJavaGenerator(override val self: ErrorAction) extends Acti
 case class ReturnActionJavaGenerator(override val self: ReturnAction) extends ActionJavaGenerator(self) {
   override def generateJava(builder: StringBuilder) {
     builder append "return "
+    self.eContainer() match {
+      case f : Function =>
+        builder append "(" + f.getType.java_type()+ ")"
+      case _ =>
+    }
     self.getExp.generateJava(builder)
-    builder append ";\n"
+    //builder append ";\n"
   }
 }
 
@@ -1059,6 +1059,7 @@ case class FunctionCallStatementJavaGenerator(override val self: FunctionCallSta
     self.getFunction.getParameters.zip(self.getParameters).foreach{ case (fp, ep) =>
         if (i > 0)
           builder append ", "
+        builder append "(" + fp.getType.java_type(fp.getCardinality != null) + ")"
         ep.generateJava(builder)
         i = i+1
     }
@@ -1087,9 +1088,9 @@ case class ExpressionJavaGenerator(val self: Expression) /*extends ThingMLJavaGe
 case class ArrayIndexJavaGenerator(override val self: ArrayIndex) extends ExpressionJavaGenerator(self) {
   override def generateJava(builder: StringBuilder) {
     self.getArray.generateJava(builder)
-    builder append "("
+    builder append "["
     self.getIndex.generateJava(builder)
-    builder append ")\n"
+    builder append "]\n"
   }
 }
 
@@ -1196,9 +1197,9 @@ case class EventReferenceJavaGenerator(override val self: EventReference) extend
 
 case class ExpressionGroupJavaGenerator(override val self: ExpressionGroup) extends ExpressionJavaGenerator(self) {
   override def generateJava(builder: StringBuilder) {
-    builder append "("
+    builder append "{"
     self.getExp.generateJava(builder)
-    builder append ")"
+    builder append "}\n"
   }
 }
 
@@ -1255,6 +1256,7 @@ case class FunctionCallExpressionJavaGenerator(override val self: FunctionCallEx
     self.getFunction.getParameters.zip(self.getParameters).foreach{ case (fp, ep) =>
         if (i > 0)
           builder append ", "
+        builder append "(" + fp.getType.java_type(fp.getCardinality != null) + ")"
         ep.generateJava(builder)
         i = i+1
     }
