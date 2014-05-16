@@ -779,7 +779,7 @@ case class StateJavaGenerator(override val self: State) extends ThingMLJavaGener
 case class CompositeStateJavaGenerator(override val self: CompositeState) extends StateJavaGenerator(self) {
      override def generateJava(builder: StringBuilder) {
         super.generateJava(builder)
-        self.getSubstate.foreach {s => s.generateJava(builder)}
+        //self.getSubstate.foreach {s => s.generateJava(builder)}
      }
 }
 
