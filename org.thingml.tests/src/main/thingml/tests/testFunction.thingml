@@ -10,15 +10,13 @@ thing TestFunction includes Test
     
     //Test recursive function
     function bar(a : ULong) : ULong do
-        if (a == 0) do
-            return 0
-        end
         if (a > 0) do
             return bar(a-1)
         end
         if (a < 0) do
             return bar(a+1)
         end
+		return 0
     end
     
   
