@@ -1197,9 +1197,9 @@ case class EventReferenceJavaGenerator(override val self: EventReference) extend
 
 case class ExpressionGroupJavaGenerator(override val self: ExpressionGroup) extends ExpressionJavaGenerator(self) {
   override def generateJava(builder: StringBuilder) {
-    builder append "{"
+    //builder append "{"
     self.getExp.generateJava(builder)
-    builder append "}\n"
+    //builder append "}\n"
   }
 }
 
