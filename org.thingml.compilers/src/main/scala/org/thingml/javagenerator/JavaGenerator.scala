@@ -504,7 +504,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         } else {
           builder append "new CompositeStateST(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
         }*/
-        builder append "new CompositeState(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
+        builder append "new CompositeState(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", " + (if (c.isHistory) "true" else "false") + ");\n"
         if (s.eContainer.isInstanceOf[State] || s.eContainer.isInstanceOf[Region]) {
           builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + c.getName + ");\n"
         }
@@ -572,7 +572,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       buildState(builder, s)
     }
     buildTransitions(builder, r)
-    builder append "final Region reg_" + r.getName + " = new Region(\"" + r.getName + "\", states_" + r.getName + ", state_" + r.getInitial.getName + ", transitions_" + r.getName + ", false);\n"
+    builder append "final Region reg_" + r.getName + " = new Region(\"" + r.getName + "\", states_" + r.getName + ", state_" + r.getInitial.getName + ", transitions_" + r.getName + ", " + (if (r.isHistory) "true" else "false") + ");\n"
   }
 
   def generateJava(builder: StringBuilder) {
@@ -1044,6 +1044,9 @@ case class ReturnActionJavaGenerator(override val self: ReturnAction) extends Ac
       case _ =>
     }
     self.getExp.generateJava(builder)
+    if (builder.last != ';') {
+      builder append ";"
+    }
     //builder append ";\n"
   }
 }
@@ -1051,8 +1054,9 @@ case class ReturnActionJavaGenerator(override val self: ReturnAction) extends Ac
 case class LocalVariableActionJavaGenerator(override val self: LocalVariable) extends ActionJavaGenerator(self) {
   override def generateJava(builder: StringBuilder) {    
     builder append (if (self.isChangeable) "" else "final ")
-    builder append self.getType.java_type(self.getCardinality != null) + " " + self.Java_var_name + " = "
+    builder append self.getType.java_type(self.getCardinality != null) + " " + self.Java_var_name
     if (self.getInit != null) {
+      builder append  " = "
       self.getInit.generateJava(builder)
       builder append ";"
     }
@@ -1067,11 +1071,11 @@ case class LocalVariableActionJavaGenerator(override val self: LocalVariable) ex
         }.headOption match {
           case Some(a) =>
             a.getValue match {
-              case "false" => builder append "null;"
+              case "false" => builder append " = null;"
               case _ => builder append ";"
             }
           case None =>
-            builder append "null;"
+            builder append " = null;"
         }
       }
       if (!self.isChangeable)
