@@ -13,7 +13,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <scala.version>2.9.1</scala.version>
+        <scala.version>2.9.3</scala.version>
         <thingml.version>0.6.0-SNAPSHOT</thingml.version>
         <smac.version>0.6.0-SNAPSHOT</smac.version>
         <bundle.vendor>SINTEF</bundle.vendor>
@@ -46,11 +46,6 @@
 
     <repositories>
         <repository>
-            <id>ScalaToolsMaven2Repository</id>
-            <name>Scala-Tools Maven2 Repository</name>
-            <url>http://scala-tools.org/repo-releases/</url>
-        </repository>
-        <repository>
             <id>thingml-snapshot</id>
             <name>thingml-snapshot</name>
             <url>http://maven.thingml.org/thingml-snapshot/</url>
@@ -65,11 +60,6 @@
             <name>thingml-snapshot</name>
             <url>http://maven.thingml.org/thirdparty/</url>
         </repository>
-        <repository><!--TODO: this one should not come by default-->
-            <id>SensApp</id>
-            <name>snapshots</name>
-            <url>https://repository-sintef.forge.cloudbees.com/snapshot/</url>
-        </repository> 
         <!--Additional repositories-->
         <!--REPO-->
     </repositories>
