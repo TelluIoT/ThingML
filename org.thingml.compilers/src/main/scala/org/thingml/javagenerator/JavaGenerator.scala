@@ -1101,9 +1101,9 @@ case class LocalVariableActionJavaGenerator(override val self: LocalVariable) ex
     }
     else {
       if (self.getCardinality != null) {
-        builder append "new " + self.getType.java_type(self.getCardinality != null) + "("
+        builder append " = new " + self.getType.java_type(self.getCardinality != null) + "["
         self.getCardinality.generateJava(builder)
-        builder append ");"
+        builder append "];"
       } else {
         self.getType.getAnnotations.filter { a =>
           a.getName == "java_primitive"
