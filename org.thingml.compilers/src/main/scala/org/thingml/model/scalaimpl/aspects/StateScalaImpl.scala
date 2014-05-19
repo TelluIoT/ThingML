@@ -76,6 +76,23 @@ case class StateScalaImpl (self : State) {
     else handlers.get(p).get(m)
   }
 
+  def hasEmptyHandlers() = {
+    !allEmptyHandlers().isEmpty
+  }
+
+  def allEmptyHandlers() : java.util.List[Handler] = {
+    var result = new java.util.ArrayList[Handler]()
+    allStates.foreach { s =>
+      s.getOutgoing.union(s.getInternal)foreach{ t =>
+        if (t.getEvent.isEmpty) {
+          result.add(t)
+        }
+      }
+    }
+    result
+  }
+
+
   def allMessageHandlers() : java.util.Map[Port, java.util.Map[Message, java.util.List[Handler]]] = {
     var result :  java.util.Map[Port, java.util.Map[Message, java.util.List[Handler]]] = new  Hashtable[Port, java.util.Map[Message, java.util.List[Handler]]]()
     allStates.foreach { s =>
