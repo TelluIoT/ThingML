@@ -281,7 +281,7 @@ for (a,b) in results:
 fdump.close()
 fdumpC.close()
 fdumpScala.close()
-fdumpScala.close()
+fdumpJava.close()
 for r in resultsData:
 	type,name,cpu,mem,size=r
 	print("type: "+type+", name: "+name+", cpu: "+cpu+", memory: "+mem+", size: "+size)
