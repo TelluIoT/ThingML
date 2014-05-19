@@ -72,9 +72,9 @@ thing TestMultiClientPing includes Test, PingMsg
 			}
 		}
 		
-		region R2 init Idle {
+		region R2 init Idle_R2 {//renamed to avoid name conflict (tested separately)
 		
-			state Idle {
+			state Idle_R2 {
 				internal event p : ppclient2?pong
 				guard p.num == 2
 				action harnessOut!testOut('\'2\'')
