@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.gnu.org/licenses/lgpl-3.0.txt
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -2651,7 +2651,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
         h.getEvent.filter {
           e =>
           // Filter only empty transition
-            e.isInstanceOf[ReceiveMessage] && e.asInstanceOf[ReceiveMessage].getPort == null && e.asInstanceOf[ReceiveMessage].getMessage == null
+            e.isInstanceOf[ReceiveMessage] && e.asInstanceOf[ReceiveMessage].getPort == port && e.asInstanceOf[ReceiveMessage].getMessage == msg
         }.foreach {
 
           event => event match {
