@@ -741,7 +741,12 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
       builder append "@Override\n"
       builder append "public boolean check(final Event e, final EventType t) {\n"
     if (self.getGuard != null) {
-      builder append "final " + Context.firstToUpper(e.getMessage.getName) + "MessageType." + Context.firstToUpper(e.getMessage.getName) + "Message ce = (" + Context.firstToUpper(e.getMessage.getName) + "MessageType." + Context.firstToUpper(e.getMessage.getName) + "Message) e;\n"
+
+      if (e != null) {
+        builder append "final " + Context.firstToUpper(e.getMessage.getName) + "MessageType." + Context.firstToUpper(e.getMessage.getName) + "Message ce = (" + Context.firstToUpper(e.getMessage.getName) + "MessageType." + Context.firstToUpper(e.getMessage.getName) + "Message) e;\n"
+      } else {
+        builder append "final NullEvent ce = (NullEvent) e;\n"
+      }
       //builder append "return e.getType().equals(t) && "
       builder append "return "
       self.getGuard.generateJava(builder)
@@ -755,7 +760,11 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
     builder append "public void execute(final Event e) {\n"
     Option(self.getAction) match {
       case Some(a) =>
-        builder append "final " + Context.firstToUpper(e.getMessage.getName) + "MessageType." + Context.firstToUpper(e.getMessage.getName) + "Message ce = (" + Context.firstToUpper(e.getMessage.getName) + "MessageType." + Context.firstToUpper(e.getMessage.getName) + "Message) e;\n"
+        if (e!=null) {
+          builder append "final " + Context.firstToUpper(e.getMessage.getName) + "MessageType." + Context.firstToUpper(e.getMessage.getName) + "Message ce = (" + Context.firstToUpper(e.getMessage.getName) + "MessageType." + Context.firstToUpper(e.getMessage.getName) + "Message) e;\n"
+        } else {
+          builder append "final NullEvent ce = (NullEvent) e;\n"
+        }
         self.getAction.generateJava(builder)
       case None =>
         builder append "//No action defined for this transition\n"
@@ -807,11 +816,15 @@ case class StateJavaGenerator(override val self: State) extends ThingMLJavaGener
     self.getInternal.foreach { t =>
       if (t.getEvent != null || t.getEvent.size() > 0) {
         t.getEvent.foreach {e => t.generateJava(builder, e.asInstanceOf[ReceiveMessage])}
+      } else {
+        t.generateJava(builder, null)
       }
     }
     self.getOutgoing.foreach { t =>
       if (t.getEvent != null || t.getEvent.size() > 0) {
         t.getEvent.foreach {e => t.generateJava(builder, e.asInstanceOf[ReceiveMessage])}
+      } else {
+        t.generateJava(builder, null)
       }
     }
   }
@@ -1070,8 +1083,8 @@ case class ReturnActionJavaGenerator(override val self: ReturnAction) extends Ac
       case _ =>
     }
     self.getExp.generateJava(builder)
-    if (!builder.toString().endsWith(";")) {
-      builder append ";"
+    if (!(builder.toString().endsWith(";") || builder.toString().endsWith(";\n"))) {
+      builder append ";\n"
     }
     //builder append ";\n"
   }
