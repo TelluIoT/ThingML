@@ -103,7 +103,7 @@ for (a,b) in results:
 		
 		if  os.path.exists("tmp/ThingML_C/"+bigName):
 			os.chdir("tmp/ThingML_C/"+bigName)
-			if os.path.exists("/usr/local/lib/gperftools-2.1/"):
+			if os.path.exists("/usr/local/include/gperftools/"):
 				insertLine("#include <google/profiler.h>",bigName+".c","#include <pthread.h>")
 				insertLine("  ProfilerStart(\""+bigName+".prof\");",bigName+".c","  initialize_configuration_"+bigName+"();")
 				insertLine("#include <google/profiler.h>","TestDumpLinux.c","#include \"TestDumpLinux.h\"")
@@ -117,7 +117,7 @@ for (a,b) in results:
 				binsize=str(os.path.getsize(bigName))
 			else:
 				binsize="error"
-			if os.path.exists("/usr/local/lib/gperftools-2.1/"):
+			if os.path.exists("/usr/local/include/gperftools/"):
 				os.system("env CPUPROFILE="+resultsDirectory+"/C/"+bigName+".prof ./"+bigName)
 				os.system("pprof --text "+bigName+" "+resultsDirectory+"/C/"+bigName+".prof > "+resultsDirectory+"/C/"+bigName+str(resultCounter))
 			else:

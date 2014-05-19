@@ -218,7 +218,7 @@ public class '+name+'Test extends TestCase {\n\
 		messageJava = "NoDumpFound";\n\
 		fail("Error: " + e.getMessage());}\n\
 	}\n')
-					fichier.write('@After\n\
+					fichier.write('	@After\n\
 	public void dump(){\n\
 		if(true && ') 		
 					if testC:
