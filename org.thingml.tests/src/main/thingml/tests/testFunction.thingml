@@ -1,24 +1,22 @@
 import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 
 thing TestFunction includes Test 
-@test "x # xxxxxxxx;"
+@test "x # xxxxxxxx"
 {
     //Test function call from a function
-    function foo(a : UInt16, b : UInt16) : ULong do
+    function foo(a : ULong, b : ULong) : ULong do
     	return a + bar(b)
     end
     
     //Test recursive function
-    function bar(a : UInt16) : ULong do
-        if (a == 0) do
-            return 0
-        end
+    function bar(a : ULong) : ULong do
         if (a > 0) do
             return bar(a-1)
         end
         if (a < 0) do
             return bar(a+1)
         end
+		return 0
     end
     
   

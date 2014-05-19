@@ -33,6 +33,7 @@ import java.lang.AssertionError
 import java.io._
 import java.util._
 import java.net.URL
+import org.apache.commons.io.FileUtils
 object TestsGeneration {
 	def exec(s: String, dir: File){
 		var p = Runtime.getRuntime().exec(s,null,dir)
@@ -57,6 +58,7 @@ object TestsGeneration {
 	}
 	def main(args: Array[String]) {
 		//exec("mvn clean install",new File((new File(System.getProperty("user.dir"))).getParentFile(),"org.thingml.cmd"));
+		FileUtils.deleteDirectory(new File((new File(System.getProperty("user.dir"))).getParentFile(),"org.thingml.cmd/tmp"));
 		var result : BufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/test/resources/results.html")))
 		result.write("<!DOCTYPE html>\n"+
 "<html>\n"+
