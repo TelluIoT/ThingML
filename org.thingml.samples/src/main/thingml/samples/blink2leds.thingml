@@ -2,8 +2,9 @@ import "../hardware/bricks/led.thingml"
 
 thing Blink2Leds includes LedMsgs, TimerMsgs
 {
-
-	required port timer1
+    
+    
+    required port timer1
 	{
 		sends timer_start
         receives timer_timeout
