@@ -31,6 +31,8 @@ thing Blink2Leds includes LedMsgs, TimerMsgs
         state Blinking 
         {    
             on entry do 
+                //crap
+                var tab : Integer[8]
             	timer1!timer_start(1000)
             	timer2!timer_start(333)
             end

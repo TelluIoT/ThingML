@@ -814,19 +814,31 @@ case class StateJavaGenerator(override val self: State) extends ThingMLJavaGener
     }
 
     self.getInternal.foreach { t =>
-      if (t.getEvent != null || t.getEvent.size() > 0) {
+      //if (t.getEvent != null || t.getEvent.size() > 0) {
         t.getEvent.foreach {e => t.generateJava(builder, e.asInstanceOf[ReceiveMessage])}
-      } else {
-        t.generateJava(builder, null)
-      }
+      //} else {
+        //t.generateJava(builder, null)
+      //}
     }
     self.getOutgoing.foreach { t =>
-      if (t.getEvent != null || t.getEvent.size() > 0) {
+      //println(t.handlerTypeName)
+      //if (t.getEvent != null || t.getEvent.size() > 0) {
         t.getEvent.foreach {e => t.generateJava(builder, e.asInstanceOf[ReceiveMessage])}
-      } else {
+      //} else {
+        //t.generateJava(builder, null)
+      //}
+    }
+
+    self.getOutgoing.union(self.getInternal)foreach{ t =>
+      if (t.getEvent.isEmpty) {
         t.generateJava(builder, null)
       }
     }
+
+    /*self.allEmptyHandlers.foreach {t =>
+      println("      " + t.handlerTypeName)
+      t.generateJava(builder, null)
+    } */
   }
 }
 
@@ -1101,7 +1113,7 @@ case class LocalVariableActionJavaGenerator(override val self: LocalVariable) ex
     }
     else {
       if (self.getCardinality != null) {
-        builder append " = new " + self.getType.java_type(self.getCardinality != null) + "["
+        builder append " = new " + self.getType.java_type() + "["
         self.getCardinality.generateJava(builder)
         builder append "];"
       } else {
@@ -1201,7 +1213,7 @@ case class GreaterExpressionJavaGenerator(override val self: GreaterExpression) 
 case class EqualsExpressionJavaGenerator(override val self: EqualsExpression) extends ExpressionJavaGenerator(self) {
   override def generateJava(builder: StringBuilder) {
     self.getLhs.generateJava(builder)
-    builder append " == "
+    builder append " == " //TODO: identity on references might cause bugs in Java, we should generate .equals (but we cannot call .equals on primitive types, which should explicitly be boxed to objects).
     self.getRhs.generateJava(builder)
   }
 }
