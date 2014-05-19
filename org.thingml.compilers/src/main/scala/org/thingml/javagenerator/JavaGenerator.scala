@@ -416,14 +416,37 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
             case "mirror" => builder append "final " + Context.firstToUpper(i.getType.getName) + "MockMirror " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "MockMirror();\n"
           }
         case None =>
-          /*//TODO: init arrays
-          self.allArrays(i).collect{ case a =>
-            if (!a.isChangeable) {
-              builder append a.getType.java_type() + "[]" + a.getName + "= new a.getType.java_type() + [" + a.getInit + "];\n"
-            } else {
-              builder append a.getType.java_type() + "[]" + a.getName + "= null;\n"
+          //TODO: init arrays
+          self.allArrays(i).foreach{ a =>
+            //if (!a.isChangeable) {
+              builder append "final " + a.getType.java_type() + "[] " + a.getName + "_array = new " + a.getType.java_type() + "["
+              a.getCardinality.generateJava(builder)
+              builder append "];\n"
+            /*} else {
+              builder append "final " + a.getType.java_type() + "[] " + a.getName + "_array = null;\n"
+            }*/
+
+          }
+
+
+          val arrayMap = self.initExpressionsByArrays(i)
+          arrayMap.keys.foreach{ init =>
+            var result = ""
+            var tempBuilder = new StringBuilder()
+            arrayMap.get(init).get.foreach{pair =>
+              result += init.getName + "_array ["
+              tempBuilder = new StringBuilder()
+              pair._1.generateJava(tempBuilder)
+              result += tempBuilder.toString
+              result += "] = "
+              tempBuilder = new StringBuilder()
+              pair._2.generateJava(tempBuilder)
+              result += tempBuilder.toString + ";\n"
             }
-          } */
+            builder append result
+          }
+
+
 
           builder append "final " + Context.firstToUpper(i.getType.getName) + " " + i.instanceName + " = (" + Context.firstToUpper(i.getType.getName) + ") new " + Context.firstToUpper(i.getType.getName) + "(\"" + i.getName + ": " + i.getType.getName + "\""
           ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -440,6 +463,9 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
             builder append ", " + result
           }
 
+          self.allArrays(i).foreach { a =>
+            builder append ", " + a.getName + "_array"
+          }
 
           builder append ").buildBehavior();\n"
       }
@@ -1044,7 +1070,7 @@ case class ReturnActionJavaGenerator(override val self: ReturnAction) extends Ac
       case _ =>
     }
     self.getExp.generateJava(builder)
-    if (builder.last != ';') {
+    if (!builder.toString().endsWith(";")) {
       builder append ";"
     }
     //builder append ";\n"
