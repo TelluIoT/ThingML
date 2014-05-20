@@ -286,5 +286,6 @@ for r in resultsData:
 	type,name,cpu,mem,size=r
 	print("type: "+type+", name: "+name+", cpu: "+cpu+", memory: "+mem+", size: "+size)
 os.chdir(rootDirectory)
-
+os.chdir(r"../../../")
 dumpHTML("stats.html",resultsData)
+os.chdir(rootDirectory)

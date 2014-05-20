@@ -229,7 +229,7 @@ public class '+name+'Test extends TestCase {\n\
 						fichier.write('JavaTried && ')
 					fichier.write('true)\n\
 		try{\n\
-			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("src/test/resources/results.html", true)));\n\
+			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("results.html", true)));\n\
 			result.write("<tr><th></th><th></th><th></th></tr>\\n");\n')
 					if testC:
 						fichier.write('\t\t\tif (successC){\n\
