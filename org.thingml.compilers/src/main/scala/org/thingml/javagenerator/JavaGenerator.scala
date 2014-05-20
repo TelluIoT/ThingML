@@ -552,18 +552,18 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
             e => e match {
               case r: ReceiveMessage =>
                 if (i.getAction != null || i.getGuard != null) {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.qname("_") else i.handlerTypeName) + "\", new " + (if (i.getName != null) i.getName else i.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.qname("_") + "));\n"
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new " + (if (i.getName != null) i.qname("_") else i.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.qname("_") + "));\n"
                 } else {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.qname("_") else i.handlerTypeName) + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.qname("_") + "));\n"
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.qname("_") + "));\n"
                 }
             }
           }
         } else {
           if (i.getAction != null  || i.getGuard != null) {
-            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.qname("_") else i.handlerTypeName) + "\", new " + (if (i.getName != null) i.getName else i.handlerTypeName) + "Action(), new NullEventType(), null, state_" + s.qname("_") + "));\n"
+            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new " + (if (i.getName != null) i.qname("_") else i.handlerTypeName) + "Action(), new NullEventType(), null, state_" + s.qname("_") + "));\n"
           } else { //Empty internal transition (TODO: this should be forbidden in ThingML as it will loop like crazy)
             builder append "//WARNING: Internal empty transition is going to loop forever. TODO: check that this is the correct behavior!\n"
-            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.qname("_") else i.handlerTypeName) + "\", new NullHandlerAction(), new NullEventType(), null, state_" + s.qname("_") + "));\n"
+            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new NullHandlerAction(), new NullEventType(), null, state_" + s.qname("_") + "));\n"
           }
         }
     }
@@ -574,17 +574,17 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
             e => e match {
               case r: ReceiveMessage =>
                 if (t.getAction != null  || t.getGuard != null) {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.qname("_") else t.handlerTypeName) + "\", new " + (if (t.getName != null) t.getName else t.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new " + (if (t.getName != null) t.qname("_") else t.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
                 } else {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.qname("_") else t.handlerTypeName) + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
                 }
             }
           }
         } else {//auto-transition
           if (t.getAction != null  || t.getGuard != null) {
-            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.qname("_") else t.handlerTypeName) + "\", new " + (if (t.getName != null) t.getName else t.handlerTypeName) + "Action(), new NullEventType(), null, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
+            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new " + (if (t.getName != null) t.qname("_") else t.handlerTypeName) + "Action(), new NullEventType(), null, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
           } else { //Empty transition (TODO: should it be allowed in ThingML?)
-            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.qname("_") else t.handlerTypeName) + "\", new NullHandlerAction(), new NullEventType(), null, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
+            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new NullHandlerAction(), new NullEventType(), null, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
           }
         }
     }
