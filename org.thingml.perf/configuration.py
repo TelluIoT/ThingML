@@ -28,4 +28,4 @@ testJava = True
 #If useBlacklist is False, runs all tests present in whitelist
 useBlacklist=True
 blacklist=("tester")
-whitelist=("testCompositeStates")
+whitelist=("testInit")

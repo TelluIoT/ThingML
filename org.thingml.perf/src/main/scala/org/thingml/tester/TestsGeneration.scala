@@ -59,7 +59,7 @@ object TestsGeneration {
 	def main(args: Array[String]) {
 		//exec("mvn clean install",new File((new File(System.getProperty("user.dir"))).getParentFile(),"org.thingml.cmd"));
 		FileUtils.deleteDirectory(new File((new File(System.getProperty("user.dir"))).getParentFile(),"org.thingml.cmd/tmp"));
-		var result : BufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/test/resources/results.html")))
+		var result : BufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("results.html")))
 		result.write("<!DOCTYPE html>\n"+
 "<html>\n"+
 "	<head>\n"+
@@ -92,7 +92,7 @@ object TestsGeneration {
 "		<th>Result</th>\n"+
 "	</tr>\n")
 		result.close();
-		var stats : BufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/test/resources/stats.html")))
+		var stats : BufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("stats.html")))
 		stats.write("<!DOCTYPE html>\n"+
 "<html>\n"+
 "	<head>\n"+
