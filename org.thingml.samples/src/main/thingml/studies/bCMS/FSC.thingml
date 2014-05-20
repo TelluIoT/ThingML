@@ -18,13 +18,13 @@ thing FSC_Mock includes FSC_Interface
 
 
 datatype FSC_GUI
-@java_type "org.thingml.generated.FSC_MockMock";
+@java_type "org.thingml.generated.gui.FSC_MockMock";
 
 thing FSC_GUI includes GUIbCMSMsgs, bCMSMsgs 
-@java_interface "org.thingml.generated.FSC_MockListener" 
+@java_interface "org.thingml.generated.gui.FSC_MockListener" 
 {
 
-	readonly property gui : FSC_GUI = 'new org.thingml.generated.FSC_MockMock()'
+	readonly property gui : FSC_GUI = 'new org.thingml.generated.gui.FSC_MockMock("FSC")'
 
     provided port control {
         receives gui_initCom, gui_crisisDetails, gui_numberOfTrucks, gui_ackRoute, gui_dispatched, gui_arrived, gui_done, gui_close
@@ -38,37 +38,37 @@ thing FSC_GUI includes GUIbCMSMsgs, bCMSMsgs
     /**
     * Call backs for the GUI
     */
-    function onInitCom_via_out(id : String) @implements "true"
+    function onInitCom_via_out(id : String) @override "true" @implements "true"
     do 
         out!initCom(id)
     end
     
-    function onCrisisDetails_via_out(id : String, lat : Double, lon : Double, time : Long, isActive : Boolean, desc : String) @implements "true"
+    function onCrisisDetails_via_out(id : String, lat : Double, lon : Double, time : Long, isActive : Boolean, desc : String) @override "true" @implements "true"
     do 
         out!crisisDetails(id, lat, lon, time, isActive, desc)
     end
     
-    function onNumberOfTrucks_via_out(number : Long) @implements "true"
+    function onNumberOfTrucks_via_out(number : Long) @override "true" @implements "true"
     do 
         out!numberOfTrucks(number)
     end
     
-    function onAckRoute_via_out() @implements "true"
+    function onAckRoute_via_out() @override "true" @implements "true"
     do 
         out!ackRoute()
     end
     
-    function onDispatched_via_out() @implements "true"
+    function onDispatched_via_out() @override "true" @implements "true"
     do 
         out!dispatched()
     end
     
-    function onArrived_via_out() @implements "true"
+    function onArrived_via_out() @override "true" @implements "true"
     do 
         out!arrived()
     end
     
-    function onDone_via_out() @implements "true"
+    function onDone_via_out() @override "true" @implements "true"
     do 
         out!done()
     end
@@ -81,7 +81,7 @@ thing FSC_GUI includes GUIbCMSMsgs, bCMSMsgs
 	statechart behavior init Init {
 	
 		on entry do
-            '' & gui & '.listeners.add(root.asInstanceOf[org.thingml.generated.FSC_MockListener]);'
+            '' & gui & '.listeners.add(FSC_GUI.this);'
 		end
 	
 		state Init {}

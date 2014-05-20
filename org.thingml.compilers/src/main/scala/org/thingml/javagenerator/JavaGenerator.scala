@@ -458,7 +458,7 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
               p._2.generateJava(tempbuilder)
               result += tempbuilder.toString
             } else {
-              result += "null"
+              result += p._1.getType.default_java_value()
             }
             builder append ", " + result
           }
@@ -507,43 +507,43 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
   def buildState(builder: StringBuilder, s: State) {
 
-    val actionName = if (s.getEntry != null || s.getExit != null) Context.firstToUpper(s.getName) + "Action" else "NullStateAction"
+    val actionName = if (s.getEntry != null || s.getExit != null) Context.firstToUpper(s.qname("_")) + "Action" else "NullStateAction"
 
     s match {
       case c: CompositeState =>
-        builder append "final List<IState> states_" + c.getName + " = new ArrayList<IState>();\n"
+        builder append "final List<IState> states_" + c.qname("_") + " = new ArrayList<IState>();\n"
         c.getSubstate.foreach { s => buildState(builder, s) }
         val numReg = c.getRegion.size
-        builder append "final List<Region> regions_" + c.getName + " = new ArrayList<Region>();\n"
+        builder append "final List<Region> regions_" + c.qname("_") + " = new ArrayList<Region>();\n"
         c.getRegion.foreach { r =>
           buildRegion(builder, r)
-          builder append "regions_" + c.getName + ".add(reg_" + r.getName + ");\n"
+          builder append "regions_" + c.qname("_") + ".add(reg_" + r.qname("_") + ");\n"
         }
         buildTransitions(builder, c)
         if (c.isInstanceOf[StateMachine]) {
           builder append "behavior = "
         } else {
-          builder append "final CompositeState state_" + c.getName + " = "
+          builder append "final IState state_" + c.qname("_") + " = "
         }
         /*if (numReg>1) {//TODO: we should also use annotations to avoid parallel overhead on single threaded platforms.
           builder append "new CompositeStateMT(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
         } else {
           builder append "new CompositeStateST(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
         }*/
-        builder append "new CompositeState(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", " + (if (c.isHistory) "true" else "false") + ");\n"
+        builder append "new CompositeState(\"" + c.getName + "\", states_" + c.qname("_") + ", state_" + c.getInitial.qname("_") + ", transitions_" + c.qname("_") + ", new " + actionName + "(), regions_" + c.qname("_") + ", " + (if (c.isHistory) "true" else "false") + ");\n"
         if (s.eContainer.isInstanceOf[State] || s.eContainer.isInstanceOf[Region]) {
-          builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + c.getName + ");\n"
+          builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(state_" + c.qname("_") + ");\n"
         }
       case s: State =>
-        builder append "final AtomicState state_" + s.getName + " = new AtomicState(\"" + s.getName + "\", new " + actionName + "());\n" //TODO: point to proper action (to be generated)
+        builder append "final IState state_" + s.qname("_") + " = new AtomicState(\"" + s.getName + "\", new " + actionName + "());\n" //TODO: point to proper action (to be generated)
         if (s.eContainer.isInstanceOf[State] || s.eContainer.isInstanceOf[Region]) {
-          builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(state_" + s.getName + ");\n"
+          builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(state_" + s.qname("_") + ");\n"
         }
     }
   }
 
   def buildTransitions(builder: StringBuilder, r : Region) {
-    builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList<Handler>();\n"
+    builder append "final List<Handler> transitions_" + r.qname("_") + " = new ArrayList<Handler>();\n"
     r.getSubstate.foreach{s =>
     s.getInternal.foreach {
       i =>
@@ -552,18 +552,18 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
             e => e match {
               case r: ReceiveMessage =>
                 if (i.getAction != null || i.getGuard != null) {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new " + (if (i.getName != null) i.getName else i.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n"
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.qname("_") else i.handlerTypeName) + "\", new " + (if (i.getName != null) i.getName else i.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.qname("_") + "));\n"
                 } else {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.getName + "));\n"
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.qname("_") else i.handlerTypeName) + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.qname("_") + "));\n"
                 }
             }
           }
         } else {
           if (i.getAction != null  || i.getGuard != null) {
-            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new " + (if (i.getName != null) i.getName else i.handlerTypeName) + "Action(), new NullEventType(), null, state_" + s.getName + "));\n"
+            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.qname("_") else i.handlerTypeName) + "\", new " + (if (i.getName != null) i.getName else i.handlerTypeName) + "Action(), new NullEventType(), null, state_" + s.qname("_") + "));\n"
           } else { //Empty internal transition (TODO: this should be forbidden in ThingML as it will loop like crazy)
             builder append "//WARNING: Internal empty transition is going to loop forever. TODO: check that this is the correct behavior!\n"
-            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new NullHandlerAction(), new NullEventType(), null, state_" + s.getName + "));\n"
+            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.qname("_") else i.handlerTypeName) + "\", new NullHandlerAction(), new NullEventType(), null, state_" + s.qname("_") + "));\n"
           }
         }
     }
@@ -574,17 +574,17 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
             e => e match {
               case r: ReceiveMessage =>
                 if (t.getAction != null  || t.getGuard != null) {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new " + (if (t.getName != null) t.getName else t.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.qname("_") else t.handlerTypeName) + "\", new " + (if (t.getName != null) t.getName else t.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
                 } else {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"
+                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.qname("_") else t.handlerTypeName) + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
                 }
             }
           }
         } else {//auto-transition
           if (t.getAction != null  || t.getGuard != null) {
-            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new " + (if (t.getName != null) t.getName else t.handlerTypeName) + "Action(), new NullEventType(), null, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"
+            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.qname("_") else t.handlerTypeName) + "\", new " + (if (t.getName != null) t.getName else t.handlerTypeName) + "Action(), new NullEventType(), null, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
           } else { //Empty transition (TODO: should it be allowed in ThingML?)
-            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].getName + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new NullHandlerAction(), new NullEventType(), null, state_" + t.getSource.getName + ", state_" + t.getTarget.getName + "));\n"
+            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.qname("_") else t.handlerTypeName) + "\", new NullHandlerAction(), new NullEventType(), null, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
           }
         }
     }
@@ -592,13 +592,13 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
   }
 
   def buildRegion(builder: StringBuilder, r: Region) {
-    builder append "final List<IState> states_" + r.getName + " = new ArrayList<IState>();\n"
+    builder append "final List<IState> states_" + r.qname("_") + " = new ArrayList<IState>();\n"
     //builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList<Handler>();\n"
     r.getSubstate.foreach { s =>
       buildState(builder, s)
     }
     buildTransitions(builder, r)
-    builder append "final Region reg_" + r.getName + " = new Region(\"" + r.getName + "\", states_" + r.getName + ", state_" + r.getInitial.getName + ", transitions_" + r.getName + ", " + (if (r.isHistory) "true" else "false") + ");\n"
+    builder append "final Region reg_" + r.qname("_") + " = new Region(\"" + r.getName + "\", states_" + r.qname("_") + ", state_" + r.getInitial.qname("_") + ", transitions_" + r.qname("_") + ", " + (if (r.isHistory) "true" else "false") + ");\n"
   }
 
   def generateJava(builder: StringBuilder) {
@@ -735,7 +735,7 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
 
   def generateJava(builder: StringBuilder, e : ReceiveMessage) {
     if (self.getGuard != null || self.getAction != null) {
-    builder append "private final class " + (if (self.getName != null) self.getName else handlerTypeName) + "Action implements IHandlerAction {\n"
+    builder append "private final class " + (if (self.getName != null) self.qname("_") else handlerTypeName) + "Action implements IHandlerAction {\n"
 
 
       builder append "@Override\n"
@@ -789,9 +789,9 @@ case class StateMachineJavaGenerator(override val self: StateMachine) extends Co
 case class StateJavaGenerator(override val self: State) extends ThingMLJavaGenerator(self) {
   def generateJava(builder: StringBuilder) {
     if (self.getEntry != null || self.getExit != null) {
-      builder append "private final class " + Context.firstToUpper(self.getName) + "Action implements IStateAction {\n"
+      builder append "private final class " +  Context.firstToUpper(self.qname("_")) + "Action implements IStateAction {\n"
 
-      builder append "public " + Context.firstToUpper(self.getName) + "Action(){}\n\n"
+      builder append "public " + Context.firstToUpper(self.qname("_")) + "Action(){}\n\n"
 
       builder append "public void onEntry() {\n"
       Option(self.getEntry) match {
@@ -874,7 +874,7 @@ case class FunctionJavaGenerator(override val self: Function) extends TypedEleme
     }
     if (generate) { 
       self.getAnnotations.filter {
-        a => a.getName == "override"
+        a => a.getName == "override" || a.getName == "implements"
       }.headOption match {
         case Some(a) => 
           builder append "@Override\npublic "
@@ -927,6 +927,25 @@ case class TypeJavaGenerator(override val self: Type) extends ThingMLJavaGenerat
       return res
     }
   }
+
+  def default_java_value() : String = self.getAnnotations.filter {
+      a => a.getName == "java_type"
+    }.headOption match {
+      case Some(a) =>
+        a.getValue match {
+          case "boolean" => "false"
+          case "int" => "0"
+          case "long" => "0"
+          case "float" => "0.0f"
+          case "double" => "0.0d"
+          case "byte" => "0"
+          case "short" => "0"
+          case "char" => "'\u0000'"
+          case _ => "null"
+        }
+      case None =>
+        "null"
+    }
 }
 
 /**

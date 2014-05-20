@@ -18,13 +18,13 @@ thing PSC_Mock includes PSC_Interface
 
 
 datatype PSC_GUI
-@java_type "org.thingml.generated.PSC_MockMock";
+@java_type "org.thingml.generated.gui.PSC_MockMock";
 
 thing PSC_GUI includes GUIbCMSMsgs, bCMSMsgs 
-@java_interface "org.thingml.generated.PSC_MockListener" 
+@java_interface "org.thingml.generated.gui.PSC_MockListener" 
 {
 
-	readonly property gui : PSC_GUI = 'new org.thingml.generated.PSC_MockMock()'
+	readonly property gui : PSC_GUI = 'new org.thingml.generated.gui.PSC_MockMock("PSC")'
 
     provided port control {
         receives gui_initCom, gui_crisisDetails, gui_numberOfTrucks, gui_route, gui_dispatched, gui_arrived, gui_done, gui_close
@@ -38,42 +38,42 @@ thing PSC_GUI includes GUIbCMSMsgs, bCMSMsgs
     /**
     * Call backs for the GUI
     */
-    function onInitCom_via_out(id : String) @implements "true"
+    function onInitCom_via_out(id : String) @override "true" @implements "true"
     do 
         out!initCom(id)
     end
     
-    function onCrisisDetails_via_out(id : String, lat : Double, lon : Double, time : Long, isActive : Boolean, desc : String) @implements "true"
+    function onCrisisDetails_via_out(id : String, lat : Double, lon : Double, time : Long, isActive : Boolean, desc : String) @override "true" @implements "true"
     do 
         out!crisisDetails(id, lat, lon, time, isActive, desc)
     end
     
-    function onNumberOfTrucks_via_out(number : Long) @implements "true"
+    function onNumberOfTrucks_via_out(number : Long) @override "true" @implements "true"
     do 
         out!numberOfTrucks(number)
     end
     
-    function onRoute_via_out(crisisID : String, pVehicles : Long, fVehicles : Long, path : String) @implements "true"
+    function onRoute_via_out(crisisID : String, pVehicles : Long, fVehicles : Long, path : String) @override "true" @implements "true"
     do 
         out!route(crisisID, pVehicles, fVehicles, path)
     end
     
-    function onDispatched_via_out() @implements "true"
+    function onDispatched_via_out() @override "true" @implements "true"
     do 
         out!dispatched()
     end
     
-    function onArrived_via_out() @implements "true"
+    function onArrived_via_out() @override "true" @implements "true"
     do 
         out!arrived()
     end
     
-    function onDone_via_out() @implements "true"
+    function onDone_via_out() @override "true" @implements "true"
     do 
         out!done()
     end
     
-    function onClose_via_out() @implements "true"
+    function onClose_via_out() @override "true" @implements "true"
     do 
         out!close()
     end
@@ -81,7 +81,7 @@ thing PSC_GUI includes GUIbCMSMsgs, bCMSMsgs
 	statechart behavior init Init {
 	
 		on entry do
-            '' & gui & '.listeners.add(root.asInstanceOf[org.thingml.generated.PSC_MockListener]);'
+            '' & gui & '.listeners.add(PSC_GUI.this);'
 		end
 	
 		state Init {}
