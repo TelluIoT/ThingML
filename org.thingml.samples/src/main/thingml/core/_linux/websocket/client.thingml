@@ -11,13 +11,14 @@
 //make sure that the dynamic linker is set to look up /usr/local/lib
 //for more details see http://lonesysadmin.net/2013/02/22/error-while-loading-shared-libraries-cannot-open-shared-object-file/
 
-import "../websocket.thingml"
-import "timer.thingml"
+
+import "../../../thingml.thingml"
+import "../../websocket.thingml"
 
 datatype WebSocketClient
 @c_type "WebSocketClient*";
 
-thing WebSClient includes WebSocketClient
+thing CPPWSClient includes WebSocketClient
 @c_header "
 #include <stdio.h>
 #include <string>
@@ -26,6 +27,7 @@ thing WebSClient includes WebSocketClient
 #include <cstdarg>
 #include \"tinyws/client-server/WebSocketFacade.h\"
 #include \"tinyws/client-server/WebSocketClient.h\"
+#include \"tinyws/libs/Utility.h\"
 
 using namespace WebSockets;
 "
@@ -37,41 +39,41 @@ using namespace WebSockets;
     
     function on_open_callback_client()
 		@c_prototype "void on_open_callback_client(void *_instance, ...)"
-		@c_instance_var_name "(WebSClient_Instance *) _instance"
+		@c_instance_var_name "(CPPWSClient_Instance *) _instance"
     do
-    	'printf("\tWebSocketClient: on_open_callback\n");'
+    	'printf("\tCPPWSClient: on_open_callback\n");'
     	lifecycle!onOpen()
     end
     
     function on_close_callback_client()
 		@c_prototype "void on_close_callback_client(void *_instance, ...)"
-		@c_instance_var_name "(WebSClient_Instance *) _instance"
+		@c_instance_var_name "(CPPWSClient_Instance *) _instance"
     do
-    	'printf("\tWebSocketClient: on_close_callback\n");'
+    	'printf("\tCPPWSClient: on_close_callback\n");'
     	lifecycle!onClose()
     end
     
     function on_error_callback_client()
 		@c_prototype "void on_error_callback_client(void *_instance, ...)"
-		@c_instance_var_name "(WebSClient_Instance *) _instance"
+		@c_instance_var_name "(CPPWSClient_Instance *) _instance"
     do
         'va_list arguments;'
         'va_start(arguments, _instance);'
         'char* message = va_arg(arguments, char*);'
     	'va_end(arguments);'
-    	'printf("\tWebSocketClient: on_error_callback with message -> %s\n", message);'
+    	'printf("\tWCPPWSClient: on_error_callback with message -> %s\n", message);'
     	err!onError('message')
     end
     
     function on_message_callback_client()
 		@c_prototype "void on_message_callback_client(void *_instance, ...)"
-		@c_instance_var_name "(WebSClient_Instance *) _instance"
+		@c_instance_var_name "(CPPWSClient_Instance *) _instance"
     do
         'va_list arguments;'
         'va_start(arguments, _instance);'
         'char* message = va_arg(arguments, char*);'
     	'va_end(arguments);'
-    	'printf("\tWebSocketClient: on_message_callback with message -> %s\n", message);'
+    	'printf("\tCPPWSClient: on_message_callback with message -> %s\n", message);'
     	messaging!onMessage('message')
     end
     
@@ -107,7 +109,7 @@ using namespace WebSockets;
             end
             
             transition -> Serve
-            event messaging?send
+            event lifecycle?start_server
         }
         
         state Serve {
@@ -117,9 +119,7 @@ using namespace WebSockets;
             
             internal event s : messaging?send
             action do
-                'char dev_value[1024];'
-                'snprintf(dev_value, 1024, "%s from client 0x%08x", strdup(' & s.msg & '), ' & client & ');'
-                '' & client & '->sendMessage(dev_value);'
+                '' & client & '->sendMessage(' & s.msg & ');'
             end
             
             transition -> Stopped
@@ -132,78 +132,6 @@ using namespace WebSockets;
             
             transition -> Start
             event lifecycle?start_client
-        }
-                
+        }        
     }  
-}
-
-thing Lifecicle includes WebSocketTest, ClockMsgs {
-    required port signal {
-        receives clock_tick
-    }
-    
-    property pingmessage : String = "ping message"
-    
-    statechart behavior init RunClient {
-
-        internal event e : lifecycle?onOpen
-        action print("test::onOpen")
-        
-        internal event lifecycle?onClose
-        action print("test::onClose")
-        
-        internal event err?onError
-        action print("test::onError")
-        
-        internal event m : messaging?onMessage
-        action
-        do
-        	'printf("test::onMessage %s\n",' & m.msg &');'
-        end
-        
-        
-        state RunClient {
-            on entry do
-                print "\trunning client...\n"
-                lifecycle!start_client()
-            end
-            
-            transition -> Loop
-            event e : lifecycle ? client_launched
-        }
-        
-        state Loop {
-            
-            transition -> Loop
-            event t : signal?clock_tick
-            action do
-                print "sending ping...\n"
-                messaging!send(pingmessage)
-            end
-        }
-    }
-}
-
-configuration WSClient
-  @output_folder "/home/tmp"
-  @debug "true"
-  @debug_fifo "true"
-  @debug_message_send ".*"
-  @debug_message_receive ".*"
-  @add_c_libraries "pthread websockets tinyws"
-{
-
- 
-    instance client : WebSClient
-       set client._port = "7681"
-       set client._host = "localhost"
-       
-    instance clock : ClockLinux
-    	set clock.period = 5000    
-    instance lifecicle : Lifecicle
-     
-    connector lifecicle.signal => clock.signal
-    connector lifecicle.err => client.err
-    connector lifecicle.lifecycle => client.lifecycle
-    connector lifecicle.messaging => client.messaging
 }
