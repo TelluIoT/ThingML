@@ -298,6 +298,16 @@ statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 		self.firstRegion=True
 		for r in self.regions:
 			r.accept(self)
+		self.file.write("	region endRegion init running {\n\
+		state running {\n\
+			transition -> endState\n\
+			event m : harnessIn?perfTestIn\n\
+			guard m.i == 1\n\
+		} \n\
+		state endState {\n\
+            on entry testEnd!testEnd() \n\
+		}\n\
+	}\n")
 		self.file.write("}//end of statechart\n")
 		self.file.write("}//end of thing\n")
 	def process(self,element):
@@ -313,7 +323,7 @@ statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 				tabs=tabs+"\t"
 			self.file.write(tabs+"composite state s"+str(element.ID)+" init s"+str(element.init.ID)+" {\n")
 			tabs=tabs+"\t"
-			self.file.write(tabs+"on entry harness!testOut('\\'"+str(element.ID)+"\\'')\n")
+			self.file.write(tabs+"on entry harnessOut!testOut('\\'"+str(element.ID)+"\\'')\n")
 			i=0
 			if element.parent.isContent: # Composite parent
 				outputsNumber=element.outputsNumber+element.parent.finalStates.count(element)
@@ -321,13 +331,13 @@ statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 				outputsNumber=element.outputsNumber
 			for e in element.outputs:
 				self.file.write(tabs+"transition -> s"+str(e.ID)+"\n")
-				self.file.write(tabs+"event m : harness?perfTestIn\n")
+				self.file.write(tabs+"event m : harnessIn?perfTestIn\n")
 				self.file.write(tabs+"guard m.i%"+str(element.outputsNumber)+" == "+str(i)+"\n")
 				self.file.write(tabs+"\n")
 				i=i+1
 			if element.parent.isContent and element.parent.finalStates.count(element)>0: # Composite parent
 				self.file.write(tabs+"transition -> final_"+str(element.parent.ID)+"\n")
-				self.file.write(tabs+"event m : harness?perfTestIn\n")
+				self.file.write(tabs+"event m : harnessIn?perfTestIn\n")
 				self.file.write(tabs+"guard m.i%"+str(outputsNumber)+" > "+str(i-1)+"\n")
 			
 			self.file.write(tabs+"state final_"+str(element.ID)+" {}\n\n")
@@ -338,7 +348,7 @@ statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 				outertabs=outertabs+"\t"
 			self.file.write(outertabs+"state s"+str(element.ID)+" {\n")
 			tabs=outertabs+"\t"
-			self.file.write(tabs+"on entry harness!testOut('\\'"+str(element.ID)+"\\'')\n\n")
+			self.file.write(tabs+"on entry harnessOut!testOut('\\'"+str(element.ID)+"\\'')\n\n")
 			i=0
 			if element.parent.isContent: # Composite parent
 				outputsNumber=element.outputsNumber+element.parent.finalStates.count(element)
@@ -346,14 +356,14 @@ statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 				outputsNumber=element.outputsNumber
 			for e in element.outputs:
 				self.file.write(tabs+"transition -> s"+str(e.ID)+"\n")
-				self.file.write(tabs+"event m : harness?perfTestIn\n")
+				self.file.write(tabs+"event m : harnessIn?perfTestIn\n")
 				self.file.write(tabs+"guard m.i%"+str(outputsNumber)+" == "+str(i)+"\n")
 				if e != element.outputs[-1]:
 					self.file.write(tabs+"\n")
 				i=i+1
 			if element.parent.isContent and element.parent.finalStates.count(element)>0: # Composite parent
 				self.file.write("\n"+tabs+"transition -> final_"+str(element.parent.ID)+"\n")
-				self.file.write(tabs+"event m : harness?perfTestIn\n")
+				self.file.write(tabs+"event m : harnessIn?perfTestIn\n")
 				self.file.write(tabs+"guard m.i%"+str(outputsNumber)+" > "+str(i-1)+"\n")
 			
 			self.file.write(outertabs+"}\n\n")

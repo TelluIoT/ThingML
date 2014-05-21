@@ -26,26 +26,27 @@ from os.path import isfile, join
 def load_src(name, fpath):
     import os, imp
     return imp.load_source(name, os.path.join(os.path.dirname(__file__), fpath))
-load_src("configuration", "../../../../../../org.thingml.tester/configuration.py")
-from configuration import useBlacklist    
-from configuration import blacklist    
-from configuration import whitelist    
-from configuration import testC    
-from configuration import testJava    
-from configuration import testScala
 
 def run(type):
 	currentDir=os.getcwd()
 	if type == "perf":
+		load_src("configuration", "../../../../../../org.thingml.perf/configuration.py")
 		if not os.path.exists("../../../../../../org.thingml.perf/src/test/java"):
 			os.makedirs("../../../../../../org.thingml.perf/src/test/java")
 		os.chdir("../../../../../../org.thingml.perf/src/test/java")
 		os.system("rm *.java")
 	elif type == "functional":
+		load_src("configuration", "../../../../../../org.thingml.tester/configuration.py")
 		if not os.path.exists("../../../../../../org.thingml.tester/src/test/java"):
 			os.makedirs("../../../../../../org.thingml.tester/src/test/java")
 		os.chdir("../../../../../../org.thingml.tester/src/test/java")
 		os.system("rm *.java")
+	from configuration import useBlacklist    
+	from configuration import blacklist    
+	from configuration import whitelist    
+	from configuration import testC    
+	from configuration import testJava    
+	from configuration import testScala
 	os.chdir(currentDir)
 	os.chdir(r"..")
 
