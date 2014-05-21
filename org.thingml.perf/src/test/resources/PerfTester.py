@@ -25,21 +25,18 @@ class PerfTester:
 		i=0
 
 		testerFile.write('import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"\n\n\
-thing Tester includes TestHarness, TimerClient\n{\n\tstatechart Tester init e0 {\n')
-			
-		testerFile.write('\n\
-		composite state e0 init loop {\n\
-			on entry timer!timer_start(10000)\n\
-			\n\
-			transition -> e1\n\
-			event timer?timer_timeout\n\
-			state loop {\n\
-				transition -> loop\n\
-				action test!perfTestIn(0)\n\
-			}\n\
+thing Tester includes TestHarness, TimerClient\n{\n\
+    property continue : Integer = 10\n\
+	statechart Tester init e1 {\n\
+	state e1 {\n\
+			on entry do \n\
+				while (continue>0) do \n\
+					test!perfTestIn(0) \n\
+					continue = continue - 1\n\
+				end\n\
+				test!perfTestIn(1) \n\
+            end\n\
 		}\n\
-		\n\
-		state e1 {\n\
-		on entry testEnd!testEnd()\n\
-		}\n\t}\n}')
+	}\n\
+}')
 		testerFile.close()

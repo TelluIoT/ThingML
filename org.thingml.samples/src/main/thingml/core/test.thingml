@@ -28,6 +28,9 @@ thing fragment Test includes TestMsg {
 	required port harnessIn {
 		receives testIn, perfTestIn
 	}
+	required port testEnd {
+		sends testEnd
+	}
 }
 
 

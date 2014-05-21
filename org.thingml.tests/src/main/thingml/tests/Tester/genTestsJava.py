@@ -62,9 +62,12 @@ def run(type):
 					'	instance dump : TestDumpJava\n'+
 					'	instance test : '+bigname+'\n'+
 					'	connector test.harnessOut => dump.dump\n'+
-					'	connector test.harnessIn => harness.test\n'+
-					'	connector harness.testEnd => dump.dumpEnd\n'+
-					'	connector harness.timer => timer.timer\n'+confLines+'}')
+					'	connector test.harnessIn => harness.test\n')
+					if type == "perf":
+						fichier.write('	connector test.testEnd => dump.dumpEnd\n')
+					else:
+						fichier.write('	connector harness.testEnd => dump.dumpEnd\n')
+					fichier.write('	connector harness.timer => timer.timer\n'+confLines+'}')
 					fichier.close()
 	print ("Successful generation of scala tests")
 	os.chdir("Tester")
