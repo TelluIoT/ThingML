@@ -1,0 +1,16 @@
+import "../random.thingml"
+
+thing RandomLinux includes Random
+@c_headers "#include <time.h>"
+{
+    statechart Random init waiting {
+    	state start {
+    		on entry 'srand(time(NULL));'
+    	}
+        state waiting {
+          internal waiting
+            event random?request
+            action random!answer('rand()')
+        }
+    }
+}

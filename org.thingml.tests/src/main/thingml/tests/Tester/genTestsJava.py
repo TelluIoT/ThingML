@@ -56,13 +56,16 @@ def run(type):
 					'import "../'+name+'.thingml"\n'+
 					'import "../tester.thingml"\n'+
 					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/timer.thingml"\n\n'+
+					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/random.thingml"\n\n'+
 					'configuration '+bigname+' {\n'+
+					'	instance random : RandomJava\n'+
 					'	instance timer : TimerJava\n'+
 					'	instance harness : Tester\n'+
 					'	instance dump : TestDumpJava\n'+
 					'	instance test : '+bigname+'\n'+
 					'	connector test.harnessOut => dump.dump\n'+
-					'	connector test.harnessIn => harness.test\n')
+					'	connector test.harnessIn => harness.test\n'+
+					'	connector harness.random => random.random\n')
 					if type == "perf":
 						fichier.write('	connector test.testEnd => dump.dumpEnd\n')
 					else:

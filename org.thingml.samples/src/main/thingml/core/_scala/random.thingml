@@ -1,0 +1,16 @@
+import "../random.thingml"
+
+datatype ScalaRandom
+@scala_type "scala.util.Random";
+
+thing RandomScala includes Random
+{
+	property rn : ScalaRandom = 'new scala.util.Random()'
+    statechart Random init waiting {
+        state waiting {
+          internal waiting
+            event random?request
+            action random!answer('' & rn & '.nextInt(java.lang.Short.MAX_VALUE + 1).toShort')
+        }
+    }
+}
