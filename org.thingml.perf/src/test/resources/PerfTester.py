@@ -25,17 +25,31 @@ class PerfTester:
 		i=0
 
 		testerFile.write('import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"\n\n\
-thing Tester includes TestHarness, TimerClient\n{\n\
+thing Tester includes TestHarness, TimerClient, RandomUser\n{\n\
     property continue : Integer = 10\n\
 	statechart Tester init e1 {\n\
-	state e1 {\n\
+		state e1 {\n\
 			on entry do \n\
-				while (continue>0) do \n\
-					test!perfTestIn(0) \n\
-					continue = continue - 1\n\
-				end\n\
-				test!perfTestIn(1) \n\
-            end\n\
+			continue = continue - 1 \n\
+			random!request()\n\
+			end\n\
+			\n\
+            transition -> e1\n\
+			event r: random?answer\n\
+            guard continue > 0\n\
+			action do \n\
+			\'//printf("Sending %d" , \'&r.v&\');\'\n\
+			print("Sending "+ r.v)\n\
+			test!perfTestIn(r.v)\n\
+			end\n\
+            \n\
+            transition -> endTest\n\
+			event r: random?answer\n\
+            guard continue == 0\n\
+		}\n\
+		state endTest{\n\
+			on entry do test!perfTestEnd() \n\
+			print("end") end\n\
 		}\n\
 	}\n\
 }')

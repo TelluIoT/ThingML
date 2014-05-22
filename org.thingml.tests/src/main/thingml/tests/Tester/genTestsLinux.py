@@ -58,6 +58,7 @@ def run(type):
 					'import "../'+name+'.thingml"\n'+
 					'import "../tester.thingml"\n'+
 					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timer.thingml"\n\n'+
+					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/random.thingml"\n\n'+
 					'configuration '+bigname+'C \n@output_folder "/home/thingml_out/" {\n'+
 					'	group timer : TimerLinux\n'+
 					'		set timer.timer.millisecond = true\n'+
@@ -66,8 +67,10 @@ def run(type):
 					'	instance harness : Tester\n'+
 					'	instance dump : TestDumpLinux\n'+
 					'	instance test : '+bigname+'\n'+
+					'	instance random : RandomLinux\n'+
 					'	connector test.harnessOut => dump.dump\n'+
-					'	connector test.harnessIn => harness.test\n')
+					'	connector test.harnessIn => harness.test\n'+
+					'	connector harness.random => random.random\n')
 					if type == "perf":
 						fichier.write('	connector test.testEnd => dump.dumpEnd\n')
 					else:

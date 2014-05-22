@@ -301,8 +301,7 @@ statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 		self.file.write("	region endRegion init running {\n\
 		state running {\n\
 			transition -> endState\n\
-			event m : harnessIn?perfTestIn\n\
-			guard m.i == 1\n\
+			event m : harnessIn?perfTestEnd\n\
 		} \n\
 		state endState {\n\
             on entry testEnd!testEnd() \n\
