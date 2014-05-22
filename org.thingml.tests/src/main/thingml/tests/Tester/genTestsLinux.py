@@ -57,26 +57,27 @@ def run(type):
 					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/test.thingml"\n'+
 					'import "../'+name+'.thingml"\n'+
 					'import "../tester.thingml"\n'+
-					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timer.thingml"\n\n'+
-					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/random.thingml"\n\n'+
-					'configuration '+bigname+'C \n@output_folder "/home/thingml_out/" {\n'+
+					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timer.thingml"\n\n')
+					if type == "perf":
+						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/random.thingml"\n\n')
+					fichier.write('configuration '+bigname+'C \n@output_folder "/home/thingml_out/" {\n'+
 					'	group timer : TimerLinux\n'+
 					'		set timer.timer.millisecond = true\n'+
 					'		set timer.timer.period = 10\n'+
 					'		set timer.clock.period = 10\n\n'+
 					'	instance harness : Tester\n'+
 					'	instance dump : TestDumpLinux\n'+
-					'	instance test : '+bigname+'\n'+
-					'	instance random : RandomLinux\n'+
-					'	connector test.harnessOut => dump.dump\n'+
-					'	connector test.harnessIn => harness.test\n'+
-					'	connector harness.random => random.random\n')
+					'	instance test : '+bigname+'\n')
 					if type == "perf":
-						fichier.write('	connector test.testEnd => dump.dumpEnd\n')
+						fichier.write('	instance random : RandomLinux\n'+
+						'	connector test.testEnd => dump.dumpEnd\n'+
+						'	connector harness.random => random.random\n')
 					else:
-						fichier.write('	connector harness.testEnd => dump.dumpEnd\n')
+						fichier.write('	connector test.harnessOut => dump.dump\n'+
+						'	connector test.harnessIn => harness.test\n'+
+						'	connector harness.testEnd => dump.dumpEnd\n')
 					fichier.write('	connector harness.timer => timer.timer.timer\n'+
 					confLines+'}')
 					fichier.close()
-	print ("Successful generation of linux tests")
+	print ("Successful generation of linux tests"+type)
 	os.chdir("Tester")

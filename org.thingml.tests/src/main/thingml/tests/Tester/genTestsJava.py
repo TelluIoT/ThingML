@@ -55,22 +55,23 @@ def run(type):
 					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/test.thingml"\n'+
 					'import "../'+name+'.thingml"\n'+
 					'import "../tester.thingml"\n'+
-					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/timer.thingml"\n\n'+
-					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/random.thingml"\n\n'+
-					'configuration '+bigname+' {\n'+
-					'	instance random : RandomJava\n'+
+					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/timer.thingml"\n\n')
+					if type == "perf":
+						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/random.thingml"\n\n')
+					fichier.write('configuration '+bigname+' {\n'+
 					'	instance timer : TimerJava\n'+
 					'	instance harness : Tester\n'+
 					'	instance dump : TestDumpJava\n'+
-					'	instance test : '+bigname+'\n'+
-					'	connector test.harnessOut => dump.dump\n'+
-					'	connector test.harnessIn => harness.test\n'+
-					'	connector harness.random => random.random\n')
+					'	instance test : '+bigname+'\n')
 					if type == "perf":
-						fichier.write('	connector test.testEnd => dump.dumpEnd\n')
+						fichier.write('	instance random : RandomJava\n'+
+						'	connector test.testEnd => dump.dumpEnd\n'+
+						'	connector harness.random => random.random\n')
 					else:
 						fichier.write('	connector harness.testEnd => dump.dumpEnd\n')
-					fichier.write('	connector harness.timer => timer.timer\n'+confLines+'}')
+					fichier.write('	connector test.harnessOut => dump.dump\n'+
+					'	connector test.harnessIn => harness.test\n'+
+					'	connector harness.timer => timer.timer\n'+confLines+'}')
 					fichier.close()
 	print ("Successful generation of scala tests")
 	os.chdir("Tester")

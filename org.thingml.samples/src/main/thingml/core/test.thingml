@@ -4,9 +4,10 @@ import "../datatypes.thingml"
  * Definition of the ThingML test framework
  *****************************************************************************/
 thing fragment TestMsg {
-	message testOut(c : Char);
 	message testIn(c : Char);
+	message testOut(c : Char);
 	message perfTestIn(i : Integer);
+	message perfTestOut(s : String);
 	message testFailure();
 	message perfTestEnd();
 	message testEnd();
@@ -23,7 +24,7 @@ thing fragment TestHarness includes TestMsg {
 thing fragment Test includes TestMsg {
 
 	required port harnessOut {
-		sends testOut, testFailure
+		sends testOut, testFailure, perfTestOut
 	}
 	required port harnessIn {
 		receives testIn, perfTestIn, perfTestEnd
@@ -37,7 +38,7 @@ thing fragment Test includes TestMsg {
 thing fragment TestDump includes TestMsg {
 
 	provided port dump {
-		receives testOut, testFailure
+		receives testOut, testFailure, perfTestOut
 	}
 	provided port dumpEnd {
 		receives testEnd

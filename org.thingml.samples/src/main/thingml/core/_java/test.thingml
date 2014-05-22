@@ -21,6 +21,10 @@ thing TestDumpJava includes TestDump
             action do write('Character.toString('&m.c&')')
             	transitionsCount=transitionsCount+1
             end
+            internal event m : dump?perfTestOut
+            action do write(''&m.s&'+"\n"')
+            	transitionsCount=transitionsCount+1
+            end
             
             transition -> Failed 
             event dump?testFailure

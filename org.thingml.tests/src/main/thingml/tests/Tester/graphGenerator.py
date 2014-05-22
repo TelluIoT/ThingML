@@ -322,7 +322,7 @@ statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 				tabs=tabs+"\t"
 			self.file.write(tabs+"composite state s"+str(element.ID)+" init s"+str(element.init.ID)+" {\n")
 			tabs=tabs+"\t"
-			self.file.write(tabs+"on entry harnessOut!testOut('\\'"+str(element.ID)+"\\'')\n")
+			self.file.write(tabs+"on entry harnessOut!perfTestOut(\""+str(element.ID)+"\")\n")
 			i=0
 			if element.parent.isContent: # Composite parent
 				outputsNumber=element.outputsNumber+element.parent.finalStates.count(element)
@@ -347,7 +347,7 @@ statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 				outertabs=outertabs+"\t"
 			self.file.write(outertabs+"state s"+str(element.ID)+" {\n")
 			tabs=outertabs+"\t"
-			self.file.write(tabs+"on entry harnessOut!testOut('\\'"+str(element.ID)+"\\'')\n\n")
+			self.file.write(tabs+"on entry harnessOut!perfTestOut(\""+str(element.ID)+"\")\n\n")
 			i=0
 			if element.parent.isContent: # Composite parent
 				outputsNumber=element.outputsNumber+element.parent.finalStates.count(element)
@@ -382,15 +382,15 @@ def launch(conf,number):
 	# for i in range (0,number):
 	tree=Initializer(conf).regions
 	DumpThingml(tree,0)
-
+"""
 conf = Configuration()
-conf.setRegions(1,1)
-conf.setStates(2,2)
-conf.setOutputs(1,2)
-conf.setDepth(2)
+conf.setRegions(5,10)
+conf.setStates(8,12)
+conf.setOutputs(1,4)
+conf.setDepth(4)
 conf.setCompositeRatio(0.5)
 launch(conf,2)
-
+"""
 """
 tree=Initializer(conf).regions
 DumpThingml(tree,0)

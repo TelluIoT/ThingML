@@ -39,7 +39,7 @@ thing Tester includes TestHarness, TimerClient, RandomUser\n{\n\
             guard continue > 0\n\
 			action do \n\
 			\'//printf("Sending %d" , \'&r.v&\');\'\n\
-			print("Sending "+ r.v)\n\
+			//print("Sending "+ r.v)\n\
 			test!perfTestIn(r.v)\n\
 			end\n\
             \n\

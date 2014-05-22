@@ -125,9 +125,10 @@ for (a,b) in results:
 				os.system("rm "+resultsDirectory+"/C/*.prof")
 				try:
 					f = open('dump', 'r')
-					res = f.readline()
+					lines = f.readlines()
 					f.close()
-					fdumpC.write(res+'\n')
+					for res in lines:
+						fdumpC.write(res)
 				except IOError:
 					fdumpC.write("ErrorAtCompilation\n")
 			
@@ -170,9 +171,10 @@ for (a,b) in results:
 					del os.environ['MAVEN_OPTS']
 				try:
 					f = open('dump', 'r')
-					res = f.readline()
+					lines = f.readlines()
 					f.close()
-					fdumpScala.write(res+'\n')
+					for res in lines:
+						fdumpScala.write(res)
 				except IOError:
 					fdumpScala.write("ErrorAtCompilation\n")
 				if os.path.exists("target/"+bigName+"-1.0-SNAPSHOT.jar"):
@@ -234,9 +236,10 @@ for (a,b) in results:
 					# del os.environ['MAVEN_OPTS']
 				try:
 					f = open('dump', 'r')
-					res = f.readline()
+					lines = f.readlines()
 					f.close()
-					fdumpJava.write(res+'\n')
+					for res in lines:
+						fdumpJava.write(res)
 				except IOError:
 					fdumpJava.write("ErrorAtCompilation\n")
 				if os.path.exists("target/"+bigName+"-1.0-SNAPSHOT.jar"):
