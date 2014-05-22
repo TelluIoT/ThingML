@@ -19,7 +19,7 @@ datatype BinarySwitch
 @c_type "BinarySwitch*";
 
 thing fragment BinarySwitchMsg {
-	message initilalize();
+	message initialize();
 	message turnon();
 	message turnoff();
 	message request();
@@ -58,7 +58,7 @@ using namespace TinyOpenZWaveApi;
  	
  	provided port bswport {
  		sends status, ready, reporterror
- 		receives turnon, turnoff, initilalize, request
+ 		receives turnon, turnoff, initialize, request
  	}
  	
  	required port ctrlport {
@@ -129,7 +129,7 @@ using namespace TinyOpenZWaveApi;
 				print "ZwaveBinarySwitch: waiting for initialize command ...\n"
 			end
     		transition->WaitingForController
-    		event bswport?initilalize
+    		event bswport?initialize
     	}
     	
     	state WaitingForController {

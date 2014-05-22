@@ -1,7 +1,6 @@
 
 import "serializer.thingml"
 import "../websocket.thingml"
-import "../../devices.thingml"
 import "zwave/binarysensor.thingml"
 import "zwave/controller.thingml"
 import "websocket/client.thingml"
