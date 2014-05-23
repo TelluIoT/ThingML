@@ -2689,6 +2689,9 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
                   et.getAfter.generateC(builder, context)
 
+                  // The event has been consumed
+                  builder append "return;\n"
+
                 }
               }
               builder append "}\n"
