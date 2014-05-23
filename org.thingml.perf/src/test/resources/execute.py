@@ -285,6 +285,8 @@ for (a,b) in results:
 						uptime = re.sub(r"Runtime & Agent: Uptime: (.*) sec",r"\1",uptime)
 						heap = find("Heap Memory: Used:",bigName+"j"+str(resultCounter)+"/Summary.txt")
 						heap = re.sub(r"Heap Memory: Used: (.*) MB",r"\1",heap)
+						if re.match(r"(.*),(.*)",heap):
+							heap = re.sub(r"(.*),(.*)",r"\1.\2",heap)
 						nonheap = find("Non-Heap Memory: Used:",bigName+"j"+str(resultCounter)+"/Summary.txt")
 						nonheap = re.sub(r"Non-Heap Memory: Used: (.*) MB",r"\1",nonheap)
 						if re.match(r"(.*),(.*)",nonheap):

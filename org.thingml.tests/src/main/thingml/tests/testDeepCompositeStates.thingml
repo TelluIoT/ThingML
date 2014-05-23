@@ -1,0 +1,96 @@
+import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+
+thing TestDeepCompositeStates includes Test 
+@test "n # (012abc|abc012)"
+@test "na # (012abc|abc012)(3d|d3)"
+@test "naa # (012abc|abc012)(3d|d3)(4e|e4)"
+@test "naaa # (012abc|abc012)(3d|d3)(4e|e4)(5f|f5)"
+{
+	statechart TestDeepCompositeStates init I {
+	
+		state I {
+			transition -> C1
+			event m : harnessIn?testIn
+			guard m.c == '\'n\''
+		}
+		
+		composite state C1 init C2 {
+		
+		on entry harnessOut!testOut('\'0\'')
+		on exit harnessOut!testOut('\'5\'')
+		transition -> I
+		event m : harnessIn?testIn
+		guard m.c == '\'a\''
+		
+			state C1S1 {
+				on entry harnessOut!testOut('\'4\'')
+			}
+			
+			composite state C2 init C3 {
+				
+				on entry harnessOut!testOut('\'1\'')
+				transition -> C1S1
+				event m : harnessIn?testIn
+				guard m.c == '\'a\''
+				
+				state C2S1 {	
+					on entry harnessOut!testOut('\'3\'')
+				}
+				
+				composite state C3 init C3S1 {
+				
+					on entry harnessOut!testOut('\'2\'')
+					transition -> C2S1
+					event m : harnessIn?testIn
+					guard m.c == '\'a\''
+					
+					state C3S1{
+					}
+				}
+			}
+		}
+		region r init r_I{
+		state r_I {
+			transition -> r_C1
+			event m : harnessIn?testIn
+			guard m.c == '\'n\''
+		}
+		
+		composite state r_C1 init r_C2 {
+		
+		on entry harnessOut!testOut('\'a\'')
+		on exit harnessOut!testOut('\'f\'')
+		transition -> r_I
+		event m : harnessIn?testIn
+		guard m.c == '\'a\''
+		
+			state r_C1S1 {
+				on entry harnessOut!testOut('\'e\'')
+			}
+			
+			composite state r_C2 init r_C3 {
+				
+				on entry harnessOut!testOut('\'b\'')
+				transition -> r_C1S1
+				event m : harnessIn?testIn
+				guard m.c == '\'a\''
+				
+				state r_C2S1 {	
+					on entry harnessOut!testOut('\'d\'')
+				}
+				
+				composite state r_C3 init r_C3S1 {
+				
+					on entry harnessOut!testOut('\'c\'')
+					transition -> r_C2S1
+					event m : harnessIn?testIn
+					guard m.c == '\'a\''
+					
+					state r_C3S1{
+					}
+				}
+			}
+		}
+		}
+	}
+}

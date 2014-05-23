@@ -223,15 +223,15 @@ for (a,b) in results:
 			if os.path.exists("tmp/ThingML_Java/"+bigName):
 				os.chdir("tmp/ThingML_Java/"+bigName)
 				# insertLine("import scala.sys.process._","src/main/scala/org/thingml/generated/Main.scala","package org.thingml.generated")
-				# if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
-					# insertLine("\"java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp-controller-api-redist.jar localhost 10001 start-cpu-sampling\".!","src/main/scala/org/thingml/generated/Main.scala","def main")
+				if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+					insertLine("try{Runtime.getRuntime().exec(\"java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp-controller-api-redist.jar localhost 10001 start-cpu-sampling\");}catch(Exception e){;}","src/main/java/org/thingml/generated/Main.java","public static void main(String args[]) {")
 				os.system("mvn clean package")
 			
-				# if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
-					# os.environ['MAVEN_OPTS'] = "-agentpath:/usr/local/lib/yjp-2013-build-13074/bin/linux-x86-32/libyjpagent.so=port=10001,dir="+resultsDirectory+"/Scala/"
+				if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+					os.environ['MAVEN_OPTS'] = "-agentpath:/usr/local/lib/yjp-2013-build-13074/bin/linux-x86-32/libyjpagent.so=port=10001,dir="+resultsDirectory+"/Java/"
 				os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
-				# if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
-					# del os.environ['MAVEN_OPTS']
+				if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+					del os.environ['MAVEN_OPTS']
 				try:
 					f = open('dump', 'r')
 					res = f.readline()
@@ -265,8 +265,12 @@ for (a,b) in results:
 						uptime = re.sub(r"Runtime & Agent: Uptime: (.*) sec",r"\1",uptime)
 						heap = find("Heap Memory: Used:",bigName+"j"+str(resultCounter)+"/Summary.txt")
 						heap = re.sub(r"Heap Memory: Used: (.*) MB",r"\1",heap)
+						if re.match(r"(.*),(.*)",heap):
+							heap = re.sub(r"(.*),(.*)",r"\1.\2",heap)
 						nonheap = find("Non-Heap Memory: Used:",bigName+"j"+str(resultCounter)+"/Summary.txt")
 						nonheap = re.sub(r"Non-Heap Memory: Used: (.*) MB",r"\1",nonheap)
+						if re.match(r"(.*),(.*)",nonheap):
+							nonheap = re.sub(r"(.*),(.*)",r"\1.\2",nonheap)
 						# print("cpu: "+cputime+"uptime: "+uptime+", heap: "+heap+", nonheap: "+nonheap)
 						resultsData.append(("Java",bigName+" "+str(resultCounter),str(round(float(cputime)/float(uptime),2))+"%",str(float(heap)+float(nonheap))+" MB",binsize))
 					else:
