@@ -131,7 +131,12 @@ for (a,b) in results:
 						fdumpC.write(res)
 				except IOError:
 					fdumpC.write("ErrorAtCompilation\n")
-			
+				try: 
+					f = open('transitionsCount','r')
+					tcount = f.readline().rstrip()
+					f.close()
+				except IOError:
+					tcount = 'error'
 				cpu="error"
 				mem="error"
 				try:
@@ -141,13 +146,13 @@ for (a,b) in results:
 					mem=mem[:-1]+" MB"
 				except IOError:
 					print("Impossible to run ps command")
-				resultsData.append(("C",fileName[0].upper()+fileName[1:]+" "+str(resultCounter),cpu,mem,binsize))
+				resultsData.append(("C",fileName[0].upper()+fileName[1:]+" "+str(resultCounter),cpu,mem,binsize,tcount))
 				os.chdir("..")
 				if deleteTemporaryFiles:
 					os.system("rm -r "+bigName)
 			else:
 				fdumpC.write("NoSourceCodeFound\n")
-				resultsData.append(("C",fileName[0].upper()+fileName[1:]+" "+str(resultCounter),"error","error","error"))
+				resultsData.append(("C",fileName[0].upper()+fileName[1:]+" "+str(resultCounter),"error","error","error","error"))
 		
 		#!Test scala
 		if testScala:
@@ -177,6 +182,12 @@ for (a,b) in results:
 						fdumpScala.write(res)
 				except IOError:
 					fdumpScala.write("ErrorAtCompilation\n")
+				try: 
+					f = open('transitionsCount','r')
+					tcount = f.readline()
+					f.close()
+				except IOError:
+					tcount = 'error'
 				if os.path.exists("target/"+bigName+"-1.0-SNAPSHOT.jar"):
 					binsize=str(os.path.getsize("target/"+bigName+"-1.0-SNAPSHOT.jar"))
 				else:
@@ -184,7 +195,7 @@ for (a,b) in results:
 				os.chdir("..")
 				if deleteTemporaryFiles:
 					os.system("rm -r "+bigName)
-				os.chdir("../../../org.thingml.tester/target/results/Scala")
+				os.chdir("../../../org.thingml.perf/target/results/Scala")
 				mypath = "."
 				onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 				snapshotName="test"
@@ -206,13 +217,13 @@ for (a,b) in results:
 						nonheap = find("Non-Heap Memory: Used:",bigName+str(resultCounter)+"/Summary.txt")
 						nonheap = re.sub(r"Non-Heap Memory: Used: (.*) MB",r"\1",nonheap)
 						# print("cpu: "+cputime+"uptime: "+uptime+", heap: "+heap+", nonheap: "+nonheap)
-						resultsData.append(("Scala",bigName+" "+str(resultCounter),str(round(float(cputime)/float(uptime),2))+"%",str(float(heap)+float(nonheap))+" MB",binsize))
+						resultsData.append(("Scala",bigName+" "+str(resultCounter),str(round(float(cputime)/float(uptime),2))+"%",str(float(heap)+float(nonheap))+" MB",binsize,tcount))
 					else:
-						resultsData.append(("Scala",bigName+" "+str(resultCounter),"error","error","error"))
+						resultsData.append(("Scala",bigName+" "+str(resultCounter),"error","error","error","error"))
 					os.system("rm *.snapshot")
 			else:
 				fdumpScala.write("NoCodeSourceFound\n")
-				resultsData.append(("Scala",bigName+" "+str(resultCounter),"error","error","error"))
+				resultsData.append(("Scala",bigName+" "+str(resultCounter),"error","error","error","error"))
 		
 		#!Test Java
 		if testJava:
@@ -224,16 +235,16 @@ for (a,b) in results:
 			
 			if os.path.exists("tmp/ThingML_Java/"+bigName):
 				os.chdir("tmp/ThingML_Java/"+bigName)
-				# insertLine("import scala.sys.process._","src/main/scala/org/thingml/generated/Main.scala","package org.thingml.generated")
-				# if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
-					# insertLine("\"java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp-controller-api-redist.jar localhost 10001 start-cpu-sampling\".!","src/main/scala/org/thingml/generated/Main.scala","def main")
+				# insertLine("import scala.sys.process._","src/main/scala/org/thingml/generated/Main.scala","package org.thingml.generated;")
+				if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+					insertLine("try{Runtime.getRuntime().exec(\"java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp-controller-api-redist.jar localhost 10001 start-cpu-sampling\");}catch(Exception e){;}","src/main/java/org/thingml/generated/Main.java","public static void main(String args[]) {")
 				os.system("mvn clean package")
 			
-				# if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
-					# os.environ['MAVEN_OPTS'] = "-agentpath:/usr/local/lib/yjp-2013-build-13074/bin/linux-x86-32/libyjpagent.so=port=10001,dir="+resultsDirectory+"/Scala/"
+				if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+					os.environ['MAVEN_OPTS'] = "-agentpath:/usr/local/lib/yjp-2013-build-13074/bin/linux-x86-32/libyjpagent.so=port=10001,dir="+resultsDirectory+"/Java/"
 				os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
-				# if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
-					# del os.environ['MAVEN_OPTS']
+				if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+					del os.environ['MAVEN_OPTS']
 				try:
 					f = open('dump', 'r')
 					lines = f.readlines()
@@ -242,6 +253,12 @@ for (a,b) in results:
 						fdumpJava.write(res)
 				except IOError:
 					fdumpJava.write("ErrorAtCompilation\n")
+				try: 
+					f = open('transitionsCount','r')
+					tcount = f.readline()
+					f.close()
+				except IOError:
+					tcount = 'error'
 				if os.path.exists("target/"+bigName+"-1.0-SNAPSHOT.jar"):
 					binsize=str(os.path.getsize("target/"+bigName+"-1.0-SNAPSHOT.jar"))
 				else:
@@ -249,7 +266,7 @@ for (a,b) in results:
 				os.chdir("..")
 				if deleteTemporaryFiles:
 					os.system("rm -r "+bigName)
-				os.chdir("../../../org.thingml.tester/target/results/Java")
+				os.chdir("../../../org.thingml.perf/target/results/Java")
 				mypath = "."
 				onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 				snapshotName="test"
@@ -270,14 +287,16 @@ for (a,b) in results:
 						heap = re.sub(r"Heap Memory: Used: (.*) MB",r"\1",heap)
 						nonheap = find("Non-Heap Memory: Used:",bigName+"j"+str(resultCounter)+"/Summary.txt")
 						nonheap = re.sub(r"Non-Heap Memory: Used: (.*) MB",r"\1",nonheap)
+						if re.match(r"(.*),(.*)",nonheap):
+							nonheap = re.sub(r"(.*),(.*)",r"\1.\2",nonheap)
 						# print("cpu: "+cputime+"uptime: "+uptime+", heap: "+heap+", nonheap: "+nonheap)
-						resultsData.append(("Java",bigName+" "+str(resultCounter),str(round(float(cputime)/float(uptime),2))+"%",str(float(heap)+float(nonheap))+" MB",binsize))
+						resultsData.append(("Java",bigName+" "+str(resultCounter),str(round(float(cputime)/float(uptime),2))+"%",str(float(heap)+float(nonheap))+" MB",binsize,tcount))
 					else:
-						resultsData.append(("Java",bigName+" "+str(resultCounter),"error","error","error"))
-					os.system("rm *.snapshot")
+						resultsData.append(("Java",bigName+" "+str(resultCounter),"error","error","error","error"))
+					os.system("rm *.x")
 			else:
 				fdumpJava.write("NoCodeSourceFound\n")
-				resultsData.append(("Java",bigName+" "+str(resultCounter),"error","error","error"))
+				resultsData.append(("Java",bigName+" "+str(resultCounter),"error","error","error","error"))
 			
 		resultCounter = resultCounter + 1
 
@@ -286,8 +305,8 @@ fdumpC.close()
 fdumpScala.close()
 fdumpJava.close()
 for r in resultsData:
-	type,name,cpu,mem,size=r
-	print("type: "+type+", name: "+name+", cpu: "+cpu+", memory: "+mem+", size: "+size)
+	type,name,cpu,mem,size,tcount=r
+	print("type: "+type+", name: "+name+", cpu: "+cpu+", memory: "+mem+", size: "+size+", tcount: "+tcount)
 os.chdir(rootDirectory)
 os.chdir("../../../")
 dumpHTML("stats.html",resultsData)

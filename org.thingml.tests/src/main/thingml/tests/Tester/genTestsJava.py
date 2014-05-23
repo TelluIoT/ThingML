@@ -65,6 +65,7 @@ def run(type):
 					'	instance test : '+bigname+'\n')
 					if type == "perf":
 						fichier.write('	instance random : RandomJava\n'+
+						'		set dump.benchmark = true\n'+
 						'	connector test.testEnd => dump.dumpEnd\n'+
 						'	connector harness.random => random.random\n')
 					else:

@@ -70,14 +70,14 @@ def run(type):
 					'	instance test : '+bigname+'\n')
 					if type == "perf":
 						fichier.write('	instance random : RandomLinux\n'+
+						'		set dump.benchmark = true\n'+
 						'	connector test.testEnd => dump.dumpEnd\n'+
 						'	connector harness.random => random.random\n')
 					else:
-						fichier.write('	connector test.harnessOut => dump.dump\n'+
+						fichier.write('	connector harness.testEnd => dump.dumpEnd\n')
+					fichier.write('	connector test.harnessOut => dump.dump\n'+
 						'	connector test.harnessIn => harness.test\n'+
-						'	connector harness.testEnd => dump.dumpEnd\n')
-					fichier.write('	connector harness.timer => timer.timer.timer\n'+
-					confLines+'}')
+						'	connector harness.timer => timer.timer.timer\n'+confLines+'}')
 					fichier.close()
 	print ("Successful generation of linux tests"+type)
 	os.chdir("Tester")

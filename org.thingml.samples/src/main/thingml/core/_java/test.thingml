@@ -7,11 +7,11 @@ thing TestDumpJava includes TestDump
 @thingml_maven_dep "org.thingml.samples.utils"
 {
    property device : Dumper = 'new org.thingml.devices.Dumper()'
-	
+ 	property benchmark: Boolean = false
 	function write(string : String) 
 	do
 		'((org.thingml.devices.Dumper)' & device & ').write(' & string & ');'
-		print(string)
+		if (benchmark == false)  do print(string) end
 	end
 	
 	statechart JavaHarness init Testing {

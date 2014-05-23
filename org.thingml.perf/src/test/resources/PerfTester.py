@@ -38,7 +38,7 @@ thing Tester includes TestHarness, TimerClient, RandomUser\n{\n\
 			event r: random?answer\n\
             guard continue > 0\n\
 			action do \n\
-			\'//printf("Sending %d" , \'&r.v&\');\'\n\
+			//\'//printf("Sending %d" , \'&r.v&\');\'\n\
 			//print("Sending "+ r.v)\n\
 			test!perfTestIn(r.v)\n\
 			end\n\
@@ -49,7 +49,7 @@ thing Tester includes TestHarness, TimerClient, RandomUser\n{\n\
 		}\n\
 		state endTest{\n\
 			on entry do test!perfTestEnd() \n\
-			print("end") end\n\
+			//print("end") end\n\
 		}\n\
 	}\n\
 }')

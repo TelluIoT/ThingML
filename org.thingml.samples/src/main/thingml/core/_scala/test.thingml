@@ -7,11 +7,12 @@ thing TestDumpScala includes TestDump
 @thingml_maven_dep "org.thingml.samples.utils"
 {
    property device : Dumper  
+ 	property benchmark: Boolean = false
 	
 	function write(string : String) 
 	do
 		'' & device & '.asInstanceOf[org.thingml.devices.Dumper].write(' & string & ')'
-		print(string)
+		if (benchmark == false)  do print(string) end
 	end
 	
 	statechart ScalaHarness init Testing {

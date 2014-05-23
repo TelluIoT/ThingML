@@ -5,6 +5,7 @@ thing TestDumpLinux includes TestDump
 @c_header "#include <stdio.h>"
 @c_global "FILE* testFile = NULL;"
 {
+ 	property benchmark: Boolean = false
 	function write(c : Char) 
 	do
 		
@@ -21,8 +22,9 @@ thing TestDumpLinux includes TestDump
     'if (testFile != NULL)
     {
         fprintf(testFile,"%s\n",s); 
-    }
-	printf("%s\n",s);'
+    }'
+	if (benchmark == false)  do 'printf("%s\n",s);' end
+	
  
 	end
 	
