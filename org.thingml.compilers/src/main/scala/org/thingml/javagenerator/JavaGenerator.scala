@@ -478,6 +478,7 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
                   p._2.generateJava(tempbuilder)
                   result += tempbuilder.toString
                 } else {
+                  result += "(" + p._1.getType.java_type() + ")"//we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
                   result += p._1.getType.default_java_value()
                 }
                 builder append ", " + result
@@ -934,12 +935,14 @@ case class TypeJavaGenerator(override val self: Type) extends ThingMLJavaGenerat
   def java_type(isArray : Boolean = false): String = {
     if (self == null){
       return "void"
+    } else if (self.isInstanceOf[Enumeration]) {
+      return self.getName + "_ENUM"
     }
     else {
       var res : String =  self.getAnnotations.filter {
         a => a.getName == "java_type"
       }.headOption match {
-        case Some(a) => 
+        case Some(a) =>
           a.asInstanceOf[PlatformAnnotation].getValue
         case None =>
           println("[WARNING] Missing annotation java_type or java_type for type " + self.getName + ", using " + self.getName + " as the Java/Java type.")
@@ -989,13 +992,22 @@ case class EnumerationJavaGenerator(override val self: Enumeration) extends Type
     
   override def generateJava(builder: StringBuilder) {
     generateHeader(builder, false)
+
+    val raw_type = self.getAnnotations.filter {
+      a => a.getName == "java_type"
+    }.headOption match {
+      case Some(a) =>
+        a.asInstanceOf[PlatformAnnotation].getValue
+      case None =>
+    }
+
     builder append "// Definition of Enumeration  " + self.getName + "\n"
     builder append "public enum " + enumName + " {\n"
     builder append self.getLiterals.collect {case l =>
-      l.Java_name + " ((" + java_type() + ") " + l.enum_val +")"
+      l.Java_name + " ((" + raw_type + ") " + l.enum_val +")"
     }.mkString("", ",\n", ";\n\n")
-    builder append "private final " + java_type() + " id;\n\n"
-    builder append enumName + "(" + java_type() + " id) {\n"
+    builder append "private final " + raw_type + " id;\n\n"
+    builder append enumName + "(" + raw_type + " id) {\n"
     builder append "this.id = id;\n"
     builder append "}\n"
     builder append "}\n"
