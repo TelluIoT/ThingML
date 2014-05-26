@@ -56,7 +56,7 @@ object Context {
   def firstToUpper(value : String) : String = {
     var result = ""
     if (value.size > 0)
-      result += value(0).toUpperCase 
+      result += value(0).toUpper
     if (value.size > 1)
       result += value.substring(1, value.length)
     return result
@@ -346,7 +346,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     
     builder append "public void print(String id, String data){\n"
     builder append "try {\n"
-    builder append "doc.insertString(doc.getLength(), formatForPrint(data), doc.getStyle(\"receive\"+id+\"Style\"));\n"
+    builder append "doc.insertString(doc.getLength(), formatForPrint(data), doc.getStyle(id));\n"
     builder append "screen.setCaretPosition(doc.getLength());\n"
     builder append "} catch (BadLocationException ex) {\n"
     builder append "ex.printStackTrace();\n"
@@ -452,13 +452,13 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append "editorScrollPane.setMinimumSize(new Dimension(320, 160));\n"
         
     builder append "doc = screen.getStyledDocument();\n"
-    builder append "Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);\n"
+    builder append "//Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);\n"
             
     val rnd = new Random()
     messagesToReceive.foreach{case (port, messages) =>
         messages.foreach{msg =>
-          builder append "Style receive" + msg.getName + "_via_" + port.getName + "Style = doc.addStyle(\"receive" + msg.getName + "_via_" + Context.firstToUpper(self.getName) + "_" + port.getName + "Style\", def);\n"
-          builder append "StyleConstants.setForeground(receive" + msg.getName + "_via_" + port.getName + "Style, Color.getHSBColor(" + rnd.nextInt(255) + ", 50, 80));\n"
+          builder append "Style receive" + msg.getName + "_via_" + port.getName + "Style = doc.addStyle(\"" + msg.getName + "_via_" + port.getName + "\", null);\n"
+          builder append "StyleConstants.setBackground(receive" + msg.getName + "_via_" + port.getName + "Style, new Color(" + (255-rnd.nextInt(125)) + ", " + (255-rnd.nextInt(125)) + ", " + (255-rnd.nextInt(125)) + "));\n"
         }        
     }
     builder append "return editorScrollPane;\n"

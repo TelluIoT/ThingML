@@ -349,6 +349,13 @@ object JavaGenerator {
             builder append "public final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName) + ";\n"
         }
 
+        builder append "@Override\npublic String toString(){\n"
+        builder append "return \"" + Context.firstToUpper(m.getName()) + " \"" + m.getParameters.collect {
+          case p =>
+            " + \"" + p.getType.java_type(p.getCardinality != null) + ": \" + " + Context.protectJavaKeyword(p.getName)
+        }.mkString("")
+        builder append ";}\n\n"
+
         builder append "protected " + Context.firstToUpper(m.getName()) + "Message(EventType type"
         builder append m.getParameters.collect {
           case p =>
