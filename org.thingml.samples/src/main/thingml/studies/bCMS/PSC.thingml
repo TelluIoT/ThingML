@@ -82,9 +82,10 @@ thing PSC_GUI includes GUIbCMSMsgs, bCMSMsgs
 	
 		on entry do
             '' & gui & '.listeners.add(PSC_GUI.this);'
+            '' & gui & '.disableAll();'
 		end
 	
-		state Init {}
+		state Init {
 
         internal event c : control?gui_initCom
         action '' & gui & '.sendinitCom_via_out.setEnabled(' & c.activate & ');'
@@ -109,7 +110,7 @@ thing PSC_GUI includes GUIbCMSMsgs, bCMSMsgs
         
         internal event c : control?gui_close
         action '' & gui & '.sendclose_via_out.setEnabled(' & c.activate & ');'
-               
+       }
 	}
 
          
@@ -132,7 +133,7 @@ thing PSC includes PSC_Interface, GUIbCMS_Controller {
     	statechart behavior init Wait4Com {
 	
 		on entry do
-            //control!gui_initCom(false)
+            control!gui_initCom(true)
             control!gui_crisisDetails(false)
             control!gui_numberOfTrucks(false)
             control!gui_route(false)

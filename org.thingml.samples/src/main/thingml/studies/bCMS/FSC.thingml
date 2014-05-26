@@ -82,12 +82,17 @@ thing FSC_GUI includes GUIbCMSMsgs, bCMSMsgs
 	
 		on entry do
             '' & gui & '.listeners.add(FSC_GUI.this);'
+            '' & gui & '.disableAll();'
+            print("FSC GUI initialized")
 		end
 	
-		state Init {}
+		state Init {
 
         internal event c : control?gui_initCom
-        action '' & gui & '.sendinitCom_via_out.setEnabled(' & c.activate & ');'
+        action do
+            print("gui_initCom received")
+            '' & gui & '.sendinitCom_via_out.setEnabled(' & c.activate & ');'
+        end
         
         internal event c : control?gui_crisisDetails
         action '' & gui & '.sendcrisisDetails_via_out.setEnabled(' & c.activate & ');'
@@ -109,7 +114,7 @@ thing FSC_GUI includes GUIbCMSMsgs, bCMSMsgs
         
         internal event c : control?gui_close
         action '' & gui & '.sendclose_via_out.setEnabled(' & c.activate & ');'
-               
+      }
 	}
 
          
@@ -132,7 +137,8 @@ thing FSC includes FSC_Interface, GUIbCMS_Controller {
     	statechart behavior init Wait4Com {
 	
 		on entry do
-            //control!gui_initCom(false)
+            print("behavior.onEntry")
+            control!gui_initCom(true)
             control!gui_crisisDetails(false)
             control!gui_numberOfTrucks(false)
             control!gui_ackRoute(false)
@@ -145,6 +151,7 @@ thing FSC includes FSC_Interface, GUIbCMS_Controller {
         //1.
 		state Wait4Com {
 			on entry do
+                print("Wait4Com.onEntry")
 				control!gui_initCom(true)
 			end
 			
