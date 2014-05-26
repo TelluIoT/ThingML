@@ -303,6 +303,17 @@ object JavaGenerator {
 
     var mainBuilder = Context.getBuilder("Main.java")
     generateHeader(mainBuilder, true)
+    var gui = false
+    t.allInstances.foreach { i => i.getType.getAnnotations.filter { a =>
+      a.getName == "mock"
+    }.headOption match {
+      case Some(a) =>
+        gui = true
+      case None =>
+    }}
+    if (gui) {
+      mainBuilder append "import org.thingml.generated.*;\n"
+    }
 
     t.generateJavaMain(mainBuilder)
 
@@ -412,8 +423,8 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
       }.headOption match {
         case Some(a) =>
           a.getValue match {
-            case "true" => builder append "final " + Context.firstToUpper(i.getType.getName) + "Mock " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "Mock();\n"
-            case "mirror" => builder append "final " + Context.firstToUpper(i.getType.getName) + "MockMirror " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "MockMirror();\n"
+            case "true" => builder append "final " + Context.firstToUpper(i.getType.getName) + "Mock " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "Mock(\"" + i.instanceName + "\");\n"
+            case "mirror" => builder append "final " + Context.firstToUpper(i.getType.getName) + "MockMirror " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "MockMirror(\"" + i.instanceName + "\");\n"
           }
         case None =>
           //TODO: init arrays
