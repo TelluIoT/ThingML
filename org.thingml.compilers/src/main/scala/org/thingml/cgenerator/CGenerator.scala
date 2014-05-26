@@ -2268,7 +2268,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
   def instance_var_name() = "_instance"
 
-  def state_id(s: State) = s.qname("_").toUpperCase + "_STATE"
+  def state_id(s: State) =  s.qname("_").toUpperCase + "_STATE"
 
   def append_formal_parameters(builder: StringBuilder, m: Message) {
     builder append "("
@@ -2560,6 +2560,8 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
           append_formal_parameters(builder, msg)
           builder append " {\n"
 
+
+
           if (context.debug_message_receive(msg)) {
             builder append context.print_debug_message("<- " + handler_name(port, msg)) + "\n"
           }
@@ -2661,7 +2663,8 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
               if (first) first = false
               else builder append "else "
 
-              builder append "if ("
+              if (cs != null) builder append "if (" + state_var_name(r)+ "_event_consumed == 0 && "
+              else builder append "if ("
               if (h.getGuard != null) h.getGuard.generateC(builder, context)
               else builder append "1"
               builder append ") {\n"
@@ -2671,6 +2674,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
                 case it: InternalTransition => {
                   // Do the action, that is all.
                   it.getAction.generateC(builder, context)
+                  if (r != null) builder append state_var_name(r)+ "_event_consumed = 1;\n"
                 }
                 case et: Transition => {
 
@@ -2690,7 +2694,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
                   et.getAfter.generateC(builder, context)
 
                   // The event has been consumed
-                  builder append "return;\n"
+                  if (r != null) builder append state_var_name(r)+ "_event_consumed = 1;\n"
 
                 }
               }
@@ -2705,10 +2709,13 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
   def dispatchToSubRegions(builder: StringBuilder, cs: CompositeState, port: Port, msg: Message, context: CGeneratorContext) {
 
     //println("dispatchToSubRegions for " + cs + " port=" + port.getName + " msg=" + msg.getName)
+
     cs.directSubRegions().foreach {
       r =>
       //println("  processing region " + r)
       // for all states of the region, if the state can handle the message and that state is active we forward the message
+        builder append "uint8_t "+state_var_name(r)+"_event_consumed = 0;\n"
+
         val states = r.getSubstate.filter {
           s => s.canHandle(port, msg)
         }
@@ -2728,7 +2735,20 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
             generateMessageHandlers(s, port, msg, builder, cs, r, context)
 
             builder append "}\n"
+
         }
+    }
+
+    if (cs.eContainer().isInstanceOf[Region]) {
+    builder append state_var_name( cs.eContainer().asInstanceOf[Region] )+"_event_consumed = 0 "
+    cs.directSubRegions().foreach {
+
+      r =>
+      //println("  processing region " + r)
+      // for all states of the region, if the state can handle the message and that state is active we forward the message
+        builder append "| " + state_var_name(r)+"_event_consumed "
+     }
+    builder append ";\n"
     }
   }
 
