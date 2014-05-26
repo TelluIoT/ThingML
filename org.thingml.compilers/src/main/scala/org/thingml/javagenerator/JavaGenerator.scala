@@ -312,7 +312,7 @@ object JavaGenerator {
       case None =>
     }}
     if (gui) {
-      mainBuilder append "import org.thingml.generated.*;\n"
+      mainBuilder append "import org.thingml.generated.gui.*;\n"
     }
 
     t.generateJavaMain(mainBuilder)
@@ -461,22 +461,30 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
 
           builder append "final " + Context.firstToUpper(i.getType.getName) + " " + i.instanceName + " = (" + Context.firstToUpper(i.getType.getName) + ") new " + Context.firstToUpper(i.getType.getName) + "(\"" + i.getName + ": " + i.getType.getName + "\""
           ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-          self.initExpressionsForInstance(i).foreach{case p =>
-            var result = ""
-            if (p._2 != null) {
-              var tempbuilder = new StringBuilder()
-              tempbuilder append "(" + p._1.getType.java_type() + ")"
-              p._2.generateJava(tempbuilder)
-              result += tempbuilder.toString
-            } else {
-              result += p._1.getType.default_java_value()
+          i.getType.allPropertiesInDepth.foreach { prop => //TODO: not optimal, to be improved
+            self.initExpressionsForInstance(i).foreach { case p =>
+              if (p._1 == prop) {
+                var result = ""
+                if (p._2 != null) {
+                  var tempbuilder = new StringBuilder()
+                  tempbuilder append "(" + p._1.getType.java_type() + ")"
+                  p._2.generateJava(tempbuilder)
+                  result += tempbuilder.toString
+                } else {
+                  result += p._1.getType.default_java_value()
+                }
+                builder append ", " + result
+              }
             }
-            builder append ", " + result
+
+            self.allArrays(i).foreach { a =>
+              if (prop == a) {
+                builder append ", " + a.getName + "_array"
+              }
+            }
           }
 
-          self.allArrays(i).foreach { a =>
-            builder append ", " + a.getName + "_array"
-          }
+
 
           builder append ").buildBehavior();\n"
       }
@@ -1153,7 +1161,7 @@ case class LocalVariableActionJavaGenerator(override val self: LocalVariable) ex
           case Some(a) =>
             a.getValue match {
               case "false" => builder append " = null;"
-              case _ => builder append ";"
+              case _ => builder append " = " + self.getType.default_java_value() +  ";"
             }
           case None =>
             builder append " = null;"

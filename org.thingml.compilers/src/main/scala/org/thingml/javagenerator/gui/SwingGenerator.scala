@@ -360,7 +360,9 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
         }
     }
     builder append "}\n\n"
-	
+
+    builder append "@Override\npublic void start() {}\n\n"
+
     builder append "private void init(){\n"
     
     builder append "GridBagConstraints c = new GridBagConstraints();\n"
@@ -538,6 +540,9 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
       builder append "final Port " + "port_" + Context.firstToUpper(self.getName) + "_" + p.getName + ";\n"
     }
 
+    self.allPorts.foreach{ p =>
+      builder append "public Port get" + Context.firstToUpper(p.getName) + "_port(){return port_" + Context.firstToUpper(self.getName) + "_" + p.getName + ";}\n"
+    }
 
   }
   
