@@ -23,6 +23,30 @@ deleteTemporaryFiles = True
 testC = True
 testScala = True
 testJava = True
+perfRetryNumber = 1
+perfTransitionNumber = 10000
+
+def initPerfConfiguration(graphGenerator):
+	conf = graphGenerator.Configuration()
+	# conf.setRegions(2,3)
+	# conf.setStates(2,4)
+	# conf.setOutputs(1,3)
+	# conf.setDepth(3)
+	# conf.setCompositeRatio(0.5)
+	"""~100 states""" 
+	conf.setRegions(3,5)
+	conf.setStates(3,5)
+	conf.setOutputs(1,4)
+	conf.setDepth(3)
+	conf.setCompositeRatio(0.5)
+	# """~1000 states""" 
+	# conf.setRegions(5,8)
+	# conf.setStates(5,8)
+	# conf.setOutputs(1,4)
+	# conf.setDepth(4)
+	# conf.setCompositeRatio(0.5)
+	
+	graphGenerator.launch(conf,2)
 
 #If useBlacklist is True, runs all tests not present in blacklist
 #If useBlacklist is False, runs all tests present in whitelist

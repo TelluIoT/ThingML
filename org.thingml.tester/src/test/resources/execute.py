@@ -204,7 +204,7 @@ for (a,b) in results:
 						nonheap = find("Non-Heap Memory: Used:",bigName+str(resultCounter)+"/Summary.txt")
 						nonheap = re.sub(r"Non-Heap Memory: Used: (.*) MB",r"\1",nonheap)
 						# print("cpu: "+cputime+"uptime: "+uptime+", heap: "+heap+", nonheap: "+nonheap)
-						resultsData.append(("Scala",bigName+" "+str(resultCounter),str(round(float(cputime)/float(uptime),2))+"%",str(float(heap)+float(nonheap))+" MB",binsize))
+						resultsData.append(("Scala",bigName+" "+str(resultCounter),str(100*round(float(cputime)/float(uptime),2))+"%",str(float(heap)+float(nonheap))+" MB",binsize))
 					else:
 						resultsData.append(("Scala",bigName+" "+str(resultCounter),"error","error","error"))
 					os.system("rm *.snapshot")
@@ -272,7 +272,7 @@ for (a,b) in results:
 						if re.match(r"(.*),(.*)",nonheap):
 							nonheap = re.sub(r"(.*),(.*)",r"\1.\2",nonheap)
 						# print("cpu: "+cputime+"uptime: "+uptime+", heap: "+heap+", nonheap: "+nonheap)
-						resultsData.append(("Java",bigName+" "+str(resultCounter),str(round(float(cputime)/float(uptime),2))+"%",str(float(heap)+float(nonheap))+" MB",binsize))
+						resultsData.append(("Java",bigName+" "+str(resultCounter),str(100*round(float(cputime)/float(uptime),2))+"%",str(float(heap)+float(nonheap))+" MB",binsize))
 					else:
 						resultsData.append(("Java",bigName+" "+str(resultCounter),"error","error","error"))
 					os.system("rm *.snapshot")

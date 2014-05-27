@@ -284,6 +284,7 @@ class DumpThingml:
 		self.file.write("/** Abstract tree:\n")
 		oldstdout=sys.stdout
 		sys.stdout=self.file
+		self.maxID=0
 		for r in tree:
 			r.dump()
 		sys.stdout=oldstdout
@@ -304,12 +305,14 @@ statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 			event m : harnessIn?perfTestEnd\n\
 		} \n\
 		state endState {\n\
-            on entry testEnd!testEnd() \n\
+            on entry testEnd!perfTestSize(\""+str(self.maxID)+"\") \n\
 		}\n\
 	}\n")
 		self.file.write("}//end of statechart\n")
 		self.file.write("}//end of thing\n")
 	def process(self,element):
+		if element.ID > self.maxID:
+			self.maxID= element.ID
 		if element.isGroup and not element.isContent:#region
 			if self.firstRegion:
 				self.file.write("\t/** First region is implicit\n\tregion s"+str(element.ID)+" init s"+str(element.init.ID)+" {*/\n")
@@ -379,9 +382,9 @@ statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 		else: 
 			self.file.write(tabs+"}//end of region\n\n")
 def launch(conf,number):
-	# for i in range (0,number):
-	tree=Initializer(conf).regions
-	DumpThingml(tree,0)
+	for i in range (0,number):
+		tree=Initializer(conf).regions
+		DumpThingml(tree,0)
 """
 conf = Configuration()
 conf.setRegions(5,10)

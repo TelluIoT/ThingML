@@ -1,11 +1,15 @@
 import "../test.thingml"
-
+datatype double
+@c_type "double";
 
 thing TestDumpLinux includes TestDump
-@c_header "#include <stdio.h>"
+@c_header "#include <stdio.h>
+#include <sys/time.h>"
 @c_global "FILE* testFile = NULL;"
 {
  	property benchmark: Boolean = false
+ 	property start: double = 0
+ 	property stop: double = 0
 	function write(c : Char) 
 	do
 		
@@ -19,20 +23,28 @@ thing TestDumpLinux includes TestDump
 	function writeString(s : String) 
 	do
 		
+	if (benchmark == false)  do 
+	'printf("%s\n",s);' 
+	
     'if (testFile != NULL)
     {
         fprintf(testFile,"%s\n",s); 
     }'
-	if (benchmark == false)  do 'printf("%s\n",s);' end
-	
- 
+	end
 	end
 	
 	statechart LinuxHarness init Testing {
-		property transitionsCount : Integer = 0
+		property transitionsCount : Long = 0
+ 	property stateNumber: String = ""
 		
 		state Testing {
-            on entry 'testFile = fopen("dump", "w+");'
+            on entry do 
+            	'testFile = fopen("dump", "w+");'
+   				'sleep(2);'
+				'struct timeval t;'
+				'gettimeofday(&t, NULL);'
+				''&start&'=t.tv_sec;'
+            end
             internal event m : dump?testOut
             action do write(m.c)
             	transitionsCount=transitionsCount+1
@@ -49,6 +61,18 @@ thing TestDumpLinux includes TestDump
             
             transition -> End
             event dumpEnd?testEnd
+            
+            transition -> End
+            event m: dumpEnd?perfTestSize
+            action do 
+			'struct timeval t;'
+			'gettimeofday(&t, NULL);'
+			''&stop&'=t.tv_sec;'
+		    'if (testFile != NULL)
+		    {
+		        fprintf(testFile,"%s\n",'&m.s&'); 
+		    }'
+		    end
 		}
 		
 		state Failed {
@@ -57,12 +81,19 @@ thing TestDumpLinux includes TestDump
 		
 		state End {
 			on entry do
-				'char cmd[80];
+'
+char cmd[80];
 sprintf(cmd, "ps -p %d -o %ccpu > stats",getpid(),\'%\');
 system(cmd);
 sprintf(cmd, "ps -p %d -o %cmem >> stats",getpid(),\'%\');
 system(cmd);'
 'sprintf(cmd, "echo \"%d\" > transitionsCount",' & transitionsCount & ');'
+'system(cmd);
+sprintf(cmd, "echo \"%f\" > cputime",'&stop&' - '&start&');'
+'system(cmd);
+sprintf(cmd, "echo \"%f\" >> cputime",'&start&');'
+'system(cmd);
+sprintf(cmd, "echo \"%f\" >> cputime",'&stop&');'
 'system(cmd);
 fclose(testFile);
 ProfilerStop();
