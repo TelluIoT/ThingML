@@ -11,12 +11,16 @@ thing TestDumpScala includes TestDump
 	
 	function write(string : String) 
 	do
-		'' & device & '.asInstanceOf[org.thingml.devices.Dumper].write(' & string & ')'
-		if (benchmark == false)  do print(string) end
+		
+		if (benchmark == false)  do 
+			'' & device & '.asInstanceOf[org.thingml.devices.Dumper].write(' & string & ')'
+			print(string) 
+		end
 	end
 	
 	statechart ScalaHarness init Testing {
-		property transitionsCount : Integer = 0
+		property transitionsCount : Long = 0
+ 	property stateNumber: String = ""
 		
 		
 		state Testing {
@@ -37,6 +41,11 @@ thing TestDumpScala includes TestDump
             
             transition -> End
             event dumpEnd?testEnd
+            
+            transition -> End
+            event m : dumpEnd?perfTestSize
+            action do '' & device & '.asInstanceOf[org.thingml.devices.Dumper].write(' & m.s & ')'
+            end
 		}
 		
 		state Failed {

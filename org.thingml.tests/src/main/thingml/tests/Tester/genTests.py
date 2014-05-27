@@ -22,23 +22,18 @@ import genTestsJava
 import genTestsJunit
 import graphGenerator
 
+def load_src(name, fpath):
+    import os, imp
+    return imp.load_source(name, os.path.join(os.path.dirname(__file__), fpath))
+
 type = sys.argv[1]
 
 # os.chdir("../org.thingml.tests/src/main/thingml/tests/Tester/")
 if type == "perf":
 	os.system("rm ../perf*")
-	conf = graphGenerator.Configuration()
-	# conf.setRegions(1,2)
-	# conf.setStates(1,2)
-	# conf.setOutputs(1,2)
-	# conf.setDepth(2)
-	# conf.setCompositeRatio(0.5)
-	conf.setRegions(3,5)
-	conf.setStates(3,5)
-	conf.setOutputs(1,4)
-	conf.setDepth(3)
-	conf.setCompositeRatio(0.5)
-	graphGenerator.launch(conf,2)
+	load_src("configuration", "../../../../../../org.thingml.perf/configuration.py")
+	from configuration import initPerfConfiguration
+	initPerfConfiguration(graphGenerator)
 genTestsLinux.run(type)
 genTestsScala.run(type)
 genTestsJava.run(type)

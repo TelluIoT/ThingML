@@ -11,13 +11,14 @@ thing fragment TestMsg {
 	message testFailure();
 	message perfTestEnd();
 	message testEnd();
+	message perfTestSize(s : String);
 }
 thing fragment TestHarness includes TestMsg {
 	provided port test {
 		sends testIn, perfTestIn, perfTestEnd
 	}
 	required port testEnd {
-		sends testEnd
+		sends testEnd,perfTestSize
 	}
 }
 
@@ -30,7 +31,7 @@ thing fragment Test includes TestMsg {
 		receives testIn, perfTestIn, perfTestEnd
 	}
 	required port testEnd {
-		sends testEnd
+		sends testEnd,perfTestSize
 	}
 }
 
@@ -41,6 +42,6 @@ thing fragment TestDump includes TestMsg {
 		receives testOut, testFailure, perfTestOut
 	}
 	provided port dumpEnd {
-		receives testEnd
+		receives testEnd,perfTestSize
 	}
 }

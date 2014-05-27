@@ -126,6 +126,8 @@ object TestsGeneration {
 "		<th>Memory</th>\n"+
 "		<th>Binary size</th>\n"+
 "		<th>Performed transitions</th>\n"+
+"		<th>Execution time</th>\n"+
+"		<th>States number</th>\n"+
 "	</tr>\n")
 		stats.close();
 		

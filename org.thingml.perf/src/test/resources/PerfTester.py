@@ -20,13 +20,13 @@
 import sys
 import re
 class PerfTester:
-	def create(self):
+	def create(self,transitionNumber):
 		testerFile = open('../tester.thingml', 'w')
 		i=0
 
 		testerFile.write('import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"\n\n\
 thing Tester includes TestHarness, TimerClient, RandomUser\n{\n\
-    property continue : Integer = 10\n\
+    property continue : Long = '+str(transitionNumber)+'\n\
 	statechart Tester init e1 {\n\
 		state e1 {\n\
 			on entry do \n\
@@ -49,7 +49,8 @@ thing Tester includes TestHarness, TimerClient, RandomUser\n{\n\
 		}\n\
 		state endTest{\n\
 			on entry do test!perfTestEnd() \n\
-			//print("end") end\n\
+			//print("end") \n\
+			end\n\
 		}\n\
 	}\n\
 }')

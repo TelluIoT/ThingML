@@ -10,12 +10,14 @@ thing TestDumpJava includes TestDump
  	property benchmark: Boolean = false
 	function write(string : String) 
 	do
-		'((org.thingml.devices.Dumper)' & device & ').write(' & string & ');'
-		if (benchmark == false)  do print(string) end
+		if (benchmark == false)  do 
+			'((org.thingml.devices.Dumper)' & device & ').write(' & string & ');'
+			print(string) 
+		end
 	end
 	
 	statechart JavaHarness init Testing {
-		property transitionsCount : Integer = 0
+		property transitionsCount : Long = 0
 		state Testing {
             internal event m : dump?testOut
             action do write('Character.toString('&m.c&')')
@@ -31,6 +33,12 @@ thing TestDumpJava includes TestDump
             
             transition -> End
             event dumpEnd?testEnd
+            
+            transition -> End
+            event m: dumpEnd?perfTestSize
+            action do 
+            '((org.thingml.devices.Dumper)' & device & ').write(' & m.s & ');' 
+            end
 		}
 		
 		state Failed {
