@@ -52,6 +52,8 @@ public class Serial4ThingML {
             } else if (osName.equals("Linux") && (osProc.equals("x86") || osProc.equals("i386"))) {
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/i686-unknown-linux-gnu/librxtxParallel.so"), "librxtxParallel.so");
                 NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/i686-unknown-linux-gnu/librxtxSerial.so"), "librxtxSerial.so");
+            } else if (osName.equals("Linux") && (osProc.equals("arm"))) {//Raspberry Pi
+                NativeLibUtil.copyFile(Serial4ThingML.class.getClassLoader().getResourceAsStream("nativelib/Linux/arm/librxtxSerial.so"), "librxtxSerial.so");
             }
         } catch (Exception e) {
             System.err.println("Cannot Load RxTx on " + osName + "(" + osProc + ")");
