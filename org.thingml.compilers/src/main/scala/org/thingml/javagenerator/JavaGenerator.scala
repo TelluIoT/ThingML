@@ -317,13 +317,14 @@ object JavaGenerator {
 
     t.generateJavaMain(mainBuilder)
 
+    //TODO: we should not generate all the enumeration defined in the model, just the one relevant for the configuration
     model.allSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
       e.generateJava(Context.getBuilder(Context.firstToUpper(e.getName) + "_ENUM.java"))
     }
 
     // Generate code for things which appear in the configuration
-
-    model.allMessages.foreach {
+    //TODO: we should not generate all the messages defined in the model, just the one relevant for the configuration
+    t.allMessages.foreach {
       m =>
         var builder = Context.getBuilder(Context.firstToUpper(m.getName()) + "MessageType.java")
         generateHeader(builder)
