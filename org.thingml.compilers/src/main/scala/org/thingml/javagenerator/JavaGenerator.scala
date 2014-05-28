@@ -1407,6 +1407,6 @@ case class FunctionCallExpressionJavaGenerator(override val self: FunctionCallEx
      p.generateJava(tempBuilder)
      tempBuilder.toString()
      }.mkString(", ")*/
-    builder append ");\n"
+    builder append ")"
   }   
 }
