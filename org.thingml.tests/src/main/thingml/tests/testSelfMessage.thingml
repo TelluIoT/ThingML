@@ -14,7 +14,7 @@ thing TestSelfMessage includes Test
         sends selfMessage    
     }
     
-	statechart TestAutoTransition init I {
+	statechart TestSelfMessage init I {
 		state I {
 			on entry harnessOut!testOut('\'I\'')
 			
