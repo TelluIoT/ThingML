@@ -28,7 +28,7 @@ public class WSClient extends WebSocketClient {
     private WSClientObserver observer = new WSClientObserver() {
 
         @Override
-        public void onMessage(byte bytes[]) {
+        public void onMessageBytes(byte bytes[]) {
         }
 
         @Override
@@ -76,8 +76,9 @@ public class WSClient extends WebSocketClient {
 
     @Override
     public void onMessage(ByteBuffer bytes) {
-        super.onMessage(bytes);
-        observer.onMessage(bytes.array());
+        //super.onMessage(bytes);
+        System.out.println("[CLIENT] Received message (bytes): " + bytes + "\n");
+        observer.onMessageBytes(bytes.array());
     }
 
     @Override

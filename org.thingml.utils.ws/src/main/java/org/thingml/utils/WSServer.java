@@ -29,7 +29,7 @@ public class WSServer extends WebSocketServer {
     private WSServerObserver observer = new WSServerObserver() {
 
         @Override
-        public void onMessage(byte bytes[]) {
+        public void onMessageBytes(byte bytes[]) {
         }
 
         @Override
@@ -76,15 +76,17 @@ public class WSServer extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, ByteBuffer message) {
-        super.onMessage(conn, message);
-        observer.onMessage(message.array());
+        //super.onMessage(conn, message);
+        System.out.println("[SERVER] Received message (bytes) on " + conn + ": " + message);
+        observer.onMessageBytes(message.array());
+        this.sendToAllOthers(message.array(), conn);
     }
 
     @Override
     public void onMessage( WebSocket conn, String message ) {
         System.out.println("[SERVER] Received message on " + conn + ": " + message);
         observer.onMessage(message);
-        //this.sendToAllOthers(message, conn);
+        this.sendToAllOthers(message, conn);
     }
 
     @Override
