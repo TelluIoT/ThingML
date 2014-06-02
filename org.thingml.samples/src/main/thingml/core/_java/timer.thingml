@@ -19,13 +19,13 @@ thing TimerJava includes Timer
 
     function onTimeout()@override "true" 
     do
-        print("timeout")
+        //print("timeout")
         timer!timer_timeout()
     end
     
     function cancel() 
     do
-      print("cancel")
+      //print("cancel")
       if(not (javaTimerTask == 'null'))
       do
         '' & javaTimerTask & '.cancel();'
@@ -36,7 +36,7 @@ thing TimerJava includes Timer
     
     function start(delay : Integer)
     do
-        print("start " + delay)
+        //print("start " + delay)
         cancel()
         javaTimerTask = 'new org.thingml.timer.ThingMLTimerTask(this)'
         '' & javaTimer & '.schedule(' & javaTimerTask & ', (long)' & delay & ');'

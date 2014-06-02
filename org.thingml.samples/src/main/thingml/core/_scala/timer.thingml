@@ -16,13 +16,13 @@ thing TimerScala includes Timer
 
     function onTimeout()@override "true" 
     do
-        print("timeout ")
+        //print("timeout ")
         timer!timer_timeout()
     end
     
     function cancel()
     do
-      print("cancel ")
+      //print("cancel ")
       if(not (scalaTimer == 'null'))
       do
         '' & scalaTimer & ' ! "cancel"'
@@ -31,7 +31,7 @@ thing TimerScala includes Timer
     
     function start(delay : Integer)
     do
-        print("start " + delay)
+        //print("start " + delay)
         cancel()
         scalaTimer = 'new org.thingml.utils.timer.Timer(this,' & delay & ').start'
     end
