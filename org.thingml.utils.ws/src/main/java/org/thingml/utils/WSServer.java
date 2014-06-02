@@ -79,14 +79,14 @@ public class WSServer extends WebSocketServer {
         //super.onMessage(conn, message);
         System.out.println("[SERVER] Received message (bytes) on " + conn + ": " + message);
         observer.onMessageBytes(message.array());
-        this.sendToAllOthers(message.array(), conn);
+        //this.sendToAllOthers(message.array(), conn);
     }
 
     @Override
     public void onMessage( WebSocket conn, String message ) {
         System.out.println("[SERVER] Received message on " + conn + ": " + message);
         observer.onMessage(message);
-        this.sendToAllOthers(message, conn);
+        //this.sendToAllOthers(message, conn);
     }
 
     @Override
