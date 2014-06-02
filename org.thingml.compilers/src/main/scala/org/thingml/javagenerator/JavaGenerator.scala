@@ -438,7 +438,7 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
           //TODO: init arrays
           self.allArrays(i).foreach{ a =>
             //if (!a.isChangeable) {
-              builder append "final " + a.getType.java_type() + "[] " + a.getName + "_array = new " + a.getType.java_type() + "["
+              builder append "final " + a.getType.java_type() + "[] " + i.getName + "_" + a.getName + "_array = new " + a.getType.java_type() + "["
               a.getCardinality.generateJava(builder)
               builder append "];\n"
             /*} else {
@@ -453,7 +453,7 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
             var result = ""
             var tempBuilder = new StringBuilder()
             arrayMap.get(init).get.foreach{pair =>
-              result += init.getName + "_array ["
+              result += i.getName + "_" + init.getName + "_array ["
               tempBuilder = new StringBuilder()
               pair._1.generateJava(tempBuilder)
               result += tempBuilder.toString
@@ -488,7 +488,7 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
 
             self.allArrays(i).foreach { a =>
               if (prop == a) {
-                builder append ", " + a.getName + "_array"
+                builder append ", " + i.getName + "_" + a.getName + "_array"
               }
             }
           }
