@@ -86,12 +86,27 @@ public class WSServer extends WebSocketServer {
         sendToAllOthers(text, null);
     }
 
+    public void send(byte bytes[]) {
+        sendToAllOthers(bytes, null);
+    }
+
     public void sendToAllOthers( String text, WebSocket conn ) {
         Collection<WebSocket> con = connections();
         synchronized ( con ) {
             for( WebSocket c : con ) {
                 if (!con.equals(conn))
                     c.send( text );
+            }
+        }
+    }
+
+
+    public void sendToAllOthers( byte bytes[], WebSocket conn ) {
+        Collection<WebSocket> con = connections();
+        synchronized ( con ) {
+            for( WebSocket c : con ) {
+                if (!con.equals(conn))
+                    c.send( bytes );
             }
         }
     }
