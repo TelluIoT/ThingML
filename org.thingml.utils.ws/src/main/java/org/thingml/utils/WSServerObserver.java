@@ -17,6 +17,7 @@ package org.thingml.utils;
 
 public interface WSServerObserver {
 
+    void onMessage(byte bytes[]);
     void onMessage(String message);
     void onOpen();
     void onClose();

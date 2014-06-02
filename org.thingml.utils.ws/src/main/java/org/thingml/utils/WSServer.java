@@ -21,11 +21,17 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 
 public class WSServer extends WebSocketServer {
 
     private WSServerObserver observer = new WSServerObserver() {
+
+        @Override
+        public void onMessage(byte bytes[]) {
+        }
+
         @Override
         public void onMessage(String message) {
         }
@@ -66,6 +72,12 @@ public class WSServer extends WebSocketServer {
     public void onClose( WebSocket conn, int code, String reason, boolean remote ) {
         System.out.println("[SERVER]" + conn + " disconnected!" );
         observer.onClose();
+    }
+
+    @Override
+    public void onMessage(WebSocket conn, ByteBuffer message) {
+        super.onMessage(conn, message);
+        observer.onMessage(message.array());
     }
 
     @Override

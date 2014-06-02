@@ -21,10 +21,16 @@ import org.java_websocket.drafts.Draft;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 
 public class WSClient extends WebSocketClient {
 
     private WSClientObserver observer = new WSClientObserver() {
+
+        @Override
+        public void onMessage(byte bytes[]) {
+        }
+
         @Override
         public void onMessage(String message) {
         }
@@ -66,6 +72,12 @@ public class WSClient extends WebSocketClient {
 
     public void stop() {
         this.close();
+    }
+
+    @Override
+    public void onMessage(ByteBuffer bytes) {
+        super.onMessage(bytes);
+        observer.onMessage(bytes.array());
     }
 
     @Override
