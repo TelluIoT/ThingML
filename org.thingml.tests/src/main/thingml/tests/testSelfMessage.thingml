@@ -1,6 +1,6 @@
 import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 
-thing TestAutoTransition includes Test 
+thing TestSelfMessage includes Test 
 @test "ttt # IJJJ"
 @conf "connector test.out => test.in"
 {
