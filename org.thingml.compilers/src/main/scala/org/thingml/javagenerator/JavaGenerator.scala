@@ -188,19 +188,25 @@ object JavaGenerator {
     }
   }
 
-  def compileAndRun(cfg: Configuration, model: ThingMLModel, run: Boolean = true) {
-	var tmpFolder = ""
-	if (run){
+  def compileAndRun(cfg: Configuration, model: ThingMLModel, run: Boolean = false) {
+	val tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
+	/*if (run){
 		tmpFolder=System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
 	}
 	else{
 		tmpFolder="tmp/ThingML_Java/"
-	}
+	}*/
     new File(tmpFolder).deleteOnExit
 
     val code = compile(cfg, "org.thingml.generated", model)
     val rootDir = tmpFolder + cfg.getName
-    val outputDir = tmpFolder + cfg.getName + "/src/main/java/org/thingml/generated"
+
+    val outputDir = cfg.getAnnotations.filter(a => a.getName == "java_folder").headOption match {
+      case Some(a) => tmpFolder + cfg.getName + a.getValue + "/java/org/thingml/generated"
+      case None => tmpFolder + cfg.getName + "/src/main/java/org/thingml/generated"
+    }
+
+    println("outputDir: " + outputDir)
 
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
