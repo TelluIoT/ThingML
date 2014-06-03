@@ -79,6 +79,10 @@ public class WSServer extends WebSocketServer {
         //super.onMessage(conn, message);
         System.out.println("[SERVER] Received message (bytes) on " + conn + ": " + message);
         observer.onMessageBytes(message.array());
+        //if (message.order() == ByteOrder.LITTLE_ENDIAN)
+            observer.onMessageBytes(message.order(ByteOrder.BIG_ENDIAN));
+        //else if (message.order() == ByteOrder.BIG_ENDIAN)
+            observer.onMessageBytes(message.order(ByteOrder.LITTLE_ENDIAN));
         //this.sendToAllOthers(message.array(), conn);
     }
 
@@ -86,6 +90,8 @@ public class WSServer extends WebSocketServer {
     public void onMessage( WebSocket conn, String message ) {
         System.out.println("[SERVER] Received message on " + conn + ": " + message);
         observer.onMessage(message);
+        observer.onMessage(new String(ByteBuffer.wrap(message.getBytes()).order(ByteOrder.BIG_ENDIAN)));
+        observer.onMessage(new String(ByteBuffer.wrap(message.getBytes()).order(ByteOrder.LITTLE_ENDIAN)));
         //this.sendToAllOthers(message, conn);
     }
 
@@ -110,6 +116,8 @@ public class WSServer extends WebSocketServer {
             for( WebSocket c : con ) {
                 if (!con.equals(conn))
                     c.send( text );
+                    c.send(new String(ByteBuffer.wrap(text.getBytes()).order(ByteOrder.BIG_ENDIAN)));
+                    c.send(new String(ByteBuffer.wrap(text.getBytes()).order(ByteOrder.LITTLE_ENDIAN)));
             }
         }
     }
@@ -119,8 +127,11 @@ public class WSServer extends WebSocketServer {
         Collection<WebSocket> con = connections();
         synchronized ( con ) {
             for( WebSocket c : con ) {
-                if (!con.equals(conn))
+                if (!con.equals(conn)) {
                     c.send( bytes );
+                    c.send(ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN));
+                    c.send(ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN));
+                }
             }
         }
     }
