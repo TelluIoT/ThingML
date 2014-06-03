@@ -669,7 +669,21 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       m => builder append "private final " + Context.firstToUpper(m.getName) + "MessageType " + m.getName + "Type = new " + Context.firstToUpper(m.getName) + "MessageType();\n"
     }
 
-    builder append "//Constructor\n"
+    builder append "//Constructor (only readonly (final) attributes)\n"
+    builder append "public " + Context.firstToUpper(self.getName) + "("
+    builder append self.allPropertiesInDepth.filter{p => !p.isChangeable}.collect{ case p =>
+        "final " + p.getType.java_type(p.getCardinality != null) + " " + p.Java_var_name
+    }.mkString(", ")
+    builder append ") {\n"
+    builder append "super();\n"
+    self.allPropertiesInDepth.foreach { p =>
+      if (!p.isChangeable) {
+        builder append "this." + p.Java_var_name + " = " + p.Java_var_name + ";\n"
+      }
+    }
+    builder append "}\n\n"
+
+    builder append "//Constructor (all attributes)\n"
     builder append "public " + Context.firstToUpper(self.getName) + "(String name"
     self.allPropertiesInDepth.foreach { p =>
         builder append ", final " + p.getType.java_type(p.getCardinality != null) + " " + p.Java_var_name
