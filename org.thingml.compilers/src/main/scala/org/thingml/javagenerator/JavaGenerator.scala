@@ -681,6 +681,13 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     }
     builder append "}\n\n"
 
+    builder append "//Getters and Setters for non readonly/final attributes\n"
+    self.allPropertiesInDepth.foreach {p =>
+      if (p.isChangeable) {
+        builder append "public " + p.getType.java_type(p.getCardinality != null) + " get" + Context.firstToUpper(p.Java_var_name) + "() {\nreturn " + p.Java_var_name + ";\n}\n\n"
+        builder append "public void set" + Context.firstToUpper(p.Java_var_name) + "(" + p.getType.java_type(p.getCardinality != null) + " " + p.Java_var_name + ") {\nthis." + p.Java_var_name + " = " + p.Java_var_name + ";\n}\n\n"
+      }
+    }
 
     builder append "//Getters for Ports\n"
     self.allPorts.foreach {
