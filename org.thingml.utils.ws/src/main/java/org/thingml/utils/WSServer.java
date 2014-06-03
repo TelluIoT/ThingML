@@ -22,6 +22,7 @@ import org.java_websocket.server.WebSocketServer;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Collection;
 
 public class WSServer extends WebSocketServer {
@@ -80,9 +81,9 @@ public class WSServer extends WebSocketServer {
         System.out.println("[SERVER] Received message (bytes) on " + conn + ": " + message);
         observer.onMessageBytes(message.array());
         //if (message.order() == ByteOrder.LITTLE_ENDIAN)
-            observer.onMessageBytes(message.order(ByteOrder.BIG_ENDIAN));
+            observer.onMessageBytes(message.order(ByteOrder.BIG_ENDIAN).array());
         //else if (message.order() == ByteOrder.BIG_ENDIAN)
-            observer.onMessageBytes(message.order(ByteOrder.LITTLE_ENDIAN));
+            observer.onMessageBytes(message.order(ByteOrder.LITTLE_ENDIAN).array());
         //this.sendToAllOthers(message.array(), conn);
     }
 
@@ -90,8 +91,8 @@ public class WSServer extends WebSocketServer {
     public void onMessage( WebSocket conn, String message ) {
         System.out.println("[SERVER] Received message on " + conn + ": " + message);
         observer.onMessage(message);
-        observer.onMessage(new String(ByteBuffer.wrap(message.getBytes()).order(ByteOrder.BIG_ENDIAN)));
-        observer.onMessage(new String(ByteBuffer.wrap(message.getBytes()).order(ByteOrder.LITTLE_ENDIAN)));
+        observer.onMessage(new String(ByteBuffer.wrap(message.getBytes()).order(ByteOrder.BIG_ENDIAN).array()));
+        observer.onMessage(new String(ByteBuffer.wrap(message.getBytes()).order(ByteOrder.LITTLE_ENDIAN).array()));
         //this.sendToAllOthers(message, conn);
     }
 
@@ -116,8 +117,8 @@ public class WSServer extends WebSocketServer {
             for( WebSocket c : con ) {
                 if (!con.equals(conn))
                     c.send( text );
-                    c.send(new String(ByteBuffer.wrap(text.getBytes()).order(ByteOrder.BIG_ENDIAN)));
-                    c.send(new String(ByteBuffer.wrap(text.getBytes()).order(ByteOrder.LITTLE_ENDIAN)));
+                    c.send(new String(ByteBuffer.wrap(text.getBytes()).order(ByteOrder.BIG_ENDIAN).array()));
+                    c.send(new String(ByteBuffer.wrap(text.getBytes()).order(ByteOrder.LITTLE_ENDIAN).array()));
             }
         }
     }
