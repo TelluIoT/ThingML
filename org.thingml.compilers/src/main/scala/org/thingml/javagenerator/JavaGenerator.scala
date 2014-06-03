@@ -687,7 +687,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       p => builder append "public Port get" + Context.firstToUpper(p.getName) + "_port() {\nreturn " + p.getName + "_port;\n}\n"
     }
 
-    builder append "protected Component buildBehavior() {\n"
+    builder append "public Component buildBehavior() {\n"
 
     builder append "//Init ports\n"
     self.allPorts.foreach { p =>
