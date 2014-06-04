@@ -283,7 +283,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append "}\n\n"
 
     builder append "@Override\n"
-    builder append "protected Component buildBehavior() {\n"
+    builder append "public Component buildBehavior() {\n"
     builder append "return null;\n"
     builder append "}\n\n"
 
