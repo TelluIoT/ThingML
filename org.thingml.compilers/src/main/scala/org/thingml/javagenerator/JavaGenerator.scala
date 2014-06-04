@@ -188,14 +188,12 @@ object JavaGenerator {
     }
   }
 
-  def compileAndRun(cfg: Configuration, model: ThingMLModel, run: Boolean = false) {
+  def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false) { 
+  //doingTests should be ignored, it is only used when calling from org.thingml.cmd
 	val tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
-	/*if (run){
-		tmpFolder=System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
-	}
-	else{
+	if (doingTests){
 		tmpFolder="tmp/ThingML_Java/"
-	}*/
+	}
     new File(tmpFolder).deleteOnExit
 
     val code = compile(cfg, "org.thingml.generated", model)
@@ -238,7 +236,7 @@ object JavaGenerator {
     val w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
     w.println(pom);
     w.close();
-	if (run){
+	if (!doingTests){
     	javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=org.thingml.generated.Main");
 	}
     /*
@@ -274,7 +272,7 @@ object JavaGenerator {
         t.printStackTrace
       }
     }
-	if (run){
+	if (!doingTests){
 		actor {
 		  compileGeneratedCode(rootDir)
 		}
