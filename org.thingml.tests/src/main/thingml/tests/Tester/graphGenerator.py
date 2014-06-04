@@ -384,7 +384,7 @@ statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
 def launch(conf,number):
 	for i in range (0,number):
 		tree=Initializer(conf).regions
-		DumpThingml(tree,0)
+		DumpThingml(tree,i)
 """
 conf = Configuration()
 conf.setRegions(5,10)

@@ -22,6 +22,7 @@ import exrex
 from os import listdir
 from os.path import isfile, join
 from fileUtilities import insertLine
+from fileUtilities import insertLineBefore
 from fileUtilities import find
 from fileUtilities import findAfter
 from fileUtilities import replaceLine
@@ -42,6 +43,7 @@ from configuration import testScala
 from configuration import testJava
 from configuration import perfRetryNumber
 from configuration import perfTransitionNumber
+from configuration import useYourkit
 
 fileName = sys.argv[1]
 rootDirectory = os.getcwd()
@@ -255,16 +257,22 @@ for (a,b) in results:
 			if os.path.exists("tmp/ThingML_Java/"+bigName):
 				os.chdir("tmp/ThingML_Java/"+bigName)
 				# insertLine("import scala.sys.process._","src/main/scala/org/thingml/generated/Main.scala","package org.thingml.generated;")
-				if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+				if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
 					insertLine("try{Runtime.getRuntime().exec(\"java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp-controller-api-redist.jar localhost 10001 start-cpu-sampling\");}catch(Exception e){;}","src/main/java/org/thingml/generated/Main.java","public static void main(String args[]) {")
+				# insertLine("long time = System.currentTimeMillis();","src/main/java/org/thingml/generated/Main.java","//Things")
+				# insertLineBefore("time = System.currentTimeMillis()-time;\n\
+# try{java.io.PrintWriter pw = new java.io.PrintWriter(\"cputime\");\n\
+# pw.println(\"\"+time);\n\
+# pw.close();}catch(Exception e){;}","src/main/java/org/thingml/generated/Main.java","}")
+
 				os.system("mvn clean package")
 				for _ in range(0,perfRetryNumber):
 					os.chdir(compilerDirectory)
 					os.chdir("tmp/ThingML_Java/"+bigName)
-					if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+					if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
 						os.environ['MAVEN_OPTS'] = "-agentpath:/usr/local/lib/yjp-2013-build-13074/bin/linux-x86-32/libyjpagent.so=port=10001,dir="+resultsDirectory+"/Java/"
 					os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
-					if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+					if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
 						del os.environ['MAVEN_OPTS']
 					try:
 						f = open('dump', 'r')
@@ -275,13 +283,20 @@ for (a,b) in results:
 						statesNumber=lines[-1]
 					except IOError:
 						fdumpJava.write("ErrorAtCompilation\n")
-						statesNumber=-1
+						statesNumber="-1"
 					try: 
 						f = open('transitionsCount','r')
 						tcount = f.readline()
 						f.close()
 					except IOError:
 						tcount = 'error'
+					try: 
+						f = open('cputime','r')
+						realtime = f.readline()
+						realtime = str(float(realtime)/1000)
+						f.close()
+					except IOError:
+						realtime = 'error'
 					if os.path.exists("target/"+bigName+"-1.0-SNAPSHOT.jar"):
 						binsize=str(os.path.getsize("target/"+bigName+"-1.0-SNAPSHOT.jar"))
 					else:
@@ -296,7 +311,7 @@ for (a,b) in results:
 							snapshotName = re.sub(r"(.*\.thingml)",r"\1",f)
 					if not os.path.exists(bigName+"j"+str(resultCounter)):
 						os.makedirs(bigName+"j"+str(resultCounter))
-					if os.path.exists("/usr/local/lib/yjp-2013-build-13074/"):
+					if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
 						os.system("java -Dexport.summary -Dexport.class.list -Dexport.apply.filters -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp.jar -export "+snapshotName+" "+bigName+"j"+str(resultCounter))
 					if os.path.exists(bigName+"j"+str(resultCounter)+"/Summary.txt"):
 						cputime = find("Runtime & Agent: CPU time",bigName+"j"+str(resultCounter)+"/Summary.txt")
@@ -312,11 +327,11 @@ for (a,b) in results:
 						if re.match(r"(.*),(.*)",nonheap):
 							nonheap = re.sub(r"(.*),(.*)",r"\1.\2",nonheap)
 						# print("cpu: "+cputime+"uptime: "+uptime+", heap: "+heap+", nonheap: "+nonheap)
-						resultsData.append(("Java",bigName+" "+str(resultCounter),str(round(100*float(cputime)/float(uptime),2))+"%",str(float(heap)+float(nonheap))+" MB",binsize,tcount,cputime+"s",statesNumber))
+						resultsData.append(("Java",bigName+" "+str(resultCounter),str(round(100*float(cputime)/float(uptime),2))+"%",str(float(heap)+float(nonheap))+" MB",binsize,tcount,realtime+"s",statesNumber))
 						print ("writing")
 					else:
-						resultsData.append(("Java",bigName+" "+str(resultCounter),"error","error","error","error","error","error"))
-					# os.system("rm *.snapshot")
+						resultsData.append(("Java",bigName+" "+str(resultCounter),"error","error",binsize,tcount,realtime+"s",statesNumber))
+					os.system("rm *.snapshot")
 			else:
 				fdumpJava.write("NoCodeSourceFound\n")
 				resultsData.append(("Java",bigName+" "+str(resultCounter),"error","error","error","error","error","error"))

@@ -123,7 +123,7 @@ object Cmd {
           val thingmlModel = loadThingMLmodel(targetFile.get)
 			println("Input file : " + targetFile.get.getAbsolutePath)
           thingmlModel.allConfigurations.foreach{c =>
-            JavaGenerator.compileAndRun(c, thingmlModel, false)                                                                      
+            JavaGenerator.compileAndRun(c, thingmlModel, true)                                                                      
           }
           
         }
