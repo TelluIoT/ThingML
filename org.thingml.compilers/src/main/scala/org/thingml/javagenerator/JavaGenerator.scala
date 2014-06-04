@@ -190,7 +190,7 @@ object JavaGenerator {
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false) { 
   //doingTests should be ignored, it is only used when calling from org.thingml.cmd
-	val tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
+	var tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
 	if (doingTests){
 		tmpFolder="tmp/ThingML_Java/"
 	}
