@@ -200,6 +200,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
   
   def generateListener(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
     builder append "package org.thingml.generated.gui;\n\n"
+    builder append "import org.thingml.generated.*;\n\n"
     builder append "public interface " + Context.firstToUpper(self.getName) + "Listener" + (if (isMirror) "Mirror" else "") + " {\n\n"
     
     var messagesToSend = Map[Port, List[Message]]()
@@ -216,7 +217,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     
     messagesToSend.foreach{case (port, messages) =>
         messages.foreach{send =>
-          builder append "void on" + Context.firstToUpper(send.getName) + "_via_" + port.getName + "(" + send.getParameters.collect{case p => p.getType.java_type + " " + p.getName}.mkString(", ") + ");\n"
+          builder append "void on" + Context.firstToUpper(send.getName) + "_via_" + port.getName + "(" + send.getParameters.collect{case p => (if (p.getType.isInstanceOf[Enumeration]) Context.firstToUpper(p.getType.getName) + "_ENUM " + p.getName else p.getType.java_type + " " + p.getName)}.mkString(", ") + ");\n"
         }
     }
     
@@ -238,9 +239,19 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
       self.allPorts.foreach{p => messagesToReceive += (p -> p.getSends.toList)}
      
     builder append "public class " + Context.firstToUpper(self.getName) + "Mock" + (if (isMirror) "Mirror" else "") + " extends Component implements ActionListener {\n\n"
-    
-    	
-    messagesToSend.foreach{case (port, messages) =>
+
+
+    self.eContainer().asInstanceOf[ThingMLModel].allSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
+      builder append "private static final Map<String, " + Context.firstToUpper(e.getName) + "_ENUM> values_" + e.getName + " = new HashMap<String, " + Context.firstToUpper(e.getName) + "_ENUM>();\n"
+      builder append "static {\n"
+      e.asInstanceOf[Enumeration].getLiterals.foreach{l =>
+        builder append "values_" + e.getName + ".put(\"" + l.getName.toUpperCase + "\", " + e.getName + "_ENUM" + "." + e.getName.toUpperCase + "_" + l.getName.toUpperCase() + ");\n"
+      }
+      builder append "}\n\n"
+    }
+
+
+    /*messagesToSend.foreach{case (port, messages) =>
         messages.foreach{send =>          
           send.getParameters.foreach{ p => 
             if (p.getType.isInstanceOf[Enumeration]) {
@@ -253,7 +264,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
             }
           }
         }
-    }
+    } */
 
     builder append "//Message types\n"
     self.allMessages.foreach {
