@@ -535,6 +535,8 @@ case class ConnectorJavaGenerator(override val self: Connector) extends ThingMLJ
   val serverName = self.getSrv.getInstance.instanceName
 }
 
+
+//TODO: The way we build the state machine has gone through many refactorings... time to rewrite from scratch as it is now very messy!!!
 case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGenerator(self) {
 
   def buildState(builder: StringBuilder, s: State) {
@@ -544,28 +546,36 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     s match {
       case c: CompositeState =>
         builder append "final List<IState> states_" + c.qname("_") + " = new ArrayList<IState>();\n"
-        c.getSubstate.foreach { s => buildState(builder, s) }
+        c.getSubstate.foreach { s =>
+          s match {
+            case cs : CompositeState =>
+              builder append "final CompositeState state_" + cs.qname("_") + " = build" + cs.qname("_") + "();\n"
+              builder append "states_" + c.qname("_") + ".add(state_" + cs.qname("_") + ");\n"
+            case _ =>
+              buildState(builder, s)
+          }
+        }
         val numReg = c.getRegion.size
         builder append "final List<Region> regions_" + c.qname("_") + " = new ArrayList<Region>();\n"
         c.getRegion.foreach { r =>
-          buildRegion(builder, r)
-          builder append "regions_" + c.qname("_") + ".add(reg_" + r.qname("_") + ");\n"
+          //buildRegion(builder, r)
+          builder append "regions_" + c.qname("_") + ".add(build" + r.qname("_") + "());\n"
         }
         buildTransitions(builder, c)
-        if (c.isInstanceOf[StateMachine]) {
+        /*if (c.isInstanceOf[StateMachine]) {
           builder append "behavior = "
-        } else {
-          builder append "final IState state_" + c.qname("_") + " = "
-        }
+        } else {*/
+          builder append "final CompositeState state_" + c.qname("_") + " = "
+        //}
         /*if (numReg>1) {//TODO: we should also use annotations to avoid parallel overhead on single threaded platforms.
           builder append "new CompositeStateMT(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
         } else {
           builder append "new CompositeStateST(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
         }*/
         builder append "new CompositeState(\"" + c.getName + "\", states_" + c.qname("_") + ", state_" + c.getInitial.qname("_") + ", transitions_" + c.qname("_") + ", new " + actionName + "(), regions_" + c.qname("_") + ", " + (if (c.isHistory) "true" else "false") + ");\n"
-        if (s.eContainer.isInstanceOf[State] || s.eContainer.isInstanceOf[Region]) {
+        /*if (s.eContainer.isInstanceOf[State] || s.eContainer.isInstanceOf[Region]) {
           builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(state_" + c.qname("_") + ");\n"
-        }
+        }*/
       case s: State =>
         builder append "final IState state_" + s.qname("_") + " = new AtomicState(\"" + s.getName + "\", new " + actionName + "());\n" //TODO: point to proper action (to be generated)
         if (s.eContainer.isInstanceOf[State] || s.eContainer.isInstanceOf[Region]) {
@@ -626,11 +636,30 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
   def buildRegion(builder: StringBuilder, r: Region) {
     builder append "final List<IState> states_" + r.qname("_") + " = new ArrayList<IState>();\n"
     //builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList<Handler>();\n"
-    r.getSubstate.foreach { s =>
-      buildState(builder, s)
+    r.getSubstate.foreach { s => s match {
+      case c : CompositeState =>
+        builder append "states_" + r.qname("_") + ".add(build" + c.qname("_") + "());\n"
+      case _ => buildState (builder, s)
+    }
     }
     buildTransitions(builder, r)
     builder append "final Region reg_" + r.qname("_") + " = new Region(\"" + r.getName + "\", states_" + r.qname("_") + ", state_" + r.getInitial.qname("_") + ", transitions_" + r.qname("_") + ", " + (if (r.isHistory) "true" else "false") + ");\n"
+
+
+  }
+
+  def buildRegionBuilder(builder : StringBuilder, r: Region) {
+    r match {
+      case c : CompositeState =>
+        builder append "private CompositeState build" + r.qname("_") + "(){\n"
+        buildState(builder, c)
+        builder append "return state_" + r.qname("_") + ";\n"
+      case _ =>
+        builder append "private Region build" + r.qname("_") + "(){\n"
+        buildRegion(builder, r)
+        builder append "return reg_" + r.qname("_") + ";\n"
+    }
+    builder append "}\n\n"
   }
 
   def generateJava(builder: StringBuilder) {
@@ -712,6 +741,13 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       p => builder append "public Port get" + Context.firstToUpper(p.getName) + "_port() {\nreturn " + p.getName + "_port;\n}\n"
     }
 
+
+    self.allStateMachines.foreach{b =>
+      b.allContainedRegions.foreach { r =>
+        buildRegionBuilder(builder, r)
+      }
+    }
+
     builder append "public Component buildBehavior() {\n"
 
     builder append "//Init ports\n"
@@ -729,10 +765,10 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     builder append "//Init state machine\n"
     self.allStateMachines.foreach { b =>
-      buildState(builder, b)
+      builder append "behavior = build" + b.qname("_") + "();\n"
+      //buildState(builder, b)
     }
-    
-    //builder append "}\n"
+
     builder append "return this;\n"
     builder append "}\n\n"
 

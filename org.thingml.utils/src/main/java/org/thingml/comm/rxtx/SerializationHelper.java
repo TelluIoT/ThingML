@@ -15,24 +15,39 @@
  */
 package org.thingml.comm.rxtx;
 
+import java.nio.ByteBuffer;
+
 /**
  * Created by bmori on 08.05.2014.
  */
 public class SerializationHelper {
 
     public static short toShort(byte bytes[]) {
-        return 0;
+        ByteBuffer bb = ByteBuffer.wrap(bytes);
+        return bb.getShort();
     }
 
     public static int toInt(byte bytes[]) {
-        return 0;
+        ByteBuffer bb = ByteBuffer.wrap(bytes);
+        return bb.getInt();
     }
 
     public static byte[] toBytes(short s) {
-        return null;
+        ByteBuffer bb = ByteBuffer.allocate(Short.SIZE);
+        bb.putShort(s);
+        return bb.array();
     }
 
     public static byte[] toBytes(int i) {
-        return null;
+        ByteBuffer bb = ByteBuffer.allocate(Short.SIZE);
+        bb.putInt(i);
+        return bb.array();
+    }
+
+    public static void main(String args[]) {
+        short s = 3;
+        short r = SerializationHelper.toShort(SerializationHelper.toBytes(s));
+
+        System.out.println(r);
     }
 }
