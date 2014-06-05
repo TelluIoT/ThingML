@@ -638,7 +638,8 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     //builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList<Handler>();\n"
     r.getSubstate.foreach { s => s match {
       case c : CompositeState =>
-        builder append "states_" + r.qname("_") + ".add(build" + c.qname("_") + "());\n"
+        builder append "CompositeState state_" + c.qname("_") + " = build" + c.qname("_") + "();\n"
+        builder append "states_" + r.qname("_") + ".add(state_" + c.qname("_") + ");\n"
       case _ => buildState (builder, s)
     }
     }
