@@ -300,9 +300,9 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
 
 
     builder append "@Override\n"
-    builder append "public void receive(Event event) {\n"
-    builder append "super.receive(event);\n"
-    builder append "print(event.getType().getName() + \"_via_\" + event.getPort().getName(), dateFormat.format(new Date()) + \": \" + event.toString());\n"
+    builder append "public void receive(Event event, Port port) {\n"
+    builder append "super.receive(event, port);\n"
+    builder append "print(event.getType().getName() + \"_via_\" + port.getName(), dateFormat.format(new Date()) + \": \" + event.toString());\n"
     builder append "}\n"
 
     messagesToSend.foreach{case (port, messages) =>
@@ -487,20 +487,23 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     messagesToSend.foreach{case (port, messages) =>
         messages.foreach{msg =>
           builder append "else if ( ae.getSource() == getSend" + msg.getName + "_via_" + port.getName + "()) {\n"          
-          builder append "send(" + msg.getName + "Type.instantiate(port_" + Context.firstToUpper(self.getName) + "_" + port.getName
+          builder append "send(" + msg.getName + "Type.instantiate("
+          var i = 0
           msg.getParameters.foreach{ p =>
+              if (i > 0) builder append ", "
               if (p.getCardinality == null) {
                 if (p.getType.isInstanceOf[Enumeration]) {
-                  builder append ", values_" + p.getType.getName + ".get(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
+                  builder append "values_" + p.getType.getName + ".get(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
                   //"new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
                 } else {
-                   builder append ", (" + (if (p.getType.java_type() == "int") "Integer" else Context.firstToUpper(p.getType.java_type())) + ") StringHelper.toObject (" +  p.getType.java_type() + ".class, getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"
+                   builder append "(" + (if (p.getType.java_type() == "int") "Integer" else Context.firstToUpper(p.getType.java_type())) + ") StringHelper.toObject (" +  p.getType.java_type() + ".class, getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"
                 }
               }
               //TODO: this is a quick and dirty hack that only works with Byte[]. We need to refactor this code to make it work with any kind of Arrays
               else {
-                builder append ", getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText().getBytes()"
+                builder append "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText().getBytes()"
               }
+              i = i + 1
             }
           builder append "), port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ");\n"
           

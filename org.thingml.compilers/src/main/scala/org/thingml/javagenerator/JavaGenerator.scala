@@ -334,11 +334,11 @@ object JavaGenerator {
         generateHeader(builder)
         builder append "public class " + Context.firstToUpper(m.getName()) + "MessageType extends EventType {\n"
         builder append "public " + Context.firstToUpper(m.getName()) + "MessageType() {name = \"" + m.getName + "\";}\n\n"
-        builder append "public Event instantiate(Port port"
-        m.getParameters.foreach { p =>
-            builder append ", final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
-        }
-        builder append ") { return new " + Context.firstToUpper(m.getName()) + "Message(this, port"
+        builder append "public Event instantiate("
+        builder append m.getParameters.collect { case p =>
+            "final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
+        }.mkString(", ")
+        builder append ") { return new " + Context.firstToUpper(m.getName()) + "Message(this"
         m.getParameters.foreach { p =>
             builder append ", " + Context.protectJavaKeyword(p.getName)
         }
@@ -359,12 +359,12 @@ object JavaGenerator {
         }.mkString("")
         builder append ";}\n\n"
 
-        builder append "protected " + Context.firstToUpper(m.getName()) + "Message(EventType type, Port port"
+        builder append "protected " + Context.firstToUpper(m.getName()) + "Message(EventType type"
         m.getParameters.foreach { p =>
             builder append ", final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
         }
         builder append ") {\n"
-        builder append "super(type, port);\n"
+        builder append "super(type);\n"
         m.getParameters.foreach {
           p =>
             builder append "this." + Context.protectJavaKeyword(p.getName) + " = " + Context.protectJavaKeyword(p.getName) + ";\n"
@@ -1097,12 +1097,14 @@ case class SendActionJavaGenerator(override val self: SendAction) extends Action
  
   
   def concreteMsg(builder: StringBuilder) {
-    builder append self.getMessage.getName + "Type.instantiate(" + self.getPort.getName + "_port"
+    builder append self.getMessage.getName + "Type.instantiate("
+    var i = 0
     self.getParameters.zip(self.getMessage.getParameters).foreach{ case (p, fp) =>
-        builder append ", "
-        builder append "(" + fp.getType.java_type(fp.getCardinality != null) + ") "
-        p.generateJava(builder)
+      if (i > 0) builder append ", "
+      builder append "(" + fp.getType.java_type(fp.getCardinality != null) + ") "
+      p.generateJava(builder)
         //builder append ".to" + fp.getType.java_type(fp.getCardinality != null)
+      i = i +1
     }
     builder append ")"
   }
