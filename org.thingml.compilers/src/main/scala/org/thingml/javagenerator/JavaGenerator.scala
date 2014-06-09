@@ -334,16 +334,14 @@ object JavaGenerator {
         generateHeader(builder)
         builder append "public class " + Context.firstToUpper(m.getName()) + "MessageType extends EventType {\n"
         builder append "public " + Context.firstToUpper(m.getName()) + "MessageType() {name = \"" + m.getName + "\";}\n\n"
-        builder append "public Event instantiate("
-        builder append m.getParameters.collect {
-          case p =>
-            "final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
-        }.mkString(", ")
-        builder append ") { return new " + Context.firstToUpper(m.getName()) + "Message(this"
-        builder append m.getParameters.collect {
-          case p =>
-            ", " + Context.protectJavaKeyword(p.getName)
-        }.mkString("")
+        builder append "public Event instantiate(Port port"
+        m.getParameters.foreach { p =>
+            builder append ", final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
+        }
+        builder append ") { return new " + Context.firstToUpper(m.getName()) + "Message(this, port"
+        m.getParameters.foreach { p =>
+            builder append ", " + Context.protectJavaKeyword(p.getName)
+        }
         builder append "); }\n"
 
         //builder = Context.getBuilder(Context.firstToUpper(m.getName()) + "Event.java")
@@ -361,13 +359,12 @@ object JavaGenerator {
         }.mkString("")
         builder append ";}\n\n"
 
-        builder append "protected " + Context.firstToUpper(m.getName()) + "Message(EventType type"
-        builder append m.getParameters.collect {
-          case p =>
-            ", final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
-        }.mkString("")
+        builder append "protected " + Context.firstToUpper(m.getName()) + "Message(EventType type, Port port"
+        m.getParameters.foreach { p =>
+            builder append ", final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName)
+        }
         builder append ") {\n"
-        builder append "super(type);\n"
+        builder append "super(type, port);\n"
         m.getParameters.foreach {
           p =>
             builder append "this." + Context.protectJavaKeyword(p.getName) + " = " + Context.protectJavaKeyword(p.getName) + ";\n"
@@ -999,7 +996,7 @@ case class TypeJavaGenerator(override val self: Type) extends ThingMLJavaGenerat
     if (self == null){
       return "void"
     } else if (self.isInstanceOf[Enumeration]) {
-      return self.getName + "_ENUM"
+      return Context.firstToUpper(self.getName) + "_ENUM"
     }
     else {
       var res : String =  self.getAnnotations.filter {
@@ -1008,10 +1005,11 @@ case class TypeJavaGenerator(override val self: Type) extends ThingMLJavaGenerat
         case Some(a) =>
           a.asInstanceOf[PlatformAnnotation].getValue
         case None =>
-          println("[WARNING] Missing annotation java_type or java_type for type " + self.getName + ", using " + self.getName + " as the Java/Java type.")
+          /*println("[WARNING] Missing annotation java_type or java_type for type " + self.getName + ", using " + self.getName + " as the Java/Java type.")
           var temp : String = self.getName
           temp = temp.capitalize//temp(0).toUpperCase + temp.substring(1, temp.length)
-          temp
+          temp*/
+          "Object"
       }
       if (isArray) {
         res = res + "[]"
@@ -1099,15 +1097,12 @@ case class SendActionJavaGenerator(override val self: SendAction) extends Action
  
   
   def concreteMsg(builder: StringBuilder) {
-    builder append self.getMessage.getName + "Type.instantiate("
-    var i = 0
+    builder append self.getMessage.getName + "Type.instantiate(" + self.getPort.getName + "_port"
     self.getParameters.zip(self.getMessage.getParameters).foreach{ case (p, fp) =>
-        if (i > 0)
-          builder append ", "
+        builder append ", "
         builder append "(" + fp.getType.java_type(fp.getCardinality != null) + ") "
         p.generateJava(builder)
         //builder append ".to" + fp.getType.java_type(fp.getCardinality != null)
-        i = i+1
     }
     builder append ")"
   }
