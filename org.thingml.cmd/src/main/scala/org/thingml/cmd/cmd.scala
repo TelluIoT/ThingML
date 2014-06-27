@@ -63,75 +63,30 @@ object Cmd {
 	def main(args: Array[String]) {
 		if (args.length==2)
 		{
-	    	if (args(0) == "c")
-	      		compileToC(args(1))
-	    	if (args(0) == "scala")
-	      		compileToScala(args(1))
-	    	if (args(0) == "java")
-	      		compileToJava(args(1))
+	    	val currentDirectory = new File(System.getProperty("user.dir"))
+			val file : File = new File(currentDirectory.getParent(),args(1))
+			targetFile = Some(file)
+			println("Input file : " + targetFile)
+			if (targetFile.isEmpty) return;
+			try {
+				val thingmlModel = loadThingMLmodel(targetFile.get)
+				if (args(0) == "c")
+					CGenerator.compileToLinuxAndNotMake(thingmlModel)
+				if (args(0) == "scala")
+					thingmlModel.allConfigurations.foreach{c =>
+						ScalaGenerator.compileAndNotRun(c, thingmlModel)                                                                      
+					}
+				if (args(0) == "java")
+					thingmlModel.allConfigurations.foreach{c =>
+						JavaGenerator.compileAndRun(c, thingmlModel, true)                                                                      
+					}
+			}
+			catch {
+			  case t : Throwable => t.printStackTrace()
+			}
 	    }
 		System.exit(0)
     }
-    
-    
-	def compileToC(path : String) {
-			val currentDirectory = new File(System.getProperty("user.dir"))
-			val file : File = new File(currentDirectory.getParent(),path)
-			targetFile = Some(file)
-        println("Input file : " + targetFile)
-        if (targetFile.isEmpty) return;
-               try {
-
-         val thingmlModel = loadThingMLmodel(targetFile.get)
-            CGenerator.compileToLinuxAndNotMake(thingmlModel)
-        }
-        catch {
-          case t : Throwable => t.printStackTrace()
-        }
-	}
-
-   
-    def compileToScala(path : String) {
-			val currentDirectory = new File(System.getProperty("user.dir"))
-			val file : File = new File(currentDirectory.getParent(),path)
-			targetFile = Some(file)
-        println("Input file : " + targetFile)
-		
-        if (targetFile.isEmpty) 
-          return
-        try {
-          val thingmlModel = loadThingMLmodel(targetFile.get)
-			println("Input file : " + targetFile.get.getAbsolutePath)
-          thingmlModel.allConfigurations.foreach{c =>
-            ScalaGenerator.compileAndNotRun(c, thingmlModel)                                                                      
-          }
-          
-        }
-        catch {
-          case t : Throwable => t.printStackTrace()
-        }
-      }       
-	  def compileToJava(path : String) {
-			val currentDirectory = new File(System.getProperty("user.dir"))
-			val file : File = new File(currentDirectory.getParent(),path)
-			targetFile = Some(file)
-        println("Input file : " + targetFile)
-		
-        if (targetFile.isEmpty) 
-          return
-        try {
-          val thingmlModel = loadThingMLmodel(targetFile.get)
-			println("Input file : " + targetFile.get.getAbsolutePath)
-          thingmlModel.allConfigurations.foreach{c =>
-            JavaGenerator.compileAndRun(c, thingmlModel, true)                                                                      
-          }
-          
-        }
-        catch {
-          case t : Throwable => t.printStackTrace()
-        }
-      }         
-      
   
   def loadThingMLmodel(file : File) = {
 	val reg = Resource.Factory.Registry.INSTANCE;

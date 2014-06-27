@@ -24,21 +24,34 @@ testC = True
 testScala = True
 testJava = True
 perfRetryNumber = 3
-perfTransitionNumber = 1000
+perfTransitionNumber = 100
 useYourkit = True
 
 def initPerfConfiguration(graphGenerator):
 	conf = graphGenerator.Configuration()
+	# """1 state""" 
+	# conf.setRegions(1,1)
+	# conf.setStates(1,1)
+	# conf.setOutputs(1,1)
+	# conf.setDepth(1)
+	# conf.setCompositeRatio(0)
+	# """~50 states""" 
 	# conf.setRegions(3,3)
 	# conf.setStates(2,4)
 	# conf.setOutputs(1,3)
 	# conf.setDepth(3)
 	# conf.setCompositeRatio(0.5)
-	"""~100 states""" 
-	conf.setRegions(4,4)
+	# """~100 states""" 
+	# conf.setRegions(4,4)
+	# conf.setStates(3,5)
+	# conf.setOutputs(1,4)
+	# conf.setDepth(3)
+	# conf.setCompositeRatio(0.5)
+	"""~250 states""" 
+	conf.setRegions(3,3)
 	conf.setStates(3,5)
 	conf.setOutputs(1,4)
-	conf.setDepth(3)
+	conf.setDepth(4)
 	conf.setCompositeRatio(0.5)
 	# """~500 states""" 
 	# conf.setRegions(4,4)
@@ -53,7 +66,7 @@ def initPerfConfiguration(graphGenerator):
 	# conf.setDepth(4)
 	# conf.setCompositeRatio(0.5)
 	
-	graphGenerator.launch(conf,2)
+	graphGenerator.launch(conf,3)
 
 #If useBlacklist is True, runs all tests not present in blacklist
 #If useBlacklist is False, runs all tests present in whitelist

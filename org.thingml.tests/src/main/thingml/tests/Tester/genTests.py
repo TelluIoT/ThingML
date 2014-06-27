@@ -25,16 +25,17 @@ import graphGenerator
 def load_src(name, fpath):
     import os, imp
     return imp.load_source(name, os.path.join(os.path.dirname(__file__), fpath))
-
-type = sys.argv[1]
+print(os.path.dirname(os.path.realpath(__file__)))
+load_src("configuration", "../../../../../configuration.py")
+from configuration import testType
 
 # os.chdir("../org.thingml.tests/src/main/thingml/tests/Tester/")
-if type == "perf":
+if testType == "perf":
 	os.system("rm ../perf*")
 	load_src("configuration", "../../../../../../org.thingml.perf/configuration.py")
 	from configuration import initPerfConfiguration
 	initPerfConfiguration(graphGenerator)
-genTestsLinux.run(type)
-genTestsScala.run(type)
-genTestsJava.run(type)
-genTestsJunit.run(type)
+genTestsLinux.run(testType)
+genTestsScala.run(testType)
+genTestsJava.run(testType)
+genTestsJunit.run(testType)
