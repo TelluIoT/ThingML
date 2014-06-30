@@ -145,6 +145,8 @@ def generic_findCPUandMEM(type):
 	return (cpu,mem)
 	
 #Do not modify this part, should be generic enough
+if testType="functional":
+	useYourkit=False
 fileName = sys.argv[1]
 rootDirectory = os.getcwd()
 print("Starting test in "+rootDirectory)

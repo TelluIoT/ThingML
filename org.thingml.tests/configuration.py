@@ -39,7 +39,7 @@ whitelist=("testInit")
 perfTestNumber = 1 #Number of generated tests
 perfRetryNumber = 1 #Number of retries per test
 perfTransitionNumber = 100
-useYourkit = True
+useYourkit = False
 
 def initPerfConfiguration(graphGenerator):
 	conf = graphGenerator.Configuration()
