@@ -513,7 +513,7 @@ implicit def cGeneratorAspect(self:ExternExpression) : ExternExpressionCGenerato
   }
 
   def compileToLinuxAndNotMake(cfg: Configuration) {
-    var out = new File("tmp/ThingML_C/" + cfg.getName)
+    var out = new File("tmp/ThingML_Linux/" + cfg.getName)
     println("Compiling configuration " + cfg.getName + " to C into target folder: " + out.getAbsolutePath)
 
 

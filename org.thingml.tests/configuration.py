@@ -19,10 +19,10 @@
 deleteTemporaryFiles = True 
 
 #Chooses which compilers should be used
-testC = True
-testScala = True
-testJava = True
-
+testLanguages=[]
+testLanguages.append("Linux")
+testLanguages.append("Scala")
+testLanguages.append("Java")
 
 #Choose between functional and performance tests
 testType="functional"

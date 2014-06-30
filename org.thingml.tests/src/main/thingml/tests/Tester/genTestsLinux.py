@@ -79,5 +79,5 @@ def run(type):
 						'	connector test.harnessIn => harness.test\n'+
 						'	connector harness.timer => timer.timer.timer\n'+confLines+'}')
 					fichier.close()
-	print ("Successful generation of linux tests"+type)
+	print ("Successful generation of linux tests")
 	os.chdir("Tester")

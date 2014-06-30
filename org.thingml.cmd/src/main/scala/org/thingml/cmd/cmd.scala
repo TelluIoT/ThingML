@@ -70,7 +70,7 @@ object Cmd {
 			if (targetFile.isEmpty) return;
 			try {
 				val thingmlModel = loadThingMLmodel(targetFile.get)
-				if (args(0) == "c")
+				if (args(0) == "linux")
 					CGenerator.compileToLinuxAndNotMake(thingmlModel)
 				if (args(0) == "scala")
 					thingmlModel.allConfigurations.foreach{c =>

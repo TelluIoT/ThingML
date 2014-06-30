@@ -74,5 +74,5 @@ def run(type):
 					'	connector test.harnessIn => harness.test\n'+
 					'	connector harness.timer => timer.timer\n'+confLines+'}')
 					fichier.close()
-	print ("Successful generation of scala tests")
+	print ("Successful generation of java tests")
 	os.chdir("Tester")

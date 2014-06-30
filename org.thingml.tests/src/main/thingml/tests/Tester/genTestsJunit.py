@@ -33,14 +33,11 @@ def run(type):
 	if not os.path.exists("../../../../test/java"):
 		os.makedirs("../../../../test/java")
 	os.chdir("../../../../test/java")
-	print(os.getcwd())
 	os.system("rm *.java")
 	from configuration import useBlacklist    
 	from configuration import blacklist    
 	from configuration import whitelist    
-	from configuration import testC    
-	from configuration import testJava    
-	from configuration import testScala
+	from configuration import testLanguages
 	os.chdir(currentDir)
 	os.chdir(r"..")
 
@@ -104,14 +101,14 @@ public class '+name+'Test extends TestCase {\n\
 			in.close();\n\
 		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
 	}\n')
-					if testC:
+					if "Linux" in testLanguages:
 						fichier.write('@Test\n\
 	public void testC(){\n\
 		try{\n\
 			CTried = true;\n\
 			System.out.println(System.getProperty("user.dir"));\n\
 			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'.dump")));\n\
-			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'C.dump")));\n\
+			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'Linux.dump")));\n\
 			String regex;\n\
 			String input;\n\
 			String output;\n\
@@ -136,10 +133,10 @@ public class '+name+'Test extends TestCase {\n\
 			}\n\
 		}catch(Exception e){\n\
 		successC=false;\n\
-		messageC = "NoDumpFound";\n\
+		messageC = "Error in Junit test";\n\
 		fail("Error: " + e.getMessage());}\n\
 	}\n')
-					if testScala:
+					if "Scala" in testLanguages:
 						fichier.write('@Test\n\
 	public void testScala(){\n\
 		try{\n\
@@ -173,10 +170,10 @@ public class '+name+'Test extends TestCase {\n\
 			dumpScala.close();\n\
 		}catch(Exception e){\n\
 		successScala=false;\n\
-		messageScala = "NoDumpFound";\n\
+		messageScala = "Error in Junit test";\n\
 		fail("Error: " + e.getMessage());}\n\
 	}\n')
-					if testJava:
+					if "Java" in testLanguages:
 						fichier.write('@Test\n\
 	public void testJava(){\n\
 		try{\n\
@@ -210,23 +207,23 @@ public class '+name+'Test extends TestCase {\n\
 			dumpJava.close();\n\
 		}catch(Exception e){\n\
 		successJava=false;\n\
-		messageJava = "NoDumpFound";\n\
+		messageJava = "Error in Junit test";\n\
 		fail("Error: " + e.getMessage());}\n\
 	}\n')
 					fichier.write('	@After\n\
 	public void dump(){\n\
 		if(true && ') 		
-					if testC:
+					if "Linux" in testLanguages:
 						fichier.write('CTried && ')
-					if testScala:
+					if "Scala" in testLanguages:
 						fichier.write('ScalaTried && ')
-					if testJava:
+					if "Java" in testLanguages:
 						fichier.write('JavaTried && ')
 					fichier.write('true)\n\
 		try{\n\
 			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("results.html", true)));\n\
 			result.write("<tr><th></th><th></th><th></th></tr>\\n");\n')
-					if testC:
+					if "Linux" in testLanguages:
 						fichier.write('\t\t\tif (successC){\n\
 				result.write("<tr class=\\"green\\">\\n");\n\
 				result.write("<th>'+name+'</th><th>C</th><th>Success</th>\\n");\n\
@@ -235,7 +232,7 @@ public class '+name+'Test extends TestCase {\n\
 				result.write("<th>'+name+'</th><th>C</th><th>"+messageC+"</th>\\n");\n\
 			}\n\
 			result.write("</tr>\\n");\n')
-					if testScala:
+					if "Scala" in testLanguages:
 						fichier.write('\t\t\tif (successScala){\n\
 				result.write("<tr class=\\"green\\">\\n");\n\
 				result.write("<th>'+name+'</th><th>Scala</th><th>Success</th>\\n");\n\
@@ -244,7 +241,7 @@ public class '+name+'Test extends TestCase {\n\
 				result.write("<th>'+name+'</th><th>Scala</th><th>"+messageScala+"</th>\\n");\n\
 			}\n\
 			result.write("</tr>\\n");\n')
-					if testJava:
+					if "Java" in testLanguages:
 						fichier.write('\t\t\tif (successJava){\n\
 				result.write("<tr class=\\"green\\">\\n");\n\
 				result.write("<th>'+name+'</th><th>Java</th><th>Success</th>\\n");\n\
