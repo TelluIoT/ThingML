@@ -29,18 +29,12 @@ def load_src(name, fpath):
 
 def run(type):
 	currentDir=os.getcwd()
-	if type == "perf":
-		load_src("configuration", "../../../../../../org.thingml.perf/configuration.py")
-		if not os.path.exists("../../../../../../org.thingml.perf/src/test/java"):
-			os.makedirs("../../../../../../org.thingml.perf/src/test/java")
-		os.chdir("../../../../../../org.thingml.perf/src/test/java")
-		os.system("rm *.java")
-	elif type == "functional":
-		load_src("configuration", "../../../../../../org.thingml.tester/configuration.py")
-		if not os.path.exists("../../../../../../org.thingml.tester/src/test/java"):
-			os.makedirs("../../../../../../org.thingml.tester/src/test/java")
-		os.chdir("../../../../../../org.thingml.tester/src/test/java")
-		os.system("rm *.java")
+	load_src("configuration", "../../../../../configuration.py")
+	if not os.path.exists("../../../../test/java"):
+		os.makedirs("../../../../test/java")
+	os.chdir("../../../../test/java")
+	print(os.getcwd())
+	os.system("rm *.java")
 	from configuration import useBlacklist    
 	from configuration import blacklist    
 	from configuration import whitelist    
@@ -57,13 +51,13 @@ def run(type):
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
-			if (useBlacklist and (name not in blacklist)) or ((not useBlacklist) and (name in whitelist)):
+			if (useBlacklist and (name not in blacklist)) or ((not useBlacklist) and (name in whitelist)) or (type == "perf"):
 				if type == "perf" and name.startswith("perf"):
-					fichier = open('../../../../../org.thingml.perf/src/test/java/'+name+'Test.java', 'w')
-					fichier.write('package org.thingml.perf;\n\n')
+					fichier = open('../../../test/java/'+name+'Test.java', 'w')
+					fichier.write('package org.thingml.tests;\n\n')
 				if type == "functional" and not name.startswith("perf"):
-					fichier = open('../../../../../org.thingml.tester/src/test/java/'+name+'Test.java', 'w')
-					fichier.write('package org.thingml.tester;\n\n')
+					fichier = open('../../../test/java/'+name+'Test.java', 'w')
+					fichier.write('package org.thingml.tests;\n\n')
 				if (type == "perf" and name.startswith("perf")) or (type == "functional" and not name.startswith("perf")):
 					fichier.write('import junit.framework.TestCase;\n\
 import org.junit.Test;\n\
