@@ -31,7 +31,7 @@ testType="functional"
 #Functional tests options
 #If useBlacklist is True, runs all tests not present in blacklist
 #If useBlacklist is False, runs all tests present in whitelist
-useBlacklist=False
+useBlacklist=True
 blacklist=("tester")
 whitelist=("testInit")
 
