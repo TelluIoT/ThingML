@@ -49,8 +49,8 @@ def generic_prepareFilesForMeasures(type):
 	if type == "Linux":
 		#Inserting necessary code to execute gperftools
 		if os.path.exists("/usr/local/include/gperftools/"):
-			insertLine("#include <google/profiler.h>",bigName+".c","#include <pthread.h>")
-			insertLine("  ProfilerStart(\""+bigName+".prof\");",bigName+".c","  initialize_configuration_"+bigName+"();")
+			insertLine("#include <google/profiler.h>",capitalizedName+".c","#include <pthread.h>")
+			insertLine("  ProfilerStart(\""+capitalizedName+".prof\");",capitalizedName+".c","  initialize_configuration_"+capitalizedName+"();")
 			insertLine("#include <google/profiler.h>","TestDumpLinux.c","#include \"TestDumpLinux.h\"")
 			replaceLine("LIBS = -lpthread -lprofiler","Makefile","LIBS = -lpthread")
 		#Deleting code written in ThingML file if gperftools is not installed
@@ -80,15 +80,15 @@ def generic_compile(type):
 	if type == "Scala":
 		os.system("mvn clean package")
 		
-def generic_execute(type,bigName,resultCounter):
+def generic_execute(type,capitalizedName,resultCounter):
 	if type == "Linux":
 		#Execution of program with necessary environment to run gperftools, if available
 		if os.path.exists("/usr/local/include/gperftools/"):
-			os.system("env CPUPROFILE="+resultsDirectory+"/Linux/"+bigName+".prof ./"+bigName)
-			os.system("pprof --text "+bigName+" "+resultsDirectory+"/Linux/"+bigName+".prof > "+resultsDirectory+"/Linux/"+bigName+str(resultCounter))
+			os.system("env CPUPROFILE="+resultsDirectory+"/Linux/"+capitalizedName+".prof ./"+capitalizedName)
+			os.system("pprof --text "+capitalizedName+" "+resultsDirectory+"/Linux/"+capitalizedName+".prof > "+resultsDirectory+"/Linux/"+capitalizedName+str(resultCounter))
 			os.system("rm "+resultsDirectory+"/Linux/*.prof")
 		else:
-			os.system("./"+bigName)
+			os.system("./"+capitalizedName)
 	if type == "Scala" or type == "Java":
 		#Execution of program with necessary environment to run yourkit, if available
 		if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
@@ -96,14 +96,14 @@ def generic_execute(type,bigName,resultCounter):
 		os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
 		if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
 			del os.environ['MAVEN_OPTS']
-def generic_findBinSize(type,bigName):
+def generic_findBinSize(type,capitalizedName):
 	binsize = "error"
 	if type == "Linux":
-		if os.path.exists(bigName):
-			binsize=str(os.path.getsize(bigName))
+		if os.path.exists(capitalizedName):
+			binsize=str(os.path.getsize(capitalizedName))
 	if type == "Scala" or type == "Java":
-		if os.path.exists("target/"+bigName+"-1.0-SNAPSHOT.jar"):
-			binsize=str(os.path.getsize("target/"+bigName+"-1.0-SNAPSHOT.jar"))
+		if os.path.exists("target/"+capitalizedName+"-1.0-SNAPSHOT.jar"):
+			binsize=str(os.path.getsize("target/"+capitalizedName+"-1.0-SNAPSHOT.jar"))
 	return binsize
 def generic_findCPUandMEM(type):
 	cpu="error"
@@ -116,7 +116,7 @@ def generic_findCPUandMEM(type):
 			mem=mem[:-1]+" MB"
 		except IOError:
 			print("Impossible to run ps command")
-	if type == "Scala":
+	if type == "Scala" or type == "Java":
 		currentDirectory = os.getcwd()
 		os.chdir("../../../../org.thingml.tests/target/results/Scala")
 		mypath = "."
@@ -126,18 +126,18 @@ def generic_findCPUandMEM(type):
 			match = re.match(r"(.*)\.snapshot",f)
 			if match is not None:
 				snapshotName = re.sub(r"(.*\.thingml)",r"\1",f)
-		if not os.path.exists(bigName+type+str(resultCounter)):
-			os.makedirs(bigName+type+str(resultCounter))
+		if not os.path.exists(capitalizedName+type+str(resultCounter)):
+			os.makedirs(capitalizedName+type+str(resultCounter))
 		if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
-			os.system("java -Dexport.summary -Dexport.class.list -Dexport.apply.filters -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp.jar -export "+snapshotName+" "+bigName+type+str(resultCounter))
-		if os.path.exists(bigName+type+str(resultCounter)+"/Summary.txt"):
-			cputime = find("Runtime & Agent: CPU time",bigName+type+str(resultCounter)+"/Summary.txt")
+			os.system("java -Dexport.summary -Dexport.class.list -Dexport.apply.filters -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp.jar -export "+snapshotName+" "+capitalizedName+type+str(resultCounter))
+		if os.path.exists(capitalizedName+type+str(resultCounter)+"/Summary.txt"):
+			cputime = find("Runtime & Agent: CPU time",capitalizedName+type+str(resultCounter)+"/Summary.txt")
 			cputime = re.sub(r"Runtime & Agent: CPU time: (.*) sec",r"\1",cputime)
-			uptime = find("Runtime & Agent: Uptime",bigName+type+str(resultCounter)+"/Summary.txt")
+			uptime = find("Runtime & Agent: Uptime",capitalizedName+type+str(resultCounter)+"/Summary.txt")
 			uptime = re.sub(r"Runtime & Agent: Uptime: (.*) sec",r"\1",uptime)
-			heap = find("Heap Memory: Used:",bigName+type+str(resultCounter)+"/Summary.txt")
+			heap = find("Heap Memory: Used:",capitalizedName+type+str(resultCounter)+"/Summary.txt")
 			heap = re.sub(r"Heap Memory: Used: (.*) MB",r"\1",heap)
-			nonheap = find("Non-Heap Memory: Used:",bigName+type+str(resultCounter)+"/Summary.txt")
+			nonheap = find("Non-Heap Memory: Used:",capitalizedName+type+str(resultCounter)+"/Summary.txt")
 			nonheap = re.sub(r"Non-Heap Memory: Used: (.*) MB",r"\1",nonheap)
 			
 			cpu = str(round(100*float(cputime)/float(uptime),2))+"%"
@@ -145,7 +145,7 @@ def generic_findCPUandMEM(type):
 	return (cpu,mem)
 	
 #Do not modify this part, should be generic enough
-if testType="functional":
+if testType=="functional":
 	useYourkit=False
 fileName = sys.argv[1]
 rootDirectory = os.getcwd()
@@ -198,20 +198,20 @@ for (a,b) in results:
 		Tester().create(input)
 	
 	for type in testLanguages:
-		bigName = fileName[0].upper()+fileName[1:]
+		capitalizedName = fileName[0].upper()+fileName[1:]
 		smallType=type[0].lower()+type[1:]
 		if type == "Linux":
-			bigName=bigName+"C"
+			capitalizedName=capitalizedName+"C"
 		os.chdir(compilerDirectory)
 		if not os.path.exists("tmp/ThingML_"+type):
 			os.makedirs("tmp/ThingML_"+type)
-		if deleteTemporaryFiles and os.path.exists(bigName):
-			os.system("rm -r tmp/ThingML_"+type+"/"+bigName)
+		if deleteTemporaryFiles and os.path.exists(capitalizedName):
+			os.system("rm -r tmp/ThingML_"+type+"/"+capitalizedName)
 		os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\""+smallType+" org.thingml.tests/src/main/thingml/tests/_"+smallType+"/"+fileName+".thingml\"")
 		
 		dump=open(dumpDir+'/target/dump/'+fileName+type+'.dump', 'a')
-		if os.path.exists("tmp/ThingML_"+type+"/"+bigName):
-			os.chdir("tmp/ThingML_"+type+"/"+bigName)
+		if os.path.exists("tmp/ThingML_"+type+"/"+capitalizedName):
+			os.chdir("tmp/ThingML_"+type+"/"+capitalizedName)
 			generic_prepareFilesForMeasures(type)
 			
 			generic_compile(type)
@@ -219,7 +219,7 @@ for (a,b) in results:
 			if testType=="functional":
 				perfRetryNumber=1
 			for _ in range(0,perfRetryNumber):
-				generic_execute(type,bigName,resultCounter)
+				generic_execute(type,capitalizedName,resultCounter)
 				
 				statesNumber="N/A"
 				try:
@@ -248,7 +248,7 @@ for (a,b) in results:
 				except IOError:
 					cputime = 'error'
 				
-				binsize=generic_findBinSize(type,bigName)
+				binsize=generic_findBinSize(type,capitalizedName)
 					
 				(cpu,mem)=generic_findCPUandMEM(type)
 				if not cpu:
