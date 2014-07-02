@@ -162,14 +162,14 @@ object TestsGeneration {
 			case ioe: IOException => ioe.printStackTrace()
 			}
 		}
-		var yourkitDir = new File("/usr/local/lib/yjp-2013-build-13074/")
+		var yourkitDir = new File("/usr/local/lib/yjp-2013-build-13086/")
 		if(!(yourkitDir.exists())){
 			try{
 			println("Downloading yourkit")
-			org.apache.commons.io.FileUtils.copyURLToFile(new java.net.URL("http://www.yourkit.com/download/yjp-2013-build-13074-linux.tar.bz2"), new File("/usr/local/lib/yjp-2013-build-13074-linux.tar.bz2"))
+			org.apache.commons.io.FileUtils.copyURLToFile(new java.net.URL("http://www.yourkit.com/download/yjp-2013-build-13086-linux.tar.bz2"), new File("/usr/local/lib/yjp-2013-build-13086-linux.tar.bz2"))
 			println("Extracting yourkit")
-			exec("tar xfj yjp-2013-build-13074-linux.tar.bz2",new File("/usr/local/lib/"))
-			exec("rm yjp-2013-build-13074-linux.tar.bz2",new File("/usr/local/lib/"))
+			exec("tar xfj yjp-2013-build-13086-linux.tar.bz2",new File("/usr/local/lib/"))
+			exec("rm yjp-2013-build-13086-linux.tar.bz2",new File("/usr/local/lib/"))
 			}catch{
 			case ioe: IOException => ioe.printStackTrace()
 			}

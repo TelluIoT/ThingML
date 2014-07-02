@@ -227,7 +227,7 @@ for (a,b) in results:
 					lines = f.readlines()
 					f.close()
 					for res in lines:
-						dump.write(res)
+						dump.write(res+'\n')
 					if testType=="perf":
 						statesNumber=lines[-1]
 				except IOError:
