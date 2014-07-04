@@ -16,6 +16,7 @@
 
 import os
 import sys
+import genTestsArduino
 import genTestsLinux
 import genTestsScala
 import genTestsJava
@@ -34,6 +35,7 @@ if testType == "perf":
 	load_src("configuration", "../../../../../configuration.py")
 	from configuration import initPerfConfiguration
 	initPerfConfiguration(graphGenerator)
+genTestsArduino.run(testType)
 genTestsLinux.run(testType)
 genTestsScala.run(testType)
 genTestsJava.run(testType)

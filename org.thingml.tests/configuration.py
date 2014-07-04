@@ -23,6 +23,7 @@ testLanguages=[]
 testLanguages.append("Linux")
 testLanguages.append("Scala")
 testLanguages.append("Java")
+# testLanguages.append("Arduino")
 
 #Choose between functional and performance tests
 testType="functional"
@@ -33,7 +34,7 @@ testType="functional"
 #If useBlacklist is False, runs all tests present in whitelist
 useBlacklist=True
 blacklist=("tester")
-whitelist=("testInit")
+whitelist=("testHello")
 
 #Performance tests options
 perfTestNumber = 1 #Number of generated tests

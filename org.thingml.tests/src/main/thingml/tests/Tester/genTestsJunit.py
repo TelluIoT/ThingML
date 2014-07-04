@@ -72,17 +72,13 @@ import java.io.*;\n\
 @RunWith(JUnit4.class)\n\
 public class '+name+'Test extends TestCase {\n\
 	\n\
-	private static boolean setUpIsNotDone = true;\n\
-	private static boolean CTried = false;\n\
-	private static boolean ScalaTried = false;\n\
-	private static boolean JavaTried = false;\n\
-	private static boolean successC = true;\n\
-	private static boolean successScala = true;\n\
-	private static boolean successJava = true;\n\
-	private static String messageC = "";\n\
-	private static String messageScala = "";\n\
-	private static String messageJava = "";\n\
-	@Before\n\
+	private static boolean setUpIsNotDone = true;\n')
+					for type in testLanguages:
+						fichier.write('\n\
+	private static boolean '+type+'Tried = false;\n\
+	private static boolean success'+type+' = true;\n\
+	private static String message'+type+' = "";\n')
+					fichier.write('@Before\n\
 	public void init(){\n\
 		if (setUpIsNotDone)\n\
 		try{\n\
@@ -101,153 +97,58 @@ public class '+name+'Test extends TestCase {\n\
 			in.close();\n\
 		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
 	}\n')
-					if "Linux" in testLanguages:
+					for type in testLanguages:
 						fichier.write('@Test\n\
-	public void testC(){\n\
+	public void test'+type+'(){\n\
 		try{\n\
-			CTried = true;\n\
+			'+type+'Tried = true;\n\
 			System.out.println(System.getProperty("user.dir"));\n\
 			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'.dump")));\n\
-			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'Linux.dump")));\n\
+			BufferedReader dumpC = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+type+'.dump")));\n\
 			String regex;\n\
 			String input;\n\
 			String output;\n\
-			String outputC;\n\
+			String output'+type+';\n\
 			while ((regex = dump.readLine()) != null){\n\
 				input = dump.readLine();\n\
 				output = dump.readLine();\n\
-				outputC = dumpC.readLine();\n\
+				output'+type+' = dumpC.readLine();\n\
 				Pattern pattern = \n\
 				Pattern.compile(output);\n\
 				Matcher matcher = \n\
-				pattern.matcher(outputC);\n\
+				pattern.matcher(output'+type+');\n\
 				boolean success = matcher.matches();\n\
 				if(!success){\n\
-					successC=false;\n\
-					if(outputC == "ErrorAtCompilation")\n\
-						messageC = "Error at compilation";\n\
+					success'+type+'=false;\n\
+					if(output'+type+' == "ErrorAtCompilation")\n\
+						message'+type+' = "Error at compilation";\n\
 					else\n\
-						messageC = outputC+" does not match "+output+" for input "+input+" ("+regex+")";\n\
+						message'+type+' = output'+type+'+" does not match "+output+" for input "+input+" ("+regex+")";\n\
 				}\n\
-				assertTrue("C compiler error: "+outputC+" does not match "+output+" for input "+input+" ("+regex+")",success);\n\
+				assertTrue("'+type+' compiler error: "+output'+type+'+" does not match "+output+" for input "+input+" ("+regex+")",success);\n\
 			}\n\
 		}catch(Exception e){\n\
-		successC=false;\n\
-		messageC = "Error in Junit test";\n\
+		success'+type+'=false;\n\
+		message'+type+' = "Error in Junit test";\n\
 		fail("Error: " + e.getMessage());}\n\
 	}\n')
-					if "Scala" in testLanguages:
-						fichier.write('@Test\n\
-	public void testScala(){\n\
-		try{\n\
-			ScalaTried = true;\n\
-			System.out.println(System.getProperty("user.dir"));\n\
-			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'.dump")));\n\
-			BufferedReader dumpScala = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'Scala.dump")));\n\
-			String regex;\n\
-			String input;\n\
-			String output;\n\
-			String outputScala;\n\
-			while ((regex = dump.readLine()) != null){\n\
-				input = dump.readLine();\n\
-				output = dump.readLine();\n\
-				outputScala = dumpScala.readLine();\n\
-				Pattern pattern = \n\
-				Pattern.compile(output);\n\
-				Matcher matcher = \n\
-				pattern.matcher(outputScala);\n\
-				boolean success = matcher.matches();\n\
-				if(!success){\n\
-					successScala=false;\n\
-					if(outputScala == "ErrorAtCompilation")\n\
-						messageScala = "Error at compilation";\n\
-					else\n\
-						messageScala = outputScala+" does not match "+output+" for input "+input+" ("+regex+")";\n\
-				}\n\
-				assertTrue("Scala compiler error: "+outputScala+" does not match "+output+" for input "+input+" ("+regex+")",success);\n\
-			}\n\
-			dump.close();\n\
-			dumpScala.close();\n\
-		}catch(Exception e){\n\
-		successScala=false;\n\
-		messageScala = "Error in Junit test";\n\
-		fail("Error: " + e.getMessage());}\n\
-	}\n')
-					if "Java" in testLanguages:
-						fichier.write('@Test\n\
-	public void testJava(){\n\
-		try{\n\
-			JavaTried = true;\n\
-			System.out.println(System.getProperty("user.dir"));\n\
-			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'.dump")));\n\
-			BufferedReader dumpJava = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'Java.dump")));\n\
-			String regex;\n\
-			String input;\n\
-			String output;\n\
-			String outputJava;\n\
-			while ((regex = dump.readLine()) != null){\n\
-				input = dump.readLine();\n\
-				output = dump.readLine();\n\
-				outputJava = dumpJava.readLine();\n\
-				Pattern pattern = \n\
-				Pattern.compile(output);\n\
-				Matcher matcher = \n\
-				pattern.matcher(outputJava);\n\
-				boolean success = matcher.matches();\n\
-				if(!success){\n\
-					successJava=false;\n\
-					if(outputJava == "ErrorAtCompilation")\n\
-						messageJava = "Error at compilation";\n\
-					else\n\
-						messageJava = outputJava+" does not match "+output+" for input "+input+" ("+regex+")";\n\
-				}\n\
-				assertTrue("Java compiler error: "+outputJava+" does not match "+output+" for input "+input+" ("+regex+")",success);\n\
-			}\n\
-			dump.close();\n\
-			dumpJava.close();\n\
-		}catch(Exception e){\n\
-		successJava=false;\n\
-		messageJava = "Error in Junit test";\n\
-		fail("Error: " + e.getMessage());}\n\
-	}\n')
+					
 					fichier.write('	@After\n\
 	public void dump(){\n\
 		if(true && ') 		
-					if "Linux" in testLanguages:
-						fichier.write('CTried && ')
-					if "Scala" in testLanguages:
-						fichier.write('ScalaTried && ')
-					if "Java" in testLanguages:
-						fichier.write('JavaTried && ')
+					for type in testLanguages:
+						fichier.write(''+type+'Tried && ')
 					fichier.write('true)\n\
 		try{\n\
 			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("results.html", true)));\n\
 			result.write("<tr><th></th><th></th><th></th></tr>\\n");\n')
-					if "Linux" in testLanguages:
-						fichier.write('\t\t\tif (successC){\n\
+					for type in testLanguages:
+						fichier.write('\t\t\tif (success'+type+'){\n\
 				result.write("<tr class=\\"green\\">\\n");\n\
-				result.write("<th>'+name+'</th><th>C</th><th>Success</th>\\n");\n\
+				result.write("<th>'+name+'</th><th>'+type+'</th><th>Success</th>\\n");\n\
 			}else{\n\
 				result.write("<tr class=\\"red\\">\\n");\n\
-				result.write("<th>'+name+'</th><th>C</th><th>"+messageC+"</th>\\n");\n\
-			}\n\
-			result.write("</tr>\\n");\n')
-					if "Scala" in testLanguages:
-						fichier.write('\t\t\tif (successScala){\n\
-				result.write("<tr class=\\"green\\">\\n");\n\
-				result.write("<th>'+name+'</th><th>Scala</th><th>Success</th>\\n");\n\
-			}else{\n\
-				result.write("<tr class=\\"red\\">\\n");\n\
-				result.write("<th>'+name+'</th><th>Scala</th><th>"+messageScala+"</th>\\n");\n\
-			}\n\
-			result.write("</tr>\\n");\n')
-					if "Java" in testLanguages:
-						fichier.write('\t\t\tif (successJava){\n\
-				result.write("<tr class=\\"green\\">\\n");\n\
-				result.write("<th>'+name+'</th><th>Java</th><th>Success</th>\\n");\n\
-			}else{\n\
-				result.write("<tr class=\\"red\\">\\n");\n\
-				result.write("<th>'+name+'</th><th>Java</th><th>"+messageJava+"</th>\\n");\n\
+				result.write("<th>'+name+'</th><th>'+type+'</th><th>"+message'+type+'+"</th>\\n");\n\
 			}\n\
 			result.write("</tr>\\n");\n')
 					fichier.write('\t\t\tresult.close();\n\

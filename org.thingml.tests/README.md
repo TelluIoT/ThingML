@@ -1,7 +1,7 @@
-org.thingml.tester
+org.thingml.tests
 ==================
 
-org.thingml.tester module manages tests defined in org.thingml.tests. 
+org.thingml.tests module manages tests defined in org.thingml.tests/src/main/thingml/tests. 
 This module automatically generates JUnit tests ready for integration in tools such as Maven, and provides several ways of running some or all the tests manually.
 
 Installation:
