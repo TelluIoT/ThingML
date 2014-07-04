@@ -27,7 +27,7 @@ def load_src(name, fpath):
     import os, imp
     return imp.load_source(name, os.path.join(os.path.dirname(__file__), fpath))
 
-def run(type):
+def run(testType):
 	currentDir=os.getcwd()
 	load_src("configuration", "../../../../../configuration.py")
 	if not os.path.exists("../../../../test/java"):
@@ -48,14 +48,14 @@ def run(type):
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
-			if (useBlacklist and (name not in blacklist)) or ((not useBlacklist) and (name in whitelist)) or (type == "perf"):
-				if type == "perf" and name.startswith("perf"):
+			if (useBlacklist and (name not in blacklist)) or ((not useBlacklist) and (name in whitelist)) or (testType == "perf"):
+				if testType == "perf" and name.startswith("perf"):
 					fichier = open('../../../test/java/'+name+'Test.java', 'w')
 					fichier.write('package org.thingml.tests;\n\n')
-				if type == "functional" and not name.startswith("perf"):
+				if testType == "functional" and not name.startswith("perf"):
 					fichier = open('../../../test/java/'+name+'Test.java', 'w')
 					fichier.write('package org.thingml.tests;\n\n')
-				if (type == "perf" and name.startswith("perf")) or (type == "functional" and not name.startswith("perf")):
+				if (testType == "perf" and name.startswith("perf")) or (testType == "functional" and not name.startswith("perf")):
 					fichier.write('import junit.framework.TestCase;\n\
 import org.junit.Test;\n\
 import org.junit.Before;\n\
