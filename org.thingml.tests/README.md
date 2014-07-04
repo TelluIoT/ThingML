@@ -28,27 +28,43 @@ Automatic run using Maven:
   * To run automatically all the tests using Maven, run the command `mvn clean install` in the folder `org.thingml.tester`
 	
 Selection of tests run by Maven:
-  * File org.thingml.tests/src/main/thingml/tests/Tester/genTestsJava.py contains the following line : "if name != "tester": ".
-  * Change it into "if name in ("testHello","testArrays"): " if you wish to run only a subsets of all the tests.
+  * Use the configuration.py file present at the root of the project.
 
 Manual run:
   * Execute the manualGeneration.py file in the folder org.thingml.tests/src/main/thingml/tests/Tester. It will ask for the input sent to the test.
   * You can now run the generated files in folders org.thingml.tests/src/main/thingml/tests/_linux and _scala using the thingml editor.
 	
-	
+Developing notes:
+-----------------
+To run Arduino tests, you need to perform the following steps:
+  * apt-get install arduino arduino-core python-pip picocom
+  * pip install ino
+  * Currently tests are launched through java runtime environment in Junit tests, which launches itself execute.py.
+    Java runtime environment makes it impossible to use serial communications.
+  * Bug #59 requires to edit the org.thingml.samples/src/main/thingml/core/_linux/test.thingml and comment all perf related messages.
+  
+To add a new language, you need to perform the following steps:
+  * add the language to the configuration.py file, following the convention "Language" (First letter capitalized)
+  * in folder src/main/thingml/tests/Tester/, create a genTestsLanguage.py file using the existing files as a model, and add a call to this generator to genTests.py.
+	This should generate the required configuration files for the tests.
+  * Create a org.thingml.samples/src/main/thingml/core/_language/test.thingml file
+  * The test.thingml file should create a "dump" file at the root of the generated code, as well as required files for perf measures.
+  * Edit the generic_* functions in stc/test/resources/execute.py file to compile and execute the test.
+  * Modify the org.thingml.cmd/src/main/scala/org/thingml/cmd/cmd.scala file to allow command line compilation.
+
 Description of the module architecture:
-----------------------------------------
-The org.thingml.tester module contains tools to run and analyse outputs from tests defined in the org.thingml.tests module.
+---------------------------------------
+The org.thingml.tests module contains tools to run and analyse outputs from tests defined in the src/main/thingml/tests folder.
 It uses the org.thingml.cmd module to compile the tests in command line.
-	
-org.thingml.tester module:
-  * This project first runs org.thingml.tester/src/main/scala/org/thingml/tester/TestsGeneration.scala, which calls python files in org.thingml.tests/src/main/thingml/tests/Tester folder to generate linux and scala configurations and JUnit tests.
-  * Maven automatically compiles the generated JUnit tests, which themselves use org.thingml.tester/src/resources python files to run each @test described in the original thingml file.
 
 org.thingml.cmd module: 
   * Provides command line compilation of thingml files through the command `mvn exec:java -Dexec.mainClass="org.thingml.cmd.Cmd" -Dexec.args="language path`
   * Provides java interface for compilation by using the import "import org.thingml.cmd.Cmd" and the function calls "Cmd.compileToC(path)" and "Cmd.compileToScala(path)".
-  * Note that language is either "c" or "scala", and path starts from the root of the project Thingml.
+  * Note that language is either "c", "scala", "java" or "arduino", and path starts from the root of the project Thingml.
 
-org.thingml.tests module:
-  * Contains user defined tests as well as some files useful to manually launch a specific test.
+The file src/main/scala/org/thingml/tests/TestsGeneration.scala is the starting point of the execution of tests.
+	
+Most files are split between two folders: 
+  * src/main/thingml/tests/Tester which contains files processing thingml tests.
+  * stc/test/resources which contains most analysis and execution files.
+These two folders contains filesDescription.md files which describe the role of each source file present in the folder.

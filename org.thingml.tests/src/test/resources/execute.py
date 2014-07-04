@@ -97,7 +97,8 @@ def generic_execute(type,capitalizedName,resultCounter):
 	if type == "Arduino":
 		os.system("ino build")
 		# os.system("ino upload")
-		# os.system("ino serial")
+		# os.system("ino serial > dump")
+		# Dump has to be processed to match usual dumps syntax
 		newdump = open('dump','w')
 		newdump.close()
 	if type == "Scala" or type == "Java":

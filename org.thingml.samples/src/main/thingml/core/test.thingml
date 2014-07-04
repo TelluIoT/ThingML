@@ -6,42 +6,42 @@ import "../datatypes.thingml"
 thing fragment TestMsg {
 	message testIn(c : Char);
 	message testOut(c : Char);
-	//message perfTestIn(i : Integer);
-	//message perfTestOut(s : String);
+	message perfTestIn(i : Integer);
+	message perfTestOut(s : String);
 	message testFailure();
-	//message perfTestEnd();
+	message perfTestEnd();
 	message testEnd();
-	//message perfTestSize(s : String);
+	message perfTestSize(s : String);
 }
 thing fragment TestHarness includes TestMsg {
 	provided port test {
-		sends testIn//, perfTestIn//, perfTestEnd
+		sends testIn, perfTestIn, perfTestEnd
 	}
 	required port testEnd {
-		sends testEnd//,perfTestSize
+		sends testEnd,perfTestSize
 	}
 }
 
 thing fragment Test includes TestMsg {
 
 	required port harnessOut {
-		sends testOut, testFailure//, perfTestOut
+		sends testOut, testFailure, perfTestOut
 	}
 	required port harnessIn {
-		receives testIn//, perfTestIn, perfTestEnd
+		receives testIn, perfTestIn, perfTestEnd
 	}
-	/*required port testEnd {
-		sends testEnd//,perfTestSize
-	}*/
+	required port testEnd {
+		sends testEnd,perfTestSize
+	}
 }
 
 
 thing fragment TestDump includes TestMsg {
 
 	provided port dump {
-		receives testOut,testFailure//, perfTestOut
+		receives testOut,testFailure, perfTestOut
 	}
 	provided port dumpEnd {
-		receives testEnd//,perfTestSize
+		receives testEnd,perfTestSize
 	}
 }
