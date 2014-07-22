@@ -140,8 +140,10 @@ object KevoreeGenerator {
     }
 
     kevScript append "\n}"
-    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/src/main/kevs" + cfg.getName
-    var w = new PrintWriter(new FileWriter(new File(rootDir+"/"+cfg.getName+".kevscript")));
+    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName + "/src/main/kevs"
+    val outputDirFile = new File(rootDir)
+    outputDirFile.mkdirs
+    val w = new PrintWriter(new FileWriter(new File(rootDir+"/"+cfg.getName+".kevscript")));
     w.println(kevScript);
     w.close();
   }
