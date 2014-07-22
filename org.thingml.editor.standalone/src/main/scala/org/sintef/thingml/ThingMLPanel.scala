@@ -107,12 +107,12 @@ class ThingMLPanel extends JPanel {
   val rosC = new JMenuItem("ROS Node")
   val bJava = new JMenuItem("Java/JaSM")
   val bSwing = new JMenuItem("Java/Swing")
-  val bScala = new JMenuItem("Scala/SMaC")
+  //val bScala = new JMenuItem("Scala/SMaC")
   val bThingML = new JMenuItem("ThingML/Comm")
   val bThingML2 = new JMenuItem("ThingML/Comm2")
 
   //val bKotlin = new JMenuItem("Kotlin")
-  //var bKevoree = new JMenuItem("Java/Kevoree")
+  val bKevoree = new JMenuItem("Java/Kevoree")
   //var bPauWare = new JMenuItem("Experimental/PauWare")
 
   val filechooser = new JFileChooser();
@@ -209,7 +209,7 @@ class ThingMLPanel extends JPanel {
       }
     })
 
-  bScala.addActionListener(new ActionListener {
+  /*bScala.addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent) {
       println("Input file : " + targetFile)
       if (targetFile.isEmpty)
@@ -226,7 +226,7 @@ class ThingMLPanel extends JPanel {
         case t : Throwable => t.printStackTrace()
       }
     }
-  })
+  })*/
 
   bJava.addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent) {
@@ -298,7 +298,7 @@ class ThingMLPanel extends JPanel {
       }         
     })
   
-   /*bKevoree.addActionListener(new ActionListener{
+   bKevoree.addActionListener(new ActionListener{
       def actionPerformed(e:ActionEvent){
         println("Input file : "+targetFile)
         if(targetFile.isEmpty) return;
@@ -313,7 +313,7 @@ class ThingMLPanel extends JPanel {
           case t : Throwable => t.printStackTrace()
         }
       }
-    })*/
+    })
   
     /*bKotlin.addActionListener(new ActionListener{
       def actionPerformed(e:ActionEvent){
@@ -355,10 +355,10 @@ class ThingMLPanel extends JPanel {
   compilersMenu.add(rosC)
   compilersMenu.add(bJava)
   compilersMenu.add(bSwing)
-  compilersMenu.add(bScala)
+  //compilersMenu.add(bScala)
   compilersMenu.add(bThingML)
   compilersMenu.add(bThingML2)
-  //compilersMenu.add(bKevoree)
+  compilersMenu.add(bKevoree)
   //compilersMenu.add(bKotlin)
   //compilersMenu.add(bPauWare)
   menubar.add(compilersMenu)

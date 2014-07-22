@@ -10,6 +10,7 @@
             <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
             <thingml.version>0.6.0-SNAPSHOT</thingml.version>
             <jasm.version>0.1.0-SNAPSHOT</jasm.version>
+            <!--PROP-->
         </properties>
 	
 	<repositories>        
@@ -51,26 +52,26 @@
             <version>${jasm.version}</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
         
         <!--Additional dependencies-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.thingml</groupId>
             <artifactId>org.thingml.utils</artifactId>
             <version>${thingml.version}</version>
-        </dependency>
+        </dependency>-->
         <!--DEP-->		
     </dependencies>
 
 	
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <!--<testSourceDirectory>src/test/java</testSourceDirectory>-->
 		<plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

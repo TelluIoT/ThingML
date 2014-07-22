@@ -221,6 +221,7 @@ object JavaGenerator {
 
     //Add ThingML dependencies
     val thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n"
+    //TODO: will not work if more than one thingml dep. We should re-declare the whole <dependency>
     cfg.allThingMLMavenDep.foreach { dep =>
       pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"))
     }
@@ -228,7 +229,7 @@ object JavaGenerator {
       pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep)
     }
 
-    pom = pom.replace("<!--DEP-->", "")
+    //pom = pom.replace("<!--DEP-->", "")//other compilers, e.g. Kevoree, might complement the POM
     pom = pom.replace("<!--COMPACT_PROFILE-->", "compact1")//TODO: this might be overriden by an annotation.
 
     //TODO: add other maven dependencies
