@@ -232,23 +232,46 @@ implicit def cGeneratorAspect(self:ExternExpression) : ExternExpressionCGenerato
     result
   }
 
-  def compileAndRunArduino(model: ThingMLModel, arduinoDir: String, libdir: String) {
+  def compileAndRunArduino(model: ThingMLModel, arduinoDir: String, libdir: String, doingTests: Boolean = false) {
+  //doingTests should be ignored, it is only used when calling from org.thingml.cmd
     // First look for a configuration in the model
     model.getConfigs.filter {
       c => !c.isFragment
     }.headOption match {
-      case Some(c) => compileAndRunArduino(c, arduinoDir, libdir)
+    	
+      case Some(c) => if (doingTests){compileAndNotRunArduino(c, arduinoDir, libdir)}else{compileAndRunArduino(c, arduinoDir, libdir)}
       case None =>
         // look in all configs
         model.allConfigurations.filter {
           c => !c.isFragment
         }.headOption match {
-          case Some(c) => compileAndRunArduino(c, arduinoDir, libdir)
+          case Some(c) => if (doingTests){compileAndNotRunArduino(c, arduinoDir, libdir)}else{compileAndRunArduino(c, arduinoDir, libdir)}
           case None => {}
         }
     }
   }
+def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: String, doingTests: Boolean = false) {
+  //doingTests should be ignored, it is only used when calling from org.thingml.cmd
+	// Create a temp folder
+	var folder = new File("tmp/ThingML_Arduino")
+    folder.delete
+    folder.mkdirs
+    folder.deleteOnExit
 
+    // Create a folder having the name of the config
+    folder = new File(folder, cfg.getName);
+    folder.mkdirs
+
+    // Compile the configuration:
+    var pde_code = CGenerator.compileArduino(cfg, new ArduinoCGeneratorContext(cfg))
+
+    // Write the code in a pde file
+    var pde_file = new File(folder, cfg.getName + ".pde")
+    var w: PrintWriter = new PrintWriter(new FileWriter(pde_file))
+    w.print(pde_code)
+    w.close
+  }
+  
   def compileAndRunArduino(cfg: Configuration, arduinoDir: String, libdir: String) {
 
     // Create a temp folder

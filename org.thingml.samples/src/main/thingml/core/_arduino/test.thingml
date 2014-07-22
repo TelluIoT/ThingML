@@ -1,40 +1,49 @@
 import "../test.thingml"
 import "../../hardware/arduino/arduino.thingml"
 
-thing TestHarnessArduino includes TestHarness, ThingMLScheduler, TestDump
+datatype double
+@c_type "double";
+
+thing TestDumpArduino includes ThingMLScheduler, TestDump
 @pim "TestArness"
 @platform "arduino"
+@c_header "#include \"Time.h\""
 {
-	required port polling {
-        receives poll
-    }
-    
+ 	property benchmark: Boolean = false
+ 	property start: double = 0
+ 	property stop: double = 0
+ 		
 	statechart ArduinoHarness init Testing {
-		
-		on entry 'Serial.begin(9600);'
+		property transitionsCount : Long = 0
+ 	property stateNumber: String = ""
 		
 		state Testing {
-			
-			internal event polling?poll
-            guard 'Serial.available()' > 0
-            action test!testIn('(char)Serial.read()')
-            
+            on entry do 
+    			'Serial.begin(9600);'
+            end
             internal event m : dump?testOut
-            action 'Serial.print(' & m.c & ');'
+            action do 'Serial.println('&m.c&');'
+            	transitionsCount=transitionsCount+1
+            end
             
             transition -> Failed 
             event dump?testFailure
-            action 'Serial.print(" *FAILURE* ");'
-			
+            action '//printf("*FAILURE*");'
+            
+            
+            transition -> End
+            event dumpEnd?testEnd
+            
 		}
 		
 		state Failed {
 
 		}
+		
+		state End {
+			on entry do
+			end
+		}
 	}
 }
 
-configuration fragment TestHarnessArduino {
-	//instance arduino : Arduino
-	instance harness : TestHarnessArduino
-}

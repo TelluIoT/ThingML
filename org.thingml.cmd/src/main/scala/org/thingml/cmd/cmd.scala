@@ -80,6 +80,8 @@ object Cmd {
 					thingmlModel.allConfigurations.foreach{c =>
 						JavaGenerator.compileAndRun(c, thingmlModel, true)                                                                      
 					}
+				if (args(0) == "arduino")
+					CGenerator.compileAndRunArduino(thingmlModel, "", "", true)          
 			}
 			catch {
 			  case t : Throwable => t.printStackTrace()

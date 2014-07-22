@@ -39,7 +39,7 @@ thing fragment Test includes TestMsg {
 thing fragment TestDump includes TestMsg {
 
 	provided port dump {
-		receives testOut, testFailure, perfTestOut
+		receives testOut,testFailure, perfTestOut
 	}
 	provided port dumpEnd {
 		receives testEnd,perfTestSize

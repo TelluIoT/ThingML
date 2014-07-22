@@ -46,6 +46,13 @@ from configuration import testType
 from configuration import testLanguages
 
 def generic_prepareFilesForMeasures(type):
+	if type == "Arduino":
+		os.system("mv *.pde ..")
+		os.system("ino init")
+		os.system("rm src/*.ino")
+		os.system("mv ../*.pde src/")
+		os.system("cp ../../../../org.thingml.tests/src/test/resources/Time* src/")
+		os.system("cp ../../../../org.thingml.tests/src/test/resources/myBash .")
 	if type == "Linux":
 		#Inserting necessary code to execute gperftools
 		if os.path.exists("/usr/local/include/gperftools/"):
@@ -75,9 +82,7 @@ pw.close();}catch(Exception e){;}","src/main/java/org/thingml/generated/Main.jav
 def generic_compile(type):
 	if type == "Linux":
 		os.system("make")
-	if type == "Java":
-		os.system("mvn clean package")
-	if type == "Scala":
+	if type == "Java" or type == "Scala":
 		os.system("mvn clean package")
 		
 def generic_execute(type,capitalizedName,resultCounter):
@@ -89,6 +94,13 @@ def generic_execute(type,capitalizedName,resultCounter):
 			os.system("rm "+resultsDirectory+"/Linux/*.prof")
 		else:
 			os.system("./"+capitalizedName)
+	if type == "Arduino":
+		os.system("ino build")
+		# os.system("ino upload")
+		# os.system("ino serial > dump")
+		# Dump has to be processed to match usual dumps syntax
+		newdump = open('dump','w')
+		newdump.close()
 	if type == "Scala" or type == "Java":
 		#Execution of program with necessary environment to run yourkit, if available
 		if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
@@ -227,7 +239,7 @@ for (a,b) in results:
 					lines = f.readlines()
 					f.close()
 					for res in lines:
-						dump.write(res)
+						dump.write(res+'\n')
 					if testType=="perf":
 						statesNumber=lines[-1]
 				except IOError:
