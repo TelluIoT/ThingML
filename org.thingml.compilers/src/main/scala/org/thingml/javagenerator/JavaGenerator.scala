@@ -347,7 +347,7 @@ object JavaGenerator {
 
         //builder = Context.getBuilder(Context.firstToUpper(m.getName()) + "Event.java")
         //generateHeader(builder)
-        builder append "public class " + Context.firstToUpper(m.getName()) + "Message extends Event {\n\n"
+        builder append "public class " + Context.firstToUpper(m.getName()) + "Message extends Event implements java.io.Serializable {\n\n"
 
         m.getParameters.foreach { p =>
             builder append "public final " + p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.getName) + ";\n"

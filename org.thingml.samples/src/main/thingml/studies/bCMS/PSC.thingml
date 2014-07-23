@@ -86,6 +86,8 @@ thing PSC_GUI includes GUIbCMSMsgs, bCMSMsgs
 		end
 	
 		state Init {
+    
+        on entry '' & gui & '.sendinitCom_via_out.setEnabled(true);'
 
         internal event c : control?gui_initCom
         action '' & gui & '.sendinitCom_via_out.setEnabled(' & c.activate & ');'
