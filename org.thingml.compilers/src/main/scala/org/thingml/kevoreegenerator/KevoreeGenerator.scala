@@ -286,7 +286,9 @@ case class ThingKevoreeGenerator(val self: Thing){
 
 
     builder append "@Start\n"
-    builder append "public void startComponent() {start();\n}\n\n"
+    builder append "public void startComponent() {\n"
+    builder append "if (behavior == null){\nbuildBehavior();\n}\n"
+    builder append "start();\n}\n\n"
 
     builder append "@Stop\n"
     builder append "public void stopComponent() {stop();\n}\n\n"
