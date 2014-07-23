@@ -701,6 +701,20 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       m => builder append "private final " + Context.firstToUpper(m.getName) + "MessageType " + m.getName + "Type = new " + Context.firstToUpper(m.getName) + "MessageType();\n"
     }
 
+    if (self.allPropertiesInDepth.filter{p => self.initExpression(p) != null}.size > 0) {
+      builder append "//Empty Constructor\n"
+      builder append "public " + Context.firstToUpper(self.getName) + "() {\n"
+      self.allPropertiesInDepth.foreach { p =>
+        val e = self.initExpression(p)
+        if (e != null) {
+          builder append p.Java_var_name + " = "
+          self.initExpression(p).generateJava(builder)
+          builder append ";\n"
+        }
+      }
+      builder append "}\n\n"
+    }
+
     builder append "//Constructor (only readonly (final) attributes)\n"
     builder append "public " + Context.firstToUpper(self.getName) + "("
     builder append self.allPropertiesInDepth.filter{p => !p.isChangeable}.collect{ case p =>

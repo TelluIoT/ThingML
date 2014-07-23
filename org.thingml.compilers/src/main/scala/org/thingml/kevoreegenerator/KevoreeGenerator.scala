@@ -219,18 +219,25 @@ case class ThingKevoreeGenerator(val self: Thing){
       builder append "private org.kevoree.api.Port " + p.getName + "Port;\n"
     }
 
-    builder append "//Constructor (all attributes)\n"
-    builder append "public K" + Context.firstToUpper(self.getName) + "(String name"
-    self.allPropertiesInDepth.foreach { p =>
-      builder append ", final " + p.getType.java_type(p.getCardinality != null) + " " + p.Java_var_name
-    }
-    builder append ") {\n"
-    builder append "super(name"
-    self.allPropertiesInDepth.foreach { p =>
-      builder append ", " + p.Java_var_name
-    }
-    builder append ");\n"
+    builder append "//Empty Constructor\n"
+    builder append "public K" + Context.firstToUpper(self.getName) + "() {\n"
+    builder append "super();"
     builder append "}\n\n"
+
+    if (self.allPropertiesInDepth.size > 0) {
+      builder append "//Constructor (all attributes)\n"
+      builder append "public K" + Context.firstToUpper(self.getName) + "(String name"
+      self.allPropertiesInDepth.foreach { p =>
+        builder append ", final " + p.getType.java_type(p.getCardinality != null) + " " + p.Java_var_name
+      }
+      builder append ") {\n"
+      builder append "super(name"
+      self.allPropertiesInDepth.foreach { p =>
+        builder append ", " + p.Java_var_name
+      }
+      builder append ");\n"
+      builder append "}\n\n"
+    }
 
 
     builder append "@Start\n"
