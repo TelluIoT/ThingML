@@ -115,35 +115,68 @@ object KevoreeGenerator {
    */
   def compileKevScript(cfg:Configuration){
     var kevScript:StringBuilder= new StringBuilder()
-    kevScript append "tblock\n{\n"
-    kevScript append "merge \"mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.javaseNode/{kevoree.version}\"\n"
-    kevScript append "merge \"mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.nanohttp/{kevoree.version}\"\n"
-    kevScript append "merge \"mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.defaultChannels/{kevoree.version}\"\n"
-    kevScript append "addNode node0 : JavaSENode\n"
-    kevScript append "addGroup sync: NanoRestGroup \n"
-    kevScript append "addToGroup sync* \n"
-    kevScript append "updateDictionary sync { port=\"8000\"}@node0\n"
-    cfg.allThings.foreach{thing=>
-      kevScript append "addComponent "+thing.getName()+"_KevComponent@node0 : "+cfg.getName+"_"+thing.getName()+"_KV2ThingML {}\n"
-    }
-    cfg.allConnectors.foreach{con=>   
-      if(con.getRequired.getSends.size>0 && con.getProvided.getReceives.size>0){
-        kevScript append "addChannel c_"+con.hashCode+" : defMSG {}\n"
-        kevScript append  "bind "+con.getRequired.getOwner.getName+"_KevComponent."+con.getRequired.getName+"_Transfer@node0 => c_"+con.hashCode+"\n"
-        kevScript append  "bind "+con.getProvided.getOwner.getName+"_KevComponent."+con.getProvided.getName+"_rcv@node0 => c_"+con.hashCode+"\n"
-      }
-      if(con.getRequired.getReceives.size>0 && con.getProvided.getSends.size>0){
-        kevScript append "addChannel c_"+con.hashCode+"_re : defMSG {}\n"
-        kevScript append  "bind "+con.getRequired.getOwner.getName+"_KevComponent."+con.getRequired.getName+"_rcv@node0 => c_"+con.hashCode+"_re\n"
-        kevScript append  "bind "+con.getProvided.getOwner.getName+"_KevComponent."+con.getProvided.getName+"_Transfer@node0 => c_"+con.hashCode+"_re\n"
-      }
-    }
+    //kevScript append "namespace " + cfg.getName + "\n\n"
 
-    kevScript append "\n}"
+    kevScript append "repo \"http://repo1.maven.org/maven2\"\n"
+    kevScript append "repo \"http://maven.thingml.org\"\n\n"
+
+    kevScript append "//include standard Kevoree libraries\n"
+    kevScript append "include mvn:org.kevoree.library.java:org.kevoree.library.java.javaNode:release\n"
+    kevScript append "include mvn:org.kevoree.library.java:org.kevoree.library.java.channels:release\n"
+    kevScript append "include mvn:org.kevoree.library.java:org.kevoree.library.java.ws:release\n\n"
+
+    kevScript append "//include external libraries that may be needed by ThingML components\n"
+    cfg.allThingMLMavenDep.foreach { dep =>
+      kevScript append "include mvn:org.thingml:" + dep + ":snapshot\n"
+    }
+    //TODO: properly manage external dependencies
+    /*cfg.allMavenDep.foreach { dep =>
+      pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep)
+    } */
+    kevScript append "\n"
+
+    kevScript append "//include Kevoree wrappers of ThingML components\n"
+    kevScript append "include mvn:org.thingml.generated:" + cfg.getName + ":1.0-SNAPSHOT\n\n"
+
+    kevScript append "//create a default Java node\n"
+    kevScript append "add node0 : JavaNode\n"
+    kevScript append "set node0.log = \"false\"\n"
+
+    kevScript append "//create a default group to manage the node(s)\n"
+    kevScript append "add sync : WSGroup\n"
+    kevScript append "set sync.port/node0 = \"9000\"\n"
+    kevScript append "attach node0 sync\n\n"
+
+    kevScript append "//instantiate Kevoree/ThingML components\n"
+    cfg.allInstances.foreach{i =>
+      kevScript append "add node0." + i.instanceName + " : K"+ i.getType.getName() + "\n"
+    }
+    kevScript append "\n"
+
+    kevScript append "//instantiate Kevoree channels and bind component\n"
+
+    cfg.allConnectors.foreach{con=>
+      if (! (con.getRequired.getAnnotations.find{a => a.getName == "internal"}.isDefined || con.getProvided.getAnnotations.find{a => a.getName == "internal"}.isDefined)) {
+        if (con.getRequired.getSends.size > 0 && con.getProvided.getReceives.size > 0) {
+          kevScript append "add channel_" + con.hashCode + " : SyncBroadcast\n"
+          kevScript append "bind node0." + con.getCli.getInstance().instanceName + "." + con.getRequired.getName + "Port_out channel_" + con.hashCode + "\n"
+          kevScript append "bind node0." + con.getSrv.getInstance().instanceName + "." + con.getProvided.getName + "Port channel_" + con.hashCode + "\n"
+        }
+        if (con.getRequired.getReceives.size > 0 && con.getProvided.getSends.size > 0) {
+          kevScript append "add channel_" + con.hashCode + "_re : SyncBroadcast\n"
+          kevScript append "bind node0." + con.getCli.getInstance().instanceName + "." + con.getRequired.getName + "Port channel_" + con.hashCode + "_re\n"
+          kevScript append "bind node0." + con.getSrv.getInstance().instanceName + "." + con.getProvided.getName + "Port_out channel_" + con.hashCode + "_re\n"
+        }
+      }
+    }
+    kevScript append "start sync\n"
+    kevScript append "start node0\n\n"
+    kevScript append "\n"
+
     val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName + "/src/main/kevs"
     val outputDirFile = new File(rootDir)
     outputDirFile.mkdirs
-    val w = new PrintWriter(new FileWriter(new File(rootDir+"/"+cfg.getName+".kevscript")));
+    val w = new PrintWriter(new FileWriter(new File(rootDir+"/"+cfg.getName+".kevs")));
     w.println(kevScript);
     w.close();
   }
@@ -216,12 +249,24 @@ case class ThingKevoreeGenerator(val self: Thing){
     self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getSends.size>0}
       .foreach{ p=>
       builder append "@Output\n"
-      builder append "private org.kevoree.api.Port " + p.getName + "Port;\n"
+      builder append "private org.kevoree.api.Port " + p.getName + "Port_out;\n"
     }
 
     builder append "//Empty Constructor\n"
     builder append "public K" + Context.firstToUpper(self.getName) + "() {\n"
     builder append "super();"
+    builder append "//binding internal connectors we do not want to expose to Kevoree\n"
+    //TODO: not quite an efficient navigation... to be improved
+    self.allPorts.filter{p => p.isInstanceOf[RequiredPort] && (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.foreach{ p =>
+      self.allPorts.filter{p2 => p2.isInstanceOf[ProvidedPort] && (p2.getAnnotations.find{a => a.getName == "internal"}.isDefined) && p2.getAnnotations.find{a => a.getName == "internal"}.get.getValue == p2.getAnnotations.find{a => a.getName == "internal"}.get.getValue}.foreach { p2 =>
+        builder append "new Connector("
+        builder append "this.get" + Context.firstToUpper(p.getName) + "_port(), "
+        builder append "this.get" + Context.firstToUpper(p2.getName) + "_port(), "
+        builder append "this, this);\n"
+      }
+    }
+
+
     builder append "}\n\n"
 
     if (self.allPropertiesInDepth.size > 0) {
@@ -270,7 +315,7 @@ case class ThingKevoreeGenerator(val self: Thing){
         if (i > 0)
           builder append "else "
         builder append "if (p.getName().equals(\"" + p.getName + "\")) {\n"
-        builder append p.getName + "Port.send(e);\n"
+        builder append p.getName + "Port_out.send(e);\n"
         builder append "}\n"
         i = i + 1
     }
@@ -280,7 +325,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getReceives.size>0}
       .foreach{ p=>
       builder append "@Input\n"
-      builder append "public void " + p.getName + "(Object o) {\n"
+      builder append "public void " + p.getName + "Port(Object o) {\n"
       builder append "receive((Event)o, get" + Context.firstToUpper(p.getName) + "_port());\n"
       builder append "}\n\n"
     }
