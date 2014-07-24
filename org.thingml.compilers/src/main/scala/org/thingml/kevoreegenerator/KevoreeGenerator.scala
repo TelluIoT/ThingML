@@ -285,6 +285,25 @@ case class ThingKevoreeGenerator(val self: Thing){
     }
 
 
+    builder append "@Override\n"
+    builder append "public void start() {\n"
+    builder append "queue = new java.util.concurrent.ArrayBlockingQueue<SignedEvent>(1024);\n"
+    builder append "super.start();\n"
+    builder append "}\n\n"
+
+    builder append "@Override\n"
+    builder append "public void stop() {\n"
+    builder append "super.stop();\n"
+    builder append "queue = null;\n"
+    builder append "}\n\n"
+
+    builder append "@Override\n"
+    builder append "public void receive(Event event, Port p) {\n"
+    builder append "if (queue != null) {\n"
+    builder append "super.receive(event, p);\n"
+    builder append "}\n"
+    builder append "}\n\n"
+
     builder append "@Start\n"
     builder append "public void startComponent() {\n"
     builder append "if (behavior == null){\nbuildBehavior();\n}\n"
@@ -321,6 +340,7 @@ case class ThingKevoreeGenerator(val self: Thing){
         builder append "}\n"
         i = i + 1
     }
+    builder append "else {//Internal channel managed by ThingML\nsuper.send(e, p);\n}\n"
     builder append "}\n\n"
 
     //forwards incoming Kevoree messages to ThingML
