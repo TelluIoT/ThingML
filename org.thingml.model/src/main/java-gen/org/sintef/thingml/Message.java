@@ -50,4 +50,11 @@ public interface Message extends AnnotatedElement {
 	 */
 	EList<Parameter> getParameters();
 
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    int getCode();
+
 } // Message

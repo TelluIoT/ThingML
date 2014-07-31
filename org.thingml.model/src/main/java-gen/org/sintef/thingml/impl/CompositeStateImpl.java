@@ -15,6 +15,7 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -371,7 +372,18 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
      */
     @Override
     public List<State> allContainedStates() {
-        return ((Region)this).allContainedStates();
+        final List<State> result = new ArrayList<State>();
+        for(Region r : allContainedRegions()) {
+            if (r instanceof State) {
+                result.add((State)r);
+            }
+            for(State s : r.getSubstate()) {
+                if (! (s instanceof Region)) {
+                    result.add(s);
+                }
+            }
+        }
+        return result;
     }
 
     /**
@@ -381,7 +393,19 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
      */
     @Override
     public List<Region> allContainedRegions() {
-        return ((Region)this).allContainedRegions();
+        List<Region> result = new ArrayList<Region>();
+        result.add(this);
+        if (this instanceof CompositeState) {
+            for(Region r : ((CompositeState)this).getRegion()) {
+                result.addAll(r.allContainedRegions());
+            }
+        }
+        for (State s : getSubstate()) {
+            if (s instanceof Region) {
+                result.addAll(((Region)s).allContainedRegions());
+            }
+        }
+        return result;
     }
 
     /**
@@ -390,6 +414,12 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
      * @generated NOT
      */
     @Override
-    public List<Property> allContainedProperties() {return ((Region)this).allContainedProperties();}
+    public List<Property> allContainedProperties() {
+        List<Property> result = new ArrayList<Property>();
+        for(State s : allContainedStates()) {
+            result.addAll(s.getProperties());
+        }
+        return result;
+    }
 
 } //CompositeStateImpl

@@ -19,6 +19,9 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Thing ML Model</b></em>'.
@@ -85,5 +88,49 @@ public interface ThingMLModel extends EObject {
 	 * @generated
 	 */
 	EList<Configuration> getConfigs();
+
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<ThingMLModel> allThingMLModelModels();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Type> allTypes();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Type> allSimpleTypes();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Thing> allThings();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    Set<Message> allMessages();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Configuration> allConfigurations();
 
 } // ThingMLModel

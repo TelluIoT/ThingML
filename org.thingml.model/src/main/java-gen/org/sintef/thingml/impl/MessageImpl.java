@@ -160,4 +160,19 @@ public class MessageImpl extends AnnotatedElementImpl implements Message {
 		return super.eIsSet(featureID);
 	}
 
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public int getCode() {
+        final String value = annotation("code");
+        if (value != null)
+            return Integer.getInteger(value);
+        else
+            return -1;
+    }
+
 } //MessageImpl

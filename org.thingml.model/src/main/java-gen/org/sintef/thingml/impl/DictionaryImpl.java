@@ -185,7 +185,7 @@ public class DictionaryImpl extends PropertyImpl implements Dictionary {
      */
     @Override
     public boolean isDefined(String annotation, String value) {
-        return ((AnnotatedElement)this).isDefined(annotation, value);
+        return super.isDefined(annotation, value);
     }
 
     /**
@@ -196,7 +196,7 @@ public class DictionaryImpl extends PropertyImpl implements Dictionary {
      */
     @Override
     public boolean hasAnnotation(String name) {
-        return ((AnnotatedElement)this).hasAnnotation(name);
+        return super.hasAnnotation(name);
     }
 
     /**
@@ -207,7 +207,7 @@ public class DictionaryImpl extends PropertyImpl implements Dictionary {
      */
     @Override
     public String annotation(String name) {
-        return ((AnnotatedElement)this).annotation(name);
+        return super.annotation(name);
     }
 
 } //DictionaryImpl

@@ -235,7 +235,7 @@ class ThingMLPanel extends JPanel {
         return
       try {
         val thingmlModel = loadThingMLmodel(targetFile.get)
-        thingmlModel.allConfigurations.foreach{c =>
+        thingmlModel.allConfigurations().foreach{c =>
           val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
           javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
           JavaGenerator.compileAndRun(c, thingmlModel)
@@ -254,7 +254,7 @@ class ThingMLPanel extends JPanel {
           return
         try {
           val thingmlModel = loadThingMLmodel(targetFile.get)
-          thingmlModel.allConfigurations.foreach{c =>
+          thingmlModel.allConfigurations().foreach{c =>
             SwingGenerator.compileAndRun(c, thingmlModel)                                                                      
           }
         }
@@ -271,7 +271,7 @@ class ThingMLPanel extends JPanel {
           return
         try {
           val thingmlModel = loadThingMLmodel(targetFile.get)
-          thingmlModel.allConfigurations.foreach{c =>
+          thingmlModel.allConfigurations().foreach{c =>
             ThingMLGenerator.compileAndRun(c)                                                                      
           }
         }
@@ -288,7 +288,7 @@ class ThingMLPanel extends JPanel {
           return
         try {
           val thingmlModel = loadThingMLmodel(targetFile.get)
-          thingmlModel.allConfigurations.foreach{c =>
+          thingmlModel.allConfigurations().foreach{c =>
             ThingMLGenerator.compileAndRun(c,true)                                                                      
           }
         }
@@ -305,7 +305,7 @@ class ThingMLPanel extends JPanel {
         
         try{
           val thingmlModel = loadThingMLmodel(targetFile.get)
-          thingmlModel.allConfigurations.foreach{c => 
+          thingmlModel.allConfigurations().foreach{c =>
             KevoreeGenerator.compileAndRun(c,thingmlModel)
           }
         }

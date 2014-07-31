@@ -253,14 +253,15 @@ public class PropertyImpl extends VariableImpl implements Property {
 		return result.toString();
 	}
 
+    //Derived properties
+
     /**
      *
      * @return
      * @generated NOT
      */
-    @Override
     public List<PlatformAnnotation> allAnnotations() {
-        return ((AnnotatedElement)this).allAnnotations();
+        return this.annotations;
     }
 
     /**
@@ -270,9 +271,19 @@ public class PropertyImpl extends VariableImpl implements Property {
      * @return
      * @generated NOT
      */
-    @Override
     public boolean isDefined(String annotation, String value) {
-        return ((AnnotatedElement)this).isDefined(annotation, value);
+        PlatformAnnotation pa = null;
+        for (PlatformAnnotation a : getAnnotations()) {
+            if (a.getName().equals(annotation)) {
+                pa = a;
+                break;
+            }
+        }
+        if (pa == null) {
+            return false;
+        } else {
+            return pa.getValue().equals(value);
+        }
     }
 
     /**
@@ -281,9 +292,15 @@ public class PropertyImpl extends VariableImpl implements Property {
      * @return
      * @generated NOT
      */
-    @Override
     public boolean hasAnnotation(String name) {
-        return ((AnnotatedElement)this).hasAnnotation(name);
+        PlatformAnnotation pa = null;
+        for (PlatformAnnotation a : getAnnotations()) {
+            if (a.getName().equals(name)) {
+                pa = a;
+                break;
+            }
+        }
+        return pa != null;
     }
 
     /**
@@ -292,9 +309,20 @@ public class PropertyImpl extends VariableImpl implements Property {
      * @return
      * @generated NOT
      */
-    @Override
     public String annotation(String name) {
-        return ((AnnotatedElement)this).annotation(name);
+        PlatformAnnotation pa = null;
+        for (PlatformAnnotation a : getAnnotations()) {
+            if (a.getName().equals(name)) {
+                pa = a;
+                break;
+            }
+        }
+        if (pa == null) {
+            return null;
+        } else {
+            return pa.getValue();
+        }
     }
+
 
 } //PropertyImpl

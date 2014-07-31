@@ -60,7 +60,7 @@ public class StateMachineImpl extends CompositeStateImpl implements StateMachine
      */
     @Override
     public List<State> allContainedStates() {
-        return ((Region)this).allContainedStates();
+        return super.allContainedStates();
     }
 
     /**
@@ -70,7 +70,7 @@ public class StateMachineImpl extends CompositeStateImpl implements StateMachine
      */
     @Override
     public List<Region> allContainedRegions() {
-        return ((Region)this).allContainedRegions();
+        return super.allContainedRegions();
     }
 
     /**
@@ -79,6 +79,8 @@ public class StateMachineImpl extends CompositeStateImpl implements StateMachine
      * @generated NOT
      */
     @Override
-    public List<Property> allContainedProperties() {return ((Region)this).allContainedProperties();}
+    public List<Property> allContainedProperties() {
+        return super.allContainedProperties();
+    }
 
 } //StateMachineImpl

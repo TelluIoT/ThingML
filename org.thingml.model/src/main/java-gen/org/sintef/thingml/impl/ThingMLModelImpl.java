@@ -16,6 +16,9 @@
 package org.sintef.thingml.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -30,10 +33,8 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ThingMLModel;
-import org.sintef.thingml.ThingmlPackage;
-import org.sintef.thingml.Type;
+import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 
 /**
  * <!-- begin-user-doc -->
@@ -233,5 +234,65 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 		}
 		return super.eIsSet(featureID);
 	}
+
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<ThingMLModel> allThingMLModelModels() {
+        return ThingMLHelpers.allThingMLModelModels(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Type> allTypes() {
+        return ThingMLHelpers.allTypes(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Type> allSimpleTypes() {
+        return ThingMLHelpers.allSimpleTypes(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Thing> allThings() {
+        return ThingMLHelpers.allThings(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Set<Message> allMessages() {
+        Set<Message> msg = new HashSet<Message>();
+        for(Thing t : allThings()) {
+            msg.addAll(t.allMessages());
+        }
+        return msg;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Configuration> allConfigurations() {
+        return ThingMLHelpers.allConfigurations(this);
+    }
 
 } //ThingMLModelImpl
