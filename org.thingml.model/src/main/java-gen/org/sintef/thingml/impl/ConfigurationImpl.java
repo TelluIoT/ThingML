@@ -540,4 +540,35 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         return result;
     }
 
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    /*public Map<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>> allRemoteMessages() {
+        Map<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>> result = new HashMap<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>>();
+        for(Map.Entry<Instance, String[]> entry : allRemoteInstances().entrySet()) {
+            for(Port p : entry.getKey().getType().getPorts()) {
+                if (p.getName().matches(entry.getValue()[2])) {
+                    List<Message> send = new ArrayList<Message>();
+                    for(Message m : p.getSends()) {
+                        if (m.getName().matches(entry.getValue()[3])) {
+                            send.add(m);
+                        }
+                    }
+
+                    List<Message> rec = new ArrayList<Message>();
+                    for(Message m : p.getReceives()) {
+                        if (m.getName().matches(entry.getValue()[3])) {
+                            rec.add(m);
+                        }
+                    }
+
+                    result.put(p, new AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>(send, rec));
+                }
+            }
+        }
+        return result;
+    }*/
+
 } //ConfigurationImpl

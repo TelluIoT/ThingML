@@ -17,6 +17,8 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
 
+import java.util.AbstractMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -158,5 +160,12 @@ public interface Configuration extends AnnotatedElement {
      * @generated NOT
      */
     Set<ConfigPropertyAssign> allPropAssigns();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    //Map<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>> allRemoteMessages();
 
 } // Configuration

@@ -80,6 +80,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
     return result
   }
 
+
   def allThings : ArrayList[Thing] = {
     var result : ArrayList[Thing] = new ArrayList[Thing]()
     self.allInstances.foreach{ i =>
