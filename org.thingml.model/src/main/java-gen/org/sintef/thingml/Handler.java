@@ -17,6 +17,9 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
 
+import java.util.AbstractMap;
+import java.util.Set;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Handler</b></em>'.
@@ -103,5 +106,14 @@ public interface Handler extends AnnotatedElement {
 	 * @generated
 	 */
 	void setAction(Action value);
+
+    //derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    Set<AbstractMap.SimpleImmutableEntry<Port, ReceiveMessage>> allTriggeringPorts();
 
 } // Handler

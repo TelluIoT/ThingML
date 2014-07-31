@@ -15,7 +15,10 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.AbstractMap;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -30,11 +33,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.sintef.thingml.Action;
-import org.sintef.thingml.Event;
-import org.sintef.thingml.Expression;
-import org.sintef.thingml.Handler;
-import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.*;
 
 /**
  * <!-- begin-user-doc -->
@@ -296,5 +295,23 @@ public abstract class HandlerImpl extends AnnotatedElementImpl implements Handle
 		}
 		return super.eIsSet(featureID);
 	}
+
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Set<AbstractMap.SimpleImmutableEntry<Port, ReceiveMessage>> allTriggeringPorts() {
+        Set<AbstractMap.SimpleImmutableEntry<Port, ReceiveMessage>> result = new HashSet<AbstractMap.SimpleImmutableEntry<Port,ReceiveMessage>>();
+        for(Event e : getEvent()) {
+            if (e instanceof  ReceiveMessage) {
+                ReceiveMessage r = (ReceiveMessage)e;
+                result.add(new AbstractMap.SimpleImmutableEntry<Port, ReceiveMessage>(r.getPort(), r));
+            }
+        }
+        return result;
+    }
 
 } //HandlerImpl

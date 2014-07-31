@@ -15,7 +15,7 @@
  */
 package org.sintef.thingml.impl;
 
-import java.util.Collection;
+import java.util.*;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -28,14 +28,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.sintef.thingml.ConfigInclude;
-import org.sintef.thingml.ConfigPropertyAssign;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Connector;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.*;
 
 /**
  * <!-- begin-user-doc -->
@@ -341,5 +337,207 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 		result.append(')');
 		return result.toString();
 	}
+
+
+    /**
+     * @generated NOT
+     */
+    private static class MergedConfigurationCache {
+
+        static Map<Configuration, Configuration> cache = new HashMap<Configuration, Configuration>();
+
+        static Configuration getMergedConfiguration(Configuration c) {
+            return cache.get(c);
+        }
+
+        static void cacheMergedConfiguration(Configuration c, Configuration mc)  {
+            cache.put(c, mc);
+        }
+
+        static void clearCache() {
+            cache.clear();
+        }
+
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    private Configuration merge() {
+
+        if (MergedConfigurationCache.getMergedConfiguration(this) != null)
+            return MergedConfigurationCache.getMergedConfiguration(this);
+
+        final Configuration copy = EcoreUtil.copy(this);
+        final Map<String, Instance> instances = new HashMap<String, Instance>();
+        final List<Connector> connectors = new ArrayList<Connector>();
+        final Map<String, ConfigPropertyAssign> assigns = new HashMap<String, ConfigPropertyAssign>();
+        final String prefix = getName();
+
+        _merge(instances, connectors, assigns, prefix);
+
+        copy.getConfigs().clear();
+        copy.getInstances().clear();
+        copy.getConnectors().clear();
+        copy.getPropassigns().clear();
+
+        copy.getInstances().addAll(instances.values());
+        copy.getConnectors().addAll(connectors);
+        copy.getPropassigns().addAll(assigns.values());
+
+        MergedConfigurationCache.cacheMergedConfiguration(this, copy);
+
+        return copy;
+    }
+
+    /**
+     *
+     * @param instances
+     * @param connectors
+     * @param assigns
+     * @param prefix
+     * @generated NOT
+     */
+    private void _merge(Map<String, Instance> instances, List<Connector> connectors, Map<String, ConfigPropertyAssign> assigns, String prefix) {
+        // Recursively deal with all groups first
+        for(ConfigInclude g : getConfigs()) {
+            ((ConfigurationImpl)g.getConfig())._merge(instances, connectors, assigns, prefix + "_" + g.getName());
+        }
+
+        // Add the instances of this configuration (actually a copy)
+        for(Instance inst : getInstances()) {
+
+            final String key = prefix + "_" + inst.getName();
+            Instance copy = null;
+
+            if (inst.getType().isSingleton()) {
+                // TODO: This could become slow if we have a large number of instances
+                List<Instance> others = new ArrayList<Instance>();
+                for(Instance i : instances.values()) {
+                    if (i.getType().equals(inst.getType())) {
+                        others.add(i);
+                    }
+                }
+                if (others.isEmpty()) {
+                    copy = EcoreUtil.copy(inst);
+                    copy.setName(inst.getName()); // no prefix needed
+                }
+                else copy = others.get(0); // There will be only one in the list
+            }
+            else {
+                copy = EcoreUtil.copy(inst);
+                copy.setName(key); // rename the instance with the prefix
+            }
+
+            instances.put(key, copy);
+        }
+
+        // Add the connectors
+        for(Connector c : getConnectors()) {
+            Connector copy = EcoreUtil.copy(c);
+            // look for the instances:
+            Instance cli = instances.get(getInstanceMergedName(prefix, c.getCli()));
+            Instance srv = instances.get(getInstanceMergedName(prefix, c.getSrv()));
+
+            copy.getCli().getConfig().clear();
+            copy.getCli().setInstance(cli);
+
+            copy.getSrv().getConfig().clear();
+            copy.getSrv().setInstance(srv);
+
+            connectors.add(copy);
+        }
+
+        for(ConfigPropertyAssign a : getPropassigns()) {
+            ConfigPropertyAssign copy = EcoreUtil.copy(a);
+
+            String inst_name = getInstanceMergedName(prefix, a.getInstance());
+
+            Instance inst = instances.get(inst_name);
+            copy.getInstance().getConfig().clear();
+            copy.getInstance().setInstance(inst);
+
+            String id = inst_name + "_" + a.getProperty().getName();
+
+            if (a.getIndex().size() > 0)  { // It is an array
+                id += a.getIndex().get(0);
+                //println(id)
+            }
+
+            assigns.put(id, copy); // This will replace any previous initialization of the variable
+        }
+
+    }
+
+    /**
+     *
+     * @param prefix
+     * @param ref
+     * @return
+     * @generated NOT
+     */
+    private String getInstanceMergedName(String prefix, InstanceRef ref) {
+        String result = prefix;
+        for (ConfigInclude c : ref.getConfig()) {
+            result += "_" + c.getName();
+        }
+        result += "_" + ref.getInstance().getName();
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Map<Instance, String[]> allRemoteInstances() {
+        Map<Instance, String[]> result = new HashMap<Instance, String[]>();
+        for (PlatformAnnotation a : getAnnotations()) {
+            if (a.getName().equals("remote")) {
+                final String[] regex = a.getValue().split("::");
+                for(Instance i : allInstances()) {
+                    if (i.getName().matches(getName()+"_"+regex[0]) && i.getType().getName().matches(regex[1]) ) {
+                        result.put(i, regex);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Set<Instance> allInstances() {
+        Set<Instance> result = new HashSet<Instance>();
+        result.addAll(merge().getInstances());
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Set<Connector> allConnectors() {
+        Set<Connector> result = new HashSet<Connector>();
+        result.addAll(merge().getConnectors());
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Set<ConfigPropertyAssign> allPropAssigns() {
+        Set<ConfigPropertyAssign> result = new HashSet<ConfigPropertyAssign>();
+        result.addAll(merge().getPropassigns());
+        return result;
+    }
 
 } //ConfigurationImpl

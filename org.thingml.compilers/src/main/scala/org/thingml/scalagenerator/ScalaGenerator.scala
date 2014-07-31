@@ -694,7 +694,7 @@ case class HandlerScalaGenerator(override val self: Handler) extends ThingMLScal
     var tempbuilder = new StringBuilder()
     tempbuilder append "List("
     tempbuilder append self.allTriggeringPorts.collect{case pair =>
-        "(" + Context.thing.getName + "." + pair._1.getName + "Port.getName, " + Context.thing.getName + "." + pair._1.getName + "Port.in." + pair._2.getMessage.getName + "_i)"
+        "(" + Context.thing.getName + "." + pair.getKey.getName + "Port.getName, " + Context.thing.getName + "." + pair.getKey.getName + "Port.in." + pair.getValue.getMessage.getName + "_i)"
     }.mkString(", ")
     tempbuilder append ")"
     return tempbuilder.toString

@@ -64,28 +64,11 @@ object MergedConfigurationCache {
 }
 
 case class ConfigurationScalaImpl (self : Configuration) {
-  /*
-   def allConfigurationFragments: ArrayList[Configuration] = {
-   return ThingMLHelpers.allConfigurationFragments(self)
-   }
-   */
 
-
-  def allRemoteInstances() : Map[Instance, Array[String]] = {
-    var result = Map[Instance, Array[String]]()
-    self.getAnnotations.filter{a => a.getName == "remote"}
-    .foreach{a =>
-      val regex = a.getValue.split("::")
-      self.allInstances.filter{i =>
-        i.getName.matches(self.getName+"_"+regex(0)) && i.getType.getName.matches(regex(1))
-      }.foreach{i => result += (i -> regex)}
-    }
-    return result
-  }
 
   def allRemoteMessages() : Map[Port, Pair[List[Message], List[Message]]] = {
     var result = Map[Port, Pair[List[Message], List[Message]]]()
-    allRemoteInstances.foreach{ case (i, regex) =>
+    self.allRemoteInstances.foreach{ case (i, regex) =>
       i.getType.getPorts.filter{p => p.getName.matches(regex(2))}
       .foreach{p =>
         //val messages = p.getSends.filter{m => m.getName.matches(regex(3))} ++: p.getReceives.filter{m => m.getName.matches(regex(3))}
@@ -96,126 +79,10 @@ case class ConfigurationScalaImpl (self : Configuration) {
     }
     return result
   }
-  
-  def merge() : Configuration = {
-
-    if (MergedConfigurationCache.getMergedConfiguration(self) != null) return MergedConfigurationCache.getMergedConfiguration(self)
-
-    var copy = EcoreUtil.copy(self).asInstanceOf[Configuration]
-    var instances = new Hashtable[String, Instance]()
-    var connectors = new ArrayList[Connector]()
-    var assigns = new Hashtable[String, ConfigPropertyAssign]()
-    var prefix = self.getName()
-
-    _merge(instances, connectors, assigns, prefix)
-
-    copy.getConfigs.clear
-    copy.getInstances.clear
-    copy.getConnectors.clear
-    copy.getPropassigns.clear
-
-    copy.getInstances.addAll(instances.values())
-    copy.getConnectors.addAll(connectors)
-    copy.getPropassigns.addAll(assigns.values())
-
-    MergedConfigurationCache.cacheMergedConfiguration(self, copy)
-
-    return copy
-  }
-
-  def _merge(instances : Hashtable[String, Instance], connectors : ArrayList[Connector], assigns : Hashtable[String, ConfigPropertyAssign], prefix : String) {
-    // Recursively deal with all groups first
-    self.getConfigs.foreach{ g =>
-      g.getConfig._merge(instances, connectors, assigns, prefix + "_" + g.getName)
-    }
-
-    // Add the instances of this configuration (actually a copy)
-    self.getInstances.foreach{ inst =>
-
-      var key = prefix + "_" + inst.getName
-      var copy : Instance = null
-
-      if (inst.getType.isSingleton) {
-        // TODO: This could can become slow if we have a large number of instances
-        var others = instances.values().filter{ i => i.getType == inst.getType }
-        if (others.isEmpty) {
-          copy = EcoreUtil.copy(inst).asInstanceOf[Instance]
-          copy.setName(inst.getName) // no prefix needed
-        }
-        else copy = others.head // There will be only one in the list
-      }
-      else {
-        copy = EcoreUtil.copy(inst).asInstanceOf[Instance]
-        copy.setName(key) // rename the instance with the prefix
-      }
-
-      instances.put(key, copy)
-    }
-
-    // Add the connectors
-    self.getConnectors.foreach{ c =>
-      var copy = EcoreUtil.copy(c).asInstanceOf[Connector]
-      // look for the instances:
-      var cli = instances.get(getInstanceMergedName(prefix, c.getCli))
-      var srv = instances.get(getInstanceMergedName(prefix, c.getSrv))
-
-      copy.getCli.getConfig.clear()
-      copy.getCli.setInstance(cli)
-
-      copy.getSrv.getConfig.clear()
-      copy.getSrv.setInstance(srv)
-
-      connectors.add(copy)
-    }
-
-    self.getPropassigns.foreach{ a =>
-      var copy = EcoreUtil.copy(a).asInstanceOf[ConfigPropertyAssign]
-
-      var inst_name = getInstanceMergedName(prefix, a.getInstance())
-
-      var inst = instances.get(inst_name)
-      copy.getInstance().getConfig.clear()
-      copy.getInstance().setInstance(inst)
-
-      var id = inst_name + "_" + a.getProperty.getName
-
-      if (a.getIndex.size() > 0)  { // It is an array
-        id += a.getIndex.head.toString
-        //println(id)
-      }
-
-      assigns.put(id, copy) // This will replace any previous initialization of the variable
-    }
-
-  }
-
-  def getInstanceMergedName(prefix : String, ref : InstanceRef) : String = {
-    var result = prefix
-    ref.getConfig.foreach{ c =>
-      result += "_" + c.getName
-    }
-    result += "_" + ref.getInstance().getName
-    result
-  }
-
-  def allInstances: Set[Instance] = {
-    var result : Set[Instance] = Set()
-    result ++ merge().getInstances
-  }
-
-  def allConnectors: Set[Connector] = {
-    var result : Set[Connector] = Set()
-    result ++ merge().getConnectors
-  }
-
-  def allPropAssigns: Set[ConfigPropertyAssign] = {
-    var result : Set[ConfigPropertyAssign] = Set()
-    result ++ merge().getPropassigns
-  }
 
   def allThings : ArrayList[Thing] = {
     var result : ArrayList[Thing] = new ArrayList[Thing]()
-    allInstances.foreach{ i =>
+    self.allInstances.foreach{ i =>
       if (!result.contains(i.getType)) result.add(i.getType)
     }
     result
@@ -259,7 +126,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
 
     i.getType.allPropertiesInDepth.filter{ p=> p.getCardinality == null }.foreach{ p =>
 
-      val assigns =  allPropAssigns
+      val assigns =  self.allPropAssigns
 
       var confassigns = assigns.filter{ a =>
         a.getInstance().getInstance().getName == i.getName && a.getProperty == p
@@ -321,7 +188,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
       }
 
 
-      allPropAssigns.filter{ a => a.getProperty == p}.foreach{ a =>
+      self.allPropAssigns.filter{ a => a.getProperty == p}.foreach{ a =>
         if (a.getIndex.size() == 1)
           result.add( ((p, a.getIndex.head, a.getInit)) )
         else System.err.println("ERROR: Malformed array initializiation for property " + p.getName + " in instance " + i.getName)
@@ -338,8 +205,8 @@ case class ConfigurationScalaImpl (self : Configuration) {
 
     val result = new Hashtable[Message, Hashtable[Instance, ArrayList[((Instance, Port))]]]()
 
-    allInstances.filter{ i => i.getType == t}.foreach {i =>
-      allConnectors.filter { c => c.getCli.getInstance == i && c.getRequired == p}.foreach{ c =>
+    self.allInstances.filter{ i => i.getType == t}.foreach {i =>
+      self.allConnectors.filter { c => c.getCli.getInstance == i && c.getRequired == p}.foreach{ c =>
         p.getSends.foreach{ m =>
           if (c.getProvided.getReceives.contains(m)) {
 
@@ -360,7 +227,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
           }
         }
       }
-      allConnectors.filter { c => c.getSrv.getInstance == i && c.getProvided == p}.foreach{ c =>
+      self.allConnectors.filter { c => c.getSrv.getInstance == i && c.getProvided == p}.foreach{ c =>
         p.getSends.foreach{ m =>
           if (c.getRequired.getReceives.contains(m)) {
 
@@ -383,13 +250,6 @@ case class ConfigurationScalaImpl (self : Configuration) {
       }
     }
     result
-  }
-
-  def annotation(name : String): String = {
-    self.getAnnotations().filter { a => a.getName == name }.headOption match {
-      case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
-      case None => return null;
-    }
   }
 
 }

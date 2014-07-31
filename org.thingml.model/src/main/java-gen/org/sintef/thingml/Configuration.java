@@ -17,6 +17,9 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Configuration</b></em>'.
@@ -127,5 +130,33 @@ public interface Configuration extends AnnotatedElement {
 	 * @generated
 	 */
 	EList<ConfigPropertyAssign> getPropassigns();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    Set<Instance> allInstances();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    Map<Instance, String[]> allRemoteInstances();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    Set<Connector> allConnectors();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    Set<ConfigPropertyAssign> allPropAssigns();
 
 } // Configuration
