@@ -32,7 +32,7 @@ object ThingMLScalaImpl {
   //implicit def scalaImplAspect(self:ThingMLModel) = ThingMLModelScalaImpl(self)
   //implicit def scalaImplAspect(self:Thing) = ThingScalaImpl(self)
   //implicit def scalaImplAspect(self:State) = StateScalaImpl(self)
-  implicit def scalaImplAspect(self:ThingMLElement) = ThingMLElementScalaImpl(self)
+  //implicit def scalaImplAspect(self:ThingMLElement) = ThingMLElementScalaImpl(self)
   //implicit def scalaImplAspect(self:Region) = RegionScalaImpl(self)
   implicit def scalaImplAspect(self:Configuration) = ConfigurationScalaImpl(self)
   //implicit def scalaImplAspect(self:Connector) = ConnectorScalaImpl(self)

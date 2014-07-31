@@ -22,8 +22,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
-import org.sintef.thingml.ThingMLElement;
-import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 
 /**
  * <!-- begin-user-doc -->
@@ -172,5 +172,86 @@ public abstract class ThingMLElementImpl extends EObjectImpl implements ThingMLE
 		result.append(')');
 		return result.toString();
 	}
+
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public ThingMLModel findContainingModel() {
+        return ThingMLHelpers.findContainingModel(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Thing findContainingThing() {
+        return ThingMLHelpers.findContainingThing(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Configuration findContainingConfiguration() {
+        return ThingMLHelpers.findContainingConfiguration(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public State findContainingState() {
+        return ThingMLHelpers.findContainingState(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Region findContainingRegion() {
+        return ThingMLHelpers.findContainingRegion(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Handler findContainingHandler() {
+        return ThingMLHelpers.findContainingHandler(this);
+    }
+
+    /**
+     *
+     * @param separator
+     * @return
+     * @generated NOT
+     */
+    public String qname(String separator) {
+        if (separator == null) {
+            separator = "::";
+        }
+        String result = "";
+        ThingMLElement elem  = this;
+        String name = null;
+        while(elem != null) {
+            name = elem.getName();
+            if (name == null || name == "") name = elem.getClass().getName();
+            if (result == null) result = name;
+            else result = name + separator + result;
+            if (elem.eContainer() != null && elem.eContainer() instanceof ThingMLElement)
+                elem = (ThingMLElement)elem.eContainer();
+            else elem = null;
+        }
+        return result;
+    }
 
 } //ThingMLElementImpl

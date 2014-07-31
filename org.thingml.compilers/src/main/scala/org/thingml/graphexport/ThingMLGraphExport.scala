@@ -157,7 +157,7 @@ object ThingMLGraphExport {
             </y:Realizers>
           </y:ProxyAutoBoundsNode>
         </data>
-        <graph edgedefault="directed" id={ cs.qname() + "_Graph" }>
+        <graph edgedefault="directed" id={ cs.qname(null) + "_Graph" }>
           {
             val nodes : scala.collection.mutable.ArrayBuffer[scala.xml.Elem] = new scala.collection.mutable.ArrayBuffer[scala.xml.Elem]
             if (cs.getRegion.size > 0) {
@@ -182,14 +182,14 @@ object ThingMLGraphExport {
 
   def graphmlParallelRegion( pr : Region ) : scala.xml.Elem = {
      var result : scala.xml.Elem =
-        <node id={ pr.qname() } yfiles.foldertype="group">
+        <node id={ pr.qname(null) } yfiles.foldertype="group">
           <data key="d6">
             <y:ProxyAutoBoundsNode>
               <y:Realizers active="0">
                 <y:GroupNode>
                   <y:Fill hasColor="false" transparent="false"/>
                   <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
-                  <y:NodeLabel alignment="center" autoSizePolicy="node_width" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="t" textColor="#000000" visible="true">{ pr.qname() }</y:NodeLabel>
+                  <y:NodeLabel alignment="center" autoSizePolicy="node_width" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" modelName="internal" modelPosition="t" textColor="#000000" visible="true">{ pr.qname(null) }</y:NodeLabel>
                   <y:Shape type="roundrectangle"/>
                   <y:State closed="false" innerGraphDisplayEnabled="false"/>
                   <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
@@ -198,7 +198,7 @@ object ThingMLGraphExport {
               </y:Realizers>
             </y:ProxyAutoBoundsNode>
           </data>
-          <graph edgedefault="directed" id={ pr.qname() + "_Graph" }>
+          <graph edgedefault="directed" id={ pr.qname(null) + "_Graph" }>
          {
             val nodes : scala.collection.mutable.ArrayBuffer[scala.xml.Elem] = new scala.collection.mutable.ArrayBuffer[scala.xml.Elem]
             pr.getSubstate.foreach{
@@ -252,7 +252,7 @@ object ThingMLGraphExport {
 
   def graphmlInitState( r : Region )  : scala.xml.Elem = {
     var result =
-    <node id={ r.qname() + "_INIT" }>
+    <node id={ r.qname(null) + "_INIT" }>
       <data key="d6">
         <y:ShapeNode>
           <y:Fill color="#000000" transparent="false"/>
@@ -267,7 +267,7 @@ object ThingMLGraphExport {
 
   def graphmlInitTransition( r : Region ) : scala.xml.Elem = {
     var result =
-    <edge id={ r.qname() + "_INITT" } source={ r.qname() + "_INIT" } target={ r.getInitial.nodeID }>
+    <edge id={ r.qname(null) + "_INITT" } source={ r.qname(null) + "_INIT" } target={ r.getInitial.nodeID }>
       <data key="d10">
         <y:PolyLineEdge>
           <y:LineStyle color="#000000" type="line" width="1.0"/>

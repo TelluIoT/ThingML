@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 
 import java.util.List;
 
@@ -208,6 +209,72 @@ public class DictionaryImpl extends PropertyImpl implements Dictionary {
     @Override
     public String annotation(String name) {
         return super.annotation(name);
+    }
+
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public ThingMLModel findContainingModel() {
+        return super.findContainingModel();
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Thing findContainingThing() {
+        return super.findContainingThing();
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Configuration findContainingConfiguration() {
+        return super.findContainingConfiguration();
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public State findContainingState() {
+        return super.findContainingState();
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Region findContainingRegion() {
+        return super.findContainingRegion();
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Handler findContainingHandler() {
+        return super.findContainingHandler();
+    }
+
+    /**
+     *
+     * @param separator
+     * @return
+     * @generated NOT
+     */
+    public String qname(String separator) {
+        return super.qname(separator);
     }
 
 } //DictionaryImpl
