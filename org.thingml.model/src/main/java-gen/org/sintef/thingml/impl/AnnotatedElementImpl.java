@@ -16,6 +16,7 @@
 package org.sintef.thingml.impl;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -30,6 +31,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.sintef.thingml.AnnotatedElement;
 import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 
 /**
  * <!-- begin-user-doc -->
@@ -159,5 +161,76 @@ public abstract class AnnotatedElementImpl extends ThingMLElementImpl implements
 		}
 		return super.eIsSet(featureID);
 	}
+
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<PlatformAnnotation> allAnnotations() {
+        return this.annotations;
+    }
+
+    /**
+     *
+     * @param annotation
+     * @param value
+     * @return
+     * @generated NOT
+     */
+    public boolean isDefined(String annotation, String value) {
+        PlatformAnnotation pa = null;
+        for (PlatformAnnotation a : getAnnotations()) {
+            if (a.getName().equals(annotation)) {
+                pa = a;
+                break;
+            }
+        }
+        if (pa == null) {
+            return false;
+        } else {
+            return pa.getValue().equals(value);
+        }
+    }
+
+    /**
+     *
+     * @param name
+     * @return
+     * @generated NOT
+     */
+    public boolean hasAnnotation(String name) {
+        PlatformAnnotation pa = null;
+        for (PlatformAnnotation a : getAnnotations()) {
+            if (a.getName().equals(name)) {
+                pa = a;
+                break;
+            }
+        }
+        return pa != null;
+    }
+
+    /**
+     *
+     * @param name
+     * @return
+     * @generated NOT
+     */
+    public String annotation(String name) {
+        PlatformAnnotation pa = null;
+        for (PlatformAnnotation a : getAnnotations()) {
+            if (a.getName().equals(name)) {
+                pa = a;
+                break;
+            }
+        }
+        if (pa == null) {
+            return null;
+        } else {
+            return pa.getValue();
+        }
+    }
 
 } //AnnotatedElementImpl

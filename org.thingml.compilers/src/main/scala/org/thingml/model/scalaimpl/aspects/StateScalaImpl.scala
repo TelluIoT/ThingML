@@ -32,11 +32,11 @@ import java.util.{Hashtable, ArrayList}
 case class StateScalaImpl (self : State) {
 
   def allStatesWithEntry: java.util.List[State] = {
-    allStates.filter{s => s.getEntry != null}
+    self.allStates.filter{s => s.getEntry != null}
   }
   
   def allStatesWithExit: java.util.List[State] = {
-    allStates.filter{s => s.getExit != null}
+    self.allStates.filter{s => s.getExit != null}
   }
   
   def allContainingStates: java.util.List[State] = {
@@ -51,7 +51,7 @@ case class StateScalaImpl (self : State) {
     return ThingMLHelpers.allValidTargetStates(self)
   }
 
-  def allStates : java.util.List[State] = {
+/*  def allStates : java.util.List[State] = {
     self match {
       case cs : CompositeState => cs.allContainedStates
       case _ => {
@@ -61,6 +61,7 @@ case class StateScalaImpl (self : State) {
       }
     }
   }
+*/
 
   def canHandle(p : Port, m : Message) = {
     val handlers = allMessageHandlers
@@ -82,7 +83,7 @@ case class StateScalaImpl (self : State) {
 
   def allEmptyHandlers() : java.util.List[Handler] = {
     var result = new java.util.ArrayList[Handler]()
-    allStates.foreach { s =>
+    self.allStates.foreach { s =>
       s.getOutgoing.union(s.getInternal)foreach{ t =>
         if (t.getEvent.isEmpty) {
           result.add(t)
@@ -95,7 +96,7 @@ case class StateScalaImpl (self : State) {
 
   def allMessageHandlers() : java.util.Map[Port, java.util.Map[Message, java.util.List[Handler]]] = {
     var result :  java.util.Map[Port, java.util.Map[Message, java.util.List[Handler]]] = new  Hashtable[Port, java.util.Map[Message, java.util.List[Handler]]]()
-    allStates.foreach { s =>
+    self.allStates.foreach { s =>
       //println("Processisng state " + s.getName)
       s.getOutgoing.union(s.getInternal)foreach{ t =>
         //println("  Processisng handler " + t + " Event = " + t.getEvent)

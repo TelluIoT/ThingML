@@ -58,7 +58,7 @@ case class ThingMLModelScalaImpl(self : ThingMLModel) {
   def allMessages: Set[Message] = {
     var msg : Set[Message] = Set()
     allThings.foreach{t =>
-      msg = msg ++ ThingScalaImpl(t).allMessages
+      msg = msg ++ t.allMessages
     }
     return msg
   }

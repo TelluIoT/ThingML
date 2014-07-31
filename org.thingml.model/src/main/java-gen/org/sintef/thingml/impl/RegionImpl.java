@@ -15,7 +15,9 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -30,6 +32,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.sintef.thingml.CompositeState;
 import org.sintef.thingml.Region;
 import org.sintef.thingml.State;
 import org.sintef.thingml.ThingmlPackage;
@@ -290,5 +293,48 @@ public abstract class RegionImpl extends AnnotatedElementImpl implements Region 
 		result.append(')');
 		return result.toString();
 	}
+
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<State> allContainedStates() {
+        final List<State> result = new ArrayList<State>();
+        for(Region r : allContainedRegions()) {
+            if (r instanceof State) {
+                result.add((State)r);
+            }
+            for(State s : r.getSubstate()) {
+                if (! (s instanceof Region)) {
+                    result.add(s);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Region> allContainedRegions() {
+        List<Region> result = new ArrayList<Region>();
+        result.add(this);
+        if (this instanceof CompositeState) {
+            for(Region r : ((CompositeState)this).getRegion()) {
+                result.addAll(r.allContainedRegions());
+            }
+        }
+        for (State s : getSubstate()) {
+            if (s instanceof Region) {
+                result.addAll(((Region)s).allContainedRegions());
+            }
+        }
+        return result;
+    }
 
 } //RegionImpl

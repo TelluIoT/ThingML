@@ -23,9 +23,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.sintef.thingml.Expression;
-import org.sintef.thingml.LocalVariable;
-import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.*;
+
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -253,4 +253,47 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable {
 		return result.toString();
 	}
 
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<PlatformAnnotation> allAnnotations() {
+        return ((AnnotatedElement)this).allAnnotations();
+    }
+
+    /**
+     *
+     * @param annotation
+     * @param value
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public boolean isDefined(String annotation, String value) {
+        return ((AnnotatedElement)this).isDefined(annotation, value);
+    }
+
+    /**
+     *
+     * @param name
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public boolean hasAnnotation(String name) {
+        return ((AnnotatedElement)this).hasAnnotation(name);
+    }
+
+    /**
+     *
+     * @param name
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public String annotation(String name) {
+        return ((AnnotatedElement)this).annotation(name);
+    }
 } //LocalVariableImpl

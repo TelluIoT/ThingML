@@ -34,7 +34,7 @@ case class RegionScalaImpl (self : Region) {
   /**
    * Returns the set of regions defined withing this region (in depth)
    */
-  def allContainedRegions() : java.util.List[Region] = {
+/*  def allContainedRegions() : java.util.List[Region] = {
     var result : ArrayList[Region] = new ArrayList[Region]()
     result.add(self)
     if (self.isInstanceOf[CompositeState]) {
@@ -45,6 +45,7 @@ case class RegionScalaImpl (self : Region) {
     }
     result
   }
+*/
 
   def directSubRegions() : java.util.List[Region] = {
     var result : ArrayList[Region] = new ArrayList[Region]()
@@ -55,7 +56,7 @@ case class RegionScalaImpl (self : Region) {
     result
   }
 
-  def allContainedStates() : java.util.List[State] = {
+/*  def allContainedStates() : java.util.List[State] = {
     var result : ArrayList[State] = new ArrayList[State]()
     allContainedRegions.foreach{ r =>
       if (r.isInstanceOf[State]) result.add(r.asInstanceOf[State])
@@ -64,6 +65,7 @@ case class RegionScalaImpl (self : Region) {
     //println(self.getName + ".allContainedStates = " + result.toString)
     result
   }
+  */
 
   def allContainedSimpleStates() : java.util.List[State] = {
     /*var result : ArrayList[State] = new ArrayList[State]()
@@ -71,18 +73,18 @@ case class RegionScalaImpl (self : Region) {
       if (s.getClass == classOf[State] || s.getClass == classOf[StateImpl]) result.add(s) 
     }
     result*/
-    allContainedStates.diff(allContainedCompositeStates).toList
+    self.allContainedStates().diff(allContainedCompositeStates).toList
   }
 
   def allContainedCompositeStates() : java.util.List[CompositeState] = {
     var result : ArrayList[CompositeState] = new ArrayList[CompositeState]()
-    allContainedStates.foreach{ s => if (s.isInstanceOf[CompositeState]) result.add(s.asInstanceOf[CompositeState]) }
+    self.allContainedStates.foreach{ s => if (s.isInstanceOf[CompositeState]) result.add(s.asInstanceOf[CompositeState]) }
     result
   }
 
   def allContainedProperties() : java.util.List[Property] = {
     var result : ArrayList[Property] = new ArrayList[Property]()
-    allContainedStates.foreach{ s =>
+    self.allContainedStates.foreach{ s =>
       result.addAll(s.getProperties)
     }
     result

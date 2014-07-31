@@ -17,8 +17,12 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.sintef.thingml.Region;
+import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.ThingmlPackage;
+
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -48,5 +52,28 @@ public class StateMachineImpl extends CompositeStateImpl implements StateMachine
 	protected EClass eStaticClass() {
 		return ThingmlPackage.Literals.STATE_MACHINE;
 	}
+
+
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<State> allContainedStates() {
+        return ((Region)this).allContainedStates();
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<Region> allContainedRegions() {
+        return ((Region)this).allContainedRegions();
+    }
 
 } //StateMachineImpl

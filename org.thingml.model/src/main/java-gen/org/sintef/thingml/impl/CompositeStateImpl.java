@@ -16,6 +16,7 @@
 package org.sintef.thingml.impl;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -193,7 +194,7 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
 			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.COMPOSITE_STATE__HISTORY, oldHistory, history));
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -364,5 +365,27 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
 		result.append(')');
 		return result.toString();
 	}
+
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<State> allContainedStates() {
+        return ((Region)this).allContainedStates();
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<Region> allContainedRegions() {
+        return ((Region)this).allContainedRegions();
+    }
 
 } //CompositeStateImpl

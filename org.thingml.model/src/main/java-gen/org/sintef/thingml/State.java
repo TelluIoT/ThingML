@@ -17,6 +17,8 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
 
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>State</b></em>'.
@@ -158,5 +160,14 @@ public interface State extends AnnotatedElement {
 	 * @generated
 	 */
 	EList<InternalTransition> getInternal();
+
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<State> allStates();
 
 } // State

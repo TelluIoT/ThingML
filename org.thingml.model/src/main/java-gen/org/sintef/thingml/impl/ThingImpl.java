@@ -15,7 +15,9 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -32,14 +34,8 @@ import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.sintef.thingml.Function;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Property;
-import org.sintef.thingml.PropertyAssign;
-import org.sintef.thingml.StateMachine;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 
 /**
  * <!-- begin-user-doc -->
@@ -466,5 +462,148 @@ public class ThingImpl extends TypeImpl implements Thing {
 		result.append(')');
 		return result.toString();
 	}
+
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public boolean isSingleton() {
+        return isDefined("singleton", "true");
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public boolean isMockUp() {
+        return isDefined("mock", "true");
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Transition> allTransitionsWithAction() {
+        //var result = new ArrayList[Handler]()
+        final List<Transition> result = new ArrayList<Transition>();
+        for(StateMachine sm : getBehaviour()) {
+            for(State s : sm.allStates()) {
+                for(Transition o : s.getOutgoing()) {
+                    if (o.getAction() != null) {
+                        result.add(o);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<InternalTransition> allInternalTransitionsWithAction() {
+        //var result = new ArrayList[Handler]()
+        final List<InternalTransition> result = new ArrayList<InternalTransition>();
+        for(StateMachine sm : getBehaviour()) {
+            for(State s : sm.allStates()) {
+                for(InternalTransition o : s.getInternal()) {
+                    if (o.getAction() != null) {
+                        result.add(o);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Thing> allFragments() {
+        return ThingMLHelpers.allThingFragments(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Property> allProperties() {
+        return ThingMLHelpers.allProperties(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Function> allFunctions() {
+        return ThingMLHelpers.allFunctions(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<PlatformAnnotation> allAnnotations() {
+        return ThingMLHelpers.allAnnotations(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Port> allPorts() {
+        return ThingMLHelpers.allPorts(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Message> allIncomingMessages() {
+        return ThingMLHelpers.allIncomingMessages(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Message> allOutgoingMessages() {
+        return ThingMLHelpers.allOutgoingMessages(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<StateMachine> allStateMachines() {
+        return ThingMLHelpers.allStateMachines(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Message> allMessages() {
+        return ThingMLHelpers.allMessages(this);
+    }
 
 } //ThingImpl

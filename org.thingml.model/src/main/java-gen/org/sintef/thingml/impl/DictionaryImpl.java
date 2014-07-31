@@ -22,9 +22,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.sintef.thingml.Dictionary;
-import org.sintef.thingml.ThingmlPackage;
-import org.sintef.thingml.Type;
+import org.sintef.thingml.*;
+
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -165,5 +165,49 @@ public class DictionaryImpl extends PropertyImpl implements Dictionary {
 		}
 		return super.eIsSet(featureID);
 	}
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<PlatformAnnotation> allAnnotations() {
+        return ((AnnotatedElement)this).allAnnotations();
+    }
+
+    /**
+     *
+     * @param annotation
+     * @param value
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public boolean isDefined(String annotation, String value) {
+        return ((AnnotatedElement)this).isDefined(annotation, value);
+    }
+
+    /**
+     *
+     * @param name
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public boolean hasAnnotation(String name) {
+        return ((AnnotatedElement)this).hasAnnotation(name);
+    }
+
+    /**
+     *
+     * @param name
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public String annotation(String name) {
+        return ((AnnotatedElement)this).annotation(name);
+    }
 
 } //DictionaryImpl

@@ -17,6 +17,8 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
 
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Annotated Element</b></em>'.
@@ -49,5 +51,37 @@ public interface AnnotatedElement extends ThingMLElement {
 	 * @generated
 	 */
 	EList<PlatformAnnotation> getAnnotations();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<PlatformAnnotation> allAnnotations();
+
+    /**
+     *
+     * @param annotation
+     * @param value
+     * @return
+     * @generated NOT
+     */
+    boolean isDefined(String annotation, String value);
+
+    /**
+     *
+     * @param name
+     * @return
+     * @generated NOT
+     */
+    boolean hasAnnotation(String name);
+
+    /**
+     *
+     * @param name
+     * @return
+     * @generated NOT
+     */
+    String annotation(String name);
 
 } // AnnotatedElement

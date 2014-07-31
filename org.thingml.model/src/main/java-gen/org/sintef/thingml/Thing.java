@@ -17,6 +17,8 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
 
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Thing</b></em>'.
@@ -180,5 +182,87 @@ public interface Thing extends Type {
 	 * @generated
 	 */
 	EList<Function> getFunctions();
+
+    //Derived properties
+
+    /**
+     * @generated NOT
+     */
+    boolean isSingleton();
+
+    /**
+     * @generated NOT
+     */
+    boolean isMockUp();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Transition> allTransitionsWithAction();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<InternalTransition> allInternalTransitionsWithAction();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Thing> allFragments();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Property> allProperties();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Function> allFunctions();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Port> allPorts();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Message> allIncomingMessages();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Message> allOutgoingMessages();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<StateMachine> allStateMachines();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Message> allMessages();
 
 } // Thing

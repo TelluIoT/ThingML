@@ -32,7 +32,7 @@ import java.lang.Boolean
 
 case class ThingScalaImpl (self : Thing) {
   
-  def isSingleton : Boolean = {
+  /*def isSingleton : Boolean = {
     self.getAnnotations.filter {
       a => a.getName == "singleton"
     }.headOption match {
@@ -58,36 +58,24 @@ case class ThingScalaImpl (self : Thing) {
           return false
         }
     }
-  }
-  
-  /*def getHTTPRegistry : Option[String] = {
-    self.allAnnotations.filter {
-      a => a.getName == "http_registry"
-    }.headOption match {
-      case Some(a) => {
-          return Some(a.asInstanceOf[PlatformAnnotation].getValue)
-        }
-      case None => {
-          return None
-        }
-    }
   }*/
 
-  def allTransitionsWithAction() : java.util.List[Transition] = {
+  /*def allTransitionsWithAction() : java.util.List[Transition] = {
     //var result = new ArrayList[Handler]()
     self.getBehaviour.collect{case b => b.allStates}.flatten.collect{case s => 
         s.getOutgoing.collect{case o if (o.getAction != null)=> o}
     }.flatten.toList
-  }
+  } */
 
-  def allInternalTransitionsWithAction() : java.util.List[InternalTransition] = {
+/*  def allInternalTransitionsWithAction() : java.util.List[InternalTransition] = {
     //var result = new ArrayList[Handler]()
     self.getBehaviour.collect{case b => b.allStates}.flatten.collect{case s =>
       s.getInternal.collect{case o if (o.getAction != null)=> o}
     }.flatten.toList
   }
+  */
   
-  def allFragments: ArrayList[Thing] = {
+/*  def allFragments: ArrayList[Thing] = {
     return ThingMLHelpers.allThingFragments(self)
   }
 
@@ -98,16 +86,17 @@ case class ThingScalaImpl (self : Thing) {
   def allFunctions: ArrayList[Function] = {
     return ThingMLHelpers.allFunctions(self)
   }
+*/
 
-  def allPropertiesInDepth: ArrayList[Property] = {
-    var result = allProperties
-    allStateMachines.foreach{sm =>
+  def allPropertiesInDepth: java.util.List[Property] = {
+    var result = self.allProperties
+    self.allStateMachines.foreach{sm =>
       result.addAll(sm.allContainedProperties)
     }
     result
   }
   
-  def allAnnotations: ArrayList[PlatformAnnotation] = {
+/*  def allAnnotations: ArrayList[PlatformAnnotation] = {
     return ThingMLHelpers.allAnnotations(self)
   }
 
@@ -130,6 +119,7 @@ case class ThingScalaImpl (self : Thing) {
   def allMessages: ArrayList[Message] = {
     return ThingMLHelpers.allMessages(self)
   }
+  */
 
   def initExpression(p : Property) : Expression = {
 
@@ -187,7 +177,7 @@ case class ThingScalaImpl (self : Thing) {
 
 
 
-  def hasAnnotation(name : String): Boolean = {
+/*  def hasAnnotation(name : String): Boolean = {
     !(allAnnotations.filter{ a => a.getName == name }.isEmpty)
   }
 
@@ -197,5 +187,6 @@ case class ThingScalaImpl (self : Thing) {
       case None => return null;
     }
   }
+*/
 
 }

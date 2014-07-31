@@ -17,6 +17,8 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
 
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Region</b></em>'.
@@ -103,5 +105,21 @@ public interface Region extends AnnotatedElement {
 	 * @generated
 	 */
 	void setHistory(boolean value);
+
+    //Derived properties
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<State> allContainedStates();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Region> allContainedRegions();
 
 } // Region
