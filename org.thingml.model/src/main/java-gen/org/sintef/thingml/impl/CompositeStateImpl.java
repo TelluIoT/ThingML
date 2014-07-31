@@ -15,9 +15,7 @@
  */
 package org.sintef.thingml.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -418,6 +416,63 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
         List<Property> result = new ArrayList<Property>();
         for(State s : allContainedStates()) {
             result.addAll(s.getProperties());
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<Region> directSubRegions() {
+        List<Region> result = new ArrayList<Region>();
+        result.add(this);
+        for (Region r : getRegion()){
+                result.addAll(r.allContainedRegions());
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<CompositeState> allContainedCompositeStates() {
+        List<CompositeState> result = new ArrayList<CompositeState>();
+        for(State s : allContainedStates()) {
+            if (s instanceof CompositeState) {
+                result.add((CompositeState)s);
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<State> allContainedSimpleStates() {
+        final List<State> result = allContainedStates();
+        result.removeAll(allContainedCompositeStates());
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public Set<Type> allUsedTypes() {
+        Set<Type> result = new HashSet<Type>();
+        for(Property p : allContainedProperties()) {
+            result.add(p.getType());
         }
         return result;
     }

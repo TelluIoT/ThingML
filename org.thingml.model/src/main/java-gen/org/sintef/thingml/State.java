@@ -18,6 +18,7 @@ package org.sintef.thingml;
 import org.eclipse.emf.common.util.EList;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <!-- begin-user-doc -->
@@ -169,5 +170,87 @@ public interface State extends AnnotatedElement {
      * @generated NOT
      */
     List<State> allStates();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<State> allStatesWithEntry();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<State> allStatesWithExit();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<State> allContainingStates();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Property> allProperties();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<State> allValidTargetStates();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    Map<Port, Map<Message, List<Handler>>> allMessageHandlers();
+
+    /**
+     *
+     * @param p
+     * @param m
+     * @return
+     * @generated NOT
+     */
+    List<Handler> allHandlers(Port p, Message m);
+
+    /**
+     *
+     * @param p
+     * @param m
+     * @return
+     * @generated NOT
+     */
+    boolean canHandle(Port p, Message m);
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    boolean hasEmptyHandlers();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Handler> allEmptyHandlers();
+
+    /**
+     *
+     * @param separator
+     * @return
+     * @generated NOT
+     */
+    String qualifiedName(String separator);
 
 } // State

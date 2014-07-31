@@ -19,7 +19,9 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.sintef.thingml.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <!-- begin-user-doc -->
@@ -83,4 +85,46 @@ public class StateMachineImpl extends CompositeStateImpl implements StateMachine
         return super.allContainedProperties();
     }
 
-} //StateMachineImpl
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<Region> directSubRegions() {
+        return super.directSubRegions();
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<CompositeState> allContainedCompositeStates() {
+        return super.allContainedCompositeStates();
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<State> allContainedSimpleStates() {
+        return super.allContainedSimpleStates();
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public Set<Type> allUsedTypes() {
+        return super.allUsedTypes();
+    }
+
+
+
+    } //StateMachineImpl

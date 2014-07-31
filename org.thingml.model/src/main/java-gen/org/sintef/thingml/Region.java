@@ -18,6 +18,7 @@ package org.sintef.thingml;
 import org.eclipse.emf.common.util.EList;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <!-- begin-user-doc -->
@@ -128,5 +129,41 @@ public interface Region extends AnnotatedElement {
      * @generated NOT
      */
     List<Property> allContainedProperties();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Region> directSubRegions();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<CompositeState> allContainedCompositeStates();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<State> allContainedSimpleStates();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    Set<Type> allUsedTypes();
+
+    /**
+     *
+     * @param separator
+     * @return
+     * @generated NOT
+     */
+    String qualifiedName(String separator);
 
 } // Region

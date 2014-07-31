@@ -15,9 +15,7 @@
  */
 package org.sintef.thingml.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -319,7 +317,7 @@ public abstract class RegionImpl extends AnnotatedElementImpl implements Region 
      * @generated NOT
      */
     public List<Region> allContainedRegions() {
-        List<Region> result = new ArrayList<Region>();
+        final List<Region> result = new ArrayList<Region>();
         result.add(this);
         if (this instanceof CompositeState) {
             for(Region r : ((CompositeState)this).getRegion()) {
@@ -340,11 +338,81 @@ public abstract class RegionImpl extends AnnotatedElementImpl implements Region 
      * @generated NOT
      */
     public List<Property> allContainedProperties() {
-        List<Property> result = new ArrayList<Property>();
+        final List<Property> result = new ArrayList<Property>();
         for(State s : allContainedStates()) {
             result.addAll(s.getProperties());
         }
         return result;
+    }
+
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Region> directSubRegions() {
+        final List<Region> result = new ArrayList<Region>();
+        result.add(this);
+        if (this instanceof CompositeState) {
+            for (Region r : ((CompositeState)this).getRegion()){
+                result.addAll(r.allContainedRegions());
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<CompositeState> allContainedCompositeStates() {
+        final List<CompositeState> result = new ArrayList<CompositeState>();
+        for(State s : allContainedStates()) {
+            if (s instanceof CompositeState) {
+                result.add((CompositeState)s);
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<State> allContainedSimpleStates() {
+        final List<State> result = allContainedStates();
+        result.removeAll(allContainedCompositeStates());
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Set<Type> allUsedTypes() {
+        Set<Type> result = new HashSet<Type>();
+        for(Property p : allContainedProperties()) {
+            result.add(p.getType());
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @param separator
+     * @return
+     * @generated NOT
+     */
+    public String qualifiedName(String separator) {
+        if (eContainer() instanceof State) {
+            return ((State)eContainer()).qualifiedName(separator) + separator + getName();
+        } else {
+            return getName();
+        }
     }
 
 } //RegionImpl
