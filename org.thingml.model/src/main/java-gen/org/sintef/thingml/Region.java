@@ -122,4 +122,11 @@ public interface Region extends AnnotatedElement {
      */
     List<Region> allContainedRegions();
 
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Property> allContainedProperties();
+
 } // Region

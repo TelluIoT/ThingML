@@ -17,10 +17,7 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.sintef.thingml.Region;
-import org.sintef.thingml.State;
-import org.sintef.thingml.StateMachine;
-import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.*;
 
 import java.util.List;
 
@@ -75,5 +72,13 @@ public class StateMachineImpl extends CompositeStateImpl implements StateMachine
     public List<Region> allContainedRegions() {
         return ((Region)this).allContainedRegions();
     }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<Property> allContainedProperties() {return ((Region)this).allContainedProperties();}
 
 } //StateMachineImpl

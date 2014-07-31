@@ -32,10 +32,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.sintef.thingml.CompositeState;
-import org.sintef.thingml.Region;
-import org.sintef.thingml.State;
-import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.*;
 
 /**
  * <!-- begin-user-doc -->
@@ -333,6 +330,19 @@ public abstract class RegionImpl extends AnnotatedElementImpl implements Region 
             if (s instanceof Region) {
                 result.addAll(((Region)s).allContainedRegions());
             }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Property> allContainedProperties() {
+        List<Property> result = new ArrayList<Property>();
+        for(State s : allContainedStates()) {
+            result.addAll(s.getProperties());
         }
         return result;
     }

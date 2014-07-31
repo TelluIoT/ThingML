@@ -606,4 +606,94 @@ public class ThingImpl extends TypeImpl implements Thing {
         return ThingMLHelpers.allMessages(this);
     }
 
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Property> allPropertiesInDepth() {
+        List<Property> result = allProperties();
+        for(StateMachine sm : allStateMachines()) {
+            result.addAll(sm.allContainedProperties());
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @param p
+     * @return
+     * @generated NOT
+     */
+    public Expression initExpression(Property p) {
+
+        if (allProperties().contains(p)) {  // It is a property of the thing
+
+            List<PropertyAssign> assigns = new ArrayList<PropertyAssign>();
+            for (PropertyAssign e : getAssign()) {
+                if (e.getProperty().equals(p))
+                    assigns.add(e);
+            }
+
+            // If the expression is defined locally return the init expression
+            if (getProperties().contains(p)) {
+                if (assigns.size() > 0)
+                    System.out.println("Error: Thing " + getName() + " cannot redefine initial value for property " + p.getName());
+                return p.getInit();
+            }
+
+            if (assigns.size() > 1)
+                System.out.println("Error: Thing " + getName() + " contains several assignments for property " + p.getName());
+
+            if (assigns.size() == 1) {
+                return assigns.get(0).getInit();
+            }
+
+            List<Thing> imports = null;
+            for (Thing t : getIncludes()) {
+                if (t.allProperties().contains(p)) {
+                    imports.add(t);
+                }
+            }
+            //  imports cannot be empty since the property must be defined in a imported thing
+            if (imports.size() > 1)
+                System.out.println("Warning: Thing " + getName() + " gets property " + p.getName() + " from several paths, it should define its initial value");
+
+            return imports.get(0).initExpression(p);
+        } else { // It is a property of a state machine
+            return p.getInit();
+        }
+    }
+
+
+    /**
+     *
+     * @param p
+     * @return
+     * @generated NOT
+     */
+    public List<PropertyAssign> initExpressionsForArray(Property p) {
+
+        List<PropertyAssign> result = new ArrayList<PropertyAssign>();
+
+        if (allProperties().contains(p)) {  // It is a property of the thing
+
+            // collect assignment in the imported things first:
+            for (Thing t : getIncludes()) {
+                if (t.allProperties().contains(p))
+                    result.addAll(t.initExpressionsForArray(p));
+            }
+            // collect assignments in this thing
+            List<PropertyAssign> assigns = null;
+            for(PropertyAssign pa : getAssign()) {
+                if (pa.getProperty().equals(p))
+                    result.add(pa);
+            }
+        }
+        else { // It is a property of a state machine
+            // No way to initialize arrays in state machines (so far)
+        }
+        return result;
+    }
+
 } //ThingImpl

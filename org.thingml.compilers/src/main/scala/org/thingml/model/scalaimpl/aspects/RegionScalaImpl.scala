@@ -82,17 +82,18 @@ case class RegionScalaImpl (self : Region) {
     result
   }
 
-  def allContainedProperties() : java.util.List[Property] = {
+/*  def allContainedProperties() : java.util.List[Property] = {
     var result : ArrayList[Property] = new ArrayList[Property]()
     self.allContainedStates.foreach{ s =>
       result.addAll(s.getProperties)
     }
     result
   }
+  */
 
   def allUsedTypes() : HashSet[Type] = {
     var result : HashSet[Type] = new HashSet[Type]()
-    allContainedProperties.foreach{p =>
+    self.allContainedProperties.foreach{p =>
       if (!result.contains(p.getType)) result.add(p.getType)
     }
     result

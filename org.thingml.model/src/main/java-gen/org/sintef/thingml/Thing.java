@@ -265,4 +265,27 @@ public interface Thing extends Type {
      */
     List<Message> allMessages();
 
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Property> allPropertiesInDepth();
+
+    /**
+     *
+     * @param p
+     * @return
+     * @generated NOT
+     */
+    Expression initExpression(Property p);
+
+    /**
+     *
+     * @param p
+     * @return
+     * @generated NOT
+     */
+    List<PropertyAssign> initExpressionsForArray(Property p);
+
 } // Thing

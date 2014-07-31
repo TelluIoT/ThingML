@@ -31,11 +31,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.sintef.thingml.CompositeState;
-import org.sintef.thingml.ParallelRegion;
-import org.sintef.thingml.Region;
-import org.sintef.thingml.State;
-import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.*;
 
 /**
  * <!-- begin-user-doc -->
@@ -387,5 +383,13 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
     public List<Region> allContainedRegions() {
         return ((Region)this).allContainedRegions();
     }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    @Override
+    public List<Property> allContainedProperties() {return ((Region)this).allContainedProperties();}
 
 } //CompositeStateImpl
