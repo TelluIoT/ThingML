@@ -17,7 +17,6 @@ package org.thingml.graphexport
 
 import org.sintef.thingml._
 import scala.collection.JavaConversions._
-import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.thingml.graphexport.ThingMLGraphExport._
 import java.lang.StringBuilder
 import java.util.Hashtable

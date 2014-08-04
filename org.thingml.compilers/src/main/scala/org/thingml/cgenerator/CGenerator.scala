@@ -16,8 +16,8 @@
 package org.thingml.cgenerator
 
 import org.sintef.thingml.constraints.ThingMLHelpers
+import org.sintef.thingml.impl.ConfigurationImpl
 import org.thingml.cgenerator.CGenerator._
-import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import sun.applet.resources.MsgAppletViewer
@@ -31,7 +31,6 @@ import scala.actors.Actor._
 
 import io.Source
 import org.sintef.thingml._
-import org.thingml.model.scalaimpl.aspects.MergedConfigurationCache
 import org.thingml.graphexport.ThingMLGraphExport
 import java.lang.{StringBuilder, ProcessBuilder, Boolean}
 import java.util.{Hashtable, ArrayList}
@@ -205,7 +204,7 @@ implicit def cGeneratorAspect(self:ExternExpression) : ExternExpressionCGenerato
   def compileArduino(config: Configuration, context: CGeneratorContext) = {
     var builder = new StringBuilder()
     config.generatePDE(builder, context)
-    MergedConfigurationCache.clearCache();
+    ConfigurationImpl.MergedConfigurationCache.clearCache();
     // Cleanup
     var result = builder.toString
     // Remove extern "C" stuff because Arduino put everyting in cpp files
@@ -749,7 +748,7 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
     mtemplate = mtemplate.replace("/*PREPROC_DIRECTIVES*/", preproc)
     result.put("Makefile", mtemplate)
 
-    MergedConfigurationCache.clearCache(); // Cleanup
+    ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     result
   }
@@ -999,7 +998,7 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
 
 
 
-    MergedConfigurationCache.clearCache(); // Cleanup
+    ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     // CREATING THE ROS PACKAGE AND WRITING THE FILES:
     //************************************************

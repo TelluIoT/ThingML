@@ -22,9 +22,9 @@
  */
 package org.thingml.thingmlgenerator
 
+import org.sintef.thingml.impl.ConfigurationImpl
 import org.thingml.thingmlgenerator.ThingMLGenerator._
 import org.sintef.thingml.constraints.ThingMLHelpers
-import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import scala.io.Source
@@ -122,6 +122,8 @@ object ThingMLGenerator {
   
   //TODO: refactor
   def compileAndRun(cfg : Configuration, alt : Boolean = false) {
+    ConfigurationImpl.MergedConfigurationCache.clearCache();
+
     //new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
     
     val code = compile(cfg, alt)
@@ -159,7 +161,8 @@ object ThingMLGenerator {
   }
   
   def compileAll(model: ThingMLModel, pack : String): Map[Configuration, Pair[String, String]] = {
-    
+    ConfigurationImpl.MergedConfigurationCache.clearCache();
+
     var result = Map[Configuration, Pair[String, String]]()
     model.allConfigurations.filter{c=> !c.isFragment}.foreach {
       t => result += (t -> compile(t))

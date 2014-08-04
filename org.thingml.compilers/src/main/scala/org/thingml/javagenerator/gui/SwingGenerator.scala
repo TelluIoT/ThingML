@@ -22,9 +22,9 @@
 //TODO: clean the way names are handled
 package org.thingml.javagenerator.gui
 
+import org.sintef.thingml.impl.ConfigurationImpl
 import org.thingml.javagenerator.gui.SwingGenerator._
 import org.sintef.thingml.constraints.ThingMLHelpers
-import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import scala.util.Random
@@ -121,6 +121,8 @@ object SwingGenerator {
   
   
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
+    ConfigurationImpl.MergedConfigurationCache.clearCache();
+
     new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
 
     val code = compileAll(model, "org.thingml.generated.gui")
@@ -158,6 +160,8 @@ object SwingGenerator {
   
   
   def compileAllThingJava(model: ThingMLModel, pack : String): Hashtable[Thing, SimpleEntry[String, String]] = {
+    ConfigurationImpl.MergedConfigurationCache.clearCache();
+
     val result = new Hashtable[Thing, SimpleEntry[String, String]]()
     compileAll(model, pack).foreach{case (t, entry) =>
         result.put(t, new SimpleEntry(entry._1, entry._2))
@@ -166,6 +170,8 @@ object SwingGenerator {
   }
   
   def compileAll(model: ThingMLModel, pack : String): Map[Thing, (String, String)] = {
+    ConfigurationImpl.MergedConfigurationCache.clearCache();
+
     Context.pack = pack
     
     var thingMap = Map[Thing, (String, String)]()

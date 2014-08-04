@@ -342,7 +342,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
     /**
      * @generated NOT
      */
-    private static class MergedConfigurationCache {
+    public static class MergedConfigurationCache {
 
         static Map<Configuration, Configuration> cache = new HashMap<Configuration, Configuration>();
 
@@ -354,7 +354,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
             cache.put(c, mc);
         }
 
-        static void clearCache() {
+        public static void clearCache() {
             cache.clear();
         }
 

@@ -16,14 +16,11 @@
 package org.thingml.cppgenerator
 
 import org.sintef.thingml.constraints.ThingMLHelpers
+import org.sintef.thingml.impl.ConfigurationImpl
 import org.thingml.cppgenerator.CPPGenerator._
-import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import sun.applet.resources.MsgAppletViewer
-import org.eclipse.emf.ecore.xml.`type`.internal.RegEx.Match
-import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
-import javax.xml.transform.Result
 import scala.util.parsing.input.StreamReader
 import java.io._
 import scala.actors._
@@ -31,7 +28,6 @@ import scala.actors.Actor._
 
 import io.Source
 import org.sintef.thingml._
-import org.thingml.model.scalaimpl.aspects.MergedConfigurationCache
 import org.thingml.graphexport.ThingMLGraphExport
 import java.lang.{StringBuilder, ProcessBuilder, Boolean}
 import java.util.{Hashtable, ArrayList}
@@ -459,7 +455,7 @@ object CPPGenerator {
     mtemplate = mtemplate.replace("/*PREPROC_DIRECTIVES*/", preproc)
     result.put("Makefile", mtemplate)
 
-    MergedConfigurationCache.clearCache(); // Cleanup
+    ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     result
   }
