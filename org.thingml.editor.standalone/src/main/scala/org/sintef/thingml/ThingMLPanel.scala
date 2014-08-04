@@ -59,10 +59,7 @@ import org.thingml.thingmlgenerator.ThingMLGenerator
 import java.io._
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
-import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.thingml.kevoreegenerator.KevoreeGenerator
-
-import scala.collection.JavaConversions._
 
 class ThingMLPanel extends JPanel {
 
