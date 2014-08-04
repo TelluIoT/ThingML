@@ -16,7 +16,9 @@
 package org.sintef.thingml.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -218,19 +220,14 @@ public abstract class AnnotatedElementImpl extends ThingMLElementImpl implements
      * @return
      * @generated NOT
      */
-    public String annotation(String name) {
-        PlatformAnnotation pa = null;
+    public Set<String> annotation(String name) {
+        Set<String> result = new HashSet<String>();
         for (PlatformAnnotation a : getAnnotations()) {
             if (a.getName().equals(name)) {
-                pa = a;
-                break;
+                result.add(a.getValue());
             }
         }
-        if (pa == null) {
-            return null;
-        } else {
-            return pa.getValue();
-        }
+        return result;
     }
 
 } //AnnotatedElementImpl

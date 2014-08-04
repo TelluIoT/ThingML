@@ -26,6 +26,7 @@ import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <!-- begin-user-doc -->
@@ -207,7 +208,7 @@ public class DictionaryImpl extends PropertyImpl implements Dictionary {
      * @generated NOT
      */
     @Override
-    public String annotation(String name) {
+    public Set<String> annotation(String name) {
         return super.annotation(name);
     }
 

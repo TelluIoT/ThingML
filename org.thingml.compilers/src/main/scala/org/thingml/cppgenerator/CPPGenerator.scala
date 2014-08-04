@@ -389,16 +389,13 @@ object CPPGenerator {
     ctemplate = ctemplate.replace("/*NAME*/", cfg.getName)
     var builder = new StringBuilder()
 
-    var c_global = cfg.annotation("c_global")
-    if (c_global == null) c_global = "// NO C_GLOBALS Annotation"
+    val c_global = cfg.annotation("c_global").headOption.orElse(Option("// NO C_GLOBALS Annotation")).get
     ctemplate = ctemplate.replace("/*C_GLOBALS*/", c_global)
 
-    var c_header = cfg.annotation("c_header")
-    if (c_header == null) c_header = "// NO C_HEADERS Annotation"
+    val c_header = cfg.annotation("c_header").headOption.orElse(Option("// NO C_HEADERS Annotation")).get
     ctemplate = ctemplate.replace("/*C_HEADERS*/", c_header)
 
-    var c_main = cfg.annotation("c_main")
-    if (c_main == null) c_main = "// NO C_MAIN Annotation"
+    val c_main = cfg.annotation("c_main").headOption.orElse(Option("// NO C_MAIN Annotation")).get
     ctemplate = ctemplate.replace("/*C_MAIN*/", c_main)
 
     cfg.generateIncludes(builder, context)
@@ -1018,8 +1015,8 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
 
   def generateCforThing(builder: StringBuilder, context : CGeneratorContext, thing : Thing) {
 
-    val a = self.annotation("fork_linux_thread")
-    if (a != null && a.trim == "true") {
+    val a = self.annotation("fork_linux_thread").headOption
+    if (a.isDefined && a.get.trim == "true") {
       generateCforThingLinuxThread(builder, context, thing)
     }
     else {

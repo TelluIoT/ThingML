@@ -671,9 +671,9 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     var traits = ""
     if (self.hasAnnotation("java_interface")) {
-      traits = self.annotation("java_interface")
+      traits = self.annotation("java_interface").mkString(", ")
     } else if (self.hasAnnotation("scala_trait")) {
-      traits = self.annotation("scala_trait")
+      traits = self.annotation("scala_trait").mkString(", ")
     }
     if (traits != "") {
       traits = "implements " + traits

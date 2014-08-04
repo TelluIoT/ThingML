@@ -545,7 +545,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * @return
      * @generated NOT
      */
-    /*public Map<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>> allRemoteMessages() {
+    public Map<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>> allRemoteMessages() {
         Map<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>> result = new HashMap<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>>();
         for(Map.Entry<Instance, String[]> entry : allRemoteInstances().entrySet()) {
             for(Port p : entry.getKey().getType().getPorts()) {
@@ -569,6 +569,80 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
             }
         }
         return result;
-    }*/
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public List<Thing> allThings() {
+        List<Thing> result = new ArrayList<Thing>();
+        for(Instance i : allInstances()) {
+            if (!result.contains(i.getType()))  //TODO: maybe we should return a set instead?
+                result.add(i.getType());
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Set<Message> allMessages() {
+        Set<Message> result = new HashSet<Message>();
+        for(Thing t : allThings()) {
+            result.addAll(t.allMessages());
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Set<String> allThingMLMavenDep() {
+        Set<String> result = new HashSet<String>();
+        for(Thing t : allThings()) {
+            for(String dep : t.annotation("thingml_maven_dep")) {
+                String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
+                result.add(cleanDep);
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public Set<String> allMavenDep() {
+        Set<String> result = new HashSet<String>();
+        for(Thing t : allThings()) {
+            for(String dep : t.annotation("maven_dep")) {
+                String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
+                result.add(cleanDep);
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @param i
+     * @return
+     * @generated NOT
+     */
+    public List<Property> allArrays(Instance i) {
+        List<Property> result = new ArrayList<Property>();
+        for(Property p : i.getType().allPropertiesInDepth()) {
+            if (p.getCardinality() != null)
+                result.add(p);
+        }
+        return result;
+    }
 
 } //ConfigurationImpl

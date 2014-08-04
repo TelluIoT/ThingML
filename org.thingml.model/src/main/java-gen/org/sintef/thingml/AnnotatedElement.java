@@ -18,6 +18,7 @@ package org.sintef.thingml;
 import org.eclipse.emf.common.util.EList;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <!-- begin-user-doc -->
@@ -82,6 +83,6 @@ public interface AnnotatedElement extends ThingMLElement {
      * @return
      * @generated NOT
      */
-    String annotation(String name);
+    Set<String> annotation(String name);
 
 } // AnnotatedElement

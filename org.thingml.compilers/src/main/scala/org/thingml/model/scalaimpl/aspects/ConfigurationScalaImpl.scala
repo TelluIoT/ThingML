@@ -66,7 +66,7 @@ object MergedConfigurationCache {
 case class ConfigurationScalaImpl (self : Configuration) {
 
 
-  def allRemoteMessages() : Map[Port, Pair[List[Message], List[Message]]] = {
+  /*def allRemoteMessages() : Map[Port, Pair[List[Message], List[Message]]] = {
     var result = Map[Port, Pair[List[Message], List[Message]]]()
     self.allRemoteInstances.foreach{ case (i, regex) =>
       i.getType.getPorts.filter{p => p.getName.matches(regex(2))}
@@ -78,10 +78,10 @@ case class ConfigurationScalaImpl (self : Configuration) {
       }
     }
     return result
-  }
+  } */
 
 
-  def allThings : ArrayList[Thing] = {
+  /*def allThings : ArrayList[Thing] = {
     var result : ArrayList[Thing] = new ArrayList[Thing]()
     self.allInstances.foreach{ i =>
       if (!result.contains(i.getType)) result.add(i.getType)
@@ -117,7 +117,7 @@ case class ConfigurationScalaImpl (self : Configuration) {
       }
     }
     return result
-  }
+  }  */
 
   // This method only initializes simple properties (not Arrays)
   def initExpressionsForInstance(i : Instance) : ArrayList[((Property, Expression))] = {
@@ -169,9 +169,9 @@ case class ConfigurationScalaImpl (self : Configuration) {
     return result
   }
   
-  def allArrays(i : Instance) : List[Property] = {
+  /*def allArrays(i : Instance) : List[Property] = {
     i.getType.allPropertiesInDepth.filter(p => p.getCardinality != null).toList
-  }
+  }*/
   
   // This method only initializes Array properties (property, index expression, init expression)
   def initExpressionsForInstanceArrays(i : Instance) : ArrayList[((Property, Expression , Expression))] = {

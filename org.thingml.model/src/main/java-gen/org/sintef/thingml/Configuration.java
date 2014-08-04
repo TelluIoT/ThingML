@@ -166,6 +166,42 @@ public interface Configuration extends AnnotatedElement {
      * @return
      * @generated NOT
      */
-    //Map<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>> allRemoteMessages();
+    Map<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>> allRemoteMessages();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Thing> allThings();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    Set<Message> allMessages();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    Set<String> allThingMLMavenDep();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    Set<String> allMavenDep();
+
+    /**
+     *
+     * @param i
+     * @return
+     * @generated NOT
+     */
+    List<Property> allArrays(Instance i);
 
 } // Configuration

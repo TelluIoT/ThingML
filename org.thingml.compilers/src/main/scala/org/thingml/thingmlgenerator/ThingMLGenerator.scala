@@ -31,15 +31,23 @@ import scala.io.Source
 import scala.actors._
 import scala.actors.Actor._
 import java.util.{ArrayList, Hashtable}
-import java.util.AbstractMap.SimpleEntry
+import java.util.AbstractMap.{SimpleImmutableEntry, SimpleEntry}
 import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
 import org.sintef.thingml._
 
 object Context {
   
-  def sort(messages : Map[Port, Pair[List[Message],List[Message]]]) : Map[Port, Pair[List[Message],List[Message]]] = {
+  def sort(messages : java.util.Map[Port, SimpleImmutableEntry[java.util.List[Message],java.util.List[Message]]]) : Map[Port, Pair[List[Message],List[Message]]] = {
+
+
+
     var result = Map[Port, Pair[List[Message],List[Message]]]()
-    messages.foreach{case (p, (send, receive)) =>
+    var inputs = Map[Port, Pair[List[Message],List[Message]]]()
+    messages.foreach { case (p, sie) =>
+        inputs += (p ->((sie.getKey.toList, sie.getValue.toList)))
+    }
+
+    inputs.foreach{case (p, (send, receive)) =>
         result += (p -> ((send.sort((e1, e2) => e1.getParameters.size < e2.getParameters.size || e1.getName.compareTo(e2.getName) <= 0),
                           receive.sort((e1, e2) => e1.getParameters.size < e2.getParameters.size || e1.getName.compareTo(e2.getName) <= 0))))
     }
