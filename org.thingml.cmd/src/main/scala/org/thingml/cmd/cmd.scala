@@ -42,9 +42,6 @@ import org.thingml.cgenerator.CGenerator
 import org.thingml.cppgenerator.CPPGenerator
 import org.thingml.scalagenerator.ScalaGenerator
 import org.thingml.javagenerator.JavaGenerator
-import org.thingml.javagenerator.gui.SwingGenerator
-import org.thingml.thingmlgenerator.ThingMLGenerator
-import org.thingml.kotlingenerator.KotlinGenerator
 import java.io._
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
