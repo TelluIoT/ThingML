@@ -649,7 +649,7 @@ public class ThingImpl extends TypeImpl implements Thing {
                 return assigns.get(0).getInit();
             }
 
-            List<Thing> imports = null;
+            List<Thing> imports = new ArrayList<Thing>();
             for (Thing t : getIncludes()) {
                 if (t.allProperties().contains(p)) {
                     imports.add(t);

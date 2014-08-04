@@ -1197,9 +1197,9 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     builder append " *****************************************************************************/\n\n"
 
     var h = self.annotation("c_header")
-    if (h != null) {
+    if (h.size > 0) {
        builder append "\n// BEGIN: Code from the c_header annotation " + self.getName + "\n"
-       builder append h
+       builder append h.mkString("\n")
        builder append "\n// END: Code from the c_header annotation " + self.getName + "\n\n"
     }
 
@@ -1227,9 +1227,9 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     builder append " *****************************************************************************/\n\n"
 
     var h = self.annotation("c_global")
-    if (h != null) {
+    if (h.size() > 0) {
        builder append "\n// BEGIN: Code from the c_global annotation " + self.getName + "\n"
-       builder append h
+       builder append h.mkString("\n")
        builder append "\n// END: Code from the c_global annotation " + self.getName + "\n\n"
     }
 
