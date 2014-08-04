@@ -586,9 +586,9 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     
     var traits = ""
     if (self.hasAnnotation("scala_trait")) {
-      traits = "with " + self.annotation("scala_trait")
+      traits = "with " + self.annotation("scala_trait").mkString(", ")
     } else if (self.hasAnnotation("java_interface")) {
-      traits = "with " + self.annotation("java_interface")
+      traits = "with " + self.annotation("java_interface").mkString(", ")
     }
 
     builder append "class " + Context.firstToUpper(self.getName) + "("
