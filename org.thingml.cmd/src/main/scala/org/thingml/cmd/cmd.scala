@@ -42,18 +42,12 @@ import org.thingml.cgenerator.CGenerator
 import org.thingml.cppgenerator.CPPGenerator
 import org.thingml.scalagenerator.ScalaGenerator
 import org.thingml.javagenerator.JavaGenerator
-//import org.thingml.java.pauwaregenerator.PauWareGenerator
 import org.thingml.javagenerator.gui.SwingGenerator
 import org.thingml.thingmlgenerator.ThingMLGenerator
 import org.thingml.kotlingenerator.KotlinGenerator
-//import org.thingml.scalagenerator.coap.ScalaCoAPGenerator
-//import org.thingml.mediatorgenerator.LoggerGenerator
 import java.io._
-//import java.nio.file.Path
-//import java.nio.file.Paths
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
-import org.thingml.model.scalaimpl.ThingMLScalaImpl._
 import org.thingml.kevoreegenerator.KevoreeGenerator
 
 import scala.collection.JavaConversions._
