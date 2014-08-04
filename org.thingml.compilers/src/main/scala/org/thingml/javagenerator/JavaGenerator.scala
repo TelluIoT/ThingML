@@ -450,21 +450,18 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
           }
 
 
-          val arrayMap = self.initExpressionsByArrays(i)
-          arrayMap.keys.foreach{ init =>
+          self.initExpressionsForInstanceArrays(i).foreach{ case (p, e) =>
             var result = ""
             var tempBuilder = new StringBuilder()
-            arrayMap.get(init).get.foreach{pair =>
-              result += i.getName + "_" + init.getName + "_array ["
+            result += i.getName + "_" + p.getName + "_array ["
               tempBuilder = new StringBuilder()
-              pair._1.generateJava(tempBuilder)
+              e.getKey.generateJava(tempBuilder)
               result += tempBuilder.toString
               result += "] = "
               tempBuilder = new StringBuilder()
-              pair._2.generateJava(tempBuilder)
+              e.getValue.generateJava(tempBuilder)
               result += tempBuilder.toString + ";\n"
-            }
-            builder append result
+              builder append result
           }
 
 
@@ -473,16 +470,16 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
           ///////////////////////////////////////////////////////////////////////////////////////////////////////////
           i.getType.allPropertiesInDepth.foreach { prop => //TODO: not optimal, to be improved
             self.initExpressionsForInstance(i).foreach { case p =>
-              if (p._1 == prop) {
+              if (p.getKey == prop) {
                 var result = ""
-                if (p._2 != null) {
+                if (p.getValue != null) {
                   var tempbuilder = new StringBuilder()
-                  tempbuilder append "(" + p._1.getType.java_type() + ")"
-                  p._2.generateJava(tempbuilder)
+                  tempbuilder append "(" + p.getKey.getType.java_type() + ")"
+                  p.getValue.generateJava(tempbuilder)
                   result += tempbuilder.toString
                 } else {
-                  result += "(" + p._1.getType.java_type() + ")"//we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
-                  result += p._1.getType.default_java_value()
+                  result += "(" + p.getKey.getType.java_type() + ")"//we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
+                  result += p.getKey.getType.default_java_value()
                 }
                 builder append ", " + result
               }

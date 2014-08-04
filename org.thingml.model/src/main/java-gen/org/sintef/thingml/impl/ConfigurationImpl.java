@@ -645,4 +645,137 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         return result;
     }
 
+    /**
+     *
+     * @param i
+     * @return
+     * @generated NOT
+     */
+    public List<AbstractMap.SimpleImmutableEntry<Property, Expression>> initExpressionsForInstance(Instance i) {
+        List<AbstractMap.SimpleImmutableEntry<Property, Expression>> result = new ArrayList<AbstractMap.SimpleImmutableEntry<Property, Expression>>();
+
+        //println("init instance " + i.getName + " " + i.toString)
+
+        for(Property p : i.getType().allPropertiesInDepth()) {
+
+            Set<ConfigPropertyAssign> confassigns = new HashSet<ConfigPropertyAssign>();
+            for(ConfigPropertyAssign a : allPropAssigns()) {
+                if (a.getInstance().getInstance().getName().equals(i.getName()) && a.getProperty().equals(p)) {
+                    confassigns.add(a);
+                }
+            }
+
+            if (confassigns.size() > 0) {  // There is an assignment for this property
+                result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, ((ConfigPropertyAssign)confassigns.toArray()[0]).getInit()));
+            }
+            else { // Look on the instance and in the type to find an init expression
+                // get the init from the instance if there is an assignment
+
+                Set<PropertyAssign> assigns = new HashSet<PropertyAssign>();
+                for(PropertyAssign a : i.getAssign()) {
+                    if (a.getProperty().equals(p)) {
+                        assigns.add(a);
+                    }
+                }
+                if (assigns.size() > 1)
+                    System.out.println("Error: Instance " + i.getName() + " contains several assignments for property " + p.getName());
+
+                if (assigns.size() > 0) {
+                    result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, ((PropertyAssign)assigns.toArray()[0]).getInit()));
+                }
+                else {
+                    result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, i.getType().initExpression(p)));
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @param i
+     * @return
+     * @generated NOT
+     */
+    public Map<Property, AbstractMap.SimpleImmutableEntry<Expression, Expression>> initExpressionsForInstanceArrays(Instance i) {
+
+        Map<Property, AbstractMap.SimpleImmutableEntry<Expression, Expression>> result = new HashMap<Property, AbstractMap.SimpleImmutableEntry<Expression, Expression>>();
+
+        for(Property p : i.getType().allPropertiesInDepth()) {
+
+            // look for assignements in the things:
+
+            for(PropertyAssign a : i.getType().initExpressionsForArray(p)) {
+                if (a.getIndex().size() == 1)
+                    result.put(p, new AbstractMap.SimpleImmutableEntry<Expression, Expression>((Expression)a.getIndex().toArray()[0], a.getInit()));
+                else
+                    System.err.println("ERROR: Malformed array initializiation for property " + p.getName() + " in thing " + ((Thing)a.eContainer()).getName());
+            }
+            for(ConfigPropertyAssign a : allPropAssigns()) {
+                if (a.getIndex().size() == 1)
+                    result.put(p, new AbstractMap.SimpleImmutableEntry<Expression, Expression>((Expression)a.getIndex().toArray()[0], a.getInit()));
+                else
+                    System.err.println("ERROR: Malformed array initializiation for property " + p.getName() + " in instance " + i.getName());
+            }
+        }
+        return result;
+    }
+    /**
+    Returns the set of destination for messages sent through the port p
+    For each outgoing message the results gives the list of destinations
+    sorted by source instance as a list of target instances+port
+    message* -> source instance* -> (target instance, port)*
+
+     TODO: WTF?! We need to return a proper structure that one can exploit, not that mess of Map<Message, ...>!!!
+
+     * @generated NOT
+     */
+    public Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch(Thing t, Port p) {
+
+        Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> result = new HashMap<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>>();
+        for(Instance i : allInstances()) {
+            if (i.getType().equals(t)) {
+                for(Connector c : allConnectors()) {
+                    if(c.getCli().getInstance().equals(i) && c.getRequired().equals(p)) {
+                        for(Message m : p.getSends()) {
+                            if (c.getProvided().getReceives().contains(m)) {
+                                Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>> mtable = result.get(m);
+                                if (mtable == null) {
+                                    mtable = new HashMap<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>();
+                                    result.put(m, mtable);
+                                }
+                                List<AbstractMap.SimpleImmutableEntry<Instance, Port>> itable = mtable.get(i);
+                                if (itable == null) {
+                                    itable = new ArrayList<AbstractMap.SimpleImmutableEntry<Instance, Port>>();
+                                    mtable.put(i, itable);
+                                }
+                                itable.add(new AbstractMap.SimpleImmutableEntry<Instance, Port>(c.getSrv().getInstance(), c.getProvided()));
+                            }
+                        }
+                    }
+                }
+                for(Connector c : allConnectors()) {
+                    if(c.getSrv().getInstance().equals(i) && c.getProvided().equals(p)) {
+                        for(Message m : p.getSends()) {
+                            if (c.getRequired().getReceives().contains(m)) {
+                                Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>> mtable = result.get(m);
+                                if (mtable == null) {
+                                    mtable = new HashMap<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>();
+                                    result.put(m, mtable);
+                                }
+                                List<AbstractMap.SimpleImmutableEntry<Instance, Port>> itable = mtable.get(i);
+                                if (itable == null) {
+                                    itable = new ArrayList<AbstractMap.SimpleImmutableEntry<Instance, Port>>();
+                                    mtable.put(i, itable);
+                                }
+                                itable.add(new AbstractMap.SimpleImmutableEntry<Instance, Port>(c.getCli().getInstance(), c.getRequired()));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
 } //ConfigurationImpl

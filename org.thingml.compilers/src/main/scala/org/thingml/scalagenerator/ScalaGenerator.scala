@@ -489,20 +489,17 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
         builder append result
       }
       
-      val arrayMap = self.initExpressionsByArrays(i)
-      arrayMap.keys.foreach{ init =>
+      self.initExpressionsForInstanceArrays(i).foreach{ case (p, e) =>
         var result = ""
         var tempBuilder = new StringBuilder()
-        arrayMap.get(init).get.foreach{pair => 
-          result += init.scala_var_name + "_" + i.getName + "("
+          result += p.scala_var_name + "_" + i.getName + "("
           tempBuilder = new StringBuilder()
-          pair._1.generateScala(tempBuilder)
+          e.getKey.generateScala(tempBuilder)
           result += tempBuilder.toString
           result += ") = "
           tempBuilder = new StringBuilder()
-          pair._2.generateScala(tempBuilder)
+          e.getValue.generateScala(tempBuilder)
           result += tempBuilder.toString + "\n"
-        }
         builder append result
       }
     }
@@ -523,15 +520,15 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
           builder append "val " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "("
           ///////////////////////////////////////////////////////////////////////////////////////////////////////////
           builder append (self.initExpressionsForInstance(i).collect{case p =>         
-                var result = (if (p._1.isChangeable) "_" else "") + p._1.scala_var_name + " = "
-                if (p._2 != null) {
+                var result = (if (p.getKey.isChangeable) "_" else "") + p.getKey.scala_var_name + " = "
+                if (p.getValue != null) {
                   var tempbuilder = new StringBuilder()
-                  p._2.generateScala(tempbuilder)
+                  p.getValue.generateScala(tempbuilder)
                   result += tempbuilder.toString
                 } else {
                   result += "null"
                 }
-                result += ".asInstanceOf[" + p._1.getType.scala_type(p._1.getCardinality != null) + "]"
+                result += ".asInstanceOf[" + p.getKey.getType.scala_type(p.getKey.getCardinality != null) + "]"
                 result
             }
             ++ 

@@ -937,9 +937,9 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
            builder append "if (_instance == &" + i.c_var_name + ") {\n"
            mtable.get(i).foreach{ tgt =>
               // dispatch to all connected instances whi can handle the message
-              if (tgt._1.getType.composedBehaviour.canHandle(tgt._2, m)) {
-                 builder append tgt._1.getType.handler_name(tgt._2, m)
-                 tgt._1.getType.append_actual_parameters(builder, m, "&" + tgt._1.c_var_name())
+              if (tgt.getKey.getType.composedBehaviour.canHandle(tgt.getValue, m)) {
+                 builder append tgt.getKey.getType.handler_name(tgt.getValue, m)
+                 tgt.getKey.getType.append_actual_parameters(builder, m, "&" + tgt.getKey.c_var_name())
                  builder append ";\n"
               }
            }
@@ -1146,20 +1146,20 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
 
     // Init simple properties
     context.cfg.initExpressionsForInstance(self).foreach{ init =>
-       if (init._2 != null ) {
-        builder append c_var_name + "." + init._1.c_var_name + " = "
-        init._2.generateC(builder, context)
+       if (init.getValue != null ) {
+        builder append c_var_name + "." + init.getKey.c_var_name + " = "
+        init.getValue.generateC(builder, context)
         builder append ";\n";
       }
     }
     // Init array properties
-    context.cfg.initExpressionsForInstanceArrays(self).foreach{ init =>
-       if (init._3 != null && init._2 != null) {
-        builder append c_var_name + "." + init._1.c_var_name
+    context.cfg.initExpressionsForInstanceArrays(self).foreach{ case (p, e) =>
+       if (e.getValue != null && e.getKey != null) {
+        builder append c_var_name + "." + p.c_var_name
         builder append  "["
-        init._2.generateC(builder, context)
+        e.getKey.generateC(builder, context)
         builder append  "] = "
-        init._3.generateC(builder, context)
+        e.getValue.generateC(builder, context)
         builder append ";\n";
       }
     }

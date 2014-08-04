@@ -6,15 +6,19 @@ datatype Device
 
 //Wrapped for the electronic bricks (for actuators)
 thing fragment Brick
-@thingml_maven_dep "org.thingml.samples.utils"
-@maven_dep 
-"<dependency>
+@maven_dep "
+<dependency>
     <groupId>org.thingml</groupId>
     <artifactId>org.thingml.samples.resources</artifactId>
     <version>${thingml.version}</version>
     <classifier>resources</classifier>
     <type>zip</type>
     <scope>provided</scope>
+</dependency>
+<dependency>
+    <groupId>org.thingml</groupId>
+    <artifactId>org.thingml.samples.utils</artifactId>
+    <version>${thingml.version}</version>
 </dependency>"
 {
     //The Scala device mocking the brick
@@ -28,16 +32,6 @@ thing fragment SensorMsgs
 
 //Wrapped for the electronic bricks (for sensors)
 thing fragment BrickSensor includes SensorMsgs, Brick
-@thingml_maven_dep "org.thingml.samples.utils"
-@maven_dep 
-"<dependency>
-    <groupId>org.thingml</groupId>
-    <artifactId>org.thingml.samples.resources</artifactId>
-    <version>${thingml.version}</version>
-    <classifier>resources</classifier>
-    <type>zip</type>
-    <scope>provided</scope>
-</dependency>"
 {
 	
     /**

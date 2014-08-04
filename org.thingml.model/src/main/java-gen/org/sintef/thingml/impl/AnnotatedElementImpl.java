@@ -184,7 +184,7 @@ public abstract class AnnotatedElementImpl extends ThingMLElementImpl implements
      */
     public boolean isDefined(String annotation, String value) {
         PlatformAnnotation pa = null;
-        for (PlatformAnnotation a : getAnnotations()) {
+        for (PlatformAnnotation a : allAnnotations()) {
             if (a.getName().equals(annotation)) {
                 pa = a;
                 break;
@@ -205,7 +205,7 @@ public abstract class AnnotatedElementImpl extends ThingMLElementImpl implements
      */
     public boolean hasAnnotation(String name) {
         PlatformAnnotation pa = null;
-        for (PlatformAnnotation a : getAnnotations()) {
+        for (PlatformAnnotation a : allAnnotations()) {
             if (a.getName().equals(name)) {
                 pa = a;
                 break;
@@ -222,7 +222,7 @@ public abstract class AnnotatedElementImpl extends ThingMLElementImpl implements
      */
     public Set<String> annotation(String name) {
         Set<String> result = new HashSet<String>();
-        for (PlatformAnnotation a : getAnnotations()) {
+        for (PlatformAnnotation a : allAnnotations()) {
             if (a.getName().equals(name)) {
                 result.add(a.getValue());
             }
