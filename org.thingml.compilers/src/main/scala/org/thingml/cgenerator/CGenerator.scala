@@ -204,7 +204,7 @@ implicit def cGeneratorAspect(self:ExternExpression) : ExternExpressionCGenerato
   def compileArduino(config: Configuration, context: CGeneratorContext) = {
     var builder = new StringBuilder()
     config.generatePDE(builder, context)
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
     // Cleanup
     var result = builder.toString
     // Remove extern "C" stuff because Arduino put everyting in cpp files
@@ -748,7 +748,7 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
     mtemplate = mtemplate.replace("/*PREPROC_DIRECTIVES*/", preproc)
     result.put("Makefile", mtemplate)
 
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     result
   }
@@ -998,7 +998,7 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
 
 
 
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     // CREATING THE ROS PACKAGE AND WRITING THE FILES:
     //************************************************

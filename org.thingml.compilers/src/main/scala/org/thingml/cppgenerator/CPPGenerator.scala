@@ -455,7 +455,7 @@ object CPPGenerator {
     mtemplate = mtemplate.replace("/*PREPROC_DIRECTIVES*/", preproc)
     result.put("Makefile", mtemplate)
 
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     result
   }

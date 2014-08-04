@@ -121,7 +121,7 @@ object SwingGenerator {
   
   
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
 
@@ -160,7 +160,7 @@ object SwingGenerator {
   
   
   def compileAllThingJava(model: ThingMLModel, pack : String): Hashtable[Thing, SimpleEntry[String, String]] = {
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     val result = new Hashtable[Thing, SimpleEntry[String, String]]()
     compileAll(model, pack).foreach{case (t, entry) =>
@@ -170,7 +170,7 @@ object SwingGenerator {
   }
   
   def compileAll(model: ThingMLModel, pack : String): Map[Thing, (String, String)] = {
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     Context.pack = pack
     

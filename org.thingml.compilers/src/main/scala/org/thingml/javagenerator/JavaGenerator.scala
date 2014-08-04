@@ -189,7 +189,7 @@ object JavaGenerator {
   }
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false) {
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     //doingTests should be ignored, it is only used when calling from org.thingml.cmd
 	var tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
@@ -305,7 +305,7 @@ object JavaGenerator {
   }
 
   def compile(t: Configuration, pack: String, model: ThingMLModel): java.util.Map[String, StringBuilder] = {
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     Context.init
     Context.pack = pack

@@ -513,6 +513,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * @generated NOT
      */
     public Set<Instance> allInstances() {
+        MergedConfigurationCache.clearCache();
         Set<Instance> result = new HashSet<Instance>();
         result.addAll(merge().getInstances());
         return result;
@@ -525,6 +526,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      */
     public Set<Connector> allConnectors() {
         Set<Connector> result = new HashSet<Connector>();
+        MergedConfigurationCache.clearCache();
         result.addAll(merge().getConnectors());
         return result;
     }
@@ -536,6 +538,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      */
     public Set<ConfigPropertyAssign> allPropAssigns() {
         Set<ConfigPropertyAssign> result = new HashSet<ConfigPropertyAssign>();
+        MergedConfigurationCache.clearCache();
         result.addAll(merge().getPropassigns());
         return result;
     }

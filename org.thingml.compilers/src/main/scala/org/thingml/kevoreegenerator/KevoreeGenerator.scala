@@ -76,7 +76,7 @@ object KevoreeGenerator {
    * 
    */
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     new File(System.getProperty("java.io.tmpdir") + "ThingML_temp/").deleteOnExit
     
@@ -116,7 +116,7 @@ object KevoreeGenerator {
    * 
    */
   def compileKevScript(cfg:Configuration){
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     var kevScript:StringBuilder= new StringBuilder()
     //kevScript append "namespace " + cfg.getName + "\n\n"
@@ -186,7 +186,7 @@ object KevoreeGenerator {
   }
   
   def compilePom(cfg:Configuration){
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     //TODO: we should load the already generated POM (from the JASM compiler) and update it with Kevoree information, not to do most of the work twice
     val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName
@@ -209,7 +209,7 @@ object KevoreeGenerator {
   }
 
   def compile(t: Thing, pack : String, model: ThingMLModel) : Pair[String, String] = {
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     Context.pack = pack
     var wrapperBuilder = new StringBuilder()

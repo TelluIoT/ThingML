@@ -176,7 +176,7 @@ object KotlinGenerator {
   }
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel) {
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
 
@@ -290,7 +290,7 @@ object KotlinGenerator {
   }
 
   def compileAll(model: ThingMLModel, pack: String): Map[Configuration, Pair[String, String]] = {
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
 
     var result = Map[Configuration, Pair[String, String]]()
@@ -301,7 +301,7 @@ object KotlinGenerator {
   }
 
   def compile(t: Configuration, pack: String, model: ThingMLModel): Pair[String, String] = {
-    ConfigurationImpl.MergedConfigurationCache.clearCache();
+    //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     Context.init
     Context.pack = pack
