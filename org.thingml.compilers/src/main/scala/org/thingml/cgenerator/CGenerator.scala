@@ -1650,9 +1650,6 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
         }.foreach { p =>
           context.set_concrete_thing(t)
           var allMessageDispatch = self.allMessageDispatch(t, p)
-
-          println("  DEBUG allMessageDispatch.size = " + allMessageDispatch.size())
-
           allMessageDispatch.keySet().foreach {
             m =>
               builder append "// Enqueue of messages " + t.getName + "::" + p.getName + "::" + m.getName + "\n"

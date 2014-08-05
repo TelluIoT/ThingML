@@ -21,7 +21,7 @@ deleteTemporaryFiles = True
 #Chooses which compilers should be used
 testLanguages=[]
 testLanguages.append("Linux")
-testLanguages.append("Scala")
+# testLanguages.append("Scala")
 testLanguages.append("Java")
 # testLanguages.append("Arduino")
 
