@@ -29,6 +29,8 @@
 package org.sintef.thingml
 
 import java.awt.{Color, BorderLayout}
+import org.thingml.javagenerator.kevoree.KevoreeGenerator
+
 import actors.DaemonActor
 import javax.swing.event.{DocumentEvent, DocumentListener}
 import jsyntaxpane.components.Markers
@@ -59,7 +61,6 @@ import org.thingml.thingmlgenerator.ThingMLGenerator
 import java.io._
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
-import org.thingml.kevoreegenerator.KevoreeGenerator
 
 class ThingMLPanel extends JPanel {
 

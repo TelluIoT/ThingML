@@ -239,7 +239,7 @@ public abstract class ThingMLElementImpl extends EObjectImpl implements ThingMLE
         if (separator == null) {
             separator = "::";
         }
-        String result = "";
+        String result = null;
         ThingMLElement elem  = this;
         String name = null;
         while(elem != null) {

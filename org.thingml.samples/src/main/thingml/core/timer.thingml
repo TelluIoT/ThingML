@@ -32,3 +32,39 @@ thing fragment TimerClient includes TimerMsgs
 	}
     
 }
+
+thing SimpleTimerClient includes TimerClient 
+{
+    statechart Default init Tick {
+        
+        property counter : Integer = 0
+        
+        state Tick {
+            on entry 
+            do
+                timer!timer_start(1000)
+            end
+            
+            
+            transition tock -> Tick
+            event timer?timer_timeout
+            guard counter%2 == 0
+            action do 
+                print("tick")
+                print(counter)
+                counter = counter + 1
+            end
+            
+            internal event tick : timer?timer_timeout
+            guard counter%2 == 1
+            action do
+                print("tock")
+                print(counter)
+                counter = counter + 1
+                timer!timer_start(5000)
+            end
+        }         
+           
+    }   
+
+}

@@ -35,6 +35,7 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic
 import org.sintef.thingml.resource.thingml.mopp._
+import org.thingml.javagenerator.kevoree.KevoreeGenerator
 import scala.collection.JavaConversions._
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
@@ -45,7 +46,6 @@ import org.thingml.javagenerator.JavaGenerator
 import java.io._
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
-import org.thingml.kevoreegenerator.KevoreeGenerator
 
 import scala.collection.JavaConversions._
 

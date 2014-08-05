@@ -871,7 +871,7 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
         val message = tuple._3.message
         val instances = tuple._4.toList
 
-        // Generate the line to connect the port whcih publishes on the topic
+        // Generate the line to connect the port which publishes on the topic
         ros_init_listeners append "register_" + thing.sender_name(port, message) + "_listener("
         ros_init_listeners append id + ");\n"
 
@@ -1643,15 +1643,16 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
   }
 
   def generateMessageEnqueue(builder: StringBuilder, context: CGeneratorContext) {
-
     // Generate the Enqueue operation only for ports which are not marked as "sync"
-    self.allThings.foreach {
-      t => t.allPorts.filter {
-        p => !isSyncSend(p)
-      }.foreach {
-        p =>
+    self.allThings.foreach { t =>
+        t.allPorts.filter { p =>
+          !isSyncSend(p)
+        }.foreach { p =>
           context.set_concrete_thing(t)
           var allMessageDispatch = self.allMessageDispatch(t, p)
+
+          println("  DEBUG allMessageDispatch.size = " + allMessageDispatch.size())
+
           allMessageDispatch.keySet().foreach {
             m =>
               builder append "// Enqueue of messages " + t.getName + "::" + p.getName + "::" + m.getName + "\n"
@@ -2857,13 +2858,11 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
   }
 
   def c_type(): String = {
-    self.getAnnotations.filter {
-      a => a.getName == "c_type"
-    }.headOption match {
-      case Some(a) => {
-        var result = a.asInstanceOf[PlatformAnnotation].getValue
+    self.annotation("c_type").headOption match {
+      case Some(v) => {
+        //var result = a.asInstanceOf[PlatformAnnotation].getValue
         //if (self.isInstanceof[PrimitiveType] && .getCardinality != null) builder append "*"
-        return result;
+        return v;
       }
       case None => {
         println("Warning: Missing annotation c_type for type " + self.getName + ", using " + self.getName + " as the C type.")
@@ -2873,10 +2872,8 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
   }
 
   def ros_type(): String = {
-    self.getAnnotations.filter {
-      a => a.getName == "ros_type"
-    }.headOption match {
-      case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
+    self.annotation("ros_type").headOption match {
+      case Some(v) => return v
       case None => {
         println("Warning: Missing annotation ros_type for type " + self.getName + ", using " + self.getName + " as the ROS type.")
         return self.getName
@@ -2885,13 +2882,11 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
   }
 
   def c_byte_size(context: CGeneratorContext): Integer = {
-    self.getAnnotations.filter {
-      a => a.getName == "c_byte_size"
-    }.headOption match {
-      case Some(a) => {
-        var v = a.asInstanceOf[PlatformAnnotation].getValue
+    self.annotation("c_byte_size").headOption match {
+      case Some(v) => {
+        //var v = a.asInstanceOf[PlatformAnnotation].getValue
         if (v == "*") return context.pointerSize(); // pointer size for the target platform
-        else return Integer.parseInt(a.asInstanceOf[PlatformAnnotation].getValue)
+        else return Integer.parseInt(v)
       }
       case None => {
         println("Warning: Missing annotation c_byte_size for type " + self.getName + ", using 2 as the type size.")
@@ -2900,14 +2895,12 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
     }
   }
 
-  def c_datatype_byte_size(): Integer = {
-    self.getAnnotations.filter {
-      a => a.getName == "c_byte_size"
-    }.headOption match {
-      case Some(a) => {
-        var v = a.asInstanceOf[PlatformAnnotation].getValue
+  def c_datatype_byte_size(): Int = {
+    self.annotation("c_byte_size").headOption match {
+      case Some(v) => {
+        //var v = a.asInstanceOf[PlatformAnnotation].getValue
         if (v == "*") throw new Error("Unknown pointer size (use c_byte_size instead of c_datatype_byte_size)")
-        else return Integer.parseInt(a.asInstanceOf[PlatformAnnotation].getValue)
+        else return Integer.parseInt(v)
       }
       case None => {
         println("Warning: Missing annotation c_byte_size for type " + self.getName + ", using 2 as the type size.")
@@ -2917,11 +2910,9 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
   }
 
   def is_pointer(): Boolean = {
-    self.getAnnotations.filter {
-      a => a.getName == "c_byte_size"
-    }.headOption match {
-      case Some(a) => {
-        var v = a.asInstanceOf[PlatformAnnotation].getValue
+    self.annotation("c_byte_size").headOption match {
+      case Some(v) => {
+        //var v = a.asInstanceOf[PlatformAnnotation].getValue
         if (v == "*") return true
         else return false
       }
@@ -2933,21 +2924,23 @@ case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(sel
   }
 
   def has_byte_buffer(): Boolean = {
-    self.getAnnotations.filter {
+    return self.hasAnnotation("c_byte_buffer")
+    /*self.getAnnotations.filter {
       a => a.getName == "c_byte_buffer"
     }.headOption match {
       case Some(a) => return true
       case None => return false
-    }
+    } */
   }
 
   def byte_buffer_name(): String = {
-    self.getAnnotations.filter {
+    return self.annotation("c_byte_buffer").head
+    /*self.getAnnotations.filter {
       a => a.getName == "c_byte_buffer"
     }.headOption match {
       case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
       case None => return null
-    }
+    }*/
   }
 
   def deserialize_from_byte(buffer: String, idx: Integer, context: CGeneratorContext) = {

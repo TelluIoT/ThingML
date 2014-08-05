@@ -729,49 +729,56 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
     sorted by source instance as a list of target instances+port
     message* -> source instance* -> (target instance, port)*
 
-     TODO: WTF?! We need to return a proper structure that one can exploit, not that mess of Map<Message, ...>!!!
+     TODO: WTF?! We need to return a proper structure that one can exploit intuitively, not that mess of Map<Message, ...>!!!
 
      * @generated NOT
      */
     public Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch(Thing t, Port p) {
-
         Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> result = new HashMap<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>>();
         for(Instance i : allInstances()) {
             if (i.getType().equals(t)) {
                 for(Connector c : allConnectors()) {
-                    if(c.getCli().getInstance().equals(i) && c.getRequired().equals(p)) {
+                    if(EcoreUtil.equals(c.getCli().getInstance(), i) && EcoreUtil.equals(c.getRequired(), p)) {
                         for(Message m : p.getSends()) {
-                            if (c.getProvided().getReceives().contains(m)) {
-                                Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>> mtable = result.get(m);
-                                if (mtable == null) {
-                                    mtable = new HashMap<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>();
-                                    result.put(m, mtable);
+                            MSGLOOP: for(Message m2 : c.getProvided().getReceives()) { //TODO: we should implement a derived property on Thing to compute input and output messages, to avoid duplicating code (see below)
+                                System.out.println(m.getName() + " ?= " + m2.getName() + EcoreUtil.equals(m, m2));
+                                if (EcoreUtil.equals(m, m2)) {
+                                    Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>> mtable = result.get(m);
+                                    if (mtable == null) {
+                                        mtable = new HashMap<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>();
+                                        result.put(m, mtable);
+                                    }
+                                    List<AbstractMap.SimpleImmutableEntry<Instance, Port>> itable = mtable.get(i);
+                                    if (itable == null) {
+                                        itable = new ArrayList<AbstractMap.SimpleImmutableEntry<Instance, Port>>();
+                                        mtable.put(i, itable);
+                                    }
+                                    itable.add(new AbstractMap.SimpleImmutableEntry<Instance, Port>(c.getSrv().getInstance(), c.getProvided()));
+                                    //break MSGLOOP;
                                 }
-                                List<AbstractMap.SimpleImmutableEntry<Instance, Port>> itable = mtable.get(i);
-                                if (itable == null) {
-                                    itable = new ArrayList<AbstractMap.SimpleImmutableEntry<Instance, Port>>();
-                                    mtable.put(i, itable);
-                                }
-                                itable.add(new AbstractMap.SimpleImmutableEntry<Instance, Port>(c.getSrv().getInstance(), c.getProvided()));
                             }
                         }
                     }
                 }
                 for(Connector c : allConnectors()) {
-                    if(c.getSrv().getInstance().equals(i) && c.getProvided().equals(p)) {
+                    if(EcoreUtil.equals(c.getSrv().getInstance(), i) && EcoreUtil.equals(c.getProvided(), p)) {
                         for(Message m : p.getSends()) {
-                            if (c.getRequired().getReceives().contains(m)) {
-                                Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>> mtable = result.get(m);
-                                if (mtable == null) {
-                                    mtable = new HashMap<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>();
-                                    result.put(m, mtable);
+                            MSGLOOP: for(Message m2 : c.getRequired().getReceives()) {   //TODO: remove duplicated code
+                                System.out.println(m.getName() + " ?= " + m2.getName() + EcoreUtil.equals(m, m2));
+                                if (EcoreUtil.equals(m, m2)) {
+                                    Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>> mtable = result.get(m);
+                                    if (mtable == null) {
+                                        mtable = new HashMap<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>();
+                                        result.put(m, mtable);
+                                    }
+                                    List<AbstractMap.SimpleImmutableEntry<Instance, Port>> itable = mtable.get(i);
+                                    if (itable == null) {
+                                        itable = new ArrayList<AbstractMap.SimpleImmutableEntry<Instance, Port>>();
+                                        mtable.put(i, itable);
+                                    }
+                                    itable.add(new AbstractMap.SimpleImmutableEntry<Instance, Port>(c.getCli().getInstance(), c.getRequired()));
+                                    //break MSGLOOP;
                                 }
-                                List<AbstractMap.SimpleImmutableEntry<Instance, Port>> itable = mtable.get(i);
-                                if (itable == null) {
-                                    itable = new ArrayList<AbstractMap.SimpleImmutableEntry<Instance, Port>>();
-                                    mtable.put(i, itable);
-                                }
-                                itable.add(new AbstractMap.SimpleImmutableEntry<Instance, Port>(c.getCli().getInstance(), c.getRequired()));
                             }
                         }
                     }

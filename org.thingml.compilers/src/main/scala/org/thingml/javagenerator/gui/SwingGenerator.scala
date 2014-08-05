@@ -493,10 +493,9 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     messagesToSend.foreach{case (port, messages) =>
         messages.foreach{msg =>
           builder append "else if ( ae.getSource() == getSend" + msg.getName + "_via_" + port.getName + "()) {\n"          
-          builder append "send(" + msg.getName + "Type.instantiate("
-          var i = 0
+          builder append "send(" + msg.getName + "Type.instantiate(port_" + Context.firstToUpper(self.getName) + "_" + port.getName
           msg.getParameters.foreach{ p =>
-              if (i > 0) builder append ", "
+              builder append ", "
               if (p.getCardinality == null) {
                 if (p.getType.isInstanceOf[Enumeration]) {
                   builder append "values_" + p.getType.getName + ".get(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
@@ -509,7 +508,6 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
               else {
                 builder append "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText().getBytes()"
               }
-              i = i + 1
             }
           builder append "), port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ");\n"
           

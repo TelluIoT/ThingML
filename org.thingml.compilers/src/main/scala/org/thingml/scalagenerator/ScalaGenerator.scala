@@ -625,7 +625,7 @@ case class ThingScalaGenerator(override val self: Thing) extends ThingMLScalaGen
     }
     
     if(self.hasAnnotation("scala_def")) {
-      builder append self.annotation("scala_def")
+      builder append self.annotation("scala_def").head
     }    
 
     self.allStateMachines.foreach{b => 
