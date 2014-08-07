@@ -96,7 +96,7 @@ sprintf(cmd, "echo \"%f\" >> cputime",'&start&');'
 sprintf(cmd, "echo \"%f\" >> cputime",'&stop&');'
 'system(cmd);
 fclose(testFile);
-ProfilerStop();
+//ProfilerStop();
 exit(0);'
 			end
 		}

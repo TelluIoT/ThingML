@@ -663,7 +663,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 
             Set<ConfigPropertyAssign> confassigns = new HashSet<ConfigPropertyAssign>();
             for(ConfigPropertyAssign a : allPropAssigns()) {
-                if (a.getInstance().getInstance().getName().equals(i.getName()) && EcoreUtil.equals(a.getProperty(), p)) {
+                if (EcoreUtil.equals(a.getInstance().getInstance(), i) && EcoreUtil.equals(a.getProperty(), p)) {
                     confassigns.add(a);
                 }
             }
@@ -676,7 +676,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 
                 Set<PropertyAssign> assigns = new HashSet<PropertyAssign>();
                 for(PropertyAssign a : i.getAssign()) {
-                    if (a.getProperty().equals(p)) {
+                    if (EcoreUtil.equals(a.getProperty(), p)) {
                         assigns.add(a);
                     }
                 }
@@ -761,7 +761,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
     public Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch(Thing t, Port p) {
         Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> result = new HashMap<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>>();
         for(Instance i : allInstances()) {
-            if (i.getType().equals(t)) {
+            if (EcoreUtil.equals(i.getType(), t)) {
                 for(Connector c : allConnectors()) {
                     if(EcoreUtil.equals(c.getCli().getInstance(), i) && EcoreUtil.equals(c.getRequired(), p)) {
                         for(Message m : p.getSends()) {
