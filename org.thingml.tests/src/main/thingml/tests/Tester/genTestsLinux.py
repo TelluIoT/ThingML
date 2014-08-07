@@ -62,9 +62,9 @@ def run(type):
 						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/random.thingml"\n\n')
 					fichier.write('configuration '+bigname+'C \n@output_folder "/home/thingml_out/" {\n'+
 					'	group timer : TimerLinux\n'+
-					'		set timer.timer.millisecond = true\n'+
-					'		set timer.timer.period = 10\n'+
-					'		set timer.clock.period = 10\n\n'+
+					'		//set timer.timer.millisecond = true\n'+
+					'		//set timer.timer.period = 10\n'+
+					'		set timer.clock.period = 1\n\n'+
 					'	instance harness : Tester\n'+
 					'	instance dump : TestDumpLinux\n'+
 					'	instance test : '+bigname+'\n')

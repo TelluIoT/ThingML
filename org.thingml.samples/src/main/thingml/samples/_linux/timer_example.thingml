@@ -32,7 +32,7 @@ thing LinuxTimerTestApp includes TimerMsgs {
 }
 
 configuration LinuxTimerTest 
-  @output_folder "/home/franck/thingml_out/timer_example"
+//  @output_folder "/home/franck/thingml_out/timer_example"
   @debug "false"
   @debug_fifo "true"
   @debug_message_send ".*"
