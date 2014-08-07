@@ -478,14 +478,26 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
             self.initExpressionsForInstance(i).foreach { case p =>
               if (p.getKey == prop && prop.getCardinality == null) {
                 var result = ""
-                if (p.getValue != null) {
+                if (prop.getType.isInstanceOf[Enumeration]) {
+                  val enum = prop.getType.asInstanceOf[Enumeration]
+                  val enumL = p.getValue.asInstanceOf[EnumLiteralRef]
                   var tempbuilder = new StringBuilder()
-                  tempbuilder append "(" + p.getKey.getType.java_type() + ")"
-                  p.getValue.generateJava(tempbuilder)
-                  result += tempbuilder.toString
+                  if (enumL == null) {
+                    tempbuilder append Context.firstToUpper(enum.getName) + "_ENUM." + enum.getName.toUpperCase() + "_" + enum.getLiterals.head.getName
+                  } else {
+                    tempbuilder append Context.firstToUpper(enum.getName) + "_ENUM." + enum.getName.toUpperCase() + "_" + enumL.getLiteral.getName
+                  }
+                    result += tempbuilder.toString()
                 } else {
-                  result += "(" + p.getKey.getType.java_type() + ")"//we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
-                  result += p.getKey.getType.default_java_value()
+                  if (p.getValue != null) {
+                    var tempbuilder = new StringBuilder()
+                    tempbuilder append "(" + p.getKey.getType.java_type() + ")"
+                    p.getValue.generateJava(tempbuilder)
+                    result += tempbuilder.toString
+                  } else {
+                    result += "(" + p.getKey.getType.java_type() + ")" //we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
+                    result += p.getKey.getType.default_java_value()
+                  }
                 }
                 builder append ", " + result
               }
