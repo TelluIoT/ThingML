@@ -50,7 +50,7 @@
          <dependency>
             <groupId>org.thingml</groupId>
             <artifactId>org.thingml.compilers</artifactId>
-            <version>${thingml.version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

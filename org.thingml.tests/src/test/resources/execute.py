@@ -224,9 +224,8 @@ for (a,b) in results:
 		dump=open(dumpDir+'/target/dump/'+fileName+type+'.dump', 'a')
 		if os.path.exists("tmp/ThingML_"+type+"/"+capitalizedName):
 			os.chdir("tmp/ThingML_"+type+"/"+capitalizedName)
-
-			# generic_prepareFilesForMeasures(type)
-
+			generic_prepareFilesForMeasures(type)
+			
 			generic_compile(type)
 			
 			if testType=="functional":
@@ -247,20 +246,20 @@ for (a,b) in results:
 					dump.write("ErrorAtCompilation\n")
 					if testType=="perf":
 						statesNumber="FileNotFound"
-				try:
+				try: 
 					f = open('transitionsCount','r')
 					tcount = f.readline().rstrip()
 					f.close()
 				except IOError:
 					tcount = 'error'
-
-				try:
+					
+				try: 
 					f = open('cputime','r')
 					cputime = f.readline().rstrip()
 					f.close()
 				except IOError:
 					cputime = 'error'
-
+				
 				binsize=generic_findBinSize(type,capitalizedName)
 					
 				(cpu,mem)=generic_findCPUandMEM(type)
