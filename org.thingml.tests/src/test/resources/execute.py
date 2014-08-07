@@ -227,8 +227,10 @@ for (a,b) in results:
 		dump=open(dumpDir+'/target/dump/'+fileName+type+'.dump', 'a')
 		if os.path.exists("tmp/ThingML_"+type+"/"+capitalizedName):
 			os.chdir("tmp/ThingML_"+type+"/"+capitalizedName)
-			generic_prepareFilesForMeasures(type)
-			
+
+			if testType=="perf":
+				generic_prepareFilesForMeasures(type)
+
 			generic_compile(type)
 			
 			if testType=="functional":
@@ -249,36 +251,37 @@ for (a,b) in results:
 					dump.write("ErrorAtCompilation\n")
 					if testType=="perf":
 						statesNumber="FileNotFound"
-				try: 
-					f = open('transitionsCount','r')
-					tcount = f.readline().rstrip()
-					f.close()
-				except IOError:
-					tcount = 'error'
+				if testType=="perf":
+					try:
+						f = open('transitionsCount','r')
+						tcount = f.readline().rstrip()
+						f.close()
+					except IOError:
+						tcount = 'error'
 					
-				try: 
-					f = open('cputime','r')
-					cputime = f.readline().rstrip()
-					f.close()
-				except IOError:
-					cputime = 'error'
+					try:
+						f = open('cputime','r')
+						cputime = f.readline().rstrip()
+						f.close()
+					except IOError:
+						cputime = 'error'
 				
-				binsize=generic_findBinSize(type,capitalizedName)
+					binsize=generic_findBinSize(type,capitalizedName)
 					
-				(cpu,mem)=generic_findCPUandMEM(type)
-				if not cpu:
-					print("CPU PROBLEM !!!")
-				if not mem:
-					print("MEM PROBLEM !!!")
-				if not binsize:
-					print("binsize PROBLEM !!!")
-				if not tcount:
-					print("tcount PROBLEM !!!")
-				if not cputime:
-					print("cputime PROBLEM !!!")
-				if not statesNumber:
-					print("statesNumber PROBLEM !!!")
-				resultsData.append((type,fileName[0].upper()+fileName[1:]+" "+str(resultCounter),cpu,mem,binsize,tcount,cputime,statesNumber))
+					(cpu,mem)=generic_findCPUandMEM(type)
+					if not cpu:
+						print("CPU PROBLEM !!!")
+					if not mem:
+						print("MEM PROBLEM !!!")
+					if not binsize:
+						print("binsize PROBLEM !!!")
+					if not tcount:
+						print("tcount PROBLEM !!!")
+					if not cputime:
+						print("cputime PROBLEM !!!")
+					if not statesNumber:
+						print("statesNumber PROBLEM !!!")
+					resultsData.append((type,fileName[0].upper()+fileName[1:]+" "+str(resultCounter),cpu,mem,binsize,tcount,cputime,statesNumber))
 			os.chdir("..")
 		else:
 			dump.write("NoSourceCodeFound\n")
@@ -287,10 +290,11 @@ for (a,b) in results:
 	resultCounter = resultCounter + 1
 
 fdump.close()
-for r in resultsData:
-	type,name,cpu,mem,size,tcount,cputime,statesNumber=r
-	print("type: "+type+", name: "+name+", cpu: "+cpu+", memory: "+mem+", size: "+size+", tcount: "+tcount+", cputime: "+cputime+", statesNumber: "+statesNumber)
-os.chdir(rootDirectory)
-os.chdir(r"../../../")
-dumpHTML("stats.html",resultsData)
-os.chdir(rootDirectory)
+if testType=="perf":
+	for r in resultsData:
+		type,name,cpu,mem,size,tcount,cputime,statesNumber=r
+		print("type: "+type+", name: "+name+", cpu: "+cpu+", memory: "+mem+", size: "+size+", tcount: "+tcount+", cputime: "+cputime+", statesNumber: "+statesNumber)
+	os.chdir(rootDirectory)
+	os.chdir(r"../../../")
+	dumpHTML("stats.html",resultsData)
+	os.chdir(rootDirectory)
