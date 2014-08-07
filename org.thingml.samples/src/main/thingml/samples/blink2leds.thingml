@@ -2,7 +2,9 @@ import "../hardware/bricks/led.thingml"
 
 thing Blink2Leds includes LedMsgs, TimerMsgs
 {
-    
+    property freq : Integer[2]
+        set freq[0] = 1000
+        set freq[1] = 333
     
     required port timer1
 	{
@@ -33,20 +35,20 @@ thing Blink2Leds includes LedMsgs, TimerMsgs
             on entry do 
                 //crap
                 var tab : Integer[8]
-            	timer1!timer_start(1000)
-            	timer2!timer_start(333)
+            	timer1!timer_start(freq[0])
+            	timer2!timer_start(freq[1])
             end
             
             internal Blink1 event timer1?timer_timeout
             action do
             	led1!led_toggle()
-            	timer1!timer_start(1000)
+            	timer1!timer_start(freq[0])
             end
             
             internal Blink2 event timer2?timer_timeout
             action do
             	led2!led_toggle()
-            	timer2!timer_start(333)
+            	timer2!timer_start(freq[1])
             end
             
         }

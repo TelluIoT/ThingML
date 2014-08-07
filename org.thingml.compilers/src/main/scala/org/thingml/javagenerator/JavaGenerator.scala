@@ -476,7 +476,7 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
           ///////////////////////////////////////////////////////////////////////////////////////////////////////////
           i.getType.allPropertiesInDepth.foreach { prop => //TODO: not optimal, to be improved
             self.initExpressionsForInstance(i).foreach { case p =>
-              if (p.getKey == prop) {
+              if (p.getKey == prop && prop.getCardinality == null) {
                 var result = ""
                 if (p.getValue != null) {
                   var tempbuilder = new StringBuilder()

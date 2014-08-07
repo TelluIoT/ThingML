@@ -766,7 +766,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
                     if(EcoreUtil.equals(c.getCli().getInstance(), i) && EcoreUtil.equals(c.getRequired(), p)) {
                         for(Message m : p.getSends()) {
                             MSGLOOP: for(Message m2 : c.getProvided().getReceives()) { //TODO: we should implement a derived property on Thing to compute input and output messages, to avoid duplicating code (see below)
-                                System.out.println(m.getName() + " ?= " + m2.getName() + EcoreUtil.equals(m, m2));
                                 if (EcoreUtil.equals(m, m2)) {
                                     Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>> mtable = result.get(m);
                                     if (mtable == null) {
@@ -789,7 +788,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
                     if(EcoreUtil.equals(c.getSrv().getInstance(), i) && EcoreUtil.equals(c.getProvided(), p)) {
                         for(Message m : p.getSends()) {
                             MSGLOOP: for(Message m2 : c.getRequired().getReceives()) { //TODO: remove duplicated code
-                                System.out.println(m.getName() + " ?= " + m2.getName() + EcoreUtil.equals(m, m2));
                                 if (EcoreUtil.equals(m, m2)) {
                                     Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>> mtable = result.get(m);
                                     if (mtable == null) {
