@@ -1149,14 +1149,16 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
       }
     }
     // Init array properties
-    context.cfg.initExpressionsForInstanceArrays(self).foreach{ case (p, e) =>
-       if (e.getValue != null && e.getKey != null) {
-        builder append c_var_name + "." + p.c_var_name
-        builder append  "["
-        e.getKey.generateC(builder, context)
-        builder append  "] = "
-        e.getValue.generateC(builder, context)
-        builder append ";\n";
+    context.cfg.initExpressionsForInstanceArrays(self).foreach{ case (p, l) =>
+      l.foreach { e =>
+        if (e.getValue != null && e.getKey != null) {
+          builder append c_var_name + "." + p.c_var_name
+          builder append "["
+          e.getKey.generateC(builder, context)
+          builder append "] = "
+          e.getValue.generateC(builder, context)
+          builder append ";\n";
+        }
       }
     }
 

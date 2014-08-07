@@ -454,10 +454,11 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
           }
 
 
-          self.initExpressionsForInstanceArrays(i).foreach{ case (p, e) =>
-            var result = ""
-            var tempBuilder = new StringBuilder()
-            result += i.getName + "_" + p.getName + "_array ["
+          self.initExpressionsForInstanceArrays(i).foreach{ case (p, l) =>
+            l.foreach { e =>
+              var result = ""
+              var tempBuilder = new StringBuilder()
+              result += i.getName + "_" + p.getName + "_array ["
               tempBuilder = new StringBuilder()
               e.getKey.generateJava(tempBuilder)
               result += tempBuilder.toString
@@ -466,6 +467,7 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
               e.getValue.generateJava(tempBuilder)
               result += tempBuilder.toString + ";\n"
               builder append result
+            }
           }
 
 

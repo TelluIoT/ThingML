@@ -39,9 +39,24 @@ thing TimerLinux includes Timer, ClockMsgs
 
 }
 
-configuration fragment TimerLinux {
+/*configuration fragment TimerLinux {
 	instance clock : ClockLinux
 	set clock.period = 1000
 	instance timer : TimerLinux
 	connector timer.clock => clock.signal
+}*/
+
+configuration TestTimerLinux 
+/*  @debug "true"
+  @debug_fifo "true"
+  @debug_message_send ".*"
+  @debug_message_receive ".*"*/
+{    
+    instance clock : ClockLinux
+	set clock.period = 1
+	instance timer : TimerLinux
+	connector timer.clock => clock.signal
+
+    instance client : SimpleTimerClient
+    connector client.timer => timer.timer    
 }

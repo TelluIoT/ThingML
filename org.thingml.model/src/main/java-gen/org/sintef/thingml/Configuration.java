@@ -220,18 +220,19 @@ public interface Configuration extends AnnotatedElement {
      *
      *   This method only initializes Array properties (property, index expression, init expression)
      */
-    Map<Property, AbstractMap.SimpleImmutableEntry<Expression, Expression>> initExpressionsForInstanceArrays(Instance i);
+    Map<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> initExpressionsForInstanceArrays(Instance i);
 
-    /**
-     Returns the set of destination for messages sent through the port p
-     For each outgoing message the results gives the list of destinations
-     sorted by source instance as a list of target instances+port
-     message* -> source instance* -> (target instance, port)*
 
-     TODO: WTF?! We need to return a proper structure that one can exploit, not that mess of Map<Message, ...>!!!
+        /**
+         Returns the set of destination for messages sent through the port p
+         For each outgoing message the results gives the list of destinations
+         sorted by source instance as a list of target instances+port
+         message* -> source instance* -> (target instance, port)*
 
-     * @generated NOT
-     */
+         TODO: WTF?! We need to return a proper structure that one can exploit, not that mess of Map<Message, ...>!!!
+
+         * @generated NOT
+         */
     Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch(Thing t, Port p);
 
 } // Configuration

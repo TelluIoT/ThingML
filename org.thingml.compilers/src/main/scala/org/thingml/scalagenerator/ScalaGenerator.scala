@@ -495,9 +495,10 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
         builder append result
       }
       
-      self.initExpressionsForInstanceArrays(i).foreach{ case (p, e) =>
-        var result = ""
-        var tempBuilder = new StringBuilder()
+      self.initExpressionsForInstanceArrays(i).foreach{ case (p, l) =>
+        l.foreach { e =>
+          var result = ""
+          var tempBuilder = new StringBuilder()
           result += p.scala_var_name + "_" + i.getName + "("
           tempBuilder = new StringBuilder()
           e.getKey.generateScala(tempBuilder)
@@ -506,7 +507,8 @@ case class ConfigurationScalaGenerator(override val self: Configuration) extends
           tempBuilder = new StringBuilder()
           e.getValue.generateScala(tempBuilder)
           result += tempBuilder.toString + "\n"
-        builder append result
+          builder append result
+        }
       }
     }
    

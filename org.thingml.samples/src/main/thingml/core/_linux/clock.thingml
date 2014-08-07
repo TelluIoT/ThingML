@@ -54,7 +54,7 @@ thing ClockTestApp includes ClockMsgs {
 }
 
 configuration LinuxClockTest 
-  @output_folder "/home/thingml_out/"
+  //@output_folder "/home/thingml_out/"
   @debug "true"
   @debug_fifo "true"
   @debug_message_send ".*"

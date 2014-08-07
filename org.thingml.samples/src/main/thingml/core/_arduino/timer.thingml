@@ -41,7 +41,7 @@ thing TimerArduino includes Timer, ThingMLSchedulerMsg
     }
 }
 
-/*configuration TestTimerJava {
+/*configuration TestTimerArduino {
     instance timer : TimerArduino
     instance client : SimpleTimerClient
     connector client.timer => timer.timer    

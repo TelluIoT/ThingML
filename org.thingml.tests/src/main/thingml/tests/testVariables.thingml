@@ -8,7 +8,7 @@ thing TestVariables includes Test
 	
 	readonly property pb : Char = '\'b\''
     
-    statechart TestPropertyPing init state1 {
+    statechart TestVariables init state1 {
     
     property pc : Char = '\'c\''
     
