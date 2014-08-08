@@ -2,9 +2,9 @@ import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 
 thing TestDeepCompositeStates includes Test 
 @test "n # (012abc|abc012)"
-@test "na # (012abc|abc012)(3d|d3)"
-@test "naa # (012abc|abc012)(3d|d3)(4e|e4)"
-@test "naaa # (012abc|abc012)(3d|d3)(4e|e4)(5f|f5)"
+@test "na # (012abc|abc012)(63gd|gd63)"
+@test "naa # (012abc|abc012)(63gd|gd63)(74he|he74)"
+@test "naaa # (012abc|abc012)(63gd|gd63)(74he|he74)(85if|if85)"
 {
 	statechart TestDeepCompositeStates init I {
 	
@@ -24,6 +24,7 @@ thing TestDeepCompositeStates includes Test
 		
 			state C1S1 {
 				on entry harnessOut!testOut('\'4\'')
+                on exit harnessOut!testOut('\'8\'')
 			}
 			
 			composite state C2 init C3 {
@@ -35,11 +36,13 @@ thing TestDeepCompositeStates includes Test
 				
 				state C2S1 {	
 					on entry harnessOut!testOut('\'3\'')
+                    on exit harnessOut!testOut('\'7\'')
 				}
 				
 				composite state C3 init C3S1 {
 				
 					on entry harnessOut!testOut('\'2\'')
+                    on exit harnessOut!testOut('\'6\'')
 					transition -> C2S1
 					event m : harnessIn?testIn
 					guard m.c == '\'a\''
@@ -66,6 +69,7 @@ thing TestDeepCompositeStates includes Test
 		
 			state r_C1S1 {
 				on entry harnessOut!testOut('\'e\'')
+                on exit harnessOut!testOut('\'i\'')
 			}
 			
 			composite state r_C2 init r_C3 {
@@ -77,11 +81,13 @@ thing TestDeepCompositeStates includes Test
 				
 				state r_C2S1 {	
 					on entry harnessOut!testOut('\'d\'')
+                    on exit harnessOut!testOut('\'h\'')
 				}
 				
 				composite state r_C3 init r_C3S1 {
 				
 					on entry harnessOut!testOut('\'c\'')
+                    on exit harnessOut!testOut('\'g\'')
 					transition -> r_C2S1
 					event m : harnessIn?testIn
 					guard m.c == '\'a\''

@@ -9,7 +9,7 @@ thing TestMaskCompositeStates includes Test
 
 {
 	statechart TestMaskCompositeStates init I {
-	
+    
 		state I {
 			transition -> C1
 			event m : harnessIn?testIn
@@ -18,14 +18,21 @@ thing TestMaskCompositeStates includes Test
 		
 		composite state C1 init C1S1 {
 		
-		on entry harnessOut!testOut('\'0\'')
-		on exit harnessOut!testOut('\'0\'')
-		transition -> I
-		event m : harnessIn?testIn
-		guard m.c == '\'p\''
+		    on entry do
+              harnessOut!testOut('\'0\'')
+            end
+		    on exit do
+              harnessOut!testOut('\'0\'')
+            end
+        
+		    transition -> I
+		    event m : harnessIn?testIn
+		    guard m.c == '\'p\''
 		
 			state C1S1 {
-				on entry harnessOut!testOut('\'1\'')
+				on entry do
+                    harnessOut!testOut('\'1\'')
+                end
 				transition -> C1S2
 				event m : harnessIn?testIn
 				guard m.c == '\'n\''
@@ -35,7 +42,8 @@ thing TestMaskCompositeStates includes Test
 				
 				on entry harnessOut!testOut('\'2\'')
 				on exit harnessOut!testOut('\'2\'')
-				transition -> C1S1
+				
+                transition -> C1S1
 				event m : harnessIn?testIn
 				guard m.c == '\'p\''
 				
