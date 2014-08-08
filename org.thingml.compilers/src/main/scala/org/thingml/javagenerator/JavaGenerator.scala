@@ -445,7 +445,14 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
           self.allArrays(i).foreach{ a =>
             //if (!a.isChangeable) {
               builder append "final " + a.getType.java_type() + "[] " + i.getName + "_" + a.getName + "_array = new " + a.getType.java_type() + "["
-              a.getCardinality.generateJava(builder)
+              a.getCardinality match {
+                case pr : PropertyReference =>
+                  self.initExpressionsForInstance(i).filter{l => l.getKey == pr.getProperty}.headOption match {
+                    case Some(p) => p.getValue.generateJava(builder)
+                    case None => a.getCardinality.generateJava(builder)
+                  }
+                case _ => a.getCardinality.generateJava(builder)
+              }
               builder append "];\n"
             /*} else {
               builder append "final " + a.getType.java_type() + "[] " + a.getName + "_array = null;\n"

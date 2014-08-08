@@ -4,7 +4,7 @@ import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 thing TestArrays3 includes Test	
 @test " # E"
 {
-    property size : UInt16 = 8
+    readonly property size : UInt16 = 8
 
 	property array : Int16[size]
 	
