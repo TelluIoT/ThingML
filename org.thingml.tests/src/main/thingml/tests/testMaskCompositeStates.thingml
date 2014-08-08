@@ -12,7 +12,7 @@ thing TestMaskCompositeStates includes Test
     
 		state I {
 			transition -> C1
-			event m : harnessIn?testIn
+		event m : harnessIn?testIn
 			guard m.c == '\'n\''
 		}
 		
