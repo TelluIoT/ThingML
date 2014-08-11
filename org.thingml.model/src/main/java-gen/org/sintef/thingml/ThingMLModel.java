@@ -110,7 +110,21 @@ public interface ThingMLModel extends EObject {
      * @return
      * @generated NOT
      */
+    Set<Type> allUsedTypes();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
     List<Type> allSimpleTypes();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    Set<Type> allUsedSimpleTypes();
 
     /**
      *

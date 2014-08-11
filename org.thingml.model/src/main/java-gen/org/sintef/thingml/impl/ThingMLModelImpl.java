@@ -260,8 +260,27 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
      * @return
      * @generated NOT
      */
+    @Override
+    public Set<Type> allUsedTypes() {
+        return ThingMLHelpers.allUsedTypes(this);
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
     public List<Type> allSimpleTypes() {
         return ThingMLHelpers.allSimpleTypes(this);
+    }
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    @Override
+    public Set<Type> allUsedSimpleTypes() {
+        return ThingMLHelpers.allUsedSimpleTypes(this);
     }
 
     /**

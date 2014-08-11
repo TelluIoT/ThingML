@@ -318,7 +318,7 @@ object JavaGenerator {
     t.generateJavaMain(mainBuilder)
 
     //TODO: we should not generate all the enumeration defined in the model, just the one relevant for the configuration
-    model.allSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
+    model.allUsedSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
       e.generateJava(Context.getBuilder(Context.firstToUpper(e.getName) + "_ENUM.java"))
     }
 

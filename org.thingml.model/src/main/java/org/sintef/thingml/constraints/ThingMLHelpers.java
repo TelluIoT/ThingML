@@ -29,11 +29,15 @@
 package org.sintef.thingml.constraints;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.tree.VariableHeightLayoutCache;
 
 import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 
 
@@ -187,14 +191,14 @@ public class ThingMLHelpers {
 	 * Resolution of imported models / All available Things and Types
 	 * ***********************************************************/
 	
-	public static ArrayList<ThingMLModel> allThingMLModelModels(ThingMLModel model) {
+	public static List<ThingMLModel> allThingMLModelModels(ThingMLModel model) {
 		ArrayList<ThingMLModel> result = new ArrayList<ThingMLModel>();
 		result.add(model);
 		for ( ThingMLModel m : model.getImports()) result.addAll(allThingMLModelModels(m));
 		return result;
 	}
 	
-	public static ArrayList<Type> allTypes(ThingMLModel model) {
+	public static List<Type> allTypes(ThingMLModel model) {
 		ArrayList<Type> result = new ArrayList<Type>();
 		for (ThingMLModel m : allThingMLModelModels(model)) {
 			for (Type t : m.getTypes()) {
@@ -203,6 +207,55 @@ public class ThingMLHelpers {
 		}
 		return result;
 	}
+
+    /**
+     * Returns the list of all types that are actually used in the model
+     * A type is used if:
+     *  - it exists a property (in a thing or in a state machine) of this type, or
+     *  - it exists a message with a parameter of this type
+     * @param model
+     * @return
+     */
+    public static Set<Type> allUsedTypes(ThingMLModel model) {
+        Set<Type> result = new HashSet<Type>();
+        for(Type t : allTypes(model)) {
+            for(Thing thing : allThings(model)) {
+                for(Property p : thing.allPropertiesInDepth()) {
+                    if (EcoreUtil.equals(p.getType(), t))
+                        result.add(t);
+                }
+                for(Message m : thing.allMessages()) {
+                    for(Parameter p : m.getParameters()) {
+                        if (EcoreUtil.equals(p.getType(), t)) {
+                            result.add(t);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+
+    public static Set<Type> allUsedSimpleTypes(ThingMLModel model) {
+        Set<Type> result = new HashSet<Type>();
+        for(Type t : allSimpleTypes(model)) {
+            for(Thing thing : allThings(model)) {
+                for(Property p : thing.allPropertiesInDepth()) {
+                    if (EcoreUtil.equals(p.getType(), t))
+                        result.add(t);
+                }
+                for(Message m : thing.allMessages()) {
+                    for(Parameter p : m.getParameters()) {
+                        if (EcoreUtil.equals(p.getType(), t)) {
+                            result.add(t);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
 	
 	public static ArrayList<Type> allSimpleTypes(ThingMLModel model) {
 		ArrayList<Type> result = new ArrayList<Type>();
