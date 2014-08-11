@@ -43,6 +43,7 @@ thing TestDumpJava includes TestDump
             transition -> End
             event m: dumpEnd?perfTestSize
             action do 
+	      ''&time& '= System.currentTimeMillis()-'&time&';'
             '((org.thingml.devices.Dumper)' & device & ').write(' & m.s & ');' 
             end
 		}
@@ -53,7 +54,6 @@ thing TestDumpJava includes TestDump
 
 		state End {
 			on entry do
-				''&time& '= System.currentTimeMillis()-'&time&';'
 				'try{java.io.PrintWriter pw = new java.io.PrintWriter("cputime");'
 				'pw.println(""+'&time&');'
 				'pw.close();}catch(Exception e){;}'

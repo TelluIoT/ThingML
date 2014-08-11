@@ -43,7 +43,7 @@ thing TestDumpLinux includes TestDump
    				'sleep(2);'
 				'struct timeval t;'
 				'gettimeofday(&t, NULL);'
-				''&start&'= ((double)t.tv_sec) + ((double)t.tv_usec) / 1000000.0;'
+				''&start&'= ((double)t.tv_sec) * 1000.0 + ((double)t.tv_usec) / 1000.0;'
             end
             internal event m : dump?testOut
             action do write(m.c)
@@ -67,7 +67,7 @@ thing TestDumpLinux includes TestDump
             action do 
 			'struct timeval t;'
 			'gettimeofday(&t, NULL);'
-			''&stop&'= ((double)t.tv_sec) + ((double)t.tv_usec) / 1000000.0;'
+			''&stop&'= ((double)t.tv_sec) * 1000.0 + ((double)t.tv_usec) / 1000.0;'
 		    'if (testFile != NULL)
 		    {
 		        fprintf(testFile,"%s\n",'&m.s&'); 
