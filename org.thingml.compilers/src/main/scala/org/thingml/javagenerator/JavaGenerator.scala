@@ -96,16 +96,7 @@ object JavaGenerator {
     case _           => TypedElementJavaGenerator(self)
   }
 
-  implicit def javaGeneratorAspect(self: Handler) = self match {
-    case h: Transition         => HandlerJavaGenerator(h)
-    case h: InternalTransition => HandlerJavaGenerator(h)
-  }
-
-  implicit def javaGeneratorAspect(self: State) = self match {
-    case s: StateMachine   => StateMachineJavaGenerator(s)
-    case s: CompositeState => CompositeStateJavaGenerator(s)
-    case s: State          => StateJavaGenerator(s)
-  }
+  implicit def javaGeneratorAspect(self: Handler) : HandlerJavaGenerator = HandlerJavaGenerator(self)
 
   implicit def javaGeneratorAspect(self: Action) = self match {
     case a: SendAction            => SendActionJavaGenerator(a)
@@ -414,15 +405,6 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
     self.allThings.foreach { thing =>
       thing.generateJava(Context.getBuilder(Context.firstToUpper(thing.getName) + ".java") )
     }
-
-    //builder append "\n"
-    /*builder append "// Initialize instance variables and states\n"
-    // Generate code to initialize variable for instances
-    self.allInstances.foreach { inst =>
-      inst.generateJava(builder)
-    }*/
-
-    //generateJavaMain()
   }
 
   def generateJavaMain(builder: StringBuilder) {
@@ -578,84 +560,143 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         val numReg = c.getRegion.size
         builder append "final List<Region> regions_" + c.qname("_") + " = new ArrayList<Region>();\n"
         c.getRegion.foreach { r =>
-          //buildRegion(builder, r)
           builder append "regions_" + c.qname("_") + ".add(build" + r.qname("_") + "());\n"
         }
         buildTransitions(builder, c)
-        /*if (c.isInstanceOf[StateMachine]) {
-          builder append "behavior = "
-        } else {*/
-          builder append "final CompositeState state_" + c.qname("_") + " = "
-        //}
-        /*if (numReg>1) {//TODO: we should also use annotations to avoid parallel overhead on single threaded platforms.
-          builder append "new CompositeStateMT(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
-        } else {
-          builder append "new CompositeStateST(\"" + c.getName + "\", states_" + c.getName + ", state_" + c.getInitial.getName + ", transitions_" + c.getName + ", new " + actionName + "(), regions_" + c.getName + ", false);\n"//TODO history
-        }*/
-        builder append "new CompositeState(\"" + c.getName + "\", states_" + c.qname("_") + ", state_" + c.getInitial.qname("_") + ", transitions_" + c.qname("_") + ", new " + actionName + "(), regions_" + c.qname("_") + ", " + (if (c.isHistory) "true" else "false") + ");\n"
-        /*if (s.eContainer.isInstanceOf[State] || s.eContainer.isInstanceOf[Region]) {
-          builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(state_" + c.qname("_") + ");\n"
-        }*/
+        builder append "final CompositeState state_" + c.qname("_") + " = "
+        builder append "new CompositeState(\"" + c.getName + "\", states_" + c.qname("_") + ", state_" + c.getInitial.qname("_") + ", transitions_" + c.qname("_") + ", regions_" + c.qname("_") + ", " + (if (c.isHistory) "true" else "false") + ")"
+        if (c.getEntry != null || c.getExit != null) {
+          builder append "{\n"
+          if (c.getEntry != null) {
+            builder append "@Override\n"
+            builder append "public void onEntry() {\n"
+            c.getEntry.generateJava(builder)
+            builder append "super.onEntry();\n"
+            builder append "}\n\n"
+          }
+
+          if (c.getExit != null) {
+            builder append "@Override\n"
+            builder append "public void onExit() {\n"
+            builder append "super.onExit();\n"
+            c.getExit.generateJava(builder)
+            builder append "}\n\n"
+          }
+          builder append "}\n"
+        }
+        builder append ";\n"
+
       case s: State =>
-        builder append "final IState state_" + s.qname("_") + " = new AtomicState(\"" + s.getName + "\", new " + actionName + "());\n" //TODO: point to proper action (to be generated)
+        builder append "final IState state_" + s.qname("_") + " = new AtomicState(\"" + s.getName + "\")\n"
+        if (s.getEntry != null || s.getExit != null) {
+          builder append "{\n"
+          if (s.getEntry != null) {
+            builder append "@Override\n"
+            builder append "public void onEntry() {\n"
+            s.getEntry.generateJava(builder)
+            builder append "}\n\n"
+          }
+
+          if (s.getExit != null) {
+            builder append "@Override\n"
+            builder append "public void onExit() {\n"
+            s.getExit.generateJava(builder)
+            builder append "}\n\n"
+          }
+          builder append "}"
+        }
+        builder append ";\n"
+
+
         if (s.eContainer.isInstanceOf[State] || s.eContainer.isInstanceOf[Region]) {
           builder append "states_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(state_" + s.qname("_") + ");\n"
         }
     }
   }
 
-  def buildTransitions(builder: StringBuilder, r : Region) {
-    builder append "final List<Handler> transitions_" + r.qname("_") + " = new ArrayList<Handler>();\n"
-    r.getSubstate.foreach{s =>
-    s.getInternal.foreach {
-      i =>
-        if (i.getEvent != null && i.getEvent.size() > 0) {
-          i.getEvent.foreach {
-            e => e match {
-              case r: ReceiveMessage =>
-                if (i.getAction != null || i.getGuard != null) {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new " + (if (i.getName != null) i.qname("_") else i.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.qname("_") + "));\n"
-                } else {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.qname("_") + "));\n"
-                }
+  def buildTransitionsHelper(builder : StringBuilder, s : State, i : Handler): Unit = {
+    if (i.getEvent != null && i.getEvent.size() > 0) {
+      i.getEvent.foreach {
+        e => e match {
+          case r: ReceiveMessage =>
+            builder append (i match {
+              case t : Transition => "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\"," + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.qname("_") + ", state_" + t.getTarget.qname("_") + ")"
+              case h : InternalTransition => "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\"," + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + s.qname("_") + ")"
+            })
+            if (i.getGuard != null || i.getAction != null)
+              builder append "{\n"
+            if (i.getGuard != null) {
+              builder append "@Override\n"
+              builder append "public boolean doCheck(final Event e, final Port p) {\n"
+              if (e != null) {
+                builder append "final " + Context.firstToUpper(r.getMessage.getName) + "MessageType." + Context.firstToUpper(r.getMessage.getName) + "Message ce = (" + Context.firstToUpper(r.getMessage.getName) + "MessageType." + Context.firstToUpper(r.getMessage.getName) + "Message) e;\n"
+              } else {
+                builder append "final NullEvent ce = (NullEvent) e;\n"
+              }
+              //builder append "return e.getType().equals(t) && "
+              builder append "return "
+              i.getGuard.generateJava(builder)
+              builder append ";\n"
+              builder append "}\n\n"
             }
-          }
-        } else {
-          if (i.getAction != null  || i.getGuard != null) {
-            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new " + (if (i.getName != null) i.qname("_") else i.handlerTypeName) + "Action(), new NullEventType(), null, state_" + s.qname("_") + "));\n"
-          } else { //Empty internal transition (TODO: this should be forbidden in ThingML as it will loop like crazy)
-            builder append "//WARNING: Internal empty transition is going to loop forever. TODO: check that this is the correct behavior!\n"
-            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new NullHandlerAction(), new NullEventType(), null, state_" + s.qname("_") + "));\n"
-          }
-        }
-    }
-    s.getOutgoing.foreach {
-      t =>
-        if (t.getEvent != null && t.getEvent.size() > 0) {
-          t.getEvent.foreach {
-            e => e match {
-              case r: ReceiveMessage =>
-                if (t.getAction != null  || t.getGuard != null) {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new " + (if (t.getName != null) t.qname("_") else t.handlerTypeName) + "Action(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
-                } else {
-                  builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new NullHandlerAction(), " + r.getMessage.getName + "Type, " + r.getPort.getName + "_port, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
-                }
+
+            if (i.getAction != null) {
+              builder append "@Override\n"
+              builder append "public void doExecute(final Event e) {\n"
+              if (e != null) {
+                builder append "final " + Context.firstToUpper(r.getMessage.getName) + "MessageType." + Context.firstToUpper(r.getMessage.getName) + "Message ce = (" + Context.firstToUpper(r.getMessage.getName) + "MessageType." + Context.firstToUpper(r.getMessage.getName) + "Message) e;\n"
+              } else {
+                builder append "final NullEvent ce = (NullEvent) e;\n"
+              }
+              i.getAction.generateJava(builder)
+              builder append "}\n\n"
             }
-          }
-        } else {//auto-transition
-          if (t.getAction != null  || t.getGuard != null) {
-            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new " + (if (t.getName != null) t.qname("_") else t.handlerTypeName) + "Action(), new NullEventType(), null, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
-          } else { //Empty transition (TODO: should it be allowed in ThingML?)
-            builder append "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (t.getName != null) t.getName else t.handlerTypeName) + "\", new NullHandlerAction(), new NullEventType(), null, state_" + t.getSource.qname("_") + ", state_" + t.getTarget.qname("_") + "));\n"
-          }
+            if (i.getGuard != null || i.getAction != null)
+              builder append "}"
+            builder append ");\n"
         }
+      }
+    } else {
+      builder append (i match {
+        case t : Transition => "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new Transition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new NullEventType(), null, state_" + s.qname("_") + ", state_" + t.getTarget.qname("_") + ")"
+        case h : InternalTransition => "transitions_" + s.eContainer.asInstanceOf[ThingMLElement].qname("_") + ".add(new InternalTransition(\"" + (if (i.getName != null) i.getName else i.handlerTypeName) + "\", new NullEventType(), null, state_" + s.qname("_") + ")"
+      })
+      if (i.getGuard != null || i.getAction != null)
+        builder append "{\n"
+      if (i.getGuard != null) {
+        builder append "@Override\n"
+        builder append "public boolean doCheck(final Event e, final Port p) {\n"
+        builder append "final NullEvent ce = (NullEvent) e;\n"
+        //builder append "return e.getType().equals(t) && "
+        builder append "return "
+        i.getGuard.generateJava(builder)
+        builder append ";\n"
+        builder append "}\n\n"
+      }
+
+      if (i.getAction != null) {
+        builder append "@Override\n"
+        builder append "public void doExecute(final Event e) {\n"
+        builder append "final NullEvent ce = (NullEvent) e;\n"
+        i.getAction.generateJava(builder)
+        builder append "}\n\n"
+      }
+      if (i.getGuard != null || i.getAction != null)
+        builder append "}"
+      builder append ");\n"
     }
+  }
+
+  def buildTransitions(builder: StringBuilder, reg : Region) {
+    builder append "final List<Handler> transitions_" + reg.qname("_") + " = new ArrayList<Handler>();\n"
+    reg.getSubstate.foreach{s =>
+      s.getInternal.foreach { i => buildTransitionsHelper(builder, s, i) }
+      s.getOutgoing.foreach { t => buildTransitionsHelper(builder, s, t) }
     }
   }
 
   def buildRegion(builder: StringBuilder, r: Region) {
     builder append "final List<IState> states_" + r.qname("_") + " = new ArrayList<IState>();\n"
-    //builder append "final List<Handler> transitions_" + r.getName + " = new ArrayList<Handler>();\n"
     r.getSubstate.foreach { s => s match {
       case c : CompositeState =>
         builder append "CompositeState state_" + c.qname("_") + " = build" + c.qname("_") + "();\n"
@@ -665,8 +706,6 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     }
     buildTransitions(builder, r)
     builder append "final Region reg_" + r.qname("_") + " = new Region(\"" + r.getName + "\", states_" + r.qname("_") + ", state_" + r.getInitial.qname("_") + ", transitions_" + r.qname("_") + ", " + (if (r.isHistory) "true" else "false") + ");\n"
-
-
   }
 
   def buildRegionBuilder(builder : StringBuilder, r: Region) {
@@ -802,7 +841,6 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     builder append "//Init state machine\n"
     self.allStateMachines.foreach { b =>
       builder append "behavior = build" + b.qname("_") + "();\n"
-      //buildState(builder, b)
     }
 
     builder append "return this;\n"
@@ -812,9 +850,9 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       f => f.generateJava(builder)
     }
 
-    self.allStateMachines.foreach { b =>
+    /*self.allStateMachines.foreach { b =>
       b.generateJava(builder)
-      }
+      }*/
 
     builder append "}\n"
   }
@@ -857,135 +895,15 @@ case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaG
 
   val handlerInstanceName = "handler_" + self.hashCode
   val handlerTypeName = "Handler_" + self.hashCode //TODO: find prettier names for handlers
-
-  def generateJava(builder: StringBuilder, e : ReceiveMessage) {
-    if (self.getGuard != null || self.getAction != null) {
-    builder append "private final class " + (if (self.getName != null) self.qname("_") else handlerTypeName) + "Action implements IHandlerAction {\n"
-
-
-      builder append "@Override\n"
-      builder append "public boolean check(final Event e, final EventType t) {\n"
-    if (self.getGuard != null) {
-
-      if (e != null) {
-        builder append "final " + Context.firstToUpper(e.getMessage.getName) + "MessageType." + Context.firstToUpper(e.getMessage.getName) + "Message ce = (" + Context.firstToUpper(e.getMessage.getName) + "MessageType." + Context.firstToUpper(e.getMessage.getName) + "Message) e;\n"
-      } else {
-        builder append "final NullEvent ce = (NullEvent) e;\n"
-      }
-      //builder append "return e.getType().equals(t) && "
-      builder append "return "
-      self.getGuard.generateJava(builder)
-      builder append ";\n"
-    } else {
-      builder append "return true;\n"
-    }
-      builder append "}\n\n"
-
-    builder append "@Override\n"
-    builder append "public void execute(final Event e) {\n"
-    Option(self.getAction) match {
-      case Some(a) =>
-        if (e!=null) {
-          builder append "final " + Context.firstToUpper(e.getMessage.getName) + "MessageType." + Context.firstToUpper(e.getMessage.getName) + "Message ce = (" + Context.firstToUpper(e.getMessage.getName) + "MessageType." + Context.firstToUpper(e.getMessage.getName) + "Message) e;\n"
-        } else {
-          builder append "final NullEvent ce = (NullEvent) e;\n"
-        }
-        self.getAction.generateJava(builder)
-      case None =>
-        builder append "//No action defined for this transition\n"
-    }
-    builder append "}\n\n"
-    builder append "}\n\n"
-  }
-}
 }
 
-case class TransitionJavaGenerator(override val self: Transition) extends HandlerJavaGenerator(self) {
-
-}
-
-case class InternalTransitionJavaGenerator(override val self: InternalTransition) extends HandlerJavaGenerator(self) {
-
-}
-
-case class StateMachineJavaGenerator(override val self: StateMachine) extends CompositeStateJavaGenerator(self) {
-}
-
-case class StateJavaGenerator(override val self: State) extends ThingMLJavaGenerator(self) {
-  def generateJava(builder: StringBuilder) {
-    if (self.getEntry != null || self.getExit != null) {
-      builder append "private final class " +  Context.firstToUpper(self.qname("_")) + "Action implements IStateAction {\n"
-
-      builder append "public " + Context.firstToUpper(self.qname("_")) + "Action(){}\n\n"
-
-      builder append "public void onEntry() {\n"
-      Option(self.getEntry) match {
-        case Some(a) =>
-          self.getEntry.generateJava(builder)
-        case None =>
-          builder append "//No entry action defined for this state\n"
-      }
-      builder append "}\n\n"
-
-      builder append "public void onExit() {\n"
-      Option(self.getExit) match {
-        case Some(a) =>
-          self.getExit.generateJava(builder)
-        case None =>
-          builder append "//No entry action defined for this state\n"
-      }
-      builder append "}\n\n"
-      builder append "}\n\n"
-    }
-
-    self.getInternal.foreach { t =>
-      //if (t.getEvent != null || t.getEvent.size() > 0) {
-        t.getEvent.foreach {e => t.generateJava(builder, e.asInstanceOf[ReceiveMessage])}
-      //} else {
-        //t.generateJava(builder, null)
-      //}
-    }
-    self.getOutgoing.foreach { t =>
-      //println(t.handlerTypeName)
-      //if (t.getEvent != null || t.getEvent.size() > 0) {
-        t.getEvent.foreach {e => t.generateJava(builder, e.asInstanceOf[ReceiveMessage])}
-      //} else {
-        //t.generateJava(builder, null)
-      //}
-    }
-
-    self.getOutgoing.union(self.getInternal)foreach{ t =>
-      if (t.getEvent.isEmpty) {
-        t.generateJava(builder, null)
-      }
-    }
-
-    /*self.allEmptyHandlers.foreach {t =>
-      println("      " + t.handlerTypeName)
-      t.generateJava(builder, null)
-    } */
-  }
-}
-
-case class CompositeStateJavaGenerator(override val self: CompositeState) extends StateJavaGenerator(self) {
-     override def generateJava(builder: StringBuilder) {
-        super.generateJava(builder)
-        self.getSubstate.foreach {s => s.generateJava(builder)}
-        self.getRegion.foreach{r =>
-          r.getSubstate.foreach{s =>
-            s.generateJava(builder)
-          }
-        }
-     }
-}
 
 case class TypedElementJavaGenerator(val self: TypedElement) /*extends ThingMLJavaGenerator(self)*/ {
   def generateJava(builder: StringBuilder) {
     // Implemented in the sub-classes
   }
 }
-  
-  
+
 
 case class FunctionJavaGenerator(override val self: Function) extends TypedElementJavaGenerator(self) {
   override def generateJava(builder: StringBuilder) {
@@ -1143,19 +1061,6 @@ case class SendActionJavaGenerator(override val self: SendAction) extends Action
     }
     builder append ")"
   }
-
-  
-  //This is nicer but does not work... for some reasons...
-  /*  def concreteMsg(builder: StringBuilder) {
-   builder append "new " + Context.firstToUpper(self.getMessage.getName) + "("
-   builder append self.getParameters.collect{case p =>
-   val tempBuilder = new StringBuilder()
-   p.generateJava(tempBuilder)
-   tempBuilder.toString
-   }.mkString(", ")
-   builder append ")"
-   }
-   */
 }
 
 case class VariableAssignmentJavaGenerator(override val self: VariableAssignment) extends ActionJavaGenerator(self) {
@@ -1299,11 +1204,6 @@ case class FunctionCallStatementJavaGenerator(override val self: FunctionCallSta
         ep.generateJava(builder)
         i = i+1
     }
-    /*builder append self.getParameters().collect{case p => 
-     var tempBuilder = new StringBuilder()
-     p.generateJava(tempBuilder)
-     tempBuilder.toString()
-     }.mkString(", ")*/
     builder append ");\n"
   }  
 }
@@ -1496,11 +1396,6 @@ case class FunctionCallExpressionJavaGenerator(override val self: FunctionCallEx
         ep.generateJava(builder)
         i = i+1
     }
-    /*builder append self.getParameters().collect{case p => 
-     var tempBuilder = new StringBuilder()
-     p.generateJava(tempBuilder)
-     tempBuilder.toString()
-     }.mkString(", ")*/
     builder append ")"
   }   
 }
