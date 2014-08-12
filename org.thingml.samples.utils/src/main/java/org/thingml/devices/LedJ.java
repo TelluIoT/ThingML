@@ -96,7 +96,7 @@ public class LedJ implements DeviceJ {
             System.out.println("tick");
 
         }  catch (InterruptedException ex) {
-            Logger.getLogger(Led.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LedJ.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
