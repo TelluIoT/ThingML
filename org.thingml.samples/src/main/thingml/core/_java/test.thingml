@@ -30,7 +30,7 @@ thing TestDumpJava includes TestDump
             	transitionsCount=transitionsCount+1
             end
             internal event m : dump?perfTestOut
-            action do write(''&m.s&'+"\n"')
+            action do //write(''&m.s&'+"\n"')
             	transitionsCount=transitionsCount+1
             end
             
@@ -39,6 +39,7 @@ thing TestDumpJava includes TestDump
             
             transition -> End
             event dumpEnd?testEnd
+	    action ''&time& '= System.currentTimeMillis()-'&time&';'
             
             transition -> End
             event m: dumpEnd?perfTestSize

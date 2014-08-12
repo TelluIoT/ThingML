@@ -50,7 +50,7 @@ thing TestDumpLinux includes TestDump
             	transitionsCount=transitionsCount+1
             end
             internal event m : dump?perfTestOut
-            action do writeString(m.s)
+            action do //writeString(m.s)
             	transitionsCount=transitionsCount+1
             end
             
@@ -61,6 +61,15 @@ thing TestDumpLinux includes TestDump
             
             transition -> End
             event dumpEnd?testEnd
+            action do 
+			'struct timeval t;'
+			'gettimeofday(&t, NULL);'
+			''&stop&'= ((double)t.tv_sec) * 1000.0 + ((double)t.tv_usec) / 1000.0;'
+		    'if (testFile != NULL)
+		    {
+		        fprintf(testFile,"%s\n",'&m.s&'); 
+		    }'
+		    end
             
             transition -> End
             event m: dumpEnd?perfTestSize

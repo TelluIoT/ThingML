@@ -22,7 +22,7 @@ thing TestArrays includes Test
 	// Other half of the array is initialized in the 
 	// configuration in order to make sure that it works too
     
-    statechart TestPropertyPing init start {
+    statechart TestArrays init start {
     
     	state start {
     		transition -> initialized

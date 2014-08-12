@@ -191,14 +191,14 @@ public class ThingMLHelpers {
 	 * Resolution of imported models / All available Things and Types
 	 * ***********************************************************/
 	
-	public static List<ThingMLModel> allThingMLModelModels(ThingMLModel model) {
+	public static ArrayList<ThingMLModel> allThingMLModelModels(ThingMLModel model) {
 		ArrayList<ThingMLModel> result = new ArrayList<ThingMLModel>();
 		result.add(model);
 		for ( ThingMLModel m : model.getImports()) result.addAll(allThingMLModelModels(m));
 		return result;
 	}
 	
-	public static List<Type> allTypes(ThingMLModel model) {
+	public static ArrayList<Type> allTypes(ThingMLModel model) {
 		ArrayList<Type> result = new ArrayList<Type>();
 		for (ThingMLModel m : allThingMLModelModels(model)) {
 			for (Type t : m.getTypes()) {
@@ -380,7 +380,7 @@ public class ThingMLHelpers {
 		}
 		return result;
 	}
-	
+    
 	public static ArrayList<Port> allPorts(Thing thing) {
 		ArrayList<Port> result = new ArrayList<Port>();
 		for (Thing t : allThingFragments(thing)) {
