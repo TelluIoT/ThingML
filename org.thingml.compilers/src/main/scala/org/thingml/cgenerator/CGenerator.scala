@@ -24,6 +24,7 @@ import sun.applet.resources.MsgAppletViewer
 import org.eclipse.emf.ecore.xml.`type`.internal.RegEx.Match
 import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
 import javax.xml.transform.Result
+import scala.collection.mutable
 import scala.util.parsing.input.StreamReader
 import java.io._
 import scala.actors._
@@ -2122,7 +2123,7 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
     // Init simple properties
     context.cfg.initExpressionsForInstance(self).foreach {
       init =>
-        if (init.getValue != null) {
+        if (init.getValue != null && init.getKey.getCardinality == null) {
           builder append c_var_name + "." + init.getKey.c_var_name + " = "
           init.getValue.generateC(builder, context)
           builder append ";\n";
@@ -2368,7 +2369,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     self.allPropertiesInDepth.foreach {
       p =>
         builder append p.getType.c_type + " " + p.c_var_name
-        if (p.getCardinality != null) {
+        if (p.getCardinality != null) {//array
           builder append "["
           p.getCardinality.generateC(builder, context)
           builder append "]"
@@ -3062,27 +3063,28 @@ case class SendActionCGenerator(override val self: SendAction) extends ActionCGe
 case class VariableAssignmentCGenerator(override val self: VariableAssignment) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder, context: CGeneratorContext) {
 
-    self.getProperty match {
+    val propertyName = self.getProperty match {
       case p: Parameter => {
-        builder append p.getName
+        p.getName
       }
       case p: Property => {
-        builder.append(context.instance_var_name + "->" + self.getProperty.qname("_") + "_var")
+        context.instance_var_name + "->" + self.getProperty.qname("_") + "_var"
       }
       case v: LocalVariable => {
-        builder append v.getName
+        v.getName
       }
     }
 
-    self.getIndex.foreach {
-      idx =>
-        builder append "["
-        idx.generateC(builder, context)
-        builder append "]"
-    }
-    builder append " = "
-    self.getExpression.generateC(builder, context)
-    builder append ";\n"
+    builder append propertyName
+      self.getIndex.foreach {
+        idx =>
+          builder append "["
+          idx.generateC(builder, context)
+          builder append "]"
+      }
+      builder append " = "
+      self.getExpression.generateC(builder, context)
+      builder append ";\n"
   }
 }
 
@@ -3151,13 +3153,45 @@ case class ReturnActionCGenerator(override val self: ReturnAction) extends Actio
 
 case class LocalVariableActionCGenerator(override val self: LocalVariable) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder, context: CGeneratorContext) {
-    builder append self.getType.c_type() + " " + self.getName
-    if (self.getCardinality != null) {
+    val propertyName = self.getType.c_type() + " " + self.getName
+    builder append propertyName
+    if (self.getCardinality != null) {//array declaration
+      val tempBuilder = new StringBuilder()
+      self.getCardinality.generateC(tempBuilder, context)
+      builder append "[" + tempBuilder.toString() + "];\n"
+      if (self.getInit != null && self.getInit.isInstanceOf[PropertyReference]) {//we want to assign the array, we have to copy all values of the target array
+        val pr: PropertyReference = self.getInit.asInstanceOf[PropertyReference]
+        if (pr.getProperty.getCardinality != null) {
+          //the target is indeed an array
+          builder append "int i = 0;\n"
+          builder append "for(i = 0; i < sizeof(" + self.getName + ") / sizeof(" + self.getType.c_type + "); i++) {\n"
+          builder append self.getName + "[i] = "
+          val propertyName2 = pr.getProperty match {
+            case p: Parameter => {
+              p.getName
+            }
+            case p: Property => {
+              context.instance_var_name + "->" + p.qname("_") + "_var"
+            }
+            case v: LocalVariable => {
+              v.getName
+            }
+          }
+          builder append propertyName2 + "[i];\n"
+          builder append "}\n"
+        } else {
+          println("ERROR: Array " + propertyName + " should be assigned from an array. " + pr.getProperty + " is not an array.")
+        }
+      }
+    }
+
+
+    /*if (self.getCardinality != null) {
       builder append "["
       self.getCardinality.generateC(builder, context)
       builder append "]"
-    }
-    if (self.getInit != null) {
+    }*/
+    else if (self.getInit != null) {
       builder append " = "
       self.getInit.generateC(builder, context)
     }
