@@ -227,7 +227,7 @@ for (a,b) in results:
 		dump=open(dumpDir+'/target/dump/'+fileName+type+'.dump', 'a')
 		if os.path.exists("tmp/ThingML_"+type+"/"+capitalizedName):
 			os.chdir("tmp/ThingML_"+type+"/"+capitalizedName)
-			generic_prepareFilesForMeasures(type)
+			#generic_prepareFilesForMeasures(type)
 			
 			generic_compile(type)
 			

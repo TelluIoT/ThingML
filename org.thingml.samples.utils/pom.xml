@@ -44,7 +44,7 @@
                 </executions>
             </plugin>
 			            <!-- Scala plugin : allow to compile Scala file -->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
                 <executions>
@@ -62,7 +62,7 @@
                         <jvmArg>-Xmx1024m</jvmArg>
                     </jvmArgs>
                 </configuration>
-            </plugin>
+            </plugin>-->
         </plugins>
 
     </build>
@@ -78,7 +78,7 @@
             <scope>provided</scope>
         </dependency>
 		
-		        <dependency>
+		<!--<dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
@@ -88,7 +88,7 @@
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-swing</artifactId>
             <version>${scala.version}</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
 </project>

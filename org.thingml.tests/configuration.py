@@ -26,20 +26,20 @@ testLanguages.append("Java")
 # testLanguages.append("Arduino")
 
 #Choose between functional and performance tests
-testType="functional"
-# testType="perf"
+# testType="functional"
+testType="perf"
 
 #Functional tests options
 #If useBlacklist is True, runs all tests not present in blacklist
 #If useBlacklist is False, runs all tests present in whitelist
 useBlacklist=True
 blacklist=("tester")
-whitelist=("testHello")
+whitelist=("testDeepCompositeStates")
 
 #Performance tests options
-perfTestNumber = 1 #Number of generated tests
+perfTestNumber = 5 #Number of generated tests
 perfRetryNumber = 1 #Number of retries per test
-perfTransitionNumber = 100
+perfTransitionNumber = 10000
 useYourkit = False
 
 def initPerfConfiguration(graphGenerator):
@@ -62,24 +62,30 @@ def initPerfConfiguration(graphGenerator):
 	# conf.setOutputs(1,4)
 	# conf.setDepth(3)
 	# conf.setCompositeRatio(0.5)
-	"""~250 states""" 
-	conf.setRegions(3,3)
-	conf.setStates(3,5)
-	conf.setOutputs(1,4)
-	conf.setDepth(4)
-	conf.setCompositeRatio(0.5)
+	# """~250 states""" 
+	# conf.setRegions(3,3)
+	# conf.setStates(3,5)
+	# conf.setOutputs(1,4)
+	# conf.setDepth(4)
+	# conf.setCompositeRatio(0.5)
 	# """~500 states""" 
 	# conf.setRegions(4,4)
 	# conf.setStates(4,6)
 	# conf.setOutputs(1,4)
 	# conf.setDepth(4)
 	# conf.setCompositeRatio(0.5)
-	# """~1000 states""" 
-	# conf.setRegions(5,8)
-	# conf.setStates(5,8)
-	# conf.setOutputs(1,4)
-	# conf.setDepth(4)
-	# conf.setCompositeRatio(0.5)
+	#"""~1000 states""" 
+	#conf.setRegions(5,8)
+	#conf.setStates(5,8)
+	#conf.setOutputs(1,4)
+	#conf.setDepth(4)
+	#conf.setCompositeRatio(0.5)
+	"""Custom"""
+	conf.setRegions(2,5)
+	conf.setStates(4,12)
+	conf.setOutputs(1,5)
+	conf.setDepth(4)
+	conf.setCompositeRatio(0.33)
 	
 	graphGenerator.launch(conf,perfTestNumber)
 

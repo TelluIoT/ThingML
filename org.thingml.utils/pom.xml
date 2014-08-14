@@ -19,7 +19,7 @@
         <plugins>
 
             <!-- Scala plugin : allow to compile Scala file -->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
                 <executions>
@@ -43,16 +43,12 @@
                     <args>
                         <arg>-Xelide-below</arg>
                         <arg>MINIMUM</arg>
-                        <!--<arg>INFO</arg>-->
-                        <!--<arg>WARNING</arg>-->
-                        <!--<arg>SEVERE</arg>-->
-                        <!--<arg>MAXIMUM</arg>-->
                     </args>
                     <jvmArgs>
                         <jvmArg>-Xmx1024m</jvmArg>
                     </jvmArgs>
                 </configuration>
-            </plugin>
+            </plugin>-->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -68,18 +64,23 @@
     </build>
 
     <dependencies>
-            
         <dependency>
+            <groupId>org.rxtx</groupId>
+            <artifactId>rxtx</artifactId>
+            <version>2.1.7</version>
+        </dependency>
+
+        <!--<dependency>
             <groupId>org.kevoree.extra</groupId>
             <artifactId>org.kevoree.extra.osgi.rxtx</artifactId>
             <version>2.2.0</version>
-        </dependency>
+        </dependency>-->
         
-        <dependency>
+        <!--<dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 
