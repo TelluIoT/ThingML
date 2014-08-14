@@ -14,7 +14,7 @@ thing fragment TimestampMsgs {
 
 thing fragment Timestamp includes TimestampMsgs
 {
-	provided port timer
+	provided port ts
     {
 		sends timestamp
 		receives getTimestamp
@@ -23,7 +23,7 @@ thing fragment Timestamp includes TimestampMsgs
 
 thing fragment TimerClient includes TimestampMsgs
 {
-	required port timer
+	required port ts
     {
 		receives timestamp
 		sends getTimestamp

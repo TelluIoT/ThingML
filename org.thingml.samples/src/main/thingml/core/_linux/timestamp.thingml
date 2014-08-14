@@ -12,11 +12,11 @@ thing TimestampLinux includes Timestamp
 
     statechart behavior init ready {
         state ready {
-            internal event timer?getTimestamp
+            internal event ts?getTimestamp
             action do
             'struct timeval  tv;
             gettimeofday(&tv, NULL);'
-            timer!timestamp('(tv.tv_sec) * 1000 + (tv.tv_usec) / 1000 ')
+            ts!timestamp('(tv.tv_sec) * 1000 + (tv.tv_usec) / 1000 ')
             end    
         }    
     }

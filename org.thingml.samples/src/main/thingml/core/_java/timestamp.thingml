@@ -8,15 +8,9 @@ thing TimestampJava includes Timestamp
 
     statechart behavior init ready {
         state ready {
-            internal event timer?getTimestamp
-            action timer!timestamp('System.currentTimeMillis()')    
+            internal event ts?getTimestamp
+            action ts!timestamp('System.currentTimeMillis()')    
         }    
     }
 
 }
-
-/*configuration TestTimerJava {
-    instance timer : TimerJava
-    instance client : SimpleTimerClient
-    connector client.timer => timer.timer    
-}*/
