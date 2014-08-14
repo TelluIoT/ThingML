@@ -1,0 +1,24 @@
+import "../../datatypes.thingml"
+import "../timestamp.thingml"
+
+/*****************************************************************************
+ * Definition of the built-in things and messages
+ *****************************************************************************/
+
+thing TimestampLinux includes Timestamp 
+@pim "Timestamp"
+@platform "linux"
+{
+
+    statechart behavior init ready {
+        state ready {
+            internal event timer?getTimestamp
+            action do
+            'struct timeval  tv;
+            gettimeofday(&tv, NULL);'
+            timer!timestamp('(tv.tv_sec) * 1000 + (tv.tv_usec) / 1000 ')
+            end    
+        }    
+    }
+
+}

@@ -1,0 +1,32 @@
+import "../datatypes.thingml"
+
+
+/*****************************************************************************
+ * Definition of the built-in things and messages
+ *****************************************************************************/
+ 
+thing fragment TimestampMsgs {
+	// Start the Timer
+	message getTimestamp();
+	// Cancel the Timer
+	message timestamp(t : LongLong);
+}
+
+thing fragment Timestamp includes TimestampMsgs
+{
+	provided port timer
+    {
+		sends timestamp
+		receives getTimestamp
+	}
+}
+
+thing fragment TimerClient includes TimestampMsgs
+{
+	required port timer
+    {
+		receives timestamp
+		sends getTimestamp
+	}
+    
+}

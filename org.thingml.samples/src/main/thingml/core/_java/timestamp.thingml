@@ -1,0 +1,22 @@
+import "../timestamp.thingml"
+
+
+thing TimestampJava includes Timestamp
+@pim "Timestamp"
+@platform "java"
+{
+
+    statechart behavior init ready {
+        state ready {
+            internal event timer?getTimestamp
+            action timer!timestamp('System.currentTimeMillis()')    
+        }    
+    }
+
+}
+
+/*configuration TestTimerJava {
+    instance timer : TimerJava
+    instance client : SimpleTimerClient
+    connector client.timer => timer.timer    
+}*/
