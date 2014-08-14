@@ -30,7 +30,7 @@ public class Dumper {
         try
         {
             printer = new PrintWriter("dump");
-            tPrinter = new PrintWriter("transitionCount");
+            tPrinter = new PrintWriter("transitionsCount");
         } catch (FileNotFoundException fnf) {
             System.err.println(fnf.getLocalizedMessage());
         }
