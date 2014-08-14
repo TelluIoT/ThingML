@@ -2583,6 +2583,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
           }
 
           // dispatch the current message to sub-regions
+          //println("  " + cs.getName + " calling dispatchToSubRegions")
           dispatchToSubRegions(builder, cs, port, msg, context)
           // If the state machine itself has a handler
           if (cs.canHandle(port, msg)) {
@@ -2663,6 +2664,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
 
   def generateMessageHandlers(s: State, port: Port, msg: Message, builder: StringBuilder, cs: CompositeState, r: Region, context: CGeneratorContext) {
+    //println("    generateMessageHandlers for " + s.getName)
     var first = true;
     s.getOutgoing.union(s.getInternal).foreach {
       h =>
@@ -2722,13 +2724,15 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     }
   }
 
-  def dispatchToSubRegions(builder: StringBuilder, cs: CompositeState, port: Port, msg: Message, context: CGeneratorContext) {
+  def dispatchToSubRegions(builder: StringBuilder, cs : CompositeState, port: Port, msg: Message, context: CGeneratorContext) {
 
-    //println("dispatchToSubRegions for " + cs + " port=" + port.getName + " msg=" + msg.getName)
+    //println("    dispatchToSubRegions for " +cs.getName + " port=" + port.getName + " msg=" + msg.getName)
 
-    cs.directSubRegions().foreach {
+    val regions = cs.asInstanceOf[Region] :: cs.getRegion.toList
+
+    regions.foreach {
       r =>
-      //println("  processing region " + r)
+      //println("  processing region " + r.getName)
       // for all states of the region, if the state can handle the message and that state is active we forward the message
         builder append "uint8_t "+state_var_name(r)+"_event_consumed = 0;\n"
 
@@ -2737,12 +2741,14 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
         }
         states.foreach {
           s =>
-          //println("    processing state " + s)
+          //println("    processing state " + s.getName)
             if (states.head != s) builder append "else "
             builder append "if (" + instance_var_name() + "->" + state_var_name(r) + " == " + state_id(s) + ") {\n" // s is the current state
             // dispatch to sub-regions if it is a composite
             s match {
-              case comp: CompositeState => dispatchToSubRegions(builder, comp, port, msg, context)
+              case comp: CompositeState =>
+                  //println("  " + comp.getName + " calling dispatchToSubRegions")
+                  dispatchToSubRegions(builder, comp, port, msg, context)
               case _ => {
                 /* do nothing */
               }
