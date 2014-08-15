@@ -5,11 +5,12 @@ datatype double
 thing TestDumpLinux includes TestDump
 @c_header "#include <stdio.h>
 #include <sys/time.h>"
-@c_global "FILE* testFile = NULL;"
+@c_global "FILE* testFile = NULL;
+FILE* cpuFile = NULL;"
 {
  	property benchmark: Boolean = false
- 	property start: double = 0
- 	property stop: double = 0
+ 	//property start: double = 0
+ 	//property stop: double = 0
 	function write(c : Char) 
 	do
 		
@@ -35,15 +36,16 @@ thing TestDumpLinux includes TestDump
 	
 	statechart LinuxHarness init Testing {
 		property transitionsCount : Long = 0
- 	property stateNumber: String = ""
+ 	    property stateNumber: String = ""
+        property time : LongLong = 0
 		
 		state Testing {
             on entry do 
             	'testFile = fopen("dump", "w+");'
    				'sleep(2);'
-				'struct timeval t;'
+				/*'struct timeval t;'
 				'gettimeofday(&t, NULL);'
-				''&start&'= ((double)t.tv_sec) * 1000.0 + ((double)t.tv_usec) / 1000.0;'
+				''&start&'= ((double)t.tv_sec) * 1000.0 + ((double)t.tv_usec) / 1000.0;'*/
             end
             internal event m : dump?testOut
             action do write(m.c)
@@ -61,18 +63,20 @@ thing TestDumpLinux includes TestDump
             
             transition -> End
             event m : dumpEnd?testEnd
-            action do 
+/*            action do 
 			'struct timeval t;'
 			'gettimeofday(&t, NULL);'
 			''&stop&'= ((double)t.tv_sec) * 1000.0 + ((double)t.tv_usec) / 1000.0;'
+            //time = m.time
 		    end
-            
+  */          
             transition -> End
             event m: dumpEnd?perfTestSize
             action do 
-			'struct timeval t;'
+			/*'struct timeval t;'
 			'gettimeofday(&t, NULL);'
-			''&stop&'= ((double)t.tv_sec) * 1000.0 + ((double)t.tv_usec) / 1000.0;'
+			''&stop&'= ((double)t.tv_sec) * 1000.0 + ((double)t.tv_usec) / 1000.0;'*/
+            time = m.time
 		    'if (testFile != NULL)
 		    {
 		        fprintf(testFile,"%s\n",'&m.s&'); 
@@ -87,6 +91,11 @@ thing TestDumpLinux includes TestDump
 		state End {
 			on entry do
 '
+cpuFile = fopen("cputime", "w+");
+if (cpuFile != NULL)
+		    {
+		        fprintf(cpuFile,"%li\n",'&time&'); 
+		    }
 char cmd[80];
 sprintf(cmd, "ps -p %d -o %ccpu > stats",getpid(),\'%\');
 system(cmd);
@@ -94,11 +103,7 @@ sprintf(cmd, "ps -p %d -o %cmem >> stats",getpid(),\'%\');
 system(cmd);'
 'sprintf(cmd, "echo \"%d\" > transitionsCount",' & transitionsCount & ');'
 'system(cmd);
-sprintf(cmd, "echo \"%f\" > cputime",'&stop&' - '&start&');'
-'system(cmd);
-sprintf(cmd, "echo \"%f\" >> cputime",'&start&');'
-'system(cmd);
-sprintf(cmd, "echo \"%f\" >> cputime",'&stop&');'
+sprintf(cmd, "echo \"%f\" > cputime",'&time&');'
 'system(cmd);
 fclose(testFile);
 //ProfilerStop();

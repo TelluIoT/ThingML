@@ -2,29 +2,29 @@ import "../test.thingml"
 
 datatype Dumper
 @java_type "org.thingml.devices.Dumper";
-datatype long
-@java_type "long";
 
 thing TestDumpJava includes TestDump
 @thingml_maven_dep "org.thingml.samples.utils"
 {
-   property device : Dumper = 'new org.thingml.devices.Dumper()'
- 	property benchmark: Boolean = false
- 	property time: long
+    readonly property device : Dumper = 'new org.thingml.devices.Dumper()'
+ 	readonly property benchmark: Boolean = false
+ 	//property time: LongLong
+ 
 	function write(string : String) 
 	do
 		if (benchmark == false)  do 
 			'((org.thingml.devices.Dumper)' & device & ').write(' & string & ');'
-			print(string) 
+			//print(string) 
 		end
 	end
 	
 	statechart JavaHarness init Testing {
 		property transitionsCount : Long = 0
+        property time : LongLong = 0
 		state Testing {
-			on entry do
+			/*on entry do
 			''&time&' = System.currentTimeMillis();'
-			end
+			end*/
             internal event m : dump?testOut
             action do write('Character.toString('&m.c&')')
             	transitionsCount=transitionsCount+1
@@ -38,14 +38,18 @@ thing TestDumpJava includes TestDump
             event dump?testFailure
             
             transition -> End
-            event dumpEnd?testEnd
-	    action ''&time& '= System.currentTimeMillis()-'&time&';'
+            event m : dumpEnd?testEnd
+            action do
+                //time = m.time
+            end
+	        //action ''&time& '= System.currentTimeMillis()-'&time&';'
             
             transition -> End
             event m: dumpEnd?perfTestSize
             action do 
-	      ''&time& '= System.currentTimeMillis()-'&time&';'
+	        //''&time& '= System.currentTimeMillis()-'&time&';'
             '((org.thingml.devices.Dumper)' & device & ').write(' & m.s & ');' 
+            time = m.time
             end
 		}
 		

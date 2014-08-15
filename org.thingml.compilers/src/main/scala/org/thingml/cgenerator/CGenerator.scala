@@ -702,7 +702,7 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
       mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -DDEBUG")
     }
     else {
-      mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -O -w")
+      mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -O2 -w")
     }
 
     val list = cfg.allThings.map {

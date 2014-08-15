@@ -54,7 +54,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
@@ -62,13 +62,13 @@
                         <include>**/*TestSuite.java</include>
                     </includes>
                 </configuration>
-            </plugin>
+            </plugin>-->
 
 	    <!-- Antrun plugin: use to run any kind of Ant tasks.
 		Use to copy the thingml samples within the test of the
 		compilers automatically 
 		-->	   
-            <plugin>
+            <!--<plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
@@ -85,7 +85,7 @@
                         </goals>  
                     </execution>
                 </executions>
-            </plugin> 
+            </plugin>-->
 
         </plugins>
 

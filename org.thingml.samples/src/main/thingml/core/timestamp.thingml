@@ -21,7 +21,7 @@ thing fragment Timestamp includes TimestampMsgs
 	}
 }
 
-thing fragment TimerClient includes TimestampMsgs
+thing fragment TimestampClient includes TimestampMsgs
 {
 	required port ts
     {

@@ -56,28 +56,33 @@ def run(type):
 					confLines = parse(name+'.thingml')
 					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/test.thingml"\n'+
 					'import "../'+name+'.thingml"\n'+
-					'import "../tester.thingml"\n'+
-					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timer.thingml"\n\n')
+					'import "../tester.thingml"\n')
 					if type == "perf":
-						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/random.thingml"\n\n')
+						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/random.thingml"\n\n'+
+						'import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timestamp.thingml"\n')
+					else:
+						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timer.thingml"\n\n')
 					fichier.write('configuration '+bigname+'C \n@output_folder "/home/thingml_out/" {\n'+
-					'	group timer : TimerLinux\n'+
-					'		set timer.timer.millisecond = true\n'+
-					'		set timer.timer.period = 10\n'+
-					'		set timer.clock.period = 10\n\n'+
 					'	instance harness : Tester\n'+
 					'	instance dump : TestDumpLinux\n'+
 					'	instance test : '+bigname+'\n')
 					if type == "perf":
 						fichier.write('	instance random : RandomLinux\n'+
 						'		set dump.benchmark = true\n'+
+						'	instance timestamp : TimestampLinux\n'+
 						'	connector test.testEnd => dump.dumpEnd\n'+
+						'	connector test.ts => timestamp.ts'+
 						'	connector harness.random => random.random\n')
 					else:
+						fichier.write(' group timer : TimerLinux\n'+
+						' set timer.timer.millisecond = true\n'+
+						' set timer.timer.period = 10\n'+
+						' set timer.clock.period = 10\n\n')
+						fichier.write(' connector harness.timer => timer.timer.timer\n')
 						fichier.write('	connector harness.testEnd => dump.dumpEnd\n')
+						fichier.write(' connector test.testEnd => dump.dumpEnd\n')
 					fichier.write('	connector test.harnessOut => dump.dump\n'+
-						'	connector test.harnessIn => harness.test\n'+
-						'	connector harness.timer => timer.timer.timer\n'+confLines+'}')
+						'	connector test.harnessIn => harness.test\n'+confLines+'}')
 					fichier.close()
 	print ("Successful generation of linux tests")
 	os.chdir("Tester")

@@ -16,7 +16,10 @@ thing TimestampLinux includes Timestamp
             action do
             'struct timeval  tv;
             gettimeofday(&tv, NULL);'
-            ts!timestamp('(tv.tv_sec) * 1000 + (tv.tv_usec) / 1000 ')
+            var ts : LongLong = '(long long) ((tv.tv_sec) * 1000 + (tv.tv_usec) / 1000)'
+            //'printf("   DEBUG timestamp: %f\n", ((tv.tv_sec) * 1000 + (tv.tv_usec) / 1000));'
+            'printf("      DEBUG timestamp: %li\n", ' & ts & ');'
+            ts!timestamp(ts)
             end    
         }    
     }

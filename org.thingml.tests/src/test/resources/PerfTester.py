@@ -24,8 +24,9 @@ class PerfTester:
 		testerFile = open('../tester.thingml', 'w')
 		i=0
 
-		testerFile.write('import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"\n\n\
-thing Tester includes TestHarness, TimerClient, RandomUser\n{\n\
+		testerFile.write('import "../../../../../org.thingml.samples/src/main/thingml/core/test.thingml"\n\
+import "../../../../../org.thingml.samples/src/main/thingml/core/random.thingml"\n\n\
+thing Tester includes TestHarness, RandomUser\n{\n\
     property continue : Long = '+str(transitionNumber)+'\n\
 	statechart Tester init e1 {\n\
 		state e1 {\n\

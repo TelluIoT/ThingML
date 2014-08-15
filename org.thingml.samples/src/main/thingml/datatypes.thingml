@@ -116,5 +116,4 @@ datatype LongLong
     @c_type "long long"
     @c_byte_size "8"
     @java_type "long"
-    @java_primitive "true"
-;
+    @java_primitive "true";

@@ -10,8 +10,8 @@ thing fragment TestMsg {
 	message perfTestOut(s : String);
 	message testFailure();
 	message perfTestEnd();
-	message testEnd();
-	message perfTestSize(s : String);
+	message testEnd(/*time : LongLong*/);
+	message perfTestSize(s : String, time : LongLong);
 }
 thing fragment TestHarness includes TestMsg {
 	provided port test {

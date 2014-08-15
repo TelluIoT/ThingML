@@ -281,32 +281,42 @@ class DumpThingml:
 		self.depth = 1
 		self.regions=tree
 		self.file=open("../perfTest"+str(id)+".thingml",'w')
-		self.file.write("/** Abstract tree:\n")
+		# self.file.write("/** Abstract tree:\n")
 		oldstdout=sys.stdout
 		sys.stdout=self.file
 		self.maxID=0
-		for r in tree:
-			r.dump()
+		# for r in tree:
+			# r.dump()
 		sys.stdout=oldstdout
 			
-		self.file.write("*/\n\n\n")
+		# self.file.write("*/\n\n\n")
 		
 		self.file.write("import \"../../../../../org.thingml.samples/src/main/thingml/thingml.thingml\"\n\n\
-thing PerfTest"+str(id)+" includes Test\n\
+thing PerfTest"+str(id)+" includes Test, TimestampClient\n\
 @test \" # .*\"\n\
 {\n\
-statechart PerfTest"+str(id)+" init s"+str(self.regions[0].init.ID)+"{\n")
+property start : LongLong\n\
+property stop : LongLong\n\
+statechart PerfTest"+str(id)+" init setup {\n")
+		self.file.write("state setup {\non entry ts!getTimestamp()\n\ntransition -> s"+str(self.regions[0].init.ID)+"\nevent t : ts?timestamp\n action start = t.t\n}\n\n")
 		self.firstRegion=True
 		for r in self.regions:
 			r.accept(self)
 		self.file.write("	region endRegion init running {\n\
 		state running {\n\
-			transition -> endState\n\
+			transition -> tearDown\n\
 			event m : harnessIn?perfTestEnd\n\
 		} \n\
-		state endState {\n\
-            on entry testEnd!perfTestSize(\""+str(self.maxID)+"\") \n\
-		}\n\
+		state tearDown {\n\
+            on entry do\n\
+ts!getTimestamp()\n\
+end\n\
+internal event t : ts?timestamp\n action do\n\
+stop = t.t \n\
+var time : LongLong = stop-start\n\
+testEnd!perfTestSize(\""+str(self.maxID)+"\", time)\n\
+end\n\
+}\n\
 	}\n")
 		self.file.write("}//end of statechart\n")
 		self.file.write("}//end of thing\n")

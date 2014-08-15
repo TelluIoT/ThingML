@@ -39,7 +39,7 @@ whitelist=("testDeepCompositeStates")
 #Performance tests options
 perfTestNumber = 5 #Number of generated tests
 perfRetryNumber = 1 #Number of retries per test
-perfTransitionNumber = 10000
+perfTransitionNumber = 25000
 useYourkit = False
 
 def initPerfConfiguration(graphGenerator):
@@ -81,10 +81,10 @@ def initPerfConfiguration(graphGenerator):
 	#conf.setDepth(4)
 	#conf.setCompositeRatio(0.5)
 	"""Custom"""
-	conf.setRegions(2,5)
-	conf.setStates(4,12)
-	conf.setOutputs(1,5)
-	conf.setDepth(4)
+	conf.setRegions(1,4)
+	conf.setStates(3,12)
+	conf.setOutputs(1,6)
+	conf.setDepth(3)
 	conf.setCompositeRatio(0.33)
 	
 	graphGenerator.launch(conf,perfTestNumber)
