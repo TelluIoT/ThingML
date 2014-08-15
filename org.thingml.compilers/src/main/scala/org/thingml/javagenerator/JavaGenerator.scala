@@ -547,7 +547,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     s match {
       case c: CompositeState =>
-        builder append "final List<IState> states_" + c.qname("_") + " = new ArrayList<IState>();\n"
+        builder append "final List<AtomicState> states_" + c.qname("_") + " = new ArrayList<AtomicState>();\n"
         c.getSubstate.foreach { s =>
           s match {
             case cs : CompositeState =>
@@ -587,7 +587,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         builder append ";\n"
 
       case s: State =>
-        builder append "final IState state_" + s.qname("_") + " = new AtomicState(\"" + s.getName + "\")\n"
+        builder append "final AtomicState state_" + s.qname("_") + " = new AtomicState(\"" + s.getName + "\")\n"
         if (s.getEntry != null || s.getExit != null) {
           builder append "{\n"
           if (s.getEntry != null) {
@@ -696,7 +696,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
   }
 
   def buildRegion(builder: StringBuilder, r: Region) {
-    builder append "final List<IState> states_" + r.qname("_") + " = new ArrayList<IState>();\n"
+    builder append "final List<AtomicState> states_" + r.qname("_") + " = new ArrayList<AtomicState>();\n"
     r.getSubstate.foreach { s => s match {
       case c : CompositeState =>
         builder append "CompositeState state_" + c.qname("_") + " = build" + c.qname("_") + "();\n"
@@ -764,7 +764,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     if (self.allPropertiesInDepth.filter{p => self.initExpression(p) != null}.size > 0) {
       builder append "//Empty Constructor\n"
-      builder append "public " + Context.firstToUpper(self.getName) + "() {\nsuper();\n"
+      builder append "public " + Context.firstToUpper(self.getName) + "() {\nsuper(" + self.allPorts.size + ");\n"
       self.allPropertiesInDepth.foreach { p =>
         val e = self.initExpression(p)
         if (e != null) {
@@ -782,7 +782,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         "final " + p.getType.java_type(p.getCardinality != null) + " " + p.Java_var_name
       }.mkString(", ")
       builder append ") {\n"
-      builder append "super();\n"
+      builder append "super(" + self.allPorts.size + ");\n"
       self.allPropertiesInDepth.foreach { p =>
         if (!p.isChangeable) {
           builder append "this." + p.Java_var_name + " = " + p.Java_var_name + ";\n"
@@ -797,7 +797,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         builder append ", final " + p.getType.java_type(p.getCardinality != null) + " " + p.Java_var_name
     }
     builder append ") {\n"
-    builder append "super(name);\n"
+    builder append "super(name, " + self.allPorts.size + ");\n"
     self.allPropertiesInDepth.foreach { p =>
       builder append "this." + p.Java_var_name + " = " + p.Java_var_name + ";\n"
     }
@@ -826,6 +826,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     builder append "public Component buildBehavior() {\n"
 
     builder append "//Init ports\n"
+    var pi = 0
     self.allPorts.foreach { p =>
       builder append "final List<EventType> inEvents_" + p.getName + " = new ArrayList<EventType>();\n"
       builder append "final List<EventType> outEvents_" + p.getName + " = new ArrayList<EventType>();\n"
@@ -835,7 +836,8 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       p.getSends.foreach { s =>
         builder append "outEvents_" + p.getName + ".add(" + s.getName + "Type);\n"
       }
-      builder append p.getName + "_port = new Port(" + (if (p.isInstanceOf[ProvidedPort]) "PortType.PROVIDED" else "PortType.REQUIRED") + ", \"" + p.getName + "\", inEvents_" + p.getName + ", outEvents_" + p.getName + ");\n"
+      builder append p.getName + "_port = new Port(" + (if (p.isInstanceOf[ProvidedPort]) "PortType.PROVIDED" else "PortType.REQUIRED") + ", \"" + p.getName + "\", inEvents_" + p.getName + ", outEvents_" + p.getName + ", " + pi + ");\n"
+      pi = pi + 1
     }
 
     builder append "//Init state machine\n"
