@@ -627,7 +627,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
               builder append "{\n"
             if (i.getGuard != null) {
               builder append "@Override\n"
-              builder append "public boolean doCheck(final Event e, final Port p) {\n"
+              builder append "public boolean doCheck(final Event e) {\n"
               if (e != null) {
                 builder append "final " + Context.firstToUpper(r.getMessage.getName) + "MessageType." + Context.firstToUpper(r.getMessage.getName) + "Message ce = (" + Context.firstToUpper(r.getMessage.getName) + "MessageType." + Context.firstToUpper(r.getMessage.getName) + "Message) e;\n"
               } else {
@@ -665,7 +665,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         builder append "{\n"
       if (i.getGuard != null) {
         builder append "@Override\n"
-        builder append "public boolean doCheck(final Event e, final Port p) {\n"
+        builder append "public boolean doCheck(final Event e) {\n"
         builder append "final NullEvent ce = (NullEvent) e;\n"
         //builder append "return e.getType().equals(t) && "
         builder append "return "
