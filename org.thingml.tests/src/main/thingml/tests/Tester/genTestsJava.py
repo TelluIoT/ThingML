@@ -53,30 +53,25 @@ def run(type):
 					fichier = open('_java/'+name+'.thingml', 'w')
 					confLines = parse(name+'.thingml')
 					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/test.thingml"\n'+
-					'import "../'+name+'.thingml"\n'+
-					'import "../tester.thingml"\n')
+								  'import "../'+name+'.thingml"\n'+
+								  'import "../tester.thingml"\n')
+					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/timer.thingml"\n\n')
 					if type == "perf":
 						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/timestamp.thingml"\n\n')
-						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/random.thingml"\n\n')
-					else:
-						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_java/timer.thingml"\n\n')
 					fichier.write('configuration '+bigname+' {\n'+
-					'	instance harness : Tester\n'+
-					'	instance dump : TestDumpJava\n'+
-					'	instance test : '+bigname+'\n')
+								  '	instance harness : Tester\n'+
+								  '	instance dump : TestDumpJava\n'+
+								  '	instance test : '+bigname+'\n')
+					fichier.write(' instance timer : TimerJava\n')
 					if type == "perf":
-						fichier.write('	instance random : RandomJava\n'+
-						'		set dump.benchmark = true\n'+
-						'	instance timestamp : TimestampJava\n'
-						'	connector test.testEnd => dump.dumpEnd\n'+
-						'	connector test.ts => timestamp.ts\n'+                        
-						'	connector harness.random => random.random\n')
+						fichier.write('	//instance timestamp : TimestampJava\n'
+									  '	connector test.testEnd => dump.dumpEnd\n'+
+									  '	//connector test.ts => timestamp.ts\n')
 					else:
-						fichier.write(' instance timer : TimerJava\n')
-						fichier.write(' connector harness.timer => timer.timer\n')
 						fichier.write('	connector harness.testEnd => dump.dumpEnd\n')
+					fichier.write(' connector harness.timer => timer.timer\n')
 					fichier.write('	connector test.harnessOut => dump.dump\n'+
-					'	connector test.harnessIn => harness.test\n'+confLines+'}')
+								  '	connector test.harnessIn => harness.test\n'+confLines+'}')
 					fichier.close()
 	print ("Successful generation of java tests")
 	os.chdir("Tester")

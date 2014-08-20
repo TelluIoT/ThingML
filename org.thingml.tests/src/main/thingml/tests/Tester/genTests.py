@@ -28,15 +28,18 @@ def load_src(name, fpath):
     return imp.load_source(name, os.path.join(os.path.dirname(__file__), fpath))
 load_src("configuration", "../../../../../configuration.py")
 from configuration import testType
+from configuration import testLanguages
 
 # os.chdir("../org.thingml.tests/src/main/thingml/tests/Tester/")
 if testType == "perf":
-	os.system("rm ../perf*")
-	load_src("configuration", "../../../../../configuration.py")
-	from configuration import initPerfConfiguration
-	initPerfConfiguration(graphGenerator)
+	for type in testLanguages:
+		os.system("rm ../perf*")
+		load_src("configuration", "../../../../../configuration.py")
+		from configuration import initPerfConfiguration
+		initPerfConfiguration(graphGenerator,type)
 genTestsArduino.run(testType)
 genTestsLinux.run(testType)
-genTestsScala.run(testType)
+# genTestsScala.run(testType)
 genTestsJava.run(testType)
-genTestsJunit.run(testType)
+for type in testLanguages:
+	genTestsJunit.run(type)

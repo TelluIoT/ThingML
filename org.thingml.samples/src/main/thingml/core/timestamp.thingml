@@ -4,29 +4,5 @@ import "../datatypes.thingml"
 /*****************************************************************************
  * Definition of the built-in things and messages
  *****************************************************************************/
- 
-thing fragment TimestampMsgs {
-	// Start the Timer
-	message getTimestamp();
-	// Cancel the Timer
-	message timestamp(t : LongLong);
-}
 
-thing fragment Timestamp includes TimestampMsgs
-{
-	provided port ts
-    {
-		sends timestamp
-		receives getTimestamp
-	}
-}
-
-thing fragment TimestampClient includes TimestampMsgs
-{
-	required port ts
-    {
-		receives timestamp
-		sends getTimestamp
-	}
-    
-}
+thing fragment Timestamp {}//PSM will define a function timestamp(): LongLong returning the timestamp at the time the function is called

@@ -35,7 +35,7 @@ import java.util._
 import java.net.URL
 import org.apache.commons.io.FileUtils
 object TestsGeneration {
-	def exec(s: String, dir: File){
+	/*def exec(s: String, dir: File){
 		var p = Runtime.getRuntime().exec(s,null,dir)
 		var line = ""
 		var in = new BufferedReader(new InputStreamReader(p.getInputStream()) )
@@ -48,14 +48,13 @@ object TestsGeneration {
 	}
 	def exec(s: String){
 		var p = Runtime.getRuntime().exec(s)
-		println("\n\n\n Goodbye \n\n\n")
 		var line = ""
 		var in = new BufferedReader(new InputStreamReader(p.getInputStream()) )
 		while ({line = in.readLine(); line!= null}) {
 			System.out.println(line)
 		}
 		in.close();
-	}
+	}*/
 	def main(args: Array[String]) {
 		FileUtils.deleteDirectory(new File((new File(System.getProperty("user.dir"))).getParentFile(),"org.thingml.cmd/tmp"));
 		var result : BufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("results.html")))
@@ -126,7 +125,6 @@ object TestsGeneration {
 "		<th>Binary size</th>\n"+
 "		<th>Performed transitions</th>\n"+
 "		<th>Execution time</th>\n"+
-"		<th>States number</th>\n"+
 "	</tr>\n")
 		stats.close();
 		
@@ -143,9 +141,9 @@ object TestsGeneration {
 		proc.destroy();
 		in.close();
 		
-		downloadExternalLibraries()
+		//downloadExternalLibraries()
     }
-	def downloadExternalLibraries(){
+	/*def downloadExternalLibraries(){
 		var gperfDir = new File("/usr/local/lib/gperftools-2.1/")
 		println("Checking libraries")
 		if(!(gperfDir.exists())){
@@ -181,5 +179,5 @@ object TestsGeneration {
 		{
 			println("Couldn't install libraries, performance measures will be unavailable")
 		}
-	}
+	}*/
 }

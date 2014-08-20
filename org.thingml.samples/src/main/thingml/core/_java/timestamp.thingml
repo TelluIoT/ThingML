@@ -5,12 +5,7 @@ thing TimestampJava includes Timestamp
 @pim "Timestamp"
 @platform "java"
 {
-
-    statechart behavior init ready {
-        state ready {
-            internal event ts?getTimestamp
-            action ts!timestamp('System.currentTimeMillis()')    
-        }    
-    }
-
+    function timestamp() : LongLong do
+        return 'System.currentTimeMillis()'
+    end
 }

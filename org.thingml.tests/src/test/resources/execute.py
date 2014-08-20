@@ -35,15 +35,17 @@ from os.path import expanduser
 #Parser gets (input,output) list from a file
 
 def load_src(name, fpath):
-    import os, imp
-    return imp.load_source(name, os.path.join(os.path.dirname(__file__), fpath))
+	import os, imp
+	return imp.load_source(name, os.path.join(os.path.dirname(__file__), fpath))
 load_src("configuration", "../../../configuration.py")
-from configuration import deleteTemporaryFiles  
+from configuration import deleteTemporaryFiles
 from configuration import perfRetryNumber
 from configuration import perfTransitionNumber
 from configuration import useYourkit
 from configuration import testType
 from configuration import testLanguages
+from configuration import maxOutputs
+from configuration import timeout
 
 def generic_prepareFilesForMeasures(type):
 	if type == "Arduino":
@@ -84,16 +86,16 @@ def generic_compile(type):
 		os.system("make")
 	if type == "Java" or type == "Scala":
 		os.system("mvn clean package")
-		
+
 def generic_execute(type,capitalizedName,resultCounter):
 	if type == "Linux":
 		#Execution of program with necessary environment to run gperftools, if available
-		if os.path.exists("/usr/local/include/gperftools/"):
-			os.system("env CPUPROFILE="+resultsDirectory+"/Linux/"+capitalizedName+".prof ./"+capitalizedName)
-			os.system("pprof --text "+capitalizedName+" "+resultsDirectory+"/Linux/"+capitalizedName+".prof > "+resultsDirectory+"/Linux/"+capitalizedName+str(resultCounter))
-			os.system("rm "+resultsDirectory+"/Linux/*.prof")
-		else:
-			os.system("./"+capitalizedName)
+		#if os.path.exists("/usr/local/include/gperftools/"):
+			#os.system("env CPUPROFILE="+resultsDirectory+"/Linux/"+capitalizedName+".prof ./"+capitalizedName)
+			#os.system("pprof --text "+capitalizedName+" "+resultsDirectory+"/Linux/"+capitalizedName+".prof > "+resultsDirectory+"/Linux/"+capitalizedName+str(resultCounter))
+			#os.system("rm "+resultsDirectory+"/Linux/*.prof")
+		#else:
+		os.system("./"+capitalizedName)
 	if type == "Arduino":
 		os.system("ino build")
 		# os.system("ino upload")
@@ -103,11 +105,11 @@ def generic_execute(type,capitalizedName,resultCounter):
 		newdump.close()
 	if type == "Scala" or type == "Java":
 		#Execution of program with necessary environment to run yourkit, if available
-		if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
-			os.environ['MAVEN_OPTS'] = "-agentpath:/usr/local/lib/yjp-2013-build-13074/bin/linux-x86-32/libyjpagent.so=port=10001,dir="+resultsDirectory+"/"+type+"/"
+		#if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
+			#os.environ['MAVEN_OPTS'] = "-agentpath:/usr/local/lib/yjp-2013-build-13074/bin/linux-x86-32/libyjpagent.so=port=10001,dir="+resultsDirectory+"/"+type+"/"
 		os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
-		if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
-			del os.environ['MAVEN_OPTS']
+		#if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
+			#del os.environ['MAVEN_OPTS']
 def generic_findBinSize(type,capitalizedName):
 	binsize = "error"
 	if type == "Linux":
@@ -143,25 +145,25 @@ def generic_findCPUandMEM(type):
 				snapshotName = re.sub(r"(.*\.thingml)",r"\1",f)
 		if not os.path.exists(capitalizedName+type+str(resultCounter)):
 			os.makedirs(capitalizedName+type+str(resultCounter))
-		if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
-			os.system("java -Dexport.summary -Dexport.class.list -Dexport.apply.filters -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp.jar -export "+snapshotName+" "+capitalizedName+type+str(resultCounter))
-		if os.path.exists(capitalizedName+type+str(resultCounter)+"/Summary.txt"):
-			cputime = find("Runtime & Agent: CPU time",capitalizedName+type+str(resultCounter)+"/Summary.txt")
-			cputime = re.sub(r"Runtime & Agent: CPU time: (.*) sec",r"\1",cputime)
-			uptime = find("Runtime & Agent: Uptime",capitalizedName+type+str(resultCounter)+"/Summary.txt")
-			uptime = re.sub(r"Runtime & Agent: Uptime: (.*) sec",r"\1",uptime)
-			heap = find("Heap Memory: Used:",capitalizedName+type+str(resultCounter)+"/Summary.txt")
-			heap = re.sub(r"Heap Memory: Used: (.*) MB",r"\1",heap)
-			nonheap = find("Non-Heap Memory: Used:",capitalizedName+type+str(resultCounter)+"/Summary.txt")
-			nonheap = re.sub(r"Non-Heap Memory: Used: (.*) MB",r"\1",nonheap)
-			
-			cpu = str(round(100*float(cputime)/float(uptime),2))+"%"
-			mem = str(float(heap)+float(nonheap))+" MB"
+		#if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
+			#os.system("java -Dexport.summary -Dexport.class.list -Dexport.apply.filters -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp.jar -export "+snapshotName+" "+capitalizedName+type+str(resultCounter))
+		#if os.path.exists(capitalizedName+type+str(resultCounter)+"/Summary.txt"):
+			#cputime = find("Runtime & Agent: CPU time",capitalizedName+type+str(resultCounter)+"/Summary.txt")
+			#cputime = re.sub(r"Runtime & Agent: CPU time: (.*) sec",r"\1",cputime)
+			#uptime = find("Runtime & Agent: Uptime",capitalizedName+type+str(resultCounter)+"/Summary.txt")
+			#uptime = re.sub(r"Runtime & Agent: Uptime: (.*) sec",r"\1",uptime)
+			#heap = find("Heap Memory: Used:",capitalizedName+type+str(resultCounter)+"/Summary.txt")
+			#heap = re.sub(r"Heap Memory: Used: (.*) MB",r"\1",heap)
+			#nonheap = find("Non-Heap Memory: Used:",capitalizedName+type+str(resultCounter)+"/Summary.txt")
+			#nonheap = re.sub(r"Non-Heap Memory: Used: (.*) MB",r"\1",nonheap)
+
+			#cpu = str(round(100*float(cputime)/float(uptime),2))+"%"
+			#mem = str(float(heap)+float(nonheap))+" MB"
 	return (cpu,mem)
-	
+
 #Do not modify this part, should be generic enough
-if testType=="functional":
-	useYourkit=False
+#if testType=="functional":
+	#useYourkit=False
 fileName = sys.argv[1]
 rootDirectory = os.getcwd()
 print("Starting test in "+rootDirectory)
@@ -171,17 +173,17 @@ compilerDirectory = os.getcwd()
 print("Compiling test in "+compilerDirectory)
 if not os.path.exists("tmp"):
 	os.makedirs("tmp")
-os.chdir("../org.thingml.tests")	
+os.chdir("../org.thingml.tests")
 if not os.path.exists("target/dump"):
-    os.makedirs("target/dump")
+	os.makedirs("target/dump")
 
 fdump = open('target/dump/'+fileName+'.dump', 'w')
 dumpDir=os.getcwd()
 for type in testLanguages:
 	open(dumpDir+'/target/dump/'+fileName+type+'.dump', 'w')
-	
+
 if not os.path.exists("target/results"):
-    os.makedirs("target/results")
+	os.makedirs("target/results")
 os.chdir("target/results")
 resultsDirectory = os.getcwd()
 print("Ready to write results in "+resultsDirectory)
@@ -197,21 +199,12 @@ from Parser import Parser
 from Tester import Tester
 from PerfTester import PerfTester
 
-#Getting expected results
-results = Parser().parse(fileName)
 
-resultCounter=0
-resultsData = []
-for (a,b) in results:
-	input = exrex.getone(a)
-	fdump.write(a+'\n'+input+'\n'+b+'\n')
+if testType=="perf":
+	resultCounter=0
+	resultsData = []
 	os.chdir(testsDirectory)
-	#Creating input file
-	if fileName.startswith('perf'):
-		PerfTester().create(perfTransitionNumber)
-	else:
-		Tester().create(input)
-	
+	PerfTester().create(perfTransitionNumber, maxOutputs, timeout)
 	for type in testLanguages:
 		capitalizedName = fileName[0].upper()+fileName[1:]
 		smallType=type[0].lower()+type[1:]
@@ -223,48 +216,29 @@ for (a,b) in results:
 		if deleteTemporaryFiles and os.path.exists(capitalizedName):
 			os.system("rm -r tmp/ThingML_"+type+"/"+capitalizedName)
 		os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\""+smallType+" org.thingml.tests/src/main/thingml/tests/_"+smallType+"/"+fileName+".thingml\"")
-		
-		dump=open(dumpDir+'/target/dump/'+fileName+type+'.dump', 'a')
 		if os.path.exists("tmp/ThingML_"+type+"/"+capitalizedName):
 			os.chdir("tmp/ThingML_"+type+"/"+capitalizedName)
 			#generic_prepareFilesForMeasures(type)
-			
+
 			generic_compile(type)
-			
-			if testType=="functional":
-				perfRetryNumber=1
 			for _ in range(0,perfRetryNumber):
 				generic_execute(type,capitalizedName,resultCounter)
-				
-				statesNumber="N/A"
 				try:
-					f = open('dump', 'r')
-					lines = f.readlines()
-					f.close()
-					for res in lines:
-						dump.write(res+'\n')
-					if testType=="perf":
-						statesNumber=lines[-1]
-				except IOError:
-					dump.write("ErrorAtCompilation\n")
-					if testType=="perf":
-						statesNumber="FileNotFound"
-				try: 
 					f = open('transitionsCount','r')
 					tcount = f.readline().rstrip()
 					f.close()
 				except IOError:
 					tcount = 'error'
-					
-				try: 
+
+				try:
 					f = open('cputime','r')
 					cputime = f.readline().rstrip()
 					f.close()
 				except IOError:
 					cputime = 'error'
-				
+
 				binsize=generic_findBinSize(type,capitalizedName)
-					
+
 				(cpu,mem)=generic_findCPUandMEM(type)
 				if not cpu:
 					print("CPU PROBLEM !!!")
@@ -276,21 +250,64 @@ for (a,b) in results:
 					print("tcount PROBLEM !!!")
 				if not cputime:
 					print("cputime PROBLEM !!!")
-				if not statesNumber:
-					print("statesNumber PROBLEM !!!")
-				resultsData.append((type,fileName[0].upper()+fileName[1:]+" "+str(resultCounter),cpu,mem,binsize,tcount,cputime,statesNumber))
+				resultsData.append((type,fileName[0].upper()+fileName[1:]+" "+str(resultCounter),cpu,mem,binsize,tcount,cputime))
 			os.chdir("..")
 		else:
-			dump.write("NoSourceCodeFound\n")
 			resultsData.append((type,fileName[0].upper()+fileName[1:]+" "+str(resultCounter),"error","error","error","error","error","error"))
-		dump.close()
 	resultCounter = resultCounter + 1
 
-fdump.close()
-for r in resultsData:
-	type,name,cpu,mem,size,tcount,cputime,statesNumber=r
-	print("type: "+type+", name: "+name+", cpu: "+cpu+", memory: "+mem+", size: "+size+", tcount: "+tcount+", cputime: "+cputime+", statesNumber: "+statesNumber)
-os.chdir(rootDirectory)
-os.chdir(r"../../../")
-dumpHTML("stats.html",resultsData)
-os.chdir(rootDirectory)
+	fdump.close()
+	for r in resultsData:
+		type,name,cpu,mem,size,tcount,cputime=r
+		print("type: "+type+", name: "+name+", cpu: "+cpu+", memory: "+mem+", size: "+size+", tcount: "+tcount+", cputime: "+cputime)
+	os.chdir(rootDirectory)
+	os.chdir(r"../../../")
+	dumpHTML("stats.html",resultsData)
+	os.chdir(rootDirectory)
+
+else:
+	#Getting expected results
+	os.chdir(testsDirectory)
+	results = Parser().parse(fileName)
+
+	resultCounter=0
+	for (a,b) in results:
+		input = exrex.getone(a)
+		fdump.write(a+'\n'+input+'\n'+b+'\n')
+		os.chdir(testsDirectory)
+		Tester().create(input)
+
+		for type in testLanguages:
+			capitalizedName = fileName[0].upper()+fileName[1:]
+			smallType=type[0].lower()+type[1:]
+			if type == "Linux":
+				capitalizedName=capitalizedName+"C"
+			os.chdir(compilerDirectory)
+			if not os.path.exists("tmp/ThingML_"+type):
+				os.makedirs("tmp/ThingML_"+type)
+			if deleteTemporaryFiles and os.path.exists(capitalizedName):
+				os.system("rm -r tmp/ThingML_"+type+"/"+capitalizedName)
+			os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\""+smallType+" org.thingml.tests/src/main/thingml/tests/_"+smallType+"/"+fileName+".thingml\"")
+
+			dump=open(dumpDir+'/target/dump/'+fileName+type+'.dump', 'a')
+			if os.path.exists("tmp/ThingML_"+type+"/"+capitalizedName):
+				os.chdir("tmp/ThingML_"+type+"/"+capitalizedName)
+				#generic_prepareFilesForMeasures(type)
+
+				generic_compile(type)
+				generic_execute(type,capitalizedName,resultCounter)
+
+				try:
+					f = open('dump', 'r')
+					lines = f.readlines()
+					f.close()
+					for res in lines:
+						dump.write(res+'\n')
+				except IOError:
+					dump.write("ErrorAtCompilation\n")
+				os.chdir("..")
+			else:
+				dump.write("NoSourceCodeFound\n")
+			dump.close()
+		resultCounter = resultCounter + 1
+	os.chdir(rootDirectory)

@@ -112,7 +112,7 @@
     </plugin>
 
     <!--ProGuard to reduce size of binaries and hopefully optimize some stuff-->
-    <plugin>
+    <!--<plugin>
         <groupId>com.github.wvengen</groupId>
         <artifactId>proguard-maven-plugin</artifactId>
         <executions>
@@ -146,7 +146,7 @@
                 <scope>runtime</scope>
             </dependency>
         </dependencies>
-    </plugin>
+    </plugin>-->
 
         </plugins>
     </build>

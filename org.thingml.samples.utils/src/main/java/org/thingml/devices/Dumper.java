@@ -49,6 +49,6 @@ public class Dumper {
         tPrinter.flush();
         tPrinter.close();
         printer.close();
-        System.exit(0);
+        //System.exit(0);
     }
 }

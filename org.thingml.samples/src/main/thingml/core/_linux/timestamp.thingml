@@ -10,18 +10,9 @@ thing TimestampLinux includes Timestamp
 @platform "linux"
 {
 
-    statechart behavior init ready {
-        state ready {
-            internal event ts?getTimestamp
-            action do
-            'struct timeval  tv;
-            gettimeofday(&tv, NULL);'
-            var ts : LongLong = '(long long) ((tv.tv_sec) * 1000 + (tv.tv_usec) / 1000)'
-            //'printf("   DEBUG timestamp: %f\n", ((tv.tv_sec) * 1000 + (tv.tv_usec) / 1000));'
-            'printf("      DEBUG timestamp: %li\n", ' & ts & ');'
-            ts!timestamp(ts)
-            end    
-        }    
-    }
-
+    function timestamp() : LongLong do
+        'struct timeval  tv;
+        gettimeofday(&tv, NULL);'
+        return '(long long) ((tv.tv_sec) * 1000 + (tv.tv_usec) / 1000)'
+    end
 }

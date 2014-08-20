@@ -27,7 +27,7 @@ def load_src(name, fpath):
     import os, imp
     return imp.load_source(name, os.path.join(os.path.dirname(__file__), fpath))
 
-def run(testType):
+def run(type):
 	currentDir=os.getcwd()
 	load_src("configuration", "../../../../../configuration.py")
 	if not os.path.exists("../../../../test/java"):
@@ -38,6 +38,7 @@ def run(testType):
 	from configuration import blacklist    
 	from configuration import whitelist    
 	from configuration import testLanguages
+	from configuration import testType
 	os.chdir(currentDir)
 	os.chdir(r"..")
 
@@ -72,17 +73,16 @@ import java.io.*;\n\
 @RunWith(JUnit4.class)\n\
 public class '+name+'Test extends TestCase {\n\
 	\n\
-	private static boolean setUpIsNotDone = true;\n')
-					for type in testLanguages:
-						fichier.write('\n\
+	//private static boolean setUpIsNotDone = true;\n')
+					fichier.write('\n\
 	private static boolean '+type+'Tried = false;\n\
 	private static boolean success'+type+' = true;\n\
 	private static String message'+type+' = "";\n')
 					fichier.write('@Before\n\
 	public void init(){\n\
-		if (setUpIsNotDone)\n\
+		//if (setUpIsNotDone)\n\
 		try{\n\
-			setUpIsNotDone = false;\n\
+			//setUpIsNotDone = false;\n\
 			ProcessBuilder pb = new ProcessBuilder("python","execute.py","'+name+'");\n\
 			pb.directory(new File("src/test/resources"));\n\
 			pb.redirectErrorStream(true);\n\
@@ -97,10 +97,10 @@ public class '+name+'Test extends TestCase {\n\
 			in.close();\n\
 		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
 	}\n')
-					for type in testLanguages:
-						fichier.write('@Test\n\
-	public void test'+type+'(){\n\
-		try{\n\
+					fichier.write('@Test\n\
+	public void test'+type+'(){\n')
+					if testType=="functional":
+						fichier.write('try{\n\
 			'+type+'Tried = true;\n\
 			System.out.println(System.getProperty("user.dir"));\n\
 			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'.dump")));\n\
@@ -130,19 +130,18 @@ public class '+name+'Test extends TestCase {\n\
 		}catch(Exception e){\n\
 		success'+type+'=false;\n\
 		message'+type+' = "Error in Junit test";\n\
-		fail("Error: " + e.getMessage());}\n\
-	}\n')
+		fail("Error: " + e.getMessage());}\n')
+					fichier.write('}\n')
 					
-					fichier.write('	@After\n\
-	public void dump(){\n\
-		if(true && ') 		
-					for type in testLanguages:
+					fichier.write('	@After\n')
+					fichier.write('public void dump(){\n')
+					if testType=="functional":
+						fichier.write('if(true && ')
 						fichier.write(''+type+'Tried && ')
-					fichier.write('true)\n\
+						fichier.write('true)\n\
 		try{\n\
 			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("results.html", true)));\n\
 			result.write("<tr><th></th><th></th><th></th></tr>\\n");\n')
-					for type in testLanguages:
 						fichier.write('\t\t\tif (success'+type+'){\n\
 				result.write("<tr class=\\"green\\">\\n");\n\
 				result.write("<th>'+name+'</th><th>'+type+'</th><th>Success</th>\\n");\n\
@@ -151,9 +150,9 @@ public class '+name+'Test extends TestCase {\n\
 				result.write("<th>'+name+'</th><th>'+type+'</th><th>"+message'+type+'+"</th>\\n");\n\
 			}\n\
 			result.write("</tr>\\n");\n')
-					fichier.write('\t\t\tresult.close();\n\
-		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
-	}\n\
+						fichier.write('\t\t\tresult.close();\n\
+		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n')
+					fichier.write('}\n\
 }')
 					fichier.close()
 	print ("Successful generation of junit testers")

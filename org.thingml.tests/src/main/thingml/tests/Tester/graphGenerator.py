@@ -41,7 +41,7 @@ class Content(Element):
 				list.append(i)
 				list=i.getNonBlockers(list)
 		return list
-		
+
 class Group(Element):
 	def __init__(self):
 		self.content = []
@@ -53,7 +53,7 @@ class Group(Element):
 		for e in self.content:
 			e.accept(visitor)
 		visitor.finalize(self)
-		
+
 class Region(Group):
 	def __init__(self):
 		Group.__init__(self)
@@ -83,7 +83,7 @@ class Composite(Group,Content):
 		for e in self.content:
 			e.dump()
 		print("end of composite")
-		
+
 class State(Content):
 	def __init__(self):
 		Content.__init__(self)
@@ -152,7 +152,7 @@ class Initializer:
 				self.currentID=self.currentID+1
 	def finalize(self,element):
 		self.conf.depth = self.conf.depth+1
-		
+
 # """
 class OutGenerator:
 	def __init__(self,conf,regions):
@@ -213,23 +213,23 @@ class TransitionSolver:
 						blocker = blockers[random.randint(0,len(blockers)-1)]
 						oldOutput=blocker.outputs[random.randint(0,len(blocker.outputs)-1)]
 						newOutput=element.content[random.randint(0,len(element.content)-1)]
-						
+
 						blocker.outputs.remove(oldOutput)
 						oldOutput.inputs.remove(blocker)
-						
+
 						blocker.outputs.append(newOutput)
 						newOutput.inputs.append(blocker)
-						
+
 				else:
 					if(len(nonReachables)>0):
 						reachables=element.init.getReachables([])
 						switch = reachables[random.randint(0,len(reachables)-1)]
 						oldOutput=switch.outputs[random.randint(0,len(switch.outputs)-1)]
 						newOutput=nonReachables[random.randint(0,len(nonReachables)-1)]
-						
+
 						switch.outputs.remove(oldOutput)
 						oldOutput.inputs.remove(switch)
-						
+
 						switch.outputs.append(newOutput)
 						newOutput.inputs.append(switch)
 				blockers=self.getBlockers(element)
@@ -277,28 +277,36 @@ class TransitionSolver:
 		return nonReachables
 # """
 class DumpThingml:
-	def __init__(self,tree,id):
+	def __init__(self,tree,id,type):
 		self.depth = 1
 		self.regions=tree
-		self.file=open("../perfTest"+str(id)+".thingml",'w')
+		if type=="Java":
+			self.file=open("../perfTest"+str(id)+"_java.thingml",'w')
+		else:
+			self.file=open("../perfTest"+str(id)+"_c.thingml",'w')
 		# self.file.write("/** Abstract tree:\n")
 		oldstdout=sys.stdout
 		sys.stdout=self.file
 		self.maxID=0
 		# for r in tree:
-			# r.dump()
+		# r.dump()
 		sys.stdout=oldstdout
-			
+
 		# self.file.write("*/\n\n\n")
-		
-		self.file.write("import \"../../../../../org.thingml.samples/src/main/thingml/thingml.thingml\"\n\n\
-thing PerfTest"+str(id)+" includes Test, TimestampClient\n\
-@test \" # .*\"\n\
+
+		self.file.write("import \"../../../../../org.thingml.samples/src/main/thingml/thingml.thingml\"\n")
+		# import the proper timestamp function
+		if type=="Java":
+			self.file.write('import \"../../../../../org.thingml.samples/src/main/thingml/core/_java/timestamp.thingml\"\n\n')
+			self.file.write("thing PerfTest"+str(id)+"_java includes Test, TimestampJava\n")
+		else:
+			self.file.write('import \"../../../../../org.thingml.samples/src/main/thingml/core/_linux/timestamp.thingml\"\n\n')
+			self.file.write("thing PerfTest"+str(id)+"_c includes Test, TimestampLinux\n")
+		self.file.write("@test \" # .*\"\n\
 {\n\
 property start : LongLong\n\
-property stop : LongLong\n\
 statechart PerfTest"+str(id)+" init setup {\n")
-		self.file.write("state setup {\non entry ts!getTimestamp()\n\ntransition -> s"+str(self.regions[0].init.ID)+"\nevent t : ts?timestamp\n action start = t.t\n}\n\n")
+		self.file.write("state setup {\non entry do\nprint(\"START\")\nstart = timestamp()\nend\n\ntransition -> s"+str(self.regions[0].init.ID)+"\n\n}\n\n")
 		self.firstRegion=True
 		for r in self.regions:
 			r.accept(self)
@@ -308,15 +316,8 @@ statechart PerfTest"+str(id)+" init setup {\n")
 			event m : harnessIn?perfTestEnd\n\
 		} \n\
 		state tearDown {\n\
-            on entry do\n\
-ts!getTimestamp()\n\
-end\n\
-internal event t : ts?timestamp\n action do\n\
-stop = t.t \n\
-var time : LongLong = stop-start\n\
-testEnd!perfTestSize(\""+str(self.maxID)+"\", time)\n\
-end\n\
-}\n\
+            on entry do\nprint(\"STOP\")\ntestEnd!testEnd()\nend\n\n\
+		}\n\
 	}\n")
 		self.file.write("}//end of statechart\n")
 		self.file.write("}//end of thing\n")
@@ -335,7 +336,7 @@ end\n\
 				tabs=tabs+"\t"
 			self.file.write(tabs+"composite state s"+str(element.ID)+" init s"+str(element.init.ID)+" {\n")
 			tabs=tabs+"\t"
-			self.file.write(tabs+"on entry harnessOut!perfTestOut(\""+str(element.ID)+"\")\n")
+			self.file.write(tabs+"on entry do\nprint(\"s"+str(element.ID)+"\\n\")\nharnessOut!perfTestOut()\nend\n")
 			i=0
 			if element.parent.isContent: # Composite parent
 				outputsNumber=element.outputsNumber+element.parent.finalStates.count(element)
@@ -344,15 +345,23 @@ end\n\
 			for e in element.outputs:
 				self.file.write(tabs+"transition -> s"+str(e.ID)+"\n")
 				self.file.write(tabs+"event m : harnessIn?perfTestIn\n")
-				self.file.write(tabs+"guard m.i%"+str(element.outputsNumber)+" == "+str(i)+"\n")
+				self.file.write(tabs+"guard m.i == "+str(i)+"\n")
+				self.file.write(tabs+"//action print(\""+str(i)+"\")\n")
 				self.file.write(tabs+"\n")
 				i=i+1
 			if element.parent.isContent and element.parent.finalStates.count(element)>0: # Composite parent
 				self.file.write(tabs+"transition -> final_"+str(element.parent.ID)+"\n")
 				self.file.write(tabs+"event m : harnessIn?perfTestIn\n")
-				self.file.write(tabs+"guard m.i%"+str(outputsNumber)+" > "+str(i-1)+"\n")
-			
-			self.file.write(tabs+"state final_"+str(element.ID)+" {}\n\n")
+				self.file.write(tabs+"guard m.i > "+str(i-1)+"\n")
+				self.file.write(tabs+"//action print(\""+str(i-1)+"\")\n")
+
+			self.file.write(tabs+"state final_"+str(element.ID)+" {\
+			on entry do\n\
+				print(\"final_"+str(element.ID)+"\\n\")\n\
+				var time : LongLong = timestamp() - start\n\
+				testEnd!perfTestSize(time)\n\
+			end\n\
+			}\n\n")
 			self.depth=self.depth+1
 		else:#State
 			outertabs=""
@@ -360,7 +369,7 @@ end\n\
 				outertabs=outertabs+"\t"
 			self.file.write(outertabs+"state s"+str(element.ID)+" {\n")
 			tabs=outertabs+"\t"
-			self.file.write(tabs+"on entry harnessOut!perfTestOut(\""+str(element.ID)+"\")\n\n")
+			self.file.write(tabs+"on entry do\nprint(\"s"+str(element.ID)+"\\n\")\nharnessOut!perfTestOut()\nend\n")
 			i=0
 			if element.parent.isContent: # Composite parent
 				outputsNumber=element.outputsNumber+element.parent.finalStates.count(element)
@@ -369,15 +378,17 @@ end\n\
 			for e in element.outputs:
 				self.file.write(tabs+"transition -> s"+str(e.ID)+"\n")
 				self.file.write(tabs+"event m : harnessIn?perfTestIn\n")
-				self.file.write(tabs+"guard m.i%"+str(outputsNumber)+" == "+str(i)+"\n")
+				self.file.write(tabs+"guard m.i == "+str(i)+"\n")
+				self.file.write(tabs+"//action print(\""+str(i)+"\")\n")
 				if e != element.outputs[-1]:
 					self.file.write(tabs+"\n")
 				i=i+1
 			if element.parent.isContent and element.parent.finalStates.count(element)>0: # Composite parent
 				self.file.write("\n"+tabs+"transition -> final_"+str(element.parent.ID)+"\n")
 				self.file.write(tabs+"event m : harnessIn?perfTestIn\n")
-				self.file.write(tabs+"guard m.i%"+str(outputsNumber)+" > "+str(i-1)+"\n")
-			
+				self.file.write(tabs+"guard m.i > "+str(i-1)+"\n")
+				self.file.write(tabs+"//action print(\""+str(i-1)+"\")\n")
+
 			self.file.write(outertabs+"}\n\n")
 	def finalize(self,element):
 		self.depth=self.depth-1
@@ -387,14 +398,14 @@ end\n\
 		if self.firstRegion and not element.isContent:
 			self.file.write("\t//} End of first implicit region\n\n")
 			self.firstRegion = False
-		elif element.isContent: 
+		elif element.isContent:
 			self.file.write(tabs+"}//end of composite\n\n")
-		else: 
+		else:
 			self.file.write(tabs+"}//end of region\n\n")
-def launch(conf,number):
+def launch(conf,number,type):
 	for i in range (0,number):
 		tree=Initializer(conf).regions
-		DumpThingml(tree,i)
+		DumpThingml(tree,i,type)
 """
 conf = Configuration()
 conf.setRegions(5,10)
@@ -402,7 +413,7 @@ conf.setStates(8,12)
 conf.setOutputs(1,4)
 conf.setDepth(4)
 conf.setCompositeRatio(0.5)
-launch(conf,2)
+launch(conf,2,"Java")
 """
 """
 tree=Initializer(conf).regions

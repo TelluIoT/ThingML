@@ -7,54 +7,47 @@ thing TestDumpJava includes TestDump
 @thingml_maven_dep "org.thingml.samples.utils"
 {
     readonly property device : Dumper = 'new org.thingml.devices.Dumper()'
- 	readonly property benchmark: Boolean = false
- 	//property time: LongLong
- 
+
 	function write(string : String) 
 	do
-		if (benchmark == false)  do 
-			'((org.thingml.devices.Dumper)' & device & ').write(' & string & ');'
-			//print(string) 
-		end
+    	'((org.thingml.devices.Dumper)' & device & ').write(' & string & ');'
+    	print(string)
 	end
 	
 	statechart JavaHarness init Testing {
 		property transitionsCount : Long = 0
         property time : LongLong = 0
 		state Testing {
-			/*on entry do
-			''&time&' = System.currentTimeMillis();'
-			end*/
+
             internal event m : dump?testOut
-            action do write('Character.toString('&m.c&')')
+            action do
+                write('Character.toString('&m.c&')')
             	transitionsCount=transitionsCount+1
             end
-            internal event m : dump?perfTestOut
-            action do //write(''&m.s&'+"\n"')
-            	transitionsCount=transitionsCount+1
+
+            internal event dump?perfTestOut
+            action do
+                transitionsCount=transitionsCount+1
             end
             
             transition -> Failed 
             event dump?testFailure
             
             transition -> End
-            event m : dumpEnd?testEnd
-            action do
-                //time = m.time
-            end
-	        //action ''&time& '= System.currentTimeMillis()-'&time&';'
+            event dumpEnd?testEnd
             
-            transition -> End
-            event m: dumpEnd?perfTestSize
-            action do 
-	        //''&time& '= System.currentTimeMillis()-'&time&';'
-            '((org.thingml.devices.Dumper)' & device & ').write(' & m.s & ');' 
-            time = m.time
+            internal event m: dumpEnd?perfTestSize
+            action do
+                time = m.time
+                transitionsCount=transitionsCount+1
             end
 		}
 		
 		state Failed {
-			on entry write("*FAILURE*")
+			on entry do
+			    write("*FAILURE*")
+			    'System.exit(-1);'
+			end
 		}
 
 		state End {
@@ -63,7 +56,9 @@ thing TestDumpJava includes TestDump
 				'pw.println(""+'&time&');'
 				'pw.close();}catch(Exception e){;}'
 				print("End of thingml processus") 
-				'((org.thingml.devices.Dumper)' & device & ').stop((int)'&transitionsCount&');'
+				'((org.thingml.devices.Dumper)' & device & ').stop((int)'&transitionsCount&');
+				System.out.println("Memory: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
+				System.exit(0);'
 			end
 		}
 	}

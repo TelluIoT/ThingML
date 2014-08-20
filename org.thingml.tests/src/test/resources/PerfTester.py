@@ -20,38 +20,52 @@
 import sys
 import re
 class PerfTester:
-	def create(self,transitionNumber):
+	def create(self,transitionNumber,maxOutputs,timeout):
 		testerFile = open('../tester.thingml', 'w')
 		i=0
 
 		testerFile.write('import "../../../../../org.thingml.samples/src/main/thingml/core/test.thingml"\n\
-import "../../../../../org.thingml.samples/src/main/thingml/core/random.thingml"\n\n\
-thing Tester includes TestHarness, RandomUser\n{\n\
-    property continue : Long = '+str(transitionNumber)+'\n\
-	statechart Tester init e1 {\n\
-		state e1 {\n\
+import "../../../../../org.thingml.samples/src/main/thingml/core/timer.thingml"\n\n\
+thing Tester includes TestHarness, TimerClient\n{\n\
+    readonly property nbTrigger : Long = '+str(transitionNumber)+'\n\
+    readonly property nbTransitions : Long = '+str(maxOutputs)+'\n\
+	property counter : Long = 0\n\
+	statechart behavior init stress {\n\
+		state stress {\n\
 			on entry do \n\
-			continue = continue - 1 \n\
-			random!request()\n\
-			end\n\
-			\n\
-            transition -> e1\n\
-			event r: random?answer\n\
-            guard continue > 0\n\
-			action do \n\
-			//\'//printf("Sending %d" , \'&r.v&\');\'\n\
-			//print("Sending "+ r.v)\n\
-			test!perfTestIn(r.v)\n\
-			end\n\
-            \n\
-            transition -> endTest\n\
-			event r: random?answer\n\
-            guard continue == 0\n\
+				print(".")\n\
+				//while(i < nbTrigger) do\n\
+                    var j : Long = 0\n\
+                    while(j < (nbTransitions + 1)/2) do\n\
+                         test!perfTestIn(0)\n\
+                         j = j + 1\n\
+                    end\n\
+					j = 0\n\
+					while(j < (nbTransitions + 1)/2) do\n\
+                         test!perfTestIn(j)\n\
+						 test!perfTestIn(j)\n\
+                         j = j + 1\n\
+                    end\n\
+					j = 0\n\
+                    while(j < nbTransitions + 1) do\n\
+                         test!perfTestIn(j)\n\
+                         j = j + 1\n\
+                    end\n\
+					counter = counter + 1\n\
+			    //end\n\
+            end\n\n\
+			transition -> relax\n\
 		}\n\
-		state endTest{\n\
-			on entry do test!perfTestEnd() \n\
-			//print("end") \n\
-			end\n\
+		state relax{\n\
+			transition -> stress\n\
+			guard counter < nbTrigger\n\
+			transition -> sleep\n\
+			guard counter == nbTrigger\n\
+		}\n\
+		state sleep{\n\
+			on entry timer!timer_start('+str(timeout)+')//wait '+str(timeout)+' for the state machine to digest...\n\
+			internal event timer?timer_timeout\n\
+			action test!perfTestEnd()\n\
 		}\n\
 	}\n\
 }')

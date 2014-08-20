@@ -7,11 +7,11 @@ thing fragment TestMsg {
 	message testIn(c : Char);
 	message testOut(c : Char);
 	message perfTestIn(i : Integer);
-	message perfTestOut(s : String);
+	message perfTestOut();
 	message testFailure();
 	message perfTestEnd();
-	message testEnd(/*time : LongLong*/);
-	message perfTestSize(s : String, time : LongLong);
+	message testEnd();
+	message perfTestSize(time : LongLong);
 }
 thing fragment TestHarness includes TestMsg {
 	provided port test {

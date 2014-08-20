@@ -16,11 +16,11 @@
 
 #When set to False, does not remove source code after execution. 
 #May cause secondary inputs to use files from the first input
-deleteTemporaryFiles = True 
+deleteTemporaryFiles = True
 
 #Chooses which compilers should be used
 testLanguages=[]
-testLanguages.append("Linux")
+# testLanguages.append("Linux")
 # testLanguages.append("Scala")
 testLanguages.append("Java")
 # testLanguages.append("Arduino")
@@ -37,12 +37,15 @@ blacklist=("tester")
 whitelist=("testDeepCompositeStates")
 
 #Performance tests options
-perfTestNumber = 5 #Number of generated tests
+perfTestNumber = 1 #Number of generated tests
 perfRetryNumber = 1 #Number of retries per test
-perfTransitionNumber = 25000
+perfTransitionNumber = 100
 useYourkit = False
+minOutputs = 1
+maxOutputs = 4
+timeout = 1000
 
-def initPerfConfiguration(graphGenerator):
+def initPerfConfiguration(graphGenerator, type):
 	conf = graphGenerator.Configuration()
 	# """1 state""" 
 	# conf.setRegions(1,1)
@@ -50,12 +53,12 @@ def initPerfConfiguration(graphGenerator):
 	# conf.setOutputs(1,1)
 	# conf.setDepth(1)
 	# conf.setCompositeRatio(0)
-	# """~50 states""" 
-	# conf.setRegions(3,3)
-	# conf.setStates(2,4)
-	# conf.setOutputs(1,3)
-	# conf.setDepth(3)
-	# conf.setCompositeRatio(0.5)
+	#"""~50 states""" 
+	#conf.setRegions(3,3)
+	#conf.setStates(2,4)
+	#conf.setOutputs(1,3)
+	#conf.setDepth(3)
+	#conf.setCompositeRatio(0.5)
 	# """~100 states""" 
 	# conf.setRegions(4,4)
 	# conf.setStates(3,5)
@@ -75,17 +78,16 @@ def initPerfConfiguration(graphGenerator):
 	# conf.setDepth(4)
 	# conf.setCompositeRatio(0.5)
 	#"""~1000 states""" 
-	#conf.setRegions(5,8)
-	#conf.setStates(5,8)
-	#conf.setOutputs(1,4)
+	conf.setRegions(5,8)
+	conf.setStates(5,8)
+	conf.setOutputs(1,4)
+	conf.setDepth(4)
+	conf.setCompositeRatio(0.5)
+	#"""Custom"""
+	#conf.setRegions(1,4)
+	#conf.setStates(4,16)
+	#conf.setOutputs(minOutputs,maxOutputs)
 	#conf.setDepth(4)
-	#conf.setCompositeRatio(0.5)
-	"""Custom"""
-	conf.setRegions(1,4)
-	conf.setStates(3,12)
-	conf.setOutputs(1,6)
-	conf.setDepth(3)
-	conf.setCompositeRatio(0.33)
-	
-	graphGenerator.launch(conf,perfTestNumber)
+	#conf.setCompositeRatio(0.33)
 
+	graphGenerator.launch(conf,perfTestNumber,type)

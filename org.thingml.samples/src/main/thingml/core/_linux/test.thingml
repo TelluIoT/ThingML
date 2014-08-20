@@ -8,94 +8,64 @@ thing TestDumpLinux includes TestDump
 @c_global "FILE* testFile = NULL;
 FILE* cpuFile = NULL;"
 {
- 	property benchmark: Boolean = false
- 	//property start: double = 0
- 	//property stop: double = 0
-	function write(c : Char) 
-	do
-		
-    'if (testFile != NULL)
-    {
-        fprintf(testFile,"%c",c); 
-    }
-	printf("%c\n",c);'
- 
+	function write(c : Char) do
+        'if (testFile == NULL) {
+            testFile = fopen("dump", "w");
+        }
+        if (testFile != NULL) {
+            fprintf(testFile,"%c",c);
+        }
+	    printf("%c\n",c);'
 	end
-	function writeString(s : String) 
-	do
-		
-	if (benchmark == false)  do 
-	'printf("%s\n",s);' 
-	
-    'if (testFile != NULL)
-    {
-        fprintf(testFile,"%s\n",s); 
-    }'
-	end
-	end
-	
+
 	statechart LinuxHarness init Testing {
 		property transitionsCount : Long = 0
  	    property stateNumber: String = ""
         property time : LongLong = 0
 		
 		state Testing {
-            on entry do 
-            	'testFile = fopen("dump", "w+");'
-   				'sleep(2);'
-				/*'struct timeval t;'
-				'gettimeofday(&t, NULL);'
-				''&start&'= ((double)t.tv_sec) * 1000.0 + ((double)t.tv_usec) / 1000.0;'*/
-            end
+
             internal event m : dump?testOut
-            action do write(m.c)
+            action do
+                write(m.c)
             	transitionsCount=transitionsCount+1
             end
-            internal event m : dump?perfTestOut
-            action do //writeString(m.s)
-            	transitionsCount=transitionsCount+1
-            end
+
+            internal event dump?perfTestOut
+            action transitionsCount=transitionsCount+1
             
             transition -> Failed 
             event dump?testFailure
-            action 'printf("*FAILURE*");'
-            
             
             transition -> End
-            event m : dumpEnd?testEnd
-/*            action do 
-			'struct timeval t;'
-			'gettimeofday(&t, NULL);'
-			''&stop&'= ((double)t.tv_sec) * 1000.0 + ((double)t.tv_usec) / 1000.0;'
-            //time = m.time
-		    end
-  */          
-            transition -> End
-            event m: dumpEnd?perfTestSize
-            action do 
-			/*'struct timeval t;'
-			'gettimeofday(&t, NULL);'
-			''&stop&'= ((double)t.tv_sec) * 1000.0 + ((double)t.tv_usec) / 1000.0;'*/
-            time = m.time
-		    'if (testFile != NULL)
-		    {
-		        fprintf(testFile,"%s\n",'&m.s&'); 
-		    }'
-		    end
+            event dumpEnd?testEnd
+
+            internal event m: dumpEnd?perfTestSize
+            action do
+                time = m.time
+                transitionsCount=transitionsCount+1
+            end
 		}
 		
 		state Failed {
-
+            on entry do
+                print("*FAILURE*\n")
+                'if (testFile != NULL) {
+                    fclose(testFile);
+                }
+                if (cpuFile != NULL) {
+                    fclose(cpuFile);
+                }
+                exit(-1);'
+            end
 		}
 		
 		state End {
 			on entry do
-'
-cpuFile = fopen("cputime", "w+");
-if (cpuFile != NULL)
-		    {
-		        fprintf(cpuFile,"%li\n",'&time&'); 
-		    }
+'cpuFile = fopen("cputime", "w");
+if (cpuFile != NULL) {
+    fprintf(cpuFile,"%li\n",'&time&');
+}
 char cmd[80];
 sprintf(cmd, "ps -p %d -o %ccpu > stats",getpid(),\'%\');
 system(cmd);
@@ -105,9 +75,14 @@ system(cmd);'
 'system(cmd);
 sprintf(cmd, "echo \"%f\" > cputime",'&time&');'
 'system(cmd);
-fclose(testFile);
-//ProfilerStop();
-exit(0);'
+if (testFile != NULL) {
+    fclose(testFile);
+}
+if (cpuFile != NULL) {
+    fclose(cpuFile);
+}'
+print("End of thingml processus\n")
+'exit(0);'
 			end
 		}
 	}
