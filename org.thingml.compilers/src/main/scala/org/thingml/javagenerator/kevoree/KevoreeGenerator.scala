@@ -290,7 +290,7 @@ case class ThingKevoreeGenerator(val self: Thing){
 
     builder append "@Override\n"
     builder append "public void start() {\n"
-    builder append "queue = new java.util.concurrent.ArrayBlockingQueue<SignedEvent>(1024);\n"
+    builder append "queue = new java.util.concurrent.ArrayBlockingQueue<Event>(1024);\n"
     builder append "super.start();\n"
     builder append "}\n\n"
 
