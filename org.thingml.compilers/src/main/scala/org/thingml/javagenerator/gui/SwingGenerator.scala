@@ -247,7 +247,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append "public class " + Context.firstToUpper(self.getName) + "Mock" + (if (isMirror) "Mirror" else "") + " extends Component implements ActionListener {\n\n"
 
 
-    self.eContainer().asInstanceOf[ThingMLModel].allSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
+    self.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
       builder append "private static final Map<String, " + Context.firstToUpper(e.getName) + "_ENUM> values_" + e.getName + " = new HashMap<String, " + Context.firstToUpper(e.getName) + "_ENUM>();\n"
       builder append "static {\n"
       e.asInstanceOf[Enumeration].getLiterals.foreach{l =>
@@ -294,7 +294,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
     builder append "private StyledDocument doc;\n\n"
 
     builder append "public " + Context.firstToUpper(self.getName) + "Mock" + (if (isMirror) "Mirror" else "") + "(String name){\n"
-    builder append "super(name);\n"
+    builder append "super(name, " +  self.allPorts.size + ");\n"
     generatePortDef(isMirror = isMirror)
     builder append "init();"
     builder append "}\n\n"
@@ -565,11 +565,11 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
   }
   
   def generatePortDef(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
+    var i = 0
     self.allPorts.foreach{ p =>
       builder append "final List<EventType> in_" + p.getName + " = new ArrayList<EventType>();\n"
       builder append "final List<EventType> out_" + p.getName + " = new ArrayList<EventType>();\n"
-      //TODO: Avoid crappy code
-      p.getReceives.foreach{ r => 
+      p.getReceives.foreach{ r =>
         if(!isMirror)
           builder append "in_" + p.getName + ".add(" + r.getName + "Type);\n"
         else
@@ -581,7 +581,8 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
         else
           builder append "in_" + p.getName + ".add(" + s.getName + "Type);\n"
       }
-      builder append "port_" + Context.firstToUpper(self.getName) + "_" + p.getName + " = new Port(" + (if((p.isInstanceOf[ProvidedPort] && !isMirror) || (p.isInstanceOf[RequiredPort] && isMirror)) "PortType.PROVIDED" else "PortType.REQUIRED") + ", \"" + p.getName + "\", in_" + p.getName() + ", out_" + p.getName() + ");\n"
+      builder append "port_" + Context.firstToUpper(self.getName) + "_" + p.getName + " = new Port(" + (if((p.isInstanceOf[ProvidedPort] && !isMirror) || (p.isInstanceOf[RequiredPort] && isMirror)) "PortType.PROVIDED" else "PortType.REQUIRED") + ", \"" + p.getName + "\", in_" + p.getName() + ", out_" + p.getName() + ", " + i + ");\n"
+      i = i + 1
     }
   }
 }

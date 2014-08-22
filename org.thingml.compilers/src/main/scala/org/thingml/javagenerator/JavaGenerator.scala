@@ -762,7 +762,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       m => builder append "private final " + Context.firstToUpper(m.getName) + "MessageType " + m.getName + "Type = new " + Context.firstToUpper(m.getName) + "MessageType();\n"
     }
 
-    if (self.allPropertiesInDepth.filter{p => self.initExpression(p) != null}.size > 0) {
+    //if (self.allPropertiesInDepth.filter{p => self.initExpression(p) != null}.size > 0) {
       builder append "//Empty Constructor\n"
       builder append "public " + Context.firstToUpper(self.getName) + "() {\nsuper(" + self.allPorts.size + ");\n"
       self.allPropertiesInDepth.foreach { p =>
@@ -774,7 +774,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         }
       }
       builder append "}\n\n"
-    }
+    //}
     if (self.allPropertiesInDepth.filter{p => !p.isChangeable}.size > 0) {
       builder append "//Constructor (only readonly (final) attributes)\n"
       builder append "public " + Context.firstToUpper(self.getName) + "("

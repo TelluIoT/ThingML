@@ -175,7 +175,7 @@ object KevoreeGenerator {
     val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName + "/src/main/kevs"
     val outputDirFile = new File(rootDir)
     outputDirFile.mkdirs
-    val w = new PrintWriter(new FileWriter(new File(rootDir+"/"+cfg.getName+".kevs")));
+    val w = new PrintWriter(new FileWriter(new File(rootDir+"/main.kevs")));
     w.println(kevScript);
     w.close();
   }
@@ -189,7 +189,7 @@ object KevoreeGenerator {
     val kevoreePlugin = "\n<plugin>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.mavenplugin</artifactId>\n<version>${kevoree.version}</version>\n<extensions>true</extensions>\n<configuration>\n<nodename>" + cfg.getName + "</nodename><model>src/main/kevs/main.kevs</model>\n</configuration>\n<executions>\n<execution>\n<goals>\n<goal>generate</goal>\n</goals>\n</execution>\n</executions>\n</plugin>\n</plugins>\n"
     pom = pom.replace("</plugins>",kevoreePlugin)
 
-    pom = pom.replace("<!--PROP-->", "<kevoree.version>3.7.1</kevoree.version>\n<!--PROP-->" )
+    pom = pom.replace("<!--PROP-->", "<kevoree.version>4.0.1</kevoree.version>\n<!--PROP-->" )
 
     pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->")
     pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->")
