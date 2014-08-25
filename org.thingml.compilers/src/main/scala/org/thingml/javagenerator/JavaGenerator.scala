@@ -1173,9 +1173,11 @@ case class LocalVariableActionJavaGenerator(override val self: LocalVariable) ex
     builder append (if (self.isChangeable) "" else "final ")
     builder append self.getType.java_type(self.getCardinality != null) + " " + self.Java_var_name
     if (self.getInit != null) {
-      builder append  " = "
+      builder append " = ("
+      builder append self.getType.java_type()
+      builder append ") ("
       self.getInit.generateJava(builder)
-      builder append ";"
+      builder append ");\n"
     }
     else {
       if (self.getCardinality != null) {
