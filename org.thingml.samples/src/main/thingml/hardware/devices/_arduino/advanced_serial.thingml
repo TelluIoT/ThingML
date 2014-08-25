@@ -42,6 +42,7 @@ thing AdvancedSerial includes IsDigitMsgs, AdvancedSerialMsgs, ArduinoMsgs, Thin
     property index : UInt8 = 0
     
 	required port Serial 
+    @sync_send "true" // Do not queue messages to make sure interrupts are executed right away.
     {
         receives receive_byte
         sends write_byte, print_message, print_value
@@ -54,7 +55,7 @@ thing AdvancedSerial includes IsDigitMsgs, AdvancedSerialMsgs, ArduinoMsgs, Thin
 	}
 	
 	provided port AdvancedSerial 
-    {
+     {
 		sends receive_byte, receive_value
         receives write_byte, print_message, print_value, value_mode
 	}

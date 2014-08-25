@@ -21,6 +21,7 @@ thing SerialTempSensor includes AdvancedSerialMsgs, SoftTemperatureSensorMsgs, V
     property high_temp_alarm : Int16
        
     required port AdvSerial 
+    @sync_send "true" // Do not queue messages to make sure interrupts are executed right away.
     {
 		receives receive_byte 
         sends write_byte, print_message, print_value
@@ -39,6 +40,7 @@ thing SerialTempSensor includes AdvancedSerialMsgs, SoftTemperatureSensorMsgs, V
 	}                
 
     required port ValueChooser
+     @sync_send "true" // Do not queue messages to make sure interrupts are executed right away.
     {
         sends run
         receives choosed_value
