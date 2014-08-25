@@ -126,7 +126,7 @@ object KevoreeGenerator {
 
     kevScript append "//include external libraries that may be needed by ThingML components\n"
     cfg.allThingMLMavenDep.foreach { dep =>
-      kevScript append "include mvn:org.thingml:" + dep + ":snapshot\n"
+      kevScript append "include mvn:org.thingml:" + dep + ":0.6.0-SNAPSHOT\n"
     }
     //TODO: properly manage external dependencies
     /*cfg.allMavenDep.foreach { dep =>
@@ -144,6 +144,7 @@ object KevoreeGenerator {
     kevScript append "//create a default group to manage the node(s)\n"
     kevScript append "add sync : WSGroup\n"
     kevScript append "set sync.port/node0 = \"9000\"\n"
+    kevScript append "set sync.master = \"node0\"\n"
     kevScript append "attach node0 sync\n\n"
 
     kevScript append "//instantiate Kevoree/ThingML components\n"

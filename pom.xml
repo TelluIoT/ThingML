@@ -1,13 +1,12 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.thingml</groupId>
     <artifactId>org.thingml.root</artifactId>
     <packaging>pom</packaging>
     <name>ThingML :: Root</name>
     <url>http://www.thingml.org</url>
-    
+
     <version>0.6.0-SNAPSHOT</version>
 
     <properties>
@@ -18,15 +17,50 @@
         <scala.version>2.9.3</scala.version>
         <bundle.vendor>SINTEF</bundle.vendor>
     </properties>
-    
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+
+    <organization>
+        <name>ThingML Project</name>
+        <url>http://thingml.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>
+                GNU Library or Lesser General Public License (LGPL), Version 3
+            </name>
+            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git@github.com:SINTEF-9012/ThingML.git</connection>
+        <developerConnection>scm:git@github.com:SINTEF-9012/ThingML.git</developerConnection>
+        <url>https://github.com/SINTEF-9012/ThingML.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Franck Fleurey</name>
+            <id>ffleurey</id>
+            <email>first.last@sintef.no</email>
+            <roles>
+                <role>admin</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <name>Brice Morin</name>
+            <id>bmorin</id>
+            <email>first.last@sintef.no</email>
+            <roles>
+                <role>admin</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
 
     <build>
         <plugins>
@@ -45,14 +79,14 @@
                     </properties>
                     <excludes>
                         <exclude>
-                        **/*.cs
-                        </exclude>   
+                            **/*.cs
+                        </exclude>
                         <exclude>
-                        **/test_out/**/*.*
-                        </exclude>   
+                            **/test_out/**/*.*
+                        </exclude>
                         <exclude>
-                        **/resources/**/**.*
-                        </exclude>   
+                            **/resources/**/**.*
+                        </exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -96,34 +130,34 @@
     </build>
 
     <repositories>
-        
+
         <repository>
             <id>thingml-snapshot</id>
             <name>thingml-snapshot</name>
             <url>http://maven.thingml.org/thingml-snapshot/</url>
         </repository>
-        
+
         <repository>
             <id>thingml-release</id>
             <name>thingml-release</name>
             <url>http://maven.thingml.org/thingml-release/</url>
         </repository>
-        
+
         <repository>
             <id>thirdparty</id>
             <name>thingml-snapshot</name>
             <url>http://maven.thingml.org/thirdparty/</url>
         </repository>
-        
+
         <repository>
             <id>kevoree-libs-release-local</id>
             <url>http://maven2.kevoree.org/release</url>
         </repository>
-        
+
         <repository>
             <id>kevoree-snapshots</id>
             <url>http://maven2.kevoree.org/snapshots</url>
-        </repository>  
+        </repository>
 
     </repositories>
 
@@ -135,30 +169,29 @@
         <module>org.thingml.editor.standalone</module>
         <module>org.thingml.editor.eclipse</module>
         <module>org.thingml.utils</module>
-		<module>org.thingml.utils.ws</module>
-		<module>org.thingml.samples.resources</module>
+        <module>org.thingml.utils.ws</module>
+        <module>org.thingml.samples.resources</module>
         <module>org.thingml.samples.utils</module>
-		<!-- The standalone app can only be built on the server which has the keystore to sign the jar
-		<module>../org.thingml.editor.standaloneApp</module>-->
-		<module>org.thingml.cmd</module>
-		<!--module>org.thingml.tester</module--><!--BUILT SEPARATELY-->
-		<!--module>org.thingml.tests</module--><!--BUILT SEPARATELY-->
+        <!-- The standalone app can only be built on the server which has the keystore to sign the jar
+        <module>../org.thingml.editor.standaloneApp</module>-->
+        <module>org.thingml.cmd</module>
+        <!--module>org.thingml.tests</module--><!--BUILT SEPARATELY-->
     </modules>
 
     <distributionManagement>
-        
+
         <repository>
             <id>thingml-release</id>
             <name>thingml-release</name>
             <url>http://maven.thingml.org/archiva/repository/thingml-release/</url>
         </repository>
-        
+
         <snapshotRepository>
             <id>thingml-snapshot</id>
             <name>thingml-snapshot</name>
             <url>http://maven.thingml.org/archiva/repository/thingml-snapshot/</url>
         </snapshotRepository>
-        
+
     </distributionManagement>
 
 
