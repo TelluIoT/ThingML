@@ -29,7 +29,7 @@ thing TimerJava includes Timer
       if(not (javaTimerTask == 'null'))
       do
         '' & javaTimerTask & '.cancel();'
-        '' & javaTimerTask & ' = null;'
+        javaTimerTask = 'null'
       end
       '' & javaTimer & '.purge();'
     end
@@ -61,8 +61,8 @@ thing TimerJava includes Timer
     }
 }
 
-/*configuration TestTimerJava {
+configuration TestTimerJava {
     instance timer : TimerJava
     instance client : SimpleTimerClient
     connector client.timer => timer.timer    
-}*/
+}

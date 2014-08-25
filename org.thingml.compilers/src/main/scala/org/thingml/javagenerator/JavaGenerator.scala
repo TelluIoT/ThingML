@@ -769,7 +769,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         val e = self.initExpression(p)
         if (e != null) {
           builder append p.Java_var_name + " = "
-          self.initExpression(p).generateJava(builder)
+          e.generateJava(builder)
           builder append ";\n"
         }
       }
@@ -805,8 +805,8 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     builder append "//Getters and Setters for non readonly/final attributes\n"
     self.allPropertiesInDepth.foreach {p =>
-      if (p.isChangeable) {
         builder append "public " + p.getType.java_type(p.getCardinality != null) + " get" + Context.firstToUpper(p.Java_var_name) + "() {\nreturn " + p.Java_var_name + ";\n}\n\n"
+      if (p.isChangeable) {
         builder append "public void set" + Context.firstToUpper(p.Java_var_name) + "(" + p.getType.java_type(p.getCardinality != null) + " " + p.Java_var_name + ") {\nthis." + p.Java_var_name + " = " + p.Java_var_name + ";\n}\n\n"
       }
     }
@@ -1079,12 +1079,19 @@ case class VariableAssignmentJavaGenerator(override val self: VariableAssignment
       }
     }
     else {
-      builder append self.getProperty.Java_var_name
-      builder append " = ("
-      builder append self.getProperty.getType.java_type()
-      builder append ") ("
-      self.getExpression.generateJava(builder)
-      builder append ");\n"
+      if (self.getProperty.isInstanceOf[Property] && self.getProperty.asInstanceOf[Property].getCardinality==null) {
+        builder append "set" + Context.firstToUpper(self.getProperty.Java_var_name) + "("
+        builder append "(" + self.getProperty.getType.java_type() + ") ("
+        self.getExpression.generateJava(builder)
+        builder append "));\n"
+      } else {
+        builder append self.getProperty.Java_var_name
+        builder append " = ("
+        builder append self.getProperty.getType.java_type()
+        builder append ") ("
+        self.getExpression.generateJava(builder)
+        builder append ");\n"
+      }
     }
   }
 }
@@ -1343,7 +1350,10 @@ case class ExpressionGroupJavaGenerator(override val self: ExpressionGroup) exte
 
 case class PropertyReferenceJavaGenerator(override val self: PropertyReference) extends ExpressionJavaGenerator(self) {
   override def generateJava(builder: StringBuilder) {
-    builder append self.getProperty.Java_var_name
+    if (self.getProperty.isInstanceOf[Property] && self.getProperty.asInstanceOf[Property].getCardinality==null)
+      builder append "get" + Context.firstToUpper(self.getProperty.Java_var_name) + "()"
+    else
+      builder append self.getProperty.Java_var_name
   }
 }
 

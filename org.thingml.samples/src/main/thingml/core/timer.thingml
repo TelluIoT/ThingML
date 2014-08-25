@@ -35,6 +35,9 @@ thing fragment TimerClient includes TimerMsgs
 
 thing SimpleTimerClient includes TimerClient 
 {
+    property t1 : Long = 1000
+    property t2 : Long = 5000
+    
     statechart Default init Tick {
         
         property counter : Integer = 0
@@ -42,7 +45,7 @@ thing SimpleTimerClient includes TimerClient
         state Tick {
             on entry 
             do
-                timer!timer_start(1000)
+                timer!timer_start(t1)
             end
             
             
@@ -61,7 +64,7 @@ thing SimpleTimerClient includes TimerClient
                 print("tock")
                 print(counter)
                 counter = counter + 1
-                timer!timer_start(5000)
+                timer!timer_start(t2)
             end
         }         
            

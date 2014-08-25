@@ -180,18 +180,13 @@ public abstract class AnnotatedElementImpl extends ThingMLElementImpl implements
      * @generated NOT
      */
     public boolean isDefined(String annotation, String value) {
-        PlatformAnnotation pa = null;
         for (PlatformAnnotation a : allAnnotations()) {
             if (a.getName().equals(annotation)) {
-                pa = a;
-                break;
+                if (a.getValue().equals(value))
+                    return true;
             }
         }
-        if (pa == null) {
-            return false;
-        } else {
-            return pa.getValue().equals(value);
-        }
+        return false;
     }
 
     /**
