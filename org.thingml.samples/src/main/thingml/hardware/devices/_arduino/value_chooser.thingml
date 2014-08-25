@@ -18,6 +18,7 @@ thing SerialValueChooser includes ValueChooserMsgs, AdvancedSerialMsgs
     }
     
     required port AdvSerial
+     @sync_send "true" // Do not queue messages to make sure interrupts are executed right away.
     {
         receives receive_value
         sends print_message, value_mode, print_value
