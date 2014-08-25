@@ -2252,7 +2252,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
     generateExitActions(builder, context)
     builder append "\n"
 
-    builder append "// Event Handlers for incomming messages:\n"
+    builder append "// Event Handlers for incoming messages:\n"
     generateEventHandlers(builder, composedBehaviour, context)
     builder append "\n"
 

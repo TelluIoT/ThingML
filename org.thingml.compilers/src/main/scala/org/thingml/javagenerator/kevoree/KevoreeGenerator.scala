@@ -251,7 +251,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     builder append "public class K" + Context.firstToUpper(self.getName) +" extends " + Context.firstToUpper(self.getName) + "{//The Kevoree wrapper extends the associated ThingML component\n"
 
     builder append "//Attributes\n"
-    self.allPropertiesInDepth.filter(p => p.isChangeable && p.getType.isDefined("java_primitive", "true") && p.eContainer().isInstanceOf[Thing]).foreach {p =>  //We just expose top-level attributes (defined in the Thing, not e.g. in the state machine) to Kevoree
+    self.allPropertiesInDepth.filter(p => p.isChangeable && p.getCardinality==null && p.getType.isDefined("java_primitive", "true") && p.eContainer().isInstanceOf[Thing]).foreach {p =>  //We just expose top-level attributes (defined in the Thing, not e.g. in the state machine) to Kevoree
       builder append "@Param "
       val e = self.initExpression(p)
       if (e != null) {
@@ -269,7 +269,7 @@ case class ThingKevoreeGenerator(val self: Thing){
 
     builder append "//Getters and Setters for non readonly/final attributes\n"
     self.allPropertiesInDepth.foreach {p =>
-      if (p.isChangeable && p.getType.isDefined("java_primitive", "true") && p.eContainer().isInstanceOf[Thing]) {
+      if (p.isChangeable && p.getCardinality==null && p.getType.isDefined("java_primitive", "true") && p.eContainer().isInstanceOf[Thing]) {
         builder append "@Override\npublic " + p.getType.java_type(p.getCardinality != null) + " get" + Context.firstToUpper(p.Java_var_name) + "() {\nreturn " + p.Java_var_name + ";\n}\n\n"
         builder append "@Override\npublic void set" + Context.firstToUpper(p.Java_var_name) + "(" + p.getType.java_type(p.getCardinality != null) + " " + p.Java_var_name + ") {\nthis." + p.Java_var_name + " = " + p.Java_var_name + ";\n}\n\n"
       }
