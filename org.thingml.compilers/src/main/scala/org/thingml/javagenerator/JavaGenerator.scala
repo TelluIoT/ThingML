@@ -521,6 +521,15 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
     }
 
 
+    builder append "Runtime.getRuntime().addShutdownHook(new Thread() {\n"
+    builder append "public void run() {\n"
+    builder append "System.out.println(\"Terminating ThingML app...\");"
+    self.allInstances.foreach{ i =>
+      builder append i.instanceName + ".stop();\n"
+    }
+    builder append "System.out.println(\"ThingML app terminated. RIP!\");"
+    builder append "}\n"
+    builder append "});\n\n"
 
     builder append "}\n"
     builder append "}\n"
