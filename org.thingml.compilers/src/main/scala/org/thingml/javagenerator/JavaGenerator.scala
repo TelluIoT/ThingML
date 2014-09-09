@@ -20,6 +20,8 @@
  */
 package org.thingml.javagenerator
 
+import java.util
+
 import org.sintef.thingml.impl.ConfigurationImpl
 import org.thingml.javagenerator.JavaGenerator._
 import org.sintef.thingml.constraints.ThingMLHelpers
@@ -202,6 +204,9 @@ object JavaGenerator {
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
 
+    val apiDir = new File(outputDirFile, "api")
+    apiDir.mkdirs()
+
     code.foreach{case (file, code) =>
       val w = new PrintWriter(new FileWriter(new File(outputDir + "/" + file)));
       w.println(code.toString);
@@ -302,6 +307,7 @@ object JavaGenerator {
     Context.pack = pack
 
     var mainBuilder = Context.getBuilder("Main.java")
+    Context.pack = "org.thingml.generated"
     generateHeader(mainBuilder, true)
     var gui = false
     t.allInstances.foreach { i => i.getType.getAnnotations.filter { a =>
@@ -317,9 +323,14 @@ object JavaGenerator {
 
     t.generateJavaMain(mainBuilder)
 
+    t.allThings().foreach{t =>
+      t.generateAPI
+      t.generateClientAPI
+    }
+
     //TODO: we should not generate all the enumeration defined in the model, just the one relevant for the configuration
     model.allUsedSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
-      e.generateJava(Context.getBuilder(Context.firstToUpper(e.getName) + "_ENUM.java"))
+      e.generateJava(Context.getBuilder("api/" + Context.firstToUpper(e.getName) + "_ENUM.java"))
     }
 
     // Generate code for things which appear in the configuration
@@ -327,6 +338,7 @@ object JavaGenerator {
     t.allMessages.foreach {
       m =>
         var builder = Context.getBuilder(Context.firstToUpper(m.getName()) + "MessageType.java")
+        Context.pack = "org.thingml.generated"
         generateHeader(builder)
         builder append "public class " + Context.firstToUpper(m.getName()) + "MessageType extends EventType {\n"
         builder append "public " + Context.firstToUpper(m.getName()) + "MessageType() {name = \"" + m.getName + "\";}\n\n"
@@ -384,9 +396,12 @@ object JavaGenerator {
 
     builder append "package " + Context.pack + ";\n\n"
     builder append "import org.thingml.java.*;\n"
-    builder append "import org.thingml.java.ext.*;\n"
+    builder append "import org.thingml.java.ext.*;\n\n"
+
+    builder append "import org.thingml.generated.api.*;\n\n"
 
     builder append "import java.util.ArrayList;\n"
+    builder append "import java.util.LinkedList;\n"
     builder append "import java.util.Collections;\n"
     builder append "import java.util.List;\n\n"
   }
@@ -549,6 +564,40 @@ case class ConnectorJavaGenerator(override val self: Connector) extends ThingMLJ
 
 //TODO: The way we build the state machine has gone through many refactorings... time to rewrite from scratch as it is now very messy!!!
 case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGenerator(self) {
+
+  def generateAPI(): Unit = {
+    self.allPorts().foreach{ p =>
+      if (p.getReceives.size()>0) {
+        val builder = Context.getBuilder("api/I" + Context.firstToUpper(self.getName) + "_" + p.getName + ".java")
+        builder append "package org.thingml.generated.api;\n\n"
+        builder append "import org.thingml.generated.api.*;\n\n"
+        builder append "public interface " + "I" + Context.firstToUpper(self.getName) + "_" + p.getName + "{\n"
+        p.getReceives.foreach { m =>
+          builder append "void " + m.getName() + "_via_" + p.getName() + "("
+          builder append m.getParameters.collect { case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ")
+          builder append ");\n"
+        }
+        builder append "}"
+      }
+    }
+  }
+
+  def generateClientAPI: Unit = {
+    self.allPorts().foreach{ p =>
+      if (p.getSends.size() > 0) {
+        val builder = Context.getBuilder("api/I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client.java")
+        builder append "package org.thingml.generated.api;\n\n"
+        builder append "import org.thingml.generated.api.*;\n\n"
+        builder append "public interface " + "I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client{\n"
+        p.getSends.foreach { m =>
+          builder append "void " + m.getName() + "_from_" + p.getName() + "("
+          builder append m.getParameters.collect { case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ")
+          builder append ");\n"
+        }
+        builder append "}"
+      }
+    }
+  }
 
   def buildState(builder: StringBuilder, s: State) {
 
@@ -733,24 +782,50 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
   def generateJava(builder: StringBuilder) {
     Context.thing = self
-
+    Context.pack = "org.thingml.generated"
     generateHeader(builder)
     builder append "\n/**\n"
     builder append " * Definition for type : " + self.getName + "\n"
     builder append " **/\n"
 
-    var traits = ""
+    val traits = new util.ArrayList[String]()
+    self.allPorts().foreach { p =>
+      if (p.getReceives.size() > 0) {
+        traits += "I" + Context.firstToUpper(self.getName) + "_" + p.getName
+      }
+    }
     if (self.hasAnnotation("java_interface")) {
-      traits = self.annotation("java_interface").mkString(", ")
+      traits += self.annotation("java_interface").mkString(", ")
     } else if (self.hasAnnotation("scala_trait")) {
-      traits = self.annotation("scala_trait").mkString(", ")
-    }
-    if (traits != "") {
-      traits = "implements " + traits
+      traits += self.annotation("scala_trait").mkString(", ")
     }
 
+    builder append "public class " + Context.firstToUpper(self.getName) + " extends Component " + (if (traits.size()>0) "implements " + traits.mkString(", ") else "") + " {\n\n"
 
-    builder append "public class " + Context.firstToUpper(self.getName) + " extends Component " + traits + " {\n\n"
+    self.allPorts().foreach{ p =>
+      if (p.getSends.size() > 0) {
+        builder append "private List<I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client> " + p.getName + "_clients = new LinkedList<I" + Context.firstToUpper(self.getName)+ "_" + p.getName + "Client>();\n"
+
+        builder append "public void registerOn" + Context.firstToUpper(p.getName) + "(I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client client){\n"
+        builder append p.getName + "_clients.add(client);\n"
+        builder append "}\n\n"
+
+        builder append "public void unregisterFrom" + Context.firstToUpper(p.getName) + "(I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client client){\n"
+        builder append p.getName + "_clients.remove(client);\n"
+        builder append "}\n\n"
+      }
+    }
+
+    self.allPorts().foreach{ p =>
+      p.getReceives.foreach{m =>
+        builder append "@Override\n"
+        builder append "public void " + m.getName + "_via_" + p.getName + "("
+        builder append m.getParameters.collect { case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ")
+        builder append "){\n"
+        builder append "receive(" + Context.firstToUpper(m.getName) + "Type.instantiate(" + p.getName + "_port, " + m.getParameters.collect{ case p => Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + "), " + p.getName + "_port);\n"
+        builder append "}\n\n"
+      }
+    }
 
     builder append "//Attributes\n"
     self.allPropertiesInDepth.foreach {p =>
@@ -1019,6 +1094,7 @@ case class EnumerationJavaGenerator(override val self: Enumeration) extends Type
   val enumName = Context.firstToUpper(self.getName) + "_ENUM"
     
   override def generateJava(builder: StringBuilder) {
+    Context.pack = "org.thingml.generated.api"
     generateHeader(builder, false)
 
     val raw_type = self.getAnnotations.filter {

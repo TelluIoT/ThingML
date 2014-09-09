@@ -78,6 +78,7 @@ object Context {
     builder append "package " + Context.pack + ";\n"
 
     builder append "import org.thingml.generated.*;\n"
+    builder append "import org.thingml.generated.api.*;\n"
 
     builder append "import org.thingml.java.*;\n"
     builder append "import org.thingml.java.ext.*;\n"
@@ -207,6 +208,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
   def generateListener(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
     builder append "package org.thingml.generated.gui;\n\n"
     builder append "import org.thingml.generated.*;\n\n"
+    builder append "import org.thingml.generated.api.*;\n\n"
     builder append "public interface " + Context.firstToUpper(self.getName) + "Listener" + (if (isMirror) "Mirror" else "") + " {\n\n"
     
     var messagesToSend = Map[Port, List[Message]]()
