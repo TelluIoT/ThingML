@@ -827,6 +827,19 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       }
     }
 
+    self.allPorts().foreach{p =>
+      p.getSends.foreach{m =>
+        builder append "private void send" + Context.firstToUpper(m.getName) + "_via_" + p.getName + "(" + m.getParameters.collect { case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + "){\n"
+        builder append "//ThingML send\n"
+        builder append "send(" + Context.firstToUpper(m.getName) + "Type.instantiate(" + p.getName + "_port, " + m.getParameters.collect{ case p => Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + "), " + p.getName + "_port);\n"
+        builder append "//send to other clients\n"
+        builder append "for(I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client client : " + p.getName + "_clients){\n"
+        builder append "client." + m.getName + "_from_" + p.getName() + "(" + m.getParameters.collect { case p => Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + ");\n"
+        builder append "}"
+        builder append "}\n\n"
+      }
+    }
+
     builder append "//Attributes\n"
     self.allPropertiesInDepth.foreach {p =>
         builder append "private "
