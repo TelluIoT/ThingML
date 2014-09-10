@@ -822,7 +822,10 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
         builder append "public void " + m.getName + "_via_" + p.getName + "("
         builder append m.getParameters.collect { case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ")
         builder append "){\n"
-        builder append "receive(" + Context.firstToUpper(m.getName) + "Type.instantiate(" + p.getName + "_port, " + m.getParameters.collect{ case p => Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + "), " + p.getName + "_port);\n"
+        builder append "receive(" + m.getName + "Type.instantiate(" + p.getName + "_port"
+        if (m.getParameters.size > 0)
+          builder append ", "
+        builder append m.getParameters.collect{ case p => Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + "), " + p.getName + "_port);\n"
         builder append "}\n\n"
       }
     }
@@ -831,7 +834,10 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       p.getSends.foreach{m =>
         builder append "private void send" + Context.firstToUpper(m.getName) + "_via_" + p.getName + "(" + m.getParameters.collect { case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + "){\n"
         builder append "//ThingML send\n"
-        builder append "send(" + Context.firstToUpper(m.getName) + "Type.instantiate(" + p.getName + "_port, " + m.getParameters.collect{ case p => Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + "), " + p.getName + "_port);\n"
+        builder append "send(" + m.getName + "Type.instantiate(" + p.getName + "_port"
+        if (m.getParameters.size > 0)
+          builder append ", "
+        builder append m.getParameters.collect{ case p => Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + "), " + p.getName + "_port);\n"
         builder append "//send to other clients\n"
         builder append "for(I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client client : " + p.getName + "_clients){\n"
         builder append "client." + m.getName + "_from_" + p.getName() + "(" + m.getParameters.collect { case p => Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + ");\n"
