@@ -488,9 +488,9 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
                   val enumL = p.getValue.asInstanceOf[EnumLiteralRef]
                   var tempbuilder = new StringBuilder()
                   if (enumL == null) {
-                    tempbuilder append Context.firstToUpper(enum.getName) + "_ENUM." + enum.getName.toUpperCase() + "_" + enum.getLiterals.head.getName
+                    tempbuilder append Context.firstToUpper(enum.getName) + "_ENUM." + enum.getName.toUpperCase() + "_" + enum.getLiterals.head.getName.toUpperCase()
                   } else {
-                    tempbuilder append Context.firstToUpper(enum.getName) + "_ENUM." + enum.getName.toUpperCase() + "_" + enumL.getLiteral.getName
+                    tempbuilder append Context.firstToUpper(enum.getName) + "_ENUM." + enum.getName.toUpperCase() + "_" + enumL.getLiteral.getName.toUpperCase()
                   }
                     result += tempbuilder.toString()
                 } else {
