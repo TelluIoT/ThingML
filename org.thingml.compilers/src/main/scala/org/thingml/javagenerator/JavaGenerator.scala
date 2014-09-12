@@ -207,6 +207,9 @@ object JavaGenerator {
     val apiDir = new File(outputDirFile, "api")
     apiDir.mkdirs()
 
+    val msgDir = new File(outputDirFile, "messages")
+    msgDir.mkdirs()
+
     code.foreach{case (file, code) =>
       val w = new PrintWriter(new FileWriter(new File(outputDir + "/" + file)));
       w.println(code.toString);
@@ -337,8 +340,8 @@ object JavaGenerator {
     //TODO: we should not generate all the messages defined in the model, just the one relevant for the configuration
     t.allMessages.foreach {
       m =>
-        var builder = Context.getBuilder(Context.firstToUpper(m.getName()) + "MessageType.java")
-        Context.pack = "org.thingml.generated"
+        var builder = Context.getBuilder("messages/" + Context.firstToUpper(m.getName()) + "MessageType.java")
+        Context.pack = "org.thingml.generated.messages"
         generateHeader(builder)
         builder append "public class " + Context.firstToUpper(m.getName()) + "MessageType extends EventType {\n"
         builder append "public " + Context.firstToUpper(m.getName()) + "MessageType() {name = \"" + m.getName + "\";}\n\n"
@@ -398,12 +401,10 @@ object JavaGenerator {
     builder append "import org.thingml.java.*;\n"
     builder append "import org.thingml.java.ext.*;\n\n"
 
-    builder append "import org.thingml.generated.api.*;\n\n"
+    builder append "import org.thingml.generated.api.*;\n"
+    builder append "import org.thingml.generated.messages.*;\n\n"
 
-    builder append "import java.util.ArrayList;\n"
-    builder append "import java.util.LinkedList;\n"
-    builder append "import java.util.Collections;\n"
-    builder append "import java.util.List;\n\n"
+    builder append "import java.util.*;\n"
   }
 }
 
@@ -804,13 +805,13 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     self.allPorts().foreach{ p =>
       if (p.getSends.size() > 0) {
-        builder append "private List<I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client> " + p.getName + "_clients = new LinkedList<I" + Context.firstToUpper(self.getName)+ "_" + p.getName + "Client>();\n"
+        builder append "private Collection<I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client> " + p.getName + "_clients = Collections.synchronizedCollection(new LinkedList<I" + Context.firstToUpper(self.getName)+ "_" + p.getName + "Client>());\n"
 
-        builder append "public void registerOn" + Context.firstToUpper(p.getName) + "(I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client client){\n"
+        builder append "public synchronized void registerOn" + Context.firstToUpper(p.getName) + "(I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client client){\n"
         builder append p.getName + "_clients.add(client);\n"
         builder append "}\n\n"
 
-        builder append "public void unregisterFrom" + Context.firstToUpper(p.getName) + "(I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client client){\n"
+        builder append "public synchronized void unregisterFrom" + Context.firstToUpper(p.getName) + "(I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client client){\n"
         builder append p.getName + "_clients.remove(client);\n"
         builder append "}\n\n"
       }
@@ -819,7 +820,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
     self.allPorts().foreach{ p =>
       p.getReceives.foreach{m =>
         builder append "@Override\n"
-        builder append "public void " + m.getName + "_via_" + p.getName + "("
+        builder append "public synchronized void " + m.getName + "_via_" + p.getName + "("
         builder append m.getParameters.collect { case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ")
         builder append "){\n"
         builder append "receive(" + m.getName + "Type.instantiate(" + p.getName + "_port"
@@ -832,7 +833,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
     self.allPorts().foreach{p =>
       p.getSends.foreach{m =>
-        builder append "private void send" + Context.firstToUpper(m.getName) + "_via_" + p.getName + "(" + m.getParameters.collect { case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + "){\n"
+        builder append "private synchronized void send" + Context.firstToUpper(m.getName) + "_via_" + p.getName + "(" + m.getParameters.collect { case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + "){\n"
         builder append "//ThingML send\n"
         builder append "send(" + m.getName + "Type.instantiate(" + p.getName + "_port"
         if (m.getParameters.size > 0)
@@ -1152,20 +1153,16 @@ case class ActionJavaGenerator(val self: Action) /*extends ThingMLJavaGenerator(
 
 case class SendActionJavaGenerator(override val self: SendAction) extends ActionJavaGenerator(self) {
   override def generateJava(builder: StringBuilder) {
-    builder append "send("
-    concreteMsg(builder)
-    builder append ", " + self.getPort.getName + "_port);\n"
-  }
- 
-  
-  def concreteMsg(builder: StringBuilder) {
-    builder append self.getMessage.getName + "Type.instantiate(" + self.getPort.getName + "_port"
+    builder append "send" + Context.firstToUpper(self.getMessage.getName) + "_via_" + self.getPort.getName + "("
+    var i = 0
     self.getParameters.zip(self.getMessage.getParameters).foreach{ case (p, fp) =>
-      builder append ", (" + fp.getType.java_type(fp.getCardinality != null) + ") "
+      if (i>0)
+        builder append ", "
+      builder append "(" + fp.getType.java_type(fp.getCardinality != null) + ") "
       p.generateJava(builder)
-        //builder append ".to" + fp.getType.java_type(fp.getCardinality != null)
+      i = i + 1
     }
-    builder append ")"
+    builder append ");\n"
   }
 }
 

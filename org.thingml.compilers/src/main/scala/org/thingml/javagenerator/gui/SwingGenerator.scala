@@ -79,6 +79,7 @@ object Context {
 
     builder append "import org.thingml.generated.*;\n"
     builder append "import org.thingml.generated.api.*;\n"
+    builder append "import org.thingml.generated.messages.*;\n"
 
     builder append "import org.thingml.java.*;\n"
     builder append "import org.thingml.java.ext.*;\n"
