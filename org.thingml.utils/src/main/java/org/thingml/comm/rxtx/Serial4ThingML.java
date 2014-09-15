@@ -15,12 +15,14 @@
  */
 package org.thingml.comm.rxtx;
 
-import gnu.io.CommPort;
+/*import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
+import gnu.io.SerialPortEventListener;*/
+
+import jssc.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +35,7 @@ import javax.swing.JOptionPane;
 
 public class Serial4ThingML {
 
-    static {
+    /*static {
         System.out.println("Load RxTx");
         String osName = System.getProperty("os.name");
         String osProc = System.getProperty("os.arch");
@@ -60,15 +62,15 @@ public class Serial4ThingML {
             e.printStackTrace();
             System.exit(1);
         }
-    }
+    } */
     /*
      * public static final byte START_BYTE = 0x12; public static final byte
      * STOP_BYTE = 0x13; public static final byte ESCAPE_BYTE = 0x7D;
      */
     protected String port;
     protected SerialPort serialPort;
-    protected InputStream in;
-    protected OutputStream out;
+    //protected InputStream in;
+    //protected OutputStream out;
     protected SerialObserver thing;
 
     public Serial4ThingML(String port, SerialObserver thing) {
@@ -79,7 +81,21 @@ public class Serial4ThingML {
     }
 
     void connect() {
-        registerPort(port);
+        serialPort = new SerialPort(port);
+        try {
+            final boolean isOpened = serialPort.openPort();
+            if (isOpened) {
+                serialPort.setParams(9600, 8, 1, 0);
+                serialPort.addEventListener(new SerialReader());
+            }
+        } catch (SerialPortException e) {
+            System.err.println("Cannot open serial port. Abort!");
+            e.printStackTrace();
+            close();
+        }
+
+
+        /*registerPort(port);
         try {
             CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(port);
             if (portIdentifier.isCurrentlyOwned()) {
@@ -106,21 +122,14 @@ public class Serial4ThingML {
             System.err.println("Cannot open serial port. Abort!");
             e.printStackTrace();
             close();
-        }
+        } */
     }
 
     public boolean close() {
         try {
-            if (in != null) {
-                in.close();
-            }
-            if (out != null) {
-                out.close();
-            }
             if (serialPort != null) {
-                serialPort.notifyOnDataAvailable(false);
                 serialPort.removeEventListener();
-                serialPort.close();
+                serialPort.closePort();
             }
             return true;
         } catch (Exception e) {
@@ -134,24 +143,12 @@ public class Serial4ThingML {
      ************************************************************************
      */
     public void sendData(byte[] payload) {
+        System.out.println("Send data " + payload.length);
         try {
-            // send the start byte
-            //out.write((int) START_BYTE);
-            // send data
-            for (int i = 0; i < payload.length; i++) {
-                // escape special bytes
-                /*
-                 * if (payload[i] == START_BYTE || payload[i] == STOP_BYTE ||
-                 * payload[i] == ESCAPE_BYTE) { out.write((int) ESCAPE_BYTE);
-                }
-                 */
-                //System.out.println("Serial.Write[" + i + "] = " + (int) payload[i]);
-                out.write((int) payload[i]);
-            }
-            // send the stop byte
-            //out.write((int) STOP_BYTE);
-        } catch (IOException e) {
-            //e.printStackTrace();
+            //for (int i = 0; i < payload.length; i++) {
+                serialPort.writeBytes(payload);
+            //}
+        } catch (SerialPortException e) {
             System.err.println("Error while writing on serial port. Trying to close and reconnect...");
             close();
             connect();
@@ -166,6 +163,9 @@ public class Serial4ThingML {
      */
     public class SerialReader implements SerialPortEventListener {
 
+
+
+
         /*
          * public static final int RCV_WAIT = 0; public static final int RCV_MSG
          * = 1; public static final int RCV_ESC = 2;
@@ -174,68 +174,31 @@ public class Serial4ThingML {
         //protected int buffer_idx = 0;
         //protected int state = RCV_WAIT;
         @Override
-        public void serialEvent(SerialPortEvent arg0) {
-
-            int data;
-            byte[] buffer = new byte[1024];
-            int buffer_idx = 0;
-
+        public void serialEvent(SerialPortEvent event) {
             try {
-                while ((data = in.read()) > -1) {
-                    /*
-                     * System.out.println("data: " + data); // we got a byte
-                     * from the serial port if (state == RCV_WAIT) { // it
-                     * should be a start byte or we just ignore it
-                     * /*System.out.println("WAIT"); System.out.println("data: "
-                     * + data + " ?= " + START_BYTE);
-                     */
-                    /*
-                     * if (data == START_BYTE) { state = RCV_MSG; buffer_idx =
-                     * 0; buffer[buffer_idx] = (byte) data; buffer_idx++; } }
-                     * else if (state == RCV_MSG) {
-                     * //System.out.println("RECEIVE"); if (data == ESCAPE_BYTE)
-                     * { state = RCV_ESC; } else if (data == STOP_BYTE) {
-                     * buffer[buffer_idx] = (byte) data; buffer_idx++; // We got
-                     * a complete frame //byte[] packet = new byte[buffer_idx];
-                     * /*for (int i = 0; i < buffer_idx; i++) { packet[i] =
-                     * buffer[i];
-                    }
-                     */
-                    /*
-                     * System.out.println("Well-formed packet forwarded to
-                     * thing"); thing.receive(java.util.Arrays.copyOf(buffer, buffer_idx)/*packet
-                     *//*
-                     * );
-                     *
-                     * state = RCV_WAIT; } else if (data == START_BYTE) { //
-                     * Should not happen but we reset just in case state =
-                     * RCV_MSG; buffer_idx = 0; buffer[buffer_idx] = (byte)
-                     * data; buffer_idx++; } else { // it is just a byte to
-                     * store buffer[buffer_idx] = (byte) data; buffer_idx++; } }
-                     * else if (state == RCV_ESC) {
-                     * //System.out.println("ESCAPE"); // Store the byte without
-                     * looking at it buffer[buffer_idx] = (byte) data;
-                     * buffer_idx++; state = RCV_MSG; }
-                     */
-                    //buffer_idx = 0;
-                    //System.out.println("byte[" + buffer_idx + "]" + (byte) data);
-                    buffer[buffer_idx] = (byte) data;
+                //while (serialPort.isOpened()) {
+                    if (event.isRXCHAR() && event.getEventValue() > 0) {
+                        byte buffer[] = serialPort.readBytes(18);
+                        thing.receive(buffer);
 
-                    if (buffer[buffer_idx] == 0x13 && buffer[buffer_idx - 1] != 0x7D) {
+                        //TODO: we should escape special thingml bytes...
+                    /*if (buffer[buffer_idx] == 0x13 && buffer[buffer_idx - 1] != 0x7D) {
                         //System.out.println("  forward");
                         thing.receive(java.util.Arrays.copyOfRange(buffer, 0, buffer_idx + 1));
                         buffer_idx = 0;
                     } else {
                         buffer_idx++;
+                    }*/
                     }
-                }
+
+                //}
 
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 //e.printStackTrace();
                 System.err.println("Error while reading from serial port. Trying to close and reconnect...");
-                close();
-                connect();
+                /*close();
+                connect();*/
             }
         }
     }
@@ -249,8 +212,11 @@ public class Serial4ThingML {
      * @return A HashSet containing the CommPortIdentifier for all serial ports
      * that are not currently being used.
      */
-    public static HashSet<CommPortIdentifier> getAvailableSerialPorts() {
-        HashSet<CommPortIdentifier> h = new HashSet<CommPortIdentifier>();
+    public static String[] getAvailableSerialPorts() {
+        return SerialPortList.getPortNames();
+
+
+        /*HashSet<CommPortIdentifier> h = new HashSet<CommPortIdentifier>();
         Enumeration thePorts = CommPortIdentifier.getPortIdentifiers();
         while (thePorts.hasMoreElements()) {
             CommPortIdentifier com = (CommPortIdentifier) thePorts.nextElement();
@@ -268,10 +234,10 @@ public class Serial4ThingML {
                     }
             }
         }
-        return h;
+        return h;*/
     }
 
-    public static void registerPort(String port) {
+    /*public static void registerPort(String port) {
         String prop = System.getProperty("gnu.io.rxtx.SerialPorts");
         if (prop == null) {
             prop = "";
@@ -291,13 +257,13 @@ public class Serial4ThingML {
             System.setProperty("javax.comm.rxtx.SerialPorts", prop);
         }
         //System.out.println("javax.comm.rxtx.SerialPorts = " + prop);
-    }
+    }*/
 
     public static String selectSerialPort(String defaultPort) {
 
         ArrayList<String> possibilities = new ArrayList<String>();
-        for (CommPortIdentifier commportidentifier : getAvailableSerialPorts()) {
-            possibilities.add(commportidentifier.getName());
+        for (String commportidentifier : getAvailableSerialPorts()) {
+            possibilities.add(commportidentifier);
         }
 
         int startPosition = possibilities.indexOf(defaultPort);
