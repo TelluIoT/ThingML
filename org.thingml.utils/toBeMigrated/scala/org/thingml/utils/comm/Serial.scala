@@ -29,17 +29,19 @@ import java.io.OutputStream*/
 import org.thingml.comm.rxtx.Serial4ThingML
 
 trait SerialThingML {
-  
-  protected var serial : Serial4ThingML = _
-  
-  def setSerial4ThingML(serial : Serial4ThingML) {this.serial = serial}
-    
-  def sendData(bytes : Array[Byte]) {
+
+  protected var serial: Serial4ThingML = _
+
+  def setSerial4ThingML(serial: Serial4ThingML) {
+    this.serial = serial
+  }
+
+  def sendData(bytes: Array[Byte]) {
     //Logger.debug("sendData(" + bytes.mkString("[", ", ", "]") + ")")
     serial.sendData(bytes)
   }
-  
-  def receive(byte : Array[Byte]) {
+
+  def receive(byte: Array[Byte]) {
     //This will be refined in the Serial Thing defined in ThingML
   }
 }

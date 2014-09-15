@@ -14,20 +14,6 @@
         <version>0.6.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-   
-    <!--<build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>**/*TestSuite.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>-->
 
     <dependencies>
         <dependency>
@@ -35,18 +21,6 @@
             <artifactId>jssc</artifactId>
             <version>2.8.0</version>
         </dependency>
-
-        <!--<dependency>
-            <groupId>org.rxtx</groupId>
-            <artifactId>rxtx</artifactId>
-            <version>2.1.7</version>
-        </dependency>-->
-
-        <!--<dependency>
-            <groupId>org.kevoree.extra</groupId>
-            <artifactId>org.kevoree.extra.osgi.rxtx</artifactId>
-            <version>2.2.0</version>
-        </dependency>-->
     </dependencies>
 
 </project>
