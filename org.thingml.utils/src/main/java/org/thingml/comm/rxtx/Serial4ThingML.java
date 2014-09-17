@@ -19,7 +19,10 @@ package org.thingml.comm.rxtx;
 import jssc.*;
 
 import javax.swing.*;
+import java.awt.*;
+import java.io.Console;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Serial4ThingML {
 
@@ -83,29 +86,40 @@ public class Serial4ThingML {
      ************************************************************************
      */
     public class SerialReader implements SerialPortEventListener {
+
+        byte buffer[] = new byte[1024];
+        int id = 0;
+
+        public SerialReader() {
+            init();
+        }
+
+        private void init() {
+            id = 0;
+            for (int i = 0; i < 1024; i++) {
+                buffer[i] = 0x13;
+            }
+        }
+
         @Override
-        public void serialEvent(SerialPortEvent event) {
+        public synchronized void serialEvent(SerialPortEvent event) {
             try {
-                //while (serialPort.isOpened()) {
                 if (event.isRXCHAR() && event.getEventValue() > 0) {
-                    byte buffer[] = serialPort.readBytes(18);
-                    thing.receive(buffer);
-
-                    //TODO: we should escape special thingml bytes...
-                    /*if (buffer[buffer_idx] == 0x13 && buffer[buffer_idx - 1] != 0x7D) {
-                        //System.out.println("  forward");
-                        thing.receive(java.util.Arrays.copyOfRange(buffer, 0, buffer_idx + 1));
-                        buffer_idx = 0;
-                    } else {
-                        buffer_idx++;
-                    }*/
+                    byte current[] = serialPort.readBytes(1);
+                    if (buffer[0] == 0x13 && current[0] == 0x12 || buffer[0] == 0x12) {//start byte, new message OR message already initialized
+                        for (byte b : current) {
+                            buffer[id] = b;
+                            id++;
+                        }
+                    }
+                    if (id > 2 && buffer[id-1] == 0x13 && buffer[id - 2] != 0x7D) {//stop byte
+                        thing.receive(Arrays.copyOf(buffer, id));
+                        init();
+                    }
                 }
-
-                //}
-
-
             } catch (Exception e) {
-                System.err.println("Error while reading from serial port. Trying to close and reconnect...");
+                System.err.println("Error while reading from serial port: " + e.getLocalizedMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -129,24 +143,47 @@ public class Serial4ThingML {
             startPosition = 0;
         }
 
-        String serialPort = (String) JOptionPane.showInputDialog(
-                null,
-                "ThingML Serial",
-                "Select serial port",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                possibilities.toArray(),
-                possibilities.toArray()[startPosition]);
+        GraphicsEnvironment ge =
+                GraphicsEnvironment.getLocalGraphicsEnvironment();
+        boolean isHeadless = ge.isHeadless();
 
-        if (serialPort == null) {
+
+        String serialPort = possibilities.get(0);
+        if (isHeadless) { //CLI-based selection of serial port
+
+            Console c = System.console();
+            if (c == null) {
+                System.err.println("No console.");
+                return serialPort;
+            }
+
+            String input = c.readLine("Choose serial port [or press ENTER to select " + serialPort + "]: ");
+            if (input == null || input.equals("") || input.equals("\n")) {
+                return serialPort;
+            } else {
+                return input;
+            }
+
+        } else { //open a popup to choose serial port
             serialPort = (String) JOptionPane.showInputDialog(
                     null,
                     "ThingML Serial",
-                    "Enter serial port",
+                    "Select serial port",
                     JOptionPane.PLAIN_MESSAGE,
                     null,
-                    null,
-                    null);
+                    possibilities.toArray(),
+                    possibilities.toArray()[startPosition]);
+
+            if (serialPort == null) {
+                serialPort = (String) JOptionPane.showInputDialog(
+                        null,
+                        "ThingML Serial",
+                        "Enter serial port",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        null,
+                        null);
+            }
         }
 
         return serialPort;

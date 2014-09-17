@@ -21,7 +21,9 @@
  */
 package org.thingml.utils.comm
 
-iimport java.nio.{ByteBuffer, ByteOrder}
+iimport java.nio. {
+ByteBuffer, ByteOrder
+}
 
 object SerializableTypes {
 
