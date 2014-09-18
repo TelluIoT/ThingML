@@ -143,14 +143,9 @@ public class Serial4ThingML {
             startPosition = 0;
         }
 
-        GraphicsEnvironment ge =
-                GraphicsEnvironment.getLocalGraphicsEnvironment();
-        boolean isHeadless = ge.isHeadless();
-
-
+        final boolean isHeadless = GraphicsEnvironment.getLocalGraphicsEnvironment().isHeadless();
         String serialPort = possibilities.get(0);
         if (isHeadless) { //CLI-based selection of serial port
-
             Console c = System.console();
             if (c == null) {
                 System.err.println("No console.");
@@ -163,7 +158,6 @@ public class Serial4ThingML {
             } else {
                 return input;
             }
-
         } else { //open a popup to choose serial port
             serialPort = (String) JOptionPane.showInputDialog(
                     null,
