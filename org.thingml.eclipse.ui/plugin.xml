@@ -21,6 +21,7 @@
 
    <extension
          point="org.eclipse.ui.popupMenus">
+         
       <objectContribution
             id="org.thingml.eclipse.ui.contribution1"
             nameFilter="*.thingml"
@@ -34,13 +35,209 @@
             </separator>
          </menu>
          <action
-               label="Compile"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompile"
+               label="Compile Arduino"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileArduino"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction">
          </action>
-      </objectContribution>
+      </objectContribution> 
+      
    </extension>
+      <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.thingml.eclipse.ui.contribution2"
+            nameFilter="*.thingml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="ThingML"
+               path="additions"
+               id="org.thingml.eclipse.ui.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Compile Posix C"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompilePosixC"
+               menubarPath="org.thingml.eclipse.ui.menu1/group1"
+               enablesFor="1"
+               id="org.thingml.eclipse.ui.newAction2">
+         </action>
+      </objectContribution> 
+   </extension>
+     <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.thingml.eclipse.ui.contribution3"
+            nameFilter="*.thingml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="ThingML"
+               path="additions"
+               id="org.thingml.eclipse.ui.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Compile CPP"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileCPP"
+               menubarPath="org.thingml.eclipse.ui.menu1/group1"
+               enablesFor="1"
+               id="org.thingml.eclipse.ui.newAction3">
+         </action>
+      </objectContribution> 
+      
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.thingml.eclipse.ui.contribution4"
+            nameFilter="*.thingml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="ThingML"
+               path="additions"
+               id="org.thingml.eclipse.ui.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Compile Java/JaSM"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJavaJaSM"
+               menubarPath="org.thingml.eclipse.ui.menu1/group1"
+               enablesFor="1"
+               id="org.thingml.eclipse.ui.newAction4">
+         </action>
+      </objectContribution> 
+      
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.thingml.eclipse.ui.contribution5"
+            nameFilter="*.thingml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="ThingML"
+               path="additions"
+               id="org.thingml.eclipse.ui.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Compile Java/MQTT"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJavaMQTT"
+               menubarPath="org.thingml.eclipse.ui.menu1/group1"
+               enablesFor="1"
+               id="org.thingml.eclipse.ui.newAction5">
+         </action>
+      </objectContribution> 
+      
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.thingml.eclipse.ui.contribution6"
+            nameFilter="*.thingml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="ThingML"
+               path="additions"
+               id="org.thingml.eclipse.ui.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Compile Java/Swing"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJavaSwing"
+               menubarPath="org.thingml.eclipse.ui.menu1/group1"
+               enablesFor="1"
+               id="org.thingml.eclipse.ui.newAction6">
+         </action>
+      </objectContribution> 
+      
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.thingml.eclipse.ui.contribution7"
+            nameFilter="*.thingml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="ThingML"
+               path="additions"
+               id="org.thingml.eclipse.ui.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Compile Java Kevoree"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJavaKevoree"
+               menubarPath="org.thingml.eclipse.ui.menu1/group1"
+               enablesFor="1"
+               id="org.thingml.eclipse.ui.newAction7">
+         </action>
+      </objectContribution> 
+      
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.thingml.eclipse.ui.contribution8"
+            nameFilter="*.thingml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="ThingML"
+               path="additions"
+               id="org.thingml.eclipse.ui.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Compile Comm"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileCom"
+               menubarPath="org.thingml.eclipse.ui.menu1/group1"
+               enablesFor="1"
+               id="org.thingml.eclipse.ui.newAction8">
+         </action>
+      </objectContribution> 
+      
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.thingml.eclipse.ui.contribution9"
+            nameFilter="*.thingml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="ThingML"
+               path="additions"
+               id="org.thingml.eclipse.ui.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Compile Comm2"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileComm2"
+               menubarPath="org.thingml.eclipse.ui.menu1/group1"
+               enablesFor="1"
+               id="org.thingml.eclipse.ui.newAction9">
+         </action>
+      </objectContribution> 
+      
+   </extension>
+
+      
+ 
+   
 
 </plugin>
