@@ -49,6 +49,12 @@
             <version>1.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor_2.11</artifactId>
+            <version>2.3.6</version>
+        </dependency>
+
     </dependencies>
 
 
@@ -80,12 +86,11 @@
                     </jvmArgs>
                 </configuration>
             </plugin>
-<!--	  <plugin>
+	  <plugin>
 	   <groupId>org.codehaus.mojo</groupId>
 	   <artifactId>exec-maven-plugin</artifactId>
 	   <executions>
 	    <execution>
-	     <phase>test</phase>
 	     <goals>
 	      <goal>java</goal>
 	     </goals>
@@ -95,7 +100,7 @@
 	    </execution>
 	   </executions>
 	  </plugin>
--->
+
         </plugins>
     </build>
 
