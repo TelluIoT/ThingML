@@ -40,7 +40,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
 import org.thingml.cgenerator.CGenerator
 //import org.thingml.cppgenerator.CPPGenerator
-import org.thingml.scalagenerator.ScalaGenerator
+//import org.thingml.scalagenerator.ScalaGenerator
 import org.thingml.javagenerator.JavaGenerator
 //import org.thingml.java.pauwaregenerator.PauWareGenerator
 //import org.thingml.javagenerator.gui.SwingGenerator
@@ -72,10 +72,10 @@ object Cmd {
 				val thingmlModel = loadThingMLmodel(targetFile.get)
 				if (args(0) == "linux")
 					CGenerator.compileToLinuxAndNotMake(thingmlModel)
-				if (args(0) == "scala")
+				/*if (args(0) == "scala")
 					thingmlModel.allConfigurations.foreach{c =>
 						ScalaGenerator.compileAndNotRun(c, thingmlModel)                                                                      
-					}
+					}*/
 				if (args(0) == "java")
 					thingmlModel.allConfigurations.foreach{c =>
 						JavaGenerator.compileAndRun(c, thingmlModel, true)                                                                      
