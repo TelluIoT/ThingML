@@ -102,9 +102,9 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                    <!--<compilerArguments>
-                        <profile><!--COMPACT_PROFILE--></profile>
-                    </compilerArguments>--><!--For Java8 only-->
+                    <!--<compilerArguments>-->
+                        <!--<profile>--><!--COMPACT_PROFILE--><!--</profile>-->
+                    <!--</compilerArguments>--><!--For Java8 only-->
                 </configuration>
             </plugin>
 

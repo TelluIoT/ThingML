@@ -28,8 +28,8 @@ import org.sintef.thingml.constraints.ThingMLHelpers
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import scala.io.Source
-import scala.actors._
-import scala.actors.Actor._
+//import scala.actors._
+//import scala.actors.Actor._
 import java.util.{ ArrayList, Hashtable }
 import java.util.AbstractMap.SimpleEntry
 import java.io.{ File, FileWriter, PrintWriter, BufferedReader, BufferedWriter, InputStreamReader, OutputStream, OutputStreamWriter, PrintStream }
@@ -38,7 +38,7 @@ import org.sintef.thingml._
 import org.thingml.graphexport.ThingMLGraphExport
 import scala.collection.immutable.HashMap
 import scala.Some
-import scala.actors.!
+//import scala.actors.!
 
 object Context {
 
@@ -90,12 +90,12 @@ object JavaGenerator {
   implicit def javaGeneratorAspect(self: Type) = self match {
     case t: PrimitiveType => PrimitiveTypeJavaGenerator(t)
     case t: Enumeration   => EnumerationJavaGenerator(t)
-    case _                => TypeJavaGenerator(self)
+    case _                => new TypeJavaGenerator(self)
   }
 
   implicit def javaGeneratorAspect(self: TypedElement) = self match {
     case t: Function => FunctionJavaGenerator(t)
-    case _           => TypedElementJavaGenerator(self)
+    case _           => new TypedElementJavaGenerator(self)
   }
 
   implicit def javaGeneratorAspect(self: Handler) : HandlerJavaGenerator = HandlerJavaGenerator(self)
@@ -112,7 +112,7 @@ object JavaGenerator {
     case a: ReturnAction          => ReturnActionJavaGenerator(a)
     case a: LocalVariable         => LocalVariableActionJavaGenerator(a)
     case a: FunctionCallStatement => FunctionCallStatementJavaGenerator(a)
-    case _                        => ActionJavaGenerator(self)
+    case _                        => new ActionJavaGenerator(self)
   }
 
   implicit def javaGeneratorAspect(self: Expression) = self match {
@@ -139,10 +139,10 @@ object JavaGenerator {
     case exp: ExternExpression       => ExternExpressionJavaGenerator(exp)
     case exp: ArrayIndex             => ArrayIndexJavaGenerator(exp)
     case exp: FunctionCallExpression => FunctionCallExpressionJavaGenerator(exp)
-    case _                           => ExpressionJavaGenerator(self)
+    case _                           => new ExpressionJavaGenerator(self)
   }
 
-  private val console_out = actor {
+  /*private val console_out = actor {
     loopWhile(true) {
       react {
         case TIMEOUT =>
@@ -159,9 +159,9 @@ object JavaGenerator {
           out.close
       }
     }
-  }
+  }*/
 
-  private val console_err = actor {
+  /*private val console_err = actor {
     loopWhile(true) {
       react {
         case TIMEOUT =>
@@ -179,7 +179,7 @@ object JavaGenerator {
 
       }
     }
-  }
+  } */
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false) {
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
@@ -231,7 +231,7 @@ object JavaGenerator {
     }
 
     //pom = pom.replace("<!--DEP-->", "")//other compilers, e.g. Kevoree, might complement the POM
-    pom = pom.replace("<!--COMPACT_PROFILE-->", "compact1")//TODO: this might be overriden by an annotation.
+    //pom = pom.replace("<!--COMPACT_PROFILE-->", "compact1")//TODO: this might be overriden by an annotation.
 
     //TODO: add other maven dependencies
 
@@ -275,9 +275,9 @@ object JavaGenerator {
       }
     }
 	if (!doingTests){
-		actor {
+		//actor {
 		  compileGeneratedCode(rootDir)
-		}
+		//}
 	}
   }
 
@@ -408,13 +408,13 @@ object JavaGenerator {
   }
 }
 
-case class ThingMLJavaGenerator(self: ThingMLElement) {
+class ThingMLJavaGenerator(self: ThingMLElement) {
   def generateJava() {
     // Implemented in the sub-classes
   }
 }
 
-case class ConfigurationJavaGenerator(override val self: Configuration) extends ThingMLJavaGenerator(self) {
+case class ConfigurationJavaGenerator(val self: Configuration) extends ThingMLJavaGenerator(self) {
 
   override def generateJava() {
 
@@ -425,6 +425,12 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
 
   def generateJavaMain(builder: StringBuilder) {
     builder append "public class Main {\n"
+
+    builder append "//Things\n"
+    self.allInstances.foreach { i =>
+      builder append "static " + Context.firstToUpper(i.getType.getName) + " " + i.instanceName + ";\n"
+    }
+
     builder append "public static void main(String args[]) {\n"
 
     builder append "//Things\n"
@@ -477,7 +483,7 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
 
 
 
-          builder append "final " + Context.firstToUpper(i.getType.getName) + " " + i.instanceName + " = (" + Context.firstToUpper(i.getType.getName) + ") new " + Context.firstToUpper(i.getType.getName) + "(\"" + i.getName + ": " + i.getType.getName + "\""
+          builder append i.instanceName + " = (" + Context.firstToUpper(i.getType.getName) + ") new " + Context.firstToUpper(i.getType.getName) + "(\"" + i.getName + ": " + i.getType.getName + "\""
           ///////////////////////////////////////////////////////////////////////////////////////////////////////////
           i.getType.allPropertiesInDepth.foreach { prop => //TODO: not optimal, to be improved
             self.initExpressionsForInstance(i).foreach { case p =>
@@ -552,11 +558,11 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
   }
 }
 
-case class InstanceJavaGenerator(override val self: Instance) extends ThingMLJavaGenerator(self) {
+case class InstanceJavaGenerator(val self: Instance) extends ThingMLJavaGenerator(self) {
   val instanceName = self.getType.getName + "_" + self.getName
 }
 
-case class ConnectorJavaGenerator(override val self: Connector) extends ThingMLJavaGenerator(self) {
+case class ConnectorJavaGenerator(val self: Connector) extends ThingMLJavaGenerator(self) {
   val instanceName = "c_" + (if (self.getName != null) self.getName + "_" else "") + self.hashCode
   val clientName = self.getCli.getInstance.instanceName
   val serverName = self.getSrv.getInstance.instanceName
@@ -564,7 +570,7 @@ case class ConnectorJavaGenerator(override val self: Connector) extends ThingMLJ
 
 
 //TODO: The way we build the state machine has gone through many refactorings... time to rewrite from scratch as it is now very messy!!!
-case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGenerator(self) {
+case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self) {
 
   def generateAPI(): Unit = {
     self.allPorts().foreach{ p =>
@@ -972,13 +978,13 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
   } */
 }
 
-case class VariableJavaGenerator(override val self: Variable) extends ThingMLJavaGenerator(self) {
+case class VariableJavaGenerator(val self: Variable) extends ThingMLJavaGenerator(self) {
   def Java_var_name = {
     self.qname("_") + "_var"
   }
 }
 
-case class EnumerationLiteralJavaGenerator(override val self: EnumerationLiteral) extends ThingMLJavaGenerator(self) {
+case class EnumerationLiteralJavaGenerator(val self: EnumerationLiteral) extends ThingMLJavaGenerator(self) {
 
   def enum_val: String = {
     self.getAnnotations.filter {
@@ -997,14 +1003,14 @@ case class EnumerationLiteralJavaGenerator(override val self: EnumerationLiteral
   }
 }
 
-case class HandlerJavaGenerator(override val self: Handler) extends ThingMLJavaGenerator(self) {
+case class HandlerJavaGenerator(val self: Handler) extends ThingMLJavaGenerator(self) {
 
   val handlerInstanceName = "handler_" + self.hashCode
   val handlerTypeName = "Handler_" + self.hashCode //TODO: find prettier names for handlers
 }
 
 
-case class TypedElementJavaGenerator(val self: TypedElement) /*extends ThingMLJavaGenerator(self)*/ {
+class TypedElementJavaGenerator(val self: TypedElement) /*extends ThingMLJavaGenerator(self)*/ {
   def generateJava(builder: StringBuilder) {
     // Implemented in the sub-classes
   }
@@ -1045,7 +1051,7 @@ case class FunctionJavaGenerator(override val self: Function) extends TypedEleme
  * Type abstract class
  */
 
-case class TypeJavaGenerator(override val self: Type) extends ThingMLJavaGenerator(self) {
+class TypeJavaGenerator(val self: Type) extends ThingMLJavaGenerator(self) {
   def generateJava(builder: StringBuilder) {
     // Implemented in the sub-classes
   }
@@ -1141,7 +1147,7 @@ case class EnumerationJavaGenerator(override val self: Enumeration) extends Type
 /**
  * Action abstract class
  */
-case class ActionJavaGenerator(val self: Action) /*extends ThingMLJavaGenerator(self)*/ {
+class ActionJavaGenerator(val self: Action) /*extends ThingMLJavaGenerator(self)*/ {
   def generateJava(builder: StringBuilder) {
     // Implemented in the sub-classes
   }
@@ -1323,7 +1329,7 @@ case class FunctionCallStatementJavaGenerator(override val self: FunctionCallSta
  * Expression abstract classes
  */
 
-case class ExpressionJavaGenerator(val self: Expression) /*extends ThingMLJavaGenerator(self)*/ {
+class ExpressionJavaGenerator(val self: Expression) /*extends ThingMLJavaGenerator(self)*/ {
   def generateJava(builder: StringBuilder) {
     // Implemented in the sub-classes
   }

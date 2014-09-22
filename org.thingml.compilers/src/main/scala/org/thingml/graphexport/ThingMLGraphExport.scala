@@ -38,7 +38,7 @@ case class RegionGraphExport(self : Region) {
     result.append("\trankdir=LR;\n")
     result.append("\tINIT_STATE [shape=circle label = \"\", style = filled, color = \"black\"];\n")
     result.append("\t\tINIT_STATE -> "+ self.getInitial.nodeID +" [label=\"init\"];\n")
-    self.getSubstate.foreach { s => s.graphviz(result) }
+    self.getSubstate.foreach { s => new StateGraphExport(s).graphviz(result) }
     result.append("}")
     result.toString
   }

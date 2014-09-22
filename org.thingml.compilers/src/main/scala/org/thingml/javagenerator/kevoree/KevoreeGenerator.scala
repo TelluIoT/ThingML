@@ -158,12 +158,12 @@ object KevoreeGenerator {
     cfg.allConnectors.foreach{con=>
       if (! (con.getRequired.getAnnotations.find{a => a.getName == "internal"}.isDefined || con.getProvided.getAnnotations.find{a => a.getName == "internal"}.isDefined)) {
         if (con.getRequired.getSends.size > 0 && con.getProvided.getReceives.size > 0) {
-          kevScript append "add channel_" + con.hashCode + " : SyncBroadcast\n"
+          kevScript append "add channel_" + con.hashCode + " : AsyncBroadcast\n"
           kevScript append "bind node0." + con.getCli.getInstance().instanceName + "." + con.getRequired.getName + "Port_out channel_" + con.hashCode + "\n"
           kevScript append "bind node0." + con.getSrv.getInstance().instanceName + "." + con.getProvided.getName + "Port channel_" + con.hashCode + "\n"
         }
         if (con.getRequired.getReceives.size > 0 && con.getProvided.getSends.size > 0) {
-          kevScript append "add channel_" + con.hashCode + "_re : SyncBroadcast\n"
+          kevScript append "add channel_" + con.hashCode + "_re : AsyncBroadcast\n"
           kevScript append "bind node0." + con.getCli.getInstance().instanceName + "." + con.getRequired.getName + "Port channel_" + con.hashCode + "_re\n"
           kevScript append "bind node0." + con.getSrv.getInstance().instanceName + "." + con.getProvided.getName + "Port_out channel_" + con.hashCode + "_re\n"
         }

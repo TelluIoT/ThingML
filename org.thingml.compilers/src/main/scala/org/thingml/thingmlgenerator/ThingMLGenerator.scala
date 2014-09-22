@@ -28,8 +28,8 @@ import org.sintef.thingml.constraints.ThingMLHelpers
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import scala.io.Source
-import scala.actors._
-import scala.actors.Actor._
+//import scala.actors._
+//import scala.actors.Actor._
 import java.util.{ArrayList, Hashtable}
 import java.util.AbstractMap.{SimpleImmutableEntry, SimpleEntry}
 import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
@@ -48,8 +48,8 @@ object Context {
     }
 
     inputs.foreach{case (p, (send, receive)) =>
-        result += (p -> ((send.sort((e1, e2) => e1.getParameters.size < e2.getParameters.size || e1.getName.compareTo(e2.getName) <= 0),
-                          receive.sort((e1, e2) => e1.getParameters.size < e2.getParameters.size || e1.getName.compareTo(e2.getName) <= 0))))
+        result += (p -> ((send.sortWith((e1, e2) => e1.getParameters.size < e2.getParameters.size || e1.getName.compareTo(e2.getName) <= 0),
+                          receive.sortWith((e1, e2) => e1.getParameters.size < e2.getParameters.size || e1.getName.compareTo(e2.getName) <= 0))))
     }
     return result
   }
@@ -81,7 +81,7 @@ object Context {
 object ThingMLGenerator {
   implicit def thingMLGeneratorAspect(self: Configuration): ConfigurationThingMLGenerator = ConfigurationThingMLGenerator(self)
   
-  private val console_out = actor {
+/*  private val console_out = actor {
     loopWhile(true){
       react {
         case TIMEOUT =>
@@ -118,7 +118,7 @@ object ThingMLGenerator {
 
       }
     }
-  }
+  } */
   
   //TODO: refactor
   def compileAndRun(cfg : Configuration, alt : Boolean = false) {
@@ -191,13 +191,13 @@ object ThingMLGenerator {
   }
 }
 
-case class ThingMLThingMLGenerator(self: ThingMLElement) {
+class ThingMLThingMLGenerator(self: ThingMLElement) {
   def generateThingML(builder: StringBuilder = Context.builder, alt : Boolean) {
     // Implemented in the sub-classes
   }
 }
 
-case class ConfigurationThingMLGenerator(override val self: Configuration) extends ThingMLThingMLGenerator(self) {
+case class ConfigurationThingMLGenerator(val self: Configuration) extends ThingMLThingMLGenerator(self) {
 
   override def generateThingML(builder: StringBuilder = Context.builder, alt : Boolean) {
     generateRemoteMsgs(builder)

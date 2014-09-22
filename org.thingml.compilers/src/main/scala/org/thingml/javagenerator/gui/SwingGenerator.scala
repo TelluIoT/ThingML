@@ -194,17 +194,17 @@ object SwingGenerator {
   
 }
 
-case class ThingMLSwingGenerator(self: ThingMLElement) {
+class ThingMLSwingGenerator(self: ThingMLElement) {
   def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
     // Implemented in the sub-classes
   }
 }
 
-case class InstanceSwingGenerator(override val self: Instance) extends ThingMLSwingGenerator(self) {
+case class InstanceSwingGenerator(val self: Instance) extends ThingMLSwingGenerator(self) {
   val instanceName = self.getType.getName + "_" + self.getName
 }
 
-case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGenerator(self) {
+case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(self) {
   
   def generateListener(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
     builder append "package org.thingml.generated.gui;\n\n"
@@ -590,7 +590,7 @@ case class ThingSwingGenerator(override val self: Thing) extends ThingMLSwingGen
   }
 }
 
-case class MessageSwingGenerator(override val self: Message) extends ThingMLSwingGenerator(self) {
+case class MessageSwingGenerator(val self: Message) extends ThingMLSwingGenerator(self) {
 
   override def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
     
@@ -633,7 +633,7 @@ case class MessageSwingGenerator(override val self: Message) extends ThingMLSwin
 
 
 //TODO: Avoid duplicating code from ScalaGenerator.
-case class TypeSwingGenerator(override val self: Type) extends ThingMLSwingGenerator(self) {
+case class TypeSwingGenerator(val self: Type) extends ThingMLSwingGenerator(self) {
   override def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
     // Implemented in the sub-classes
   }
@@ -658,7 +658,7 @@ case class TypeSwingGenerator(override val self: Type) extends ThingMLSwingGener
       case None =>
         println("Warning: Missing annotation java_type or scala_type for type " + self.getName + ", using " + self.getName + " as the Java/Scala type.")
         var temp : String = self.getName
-        temp = temp(0).toUpperCase + temp.substring(1, temp.length)
+        temp = temp(0).toUpper + temp.substring(1, temp.length)
         temp
     }
     return res

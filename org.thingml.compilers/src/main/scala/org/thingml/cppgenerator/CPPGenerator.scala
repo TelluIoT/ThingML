@@ -21,10 +21,7 @@ import org.thingml.cppgenerator.CPPGenerator._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import sun.applet.resources.MsgAppletViewer
-import scala.util.parsing.input.StreamReader
 import java.io._
-import scala.actors._
-import scala.actors.Actor._
 
 import io.Source
 import org.sintef.thingml._
@@ -63,7 +60,7 @@ object CPPGenerator {
   implicit def cGeneratorAspect(self: Type) = self match {
     case t: PrimitiveType => PrimitiveTypeCGenerator(t)
     case t: Enumeration => EnumerationCGenerator(t)
-    case _ => TypeCGenerator(self)
+    case _ => new TypeCGenerator(self)
   }
 
   implicit def cGeneratorAspect(self: Action) = self match {
@@ -78,7 +75,7 @@ object CPPGenerator {
     case a: ReturnAction => ReturnActionCGenerator(a)
     case a: LocalVariable => LocalVariableActionCGenerator(a)
     case a: FunctionCallStatement => FunctionCallStatementCGenerator(a)
-    case _ => ActionCGenerator(self)
+    case _ => new ActionCGenerator(self)
   }
 
   implicit def cGeneratorAspect(self: Expression) = self match {
@@ -104,7 +101,7 @@ object CPPGenerator {
     case exp: ExternExpression => ExternExpressionCGenerator(exp)
     case exp: ArrayIndex => ArrayIndexCGenerator(exp)
     case exp: FunctionCallExpression => FunctionCallExpressionCGenerator(exp)
-    case _ => ExpressionCGenerator(self)
+    case _ => new ExpressionCGenerator(self)
   }
 
     /*
@@ -133,7 +130,7 @@ object CPPGenerator {
    *    Generic methods
    ****************************************************************************************/
 
-    private val console_out = actor {
+    /*private val console_out = actor {
            loopWhile(true){
               react {
                   case TIMEOUT =>
@@ -170,7 +167,7 @@ object CPPGenerator {
 
               }
         }
-    }
+    }*/
 
 
   def isWindows() : Boolean = {
@@ -299,8 +296,17 @@ object CPPGenerator {
     pb.directory(out)
     var p: Process = pb.start
 
-    console_out ! p
-    console_err ! p
+    /*console_out ! p
+    console_err ! p*/
+
+    val is : InputStream = p.getInputStream();
+    val isr : InputStreamReader = new InputStreamReader(is);
+    val br : BufferedReader = new BufferedReader(isr);
+    var line : String = br.readLine();
+    while (line != null) {
+      println(line);
+      line = br.readLine()
+    }
 
     return out
   }
@@ -617,13 +623,13 @@ class LinuxCGeneratorContext ( src: Configuration ) extends CGeneratorContext ( 
 
 }
 
-case class ThingMLCGenerator(self: ThingMLElement) {
+class ThingMLCGenerator(self: ThingMLElement) {
   def generateC(builder: StringBuilder, context : CGeneratorContext) {
     // Implemented in the sub-classes
   }
 }
 
-case class ConfigurationCGenerator(override val self: Configuration) extends ThingMLCGenerator(self) {
+case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGenerator(self) {
 
   def out_folder() : File = {
      self.getAnnotations.filter {
@@ -998,7 +1004,7 @@ case class ConfigurationCGenerator(override val self: Configuration) extends Thi
   }
 }
 
-case class FunctionCGenerator(override val self: Function) extends ThingMLCGenerator(self) {
+case class FunctionCGenerator(val self: Function) extends ThingMLCGenerator(self) {
 
   def annotation(name : String): String = {
     self.getAnnotations.filter { a => a.getName == name }.headOption match {
@@ -1120,7 +1126,7 @@ case class FunctionCGenerator(override val self: Function) extends ThingMLCGener
 
 }
 
-case class InstanceCGenerator(override val self: Instance) extends ThingMLCGenerator(self) {
+case class InstanceCGenerator(val self: Instance) extends ThingMLCGenerator(self) {
 
 
   def c_var_name() = self.getName + "_var"
@@ -1171,7 +1177,7 @@ case class InstanceCGenerator(override val self: Instance) extends ThingMLCGener
 
 }
 
-case class ConnectorCGenerator(override val self: Connector) extends ThingMLCGenerator(self) {
+case class ConnectorCGenerator(val self: Connector) extends ThingMLCGenerator(self) {
 
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     // connect the handlers for messages with the sender
@@ -1189,7 +1195,7 @@ case class ConnectorCGenerator(override val self: Connector) extends ThingMLCGen
 }
 
 
-case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(self) {
+case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
 
 
   def generateCHeader(builder: StringBuilder, context : CGeneratorContext) {
@@ -1656,7 +1662,7 @@ case class ThingCGenerator(override val self: Thing) extends ThingMLCGenerator(s
 
 }
 
-case class VariableCGenerator(override val self: Variable) extends ThingMLCGenerator(self) {
+case class VariableCGenerator(val self: Variable) extends ThingMLCGenerator(self) {
    def c_var_name = {
        self.qname("_") + "_var"
    }
@@ -1669,7 +1675,7 @@ case class PropertyCGenerator(override val self: Property) extends ThingMLCGener
    }
 }
   */
-case class EnumerationLiteralCGenerator(override val self: EnumerationLiteral) extends ThingMLCGenerator(self) {
+case class EnumerationLiteralCGenerator(val self: EnumerationLiteral) extends ThingMLCGenerator(self) {
 
   def enum_val: String = {
     self.getAnnotations.filter {
@@ -1692,7 +1698,7 @@ case class EnumerationLiteralCGenerator(override val self: EnumerationLiteral) e
  * Type abstract class
  */
 
-case class TypeCGenerator(override val self: Type) extends ThingMLCGenerator(self) {
+class TypeCGenerator(val self: Type) extends ThingMLCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     // Implemented in the sub-classes
   }
@@ -1881,7 +1887,7 @@ case class EnumerationCGenerator(override val self: Enumeration) extends TypeCGe
 /**
  * Action abstract class
  */
-case class ActionCGenerator(val self: Action) /*extends ThingMLCGenerator(self)*/ {
+class ActionCGenerator(val self: Action) /*extends ThingMLCGenerator(self)*/ {
   def generateC(builder: StringBuilder, context : CGeneratorContext) {
     // Implemented in the sub-classes
   }
@@ -2036,7 +2042,7 @@ case class FunctionCallStatementCGenerator(override val self: FunctionCallStatem
  * Expression abstract classes
  */
 
-case class ExpressionCGenerator(val self: Expression) /*extends ThingMLCGenerator(self)*/ {
+class ExpressionCGenerator(val self: Expression) /*extends ThingMLCGenerator(self)*/ {
   def generateC(builder: StringBuilder, context : CGeneratorContext) {
     // Implemented in the sub-classes
   }

@@ -27,16 +27,16 @@ import org.sintef.thingml.constraints.ThingMLHelpers
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
 import scala.io.Source
-import scala.actors._
-import scala.actors.Actor._
+//import scala.actors._
+//import scala.actors.Actor._
 import java.util.{ ArrayList, Hashtable }
 import java.util.AbstractMap.SimpleEntry
-import java.io.{ File, FileWriter, PrintWriter, BufferedReader, BufferedWriter, InputStreamReader, OutputStream, OutputStreamWriter, PrintStream }
+import java.io._
 import org.sintef.thingml._
 
 import scala.collection.immutable.HashMap
 import scala.Some
-import scala.actors.!
+//import scala.actors.!
 
 object Context {
 
@@ -83,7 +83,7 @@ object MQTTGenerator {
 
   implicit def javaGeneratorAspect(self: Configuration): ConfigurationJavaGenerator = ConfigurationJavaGenerator(self)
 
-  private val console_out = actor {
+  /*private val console_out = actor {
     loopWhile(true) {
       react {
         case TIMEOUT =>
@@ -120,7 +120,7 @@ object MQTTGenerator {
 
       }
     }
-  }
+  }*/
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false) {
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
@@ -155,9 +155,10 @@ object MQTTGenerator {
     }
 
     //TODO: update POM
-    var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/javapom.xml"), "utf-8").getLines().mkString("\n")
+    var pom = Source.fromInputStream(new FileInputStream(rootDir + "/pom.xml"),"utf-8").getLines().mkString("\n")
     pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
-
+    pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.eclipse.paho</groupId>\n<artifactId>mqtt-client</artifactId>\n<version>0.4.0</version>\n</dependency>\n\n<dependency>\n<groupId>org.dna.mqtt</groupId>\n<artifactId>moquette-broker</artifactId>\n<version>0.6</version>\n</dependency>\n<!--DEP-->")
+    pom = pom.replace("<!--REPO-->", "<repository>\n<id>bintray</id>\n<url>http://dl.bintray.com/andsel/maven/</url>\n<releases>\n<enabled>true</enabled>\n</releases>\n<snapshots>\n<enabled>false</enabled>\n</snapshots>\n</repository>\n<!--REPO-->");
     val w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
     w.println(pom);
     w.close();
@@ -169,9 +170,9 @@ object MQTTGenerator {
      */
 
 	if (!doingTests){
-		actor {
+		//actor {
 		  compileGeneratedCode(rootDir)
-		}
+		//}
 	}
   }
 
@@ -203,11 +204,12 @@ object MQTTGenerator {
     Context.init
     Context.pack = pack
 
-    var mainBuilder = Context.getBuilder("Main.java")
+    var mainBuilder = Context.getBuilder("mqtt/Main.java")
     Context.pack = "org.thingml.generated.mqtt"
     generateHeader(mainBuilder, true)
 
     t.generateJavaMain(mainBuilder)
+    t.generateJava()
     return Context.builder
   }
 
@@ -226,18 +228,21 @@ object MQTTGenerator {
     builder append "import org.eclipse.paho.client.mqttv3.*;\n"
     builder append "import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;\n\n"
 
+    builder append "import org.dna.mqtt.moquette.server.Server;\n\n"
+
+    builder append "import java.io.IOException;\n"
     builder append "import java.text.SimpleDateFormat;\n"
     builder append "import java.util.Date;\n\n"
   }
 }
 
-case class ThingMLJavaGenerator(self: ThingMLElement) {
+class ThingMLJavaGenerator(self: ThingMLElement) {
   def generateJava() {
     // Implemented in the sub-classes
   }
 }
 
-case class ConfigurationJavaGenerator(override val self: Configuration) extends ThingMLJavaGenerator(self) {
+case class ConfigurationJavaGenerator(val self: Configuration) extends ThingMLJavaGenerator(self) {
 
   override def generateJava() {
     self.allThings.foreach { thing =>
@@ -251,7 +256,7 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
 
     builder append "//Starting a local MQTT Broker (for demo purpose)\n"
     builder append "final Server mqttServer = new Server(); //Warning: it seems moquette starts something on 8080...\n"
-    builder append "mqttServer.startServer();\n"
+    builder append "try{\nmqttServer.startServer();\n} catch (IOException e) {\ne.printStackTrace();\n}\n"
     builder append "System.out.println(\"MQTT Server started\");\n"
 
 
@@ -261,21 +266,21 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
     builder append "//Instantiate and link per instance and per port MQTT wrappers\n"
     self.allInstances.foreach{ i =>
       i.getType.allPorts().foreach{p =>
-        builder append "final " + i.getName + "_" + p.getName + "_mqtt = new MQTT_" + i.getType.getName + "_" + p.getName + "(org.thingml.generated.Main." + i.qname("_") + ");\n"
-        builder append i.qname("_") + ".registerOn" + p.getName() + "(" + i.getName + "_" + p.getName + "_mqtt);\n\n"
+        builder append "final MQTT_" + i.getType.getName + "_" + p.getName + " " + i.getName + "_" + p.getName + "_mqtt = new MQTT_" + i.getType.getName + "_" + p.getName + "(org.thingml.generated.Main." + i.qname("_") + ");\n"
+        builder append "org.thingml.generated.Main." + i.qname("_") + ".registerOn" + p.getName() + "(" + i.getName + "_" + p.getName + "_mqtt);\n\n"
       }
     }
 
     builder append "Runtime.getRuntime().addShutdownHook(new Thread() {\n"
     builder append "public void run() {\n"
-    builder append "System.out.println(\"Terminating MQTT clients and broker...\");"
+    builder append "System.out.println(\"Terminating MQTT clients and broker...\");\n"
     self.allInstances.foreach{ i =>
       i.getType.allPorts().foreach { p =>
         builder append i.getName + "_" + p.getName + "_mqtt.stop();\n"
       }
     }
     builder append "mqttServer.stopServer();\n"
-    builder append "System.out.println(\"MQTT clients and broker terminated. RIP!\");"
+    builder append "System.out.println(\"MQTT clients and broker terminated. RIP!\");\n"
     builder append "}\n"
     builder append "});\n\n"
 
@@ -286,12 +291,12 @@ case class ConfigurationJavaGenerator(override val self: Configuration) extends 
 
 
 //TODO: The way we build the state machine has gone through many refactorings... time to rewrite from scratch as it is now very messy!!!
-case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGenerator(self) {
+case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self) {
 
   override def generateJava() {
 
     self.getPorts.foreach{p =>
-      val builder = Context.getBuilder("MQTT_" + Context.firstToUpper(self.getName) + "_" + p.getName + ".java")
+      val builder = Context.getBuilder("mqtt/MQTT_" + Context.firstToUpper(self.getName) + "_" + p.getName + ".java")
       Context.thing = self
       Context.pack = "org.thingml.generated.mqtt"
       generateHeader(builder)
@@ -317,7 +322,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       }
 
       builder append "//Constructor\n"
-      builder append "public MQTT_" + Context.firstToUpper(self.getName) + "_" + p.getName + "_Client(" + Context.firstToUpper(self.getName) + " thing) {\n"
+      builder append "public MQTT_" + Context.firstToUpper(self.getName) + "_" + p.getName + "(" + Context.firstToUpper(self.getName) + " thing) {\n"
       builder append self.getName + " = thing;\n"
 
 
@@ -340,8 +345,8 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
           p.getReceives.foreach{m =>
             if (i > 0)
               builder append "else "
-            builder append "if (topic.equals(" + m.getName + "_pub)) {"
-              builder append "System.out.println(\"" + m.getName + "received on MQTT topic\");\n"
+            builder append "if (topic.equals(" + m.getName + "_sub)) {"  //TODO: generate parsing method
+              builder append "System.out.println(\"" + m.getName + " received on MQTT topic\");\n"
               builder append self.getName + "." + m.getName + "_via_" + p.getName + "();\n"
             builder append "}\n"
             i = i + 1
@@ -356,7 +361,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       if (p.getReceives.size() > 0)
         builder append "try {\n"
       p.getReceives.foreach { m =>
-          builder append "mqtt.subscribe(" + m.getName + "_pub, 2);\n"
+          builder append "mqtt.subscribe(" + m.getName + "_sub, 2);\n"
       }
       if (p.getReceives.size() > 0) {
         builder append "} catch (MqttException e) {\n"
@@ -378,6 +383,22 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
       builder append "}\n\n"
 
       p.getSends.foreach{m =>
+        builder append "protected byte[] " + p.getName + "_" + m.getName + "toBinJSON("
+        builder append m.getParameters.collect { case pa => pa.getType.java_type(pa.getCardinality != null) + " " + Context.protectJavaKeyword(pa.getName)}.mkString(", ")
+        builder append "){\n"
+        builder append "final Date date = new Date();\n"
+        builder append "final StringBuilder builder = new StringBuilder();\n"
+        builder append "builder.append(\"{\");\n"
+        builder append "builder.append(\"\\\"deviceId\\\":\\\"\" + deviceId + \"\\\",\");\n"
+        builder append "builder.append(\"\\\"observationTime\\\":\\\"\" + dateFormat.format(date) + \"\\\",\");\n"
+        builder append "builder.append(\"\\\"observations\\\":[\");\n"
+        m.getParameters.foreach{pa =>
+          builder append "builder.append(\"{\\\"" + Context.protectJavaKeyword(pa.getName) + "\\\":\\\"\" + " + Context.protectJavaKeyword(pa.getName) + "+ \"\\\"}\");\n"
+        }
+        builder append "builder.append(\"]}\");\n"
+        builder append "return builder.toString().getBytes();\n"
+        builder append "}"
+
         builder append "@Override\n"
         builder append "public void " + m.getName + "_from_" + p.getName + "("
         builder append m.getParameters.collect { case pa => pa.getType.java_type(pa.getCardinality != null) + " " + Context.protectJavaKeyword(pa.getName)}.mkString(", ")
@@ -385,11 +406,11 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
 
         builder append "try {\n"
           builder append "System.out.println(\"Publishing " + m.getName + "\");\n"
-          builder append "MqttMessage message = new MqttMessage("
-          //TODO format message (in a seperate method, which can be customized according to the payload format of the broker
-          builder append ");\n"
+          builder append "MqttMessage message = new MqttMessage(" + p.getName + "_" + m.getName + "toBinJSON("
+          builder append m.getParameters.collect { case pa => Context.protectJavaKeyword(pa.getName)}.mkString(", ")
+          builder append "));\n"
           builder append "message.setQos(2);\n"
-          builder append "mqtt.publish(tempTopic, message);\n"
+          builder append "mqtt.publish(" + m.getName + "_pub, message);\n"
         builder append "} catch (Exception e) {\n"
           builder append "System.err.println(\"Cannot publish on MQTT topic. \" + e.getLocalizedMessage());"
         builder append "}\n\n"
@@ -402,7 +423,7 @@ case class ThingJavaGenerator(override val self: Thing) extends ThingMLJavaGener
   }
 }
 
-case class TypeJavaGenerator(override val self: Type) extends ThingMLJavaGenerator(self) {
+case class TypeJavaGenerator(val self: Type) extends ThingMLJavaGenerator(self) {
   def java_type(isArray : Boolean = false): String = {
     if (self == null){
       return "void"
@@ -416,10 +437,6 @@ case class TypeJavaGenerator(override val self: Type) extends ThingMLJavaGenerat
         case Some(a) =>
           a.asInstanceOf[PlatformAnnotation].getValue
         case None =>
-          /*println("[WARNING] Missing annotation java_type or java_type for type " + self.getName + ", using " + self.getName + " as the Java/Java type.")
-          var temp : String = self.getName
-          temp = temp.capitalize//temp(0).toUpperCase + temp.substring(1, temp.length)
-          temp*/
           "Object"
       }
       if (isArray) {
