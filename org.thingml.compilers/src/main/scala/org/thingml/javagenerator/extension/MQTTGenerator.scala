@@ -304,12 +304,9 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
       p.getReceives.foreach { m =>
         if (i > 0)
           builder append "else "
-        builder append "if (topic.equals(" + m.getName + "_sub)) {" //TODO: generate parsing method
+        builder append "if (topic.equals(" + m.getName + "_sub)) {"
         builder append "System.out.println(\"" + m.getName + " received on MQTT topic\");\n"
-        builder append "JsonObject jsonObject = JsonObject.readFrom(new String(mqttMessage.getPayload()));\n"
-        builder append self.getName + "." + m.getName + "_via_" + p.getName + "("
-        builder append m.getParameters.collect { case pa => "jsonObject.get(\"" + Context.protectJavaKeyword(pa.getName) + "\")"}.mkString(", ")
-        builder append ");\n"
+        builder append "receive" + Context.firstToUpper(p.getName) + "_" + m.getName + "(mqttMessage.getPayload());\n"
         builder append "}\n"
         i = i + 1
       }
@@ -319,7 +316,6 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
       builder append "public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {}});\n\n"
 
       builder append "token.waitForCompletion();\n"
-      //TODO
       if (p.getReceives.size() > 0)
         builder append "try {\n"
       p.getReceives.foreach { m =>
@@ -343,6 +339,19 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
       builder append "e.printStackTrace();\n"
       builder append "}\n"
       builder append "}\n\n"
+
+      p.getReceives.foreach { m =>
+        builder append "protected void receive" + Context.firstToUpper(p.getName) + "_" + m.getName + "(byte[] payload) {"
+        if (m.getParameters.size() > 0 ) {
+          builder append "JsonObject jsonObject = JsonObject.readFrom(new String(payload));\n"
+          builder append self.getName + "." + m.getName + "_via_" + p.getName + "("
+          builder append m.getParameters.collect { case pa => "(" + pa.getType.java_type() + ") jsonObject.get(\"" + Context.protectJavaKeyword(pa.getName) + "\").as" + (if (pa.getType.java_type() == "short") "Int" else Context.firstToUpper(pa.getType.java_type())) + "()"}.mkString(", ")
+          builder append ");\n"
+        } else {
+          builder append self.getName + "." + m.getName + "_via_" + p.getName + "();\n"
+        }
+        builder append "}\n"
+      }
 
       p.getSends.foreach { m =>
         builder append "protected byte[] " + p.getName + "_" + m.getName + "toBinJSON("
