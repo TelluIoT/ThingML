@@ -428,7 +428,7 @@ case class ConfigurationJavaGenerator(val self: Configuration) extends ThingMLJa
 
     builder append "//Things\n"
     self.allInstances.foreach { i =>
-      builder append "static " + Context.firstToUpper(i.getType.getName) + " " + i.instanceName + ";\n"
+      builder append "public static " + Context.firstToUpper(i.getType.getName) + " " + i.instanceName + ";\n"
     }
 
     builder append "public static void main(String args[]) {\n"
@@ -574,7 +574,7 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
 
   def generateAPI(): Unit = {
     self.allPorts().foreach{ p =>
-      if (p.getReceives.size()>0) {
+      if (p.isDefined("public", "true") && p.getReceives.size()>0) {
         val builder = Context.getBuilder("api/I" + Context.firstToUpper(self.getName) + "_" + p.getName + ".java")
         builder append "package org.thingml.generated.api;\n\n"
         builder append "import org.thingml.generated.api.*;\n\n"
@@ -591,7 +591,7 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
 
   def generateClientAPI: Unit = {
     self.allPorts().foreach{ p =>
-      if (p.getSends.size() > 0) {
+      if (p.isDefined("public", "true") && p.getSends.size() > 0) {
         val builder = Context.getBuilder("api/I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client.java")
         builder append "package org.thingml.generated.api;\n\n"
         builder append "import org.thingml.generated.api.*;\n\n"
@@ -797,7 +797,7 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
 
     val traits = new util.ArrayList[String]()
     self.allPorts().foreach { p =>
-      if (p.getReceives.size() > 0) {
+      if (p.isDefined("public", "true") && p.getReceives.size() > 0) {
         traits += "I" + Context.firstToUpper(self.getName) + "_" + p.getName
       }
     }
@@ -810,7 +810,7 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
     builder append "public class " + Context.firstToUpper(self.getName) + " extends Component " + (if (traits.size()>0) "implements " + traits.mkString(", ") else "") + " {\n\n"
 
     self.allPorts().foreach{ p =>
-      if (p.getSends.size() > 0) {
+      if (p.isDefined("public", "true") && p.getSends.size() > 0) {
         builder append "private Collection<I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client> " + p.getName + "_clients = Collections.synchronizedCollection(new LinkedList<I" + Context.firstToUpper(self.getName)+ "_" + p.getName + "Client>());\n"
 
         builder append "public synchronized void registerOn" + Context.firstToUpper(p.getName) + "(I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client client){\n"
@@ -823,7 +823,7 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
       }
     }
 
-    self.allPorts().foreach{ p =>
+    self.allPorts().filter{p => p.isDefined("public", "true")}.foreach{ p =>
       p.getReceives.foreach{m =>
         builder append "@Override\n"
         builder append "public synchronized void " + m.getName + "_via_" + p.getName + "("
@@ -845,10 +845,12 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
         if (m.getParameters.size > 0)
           builder append ", "
         builder append m.getParameters.collect{ case p => Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + "), " + p.getName + "_port);\n"
-        builder append "//send to other clients\n"
-        builder append "for(I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client client : " + p.getName + "_clients){\n"
-        builder append "client." + m.getName + "_from_" + p.getName() + "(" + m.getParameters.collect { case p => Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + ");\n"
-        builder append "}"
+        if (p.isDefined("public", "true")) {
+          builder append "//send to other clients\n"
+          builder append "for(I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client client : " + p.getName + "_clients){\n"
+          builder append "client." + m.getName + "_from_" + p.getName() + "(" + m.getParameters.collect { case p => Context.protectJavaKeyword(p.Java_var_name)}.mkString(", ") + ");\n"
+          builder append "}"
+        }
         builder append "}\n\n"
       }
     }
