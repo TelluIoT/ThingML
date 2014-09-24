@@ -30,6 +30,7 @@ import org.sintef.thingml._
 import org.thingml.javagenerator.gui.SwingGenerator._
 
 import scala.collection.JavaConversions._
+import scala.io.Source
 import scala.util.Random
 
 object Context {
@@ -154,7 +155,13 @@ object SwingGenerator {
         thing.generateListener(b, true)
         w.println(b.toString);
         w.close();
-    }    
+    }
+
+    val helper = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("javatemplates/StringHelper.java"), "utf-8").getLines().mkString("\n")
+
+    val w = new PrintWriter(new FileWriter(new File(outputDir + "/StringHelper.java")));
+    w.println(helper);
+    w.close();
 
     javax.swing.JOptionPane.showMessageDialog(null, "Java code generated");
   }

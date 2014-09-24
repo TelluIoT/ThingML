@@ -105,17 +105,25 @@ public class Serial4ThingML {
         public synchronized void serialEvent(SerialPortEvent event) {
             try {
                 if (event.isRXCHAR() && event.getEventValue() > 0) {
-                    byte current[] = serialPort.readBytes(1);
+                    byte current[] = serialPort.readBytes();
                     if (buffer[0] == 0x13 && current[0] == 0x12 || buffer[0] == 0x12) {//start byte, new message OR message already initialized
                         for (byte b : current) {
-                            buffer[id] = b;
-                            id++;
+                            //System.out.println("byte: " + b);
+                            if (b != 0x13 || buffer[id - 1] == 0x7D) {//if not stop byte (or if it is escaped)
+                                buffer[id] = b;
+                                id++;
+                            } else {
+                                //System.out.println("stop byte");
+                                thing.receive(Arrays.copyOf(buffer, id+1));
+                                init();
+                            }
                         }
                     }
-                    if (id > 2 && buffer[id-1] == 0x13 && buffer[id - 2] != 0x7D) {//stop byte
+                    /*if (id > 2 && buffer[id-1] == 0x13 && buffer[id - 2] != 0x7D) {//stop byte
+                        System.out.println("stop byte");
                         thing.receive(Arrays.copyOf(buffer, id));
                         init();
-                    }
+                    }*/
                 }
             } catch (Exception e) {
                 System.err.println("Error while reading from serial port: " + e.getLocalizedMessage());
