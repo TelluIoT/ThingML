@@ -17,26 +17,53 @@ thing SerialJava includes IOByteArray
 	function receive(byte : Byte[18]) 
     @override "true"
     do
-        //print("  serial has received: " + '' & byte & '.mkString("[", ", ", "]")')
+        //DEBUG
+        print("receiving from serial port...")
+        
+        'System.out.print("[");
+        for(byte b :' & byte & ') {
+            System.out.print("- " + b + " -");
+        }
+        System.out.println("]");'
+         
         IOStream!receive_bytes(byte)
+        
+        print("")
     end
     
     function initSerial() do 
         serial = 'new org.thingml.comm.rxtx.Serial4ThingML(' & serialPort & ', this)'  
     end
+    
+    function killSerial() do
+        '' & serial & '.close();'
+    end
         
 
     statechart behavior init default {
-        on entry 
-        do
+        on entry do
             initSerial()    
             print("Serial port ready!")    
         end
         
+        on exit do
+            killSerial()
+            print("Serial port killed, RIP!")
+        end
+        
         state default {
+            on entry do
+                print("Serial port ready indeed!")
+            end
+            
             internal event wb : IOStream?write_bytes
             action do
-               // print("  serial.write: " + '' & wb.b & '.mkString("[", ", ", "]")')
+               
+                //DEBUG
+                /*'for(byte b :' & wb.b & ') {'
+                print("  serial will write: " + 'b')
+                '}'*/
+               
                 '' & serial '.sendData(' & wb.b & ');'
             end
         }    
