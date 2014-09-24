@@ -22,16 +22,15 @@
 //TODO: clean the way names are handled
 package org.thingml.javagenerator.gui
 
-import org.sintef.thingml.impl.ConfigurationImpl
+import java.io.{File, FileWriter, PrintWriter}
+import java.util.AbstractMap.SimpleEntry
+import java.util.Hashtable
+
+import org.sintef.thingml._
 import org.thingml.javagenerator.gui.SwingGenerator._
-import org.sintef.thingml.constraints.ThingMLHelpers
-import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
+
 import scala.collection.JavaConversions._
 import scala.util.Random
-import java.util.{ArrayList, Hashtable}
-import org.sintef.thingml._
-import java.util.AbstractMap.SimpleEntry
-import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
 
 object Context {
   val builder = new StringBuilder()

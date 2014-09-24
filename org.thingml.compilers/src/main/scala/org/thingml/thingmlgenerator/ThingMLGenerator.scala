@@ -22,17 +22,10 @@
  */
 package org.thingml.thingmlgenerator
 
-import org.sintef.thingml.impl.ConfigurationImpl
-import org.thingml.thingmlgenerator.ThingMLGenerator._
-import org.sintef.thingml.constraints.ThingMLHelpers
-import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import scala.collection.JavaConversions._
-import scala.io.Source
-//import scala.actors._
-//import scala.actors.Actor._
-import java.util.{ArrayList, Hashtable}
-import java.util.AbstractMap.{SimpleImmutableEntry, SimpleEntry}
-import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
+import java.util.AbstractMap.{SimpleEntry, SimpleImmutableEntry}
+import java.util.Hashtable
+
 import org.sintef.thingml._
 
 object Context {
@@ -80,76 +73,10 @@ object Context {
 
 object ThingMLGenerator {
   implicit def thingMLGeneratorAspect(self: Configuration): ConfigurationThingMLGenerator = ConfigurationThingMLGenerator(self)
-  
-/*  private val console_out = actor {
-    loopWhile(true){
-      react {
-        case TIMEOUT =>
-          //caller ! "react timeout"
-        case proc:Process =>
-          println("[PROC] " + proc)
-          val out = new BufferedReader( new InputStreamReader(proc.getInputStream))
 
-          var line:String = null
-          while({line = out.readLine; line != null}){
-            println("["+ proc + " OUT] " + line)
-          }
-
-          out.close
-      }
-    }
-  }
-
-  private val console_err = actor {
-    loopWhile(true){
-      react {
-        case TIMEOUT =>
-          //caller ! "react timeout"
-        case proc:Process =>
-          println("[PROC] " + proc)
-
-          val err = new BufferedReader( new InputStreamReader(proc.getErrorStream))
-          var line:String = null
-
-          while({line = err.readLine; line != null}){
-            println("["+ proc + " ERR] " + line)
-          }
-          err.close
-
-      }
-    }
-  } */
-  
   //TODO: refactor
   def compileAndRun(cfg : Configuration, alt : Boolean = false) {
-    //ConfigurationImpl.MergedConfigurationCache.clearCache();
-
-    //new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
-    
     val code = compile(cfg, alt)
-    /*val rootDir = new File(".")
-     val outputDir = new File(rootDir, "/serialization/")
-   
-     outputDir.mkdirs
-    
-     var w = new PrintWriter(new FileWriter(new File(outputDir,  cfg.getName() + "_serialization.thingml")))
-     w.println(code._1)
-     w.close()
-        
-     javax.swing.JOptionPane.showMessageDialog(null, "serialization generated in" + outputDir.getPath);*/
-    
-    /*val pb: ProcessBuilder = new ProcessBuilder("mvn")
-
-     pb.command().add("mvn clean install")
-     pb.command().add("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
-
-     println("EXEC : " + pb.command().toString)
-
-     pb.directory(new File(System.getProperty("user.home") + "/ThingML_temp/" + cfg.getName))
-
-     val p: Process = pb.start
-     console_out ! p
-     console_err ! p*/
   }
   
   def compileAllJava(model: ThingMLModel, pack : String): Hashtable[Configuration, SimpleEntry[String, String]] = {

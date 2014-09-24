@@ -15,12 +15,13 @@
  */
 package org.thingml.graphexport
 
-import org.sintef.thingml._
-import scala.collection.JavaConversions._
-import org.thingml.graphexport.ThingMLGraphExport._
 import java.lang.StringBuilder
 import java.util.Hashtable
-import javax.xml.transform.Result
+
+import org.sintef.thingml._
+import org.thingml.graphexport.ThingMLGraphExport._
+
+import scala.collection.JavaConversions._
 
 /**
  * Created by IntelliJ IDEA.

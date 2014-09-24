@@ -20,25 +20,20 @@
  */
 package org.thingml.javagenerator
 
+import java.io.{BufferedReader, BufferedWriter, File, FileWriter, InputStreamReader, OutputStreamWriter, PrintWriter}
 import java.util
+import java.util.Hashtable
 
-import org.sintef.thingml.impl.ConfigurationImpl
-import org.thingml.javagenerator.JavaGenerator._
-import org.sintef.thingml.constraints.ThingMLHelpers
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
+
+import org.sintef.thingml._
+import org.sintef.thingml.constraints.ThingMLHelpers
+import org.thingml.graphexport.ThingMLGraphExport
+import org.thingml.javagenerator.JavaGenerator._
+
 import scala.collection.JavaConversions._
 import scala.io.Source
-//import scala.actors._
-//import scala.actors.Actor._
-import java.util.{ ArrayList, Hashtable }
-import java.util.AbstractMap.SimpleEntry
-import java.io.{ File, FileWriter, PrintWriter, BufferedReader, BufferedWriter, InputStreamReader, OutputStream, OutputStreamWriter, PrintStream }
-import org.sintef.thingml._
 
-import org.thingml.graphexport.ThingMLGraphExport
-import scala.collection.immutable.HashMap
-import scala.Some
-//import scala.actors.!
 
 object Context {
 
@@ -142,45 +137,6 @@ object JavaGenerator {
     case _                           => new ExpressionJavaGenerator(self)
   }
 
-  /*private val console_out = actor {
-    loopWhile(true) {
-      react {
-        case TIMEOUT =>
-        //caller ! "react timeout"
-        case proc: Process =>
-          println("[PROC] " + proc)
-          val out = new BufferedReader(new InputStreamReader(proc.getInputStream))
-
-          var line: String = null
-          while ({ line = out.readLine; line != null }) {
-            println("[" + proc + " OUT] " + line)
-          }
-
-          out.close
-      }
-    }
-  }*/
-
-  /*private val console_err = actor {
-    loopWhile(true) {
-      react {
-        case TIMEOUT =>
-        //caller ! "react timeout"
-        case proc: Process =>
-          println("[PROC] " + proc)
-
-          val err = new BufferedReader(new InputStreamReader(proc.getErrorStream))
-          var line: String = null
-
-          while ({ line = err.readLine; line != null }) {
-            println("[" + proc + " ERR] " + line)
-          }
-          err.close
-
-      }
-    }
-  } */
-
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false) {
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
@@ -275,9 +231,9 @@ object JavaGenerator {
       }
     }
 	if (!doingTests){
-		//actor {
-		  compileGeneratedCode(rootDir)
-		//}
+		  new Thread(new Runnable {
+        override def run(): Unit = compileGeneratedCode(rootDir)
+      }).start()
 	}
   }
 
