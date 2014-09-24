@@ -110,7 +110,7 @@ object MQTTGenerator {
     var pom = Source.fromInputStream(new FileInputStream(rootDir + "/pom.xml"), "utf-8").getLines().mkString("\n")
     pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
     pom = pom.replace("<!--DEP-->", "<dependency>\n\t<groupId>com.eclipsesource.minimal-json</groupId>\n\t<artifactId>minimal-json</artifactId>\n\t<version>0.9.1</version>\n</dependency><dependency>\n<groupId>org.eclipse.paho</groupId>\n<artifactId>mqtt-client</artifactId>\n<version>0.4.0</version>\n</dependency>\n\n<dependency>\n<groupId>org.dna.mqtt</groupId>\n<artifactId>moquette-broker</artifactId>\n<version>0.6</version>\n</dependency>\n<!--DEP-->")
-    pom = pom.replace("<!--REPO-->", "<repository>\n<id>bintray</id>\n<url>http://dl.bintray.com/andsel/maven/</url>\n<releases>\n<enabled>true</enabled>\n</releases>\n<snapshots>\n<enabled>false</enabled>\n</snapshots>\n</repository>\n<!--REPO-->");
+    pom = pom.replace("<!--REPO-->", "<repository>\n<id>Eclipse Paho Repo</id>\n<url>https://repo.eclipse.org/content/repositories/paho-releases/</url>\n</repository><repository>\n<id>bintray</id>\n<url>http://dl.bintray.com/andsel/maven/</url>\n<releases>\n<enabled>true</enabled>\n</releases>\n<snapshots>\n<enabled>false</enabled>\n</snapshots>\n</repository>\n<!--REPO-->");
     val w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
     w.println(pom);
     w.close();
