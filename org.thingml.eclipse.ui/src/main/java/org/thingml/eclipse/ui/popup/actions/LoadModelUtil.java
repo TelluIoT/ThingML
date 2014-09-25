@@ -55,7 +55,7 @@ public class LoadModelUtil {
 	     Resource model= rs.getResource(xmiuri,true);
 //	    Resource model = rs.createResource(xmiuri);
 	    try {
-			model.load(new HashMap<>());
+			model.load(new HashMap());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
