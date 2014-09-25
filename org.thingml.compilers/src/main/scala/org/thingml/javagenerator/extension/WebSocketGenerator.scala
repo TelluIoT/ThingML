@@ -64,6 +64,7 @@ object WebSocketGenerator {
     mqttDir.mkdirs()
 
     code.foreach { case (file, code) =>
+      println("Dumping " + file);
       val w = new PrintWriter(new FileWriter(new File(outputDir + "/" + file)));
       w.println(code.toString);
       w.close();
@@ -134,13 +135,21 @@ object WebSocketGenerator {
 
     builder append "package " + Context.pack + ";\n\n"
 
+    if(isMain)
+      builder append "import java.io.IOException;\n"
+
+    builder append "import org.java_websocket.WebSocket;\n"
+    builder append "import org.java_websocket.handshake.ClientHandshake;\n"
+    builder append "import org.java_websocket.server.WebSocketServer;\n\n"
     builder append "import org.thingml.generated.*;\n"
     builder append "import org.thingml.generated.api.*;\n\n"
 
     builder append "import java.net.InetSocketAddress;\n"
     builder append "import java.net.UnknownHostException;\n"
     builder append "import java.nio.channels.NotYetConnectedException;\n"
-    builder append "import java.util.Collection;\n\n"
+    builder append "import java.text.SimpleDateFormat;\n"
+    builder append "import java.util.Collection;\n"
+    builder append "import java.util.Date;\n"
   }
 }
 
@@ -170,9 +179,10 @@ case class ConfigurationWSGenerator(val self: Configuration) extends ThingMLJava
     self.allInstances.foreach { i =>
       i.getType.allPorts().foreach { p =>
         if (p.isDefined("public", "true")) {
-          builder append "final WebSocket_" + i.getType.getName + "_" + p.getName + " " + i.getName + "_" + p.getName + "_ws = new WebSocket_" + i.getType.getName + "_" + p.getName + "(\"" + socket + "\", org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ");\n"
-          i.getName + "_" + p.getName + "_ws.start();\n"
-          builder append "org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ".registerOn" + Context.firstToUpper(p.getName()) + "(" + i.getName + "_" + p.getName + "_mqtt);\n\n"
+          builder append "System.out.println(\"[WebSocket_" + p.getName + "] Server starting on port " + socket + "\");"
+          builder append "final WebSocket_" + i.getType.getName + "_" + p.getName + " " + i.getName + "_" + p.getName + "_ws = new WebSocket_" + i.getType.getName + "_" + p.getName + "(" + socket + ", org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ");\n"
+          builder append i.getName + "_" + p.getName + "_ws.start();\n"
+          builder append "org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ".registerOn" + Context.firstToUpper(p.getName()) + "(" + i.getName + "_" + p.getName + "_ws);\n\n"
           socket = socket + 1
         }
       }
@@ -181,6 +191,7 @@ case class ConfigurationWSGenerator(val self: Configuration) extends ThingMLJava
     builder append "Runtime.getRuntime().addShutdownHook(new Thread() {\n"
     builder append "public void run() {\n"
     builder append "System.out.println(\"Terminating websockets...\");\n"
+    builder append "try {\n"
     self.allInstances.foreach { i =>
       i.getType.allPorts().foreach { p =>
         if (p.isDefined("public", "true")) {
@@ -188,6 +199,11 @@ case class ConfigurationWSGenerator(val self: Configuration) extends ThingMLJava
         }
       }
     }
+    builder append "} catch (IOException e) {\n"
+    builder append "e.printStackTrace();\n"
+    builder append "} catch (InterruptedException e) {\n"
+    builder append "e.printStackTrace();\n"
+    builder append "}\n"
     builder append "System.out.println(\"websockets terminated. RIP!\");\n"
     builder append "}\n"
     builder append "});\n\n"
@@ -222,7 +238,6 @@ case class ThingWSGenerator(val self: Thing) extends ThingMLJavaGenerator(self) 
       builder append "public WebSocket_" + Context.firstToUpper(self.getName) + "_" + p.getName + "(int port, " + Context.firstToUpper(self.getName) + " thing) {\n"
       builder append "super(new InetSocketAddress(port));\n"
       builder append self.getName + " = thing;\n"
-      builder append "System.out.println(\"[WebSocket_" + p.getName + "] Server started on port \" + this.getPort());"
       builder append "}\n\n"
 
       builder append "public void sendToAll(String text) {\n"
@@ -279,7 +294,7 @@ case class ThingWSGenerator(val self: Thing) extends ThingMLJavaGenerator(self) 
         builder append "final StringBuilder builder = new StringBuilder();\n"
         builder append "builder.append(\"{\");\n"
         builder append "builder.append(\"\\\"deviceId\\\":\\\"\" + deviceId + \"\\\",\");\n"
-        builder append "builder.append(\"\\\"sensorId\\\":\\\"\"" + p.getName + "." + m.getName  + "\"\\\",\");\n"
+        builder append "builder.append(\"\\\"sensorId\\\":\\\"" + p.getName + "." + m.getName  + "\\\",\");\n"
         builder append "builder.append(\"\\\"observationTime\\\":\\\"\" + dateFormat.format(date) + \"\\\",\");\n"
         builder append "builder.append(\"\\\"observations\\\":[\");\n"
         m.getParameters.foreach { pa =>
@@ -287,14 +302,14 @@ case class ThingWSGenerator(val self: Thing) extends ThingMLJavaGenerator(self) 
         }
         builder append "builder.append(\"]}\");\n"
         builder append "return builder.toString();\n"
-        builder append "}"
+        builder append "}\n\n"
 
         builder append "@Override\n"
         builder append "public void " + m.getName + "_from_" + p.getName + "("
         builder append m.getParameters.collect { case pa => pa.getType.java_type(pa.getCardinality != null) + " " + Context.protectJavaKeyword(pa.getName)}.mkString(", ")
         builder append ") {\n"
         builder append "sendToAll(" + p.getName + "_" + m.getName + "toJSON(" + m.getParameters.collect { case pa => Context.protectJavaKeyword(pa.getName)}.mkString(", ") + "));\n"
-        builder append "}"
+        builder append "}\n\n"
       }
 
       builder append "}"
