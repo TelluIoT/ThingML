@@ -169,7 +169,7 @@ public abstract class AnnotatedElementImpl extends ThingMLElementImpl implements
      * @generated NOT
      */
     public List<PlatformAnnotation> allAnnotations() {
-        return this.annotations;
+        return this.getAnnotations();
     }
 
     /**

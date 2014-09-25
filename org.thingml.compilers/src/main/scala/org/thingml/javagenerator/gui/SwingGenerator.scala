@@ -22,16 +22,16 @@
 //TODO: clean the way names are handled
 package org.thingml.javagenerator.gui
 
-import org.sintef.thingml.impl.ConfigurationImpl
-import org.thingml.javagenerator.gui.SwingGenerator._
-import org.sintef.thingml.constraints.ThingMLHelpers
-import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
-import scala.collection.JavaConversions._
-import scala.util.Random
-import java.util.{ArrayList, Hashtable}
-import org.sintef.thingml._
+import java.io.{File, FileWriter, PrintWriter}
 import java.util.AbstractMap.SimpleEntry
-import java.io.{File, FileWriter, PrintWriter, BufferedReader, InputStreamReader}
+import java.util.Hashtable
+
+import org.sintef.thingml._
+import org.thingml.javagenerator.gui.SwingGenerator._
+
+import scala.collection.JavaConversions._
+import scala.io.Source
+import scala.util.Random
 
 object Context {
   val builder = new StringBuilder()
@@ -155,7 +155,13 @@ object SwingGenerator {
         thing.generateListener(b, true)
         w.println(b.toString);
         w.close();
-    }    
+    }
+
+    val helper = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("javatemplates/StringHelper.java"), "utf-8").getLines().mkString("\n")
+
+    val w = new PrintWriter(new FileWriter(new File(outputDir + "/StringHelper.java")));
+    w.println(helper);
+    w.close();
 
     javax.swing.JOptionPane.showMessageDialog(null, "Java code generated");
   }

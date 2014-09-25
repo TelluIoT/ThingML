@@ -79,6 +79,12 @@ class ThingMLPanel extends JPanel {
   add(menuframe, BorderLayout.CENTER)
 
   val compilersMenu = new JMenu("Compile to");
+  val arduinoMenu = new JMenu("Arduino");
+  val linuxMenu = new JMenu("Linux");
+  val javaMenu = new JMenu("Java");
+  compilersMenu.add(arduinoMenu);
+  compilersMenu.add(linuxMenu);
+  compilersMenu.add(javaMenu);
 
   val b = new JMenuItem("Arduino")
   val bC = new JMenuItem("Posix C")
@@ -263,14 +269,14 @@ class ThingMLPanel extends JPanel {
     }
   })
 
-  compilersMenu.add(b)
-  compilersMenu.add(bC)
-  compilersMenu.add(bCPP)
-  compilersMenu.add(rosC)
-  compilersMenu.add(bJava)
-  compilersMenu.add(bMQTT)
-  compilersMenu.add(bSwing)
-  compilersMenu.add(bKevoree)
+  arduinoMenu.add(b)
+  linuxMenu.add(bC)
+  linuxMenu.add(bCPP)
+  linuxMenu.add(rosC)
+  javaMenu.add(bJava)
+  javaMenu.add(bMQTT)
+  javaMenu.add(bSwing)
+  javaMenu.add(bKevoree)
   compilersMenu.add(bThingML)
   compilersMenu.add(bThingML2)
   menubar.add(compilersMenu)

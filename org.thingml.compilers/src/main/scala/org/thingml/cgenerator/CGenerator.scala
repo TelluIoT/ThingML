@@ -16,26 +16,21 @@
 package org.thingml.cgenerator
 
 import org.sintef.thingml.constraints.ThingMLHelpers
-import org.sintef.thingml.impl.ConfigurationImpl
 import org.thingml.cgenerator.CGenerator._
-import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
-import scala.collection.JavaConversions._
-import sun.applet.resources.MsgAppletViewer
-import org.eclipse.emf.ecore.xml.`type`.internal.RegEx.Match
-import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile
-import javax.xml.transform.Result
-import scala.collection.mutable
-//import scala.util.parsing.input.StreamReader
-import java.io._
-//import scala.actors._
-//import scala.actors.Actor._
 
-import io.Source
+import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
+
+import scala.collection.JavaConversions._
+import java.io._
+
+import java.lang.{Boolean, StringBuilder}
+import java.util.{ArrayList, Hashtable}
+
 import org.sintef.thingml._
 import org.thingml.graphexport.ThingMLGraphExport
-import java.lang.{StringBuilder, ProcessBuilder, Boolean}
-import java.util.{Hashtable, ArrayList}
-import collection.mutable.{MutableList, ListBuffer}
+
+import scala.collection.mutable.ListBuffer
+import scala.io.Source
 
 object SimpleCopyTemplate {
 
@@ -138,50 +133,6 @@ implicit def cGeneratorAspect(self:ExternExpression) : ExternExpressionCGenerato
   /** **************************************************************************************
     * Generic methods
     * ***************************************************************************************/
-
-  /*private val console_out = actor {
-    loopWhile(true) {
-      react {
-        case TIMEOUT =>
-        //caller ! "react timeout"
-        case proc: Process =>
-          println("[PROC] " + proc)
-          val out = new BufferedReader(new InputStreamReader(proc.getInputStream))
-
-          var line: String = null
-          while ( {
-            line = out.readLine; line != null
-          }) {
-            println("[" + proc + " OUT] " + line)
-          }
-
-          out.close
-      }
-    }
-  }*/
-
-  /*private val console_err = actor {
-    loopWhile(true) {
-      react {
-        case TIMEOUT =>
-        //caller ! "react timeout"
-        case proc: Process =>
-          println("[PROC] " + proc)
-
-          val err = new BufferedReader(new InputStreamReader(proc.getErrorStream))
-          var line: String = null
-
-          while ( {
-            line = err.readLine; line != null
-          }) {
-            println("[" + proc + " ERR] " + line)
-          }
-          err.close
-
-      }
-    }
-  }*/
-
 
   def isWindows(): Boolean = {
     var os = System.getProperty("os.name").toLowerCase();
