@@ -30,7 +30,7 @@ import org.sintef.thingml.resource.thingml.mopp._
 import org.thingml.cgenerator.CGenerator
 import org.thingml.cppgenerator.CPPGenerator
 import org.thingml.javagenerator.JavaGenerator
-import org.thingml.javagenerator.extension.MQTTGenerator
+import org.thingml.javagenerator.extension.{WebSocketGenerator, MQTTGenerator}
 import org.thingml.javagenerator.kevoree.KevoreeGenerator
 
 import akka.actor.{Props, ActorSystem, ReceiveTimeout, Actor}
@@ -90,10 +90,11 @@ class ThingMLPanel extends JPanel {
   val bC = new JMenuItem("Posix C")
   val bCPP = new JMenuItem("C++")
   val rosC = new JMenuItem("ROS Node")
-  val bJava = new JMenuItem("Java/JaSM")
-  val bMQTT = new JMenuItem("Java/MQTT")
-  val bSwing = new JMenuItem("Java/Swing")
-  val bKevoree = new JMenuItem("Java/Kevoree")
+  val bJava = new JMenuItem("Behavior")
+  val bMQTT = new JMenuItem("MQTT")
+  val bWS = new JMenuItem("WebSocket")
+  val bSwing = new JMenuItem("Swing")
+  val bKevoree = new JMenuItem("Kevoree")
   val bThingML = new JMenuItem("ThingML/Comm")
   val bThingML2 = new JMenuItem("ThingML/Comm2")
 
@@ -201,6 +202,25 @@ class ThingMLPanel extends JPanel {
     }
   })
 
+  bWS.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty)
+        return
+      try {
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        thingmlModel.allConfigurations().foreach { c =>
+          val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
+          //javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
+          WebSocketGenerator.compileAndRun(c, thingmlModel)
+        }
+      }
+      catch {
+        case t: Throwable => t.printStackTrace()
+      }
+    }
+  })
+
   bSwing.addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent) {
       println("Input file : " + targetFile)
@@ -275,6 +295,7 @@ class ThingMLPanel extends JPanel {
   linuxMenu.add(rosC)
   javaMenu.add(bJava)
   javaMenu.add(bMQTT)
+  javaMenu.add(bWS)
   javaMenu.add(bSwing)
   javaMenu.add(bKevoree)
   compilersMenu.add(bThingML)
@@ -377,7 +398,6 @@ class ThingMLPanel extends JPanel {
 
     }
 
-
       context.setReceiveTimeout(500 millisecond)
       def receive = {
         case ReceiveTimeout => if (checkNeeded) {
@@ -390,23 +410,6 @@ class ThingMLPanel extends JPanel {
         }
         case _ => checkNeeded = true
       }
-
-
-    /*def act() {
-      loop {
-        reactWithin(500) {
-          case scala.actors.TIMEOUT => if (checkNeeded) {
-
-            if (codeEditor.getDocument.getLength > 1) {
-              updateMarkers(codeEditor.getDocument.getText(0, codeEditor.getDocument.getLength - 1));
-            }
-
-            checkNeeded = false
-          }
-          case _ => checkNeeded = true
-        }
-      }
-    }*/
   }
 
   codeEditor.getDocument.addDocumentListener(new DocumentListener() {
