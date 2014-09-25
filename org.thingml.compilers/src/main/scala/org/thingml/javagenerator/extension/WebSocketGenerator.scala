@@ -72,7 +72,7 @@ object WebSocketGenerator {
 
     var pom = Source.fromInputStream(new FileInputStream(rootDir + "/pom.xml"), "utf-8").getLines().mkString("\n")
     pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
-    pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.java-websocket</groupId>\n<artifactId>Java-WebSocket</artifactId>\n<version>1.3.0</version>\n</dependency>\n<!--DEP-->")
+    pom = pom.replace("<!--DEP-->", "<dependency>\n\t<groupId>com.eclipsesource.minimal-json</groupId>\n\t<artifactId>minimal-json</artifactId>\n\t<version>0.9.1</version>\n</dependency>\n<dependency>\n<groupId>org.java-websocket</groupId>\n<artifactId>Java-WebSocket</artifactId>\n<version>1.3.0</version>\n</dependency>\n<!--DEP-->")
     //pom = pom.replace("<!--REPO-->", "\n<!--REPO-->");
     val w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
     w.println(pom);
@@ -137,6 +137,9 @@ object WebSocketGenerator {
 
     if(isMain)
       builder append "import java.io.IOException;\n"
+
+    if(!isMain)
+      builder append "import com.eclipsesource.json.JsonObject;\n\n"
 
     builder append "import org.java_websocket.WebSocket;\n"
     builder append "import org.java_websocket.handshake.ClientHandshake;\n"
@@ -271,20 +274,23 @@ case class ThingWSGenerator(val self: Thing) extends ThingMLJavaGenerator(self) 
       builder append "public void onMessage(WebSocket ws, String string) {"
       builder append "System.out.println(\"[WebSocket_" + p.getName + "] Message from \" + ws.getRemoteSocketAddress().getAddress().getHostAddress() + \" Data = \" + string);\n"
       //TODO: parse JSON and forward
-      builder append "}\n\n"
 
-      /*p.getReceives.foreach { m =>
-        builder append "protected void receive" + Context.firstToUpper(p.getName) + "_" + m.getName + "(String payload) {"
-        if (m.getParameters.size() > 0 ) {
-          builder append "JsonObject jsonObject = JsonObject.readFrom(payload);\n"
-          builder append self.getName + "." + m.getName + "_via_" + p.getName + "("
-          builder append m.getParameters.collect { case pa => "(" + pa.getType.java_type() + ") jsonObject.get(\"" + Context.protectJavaKeyword(pa.getName) + "\").as" + (if (pa.getType.java_type() == "short") "Int" else Context.firstToUpper(pa.getType.java_type())) + "()"}.mkString(", ")
-          builder append ");\n"
-        } else {
-          builder append self.getName + "." + m.getName + "_via_" + p.getName + "();\n"
-        }
+      builder append "JsonObject json = JsonObject.readFrom(string);\n"
+      builder append "if (deviceId.equals(json.get(\"deviceId\").asString())) {\n"
+      var i = 0;
+      p.getReceives.foreach{m =>
+        if (i>0)
+          builder append "else "
+        builder append "if (\"" + p.getName + "." + m.getName + "\".equals(json.get(\"sensorId\").asString())) {\n"
+        builder append self.getName + "." + m.getName + "_via_" + p.getName + "("
+        builder append m.getParameters.collect { case pa => "(" + pa.getType.java_type() + ") json.get(\"" + Context.protectJavaKeyword(pa.getName) + "\").as" + (if (pa.getType.java_type() == "short") "Int" else Context.firstToUpper(pa.getType.java_type())) + "()"}.mkString(", ")
+        builder append ");\n"
         builder append "}\n"
-      }*/
+        i = i + 1
+      }
+      builder append "}\n"
+
+      builder append "}\n\n"
 
       p.getSends.foreach { m =>
         builder append "protected String " + p.getName + "_" + m.getName + "toJSON("
