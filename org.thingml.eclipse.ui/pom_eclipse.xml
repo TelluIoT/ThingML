@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
-
-    Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-    	http://www.gnu.org/licenses/lgpl-3.0.txt
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
+<!-- Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no> Licensed under 
+	the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007; you may not 
+	use this file except in compliance with the License. You may obtain a copy 
+	of the License at http://www.gnu.org/licenses/lgpl-3.0.txt Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
 <project>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -30,4 +21,35 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<name>ThingML UI Eclipse Plugin</name>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<artifactId>org.thingml.editor.standaloneApp</artifactId>
+									<groupId>org.thingml</groupId>
+									<version>${version}</version>
+									<outputDirectory>lib</outputDirectory>
+									
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
 </project> 
