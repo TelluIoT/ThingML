@@ -279,6 +279,7 @@ case class ThingWSGenerator(val self: Thing) extends ThingMLJavaGenerator(self) 
         builder append "final StringBuilder builder = new StringBuilder();\n"
         builder append "builder.append(\"{\");\n"
         builder append "builder.append(\"\\\"deviceId\\\":\\\"\" + deviceId + \"\\\",\");\n"
+        builder append "builder.append(\"\\\"sensorId\\\":\\\"\"" + p.getName + "." + m.getName  + "\"\\\",\");\n"
         builder append "builder.append(\"\\\"observationTime\\\":\\\"\" + dateFormat.format(date) + \"\\\",\");\n"
         builder append "builder.append(\"\\\"observations\\\":[\");\n"
         m.getParameters.foreach { pa =>
