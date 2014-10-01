@@ -151,6 +151,7 @@ object HTTPGenerator {
 
     builder append "import javax.ws.rs.*;\n"
     builder append "import javax.ws.rs.client.*;\n"
+    builder append "import javax.ws.rs.core.Response;\n"
     builder append "import javax.ws.rs.core.MediaType;\n\n"
 
     builder append "import java.text.SimpleDateFormat;\n"
@@ -293,7 +294,8 @@ case class ThingHTTPGenerator(val self: Thing) extends ThingMLJavaGenerator(self
         builder append m.getParameters.collect { case pa => pa.getType.java_type(pa.getCardinality != null) + " " + Context.protectJavaKeyword(pa.getName)}.mkString(", ")
         builder append ") {\n"
         builder append "try {\n"
-        builder append "target.path(\"" + self.getName + "/" + p.getName + "/" + m.getName + "\").request().put(Entity.entity(" + p.getName + "_" + m.getName + "toJSON(" + m.getParameters.collect { case pa => Context.protectJavaKeyword(pa.getName)}.mkString(", ") + "), MediaType.APPLICATION_JSON_TYPE)).toString();\n"
+        builder append "final Response r = target.path(\"" + self.getName + "/" + p.getName + "/" + m.getName + "\").request().put(Entity.entity(" + p.getName + "_" + m.getName + "toJSON(" + m.getParameters.collect { case pa => Context.protectJavaKeyword(pa.getName)}.mkString(", ") + "), MediaType.APPLICATION_JSON_TYPE));\n"
+        builder append "System.out.println(\"[HTTP]: \" + r.getStatusInfo());\n"
         builder append "}\n"
         builder append "catch(Exception e) {\n"
         builder append  "System.out.println(e.getLocalizedMessage());\n"
