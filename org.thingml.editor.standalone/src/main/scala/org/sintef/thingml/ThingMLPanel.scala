@@ -30,7 +30,7 @@ import org.sintef.thingml.resource.thingml.mopp._
 import org.thingml.cgenerator.CGenerator
 import org.thingml.cppgenerator.CPPGenerator
 import org.thingml.javagenerator.JavaGenerator
-import org.thingml.javagenerator.extension.{WebSocketGenerator, MQTTGenerator}
+import org.thingml.javagenerator.extension.{HTTPGenerator, WebSocketGenerator, MQTTGenerator}
 import org.thingml.javagenerator.kevoree.KevoreeGenerator
 
 import akka.actor.{Props, ActorSystem, ReceiveTimeout, Actor}
@@ -91,6 +91,7 @@ class ThingMLPanel extends JPanel {
   val bCPP = new JMenuItem("C++")
   val rosC = new JMenuItem("ROS Node")
   val bJava = new JMenuItem("Behavior")
+  val bHTTP = new JMenuItem("HTTP")
   val bMQTT = new JMenuItem("MQTT")
   val bWS = new JMenuItem("WebSocket")
   val bSwing = new JMenuItem("Swing")
@@ -173,8 +174,25 @@ class ThingMLPanel extends JPanel {
         val thingmlModel = loadThingMLmodel(targetFile.get)
         thingmlModel.allConfigurations().foreach { c =>
           val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
-          //javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
           JavaGenerator.compileAndRun(c, thingmlModel)
+        }
+      }
+      catch {
+        case t: Throwable => t.printStackTrace()
+      }
+    }
+  })
+
+  bHTTP.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty)
+        return
+      try {
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        thingmlModel.allConfigurations().foreach { c =>
+          val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
+          HTTPGenerator.compileAndRun(c, thingmlModel)
         }
       }
       catch {
@@ -192,7 +210,6 @@ class ThingMLPanel extends JPanel {
         val thingmlModel = loadThingMLmodel(targetFile.get)
         thingmlModel.allConfigurations().foreach { c =>
           val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
-          //javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
           MQTTGenerator.compileAndRun(c, thingmlModel)
         }
       }
@@ -211,7 +228,6 @@ class ThingMLPanel extends JPanel {
         val thingmlModel = loadThingMLmodel(targetFile.get)
         thingmlModel.allConfigurations().foreach { c =>
           val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
-          //javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
           WebSocketGenerator.compileAndRun(c, thingmlModel)
         }
       }
@@ -294,6 +310,7 @@ class ThingMLPanel extends JPanel {
   linuxMenu.add(bCPP)
   linuxMenu.add(rosC)
   javaMenu.add(bJava)
+  javaMenu.add(bHTTP)
   javaMenu.add(bMQTT)
   javaMenu.add(bWS)
   javaMenu.add(bSwing)
@@ -391,8 +408,8 @@ class ThingMLPanel extends JPanel {
         }
 
       } catch {
-        case _@e => {
-          e.printStackTrace()
+        case e : Throwable => {
+          println(e.getLocalizedMessage)//e.printStackTrace()
         }
       }
 

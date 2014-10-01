@@ -23,19 +23,19 @@ import java.io._
 import java.util.Hashtable
 
 import org.sintef.thingml._
-import org.thingml.javagenerator.extension.WebSocketGenerator._
+import org.thingml.javagenerator.extension.HTTPGenerator._
 
 import scala.collection.JavaConversions._
 import scala.io.Source
 
-object WebSocketGenerator {
-  implicit def wsGeneratorAspect(self: Thing): ThingWSGenerator = ThingWSGenerator(self)
+object HTTPGenerator {
+  implicit def httpGeneratorAspect(self: Thing): ThingHTTPGenerator = ThingHTTPGenerator(self)
 
-  implicit def wsGeneratorAspect(self: Type) = self match {
-    case _ => TypeWSGenerator(self)
+  implicit def httpGeneratorAspect(self: Type) = self match {
+    case _ => TypeHTTPGenerator(self)
   }
 
-  implicit def wsGeneratorAspect(self: Configuration): ConfigurationWSGenerator = ConfigurationWSGenerator(self)
+  implicit def httpGeneratorAspect(self: Configuration): ConfigurationHTTPGenerator = ConfigurationHTTPGenerator(self)
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false) {
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
@@ -47,7 +47,7 @@ object WebSocketGenerator {
     }
     new File(tmpFolder).deleteOnExit
 
-    val code = compile(cfg, "org.thingml.generated.websocket", model)
+    val code = compile(cfg, "org.thingml.generated.http", model)
     val rootDir = tmpFolder + cfg.getName
 
     val outputDir = cfg.getAnnotations.filter(a => a.getName == "java_folder").headOption match {
@@ -60,7 +60,7 @@ object WebSocketGenerator {
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
 
-    val mqttDir = new File(outputDirFile, "websocket")
+    val mqttDir = new File(outputDirFile, "http")
     mqttDir.mkdirs()
 
     code.foreach { case (file, code) =>
@@ -72,13 +72,13 @@ object WebSocketGenerator {
 
     var pom = Source.fromInputStream(new FileInputStream(rootDir + "/pom.xml"), "utf-8").getLines().mkString("\n")
     pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
-    pom = pom.replace("<!--DEP-->", "<dependency>\n\t<groupId>com.eclipsesource.minimal-json</groupId>\n\t<artifactId>minimal-json</artifactId>\n\t<version>0.9.1</version>\n</dependency>\n<dependency>\n<groupId>org.java-websocket</groupId>\n<artifactId>Java-WebSocket</artifactId>\n<version>1.3.0</version>\n</dependency>\n<!--DEP-->")
+    pom = pom.replace("<!--DEP-->", "<dependency>\n\t<groupId>com.eclipsesource.minimal-json</groupId>\n\t<artifactId>minimal-json</artifactId>\n\t<version>0.9.1</version>\n</dependency>\n<dependency>\n<groupId>org.glassfish.jersey.containers</groupId>\n<artifactId>jersey-container-grizzly2-http</artifactId>\n<version>2.12</version>\n</dependency>\n<!--DEP-->")
     //pom = pom.replace("<!--REPO-->", "\n<!--REPO-->");
     val w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
     w.println(pom);
     w.close();
     if (!doingTests) {
-      javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=org.thingml.generated.websocket.Main");
+      javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=org.thingml.generated.http.Main");
     }
     /*
      * GENERATE SOME DOCUMENTATION
@@ -95,7 +95,7 @@ object WebSocketGenerator {
   }
 
   def compileGeneratedCode(rootDir: String) = {
-    val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start " else "") + "mvn clean package exec:java -Dexec.mainClass=org.thingml.generated.websocket.Main", null, new File(rootDir));
+    val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start " else "") + "mvn clean package exec:java -Dexec.mainClass=org.thingml.generated.http.Main", null, new File(rootDir));
 
     val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
     val out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(runtime.getOutputStream())), true);
@@ -117,8 +117,8 @@ object WebSocketGenerator {
     Context.init
     Context.pack = pack
 
-    var mainBuilder = Context.getBuilder("websocket/Main.java")
-    Context.pack = "org.thingml.generated.websocket"
+    var mainBuilder = Context.getBuilder("http/Main.java")
+    Context.pack = "org.thingml.generated.http"
     generateHeader(mainBuilder, true)
 
     t.generateJavaMain(mainBuilder)
@@ -135,34 +135,37 @@ object WebSocketGenerator {
 
     builder append "package " + Context.pack + ";\n\n"
 
-    if(isMain)
+    if(isMain) {
       builder append "import java.io.IOException;\n"
+      builder append "import java.net.URI;\n"
+      builder append "import org.glassfish.grizzly.http.server.HttpServer;\n"
+      builder append "import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;\n"
+      builder append "import org.glassfish.jersey.server.ResourceConfig;\n"
+    }
 
     if(!isMain)
       builder append "import com.eclipsesource.json.JsonObject;\n\n"
 
-    builder append "import org.java_websocket.WebSocket;\n"
-    builder append "import org.java_websocket.handshake.ClientHandshake;\n"
-    builder append "import org.java_websocket.server.WebSocketServer;\n\n"
     builder append "import org.thingml.generated.*;\n"
     builder append "import org.thingml.generated.api.*;\n\n"
 
-    builder append "import java.net.InetSocketAddress;\n"
-    builder append "import java.net.UnknownHostException;\n"
-    builder append "import java.nio.channels.NotYetConnectedException;\n"
+    builder append "import javax.ws.rs.*;\n"
+    builder append "import javax.ws.rs.client.*;\n"
+    builder append "import javax.ws.rs.core.MediaType;\n\n"
+
     builder append "import java.text.SimpleDateFormat;\n"
     builder append "import java.util.Collection;\n"
     builder append "import java.util.Date;\n"
   }
 }
 
-class ThingMLWSGenerator(self: ThingMLElement) {
+class ThingMLHTTPGenerator(self: ThingMLElement) {
   def generateJava() {
     // Implemented in the sub-classes
   }
 }
 
-case class ConfigurationWSGenerator(val self: Configuration) extends ThingMLJavaGenerator(self) {
+case class ConfigurationHTTPGenerator(val self: Configuration) extends ThingMLJavaGenerator(self) {
 
   override def generateJava() {
     self.allInstances().foreach { thing =>
@@ -172,65 +175,67 @@ case class ConfigurationWSGenerator(val self: Configuration) extends ThingMLJava
 
   def generateJavaMain(builder: StringBuilder) {
     builder append "public class Main {\n"
+
+    builder append "public static final String BASE_URI = \"http://localhost:8090/\";\n\n"
+
     builder append "public static void main(String args[]) {\n"
 
     builder append "//Calling standalone ThingML Main\n"
     builder append "org.thingml.generated.Main.main(null);\n\n"
 
-    builder append "//Instantiate and link per instance and per port WebSocket wrappers\n"
-    var socket = 9000;
+
+    builder append "final ResourceConfig rc = new ResourceConfig();\n"
+    builder append "//Instantiate and link per instance and per port HTTP wrappers\n"
     self.allInstances.foreach { i =>
       i.getType.allPorts().foreach { p =>
-        if (p.isDefined("public", "true")) {
-          builder append "System.out.println(\"[WebSocket_" + p.getName + "] Server starting on port " + socket + "\");"
-          builder append "final WebSocket_" + i.getType.getName + "_" + p.getName + " " + i.getName + "_" + p.getName + "_ws = new WebSocket_" + i.getType.getName + "_" + p.getName + "(" + socket + ", org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ");\n"
-          builder append i.getName + "_" + p.getName + "_ws.start();\n"
-          builder append "org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ".registerOn" + Context.firstToUpper(p.getName()) + "(" + i.getName + "_" + p.getName + "_ws);\n\n"
-          socket = socket + 1
+        if (p.isDefined("public", "true") && p.getSends.size() > 0 ) {
+          builder append "HTTP_" + Context.firstToUpper(i.getType.getName) + "_" + p.getName + " http" + i.getType.getName + "_" + p.getName + " = new HTTP_" + Context.firstToUpper(i.getType.getName) + "_" + p.getName + "(" + "org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ");\n"
+          builder append "rc.register(http" + i.getType.getName + "_" + p.getName + ");\n"
         }
       }
     }
 
-    builder append "Runtime.getRuntime().addShutdownHook(new Thread() {\n"
-    builder append "public void run() {\n"
-    builder append "System.out.println(\"Terminating websockets...\");\n"
-    builder append "try {\n"
+    builder append "final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);\n\n"
+    builder append " Runtime.getRuntime().addShutdownHook(new Thread() {\npublic void run() {\nserver.shutdownNow();\n}\n});\n\n"
+
+    builder append "//Instantiate and link per instance and per port HTTP wrappers\n"
     self.allInstances.foreach { i =>
       i.getType.allPorts().foreach { p =>
-        if (p.isDefined("public", "true")) {
-          builder append i.getName + "_" + p.getName + "_ws.stop();\n"
+        if (p.isDefined("public", "true") && p.getReceives().size() > 0 ) {
+          if (p.getSends.size() == 0)//else it has been created earlier
+            builder append "HTTP_" + Context.firstToUpper(i.getType.getName) + "_" + p.getName + " http" + i.getType.getName + "_" + p.getName + " = new HTTP_" + Context.firstToUpper(i.getType.getName) + "_" + p.getName + "();\n"
+          builder append "org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ".registerOn" + Context.firstToUpper(p.getName) + "(http" + i.getType.getName + "_" + p.getName + ");\n"
         }
       }
     }
-    builder append "} catch (IOException e) {\n"
-    builder append "e.printStackTrace();\n"
-    builder append "} catch (InterruptedException e) {\n"
-    builder append "e.printStackTrace();\n"
-    builder append "}\n"
-    builder append "System.out.println(\"websockets terminated. RIP!\");\n"
-    builder append "}\n"
-    builder append "});\n\n"
+
 
     builder append "}\n"
     builder append "}\n"
   }
 }
 
-case class ThingWSGenerator(val self: Thing) extends ThingMLJavaGenerator(self) {
+case class ThingHTTPGenerator(val self: Thing) extends ThingMLJavaGenerator(self) {
 
   override def generateJava() {
 
     self.allPorts.filter{p => p.isDefined("public", "true")}.foreach{ p =>
-      val builder = Context.getBuilder("websocket/WebSocket_" + Context.firstToUpper(self.getName) + "_" + p.getName + ".java")
+      val builder = Context.getBuilder("http/HTTP_" + Context.firstToUpper(self.getName) + "_" + p.getName + ".java")
       Context.thing = self
-      Context.pack = "org.thingml.generated.websocket"
+      Context.pack = "org.thingml.generated.http"
       generateHeader(builder)
 
-      builder append "public class WebSocket_" + Context.firstToUpper(self.getName) + "_" + p.getName
-      builder append " extends WebSocketServer"
+      if (p.getReceives.size() > 0)
+        builder append "@Path(\"/" + self.getName + "/" + p.getName + "\")\n"
+      builder append "public class HTTP_" + Context.firstToUpper(self.getName) + "_" + p.getName
       if (p.getSends.size() > 0)
         builder append " implements I" + self.getName + "_" + p.getName + "Client"
       builder append " {\n\n"
+
+      if (p.getSends.size > 0) {
+        builder append "String httpHook = \"http://localhost:8090/\";\n"
+        builder append "private WebTarget target;\n"
+      }
 
 
       builder append "SimpleDateFormat dateFormat = new SimpleDateFormat(\"yyyy-MM-dd'T'HH:mm:ss.SSS\");\n"
@@ -238,58 +243,32 @@ case class ThingWSGenerator(val self: Thing) extends ThingMLJavaGenerator(self) 
       builder append "String deviceId = \"" + self.getName + "\";\n"
 
       builder append "//Constructor\n"
-      builder append "public WebSocket_" + Context.firstToUpper(self.getName) + "_" + p.getName + "(int port, " + Context.firstToUpper(self.getName) + " thing) {\n"
-      builder append "super(new InetSocketAddress(port));\n"
+      builder append "public HTTP_" + Context.firstToUpper(self.getName) + "_" + p.getName + "(" + Context.firstToUpper(self.getName) + " thing) {\n"
       builder append self.getName + " = thing;\n"
-      builder append "}\n\n"
-
-      builder append "public void sendToAll(String text) {\n"
-      builder append "Collection<WebSocket> con = connections();\n"
-      builder append "synchronized (con) {\n"
-      builder append "for (WebSocket c : con) {\n"
-      builder append "try {\n"
-      builder append "c.send(text);\n"
-      builder append "} catch (NotYetConnectedException ignored) {}\n"
-      builder append "}\n"
-      builder append "}\n"
-      builder append "}\n\n"
-
-      builder append "@Override\n"
-      builder append "public void onOpen(WebSocket ws, ClientHandshake ch) {\n"
-      builder append "System.out.println(\"[WebSocket_" + p.getName + "] Open Client: \" + ws.getRemoteSocketAddress().getAddress().getHostAddress());\n"
-      builder append "}\n\n"
-
-      builder append "@Override\n"
-      builder append "public void onClose(WebSocket ws, int i, String string, boolean bln) {\n"
-      builder append "System.out.println(\"[WebSocket_" + p.getName + "] Close Client: \" + ws.getRemoteSocketAddress().getAddress().getHostAddress());\n"
-      builder append "}\n\n"
-
-      builder append "@Override\n"
-      builder append "public void onError(WebSocket ws, Exception excptn) {\n"
-      builder append "System.out.println(\"[WebSocket_" + p.getName + "] Error ws = \" + ws + \" exception = \" + excptn.getMessage());\n"
-      builder append "excptn.printStackTrace();\n"
-      builder append "}\n\n"
-
-      builder append "@Override\n"
-      builder append "public void onMessage(WebSocket ws, String string) {"
-      builder append "System.out.println(\"[WebSocket_" + p.getName + "] Message from \" + ws.getRemoteSocketAddress().getAddress().getHostAddress() + \" Data = \" + string);\n"
-
-      builder append "JsonObject json = JsonObject.readFrom(string);\n"
-      builder append "if (deviceId.equals(json.get(\"deviceId\").asString())) {\n"
-      var i = 0;
-      p.getReceives.foreach{m =>
-        if (i>0)
-          builder append "else "
-        builder append "if (\"" + p.getName + "." + m.getName + "\".equals(json.get(\"sensorId\").asString())) {\n"
-        builder append self.getName + "." + m.getName + "_via_" + p.getName + "("
-        builder append m.getParameters.collect { case pa => "(" + pa.getType.java_type() + ") json.get(\"" + Context.protectJavaKeyword(pa.getName) + "\").as" + (if (pa.getType.java_type() == "short") "Int" else Context.firstToUpper(pa.getType.java_type())) + "()"}.mkString(", ")
-        builder append ");\n"
-        builder append "}\n"
-        i = i + 1
+      if (p.getSends.size > 0) {
+        builder append "target = ClientBuilder.newClient().target(httpHook);\n"
       }
-      builder append "}\n"
-
       builder append "}\n\n"
+
+      p.getReceives.foreach{m =>
+        builder append "@PUT @Path(\"/" + m.getName + "\")\n"
+        builder append "@Produces(MediaType.APPLICATION_JSON)\n"
+        if (m.getParameters.size() > 0)
+          builder append "@Consumes(MediaType.APPLICATION_JSON)\n"
+        builder append "public String " + m.getName + "("
+        if (m.getParameters.size() > 0)
+          builder append "String payload"
+        builder append ") {\n"
+        if (m.getParameters.size() == 0) {
+          builder append self.getName + "." + m.getName + "_via_" + p.getName + "();\n"
+        } else {
+          builder append "JsonObject json = JsonObject.readFrom(string);\n"
+          builder append self.getName + "." + m.getName + "_via_" + p.getName + "("
+          builder append m.getParameters.collect { case pa => "(" + pa.getType.java_type() + ") json.get(\"" + Context.protectJavaKeyword(pa.getName) + "\").as" + (if (pa.getType.java_type() == "short") "Int" else Context.firstToUpper(pa.getType.java_type())) + "()"}.mkString(", ")
+        }
+        builder append "return \"{\\\"status\\\":\\\"OK\\\"}\";\n"
+        builder append "}\n"
+      }
 
       p.getSends.foreach { m =>
         builder append "protected String " + p.getName + "_" + m.getName + "toJSON("
@@ -313,7 +292,12 @@ case class ThingWSGenerator(val self: Thing) extends ThingMLJavaGenerator(self) 
         builder append "public void " + m.getName + "_from_" + p.getName + "("
         builder append m.getParameters.collect { case pa => pa.getType.java_type(pa.getCardinality != null) + " " + Context.protectJavaKeyword(pa.getName)}.mkString(", ")
         builder append ") {\n"
-        builder append "sendToAll(" + p.getName + "_" + m.getName + "toJSON(" + m.getParameters.collect { case pa => Context.protectJavaKeyword(pa.getName)}.mkString(", ") + "));\n"
+        builder append "try {\n"
+        builder append "target.path(\"" + self.getName + "/" + p.getName + "/" + m.getName + "\").request().put(Entity.entity(" + p.getName + "_" + m.getName + "toJSON(" + m.getParameters.collect { case pa => Context.protectJavaKeyword(pa.getName)}.mkString(", ") + "), MediaType.APPLICATION_JSON_TYPE)).toString();\n"
+        builder append "}\n"
+        builder append "catch(Exception e) {\n"
+        builder append  "System.out.println(e.getLocalizedMessage());\n"
+        builder append "}\n\n"
         builder append "}\n\n"
       }
 
@@ -322,7 +306,7 @@ case class ThingWSGenerator(val self: Thing) extends ThingMLJavaGenerator(self) 
   }
 }
 
-case class TypeWSGenerator(val self: Type) extends ThingMLJavaGenerator(self) {
+case class TypeHTTPGenerator(val self: Type) extends ThingMLJavaGenerator(self) {
   def java_type(isArray: Boolean = false): String = {
     if (self == null) {
       return "void"
