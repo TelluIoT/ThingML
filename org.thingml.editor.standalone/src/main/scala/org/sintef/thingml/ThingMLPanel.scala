@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.resource.{Resource, ResourceSet}
 import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic
 import org.sintef.thingml.resource.thingml.mopp._
 import org.thingml.cgenerator.CGenerator
+import org.thingml.coapgenerator.extension.CoAPGenerator
 import org.thingml.cppgenerator.CPPGenerator
 import org.thingml.javagenerator.JavaGenerator
 import org.thingml.javagenerator.extension.{HTTPGenerator, WebSocketGenerator, MQTTGenerator}
@@ -94,6 +95,7 @@ class ThingMLPanel extends JPanel {
   val bHTTP = new JMenuItem("HTTP")
   val bMQTT = new JMenuItem("MQTT")
   val bWS = new JMenuItem("WebSocket")
+  val bCoAP = new JMenuItem("CoAP")
   val bSwing = new JMenuItem("Swing")
   val bKevoree = new JMenuItem("Kevoree")
   val bThingML = new JMenuItem("ThingML/Comm")
@@ -237,6 +239,24 @@ class ThingMLPanel extends JPanel {
     }
   })
 
+  bCoAP.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty)
+        return
+      try {
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        thingmlModel.allConfigurations().foreach { c =>
+          val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
+          CoAPGenerator.compileAndRun(c, thingmlModel)
+        }
+      }
+      catch {
+        case t: Throwable => t.printStackTrace()
+      }
+    }
+  })
+
   bSwing.addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent) {
       println("Input file : " + targetFile)
@@ -313,6 +333,7 @@ class ThingMLPanel extends JPanel {
   javaMenu.add(bHTTP)
   javaMenu.add(bMQTT)
   javaMenu.add(bWS)
+  javaMenu.add(bCoAP)
   javaMenu.add(bSwing)
   javaMenu.add(bKevoree)
   compilersMenu.add(bThingML)

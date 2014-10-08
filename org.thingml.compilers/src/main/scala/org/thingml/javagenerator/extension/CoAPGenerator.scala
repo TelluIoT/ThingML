@@ -175,6 +175,7 @@ object CoAPGenerator {
     builder append "import org.thingml.generated.*;\n"
     builder append "import org.thingml.generated.api.*;\n\n"
 
+    builder append "import org.eclipse.californium.core.coap.MediaTypeRegistry;\n"
     builder append "import org.eclipse.californium.core.*;\n"
     builder append "import org.eclipse.californium.core.server.resources.CoapExchange;\n\n"
 
@@ -250,8 +251,8 @@ case class ThingCoAPGenerator(val self: Thing) extends ThingMLCoAPGenerator(self
 
       builder append "public class CoAP_" + Context.firstToUpper(self.getName) + "_" + p.getName
       if (p.getSends.size() > 0) {
-        builder append " implements I" + self.getName + "_" + p.getName + "Client "
-        builder append "extends CoapServer "
+        builder append " extends CoapServer "
+        builder append "implements I" + self.getName + "_" + p.getName + "Client "
       }
       builder append "{\n\n"
 
@@ -273,14 +274,24 @@ case class ThingCoAPGenerator(val self: Thing) extends ThingMLCoAPGenerator(self
         builder append "add(new " + Context.firstToUpper(m.getName) + "Resource());\n"
       }
 
-      builder append "}"
+      builder append "}\n\n"
 
       p.getReceives.foreach { m =>
         builder append "class " + Context.firstToUpper(m.getName) + "Resource extends CoapResource {\n"
-        builder append "public " + Context.firstToUpper(m.getName) + "Resource(){"
-        builder append "super(" + m.getName + ");\n"
-        builder append "getAttributes().setTitle(\"" + Context.firstToUpper(m.getName) + " Resource\")\n"
+        builder append "public " + Context.firstToUpper(m.getName) + "Resource(){\n"
+        builder append "super(\"" + m.getName + "\");\n"
+        builder append "getAttributes().setTitle(\"" + Context.firstToUpper(m.getName) + " Resource\");\n"
         builder append "}\n\n"
+
+        builder append "@Override\n"
+        builder append "public void handlePOST(CoapExchange exchange) {\n"
+        builder append "super.handlePOST(exchange);\n"
+        builder append "JsonObject json = JsonObject.readFrom(new String(exchange.getRequestPayload()));\n"
+        builder append self.getName + "." + m.getName + "_via_" + p.getName + "("
+        builder append m.getParameters.collect { case pa => "(" + pa.getType.java_type() + ") json.get(\"" + Context.protectJavaKeyword(pa.getName) + "\").as" + (if (pa.getType.java_type() == "short") "Int" else Context.firstToUpper(pa.getType.java_type())) + "()"}.mkString(", ")
+        builder append ");\n"
+        builder append "}\n\n"
+
         builder append "}\n\n"
       }
 
@@ -300,7 +311,7 @@ case class ThingCoAPGenerator(val self: Thing) extends ThingMLCoAPGenerator(self
           builder append "builder.append(\"{\\\"" + Context.protectJavaKeyword(pa.getName) + "\\\":\\\"\" + " + Context.protectJavaKeyword(pa.getName) + "+ \"\\\"}\");\n"
         }
         builder append "builder.append(\"]}\");\n"
-        builder append "return builder.toString().toBytes();\n"
+        builder append "return builder.toString().getBytes();\n"
         builder append "}\n\n"
 
         builder append "@Override\n"
@@ -308,10 +319,11 @@ case class ThingCoAPGenerator(val self: Thing) extends ThingMLCoAPGenerator(self
         builder append m.getParameters.collect { case pa => pa.getType.java_type(pa.getCardinality != null) + " " + Context.protectJavaKeyword(pa.getName)}.mkString(", ")
         builder append ") {\n"
         builder append "final CoapClient client = new CoapClient(" + m.getName + "_uri);\n"
+        //TODO: we should use the async CoAP API
         builder append "final CoapResponse response = client.post(" + p.getName + "_" + m.getName + "toJSON(" + m.getParameters.collect { case pa => Context.protectJavaKeyword(pa.getName)}.mkString(", ") + "), MediaTypeRegistry.APPLICATION_JSON);\n"
         builder append "}\n\n"
       }
-
+      builder append "}"
     }
   }
 }
