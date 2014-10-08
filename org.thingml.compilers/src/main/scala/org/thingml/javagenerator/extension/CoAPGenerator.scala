@@ -212,11 +212,12 @@ case class ConfigurationCoAPGenerator(val self: Configuration) extends ThingMLCo
     builder append "org.thingml.generated.Main.main(null);\n\n"
 
     builder append "//Instantiate and link per instance and per port CoAP wrappers\n"
-    /*self.allInstances.foreach { i =>
+    self.allInstances.foreach { i =>
       i.getType.allPorts().foreach { p =>
         if (p.isDefined("public", "true")) {
-          builder append "final MQTT_" + i.getType.getName + "_" + p.getName + " " + i.getName + "_" + p.getName + "_mqtt = new MQTT_" + i.getType.getName + "_" + p.getName + "(org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ");\n"
+          builder append "final CoAP_" + i.getType.getName + "_" + p.getName + " " + i.getName + "_" + p.getName + "_coap = new CoAP_" + i.getType.getName + "_" + p.getName + "(org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ");\n"
           builder append "org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ".registerOn" + Context.firstToUpper(p.getName()) + "(" + i.getName + "_" + p.getName + "_mqtt);\n\n"
+          i.getName + "_" + p.getName + "_coap.start();\n";
         }
       }
     }
@@ -227,10 +228,10 @@ case class ConfigurationCoAPGenerator(val self: Configuration) extends ThingMLCo
     self.allInstances.foreach { i =>
       i.getType.allPorts().foreach { p =>
         if (p.isDefined("public", "true")) {
-          builder append i.getName + "_" + p.getName + "_mqtt.stop();\n"
+          i.getName + "_" + p.getName + "_coap.stop();\n";
         }
       }
-    } */
+    }
     builder append "}\n"
     builder append "});\n\n"
 
