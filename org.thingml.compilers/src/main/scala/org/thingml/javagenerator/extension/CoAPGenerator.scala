@@ -216,19 +216,19 @@ case class ConfigurationCoAPGenerator(val self: Configuration) extends ThingMLCo
       i.getType.allPorts().foreach { p =>
         if (p.isDefined("public", "true")) {
           builder append "final CoAP_" + i.getType.getName + "_" + p.getName + " " + i.getName + "_" + p.getName + "_coap = new CoAP_" + i.getType.getName + "_" + p.getName + "(org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ");\n"
-          builder append "org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ".registerOn" + Context.firstToUpper(p.getName()) + "(" + i.getName + "_" + p.getName + "_mqtt);\n\n"
-          i.getName + "_" + p.getName + "_coap.start();\n";
+          builder append "org.thingml.generated.Main." + i.getType.getName + "_" + i.getName + ".registerOn" + Context.firstToUpper(p.getName()) + "(" + i.getName + "_" + p.getName + "_coap);\n"
+          builder append i.getName + "_" + p.getName + "_coap.start();\n";
         }
       }
     }
 
     builder append "Runtime.getRuntime().addShutdownHook(new Thread() {\n"
     builder append "public void run() {\n"
-    builder append "System.out.println(\"Terminating MQTT clients and broker...\");\n"
+    builder append "System.out.println(\"Terminating CoAP clients and broker...\");\n"
     self.allInstances.foreach { i =>
       i.getType.allPorts().foreach { p =>
         if (p.isDefined("public", "true")) {
-          i.getName + "_" + p.getName + "_coap.stop();\n";
+          builder append i.getName + "_" + p.getName + "_coap.stop();\n";
         }
       }
     }
@@ -287,7 +287,8 @@ case class ThingCoAPGenerator(val self: Thing) extends ThingMLCoAPGenerator(self
         builder append "@Override\n"
         builder append "public void handlePOST(CoapExchange exchange) {\n"
         builder append "super.handlePOST(exchange);\n"
-        builder append "JsonObject json = JsonObject.readFrom(new String(exchange.getRequestPayload()));\n"
+        if (m.getParameters.size()>0)
+          builder append "JsonObject json = JsonObject.readFrom(new String(exchange.getRequestPayload()));\n"
         builder append self.getName + "." + m.getName + "_via_" + p.getName + "("
         builder append m.getParameters.collect { case pa => "(" + pa.getType.java_type() + ") json.get(\"" + Context.protectJavaKeyword(pa.getName) + "\").as" + (if (pa.getType.java_type() == "short") "Int" else Context.firstToUpper(pa.getType.java_type())) + "()"}.mkString(", ")
         builder append ");\n"

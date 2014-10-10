@@ -15,22 +15,21 @@
  */
 package org.thingml.eclipse.ui.popup.actions;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Configurable;
+//import org.codehaus.plexus.personality.plexus.lifecycle.phase.Configurable;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
-import org.thingml.cgenerator.CGenerator;
 import org.thingml.thingmlgenerator.ThingMLGenerator;
 
-import com.typesafe.config.Config;
+//import com.typesafe.config.Config;
 
 public class ThingMLCompileCom implements IObjectActionDelegate {
 
