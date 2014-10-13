@@ -55,7 +55,8 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-					<timestampProvider>custom</timestampProvider>
+					<timestampProvider>jgit</timestampProvider>
+					<jgit.ignore>pom.xml</jgit.ignore>
 				</configuration>
 			</plugin>
 		</plugins>
