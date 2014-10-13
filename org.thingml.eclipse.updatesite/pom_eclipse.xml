@@ -49,9 +49,9 @@
 				<version>${tycho-version}</version>
 				<dependencies>
 					<dependency>
-						<groupId>timestamp-provider-groupid</groupId>
-						<artifactId>timestamp-provider-artifactid</artifactId>
-						<version>timestamp-provider-version</version>
+						<groupId>org.eclipse.tycho.extras</groupId>
+						<artifactId>tycho-buildtimestamp-jgit</artifactId>
+						<version>0.21.0</version>
 					</dependency>
 				</dependencies>
 				<configuration>
