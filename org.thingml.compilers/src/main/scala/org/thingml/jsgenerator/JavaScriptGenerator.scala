@@ -166,9 +166,6 @@ object JavaScriptGenerator {
       w.close();
     }
 
-	if (!doingTests){
-    	javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=org.thingml.generated.Main");
-	}
     /*
      * GENERATE SOME DOCUMENTATION
      */
@@ -202,33 +199,11 @@ object JavaScriptGenerator {
         t.printStackTrace
       }
     }
-	if (!doingTests){
-		  new Thread(new Runnable {
-        override def run(): Unit = compileGeneratedCode(rootDir)
-      }).start()
-	}
   }
 
   def isWindows(): Boolean = {
     var os = System.getProperty("os.name").toLowerCase();
     return (os.indexOf("win") >= 0);
-  }
-
-  def compileGeneratedCode(rootDir: String) = {
-    val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start " else "") + "mvn clean package exec:java -Dexec.mainClass=org.thingml.generated.Main", null, new File(rootDir));
-
-    val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
-    val out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(runtime.getOutputStream())), true);
-
-    var line: String = in.readLine()
-    while (line != null) {
-      println(line);
-      line = in.readLine()
-    }
-    runtime.waitFor();
-    in.close();
-    out.close();
-    runtime.destroy();
   }
 
   def compile(t: Configuration, model: ThingMLModel): java.util.Map[String, StringBuilder] = {
@@ -258,17 +233,31 @@ object JavaScriptGenerator {
     builder append "}\n"
     builder append "}\n\n"
 
-
-    //TODO: enums in JS?
-    /*model.allUsedSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
-      e.generateJavaScript(Context.getBuilder("api/" + Context.firstToUpper(e.getName) + "_ENUM.java"))
-    }*/
+    model.allUsedSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
+      e.generateJavaScript(Context.getBuilder("index.html"))
+    }
 
     t.generateJavaScript()
 
+    t.allInstances().foreach{i =>
+      builder append "var " + i.getName + " = new " + i.getType.getName + "();\n"//TODO: pass parameters to constructor
+    }
+    t.allConnectors().foreach { c =>
+      builder append c.getCli.getInstance().getName + ".getConnectors().push(new Connector(" + c.getCli.getInstance().getName + ", " + c.getSrv.getInstance().getName + ", \"" + c.getRequired.getName + "\", \"" + c.getProvided.getName + "\"));\n"
+      builder append c.getCli.getInstance().getName + ".getConnectors().push(new Connector(" + c.getSrv.getInstance().getName + ", " + c.getCli.getInstance().getName + ", \"" + c.getProvided.getName + "\", \"" + c.getRequired.getName + "\"));\n"
+    }
+
+    builder append "function main() {\n"
+    t.allInstances().foreach{i =>
+      if (i.getType.allStateMachines().headOption.isDefined) {
+        builder append i.getName + ".init();\n"
+      }
+    }
+    builder append "}\n"
+
     builder append "</script>\n"
     builder append "</head>\n"
-    builder append "<body>\n"
+    builder append "<body onLoad=\"main()\">\n"
     builder append "</body>\n"
     //TODO: generate simple GUI to visualize state and send messages
     builder append "</html>"
@@ -292,7 +281,7 @@ case class ConfigurationJavaScriptGenerator(val self: Configuration) extends Thi
   override def generateJavaScript() {
 
     self.allThings.foreach { thing =>
-      thing.generateJavaScript(Context.getBuilder(Context.firstToUpper(thing.getName) + ".java") )
+      thing.generateJavaScript(Context.getBuilder("index.html"))
     }
   }
 
@@ -310,6 +299,32 @@ case class ConnectorJavaScriptGenerator(val self: Connector) extends ThingMLJava
 
 
 case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGenerator(self) {
+
+  def buildState(builder : StringBuilder, s : State, containerName : String): Unit = {
+    if (s.isInstanceOf[CompositeState]) {
+      val c = s.asInstanceOf[CompositeState]
+      builder append "var " + c.qname("_") + " = new CompositeState(\"" + c.getName + "\", " + containerName + ");\n"
+      c.getSubstate.foreach{s =>
+        buildState(builder, s, c.qname("_"));
+      }
+      c.getRegion.foreach { r =>
+        buildRegion(builder, r, c.qname("_"));
+      }
+    } else {
+      builder append "var " + s.qname("_") + " = new SimpleState(\"" + s.getName + "\", " + containerName + ");\n"
+    }
+    if(s.getEntry != null)
+      builder append s.qname("_") + ".entry = [" + s.qname("_") + "_entry];\n"
+    if(s.getExit != null)
+      builder append s.qname("_") + ".exit = [" + s.qname("_") + "_exit];\n"
+  }
+
+  def buildRegion(builder : StringBuilder, r : Region, containerName : String): Unit = {
+    builder append "var " + r.qname("_") + " = new Region(\"" + r.getName + "\", " + containerName + ");\n"
+    builder append "var _initial_" + r.qname("_") + " = new PseudoState(\"_initial\", PseudoStateKind.Initial, " + r.qname("_") + ");\n"
+    r.getSubstate.foreach{s => buildState(builder, s, r.qname("_"))}
+    builder append "var t0_" + r.qname("_") + " = new Transition(_initial_" + r.qname("_") + ", " + r.getInitial.qname("_") + ");\n"
+  }
 
   def generateJavaScript(builder: StringBuilder) {
     Context.thing = self
@@ -345,49 +360,179 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     builder append "}\n\n"
 
     builder append "//message queue\n"
-    builder append "this.queue = [];\n"
+    builder append "var queue = [];\n"
     builder append "this.getQueue = function() {\n"
-    builder append "return this.queue;\n"
+    builder append "return queue;\n"
     builder append "}\n\n"
 
+    builder append "//callbacks for third-party listeners\n"
+    self.allPorts().foreach{ p =>
+      if (p.isDefined("public", "true") && p.getSends.size()>0) {
+        builder append "var " + p.getName + "Listeners = [];\n"
+        builder append "this.get" + Context.firstToUpper(p.getName) + "Listeners = function() {\n"
+        builder append "return " + p.getName + "Listeners;\n"
+        builder append "}\n"
+      }
+    }
+
+    builder append "//ThingML-defined functions\n"
     self.allFunctions.foreach {
       f => f.generateJavaScript(builder)
     }
 
-    builder append "//Init state machine\n"
-    self.allStateMachines.foreach { b =>
-      builder append "this.machine = new StateMachine(\"" + b.getName + "\");\n"
+    builder append "//Internal functions\n"
+    builder append "function send(message) {\n"
+    builder append "var json = JSON.parse(message);\n"
+    builder append "var port = json.port;\n"
+    builder append "var arrayLength = connectors.length;\n"
+    builder append "for (var i = 0; i < arrayLength; i++) {\n"
+    builder append "var c = connectors[i];\n"
+    builder append "if (port == c.clientPort) {\n"
+    builder append "c.forward(message);\n"
+    builder append "}\n"
+    builder append "}\n"
+    builder append "}\n\n"
+
+    self.allPorts().foreach{p =>
+      p.getSends.foreach{m =>
+        builder append "function send" + Context.firstToUpper(m.getName) + "On" + Context.firstToUpper(p.getName) + "("
+        builder append m.getParameters.collect { case pa => Context.protectJavaScriptKeyword(pa.getName)}.mkString(", ")
+        builder append ") {\n"
+        builder append "send('{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + "\""
+        builder append m.getParameters.collect { case pa => ", \"" + pa.getName + "\":\"" + Context.protectJavaScriptKeyword(pa.getName) + "\""}.mkString("")//TODO: only string params should have \" \" for their values...
+        builder append "}');\n"
+        builder append "//notify listeners\n"
+        builder append "var arrayLength = " + p.getName + "Listeners.length;\n"
+        builder append "for (var i = 0; i < arrayLength; i++) {\n"
+        builder append p.getName + "Listeners[i]();\n"
+        builder append "}\n"
+        builder append "}\n\n"
+      }
     }
 
+    builder append "//Init state machine\n"
+    self.allStateMachines.foreach { b =>
+      builder append "this." + b.qname("_") + " = new StateMachine(\"" + b.getName + "\");\n"
+      builder append "this._initial_" + b.qname("_") + " = new PseudoState(\"_initial\", PseudoStateKind.Initial, this." + b.qname("_") + ");\n"
+    }
+
+    builder append "//State machine (states and regions)\n"
     self.allStateMachines.foreach{b =>
-      b.allContainedRegions.foreach { r =>
-        //TODO: build behavior
+      b.getSubstate.foreach{s =>
+        buildState(builder, s, "this." + b.qname("_"));
+      }
+      b.getRegion.foreach { r =>
+        buildRegion(builder, r, "this." + b.qname("_"));
+      }
+      if(b.getEntry != null)
+        builder append b.qname("_") + ".entry = [" + b.qname("_") + "_entry];\n"
+      if(b.getExit != null)
+        builder append b.qname("_") + ".exit = [" + b.qname("_") + "_exit];\n"
+
+
+      builder append "//State machine (transitions)\n"
+      builder append "var t0 = new Transition(this._initial_" + b.qname("_") + ", " + b.getInitial.qname("_") + ");\n"
+
+      var i = 1
+      b.allMessageHandlers().foreach{case (p, map) =>
+         map.foreach{case (msg, handlers) =>
+          handlers.foreach{h =>
+            if (h.isInstanceOf[Transition]) {
+              val t = h.asInstanceOf[Transition]
+              if (t.getEvent.size() == 0) {
+                builder append "var t" + i + " = new Transition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_") + ");\n"
+              }
+              else {
+                t.getEvent.foreach{ev =>
+                  builder append "var t" + i + " = new Transition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_")
+                  //TODO: guards
+                  builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + ev.asInstanceOf[ReceiveMessage].getPort.getName + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\"});\n"
+                }
+              }
+            } else {
+              val t = h.asInstanceOf[InternalTransition]
+              t.getEvent.foreach{ev =>
+                builder append "var t" + i + " = new Transition(" + t.eContainer().asInstanceOf[State].qname("_") + ", null"
+                //TODO: guards
+                builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + ev.asInstanceOf[ReceiveMessage].getPort.getName + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\"});\n"
+              }
+            }
+            if (h.getAction != null) {
+              builder append "t" + i + ".effect = [t" + i + "_effect];\n"
+            }
+            i = i + 1
+          }
+        }
+      }
+
+      builder append "//State machine (actions on states and transitions)\n"
+      b.allContainedStates().foreach{s =>
+        if (s.getEntry != null) {
+          builder append "function " + s.qname("_") + "_entry(context, message) {\n"
+          s.getEntry.generateJavaScript(builder)
+          builder append "}\n\n"
+        }
+        if (s.getExit != null) {
+          builder append "function " + s.qname("_") + "_exit(context, message) {\n"
+          s.getExit.generateJavaScript(builder)
+          builder append "}\n\n"
+        }
+      }
+
+      i = 1;
+      b.allMessageHandlers().foreach { case (p, map) =>
+        map.foreach { case (msg, handlers) =>
+          handlers.foreach { h =>
+            if (h.getAction != null) {
+              builder append "function t" + i + "_effect(context, message) {\n"
+              h.getAction.generateJavaScript(builder)
+              builder append "}\n\n"
+            }
+            i = i +1;
+          }
+        }
       }
     }
 
     builder append "}\n"
 
+    if (self.allStateMachines().headOption.isDefined) {
+      builder append "//Public API for third parties\n"
+      builder append self.getName + ".prototype.init = function() {\n"
+      builder append "this." + self.allStateMachines().head.qname("_") + ".initialise( this._initial_" + self.allStateMachines().head.qname("_") + " );\n"
+      builder append "var msg = this.getQueue().shift();\n"
+      builder append "while(msg != null) {\n"
+      builder append "this." + self.allStateMachines().head.qname("_") + ".process(this._initial_" + self.allStateMachines().head.qname("_") + ", msg);\n"
+      builder append "msg = this.getQueue().shift();\n"
+      builder append "}\n"
+      builder append "this.ready = true;\n"
+      builder append "}\n"
 
-    builder append self.getName + ".prototype.init = function() {\n"
-    builder append "this.machine.initialise( this.sms );\n"
-    builder append "var msg = this.getQueue().shift();\n"
-    builder append "while(msg != null) {\n"
-    builder append "this.machine.process(this.sms, msg);\n"
-    builder append "msg = this.getQueue().shift();\n"
-    builder append "}\n"
-    builder append "this.ready = true;\n"
-    builder append "}\n"
+      builder append self.getName + ".prototype.receive = function(message) {//takes a JSONified message\n"
+      builder append "this.getQueue().push(message);\n"
+      builder append "if (this.ready) {\n"
+      builder append "var msg = this.getQueue().shift();\n"
+      builder append "while(msg != null) {\n"
+      builder append "this." + self.allStateMachines().head.qname("_") + ".process(this._initial_" + self.allStateMachines().head.qname("_") + ", msg);\n"
+      builder append "msg = this.getQueue().shift();\n"
+      builder append "}\n"
+      builder append "}\n"
+      builder append "}\n"
+    }
 
-    builder append self.getName + ".prototype.receive = function(message) {//takes a JSONified message\n"
-    builder append "this.getQueue().push(message);\n"
-    builder append "if (this.ready) {\n"
-    builder append "var msg = this.getQueue().shift();\n"
-    builder append "while(msg != null) {\n"
-    builder append "this.machine.process(this.sms, msg);\n"
-    builder append "msg = this.getQueue().shift();\n"
-    builder append "}\n"
-    builder append "}\n"
-    builder append "}\n"
+    self.allPorts().foreach{ p =>
+      if (p.isDefined("public", "true") && p.getReceives.size()>0) {
+        p.getReceives.foreach { m =>
+          builder append self.getName + ".prototype.receive" + m.getName + "On" + p.getName + " = function("
+          builder append m.getParameters.collect { case pa => Context.protectJavaScriptKeyword(pa.getName)}.mkString(", ")
+          builder append ") {\n"
+          builder append "this.receive('{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + "\""
+          builder append m.getParameters.collect { case pa => ", \"" + pa.getName + "\":\"" + Context.protectJavaScriptKeyword(pa.getName) + "\""}.mkString("")//TODO: only string params should have \" \" for their values...
+          builder append "}');\n"
+          builder append "}\n\n"
+        }
+      }
+    }
   }
 
 }
@@ -534,11 +679,8 @@ case class EnumerationJavaScriptGenerator(override val self: Enumeration) extend
   val enumName = Context.firstToUpper(self.getName) + "_ENUM"
     
   override def generateJavaScript(builder: StringBuilder) {
-    Context.pack = "org.thingml.generated.api"
-    generateHeader(builder, false, false)
-
     val raw_type = self.getAnnotations.filter {
-      a => a.getName == "java_type"
+      a => a.getName == "javascript_type"
     }.headOption match {
       case Some(a) =>
         a.asInstanceOf[PlatformAnnotation].getValue
@@ -546,14 +688,10 @@ case class EnumerationJavaScriptGenerator(override val self: Enumeration) extend
     }
 
     builder append "// Definition of Enumeration  " + self.getName + "\n"
-    builder append "public enum " + enumName + " {\n"
-    builder append self.getLiterals.collect {case l =>
-      l.Java_name + " ((" + raw_type + ") " + l.enum_val +")"
-    }.mkString("", ",\n", ";\n\n")
-    builder append "private final " + raw_type + " id;\n\n"
-    builder append enumName + "(" + raw_type + " id) {\n"
-    builder append "this.id = id;\n"
-    builder append "}\n"
+    builder append "var " + self.getName + "ENUM = {\n"
+    self.getLiterals.collect {case l =>
+      l.getName.toUpperCase + ": \"" + l.getName + "\""
+    }.mkString(",\n")
     builder append "}\n"
   }
 }
@@ -573,12 +711,11 @@ class ActionJavaScriptGenerator(val self: Action) /*extends ThingMLJavaScriptGen
 
 case class SendActionJavaScriptGenerator(override val self: SendAction) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-    builder append "send" + Context.firstToUpper(self.getMessage.getName) + "_via_" + self.getPort.getName + "("
+    builder append "send" + Context.firstToUpper(self.getMessage.getName) + "On" + Context.firstToUpper(self.getPort.getName) + "("
     var i = 0
     self.getParameters.zip(self.getMessage.getParameters).foreach{ case (p, fp) =>
       if (i>0)
         builder append ", "
-      builder append "(" + fp.getType.java_type(fp.getCardinality != null) + ") "
       p.generateJavaScript(builder)
       i = i + 1
     }
@@ -600,21 +737,12 @@ case class VariableAssignmentJavaScriptGenerator(override val self: VariableAssi
       }
     }
     else {
-      if (self.getProperty.isInstanceOf[Property] && self.getProperty.asInstanceOf[Property].getCardinality==null) {
-        builder append "set" + Context.firstToUpper(self.getProperty.Java_var_name) + "("
-        builder append "(" + self.getProperty.getType.java_type() + ") ("
-        self.getExpression.generateJavaScript(builder)
-        builder append "));\n"
-      } else {
         builder append self.getProperty.Java_var_name
-        builder append " = ("
-        builder append self.getProperty.getType.java_type()
-        builder append ") ("
+        builder append " = "
         self.getExpression.generateJavaScript(builder)
-        builder append ");\n"
+        builder append ";\n"
       }
     }
-  }
 }
 
 case class ActionBlockJavaScriptGenerator(override val self: ActionBlock) extends ActionJavaScriptGenerator(self) {
@@ -659,7 +787,7 @@ case class LoopActionJavaScriptGenerator(override val self: LoopAction) extends 
 
 case class PrintActionJavaScriptGenerator(override val self: PrintAction) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-    builder append "System.out.println("
+    builder append "console.log("
     self.getMsg.generateJavaScript(builder)
     builder append ");\n"
   }
@@ -667,7 +795,7 @@ case class PrintActionJavaScriptGenerator(override val self: PrintAction) extend
 
 case class ErrorActionJavaScriptGenerator(override val self: ErrorAction) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-    builder append "System.err.println("
+    builder append "alert("
     self.getMsg.generateJavaScript(builder)
     builder append ");\n"
   }
@@ -732,7 +860,6 @@ case class FunctionCallStatementJavaScriptGenerator(override val self: FunctionC
     self.getFunction.getParameters.zip(self.getParameters).foreach{ case (fp, ep) =>
         if (i > 0)
           builder append ", "
-        builder append "(" + fp.getType.java_type(fp.getCardinality != null) + ")"
         ep.generateJavaScript(builder)
         i = i+1
     }
@@ -797,7 +924,7 @@ case class GreaterExpressionJavaScriptGenerator(override val self: GreaterExpres
 case class EqualsExpressionJavaScriptGenerator(override val self: EqualsExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
     self.getLhs.generateJavaScript(builder)
-    builder append " == " //TODO: identity on references might cause bugs in Java, we should generate .equals (but we cannot call .equals on primitive types, which should explicitly be boxed to objects).
+    builder append " === " //TODO: identity on references might cause bugs in Java, we should generate .equals (but we cannot call .equals on primitive types, which should explicitly be boxed to objects).
     self.getRhs.generateJavaScript(builder)
   }
 }
@@ -873,9 +1000,6 @@ case class ExpressionGroupJavaScriptGenerator(override val self: ExpressionGroup
 
 case class PropertyReferenceJavaScriptGenerator(override val self: PropertyReference) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-    if (self.getProperty.isInstanceOf[Property] && self.getProperty.asInstanceOf[Property].getCardinality==null)
-      builder append "get" + Context.firstToUpper(self.getProperty.Java_var_name) + "()"
-    else
       builder append self.getProperty.Java_var_name
   }
 }
@@ -927,7 +1051,6 @@ case class FunctionCallExpressionJavaScriptGenerator(override val self: Function
     self.getFunction.getParameters.zip(self.getParameters).foreach{ case (fp, ep) =>
         if (i > 0)
           builder append ", "
-        builder append "(" + fp.getType.java_type(fp.getCardinality != null) + ")"
         ep.generateJavaScript(builder)
         i = i+1
     }

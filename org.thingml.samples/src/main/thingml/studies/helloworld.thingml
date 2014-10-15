@@ -14,7 +14,7 @@ thing HelloWorldClient includes HelloWorldMsgs
 }
 
 thing HelloWorldServer includes HelloWorldMsgs {
-    provided port hello {
+    provided port hello @public "true"{
         receives h, e, l, o
     }
     
