@@ -413,13 +413,14 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     builder append "//Init state machine\n"
     self.allStateMachines.foreach { b =>
       builder append "this." + b.qname("_") + " = new StateMachine(\"" + b.getName + "\");\n"
-      builder append "this._initial_" + b.qname("_") + " = new PseudoState(\"_initial\", PseudoStateKind.Initial, this." + b.qname("_") + ");\n"
+      builder append "var " + b.qname("_") + "_default = new Region(\"_default\", this." + b.qname("_") + ");\n"//TODO: default region should be generalized to all (sub-) composites....
+      builder append "this._initial_" + b.qname("_") + " = new PseudoState(\"_initial\", PseudoStateKind.Initial, " + b.qname("_") + "_default);\n"
     }
 
     builder append "//State machine (states and regions)\n"
     self.allStateMachines.foreach{b =>
       b.getSubstate.foreach{s =>
-        buildState(builder, s, "this." + b.qname("_"));
+        buildState(builder, s, b.qname("_") + "_default");
       }
       b.getRegion.foreach { r =>
         buildRegion(builder, r, "this." + b.qname("_"));
