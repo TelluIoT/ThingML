@@ -43,6 +43,7 @@ object Context {
   var pack: String = _
 
   val keywords = scala.List("match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@")
+
   def protectJavaScriptKeyword(value: String): String = {
     if (keywords.exists(p => p.equals(value))) {
       return "`" + value + "`"
@@ -61,7 +62,7 @@ object Context {
     pack = null
   }
 
-  def getBuilder(name : String) : StringBuilder = {
+  def getBuilder(name: String): StringBuilder = {
     if (builder.get(name) == null) {
       val b: StringBuilder = new StringBuilder()
       builder.put(name, b)
@@ -75,7 +76,9 @@ object JavaScriptGenerator {
   implicit def javaGeneratorAspect(self: Thing): ThingJavaScriptGenerator = ThingJavaScriptGenerator(self)
 
   implicit def javaGeneratorAspect(self: Configuration): ConfigurationJavaScriptGenerator = ConfigurationJavaScriptGenerator(self)
+
   implicit def javaGeneratorAspect(self: Instance): InstanceJavaScriptGenerator = InstanceJavaScriptGenerator(self)
+
   implicit def javaGeneratorAspect(self: Connector): ConnectorJavaScriptGenerator = ConnectorJavaScriptGenerator(self)
 
   implicit def javaGeneratorAspect(self: EnumerationLiteral): EnumerationLiteralJavaScriptGenerator = EnumerationLiteralJavaScriptGenerator(self)
@@ -84,67 +87,67 @@ object JavaScriptGenerator {
 
   implicit def javaGeneratorAspect(self: Type) = self match {
     case t: PrimitiveType => PrimitiveTypeJavaScriptGenerator(t)
-    case t: Enumeration   => EnumerationJavaScriptGenerator(t)
-    case _                => new TypeJavaScriptGenerator(self)
+    case t: Enumeration => EnumerationJavaScriptGenerator(t)
+    case _ => new TypeJavaScriptGenerator(self)
   }
 
   implicit def javaGeneratorAspect(self: TypedElement) = self match {
     case t: Function => FunctionJavaScriptGenerator(t)
-    case _           => new TypedElementJavaScriptGenerator(self)
+    case _ => new TypedElementJavaScriptGenerator(self)
   }
 
-  implicit def javaGeneratorAspect(self: Handler) : HandlerJavaScriptGenerator = HandlerJavaScriptGenerator(self)
+  implicit def javaGeneratorAspect(self: Handler): HandlerJavaScriptGenerator = HandlerJavaScriptGenerator(self)
 
   implicit def javaGeneratorAspect(self: Action) = self match {
-    case a: SendAction            => SendActionJavaScriptGenerator(a)
-    case a: VariableAssignment    => VariableAssignmentJavaScriptGenerator(a)
-    case a: ActionBlock           => ActionBlockJavaScriptGenerator(a)
-    case a: ExternStatement       => ExternStatementJavaScriptGenerator(a)
-    case a: ConditionalAction     => ConditionalActionJavaScriptGenerator(a)
-    case a: LoopAction            => LoopActionJavaScriptGenerator(a)
-    case a: PrintAction           => PrintActionJavaScriptGenerator(a)
-    case a: ErrorAction           => ErrorActionJavaScriptGenerator(a)
-    case a: ReturnAction          => ReturnActionJavaScriptGenerator(a)
-    case a: LocalVariable         => LocalVariableActionJavaScriptGenerator(a)
+    case a: SendAction => SendActionJavaScriptGenerator(a)
+    case a: VariableAssignment => VariableAssignmentJavaScriptGenerator(a)
+    case a: ActionBlock => ActionBlockJavaScriptGenerator(a)
+    case a: ExternStatement => ExternStatementJavaScriptGenerator(a)
+    case a: ConditionalAction => ConditionalActionJavaScriptGenerator(a)
+    case a: LoopAction => LoopActionJavaScriptGenerator(a)
+    case a: PrintAction => PrintActionJavaScriptGenerator(a)
+    case a: ErrorAction => ErrorActionJavaScriptGenerator(a)
+    case a: ReturnAction => ReturnActionJavaScriptGenerator(a)
+    case a: LocalVariable => LocalVariableActionJavaScriptGenerator(a)
     case a: FunctionCallStatement => FunctionCallStatementJavaScriptGenerator(a)
-    case _                        => new ActionJavaScriptGenerator(self)
+    case _ => new ActionJavaScriptGenerator(self)
   }
 
   implicit def javaGeneratorAspect(self: Expression) = self match {
-    case exp: OrExpression           => OrExpressionJavaScriptGenerator(exp)
-    case exp: AndExpression          => AndExpressionJavaScriptGenerator(exp)
-    case exp: LowerExpression        => LowerExpressionJavaScriptGenerator(exp)
-    case exp: GreaterExpression      => GreaterExpressionJavaScriptGenerator(exp)
-    case exp: EqualsExpression       => EqualsExpressionJavaScriptGenerator(exp)
-    case exp: PlusExpression         => PlusExpressionJavaScriptGenerator(exp)
-    case exp: MinusExpression        => MinusExpressionJavaScriptGenerator(exp)
-    case exp: TimesExpression        => TimesExpressionJavaScriptGenerator(exp)
-    case exp: DivExpression          => DivExpressionJavaScriptGenerator(exp)
-    case exp: ModExpression          => ModExpressionJavaScriptGenerator(exp)
-    case exp: UnaryMinus             => UnaryMinusJavaScriptGenerator(exp)
-    case exp: NotExpression          => NotExpressionJavaScriptGenerator(exp)
-    case exp: EventReference         => EventReferenceJavaScriptGenerator(exp)
-    case exp: ExpressionGroup        => ExpressionGroupJavaScriptGenerator(exp)
-    case exp: PropertyReference      => PropertyReferenceJavaScriptGenerator(exp)
-    case exp: IntegerLiteral         => IntegerLiteralJavaScriptGenerator(exp)
-    case exp: DoubleLiteral          => DoubleLiteralJavaScriptGenerator(exp)
-    case exp: StringLiteral          => StringLiteralJavaScriptGenerator(exp)
-    case exp: BooleanLiteral         => BooleanLiteralJavaScriptGenerator(exp)
-    case exp: EnumLiteralRef         => EnumLiteralRefJavaScriptGenerator(exp)
-    case exp: ExternExpression       => ExternExpressionJavaScriptGenerator(exp)
-    case exp: ArrayIndex             => ArrayIndexJavaScriptGenerator(exp)
+    case exp: OrExpression => OrExpressionJavaScriptGenerator(exp)
+    case exp: AndExpression => AndExpressionJavaScriptGenerator(exp)
+    case exp: LowerExpression => LowerExpressionJavaScriptGenerator(exp)
+    case exp: GreaterExpression => GreaterExpressionJavaScriptGenerator(exp)
+    case exp: EqualsExpression => EqualsExpressionJavaScriptGenerator(exp)
+    case exp: PlusExpression => PlusExpressionJavaScriptGenerator(exp)
+    case exp: MinusExpression => MinusExpressionJavaScriptGenerator(exp)
+    case exp: TimesExpression => TimesExpressionJavaScriptGenerator(exp)
+    case exp: DivExpression => DivExpressionJavaScriptGenerator(exp)
+    case exp: ModExpression => ModExpressionJavaScriptGenerator(exp)
+    case exp: UnaryMinus => UnaryMinusJavaScriptGenerator(exp)
+    case exp: NotExpression => NotExpressionJavaScriptGenerator(exp)
+    case exp: EventReference => EventReferenceJavaScriptGenerator(exp)
+    case exp: ExpressionGroup => ExpressionGroupJavaScriptGenerator(exp)
+    case exp: PropertyReference => PropertyReferenceJavaScriptGenerator(exp)
+    case exp: IntegerLiteral => IntegerLiteralJavaScriptGenerator(exp)
+    case exp: DoubleLiteral => DoubleLiteralJavaScriptGenerator(exp)
+    case exp: StringLiteral => StringLiteralJavaScriptGenerator(exp)
+    case exp: BooleanLiteral => BooleanLiteralJavaScriptGenerator(exp)
+    case exp: EnumLiteralRef => EnumLiteralRefJavaScriptGenerator(exp)
+    case exp: ExternExpression => ExternExpressionJavaScriptGenerator(exp)
+    case exp: ArrayIndex => ArrayIndexJavaScriptGenerator(exp)
     case exp: FunctionCallExpression => FunctionCallExpressionJavaScriptGenerator(exp)
-    case _                           => new ExpressionJavaScriptGenerator(self)
+    case _ => new ExpressionJavaScriptGenerator(self)
   }
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false) {
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     //doingTests should be ignored, it is only used when calling from org.thingml.cmd
-	var tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
-	if (doingTests){
-		tmpFolder="tmp/ThingML_JavaScript/"
-	}
+    var tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
+    if (doingTests) {
+      tmpFolder = "tmp/ThingML_JavaScript/"
+    }
     new File(tmpFolder).deleteOnExit
 
     val code = compile(cfg, model)
@@ -160,7 +163,7 @@ object JavaScriptGenerator {
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
 
-    code.foreach{case (file, code) =>
+    code.foreach { case (file, code) =>
       val w = new PrintWriter(new FileWriter(new File(outputDir + "/" + file)));
       w.println(code.toString);
       w.close();
@@ -233,14 +236,45 @@ object JavaScriptGenerator {
     builder append "}\n"
     builder append "}\n\n"
 
-    model.allUsedSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
+    model.allUsedSimpleTypes.filter { t => t.isInstanceOf[Enumeration]}.foreach { e =>
       e.generateJavaScript(Context.getBuilder("index.html"))
     }
 
     t.generateJavaScript()
 
-    t.allInstances().foreach{i =>
-      builder append "var " + i.getName + " = new " + i.getType.getName + "();\n"//TODO: pass parameters to constructor
+    t.allInstances().foreach { i =>
+      builder append "var " + i.getName + " = new " + i.getType.getName + "("
+      var id = 0
+      i.getType.allPropertiesInDepth.foreach { prop => //TODO: not optimal, to be improved
+        t.initExpressionsForInstance(i).filter { p => p.getKey == prop && prop.getCardinality == null}.foreach { case p =>
+          println(p.getKey + " -> " + p.getValue)
+          var result = ""
+          if (prop.getType.isInstanceOf[Enumeration]) {
+            val enum = prop.getType.asInstanceOf[Enumeration]
+            val enumL = p.getValue.asInstanceOf[EnumLiteralRef]
+            var tempbuilder = new StringBuilder()
+            if (enumL == null) {
+              tempbuilder append Context.firstToUpper(enum.getName) + "_ENUM." + enum.getName.toUpperCase() + "_" + enum.getLiterals.head.getName.toUpperCase()
+            } else {
+              tempbuilder append Context.firstToUpper(enum.getName) + "_ENUM." + enum.getName.toUpperCase() + "_" + enumL.getLiteral.getName.toUpperCase()
+            }
+            result = tempbuilder.toString()
+          } else {
+            if (p.getValue != null) {
+              var tempbuilder = new StringBuilder()
+              p.getValue.generateJavaScript(tempbuilder)
+              result = tempbuilder.toString
+            } else {
+              result = p.getKey.getType.default_java_value()
+            }
+          }
+          if (id > 0)
+            builder append ", "
+          builder append result
+          id = id + 1
+        }
+      }
+      builder append ");\n" //TODO: we should also initialize (readonly) arrays
     }
     t.allConnectors().foreach { c =>
       builder append c.getCli.getInstance().getName + ".getConnectors().push(new Connector(" + c.getCli.getInstance().getName + ", " + c.getSrv.getInstance().getName + ", \"" + c.getRequired.getName + "\", \"" + c.getProvided.getName + "\"));\n"
@@ -248,7 +282,7 @@ object JavaScriptGenerator {
     }
 
     builder append "function main() {\n"
-    t.allInstances().foreach{i =>
+    t.allInstances().foreach { i =>
       if (i.getType.allStateMachines().headOption.isDefined) {
         builder append i.getName + ".init();\n"
       }
@@ -265,7 +299,7 @@ object JavaScriptGenerator {
     return Context.builder
   }
 
-  def generateHeader(builder: StringBuilder, isMain: Boolean = false, api : Boolean = true) = {
+  def generateHeader(builder: StringBuilder, isMain: Boolean = false, api: Boolean = true) = {
 
   }
 }
@@ -300,11 +334,11 @@ case class ConnectorJavaScriptGenerator(val self: Connector) extends ThingMLJava
 
 case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGenerator(self) {
 
-  def buildState(builder : StringBuilder, s : State, containerName : String): Unit = {
+  def buildState(builder: StringBuilder, s: State, containerName: String): Unit = {
     if (s.isInstanceOf[CompositeState]) {
       val c = s.asInstanceOf[CompositeState]
       builder append "var " + c.qname("_") + " = new CompositeState(\"" + c.getName + "\", " + containerName + ");\n"
-      c.getSubstate.foreach{s =>
+      c.getSubstate.foreach { s =>
         buildState(builder, s, c.qname("_"));
       }
       c.getRegion.foreach { r =>
@@ -313,16 +347,16 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     } else {
       builder append "var " + s.qname("_") + " = new SimpleState(\"" + s.getName + "\", " + containerName + ");\n"
     }
-    if(s.getEntry != null)
+    if (s.getEntry != null)
       builder append s.qname("_") + ".entry = [" + s.qname("_") + "_entry];\n"
-    if(s.getExit != null)
+    if (s.getExit != null)
       builder append s.qname("_") + ".exit = [" + s.qname("_") + "_exit];\n"
   }
 
-  def buildRegion(builder : StringBuilder, r : Region, containerName : String): Unit = {
+  def buildRegion(builder: StringBuilder, r: Region, containerName: String): Unit = {
     builder append "var " + r.qname("_") + " = new Region(\"" + r.getName + "\", " + containerName + ");\n"
     builder append "var _initial_" + r.qname("_") + " = new PseudoState(\"_initial\", PseudoStateKind.Initial, " + r.qname("_") + ");\n"
-    r.getSubstate.foreach{s => buildState(builder, s, r.qname("_"))}
+    r.getSubstate.foreach { s => buildState(builder, s, r.qname("_"))}
     builder append "var t0_" + r.qname("_") + " = new Transition(_initial_" + r.qname("_") + ", " + r.getInitial.qname("_") + ");\n"
   }
 
@@ -346,11 +380,13 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     }*/
 
     builder append "function " + Context.firstToUpper(self.getName) + "("
-    builder append self.allPropertiesInDepth.collect {case p => p.Java_var_name }.mkString(", ")//TODO: changeable properties?
+    builder append self.allPropertiesInDepth.collect { case p => p.Java_var_name}.mkString(", ") //TODO: changeable properties?
     builder append ") {\n\n"
 
+    builder append "this.ready = false;\n"
+
     builder append "//Attributes\n"
-    builder append self.allPropertiesInDepth.collect {case p => "this." + p.Java_var_name + " =" + p.Java_var_name + ";"}.mkString("\n")//TODO: public/private properties?
+    builder append self.allPropertiesInDepth.collect { case p => "this." + p.Java_var_name + " =" + p.Java_var_name + ";"}.mkString("\n") //TODO: public/private properties?
 
 
     builder append "//bindings\n"
@@ -366,8 +402,8 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     builder append "}\n\n"
 
     builder append "//callbacks for third-party listeners\n"
-    self.allPorts().foreach{ p =>
-      if (p.isDefined("public", "true") && p.getSends.size()>0) {
+    self.allPorts().foreach { p =>
+      if (p.isDefined("public", "true") && p.getSends.size() > 0) {
         builder append "var " + p.getName + "Listeners = [];\n"
         builder append "this.get" + Context.firstToUpper(p.getName) + "Listeners = function() {\n"
         builder append "return " + p.getName + "Listeners;\n"
@@ -393,19 +429,21 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     builder append "}\n"
     builder append "}\n\n"
 
-    self.allPorts().foreach{p =>
-      p.getSends.foreach{m =>
+    self.allPorts().foreach { p =>
+      p.getSends.foreach { m =>
         builder append "function send" + Context.firstToUpper(m.getName) + "On" + Context.firstToUpper(p.getName) + "("
         builder append m.getParameters.collect { case pa => Context.protectJavaScriptKeyword(pa.getName)}.mkString(", ")
         builder append ") {\n"
         builder append "send('{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + "\""
-        builder append m.getParameters.collect { case pa => ", \"" + pa.getName + "\":\"' + " + Context.protectJavaScriptKeyword(pa.getName) + " + '\""}.mkString("")//TODO: only string params should have \" \" for their values...
+        builder append m.getParameters.collect { case pa => ", \"" + pa.getName + "\":\"' + " + Context.protectJavaScriptKeyword(pa.getName) + " + '\""}.mkString("") //TODO: only string params should have \" \" for their values...
         builder append "}');\n"
-        builder append "//notify listeners\n"
-        builder append "var arrayLength = " + p.getName + "Listeners.length;\n"
-        builder append "for (var i = 0; i < arrayLength; i++) {\n"
-        builder append p.getName + "Listeners[i]();\n"
-        builder append "}\n"
+        if (p.isDefined("public", "true") && p.getSends.size() > 0) {
+          builder append "//notify listeners\n"
+          builder append "var arrayLength = " + p.getName + "Listeners.length;\n"
+          builder append "for (var i = 0; i < arrayLength; i++) {\n"
+          builder append p.getName + "Listeners[i]();\n"
+          builder append "}\n"
+        }
         builder append "}\n\n"
       }
     }
@@ -413,21 +451,21 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     builder append "//Init state machine\n"
     self.allStateMachines.foreach { b =>
       builder append "this." + b.qname("_") + " = new StateMachine(\"" + b.getName + "\");\n"
-      builder append "var " + b.qname("_") + "_default = new Region(\"_default\", this." + b.qname("_") + ");\n"//TODO: default region should be generalized to all (sub-) composites....
+      builder append "var " + b.qname("_") + "_default = new Region(\"_default\", this." + b.qname("_") + ");\n" //TODO: default region should be generalized to all (sub-) composites....
       builder append "this._initial_" + b.qname("_") + " = new PseudoState(\"_initial\", PseudoStateKind.Initial, " + b.qname("_") + "_default);\n"
     }
 
     builder append "//State machine (states and regions)\n"
-    self.allStateMachines.foreach{b =>
-      b.getSubstate.foreach{s =>
+    self.allStateMachines.foreach { b =>
+      b.getSubstate.foreach { s =>
         buildState(builder, s, b.qname("_") + "_default");
       }
       b.getRegion.foreach { r =>
         buildRegion(builder, r, "this." + b.qname("_"));
       }
-      if(b.getEntry != null)
+      if (b.getEntry != null)
         builder append b.qname("_") + ".entry = [" + b.qname("_") + "_entry];\n"
-      if(b.getExit != null)
+      if (b.getExit != null)
         builder append b.qname("_") + ".exit = [" + b.qname("_") + "_exit];\n"
 
 
@@ -435,16 +473,20 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
       builder append "var t0 = new Transition(this._initial_" + b.qname("_") + ", " + b.getInitial.qname("_") + ");\n"
 
       var i = 1
-      b.allMessageHandlers().foreach{case (p, map) =>
-         map.foreach{case (msg, handlers) =>
-          handlers.foreach{h =>
+      b.allMessageHandlers().foreach { case (p, map) =>
+        map.foreach { case (msg, handlers) =>
+          handlers.foreach { h =>
             if (h.isInstanceOf[Transition]) {
               val t = h.asInstanceOf[Transition]
               if (t.getEvent.size() == 0) {
                 builder append "var t" + i + " = new Transition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_") + ");\n"
+                if (h.getAction != null) {
+                  builder append "t" + i + ".effect = [t" + i + "_effect];\n"
+                }
+                i = i + 1;
               }
               else {
-                t.getEvent.foreach{ev =>
+                t.getEvent.foreach { ev =>
                   builder append "var t" + i + " = new Transition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_")
                   builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + ev.asInstanceOf[ReceiveMessage].getPort.getName + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
                   if (t.getGuard != null) {
@@ -452,11 +494,15 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
                     t.getGuard.generateJavaScript(builder)
                   }
                   builder append "});\n"
+                  if (h.getAction != null) {
+                    builder append "t" + i + ".effect = [t" + i + "_effect];\n"
+                  }
+                  i = i + 1;
                 }
               }
             } else {
               val t = h.asInstanceOf[InternalTransition]
-              t.getEvent.foreach{ev =>
+              t.getEvent.foreach { ev =>
                 builder append "var t" + i + " = new Transition(" + t.eContainer().asInstanceOf[State].qname("_") + ", null"
                 builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + ev.asInstanceOf[ReceiveMessage].getPort.getName + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
                 if (t.getGuard != null) {
@@ -464,18 +510,19 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
                   t.getGuard.generateJavaScript(builder)
                 }
                 builder append "});\n"
+                if (h.getAction != null) {
+                  builder append "t" + i + ".effect = [t" + i + "_effect];\n"
+                }
+                i = i + 1;
               }
             }
-            if (h.getAction != null) {
-              builder append "t" + i + ".effect = [t" + i + "_effect];\n"
-            }
-            i = i + 1
+
           }
         }
       }
 
       builder append "//State machine (actions on states and transitions)\n"
-      b.allContainedStates().foreach{s =>
+      b.allContainedStates().foreach { s =>
         if (s.getEntry != null) {
           builder append "function " + s.qname("_") + "_entry(context, message) {\n"
           s.getEntry.generateJavaScript(builder)
@@ -493,12 +540,23 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
         map.foreach { case (msg, handlers) =>
           handlers.foreach { h =>
             if (h.getAction != null) {
-              builder append "function t" + i + "_effect(context, message) {\n"
-              builder append "var json = JSON.parse(message);\n"
-              h.getAction.generateJavaScript(builder)
-              builder append "}\n\n"
+              if (h.getEvent.size() == 0) {
+                builder append "function t" + i + "_effect(context, message) {\n"
+                builder append "var json = JSON.parse(message);\n"
+                h.getAction.generateJavaScript(builder)
+                builder append "}\n\n"
+                i = i + 1;
+              }
+              else {
+                h.getEvent.foreach { ev =>
+                  builder append "function t" + i + "_effect(context, message) {\n"
+                  builder append "var json = JSON.parse(message);\n"
+                  h.getAction.generateJavaScript(builder)
+                  builder append "}\n\n"
+                  i = i + 1;
+                }
+              }
             }
-            i = i +1;
           }
         }
       }
@@ -530,14 +588,14 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
       builder append "}\n"
     }
 
-    self.allPorts().foreach{ p =>
-      if (p.isDefined("public", "true") && p.getReceives.size()>0) {
+    self.allPorts().foreach { p =>
+      if (p.isDefined("public", "true") && p.getReceives.size() > 0) {
         p.getReceives.foreach { m =>
           builder append self.getName + ".prototype.receive" + m.getName + "On" + p.getName + " = function("
           builder append m.getParameters.collect { case pa => Context.protectJavaScriptKeyword(pa.getName)}.mkString(", ")
           builder append ") {\n"
           builder append "this.receive('{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + "\""
-          builder append m.getParameters.collect { case pa => ", \"" + pa.getName + "\":\"" + Context.protectJavaScriptKeyword(pa.getName) + "\""}.mkString("")//TODO: only string params should have \" \" for their values...
+          builder append m.getParameters.collect { case pa => ", \"" + pa.getName + "\":\"" + Context.protectJavaScriptKeyword(pa.getName) + "\""}.mkString("") //TODO: only string params should have \" \" for their values...
           builder append "}');\n"
           builder append "}\n\n"
         }
@@ -588,7 +646,7 @@ class TypedElementJavaScriptGenerator(val self: TypedElement) /*extends ThingMLJ
 
 case class FunctionJavaScriptGenerator(override val self: Function) extends TypedElementJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-    var generate = true
+    /*var generate = true
     self.getAnnotations.filter {
       a => a.getName == "abstract"
     }.headOption match {
@@ -606,16 +664,15 @@ case class FunctionJavaScriptGenerator(override val self: Function) extends Type
           builder append "private "
       }
      
-      val returnType = self.getType.java_type(self.getCardinality != null)
-  
-      builder append returnType + " " + self.getName + "(" + self.getParameters.collect{ case p => p.getType.java_type(p.getCardinality != null) + " " + Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
-      self.getBody.generateJavaScript(builder)
-      builder append "}\n"
-    }
+      val returnType = self.getType.java_type(self.getCardinality != null)*/
+
+    builder append "function " + self.getName + "(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
+    self.getBody.generateJavaScript(builder)
+    builder append "}\n"
   }
 }
-  
-    
+
+
 /**
  * Type abstract class
  */
@@ -629,14 +686,14 @@ class TypeJavaScriptGenerator(val self: Type) extends ThingMLJavaScriptGenerator
     java_type()
   }
 
-  def java_type(isArray : Boolean = false): String = {
-    if (self == null){
+  def java_type(isArray: Boolean = false): String = {
+    if (self == null) {
       return "void"
     } else if (self.isInstanceOf[Enumeration]) {
       return Context.firstToUpper(self.getName) + "_ENUM"
     }
     else {
-      var res : String =  self.getAnnotations.filter {
+      var res: String = self.getAnnotations.filter {
         a => a.getName == "java_type"
       }.headOption match {
         case Some(a) =>
@@ -655,24 +712,24 @@ class TypeJavaScriptGenerator(val self: Type) extends ThingMLJavaScriptGenerator
     }
   }
 
-  def default_java_value() : String = self.getAnnotations.filter {
-      a => a.getName == "java_type"
-    }.headOption match {
-      case Some(a) =>
-        a.getValue match {
-          case "boolean" => "false"
-          case "int" => "0"
-          case "long" => "0"
-          case "float" => "0.0f"
-          case "double" => "0.0d"
-          case "byte" => "0"
-          case "short" => "0"
-          case "char" => "'\u0000'"
-          case _ => "null"
-        }
-      case None =>
-        "null"
-    }
+  def default_java_value(): String = self.getAnnotations.filter {
+    a => a.getName == "java_type"
+  }.headOption match {
+    case Some(a) =>
+      a.getValue match {
+        case "boolean" => "false"
+        case "int" => "0"
+        case "long" => "0"
+        case "float" => "0.0f"
+        case "double" => "0.0d"
+        case "byte" => "0"
+        case "short" => "0"
+        case "char" => "'\u0000'"
+        case _ => "null"
+      }
+    case None =>
+      "null"
+  }
 }
 
 /**
@@ -687,7 +744,7 @@ case class PrimitiveTypeJavaScriptGenerator(override val self: PrimitiveType) ex
 
 case class EnumerationJavaScriptGenerator(override val self: Enumeration) extends TypeJavaScriptGenerator(self) {
   val enumName = Context.firstToUpper(self.getName) + "_ENUM"
-    
+
   override def generateJavaScript(builder: StringBuilder) {
     val raw_type = self.getAnnotations.filter {
       a => a.getName == "javascript_type"
@@ -699,7 +756,7 @@ case class EnumerationJavaScriptGenerator(override val self: Enumeration) extend
 
     builder append "// Definition of Enumeration  " + self.getName + "\n"
     builder append "var " + self.getName + "ENUM = {\n"
-    self.getLiterals.collect {case l =>
+    self.getLiterals.collect { case l =>
       l.getName.toUpperCase + ": \"" + l.getName + "\""
     }.mkString(",\n")
     builder append "}\n"
@@ -723,8 +780,8 @@ case class SendActionJavaScriptGenerator(override val self: SendAction) extends 
   override def generateJavaScript(builder: StringBuilder) {
     builder append "send" + Context.firstToUpper(self.getMessage.getName) + "On" + Context.firstToUpper(self.getPort.getName) + "("
     var i = 0
-    self.getParameters.zip(self.getMessage.getParameters).foreach{ case (p, fp) =>
-      if (i>0)
+    self.getParameters.zip(self.getMessage.getParameters).foreach { case (p, fp) =>
+      if (i > 0)
         builder append ", "
       p.generateJavaScript(builder)
       i = i + 1
@@ -736,7 +793,7 @@ case class SendActionJavaScriptGenerator(override val self: SendAction) extends 
 case class VariableAssignmentJavaScriptGenerator(override val self: VariableAssignment) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
     if (self.getProperty.getCardinality != null) {
-      self.getIndex.foreach{i =>
+      self.getIndex.foreach { i =>
         builder append self.getProperty.Java_var_name
         val tempBuilder = new StringBuilder
         i.generateJavaScript(tempBuilder)
@@ -747,12 +804,12 @@ case class VariableAssignmentJavaScriptGenerator(override val self: VariableAssi
       }
     }
     else {
-        builder append self.getProperty.Java_var_name
-        builder append " = "
-        self.getExpression.generateJavaScript(builder)
-        builder append ";\n"
-      }
+      builder append self.getProperty.Java_var_name
+      builder append " = "
+      self.getExpression.generateJavaScript(builder)
+      builder append ";\n"
     }
+  }
 }
 
 case class ActionBlockJavaScriptGenerator(override val self: ActionBlock) extends ActionJavaScriptGenerator(self) {
@@ -815,8 +872,8 @@ case class ReturnActionJavaScriptGenerator(override val self: ReturnAction) exte
   override def generateJavaScript(builder: StringBuilder) {
     builder append "return "
     self.eContainer() match {
-      case f : Function =>
-        builder append "(" + f.getType.java_type()+ ")"
+      case f: Function =>
+        builder append "(" + f.getType.java_type() + ")"
       case _ =>
     }
     self.getExp.generateJavaScript(builder)
@@ -828,12 +885,12 @@ case class ReturnActionJavaScriptGenerator(override val self: ReturnAction) exte
 }
 
 case class LocalVariableActionJavaScriptGenerator(override val self: LocalVariable) extends ActionJavaScriptGenerator(self) {
-  override def generateJavaScript(builder: StringBuilder) {    
+  override def generateJavaScript(builder: StringBuilder) {
     builder append (if (self.isChangeable) "" else "final ")
     builder append self.getType.java_type(self.getCardinality != null) + " " + self.Java_var_name
     if (self.getInit != null) {
       builder append " = ("
-      builder append self.getType.java_type(self.getCardinality!=null)
+      builder append self.getType.java_type(self.getCardinality != null)
       builder append ") ("
       self.getInit.generateJavaScript(builder)
       builder append ");\n"
@@ -850,7 +907,7 @@ case class LocalVariableActionJavaScriptGenerator(override val self: LocalVariab
           case Some(a) =>
             a.getValue match {
               case "false" => builder append " = null;"
-              case _ => builder append " = " + self.getType.default_java_value() +  ";"
+              case _ => builder append " = " + self.getType.default_java_value() + ";"
             }
           case None =>
             builder append " = null;"
@@ -864,18 +921,19 @@ case class LocalVariableActionJavaScriptGenerator(override val self: LocalVariab
 }
 
 case class FunctionCallStatementJavaScriptGenerator(override val self: FunctionCallStatement) extends ActionJavaScriptGenerator(self) {
-  override def generateJavaScript(builder: StringBuilder) {  
+  override def generateJavaScript(builder: StringBuilder) {
     builder append self.getFunction().getName + "("
     var i = 0
-    self.getFunction.getParameters.zip(self.getParameters).foreach{ case (fp, ep) =>
-        if (i > 0)
-          builder append ", "
-        ep.generateJavaScript(builder)
-        i = i+1
+    self.getFunction.getParameters.zip(self.getParameters).foreach { case (fp, ep) =>
+      if (i > 0)
+        builder append ", "
+      ep.generateJavaScript(builder)
+      i = i + 1
     }
     builder append ");\n"
-  }  
+  }
 }
+
 /**
  * Expression abstract classes
  */
@@ -1010,7 +1068,7 @@ case class ExpressionGroupJavaScriptGenerator(override val self: ExpressionGroup
 
 case class PropertyReferenceJavaScriptGenerator(override val self: PropertyReference) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-      builder append self.getProperty.Java_var_name
+    builder append self.getProperty.Java_var_name
   }
 }
 
@@ -1055,15 +1113,15 @@ case class ExternExpressionJavaScriptGenerator(override val self: ExternExpressi
 }
 
 case class FunctionCallExpressionJavaScriptGenerator(override val self: FunctionCallExpression) extends ExpressionJavaScriptGenerator(self) {
-  override def generateJavaScript(builder: StringBuilder) {  
+  override def generateJavaScript(builder: StringBuilder) {
     builder append self.getFunction().getName + "("
     var i = 0
-    self.getFunction.getParameters.zip(self.getParameters).foreach{ case (fp, ep) =>
-        if (i > 0)
-          builder append ", "
-        ep.generateJavaScript(builder)
-        i = i+1
+    self.getFunction.getParameters.zip(self.getParameters).foreach { case (fp, ep) =>
+      if (i > 0)
+        builder append ", "
+      ep.generateJavaScript(builder)
+      i = i + 1
     }
     builder append ")"
-  }   
+  }
 }

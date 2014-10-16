@@ -144,8 +144,10 @@ thing HelloWorldServer2 includes HelloWorldMsgs {
 
 configuration helloWorldConf {
     instance client : HelloWorldClient    
+    instance client2 : HelloWorldClient    
     instance server : HelloWorldServer
     //instance server : HelloWorldServer2
     
     connector client.hello => server.hello
+    connector client2.hello => server.hello    
 }

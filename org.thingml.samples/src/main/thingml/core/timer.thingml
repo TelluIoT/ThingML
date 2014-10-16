@@ -45,6 +45,7 @@ thing SimpleTimerClient includes TimerClient
         state Tick {
             on entry 
             do
+                print("sending timer_start")
                 timer!timer_start(t1)
             end
             
@@ -64,6 +65,7 @@ thing SimpleTimerClient includes TimerClient
                 print("tock")
                 print(counter)
                 counter = counter + 1
+                print("sending timer_start")
                 timer!timer_start(t2)
             end
         }         
