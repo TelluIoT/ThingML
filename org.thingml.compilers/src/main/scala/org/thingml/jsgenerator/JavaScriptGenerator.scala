@@ -244,7 +244,7 @@ object JavaScriptGenerator {
     }
     t.allConnectors().foreach { c =>
       builder append c.getCli.getInstance().getName + ".getConnectors().push(new Connector(" + c.getCli.getInstance().getName + ", " + c.getSrv.getInstance().getName + ", \"" + c.getRequired.getName + "\", \"" + c.getProvided.getName + "\"));\n"
-      builder append c.getCli.getInstance().getName + ".getConnectors().push(new Connector(" + c.getSrv.getInstance().getName + ", " + c.getCli.getInstance().getName + ", \"" + c.getProvided.getName + "\", \"" + c.getRequired.getName + "\"));\n"
+      builder append c.getSrv.getInstance().getName + ".getConnectors().push(new Connector(" + c.getSrv.getInstance().getName + ", " + c.getCli.getInstance().getName + ", \"" + c.getProvided.getName + "\", \"" + c.getRequired.getName + "\"));\n"
     }
 
     builder append "function main() {\n"
@@ -399,7 +399,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
         builder append m.getParameters.collect { case pa => Context.protectJavaScriptKeyword(pa.getName)}.mkString(", ")
         builder append ") {\n"
         builder append "send('{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + "\""
-        builder append m.getParameters.collect { case pa => ", \"" + pa.getName + "\":\"" + Context.protectJavaScriptKeyword(pa.getName) + "\""}.mkString("")//TODO: only string params should have \" \" for their values...
+        builder append m.getParameters.collect { case pa => ", \"" + pa.getName + "\":\"' + " + Context.protectJavaScriptKeyword(pa.getName) + " + '\""}.mkString("")//TODO: only string params should have \" \" for their values...
         builder append "}');\n"
         builder append "//notify listeners\n"
         builder append "var arrayLength = " + p.getName + "Listeners.length;\n"
@@ -446,16 +446,24 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
               else {
                 t.getEvent.foreach{ev =>
                   builder append "var t" + i + " = new Transition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_")
-                  //TODO: guards
-                  builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + ev.asInstanceOf[ReceiveMessage].getPort.getName + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\"});\n"
+                  builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + ev.asInstanceOf[ReceiveMessage].getPort.getName + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
+                  if (t.getGuard != null) {
+                    builder append " && "
+                    t.getGuard.generateJavaScript(builder)
+                  }
+                  builder append "});\n"
                 }
               }
             } else {
               val t = h.asInstanceOf[InternalTransition]
               t.getEvent.foreach{ev =>
                 builder append "var t" + i + " = new Transition(" + t.eContainer().asInstanceOf[State].qname("_") + ", null"
-                //TODO: guards
-                builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + ev.asInstanceOf[ReceiveMessage].getPort.getName + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\"});\n"
+                builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + ev.asInstanceOf[ReceiveMessage].getPort.getName + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
+                if (t.getGuard != null) {
+                  builder append " && "
+                  t.getGuard.generateJavaScript(builder)
+                }
+                builder append "});\n"
               }
             }
             if (h.getAction != null) {
@@ -486,6 +494,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
           handlers.foreach { h =>
             if (h.getAction != null) {
               builder append "function t" + i + "_effect(context, message) {\n"
+              builder append "var json = JSON.parse(message);\n"
               h.getAction.generateJavaScript(builder)
               builder append "}\n\n"
             }
@@ -987,7 +996,7 @@ case class NotExpressionJavaScriptGenerator(override val self: NotExpression) ex
 
 case class EventReferenceJavaScriptGenerator(override val self: EventReference) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-    builder append "ce." + Context.protectJavaScriptKeyword(self.getParamRef.getName)
+    builder append "json." + Context.protectJavaScriptKeyword(self.getParamRef.getName)
   }
 }
 

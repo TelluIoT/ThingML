@@ -1,52 +1,70 @@
+datatype String
+	@c_type "char *"
+	@c_byte_size "*"
+	@java_type "String"
+    @SenML_type "String";
+
 thing fragment HelloWorldMsgs {
     message h();
     message e();
     message l();
-    message o();   
+    message o();
+    
+    message msg(m : String);   
 }
 
 thing HelloWorldClient includes HelloWorldMsgs
-@mock "true"
 {
     required port hello {
-        sends h, e, l, o
+        receives msg
+    }
+    
+    statechart behavior init Init {
+        state Init {
+           internal event m : hello?msg
+           guard m.m == "w" or m.m == "o" or m.m == "r" or m.m == "l" or m.m == "d"
+           action do
+            print(m.m)
+           end
+        }       
     }
 }
 
 thing HelloWorldServer includes HelloWorldMsgs {
     provided port hello @public "true"{
         receives h, e, l, o
+        sends msg
     }
     
     statechart behavior init Init {
         state Init {
             transition h -> H
 				event hello?h
-				action print("w")
+				action hello!msg("w")
         }
         
         state H {
             transition e -> E
 				event hello?e
-				action print("o")
+				action hello!msg("o")
         }    
         
         state E {
             transition l -> L1
 				event hello?l
-				action print("r")
+				action hello!msg("r")
         }
         
         state L1 {
             transition l -> L2
 				event hello?l
-				action print("l")
+				action hello!msg("l")
         }
         
         state L2 {
             transition l -> Init
 				event hello?o
-				action print("d")
+				action hello!msg("d")
         }
         
         
