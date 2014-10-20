@@ -209,7 +209,7 @@ object JavaScriptGenerator {
     return (os.indexOf("win") >= 0);
   }
 
-  def compile(t: Configuration, model: ThingMLModel): java.util.Map[String, StringBuilder] = {
+  def compile(t: Configuration, model: ThingMLModel, isNode : Boolean = true): java.util.Map[String, StringBuilder] = {
     Context.init
     var builder = Context.getBuilder("index.html")
 
@@ -219,7 +219,45 @@ object JavaScriptGenerator {
     builder append "<head>\n"
     builder append "<title>" + t.getName + "</title>\n"
     builder append "<script src=\"./lib/state.js\"></script>\n"
+    builder append "<script src=\"./behavior.js\"></script>\n"
     builder append "<script>\n\n"
+
+    builder append "</script>\n"
+    builder append "</head>\n"
+    builder append "<body>\n"
+    builder append "</body>\n"
+    if (isNode)
+      builder append "<br>Not intended to run in the browser. Please run with Node.js</br>"
+    builder append "</html>"
+
+
+    builder = Context.getBuilder("behavior.js")
+
+    var prefix = (if (isNode) "state_js." else "")
+    if (isNode)
+      builder append "var state_js = require('./lib/state.js');\n"
+    builder append "function buildStateMachine(name) {\n"
+    builder append "return new " + prefix + "StateMachine(name);\n"
+    builder append "}\n\n"
+    builder append "function buildRegion(name, container){\n"
+    builder append "return new " + prefix + "Region(name, container);\n"
+    builder append "}\n\n"
+    builder append "function buildInitialState(name, container){\n"
+    builder append "return new " + prefix + "PseudoState(name, " + prefix + "PseudoStateKind.Initial, container);\n"
+    builder append "}\n\n"
+    builder append "function buildSimpleState(name, container){\n"
+    builder append "return new " + prefix + "SimpleState(name, container);\n"
+    builder append "}\n\n"
+    builder append "function buildCompositeState(name, container){\n"
+    builder append "return new " + prefix + "CompositeState(name, container);\n"
+    builder append "}\n\n"
+    builder append "function buildEmptyTransition(source, target){\n"
+    builder append "return new " + prefix + "Transition(source, target);\n"
+    builder append "}\n\n"
+    builder append "function buildTransition(source, target, guard){\n"
+    builder append "return new " + prefix + "Transition(source, target, guard);\n"
+    builder append "}\n\n"
+
 
     builder append "function Connector(client, server, clientPort, serverPort) {\n"
     builder append "this.client = client;\n"
@@ -237,7 +275,7 @@ object JavaScriptGenerator {
     builder append "}\n\n"
 
     model.allUsedSimpleTypes.filter { t => t.isInstanceOf[Enumeration]}.foreach { e =>
-      e.generateJavaScript(Context.getBuilder("index.html"))
+      e.generateJavaScript(Context.getBuilder("behavior.js"))
     }
 
     t.generateJavaScript()
@@ -281,20 +319,11 @@ object JavaScriptGenerator {
       builder append c.getSrv.getInstance().getName + ".getConnectors().push(new Connector(" + c.getSrv.getInstance().getName + ", " + c.getCli.getInstance().getName + ", \"" + c.getProvided.getName + "\", \"" + c.getRequired.getName + "\"));\n"
     }
 
-    builder append "function main() {\n"
     t.allInstances().foreach { i =>
       if (i.getType.allStateMachines().headOption.isDefined) {
         builder append i.getName + ".init();\n"
       }
     }
-    builder append "}\n"
-
-    builder append "</script>\n"
-    builder append "</head>\n"
-    builder append "<body onLoad=\"main()\">\n"
-    builder append "</body>\n"
-    //TODO: generate simple GUI to visualize state and send messages
-    builder append "</html>"
 
     return Context.builder
   }
@@ -315,7 +344,7 @@ case class ConfigurationJavaScriptGenerator(val self: Configuration) extends Thi
   override def generateJavaScript() {
 
     self.allThings.foreach { thing =>
-      thing.generateJavaScript(Context.getBuilder("index.html"))
+      thing.generateJavaScript(Context.getBuilder("behavior.js"))
     }
   }
 
@@ -337,7 +366,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
   def buildState(builder: StringBuilder, s: State, containerName: String): Unit = {
     if (s.isInstanceOf[CompositeState]) {
       val c = s.asInstanceOf[CompositeState]
-      builder append "var " + c.qname("_") + " = new CompositeState(\"" + c.getName + "\", " + containerName + ");\n"
+      builder append "var " + c.qname("_") + " = buildCompositeState(\"" + c.getName + "\", " + containerName + ");\n"
       c.getSubstate.foreach { s =>
         buildState(builder, s, c.qname("_"));
       }
@@ -345,7 +374,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
         buildRegion(builder, r, c.qname("_"));
       }
     } else {
-      builder append "var " + s.qname("_") + " = new SimpleState(\"" + s.getName + "\", " + containerName + ");\n"
+      builder append "var " + s.qname("_") + " = buildSimpleState(\"" + s.getName + "\", " + containerName + ");\n"
     }
     if (s.getEntry != null)
       builder append s.qname("_") + ".entry = [" + s.qname("_") + "_entry];\n"
@@ -354,10 +383,10 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
   }
 
   def buildRegion(builder: StringBuilder, r: Region, containerName: String): Unit = {
-    builder append "var " + r.qname("_") + " = new Region(\"" + r.getName + "\", " + containerName + ");\n"
-    builder append "var _initial_" + r.qname("_") + " = new PseudoState(\"_initial\", PseudoStateKind.Initial, " + r.qname("_") + ");\n"
+    builder append "var " + r.qname("_") + " = buildRegion(\"" + r.getName + "\", " + containerName + ");\n"
+    builder append "var _initial_" + r.qname("_") + " = buildInitialState(\"_initial\", " + r.qname("_") + ");\n"
     r.getSubstate.foreach { s => buildState(builder, s, r.qname("_"))}
-    builder append "var t0_" + r.qname("_") + " = new Transition(_initial_" + r.qname("_") + ", " + r.getInitial.qname("_") + ");\n"
+    builder append "var t0_" + r.qname("_") + " = buildEmptyTransition(_initial_" + r.qname("_") + ", " + r.getInitial.qname("_") + ");\n"
   }
 
   def generateJavaScript(builder: StringBuilder) {
@@ -450,9 +479,9 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
 
     builder append "//Init state machine\n"
     self.allStateMachines.foreach { b =>
-      builder append "this." + b.qname("_") + " = new StateMachine(\"" + b.getName + "\");\n"
-      builder append "var " + b.qname("_") + "_default = new Region(\"_default\", this." + b.qname("_") + ");\n" //TODO: default region should be generalized to all (sub-) composites....
-      builder append "this._initial_" + b.qname("_") + " = new PseudoState(\"_initial\", PseudoStateKind.Initial, " + b.qname("_") + "_default);\n"
+      builder append "this." + b.qname("_") + " = buildStateMachine(\"" + b.getName + "\");\n"
+      builder append "var " + b.qname("_") + "_default = buildRegion(\"_default\", this." + b.qname("_") + ");\n" //TODO: default region should be generalized to all (sub-) composites....
+      builder append "this._initial_" + b.qname("_") + " = buildInitialState(\"_initial\", " + b.qname("_") + "_default);\n"
     }
 
     builder append "//State machine (states and regions)\n"
@@ -470,7 +499,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
 
 
       builder append "//State machine (transitions)\n"
-      builder append "var t0 = new Transition(this._initial_" + b.qname("_") + ", " + b.getInitial.qname("_") + ");\n"
+      builder append "var t0 = new buildEmptyTransition(this._initial_" + b.qname("_") + ", " + b.getInitial.qname("_") + ");\n"
 
       var i = 1
       b.allMessageHandlers().foreach { case (p, map) =>
@@ -479,7 +508,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
             if (h.isInstanceOf[Transition]) {
               val t = h.asInstanceOf[Transition]
               if (t.getEvent.size() == 0) {
-                builder append "var t" + i + " = new Transition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_") + ");\n"
+                builder append "var t" + i + " = buildEmptyTransition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_") + ");\n"
                 if (h.getAction != null) {
                   builder append "t" + i + ".effect = [t" + i + "_effect];\n"
                 }
@@ -487,7 +516,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
               }
               else {
                 t.getEvent.foreach { ev =>
-                  builder append "var t" + i + " = new Transition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_")
+                  builder append "var t" + i + " = buildTransition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_")
                   builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + ev.asInstanceOf[ReceiveMessage].getPort.getName + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
                   if (t.getGuard != null) {
                     builder append " && "
@@ -503,7 +532,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
             } else {
               val t = h.asInstanceOf[InternalTransition]
               t.getEvent.foreach { ev =>
-                builder append "var t" + i + " = new Transition(" + t.eContainer().asInstanceOf[State].qname("_") + ", null"
+                builder append "var t" + i + " = buildTransition(" + t.eContainer().asInstanceOf[State].qname("_") + ", null"
                 builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + ev.asInstanceOf[ReceiveMessage].getPort.getName + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
                 if (t.getGuard != null) {
                   builder append " && "
