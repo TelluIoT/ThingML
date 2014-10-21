@@ -997,13 +997,13 @@ case class ReturnActionJavaScriptGenerator(override val self: ReturnAction) exte
 case class LocalVariableActionJavaScriptGenerator(override val self: LocalVariable) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
     builder append "var " + self.Java_var_name
-    builder append " = "
     if (self.getInit != null) {
+      builder append " = "
       self.getInit.generateJavaScript(builder)
     }
     else {
       if (self.getCardinality != null) {
-        builder append "[]"
+        builder append " = []"
       }
       if (!self.isChangeable)
         println("[ERROR] readonly variable " + self + " must be initialized")
