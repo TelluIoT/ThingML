@@ -10,10 +10,8 @@ thing TestDumpJS includes TestDump
    
 	function write(string : String) 
 	do
-    	'' & fs & '.appendFile("dump", ' & string & ', function(err){'
-        'if(err) ' error("Cannot write to dump file") 
-        'else ' print(string)
-        '});'
+    	'' & fs & '.appendFileSync("dump", ' & string & ');'
+        print(string)
 	end
 	
 	statechart JavaHarness init Testing {
@@ -24,18 +22,14 @@ thing TestDumpJS includes TestDump
             on entry do
                 //erase previous dump files, if they exist to avoid appending to the results of previous tests...
                 
-                '' & fs & '.exists(\'dump\', function (exists) {'
-                'if(exists){' & fs & '.unlinkSync(\'dump\');}'
-                '});'
+                'if(' & fs & '.existsSync(\'dump\')) {'
+                '' & fs & '.unlinkSync(\'dump\');}'
                 
-                '' & fs & '.exists(\'cputime\', function (exists) {'
-                'if(exists){' & fs & '.unlinkSync(\'cputime\');}'
-                '});'
+                'if(' & fs & '.existsSync(\'cputime\')) {'
+                '' & fs & '.unlinkSync(\'cputime\');}'
                 
-                '' & fs & '.exists(\'transitionsCount\', function (exists) {'
-                'if(exists){' & fs & '.unlinkSync(\'transitionsCount\');}'
-                '});'
-                
+                'if(' & fs & '.existsSync(\'transitionsCount\')) {'
+                '' & fs & '.unlinkSync(\'transitionsCount\');}'                
             end
 
             internal event m : dump?testOut
@@ -72,17 +66,13 @@ thing TestDumpJS includes TestDump
 		state End {
 			on entry do
                 //write cputime
-                '' & fs & '.appendFile("cputime", ' & time & ', function(err){'
-                'if(err) ' error("Cannot write to cputime file") 
-                'else ' print(time)
-                '});'
+                '' & fs & '.appendFileSync("cputime", ' & time & ');'
+                print(time)
                 
                 //write number of transitions
-                '' & fs & '.appendFile("transitionsCount", ' & transitionsCount & ', function(err){'
-                'if(err) ' error("Cannot write to transitionsCount file") 
-                'else ' print(transitionsCount)
-                '});'
-
+                '' & fs & '.appendFileSync("transitionsCount", ' & transitionsCount & ');'
+                print(transitionsCount)
+                
                 'process.exit(0);'
 			end
 		}

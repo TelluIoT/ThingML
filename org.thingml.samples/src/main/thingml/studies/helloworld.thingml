@@ -148,7 +148,7 @@ thing BasicHello {
     set array[0] = "a"
     set array[1] = "b"
     
-    statechart behavior init hello {
+    statechart behavior init hello keeps history {
         state hello {
             on entry print("hello")    
         }
