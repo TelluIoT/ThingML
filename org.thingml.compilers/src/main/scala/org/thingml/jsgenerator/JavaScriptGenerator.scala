@@ -21,6 +21,7 @@
 package org.thingml.jsgenerator
 
 import java.io.{BufferedReader, BufferedWriter, File, FileWriter, InputStreamReader, OutputStreamWriter, PrintWriter}
+import java.nio.file.{FileSystems, StandardCopyOption, Path, Files}
 import java.util
 import java.util.Hashtable
 
@@ -168,6 +169,10 @@ object JavaScriptGenerator {
       w.println(code.toString);
       w.close();
     }
+    val libDir = new File(outputDir + "/lib")
+    libDir.mkdirs()
+
+    Files.copy(this.getClass.getClassLoader.getResourceAsStream("javascript/lib/state-compiled.js"), FileSystems.getDefault().getPath(outputDir + "/lib", "state.js"), StandardCopyOption.REPLACE_EXISTING);
 
     /*
      * GENERATE SOME DOCUMENTATION
