@@ -60,11 +60,11 @@ def run(type):
 						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/timestamp.thingml"\n\n')
 					fichier.write('configuration '+bigname+' {\n'+
 								  '	instance harness : Tester\n'+
-								  '	instance dump : TestDumpJavaScript\n'+
+								  '	instance dump : TestDumpJS\n'+
 								  '	instance test : '+bigname+'\n')
-					fichier.write(' instance timer : TimerJavaScript\n')
+					fichier.write(' instance timer : TimerJS\n')
 					if type == "perf":
-						fichier.write('	//instance timestamp : TimestampJavaScript\n'
+						fichier.write('	//instance timestamp : TimestampJS\n'
 									  '	connector test.testEnd => dump.dumpEnd\n'+
 									  '	//connector test.ts => timestamp.ts\n')
 					else:
