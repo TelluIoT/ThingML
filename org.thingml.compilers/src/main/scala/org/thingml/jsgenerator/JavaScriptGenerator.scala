@@ -538,6 +538,24 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
       builder append "var t0 = new buildEmptyTransition(this._initial_" + b.qname("_") + ", " + b.getInitial.qname("_") + ");\n"
 
       var i = 1
+      b.allEmptyHandlers().foreach{h =>
+        h match {
+          case t : Transition =>
+            builder append "var t" + i + " = buildEmptyTransition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_")
+          case it : InternalTransition =>
+            builder append "var t" + i + " = buildEmptyTransition(" + it.eContainer().asInstanceOf[State].qname("_") + ", null"
+        }
+        if (h.getGuard != null) {
+          builder append ", function (s, c) {var json = JSON.parse(c); "
+          h.getGuard.generateJavaScript(builder)
+          builder append "}"
+        }
+        builder append ");\n"
+        if (h.getAction != null) {
+          builder append "t" + i + ".effect = [t" + i + "_effect];\n"
+        }
+        i = i + 1;
+      }
       b.allMessageHandlers().foreach { case (p, map) =>
         map.foreach { case (msg, handlers) =>
           handlers.foreach { h =>
@@ -601,6 +619,25 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
       }
 
       i = 1;
+      b.allEmptyHandlers().foreach { h =>
+        if (h.getAction != null) {
+          if (h.getEvent.size() == 0) {
+            builder append "function t" + i + "_effect(context, message) {\n"
+            builder append "var json = JSON.parse(message);\n"
+            h.getAction.generateJavaScript(builder)
+            builder append "}\n\n"
+          }
+          else {
+            h.getEvent.foreach { ev =>
+              builder append "function t" + i + "_effect(context, message) {\n"
+              builder append "var json = JSON.parse(message);\n"
+              h.getAction.generateJavaScript(builder)
+              builder append "}\n\n"
+            }
+          }
+        }
+        i = i + 1
+      }
       b.allMessageHandlers().foreach { case (p, map) =>
         map.foreach { case (msg, handlers) =>
           handlers.foreach { h =>
