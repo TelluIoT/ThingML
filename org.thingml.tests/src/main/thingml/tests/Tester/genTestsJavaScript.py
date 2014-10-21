@@ -40,9 +40,9 @@ def run(type):
 	mypath = "."
 	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 
-	if not os.path.exists("_javascript"):
-		os.makedirs("_javascript")
-	os.system("rm _javascript/*")
+	if not os.path.exists("_javaScript"):
+		os.makedirs("_javaScript")
+	os.system("rm _javaScript/*")
 	for f in onlyfiles:
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
@@ -50,7 +50,7 @@ def run(type):
 			if name != "tester":
 				if (type == "perf" and name.startswith("perf")) or (type == "functional" and not name.startswith("perf")):
 					bigname = name[:0]+name[0].upper()+name[1:]
-					fichier = open('_javascript/'+name+'.thingml', 'w')
+					fichier = open('_javaScript/'+name+'.thingml', 'w')
 					confLines = parse(name+'.thingml')
 					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/test.thingml"\n'+
 								  'import "../'+name+'.thingml"\n'+

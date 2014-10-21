@@ -132,12 +132,9 @@ def generic_findCPUandMEM(type):
 			mem=mem[:-1]+" MB"
 		except IOError:
 			print("Impossible to run ps command")
-	if type == "Scala" or type == "Java":
+	if type == "Java":
 		currentDirectory = os.getcwd()
-		if type == "Scala":
-			os.chdir("../../../../org.thingml.tests/target/results/Scala")
-		else:
-			os.chdir("../../../../org.thingml.tests/target/results/Java")
+		os.chdir("../../../../org.thingml.tests/target/results/Java")
 		mypath = "."
 		onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 		snapshotName="test"
