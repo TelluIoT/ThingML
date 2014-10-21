@@ -401,12 +401,14 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     if (s.isInstanceOf[CompositeState]) {
       val c = s.asInstanceOf[CompositeState]
       builder append "var " + c.qname("_") + " = buildCompositeState(\"" + c.getName + "\", " + containerName + ");\n"
+      builder append "var _initial_" + c.qname("_") + " = buildInitialState(\"_initial\", " + c.qname("_") + ");\n"
       c.getSubstate.foreach { s =>
         buildState(builder, s, c.qname("_"));
       }
       c.getRegion.foreach { r =>
         buildRegion(builder, r, c.qname("_"));
       }
+      builder append "var t0_" + c.qname("_") + " = buildEmptyTransition(_initial_" + c.qname("_") + ", " + c.getInitial.qname("_") + ");\n"
     } else {
       builder append "var " + s.qname("_") + " = buildSimpleState(\"" + s.getName + "\", " + containerName + ");\n"
     }
@@ -820,8 +822,8 @@ case class EnumerationJavaScriptGenerator(override val self: Enumeration) extend
     }
 
     builder append "// Definition of Enumeration  " + self.getName + "\n"
-    builder append "var " + self.getName + "ENUM = {\n"
-    self.getLiterals.collect { case l =>
+    builder append "var " + self.getName + "_ENUM = {\n"
+    builder append self.getLiterals.collect { case l =>
       l.getName.toUpperCase + ": \"" + l.getName + "\""
     }.mkString(",\n")
     builder append "}\n"
