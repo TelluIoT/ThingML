@@ -403,7 +403,7 @@ case class ConfigurationJavaGenerator(val self: Configuration) extends ThingMLJa
             case "mirror" => builder append "final " + Context.firstToUpper(i.getType.getName) + "MockMirror " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "MockMirror(\"" + i.instanceName + "\");\n"
           }
         case None =>
-          //TODO: init arrays
+
           self.allArrays(i).foreach{ a =>
             //if (!a.isChangeable) {
               builder append "final " + a.getType.java_type() + "[] " + i.getName + "_" + a.getName + "_array = new " + a.getType.java_type() + "["

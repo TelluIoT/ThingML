@@ -286,6 +286,27 @@ object JavaScriptGenerator {
     t.generateJavaScript()
 
     t.allInstances().foreach { i =>
+      t.allArrays(i).foreach{ a =>
+        builder append "var " + i.getName + "_" + a.getName + "_array = [];\n"
+      }
+
+      t.initExpressionsForInstanceArrays(i).foreach{ case (p, l) =>
+        l.foreach { e =>
+          var result = ""
+          var tempBuilder = new StringBuilder()
+          result += i.getName + "_" + p.getName + "_array ["
+          tempBuilder = new StringBuilder()
+          e.getKey.generateJavaScript(tempBuilder)
+          result += tempBuilder.toString
+          result += "] = "
+          tempBuilder = new StringBuilder()
+          e.getValue.generateJavaScript(tempBuilder)
+          result += tempBuilder.toString + ";\n"
+          builder append result
+        }
+      }
+
+
       builder append "var " + i.getName + " = new " + i.getType.getName + "("
       var id = 0
       i.getType.allPropertiesInDepth.foreach { prop => //TODO: not optimal, to be improved
@@ -315,6 +336,14 @@ object JavaScriptGenerator {
             builder append ", "
           builder append result
           id = id + 1
+        }
+        t.allArrays(i).foreach { a =>
+          if (prop == a) {
+            if (id > 0)
+              builder append ", "
+            builder append i.getName + "_" + a.getName + "_array"
+            id = id + 1
+          }
         }
       }
       builder append ");\n" //TODO: we should also initialize (readonly) arrays

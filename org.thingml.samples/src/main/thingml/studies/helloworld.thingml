@@ -143,6 +143,11 @@ thing HelloWorldServer2 includes HelloWorldMsgs {
 }
 
 thing BasicHello {
+    
+    property array : String[2]
+    set array[0] = "a"
+    set array[1] = "b"
+    
     statechart behavior init hello {
         state hello {
             on entry print("hello")    
