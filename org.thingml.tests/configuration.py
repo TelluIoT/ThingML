@@ -21,13 +21,13 @@ deleteTemporaryFiles = True
 #Chooses which compilers should be used
 testLanguages=[]
 # testLanguages.append("Linux")
-# testLanguages.append("Scala")
+# testLanguages.append("JavaScript")
 testLanguages.append("Java")
 # testLanguages.append("Arduino")
 
 #Choose between functional and performance tests
-# testType="functional"
-testType="perf"
+testType="functional"
+#testType="perf"
 
 #Functional tests options
 #If useBlacklist is True, runs all tests not present in blacklist

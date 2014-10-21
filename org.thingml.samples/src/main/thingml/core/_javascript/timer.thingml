@@ -4,6 +4,7 @@ import "../timer.thingml"
 thing TimerJS includes Timer
 @pim "Timer"
 @platform "javascript"
+@javascript "node browser"
 {
     function cancel() 
     do
