@@ -147,7 +147,7 @@ object JavaScriptGenerator {
     //doingTests should be ignored, it is only used when calling from org.thingml.cmd
     var tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
     if (doingTests) {
-      tmpFolder = "tmp/ThingML_JavaScript/"
+      tmpFolder = "tmp/ThingML_Javascript/"
     }
     new File(tmpFolder).deleteOnExit
 
