@@ -250,6 +250,9 @@ object JavaScriptGenerator {
     builder append "function buildInitialState(name, container){\n"
     builder append "return new " + prefix + "PseudoState(name, " + prefix + "PseudoStateKind.Initial, container);\n"
     builder append "}\n\n"
+    builder append "function buildHistoryState(name, container){\n"
+    builder append "return new " + prefix + "PseudoState(name, " + prefix + "PseudoStateKind.ShallowHistory, container);\n"
+    builder append "}\n\n"
     builder append "function buildSimpleState(name, container){\n"
     builder append "return new " + prefix + "SimpleState(name, container);\n"
     builder append "}\n\n"
@@ -401,7 +404,10 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     if (s.isInstanceOf[CompositeState]) {
       val c = s.asInstanceOf[CompositeState]
       builder append "var " + c.qname("_") + " = buildCompositeState(\"" + c.getName + "\", " + containerName + ");\n"
-      builder append "var _initial_" + c.qname("_") + " = buildInitialState(\"_initial\", " + c.qname("_") + ");\n"
+      if (c.isHistory)
+        builder append "var _initial_" + c.qname("_") + " = buildHistoryState(\"_initial\", " + c.qname("_") + ");\n"
+      else
+        builder append "var _initial_" + c.qname("_") + " = buildInitialState(\"_initial\", " + c.qname("_") + ");\n"
       c.getSubstate.foreach { s =>
         buildState(builder, s, c.qname("_"));
       }
@@ -420,7 +426,10 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
 
   def buildRegion(builder: StringBuilder, r: Region, containerName: String): Unit = {
     builder append "var " + r.qname("_") + " = buildRegion(\"" + r.getName + "\", " + containerName + ");\n"
-    builder append "var _initial_" + r.qname("_") + " = buildInitialState(\"_initial\", " + r.qname("_") + ");\n"
+    if (r.isHistory)
+      builder append "var _initial_" + r.qname("_") + " = buildHistoryState(\"_initial\", " + r.qname("_") + ");\n"
+    else
+      builder append "var _initial_" + r.qname("_") + " = buildInitialState(\"_initial\", " + r.qname("_") + ");\n"
     r.getSubstate.foreach { s => buildState(builder, s, r.qname("_"))}
     builder append "var t0_" + r.qname("_") + " = buildEmptyTransition(_initial_" + r.qname("_") + ", " + r.getInitial.qname("_") + ");\n"
   }
@@ -517,7 +526,10 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     self.allStateMachines.foreach { b =>
       builder append "this." + b.qname("_") + " = buildStateMachine(\"" + b.getName + "\");\n"
       builder append "var " + b.qname("_") + "_default = buildRegion(\"_default\", this." + b.qname("_") + ");\n" //TODO: default region should be generalized to all (sub-) composites....
-      builder append "this._initial_" + b.qname("_") + " = buildInitialState(\"_initial\", " + b.qname("_") + "_default);\n"
+      if (b.isHistory)
+        builder append "this._initial_" + b.qname("_") + " = buildHistoryState(\"_initial\", " + b.qname("_") + "_default);\n"
+      else
+        builder append "this._initial_" + b.qname("_") + " = buildInitialState(\"_initial\", " + b.qname("_") + "_default);\n"
     }
 
     builder append "//State machine (states and regions)\n"
