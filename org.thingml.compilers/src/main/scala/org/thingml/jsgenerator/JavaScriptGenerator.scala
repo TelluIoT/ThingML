@@ -153,9 +153,9 @@ object JavaScriptGenerator {
     val code = compile(cfg, model)
     val rootDir = tmpFolder + cfg.getName
 
-    val outputDir = cfg.getAnnotations.filter(a => a.getName == "java_folder").headOption match {
-      case Some(a) => tmpFolder + cfg.getName + a.getValue + "/java/org/thingml/generated"
-      case None => tmpFolder + cfg.getName + "/src/main/java/org/thingml/generated"
+    val outputDir = cfg.getAnnotations.filter(a => a.getName == "js_folder").headOption match {
+      case Some(a) => tmpFolder + cfg.getName + a.getValue
+      case None => tmpFolder + cfg.getName
     }
 
     println("outputDir: " + outputDir)

@@ -65,7 +65,7 @@ object Cmd {
 					CGenerator.compileToLinuxAndNotMake(thingmlModel)
 				else if (args(0) == "javascript")
 					thingmlModel.allConfigurations.foreach{c =>
-						JavaScriptGenerator.compile(c, thingmlModel, true)
+						JavaScriptGenerator.compileAndRun(c, thingmlModel, true)
 					}
 				else if (args(0) == "java")
 					thingmlModel.allConfigurations.foreach{c =>
