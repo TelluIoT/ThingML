@@ -590,6 +590,8 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
                   i = i + 1;
                 }
               }
+            } else {
+              i = i + Math.max(h.getEvent.size(), 1)
             }
           }
         }
@@ -848,11 +850,11 @@ case class VariableAssignmentJavaScriptGenerator(override val self: VariableAssi
 
 case class ActionBlockJavaScriptGenerator(override val self: ActionBlock) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-    builder append "{\n"
+    //builder append "{\n"
     self.getActions.foreach {
       a => a.generateJavaScript(builder)
     }
-    builder append "}\n"
+    //builder append "}\n"
   }
 }
 
@@ -905,47 +907,26 @@ case class ErrorActionJavaScriptGenerator(override val self: ErrorAction) extend
 case class ReturnActionJavaScriptGenerator(override val self: ReturnAction) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
     builder append "return "
-    self.eContainer() match {
-      case f: Function =>
-        builder append "(" + f.getType.java_type() + ")"
-      case _ =>
-    }
     self.getExp.generateJavaScript(builder)
     if (!(builder.toString().endsWith(";") || builder.toString().endsWith(";\n"))) {
       builder append ";\n"
     }
-    //builder append ";\n"
   }
 }
 
 case class LocalVariableActionJavaScriptGenerator(override val self: LocalVariable) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-    builder append (if (self.isChangeable) "" else "final ")
-    builder append self.getType.java_type(self.getCardinality != null) + " " + self.Java_var_name
+    builder append "var " + self.Java_var_name
     if (self.getInit != null) {
-      builder append " = ("
-      builder append self.getType.java_type(self.getCardinality != null)
-      builder append ") ("
+      builder append " = "
       self.getInit.generateJavaScript(builder)
-      builder append ");\n"
+      builder append ";\n"
     }
     else {
       if (self.getCardinality != null) {
-        builder append " = new " + self.getType.java_type() + "["
-        self.getCardinality.generateJavaScript(builder)
-        builder append "];"
+        builder append "[];"
       } else {
-        self.getType.getAnnotations.filter { a =>
-          a.getName == "java_primitive"
-        }.headOption match {
-          case Some(a) =>
-            a.getValue match {
-              case "false" => builder append " = null;"
-              case _ => builder append " = " + self.getType.default_java_value() + ";"
-            }
-          case None =>
-            builder append " = null;"
-        }
+        builder append ";"
       }
       if (!self.isChangeable)
         println("[ERROR] readonly variable " + self + " must be initialized")

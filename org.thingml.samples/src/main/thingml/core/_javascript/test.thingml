@@ -2,7 +2,7 @@ import "../test.thingml"
 
 datatype fs;
 
-thing TestDumpJavaScript includes TestDump
+thing TestDumpJS includes TestDump
 @javascript "node"
 {
     
@@ -13,7 +13,7 @@ thing TestDumpJavaScript includes TestDump
     	'' & fs & '.appendFile("dump", ' & string & ', function(err){'
         'if(err) ' error("Cannot write to dump file") 
         'else ' print(string)
-        ');'
+        '});'
 	end
 	
 	statechart JavaHarness init Testing {
@@ -58,16 +58,20 @@ thing TestDumpJavaScript includes TestDump
                 '' & fs & '.appendFile("cputime", ' & time & ', function(err){'
                 'if(err) ' error("Cannot write to cputime file") 
                 'else ' print(time)
-                ');'
+                '});'
                 
                 //write number of transitions
                 '' & fs & '.appendFile("transitionsCount", ' & transitionsCount & ', function(err){'
                 'if(err) ' error("Cannot write to transitionsCount file") 
                 'else ' print(transitionsCount)
-                ');'
+                '});'
 
                 'process.exit(0);'
 			end
 		}
 	}
+}
+
+configuration test {
+    instance t : TestDumpJS   
 }
