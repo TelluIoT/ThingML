@@ -40,9 +40,9 @@ def run(type):
 	mypath = "."
 	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 
-	if not os.path.exists("_scala"):
-		os.makedirs("_scala")
-	os.system("rm _scala/*")
+	if not os.path.exists("_javascript"):
+		os.makedirs("_javascript")
+	os.system("rm _javascript/*")
 	for f in onlyfiles:
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
@@ -50,29 +50,28 @@ def run(type):
 			if name != "tester":
 				if (type == "perf" and name.startswith("perf")) or (type == "functional" and not name.startswith("perf")):
 					bigname = name[:0]+name[0].upper()+name[1:]
-					fichier = open('_scala/'+name+'.thingml', 'w')
+					fichier = open('_java/'+name+'.thingml', 'w')
 					confLines = parse(name+'.thingml')
-					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_scala/test.thingml"\n'+
-					'import "../'+name+'.thingml"\n'+
-					'import "../tester.thingml"\n'+
-					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_scala/timer.thingml"\n\n')
+					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/test.thingml"\n'+
+								  'import "../'+name+'.thingml"\n'+
+								  'import "../tester.thingml"\n')
+					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/timer.thingml"\n\n')
 					if type == "perf":
-						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_scala/random.thingml"\n\n')
+						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/timestamp.thingml"\n\n')
 					fichier.write('configuration '+bigname+' {\n'+
-					'	instance timer : TimerScala\n'+
-					'	instance harness : Tester\n'+
-					'	instance dump : TestDumpScala\n'+
-					'	instance test : '+bigname+'\n')
+								  '	instance harness : Tester\n'+
+								  '	instance dump : TestDumpJavaScript\n'+
+								  '	instance test : '+bigname+'\n')
+					fichier.write(' instance timer : TimerJavaScript\n')
 					if type == "perf":
-						fichier.write('	instance random : RandomScala\n'+
-						'		set dump.benchmark = true\n'+
-						'	connector test.testEnd => dump.dumpEnd\n'+
-						'	connector harness.random => random.random\n')
+						fichier.write('	//instance timestamp : TimestampJavaScript\n'
+									  '	connector test.testEnd => dump.dumpEnd\n'+
+									  '	//connector test.ts => timestamp.ts\n')
 					else:
 						fichier.write('	connector harness.testEnd => dump.dumpEnd\n')
+					fichier.write(' connector harness.timer => timer.timer\n')
 					fichier.write('	connector test.harnessOut => dump.dump\n'+
-						'	connector test.harnessIn => harness.test\n'+
-						'	connector harness.timer => timer.timer\n'+confLines+'}')
+								  '	connector test.harnessIn => harness.test\n'+confLines+'}')
 					fichier.close()
-	print ("Successful generation of scala tests")
+	print ("Successful generation of javascript tests")
 	os.chdir("Tester")
