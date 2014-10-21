@@ -56,13 +56,14 @@ object Cmd {
 	    	val currentDirectory = new File(System.getProperty("user.dir"))
 			val file : File = new File(currentDirectory.getParent(),args(1))
 			targetFile = Some(file)
+      println("Compiler: " + args(0))
 			println("Input file : " + targetFile)
 			if (targetFile.isEmpty) return;
 			try {
 				val thingmlModel = loadThingMLmodel(targetFile.get)
 				if (args(0) == "linux")
 					CGenerator.compileToLinuxAndNotMake(thingmlModel)
-				else if (args(0) == "JavaScript")
+				else if (args(0) == "javascript")
 					thingmlModel.allConfigurations.foreach{c =>
 						JavaScriptGenerator.compile(c, thingmlModel, true)
 					}
