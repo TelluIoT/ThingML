@@ -84,7 +84,7 @@ pw.close();}catch(Exception e){;}","src/main/java/org/thingml/generated/Main.jav
 def generic_compile(type):
 	if type == "Linux":
 		os.system("make")
-	if type == "Java" or type == "Scala":
+	if type == "Java":
 		os.system("mvn clean package")
 
 def generic_execute(type,capitalizedName,resultCounter):
@@ -214,6 +214,7 @@ if testType=="perf":
 			os.makedirs("tmp/ThingML_"+type)
 		if deleteTemporaryFiles and os.path.exists(capitalizedName):
 			os.system("rm -r tmp/ThingML_"+type+"/"+capitalizedName)
+		print("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\""+smallType+" org.thingml.tests/src/main/thingml/tests/_"+smallType+"/"+fileName+".thingml\"")
 		os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\""+smallType+" org.thingml.tests/src/main/thingml/tests/_"+smallType+"/"+fileName+".thingml\"")
 		if os.path.exists("tmp/ThingML_"+type+"/"+capitalizedName):
 			os.chdir("tmp/ThingML_"+type+"/"+capitalizedName)

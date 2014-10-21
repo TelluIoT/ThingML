@@ -62,7 +62,7 @@ object Cmd {
 				val thingmlModel = loadThingMLmodel(targetFile.get)
 				if (args(0) == "linux")
 					CGenerator.compileToLinuxAndNotMake(thingmlModel)
-				else if (args(0) == "javascript")
+				else if (args(0) == "JavaScript")
 					thingmlModel.allConfigurations.foreach{c =>
 						JavaScriptGenerator.compile(c, thingmlModel, true)
 					}
