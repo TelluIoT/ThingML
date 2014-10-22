@@ -250,6 +250,9 @@ object JavaScriptGenerator {
     builder append "function buildInitialState(name, container){\n"
     builder append "return new " + prefix + "PseudoState(name, " + prefix + "PseudoStateKind.Initial, container);\n"
     builder append "}\n\n"
+    builder append "function buildFinalState(name, container){\n"
+    builder append "return new " + prefix + "PseudoState(name, " + prefix + "PseudoStateKind.Final, container);\n"
+    builder append "}\n\n"
     builder append "function buildHistoryState(name, container){\n"
     builder append "return new " + prefix + "PseudoState(name, " + prefix + "PseudoStateKind.ShallowHistory, container);\n"
     builder append "}\n\n"
@@ -361,6 +364,13 @@ object JavaScriptGenerator {
         builder append i.getName + ".init();\n"
       }
     }
+
+    builder append "//terminate all things on SIGINT (e.g. CTRL+C)\n"
+    builder append "process.on('SIGINT', function() {\n"
+    t.allInstances.foreach{ i =>
+      builder append i.getName + ".stop();\n"
+    }
+    builder append "});\n\n"
 
     return Context.builder
   }
@@ -530,6 +540,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
         builder append "this._initial_" + b.qname("_") + " = buildHistoryState(\"_initial\", " + b.qname("_") + "_default);\n"
       else
         builder append "this._initial_" + b.qname("_") + " = buildInitialState(\"_initial\", " + b.qname("_") + "_default);\n"
+      //builder append "var _final_" + b.qname("_") + " = buildFinalState(\"_final\", " + b.qname("_") + "_default);\n"
     }
 
     builder append "//State machine (states and regions)\n"
@@ -541,9 +552,9 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
         buildRegion(builder, r, "this." + b.qname("_"));
       }
       if (b.getEntry != null)
-        builder append b.qname("_") + ".entry = [" + b.qname("_") + "_entry];\n"
+        builder append "this." + b.qname("_") + ".entry = [" + b.qname("_") + "_entry];\n"
       if (b.getExit != null)
-        builder append b.qname("_") + ".exit = [" + b.qname("_") + "_exit];\n"
+        builder append "this." + b.qname("_") + ".exit = [" + b.qname("_") + "_exit];\n"
 
 
       builder append "//State machine (transitions)\n"
@@ -735,7 +746,7 @@ case class EnumerationLiteralJavaScriptGenerator(val self: EnumerationLiteral) e
     }.headOption match {
       case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
       case None => {
-        println("[WARNING] Missing annotation enum_val on litteral " + self.getName + " in enum " + self.eContainer().asInstanceOf[ThingMLElement].getName + ", will use default value 0.")
+        println("[WARNING] Missing annotation enum_val on literal " + self.getName + " in enum " + self.eContainer().asInstanceOf[ThingMLElement].getName + ", will use default value 0.")
         return "0"
       }
     }
@@ -1161,7 +1172,7 @@ case class ExpressionGroupJavaScriptGenerator(override val self: ExpressionGroup
 
 case class PropertyReferenceJavaScriptGenerator(override val self: PropertyReference) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-    builder append self.getProperty.Java_var_name
+    builder append /*"this." + */self.getProperty.Java_var_name//TODO: in principle, we need "this.", it is just temporarily removed as a workaround
   }
 }
 
