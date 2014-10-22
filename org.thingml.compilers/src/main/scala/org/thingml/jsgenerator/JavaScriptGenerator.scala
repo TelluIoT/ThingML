@@ -551,10 +551,10 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
       b.getRegion.foreach { r =>
         buildRegion(builder, r, "this." + b.qname("_"));
       }
-      if (b.getEntry != null)
+      /*if (b.getEntry != null)
         builder append "this." + b.qname("_") + ".entry = [" + b.qname("_") + "_entry];\n"
       if (b.getExit != null)
-        builder append "this." + b.qname("_") + ".exit = [" + b.qname("_") + "_exit];\n"
+        builder append "this." + b.qname("_") + ".exit = [" + b.qname("_") + "_exit];\n"*/
 
 
       builder append "//State machine (transitions)\n"
@@ -692,16 +692,27 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     builder append "}\n"
 
     if (self.allStateMachines().headOption.isDefined) {
+      builder append "//Public API for lifecycle management\n"
+      builder append self.getName + ".prototype.stop = function() {\n"
+      if (self.allStateMachines().head.getExit != null)
+        self.allStateMachines().head.getExit.generateJavaScript(builder)
+      builder append "}\n\n"
+
       builder append "//Public API for third parties\n"
       builder append self.getName + ".prototype.init = function() {\n"
       builder append "this." + self.allStateMachines().head.qname("_") + ".initialise( this._initial_" + self.allStateMachines().head.qname("_") + " );\n"
+
+      //execute onEntry of the root state machine
+      if (self.allStateMachines().head.getEntry != null)
+        self.allStateMachines().head.getEntry.generateJavaScript(builder)
+
       builder append "var msg = this.getQueue().shift();\n"
       builder append "while(msg != null) {\n"
       builder append "this." + self.allStateMachines().head.qname("_") + ".process(this._initial_" + self.allStateMachines().head.qname("_") + ", msg);\n"
       builder append "msg = this.getQueue().shift();\n"
       builder append "}\n"
       builder append "this.ready = true;\n"
-      builder append "}\n"
+      builder append "}\n\n"
 
       builder append self.getName + ".prototype.receive = function(message) {//takes a JSONified message\n"
       builder append "this.getQueue().push(message);\n"
@@ -793,7 +804,11 @@ case class FunctionJavaScriptGenerator(override val self: Function) extends Type
      
       val returnType = self.getType.java_type(self.getCardinality != null)*/
 
-    builder append "function " + self.getName + "(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
+    if (self.isDefined("private", "true"))
+      builder append "var "
+    else
+      builder append "this."
+    builder append self.getName + " = function(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
     self.getBody.generateJavaScript(builder)
     builder append "}\n"
   }
@@ -1026,6 +1041,8 @@ case class LocalVariableActionJavaScriptGenerator(override val self: LocalVariab
 
 case class FunctionCallStatementJavaScriptGenerator(override val self: FunctionCallStatement) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
+    if (!self.getFunction.isDefined("private", "true"))
+      builder append "this."
     builder append self.getFunction().getName + "("
     var i = 0
     self.getFunction.getParameters.zip(self.getParameters).foreach { case (fp, ep) =>

@@ -20,7 +20,8 @@ thing SerialJS includes IOByteArray
     property buffer : Byte[18]            
     property index : Integer = 0
             
-	function receive(byte : Byte) 
+	function receive(byte : Byte)
+    @private "true"
     do
         print("receiving " + byte + " from serial port...")
         if (buffer[0] == '0x13' and byte == '0x12' or buffer[0] == '0x12') do//if new buffer or start byte already there
@@ -75,7 +76,6 @@ thing SerialJS includes IOByteArray
         
 
     statechart behavior init default {
-        state default {
             on entry do
                 initSerial()    
                 print("Serial port ready!")    
@@ -86,6 +86,7 @@ thing SerialJS includes IOByteArray
                 print("Serial port killed, RIP!")
             end
             
+        state default {            
             internal event wb : IOStream?write_bytes
             action do               
                 '' & serialP & '.write(' & wb.b & ', function(err, results) {'
