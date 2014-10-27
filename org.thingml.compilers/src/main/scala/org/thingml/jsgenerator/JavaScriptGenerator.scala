@@ -43,6 +43,8 @@ object Context {
   var thing: Thing = _
   var pack: String = _
 
+  var useThis = false;
+
   val keywords = scala.List("match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@")
 
   def protectJavaScriptKeyword(value: String): String = {
@@ -281,7 +283,10 @@ object JavaScriptGenerator {
     builder append "var json = JSON.parse(message);\n"
     builder append "if (json.port === this.clientPort) {\n"
     builder append "json.port = this.serverPort;\n"
-    builder append "this.server.receive(JSON.stringify(json));\n"
+    builder append "this.server._receive(JSON.stringify(json));\n"
+    builder append "} else {\n"
+    builder append "json.port = this.clientPort;\n"
+    builder append "this.client._receive(JSON.stringify(json));\n"
     builder append "}\n"
     builder append "}\n\n"
 
@@ -355,20 +360,20 @@ object JavaScriptGenerator {
       builder append ");\n" //TODO: we should also initialize (readonly) arrays
     }
     t.allConnectors().foreach { c =>
-      builder append c.getCli.getInstance().getName + ".getConnectors().push(new Connector(" + c.getCli.getInstance().getName + ", " + c.getSrv.getInstance().getName + ", \"" + c.getRequired.getName + "\", \"" + c.getProvided.getName + "\"));\n"
-      builder append c.getSrv.getInstance().getName + ".getConnectors().push(new Connector(" + c.getSrv.getInstance().getName + ", " + c.getCli.getInstance().getName + ", \"" + c.getProvided.getName + "\", \"" + c.getRequired.getName + "\"));\n"
+      builder append c.getCli.getInstance().getName + ".getConnectors().push(new Connector(" + c.getSrv.getInstance().getName + ", " + c.getCli.getInstance().getName + ", \"" + c.getProvided.getName + "_s\", \"" + c.getRequired.getName + "_c\"));\n"
+      builder append c.getSrv.getInstance().getName + ".getConnectors().push(new Connector(" + c.getCli.getInstance().getName + ", " + c.getSrv.getInstance().getName + ", \"" + c.getRequired.getName + "_c\", \"" + c.getProvided.getName + "_s\"));\n"
     }
 
     t.allInstances().foreach { i =>
       if (i.getType.allStateMachines().headOption.isDefined) {
-        builder append i.getName + ".init();\n"
+        builder append i.getName + "._init();\n"
       }
     }
 
     builder append "//terminate all things on SIGINT (e.g. CTRL+C)\n"
     builder append "process.on('SIGINT', function() {\n"
     t.allInstances.foreach{ i =>
-      builder append i.getName + ".stop();\n"
+      builder append i.getName + "._stop();\n"
     }
     builder append "});\n\n"
 
@@ -507,9 +512,9 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     builder append "var arrayLength = connectors.length;\n"
     builder append "for (var i = 0; i < arrayLength; i++) {\n"
     builder append "var c = connectors[i];\n"
-    builder append "if (port == c.clientPort) {\n"
+    //builder append "if (port == c.clientPort) {\n"
     builder append "c.forward(message);\n"
-    builder append "}\n"
+    //builder append "}\n"
     builder append "}\n"
     builder append "}\n\n"
 
@@ -518,8 +523,12 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
         builder append "function send" + Context.firstToUpper(m.getName) + "On" + Context.firstToUpper(p.getName) + "("
         builder append m.getParameters.collect { case pa => Context.protectJavaScriptKeyword(pa.getName)}.mkString(", ")
         builder append ") {\n"
-        builder append "send('{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + "\""
-        builder append m.getParameters.collect { case pa => ", \"" + pa.getName + "\":\"' + " + Context.protectJavaScriptKeyword(pa.getName) + " + '\""}.mkString("") //TODO: only string params should have \" \" for their values...
+        builder append "send('{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c") + "\""
+        m.getParameters.foreach { pa =>
+          val isString = (pa.getType.isDefined("js_type", "String"))
+          val isArray = (pa.getCardinality != null)
+          builder append ", \"" + pa.getName + "\":" + (if(isArray) "[" else "") + (if (isString) "\"" else "") + "' + " + Context.protectJavaScriptKeyword(pa.getName) + " + '" + (if (isString) "\"" else "") + (if(isArray) "]" else "")
+        }
         builder append "}');\n"
         if (p.isDefined("public", "true") && p.getSends.size() > 0) {
           builder append "//notify listeners\n"
@@ -594,7 +603,8 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
               else {
                 t.getEvent.foreach { ev =>
                   builder append "var t" + i + " = buildTransition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_")
-                  builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + ev.asInstanceOf[ReceiveMessage].getPort.getName + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
+                  val p = ev.asInstanceOf[ReceiveMessage].getPort
+                  builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName + (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c") + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
                   if (t.getGuard != null) {
                     builder append " && "
                     t.getGuard.generateJavaScript(builder)
@@ -609,8 +619,9 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
             } else {
               val t = h.asInstanceOf[InternalTransition]
               t.getEvent.foreach { ev =>
+                val p = ev.asInstanceOf[ReceiveMessage].getPort
                 builder append "var t" + i + " = buildTransition(" + t.eContainer().asInstanceOf[State].qname("_") + ", null"
-                builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + ev.asInstanceOf[ReceiveMessage].getPort.getName + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
+                builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName + (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c") + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
                 if (t.getGuard != null) {
                   builder append " && "
                   t.getGuard.generateJavaScript(builder)
@@ -693,18 +704,18 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
 
     if (self.allStateMachines().headOption.isDefined) {
       builder append "//Public API for lifecycle management\n"
-      builder append self.getName + ".prototype.stop = function() {\n"
+      builder append self.getName + ".prototype._stop = function() {\n"
       if (self.allStateMachines().head.getExit != null)
         self.allStateMachines().head.getExit.generateJavaScript(builder)
       builder append "}\n\n"
 
       builder append "//Public API for third parties\n"
-      builder append self.getName + ".prototype.init = function() {\n"
-      builder append "this." + self.allStateMachines().head.qname("_") + ".initialise( this._initial_" + self.allStateMachines().head.qname("_") + " );\n"
-
+      builder append self.getName + ".prototype._init = function() {\n"
+      Context.useThis = true;
       //execute onEntry of the root state machine
       if (self.allStateMachines().head.getEntry != null)
         self.allStateMachines().head.getEntry.generateJavaScript(builder)
+      builder append "this." + self.allStateMachines().head.qname("_") + ".initialise( this._initial_" + self.allStateMachines().head.qname("_") + " );\n"
 
       builder append "var msg = this.getQueue().shift();\n"
       builder append "while(msg != null) {\n"
@@ -712,9 +723,10 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
       builder append "msg = this.getQueue().shift();\n"
       builder append "}\n"
       builder append "this.ready = true;\n"
+      Context.useThis = false;
       builder append "}\n\n"
 
-      builder append self.getName + ".prototype.receive = function(message) {//takes a JSONified message\n"
+      builder append self.getName + ".prototype._receive = function(message) {//takes a JSONified message\n"
       builder append "this.getQueue().push(message);\n"
       builder append "if (this.ready) {\n"
       builder append "var msg = this.getQueue().shift();\n"
@@ -725,6 +737,11 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
       builder append "}\n"
       builder append "}\n"
     }
+
+    builder append  self.getName + ".prototype.getName = function() {\n"
+    builder append "return \"" + self.getName + "\";\n"
+    builder append "}\n\n"
+
 
     self.allPorts().foreach { p =>
       if (p.isDefined("public", "true") && p.getReceives.size() > 0) {
@@ -804,13 +821,17 @@ case class FunctionJavaScriptGenerator(override val self: Function) extends Type
      
       val returnType = self.getType.java_type(self.getCardinality != null)*/
 
-    if (self.isDefined("private", "true"))
+    /*if (self.isDefined("private", "true"))
       builder append "var "
-    else
-      builder append "this."
-    builder append self.getName + " = function(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
+    else*/
+    builder append "function " + self.getName + "(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
     self.getBody.generateJavaScript(builder)
-    builder append "}\n"
+    builder append "}\n\n"
+
+
+    builder append "this." + self.getName + " = function(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
+    builder append self.getName() + "(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ");"
+    builder append "}\n\n"
   }
 }
 
@@ -1004,7 +1025,7 @@ case class PrintActionJavaScriptGenerator(override val self: PrintAction) extend
 
 case class ErrorActionJavaScriptGenerator(override val self: ErrorAction) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-    builder append "alert("
+    builder append "console.log(\"ERROR: \" + "
     self.getMsg.generateJavaScript(builder)
     builder append ");\n"
   }
@@ -1041,7 +1062,7 @@ case class LocalVariableActionJavaScriptGenerator(override val self: LocalVariab
 
 case class FunctionCallStatementJavaScriptGenerator(override val self: FunctionCallStatement) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-    if (!self.getFunction.isDefined("private", "true"))
+    if (Context.useThis)
       builder append "this."
     builder append self.getFunction().getName + "("
     var i = 0

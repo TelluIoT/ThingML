@@ -23,7 +23,7 @@ thing SerialJS includes IOByteArray
 	function receive(byte : Byte)
     @private "true"
     do
-        print("receiving " + byte + " from serial port...")
+        //print("receiving " + byte + " from serial port...")
         if (buffer[0] == '0x13' and byte == '0x12' or buffer[0] == '0x12') do//if new buffer or start byte already there
             if (not(byte == '0x13') or buffer[index-1] == '0x7D') do //if not stop byte (or if it is escaped)
                 buffer[index] = byte
@@ -40,7 +40,7 @@ thing SerialJS includes IOByteArray
                end
             end
         end        
-        print("")
+        //print("")
     end
     
     function initSerial() do 
@@ -58,7 +58,7 @@ thing SerialJS includes IOByteArray
         error("Problem opening the serial port... It might work, though most likely not :-)")
         'else'     
         '' & serialP & '.on(\'data\', function(data) {'
-                print('data')
+                //print('data')
                 receive('data[0]')
             '});'  
         print("Serial port opened sucessfully!")
@@ -90,8 +90,8 @@ thing SerialJS includes IOByteArray
             internal event wb : IOStream?write_bytes
             action do               
                 '' & serialP & '.write(' & wb.b & ', function(err, results) {'
-                    print("err" + 'err')
-                    print("results" + 'results')
+                    //print("err" + 'err')
+                    //print("results" + 'results')
                 '});'
             end
         }    
