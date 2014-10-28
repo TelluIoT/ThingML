@@ -144,9 +144,6 @@ object JavaScriptGenerator {
   }
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false) {
-    //ConfigurationImpl.MergedConfigurationCache.clearCache();
-
-    //doingTests should be ignored, it is only used when calling from org.thingml.cmd
     var tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
     if (doingTests) {
       tmpFolder = "tmp/ThingML_Javascript/"
@@ -506,7 +503,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     }
 
     builder append "//Internal functions\n"
-    builder append "function send(message) {\n"
+    builder append "function _send(message) {\n"
     builder append "var json = JSON.parse(message);\n"
     builder append "var port = json.port;\n"
     builder append "var arrayLength = connectors.length;\n"
@@ -523,18 +520,19 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
         builder append "function send" + Context.firstToUpper(m.getName) + "On" + Context.firstToUpper(p.getName) + "("
         builder append m.getParameters.collect { case pa => Context.protectJavaScriptKeyword(pa.getName)}.mkString(", ")
         builder append ") {\n"
-        builder append "send('{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c") + "\""
+        builder append "var msg = '{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c") + "\""
         m.getParameters.foreach { pa =>
           val isString = (pa.getType.isDefined("js_type", "String"))
           val isArray = (pa.getCardinality != null)
           builder append ", \"" + pa.getName + "\":" + (if(isArray) "[" else "") + (if (isString) "\"" else "") + "' + " + Context.protectJavaScriptKeyword(pa.getName) + " + '" + (if (isString) "\"" else "") + (if(isArray) "]" else "")
         }
-        builder append "}');\n"
+        builder append "}';\n"
+        builder append "_send(msg);\n"
         if (p.isDefined("public", "true") && p.getSends.size() > 0) {
           builder append "//notify listeners\n"
           builder append "var arrayLength = " + p.getName + "Listeners.length;\n"
           builder append "for (var i = 0; i < arrayLength; i++) {\n"
-          builder append p.getName + "Listeners[i]();\n"
+          builder append p.getName + "Listeners[i](msg);\n"
           builder append "}\n"
         }
         builder append "}\n\n"
@@ -749,7 +747,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
           builder append self.getName + ".prototype.receive" + m.getName + "On" + p.getName + " = function("
           builder append m.getParameters.collect { case pa => Context.protectJavaScriptKeyword(pa.getName)}.mkString(", ")
           builder append ") {\n"
-          builder append "this.receive('{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + "\""
+          builder append "this._receive('{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c") + "\""
           builder append m.getParameters.collect { case pa => ", \"" + pa.getName + "\":\"" + Context.protectJavaScriptKeyword(pa.getName) + "\""}.mkString("") //TODO: only string params should have \" \" for their values...
           builder append "}');\n"
           builder append "}\n\n"
