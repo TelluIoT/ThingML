@@ -91,6 +91,7 @@ datatype Char
 	@c_type "char"
 	@c_byte_size "1"
 	@java_type "char"
+    @js_type "String"
 	@java_primitive "true"
     @scala_type "Character"
     @SenML_type "String";
@@ -99,6 +100,7 @@ datatype String
 	@c_type "char *"
 	@c_byte_size "*"
 	@java_type "String"
+    @js_type "String"
     @SenML_type "String";
 	
 enumeration DigitalState 
