@@ -801,37 +801,16 @@ class TypedElementJavaScriptGenerator(val self: TypedElement) /*extends ThingMLJ
 
 case class FunctionJavaScriptGenerator(override val self: Function) extends TypedElementJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder) {
-    /*var generate = true
-    self.getAnnotations.filter {
-      a => a.getName == "abstract"
-    }.headOption match {
-      case Some(a) => 
-        generate = !a.getValue.toLowerCase.equals("true")
-      case None =>
+    if (!self.isDefined("abstract", "true")) {//should be refined in a PSM thing
+      builder append "function " + self.getName + "(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
+      self.getBody.generateJavaScript(builder)
+      builder append "}\n\n"
+
+
+      builder append "this." + self.getName + " = function(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
+      builder append self.getName() + "(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ");"
+      builder append "}\n\n"
     }
-    if (generate) { 
-      self.getAnnotations.filter {
-        a => a.getName == "override" || a.getName == "implements"
-      }.headOption match {
-        case Some(a) => 
-          builder append "@Override\npublic "
-        case None =>
-          builder append "private "
-      }
-     
-      val returnType = self.getType.java_type(self.getCardinality != null)*/
-
-    /*if (self.isDefined("private", "true"))
-      builder append "var "
-    else*/
-    builder append "function " + self.getName + "(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
-    self.getBody.generateJavaScript(builder)
-    builder append "}\n\n"
-
-
-    builder append "this." + self.getName + " = function(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ") {\n"
-    builder append self.getName() + "(" + self.getParameters.collect { case p => Context.protectJavaScriptKeyword(p.Java_var_name)}.mkString(", ") + ");"
-    builder append "}\n\n"
   }
 }
 
