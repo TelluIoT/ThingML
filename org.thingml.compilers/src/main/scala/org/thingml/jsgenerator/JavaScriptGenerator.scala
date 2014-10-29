@@ -703,8 +703,10 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     if (self.allStateMachines().headOption.isDefined) {
       builder append "//Public API for lifecycle management\n"
       builder append self.getName + ".prototype._stop = function() {\n"
+      Context.useThis = true;
       if (self.allStateMachines().head.getExit != null)
         self.allStateMachines().head.getExit.generateJavaScript(builder)
+      Context.useThis = false;
       builder append "}\n\n"
 
       builder append "//Public API for third parties\n"
