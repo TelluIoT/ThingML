@@ -29,6 +29,12 @@ import org.thingml.jsgenerator.extension.JSWebSocketGenerator._
 import scala.collection.JavaConversions._
 import scala.io.Source
 
+object Context {
+  def firstToUpper(value: String): String = {
+    return value.capitalize
+  }
+}
+
 object JSWebSocketGenerator {
   implicit def wsGeneratorAspect(self: Configuration): ConfigurationWSGenerator = ConfigurationWSGenerator(self)
 
@@ -122,6 +128,7 @@ case class ConfigurationWSGenerator(val self: Configuration) extends ThingMLWSGe
           }.mkString(",\n")
           builder append "]"
           builder append ");\n"
+          builder append i.getName + ".get" + Context.firstToUpper(p.getName) + "Listeners().push(" + i.getName + "_" + p.getName + "_ws.onMessage);\n"
           socket = socket + 1
         }
       }
