@@ -36,6 +36,7 @@ import org.thingml.javagenerator.kevoree.KevoreeGenerator
 
 import akka.actor.{Props, ActorSystem, ReceiveTimeout, Actor}
 import org.thingml.jsgenerator.JavaScriptGenerator
+import org.thingml.jsgenerator.extension.JSWebSocketGenerator
 import scala.collection.JavaConversions._
 import scala.concurrent.duration._
 
@@ -104,6 +105,7 @@ class ThingMLPanel extends JPanel {
   val bThingML = new JMenuItem("ThingML/Comm")
   val bThingML2 = new JMenuItem("ThingML/Comm2")
   val j = new JMenuItem("state.js")
+  val jWS = new JMenuItem("WebSocket")
 
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
@@ -346,6 +348,23 @@ class ThingMLPanel extends JPanel {
     }
   })
 
+  jWS.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty) return;
+
+      try {
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        thingmlModel.allConfigurations().foreach { c =>
+          JSWebSocketGenerator.compileAndRun(c, thingmlModel)
+        }
+      }
+      catch {
+        case t: Throwable => t.printStackTrace()
+      }
+    }
+  })
+
   arduinoMenu.add(b)
   linuxMenu.add(bC)
   linuxMenu.add(bCPP)
@@ -358,6 +377,7 @@ class ThingMLPanel extends JPanel {
   javaMenu.add(bSwing)
   javaMenu.add(bKevoree)
   jsMenu.add(j);
+  jsMenu.add(jWS);
   compilersMenu.add(bThingML)
   compilersMenu.add(bThingML2)
   menubar.add(compilersMenu)
