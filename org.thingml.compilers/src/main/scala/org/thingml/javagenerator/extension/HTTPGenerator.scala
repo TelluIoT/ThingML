@@ -72,7 +72,7 @@ object HTTPGenerator {
 
     var pom = Source.fromInputStream(new FileInputStream(rootDir + "/pom.xml"), "utf-8").getLines().mkString("\n")
     pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
-    pom = pom.replace("<!--DEP-->", "<dependency>\n\t<groupId>com.eclipsesource.minimal-json</groupId>\n\t<artifactId>minimal-json</artifactId>\n\t<version>0.9.1</version>\n</dependency>\n<dependency>\n<groupId>org.glassfish.jersey.containers</groupId>\n<artifactId>jersey-container-grizzly2-http</artifactId>\n<version>2.12</version>\n</dependency>\n<!--DEP-->")
+    pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>joda-time</groupId>\n<artifactId>joda-time</artifactId>\n<version>2.5</version>\n</dependency>\n<dependency>\n\t<groupId>com.eclipsesource.minimal-json</groupId>\n\t<artifactId>minimal-json</artifactId>\n\t<version>0.9.1</version>\n</dependency>\n<dependency>\n<groupId>org.glassfish.jersey.containers</groupId>\n<artifactId>jersey-container-grizzly2-http</artifactId>\n<version>2.12</version>\n</dependency>\n<!--DEP-->")
     //pom = pom.replace("<!--REPO-->", "\n<!--REPO-->");
     val w = new PrintWriter(new FileWriter(new File(rootDir + "/pom.xml")));
     w.println(pom);
@@ -154,9 +154,14 @@ object HTTPGenerator {
     builder append "import javax.ws.rs.core.Response;\n"
     builder append "import javax.ws.rs.core.MediaType;\n\n"
 
+    builder append "import org.joda.time.DateTime;\n"
+    builder append "import org.joda.time.format.DateTimeFormatter;\n"
+    builder append "import org.joda.time.format.ISODateTimeFormat;\n\n"
+
+    builder append "import java.io.IOException;\n"
+    builder append "import java.io.InputStream;\n"
     builder append "import java.text.SimpleDateFormat;\n"
-    builder append "import java.util.Collection;\n"
-    builder append "import java.util.Date;\n"
+    builder append "import java.util.Properties;\n"
   }
 }
 
@@ -177,7 +182,7 @@ case class ConfigurationHTTPGenerator(val self: Configuration) extends ThingMLJa
   def generateJavaMain(builder: StringBuilder) {
     builder append "public class Main {\n"
 
-    builder append "public static final String BASE_URI = \"http://localhost:8090/\";\n\n"
+    builder append "//public static final String BASE_URI = \"http://localhost:8090/\";\n\n"
 
     builder append "public static void main(String args[]) {\n"
 
@@ -196,8 +201,8 @@ case class ConfigurationHTTPGenerator(val self: Configuration) extends ThingMLJa
       }
     }
 
-    builder append "final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);\n\n"
-    builder append " Runtime.getRuntime().addShutdownHook(new Thread() {\npublic void run() {\nserver.shutdownNow();\n}\n});\n\n"
+    builder append "/*final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);\n\n"
+    builder append " Runtime.getRuntime().addShutdownHook(new Thread() {\npublic void run() {\nserver.shutdownNow();\n}\n});*/\n\n"
 
     builder append "//Instantiate and link per instance and per port HTTP wrappers\n"
     self.allInstances.foreach { i =>
@@ -235,11 +240,12 @@ case class ThingHTTPGenerator(val self: Thing) extends ThingMLJavaGenerator(self
 
       if (p.getSends.size > 0) {
         builder append "String httpHook = \"http://localhost:8090/\";\n"
+        builder append "String keyApi = \"\";\n"
         builder append "private WebTarget target;\n"
       }
 
 
-      builder append "SimpleDateFormat dateFormat = new SimpleDateFormat(\"yyyy-MM-dd'T'HH:mm:ss.SSS\");\n"
+      builder append "private DateTimeFormatter fmt = ISODateTimeFormat.dateTime();\n"
       builder append Context.firstToUpper(self.getName) + " " + self.getName + ";\n"
       builder append "String deviceId = \"" + self.getName + "\";\n"
 
@@ -247,6 +253,21 @@ case class ThingHTTPGenerator(val self: Thing) extends ThingMLJavaGenerator(self
       builder append "public HTTP_" + Context.firstToUpper(self.getName) + "_" + p.getName + "(" + Context.firstToUpper(self.getName) + " thing) {\n"
       builder append self.getName + " = thing;\n"
       if (p.getSends.size > 0) {
+        builder append "String propFileName = \"config.properties\";"
+        builder append "Properties prop = new Properties();\n"
+        builder append "InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);\n"
+        builder append "if (inputStream == null) {\n"
+        builder append "System.err.println(\"Cannot open config.properties\");\n"
+        builder append "} else {\n"
+        builder append "try {\n"
+        builder append "prop.load(inputStream);\n"
+        builder append "httpHook = prop.getProperty(\"M2M\");\n"
+        builder append "keyApi = prop.getProperty(\"M2MapiKey\");\n"
+        builder append "inputStream.close();\n"
+        builder append "} catch (IOException e) {\n"
+        builder append "e.printStackTrace();\n"
+        builder append "}\n"
+        builder append "}\n"
         builder append "target = ClientBuilder.newClient().target(httpHook);\n"
       }
       builder append "}\n\n"
@@ -275,7 +296,7 @@ case class ThingHTTPGenerator(val self: Thing) extends ThingMLJavaGenerator(self
         builder append "protected String " + p.getName + "_" + m.getName + "toJSON("
         builder append m.getParameters.collect { case pa => pa.getType.java_type(pa.getCardinality != null) + " " + Context.protectJavaKeyword(pa.getName)}.mkString(", ")
         builder append "){\n"
-        builder append "final Date date = new Date();\n"
+        /*builder append "final Date date = new Date();\n"
         builder append "final StringBuilder builder = new StringBuilder();\n"
         builder append "builder.append(\"{\");\n"
         builder append "builder.append(\"\\\"deviceId\\\":\\\"\" + deviceId + \"\\\",\");\n"
@@ -286,7 +307,24 @@ case class ThingHTTPGenerator(val self: Thing) extends ThingMLJavaGenerator(self
           builder append "builder.append(\"{\\\"" + Context.protectJavaKeyword(pa.getName) + "\\\":\\\"\" + " + Context.protectJavaKeyword(pa.getName) + "+ \"\\\"}\");\n"
         }
         builder append "builder.append(\"]}\");\n"
+        builder append "return builder.toString();\n"*/
+
+
+        builder append "DateTime dt = new DateTime();\n"
+        builder append "StringBuilder builder = new StringBuilder();\n"
+        builder append "builder.append(\"{\\n\");"
+        builder append "builder.append(\"\\\"nedata\\\": {\\n\");\n"
+        builder append "builder.append(\"\\\"location\\\": { \\\"coordinates\\\": [10.711970,59.945274], \\\"description\\\": \\\"SINTEF Room 101\\\" }\\n\");\n"
+        builder append "builder.append(\"},\\n\");\n"
+        builder append "builder.append(\"\\\"name\\\":\\\"" + m.getName + "_std\\\",\\n\");\n"
+        builder append "builder.append(\"\\\"value\\\": \" + " + m.getName + " + \",\\n\");\n"
+        builder append "builder.append(\"\\\"event_timestamp\\\":\\\"\" + fmt.print(dt) + \"\\\",\\n\");\n"
+        builder append "builder.append(\"\\\"event_id\\\":\\\"101\\\",\\n\");\n"
+        builder append "builder.append(\"\\\"source_id\\\":\\\"102\\\"\\n\");\n"
+        builder append "builder.append(\"}\\n\");\n"
+        builder append "System.out.println(\"HTTP: \" + builder.toString());\n"
         builder append "return builder.toString();\n"
+
         builder append "}\n\n"
 
         builder append "@Override\n"
@@ -294,7 +332,7 @@ case class ThingHTTPGenerator(val self: Thing) extends ThingMLJavaGenerator(self
         builder append m.getParameters.collect { case pa => pa.getType.java_type(pa.getCardinality != null) + " " + Context.protectJavaKeyword(pa.getName)}.mkString(", ")
         builder append ") {\n"
         builder append "try {\n"
-        builder append "final Response r = target.path(\"" + self.getName + "/" + p.getName + "/" + m.getName + "\").request().put(Entity.entity(" + p.getName + "_" + m.getName + "toJSON(" + m.getParameters.collect { case pa => Context.protectJavaKeyword(pa.getName)}.mkString(", ") + "), MediaType.APPLICATION_JSON_TYPE));\n"
+        builder append "final Response r = target.path(\"/\").queryParam(\"api_key\", keyApi).request().post(Entity.entity(" + p.getName + "_" + m.getName + "toJSON(" + m.getParameters.collect { case pa => Context.protectJavaKeyword(pa.getName)}.mkString(", ") + "), MediaType.APPLICATION_JSON_TYPE));\n"
         builder append "System.out.println(\"[HTTP]: \" + r.getStatusInfo());\n"
         builder append "}\n"
         builder append "catch(Exception e) {\n"
