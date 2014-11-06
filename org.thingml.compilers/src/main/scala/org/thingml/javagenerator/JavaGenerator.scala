@@ -267,7 +267,8 @@ object JavaGenerator {
 
     var mainBuilder = Context.getBuilder("Main.java")
     Context.pack = "org.thingml.generated"
-    generateHeader(mainBuilder, true, t.allInstances().collect{case i => i.getType}.filter{thing => thing.allPorts.filter{p => p.isDefined("public", "true")}.size > 0}.size > 0 || t.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes().exists(t => t.isInstanceOf[Enumeration]), t.allMessages().size > 0)
+
+    generateHeader(mainBuilder, true, t.allInstances().collect{case i => i.getType}.filter{thing => thing.allPorts.filter{p => p.isDefined("public", "true")}.size > 0}.size > 0 || model.allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, t.allMessages().size > 0)
     var gui = false
     t.allInstances.foreach { i => i.getType.getAnnotations.filter { a =>
       a.getName == "mock"
@@ -298,7 +299,8 @@ object JavaGenerator {
       m =>
         var builder = Context.getBuilder("messages/" + Context.firstToUpper(m.getName()) + "MessageType.java")
         Context.pack = "org.thingml.generated.messages"
-        generateHeader(builder, false, t.allInstances().collect{case i => i.getType}.filter{thing => thing.allPorts.filter{p => p.isDefined("public", "true")}.size > 0}.size > 0 || t.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes().exists(t => t.isInstanceOf[Enumeration]), t.allMessages().size() > 0)
+
+        generateHeader(builder, false, t.allInstances().collect{case i => i.getType}.filter{thing => thing.allPorts.filter{p => p.isDefined("public", "true")}.size > 0}.size > 0 || model.allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, t.allMessages().size() > 0)
         builder append "public class " + Context.firstToUpper(m.getName()) + "MessageType extends EventType {\n"
         builder append "public " + Context.firstToUpper(m.getName()) + "MessageType() {name = \"" + m.getName + "\";}\n\n"
         builder append "public Event instantiate(final Port port"
@@ -754,7 +756,8 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
   def generateJava(builder: StringBuilder) {
     Context.thing = self
     Context.pack = "org.thingml.generated"
-    generateHeader(builder, false, self.allPorts.filter{p => p.isDefined("public", "true")}.size > 0 || self.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes().exists(t => t.isInstanceOf[Enumeration]), self.allMessages().size() > 0)
+
+    generateHeader(builder, false, self.allPorts.filter{p => p.isDefined("public", "true")}.size > 0 || self.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, self.allMessages().size() > 0)
     builder append "\n/**\n"
     builder append " * Definition for type : " + self.getName + "\n"
     builder append " **/\n"
