@@ -22,6 +22,7 @@
 package org.thingml.javagenerator.kevoree
 
 import java.io._
+import java.nio.file.{StandardCopyOption, FileSystems, Files}
 
 import org.sintef.thingml._
 import org.thingml.javagenerator.JavaGenerator._
@@ -106,6 +107,21 @@ object KevoreeGenerator {
      
      }*/
     javax.swing.JOptionPane.showMessageDialog(null, "Kevoree wrappers generated");
+
+    /*val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start run.bat" else "./run.sh"), null, new File(rootDir));
+
+    val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
+    val out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(runtime.getOutputStream())), true);
+
+    var line: String = in.readLine()
+    while (line != null) {
+      println(line);
+      line = in.readLine()
+    }
+    runtime.waitFor();
+    in.close();
+    out.close();
+    runtime.destroy();*/
   }
   /*
    * 
@@ -184,7 +200,6 @@ object KevoreeGenerator {
   def compilePom(cfg:Configuration){
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
-    //TODO: we should load the already generated POM (from the JASM compiler) and update it with Kevoree information, not to do most of the work twice
     val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName
     var pom = Source.fromInputStream(new FileInputStream(rootDir + "/pom.xml"),"utf-8").getLines().mkString("\n")
     val kevoreePlugin = "\n<plugin>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.mavenplugin</artifactId>\n<version>${kevoree.version}</version>\n<extensions>true</extensions>\n<configuration>\n<nodename>node0</nodename><model>src/main/kevs/main.kevs</model>\n</configuration>\n<executions>\n<execution>\n<goals>\n<goal>generate</goal>\n</goals>\n</execution>\n</executions>\n</plugin>\n</plugins>\n"
@@ -202,6 +217,10 @@ object KevoreeGenerator {
     println(rootDir+"/pom.xml")
     w.println(pom);
     w.close();
+
+    Files.copy(this.getClass.getClassLoader.getResourceAsStream("kevoreepom/run.bat"), FileSystems.getDefault().getPath(rootDir, "run.bat"), StandardCopyOption.REPLACE_EXISTING);
+    Files.copy(this.getClass.getClassLoader.getResourceAsStream("kevoreepom/org.kevoree.watchdog-0.27.jar"), FileSystems.getDefault().getPath(rootDir, "org.kevoree.watchdog.jar"), StandardCopyOption.REPLACE_EXISTING);
+    Files.copy(this.getClass.getClassLoader.getResourceAsStream("kevoreepom/org.kevoree.tools.ui.editor-5.1.3.jar"), FileSystems.getDefault().getPath(rootDir, "org.kevoree.editor.jar"), StandardCopyOption.REPLACE_EXISTING);
   }
 
   def compile(t: Thing, pack : String, model: ThingMLModel) : String = {
