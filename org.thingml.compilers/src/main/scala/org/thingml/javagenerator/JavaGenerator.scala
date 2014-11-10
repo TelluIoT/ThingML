@@ -407,8 +407,8 @@ case class ConfigurationJavaGenerator(val self: Configuration) extends ThingMLJa
       }.headOption match {
         case Some(a) =>
           a.getValue match {
-            case "true" => builder append "final " + Context.firstToUpper(i.getType.getName) + "Mock " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "Mock(\"" + i.instanceName + "\");\n"
-            case "mirror" => builder append "final " + Context.firstToUpper(i.getType.getName) + "MockMirror " + i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "MockMirror(\"" + i.instanceName + "\");\n"
+            case "true" => builder append i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "Mock(\"" + i.instanceName + "\");\n"
+            case "mirror" => builder append i.instanceName + " = new " + Context.firstToUpper(i.getType.getName) + "MockMirror(\"" + i.instanceName + "\");\n"
           }
         case None =>
 
