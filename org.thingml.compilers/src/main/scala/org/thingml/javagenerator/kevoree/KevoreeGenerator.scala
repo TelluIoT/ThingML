@@ -389,7 +389,7 @@ case class ThingKevoreeGenerator(val self: Thing){
       .foreach{p =>
         if (i > 0)
           builder append "else "
-        builder append "if (p.getName().equals(\"" + p.getName + "\")) {\n"
+        builder append "if (p.getName().equals(\"" + p.getName + "\") &&" + p.getName + "Port_out.getConnectedBindingsSize()>0 && " + p.getName + "Port_out != null) {\n"
         builder append p.getName + "Port_out.send(e);\n"
         builder append "}\n"
         i = i + 1
