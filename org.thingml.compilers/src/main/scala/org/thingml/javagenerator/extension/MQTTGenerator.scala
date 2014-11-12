@@ -183,8 +183,10 @@ object MQTTGenerator {
     builder append "import com.eclipsesource.json.JsonObject;\n\n"
 
     builder append "import java.io.IOException;\n"
+    builder append "import java.io.InputStream;\n"
     builder append "import java.text.SimpleDateFormat;\n"
-    builder append "import java.util.Date;\n\n"
+    builder append "import java.util.Date;\n"
+    builder append "import java.util.Properties;\n"
   }
 }
 
@@ -207,9 +209,9 @@ case class ConfigurationJavaGenerator(val self: Configuration) extends ThingMLJa
     builder append "public static void main(String args[]) {\n"
 
     builder append "//Starting a local MQTT Broker (for demo purpose)\n"
-    builder append "final Server mqttServer = new Server(); //Warning: it seems moquette starts something on 8080...\n"
+    builder append "/*final Server mqttServer = new Server(); //Warning: it seems moquette starts something on 8080...\n"
     builder append "try{\nmqttServer.startServer();\n} catch (IOException e) {\ne.printStackTrace();\n}\n"
-    builder append "System.out.println(\"MQTT Server started\");\n"
+    builder append "System.out.println(\"MQTT Server started\");*/\n"
 
 
     builder append "//Calling standalone ThingML Main\n"
@@ -235,7 +237,7 @@ case class ConfigurationJavaGenerator(val self: Configuration) extends ThingMLJa
         }
       }
     }
-    builder append "mqttServer.stopServer();\n"
+    builder append "//mqttServer.stopServer();\n"
     builder append "System.out.println(\"MQTT clients and broker terminated. RIP!\");\n"
     builder append "}\n"
     builder append "});\n\n"
@@ -283,13 +285,37 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
       builder append self.getName + " = thing;\n"
 
 
+      builder append "Properties prop = new Properties();\n"
+      builder append "String propFileName = \"config.properties\";\n"
+
+      builder append "InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);\n"
+      builder append "try {\n"
+      builder append "if (inputStream == null) {\n"
+      builder append "System.err.println(\"Cannot open config.properties\");\n"
+      builder append "} else {\n"
+      builder append "prop.load(inputStream);\n"
+      builder append "mqttBroker = prop.getProperty(\"mqttBroker\");\n"
+      builder append "deviceId = prop.getProperty(\"deviceId\");\n"
+      p.getSends.foreach { m =>
+        builder append m.getName + "_pub = prop.getProperty(\"" + m.getName + "Topic\");\n"
+      }
+
+      p.getReceives.foreach { m =>
+        builder append m.getName + "_sub = prop.getProperty(\"" + m.getName + "Topic\");\n"
+      }
+      builder append "inputStream.close();\n"
+      builder append "}\n"
+      builder append "} catch (IOException e) {\n"
+      builder append "System.err.println(\"Cannot open config.properties: \" + e.getLocalizedMessage());\n"
+      builder append "}\n\n"
+
+
       builder append "try {\n"
       builder append "mqtt = new MqttAsyncClient(mqttBroker, \"" + Context.firstToUpper(self.getName) + "_" + p.getName + "\", new MemoryPersistence());\n"
       builder append "MqttConnectOptions connOpts = new MqttConnectOptions();\n"
       builder append "connOpts.setCleanSession(true);\n"
       builder append "System.out.println(\"Connecting to broker\");\n"
       builder append "token = mqtt.connect(connOpts);\n"
-      builder append "System.out.println(\"Connected\");"
       builder append "mqtt.setCallback(new MqttCallback() {\n"
       builder append "@Override\n"
       builder append "public void connectionLost(Throwable e) {\n"
@@ -314,16 +340,16 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
       builder append "public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {}});\n\n"
 
       builder append "token.waitForCompletion();\n"
-      if (p.getReceives.size() > 0)
+      builder append "System.out.println(\"Connected\");"
+      /*if (p.getReceives.size() > 0) {//TODO: it seems there is some problems (null pointer in paho, with that code...)
         builder append "try {\n"
-      p.getReceives.foreach { m =>
-        builder append "mqtt.subscribe(" + m.getName + "_sub, 2);\n"
-      }
-      if (p.getReceives.size() > 0) {
+        p.getReceives.foreach { m =>
+          builder append "mqtt.subscribe(" + m.getName + "_sub, 2);\n"
+        }
         builder append "} catch (MqttException e) {\n"
         builder append "e.printStackTrace();\n"
         builder append "}\n"
-      }
+      } */
 
       builder append "} catch (Exception e) {\n"
       builder append "System.err.println(\"Cannot connect to MQTT Server. \" + e.getLocalizedMessage());\n"
@@ -362,9 +388,10 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
         builder append "builder.append(\"\\\"observationTime\\\":\\\"\" + dateFormat.format(date) + \"\\\",\");\n"
         builder append "builder.append(\"\\\"observations\\\":[\");\n"
         m.getParameters.foreach { pa =>
-          builder append "builder.append(\"{\\\"" + Context.protectJavaKeyword(pa.getName) + "\\\":\\\"\" + " + Context.protectJavaKeyword(pa.getName) + "+ \"\\\"}\");\n"
+          builder append "builder.append(\"{\\\"" + Context.protectJavaKeyword(pa.getName) + "_std\\\":\\\"\" + " + Context.protectJavaKeyword(pa.getName) + "+ \"\\\"}\");\n"
         }
         builder append "builder.append(\"]}\");\n"
+        builder append "System.out.println(\"MQTT: \" + builder.toString());\n"
         builder append "return builder.toString().getBytes();\n"
         builder append "}"
 

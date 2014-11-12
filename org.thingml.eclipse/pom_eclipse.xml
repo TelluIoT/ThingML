@@ -23,8 +23,7 @@
   <version>0.6.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
-  	<module>../org.thingml.eclipse.testplugin/pom_eclipse.xml</module>
-    <module>../org.thingml.model/pom_eclipse.xml</module>
+  	<module>../org.thingml.model/pom_eclipse.xml</module>
     <module>../org.thingml.parser/pom_eclipse.xml</module>
     <module>../org.thingml.editor.eclipse/pom_eclipse.xml</module>
 	<module>../org.thingml.eclipse.ui/pom_eclipse.xml</module>

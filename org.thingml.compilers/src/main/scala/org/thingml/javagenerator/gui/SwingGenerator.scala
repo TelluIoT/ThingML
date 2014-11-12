@@ -309,6 +309,17 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
     builder append "}\n\n"
 
     builder append "@Override\n"
+    builder append "public void stop() {\n"
+    builder append "super.stop();\n"
+    builder append "frame.setVisible(false);\n"
+    builder append "}\n\n"
+
+    builder append "@Override\n"
+    builder append "public void start() {\n"
+    builder append "frame.setVisible(true);\n"
+    builder append "}\n\n"
+
+    builder append "@Override\n"
     builder append "public Component buildBehavior() {\n"
     builder append "return null;\n"
     builder append "}\n\n"
@@ -386,8 +397,6 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
         }
     }
     builder append "}\n\n"
-
-    builder append "@Override\npublic void start() {}\n\n"
 
     builder append "private void init(){\n"
     

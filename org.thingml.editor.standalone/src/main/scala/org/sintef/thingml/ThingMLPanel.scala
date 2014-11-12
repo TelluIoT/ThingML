@@ -28,12 +28,15 @@ import org.eclipse.emf.ecore.resource.{Resource, ResourceSet}
 import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic
 import org.sintef.thingml.resource.thingml.mopp._
 import org.thingml.cgenerator.CGenerator
+import org.thingml.coapgenerator.extension.CoAPGenerator
 import org.thingml.cppgenerator.CPPGenerator
 import org.thingml.javagenerator.JavaGenerator
-import org.thingml.javagenerator.extension.{WebSocketGenerator, MQTTGenerator}
+import org.thingml.javagenerator.extension.{HTTPGenerator, WebSocketGenerator, MQTTGenerator}
 import org.thingml.javagenerator.kevoree.KevoreeGenerator
 
 import akka.actor.{Props, ActorSystem, ReceiveTimeout, Actor}
+import org.thingml.jsgenerator.JavaScriptGenerator
+import org.thingml.jsgenerator.extension.JSWebSocketGenerator
 import scala.collection.JavaConversions._
 import scala.concurrent.duration._
 
@@ -82,21 +85,27 @@ class ThingMLPanel extends JPanel {
   val arduinoMenu = new JMenu("Arduino");
   val linuxMenu = new JMenu("Linux");
   val javaMenu = new JMenu("Java");
+  val jsMenu = new JMenu("JavaScript");
   compilersMenu.add(arduinoMenu);
   compilersMenu.add(linuxMenu);
   compilersMenu.add(javaMenu);
+  compilersMenu.add(jsMenu);
 
   val b = new JMenuItem("Arduino")
   val bC = new JMenuItem("Posix C")
   val bCPP = new JMenuItem("C++")
   val rosC = new JMenuItem("ROS Node")
   val bJava = new JMenuItem("Behavior")
+  val bHTTP = new JMenuItem("HTTP")
   val bMQTT = new JMenuItem("MQTT")
   val bWS = new JMenuItem("WebSocket")
+  val bCoAP = new JMenuItem("CoAP")
   val bSwing = new JMenuItem("Swing")
   val bKevoree = new JMenuItem("Kevoree")
   val bThingML = new JMenuItem("ThingML/Comm")
   val bThingML2 = new JMenuItem("ThingML/Comm2")
+  val j = new JMenuItem("state.js")
+  val jWS = new JMenuItem("WebSocket")
 
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
@@ -173,8 +182,25 @@ class ThingMLPanel extends JPanel {
         val thingmlModel = loadThingMLmodel(targetFile.get)
         thingmlModel.allConfigurations().foreach { c =>
           val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
-          //javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
           JavaGenerator.compileAndRun(c, thingmlModel)
+        }
+      }
+      catch {
+        case t: Throwable => t.printStackTrace()
+      }
+    }
+  })
+
+  bHTTP.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty)
+        return
+      try {
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        thingmlModel.allConfigurations().foreach { c =>
+          val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
+          HTTPGenerator.compileAndRun(c, thingmlModel)
         }
       }
       catch {
@@ -192,7 +218,6 @@ class ThingMLPanel extends JPanel {
         val thingmlModel = loadThingMLmodel(targetFile.get)
         thingmlModel.allConfigurations().foreach { c =>
           val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
-          //javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
           MQTTGenerator.compileAndRun(c, thingmlModel)
         }
       }
@@ -211,8 +236,25 @@ class ThingMLPanel extends JPanel {
         val thingmlModel = loadThingMLmodel(targetFile.get)
         thingmlModel.allConfigurations().foreach { c =>
           val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
-          //javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + rootDir + "\n$>mvn clean package exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"");
           WebSocketGenerator.compileAndRun(c, thingmlModel)
+        }
+      }
+      catch {
+        case t: Throwable => t.printStackTrace()
+      }
+    }
+  })
+
+  bCoAP.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty)
+        return
+      try {
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        thingmlModel.allConfigurations().foreach { c =>
+          val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
+          CoAPGenerator.compileAndRun(c, thingmlModel)
         }
       }
       catch {
@@ -289,15 +331,53 @@ class ThingMLPanel extends JPanel {
     }
   })
 
+  j.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty) return;
+
+      try {
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        thingmlModel.allConfigurations().foreach { c =>
+          JavaScriptGenerator.compileAndRun(c, thingmlModel)
+        }
+      }
+      catch {
+        case t: Throwable => t.printStackTrace()
+      }
+    }
+  })
+
+  jWS.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty) return;
+
+      try {
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        thingmlModel.allConfigurations().foreach { c =>
+          JSWebSocketGenerator.compileAndRun(c, thingmlModel)
+        }
+      }
+      catch {
+        case t: Throwable => t.printStackTrace()
+      }
+    }
+  })
+
   arduinoMenu.add(b)
   linuxMenu.add(bC)
   linuxMenu.add(bCPP)
   linuxMenu.add(rosC)
   javaMenu.add(bJava)
+  javaMenu.add(bHTTP)
   javaMenu.add(bMQTT)
   javaMenu.add(bWS)
+  javaMenu.add(bCoAP)
   javaMenu.add(bSwing)
   javaMenu.add(bKevoree)
+  jsMenu.add(j);
+  jsMenu.add(jWS);
   compilersMenu.add(bThingML)
   compilersMenu.add(bThingML2)
   menubar.add(compilersMenu)
@@ -391,8 +471,8 @@ class ThingMLPanel extends JPanel {
         }
 
       } catch {
-        case _@e => {
-          e.printStackTrace()
+        case e : Throwable => {
+          println(e.getLocalizedMessage)//e.printStackTrace()
         }
       }
 

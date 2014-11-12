@@ -1,0 +1,84 @@
+import "../test.thingml"
+
+datatype fs;
+
+thing TestDumpJS includes TestDump
+@javascript "node"
+{
+    
+    property fs : fs = 'require(\'fs\')'
+   
+	function write(string : String) 
+	do
+    	'' & fs & '.appendFileSync("dump", ' & string & ');'
+        print(string)
+	end
+	
+	statechart JavaHarness init Testing {
+		property transitionsCount : Long = 0
+        property time : LongLong = 0
+		state Testing {
+    
+            on entry do
+                //erase previous dump files, if they exist to avoid appending to the results of previous tests...
+                
+                'if(' & fs & '.existsSync(\'dump\')) {'
+                '' & fs & '.unlinkSync(\'dump\');}'
+                
+                'if(' & fs & '.existsSync(\'cputime\')) {'
+                '' & fs & '.unlinkSync(\'cputime\');}'
+                
+                'if(' & fs & '.existsSync(\'transitionsCount\')) {'
+                '' & fs & '.unlinkSync(\'transitionsCount\');}'                
+            end
+
+            internal event m : dump?testOut
+            action do
+                write(m.c)
+            	transitionsCount=transitionsCount+1
+            end
+
+            internal event dump?perfTestOut
+            action do
+                transitionsCount=transitionsCount+1
+            end
+            
+            transition -> Failed 
+            event dump?testFailure
+            
+            transition -> End
+            event dumpEnd?testEnd
+            
+            internal event m: dumpEnd?perfTestSize
+            action do
+                time = m.time
+                transitionsCount=transitionsCount+1
+            end
+		}
+		
+		state Failed {
+			on entry do
+			    write("*FAILURE*")
+			    'process.exit(1);'
+			end
+		}
+
+		state End {
+			on entry do
+                //write cputime
+                '' & fs & '.appendFileSync("cputime", ' & time & ');'
+                print(time)
+                
+                //write number of transitions
+                '' & fs & '.appendFileSync("transitionsCount", ' & transitionsCount & ');'
+                print(transitionsCount)
+                
+                'process.exit(0);'
+			end
+		}
+	}
+}
+
+configuration test {
+    instance t : TestDumpJS   
+}

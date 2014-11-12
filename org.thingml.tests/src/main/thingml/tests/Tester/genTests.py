@@ -18,8 +18,8 @@ import os
 import sys
 import genTestsArduino
 import genTestsLinux
-import genTestsScala
 import genTestsJava
+import genTestsJavaScript
 import genTestsJunit
 import graphGenerator
 
@@ -39,7 +39,7 @@ if testType == "perf":
 		initPerfConfiguration(graphGenerator,type)
 genTestsArduino.run(testType)
 genTestsLinux.run(testType)
-# genTestsScala.run(testType)
+genTestsJavaScript.run(testType)
 genTestsJava.run(testType)
 for type in testLanguages:
 	genTestsJunit.run(type)

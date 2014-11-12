@@ -65,11 +65,11 @@ def generic_prepareFilesForMeasures(type):
 		#Deleting code written in ThingML file if gperftools is not installed
 		else:
 			replaceLine("","TestDumpLinux.c","ProfilerStop();")
-	if type == "Scala":
+	#if type == "Scala":
 		#Inserting necessary code to execute yourkit
-		insertLine("import scala.sys.process._","src/main/scala/org/thingml/generated/Main.scala","package org.thingml.generated")
-		if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
-			insertLine("\"java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp-controller-api-redist.jar localhost 10001 start-cpu-sampling\".!","src/main/scala/org/thingml/generated/Main.scala","def main")
+		#insertLine("import scala.sys.process._","src/main/scala/org/thingml/generated/Main.scala","package org.thingml.generated")
+		#if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
+			#insertLine("\"java -jar /usr/local/lib/yjp-2013-build-13074/lib/yjp-controller-api-redist.jar localhost 10001 start-cpu-sampling\".!","src/main/scala/org/thingml/generated/Main.scala","def main")
 	if type == "Java":
 		#Inserting necessary code to execute yourkit
 		if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
@@ -84,7 +84,7 @@ pw.close();}catch(Exception e){;}","src/main/java/org/thingml/generated/Main.jav
 def generic_compile(type):
 	if type == "Linux":
 		os.system("make")
-	if type == "Java" or type == "Scala":
+	if type == "Java":
 		os.system("mvn clean package")
 
 def generic_execute(type,capitalizedName,resultCounter):
@@ -103,19 +103,21 @@ def generic_execute(type,capitalizedName,resultCounter):
 		# Dump has to be processed to match usual dumps syntax
 		newdump = open('dump','w')
 		newdump.close()
-	if type == "Scala" or type == "Java":
+	if type == "Java":
 		#Execution of program with necessary environment to run yourkit, if available
 		#if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
 			#os.environ['MAVEN_OPTS'] = "-agentpath:/usr/local/lib/yjp-2013-build-13074/bin/linux-x86-32/libyjpagent.so=port=10001,dir="+resultsDirectory+"/"+type+"/"
 		os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
 		#if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
 			#del os.environ['MAVEN_OPTS']
+	if type == "Javascript":
+		os.system("node behavior.js")
 def generic_findBinSize(type,capitalizedName):
 	binsize = "error"
 	if type == "Linux":
 		if os.path.exists(capitalizedName):
 			binsize=str(os.path.getsize(capitalizedName))
-	if type == "Scala" or type == "Java":
+	if type == "Java":
 		if os.path.exists("target/"+capitalizedName+"-1.0-SNAPSHOT.jar"):
 			binsize=str(os.path.getsize("target/"+capitalizedName+"-1.0-SNAPSHOT.jar"))
 	return binsize
@@ -130,12 +132,9 @@ def generic_findCPUandMEM(type):
 			mem=mem[:-1]+" MB"
 		except IOError:
 			print("Impossible to run ps command")
-	if type == "Scala" or type == "Java":
+	if type == "Java":
 		currentDirectory = os.getcwd()
-		if type == "Scala":
-			os.chdir("../../../../org.thingml.tests/target/results/Scala")
-		else:
-			os.chdir("../../../../org.thingml.tests/target/results/Java")
+		os.chdir("../../../../org.thingml.tests/target/results/Java")
 		mypath = "."
 		onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 		snapshotName="test"
@@ -215,6 +214,7 @@ if testType=="perf":
 			os.makedirs("tmp/ThingML_"+type)
 		if deleteTemporaryFiles and os.path.exists(capitalizedName):
 			os.system("rm -r tmp/ThingML_"+type+"/"+capitalizedName)
+		print("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\""+smallType+" org.thingml.tests/src/main/thingml/tests/_"+smallType+"/"+fileName+".thingml\"")
 		os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.cmd.Cmd\" -Dexec.args=\""+smallType+" org.thingml.tests/src/main/thingml/tests/_"+smallType+"/"+fileName+".thingml\"")
 		if os.path.exists("tmp/ThingML_"+type+"/"+capitalizedName):
 			os.chdir("tmp/ThingML_"+type+"/"+capitalizedName)

@@ -35,26 +35,16 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic
 import org.sintef.thingml.resource.thingml.mopp._
+import org.thingml.jsgenerator.JavaScriptGenerator
 import scala.collection.JavaConversions._
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
 import org.thingml.cgenerator.CGenerator
 //import org.thingml.cppgenerator.CPPGenerator
-//import org.thingml.scalagenerator.ScalaGenerator
 import org.thingml.javagenerator.JavaGenerator
-//import org.thingml.java.pauwaregenerator.PauWareGenerator
-//import org.thingml.javagenerator.gui.SwingGenerator
-//import org.thingml.thingmlgenerator.ThingMLGenerator
-//import org.thingml.kotlingenerator.KotlinGenerator
-//import org.thingml.scalagenerator.coap.ScalaCoAPGenerator
-//import org.thingml.mediatorgenerator.LoggerGenerator
 import java.io._
-//import java.nio.file.Path
-//import java.nio.file.Paths
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
-//import org.thingml.model.scalaimpl.ThingMLScalaImpl._
-//import org.thingml.kevoreegenerator.KevoreeGenerator
 
 import scala.collection.JavaConversions._
 
@@ -66,21 +56,22 @@ object Cmd {
 	    	val currentDirectory = new File(System.getProperty("user.dir"))
 			val file : File = new File(currentDirectory.getParent(),args(1))
 			targetFile = Some(file)
+      println("Compiler: " + args(0))
 			println("Input file : " + targetFile)
 			if (targetFile.isEmpty) return;
 			try {
 				val thingmlModel = loadThingMLmodel(targetFile.get)
 				if (args(0) == "linux")
 					CGenerator.compileToLinuxAndNotMake(thingmlModel)
-				/*if (args(0) == "scala")
+				else if (args(0) == "javascript")
 					thingmlModel.allConfigurations.foreach{c =>
-						ScalaGenerator.compileAndNotRun(c, thingmlModel)                                                                      
-					}*/
-				if (args(0) == "java")
+						JavaScriptGenerator.compileAndRun(c, thingmlModel, true)
+					}
+				else if (args(0) == "java")
 					thingmlModel.allConfigurations.foreach{c =>
 						JavaGenerator.compileAndRun(c, thingmlModel, true)                                                                      
 					}
-				if (args(0) == "arduino")
+				else if (args(0) == "arduino")
 					CGenerator.compileAndRunArduino(thingmlModel, "", "", true)          
 			}
 			catch {
