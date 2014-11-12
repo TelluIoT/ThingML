@@ -52,12 +52,12 @@
             <plugin>
                <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
-                <version>2.0.6</version>
+                <version>2.0.8</version>
                 <dependencies>
                     <dependency>
                         <groupId>net.sf.proguard</groupId>
                         <artifactId>proguard-base</artifactId>
-                        <version>4.9</version>
+                        <version>5.0</version>
                         <scope>runtime</scope>
                     </dependency>
                 </dependencies>
@@ -71,13 +71,11 @@
                 </executions>
                 <configuration>
                     <injar>${project.build.finalName}.jar</injar>
-                    <outjar>${project.build.finalName}-small.jar</outjar>
+                    <outjar>${project.build.finalName}.jar</outjar>
                     <obfuscate>false</obfuscate>
                     <maxMemory>512m</maxMemory>
-                    <proguardVersion>4.9</proguardVersion>
+                    <proguardVersion>5.0</proguardVersion>
                     <options>
-                        <option>-dontskipnonpubliclibraryclasses</option>
-                        <option>-dontskipnonpubliclibraryclassmembers</option>
                         <option>-dontoptimize</option>
                         <option>-ignorewarnings</option>
                         <option>-keep public class org.sintef.thingml.ThingMLApp { *; }</option>
@@ -85,13 +83,29 @@
                             public static javax.swing.plaf.ComponentUI createUI(javax.swing.JComponent);
                             }
                         </option>
-                        <option>-keep class jsyntaxpane.** { *; }</option>
+                        <option>-keep class com.typesafe.config.ConfigFactory</option>	
+			<option>-keep class jsyntaxpane.** { *; }</option>
+			<option>-keep class com.typesafe.** { *; }</option>	
+			<option>-keep class com.typesafe.config.** { *; }</option>	
+			<option>-keep class akka.** { *; }</option>	
+                        <option>-keep class scala.** { *; }</option>	
                         <option>-keepattributes *Annotation*</option>
                         <option>-keepattributes **</option>
 
                     </options>
                     <assembly>
                         <inclusions>
+                            <inclusion>
+				<groupId>org.scala-lang</groupId>
+				<artifactId>scala-xml</artifactId>
+				<library>false</library>
+                            </inclusion>
+                            <inclusion>
+				    <groupId>com.typesafe.akka</groupId>
+			            <artifactId>akka-actor_2.11</artifactId>
+				<library>false</library>
+                            </inclusion>
+
                             <inclusion>
                                 <groupId>org.thingml</groupId>
                                 <artifactId>org.thingml.editor.standalone</artifactId>
@@ -153,7 +167,7 @@
                     </archive>
                 </configuration>
 
-                <executions>
+             <!--   <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
@@ -168,7 +182,7 @@
                             <verify>true</verify>
                         </configuration>
                     </execution>
-                </executions>
+                </executions>-->
 
             </plugin>
             <!--

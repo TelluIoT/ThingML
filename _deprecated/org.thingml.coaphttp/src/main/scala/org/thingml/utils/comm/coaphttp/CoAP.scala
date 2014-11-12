@@ -29,7 +29,7 @@ import net.modelbased.sensapp.library.senml.export.JsonParser
 
 import org.thingml.utils.http.SensAppHelper
 
-import scala.actors.Actor._
+import akka.actor.Actor._
 
 class CoAPHTTPResource(val resourceIdentifier : String, val isPUTallowed : Boolean, val isPOSTallowed : Boolean, val isGETallowed : Boolean, httpURLs : Set[String], httpRegistryURLs : Set[String]) extends LocalResource(resourceIdentifier) {
   

@@ -26,7 +26,7 @@ import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.{JPanel, JLabel, JFrame, ImageIcon, Icon}
 
-import scala.actors.Actor._
+import akka.actor.Actor._
 import scala.collection.mutable.Map
 
 
