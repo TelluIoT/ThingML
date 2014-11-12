@@ -200,7 +200,7 @@ object KevoreeGenerator {
   def compilePom(cfg:Configuration){
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
-    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName
+    val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
     var pom = Source.fromInputStream(new FileInputStream(rootDir + "/pom.xml"),"utf-8").getLines().mkString("\n")
     val kevoreePlugin = "\n<plugin>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.mavenplugin</artifactId>\n<version>${kevoree.version}</version>\n<extensions>true</extensions>\n<configuration>\n<nodename>node0</nodename><model>src/main/kevs/main.kevs</model>\n</configuration>\n<executions>\n<execution>\n<goals>\n<goal>generate</goal>\n</goals>\n</execution>\n</executions>\n</plugin>\n</plugins>\n"
     pom = pom.replace("</plugins>",kevoreePlugin)
