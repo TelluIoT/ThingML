@@ -122,7 +122,9 @@ object CoAPGenerator {
      */
 
     if (!doingTests) {
-      compileGeneratedCode(rootDir)
+      new Thread(new Runnable {
+        override def run(): Unit = compileGeneratedCode(rootDir)
+      }).start()
     }
   }
 

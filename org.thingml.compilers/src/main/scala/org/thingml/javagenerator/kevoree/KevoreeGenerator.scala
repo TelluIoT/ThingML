@@ -74,10 +74,10 @@ object KevoreeGenerator {
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
-    new File(System.getProperty("java.io.tmpdir") + "ThingML_temp/").deleteOnExit
+    new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
     
-    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName
-    val outputDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName + "/src/main/java/org/thingml/generated/kevoree"
+    val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
+    val outputDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/java/org/thingml/generated/kevoree"
     
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
@@ -189,7 +189,7 @@ object KevoreeGenerator {
     kevScript append "start node0\n\n"
     kevScript append "\n"
 
-    val rootDir = System.getProperty("java.io.tmpdir") + "ThingML_temp/" + cfg.getName + "/src/main/kevs"
+    val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/kevs"
     val outputDirFile = new File(rootDir)
     outputDirFile.mkdirs
     val w = new PrintWriter(new FileWriter(new File(rootDir+"/main.kevs")));
