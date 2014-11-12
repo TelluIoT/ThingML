@@ -235,6 +235,78 @@
       </objectContribution> 
       
    </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.thingml.eclipse.ui.contribution10"
+            nameFilter="*.thingml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="ThingML"
+               path="additions"
+               id="org.thingml.eclipse.ui.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Compile Java Rest"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJavaRest"
+               menubarPath="org.thingml.eclipse.ui.menu1/group1"
+               enablesFor="1"
+               id="org.thingml.eclipse.ui.newAction10">
+         </action>
+      </objectContribution> 
+      
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.thingml.eclipse.ui.contribution11"
+            nameFilter="*.thingml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="ThingML"
+               path="additions"
+               id="org.thingml.eclipse.ui.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Compile Java Rest"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJS"
+               menubarPath="org.thingml.eclipse.ui.menu1/group1"
+               enablesFor="1"
+               id="org.thingml.eclipse.ui.newAction11">
+         </action>
+      </objectContribution> 
+      
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.thingml.eclipse.ui.contribution12"
+            nameFilter="*.thingml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="ThingML"
+               path="additions"
+               id="org.thingml.eclipse.ui.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               label="Compile Java Rest"
+               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJSWS"
+               menubarPath="org.thingml.eclipse.ui.menu1/group1"
+               enablesFor="1"
+               id="org.thingml.eclipse.ui.newAction12">
+         </action>
+      </objectContribution> 
+      
+   </extension>
 
       
  

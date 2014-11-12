@@ -27,7 +27,7 @@ import org.thingml.javagenerator.extension.HTTPGenerator._
 
 import scala.collection.JavaConversions._
 import scala.io.Source
-
+ 
 object HTTPGenerator {
   implicit def httpGeneratorAspect(self: Thing): ThingHTTPGenerator = ThingHTTPGenerator(self)
 
