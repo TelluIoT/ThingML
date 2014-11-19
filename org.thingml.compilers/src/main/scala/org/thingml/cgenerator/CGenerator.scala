@@ -1248,6 +1248,33 @@ class LinuxCGeneratorContext(src: Configuration) extends CGeneratorContext(src) 
 
 class ArduinoCGeneratorContext(src: Configuration) extends CGeneratorContext(src) {
 
+  if (!src.getAnnotations.filter {
+    a => a.getName == "arduino_stdout"
+  }.isEmpty) {
+
+  }
+
+  def has_arduino_stdout: Boolean = {
+    src.getAnnotations.filter {
+      a => a.getName == "arduino_stdout"
+    }.foreach {
+      a =>
+        return true;
+    }
+    return false;
+  }
+
+  def arduino_stdout() : String = {
+    src.getAnnotations.filter {
+      a => a.getName == "arduino_stdout"
+    }.foreach {
+      a =>
+        return a.asInstanceOf[PlatformAnnotation].getValue
+    }
+    return null;
+  }
+
+
   // pointer size in bytes of the target platform
   override def pointerSize() = {
     2
@@ -1272,10 +1299,15 @@ class ArduinoCGeneratorContext(src: Configuration) extends CGeneratorContext(src
 
   override def generateMain(builder: StringBuilder, cfg: Configuration) {
     var initb = new StringBuilder()
+    if (has_arduino_stdout) {
+      initb.append(arduino_stdout());
+      initb.append(".begin(9600);\n");
+    }
     cfg.generateInitializationCode(initb, this)
     var pollb = new StringBuilder()
     cfg.generatePollingCode(pollb)
     var maintemplate = SimpleCopyTemplate.copyFromClassPath("ctemplates/arduino_main.c")
+
     maintemplate = maintemplate.replace("/* INIT_CODE */", initb.toString);
     maintemplate = maintemplate.replace("/* POLL_CODE */", pollb.toString);
     builder append maintemplate
@@ -1284,6 +1316,25 @@ class ArduinoCGeneratorContext(src: Configuration) extends CGeneratorContext(src
   override def init_debug_mode() = "Serial.begin(9600);" // Any code to initialize the debug mode
 
   override def print_debug_message(msg: String) = "Serial.println(\"DB: " + msg + "\");"
+
+  override def print_message(exp: String) = {
+    if (has_arduino_stdout) {
+      arduino_stdout() + ".print(" + exp + ");\n"
+    }
+    else {
+      "// PRINT: " + exp
+    }
+
+  }
+
+  override def error_message(exp: String) = {
+    if (has_arduino_stdout) {
+      arduino_stdout() + ".print(" + exp + ");\n"
+    }
+    else {
+      "// ERROR: " + exp
+    }
+  }
 
 }
 
