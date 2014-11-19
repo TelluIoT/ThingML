@@ -17,6 +17,7 @@ package org.thingml.eclipse.ui.popup.actions;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.widgets.Shell;
@@ -26,6 +27,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.ThingMLModel;
 import org.thingml.cgenerator.CGenerator;
+import org.thingml.eclipse.preferences.PreferenceConstants;
+import org.thingml.eclipse.ui.Activator;
 
 public class ThingMLCompileArduino implements IObjectActionDelegate {
 
@@ -59,14 +62,18 @@ public class ThingMLCompileArduino implements IObjectActionDelegate {
 		ThingMLModel thingmlModel = LoadModelUtil.getInstance()
 				.loadThingMLmodel(f1);
 		java.io.File ftemp = null;
-		String tempDir = System.getProperty("java.io.tmpdir") + "tmp"
+		String tempDir = System.getProperty("java.io.tmpdir") + "/tmp"
 				+ System.nanoTime();
 		ftemp = new java.io.File(tempDir);
 		if (!ftemp.exists())
 			ftemp.mkdir();
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		String arduibnoidefolder =store.getString(PreferenceConstants.P_STRING);
+		String libraryfolder =store.getString(PreferenceConstants.T_STRING);
+		//TODO Check if folder exist ?
 		CGenerator.compileAndRunArduino(thingmlModel,
-				ftemp.getAbsolutePath() + java.io.File.pathSeparator,
-				ftemp.getAbsolutePath() + java.io.File.pathSeparator,false);
+				arduibnoidefolder,
+				libraryfolder,false);
 	}
 
 	/**

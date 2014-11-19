@@ -308,7 +308,20 @@
       
    </extension>
 
-      
+       <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          class="org.thingml.eclipse.preferences.ThingMLPreferencePage"
+          id="org.thingml.eclipse.preferences.ThingMLPreferencePage"
+          name="ThingML">
+    </page>
+ </extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.thingml.eclipse.preferences.PreferenceInitializer">
+    </initializer>
+ </extension>
  
    
 

@@ -357,8 +357,12 @@ object JavaScriptGenerator {
       builder append ");\n" //TODO: we should also initialize (readonly) arrays
     }
     t.allConnectors().foreach { c =>
-      builder append c.getCli.getInstance().getName + ".getConnectors().push(new Connector(" + c.getSrv.getInstance().getName + ", " + c.getCli.getInstance().getName + ", \"" + c.getProvided.getName + "_s\", \"" + c.getRequired.getName + "_c\"));\n"
-      builder append c.getSrv.getInstance().getName + ".getConnectors().push(new Connector(" + c.getCli.getInstance().getName + ", " + c.getSrv.getInstance().getName + ", \"" + c.getRequired.getName + "_c\", \"" + c.getProvided.getName + "_s\"));\n"
+      if (c.getRequired.getSends.size()>0) {
+        builder append c.getCli.getInstance().getName + ".getConnectors().push(new Connector(" + c.getCli.getInstance().getName + ", " + c.getSrv.getInstance().getName + ", \"" + c.getRequired.getName + "_c\", \"" + c.getProvided.getName + "_s\"));\n"
+      }
+      if (c.getProvided.getSends.size()>0) {
+        builder append c.getSrv.getInstance().getName + ".getConnectors().push(new Connector(" + c.getSrv.getInstance().getName + ", " + c.getCli.getInstance().getName + ", \"" + c.getProvided.getName + "_c\", \"" + c.getRequired.getName + "_s\"));\n"
+      }
     }
 
     t.allInstances().foreach { i =>
@@ -504,14 +508,9 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
 
     builder append "//Internal functions\n"
     builder append "function _send(message) {\n"
-    builder append "var json = JSON.parse(message);\n"
-    builder append "var port = json.port;\n"
     builder append "var arrayLength = connectors.length;\n"
     builder append "for (var i = 0; i < arrayLength; i++) {\n"
-    builder append "var c = connectors[i];\n"
-    //builder append "if (port == c.clientPort) {\n"
-    builder append "c.forward(message);\n"
-    //builder append "}\n"
+    builder append "connectors[i].forward(message);\n"
     builder append "}\n"
     builder append "}\n\n"
 
@@ -520,7 +519,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
         builder append "function send" + Context.firstToUpper(m.getName) + "On" + Context.firstToUpper(p.getName) + "("
         builder append m.getParameters.collect { case pa => Context.protectJavaScriptKeyword(pa.getName)}.mkString(", ")
         builder append ") {\n"
-        builder append "var msg = '{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c") + "\""
+        builder append "var msg = '{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + "_c"/* (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c")*/ + "\""
         m.getParameters.foreach { pa =>
           val isString = (pa.getType.isDefined("js_type", "String"))
           val isArray = (pa.getCardinality != null)
@@ -602,7 +601,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
                 t.getEvent.foreach { ev =>
                   builder append "var t" + i + " = buildTransition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_")
                   val p = ev.asInstanceOf[ReceiveMessage].getPort
-                  builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName + (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c") + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
+                  builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName + "_s"/*(if(p.isInstanceOf[ProvidedPort]) "_s" else "_c")*/ + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
                   if (t.getGuard != null) {
                     builder append " && "
                     t.getGuard.generateJavaScript(builder)
@@ -619,7 +618,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
               t.getEvent.foreach { ev =>
                 val p = ev.asInstanceOf[ReceiveMessage].getPort
                 builder append "var t" + i + " = buildTransition(" + t.eContainer().asInstanceOf[State].qname("_") + ", null"
-                builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName + (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c") + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
+                builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName + "_s"/*(if(p.isInstanceOf[ProvidedPort]) "_s" else "_c")*/ + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
                 if (t.getGuard != null) {
                   builder append " && "
                   t.getGuard.generateJavaScript(builder)
