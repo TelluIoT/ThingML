@@ -440,7 +440,7 @@ class ThingMLPanel extends JPanel {
 
         resource.getErrors.foreach {
           error =>
-            val marker = new Markers.SimpleMarker(new Color(255, 0, 0, 100), error.getMessage)
+            val marker = new Markers.SimpleMarker(new Color(255, 0, 0, 100))
 
             error match {
               case e: IThingmlTextDiagnostic => {
@@ -454,7 +454,7 @@ class ThingMLPanel extends JPanel {
         }
         resource.getWarnings.foreach {
           error =>
-            val marker = new Markers.SimpleMarker(new Color(255, 155, 0, 100), error.getMessage)
+            val marker = new Markers.SimpleMarker(new Color(255, 155, 0, 100))
             val offset = getIndex(error.getLine, error.getColumn)
             Markers.markText(codeEditor, offset, getNextIndex(offset), marker)
         }

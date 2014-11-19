@@ -41,7 +41,7 @@ import java.lang.Boolean
 
 class ThingMLJSyntaxKit extends DefaultSyntaxKit(new ThingMLJSyntaxLexerWrapper()) {
 
-  StaticConfig.staticConfig = new Boolean(true);
+  //StaticConfig.staticConfig = new Boolean(true);
 
   override def getContentType = "text/thingml; charset=UTF-8"
 
@@ -60,11 +60,11 @@ class ThingMLJSyntaxKit extends DefaultSyntaxKit(new ThingMLJSyntaxLexerWrapper(
 
 
   val STRINGSTYLE = new SyntaxStyle(new Color(204, 102, 0), false, true)
-  jsyntaxpane.SyntaxStyles.getInstance().put(TokenTypes.STRING,STRINGSTYLE)
+  jsyntaxpane.SyntaxStyles.getInstance().put(TokenType.STRING,STRINGSTYLE)
   val ANNOTSTYLE = new SyntaxStyle(Color.BLUE, true, false)
-  jsyntaxpane.SyntaxStyles.getInstance().put(TokenTypes.ANNOTATION,ANNOTSTYLE)
+  jsyntaxpane.SyntaxStyles.getInstance().put(TokenType.REGEX,ANNOTSTYLE)
   val COMMENTSTYLE = new SyntaxStyle(new Color(51,153,3), true, false)
-  jsyntaxpane.SyntaxStyles.getInstance().put(TokenTypes.COMMENT,COMMENTSTYLE)
+  jsyntaxpane.SyntaxStyles.getInstance().put(TokenType.COMMENT,COMMENTSTYLE)
 
 
   //UGLY REFLECTIVE GENERATION
@@ -75,9 +75,7 @@ class ThingMLJSyntaxKit extends DefaultSyntaxKit(new ThingMLJSyntaxLexerWrapper(
       if (field.getType == classOf[org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword]) {
         val kw = field.get(null).asInstanceOf[org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword]
         val tStyle = ThingMLStyle.infoProvider.getDefaultTokenStyle(kw.getValue)
-        val newTType = new TokenType {
-          override def toString: String = "Style" + kw.getValue
-        }
+        val newTType = TokenType.KEYWORD
         if (tStyle != null) {
           val colorTab = tStyle.getColorAsRGB
           ThingMLStyle.styles.put(kw.getValue, newTType)

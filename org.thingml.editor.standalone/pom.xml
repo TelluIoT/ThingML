@@ -14,11 +14,21 @@
     </parent>
 
     <dependencies>
+       <!--
         <dependency>
             <groupId>org.kevoree.extra</groupId>
             <artifactId>org.kevoree.extra.jsyntaxpane</artifactId>
             <version>0.9.7</version>
         </dependency>
+-->
+        <dependency>
+            <groupId>de.sciss</groupId>
+            <artifactId>jsyntaxpane</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+
+
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>

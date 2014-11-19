@@ -1903,12 +1903,18 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
 
   def generatePollingCode(builder: StringBuilder) {
 
+    println("-> generatePollingCode --1")
+
     var model = ThingMLHelpers.findContainingModel(self)
+
+    println("-> generatePollingCode --2")
 
     // Serach for the ThingMLSheduler Thing
     var things = model.allThings.filter {
       t => t.getName == "ThingMLScheduler"
     }
+
+    println("-> generatePollingCode --3")
 
     if (!things.isEmpty) {
       var arduino = things.head
@@ -1928,15 +1934,23 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
             }
         }
       }
+    }
+      println("-> generatePollingCode --4")
 
+      println("Generate polling for empty transitions:")
       // Call empty transition handler (if needed)
       self.allInstances.foreach {
         i =>
+          print("Looking for empty-transition for instance " + i.getName + "...")
           if (i.getType.getBehaviour.head.hasEmptyHandlers()) {
+            println("YES")
             builder append i.getType.empty_handler_name() + "(&" + i.c_var_name() + ");\n"
           }
+          else {
+            println("NO")
+          }
       }
-    }
+
   }
 }
 

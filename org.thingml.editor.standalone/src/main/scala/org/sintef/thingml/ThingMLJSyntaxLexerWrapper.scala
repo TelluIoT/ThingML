@@ -36,7 +36,6 @@ package org.sintef.thingml
 
 import javax.swing.text.Segment
 import jsyntaxpane.{Token => JTOK}
-import jsyntaxpane.TokenTypes
 import jsyntaxpane.TokenType
 import resource.thingml.IThingmlTextToken
 import resource.thingml.mopp.{ThingmlTokenStyleInformationProvider, ThingmlLexer, ThingmlAntlrScanner}
@@ -66,14 +65,14 @@ class ThingMLJSyntaxLexerWrapper extends jsyntaxpane.Lexer {
 
   def getType(tok: IThingmlTextToken): TokenType = {
     tok.getName match {
-      case "SL_COMMENT" => TokenTypes.COMMENT
-      case "ML_COMMENT" => TokenTypes.COMMENT
-      case "ANNOTATION" => TokenTypes.ANNOTATION
-      case "STRING_LITERAL" => TokenTypes.STRING
+      case "SL_COMMENT" => TokenType.COMMENT
+      case "ML_COMMENT" => TokenType.COMMENT
+      case "ANNOTATION" => TokenType.REGEX
+      case "STRING_LITERAL" => TokenType.STRING
       case _@name => {
         ThingMLStyle.styles.get(name) match {
           case Some(e) => e
-          case None => TokenTypes.DEFAULT
+          case None => TokenType.DEFAULT
         }
       }
 
