@@ -77,7 +77,7 @@
         <!--<testSourceDirectory>src/test/java</testSourceDirectory>-->
 		<plugins>
 
-            <plugin>
+            <!--<plugin>
                 <groupId>com.googlecode.maven-java-formatter-plugin</groupId>
                 <artifactId>maven-java-formatter-plugin</artifactId>
                 <version>0.4</version>
@@ -93,7 +93,7 @@
                         <include>org/thingml/generated/**</include>
                     </includes>
                 </configuration>
-            </plugin>
+            </plugin>-->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -108,7 +108,7 @@
                 </configuration>
             </plugin>
 
-    <plugin>
+    <!--<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
@@ -128,7 +128,7 @@
                 </configuration>
             </execution>
         </executions>
-    </plugin>
+    </plugin> -->
 
     <!--ProGuard to reduce size of binaries and hopefully optimize some stuff-->
     <!--<plugin>

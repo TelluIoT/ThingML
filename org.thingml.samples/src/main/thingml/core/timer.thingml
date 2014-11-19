@@ -46,7 +46,13 @@ thing SimpleTimerClient includes TimerClient
             on entry 
             do
                 print("sending timer_start")
-                timer!timer_start(t1)
+                if (counter < 10) do
+                    timer!timer_start(t1)
+                end
+                if (counter == 10) do
+                    timer!timer_start(t1)
+                    timer!timer_cancel()
+                end
             end
             
             
@@ -66,7 +72,13 @@ thing SimpleTimerClient includes TimerClient
                 print(counter)
                 counter = counter + 1
                 print("sending timer_start")
-                timer!timer_start(t2)
+                if (counter < 10) do
+                    timer!timer_start(t2)
+                end
+                if (counter == 10) do
+                    timer!timer_start(t2)
+                    timer!timer_cancel()
+                end
             end
         }         
            

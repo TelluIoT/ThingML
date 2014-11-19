@@ -1,62 +1,39 @@
 import "../timer.thingml"
 
-datatype JavaTimer
-@java_type "java.util.Timer";
-
-datatype JavaTimerTask
-@java_type "java.util.TimerTask";
-
 // Manage a set of software timers.
 thing TimerJava includes Timer
 @pim "Timer"
 @platform "java"
-@java_interface "org.thingml.timer.TimerObserver"
-@thingml_maven_dep "org.thingml.utils"
 {
 
-    readonly property javaTimer : JavaTimer = 'new java.util.Timer()'
-    property javaTimerTask : JavaTimerTask
-
-    function onTimeout()@override "true" 
-    do
-        //print("timeout")
-        timer!timer_timeout()
-    end
-    
-    function cancel() 
-    do
-      //print("cancel")
-      if(not (javaTimerTask == 'null'))
-      do
-        '' & javaTimerTask & '.cancel();'
-        javaTimerTask = 'null'
-      end
-      '' & javaTimer & '.purge();'
-    end
-    
-    function start(delay : Integer)
-    do
-        //print("start " + delay)
-        cancel()
-        javaTimerTask = 'new org.thingml.timer.ThingMLTimerTask(this)'
-        '' & javaTimer & '.schedule(' & javaTimerTask & ', (long)' & delay & ');'
-    end
+    property stop : Boolean = false
     
     statechart SoftTimer init default {
         state default {
-          //on entry print("debug timer on entry")
-            
+
           internal start
             event m : timer?timer_start
             guard m.delay > 0
             action do
-                //print("debug timer")
-                start(m.delay)
+            
+             'final long start = System.currentTimeMillis();
+             Thread t = new Thread(){
+              public void run() {
+              while(!' & stop & ' && System.currentTimeMillis()-start < ' & m.delay & ') {
+                  try {
+                    Thread.sleep(1);
+                  } catch (Exception ex) {}
+              }'
+              timer!timer_timeout()
+              '}
+              };
+              t.start();'
+                
             end
             
           internal cancel
             event m : timer?timer_cancel
-            action cancel()    
+            action stop = true
         }
     }
 }
