@@ -245,8 +245,9 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
     w.close
 
     // Open the arduino environment on the generated file
-    openArduinoIDE(pde_file.getAbsolutePath, arduinoDir, libdir)
-
+    new Thread(new Runnable {
+      override def run(): Unit = openArduinoIDE(pde_file.getAbsolutePath, arduinoDir, libdir)
+    }).start()
   }
 
   def openArduinoIDE(pde_file: String, arduinoDir: String, arduinolibdir: String) {
