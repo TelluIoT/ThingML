@@ -1,6 +1,7 @@
 datatype String
 	@c_type "char *"
 	@c_byte_size "*"
+    @js_type "String"
 	@java_type "String"
     @SenML_type "String";
 
@@ -16,15 +17,25 @@ thing fragment HelloWorldMsgs {
 thing HelloWorldClient includes HelloWorldMsgs
 {
     required port hello {
+        sends h, e, l, o
         receives msg
     }
     
     statechart behavior init Init {
         state Init {
+            
+           on entry do
+                hello!h()
+                hello!e()
+                hello!l()
+                hello!l()
+                hello!o()
+           end
+            
            internal event m : hello?msg
            guard m.m == "w" or m.m == "o" or m.m == "r" or m.m == "l" or m.m == "d"
            action do
-            print(m.m)
+           print(m.m)
            end
         }       
     }
@@ -142,12 +153,7 @@ thing HelloWorldServer2 includes HelloWorldMsgs {
     }
 }
 
-thing BasicHello {
-    
-    property array : String[2]
-    set array[0] = "a"
-    set array[1] = "b"
-    
+thing BasicHello {    
     statechart behavior init hello keeps history {
         state hello {
             on entry print("hello")    
@@ -156,14 +162,14 @@ thing BasicHello {
 }
 
 configuration helloWorldConf {
-/*    instance client : HelloWorldClient    
-    instance client2 : HelloWorldClient    
+    instance client : HelloWorldClient    
+    //instance client2 : HelloWorldClient    
     instance server : HelloWorldServer
     //instance server : HelloWorldServer2
     
     connector client.hello => server.hello
-    connector client2.hello => server.hello    
-    */
+    //connector client2.hello => server.hello    
     
-    instance h : BasicHello
+    
+    //instance h : BasicHello
 }

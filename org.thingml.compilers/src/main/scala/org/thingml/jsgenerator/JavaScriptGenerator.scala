@@ -210,7 +210,7 @@ object JavaScriptGenerator {
     if (!doingTests) {
       new Thread(new Runnable {
         override def run() {
-          val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start " else "") + "node behavior.js", null, new File(rootDir));
+          val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /k start " else "") + "node behavior.js", null, new File(rootDir));
 
           val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
           val out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(runtime.getOutputStream())), true);
@@ -282,6 +282,9 @@ object JavaScriptGenerator {
     builder append "}\n\n"
     builder append "function buildCompositeState(name, container){\n"
     builder append "return new " + prefix + "CompositeState(name, container);\n"
+    builder append "}\n\n"
+    builder append "function buildOrthogonalState(name, container){\n"
+    builder append "return new " + prefix + "OrthogonalState(name, container);\n"
     builder append "}\n\n"
     builder append "function buildEmptyTransition(source, target){\n"
     builder append "return new " + prefix + "Transition(source, target);\n"
@@ -439,21 +442,34 @@ case class ConnectorJavaScriptGenerator(val self: Connector) extends ThingMLJava
 case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGenerator(self) {
 
   def buildState(builder: StringBuilder, s: State, containerName: String): Unit = {
-    if (s.isInstanceOf[CompositeState]) {
+    if (s.isInstanceOf[CompositeState]) { //composite state
       val c = s.asInstanceOf[CompositeState]
-      builder append "var " + c.qname("_") + " = buildCompositeState(\"" + c.getName + "\", " + containerName + ");\n"
+      if (c.hasSeveralRegions) {
+        builder append "var " + c.qname("_") + " = buildOrthogonalState(\"" + c.getName + "\", " + containerName + ");\n"
+        builder append "var " + c.qname("_") + "_default = buildRegion(\"_default\", " + c.qname("_") + ");\n"
+        if (c.isHistory)
+          builder append "var _initial_" + c.qname("_") + " = buildHistoryState(\"_initial\", " + c.qname("_") + ");\n"
+        else
+          builder append "var _initial_" + c.qname("_") + " = buildInitialState(\"_initial\", " + c.qname("_") + ");\n"
+        builder append "var t0_" + c.qname("_") + " = buildEmptyTransition(_initial_" + c.qname("_") + ", " + c.getInitial.qname("_") + ");\n"
+        c.getSubstate.foreach { s =>
+          buildState(builder, s, c.qname("_") + "_default");
+        }
+        c.getRegion.foreach { r =>
+          buildRegion(builder, r, c.qname("_"));
+        }
+      } else {
+        builder append "var " + c.qname("_") + " = buildCompositeState(\"" + c.getName + "\", " + containerName + ");\n"
+        c.getSubstate.foreach { s =>
+          buildState(builder, s, c.qname("_"));
+        }
+      }
       if (c.isHistory)
         builder append "var _initial_" + c.qname("_") + " = buildHistoryState(\"_initial\", " + c.qname("_") + ");\n"
       else
         builder append "var _initial_" + c.qname("_") + " = buildInitialState(\"_initial\", " + c.qname("_") + ");\n"
-      c.getSubstate.foreach { s =>
-        buildState(builder, s, c.qname("_"));
-      }
-      c.getRegion.foreach { r =>
-        buildRegion(builder, r, c.qname("_"));
-      }
       builder append "var t0_" + c.qname("_") + " = buildEmptyTransition(_initial_" + c.qname("_") + ", " + c.getInitial.qname("_") + ");\n"
-    } else {
+    } else { //atomic state
       builder append "var " + s.qname("_") + " = buildSimpleState(\"" + s.getName + "\", " + containerName + ");\n"
     }
     if (s.getEntry != null)
@@ -477,19 +493,6 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     builder append "\n/**\n"
     builder append " * Definition for type : " + self.getName + "\n"
     builder append " **/\n"
-
-    //TODO: think about the extension mechanism we want to use for JS...
-    /*val traits = new util.ArrayList[String]()
-    self.allPorts().foreach { p =>
-      if (p.isDefined("public", "true") && p.getReceives.size() > 0) {
-        traits += "I" + Context.firstToUpper(self.getName) + "_" + p.getName
-      }
-    }
-    if (self.hasAnnotation("java_interface")) {
-      traits += self.annotation("java_interface").mkString(", ")
-    } else if (self.hasAnnotation("scala_trait")) {
-      traits += self.annotation("scala_trait").mkString(", ")
-    }*/
 
     builder append "function " + Context.firstToUpper(self.getName) + "("
     builder append self.allPropertiesInDepth.collect { case p => p.Java_var_name}.mkString(", ") //TODO: changeable properties?
@@ -543,7 +546,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
         builder append ") {\n"
         builder append "var msg = '{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + "_c"/* (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c")*/ + "\""
         m.getParameters.foreach { pa =>
-          val isString = (pa.getType.isDefined("js_type", "String"))
+          val isString = pa.getType.isDefined("js_type", "String")
           val isArray = (pa.getCardinality != null)
           builder append ", \"" + pa.getName + "\":" + (if(isArray) "[" else "") + (if (isString) "\"" else "") + "' + " + Context.protectJavaScriptKeyword(pa.getName) + " + '" + (if (isString) "\"" else "") + (if(isArray) "]" else "")
         }
@@ -560,34 +563,39 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
       }
     }
 
-    builder append "//Init state machine\n"
-    self.allStateMachines.foreach { b =>
-      builder append "this." + b.qname("_") + " = buildStateMachine(\"" + b.getName + "\");\n"
-      builder append "var " + b.qname("_") + "_default = buildRegion(\"_default\", this." + b.qname("_") + ");\n" //TODO: default region should be generalized to all (sub-) composites....
-      if (b.isHistory)
-        builder append "this._initial_" + b.qname("_") + " = buildHistoryState(\"_initial\", " + b.qname("_") + "_default);\n"
-      else
-        builder append "this._initial_" + b.qname("_") + " = buildInitialState(\"_initial\", " + b.qname("_") + "_default);\n"
-      //builder append "var _final_" + b.qname("_") + " = buildFinalState(\"_final\", " + b.qname("_") + "_default);\n"
-    }
-
     builder append "//State machine (states and regions)\n"
     self.allStateMachines.foreach { b =>
-      b.getSubstate.foreach { s =>
-        buildState(builder, s, b.qname("_") + "_default");
+      builder append "this." + b.qname("_") + " = buildRegion(\"" + b.getName + "\");\n"
+      if (b.isHistory)
+        builder append "this._initial_" + b.qname("_") + " = buildHistoryState(\"_initial\", this." + b.qname("_") + ");\n"
+      else
+        builder append "this._initial_" + b.qname("_") + " = buildInitialState(\"_initial\", this." + b.qname("_") + ");\n"
+      if (b.hasSeveralRegions) {
+        builder append "var _orth_" + b.qname("_") + " = buildOrthogonalState(\"_orth_" + b.qname("_") + "\", this." + b.qname("_") + " );\n"
+        builder append "var t0 = new buildEmptyTransition(this._initial_" + b.qname("_") + ", _orth_" + b.qname("_") + ");\n"
+        builder append "var " + b.qname("_") + "_default = buildRegion(\"_default\", _orth_" + b.qname("_") + ");\n"
+        if (b.isHistory)
+          builder append "var _initial_" + b.qname("_") + "_default = buildHistoryState(\"_initial\", " + b.qname("_") + "_default);\n"
+        else
+          builder append "var _initial_" + b.qname("_") + "_default = buildInitialState(\"_initial\", " + b.qname("_") + "_default);\n"
+        b.getSubstate.foreach { s =>
+          buildState(builder, s, b.qname("_") + "_default");
+        }
+        builder append "var t0_" + b.qname("_") + "_default = buildEmptyTransition(_initial_" + b.qname("_") + "_default, " + b.getInitial.qname("_") + ");\n"
+        b.getRegion.foreach { r =>
+          buildRegion(builder, r, "_orth_" + b.qname("_"));
+        }
+      } else {
+        b.getSubstate.foreach { s =>
+          buildState(builder, s, "this." + b.qname("_"));
+        }
+        builder append "var t0 = new buildEmptyTransition(this._initial_" + b.qname("_") + ", " + b.getInitial.qname("_") + ");\n"
       }
-      b.getRegion.foreach { r =>
-        buildRegion(builder, r, "this." + b.qname("_"));
-      }
-      /*if (b.getEntry != null)
-        builder append "this." + b.qname("_") + ".entry = [" + b.qname("_") + "_entry];\n"
-      if (b.getExit != null)
-        builder append "this." + b.qname("_") + ".exit = [" + b.qname("_") + "_exit];\n"*/
+    }
 
 
-      builder append "//State machine (transitions)\n"
-      builder append "var t0 = new buildEmptyTransition(this._initial_" + b.qname("_") + ", " + b.getInitial.qname("_") + ");\n"
-
+    self.allStateMachines.foreach { b =>
+    builder append "//State machine (transitions)\n"
       var i = 1
       b.allEmptyHandlers().foreach{h =>
         h match {
