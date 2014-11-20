@@ -50,4 +50,10 @@ public interface CompositeState extends State, Region {
 	 */
 	EList<ParallelRegion> getRegion();
 
+    /**
+     * A composite has several region, if getRegion.size > 0 (as the composite already defines an implicit region on its own)
+     * @generated NOT
+     */
+    boolean hasSeveralRegions();
+
 } // CompositeState

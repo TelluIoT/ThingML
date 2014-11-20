@@ -207,25 +207,26 @@ object JavaScriptGenerator {
       }
     }
 
-    new Thread(new Runnable {
-      override def run() {
-        val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start " else "") + "node behavior.js", null, new File(rootDir));
+    if (!doingTests) {
+      new Thread(new Runnable {
+        override def run() {
+          val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start " else "") + "node behavior.js", null, new File(rootDir));
 
-        val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
-        val out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(runtime.getOutputStream())), true);
+          val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
+          val out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(runtime.getOutputStream())), true);
 
-        var line: String = in.readLine()
-        while (line != null) {
-        println(line);
-        line = in.readLine()
-      }
-        runtime.waitFor();
-        in.close();
-        out.close();
-        runtime.destroy();
-      }
-    }).start()
-
+          var line: String = in.readLine()
+          while (line != null) {
+            println(line);
+            line = in.readLine()
+          }
+          runtime.waitFor();
+          in.close();
+          out.close();
+          runtime.destroy();
+        }
+      }).start()
+    }
 
   }
 

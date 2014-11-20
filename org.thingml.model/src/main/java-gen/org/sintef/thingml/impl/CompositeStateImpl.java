@@ -201,7 +201,7 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
 		return region;
 	}
 
-	/**
+    /**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -476,5 +476,15 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
         }
         return result;
     }
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    @Override
+    public boolean hasSeveralRegions() {
+        return getRegion().size() > 0;
+    }
+
 
 } //CompositeStateImpl
