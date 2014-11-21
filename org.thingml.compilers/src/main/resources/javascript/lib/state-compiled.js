@@ -1,17 +1,767 @@
-function initStateJS(g){function r(a,b){var c,f,d;c=0;for(f=a.length;c<f;c+=1)if(b(a[c])){if(d)throw"single found more than one result";d=a[c]}return d}function m(a,b){if(a.steelbreeze_statejs_active)return a.steelbreeze_statejs_active[b]}function h(a,b){if(a.steelbreeze_statejs_current)return a.steelbreeze_statejs_current[b]}function n(a,b,c){this.guard=c||function(a){return!0};if(b&&null!==b){for(var f=a.owner.ancestors(),d=b.owner.ancestors(),e=0;f.length>e&&d.length>e&&f[e]===d[e];)e+=1;this.sourceAncestorsToExit=
-f.slice(e);this.targetAncestorsToEnter=d.slice(e);this.sourceAncestorsToExit.reverse();this.source=a;this.target=b}a[c&&1<c.length?"transitions":"completions"].push(this)}function v(a,b){if(1===b.length)return b[0];throw"initial pseudo states must have one and only one outbound transition";}function d(a,b){this.name=a;this.owner=b}function t(a,b,c){d.call(this,a,c);this.kind=b;this.completions=[];this.kind.isInitial&&(this.owner.initial=this)}function e(a,b){d.call(this,a,b);this.completions=[];this.transitions=
-[]}function p(a,b){e.call(this,a,b)}function q(a,b){e.call(this,a,b);this.regions=[]}function s(a,b){e.call(this,a,b);this.isFinalState=!0}function k(a,b){d.call(this,a,b);this.initial=null;this.owner&&this.owner.regions.push(this)}function l(a){d.call(this,a);this.regions=[]}n.prototype.onEffect=function(a,b){var c,f;if(this.effect)for(c=0,f=this.effect.length;c<f;c+=1)this.effect[c](a,b)};n.prototype.traverse=function(a,b){var c,f;if(this.source)for(this.source.beginExit(a),this.source.endExit(a),
-c=0,f=this.sourceAncestorsToExit.length;c<f;c+=1)this.sourceAncestorsToExit[c].endExit(a);this.onEffect(a,b);if(this.target){c=0;for(f=this.targetAncestorsToEnter.length;c<f;c+=1)this.targetAncestorsToEnter[c].beginEntry(a);this.target.beginEntry(a);this.target.endEntry(a,!1)}};n.Else=function(a,b){n.call(this,a,b,function(a){return!1});this.isElse=!0};n.Else.prototype=n.prototype;n.Else.prototype.constructor=n.Else;var u={Choice:{isInitial:!1,isHistory:!1,completions:function(a,b){var c,f,d=[];c=
-0;for(f=b.length;c<f;c+=1)b[c].guard(a)&&d.push(b[c]);return 0<d.length?d[(d.length-1)*Math.random()]:r(b,function(a){return a.isElse})}},DeepHistory:{isInitial:!0,isHistory:!0,completions:v},Initial:{isInitial:!0,isHistory:!1,completions:v},Junction:{isInitial:!1,isHistory:!1,completions:function(a,b){var c=r(b,function(b){return b.guard(a)});if(c||(c=r(b,function(a){return a.isElse})))return c;throw"junction PseudoState has no valid competion transitions";}},ShallowHistory:{isInitial:!0,isHistory:!0,
-completions:v},Terminate:{isInitial:!1,isHistory:!1,completions:null}};d.prototype.qualifiedName=function(){return this.owner?this.owner+"."+this.name:this.name};d.prototype.ancestors=function(){return(this.owner?this.owner.ancestors():[]).concat(this)};d.prototype.beginExit=function(a){};d.prototype.endExit=function(a){console.log("Leave: "+this.toString());a.steelbreeze_statejs_active||(a.steelbreeze_statejs_active=[]);a.steelbreeze_statejs_active[this]=!1};d.prototype.beginEntry=function(a){m(a,
-this)&&(this.beginExit(a),this.endExit(a));console.log("Enter: "+this.toString());a.steelbreeze_statejs_active||(a.steelbreeze_statejs_active=[]);a.steelbreeze_statejs_active[this]=!0};d.prototype.endEntry=function(a,b){};d.prototype.getCurrent=function(a){return{name:this.name}};d.prototype.toString=function(){return this.qualifiedName()};t.prototype=new d;t.prototype.constructor=t;t.prototype.endEntry=function(a,b){this.kind===u.Terminate?a.IsTerminated=!0:this.kind.completions(a,this.completions).traverse(a,
-b)};e.prototype=new d;e.prototype.constructor=e;e.prototype.isComplete=function(a){return!0};e.prototype.onExit=function(a){var b,c;if(this.exit)for(b=0,c=this.exit.length;b<c;b+=1)this.exit[b](a)};e.prototype.endExit=function(a){this.onExit(a);d.prototype.endExit.call(this,a)};e.prototype.onEntry=function(a){var b,c;if(this.entry)for(b=0,c=this.entry.length;b<c;b+=1)this.entry[b](a)};e.prototype.beginEntry=function(a){d.prototype.beginEntry.call(this,a);if(this.owner){var b=this.owner;a.steelbreeze_statejs_current||
-(a.steelbreeze_statejs_current=[]);a.steelbreeze_statejs_current[b]=this}this.onEntry(a)};e.prototype.endEntry=function(a,b){this.evaluateCompletions(a,b)};e.prototype.evaluateCompletions=function(a,b){if(this.isComplete(a)){var c=r(this.completions,function(b){return b.guard(a)});c&&c.traverse(a,b)}};e.prototype.process=function(a,b){var c=r(this.transitions,function(c){return c.guard(a,b)});if(!c)return!1;c.traverse(a,b);return!0};p.prototype=new e;p.prototype.constructor=p;p.prototype.isComplete=
-function(a){var b=h(a,this);return a.isTerminated||null===b||b.isFinalState||!1===m(a,b)};p.prototype.beginExit=function(a){var b=h(a,this);b&&(b.beginExit(a),b.endExit(a))};p.prototype.endEntry=function(a,b){var c=(b||this.initial.kind.isHistory?h(a,this):this.initial)||this.initial;c.beginEntry(a);c.endEntry(a,b||this.initial.kind===u.DeepHistory);e.prototype.endEntry.call(this,a,b)};p.prototype.process=function(a,b){var c=e.prototype.process.call(this,a,b)||h(a,this).process(a,b);!0===c&&this.evaluateCompletions(a,
-!1);return c};p.prototype.getCurrent=function(a){var b=d.prototype.getCurrent.call(this,a),c=h(a,this);c&&(b.current=c.getCurrent(a));return b};q.prototype=new e;q.prototype.constructor=q;q.prototype.isComplete=function(a){var b,c;if(!a.isTerminated)for(b=0,c=this.regions.length;b<c;b+=1)if(!this.regions[b].isComplete(a))return!1;return!0};q.prototype.beginExit=function(a){var b,c;b=0;for(c=this.regions.length;b<c;b+=1)m(a,this.regions[b])&&(this.regions[b].beginExit(a),this.regions[b].endExit(a))};
-q.prototype.endEntry=function(a,b){var c,d;c=0;for(d=this.regions.length;c<d;c+=1)this.regions[c].beginEntry(a),this.regions[c].endEntry(a);e.prototype.endEntry.call(this,a,b)};q.prototype.process=function(a,b){var c,d,g=!1;if(!a.isTerminated&&!1===(g=e.prototype.process.call(this,a,b)))for(c=0,d=this.regions.length;c<d;c+=1)g=this.regions[c].process(a,b)||g;!0===g&&this.evaluateCompletions(a,!1);return g};q.prototype.getCurrent=function(a){var b=d.prototype.getCurrent.call(this,a),c,e;b.regions=
-[];c=0;for(e=this.regions.length;c<e;c+=1)m(a,this.regions[c])&&(b.regions[c]=this.regions[c].getCurrent(a));return b};s.prototype=new e;s.prototype.constructor=s;delete s.prototype.comlpetions;delete s.prototype.transitions;s.prototype.process=function(a,b){return!1};k.prototype=new d;k.prototype.constructor=k;k.prototype.isComplete=function(a){var b=h(a,this);return a.isTerminated||null===b||b.isFinalState||!1===m(a,b)};k.prototype.initialise=function(a){this.beginEntry(a);this.endEntry(a,!1)};
-k.prototype.beginExit=function(a){var b=h(a,this);b&&(b.beginExit(a),b.endExit(a))};k.prototype.endEntry=function(a,b){var c=(b||this.initial.kind.isHistory?h(a,this):this.initial)||this.initial;c.beginEntry(a);c.endEntry(a,b||this.initial.kind===u.DeepHistory)};k.prototype.process=function(a,b){return a.isTerminated?!1:m(a,this)&&h(a,this).process(a,b)};k.prototype.getCurrent=function(a){var b=d.prototype.getCurrent.call(this,a),c=h(a,this);c&&(b.current=c.getCurrent(a));return b};l.prototype=new d;
-l.prototype.constructor=l;l.prototype.isComplete=function(a){var b,c;if(!a.isTerminated)for(b=0,c=this.regions.length;b<c;b+=1)if(!this.regions[b].isComplete(a))return!1;return!0};l.prototype.initialise=function(a){this.beginEntry(a);this.endEntry(a,!1)};l.prototype.beginExit=function(a){var b,c;b=0;for(c=this.regions.length;b<c;b+=1)m(a,this.regions[b])&&(this.regions[b].beginExit(a),this.regions[b].endExit(a))};l.prototype.endEntry=function(a,b){var c,e;c=0;for(e=this.regions.length;c<e;c+=1)this.regions[c].beginEntry(a),
-this.regions[c].endEntry(a,b);d.prototype.endEntry.call(this,a,b)};l.prototype.process=function(a,b){var c,d,e=!1;if(!a.isTerminated)for(c=0,d=this.regions.length;c<d;c+=1)e=this.regions[c].process(a,b)||e;return e};l.prototype.getCurrent=function(a){var b=d.prototype.getCurrent.call(this,a),c,e;b.regions=[];c=0;for(e=this.regions.length;c<e;c+=1)m(a,this.regions[c])&&(b.regions[c]=this.regions[c].getCurrent(a));return b};g.PseudoStateKind=u;g.PseudoState=t;g.SimpleState=e;g.CompositeState=p;g.OrthogonalState=
-q;g.FinalState=s;g.Region=k;g.StateMachine=l;g.Transition=n}this.exports?initStateJS(this.exports):this.define?this.define(function(g,r,m){initStateJS(r)}):initStateJS(this);
+/* State v4 finite state machine library
+ * http://www.steelbreeze.net/state.js
+ * Copyright (c) 2014 Steelbreeze Limited
+ * Licensed under MIT and GPL v3 licences
+ */
+
+/*global console */
+function initStateJS(exports) {
+    "use strict";
+    
+    function single(collection, predicate) {
+        var i, len, result;
+        
+        for (i = 0, len = collection.length; i < len; i = i + 1) {
+            if (predicate(collection[i])) {
+                if (result) {
+                    throw "single found more than one result";
+                }
+                
+                result = collection[i];
+            }
+        }
+        
+        return result;
+    }
+
+    // TODO: add similar methods to the state machine state on initialisation in StateMachine
+    function setActive(state, element, value) {
+        if (!state.steelbreeze_statejs_active) {
+            state.steelbreeze_statejs_active = [];
+        }
+    
+        state.steelbreeze_statejs_active[element] = value;
+    }
+    
+    function getActive(state, element) {
+        if (state.steelbreeze_statejs_active) {
+            return state.steelbreeze_statejs_active[element];
+        }
+    }
+    
+    function setCurrent(state, element, value) {
+        if (!state.steelbreeze_statejs_current) {
+            state.steelbreeze_statejs_current = [];
+        }
+    
+        state.steelbreeze_statejs_current[element] = value;
+    }
+
+    function getCurrent(state, element) {
+        if (state.steelbreeze_statejs_current) {
+            return state.steelbreeze_statejs_current[element];
+        }
+    }
+    
+    function invoke1(behavior, p1) {
+        var i, l;
+        
+        for (i = 0, l = behavior.length; i < l; i = i + 1) {
+            behavior[i](p1);
+        }
+    }
+    
+    function invoke2(behavior, p1, p2) {
+        var i, l;
+        
+        for (i = 0, l = behavior.length; i < l; i = i + 1) {
+            behavior[i](p1, p2);
+        }
+    }
+    
+    /**
+     * Creates an instance of a transition.
+     * @constructor
+     * @this {Transition}
+     * @param {(PseudoState|SimpleState)} source - The source state or pseudo state of the transition.
+     * @param {(PseudoState|SimpleState)} [target] - The target state or pseudo state of the transition; to create an internal transition, omit the target by passing either undefined or null.
+     * @param {function} [guard] The guard condition that must evaluate true prior to traversing from source to target. Guard conditions are boolean functions: completion transition guards will take the state machine state as a parameter; message based transition guards will take the state machine state and triggering message as parameters.
+     */
+    function Transition(source, target, guard) {
+        this.guard = guard || function (state) { return true; };
+    
+        this.effect = [];
+        
+        if (target && (target !== null)) {
+            var sourceAncestors = source.owner.ancestors(),
+                targetAncestors = target.owner.ancestors(),
+                ignoreAncestors = 0;
+
+            while (sourceAncestors.length > ignoreAncestors && targetAncestors.length > ignoreAncestors && sourceAncestors[ignoreAncestors] === targetAncestors[ignoreAncestors]) {
+                ignoreAncestors = ignoreAncestors + 1;
+            }
+
+            this.sourceAncestorsToExit = sourceAncestors.slice(ignoreAncestors);
+            this.targetAncestorsToEnter = targetAncestors.slice(ignoreAncestors);
+            
+            this.sourceAncestorsToExit.reverse();
+            
+            this.source = source;
+            this.target = target;
+        }
+
+        source[guard && guard.length > 1 ? "transitions" : "completions"].push(this);
+    }
+    
+    Transition.prototype.onEffect = function (state, message) {
+        invoke2(this.effect, state, message);
+    };
+    
+    Transition.prototype.traverse = function (state, message) {
+        var i, len;
+        
+        if (this.source) {
+            this.source.beginExit(state);
+            this.source.endExit(state);
+
+            for (i = 0, len = this.sourceAncestorsToExit.length; i < len; i = i + 1) {
+                this.sourceAncestorsToExit[i].endExit(state);
+            }
+        }
+
+        this.onEffect(state, message);
+
+        if (this.target) {
+            for (i = 0, len = this.targetAncestorsToEnter.length; i < len; i = i + 1) {
+                this.targetAncestorsToEnter[i].beginEntry(state);
+            }
+            
+            this.target.beginEntry(state);
+            this.target.endEntry(state, false);
+        }
+    };
+    
+    /**
+     * Creates an instance of an else transition for use at choice and junction pseudo states.
+     * @constructor
+     * @augments Transition
+     * @this {Transition.Else}
+     * @param {(PseudoState|SimpleState)} source - The source state or pseudo state of the transition.
+     * @param {(PseudoState|SimpleState)} target - The target state or pseudo state of the transition.
+     */
+    Transition.Else = function (source, target) {
+        Transition.call(this, source, target, function (state) { return false; });
+        this.isElse = true;
+    };
+    
+    Transition.Else.prototype = Transition.prototype;
+    Transition.Else.prototype.constructor = Transition.Else;
+
+    function getInitialCompletion(state, completions) {
+        
+        if (completions.length === 1) {
+            return completions[0];
+        }
+
+        throw "initial pseudo states must have one and only one outbound transition";
+    }
+    
+    function getChoiceCompletion(state, completions) {
+        var i, len, results = [];
+        
+        for (i = 0, len = completions.length; i < len; i = i + 1) {
+            if (completions[i].guard(state)) {
+                results.push(completions[i]);
+            }
+        }
+            
+        if (results.length > 0) {
+            return results[(results.length - 1) * Math.random()];
+        }
+
+        return single(completions, function (c) { return c.isElse; });
+    }
+    
+    function getJunctionCompletion(state, completions) {
+        var result = single(completions, function (c) { return c.guard(state); });
+        
+        if (result) {
+            return result;
+        }
+        
+        result = single(completions, function (c) { return c.isElse; });
+        
+        if (result) {
+            return result;
+        }
+        
+        throw "junction PseudoState has no valid competion transitions";
+    }
+            
+    /**
+     * Enum for pseudo state kinds
+     * @enum {object}
+     * @alias PseudoStateKind
+     */
+    var PseudoStateKind = {
+        /**
+         * Enables a dynamic conditional branches; within a compound transition.
+         * @alias Choice
+         */
+        Choice: { isInitial: false, isHistory: false, completions: getChoiceCompletion },
+
+        /**
+         * A type of initial pseudo state; forms the initial starting point when entering a region or composite state for the first time.
+         * @alias DeepHistory
+         */
+        DeepHistory: { isInitial: true, isHistory: true, completions: getInitialCompletion },
+
+        /**
+         * A type of initial pseudo state; forms the initial starting point when entering a region or composite state for the first time.
+         * @alias Initial
+         */
+        Initial: { isInitial: true, isHistory: false, completions: getInitialCompletion },
+
+        /**
+         * Enables a static conditional branches; within a compound transition.
+         * @alias Junction
+         */
+        Junction: { isInitial: false, isHistory: false, completions: getJunctionCompletion },
+
+        /**
+         *  A type of initial pseudo state; forms the initial starting point when entering a region or composite state for the first time.
+         * @alias ShallowHistory
+         */
+        ShallowHistory: { isInitial: true, isHistory: true, completions: getInitialCompletion },
+
+        /**
+         * Entering a terminate pseudostate implies that the execution of this state machine by means of its state object is terminated.
+         * @alias Terminate
+         */
+        Terminate: { isInitial: false, isHistory: false, completions: null }
+    };
+
+    function Element(name, owner) {
+        this.name = name;
+        this.owner = owner;
+    }
+    
+    Element.prototype.qualifiedName = function () {
+        return this.owner ? this.owner + "." + this.name : this.name;
+    };
+
+    Element.prototype.ancestors = function () {
+        return (this.owner ? this.owner.ancestors() : []).concat(this);
+    };
+
+    Element.prototype.beginExit = function (state) {
+    };
+
+    Element.prototype.endExit = function (state) {
+        console.log("Leave: " + this.toString());
+
+        setActive(state, this, false);
+    };
+
+    Element.prototype.beginEntry = function (state) {
+        if (getActive(state, this)) {
+            this.beginExit(state);
+            this.endExit(state);
+        }
+	
+        console.log("Enter: " + this.toString());
+        
+        setActive(state, this, true);
+    };
+
+    Element.prototype.endEntry = function (state, deepHistory) {
+    };
+    
+    Element.prototype.getCurrent = function (state) {
+        return { name: this.name };
+    };
+    
+    Element.prototype.toString = function () {
+        return this.qualifiedName();
+    };
+    
+    /**
+     * Creates an instance of a pseudo state.
+     * @constructor
+     * @this {PseudoState}
+     * @param {string} name - The name given to the pseudo state.
+     * @param {PseudoStateKind} kind - The kind of pseudo state to create.
+     * @param {(Region|CompositeState)} owner - The owning parent region or composite state.
+     */
+    function PseudoState(name, kind, owner) {
+        Element.call(this, name, owner);
+
+        this.kind = kind;
+        this.completions = [];
+    
+        // update the parents initial state as appropriate
+        if (this.kind.isInitial) {
+            this.owner.initial = this;
+        }
+    }
+    
+    PseudoState.prototype = new Element();
+    PseudoState.prototype.constructor = PseudoState;
+
+    PseudoState.prototype.endEntry = function (state, deepHistory) {
+        if (this.kind === PseudoStateKind.Terminate) {
+            state.IsTerminated = true;
+        } else {
+            this.kind.completions(state, this.completions).traverse(state, deepHistory);
+        }
+    };
+    
+    /**
+     * Creates an instance of a simple state.
+     * @constructor
+     * @this {SimpleState}
+     * @param {string} name - The name given to the simple state.
+     * @param {(Region|CompositeState)} owner - The owining parent region or composite state.
+     */
+    function SimpleState(name, owner) {
+        Element.call(this, name, owner);
+        
+        this.completions = [];
+        this.transitions = [];
+        
+        /** Array of callback functions defining the exit behavior of the state; each function will be passed the state machine state as a parameter */
+        this.exit = [];
+        
+        /** Array of callback functions defining the exit behavior of the state; each function will be passed the state machine state as a parameter */
+        this.entry = [];
+    }
+    
+    SimpleState.prototype = new Element();
+    SimpleState.prototype.constructor = SimpleState;
+
+    SimpleState.prototype.isComplete = function (state) {
+        return true;
+    };
+
+    SimpleState.prototype.onExit = function (state) {
+        invoke1(this.exit, state);
+    };
+
+    SimpleState.prototype.endExit = function (state) {
+        this.onExit(state);
+        
+        Element.prototype.endExit.call(this, state);
+    };
+
+    SimpleState.prototype.onEntry = function (state) {
+        invoke1(this.entry, state);
+    };
+
+    SimpleState.prototype.beginEntry = function (state) {
+
+        Element.prototype.beginEntry.call(this, state);
+
+        if (this.owner) {
+            setCurrent(state, this.owner, this);
+        }
+
+        this.onEntry(state);
+            
+    };
+
+    SimpleState.prototype.endEntry = function (state, deepHistory) {
+        this.evaluateCompletions(state, deepHistory);
+    };
+
+    SimpleState.prototype.evaluateCompletions = function (state, deepHistory) {
+        if (this.isComplete(state)) {
+            var result = single(this.completions, function (c) { return c.guard(state); });
+            
+            if (result) {
+                result.traverse(state, deepHistory);
+            }
+        }
+    };
+    
+    SimpleState.prototype.process = function (state, message) {
+        var result = single(this.transitions, function (t) { return t.guard(state, message); });
+                
+        if (!result) {
+            return false;
+        }
+        
+        result.traverse(state, message);
+
+        return true;
+    };
+
+    /**
+     * Creates an instance of a composite state.
+     * @constructor
+     * @augments SimpleState
+     * @this {CompositeState}
+     * @param {string} name - The name given to the composite state.
+     * @param {(Region|CompositeState)} [owner] - The owining parent region or composite state.
+     */
+    function CompositeState(name, owner) {
+        SimpleState.call(this, name, owner);
+    }
+    
+    CompositeState.prototype = new SimpleState();
+    CompositeState.prototype.constructor = CompositeState;
+
+    CompositeState.prototype.isComplete = function (state) {
+        var current = getCurrent(state, this);
+        
+        return state.isTerminated || current === null || current.isFinalState || getActive(state, current) === false;
+    };
+    
+    CompositeState.prototype.beginExit = function (state) {
+        var current = getCurrent(state, this);
+    
+        if (current) {
+            current.beginExit(state);
+            current.endExit(state);
+        }
+    };
+    
+    CompositeState.prototype.endEntry = function (state, deepHistory) {
+        var current = (deepHistory || this.initial.kind.isHistory ? getCurrent(state, this) : this.initial) || this.initial;
+    
+        current.beginEntry(state);
+        current.endEntry(state, deepHistory || this.initial.kind === PseudoStateKind.DeepHistory);
+    
+        SimpleState.prototype.endEntry.call(this, state, deepHistory);
+    };
+    
+    CompositeState.prototype.process = function (state, message) {
+//        var result = SimpleState.prototype.process.call(this, state, message) || getCurrent(state, this).process(state, message);
+        var result = getCurrent(state, this).process(state, message) || SimpleState.prototype.process.call(this, state, message);
+        
+        // NOTE: the following code is the fix to bug #5; while this is now correct, it may introduce unexpected behaviour in old models
+        if (result === true) {
+            this.evaluateCompletions(state, false);
+        }
+        
+        return result;
+    };
+
+    CompositeState.prototype.getCurrent = function (state) {
+        var result = Element.prototype.getCurrent.call(this, state), current = getCurrent(state, this);
+        
+        if (current) {
+            result.current = current.getCurrent(state);
+        }
+        
+        return result;
+    };
+    
+    /**
+     * Creates an instance of an orthogonal state.
+     * @constructor
+     * @augments SimpleState
+     * @this {OrthogonalState}
+     * @param {string} name - The name given to the orthogonal state.
+     * @param {(Region|CompositeState)} [owner] - The owining parent region or composite state.
+     */
+    function OrthogonalState(name, owner) {
+        SimpleState.call(this, name, owner);
+    
+        this.regions = [];
+    }
+    
+    OrthogonalState.prototype = new SimpleState();
+    OrthogonalState.prototype.constructor = OrthogonalState;
+    
+    OrthogonalState.prototype.isComplete = function (state) {
+        var i, len;
+        
+        if (!state.isTerminated) {
+            for (i = 0, len = this.regions.length; i < len; i = i + 1) {
+                if (!this.regions[i].isComplete(state)) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    };
+    
+    OrthogonalState.prototype.beginExit = function (state) {
+        var i, len;
+        
+        for (i = 0, len = this.regions.length; i < len; i = i + 1) {
+            if (getActive(state, this.regions[i])) {
+                this.regions[i].beginExit(state);
+                this.regions[i].endExit(state);
+            }
+        }
+    };
+
+    OrthogonalState.prototype.endEntry = function (state, deepHistory) {
+        var i, len;
+
+        for (i = 0, len = this.regions.length; i < len; i = i + 1) {
+            this.regions[i].beginEntry(state);
+            this.regions[i].endEntry(state);
+        }
+
+        SimpleState.prototype.endEntry.call(this, state, deepHistory);
+    };
+
+    OrthogonalState.prototype.process = function (state, message) {
+        var i, len, result = false;
+        
+        if (!state.isTerminated) {
+//            if ((result = SimpleState.prototype.process.call(this, state, message)) === false) {
+            for (i = 0, len = this.regions.length; i < len; i = i + 1) {
+                result = this.regions[i].process(state, message) || result;
+            }
+            
+            if (result === false) {
+                result = SimpleState.prototype.process.call(this, state, message);
+            }
+        }
+        
+        // NOTE: the following code is the fix to bug #5; while this is now correct, it may introduce unexpected behaviour in old models
+        if (result === true) {
+            this.evaluateCompletions(state, false);
+        }
+        
+        return result;
+    };
+    
+    OrthogonalState.prototype.getCurrent = function (state) {
+        var result = Element.prototype.getCurrent.call(this, state), i, len;
+        result.regions = [];
+        
+        for (i = 0, len = this.regions.length; i < len; i = i + 1) {
+            if (getActive(state, this.regions[i])) {
+                result.regions[i] = this.regions[i].getCurrent(state);
+            }
+        }
+        
+        return result;
+    };
+    
+
+    /**
+     * Creates an instance of a final state.
+     * @constructor
+     * @augments SimpleState
+     * @this {FinalState}
+     * @param {string} name The name given to the final state.
+     * @param {(Region|CompositeState)} [owner] - The owining parent region or composite state.
+     */
+    function FinalState(name, owner) {
+        SimpleState.call(this, name, owner);
+        
+        this.isFinalState = true;
+    }
+  
+    FinalState.prototype = new SimpleState();
+    FinalState.prototype.constructor = FinalState;
+    delete FinalState.prototype.comlpetions;
+    delete FinalState.prototype.transitions;
+    
+    FinalState.prototype.process = function (state, message) {
+        return false;
+    };
+
+    /**
+     * Creates an instance of a region.
+     * @constructor
+     * @this {Region}
+     * @param {string} name The name given to the simple state.
+     * @param {(StateMachine|OrthogonalState)} [owner] - The owining parent orthogonal state.
+     */
+    function Region(name, owner) {
+        Element.call(this, name, owner);
+        
+        this.initial = null;
+    
+        if (this.owner) {
+            this.owner.regions.push(this);
+        }
+    }
+
+    Region.prototype = new Element();
+    Region.prototype.constructor = Region;
+
+    /**
+     * Determines if a region is complete
+     * @this {Region}
+     * @param {object} state - the state machine state.
+     * @return {bool} True if the region is complete.
+     */
+    Region.prototype.isComplete = function (state) {
+        var current = getCurrent(state, this);
+        
+        return state.isTerminated || current === null || current.isFinalState || getActive(state, current) === false;
+    };
+
+    /**
+     * Initialises a region to its inital state
+     * @this {CompositeState}
+     * @param {object} state - the state machine state.
+     */
+    Region.prototype.initialise = function (state) {
+        this.beginEntry(state);
+        this.endEntry(state, false);
+    };
+
+    Region.prototype.beginExit = function (state) {
+        var current = getCurrent(state, this);
+
+        if (current) {
+            current.beginExit(state);
+            current.endExit(state);
+        }
+    };
+
+    Region.prototype.endEntry = function (state, deepHistory) {
+        var current = (deepHistory || this.initial.kind.isHistory ? getCurrent(state, this) : this.initial) || this.initial;
+
+        current.beginEntry(state);
+        current.endEntry(state, deepHistory || this.initial.kind === PseudoStateKind.DeepHistory);
+    };
+
+    /**
+     * Attempt to process a message against the region
+     * @this {Region}
+     * @param {object} state - the state machine state.
+     * @param {object} message - the message to pass into the state machine.
+     * @return {bool} True of if the message caused a transition execution.
+     */
+    Region.prototype.process = function (state, message) {
+        if (state.isTerminated) {
+            return false;
+        }
+
+        return getActive(state, this) && getCurrent(state, this).process(state, message);
+    };
+
+    Region.prototype.getCurrent = function (state) {
+        var result = Element.prototype.getCurrent.call(this, state), current = getCurrent(state, this);
+        
+        if (current) {
+            result.current = current.getCurrent(state);
+        }
+        
+        return result;
+    };
+    
+    /**
+     * Creates an instance of a state machine.
+     * @constructor
+     * @this {StateMachine}
+     * @param {string} name The name given to the state machine.
+     */
+    function StateMachine(name) {
+        Element.call(this, name);
+        
+        this.regions = [];
+    }
+
+    StateMachine.prototype = new Element();
+    StateMachine.prototype.constructor = StateMachine;
+
+    /**
+     * Determines if a state machine is complete
+     * @this {StateMachine}
+     * @param {object} state - the state machine state.
+     * @return {bool} True if the state machine is complete.
+     */
+    StateMachine.prototype.isComplete = function (state) {
+        var i, len;
+        
+        if (!state.isTerminated) {
+            for (i = 0, len = this.regions.length; i < len; i = i + 1) {
+                if (!this.regions[i].isComplete(state)) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    };
+
+    /**
+     * Initialises a state machine to its inital state
+     * @this {StateMachine}
+     * @param {object} state - the state machine state.
+     */
+    StateMachine.prototype.initialise = function (state) {
+        this.beginEntry(state);
+        this.endEntry(state, false);
+    };
+    
+    StateMachine.prototype.beginExit = function (state) {
+        var i, len;
+        
+        for (i = 0, len = this.regions.length; i < len; i = i + 1) {
+            if (getActive(state, this.regions[i])) {
+                this.regions[i].beginExit(state);
+                this.regions[i].endExit(state);
+            }
+        }
+	};
+
+    StateMachine.prototype.endEntry = function (state, deepHistory) {
+        var i, len;
+        
+        for (i = 0, len = this.regions.length; i < len; i = i + 1) {
+            this.regions[i].beginEntry(state);
+            this.regions[i].endEntry(state, deepHistory);
+        }
+        
+        Element.prototype.endEntry.call(this, state, deepHistory);
+    };
+
+    /**
+     * Attempt to process a message against the state machine
+     * @this {StateMachine}
+     * @param {object} state - the state machine state.
+     * @param {object} message - the message to pass into the state machine.
+     * @return {bool} True of if the message caused a transition execution.
+     */
+    StateMachine.prototype.process = function (state, message) {
+        var i, len, result = false;
+        
+        if (!state.isTerminated) {
+            
+            for (i = 0, len = this.regions.length; i < len; i = i + 1) {
+                result = this.regions[i].process(state, message) || result;
+            }
+        }
+        
+        return result;
+    };
+
+    StateMachine.prototype.getCurrent = function (state) {
+        var result = Element.prototype.getCurrent.call(this, state), i, len;
+        result.regions = [];
+        
+        for (i = 0, len = this.regions.length; i < len; i = i + 1) {
+            if (getActive(state, this.regions[i])) {
+                result.regions[i] = this.regions[i].getCurrent(state);
+            }
+        }
+        
+        return result;
+    };
+    
+    // export the public API
+    exports.PseudoStateKind = PseudoStateKind;
+    exports.PseudoState = PseudoState;
+    exports.SimpleState = SimpleState;
+    exports.CompositeState = CompositeState;
+    exports.OrthogonalState = OrthogonalState;
+    exports.FinalState = FinalState;
+    exports.Region = Region;
+    exports.StateMachine = StateMachine;
+    exports.Transition = Transition;
+}
+
+// initialise in node.js state
+if (this.exports) {
+    initStateJS(this.exports);
+
+// initialise in the require.js state
+} else if (this.define) {
+    this.define(function (require, exports, module) { "use strict"; initStateJS(exports); });
+    
+// initialise in the global scope 
+} else {
+    initStateJS(this);
+}
