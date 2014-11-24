@@ -479,13 +479,13 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
   }
 
   def buildRegion(builder: StringBuilder, r: Region, containerName: String): Unit = {
-    builder append "var " + r.qname("_") + " = buildRegion(\"" + r.getName + "\", " + containerName + ");\n"
+    builder append "var " + r.qname("_") + "_reg = buildRegion(\"" + r.getName + "\", " + containerName + ");\n"
     if (r.isHistory)
-      builder append "var _initial_" + r.qname("_") + " = buildHistoryState(\"_initial\", " + r.qname("_") + ");\n"
+      builder append "var _initial_" + r.qname("_") + "_reg = buildHistoryState(\"_initial\", " + r.qname("_") + "_reg);\n"
     else
-      builder append "var _initial_" + r.qname("_") + " = buildInitialState(\"_initial\", " + r.qname("_") + ");\n"
-    r.getSubstate.foreach { s => buildState(builder, s, r.qname("_"))}
-    builder append "var t0_" + r.qname("_") + " = buildEmptyTransition(_initial_" + r.qname("_") + ", " + r.getInitial.qname("_") + ");\n"
+      builder append "var _initial_" + r.qname("_") + "_reg = buildInitialState(\"_initial\", " + r.qname("_") + "_reg);\n"
+    r.getSubstate.foreach { s => buildState(builder, s, r.qname("_") + "_reg")}
+    builder append "var t0_" + r.qname("_") + "_reg = buildEmptyTransition(_initial_" + r.qname("_") + "_reg, " + r.getInitial.qname("_") + ");\n"
   }
 
   def generateJavaScript(builder: StringBuilder) {
