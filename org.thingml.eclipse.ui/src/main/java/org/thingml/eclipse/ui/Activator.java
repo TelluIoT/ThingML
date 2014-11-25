@@ -43,6 +43,11 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		// Initialize the console. The following can be commented out if it becomes annoying :-)
+		ThingMLConsole.getInstance().printDebug("HEADS ThingML Console Ready.\n");
+		ThingMLConsole.getInstance().printMessage("[MESSAGE]");
+		ThingMLConsole.getInstance().printError("[ERROR]");
+		ThingMLConsole.getInstance().printDebug("[DEBUG]\n"); 
 	}
 
 	/*

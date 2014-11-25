@@ -29,6 +29,7 @@ import org.sintef.thingml.ThingMLModel;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.eclipse.preferences.PreferenceConstants;
 import org.thingml.eclipse.ui.Activator;
+import org.thingml.eclipse.ui.ThingMLConsole;
 
 public class ThingMLCompileArduino implements IObjectActionDelegate {
 
@@ -52,6 +53,9 @@ public class ThingMLCompileArduino implements IObjectActionDelegate {
 	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
+		
+		ThingMLConsole.getInstance().printDebug("Running the Arduino Compiler\n");
+		
 		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 				.getSelectionService().getSelection().isEmpty())
 			return;
@@ -59,6 +63,9 @@ public class ThingMLCompileArduino implements IObjectActionDelegate {
 				.getActiveWorkbenchWindow().getSelectionService()
 				.getSelection()).getFirstElement();
 		java.io.File f1 = f.getLocation().toFile();
+		
+		ThingMLConsole.getInstance().printDebug("Input file: " + f1.getAbsolutePath() + "\n");
+		
 		ThingMLModel thingmlModel = LoadModelUtil.getInstance()
 				.loadThingMLmodel(f1);
 		java.io.File ftemp = null;
@@ -67,6 +74,9 @@ public class ThingMLCompileArduino implements IObjectActionDelegate {
 		ftemp = new java.io.File(tempDir);
 		if (!ftemp.exists())
 			ftemp.mkdir();
+		
+		ThingMLConsole.getInstance().printDebug("Output directory: " + ftemp.getAbsolutePath() + "\n");
+		
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		String arduibnoidefolder =store.getString(PreferenceConstants.P_STRING);
 		String libraryfolder =store.getString(PreferenceConstants.T_STRING);
@@ -74,6 +84,7 @@ public class ThingMLCompileArduino implements IObjectActionDelegate {
 		CGenerator.compileAndRunArduino(thingmlModel,
 				arduibnoidefolder,
 				libraryfolder,false);
+		ThingMLConsole.getInstance().printDebug("Done.\n");
 	}
 
 	/**
