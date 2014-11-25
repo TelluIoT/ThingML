@@ -1,13 +1,15 @@
 import "../timer.thingml"
 
+datatype JThread
+@java_type "Thread";
+
 // Manage a set of software timers.
 thing TimerJava includes Timer
 @pim "Timer"
 @platform "java"
 {
+    property timer : JThread
 
-    property stop : Boolean = false
-    
     statechart SoftTimer init default {
         state default {
 
@@ -15,25 +17,30 @@ thing TimerJava includes Timer
             event m : timer?timer_start
             guard m.delay > 0
             action do
-            
-             'final long start = System.currentTimeMillis();
-             Thread t = new Thread(){
-              public void run() {
-              while(!' & stop & ' && System.currentTimeMillis()-start < ' & m.delay & ') {
-                  try {
-                    Thread.sleep(1);
-                  } catch (Exception ex) {}
-              }'
-              timer!timer_timeout()
-              '}
-              };
-              t.start();'
-                
+             if (not(timer == 'null')) do
+                '' & timer & '.interrupt();'
+             end
+             'Thread t = new Thread(){
+                public void run() {
+				try {
+					Thread.sleep(' & m.delay & ');'
+					timer!timer_timeout()
+				'} catch (Exception ex) {
+				}
+				interrupt();
+			    }
+              };'
+             timer = 't' 
+              '' & timer & '.start();'                
             end
             
           internal cancel
             event m : timer?timer_cancel
-            action stop = true
+            action do
+              if (not(timer == 'null')) do
+                '' & timer & '.interrupt();'
+              end
+            end
         }
     }
 }

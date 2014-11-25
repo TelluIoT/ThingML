@@ -548,7 +548,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
         m.getParameters.foreach { pa =>
           val isString = pa.getType.isDefined("js_type", "String")
           val isArray = (pa.getCardinality != null)
-          builder append ", \"" + pa.getName + "\":" + (if(isArray) "[" else "") + (if (isString) "\"" else "") + "' + " + Context.protectJavaScriptKeyword(pa.getName) + " + '" + (if (isString) "\"" else "") + (if(isArray) "]" else "")
+          builder append ", \"" + pa.getName + "\":" + (if(isArray) "[" else "") + (if (isString) "\"" else "") + "' + " + (if(isString) Context.protectJavaScriptKeyword(pa.getName) + ".replace(\"\\n\", \"\\\\n\")" else Context.protectJavaScriptKeyword(pa.getName)) + " + '" + (if (isString) "\"" else "") + (if(isArray) "]" else "")
         }
         builder append "}';\n"
         builder append "_send(msg);\n"
