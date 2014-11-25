@@ -1214,7 +1214,7 @@ case class LoopActionJavaGenerator(override val self: LoopAction) extends Action
 
 case class PrintActionJavaGenerator(override val self: PrintAction) extends ActionJavaGenerator(self) {
   override def generateJava(builder: StringBuilder) {
-    builder append "System.out.println("
+    builder append "System.out.print("
     self.getMsg.generateJava(builder)
     builder append ");\n"
   }

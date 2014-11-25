@@ -248,7 +248,7 @@ function initStateJS(exports) {
     };
 
     Element.prototype.endExit = function (state) {
-        console.log("Leave: " + this.toString());
+        //console.log("Leave: " + this.toString());
 
         setActive(state, this, false);
     };
@@ -259,7 +259,7 @@ function initStateJS(exports) {
             this.endExit(state);
         }
 	
-        console.log("Enter: " + this.toString());
+        //console.log("Enter: " + this.toString());
         
         setActive(state, this, true);
     };

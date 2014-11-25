@@ -1,0 +1,15 @@
+import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/test.thingml"
+import "../testOnEntry.thingml"
+import "../tester.thingml"
+import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/timer.thingml"
+
+configuration TestOnEntry {
+	instance harness : Tester
+	instance dump : TestDumpJS
+	instance test : TestOnEntry
+ instance timer : TimerJS
+	connector harness.testEnd => dump.dumpEnd
+ connector harness.timer => timer.timer
+	connector test.harnessOut => dump.dump
+	connector test.harnessIn => harness.test
+}

@@ -13,25 +13,21 @@ thing TimerJS includes Timer
     
     function start(delay : Integer)
     do
-        print("timer.start")
         'this.timer = setTimeout(onTimeout,' & delay & ');'
     end
     
     function onTimeout() 
     do
-        print("timer.onTimeout")
         timer!timer_timeout()
     end
     
     statechart SoftTimer init default {
         state default {
-          on entry print("debug timer on entry")
             
           internal start
             event m : timer?timer_start
             guard m.delay > 0
             action do
-                print("debug timer")
                 start(m.delay)
             end
             

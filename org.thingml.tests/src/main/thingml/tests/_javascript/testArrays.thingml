@@ -1,0 +1,19 @@
+import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/test.thingml"
+import "../testArrays.thingml"
+import "../tester.thingml"
+import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/timer.thingml"
+
+configuration TestArrays {
+	instance harness : Tester
+	instance dump : TestDumpJS
+	instance test : TestArrays
+ instance timer : TimerJS
+	connector harness.testEnd => dump.dumpEnd
+ connector harness.timer => timer.timer
+	connector test.harnessOut => dump.dump
+	connector test.harnessIn => harness.test
+	set test.array[7] = '\'8\''
+	set test.array[4] = '\'5\''
+	set test.array[5] = '\'6\''
+	set test.array[6] = '\'7\''
+}

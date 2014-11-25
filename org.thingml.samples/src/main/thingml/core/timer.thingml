@@ -45,14 +45,12 @@ thing SimpleTimerClient includes TimerClient
         state Tick {
             on entry 
             do
-                print("sending timer_start")
-                if (counter < 10) do
-                    timer!timer_start(t1)
-                end
-                if (counter == 10) do
-                    timer!timer_start(t1)
-                    timer!timer_cancel()
-                end
+                print("sending timer_start\n")
+                timer!timer_start(t1)
+                print("sending timer_cancel\n")
+                timer!timer_cancel()//just to test we can stop and restart a timer
+                print("sending timer_start\n")
+                timer!timer_start(t1)
             end
             
             
@@ -60,25 +58,25 @@ thing SimpleTimerClient includes TimerClient
             event timer?timer_timeout
             guard counter%2 == 0
             action do 
-                print("tick")
+                print("tick\n")
                 print(counter)
+                print("\n")
                 counter = counter + 1
             end
             
             internal event tick : timer?timer_timeout
             guard counter%2 == 1
             action do
-                print("tock")
+                print("tock\n")
                 print(counter)
+                print("\n")
                 counter = counter + 1
-                print("sending timer_start")
-                if (counter < 10) do
-                    timer!timer_start(t2)
-                end
-                if (counter == 10) do
-                    timer!timer_start(t2)
-                    timer!timer_cancel()
-                end
+                print("sending timer_start\n")
+                timer!timer_start(t2)
+                print("sending timer_cancel\n")
+                timer!timer_cancel()
+                print("sending timer_start\n")
+                timer!timer_start(t2)               
             end
         }         
            
