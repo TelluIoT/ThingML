@@ -31,6 +31,7 @@ import org.thingml.graphexport.ThingMLGraphExport
 
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
+import org.thingml.compilers.{FakeThingMLCompiler, AbstractThingMLCompiler}
 
 object SimpleCopyTemplate {
 
@@ -222,6 +223,25 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
     w.print(pde_code)
     w.close
   }
+
+
+  def opaqueArduinoCodeGenerator(cfg: Configuration, compiler: AbstractThingMLCompiler ) {
+    var folder = compiler.getOutputDirectory();
+    // Create a folder having the name of the config
+    folder = new File(folder, cfg.getName);
+    folder.mkdirs
+
+    // Compile the configuration:
+    var pde_code = CGenerator.compileArduino(cfg, new ArduinoCGeneratorContext(cfg, compiler))
+
+    // Write the code in a pde file
+    var pde_file = new File(folder, cfg.getName + ".pde")
+    var w: PrintWriter = new PrintWriter(new FileWriter(pde_file))
+    w.print(pde_code)
+    w.close
+  }
+
+
   
   def compileAndRunArduino(cfg: Configuration, arduinoDir: String, libdir: String) {
 
@@ -554,6 +574,25 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
     }
   }
 
+  def opaqueCompileToLinux(cfg: Configuration, compiler: AbstractThingMLCompiler) {
+
+    var folder = compiler.getOutputDirectory();
+    // Create a folder having the name of the config
+    folder = new File(folder, cfg.getName);
+    folder.mkdirs
+      val files = compileToLinux(cfg, compiler)
+
+      files.keys.foreach {
+        fname =>
+          var file = new File(folder, fname)
+          var w: PrintWriter = new PrintWriter(new FileWriter(file))
+          w.print(files.get(fname))
+          w.close
+
+    }
+    //return null
+  }
+
 
   def compileToLinux(cfg: Configuration, dir: String) {
 
@@ -625,10 +664,10 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
   }
 
 
-  def compileToLinux(cfg: Configuration): Hashtable[String, String] = {
+  def compileToLinux(cfg: Configuration, comp : AbstractThingMLCompiler = new FakeThingMLCompiler()): Hashtable[String, String] = {
 
     val result = new Hashtable[String, String]()
-    val context = new LinuxCGeneratorContext(cfg)
+    val context = new LinuxCGeneratorContext(cfg, comp)
 
     compileCModules(cfg, context, result, "")
 
@@ -1080,9 +1119,29 @@ class ROSMessage(pack: String, m: Message) {
 
 }
 
-class CGeneratorContext(src: Configuration) {
+class CGeneratorContext(src: Configuration, comp: AbstractThingMLCompiler) {
   // The configuration
   var cfg = src
+  var compiler = comp
+
+  var msg_printer = new PrintStream(comp.getMessageStream)
+  var err_printer = new PrintStream(comp.getErrorStream)
+
+  def printMessage(message : String) {
+    msg_printer.print(message);
+  }
+
+  def printlnMessage(message : String) {
+    msg_printer.println(message);
+  }
+
+  def printError(message : String) {
+    err_printer.print(message);
+  }
+
+  def printlnError(message : String) {
+    err_printer.println(message);
+  }
 
   // pointer size in bytes of the target platform
   def pointerSize() = {
@@ -1203,7 +1262,7 @@ class CGeneratorContext(src: Configuration) {
   def error_message(msg: String) = "// ERROR: " + msg
 }
 
-class LinuxCGeneratorContext(src: Configuration) extends CGeneratorContext(src) {
+class LinuxCGeneratorContext(src: Configuration, comp : AbstractThingMLCompiler = new FakeThingMLCompiler()) extends CGeneratorContext(src, comp) {
 
   // pointer size in bytes of the target platform
   override def pointerSize() = {
@@ -1246,7 +1305,7 @@ class LinuxCGeneratorContext(src: Configuration) extends CGeneratorContext(src) 
 }
 
 
-class ArduinoCGeneratorContext(src: Configuration) extends CGeneratorContext(src) {
+class ArduinoCGeneratorContext(src: Configuration, comp: AbstractThingMLCompiler = new FakeThingMLCompiler()) extends CGeneratorContext(src, comp) {
 
   if (!src.getAnnotations.filter {
     a => a.getName == "arduino_stdout"
@@ -1515,14 +1574,14 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
 
     self.allInstances.foreach {
       instance =>
-        println("| - I " + instance.getName + " : " + instance.getType.getName)
+        context.printlnMessage("| - I " + instance.getName + " : " + instance.getType.getName)
     }
 
     // Generate code for things which appear in the configuration
     self.allThings.foreach {
       thing =>
         context.set_concrete_thing(thing)
-        println("Generating code for Thing: " + thing.getName)
+        context.printlnMessage("Generating code for Thing: " + thing.getName)
         thing.generateC(builder, context)
     }
     context.clear_concrete_thing()
@@ -1954,18 +2013,14 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
 
   def generatePollingCode(builder: StringBuilder) {
 
-    println("-> generatePollingCode --1")
 
     var model = ThingMLHelpers.findContainingModel(self)
-
-    println("-> generatePollingCode --2")
 
     // Serach for the ThingMLSheduler Thing
     var things = model.allThings.filter {
       t => t.getName == "ThingMLScheduler"
     }
 
-    println("-> generatePollingCode --3")
 
     if (!things.isEmpty) {
       var arduino = things.head
@@ -1986,19 +2041,16 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
         }
       }
     }
-      println("-> generatePollingCode --4")
-
-      println("Generate polling for empty transitions:")
-      // Call empty transition handler (if needed)
+         // Call empty transition handler (if needed)
       self.allInstances.foreach {
         i =>
-          print("Looking for empty-transition for instance " + i.getName + "...")
+          //print("Looking for empty-transition for instance " + i.getName + "...")
           if (i.getType.getBehaviour.head.hasEmptyHandlers()) {
-            println("YES")
+            //println("YES")
             builder append i.getType.empty_handler_name() + "(&" + i.c_var_name() + ");\n"
           }
           else {
-            println("NO")
+            //println("NO")
           }
       }
 
@@ -2039,7 +2091,7 @@ case class FunctionCGenerator(val self: Function) extends ThingMLCGenerator(self
         // generate the given prototype. Any parameters are ignored.
         val nname = self.annotation("c_instance_var_name").head.trim()
         context.change_instance_var_name(nname)
-        println("INFO: Instance variable name changed to " + nname + " in function " + self.getName)
+        context.printlnMessage("INFO: Instance variable name changed to " + nname + " in function " + self.getName)
       }
     }
     else {
@@ -2084,7 +2136,7 @@ case class FunctionCGenerator(val self: Function) extends ThingMLCGenerator(self
   def generateCforThingLinuxThread(builder: StringBuilder, context: CGeneratorContext, thing: Thing) {
 
     if (self.getType != null) {
-      println("WARNING: function with annotation fork_linux_thread must return void");
+      context.printlnMessage("WARNING: function with annotation fork_linux_thread must return void");
     }
 
     var template = SimpleCopyTemplate.copyFromClassPath("ctemplates/fork.c")
@@ -2842,8 +2894,7 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
     val statemachines = self.allStateMachines
     if (statemachines.size == 1) statemachines.get(0)
     else {
-      println("Info: Thing " + self.getName + " has " + statemachines.size + " state machines")
-      println("Error: Code generation for Things with several state machindes not implemented. Ready for a null pointer?")
+      throw new Error("Info: Thing " + self.getName + " has " + statemachines.size + " state machines. " + "Error: Code generation for Things with several state machines not implemented.");
       // TODO: Compose the state machines here
       null
     }
@@ -3219,7 +3270,7 @@ case class LocalVariableActionCGenerator(override val self: LocalVariable) exten
           builder append propertyName2 + "[i];\n"
           builder append "}\n"
         } else {
-          println("ERROR: Array " + propertyName + " should be assigned from an array. " + pr.getProperty + " is not an array.")
+          context.printlnError("ERROR: Array " + propertyName + " should be assigned from an array. " + pr.getProperty + " is not an array.")
         }
       }
     }

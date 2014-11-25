@@ -131,8 +131,8 @@
                                 <artifactId>org.kevoree.extra.emf.library</artifactId>
                             </inclusion>
                             <inclusion>
-                                <groupId>org.kevoree.extra</groupId>
-                                <artifactId>org.kevoree.extra.jsyntaxpane</artifactId>
+                                <groupId>de.sciss</groupId>
+                                <artifactId>jsyntaxpane</artifactId>
                                 <filter>!META-INF/services/jsyntaxpane/kitsfortypes.properties</filter>
                             </inclusion>
 
@@ -219,6 +219,20 @@
             </plugin>
             -->
 
+			<plugin>
+      <artifactId>maven-assembly-plugin</artifactId>
+      <configuration>
+        <archive>
+          <manifest>
+            <mainClass>org.sintef.thingml.ThingMLApp</mainClass>
+          </manifest>
+        </archive>
+        <descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+      </configuration>
+    </plugin>
+			
         </plugins>
     </build>
 
