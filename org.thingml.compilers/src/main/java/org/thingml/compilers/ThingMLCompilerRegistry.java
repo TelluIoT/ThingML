@@ -31,6 +31,7 @@ public class ThingMLCompilerRegistry {
             instance =  new ThingMLCompilerRegistry();
             instance.addCompiler(new ArduinoCompiler());
             instance.addCompiler(new PosixCompiler());
+            instance.addCompiler(new JavaScriptCompiler());
         }
         return instance;
     }

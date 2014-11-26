@@ -143,15 +143,24 @@ object JavaScriptGenerator {
     case _ => new ExpressionJavaScriptGenerator(self)
   }
 
-  def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false) {
-    var tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
-    if (doingTests) {
-      tmpFolder = "tmp/ThingML_Javascript/"
-    }
-    new File(tmpFolder).deleteOnExit
+  def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false, outdir : File = null) {
 
-    val code = compile(cfg, model)
-    val rootDir = tmpFolder + cfg.getName
+    var tmpFolder = "";
+
+    if (outdir == null) {
+      var tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
+      if (doingTests) {
+        tmpFolder = "tmp/ThingML_Javascript/"
+      }
+      new File(tmpFolder).deleteOnExit
+    }
+    else {
+      tmpFolder = outdir.getAbsolutePath + File.separator
+    }
+
+      val code = compile(cfg, model)
+      var rootDir = tmpFolder + cfg.getName
+
 
     val outputDir = cfg.getAnnotations.filter(a => a.getName == "js_folder").headOption match {
       case Some(a) => tmpFolder + cfg.getName + a.getValue

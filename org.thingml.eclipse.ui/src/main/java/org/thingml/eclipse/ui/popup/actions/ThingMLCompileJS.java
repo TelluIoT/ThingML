@@ -67,7 +67,7 @@ public class ThingMLCompileJS implements IObjectActionDelegate {
 		if (!ftemp.exists())
 			ftemp.mkdir();
 		for (Configuration c : thingmlModel.getConfigs())
-			org.thingml.jsgenerator.JavaScriptGenerator.compileAndRun(c, thingmlModel,false);
+			org.thingml.jsgenerator.JavaScriptGenerator.compileAndRun(c, thingmlModel,false, null);
 	}
 
 	/**
