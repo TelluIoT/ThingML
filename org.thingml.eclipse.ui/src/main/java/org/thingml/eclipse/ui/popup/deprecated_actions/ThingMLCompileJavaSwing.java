@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.eclipse.ui.popup.actions;
+package org.thingml.eclipse.ui.popup.deprecated_actions;
+
+import javax.swing.SwingConstants;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jface.action.IAction;
@@ -26,17 +28,17 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
-import org.thingml.javagenerator.extension.MQTTGenerator;
+import org.thingml.javagenerator.gui.SwingGenerator;
 import org.thingml.javagenerator.kevoree.KevoreeGenerator;
 
-public class ThingMLCompileJSWS implements IObjectActionDelegate {
+public class ThingMLCompileJavaSwing implements IObjectActionDelegate {
 
 	private Shell shell;
 	
 	/**
 	 * Constructor for Action1.
 	 */
-	public ThingMLCompileJSWS() {
+	public ThingMLCompileJavaSwing() {
 		super();
 	}
 
@@ -67,7 +69,7 @@ public class ThingMLCompileJSWS implements IObjectActionDelegate {
 		if (!ftemp.exists())
 			ftemp.mkdir();
 		for (Configuration c : thingmlModel.getConfigs())
-			org.thingml.jsgenerator.extension.JSWebSocketGenerator.compileAndRun(c, thingmlModel,false);
+				SwingGenerator.compileAndRun(c, thingmlModel);
 	}
 
 	/**

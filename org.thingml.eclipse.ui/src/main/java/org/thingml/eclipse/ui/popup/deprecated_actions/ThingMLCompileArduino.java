@@ -13,30 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.eclipse.ui.popup.actions;
+package org.thingml.eclipse.ui.popup.deprecated_actions;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
-import org.thingml.javagenerator.JavaGenerator;
-import org.thingml.javagenerator.kevoree.KevoreeGenerator;
+import org.thingml.cgenerator.CGenerator;
+import org.thingml.eclipse.preferences.PreferenceConstants;
+import org.thingml.eclipse.ui.Activator;
+import org.thingml.eclipse.ui.ThingMLConsole;
 
-public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
+public class ThingMLCompileArduino implements IObjectActionDelegate {
 
 	private Shell shell;
-	
+
 	/**
 	 * Constructor for Action1.
 	 */
-	public ThingMLCompileJavaKevoree() {
+	public ThingMLCompileArduino() {
 		super();
 	}
 
@@ -51,6 +53,9 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
 	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
+		
+		ThingMLConsole.getInstance().printDebug("Running the Arduino Compiler\n");
+		
 		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 				.getSelectionService().getSelection().isEmpty())
 			return;
@@ -58,16 +63,28 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
 				.getActiveWorkbenchWindow().getSelectionService()
 				.getSelection()).getFirstElement();
 		java.io.File f1 = f.getLocation().toFile();
+		
+		ThingMLConsole.getInstance().printDebug("Input file: " + f1.getAbsolutePath() + "\n");
+		
 		ThingMLModel thingmlModel = LoadModelUtil.getInstance()
 				.loadThingMLmodel(f1);
 		java.io.File ftemp = null;
-		String tempDir = System.getProperty("java.io.tmpdir") + "tmp"
+		String tempDir = System.getProperty("java.io.tmpdir") + "/tmp"
 				+ System.nanoTime();
 		ftemp = new java.io.File(tempDir);
 		if (!ftemp.exists())
 			ftemp.mkdir();
-		for (Configuration c : thingmlModel.getConfigs())
-				KevoreeGenerator.compileAndRun(c, thingmlModel);
+		
+		ThingMLConsole.getInstance().printDebug("Output directory: " + ftemp.getAbsolutePath() + "\n");
+		
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		String arduibnoidefolder =store.getString(PreferenceConstants.P_STRING);
+		String libraryfolder =store.getString(PreferenceConstants.T_STRING);
+		//TODO Check if folder exist ?
+		CGenerator.compileAndRunArduino(thingmlModel,
+				arduibnoidefolder,
+				libraryfolder,false);
+		ThingMLConsole.getInstance().printDebug("Done.\n");
 	}
 
 	/**

@@ -13,28 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.eclipse.ui.popup.actions;
+package org.thingml.eclipse.ui.popup.deprecated_actions;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
-import org.thingml.cppgenerator.CPPGenerator;
+import org.thingml.cgenerator.CGenerator;
+import org.thingml.javagenerator.JavaGenerator;
 
-public class ThingMLCompileCPP implements IObjectActionDelegate {
+public class ThingMLCompileJavaJaSM implements IObjectActionDelegate {
 
 	private Shell shell;
 	
 	/**
 	 * Constructor for Action1.
 	 */
-	public ThingMLCompileCPP() {
+	public ThingMLCompileJavaJaSM() {
 		super();
 	}
 
@@ -64,7 +66,8 @@ public class ThingMLCompileCPP implements IObjectActionDelegate {
 		ftemp = new java.io.File(tempDir);
 		if (!ftemp.exists())
 			ftemp.mkdir();
-		CPPGenerator.compileToLinuxAndMake(thingmlModel);
+		for (Configuration c : thingmlModel.getConfigs())
+				JavaGenerator.compileAndRun(c, thingmlModel, false);
 	}
 
 	/**

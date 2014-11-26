@@ -13,30 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.eclipse.ui.popup.actions;
+package org.thingml.eclipse.ui.popup.deprecated_actions;
 
+//import org.codehaus.plexus.personality.plexus.lifecycle.phase.Configurable;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
-import org.thingml.javagenerator.extension.MQTTGenerator;
-import org.thingml.javagenerator.kevoree.KevoreeGenerator;
+import org.thingml.thingmlgenerator.ThingMLGenerator;
 
-public class ThingMLCompileJS implements IObjectActionDelegate {
+//import com.typesafe.config.Config;
+
+public class ThingMLCompileCom implements IObjectActionDelegate {
 
 	private Shell shell;
 	
 	/**
 	 * Constructor for Action1.
 	 */
-	public ThingMLCompileJS() {
+	public ThingMLCompileCom() {
 		super();
 	}
 
@@ -67,7 +69,7 @@ public class ThingMLCompileJS implements IObjectActionDelegate {
 		if (!ftemp.exists())
 			ftemp.mkdir();
 		for (Configuration c : thingmlModel.getConfigs())
-			org.thingml.jsgenerator.JavaScriptGenerator.compileAndRun(c, thingmlModel,false, null);
+			ThingMLGenerator.compileAndRun(c,false);
 	}
 
 	/**

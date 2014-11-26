@@ -29,7 +29,7 @@
             nameFilter="*.thingml"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="ThingML"
+               label="ThingML (Deprecated)"
                path="additions"
                id="org.thingml.eclipse.ui.menu1">
             <separator
@@ -38,7 +38,7 @@
          </menu>
          <action
                label="Compile Arduino"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileArduino"
+               class="org.thingml.eclipse.ui.popup.deprecated_actions.ThingMLCompileArduino"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction">
@@ -53,7 +53,7 @@
             nameFilter="*.thingml"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="ThingML"
+               label="ThingML (Deprecated)"
                path="additions"
                id="org.thingml.eclipse.ui.menu1">
             <separator
@@ -62,7 +62,7 @@
          </menu>
          <action
                label="Compile Posix C"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompilePosixC"
+               class="org.thingml.eclipse.ui.popup.deprecated_actions.ThingMLCompilePosixC"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction2">
@@ -76,7 +76,7 @@
             nameFilter="*.thingml"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="ThingML"
+               label="ThingML (Deprecated)"
                path="additions"
                id="org.thingml.eclipse.ui.menu1">
             <separator
@@ -85,7 +85,7 @@
          </menu>
          <action
                label="Compile CPP"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileCPP"
+               class="org.thingml.eclipse.ui.popup.deprecated_actions.ThingMLCompileCPP"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction3">
@@ -100,7 +100,7 @@
             nameFilter="*.thingml"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="ThingML"
+               label="ThingML (Deprecated)"
                path="additions"
                id="org.thingml.eclipse.ui.menu1">
             <separator
@@ -109,7 +109,7 @@
          </menu>
          <action
                label="Compile Java/JaSM"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJavaJaSM"
+               class="org.thingml.eclipse.ui.popup.deprecated_actions.ThingMLCompileJavaJaSM"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction4">
@@ -124,7 +124,7 @@
             nameFilter="*.thingml"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="ThingML"
+               label="ThingML (Deprecated)"
                path="additions"
                id="org.thingml.eclipse.ui.menu1">
             <separator
@@ -133,7 +133,7 @@
          </menu>
          <action
                label="Compile Java/MQTT"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJavaMQTT"
+               class="org.thingml.eclipse.ui.popup.deprecated_actions.ThingMLCompileJavaMQTT"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction5">
@@ -148,7 +148,7 @@
             nameFilter="*.thingml"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="ThingML"
+               label="ThingML (Deprecated)"
                path="additions"
                id="org.thingml.eclipse.ui.menu1">
             <separator
@@ -157,7 +157,7 @@
          </menu>
          <action
                label="Compile Java/Swing"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJavaSwing"
+               class="org.thingml.eclipse.ui.popup.deprecated_actions.ThingMLCompileJavaSwing"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction6">
@@ -172,7 +172,7 @@
             nameFilter="*.thingml"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="ThingML"
+               label="ThingML (Deprecated)"
                path="additions"
                id="org.thingml.eclipse.ui.menu1">
             <separator
@@ -181,7 +181,7 @@
          </menu>
          <action
                label="Compile Java Kevoree"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJavaKevoree"
+               class="org.thingml.eclipse.ui.popup.deprecated_actions.ThingMLCompileJavaKevoree"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction7">
@@ -196,7 +196,7 @@
             nameFilter="*.thingml"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="ThingML"
+               label="ThingML (Deprecated)"
                path="additions"
                id="org.thingml.eclipse.ui.menu1">
             <separator
@@ -205,7 +205,7 @@
          </menu>
          <action
                label="Compile Comm"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileCom"
+               class="org.thingml.eclipse.ui.popup.deprecated_actions.ThingMLCompileCom"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction8">
@@ -220,7 +220,7 @@
             nameFilter="*.thingml"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="ThingML"
+               label="ThingML (Deprecated)"
                path="additions"
                id="org.thingml.eclipse.ui.menu1">
             <separator
@@ -229,7 +229,7 @@
          </menu>
          <action
                label="Compile Comm2"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileComm2"
+               class="org.thingml.eclipse.ui.popup.deprecated_actions.ThingMLCompileComm2"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction9">
@@ -244,7 +244,7 @@
             nameFilter="*.thingml"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="ThingML"
+               label="ThingML (Deprecated)"
                path="additions"
                id="org.thingml.eclipse.ui.menu1">
             <separator
@@ -253,7 +253,7 @@
          </menu>
          <action
                label="Compile Java Rest"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJavaRest"
+               class="org.thingml.eclipse.ui.popup.deprecated_actions.ThingMLCompileJavaRest"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction10">
@@ -268,7 +268,7 @@
             nameFilter="*.thingml"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="ThingML"
+               label="ThingML (Deprecated)"
                path="additions"
                id="org.thingml.eclipse.ui.menu1">
             <separator
@@ -277,7 +277,7 @@
          </menu>
          <action
                label="Compile JS"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJS"
+               class="org.thingml.eclipse.ui.popup.deprecated_actions.ThingMLCompileJS"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction11">
@@ -292,7 +292,7 @@
             nameFilter="*.thingml"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               label="ThingML"
+               label="ThingML (Deprecated)"
                path="additions"
                id="org.thingml.eclipse.ui.menu1">
             <separator
@@ -301,7 +301,7 @@
          </menu>
          <action
                label="Compile JS WS"
-               class="org.thingml.eclipse.ui.popup.actions.ThingMLCompileJSWS"
+               class="org.thingml.eclipse.ui.popup.deprecated_actions.ThingMLCompileJSWS"
                menubarPath="org.thingml.eclipse.ui.menu1/group1"
                enablesFor="1"
                id="org.thingml.eclipse.ui.newAction12">

@@ -43,7 +43,7 @@ import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.ThingMLCompilerRegistry;
 import org.thingml.eclipse.ui.ThingMLConsole;
-import org.thingml.eclipse.ui.popup.actions.LoadModelUtil;
+import org.thingml.eclipse.ui.popup.deprecated_actions.LoadModelUtil;
 
 public class CompileThingFile implements IHandler {
 

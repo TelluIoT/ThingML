@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.eclipse.ui.popup.actions;
+package org.thingml.eclipse.ui.popup.deprecated_actions;
 
-//import org.codehaus.plexus.personality.plexus.lifecycle.phase.Configurable;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -25,20 +24,17 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
-import org.thingml.thingmlgenerator.ThingMLGenerator;
+import org.thingml.cppgenerator.CPPGenerator;
 
-//import com.typesafe.config.Config;
-
-public class ThingMLCompileCom implements IObjectActionDelegate {
+public class ThingMLCompileCPP implements IObjectActionDelegate {
 
 	private Shell shell;
 	
 	/**
 	 * Constructor for Action1.
 	 */
-	public ThingMLCompileCom() {
+	public ThingMLCompileCPP() {
 		super();
 	}
 
@@ -68,8 +64,7 @@ public class ThingMLCompileCom implements IObjectActionDelegate {
 		ftemp = new java.io.File(tempDir);
 		if (!ftemp.exists())
 			ftemp.mkdir();
-		for (Configuration c : thingmlModel.getConfigs())
-			ThingMLGenerator.compileAndRun(c,false);
+		CPPGenerator.compileToLinuxAndMake(thingmlModel);
 	}
 
 	/**

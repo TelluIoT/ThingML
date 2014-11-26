@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.eclipse.ui.popup.actions;
-
-import javax.swing.SwingConstants;
+package org.thingml.eclipse.ui.popup.deprecated_actions;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jface.action.IAction;
@@ -28,17 +26,17 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
-import org.thingml.javagenerator.gui.SwingGenerator;
+import org.thingml.cgenerator.CGenerator;
 import org.thingml.javagenerator.kevoree.KevoreeGenerator;
 
-public class ThingMLCompileJavaSwing implements IObjectActionDelegate {
+public class ThingMLCompilePosixC implements IObjectActionDelegate {
 
 	private Shell shell;
 	
 	/**
 	 * Constructor for Action1.
 	 */
-	public ThingMLCompileJavaSwing() {
+	public ThingMLCompilePosixC() {
 		super();
 	}
 
@@ -69,7 +67,7 @@ public class ThingMLCompileJavaSwing implements IObjectActionDelegate {
 		if (!ftemp.exists())
 			ftemp.mkdir();
 		for (Configuration c : thingmlModel.getConfigs())
-				SwingGenerator.compileAndRun(c, thingmlModel);
+				CGenerator.compileToLinuxAndMake(thingmlModel);
 	}
 
 	/**
