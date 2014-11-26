@@ -23,13 +23,14 @@ import java.io.OutputStream;
 /**
  * Created by ffl on 23.11.14.
  */
-public abstract class AbstractThingMLCompiler {
+public abstract class ThingMLCompiler {
 
     /**************************************************************
      * META-DATA about this particular compiler
      **************************************************************/
     public abstract String getPlatform();
     public abstract String getName();
+    public abstract String getDescription();
 
     /**************************************************************
      * Parameters common to all compilers

@@ -16,15 +16,13 @@
 package org.thingml.compilers;
 
 import org.sintef.thingml.Configuration;
-import org.thingml.cgenerator.CGenerator;
 
-import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**
  * Created by ffl on 24.11.14.
  */
-public abstract class OpaqueThingMLCompiler extends AbstractThingMLCompiler {
+public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
     @Override
     public boolean compile(Configuration cfg) {

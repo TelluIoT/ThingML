@@ -24,12 +24,16 @@ import org.thingml.cgenerator.CGenerator;
 public class PosixCompiler extends OpaqueThingMLCompiler {
     @Override
     public String getPlatform() {
-        return "C/C++";
+        return "posix";
     }
 
     @Override
     public String getName() {
-        return "Posix";
+        return "C/C++ for Linux / Posix";
+    }
+
+    public String getDescription() {
+        return "Generates C/C++ code for Linux or other Posix runtime environments (GCC compiler).";
     }
 
     @Override

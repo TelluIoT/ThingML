@@ -31,7 +31,7 @@ import org.thingml.graphexport.ThingMLGraphExport
 
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
-import org.thingml.compilers.{FakeThingMLCompiler, AbstractThingMLCompiler}
+import org.thingml.compilers.{FakeThingMLCompiler, ThingMLCompiler}
 
 object SimpleCopyTemplate {
 
@@ -225,7 +225,7 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
   }
 
 
-  def opaqueArduinoCodeGenerator(cfg: Configuration, compiler: AbstractThingMLCompiler ) {
+  def opaqueArduinoCodeGenerator(cfg: Configuration, compiler: ThingMLCompiler ) {
     var folder = compiler.getOutputDirectory();
     // Create a folder having the name of the config
     folder = new File(folder, cfg.getName);
@@ -574,7 +574,7 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
     }
   }
 
-  def opaqueCompileToLinux(cfg: Configuration, compiler: AbstractThingMLCompiler) {
+  def opaqueCompileToLinux(cfg: Configuration, compiler: ThingMLCompiler) {
 
     var folder = compiler.getOutputDirectory();
     // Create a folder having the name of the config
@@ -664,7 +664,7 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
   }
 
 
-  def compileToLinux(cfg: Configuration, comp : AbstractThingMLCompiler = new FakeThingMLCompiler()): Hashtable[String, String] = {
+  def compileToLinux(cfg: Configuration, comp : ThingMLCompiler = new FakeThingMLCompiler()): Hashtable[String, String] = {
 
     val result = new Hashtable[String, String]()
     val context = new LinuxCGeneratorContext(cfg, comp)
@@ -1119,7 +1119,7 @@ class ROSMessage(pack: String, m: Message) {
 
 }
 
-class CGeneratorContext(src: Configuration, comp: AbstractThingMLCompiler) {
+class CGeneratorContext(src: Configuration, comp: ThingMLCompiler) {
   // The configuration
   var cfg = src
   var compiler = comp
@@ -1262,7 +1262,7 @@ class CGeneratorContext(src: Configuration, comp: AbstractThingMLCompiler) {
   def error_message(msg: String) = "// ERROR: " + msg
 }
 
-class LinuxCGeneratorContext(src: Configuration, comp : AbstractThingMLCompiler = new FakeThingMLCompiler()) extends CGeneratorContext(src, comp) {
+class LinuxCGeneratorContext(src: Configuration, comp : ThingMLCompiler = new FakeThingMLCompiler()) extends CGeneratorContext(src, comp) {
 
   // pointer size in bytes of the target platform
   override def pointerSize() = {
@@ -1305,7 +1305,7 @@ class LinuxCGeneratorContext(src: Configuration, comp : AbstractThingMLCompiler 
 }
 
 
-class ArduinoCGeneratorContext(src: Configuration, comp: AbstractThingMLCompiler = new FakeThingMLCompiler()) extends CGeneratorContext(src, comp) {
+class ArduinoCGeneratorContext(src: Configuration, comp: ThingMLCompiler = new FakeThingMLCompiler()) extends CGeneratorContext(src, comp) {
 
   if (!src.getAnnotations.filter {
     a => a.getName == "arduino_stdout"

@@ -36,18 +36,22 @@ public class ThingMLCompilerRegistry {
         return instance;
     }
 
-    private HashMap<String, AbstractThingMLCompiler> compilers = new HashMap<String, AbstractThingMLCompiler>();
+    private HashMap<String, ThingMLCompiler> compilers = new HashMap<String, ThingMLCompiler>();
 
     public Set<String> getCompilerIds() {
         return compilers.keySet();
     }
 
-    public Collection<AbstractThingMLCompiler> getCompilers() {
+    public Collection<ThingMLCompiler> getCompilers() {
         return compilers.values();
     }
 
-    public void addCompiler(AbstractThingMLCompiler c) {
+    public void addCompiler(ThingMLCompiler c) {
         compilers.put(c.getName(), c);
+    }
+
+    public ThingMLCompiler getCompilerByName(String name) {
+        return compilers.get(name);
     }
 
 }

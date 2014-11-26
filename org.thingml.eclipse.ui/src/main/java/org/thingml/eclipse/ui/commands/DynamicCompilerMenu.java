@@ -19,32 +19,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.action.IContributionItem;
-
 import org.eclipse.ui.actions.CompoundContributionItem;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
+import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.ThingMLCompilerRegistry;
 
 public class DynamicCompilerMenu extends  CompoundContributionItem implements IWorkbenchContribution {
 
 	@Override
 	protected IContributionItem[] getContributionItems() {
 		
-		 IContributionItem[] list = new IContributionItem[2];
-		 
-		 	Map<String, String> parms = new HashMap<String, String>();
-		    parms.put("org.thingml.eclipse.ui.commandParameterCompilerName", "Arduino");
-		    list[0] =  new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "someID1", "thingml.compile", parms, null, null, null, "Compile to Arduino", null, "Some tooltip,", CommandContributionItem.STYLE_PUSH, null, true));
-		    //list[0] =  new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "someID1", "thingml.compile", CommandContributionItem.STYLE_PUSH));
-		    
-		    
-		    parms = new HashMap<String, String>();
-		    parms.put("org.thingml.eclipse.ui.commandParameterCompilerName", "Javascript");
-		    list[1] = new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "someID2", "thingml.compile", parms, null, null, null, "Compile to Javascript", null, "Some tooltip,", CommandContributionItem.STYLE_PUSH, null, true));
-		    //list[1] =  new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "someID2", "thingml.compile", CommandContributionItem.STYLE_PUSH));
-		    return list;
 		
+		IContributionItem[] list = new IContributionItem[ThingMLCompilerRegistry.getInstance().getCompilers().size()];
+		int i=0;
+		Map<String, String> parms;
+		
+		for (ThingMLCompiler c : ThingMLCompilerRegistry.getInstance().getCompilers()) {
+			parms = new HashMap<String, String>();
+			parms.put("org.thingml.eclipse.ui.commandParameterCompilerName", c.getName());
+			list[i] =  new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "itemid_"+i, "thingml.compile", parms, null, null, null, c.getName(), null, c.getDescription(), CommandContributionItem.STYLE_PUSH, null, true));
+			i++;
+		}
+		
+		return list;
 		
 	}
 	

@@ -22,7 +22,7 @@ import java.io.File;
 /**
  * Created by ffl on 25.11.14.
  */
-public class FakeThingMLCompiler extends AbstractThingMLCompiler {
+public class FakeThingMLCompiler extends ThingMLCompiler {
 
     public FakeThingMLCompiler () {
 
@@ -43,6 +43,11 @@ public class FakeThingMLCompiler extends AbstractThingMLCompiler {
 
     @Override
     public String getName() {
+        return "Fake";
+    }
+
+    @Override
+    public String getDescription() {
         return "Fake";
     }
 

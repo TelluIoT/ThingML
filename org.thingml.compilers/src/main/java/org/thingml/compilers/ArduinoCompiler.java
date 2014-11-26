@@ -26,12 +26,16 @@ import java.io.PrintStream;
 public class ArduinoCompiler extends OpaqueThingMLCompiler {
     @Override
     public String getPlatform() {
-        return "C/C++";
+        return "arduino";
     }
 
     @Override
     public String getName() {
-        return "Arduino";
+        return "C/C++ for Arduino";
+    }
+
+    public String getDescription() {
+        return "Generates c/c++ code for the Arduino IDE (AVR-GCC for AVR micro controllers).";
     }
 
     @Override
