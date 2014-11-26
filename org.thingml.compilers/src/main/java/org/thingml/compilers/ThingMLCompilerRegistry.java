@@ -29,7 +29,6 @@ public class ThingMLCompilerRegistry {
     public static ThingMLCompilerRegistry getInstance() {
         if (instance == null) {
             instance =  new ThingMLCompilerRegistry();
-
             instance.addCompiler(new ArduinoCompiler());
             instance.addCompiler(new PosixCompiler());
         }
@@ -42,7 +41,7 @@ public class ThingMLCompilerRegistry {
         return compilers.keySet();
     }
 
-    public Collection<ThingMLCompiler> getCompilers() {
+    public Collection<ThingMLCompiler> getCompilerPrototypes() {
         return compilers.values();
     }
 
@@ -50,8 +49,8 @@ public class ThingMLCompilerRegistry {
         compilers.put(c.getName(), c);
     }
 
-    public ThingMLCompiler getCompilerByName(String name) {
-        return compilers.get(name);
+    public ThingMLCompiler createCompilerInstanceByName(String name) {
+        return compilers.get(name).clone();
     }
 
 }

@@ -23,6 +23,11 @@ import org.thingml.cgenerator.CGenerator;
  */
 public class PosixCompiler extends OpaqueThingMLCompiler {
     @Override
+    public ThingMLCompiler clone() {
+        return new PosixCompiler();
+    }
+
+    @Override
     public String getPlatform() {
         return "posix";
     }

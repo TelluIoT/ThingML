@@ -25,6 +25,11 @@ import java.io.PrintStream;
  */
 public class ArduinoCompiler extends OpaqueThingMLCompiler {
     @Override
+    public ThingMLCompiler clone() {
+        return new ArduinoCompiler();
+    }
+
+    @Override
     public String getPlatform() {
         return "arduino";
     }

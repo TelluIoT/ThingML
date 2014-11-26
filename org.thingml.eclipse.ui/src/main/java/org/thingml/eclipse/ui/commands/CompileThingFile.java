@@ -66,7 +66,7 @@ public class CompileThingFile implements IHandler {
 		try {
 		// Fetch the compiler to be used
 		String compilerName = event.getParameter("org.thingml.eclipse.ui.commandParameterCompilerName").toString();
-		ThingMLCompiler compiler = ThingMLCompilerRegistry.getInstance().getCompilerByName(compilerName);
+		ThingMLCompiler compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
 		ThingMLConsole.getInstance().printDebug("Compiling with \"" + compiler.getName() + "\" (Platform: " + compiler.getPlatform() + ")\n");
 		
 		// Fetch the input model to be used

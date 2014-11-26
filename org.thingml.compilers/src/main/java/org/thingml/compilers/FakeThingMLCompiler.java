@@ -37,6 +37,11 @@ public class FakeThingMLCompiler extends ThingMLCompiler {
 
 
     @Override
+    public ThingMLCompiler clone() {
+        return new FakeThingMLCompiler();
+    }
+
+    @Override
     public String getPlatform() {
         return "Fake";
     }

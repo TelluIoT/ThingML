@@ -33,11 +33,11 @@ public class DynamicCompilerMenu extends  CompoundContributionItem implements IW
 	protected IContributionItem[] getContributionItems() {
 		
 		
-		IContributionItem[] list = new IContributionItem[ThingMLCompilerRegistry.getInstance().getCompilers().size()];
+		IContributionItem[] list = new IContributionItem[ThingMLCompilerRegistry.getInstance().getCompilerPrototypes().size()];
 		int i=0;
 		Map<String, String> parms;
 		
-		for (ThingMLCompiler c : ThingMLCompilerRegistry.getInstance().getCompilers()) {
+		for (ThingMLCompiler c : ThingMLCompilerRegistry.getInstance().getCompilerPrototypes()) {
 			parms = new HashMap<String, String>();
 			parms.put("org.thingml.eclipse.ui.commandParameterCompilerName", c.getName());
 			list[i] =  new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "itemid_"+i, "thingml.compile", parms, null, null, null, c.getName(), null, c.getDescription(), CommandContributionItem.STYLE_PUSH, null, true));

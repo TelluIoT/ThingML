@@ -25,6 +25,8 @@ import java.io.OutputStream;
  */
 public abstract class ThingMLCompiler {
 
+    public abstract ThingMLCompiler clone();
+
     /**************************************************************
      * META-DATA about this particular compiler
      **************************************************************/
