@@ -216,7 +216,7 @@ object JavaScriptGenerator {
       }
     }
 
-    if (!doingTests) {
+    if (!doingTests && outdir == null) {
       new Thread(new Runnable {
         override def run() {
           val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /k start " else "") + "node behavior.js", null, new File(rootDir));

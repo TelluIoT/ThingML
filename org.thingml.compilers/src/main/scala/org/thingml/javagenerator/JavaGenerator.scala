@@ -137,7 +137,7 @@ object JavaGenerator {
     case _                           => new ExpressionJavaGenerator(self)
   }
 
-  def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false) {
+  def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false, outdir : File = null) {
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     //doingTests should be ignored, it is only used when calling from org.thingml.cmd
@@ -145,7 +145,9 @@ object JavaGenerator {
 	if (doingTests){
 		tmpFolder="tmp/ThingML_Java/"
 	}
-    new File(tmpFolder).deleteOnExit
+
+    if (outdir != null) tmpFolder = outdir.getAbsolutePath + File.separator;
+    else new File(tmpFolder).deleteOnExit
 
     val code = compile(cfg, "org.thingml.generated", model)
     val rootDir = tmpFolder + cfg.getName
@@ -230,7 +232,7 @@ object JavaGenerator {
         t.printStackTrace
       }
     }
-	if (!doingTests){
+	if (!doingTests && outdir == null){
 		  new Thread(new Runnable {
         override def run(): Unit = compileGeneratedCode(rootDir)
       }).start()

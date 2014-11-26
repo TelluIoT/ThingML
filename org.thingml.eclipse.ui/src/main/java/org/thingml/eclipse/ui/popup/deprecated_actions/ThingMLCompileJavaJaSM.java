@@ -67,7 +67,7 @@ public class ThingMLCompileJavaJaSM implements IObjectActionDelegate {
 		if (!ftemp.exists())
 			ftemp.mkdir();
 		for (Configuration c : thingmlModel.getConfigs())
-				JavaGenerator.compileAndRun(c, thingmlModel, false);
+				JavaGenerator.compileAndRun(c, thingmlModel, false, null);
 	}
 
 	/**
