@@ -159,4 +159,8 @@ public class Context {
         return markers.contains(marker);
     }
 
+    public String getOutputDir() {
+        return compiler.getOutputDirectory().getAbsolutePath();
+    }
+
 }

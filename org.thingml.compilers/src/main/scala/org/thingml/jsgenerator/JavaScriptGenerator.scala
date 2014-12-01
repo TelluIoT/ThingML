@@ -108,85 +108,14 @@ object JavaScriptGenerator {
   }
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false, outdir : File = null, ctx : Context) {
-
-    var tmpFolder = "";
-
-    if (outdir == null) {
-      var tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/"
-      if (doingTests) {
-        tmpFolder = "tmp/ThingML_Javascript/"
-      }
-      new File(tmpFolder).deleteOnExit
-    }
-    else {
-      tmpFolder = outdir.getAbsolutePath + File.separator
-    }
-
-      compile(cfg, model, true, ctx)
-      var rootDir = tmpFolder + cfg.getName
-
-
-    val outputDir = cfg.getAnnotations.filter(a => a.getName == "js_folder").headOption match {
-      case Some(a) => tmpFolder + cfg.getName + a.getValue
-      case None => tmpFolder + cfg.getName
-    }
-
+    compile(cfg, model, true, ctx)
     ctx.dump()
-    /*println("outputDir: " + outputDir)
-
-    val outputDirFile = new File(outputDir)
-    outputDirFile.mkdirs
-
-    code.foreach { case (file, code) =>
-      val w = new PrintWriter(new FileWriter(new File(outputDir + "/" + file)));
-      w.println(code.toString);
-      w.close();
-    }*/
-    /*val libDir = new File(outputDir + "/lib")
-    libDir.mkdirs()
-
-    Files.copy(this.getClass.getClassLoader.getResourceAsStream("javascript/lib/state-compiled.js"), FileSystems.getDefault().getPath(outputDir + "/lib", "state.js"), StandardCopyOption.REPLACE_EXISTING);*/
-    println("PATH:" + this.getClass.getClassLoader.getResource("javascript/lib/state-compiled.js").getPath)
     ctx.copy(this.getClass.getClassLoader.getResourceAsStream("javascript/lib/state-compiled.js"), "/lib", "state.js")
-
-    /*
-     * GENERATE SOME DOCUMENTATION
-     */
-
-    new File(rootDir + "/doc").mkdirs();
-
-    try {
-      val dots = ThingMLGraphExport.allGraphviz(ThingMLHelpers.findContainingModel(cfg))
-      for (name <- dots.keySet) {
-        System.out.println(" -> Writing file " + name + ".dot")
-        val w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".dot"))
-        w.println(dots.get(name))
-        w.close
-      }
-    } catch {
-      case t: Throwable => {
-        t.printStackTrace
-      }
-    }
-
-    try {
-      val gml = ThingMLGraphExport.allGraphML(ThingMLHelpers.findContainingModel(cfg))
-      for (name <- gml.keySet) {
-        System.out.println(" -> Writing file " + name + ".graphml")
-        val w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".graphml"))
-        w.println(gml.get(name))
-        w.close
-      }
-    } catch {
-      case t: Throwable => {
-        t.printStackTrace
-      }
-    }
 
     if (!doingTests && outdir == null) {
       new Thread(new Runnable {
         override def run() {
-          val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /k start " else "") + "node behavior.js", null, new File(rootDir));
+          val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /k start " else "") + "node behavior.js", null, new File(ctx.getOutputDir));
 
           val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
           val out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(runtime.getOutputStream())), true);
