@@ -18,14 +18,25 @@ package org.thingml.compilers;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.cgenerator.CGenerator;
+import org.thingml.compilers.actions.ActionCompiler;
+import org.thingml.compilers.actions.JSActionCompiler;
 
 /**
  * Created by ffl on 25.11.14.
  */
 public class JavaScriptCompiler extends OpaqueThingMLCompiler {
+
+    public JavaScriptCompiler() {
+        super(new JSActionCompiler());
+    }
+
+    public JavaScriptCompiler(ActionCompiler actionCompiler) {
+        super(actionCompiler);
+    }
+
     @Override
     public ThingMLCompiler clone() {
-        return new JavaScriptCompiler();
+        return new JavaScriptCompiler(new JSActionCompiler());
     }
 
     @Override

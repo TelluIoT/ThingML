@@ -19,6 +19,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers
 import org.thingml.cgenerator.CGenerator._
 
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
+import org.thingml.compilers.actions.ActionCompiler
 
 import scala.collection.JavaConversions._
 import java.io._
@@ -664,7 +665,7 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
   }
 
 
-  def compileToLinux(cfg: Configuration, comp : ThingMLCompiler = new FakeThingMLCompiler()): Hashtable[String, String] = {
+  def compileToLinux(cfg: Configuration, comp : ThingMLCompiler = new FakeThingMLCompiler(new ActionCompiler())): Hashtable[String, String] = {
 
     val result = new Hashtable[String, String]()
     val context = new LinuxCGeneratorContext(cfg, comp)
@@ -1262,7 +1263,7 @@ class CGeneratorContext(src: Configuration, comp: ThingMLCompiler) {
   def error_message(msg: String) = "// ERROR: " + msg
 }
 
-class LinuxCGeneratorContext(src: Configuration, comp : ThingMLCompiler = new FakeThingMLCompiler()) extends CGeneratorContext(src, comp) {
+class LinuxCGeneratorContext(src: Configuration, comp : ThingMLCompiler = new FakeThingMLCompiler(new ActionCompiler())) extends CGeneratorContext(src, comp) {
 
   // pointer size in bytes of the target platform
   override def pointerSize() = {
@@ -1305,7 +1306,7 @@ class LinuxCGeneratorContext(src: Configuration, comp : ThingMLCompiler = new Fa
 }
 
 
-class ArduinoCGeneratorContext(src: Configuration, comp: ThingMLCompiler = new FakeThingMLCompiler()) extends CGeneratorContext(src, comp) {
+class ArduinoCGeneratorContext(src: Configuration, comp: ThingMLCompiler = new FakeThingMLCompiler(new ActionCompiler())) extends CGeneratorContext(src, comp) {
 
   if (!src.getAnnotations.filter {
     a => a.getName == "arduino_stdout"

@@ -17,12 +17,18 @@ package org.thingml.compilers;
 
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.javagenerator.JavaGenerator;
 
 /**
  * Created by ffl on 25.11.14.
  */
 public class JavaCompiler extends OpaqueThingMLCompiler {
+
+    public JavaCompiler() {
+        super(new ActionCompiler());
+    }
+
     @Override
     public ThingMLCompiler clone() {
         return new JavaCompiler();

@@ -844,138 +844,67 @@ class ActionJavaScriptGenerator(val self: Action) /*extends ThingMLJavaScriptGen
 
 case class SendActionJavaScriptGenerator(override val self: SendAction) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append "send" + ctx.firstToUpper(self.getMessage.getName) + "On" + ctx.firstToUpper(self.getPort.getName) + "("
-    var i = 0
-    self.getParameters.zip(self.getMessage.getParameters).foreach { case (p, fp) =>
-      if (i > 0)
-        builder append ", "
-      p.generateJavaScript(builder, ctx)
-      i = i + 1
-    }
-    builder append ");\n"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class VariableAssignmentJavaScriptGenerator(override val self: VariableAssignment) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    if (self.getProperty.getCardinality != null) {
-      self.getIndex.foreach { i =>
-        builder append self.getProperty.Java_var_name
-        val tempBuilder = new StringBuilder
-        i.generateJavaScript(tempBuilder, ctx)
-        builder append "[" + tempBuilder.toString + "]"
-        builder append " = "
-        self.getExpression.generateJavaScript(builder, ctx)
-        builder append ";\n"
-      }
-    }
-    else {
-      builder append self.getProperty.Java_var_name
-      builder append " = "
-      self.getExpression.generateJavaScript(builder, ctx)
-      builder append ";\n"
-    }
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class ActionBlockJavaScriptGenerator(override val self: ActionBlock) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    //builder append "{\n"
-    self.getActions.foreach {
-      a => a.generateJavaScript(builder, ctx)
-    }
-    //builder append "}\n"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class ExternStatementJavaScriptGenerator(override val self: ExternStatement) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append self.getStatement
-    self.getSegments.foreach {
-      e => e.generateJavaScript(builder, ctx)
-    }
-    builder append "\n"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class ConditionalActionJavaScriptGenerator(override val self: ConditionalAction) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append "if("
-    self.getCondition.generateJavaScript(builder, ctx)
-    builder append ") {\n"
-    self.getAction.generateJavaScript(builder, ctx)
-    builder append "\n}\n"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class LoopActionJavaScriptGenerator(override val self: LoopAction) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append "while("
-    self.getCondition.generateJavaScript(builder, ctx)
-    builder append ") {\n"
-    self.getAction.generateJavaScript(builder, ctx)
-    builder append "\n}\n"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class PrintActionJavaScriptGenerator(override val self: PrintAction) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append "console.log("
-    self.getMsg.generateJavaScript(builder, ctx)
-    builder append ");\n"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class ErrorActionJavaScriptGenerator(override val self: ErrorAction) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append "console.log(\"ERROR: \" + "
-    self.getMsg.generateJavaScript(builder, ctx)
-    builder append ");\n"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class ReturnActionJavaScriptGenerator(override val self: ReturnAction) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append "return "
-    self.getExp.generateJavaScript(builder, ctx)
-    if (!(builder.toString().endsWith(";") || builder.toString().endsWith(";\n"))) {
-      builder append ";\n"
-    }
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class LocalVariableActionJavaScriptGenerator(override val self: LocalVariable) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append "var " + self.Java_var_name
-    if (self.getInit != null) {
-      builder append " = "
-      self.getInit.generateJavaScript(builder, ctx)
-    }
-    else {
-      if (self.getCardinality != null) {
-        builder append " = []"
-      }
-      if (!self.isChangeable)
-        println("[ERROR] readonly variable " + self + " must be initialized")
-    }
-    builder append ";\n"
-    builder append "\n"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class FunctionCallStatementJavaScriptGenerator(override val self: FunctionCallStatement) extends ActionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    if (ctx.isDefined("useThis"))
-      builder append "this."
-    builder append self.getFunction().getName + "("
-    var i = 0
-    self.getFunction.getParameters.zip(self.getParameters).foreach { case (fp, ep) =>
-      if (i > 0)
-        builder append ", "
-      ep.generateJavaScript(builder, ctx)
-      i = i + 1
-    }
-    builder append ");\n"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
@@ -995,178 +924,138 @@ class ExpressionJavaScriptGenerator(val self: Expression) /*extends ThingMLJavaS
 
 case class ArrayIndexJavaScriptGenerator(override val self: ArrayIndex) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    self.getArray.generateJavaScript(builder, ctx)
-    builder append "["
-    self.getIndex.generateJavaScript(builder, ctx)
-    builder append "]\n"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class OrExpressionJavaScriptGenerator(override val self: OrExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    self.getLhs.generateJavaScript(builder, ctx)
-    builder append " || "
-    self.getRhs.generateJavaScript(builder, ctx)
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class AndExpressionJavaScriptGenerator(override val self: AndExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    self.getLhs.generateJavaScript(builder, ctx)
-    builder append " && "
-    self.getRhs.generateJavaScript(builder, ctx)
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class LowerExpressionJavaScriptGenerator(override val self: LowerExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    self.getLhs.generateJavaScript(builder, ctx)
-    builder append " < "
-    self.getRhs.generateJavaScript(builder, ctx)
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class GreaterExpressionJavaScriptGenerator(override val self: GreaterExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    self.getLhs.generateJavaScript(builder, ctx)
-    builder append " > "
-    self.getRhs.generateJavaScript(builder, ctx)
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class EqualsExpressionJavaScriptGenerator(override val self: EqualsExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    self.getLhs.generateJavaScript(builder, ctx)
-    builder append " === " //TODO: identity on references might cause bugs in Java, we should generate .equals (but we cannot call .equals on primitive types, which should explicitly be boxed to objects).
-    self.getRhs.generateJavaScript(builder, ctx)
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class PlusExpressionJavaScriptGenerator(override val self: PlusExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    self.getLhs.generateJavaScript(builder, ctx)
-    builder append " + "
-    self.getRhs.generateJavaScript(builder, ctx)
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class MinusExpressionJavaScriptGenerator(override val self: MinusExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    self.getLhs.generateJavaScript(builder, ctx)
-    builder append " - "
-    self.getRhs.generateJavaScript(builder, ctx)
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class TimesExpressionJavaScriptGenerator(override val self: TimesExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    self.getLhs.generateJavaScript(builder, ctx)
-    builder append " * "
-    self.getRhs.generateJavaScript(builder, ctx)
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class DivExpressionJavaScriptGenerator(override val self: DivExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    self.getLhs.generateJavaScript(builder, ctx)
-    builder append " / "
-    self.getRhs.generateJavaScript(builder, ctx)
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class ModExpressionJavaScriptGenerator(override val self: ModExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    self.getLhs.generateJavaScript(builder, ctx)
-    builder append " % "
-    self.getRhs.generateJavaScript(builder, ctx)
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class UnaryMinusJavaScriptGenerator(override val self: UnaryMinus) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append " -"
-    self.getTerm.generateJavaScript(builder, ctx)
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class NotExpressionJavaScriptGenerator(override val self: NotExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append " !("
-    self.getTerm.generateJavaScript(builder, ctx)
-    builder append ")"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class EventReferenceJavaScriptGenerator(override val self: EventReference) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append "json." + ctx.protectKeyword(self.getParamRef.getName)
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class ExpressionGroupJavaScriptGenerator(override val self: ExpressionGroup) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    //builder append "{"
-    self.getExp.generateJavaScript(builder, ctx)
-    //builder append "}\n"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class PropertyReferenceJavaScriptGenerator(override val self: PropertyReference) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append /*"this." + */self.getProperty.Java_var_name//TODO: in principle, we need "this.", it is just temporarily removed as a workaround
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class IntegerLiteralJavaScriptGenerator(override val self: IntegerLiteral) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append self.getIntValue.toString
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class DoubleLiteralJavaScriptGenerator(override val self: DoubleLiteral) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append self.getDoubleValue.toString
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class StringLiteralJavaScriptGenerator(override val self: StringLiteral) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append "\"" + CharacterEscaper.escapeEscapedCharacters(self.getStringValue) + "\""
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class BooleanLiteralJavaScriptGenerator(override val self: BooleanLiteral) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append (if (self.isBoolValue) "true" else "false")
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class EnumLiteralRefJavaScriptGenerator(override val self: EnumLiteralRef) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    //builder append self.getEnum.enumName + "." + self.getLiteral.Java_name
-    builder append ctx.firstToUpper(self.getEnum.getName) + "_ENUM." + self.getLiteral.Java_name
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class ExternExpressionJavaScriptGenerator(override val self: ExternExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append self.getExpression
-    self.getSegments.foreach {
-      e => e.generateJavaScript(builder, ctx)
-    }
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }
 
 case class FunctionCallExpressionJavaScriptGenerator(override val self: FunctionCallExpression) extends ExpressionJavaScriptGenerator(self) {
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    builder append self.getFunction().getName + "("
-    var i = 0
-    self.getFunction.getParameters.zip(self.getParameters).foreach { case (fp, ep) =>
-      if (i > 0)
-        builder append ", "
-      ep.generateJavaScript(builder, ctx)
-      i = i + 1
-    }
-    builder append ")"
+    ctx.getCompiler.getActionCompiler.generate(self, builder, ctx);
   }
 }

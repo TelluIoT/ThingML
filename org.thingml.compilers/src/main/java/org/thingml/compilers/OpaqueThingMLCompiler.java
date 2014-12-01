@@ -16,6 +16,7 @@
 package org.thingml.compilers;
 
 import org.sintef.thingml.Configuration;
+import org.thingml.compilers.actions.ActionCompiler;
 
 import java.io.PrintStream;
 
@@ -23,6 +24,10 @@ import java.io.PrintStream;
  * Created by ffl on 24.11.14.
  */
 public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
+
+    public OpaqueThingMLCompiler(ActionCompiler actionCompiler) {
+        super(actionCompiler);
+    }
 
     @Override
     public boolean compile(Configuration cfg) {

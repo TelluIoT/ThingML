@@ -17,11 +17,17 @@ package org.thingml.compilers;
 
 import org.sintef.thingml.Configuration;
 import org.thingml.cgenerator.CGenerator;
+import org.thingml.compilers.actions.ActionCompiler;
 
 /**
  * Created by ffl on 25.11.14.
  */
 public class PosixCompiler extends OpaqueThingMLCompiler {
+
+    public PosixCompiler() {
+        super(new ActionCompiler());
+    }
+
     @Override
     public ThingMLCompiler clone() {
         return new PosixCompiler();

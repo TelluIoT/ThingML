@@ -16,6 +16,7 @@
 package org.thingml.compilers;
 
 import org.sintef.thingml.Configuration;
+import org.thingml.compilers.actions.ActionCompiler;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -24,6 +25,17 @@ import java.io.OutputStream;
  * Created by ffl on 23.11.14.
  */
 public abstract class ThingMLCompiler {
+
+
+    private ActionCompiler actionCompiler;
+
+    public ThingMLCompiler() {
+        this.actionCompiler = new ActionCompiler();
+    }
+
+    public ThingMLCompiler(ActionCompiler actionCompiler) {
+        this.actionCompiler = actionCompiler;
+    }
 
     public abstract ThingMLCompiler clone();
 
@@ -74,4 +86,7 @@ public abstract class ThingMLCompiler {
      **************************************************************/
     public abstract boolean compile(Configuration cfg);
 
+    public ActionCompiler getActionCompiler() {
+        return actionCompiler;
+    }
 }

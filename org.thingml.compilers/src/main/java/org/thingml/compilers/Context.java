@@ -163,4 +163,7 @@ public class Context {
         return compiler.getOutputDirectory().getAbsolutePath();
     }
 
+    public ThingMLCompiler getCompiler() {
+        return compiler;
+    }
 }
