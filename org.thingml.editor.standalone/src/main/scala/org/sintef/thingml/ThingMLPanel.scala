@@ -29,6 +29,7 @@ import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic
 import org.sintef.thingml.resource.thingml.mopp._
 import org.thingml.cgenerator.CGenerator
 import org.thingml.coapgenerator.extension.CoAPGenerator
+import org.thingml.compilers.JavaScriptCompiler
 import org.thingml.cppgenerator.CPPGenerator
 import org.thingml.javagenerator.JavaGenerator
 import org.thingml.javagenerator.extension.{HTTPGenerator, WebSocketGenerator, MQTTGenerator}
@@ -338,8 +339,10 @@ class ThingMLPanel extends JPanel {
 
       try {
         val thingmlModel = loadThingMLmodel(targetFile.get)
+        val compiler = new JavaScriptCompiler();
         thingmlModel.allConfigurations().foreach { c =>
-          JavaScriptGenerator.compileAndRun(c, thingmlModel)
+          compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName))
+          compiler.do_call_compiler(c)
         }
       }
       catch {

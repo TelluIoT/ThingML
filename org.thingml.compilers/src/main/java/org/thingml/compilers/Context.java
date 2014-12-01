@@ -15,22 +15,35 @@
  */
 package org.thingml.compilers;
 
+import java.io.*;
 import java.lang.String;
 import java.lang.StringBuilder;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class Context {
+public class Context {
+
+    private ThingMLCompiler compiler;
 
     //Contains entries like <path to the file relative to rootDir, code (to be) generated for that file>
     private Map<String, StringBuilder> builders = new HashMap<String, StringBuilder>();
+
+    //contains some markers
+    private List<String> markers = new ArrayList<String>();
 
     //Keywords of the target languages
     private List<String> keywords = new ArrayList<String>();
     private String preKeywordEscape = "`";
     private String postKeywordEscape = "`";
+
+    public Context(ThingMLCompiler compiler) {
+        this.compiler = compiler;
+    }
 
     public List<String> getKeywords() {
         return keywords;
@@ -53,7 +66,7 @@ class Context {
     }
 
     /**
-     * @param path (relative to rootDir) where the code should be generated
+     * @param path (relative to outputDir) where the code should be generated
      * @return a StringBuilder where the code can be built
      */
     public StringBuilder getBuilder(String path) {
@@ -88,6 +101,62 @@ class Context {
             return value.substring(0,1).toUpperCase() + value.substring(1);
         else
             return value.substring(0,1).toUpperCase();
+    }
+
+    /**
+     * Dumps the whole code generated in the builders
+     */
+    public void dump() {
+        for(Map.Entry<String, StringBuilder> e : builders.entrySet()) {
+            try {
+                PrintWriter w = new PrintWriter(new File(compiler.getOutputDirectory(), e.getKey()));
+                w.print(e.getValue().toString());
+                w.close();
+            } catch (Exception ex) {
+                System.err.println("Problem while dumping the code");
+            }
+        }
+    }
+
+    /**
+     * Allows to dump additional files (not generated in the normal builders)
+     * @param path
+     * @param content
+     */
+    public void dump(String path, String content) {
+        try {
+            PrintWriter w = new PrintWriter(new File(compiler.getOutputDirectory(), path));
+            w.print(content);
+            w.close();
+        } catch (Exception ex) {
+            System.err.println("Problem while dumping the code");
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Copies a file into the file located at target (related to outputDir)
+     * @param source
+     */
+    public void copy(InputStream source, String targetDir, String targetFile) {
+        try {
+            Files.copy(source, FileSystems.getDefault().getPath(compiler.getOutputDirectory() + targetDir, targetFile), StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            System.err.println("Problem while copying file");
+            e.printStackTrace();
+        }
+    }
+
+    public void mark(String marker) {
+        markers.add(marker);
+    }
+
+    public void unmark(String marker) {
+        markers.remove(marker);
+    }
+
+    public boolean isDefined(String marker) {
+        return markers.contains(marker);
     }
 
 }
