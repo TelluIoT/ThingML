@@ -35,6 +35,8 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic
 import org.sintef.thingml.resource.thingml.mopp._
+import org.thingml.compilers.JavaScriptCompiler
+import org.thingml.compilers.actions.JSActionCompiler
 import org.thingml.jsgenerator.JavaScriptGenerator
 import scala.collection.JavaConversions._
 import org.eclipse.emf.ecore.util.EcoreUtil
@@ -63,10 +65,13 @@ object Cmd {
 				val thingmlModel = loadThingMLmodel(targetFile.get)
 				if (args(0) == "linux")
 					CGenerator.compileToLinuxAndNotMake(thingmlModel)
-				else if (args(0) == "javascript")
-					thingmlModel.allConfigurations.foreach{c =>
-						JavaScriptGenerator.compileAndRun(c, thingmlModel, true)
-					}
+				else if (args(0) == "javascript") {
+          val compiler = new JavaScriptCompiler(new JSActionCompiler());
+          thingmlModel.allConfigurations().foreach { c =>
+            compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName))
+            compiler.do_call_compiler(c)
+          }
+        }
 				else if (args(0) == "java")
 					thingmlModel.allConfigurations.foreach{c =>
 						JavaGenerator.compileAndRun(c, thingmlModel, true)                                                                      
