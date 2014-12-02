@@ -68,7 +68,9 @@ object Cmd {
 				else if (args(0) == "javascript") {
           val compiler = new JavaScriptCompiler(new JSActionCompiler());
           thingmlModel.allConfigurations().foreach { c =>
-            compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName))
+            val folder = new File("tmp/ThingML_Javascript/" + c.getName)
+            folder.mkdirs()
+            compiler.setOutputDirectory(folder)
             compiler.do_call_compiler(c)
           }
         }

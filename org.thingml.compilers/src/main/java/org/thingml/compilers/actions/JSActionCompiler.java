@@ -106,7 +106,7 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        builder.append(/*"this." + */expression.getProperty().qname("_" + "_var"));//TODO: in principle, we need "this.", it is just temporarily removed as a workaround
+        builder.append(/*"this." + */expression.getProperty().qname("_") + "_var");//TODO: in principle, we need "this.", it is just temporarily removed as a workaround
     }
 
     @Override

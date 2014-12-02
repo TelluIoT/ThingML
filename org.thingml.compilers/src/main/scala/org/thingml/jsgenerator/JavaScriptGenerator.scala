@@ -21,7 +21,7 @@
 package org.thingml.jsgenerator
 
 import java.io.{BufferedReader, BufferedWriter, File, FileWriter, InputStreamReader, OutputStreamWriter, PrintWriter}
-import java.nio.file.{FileSystems, StandardCopyOption, Path, Files}
+import java.nio.file._
 import java.util
 import java.util.Hashtable
 
@@ -32,6 +32,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers
 import org.thingml.graphexport.ThingMLGraphExport
 import org.thingml.jsgenerator.JavaScriptGenerator._
 import org.thingml.compilers.Context
+import org.apache.commons.io.IOUtils
 
 import scala.collection.JavaConversions._
 import scala.io.Source
@@ -108,9 +109,14 @@ object JavaScriptGenerator {
   }
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false, outdir : File = null, ctx : Context) {
+    val f = new File(ctx.getOutputDir + "/lib")
+    f.mkdirs()
+    val writer = new FileWriter(new File(f, "state.js"))
+    IOUtils.copy(this.getClass.getClassLoader.getResourceAsStream("javascript/lib/state.js"), writer)
+    writer.flush()
+    writer.close();
     compile(cfg, model, true, ctx)
     ctx.dump()
-    ctx.copy(this.getClass.getClassLoader.getResourceAsStream("javascript/lib/state-compiled.js"), "/lib", "state.js")
 
     if (!doingTests && outdir == null) {
       new Thread(new Runnable {
