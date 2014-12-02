@@ -28,7 +28,7 @@ public class GenericImperativeActionCompiler extends ActionCompiler {
     //ThingML actions that can be compiled the same way for any imperative language like (Java, JS, C)
 
     @Override
-    public void generate(SendAction action, StringBuilder builder, Context ctx) {
+    public void generate(SendAction action, StringBuilder builder, Context ctx) {//TODO: this might actually be factorizable if we agree on the methods' signatures to send message
         builder.append("//Platform-specific action (" + action.getClass().getName() + ") should be refined in a sub-compiler");
     }
 
@@ -258,7 +258,7 @@ public class GenericImperativeActionCompiler extends ActionCompiler {
     }
 
     @Override
-    public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
+    public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {//TODO: this should actually be factorizable
         builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
     }
 }

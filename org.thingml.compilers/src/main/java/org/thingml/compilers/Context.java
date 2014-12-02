@@ -15,6 +15,8 @@
  */
 package org.thingml.compilers;
 
+import org.sintef.thingml.Variable;
+
 import java.io.*;
 import java.lang.String;
 import java.lang.StringBuilder;
@@ -166,4 +168,9 @@ public class Context {
     public ThingMLCompiler getCompiler() {
         return compiler;
     }
+
+    public String getVariableName(Variable var) {
+        return var.qname("_") + "_var";
+    }
+
 }
