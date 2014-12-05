@@ -52,7 +52,7 @@ public class ThingmlNewProjectWizard extends org.eclipse.jface.wizard.Wizard imp
 	/**
 	 * The name of the new project zip file (relative to the UI plugin's root)
 	 */
-	private String  newProjectZip="newProject.zip";
+	private String  newProjectZip="ThingML_Basics.zip";
 	
 	/**
 	 * The configuration element associated with this new project wizard
