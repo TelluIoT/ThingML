@@ -228,6 +228,8 @@ object JavaScriptGenerator {
 
     t.generateJavaScript(builder, ctx)
 
+    builder append "process.stdin.resume();//to keep Node.js alive even when it is nothing more to do...\n"
+
     t.allInstances().foreach { i =>
       t.allArrays(i).foreach{ a =>
         builder append "var " + i.getName + "_" + a.getName + "_array = [];\n"
