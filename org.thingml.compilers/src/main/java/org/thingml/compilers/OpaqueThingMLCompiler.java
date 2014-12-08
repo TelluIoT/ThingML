@@ -18,6 +18,7 @@ package org.thingml.compilers;
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.actions.ActionCompiler;
 
+import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**
@@ -28,20 +29,37 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
     public OpaqueThingMLCompiler(ActionCompiler actionCompiler) {
         super(actionCompiler);
     }
+    PrintStream m, e;
+
+    private void println(String msg) {
+        if (m!=null)
+            m.println(msg);
+        else
+            System.out.println(msg);
+    }
+
+    private void erroln(String msg) {
+        if (e!=null)
+            e.println(msg);
+        else
+            System.err.println(msg);
+    }
 
     @Override
     public boolean compile(Configuration cfg) {
-
-        PrintStream m = new PrintStream(getMessageStream());
-        PrintStream e = new PrintStream(getMessageStream());
+        final OutputStream stream = getMessageStream();
+        if (stream != null) {
+            m = new PrintStream(stream);
+            e = new PrintStream(stream);
+        }
 
         try {
-            m.println("Running "+getName()+" compiler on configuration " + cfg.getName());
+            println("Running "+getName()+" compiler on configuration " + cfg.getName());
             do_call_compiler(cfg);
-            m.println("Compilation complete.");
+            println("Compilation complete.");
         }
         catch (Error err) {
-            e.println("Compilation error:" + err.getMessage());
+            erroln("Compilation error:" + err.getMessage());
             return false;
         }
         return true;
