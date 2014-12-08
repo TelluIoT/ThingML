@@ -34,19 +34,19 @@ public class GenericImperativeActionCompiler extends ActionCompiler {
 
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
-        if (action.getProperty().getCardinality() != null) {//this is an array
+        if (action.getProperty().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
             for(Expression i : action.getIndex()) {
                 builder.append(action.getProperty().qname("_") + "_var");
                 StringBuilder tempBuilder = new StringBuilder();
                 generate(i, tempBuilder, ctx);
                 builder.append("[" + tempBuilder.toString() + "]");
                 builder.append(" = ");
-                cast(action.getProperty().getType(), action.getProperty().getCardinality()!=null, builder, ctx);
+                cast(action.getProperty().getType(), false, builder, ctx);
                 generate(action.getExpression(), builder, ctx);
                 builder.append(";\n");
             }
         }
-        else {//simple variable
+        else {//simple variable or we re-affect the whole array
             builder.append(action.getProperty().qname("_") + "_var");
             builder.append(" = ");
             cast(action.getProperty().getType(), action.getProperty().getCardinality()!=null, builder, ctx);
