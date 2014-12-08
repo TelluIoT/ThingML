@@ -41,6 +41,7 @@ public class GenericImperativeActionCompiler extends ActionCompiler {
                 generate(i, tempBuilder, ctx);
                 builder.append("[" + tempBuilder.toString() + "]");
                 builder.append(" = ");
+                cast(action.getProperty().getType(), action.getProperty().getCardinality()!=null, builder, ctx);
                 generate(action.getExpression(), builder, ctx);
                 builder.append(";\n");
             }
@@ -48,9 +49,14 @@ public class GenericImperativeActionCompiler extends ActionCompiler {
         else {//simple variable
             builder.append(action.getProperty().qname("_") + "_var");
             builder.append(" = ");
+            cast(action.getProperty().getType(), action.getProperty().getCardinality()!=null, builder, ctx);
             generate(action.getExpression(), builder, ctx);
             builder.append(";\n");
         }
+    }
+
+    protected void cast(Type type, boolean isArray, StringBuilder builder, Context ctx) {
+
     }
 
     @Override

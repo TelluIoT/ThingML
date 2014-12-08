@@ -33,7 +33,7 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
             int j = 0;
             for(Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    builder.append("(" + fp.getType().annotation("java_type").toArray()[0] + ") ");
+                    cast(fp.getType(), fp.getCardinality()!=null, builder, ctx);
                     generate(p, builder, ctx);
                     break;
                 }
@@ -192,7 +192,7 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
             int j = 0;
             for(Parameter fp : expression.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    builder.append("(" + fp.getType().annotation("java_type").toArray()[0] + ") ");
+                    cast(fp.getType(), fp.getCardinality()!=null, builder, ctx);
                     generate(p, builder, ctx);
                     break;
                 }
@@ -201,5 +201,13 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
             i++;
         }
         builder.append(");\n");
+    }
+
+    @Override
+    protected void cast(Type type, boolean isArray, StringBuilder builder, Context ctx) {
+        if (!isArray)
+            builder.append("(" + type.annotation("java_type").toArray()[0] + ") ");
+        else
+            builder.append("(" + type.annotation("java_type").toArray()[0] + "[]) ");
     }
 }
