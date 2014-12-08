@@ -127,6 +127,7 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
             builder.append(" = ");
             //builder.append(getJavaType(action.getType(), action.getCardinality()!=null, ctx));
             cast(action.getType(), action.getCardinality()!=null, action.getInit(), builder, ctx);
+            builder.append(";\n");
             /*builder.append("(");
             generate(action.getInit(), builder, ctx);
             builder.append(");\n");*/
