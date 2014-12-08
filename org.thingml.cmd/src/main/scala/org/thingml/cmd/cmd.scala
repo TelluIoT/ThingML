@@ -35,15 +35,13 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic
 import org.sintef.thingml.resource.thingml.mopp._
-import org.thingml.compilers.JavaScriptCompiler
-import org.thingml.compilers.actions.JSActionCompiler
-import org.thingml.jsgenerator.JavaScriptGenerator
+import org.thingml.compilers._
+import org.thingml.compilers.actions._
 import scala.collection.JavaConversions._
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
 import org.thingml.cgenerator.CGenerator
 //import org.thingml.cppgenerator.CPPGenerator
-import org.thingml.javagenerator.JavaGenerator
 import java.io._
 import java.util.Hashtable
 import javax.management.remote.rmi._RMIConnection_Stub
@@ -74,10 +72,15 @@ object Cmd {
             compiler.do_call_compiler(c)
           }
         }
-				else if (args(0) == "java")
-					thingmlModel.allConfigurations.foreach{c =>
-						JavaGenerator.compileAndRun(c, thingmlModel, true)                                                                      
-					}
+				else if (args(0) == "java") {
+          val compiler = new JavaCompiler();
+          thingmlModel.allConfigurations().foreach { c =>
+            val folder = new File("tmp/ThingML_Java/" + c.getName)
+            folder.mkdirs()
+            compiler.setOutputDirectory(folder)
+            compiler.do_call_compiler(c)
+          }
+        }
 				else if (args(0) == "arduino")
 					CGenerator.compileAndRunArduino(thingmlModel, "", "", true)          
 			}

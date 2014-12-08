@@ -15,6 +15,8 @@
  */
 package org.thingml.eclipse.ui.popup.deprecated_actions;
 
+import org.thingml.compilers.*;
+import org.thingml.compilers.actions.*;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,8 +28,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
-import org.thingml.cgenerator.CGenerator;
-import org.thingml.javagenerator.JavaGenerator;
 
 public class ThingMLCompileJavaJaSM implements IObjectActionDelegate {
 
@@ -66,8 +66,13 @@ public class ThingMLCompileJavaJaSM implements IObjectActionDelegate {
 		ftemp = new java.io.File(tempDir);
 		if (!ftemp.exists())
 			ftemp.mkdir();
-		for (Configuration c : thingmlModel.getConfigs())
-				JavaGenerator.compileAndRun(c, thingmlModel, false, null);
+
+
+        ThingMLCompiler compiler = new JavaCompiler();
+        for (Configuration c : thingmlModel.getConfigs()) {
+            compiler.setOutputDirectory(new java.io.File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName()));
+            compiler.compile(c);
+        }
 	}
 
 	/**
