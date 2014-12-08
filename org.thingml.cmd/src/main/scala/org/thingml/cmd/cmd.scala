@@ -33,10 +33,12 @@ import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
+import org.sintef.thingml.constraints.ThingMLHelpers
 import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic
 import org.sintef.thingml.resource.thingml.mopp._
 import org.thingml.compilers._
 import org.thingml.compilers.actions._
+import org.thingml.javagenerator.JavaGenerator
 import scala.collection.JavaConversions._
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.emf.ecore.resource.{ResourceSet, Resource}
@@ -69,7 +71,7 @@ object Cmd {
             val folder = new File("tmp/ThingML_Javascript/" + c.getName)
             folder.mkdirs()
             compiler.setOutputDirectory(folder)
-            compiler.do_call_compiler(c)
+            compiler.compile(c)
           }
         }
 				else if (args(0) == "java") {
@@ -78,7 +80,8 @@ object Cmd {
             val folder = new File("tmp/ThingML_Java/" + c.getName)
             folder.mkdirs()
             compiler.setOutputDirectory(folder)
-            compiler.do_call_compiler(c)
+            val ctx: Context = new Context(compiler, "match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@")
+            JavaGenerator.compileAndRun(c, ThingMLHelpers.findContainingModel(c), true, compiler.getOutputDirectory, ctx)
           }
         }
 				else if (args(0) == "arduino")

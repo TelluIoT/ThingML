@@ -114,6 +114,8 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
         builder.append(getJavaType(action.getType(), action.getCardinality()!=null, ctx));
         builder.append(" ");
 
+        builder.append(ctx.getVariableName(action));
+
         //Define the initial value for that variable
         if (action.getInit() != null) {
             builder.append(" = (");
