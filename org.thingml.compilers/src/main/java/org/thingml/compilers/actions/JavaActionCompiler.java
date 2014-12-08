@@ -33,10 +33,10 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
             int j = 0;
             for(Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    cast(fp.getType(), fp.getCardinality()!=null, builder, ctx);
-                    builder.append("(");
+                    cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
+                    /*builder.append("(");
                     generate(p, builder, ctx);
-                    builder.append(")");
+                    builder.append(")");*/
                     break;
                 }
                 j++;
@@ -56,10 +56,10 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
             int j = 0;
             for(Parameter fp : action.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    cast(fp.getType(), fp.getCardinality()!=null, builder, ctx);
-                    builder.append("(");
+                    cast(fp.getType(), fp.getCardinality()!=null, p, builder, ctx);
+                    /*builder.append("(");
                     generate(p, builder, ctx);
-                    builder.append(")");
+                    builder.append(")");*/
                     break;
                 }
                 j++;
@@ -126,10 +126,10 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
         if (action.getInit() != null) {
             builder.append(" = ");
             //builder.append(getJavaType(action.getType(), action.getCardinality()!=null, ctx));
-            cast(action.getType(), action.getCardinality()!=null, builder, ctx);
-            builder.append("(");
+            cast(action.getType(), action.getCardinality()!=null, action.getInit(), builder, ctx);
+            /*builder.append("(");
             generate(action.getInit(), builder, ctx);
-            builder.append(");\n");
+            builder.append(");\n");*/
         } else {
             if (!action.isChangeable()) {
                 System.err.println("WARNING: non changeable variable (" + action.getName() + ") should have been initialized ");
@@ -198,24 +198,30 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
             int j = 0;
             for(Parameter fp : expression.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    cast(fp.getType(), fp.getCardinality()!=null, builder, ctx);
-                    builder.append("(");
+                    cast(fp.getType(), fp.getCardinality()!=null, p, builder, ctx);
+                    /*builder.append("(");
                     generate(p, builder, ctx);
-                    builder.append(")");
+                    builder.append(")");*/
                     break;
                 }
                 j++;
             }
             i++;
         }
-        builder.append(");\n");
+        builder.append(")");
     }
 
     @Override
-    protected void cast(Type type, boolean isArray, StringBuilder builder, Context ctx) {
-        //if (!isArray)
-            builder.append("(" + type.annotation("java_type").toArray()[0] + ") ");
-        /*else
-            builder.append("(" + type.annotation("java_type").toArray()[0] + "[]) ");*/
+    protected void cast(Type type, boolean isArray, Expression exp, StringBuilder builder, Context ctx) {
+
+        if (!(type instanceof Enumeration)) {
+            if (!isArray)
+                builder.append("(" + type.annotation("java_type").toArray()[0] + ") ");
+            else
+                builder.append("(" + type.annotation("java_type").toArray()[0] + "[]) ");
+        }
+        builder.append("(");
+        generate(exp, builder, ctx);
+        builder.append(")");
     }
 }
