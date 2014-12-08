@@ -33,6 +33,7 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
             int j = 0;
             for(Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
+                    builder.append("(" + fp.getType().annotation("java_type").toArray()[0] + ") ");
                     generate(p, builder, ctx);
                     break;
                 }
@@ -185,11 +186,13 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
 
         int i = 0;
         for(Expression p : expression.getParameters()) {
+
             if (i > 0)
                 builder.append(", ");
             int j = 0;
             for(Parameter fp : expression.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
+                    builder.append("(" + fp.getType().annotation("java_type").toArray()[0] + ") ");
                     generate(p, builder, ctx);
                     break;
                 }
