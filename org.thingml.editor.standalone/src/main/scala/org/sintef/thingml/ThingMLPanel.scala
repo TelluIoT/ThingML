@@ -29,8 +29,8 @@ import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic
 import org.sintef.thingml.resource.thingml.mopp._
 import org.thingml.cgenerator.CGenerator
 import org.thingml.coapgenerator.extension.CoAPGenerator
-import org.thingml.compilers.JavaScriptCompiler
-import org.thingml.compilers.actions.JSActionCompiler
+import org.thingml.compilers._
+import org.thingml.compilers.actions.{JavaActionCompiler, JSActionCompiler}
 import org.thingml.cppgenerator.CPPGenerator
 import org.thingml.javagenerator.JavaGenerator
 import org.thingml.javagenerator.extension.{HTTPGenerator, WebSocketGenerator, MQTTGenerator}
@@ -182,9 +182,12 @@ class ThingMLPanel extends JPanel {
         return
       try {
         val thingmlModel = loadThingMLmodel(targetFile.get)
+        val compiler = new JavaCompiler();
         thingmlModel.allConfigurations().foreach { c =>
-          val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName
-          JavaGenerator.compileAndRun(c, thingmlModel)
+          val file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName)
+          file.mkdirs()
+          compiler.setOutputDirectory(file)
+          compiler.do_call_compiler(c)
         }
       }
       catch {
@@ -342,7 +345,9 @@ class ThingMLPanel extends JPanel {
         val thingmlModel = loadThingMLmodel(targetFile.get)
         val compiler = new JavaScriptCompiler(new JSActionCompiler());
         thingmlModel.allConfigurations().foreach { c =>
-          compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName))
+          val file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName)
+          file.mkdirs()
+          compiler.setOutputDirectory(file)
           compiler.do_call_compiler(c)
         }
       }

@@ -18,7 +18,10 @@ package org.thingml.compilers;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.actions.ActionCompiler;
+import org.thingml.compilers.actions.JavaActionCompiler;
 import org.thingml.javagenerator.JavaGenerator;
+
+import java.util.ArrayList;
 
 /**
  * Created by ffl on 25.11.14.
@@ -26,7 +29,7 @@ import org.thingml.javagenerator.JavaGenerator;
 public class JavaCompiler extends OpaqueThingMLCompiler {
 
     public JavaCompiler() {
-        super(new ActionCompiler());
+        super(new JavaActionCompiler());
     }
 
     @Override
@@ -50,6 +53,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(Configuration cfg) {
-        JavaGenerator.compileAndRun(cfg, ThingMLHelpers.findContainingModel(cfg), false, getOutputDirectory());
+        Context ctx = new Context(this, "match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@");
+        JavaGenerator.compileAndRun(cfg, ThingMLHelpers.findContainingModel(cfg), false, getOutputDirectory(), ctx);
     }
 }

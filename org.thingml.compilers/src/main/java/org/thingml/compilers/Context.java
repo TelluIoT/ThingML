@@ -38,13 +38,19 @@ public class Context {
     //contains some markers
     private List<String> markers = new ArrayList<String>();
 
+    //contains some additional properties
+    private Map<String, String> properties = new HashMap<String, String>();
+
     //Keywords of the target languages
     private List<String> keywords = new ArrayList<String>();
     private String preKeywordEscape = "`";
     private String postKeywordEscape = "`";
 
-    public Context(ThingMLCompiler compiler) {
+    public Context(ThingMLCompiler compiler, String... keywords) {
         this.compiler = compiler;
+        for (String k : keywords) {
+            this.keywords.add(k);
+        }
     }
 
     public List<String> getKeywords() {
@@ -111,11 +117,15 @@ public class Context {
     public void dump() {
         for(Map.Entry<String, StringBuilder> e : builders.entrySet()) {
             try {
-                PrintWriter w = new PrintWriter(new File(compiler.getOutputDirectory(), e.getKey()));
+                File file = new File(compiler.getOutputDirectory(), e.getKey());
+                if (!file.getParentFile().exists())
+                    file.getParentFile().mkdirs();
+                PrintWriter w = new PrintWriter(file);
                 w.print(e.getValue().toString());
                 w.close();
             } catch (Exception ex) {
                 System.err.println("Problem while dumping the code");
+                ex.printStackTrace();
             }
         }
     }
@@ -127,7 +137,10 @@ public class Context {
      */
     public void dump(String path, String content) {
         try {
-            PrintWriter w = new PrintWriter(new File(compiler.getOutputDirectory(), path));
+            File file = new File(compiler.getOutputDirectory(), path);
+            if (!file.getParentFile().exists())
+                file.getParentFile().mkdirs();
+            PrintWriter w = new PrintWriter(file);
             w.print(content);
             w.close();
         } catch (Exception ex) {
@@ -171,6 +184,22 @@ public class Context {
 
     public String getVariableName(Variable var) {
         return var.qname("_") + "_var";
+    }
+
+    public void addProperty(String key, String value) {
+        properties.put(key, value);
+    }
+
+    public String getProperty(String key) {
+        return properties.get(key);
+    }
+
+    public boolean isDefined(String key, String value) {
+        return properties.containsKey(key) && properties.get(key).equals(value);
+    }
+
+    public boolean hasProperty(String key) {
+        return properties.containsKey(key);
     }
 
 }
