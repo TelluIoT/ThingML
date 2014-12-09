@@ -26,6 +26,7 @@ import java.util.Hashtable
 
 import org.sintef.thingml._
 import org.sintef.thingml.constraints.ThingMLHelpers
+import org.thingml.compilers.api.JavaApiCompiler
 import org.thingml.graphexport.ThingMLGraphExport
 import org.thingml.javagenerator.JavaGenerator._
 
@@ -227,8 +228,7 @@ object JavaGenerator {
     t.generateJavaMain(mainBuilder, ctx)
 
     t.allThings().foreach{t =>
-      t.generateAPI(mainBuilder, ctx)
-      t.generateClientAPI(mainBuilder, ctx)
+      ctx.getCompiler.getApiCompiler.generate(t, ctx)
     }
 
     //TODO: we should not generate all the enumeration defined in the model, just the one relevant for the configuration
@@ -479,40 +479,6 @@ case class ConnectorJavaGenerator(val self: Connector) extends ThingMLJavaGenera
 
 //TODO: The way we build the state machine has gone through many refactorings... time to rewrite from scratch as it is now very messy!!!
 case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self) {
-
-  def generateAPI(builder : java.lang.StringBuilder, ctx : Context): Unit = {
-    self.allPorts().foreach{ p =>
-      if (p.isDefined("public", "true") && p.getReceives.size()>0) {
-        val builder = ctx.getBuilder("src/main/java/api/I" + ctx.firstToUpper(self.getName) + "_" + p.getName + ".java")
-        builder append "package org.thingml.generated.api;\n\n"
-        builder append "import org.thingml.generated.api.*;\n\n"
-        builder append "public interface " + "I" + ctx.firstToUpper(self.getName) + "_" + p.getName + "{\n"
-        p.getReceives.foreach { m =>
-          builder append "void " + m.getName() + "_via_" + p.getName() + "("
-          builder append m.getParameters.collect { case p => p.getType.java_type(ctx, p.getCardinality != null) + " " + ctx.protectKeyword(p.Java_var_name)}.mkString(", ")
-          builder append ");\n"
-        }
-        builder append "}"
-      }
-    }
-  }
-
-  def generateClientAPI(builder : java.lang.StringBuilder, ctx : Context): Unit = {
-    self.allPorts().foreach{ p =>
-      if (p.isDefined("public", "true") && p.getSends.size() > 0) {
-        val builder = ctx.getBuilder("src/main/java/api/I" + ctx.firstToUpper(self.getName) + "_" + p.getName + "Client.java")
-        builder append "package org.thingml.generated.api;\n\n"
-        builder append "import org.thingml.generated.api.*;\n\n"
-        builder append "public interface " + "I" + ctx.firstToUpper(self.getName) + "_" + p.getName + "Client{\n"
-        p.getSends.foreach { m =>
-          builder append "void " + m.getName() + "_from_" + p.getName() + "("
-          builder append m.getParameters.collect { case p => p.getType.java_type(ctx, p.getCardinality != null) + " " + ctx.protectKeyword(p.Java_var_name)}.mkString(", ")
-          builder append ");\n"
-        }
-        builder append "}"
-      }
-    }
-  }
 
   def buildState(builder : java.lang.StringBuilder, ctx : Context, s: State) {
 

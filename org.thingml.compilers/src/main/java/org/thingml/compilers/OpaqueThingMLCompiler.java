@@ -17,6 +17,7 @@ package org.thingml.compilers;
 
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.actions.ActionCompiler;
+import org.thingml.compilers.api.ApiCompiler;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -26,8 +27,8 @@ import java.io.PrintStream;
  */
 public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
-    public OpaqueThingMLCompiler(ActionCompiler actionCompiler) {
-        super(actionCompiler);
+    public OpaqueThingMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler) {
+        super(actionCompiler, apiCompiler);
     }
     PrintStream m, e;
 

@@ -18,6 +18,7 @@ package org.thingml.compilers;
 import org.sintef.thingml.Configuration;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.actions.ActionCompiler;
+import org.thingml.compilers.api.ApiCompiler;
 
 import java.io.PrintStream;
 
@@ -27,7 +28,7 @@ import java.io.PrintStream;
 public class ArduinoCompiler extends OpaqueThingMLCompiler {
 
     public ArduinoCompiler() {
-        super(new ActionCompiler());
+        super(new ActionCompiler(), new ApiCompiler());
     }
 
     @Override

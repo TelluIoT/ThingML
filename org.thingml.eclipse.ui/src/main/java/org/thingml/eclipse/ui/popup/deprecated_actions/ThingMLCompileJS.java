@@ -69,7 +69,7 @@ public class ThingMLCompileJS implements IObjectActionDelegate {
 
 
 
-        ThingMLCompiler compiler = new JavaScriptCompiler(new JSActionCompiler());
+        ThingMLCompiler compiler = new JavaScriptCompiler();
         for (Configuration c : thingmlModel.getConfigs()) {
             compiler.setOutputDirectory(new java.io.File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName()));
             compiler.compile(c);

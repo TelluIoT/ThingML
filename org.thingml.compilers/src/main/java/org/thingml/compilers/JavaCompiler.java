@@ -19,6 +19,7 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.JavaActionCompiler;
+import org.thingml.compilers.api.JavaApiCompiler;
 import org.thingml.javagenerator.JavaGenerator;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 public class JavaCompiler extends OpaqueThingMLCompiler {
 
     public JavaCompiler() {
-        super(new JavaActionCompiler());
+        super(new JavaActionCompiler(), new JavaApiCompiler());
     }
 
     @Override

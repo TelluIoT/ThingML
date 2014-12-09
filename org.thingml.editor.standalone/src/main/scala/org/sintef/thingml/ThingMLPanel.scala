@@ -343,7 +343,7 @@ class ThingMLPanel extends JPanel {
 
       try {
         val thingmlModel = loadThingMLmodel(targetFile.get)
-        val compiler = new JavaScriptCompiler(new JSActionCompiler());
+        val compiler = new JavaScriptCompiler();
         thingmlModel.allConfigurations().foreach { c =>
           val file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName)
           file.mkdirs()

@@ -20,6 +20,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.JSActionCompiler;
+import org.thingml.compilers.api.ApiCompiler;
 
 /**
  * Created by ffl on 25.11.14.
@@ -27,16 +28,16 @@ import org.thingml.compilers.actions.JSActionCompiler;
 public class JavaScriptCompiler extends OpaqueThingMLCompiler {
 
     public JavaScriptCompiler() {
-        super(new JSActionCompiler());
+        super(new JSActionCompiler(), new ApiCompiler());
     }
 
-    public JavaScriptCompiler(ActionCompiler actionCompiler) {
-        super(actionCompiler);
+    public JavaScriptCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler) {
+        super(actionCompiler, apiCompiler);
     }
 
     @Override
     public ThingMLCompiler clone() {
-        return new JavaScriptCompiler(new JSActionCompiler());
+        return new JavaScriptCompiler();
     }
 
     @Override

@@ -17,6 +17,7 @@ package org.thingml.compilers.actions;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.helpers.JavaHelper;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -34,9 +35,6 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
             for(Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
                     cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
-                    /*builder.append("(");
-                    generate(p, builder, ctx);
-                    builder.append(")");*/
                     break;
                 }
                 j++;
@@ -50,16 +48,13 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
         builder.append(action.getFunction().getName() + "(");
         int i = 0;
-        for(Expression p : action.getParameters()) {
+        for (Expression p : action.getParameters()) {
             if (i > 0)
                 builder.append(", ");
             int j = 0;
-            for(Parameter fp : action.getFunction().getParameters()) {
+            for (Parameter fp : action.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    cast(fp.getType(), fp.getCardinality()!=null, p, builder, ctx);
-                    /*builder.append("(");
-                    generate(p, builder, ctx);
-                    builder.append(")");*/
+                    cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
                     break;
                 }
                 j++;
@@ -67,26 +62,6 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
             i++;
         }
         builder.append(");\n");
-    }
-
-    private String getJavaType(Type type, boolean isArray, Context ctx) {
-        StringBuilder builder = new StringBuilder();
-        if (type == null) {//void
-            builder.append("void");
-        } else if (type instanceof Enumeration){//enumeration
-            builder.append(ctx.firstToUpper(type.getName()) + "_ENUM");
-        } else {
-            if (type.hasAnnotation("java_type")) {
-                builder.append(type.annotation("java_type").toArray()[0]);
-            } else {
-                System.err.println("WARNING: no Java type defined for ThingML datatype " + type.getName());
-                builder.append("/*No Java type was explicitly defined*/ Object");
-            }
-            if (isArray) {//array
-                builder.append("[]");
-            }
-        }
-        return builder.toString();
     }
 
     private String getDefaultValue(Type type) {
@@ -117,7 +92,7 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
         }
 
         //Define the type of the variable
-        builder.append(getJavaType(action.getType(), action.getCardinality()!=null, ctx));
+        builder.append(JavaHelper.getJavaType(action.getType(), action.getCardinality() != null, ctx));
         builder.append(" ");
 
         builder.append(ctx.getVariableName(action));
@@ -125,19 +100,15 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
         //Define the initial value for that variable
         if (action.getInit() != null) {
             builder.append(" = ");
-            //builder.append(getJavaType(action.getType(), action.getCardinality()!=null, ctx));
             cast(action.getType(), action.getCardinality()!=null, action.getInit(), builder, ctx);
             builder.append(";\n");
-            /*builder.append("(");
-            generate(action.getInit(), builder, ctx);
-            builder.append(");\n");*/
         } else {
             if (!action.isChangeable()) {
                 System.err.println("WARNING: non changeable variable (" + action.getName() + ") should have been initialized ");
                 builder.append("/*final variable should have been initialized. Please fix your ThingML model*/");
             }
             if (action.getCardinality() != null) {
-                builder.append(" = new " + getJavaType(action.getType(), false, ctx) + "[");
+                builder.append(" = new " + JavaHelper.getJavaType(action.getType(), false, ctx) + "[");
                 generate(action.getCardinality(), builder, ctx);
                 builder.append("];");
             } else {
@@ -182,9 +153,6 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
     @Override
     public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
         builder.append(ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + ((ThingMLElement)expression.getLiteral().eContainer()).getName().toUpperCase() + "_" + expression.getLiteral().getName().toUpperCase());
-
-
-
     }
 
     @Override
@@ -200,9 +168,6 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
             for(Parameter fp : expression.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
                     cast(fp.getType(), fp.getCardinality()!=null, p, builder, ctx);
-                    /*builder.append("(");
-                    generate(p, builder, ctx);
-                    builder.append(")");*/
                     break;
                 }
                 j++;

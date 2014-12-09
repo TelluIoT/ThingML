@@ -66,7 +66,7 @@ object Cmd {
 				if (args(0) == "linux")
 					CGenerator.compileToLinuxAndNotMake(thingmlModel)
 				else if (args(0) == "javascript") {
-          val compiler = new JavaScriptCompiler(new JSActionCompiler());
+          val compiler = new JavaScriptCompiler();
           thingmlModel.allConfigurations().foreach { c =>
             val folder = new File("tmp/ThingML_Javascript/" + c.getName)
             folder.mkdirs()
