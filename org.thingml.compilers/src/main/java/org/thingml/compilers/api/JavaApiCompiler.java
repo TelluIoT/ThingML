@@ -28,9 +28,11 @@ import org.thingml.compilers.helpers.JavaHelper;
 public class JavaApiCompiler extends ApiCompiler {
 
     public void generate(Thing thing, Context ctx) {
+        //Lifecycle API (start/stop) comes from the JaSM component which things extends **
+
         //Generate interfaces that the thing will implement, for others to call this API
         for(Port p : thing.allPorts()) {
-            if (p.isDefined("public", "true") && p.getReceives().size() > 0) {
+            if (!p.isDefined("public", "false") && p.getReceives().size() > 0) {
                 StringBuilder builder = ctx.getBuilder("src/main/java/api/I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + ".java");
                 builder.append("package org.thingml.generated.api;\n\n");
                 builder.append("import org.thingml.generated.api.*;\n\n");
@@ -51,7 +53,7 @@ public class JavaApiCompiler extends ApiCompiler {
 
         //generate interfaces for the others to implement, so that the thing can notify them
         for(Port p : thing.allPorts()) {
-            if (p.isDefined("public", "true") && p.getSends().size() > 0) {
+            if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
                 StringBuilder builder = ctx.getBuilder("src/main/java/api/I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client.java");
                 builder.append("package org.thingml.generated.api;\n\n");
                 builder.append("import org.thingml.generated.api.*;\n\n");

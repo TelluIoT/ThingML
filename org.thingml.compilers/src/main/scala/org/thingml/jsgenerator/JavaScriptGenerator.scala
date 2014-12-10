@@ -310,6 +310,7 @@ object JavaScriptGenerator {
 
     builder append "//terminate all things on SIGINT (e.g. CTRL+C)\n"
     builder append "process.on('SIGINT', function() {\n"
+    builder append "console.log(\"Stopping components...\");\n"
     t.allInstances.foreach{ i =>
       builder append i.getName + "._stop();\n"
     }
@@ -641,10 +642,13 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     if (self.allStateMachines().headOption.isDefined) {
       builder append "//Public API for lifecycle management\n"
       builder append self.getName + ".prototype._stop = function() {\n"
+      builder append "this." + self.allStateMachines().head.qname("_") + ".beginExit(this._initial_" + self.allStateMachines().head.qname("_") + " );\n"
+      //It seems the very root onEntry is not called
       ctx.mark("useThis")
       if (self.allStateMachines().head.getExit != null)
         self.allStateMachines().head.getExit.generateJavaScript(builder, ctx)
       ctx.unmark("useThis")
+      //exit the rest
       builder append "}\n\n"
 
       builder append "//Public API for third parties\n"
