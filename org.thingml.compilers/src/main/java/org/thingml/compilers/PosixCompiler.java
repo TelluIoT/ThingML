@@ -19,6 +19,7 @@ import org.sintef.thingml.Configuration;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
+import org.thingml.compilers.main.MainGenerator;
 
 /**
  * Created by ffl on 25.11.14.
@@ -26,7 +27,7 @@ import org.thingml.compilers.api.ApiCompiler;
 public class PosixCompiler extends OpaqueThingMLCompiler {
 
     public PosixCompiler() {
-        super(new ActionCompiler(), new ApiCompiler());
+        super(new ActionCompiler(), new ApiCompiler(), new MainGenerator());
     }
 
     @Override

@@ -18,6 +18,7 @@ package org.thingml.compilers;
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
+import org.thingml.compilers.main.MainGenerator;
 
 import java.io.File;
 
@@ -26,8 +27,8 @@ import java.io.File;
  */
 public class FakeThingMLCompiler extends ThingMLCompiler {
 
-    public FakeThingMLCompiler (ActionCompiler actionCompiler, ApiCompiler apiCompiler) {
-        super(actionCompiler, apiCompiler);
+    public FakeThingMLCompiler (ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler) {
+        super(actionCompiler, apiCompiler, mainCompiler);
         File folder = new File("tmp/ThingML");
         folder.delete();
         folder.mkdirs();
@@ -40,7 +41,7 @@ public class FakeThingMLCompiler extends ThingMLCompiler {
 
     @Override
     public ThingMLCompiler clone() {
-        return new FakeThingMLCompiler(new ActionCompiler(), new ApiCompiler());
+        return new FakeThingMLCompiler(new ActionCompiler(), new ApiCompiler(), new MainGenerator());
     }
 
     @Override

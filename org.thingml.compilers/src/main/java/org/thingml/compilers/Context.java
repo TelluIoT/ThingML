@@ -15,6 +15,8 @@
  */
 package org.thingml.compilers;
 
+import org.sintef.thingml.Connector;
+import org.sintef.thingml.Instance;
 import org.sintef.thingml.Variable;
 
 import java.io.*;
@@ -31,6 +33,9 @@ import java.util.Map;
 public class Context {
 
     private ThingMLCompiler compiler;
+
+    //Contains instantiation statements that will go into the main
+    private Map<Instance, StringBuilder> instances = new HashMap<>();
 
     //Contains entries like <path to the file relative to rootDir, code (to be) generated for that file>
     private Map<String, StringBuilder> builders = new HashMap<String, StringBuilder>();
@@ -184,6 +189,22 @@ public class Context {
 
     public String getVariableName(Variable var) {
         return var.qname("_") + "_var";
+    }
+
+    public String getInstanceName(Instance i) {
+        return i.getType().getName() + "_" + i.getName();
+    }
+
+    public String getInstanceName(Connector c) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("c_");
+        if (c.getName() != null)
+            builder.append(c.getName());
+        builder.append("_");
+        builder.append(getInstanceName(c.getCli().getInstance()) + "-" + c.getRequired());
+        builder.append("_to_");
+        builder.append(getInstanceName(c.getSrv().getInstance()) + "-" + c.getProvided());
+        return builder.toString();
     }
 
     public void addProperty(String key, String value) {

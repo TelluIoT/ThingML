@@ -18,6 +18,7 @@ package org.thingml.compilers;
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
+import org.thingml.compilers.main.MainGenerator;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -30,15 +31,18 @@ public abstract class ThingMLCompiler {
 
     private ActionCompiler actionCompiler;
     private ApiCompiler apiCompiler;
+    private MainGenerator mainCompiler;
 
     public ThingMLCompiler() {
         this.actionCompiler = new ActionCompiler();
         this.apiCompiler = new ApiCompiler();
+        this.mainCompiler = new MainGenerator();
     }
 
-    public ThingMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler) {
+    public ThingMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler) {
         this.actionCompiler = actionCompiler;
         this.apiCompiler = apiCompiler;
+        this.mainCompiler = mainCompiler;
     }
 
     public abstract ThingMLCompiler clone();
@@ -96,5 +100,9 @@ public abstract class ThingMLCompiler {
 
     public ApiCompiler getApiCompiler() {
         return apiCompiler;
+    }
+
+    public MainGenerator getMainCompiler() {
+        return mainCompiler;
     }
 }

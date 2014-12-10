@@ -64,27 +64,6 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
         builder.append(");\n");
     }
 
-    private String getDefaultValue(Type type) {
-        if (type.isDefined("java_type", "boolean"))
-            return "false";
-        else if (type.isDefined("java_type", "int"))
-            return "0";
-        else if (type.isDefined("java_type", "long"))
-            return "0";
-        else if (type.isDefined("java_type", "float"))
-            return "0.0f";
-        else if (type.isDefined("java_type", "double"))
-            return "0.0d";
-        else if (type.isDefined("java_type", "byte"))
-            return "0";
-        else if (type.isDefined("java_type", "short"))
-            return "0";
-        else if (type.isDefined("java_type", "char"))
-            return "'\u0000'";
-        else
-            return "null";
-    }
-
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
         if (!action.isChangeable()) {
@@ -113,7 +92,7 @@ public class JavaActionCompiler extends GenericImperativeActionCompiler {
                 builder.append("];");
             } else {
                  if (action.getType().isDefined("java_primitive", "true")) {
-                     builder.append(" = " + getDefaultValue(action.getType()) +  ";");
+                     builder.append(" = " + JavaHelper.getDefaultValue(action.getType()) +  ";");
                  } else {
                     builder.append(" = null;");
                  }
