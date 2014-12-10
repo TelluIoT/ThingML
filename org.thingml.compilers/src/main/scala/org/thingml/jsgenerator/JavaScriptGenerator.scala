@@ -639,65 +639,11 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
 
     builder append "}\n"
 
-    if (self.allStateMachines().headOption.isDefined) {
-      builder append "//Public API for lifecycle management\n"
-      builder append self.getName + ".prototype._stop = function() {\n"
-      builder append "this." + self.allStateMachines().head.qname("_") + ".beginExit(this._initial_" + self.allStateMachines().head.qname("_") + " );\n"
-      //It seems the very root onEntry is not called
-      ctx.mark("useThis")
-      if (self.allStateMachines().head.getExit != null)
-        self.allStateMachines().head.getExit.generateJavaScript(builder, ctx)
-      ctx.unmark("useThis")
-      //exit the rest
-      builder append "}\n\n"
-
-      builder append "//Public API for third parties\n"
-      builder append self.getName + ".prototype._init = function() {\n"
-      ctx.mark("useThis")
-      //execute onEntry of the root state machine
-      if (self.allStateMachines().head.getEntry != null)
-        self.allStateMachines().head.getEntry.generateJavaScript(builder, ctx)
-      builder append "this." + self.allStateMachines().head.qname("_") + ".initialise( this._initial_" + self.allStateMachines().head.qname("_") + " );\n"
-
-      builder append "var msg = this.getQueue().shift();\n"
-      builder append "while(msg != null) {\n"
-      builder append "this." + self.allStateMachines().head.qname("_") + ".process(this._initial_" + self.allStateMachines().head.qname("_") + ", msg);\n"
-      builder append "msg = this.getQueue().shift();\n"
-      builder append "}\n"
-      builder append "this.ready = true;\n"
-      ctx.unmark("useThis")
-      builder append "}\n\n"
-
-      builder append self.getName + ".prototype._receive = function(message) {//takes a JSONified message\n"
-      builder append "this.getQueue().push(message);\n"
-      builder append "if (this.ready) {\n"
-      builder append "var msg = this.getQueue().shift();\n"
-      builder append "while(msg != null) {\n"
-      builder append "this." + self.allStateMachines().head.qname("_") + ".process(this._initial_" + self.allStateMachines().head.qname("_") + ", msg);\n"
-      builder append "msg = this.getQueue().shift();\n"
-      builder append "}\n"
-      builder append "}\n"
-      builder append "}\n"
-    }
+    ctx.getCompiler.getApiCompiler.generate(self, ctx)
 
     builder append  self.getName + ".prototype.getName = function() {\n"
     builder append "return \"" + self.getName + "\";\n"
     builder append "}\n\n"
-
-
-    self.allPorts().foreach { p =>
-      if (p.isDefined("public", "true") && p.getReceives.size() > 0) {
-        p.getReceives.foreach { m =>
-          builder append self.getName + ".prototype.receive" + m.getName + "On" + p.getName + " = function("
-          builder append m.getParameters.collect { case pa => ctx.protectKeyword(pa.getName)}.mkString(", ")
-          builder append ") {\n"
-          builder append "this._receive('{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c") + "\""
-          builder append m.getParameters.collect { case pa => ", \"" + pa.getName + "\":\"" + ctx.protectKeyword(pa.getName) + "\""}.mkString("") //TODO: only string params should have \" \" for their values...
-          builder append "}');\n"
-          builder append "}\n\n"
-        }
-      }
-    }
   }
 
 }
