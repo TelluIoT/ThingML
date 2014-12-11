@@ -206,13 +206,14 @@ object JavaGenerator {
   }
 
   def compile(t: Configuration, pack: String, model: ThingMLModel, ctx : Context) {
-    t.allThings().foreach{t =>
-      ctx.getCompiler.getApiCompiler.generate(t, ctx)
+    ctx.setCurrentConfiguration(t)
+    t.allThings().foreach{th =>
+      ctx.getCompiler.getApiCompiler.generate(th, ctx)
     }
 
     //TODO: to be migrated in API generator
     model.allUsedSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
-      e.generateJava(ctx.getBuilder("src/main/java/api/" + ctx.firstToUpper(e.getName) + "_ENUM.java"), ctx)
+      e.generateJava(ctx.getBuilder("src/main/java/org/thingml/generated/api/" + ctx.firstToUpper(e.getName) + "_ENUM.java"), ctx)
     }
 
     ctx.getCompiler.getMainCompiler.generate(t, model, ctx);
@@ -221,7 +222,7 @@ object JavaGenerator {
     //TODO: we should not generate all the messages defined in the model, just the one relevant for the configuration
     t.allMessages.foreach {
       m =>
-        var builder = ctx.getBuilder("src/main/java/messages/" + ctx.firstToUpper(m.getName()) + "MessageType.java")
+        var builder = ctx.getBuilder("src/main/java/org/thingml/generated/messages/" + ctx.firstToUpper(m.getName()) + "MessageType.java")
         ctx.addProperty("pack", "org.thingml.generated.messages")
 
         JavaHelper.generateHeader(builder, ctx, false, t.allInstances().collect{case i => i.getType}.filter{thing => thing.allPorts.filter{p => p.isDefined("public", "true")}.size > 0}.size > 0 || model.allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, t.allMessages().size() > 0)
@@ -487,7 +488,7 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
   override def generateJava(ctx : Context) {
     //Context.thing = self
     ctx.addProperty("pack", "org.thingml.generated")
-    val builder = ctx.getBuilder("src/main/java/" + ctx.firstToUpper(self.getName) + ".java")
+    val builder = ctx.getBuilder("src/main/java/org/thingml/generated/" + ctx.firstToUpper(self.getName) + ".java")
 
     JavaHelper.generateHeader(builder, ctx, false, self.allPorts.filter{p => p.isDefined("public", "true")}.size > 0 || self.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, self.allMessages().size() > 0)
     builder append "\n/**\n"

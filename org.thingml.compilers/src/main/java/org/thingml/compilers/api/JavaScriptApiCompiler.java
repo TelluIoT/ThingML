@@ -25,7 +25,7 @@ import org.thingml.compilers.helpers.JavaHelper;
 public class JavaScriptApiCompiler extends ApiCompiler {
 
     public void generate(Thing thing, Context ctx) {
-        final StringBuilder builder = ctx.getBuilder("behavior.js");
+        final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/behavior.js");
 
         if (thing.allStateMachines().size()>0) {
             //Lifecycle

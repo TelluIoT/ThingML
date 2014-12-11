@@ -109,9 +109,9 @@ object JavaScriptGenerator {
   }
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false, outdir : File = null, ctx : Context) {
-    val f = new File(ctx.getOutputDir + "/lib")
+    val f = new File(ctx.getOutputDir + "/" + cfg.getName + "/lib")
     f.mkdirs()
-    val writer = new FileWriter(new File(f, "state.js"))
+    val writer = new FileWriter(new File(f, "/state.js"))
     IOUtils.copy(this.getClass.getClassLoader.getResourceAsStream("javascript/lib/state.js"), writer)
     writer.flush()
     writer.close();
@@ -167,7 +167,7 @@ object JavaScriptGenerator {
     builder append "</html>"*/
 
 
-    var builder = ctx.getBuilder("behavior.js")
+    var builder = ctx.getBuilder(t.getName + "/behavior.js")
 
     var prefix = (if (isNode) "state_js." else "")
     if (isNode)
@@ -222,8 +222,8 @@ object JavaScriptGenerator {
     builder append "}\n"
     builder append "}\n\n"
 
-    model.allUsedSimpleTypes.filter { t => t.isInstanceOf[Enumeration]}.foreach { e =>
-      e.generateJavaScript(ctx.getBuilder("behavior.js"), ctx)
+    model.allUsedSimpleTypes.filter { ty => ty.isInstanceOf[Enumeration]}.foreach { e =>
+      e.generateJavaScript(ctx.getBuilder(t.getName + "/behavior.js"), ctx)
     }
 
     t.generateJavaScript(builder, ctx)
@@ -331,9 +331,9 @@ class ThingMLJavaScriptGenerator(self: ThingMLElement) {
 case class ConfigurationJavaScriptGenerator(val self: Configuration) extends ThingMLJavaScriptGenerator(self) {
 
   override def generateJavaScript(builder : StringBuilder, ctx : Context) {
-
+    ctx.setCurrentConfiguration(self)
     self.allThings.foreach { thing =>
-      thing.generateJavaScript(ctx.getBuilder("behavior.js"), ctx)
+      thing.generateJavaScript(ctx.getBuilder(self.getName + "/behavior.js"), ctx)
     }
   }
 

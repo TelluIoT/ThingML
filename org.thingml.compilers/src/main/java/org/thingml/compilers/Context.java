@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers;
 
+import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Connector;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.Variable;
@@ -45,6 +46,16 @@ public class Context {
 
     //contains some additional properties
     private Map<String, String> properties = new HashMap<String, String>();
+
+    private Configuration currentConfiguration;
+
+    public Configuration getCurrentConfiguration() {
+        return currentConfiguration;
+    }
+
+    public void setCurrentConfiguration(Configuration currentConfiguration) {
+        this.currentConfiguration = currentConfiguration;
+    }
 
     //Keywords of the target languages
     private List<String> keywords = new ArrayList<String>();

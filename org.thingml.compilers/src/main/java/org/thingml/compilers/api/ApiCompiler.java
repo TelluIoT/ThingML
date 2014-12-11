@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.api;
 
+import org.sintef.thingml.Configuration;
 import org.sintef.thingml.SendAction;
 import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;

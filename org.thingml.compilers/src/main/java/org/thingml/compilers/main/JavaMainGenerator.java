@@ -30,7 +30,7 @@ public class JavaMainGenerator extends MainGenerator {
 
     @Override
     public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
-        StringBuilder builder = ctx.getBuilder("src/main/java/Main.java");
+        StringBuilder builder = ctx.getBuilder("src/main/java/org/thingml/generated/Main.java");
         ctx.addProperty("pack", "org.thingml.generated");
 
         boolean api = false;
