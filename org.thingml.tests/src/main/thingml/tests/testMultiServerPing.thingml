@@ -50,28 +50,28 @@ thing TestMultiServerPing includes Test, PingMsg
             transition -> Pong
 			event m : harnessIn?testIn
 			guard m.c == '\'0\''
-			after do
+			action do
                 	harnessOut!testOut('\'P\'')
                 	ppclient!ping(0)
                 end
 			transition -> Pong
 			event m : harnessIn?testIn
 			guard m.c == '\'1\''
-			after do
+			action do
                 	harnessOut!testOut('\'P\'')
                 	ppclient!ping(1)
                 end
             transition -> Pong
 			event m : harnessIn?testIn
 			guard m.c == '\'2\''
-			after do
+			action do
                 	harnessOut!testOut('\'P\'')
                 	ppclient!ping(2)
             	end
             transition -> Pong
 			event m : harnessIn?testIn
 			guard m.c == '\'3\''
-			after do
+			action do
                 	harnessOut!testOut('\'P\'')
                 	ppclient!ping(3)
             	end
@@ -82,15 +82,15 @@ thing TestMultiServerPing includes Test, PingMsg
 			transition -> Ping
 			event p : ppclient?pong
 			guard p.num == 1
-			after harnessOut!testOut('\'1\'')
+			action harnessOut!testOut('\'1\'')
 			transition -> Ping
 			event p : ppclient?pong
 			guard p.num == 2
-			after harnessOut!testOut('\'2\'')
+			action harnessOut!testOut('\'2\'')
             transition -> Ping
 			event p : ppclient?pong
 			guard p.num == 3
-			after harnessOut!testOut('\'3\'')
+			action harnessOut!testOut('\'3\'')
 		}
 	}
 }

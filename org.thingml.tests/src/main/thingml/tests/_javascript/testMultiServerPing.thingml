@@ -1,0 +1,24 @@
+import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/test.thingml"
+import "../testMultiServerPing.thingml"
+import "../tester.thingml"
+import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/timer.thingml"
+
+configuration TestMultiServerPing {
+	instance harness : Tester
+	instance dump : TestDumpJS
+	instance test : TestMultiServerPing
+ instance timer : TimerJS
+	connector harness.testEnd => dump.dumpEnd
+ connector harness.timer => timer.timer
+	connector test.harnessOut => dump.dump
+	connector test.harnessIn => harness.test
+	instance pingServ1 : PingServer
+		set pingServ1.num = 1
+	instance pingServ2 : PingServer
+		set pingServ2.num = 2
+	instance pingServ3 : PingServer
+		set pingServ3.num = 3
+	connector test.ppclient => pingServ1.pp
+	connector test.ppclient => pingServ2.pp
+	connector test.ppclient => pingServ3.pp
+}
