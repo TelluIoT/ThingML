@@ -147,7 +147,7 @@ object JavaScriptGenerator {
   }
 
   def compile(t: Configuration, model: ThingMLModel, isNode : Boolean = true, ctx : Context) {
-    var builder = ctx.getBuilder("index.html")
+    /*var builder = ctx.getBuilder("index.html")
 
 
     builder append "<!DOCTYPE html>\n"
@@ -164,10 +164,10 @@ object JavaScriptGenerator {
     builder append "</body>\n"
     if (isNode)
       builder append "<br>Not intended to run in the browser. Please run with Node.js</br>"
-    builder append "</html>"
+    builder append "</html>"*/
 
 
-    builder = ctx.getBuilder("behavior.js")
+    var builder = ctx.getBuilder("behavior.js")
 
     var prefix = (if (isNode) "state_js." else "")
     if (isNode)
