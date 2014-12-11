@@ -91,7 +91,7 @@ datatype Char
 	@c_type "char"
 	@c_byte_size "1"
 	@java_type "char"
-    @js_type "String"
+    @js_type "char"
 	@java_primitive "true"
     @scala_type "Character"
     @SenML_type "String";

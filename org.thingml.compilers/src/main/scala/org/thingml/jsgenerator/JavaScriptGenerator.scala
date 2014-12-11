@@ -457,8 +457,9 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
         builder append "var msg = '{\"message\":\"" + m.getName + "\",\"port\":\"" + p.getName + "_c"/* (if(p.isInstanceOf[ProvidedPort]) "_s" else "_c")*/ + "\""
         m.getParameters.foreach { pa =>
           val isString = pa.getType.isDefined("js_type", "String")
+          val isChar = pa.getType.isDefined("js_type", "char")
           val isArray = (pa.getCardinality != null)
-          builder append ", \"" + pa.getName + "\":" + (if(isArray) "[" else "") + (if (isString) "\"" else "") + "' + " + (if(isString) ctx.protectKeyword(pa.getName) + ".replace(\"\\n\", \"\\\\n\")" else ctx.protectKeyword(pa.getName)) + " + '" + (if (isString) "\"" else "") + (if(isArray) "]" else "")
+          builder append ", \"" + pa.getName + "\":" + (if(isArray) "[" else "") + (if (isString || isChar) "\"" else "") + "' + " + (if(isString) ctx.protectKeyword(pa.getName) + ".replace(\"\\n\", \"\\\\n\")" else ctx.protectKeyword(pa.getName)) + " + '" + (if (isString || isChar) "\"" else "") + (if(isArray) "]" else "")
         }
         builder append "}';\n"
         builder append "_send(msg);\n"

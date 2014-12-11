@@ -25,14 +25,13 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        builder.append("process.nextTick(function(){send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + "(");
+        builder.append("process.nextTick(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + ".bind(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()));
         int i = 0;
         for(Expression p : action.getParameters()) {
-            if (i > 0)
-                builder.append(", ");
             int j = 0;
             for(Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
+                    builder.append(", ");
                     generate(p, builder, ctx);
                     break;
                 }
@@ -40,7 +39,7 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
             }
             i++;
         }
-        builder.append(");});\n");
+        builder.append("));\n");
     }
 
     @Override
