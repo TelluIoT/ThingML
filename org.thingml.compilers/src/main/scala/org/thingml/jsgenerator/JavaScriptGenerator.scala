@@ -252,7 +252,7 @@ object JavaScriptGenerator {
       }
 
 
-      builder append "var " + i.getName + " = new " + i.getType.getName + "("
+      builder append "var " + i.getName + " = new " + ctx.firstToUpper(i.getType.getName) + "("
       var id = 0
       i.getType.allPropertiesInDepth.foreach { prop => //TODO: not optimal, to be improved
         t.initExpressionsForInstance(i).filter { p => p.getKey == prop && prop.getCardinality == null}.foreach { case p =>
