@@ -30,7 +30,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         if (thing.allStateMachines().size()>0) {
             //Lifecycle
             builder.append("//Public API for lifecycle management\n");
-            builder.append(thing.getName() + ".prototype._stop = function() {\n");
+            builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._stop = function() {\n");
             builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".beginExit(this._initial_" + thing.allStateMachines().get(0).qname("_") + " );\n");
             //It seems the very root onEntry is not called
             ctx.mark("useThis");
@@ -42,7 +42,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
 
             //Communication
             builder.append("//Public API for third parties\n");
-            builder.append(thing.getName() + ".prototype._init = function() {\n");
+            builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._init = function() {\n");
             ctx.mark("useThis");
             //execute onEntry of the root state machine
             if (thing.allStateMachines().get(0).getEntry() != null)
@@ -58,7 +58,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
             ctx.unmark("useThis");
             builder.append("}\n\n");
 
-            builder.append(thing.getName() + ".prototype._receive = function(message) {//takes a JSONified message\n");
+            builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(message) {//takes a JSONified message\n");
             builder.append("this.getQueue().push(message);\n");
             builder.append("if (this.ready) {\n");
             builder.append("var msg = this.getQueue().shift();\n");
@@ -73,7 +73,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         for(Port p : thing.allPorts()) {
             if (!p.isDefined("public", "false") && p.getReceives().size() > 0) {
                 for(Message m : p.getReceives()) {
-                    builder.append(thing.getName() + ".prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
+                    builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
                     int i = 0;
                     for(Parameter pa : m.getParameters()) {
                         if (i > 0)
