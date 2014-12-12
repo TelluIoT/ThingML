@@ -41,6 +41,7 @@ public class JavaApiCompiler extends ApiCompiler {
                         if (i > 0)
                             builder.append(", ");
                         builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                        i++;
                     }
                     builder.append(");\n");
                 }
@@ -62,6 +63,7 @@ public class JavaApiCompiler extends ApiCompiler {
                         if (i > 0)
                             builder.append(", ");
                         builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                        i++;
                     }
                     builder.append(");\n");
                 }
