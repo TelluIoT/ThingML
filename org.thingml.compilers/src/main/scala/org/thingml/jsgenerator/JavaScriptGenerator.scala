@@ -642,7 +642,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
 
     ctx.getCompiler.getApiCompiler.generate(self, ctx)
 
-    builder append  self.getName + ".prototype.getName = function() {\n"
+    builder append  ctx.firstToUpper(self.getName) + ".prototype.getName = function() {\n"
     builder append "return \"" + self.getName + "\";\n"
     builder append "}\n\n"
   }
