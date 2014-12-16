@@ -539,7 +539,7 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
 
     self.allPorts().foreach{p =>
       p.getSends.foreach{m =>
-        builder append "private synchronized void send" + ctx.firstToUpper(m.getName) + "_via_" + p.getName + "(" + m.getParameters.collect { case p => p.getType.java_type(ctx, p.getCardinality != null) + " " + ctx.protectKeyword(p.Java_var_name)}.mkString(", ") + "){\n"
+        builder append "private void send" + ctx.firstToUpper(m.getName) + "_via_" + p.getName + "(" + m.getParameters.collect { case p => p.getType.java_type(ctx, p.getCardinality != null) + " " + ctx.protectKeyword(p.Java_var_name)}.mkString(", ") + "){\n"
         builder append "//ThingML send\n"
         builder append "send(" + m.getName + "Type.instantiate(" + p.getName + "_port"
         if (m.getParameters.size > 0)
