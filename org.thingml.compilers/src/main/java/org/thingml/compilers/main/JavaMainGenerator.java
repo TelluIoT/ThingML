@@ -16,12 +16,11 @@
 package org.thingml.compilers.main;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.Enumeration;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.helpers.JavaHelper;
 
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by bmori on 10.12.2014.

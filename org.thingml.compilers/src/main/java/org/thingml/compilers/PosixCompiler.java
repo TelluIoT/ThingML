@@ -19,6 +19,7 @@ import org.sintef.thingml.Configuration;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
+import org.thingml.compilers.build.BuildCompiler;
 import org.thingml.compilers.main.MainGenerator;
 
 /**
@@ -27,7 +28,7 @@ import org.thingml.compilers.main.MainGenerator;
 public class PosixCompiler extends OpaqueThingMLCompiler {
 
     public PosixCompiler() {
-        super(new ActionCompiler(), new ApiCompiler(), new MainGenerator());
+        super(new ActionCompiler(), new ApiCompiler(), new MainGenerator(), new BuildCompiler());
     }
 
     @Override

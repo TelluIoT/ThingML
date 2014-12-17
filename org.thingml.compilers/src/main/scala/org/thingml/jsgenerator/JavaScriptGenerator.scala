@@ -109,12 +109,8 @@ object JavaScriptGenerator {
   }
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false, outdir : File = null, ctx : Context) {
-    val f = new File(ctx.getOutputDir + "/" + cfg.getName + "/lib")
-    f.mkdirs()
-    val writer = new FileWriter(new File(f, "/state.js"))
-    IOUtils.copy(this.getClass.getClassLoader.getResourceAsStream("javascript/lib/state.js"), writer)
-    writer.flush()
-    writer.close();
+    ctx.setCurrentConfiguration(cfg)
+    ctx.getCompiler.getBuildCompiler.generate(cfg, ctx)
     compile(cfg, model, true, ctx)
     ctx.dump()
 
@@ -171,7 +167,7 @@ object JavaScriptGenerator {
 
     var prefix = (if (isNode) "state_js." else "")
     if (isNode)
-      builder append "var state_js = require('./lib/state.js');\n"
+      builder append "var state_js = require('state.js');\n"
     builder append "function buildStateMachine(name) {\n"
     builder append "return new " + prefix + "StateMachine(name);\n"
     builder append "}\n\n"
@@ -310,7 +306,7 @@ object JavaScriptGenerator {
 
     builder append "//terminate all things on SIGINT (e.g. CTRL+C)\n"
     builder append "process.on('SIGINT', function() {\n"
-    builder append "console.log(\"Stopping components...\");\n"
+    builder append "console.log(\"Stopping components... CTRL+D to force shutdown\");\n"
     t.allInstances.foreach{ i =>
       builder append i.getName + "._stop();\n"
     }

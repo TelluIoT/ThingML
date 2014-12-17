@@ -118,28 +118,7 @@ object JavaGenerator {
     ctx.dump()
     //val rootDir = tmpFolder + cfg.getName
 
-    //TODO: update POM
-    var pom = Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream("pomtemplates/javapom.xml"), "utf-8").getLines().mkString("\n")
-    pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName())
-
-    //Add ThingML dependencies
-    val thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n"
-    //TODO: will not work if more than one thingml dep. We should re-declare the whole <dependency>
-    cfg.allThingMLMavenDep.foreach { dep =>
-      pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"))
-    }
-    cfg.allMavenDep.foreach { dep =>
-      pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep)
-    }
-
-    //pom = pom.replace("<!--DEP-->", "")//other compilers, e.g. Kevoree, might complement the POM
-    //pom = pom.replace("<!--COMPACT_PROFILE-->", "compact1")//TODO: this might be overriden by an annotation.
-
-    //TODO: add other maven dependencies
-
-    val w = new PrintWriter(new FileWriter(new File(tmpFolder + "/pom.xml")));
-    w.println(pom);
-    w.close();
+    ctx.getCompiler.getBuildCompiler.generate(cfg, ctx)
 	if (!doingTests){
     	javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + tmpFolder + "\n$>mvn clean package exec:java -Dexec.mainClass=org.thingml.generated.Main");
 	}

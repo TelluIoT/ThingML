@@ -21,6 +21,7 @@ import org.thingml.cgenerator.CGenerator._
 import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper
 import org.thingml.compilers.actions.ActionCompiler
 import org.thingml.compilers.api.ApiCompiler
+import org.thingml.compilers.build.BuildCompiler
 import org.thingml.compilers.main.MainGenerator
 
 import scala.collection.JavaConversions._
@@ -667,7 +668,7 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
   }
 
 
-  def compileToLinux(cfg: Configuration, comp : ThingMLCompiler = new FakeThingMLCompiler(new ActionCompiler(), new ApiCompiler(), new MainGenerator())): Hashtable[String, String] = {
+  def compileToLinux(cfg: Configuration, comp : ThingMLCompiler = new FakeThingMLCompiler(new ActionCompiler(), new ApiCompiler(), new MainGenerator(), new BuildCompiler())): Hashtable[String, String] = {
 
     val result = new Hashtable[String, String]()
     val context = new LinuxCGeneratorContext(cfg, comp)
@@ -1265,7 +1266,7 @@ class CGeneratorContext(src: Configuration, comp: ThingMLCompiler) {
   def error_message(msg: String) = "// ERROR: " + msg
 }
 
-class LinuxCGeneratorContext(src: Configuration, comp : ThingMLCompiler = new FakeThingMLCompiler(new ActionCompiler(), new ApiCompiler(), new MainGenerator())) extends CGeneratorContext(src, comp) {
+class LinuxCGeneratorContext(src: Configuration, comp : ThingMLCompiler = new FakeThingMLCompiler(new ActionCompiler(), new ApiCompiler(), new MainGenerator(), new BuildCompiler())) extends CGeneratorContext(src, comp) {
 
   // pointer size in bytes of the target platform
   override def pointerSize() = {
@@ -1308,7 +1309,7 @@ class LinuxCGeneratorContext(src: Configuration, comp : ThingMLCompiler = new Fa
 }
 
 
-class ArduinoCGeneratorContext(src: Configuration, comp: ThingMLCompiler = new FakeThingMLCompiler(new ActionCompiler(), new ApiCompiler(), new MainGenerator())) extends CGeneratorContext(src, comp) {
+class ArduinoCGeneratorContext(src: Configuration, comp: ThingMLCompiler = new FakeThingMLCompiler(new ActionCompiler(), new ApiCompiler(), new MainGenerator(), new BuildCompiler())) extends CGeneratorContext(src, comp) {
 
   if (!src.getAnnotations.filter {
     a => a.getName == "arduino_stdout"

@@ -22,6 +22,8 @@ import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.JSActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
 import org.thingml.compilers.api.JavaScriptApiCompiler;
+import org.thingml.compilers.build.BuildCompiler;
+import org.thingml.compilers.build.JSBuildCompiler;
 import org.thingml.compilers.main.MainGenerator;
 
 /**
@@ -30,11 +32,11 @@ import org.thingml.compilers.main.MainGenerator;
 public class JavaScriptCompiler extends OpaqueThingMLCompiler {
 
     public JavaScriptCompiler() {
-        super(new JSActionCompiler(), new JavaScriptApiCompiler(), new MainGenerator());
+        super(new JSActionCompiler(), new JavaScriptApiCompiler(), new MainGenerator(), new JSBuildCompiler());
     }
 
-    public JavaScriptCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler) {
-        super(actionCompiler, apiCompiler, mainCompiler);
+    public JavaScriptCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler) {
+        super(actionCompiler, apiCompiler, mainCompiler, buildCompiler);
     }
 
     @Override
