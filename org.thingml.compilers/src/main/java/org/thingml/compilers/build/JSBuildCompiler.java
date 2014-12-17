@@ -16,6 +16,7 @@
 package org.thingml.compilers.build;
 
 import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 
 /**
@@ -32,8 +33,13 @@ public class JSBuildCompiler extends BuildCompiler {
         builder.append("\"description\": \"" + cfg.getName() + " configuration generated from ThingML\",\n");
         builder.append("\"main\": \"behavior.js\",\n");
         builder.append("\"dependencies\": {\n");
-        builder.append("\"state.js\": \"^4.1.5\"\n");
-        //TODO: add other dependencies needed by the things
+        builder.append("\"state.js\": \"^4.1.5\"");
+        for(Thing t : cfg.allThings()) {
+            for(String dep : t.annotation("js_dep")) {
+                builder.append(",\n" + dep);
+            }
+        }
+        builder.append("\n");
         builder.append("}\n");
         builder.append("}\n");
 

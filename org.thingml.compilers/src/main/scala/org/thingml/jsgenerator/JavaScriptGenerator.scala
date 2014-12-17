@@ -166,8 +166,14 @@ object JavaScriptGenerator {
     var builder = ctx.getBuilder(t.getName + "/behavior.js")
 
     var prefix = (if (isNode) "state_js." else "")
-    if (isNode)
+    if (isNode) {
       builder append "var state_js = require('state.js');\n"
+      t.allThings().foreach { th =>
+        th.annotation("js_dep").foreach{dep =>
+          builder append "var " + dep.split(":")(0).replaceAll("\"", "") + " = require(" + dep.split(":")(0) + ");\n"
+        }
+      }
+    }
     builder append "function buildStateMachine(name) {\n"
     builder append "return new " + prefix + "StateMachine(name);\n"
     builder append "}\n\n"
