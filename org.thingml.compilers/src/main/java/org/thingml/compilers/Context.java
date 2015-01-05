@@ -35,7 +35,7 @@ public class Context {
 
     private ThingMLCompiler compiler;
 
-    private String thisRef = "this.";
+    private String thisRef = "";
 
     //Contains instantiation statements that will go into the main
     private Map<Instance, StringBuilder> instances = new HashMap<>();
