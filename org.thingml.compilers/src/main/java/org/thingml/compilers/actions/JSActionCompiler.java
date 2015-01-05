@@ -105,7 +105,7 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        if (expression.getProperty().isDefined("private", "true") || (expression.getProperty() instanceof Parameter) || (expression.getProperty() instanceof LocalVariable)) {
+        if (expression.getProperty().isDefined("private", "true") ||  !(expression.getProperty().eContainer() instanceof Thing) || (expression.getProperty() instanceof Parameter) || (expression.getProperty() instanceof LocalVariable)) {
             builder.append(ctx.getVariableName(expression.getProperty()));
         } else {
             builder.append("_this." + ctx.getVariableName(expression.getProperty()));

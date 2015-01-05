@@ -59,7 +59,7 @@ public class JSMainGenerator extends MainGenerator {
 
             for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
                 for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
-                       if (p.getKey().equals(prop) && prop.getCardinality() == null && !prop.isDefined("private", "true")) {
+                       if (p.getKey().equals(prop) && prop.getCardinality() == null && !prop.isDefined("private", "true") && prop.eContainer() instanceof Thing) {
                             System.out.println("Property " + prop);
                             String result = "";
                             if (prop.getType() instanceof Enumeration) {
@@ -88,7 +88,7 @@ public class JSMainGenerator extends MainGenerator {
                         }
                 }
                 for (Property a : cfg.allArrays(i)) {
-                    if (prop.equals(a) && !(prop.isDefined("private", "true"))) {
+                    if (prop.equals(a) && !(prop.isDefined("private", "true"))  && prop.eContainer() instanceof Thing) {
                         System.out.println("Array " + prop);
                         if (id > 0)
                             builder.append(", ");

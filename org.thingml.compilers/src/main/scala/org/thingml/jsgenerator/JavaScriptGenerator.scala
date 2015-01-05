@@ -323,7 +323,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     builder append "function " + ctx.firstToUpper(self.getName) + "("
     var i = 0
     self.allPropertiesInDepth.foreach{ p =>
-      if (!p.isDefined("private", "true")) {
+      if (!p.isDefined("private", "true") && p.eContainer().isInstanceOf[Thing]) {
         if (i > 0)
           builder append ", "
         builder append p.Java_var_name
@@ -342,8 +342,16 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
 
     builder append "//Attributes\n"
     self.allPropertiesInDepth.foreach{ p =>
-      if (p.isDefined("private", "true")) {
-        builder append "var " + p.Java_var_name + ";\n"
+      if (p.isDefined("private", "true") || !(p.eContainer().isInstanceOf[Thing])) {
+        builder append "var " + p.Java_var_name
+        val initExp = self.initExpression(p)
+        if (initExp != null) {
+          builder append " = "
+          initExp.generateJavaScript(builder, ctx);
+        }
+        //TODO: Init
+        builder append ";\n"
+
       } else {
         builder append "this." + p.Java_var_name + " = " + p.Java_var_name + ";\n"
       }
