@@ -33,15 +33,14 @@ public class JSMainGenerator extends MainGenerator {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/behavior.js");
 
 
-
         builder.append("process.stdin.resume();//to keep Node.js alive even when it is nothing more to do...\n");
-        for(Instance i : cfg.allInstances()) {
-            for(Property a : cfg.allArrays(i)) {
-                    builder.append("var " + i.getName() + "_" + a.getName() + "_array = [];\n");
+        for (Instance i : cfg.allInstances()) {
+            for (Property a : cfg.allArrays(i)) {
+                builder.append("var " + i.getName() + "_" + a.getName() + "_array = [];\n");
             }
 
-            for(Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : cfg.initExpressionsForInstanceArrays(i).entrySet()) {
-                for(AbstractMap.SimpleImmutableEntry<Expression, Expression> e : entry.getValue()) {
+            for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : cfg.initExpressionsForInstanceArrays(i).entrySet()) {
+                for (AbstractMap.SimpleImmutableEntry<Expression, Expression> e : entry.getValue()) {
                     String result = "";
                     StringBuilder tempBuilder = new StringBuilder();
                     result += i.getName() + "_" + entry.getKey().getName() + "_array [";
@@ -58,54 +57,52 @@ public class JSMainGenerator extends MainGenerator {
             builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(");
             int id = 0;
 
-            for(Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
-                    for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
-                        if (!p.getKey().isDefined("private", "true")) {
-                            if (p.getKey().equals(prop) && prop.getCardinality() == null) {
-                                String result = "";
-                                if (prop.getType() instanceof Enumeration) {
-                                    Enumeration enum_ = (Enumeration) prop.getType();
-                                    EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
+            for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
+                for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
+                       if (p.getKey().equals(prop) && prop.getCardinality() == null && !prop.isDefined("private", "true")) {
+                            String result = "";
+                            if (prop.getType() instanceof Enumeration) {
+                                Enumeration enum_ = (Enumeration) prop.getType();
+                                EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
+                                StringBuilder tempbuilder = new StringBuilder();
+                                if (enumL == null) {
+                                    tempbuilder.append(ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enum_.getLiterals().get(0).getName().toUpperCase());
+                                } else {
+                                    tempbuilder.append(ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enumL.getLiteral().getName().toUpperCase());
+                                }
+                                result += tempbuilder.toString();
+                            } else {
+                                if (p.getValue() != null) {
                                     StringBuilder tempbuilder = new StringBuilder();
-                                    if (enumL == null) {
-                                        tempbuilder.append(ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enum_.getLiterals().get(0).getName().toUpperCase());
-                                    } else {
-                                        tempbuilder.append(ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enumL.getLiteral().getName().toUpperCase());
-                                    }
+                                    ctx.getCompiler().getActionCompiler().generate(p.getValue(), tempbuilder, ctx);
                                     result += tempbuilder.toString();
                                 } else {
-                                    if (p.getValue() != null) {
-                                        StringBuilder tempbuilder = new StringBuilder();
-                                        ctx.getCompiler().getActionCompiler().generate(p.getValue(), tempbuilder, ctx);
-                                        result += tempbuilder.toString();
-                                    } else {
-                                        result += JavaHelper.getDefaultValue(p.getKey().getType());
-                                    }
+                                    result += JavaHelper.getDefaultValue(p.getKey().getType());
                                 }
-                                if (id > 0)
-                                    builder.append(", ");
-                                builder.append(result);
-                                id = id + 1;
                             }
-                        }
-                    }
-                    for (Property a : cfg.allArrays(i)) {
-                        if (prop.equals(a) && !(a.isDefined("private", "true"))) {
                             if (id > 0)
                                 builder.append(", ");
-                            builder.append(", " + i.getName() + "_" + a.getName() + "_array");
+                            builder.append(result);
                             id = id + 1;
                         }
+                }
+                for (Property a : cfg.allArrays(i)) {
+                    if (prop.equals(a) && !(prop.isDefined("private", "true"))) {
+                        if (id > 0)
+                            builder.append(", ");
+                        builder.append(", " + i.getName() + "_" + a.getName() + "_array");
+                        id = id + 1;
                     }
+                }
             }
             builder.append(");\n");
             builder.append(i.getName() + ".setThis(" + i.getName() + ");\n");
         }
-        for(Connector c : cfg.allConnectors()) {
-            if (c.getRequired().getSends().size()>0) {
+        for (Connector c : cfg.allConnectors()) {
+            if (c.getRequired().getSends().size() > 0) {
                 builder.append(c.getCli().getInstance().getName() + ".getConnectors().push(new Connector(" + c.getCli().getInstance().getName() + ", " + c.getSrv().getInstance().getName() + ", \"" + c.getRequired().getName() + "_c\", \"" + c.getProvided().getName() + "_s\"));\n");
             }
-            if (c.getProvided().getSends().size()>0) {
+            if (c.getProvided().getSends().size() > 0) {
                 builder.append(c.getSrv().getInstance().getName() + ".getConnectors().push(new Connector(" + c.getSrv().getInstance().getName() + ", " + c.getCli().getInstance().getName() + ", \"" + c.getProvided().getName() + "_c\", \"" + c.getRequired().getName() + "_s\"));\n");
             }
         }
@@ -119,7 +116,7 @@ public class JSMainGenerator extends MainGenerator {
         builder.append("//terminate all things on SIGINT (e.g. CTRL+C)\n");
         builder.append("process.on('SIGINT', function() {\n");
         builder.append("console.log(\"Stopping components... CTRL+D to force shutdown\");\n");
-        for(Instance i : cfg.allInstances()) {
+        for (Instance i : cfg.allInstances()) {
             builder.append(i.getName() + "._stop();\n");
         }
         builder.append("});\n\n");
