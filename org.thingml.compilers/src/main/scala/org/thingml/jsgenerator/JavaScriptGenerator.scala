@@ -483,10 +483,10 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
                 i = i + 1;
               }
               else {
-                t.getEvent.foreach { ev =>
+                //t.getEvent.foreach { ev =>
                   builder append "var t" + i + " = buildTransition(" + t.getSource.qname("_") + ", " + t.getTarget.qname("_")
-                  val p = ev.asInstanceOf[ReceiveMessage].getPort
-                  builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName + "_s"/*(if(p.isInstanceOf[ProvidedPort]) "_s" else "_c")*/ + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
+                  //val p = msg.asInstanceOf[ReceiveMessage].getPort
+                  builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName + "_s"/*(if(p.isInstanceOf[ProvidedPort]) "_s" else "_c")*/ + "\" && json.message === \"" + msg.getName + "\""
                   if (t.getGuard != null) {
                     builder append " && "
                     t.getGuard.generateJavaScript(builder, ctx)
@@ -496,14 +496,14 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
                     builder append "t" + i + ".effect = [t" + i + "_effect];\n"
                   }
                   i = i + 1;
-                }
+                //}
               }
             } else {
               val t = h.asInstanceOf[InternalTransition]
-              t.getEvent.foreach { ev =>
-                val p = ev.asInstanceOf[ReceiveMessage].getPort
+              //t.getEvent.foreach { ev =>
+                //val p = msg.asInstanceOf[ReceiveMessage].getPort
                 builder append "var t" + i + " = buildTransition(" + t.eContainer().asInstanceOf[State].qname("_") + ", null"
-                builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName + "_s"/*(if(p.isInstanceOf[ProvidedPort]) "_s" else "_c")*/ + "\" && json.message === \"" + ev.asInstanceOf[ReceiveMessage].getMessage.getName + "\""
+                builder append ", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName + "_s"/*(if(p.isInstanceOf[ProvidedPort]) "_s" else "_c")*/ + "\" && json.message === \"" + msg.getName + "\""
                 if (t.getGuard != null) {
                   builder append " && "
                   t.getGuard.generateJavaScript(builder, ctx)
@@ -513,7 +513,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
                   builder append "t" + i + ".effect = [t" + i + "_effect];\n"
                 }
                 i = i + 1;
-              }
+              //}
             }
 
           }
