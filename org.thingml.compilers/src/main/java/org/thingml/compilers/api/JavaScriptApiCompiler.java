@@ -88,7 +88,11 @@ public class JavaScriptApiCompiler extends ApiCompiler {
                         builder.append("_c");
                     builder.append("\"");
                     for(Parameter pa : m.getParameters()) {
-                        builder.append(", \"" + pa.getName() + "\":\"" + ctx.protectKeyword(pa.getName()) + "\"");//TODO: only string params should have \" \" for their values...
+                        if (pa.getType().isDefined("js_type", "String") || pa.getType().isDefined("js_type", "char")) {
+                            builder.append(", \"" + pa.getName() + "\":\"' + " + ctx.protectKeyword(pa.getName()) + " + '\"");//TODO: only string params should have \" \" for their values...
+                        } else {
+                            builder.append(", \"" + pa.getName() + "\":' + " + ctx.protectKeyword(pa.getName()) + " + '");//TODO: only string params should have \" \" for their values...
+                        }
                     }
                     builder.append("}');\n");
                     builder.append("}\n\n");

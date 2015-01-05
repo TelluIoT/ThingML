@@ -47,7 +47,10 @@ public class GenericImperativeActionCompiler extends ActionCompiler {
             }
         }
         else {//simple variable or we re-affect the whole array
-            builder.append(ctx.getThisRef() + action.getProperty().qname("_") + "_var");
+            if (action.getProperty().eContainer() instanceof Thing && !(action.getProperty().isDefined("private", "true"))) {
+                builder.append(ctx.getThisRef());
+            }
+            builder.append(action.getProperty().qname("_") + "_var");
             builder.append(" = ");
             cast(action.getProperty().getType(), action.getProperty().getCardinality()!=null, action.getExpression(), builder, ctx);
             //generate(action.getExpression(), builder, ctx);
