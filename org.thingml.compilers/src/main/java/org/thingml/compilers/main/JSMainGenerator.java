@@ -59,44 +59,44 @@ public class JSMainGenerator extends MainGenerator {
             int id = 0;
 
             for(Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
-                if (!prop.isDefined("private", "true")) {
                     for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
-                        if (p.getKey().equals(prop) && prop.getCardinality() == null) {
-                            String result = "";
-                            if (prop.getType() instanceof Enumeration) {
-                                Enumeration enum_ = (Enumeration) prop.getType();
-                                EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
-                                StringBuilder tempbuilder = new StringBuilder();
-                                if (enumL == null) {
-                                    tempbuilder.append(ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enum_.getLiterals().get(0).getName().toUpperCase());
-                                } else {
-                                    tempbuilder.append(ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enumL.getLiteral().getName().toUpperCase());
-                                }
-                                result += tempbuilder.toString();
-                            } else {
-                                if (p.getValue() != null) {
+                        if (!p.getKey().isDefined("private", "true")) {
+                            if (p.getKey().equals(prop) && prop.getCardinality() == null) {
+                                String result = "";
+                                if (prop.getType() instanceof Enumeration) {
+                                    Enumeration enum_ = (Enumeration) prop.getType();
+                                    EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
                                     StringBuilder tempbuilder = new StringBuilder();
-                                    ctx.getCompiler().getActionCompiler().generate(p.getValue(), tempbuilder, ctx);
+                                    if (enumL == null) {
+                                        tempbuilder.append(ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enum_.getLiterals().get(0).getName().toUpperCase());
+                                    } else {
+                                        tempbuilder.append(ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enumL.getLiteral().getName().toUpperCase());
+                                    }
                                     result += tempbuilder.toString();
                                 } else {
-                                    result += JavaHelper.getDefaultValue(p.getKey().getType());
+                                    if (p.getValue() != null) {
+                                        StringBuilder tempbuilder = new StringBuilder();
+                                        ctx.getCompiler().getActionCompiler().generate(p.getValue(), tempbuilder, ctx);
+                                        result += tempbuilder.toString();
+                                    } else {
+                                        result += JavaHelper.getDefaultValue(p.getKey().getType());
+                                    }
                                 }
+                                if (id > 0)
+                                    builder.append(", ");
+                                builder.append(result);
+                                id = id + 1;
                             }
-                            if (id > 0)
-                                builder.append(", ");
-                            builder.append(result);
-                            id = id + 1;
                         }
                     }
                     for (Property a : cfg.allArrays(i)) {
-                        if (prop.equals(a)) {
+                        if (prop.equals(a) && !(a.isDefined("private", "true"))) {
                             if (id > 0)
                                 builder.append(", ");
                             builder.append(", " + i.getName() + "_" + a.getName() + "_array");
                             id = id + 1;
                         }
                     }
-                }
             }
             builder.append(");\n");
             builder.append(i.getName() + ".setThis(" + i.getName() + ");\n");
