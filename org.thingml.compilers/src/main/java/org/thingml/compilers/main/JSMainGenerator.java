@@ -60,6 +60,7 @@ public class JSMainGenerator extends MainGenerator {
             for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
                 for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
                        if (p.getKey().equals(prop) && prop.getCardinality() == null && !prop.isDefined("private", "true")) {
+                            System.out.println("Property " + prop);
                             String result = "";
                             if (prop.getType() instanceof Enumeration) {
                                 Enumeration enum_ = (Enumeration) prop.getType();
@@ -83,15 +84,16 @@ public class JSMainGenerator extends MainGenerator {
                             if (id > 0)
                                 builder.append(", ");
                             builder.append(result);
-                            id = id + 1;
+                            id++;
                         }
                 }
                 for (Property a : cfg.allArrays(i)) {
                     if (prop.equals(a) && !(prop.isDefined("private", "true"))) {
+                        System.out.println("Array " + prop);
                         if (id > 0)
                             builder.append(", ");
-                        builder.append(", " + i.getName() + "_" + a.getName() + "_array");
-                        id = id + 1;
+                        builder.append(i.getName() + "_" + a.getName() + "_array");
+                        id++;
                     }
                 }
             }
