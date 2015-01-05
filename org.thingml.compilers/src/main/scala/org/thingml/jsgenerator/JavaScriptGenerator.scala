@@ -321,13 +321,33 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     builder append " **/\n"
 
     builder append "function " + ctx.firstToUpper(self.getName) + "("
-    builder append self.allPropertiesInDepth.collect { case p => p.Java_var_name}.mkString(", ") //TODO: changeable properties?
+    var i = 0
+    self.allPropertiesInDepth.foreach{ p =>
+      if (!p.isDefined("private", "true")) {
+        if (i > 0)
+          builder append ", "
+        builder append p.Java_var_name
+        i = i + 1
+      }
+    }//TODO: changeable properties?
     builder append ") {\n\n"
+
+
+    builder append "var _this;\n"
+    builder append "this.setThis = function(__this) {\n"
+    builder append "_this = __this;\n"
+    builder append "}\n\n"
 
     builder append "this.ready = false;\n"
 
     builder append "//Attributes\n"
-    builder append self.allPropertiesInDepth.collect { case p => "this." + p.Java_var_name + " =" + p.Java_var_name + ";"}.mkString("\n") //TODO: public/private properties?
+    self.allPropertiesInDepth.foreach{ p =>
+      if (p.isDefined("private", "true")) {
+        builder append "var " + p.Java_var_name + ";\n"
+      } else {
+        builder append "this." + p.Java_var_name + " = " + p.Java_var_name + ";\n"
+      }
+    }//TODO: public/private properties?
 
 
     builder append "//bindings\n"

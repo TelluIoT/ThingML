@@ -25,7 +25,7 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        builder.append("process.nextTick(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + ".bind(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()));
+        builder.append("process.nextTick(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + ".bind(_this"/* + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName())*/);
         int i = 0;
         for(Expression p : action.getParameters()) {
             int j = 0;
@@ -45,7 +45,7 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
         if (ctx.isDefined("useThis"))
-            builder.append("this.");
+            builder.append("_this.");
         builder.append(action.getFunction().getName() + "(");
 
         int i = 0;
@@ -105,7 +105,11 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        builder.append(/*"this." + */ctx.getVariableName(expression.getProperty()));//TODO: in principle, we need "this.", it is just temporarily removed as a workaround
+        if (expression.getProperty().isDefined("private", "true") || (expression.getProperty() instanceof Parameter)) {
+            builder.append(ctx.getVariableName(expression.getProperty()));
+        } else {
+            builder.append("_this." + ctx.getVariableName(expression.getProperty()));
+        }
     }
 
     @Override

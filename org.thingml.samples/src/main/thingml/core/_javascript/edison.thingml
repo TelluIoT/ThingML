@@ -34,26 +34,38 @@ thing fragment Led includes LedMsgs
 
 thing LedEdison includes Edison, Led
 {
-    
-    property pin : GPIO
-     
+    readonly property pinNumber : Integer = 13
+    readonly property pin : GPIO @private "true" 
         
-    statechart LedImpl init LedOff 
+    statechart LedImpl init Init 
     {    
-    	on entry do
+        
+        state Init {
+        on entry do
             print "" + 'mraa.getVersion()'
-            'this.' & pin & ' = new mraa.Gpio(13);'//TODO: should be a param, not 13
-            'this.' & pin & '.dir(mraa.DIR_OUT);'
-            print "" + pin
-        end
+            pin = 'new mraa.Gpio(13);'//TODO: PIN number should be a param
+            'console.log(' & pin & ');'
+            '' & pin & '.dir(mraa.DIR_OUT);'
+            '' & pin & '.write(0);'
+            '' & pin & '.write(1);'
+            '' & pin & '.write(0);'
+            '' & pin & '.write(1);'
+            '' & pin & '.write(0);'
+            '' & pin & '.write(1);'
+            '' & pin & '.write(0);'
+            '' & pin & '.write(1);'
+        end            
+        
+        transition -> LedOff
+        }
     
         state LedOff 
         {
             on entry do
-                if ('this.' & pin & ' != null') do
-                    'this.' & pin & '.write(0);'
+                if ('' & pin & ' != null') do
+                    '' & pin & '.write(0);'
                 end
-                if ('this.' & pin & ' == null') do
+                if ('' & pin & ' == null') do
                     error "Pin is null"
                 end
             end
@@ -66,10 +78,10 @@ thing LedEdison includes Edison, Led
         state LedOn 
         {
             on entry do
-                if ('this.' & pin & ' != null') do
-                    'this.' & pin & '.write(1);'
+                if ('' & pin & ' != null') do
+                    '' & pin & '.write(1);'
                 end
-                if ('this.' & pin & ' == null') do
+                if ('' & pin & ' == null') do
                     error "Pin is null"
                 end
             end
