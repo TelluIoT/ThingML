@@ -135,25 +135,9 @@ object SwingGenerator {
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
     
-    code.foreach{case (thing, (mock, mirror)) =>
+    code.foreach{case (thing, mock) =>
         var w = new PrintWriter(new FileWriter(new File(outputDir, Context.firstToUpper(thing.getName()) + "Mock.java")));
         w.println(mock);
-        w.close();
-        
-        w = new PrintWriter(new FileWriter(new File(outputDir, Context.firstToUpper(thing.getName()) + "MockMirror.java")));
-        w.println(mirror);
-        w.close();
-        
-        w = new PrintWriter(new FileWriter(new File(outputDir, Context.firstToUpper(thing.getName()) + "Listener.java")));
-        var b = new StringBuilder()
-        thing.generateListener(b, false)
-        w.println(b.toString);
-        w.close();
-        
-        w = new PrintWriter(new FileWriter(new File(outputDir, Context.firstToUpper(thing.getName()) + "ListenerMirror.java")));
-        b = new StringBuilder()
-        thing.generateListener(b, true)
-        w.println(b.toString);
         w.close();
     }
 
@@ -167,41 +151,40 @@ object SwingGenerator {
   }
   
   
-  def compileAllThingJava(model: ThingMLModel, pack : String): Hashtable[Thing, SimpleEntry[String, String]] = {
+  def compileAllThingJava(model: ThingMLModel, pack : String): Hashtable[Thing, String] = {
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
-    val result = new Hashtable[Thing, SimpleEntry[String, String]]()
+    val result = new Hashtable[Thing, String]()
     compileAll(model, pack).foreach{case (t, entry) =>
-        result.put(t, new SimpleEntry(entry._1, entry._2))
+        result.put(t, entry)
     }
     result
   }
   
-  def compileAll(model: ThingMLModel, pack : String): Map[Thing, (String, String)] = {
+  def compileAll(model: ThingMLModel, pack : String): Map[Thing, String] = {
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     Context.pack = pack
     
-    var thingMap = Map[Thing, (String, String)]()
+    var thingMap = Map[Thing, String]()
     model.allThings.filter{t=> !t.isFragment && t.isMockUp}.foreach {t => 
       val thingCode = compile(t, pack)
-      val mirrorCode = compile(t, pack, true)
-      thingMap += (t -> ((thingCode, mirrorCode)))
+      thingMap += (t -> thingCode)
     }
     return thingMap
   }
   
-  def compile(t: Thing, pack : String, isMirror : Boolean = false) = {
+  def compile(t: Thing, pack : String) = {
     Context.thing = t
     Context.init
-    t.generateSwing(isMirror = isMirror)
+    t.generateSwing()
     Context.builder.toString
   }
   
 }
 
 class ThingMLSwingGenerator(self: ThingMLElement) {
-  def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
+  def generateSwing(builder: StringBuilder = Context.builder) {
     // Implemented in the sub-classes
   }
 }
@@ -212,18 +195,15 @@ case class InstanceSwingGenerator(val self: Instance) extends ThingMLSwingGenera
 
 case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(self) {
   
-  def generateListener(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
+  def generateListener(builder: StringBuilder = Context.builder) {
     builder append "package org.thingml.generated.gui;\n\n"
     builder append "import org.thingml.generated.*;\n\n"
     builder append "import org.thingml.generated.api.*;\n\n"
-    builder append "public interface " + Context.firstToUpper(self.getName) + "Listener" + (if (isMirror) "Mirror" else "") + " {\n\n"
+    builder append "public interface " + Context.firstToUpper(self.getName) + "Listener {\n\n"
     
     var messagesToSend = Map[Port, List[Message]]()
-    if (!isMirror) 
-      self.allPorts.foreach{p => messagesToSend += (p -> p.getSends.toList)} 
-    else 
-      self.allPorts.foreach{p => messagesToSend +=(p -> p.getReceives.toList)}
-    
+      self.allPorts.foreach{p => messagesToSend += (p -> p.getSends.toList)}
+
     /*var messagesToReceive = Map[Port, List[Message]]()
      if (!isMirror) 
      self.allPorts.foreach{p => messagesToReceive += (p -> p.getReceives.toList)} 
@@ -239,21 +219,15 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
     builder append "}\n\n"
   }
 
-  override def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
+  override def generateSwing(builder: StringBuilder = Context.builder) {
     
     var messagesToSend = Map[Port, List[Message]]()
-    if (!isMirror) 
-      self.allPorts.foreach{p => messagesToSend += (p -> p.getSends.toList)} 
-    else 
-      self.allPorts.foreach{p => messagesToSend +=(p -> p.getReceives.toList)}
-    
+      self.allPorts.foreach{p => messagesToSend += (p -> p.getSends.toList)}
+
     var messagesToReceive = Map[Port, List[Message]]()
-    if (!isMirror) 
-      self.allPorts.foreach{p => messagesToReceive += (p -> p.getReceives.toList)} 
-    else 
-      self.allPorts.foreach{p => messagesToReceive += (p -> p.getSends.toList)}
-     
-    builder append "public class " + Context.firstToUpper(self.getName) + "Mock" + (if (isMirror) "Mirror" else "") + " extends Component implements ActionListener {\n\n"
+      self.allPorts.foreach{p => messagesToReceive += (p -> p.getReceives.toList)}
+
+    builder append "public class " + Context.firstToUpper(self.getName) + "Mock extends Component implements ActionListener {\n\n"
 
 
     self.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
@@ -287,7 +261,13 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
     }
 
     generatePortDecl()
-    builder append "\npublic java.util.List<" + Context.firstToUpper(self.getName) + "Listener" + (if (isMirror) "Mirror" else "") + "> listeners = new java.util.LinkedList<" + Context.firstToUpper(self.getName) + "Listener" + (if (isMirror) "Mirror" else "") + ">();\n\n"
+    self.allPorts().foreach{p =>
+      if (p.getSends.size() > 0) {
+        builder append "\npublic java.util.List<I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client> " + p.getName + "_listeners = new java.util.LinkedList<I" + Context.firstToUpper(self.getName) + "_" + p.getName + "Client>();\n\n"
+      }
+    }
+
+
 
     builder append "private SimpleDateFormat dateFormat = new SimpleDateFormat(\"dd MMM yyy 'at' HH:mm:ss.SSS\");"
 
@@ -302,9 +282,9 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
 
     builder append "private StyledDocument doc;\n\n"
 
-    builder append "public " + Context.firstToUpper(self.getName) + "Mock" + (if (isMirror) "Mirror" else "") + "(String name){\n"
+    builder append "public " + Context.firstToUpper(self.getName) + "Mock(String name){\n"
     builder append "super(name, " +  self.allPorts.size + ");\n"
-    generatePortDef(isMirror = isMirror)
+    generatePortDef()
     builder append "init();"
     builder append "}\n\n"
 
@@ -316,20 +296,23 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
 
     builder append "@Override\n"
     builder append "public void start() {\n"
+    builder append "super.start();\n"
     builder append "frame.setVisible(true);\n"
     builder append "}\n\n"
 
     builder append "@Override\n"
     builder append "public Component buildBehavior() {\n"
-    builder append "return null;\n"
-    builder append "}\n\n"
-
-
+    builder append "behavior = new CompositeState(\"" + self.getName + "\", Collections.EMPTY_LIST, new AtomicState(\"dummy\"), Collections.EMPTY_LIST) {\n"
     builder append "@Override\n"
-    builder append "public void receive(Event event, Port port) {\n"
-    builder append "super.receive(event, port);\n"
+    builder append "public boolean dispatch(Event event, Port port) {\n"
+    builder append "if (port != null) {\n"
     builder append "print(event.getType().getName() + \"_via_\" + port.getName(), dateFormat.format(new Date()) + \": \" + event.toString());\n"
     builder append "}\n"
+    builder append "return false;\n"
+    builder append "}\n"
+    builder append "};\n"
+    builder append "return this;\n"
+    builder append "}\n\n"
 
     messagesToSend.foreach{case (port, messages) =>
       messages.foreach{send =>
@@ -470,7 +453,7 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
     messagesToSend.foreach{case (port, messages) =>
         messages.foreach{msg => 
           Context.port = port
-          msg.generateSwing(isMirror = isMirror)
+          msg.generateSwing()
         }
     }
        
@@ -510,7 +493,8 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
     builder append "}\n"		
     messagesToSend.foreach{case (port, messages) =>
         messages.foreach{msg =>
-          builder append "else if ( ae.getSource() == getSend" + msg.getName + "_via_" + port.getName + "()) {\n"          
+          builder append "else if ( ae.getSource() == getSend" + msg.getName + "_via_" + port.getName + "()) {\n"
+          builder append "try{\n"
           builder append "send(" + msg.getName + "Type.instantiate(port_" + Context.firstToUpper(self.getName) + "_" + port.getName
           msg.getParameters.foreach{ p =>
               builder append ", "
@@ -529,8 +513,8 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
             }
           builder append "), port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ");\n"
           
-          builder append "for(" + Context.firstToUpper(self.getName) + "Listener" + (if (isMirror) "Mirror" else "") + " l : listeners)\n"
-          builder append "l.on" + Context.firstToUpper(msg.getName) + "_via_" + port.getName + "("
+          builder append "for(I" + Context.firstToUpper(self.getName) + "_" + port.getName + "Client l : " + port.getName + "_listeners)\n"
+          builder append "l." + msg.getName + "_from_" + port.getName + "("
           builder append (msg.getParameters.collect{ case p =>
               (if (p.getCardinality == null) {
                 if (p.getType.isInstanceOf[Enumeration]) {
@@ -546,29 +530,14 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
               })
             }.toList).mkString(", ")
           builder append ");\n"
-          
+          builder append "} catch(IllegalArgumentException iae) {\n"
+          builder append "System.err.println(\"Cannot parse arguments for message " + msg.getName + " on port " + port.getName + ". Please try again with proper parameters\");\n"
+          builder append "}\n"
           builder append "}\n"
         }
     }
     builder append "}\n\n"
-      
-    
-    builder append "public static void main(String args[]){\n"
-    builder append Context.firstToUpper(self.getName) + "Mock mock = new " + Context.firstToUpper(self.getName) + "Mock(\"" + self.getName() + "\");\n"
-    builder append Context.firstToUpper(self.getName) + "MockMirror mockMirror = new " + Context.firstToUpper(self.getName) + "MockMirror(\"" + self.getName() + "_mirror\");\n"
-    
-    /*self.getPorts.foreach{port =>
-      builder append "Channel c_" + port.getName + "_" + port.hashCode + " = new Channel("
-      builder append "mock.port_" + Context.firstToUpper(self.getName) + "_" + port.getName + ", " + "mockMirror.port_" + Context.firstToUpper(self.getName) + "_" + port.getName
-      builder append ");\n"
-    } */
-    
     builder append "}\n"
-    
-    
-    builder append "}\n"
-      
-    
   }
   
   def generatePortDecl(builder: StringBuilder = Context.builder) {
@@ -582,24 +551,18 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
 
   }
   
-  def generatePortDef(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
+  def generatePortDef(builder: StringBuilder = Context.builder) {
     var i = 0
     self.allPorts.foreach{ p =>
       builder append "final List<EventType> in_" + p.getName + " = new ArrayList<EventType>();\n"
       builder append "final List<EventType> out_" + p.getName + " = new ArrayList<EventType>();\n"
       p.getReceives.foreach{ r =>
-        if(!isMirror)
           builder append "in_" + p.getName + ".add(" + r.getName + "Type);\n"
-        else
-          builder append "out_" + p.getName + ".add(" + r.getName + "Type);\n"
       }
-      p.getSends.foreach{ s => 
-        if(!isMirror)
+      p.getSends.foreach{ s =>
           builder append "out_" + p.getName + ".add(" + s.getName + "Type);\n"
-        else
-          builder append "in_" + p.getName + ".add(" + s.getName + "Type);\n"
       }
-      builder append "port_" + Context.firstToUpper(self.getName) + "_" + p.getName + " = new Port(" + (if((p.isInstanceOf[ProvidedPort] && !isMirror) || (p.isInstanceOf[RequiredPort] && isMirror)) "PortType.PROVIDED" else "PortType.REQUIRED") + ", \"" + p.getName + "\", in_" + p.getName() + ", out_" + p.getName() + ", " + i + ");\n"
+      builder append "port_" + Context.firstToUpper(self.getName) + "_" + p.getName + " = new Port(" + (if(p.isInstanceOf[ProvidedPort]) "PortType.PROVIDED" else "PortType.REQUIRED") + ", \"" + p.getName + "\", in_" + p.getName() + ", out_" + p.getName() + ", " + i + ");\n"
       i = i + 1
     }
   }
@@ -607,7 +570,7 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
 
 case class MessageSwingGenerator(val self: Message) extends ThingMLSwingGenerator(self) {
 
-  override def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
+  override def generateSwing(builder: StringBuilder = Context.builder) {
     
     builder append "public JPanel create" + self.getName + "_via_" + Context.port.getName + "Panel(){\n"
 
@@ -649,7 +612,7 @@ case class MessageSwingGenerator(val self: Message) extends ThingMLSwingGenerato
 
 //TODO: Avoid duplicating code from ScalaGenerator.
 case class TypeSwingGenerator(val self: Type) extends ThingMLSwingGenerator(self) {
-  override def generateSwing(builder: StringBuilder = Context.builder, isMirror : Boolean = false) {
+  override def generateSwing(builder: StringBuilder = Context.builder) {
     // Implemented in the sub-classes
   }
 

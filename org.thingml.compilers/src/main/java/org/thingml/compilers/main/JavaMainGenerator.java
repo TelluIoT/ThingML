@@ -78,11 +78,7 @@ public class JavaMainGenerator extends MainGenerator {
         builder.append("//Things\n");
         for (Instance i : cfg.allInstances()) {
             if (i.getType().hasAnnotation("mock")) {
-                if (i.getType().isDefined("mock", "true")) {
-                    builder.append(ctx.getInstanceName(i) + " = new " + ctx.firstToUpper(i.getType().getName()) + "Mock(\"" + ctx.getInstanceName(i) + "\");\n");
-                } else {
-                    builder.append(ctx.getInstanceName(i) + " = new " + ctx.firstToUpper(i.getType().getName()) + "MockMirror(\"" + ctx.getInstanceName(i) + "\");\n");
-                }
+                    builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + "Mock) new " + ctx.firstToUpper(i.getType().getName()) + "Mock(\"" + ctx.getInstanceName(i) + "\").buildBehavior();\n");
             } else {
 
 
@@ -166,7 +162,7 @@ public class JavaMainGenerator extends MainGenerator {
 
         builder.append("//Connectors\n");
         for(Connector c : cfg.allConnectors()) {
-            builder.append("/*final Connector " + ctx.getInstanceName(c) + " = */new Connector(");
+            builder.append("new Connector(");
             builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port(), ");
             builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port(), ");
             builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ", ");
