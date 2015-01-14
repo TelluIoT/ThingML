@@ -550,7 +550,7 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
 
     builder append "//Message types\n"
     self.allMessages.foreach {
-      m => builder append "private final " + ctx.firstToUpper(m.getName) + "MessageType " + m.getName + "Type = new " + ctx.firstToUpper(m.getName) + "MessageType();\n"
+      m => builder append "protected final " + ctx.firstToUpper(m.getName) + "MessageType " + m.getName + "Type = new " + ctx.firstToUpper(m.getName) + "MessageType();\n"
     }
 
     //if (self.allPropertiesInDepth.filter{p => self.initExpression(p) != null}.size > 0) {

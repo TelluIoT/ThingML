@@ -76,8 +76,6 @@ object KevoreeGenerator {
    * 
    */
   def compileAndRun(cfg : Configuration, model: ThingMLModel) {
-    //ConfigurationImpl.MergedConfigurationCache.clearCache();
-
     new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
     
     val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
@@ -90,51 +88,24 @@ object KevoreeGenerator {
     cfg.allThings.foreach{case thing=>
         Context.init
         Context.file_name = "K" + Context.firstToUpper(thing.getName())
-        //Context.wrapper_name = cfg.getName+"_"+thing.getName()+"_Wrapper"
         val code = compile(thing, "org.thingml.generated", model)
         
         var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + Context.file_name+".java")));
         System.out.println("code generated at "+outputDir  + "/" + Context.file_name+".java");
         w.println(code);
         w.close();
-    
-        /*w = new PrintWriter(new FileWriter(new File(outputDir + "/"+Context.wrapper_name+".java")));
-        System.out.println("code generated at "+outputDir  + "/" + Context.wrapper_name+".java");
-        w.println(code._2);
-        w.close();*/
     }
 
     compilePom(cfg)
     compileKevScript(cfg)
     
-    /* cfg.allInstances.foreach{case inst =>
-     
-     }*/
     javax.swing.JOptionPane.showMessageDialog(null, "Kevoree wrappers generated");
-
-    /*val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start run.bat" else "./run.sh"), null, new File(rootDir));
-
-    val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
-    val out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(runtime.getOutputStream())), true);
-
-    var line: String = in.readLine()
-    while (line != null) {
-      println(line);
-      line = in.readLine()
-    }
-    runtime.waitFor();
-    in.close();
-    out.close();
-    runtime.destroy();*/
   }
   /*
    * 
    */
   def compileKevScript(cfg:Configuration){
-    //ConfigurationImpl.MergedConfigurationCache.clearCache();
-
     var kevScript:StringBuilder= new StringBuilder()
-    //kevScript append "namespace " + cfg.getName + "\n\n"
 
     kevScript append "repo \"http://repo1.maven.org/maven2\"\n"
     kevScript append "repo \"http://maven.thingml.org\"\n\n"
@@ -202,34 +173,27 @@ object KevoreeGenerator {
   }
   
   def compilePom(cfg:Configuration){
-    //ConfigurationImpl.MergedConfigurationCache.clearCache();
-
     val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
     var pom = Source.fromInputStream(new FileInputStream(rootDir + "/pom.xml"),"utf-8").getLines().mkString("\n")
     val kevoreePlugin = "\n<plugin>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.mavenplugin</artifactId>\n<version>${kevoree.version}</version>\n<extensions>true</extensions>\n<configuration>\n<nodename>node0</nodename><model>src/main/kevs/main.kevs</model>\n</configuration>\n<executions>\n<execution>\n<goals>\n<goal>generate</goal>\n</goals>\n</execution>\n</executions>\n</plugin>\n</plugins>\n"
     pom = pom.replace("</plugins>",kevoreePlugin)
 
-    pom = pom.replace("<!--PROP-->", "<kevoree.version>5.1.3</kevoree.version>\n<!--PROP-->" )
+    pom = pom.replace("<!--PROP-->", "<kevoree.version>5.2.4</kevoree.version>\n<!--PROP-->" )
 
-    pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->")
+    pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>com.eclipsesource.minimal-json</groupId>\n<artifactId>minimal-json</artifactId>\n<version>0.9.1</version>\n</dependency>\n<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->")
     pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->")
-
-    //println(pom)
-
 
     var w = new PrintWriter(new FileWriter(new File(rootDir+"/pom.xml")));
     println(rootDir+"/pom.xml")
     w.println(pom);
     w.close();
 
-    Files.copy(this.getClass.getClassLoader.getResourceAsStream("kevoreepom/run.bat"), FileSystems.getDefault().getPath(rootDir, "run.bat"), StandardCopyOption.REPLACE_EXISTING);
+    /*Files.copy(this.getClass.getClassLoader.getResourceAsStream("kevoreepom/run.bat"), FileSystems.getDefault().getPath(rootDir, "run.bat"), StandardCopyOption.REPLACE_EXISTING);
     Files.copy(this.getClass.getClassLoader.getResourceAsStream("kevoreepom/org.kevoree.watchdog-0.27.jar"), FileSystems.getDefault().getPath(rootDir, "org.kevoree.watchdog.jar"), StandardCopyOption.REPLACE_EXISTING);
-    Files.copy(this.getClass.getClassLoader.getResourceAsStream("kevoreepom/org.kevoree.tools.ui.editor-5.1.3.jar"), FileSystems.getDefault().getPath(rootDir, "org.kevoree.editor.jar"), StandardCopyOption.REPLACE_EXISTING);
+    Files.copy(this.getClass.getClassLoader.getResourceAsStream("kevoreepom/org.kevoree.tools.ui.editor-5.1.3.jar"), FileSystems.getDefault().getPath(rootDir, "org.kevoree.editor.jar"), StandardCopyOption.REPLACE_EXISTING);*/
   }
 
   def compile(t: Thing, pack : String, model: ThingMLModel) : String = {
-    //ConfigurationImpl.MergedConfigurationCache.clearCache();
-
     Context.pack = pack
     var wrapperBuilder = new StringBuilder()
     
@@ -257,6 +221,9 @@ object KevoreeGenerator {
     builder append "import org.kevoree.annotation.*;\n"
     builder append "import org.thingml.java.*;\n"
     builder append "import org.thingml.java.ext.*;\n"
+    builder append "import org.thingml.generated.messages.*;\n\n"
+
+    builder append "import com.eclipsesource.json.JsonObject;\n\n"
 
     builder append "\n\n"
   }
@@ -388,13 +355,36 @@ case class ThingKevoreeGenerator(val self: Thing){
     //forwards outgoing ThingML messages to Kevoree
     builder append "@Override\n"
     builder append "public void send(Event e, Port p) {\n"
+    builder append "String msg = \"\";\n"
     var i = 0
+    self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getSends.size > 0}
+      .foreach { p => p.getSends.foreach { m =>
+        if (i > 0)
+           builder append "else "
+        builder append "if (e instanceof " + Context.firstToUpper(m.getName) +"MessageType." + Context.firstToUpper(m.getName) + "Message) {\n"
+
+
+      builder append "msg = \"{\\\"message\\\":\\\"" + m.getName() + "\\\",\\\"port\\\":\\\"" + p.getName + "_c" + "\\\""
+      m.getParameters.foreach { pa =>
+        val isString = pa.getType.isDefined("java_type", "String")
+        val isChar = pa.getType.isDefined("java_type", "char")
+        val isArray = (pa.getCardinality != null)
+        builder append ", \\\"" + pa.getName + "\\\":" + (if(isArray) "[" else "") + (if (isString || isChar) "\\\"" else "\"") + " + ((" + Context.firstToUpper(m.getName) + "MessageType." + Context.firstToUpper(m.getName) + "Message) e)." + (if(isString) Context.protectJavaKeyword(pa.getName) + ".replace(\"\\n\", \"\\\\n\")" else Context.protectJavaKeyword(pa.getName)) + " + " + (if (isString || isChar) "\\\"" else "\"") + (if(isArray) "]" else "")
+      }
+      builder append "}\";\n"
+
+        builder append "}\n"
+        i = i + 1
+      }
+    }
+
+    i = 0
     self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getSends.size > 0}
       .foreach{p =>
         if (i > 0)
           builder append "else "
         builder append "if (p.getName().equals(\"" + p.getName + "\") &&" + p.getName + "Port_out.getConnectedBindingsSize()>0 && " + p.getName + "Port_out != null) {\n"
-        builder append p.getName + "Port_out.send(e);\n"
+        builder append p.getName + "Port_out.send(msg, null);\n"
         builder append "}\n"
         i = i + 1
     }
@@ -405,9 +395,37 @@ case class ThingKevoreeGenerator(val self: Thing){
     self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getReceives.size>0}
       .foreach{ p=>
       builder append "@Input\n"
-      builder append "public void " + p.getName + "Port(Object o) {\n"
-      builder append "receive((Event)o, get" + Context.firstToUpper(p.getName) + "_port());\n"
+      builder append "public void " + p.getName + "Port(String string) {\n"
+      builder append "final JsonObject json = JsonObject.readFrom(string);\n"
+      builder append "if (json.get(\"port\").asString().equals(\"" + p.getName + "_c\")) {\n"//might be a redundant check
+      i = 0
+      p.getReceives.foreach{ m =>
+        if (i > 0)
+          builder append "else "
+        builder append "if (json.get(\"message\").asString().equals(\"" + m.getName + "\")) {\n"
+        builder append "final Event msg = " + m.getName + "Type.instantiate(get" + Context.firstToUpper(p.getName) + "_port()"
+        m.getParameters.foreach { pa =>
+          builder append ", (" + pa.getType.annotation("java_type").head + ") json.get(\"" + pa.getName + "\")"
+          pa.getType.annotation("java_type").head match {
+            case "int" => builder append ".asInt()"
+            case "short" => builder append ".asInt()"
+            case "long" => builder append ".asLong()"
+            case "double" => builder append ".asDouble()"
+            case "float" => builder append ".asFloat()"
+            case "char" => builder append ".asString().charAt(0)"
+            case "String" => builder append ".asString()"
+            case "byte" => builder append ".asString().getBytes[0]"
+            case "boolean" => builder append ".asBoolean()"
+          }
+        }
+        builder append ");\n"
+        builder append "receive(msg, get" + Context.firstToUpper(p.getName) + "_port());\n"
+        builder append "}\n"
+        i = i + 1
+      }
+      builder append "}\n"
       builder append "}\n\n"
+
     }
     builder append "}\n"
   }
