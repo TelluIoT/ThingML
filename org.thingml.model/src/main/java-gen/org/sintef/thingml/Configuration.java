@@ -235,4 +235,11 @@ public interface Configuration extends AnnotatedElement {
          */
     Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch(Thing t, Port p);
 
+    /**
+     * Returns all the dangling ports (not connected via a connector) for the instances of this configuration
+     * @return
+     * @generated NOT
+     */
+    Map<Instance, List<Port>> danglingPorts();
+
 } // Configuration

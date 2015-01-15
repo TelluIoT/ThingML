@@ -25,8 +25,11 @@ import java.io._
 import java.nio.file.{StandardCopyOption, FileSystems, Files}
 
 import org.sintef.thingml._
+import org.thingml.compilers.helpers.JavaHelper
+import org.thingml.compilers.main.JavaMainGenerator
 import org.thingml.compilers.{JavaCompiler, Context}
 import org.thingml.javagenerator.JavaGenerator._
+import org.thingml.javagenerator.extension.Context
 
 import scala.collection.JavaConversions._
 import scala.io.Source
@@ -83,27 +86,166 @@ object KevoreeGenerator {
     
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
-    
-    
-    cfg.allThings.foreach{case thing=>
-        Context.init
-        Context.file_name = "K" + Context.firstToUpper(thing.getName())
-        val code = compile(thing, "org.thingml.generated", model)
-        
-        var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + Context.file_name+".java")));
-        System.out.println("code generated at "+outputDir  + "/" + Context.file_name+".java");
-        w.println(code);
-        w.close();
+
+
+    Context.init
+    Context.pack = "org.thingml.generated"
+    val ctx = new Context(new JavaCompiler())
+    val builder = Context.builder
+
+    generateHeader()
+
+    builder append "@ComponentType\n "
+    builder append "public class K" + Context.firstToUpper(cfg.getName) + "{//The Kevoree component wraps the whole ThingML configuration " + cfg.getName + "\n"
+
+
+    builder.append("//Things\n");
+    cfg.allInstances().foreach{i =>
+        builder.append("private " + Context.firstToUpper(i.getType().getName()) + " " + ctx.getInstanceName(i) + ";\n");
     }
+
+    builder append "//Output ports (dangling ports in the ThingML configuration)\n"
+    cfg.danglingPorts().foreach{case (i, ports) =>
+      var self = i.getType
+      ports.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getSends.size>0}
+        .foreach{ p=>
+        builder append "@Output\n"
+        builder append "private org.kevoree.api.Port " + i.getName + "_" + p.getName + "Port_out;\n"
+      }
+    }
+
+    builder append "//Attributes\n"
+    cfg.allInstances().foreach{i =>
+      var self = i.getType
+
+      self.allPropertiesInDepth.filter(p => p.isChangeable && p.getCardinality==null && p.getType.isDefined("java_primitive", "true") && p.eContainer().isInstanceOf[Thing]).foreach {p =>  //We just expose top-level attributes (defined in the Thing, not e.g. in the state machine) to Kevoree
+        builder append "@Param "
+        val e = self.initExpression(p)
+        if (e != null) {
+          builder append "(defaultValue = \""
+          e.generateJava(builder, Context.ctx)
+          builder append "\")"
+        }
+        builder append "\nprivate " + p.getType.java_type(Context.ctx, p.getCardinality != null) + " " + i.getName + "_" + p.Java_var_name
+        if (e != null) {
+          builder append " = "
+          e.generateJava(builder, Context.ctx)
+        }
+        builder append ";\n"
+      }
+
+      builder append "//Getters and Setters for non readonly/final attributes\n"
+      self.allPropertiesInDepth.foreach {p =>
+        if (p.isChangeable && p.getCardinality==null && p.getType.isDefined("java_primitive", "true") && p.eContainer().isInstanceOf[Thing]) {
+          builder append "public " + p.getType.java_type(Context.ctx, p.getCardinality != null) + " get" + i.getName + "_" + Context.firstToUpper(p.Java_var_name) + "() {\nreturn " + i.getName + "_" + p.Java_var_name + ";\n}\n\n"
+          builder append "public void set" + i.getName + "_" + Context.firstToUpper(p.Java_var_name) + "(" + p.getType.java_type(Context.ctx, p.getCardinality != null) + " " + p.Java_var_name + "){\n"
+          builder append "this." + i.getName + "_" + p.Java_var_name + " = " + p.Java_var_name + ";\n"
+          builder append "this." + ctx.getInstanceName(i) + ".set" + i.getType.getName + "_" + p.getName + "__var(" + p.Java_var_name + ");\n"
+          builder append "}\n\n"
+        }
+      }
+
+    }
+
+
+    builder append "//Empty Constructor\n"
+    builder append "public K" + Context.firstToUpper(cfg.getName) + "() {\n"
+    builder append "initThingML();\n"
+    builder append "}\n\n"
+
+
+    builder append "//Instantiates ThingML component instances and connectors\n"
+    builder append "private void initThingML() {\n"
+    JavaMainGenerator.generateInstances(cfg, ctx, builder)
+
+    cfg.danglingPorts().foreach { case (i, ports) =>
+       ports.foreach { p =>
+         if (p.getSends.size() > 0) {
+           builder append "final I" + i.getType.getName + "_" + p.getName + "Client " + i.getName + "_" + p.getName + "_listener = new I" + i.getType.getName + "_" + p.getName + "Client(){\n"
+           p.getSends.foreach{m =>
+             builder append "@Override\n"
+             builder append "public void " + m.getName + "_from_" + p.getName + "("
+             var id: Int = 0
+             for (pa <- m.getParameters) {
+               if (id > 0) builder.append(", ")
+               builder.append(JavaHelper.getJavaType(pa.getType, pa.getCardinality != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)))
+               id += 1
+             }
+             builder append ") {\n"
+             builder append "final String msg = \"{\\\"message\\\":\\\"" + m.getName() + "\\\",\\\"port\\\":\\\"" + p.getName + "_c" + "\\\""
+             m.getParameters.foreach { pa =>
+               val isString = pa.getType.isDefined("java_type", "String")
+               val isChar = pa.getType.isDefined("java_type", "char")
+               val isArray = (pa.getCardinality != null)
+               builder append ", \\\"" + pa.getName + "\\\":" + (if(isArray) "[" else "") + (if (isString || isChar) "\\\"" else "\"") + " + " + ctx.protectKeyword(ctx.getVariableName(pa)) + (if(isString) ".replace(\"\\n\", \"\\\\n\")" else "") + " + " + (if (isString || isChar) "\\\"" else "\"") + (if(isArray) "]" else "")
+             }
+             builder append "}\";\n"
+             builder append i.getName + "_" + p.getName + "Port_out.send(msg, null);\n"
+             builder append "}\n"
+           }
+           builder append "};\n"
+           builder append ctx.getInstanceName(i) + ".registerOn" + Context.firstToUpper(p.getName()) + "(" + i.getName + "_" + p.getName + "_listener);\n"
+         }
+       }
+    }
+    builder append "}\n\n"
+
+
+    builder append "@Start\n"
+    builder append "public void startComponent() {\n"
+    cfg.allInstances().foreach{ i =>
+      builder append ctx.getInstanceName(i) + ".start();\n"
+    }
+    builder append "}\n\n"
+
+    builder append "@Stop\n"
+    builder append "public void stopComponent() {"
+    cfg.allInstances().foreach{ i =>
+      builder append ctx.getInstanceName(i) + ".stop();\n"
+    }
+    builder append "}\n\n"
+    builder append "}\n"
+
+
+    Context.file_name = "K" + Context.firstToUpper(cfg.getName())
+    val code = builder.toString
+
+    var w = new PrintWriter(new FileWriter(new File(outputDir  + "/" + Context.file_name+".java")));
+    System.out.println("code generated at "+outputDir  + "/" + Context.file_name+".java");
+    w.println(code);
+    w.close();
 
     compilePom(cfg)
     compileKevScript(cfg)
     
     javax.swing.JOptionPane.showMessageDialog(null, "Kevoree wrappers generated");
   }
-  /*
-   * 
-   */
+
+  def generateHeader(builder: java.lang.StringBuilder = Context.builder, extendGUI : Boolean = false) = {
+    builder append "/**\n"
+    builder append " * File generated by the ThingML IDE\n"
+    builder append " * /!\\Do not edit this file/!\\\n"
+    builder append " * In case of a bug in the generated code,\n"
+    builder append " * please submit an issue on our GitHub\n"
+    builder append " **/\n\n"
+
+    builder append "package " + Context.pack +".kevoree;\n"
+    builder append "import " + Context.pack + ".*;\n"
+    if (extendGUI) {
+      builder append "import " + Context.pack + ".gui.*;\n"
+    }
+    builder append "import org.kevoree.annotation.*;\n"
+    builder append "import org.thingml.generated.api.*;\n"
+    builder append "import org.thingml.java.*;\n"
+    builder append "import org.thingml.java.ext.*;\n"
+    builder append "import org.thingml.generated.messages.*;\n\n"
+
+    builder append "import com.eclipsesource.json.JsonObject;\n\n"
+
+    builder append "\n\n"
+  }
+
+
   def compileKevScript(cfg:Configuration){
     var kevScript:StringBuilder= new StringBuilder()
 
@@ -139,7 +281,8 @@ object KevoreeGenerator {
     kevScript append "attach node0 sync\n\n"
 
     kevScript append "//instantiate Kevoree/ThingML components\n"
-    cfg.allInstances.foreach{i =>
+    kevScript append "add node0." + cfg.getName + " : K" + cfg.getName + "\n"
+    /*cfg.allInstances.foreach{i =>
       kevScript append "add node0." + i.instanceName + " : K"+ i.getType.getName() + "\n"
     }
     kevScript append "\n"
@@ -159,7 +302,7 @@ object KevoreeGenerator {
           kevScript append "bind node0." + con.getSrv.getInstance().instanceName + "." + con.getProvided.getName + "Port_out channel_" + con.hashCode + "_re\n"
         }
       }
-    }
+    } */
     kevScript append "start sync\n"
     kevScript append "start node0\n\n"
     kevScript append "\n"
@@ -204,29 +347,7 @@ object KevoreeGenerator {
     t.generateKevoree()
     Context.builder.toString
   }
-  
-  def generateHeader(builder: java.lang.StringBuilder = Context.builder, extendGUI : Boolean = false) = {
-    builder append "/**\n"
-    builder append " * File generated by the ThingML IDE\n"
-    builder append " * /!\\Do not edit this file/!\\\n"
-    builder append " * In case of a bug in the generated code,\n"
-    builder append " * please submit an issue on our GitHub\n"
-    builder append " **/\n\n"
 
-    builder append "package " + Context.pack +".kevoree;\n"
-    builder append "import " + Context.pack + ".*;\n"
-    if (extendGUI) {
-      builder append "import " + Context.pack + ".gui.*;\n"
-    }
-    builder append "import org.kevoree.annotation.*;\n"
-    builder append "import org.thingml.java.*;\n"
-    builder append "import org.thingml.java.ext.*;\n"
-    builder append "import org.thingml.generated.messages.*;\n\n"
-
-    builder append "import com.eclipsesource.json.JsonObject;\n\n"
-
-    builder append "\n\n"
-  }
 }
 
 case class ThingKevoreeGenerator(val self: Thing){
@@ -237,105 +358,6 @@ case class ThingKevoreeGenerator(val self: Thing){
 
     //TODO: we might want some attributes to be manageable from Kevoree
     //generateDictionary();
-
-    builder append "@ComponentType\n "
-    builder append "public class K" + Context.firstToUpper(self.getName) +" extends " + Context.firstToUpper(self.getName) + (if (self.isMockUp) "Mock" else "") + "{//The Kevoree wrapper extends the associated ThingML component\n"
-
-    builder append "//Attributes\n"
-    self.allPropertiesInDepth.filter(p => p.isChangeable && p.getCardinality==null && p.getType.isDefined("java_primitive", "true") && p.eContainer().isInstanceOf[Thing]).foreach {p =>  //We just expose top-level attributes (defined in the Thing, not e.g. in the state machine) to Kevoree
-      builder append "@Param "
-      val e = self.initExpression(p)
-      if (e != null) {
-        builder append "(defaultValue = \""
-        e.generateJava(builder, Context.ctx)
-        builder append "\")"
-      }
-      builder append "\nprivate " + p.getType.java_type(Context.ctx, p.getCardinality != null) + " " + p.Java_var_name
-      if (e != null) {
-        builder append " = "
-        e.generateJava(builder, Context.ctx)
-      }
-      builder append ";\n"
-    }
-
-    builder append "//Getters and Setters for non readonly/final attributes\n"
-    self.allPropertiesInDepth.foreach {p =>
-      if (p.isChangeable && p.getCardinality==null && p.getType.isDefined("java_primitive", "true") && p.eContainer().isInstanceOf[Thing]) {
-        builder append "@Override\npublic " + p.getType.java_type(Context.ctx, p.getCardinality != null) + " get" + Context.firstToUpper(p.Java_var_name) + "() {\nreturn " + p.Java_var_name + ";\n}\n\n"
-        builder append "@Override\npublic void set" + Context.firstToUpper(p.Java_var_name) + "(" + p.getType.java_type(Context.ctx, p.getCardinality != null) + " " + p.Java_var_name + ") {\nthis." + p.Java_var_name + " = " + p.Java_var_name + ";\n}\n\n"
-      }
-    }
-
-
-    self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getSends.size>0}
-      .foreach{ p=>
-      builder append "@Output\n"
-      builder append "private org.kevoree.api.Port " + p.getName + "Port_out;\n"
-    }
-
-    builder append "//Empty Constructor\n"
-    builder append "public K" + Context.firstToUpper(self.getName) + "() {\n"
-    if (self.isMockUp) {
-      builder append "super(\"" + self.getName + "\");\n"
-    } else {
-      builder append "super();\n"
-    }
-    builder append "//binding internal connectors we do not want to expose to Kevoree\n"
-    //TODO: not quite an efficient navigation... to be improved
-    self.allPorts.filter{p => p.isInstanceOf[RequiredPort] && (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.foreach{ p =>
-      self.allPorts.filter{p2 => p2.isInstanceOf[ProvidedPort] && (p2.getAnnotations.find{a => a.getName == "internal"}.isDefined) && p2.getAnnotations.find{a => a.getName == "internal"}.get.getValue == p2.getAnnotations.find{a => a.getName == "internal"}.get.getValue}.foreach { p2 =>
-        builder append "new Connector("
-        builder append "this.get" + Context.firstToUpper(p.getName) + "_port(), "
-        builder append "this.get" + Context.firstToUpper(p2.getName) + "_port(), "
-        builder append "this, this);\n"
-      }
-    }
-
-
-    builder append "}\n\n"
-
-    if (self.allPropertiesInDepth.size > 0) {
-      builder append "//Constructor (all attributes)\n"
-      builder append "public K" + Context.firstToUpper(self.getName) + "(String name"
-      self.allPropertiesInDepth.foreach { p =>
-        builder append ", final " + p.getType.java_type(Context.ctx, p.getCardinality != null) + " " + p.Java_var_name
-      }
-      builder append ") {\n"
-      builder append "super(name"
-      self.allPropertiesInDepth.foreach { p =>
-        builder append ", " + p.Java_var_name
-      }
-      builder append ");\n"
-      builder append "}\n\n"
-    }
-
-
-    builder append "@Override\n"
-    builder append "public void start() {\n"
-    builder append "queue = new java.util.concurrent.ArrayBlockingQueue<Event>(1024);\n"
-    builder append "super.start();\n"
-    builder append "}\n\n"
-
-    builder append "@Override\n"
-    builder append "public void stop() {\n"
-    builder append "super.stop();\n"
-    builder append "queue = null;\n"
-    builder append "}\n\n"
-
-    builder append "@Override\n"
-    builder append "public void receive(Event event, Port p) {\n"
-    builder append "if (queue != null) {\n"
-    builder append "super.receive(event, p);\n"
-    builder append "}\n"
-    builder append "}\n\n"
-
-    builder append "@Start\n"
-    builder append "public void startComponent() {\n"
-    builder append "if (behavior == null){\nbuildBehavior();\n}\n"
-    builder append "start();\n}\n\n"
-
-    builder append "@Stop\n"
-    builder append "public void stopComponent() {stop();\n}\n\n"
  
 /*    builder append "@Update\n"
     builder append "public void updateComponent() {System.out.println(\""+Context.file_name+" component update!\");\n"
@@ -352,44 +374,7 @@ case class ThingKevoreeGenerator(val self: Thing){
     builder append "}\n\n"
 */
 
-    //forwards outgoing ThingML messages to Kevoree
-    builder append "@Override\n"
-    builder append "public void send(Event e, Port p) {\n"
-    builder append "String msg = \"\";\n"
-    var i = 0
-    self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getSends.size > 0}
-      .foreach { p => p.getSends.foreach { m =>
-        if (i > 0)
-           builder append "else "
-        builder append "if (e instanceof " + Context.firstToUpper(m.getName) +"MessageType." + Context.firstToUpper(m.getName) + "Message) {\n"
 
-
-      builder append "msg = \"{\\\"message\\\":\\\"" + m.getName() + "\\\",\\\"port\\\":\\\"" + p.getName + "_c" + "\\\""
-      m.getParameters.foreach { pa =>
-        val isString = pa.getType.isDefined("java_type", "String")
-        val isChar = pa.getType.isDefined("java_type", "char")
-        val isArray = (pa.getCardinality != null)
-        builder append ", \\\"" + pa.getName + "\\\":" + (if(isArray) "[" else "") + (if (isString || isChar) "\\\"" else "\"") + " + ((" + Context.firstToUpper(m.getName) + "MessageType." + Context.firstToUpper(m.getName) + "Message) e)." + (if(isString) Context.protectJavaKeyword(pa.getName) + ".replace(\"\\n\", \"\\\\n\")" else Context.protectJavaKeyword(pa.getName)) + " + " + (if (isString || isChar) "\\\"" else "\"") + (if(isArray) "]" else "")
-      }
-      builder append "}\";\n"
-
-        builder append "}\n"
-        i = i + 1
-      }
-    }
-
-    i = 0
-    self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getSends.size > 0}
-      .foreach{p =>
-        if (i > 0)
-          builder append "else "
-        builder append "if (p.getName().equals(\"" + p.getName + "\") &&" + p.getName + "Port_out.getConnectedBindingsSize()>0 && " + p.getName + "Port_out != null) {\n"
-        builder append p.getName + "Port_out.send(msg, null);\n"
-        builder append "}\n"
-        i = i + 1
-    }
-    builder append "else {//Internal channel managed by ThingML\nsuper.send(e, p);\n}\n"
-    builder append "}\n\n"
 
     //forwards incoming Kevoree messages to ThingML
     self.allPorts.filter{p => ! (p.getAnnotations.find{a => a.getName == "internal"}.isDefined)}.filter{p => p.getReceives.size>0}
@@ -398,7 +383,7 @@ case class ThingKevoreeGenerator(val self: Thing){
       builder append "public void " + p.getName + "Port(String string) {\n"
       builder append "final JsonObject json = JsonObject.readFrom(string);\n"
       builder append "if (json.get(\"port\").asString().equals(\"" + p.getName + "_c\")) {\n"//might be a redundant check
-      i = 0
+      var i = 0
       p.getReceives.foreach{ m =>
         if (i > 0)
           builder append "else "

@@ -811,4 +811,29 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         return result;
     }
 
+    /**
+     * @generated NOT
+     * @return
+     */
+    public Map<Instance, List<Port>> danglingPorts() {
+        Map<Instance, List<Port>> result = new HashMap<>();
+        for(Instance i : allInstances()) {
+            List<Port> ports = new ArrayList<>();
+            for (Port p : i.getType().allPorts()) {
+                boolean connected = false;
+                for(Connector c : allConnectors()) {
+                    if ((EcoreUtil.equals(c.getCli().getInstance(), i) || EcoreUtil.equals(c.getSrv().getInstance(), i)) && (EcoreUtil.equals(c.getProvided(), p) || EcoreUtil.equals(c.getRequired(), p))) {
+                        connected = true;
+                        break;
+                    }
+                }
+                if (!connected) {
+                    ports.add(p);
+                }
+            }
+            result.put(i, ports);
+        }
+        return result;
+    }
+
 } //ConfigurationImpl
