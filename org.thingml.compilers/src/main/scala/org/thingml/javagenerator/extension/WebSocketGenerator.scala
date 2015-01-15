@@ -84,11 +84,11 @@ object WebSocketGenerator {
      * GENERATE SOME DOCUMENTATION
      */
 
-    if (!doingTests) {
+    /*if (!doingTests) {
       new Thread(new Runnable {
         override def run(): Unit = compileGeneratedCode(rootDir)
       }).start()
-    }
+    } */
   }
 
   def isWindows(): Boolean = {
@@ -96,7 +96,7 @@ object WebSocketGenerator {
     return (os.indexOf("win") >= 0);
   }
 
-  def compileGeneratedCode(rootDir: String) = {
+  /*def compileGeneratedCode(rootDir: String) = {
     val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start " else "") + "mvn clean package exec:java -Dexec.mainClass=org.thingml.generated.websocket.Main", null, new File(rootDir));
 
     val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
@@ -111,7 +111,7 @@ object WebSocketGenerator {
     in.close();
     out.close();
     runtime.destroy();
-  }
+  }*/
 
   def compile(t: Configuration, pack: String, model: ThingMLModel): java.util.Map[String, StringBuilder] = {
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
@@ -277,19 +277,19 @@ case class ThingWSGenerator(val self: Thing) extends ThingMLJavaGenerator(self) 
       builder append "System.out.println(\"[WebSocket_" + p.getName + "] Message from \" + ws.getRemoteSocketAddress().getAddress().getHostAddress() + \" Data = \" + string);\n"
 
       builder append "JsonObject json = JsonObject.readFrom(string);\n"
-      builder append "if (deviceId.equals(json.get(\"deviceId\").asString())) {\n"
+      //builder append "if (deviceId.equals(json.get(\"deviceId\").asString())) {\n"
       var i = 0;
       p.getReceives.foreach{m =>
         if (i>0)
           builder append "else "
-        builder append "if (\"" + p.getName + "." + m.getName + "\".equals(json.get(\"sensorId\").asString())) {\n"
+        builder append "if (\"" + p.getName + "\".equals(json.get(\"port\").asString()) && \"" + m.getName + "\".equals(json.get(\"message\").asString())) {\n"
         builder append self.getName + "." + m.getName + "_via_" + p.getName + "("
         builder append m.getParameters.collect { case pa => "(" + pa.getType.java_type() + ") json.get(\"" + Context.protectJavaKeyword(pa.getName) + "\").as" + (if (pa.getType.java_type() == "short") "Int" else Context.firstToUpper(pa.getType.java_type())) + "()"}.mkString(", ")
         builder append ");\n"
         builder append "}\n"
         i = i + 1
       }
-      builder append "}\n"
+      //builder append "}\n"
 
       builder append "}\n\n"
 
@@ -301,13 +301,12 @@ case class ThingWSGenerator(val self: Thing) extends ThingMLJavaGenerator(self) 
         builder append "final StringBuilder builder = new StringBuilder();\n"
         builder append "builder.append(\"{\");\n"
         builder append "builder.append(\"\\\"deviceId\\\":\\\"\" + deviceId + \"\\\",\");\n"
-        builder append "builder.append(\"\\\"sensorId\\\":\\\"" + p.getName + "." + m.getName  + "\\\",\");\n"
-        builder append "builder.append(\"\\\"observationTime\\\":\\\"\" + dateFormat.format(date) + \"\\\",\");\n"
-        builder append "builder.append(\"\\\"observations\\\":[\");\n"
-        m.getParameters.foreach { pa =>
-          builder append "builder.append(\"{\\\"" + Context.protectJavaKeyword(pa.getName) + "\\\":\\\"\" + " + Context.protectJavaKeyword(pa.getName) + "+ \"\\\"}\");\n"
+        builder append "builder.append(\"\\\"port\\\":\\\"" + p.getName  + "\\\",\");\n"
+        builder append "builder.append(\"\\\"message\\\":\\\"" + m.getName  + "\\\"\");\n"
+        m.getParameters.foreach { pa => //TODO: only string should be protected by quotes in the JSON. Int and the like should not.
+          builder append "builder.append(\", \\\"" + Context.protectJavaKeyword(pa.getName) + "\\\":\\\"\" + " + Context.protectJavaKeyword(pa.getName) + "+ \"\\\"\");\n"
         }
-        builder append "builder.append(\"]}\");\n"
+        builder append "builder.append(\"}\");\n"
         builder append "return builder.toString();\n"
         builder append "}\n\n"
 
