@@ -152,7 +152,7 @@ object WebSocketGenerator {
     builder append "import java.net.InetSocketAddress;\n"
     builder append "import java.net.UnknownHostException;\n"
     builder append "import java.nio.channels.NotYetConnectedException;\n"
-    builder append "import java.text.SimpleDateFormat;\n"
+    //builder append "import java.text.SimpleDateFormat;\n"
     builder append "import java.util.Collection;\n"
     builder append "import java.util.Date;\n"
   }
@@ -235,7 +235,7 @@ case class ThingWSGenerator(val self: Thing) extends ThingMLJavaGenerator(self) 
       builder append " {\n\n"
 
 
-      builder append "SimpleDateFormat dateFormat = new SimpleDateFormat(\"yyyy-MM-dd'T'HH:mm:ss.SSS\");\n"
+      //builder append "SimpleDateFormat dateFormat = new SimpleDateFormat(\"yyyy-MM-dd'T'HH:mm:ss.SSS\");\n"
       builder append Context.firstToUpper(self.getName) + " " + self.getName + ";\n"
       builder append "String deviceId = \"" + self.getName + "\";\n"
 
