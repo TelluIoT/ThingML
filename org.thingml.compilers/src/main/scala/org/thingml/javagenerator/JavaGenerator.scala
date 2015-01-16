@@ -119,47 +119,15 @@ object JavaGenerator {
     //val rootDir = tmpFolder + cfg.getName
 
     ctx.getCompiler.getBuildCompiler.generate(cfg, ctx)
-	if (!doingTests){
+	/*if (!doingTests){
     	javax.swing.JOptionPane.showMessageDialog(null, "$>cd " + tmpFolder + "\n$>mvn clean package exec:java -Dexec.mainClass=org.thingml.generated.Main");
-	}
-    /*
-     * GENERATE SOME DOCUMENTATION
-     */
+	}*/
 
-    /*new File(tmpFolder + "/doc").mkdirs();
-
-    try {
-      val dots = ThingMLGraphExport.allGraphviz(ThingMLHelpers.findContainingModel(cfg))
-      for (name <- dots.keySet) {
-        System.out.println(" -> Writing file " + name + ".dot")
-        val w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".dot"))
-        w.println(dots.get(name))
-        w.close
-      }
-    } catch {
-      case t: Throwable => {
-        t.printStackTrace
-      }
-    }
-
-    try {
-      val gml = ThingMLGraphExport.allGraphML(ThingMLHelpers.findContainingModel(cfg))
-      for (name <- gml.keySet) {
-        System.out.println(" -> Writing file " + name + ".graphml")
-        val w: PrintWriter = new PrintWriter(new FileWriter(rootDir + "/doc" + File.separator + name + ".graphml"))
-        w.println(gml.get(name))
-        w.close
-      }
-    } catch {
-      case t: Throwable => {
-        t.printStackTrace
-      }
-    }*/
-	if (!doingTests && outdir == null){
+	/*if (!doingTests && outdir == null){
 		  new Thread(new Runnable {
         override def run(): Unit = compileGeneratedCode(tmpFolder)
       }).start()
-	}
+	}*/
   }
 
   def isWindows(): Boolean = {
@@ -167,7 +135,7 @@ object JavaGenerator {
     return (os.indexOf("win") >= 0);
   }
 
-  def compileGeneratedCode(rootDir: String) = {
+  /*def compileGeneratedCode(rootDir: String) = {
     val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /c start " else "") + "mvn clean package exec:java -Dexec.mainClass=org.thingml.generated.Main", null, new File(rootDir));
 
     val in = new BufferedReader(new InputStreamReader(runtime.getInputStream()));
@@ -182,7 +150,7 @@ object JavaGenerator {
     in.close();
     out.close();
     runtime.destroy();
-  }
+  }*/
 
   def compile(t: Configuration, pack: String, model: ThingMLModel, ctx : Context) {
     ctx.setCurrentConfiguration(t)
@@ -549,8 +517,9 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
     }
 
     builder append "//Message types\n"
-    self.allMessages.foreach {
-      m => builder append "protected final " + ctx.firstToUpper(m.getName) + "MessageType " + m.getName + "Type = new " + ctx.firstToUpper(m.getName) + "MessageType();\n"
+    self.allMessages.foreach { m =>
+      builder append "protected final " + ctx.firstToUpper(m.getName) + "MessageType " + m.getName + "Type = new " + ctx.firstToUpper(m.getName) + "MessageType();\n"
+      builder append "public " + ctx.firstToUpper(m.getName) + "MessageType get" + ctx.firstToUpper(m.getName) + "Type(){\nreturn " + m.getName + "Type;\n}\n\n"
     }
 
     //if (self.allPropertiesInDepth.filter{p => self.initExpression(p) != null}.size > 0) {
