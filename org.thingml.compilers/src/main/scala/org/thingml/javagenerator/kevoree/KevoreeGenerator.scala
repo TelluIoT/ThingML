@@ -219,7 +219,11 @@ object KevoreeGenerator {
               builder append ", \\\"" + pa.getName + "\\\":" + (if (isArray) "[" else "") + (if (isString || isChar) "\\\"" else "\"") + " + " + ctx.protectKeyword(ctx.getVariableName(pa)) + (if (isString) ".replace(\"\\n\", \"\\\\n\")" else "") + " + " + (if (isString || isChar) "\\\"" else "\"") + (if (isArray) "]" else "")
             }
             builder append "}\";\n"
+            builder append "if (" + i.getName + "_" + p.getName + "Port_out != null) {\n"
             builder append i.getName + "_" + p.getName + "Port_out.send(msg, null);\n"
+            builder append "} else {\n"
+            builder append "Log.warn(\"" + i.getName + "_" + p.getName + "Port_out is not connected. Message \" + msg + \" has been lost. Connect a channel (and maybe restart your component)\");\n"
+            builder append "}\n"
             builder append "}\n"
           }
           builder append "};\n"
@@ -274,6 +278,7 @@ object KevoreeGenerator {
       builder append "import " + Context.pack + ".gui.*;\n"
     }
     builder append "import org.kevoree.annotation.*;\n"
+    builder append "import org.kevoree.log.Log;\n"
     builder append "import org.thingml.generated.api.*;\n"
     builder append "import org.thingml.java.*;\n"
     builder append "import org.thingml.java.ext.*;\n"
@@ -343,7 +348,7 @@ object KevoreeGenerator {
       }
     } */
     kevScript append "start sync\n"
-    kevScript append "start node0\n\n"
+    kevScript append "//start node0\n\n"
     kevScript append "\n"
 
     val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/kevs"
