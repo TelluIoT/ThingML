@@ -30,9 +30,18 @@ public class JSMainGenerator extends MainGenerator {
 
     @Override
     public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
-        final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/behavior.js");
+        final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/main.js");
 
-
+        builder.append("var Connector = require('./Connector');\n");
+        for(Type ty : model.allUsedSimpleTypes()) {
+            if (ty instanceof Enumeration) {
+                builder.append("var Enum = require('enums.js');\n");
+                break;
+            }
+        }
+        for(Thing t : cfg.allThings()) {
+            builder.append("var " + t.getName() + " = require('./" + t.getName() + "');\n");
+        }
         builder.append("process.stdin.resume();//to keep Node.js alive even when it is nothing more to do...\n");
         for (Instance i : cfg.allInstances()) {
             for (Property a : cfg.allArrays(i)) {
