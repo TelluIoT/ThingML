@@ -35,7 +35,7 @@ public class JSMainGenerator extends MainGenerator {
         builder.append("var Connector = require('./Connector');\n");
         for(Type ty : model.allUsedSimpleTypes()) {
             if (ty instanceof Enumeration) {
-                builder.append("var Enum = require('enums.js');\n");
+                builder.append("var Enum = require('./enums');\n");
                 break;
             }
         }
@@ -76,9 +76,9 @@ public class JSMainGenerator extends MainGenerator {
                                 EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
                                 StringBuilder tempbuilder = new StringBuilder();
                                 if (enumL == null) {
-                                    tempbuilder.append(ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enum_.getLiterals().get(0).getName().toUpperCase());
+                                    tempbuilder.append("Enum." + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enum_.getLiterals().get(0).getName().toUpperCase());
                                 } else {
-                                    tempbuilder.append(ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enumL.getLiteral().getName().toUpperCase());
+                                    tempbuilder.append("Enum" + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enumL.getLiteral().getName().toUpperCase());
                                 }
                                 result += tempbuilder.toString();
                             } else {

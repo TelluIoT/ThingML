@@ -206,7 +206,7 @@ object JavaScriptGenerator {
     builder append "return new State.Transition(source, target, guard);\n"
     builder append "}\n\n"
 
-    builder = ctx.getBuilder(t.getName + "/Connector")
+    builder = ctx.getBuilder(t.getName + "/Connector.js")
     builder append "function Connector(client, server, clientPort, serverPort) {\n"
     builder append "this.client = client;\n"
     builder append "this.server = server;\n"
@@ -226,6 +226,9 @@ object JavaScriptGenerator {
     builder append "};\n\n"
     builder append "module.exports = Connector;\n"
 
+    if(model.allUsedSimpleTypes.filter { ty => ty.isInstanceOf[Enumeration]}.size > 0) {
+      ctx.addProperty("hasEnum", "true")
+    }
     model.allUsedSimpleTypes.filter { ty => ty.isInstanceOf[Enumeration]}.foreach { e =>
       e.generateJavaScript(ctx.getBuilder(t.getName + "/enums.js"), ctx)
     }
@@ -318,6 +321,9 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
   }
 
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
+    if("true" == ctx.getProperty("hasEnum")) {
+      builder append "var Enum = require('./enums');\n"
+    }
     builder append "var StateFactory = require('./state-factory');\n"
     builder append "\n/**\n"
     builder append " * Definition for type : " + self.getName + "\n"
@@ -619,7 +625,7 @@ case class EnumerationLiteralJavaScriptGenerator(val self: EnumerationLiteral) e
   }
 
   def Java_name = {
-    self.eContainer().asInstanceOf[ThingMLElement].getName.toUpperCase + "_" + self.getName.toUpperCase
+    "Enum." + self.eContainer().asInstanceOf[ThingMLElement].getName.toUpperCase + "_" + self.getName.toUpperCase
   }
 }
 
@@ -666,7 +672,7 @@ class TypeJavaScriptGenerator(val self: Type) extends ThingMLJavaScriptGenerator
     if (self == null) {
       return "void"
     } else if (self.isInstanceOf[Enumeration]) {
-      return ctx.firstToUpper(self.getName) + "_ENUM"
+      return "Enum." + ctx.firstToUpper(self.getName) + "_ENUM"
     }
     else {
       var res: String = self.getAnnotations.filter {
@@ -734,6 +740,7 @@ case class EnumerationJavaScriptGenerator(override val self: Enumeration) extend
       l.getName.toUpperCase + ": \"" + l.getName + "\""
     }.mkString(",\n")
     builder append "}\n"
+    builder append "exports." + self.getName + "_ENUM = " + self.getName + "_ENUM;\n"
   }
 }
 

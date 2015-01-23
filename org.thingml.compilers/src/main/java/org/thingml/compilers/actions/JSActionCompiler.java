@@ -114,7 +114,7 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
 
     @Override
     public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
-        builder.append(ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + ((ThingMLElement)expression.getLiteral().eContainer()).getName().toUpperCase() + "_" + expression.getLiteral().getName().toUpperCase());
+        builder.append("Enum." + ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + ((ThingMLElement)expression.getLiteral().eContainer()).getName().toUpperCase() + "_" + expression.getLiteral().getName().toUpperCase());
 
 
 
