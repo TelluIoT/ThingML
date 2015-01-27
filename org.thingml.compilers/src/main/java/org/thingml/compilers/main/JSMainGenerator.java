@@ -28,21 +28,7 @@ import java.util.Map;
  */
 public class JSMainGenerator extends MainGenerator {
 
-    @Override
-    public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
-        final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/main.js");
-
-        builder.append("var Connector = require('./Connector');\n");
-        for(Type ty : model.allUsedSimpleTypes()) {
-            if (ty instanceof Enumeration) {
-                builder.append("var Enum = require('./enums');\n");
-                break;
-            }
-        }
-        for(Thing t : cfg.allThings()) {
-            builder.append("var " + t.getName() + " = require('./" + t.getName() + "');\n");
-        }
-        builder.append("process.stdin.resume();//to keep Node.js alive even when it is nothing more to do...\n");
+    public static void generateInstances(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
         for (Instance i : cfg.allInstances()) {
             for (Property a : cfg.allArrays(i)) {
                 builder.append("var " + i.getName() + "_" + a.getName() + "_array = [];\n");
@@ -63,38 +49,42 @@ public class JSMainGenerator extends MainGenerator {
                 }
             }
 
-            builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(");
+            if (useThis) {
+                builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(");
+            } else {
+                builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(");
+            }
             int id = 0;
 
             for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
                 for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
-                       if (p.getKey().equals(prop) && prop.getCardinality() == null && !prop.isDefined("private", "true") && prop.eContainer() instanceof Thing) {
-                            System.out.println("Property " + prop);
-                            String result = "";
-                            if (prop.getType() instanceof Enumeration) {
-                                Enumeration enum_ = (Enumeration) prop.getType();
-                                EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
+                    if (p.getKey().equals(prop) && prop.getCardinality() == null && !prop.isDefined("private", "true") && prop.eContainer() instanceof Thing) {
+                        System.out.println("Property " + prop);
+                        String result = "";
+                        if (prop.getType() instanceof Enumeration) {
+                            Enumeration enum_ = (Enumeration) prop.getType();
+                            EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
+                            StringBuilder tempbuilder = new StringBuilder();
+                            if (enumL == null) {
+                                tempbuilder.append("Enum." + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enum_.getLiterals().get(0).getName().toUpperCase());
+                            } else {
+                                tempbuilder.append("Enum" + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enumL.getLiteral().getName().toUpperCase());
+                            }
+                            result += tempbuilder.toString();
+                        } else {
+                            if (p.getValue() != null) {
                                 StringBuilder tempbuilder = new StringBuilder();
-                                if (enumL == null) {
-                                    tempbuilder.append("Enum." + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enum_.getLiterals().get(0).getName().toUpperCase());
-                                } else {
-                                    tempbuilder.append("Enum" + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enumL.getLiteral().getName().toUpperCase());
-                                }
+                                ctx.getCompiler().getActionCompiler().generate(p.getValue(), tempbuilder, ctx);
                                 result += tempbuilder.toString();
                             } else {
-                                if (p.getValue() != null) {
-                                    StringBuilder tempbuilder = new StringBuilder();
-                                    ctx.getCompiler().getActionCompiler().generate(p.getValue(), tempbuilder, ctx);
-                                    result += tempbuilder.toString();
-                                } else {
-                                    result += JavaHelper.getDefaultValue(p.getKey().getType());
-                                }
+                                result += JavaHelper.getDefaultValue(p.getKey().getType());
                             }
-                            if (id > 0)
-                                builder.append(", ");
-                            builder.append(result);
-                            id++;
                         }
+                        if (id > 0)
+                            builder.append(", ");
+                        builder.append(result);
+                        id++;
+                    }
                 }
                 for (Property a : cfg.allArrays(i)) {
                     if (prop.equals(a) && !(prop.isDefined("private", "true"))  && prop.eContainer() instanceof Thing) {
@@ -117,6 +107,25 @@ public class JSMainGenerator extends MainGenerator {
                 builder.append(c.getSrv().getInstance().getName() + ".getConnectors().push(new Connector(" + c.getSrv().getInstance().getName() + ", " + c.getCli().getInstance().getName() + ", \"" + c.getProvided().getName() + "_c\", \"" + c.getRequired().getName() + "_s\"));\n");
             }
         }
+    }
+
+    @Override
+    public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
+        final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/main.js");
+
+        builder.append("var Connector = require('./Connector');\n");
+        for(Type ty : model.allUsedSimpleTypes()) {
+            if (ty instanceof Enumeration) {
+                builder.append("var Enum = require('./enums');\n");
+                break;
+            }
+        }
+        for(Thing t : cfg.allThings()) {
+            builder.append("var " + t.getName() + " = require('./" + t.getName() + "');\n");
+        }
+        builder.append("process.stdin.resume();//to keep Node.js alive even when it is nothing more to do...\n");
+
+        generateInstances(cfg, builder, ctx, false);
 
         for (Instance i : cfg.allInstances()) {
             if (i.getType().allStateMachines().size() > 0) {

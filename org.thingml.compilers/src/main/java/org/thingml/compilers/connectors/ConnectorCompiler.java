@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.connectors;
 
+import org.sintef.thingml.Configuration;
 import org.thingml.compilers.Context;
 
 /**
@@ -22,7 +23,7 @@ import org.thingml.compilers.Context;
  */
 public class ConnectorCompiler {
 
-    public void generateLib(Context ctx, String protocol) {
+    public void generateLib(Context ctx, Configuration cfg) {
         throw(new UnsupportedOperationException("Connector libs are platform-specific."));
     }
 
