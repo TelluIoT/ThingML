@@ -173,7 +173,7 @@ public class Context {
      */
     public void copy(InputStream source, String targetDir, String targetFile) {
         try {
-            Files.copy(source, FileSystems.getDefault().getPath(compiler.getOutputDirectory() + targetDir, targetFile), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(source, FileSystems.getDefault().getPath(compiler.getOutputDirectory() + "/" +  targetDir, targetFile), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
             System.err.println("Problem while copying file");
             e.printStackTrace();

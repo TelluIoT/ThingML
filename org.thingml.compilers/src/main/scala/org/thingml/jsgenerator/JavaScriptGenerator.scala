@@ -163,68 +163,10 @@ object JavaScriptGenerator {
     builder append "</html>"*/
 
 
-    var builder = ctx.getBuilder(t.getName + "/state-factory.js")
+    var builder = ctx.getBuilder(t.getName + "/" + t.getName + ".js")
 
-    /*var prefix = (if (isNode) "state_js." else "")
-    if (isNode) {
-      builder append "var state_js = require('state.js');\n"
-      t.allThings().foreach { th =>
-        th.annotation("js_dep").foreach{dep =>
-          builder append "var " + dep.split(":")(0).replaceAll("\"", "") + " = require(" + dep.split(":")(0) + ");\n"
-        }
-      }
-    }*/
-    builder append "var State = require('state.js');\n"
-    builder append "module.exports.buildStateMachine = function buildStateMachine(name) {\n"
-    builder append "return new State.StateMachine(name);\n"
-    builder append "}\n\n"
-    builder append "module.exports.buildRegion = function buildRegion(name, container){\n"
-    builder append "return new State.Region(name, container);\n"
-    builder append "}\n\n"
-    builder append "module.exports.buildInitialState = function buildInitialState(name, container){\n"
-    builder append "return new State.PseudoState(name, State.PseudoStateKind.Initial, container);\n"
-    builder append "}\n\n"
-    builder append "module.exports.buildFinalState = function buildFinalState(name, container){\n"
-    builder append "return new State.PseudoState(name, State.PseudoStateKind.Final, container);\n"
-    builder append "}\n\n"
-    builder append "module.exports.buildHistoryState = function buildHistoryState(name, container){\n"
-    builder append "return new State.PseudoState(name, State.PseudoStateKind.ShallowHistory, container);\n"
-    builder append "}\n\n"
-    builder append "module.exports.buildSimpleState = function buildSimpleState(name, container){\n"
-    builder append "return new State.SimpleState(name, container);\n"
-    builder append "}\n\n"
-    builder append "module.exports.buildCompositeState = function buildCompositeState(name, container){\n"
-    builder append "return new State.CompositeState(name, container);\n"
-    builder append "}\n\n"
-    builder append "module.exports.buildOrthogonalState = function buildOrthogonalState(name, container){\n"
-    builder append "return new State.OrthogonalState(name, container);\n"
-    builder append "}\n\n"
-    builder append "module.exports.buildEmptyTransition = function buildEmptyTransition(source, target){\n"
-    builder append "return new State.Transition(source, target);\n"
-    builder append "}\n\n"
-    builder append "module.exports.buildTransition = function buildTransition(source, target, guard){\n"
-    builder append "return new State.Transition(source, target, guard);\n"
-    builder append "}\n\n"
-
-    builder = ctx.getBuilder(t.getName + "/Connector.js")
-    builder append "function Connector(client, server, clientPort, serverPort) {\n"
-    builder append "this.client = client;\n"
-    builder append "this.server = server;\n"
-    builder append "this.clientPort = clientPort;\n"
-    builder append "this.serverPort = serverPort;\n"
-    builder append "}\n\n"
-
-    builder append "Connector.prototype.forward = function(message) {//JSONified messsage, we need to update port before we send to server\n"
-    builder append "var json = JSON.parse(message);\n"
-    builder append "if (json.port === this.clientPort) {\n"
-    builder append "json.port = this.serverPort;\n"
-    builder append "this.server._receive(JSON.stringify(json));\n"
-    builder append "} else {\n"
-    builder append "json.port = this.clientPort;\n"
-    builder append "this.client._receive(JSON.stringify(json));\n"
-    builder append "}\n"
-    builder append "};\n\n"
-    builder append "module.exports = Connector;\n"
+    ctx.copy(this.getClass.getClassLoader.getResourceAsStream("javascript/lib/state-factory.js"), t.getName, "state-factory.js")
+    ctx.copy(this.getClass.getClassLoader.getResourceAsStream("javascript/lib/Connector.js"), t.getName, "Connector.js")
 
     if(model.allUsedSimpleTypes.filter { ty => ty.isInstanceOf[Enumeration]}.size > 0) {
       ctx.addProperty("hasEnum", "true")
