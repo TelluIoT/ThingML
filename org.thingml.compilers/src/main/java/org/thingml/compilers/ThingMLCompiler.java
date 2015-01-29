@@ -19,27 +19,35 @@ import org.sintef.thingml.Configuration;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
 import org.thingml.compilers.build.BuildCompiler;
+import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.compilers.main.MainGenerator;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ffl on 23.11.14.
  */
 public abstract class ThingMLCompiler {
 
+    protected Context ctx = new Context(this);
 
     private ActionCompiler actionCompiler;
     private ApiCompiler apiCompiler;
     private MainGenerator mainCompiler;
     private BuildCompiler buildCompiler;
+    //we might need several connector compilers has different ports might use different connectors
+    private Map<String, ConnectorCompiler> connectorCompilers = new HashMap<>();
 
     public ThingMLCompiler() {
         this.actionCompiler = new ActionCompiler();
         this.apiCompiler = new ApiCompiler();
         this.mainCompiler = new MainGenerator();
         this.buildCompiler = new BuildCompiler();
+        connectorCompilers.put("default", new ConnectorCompiler());
     }
 
     public ThingMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler) {
@@ -98,6 +106,17 @@ public abstract class ThingMLCompiler {
      **************************************************************/
     public abstract boolean compile(Configuration cfg);
 
+    public boolean compileConnector(String connector, Configuration cfg) {
+        ctx.setCurrentConfiguration(cfg);
+        final ConnectorCompiler cc = connectorCompilers.get(connector);
+        if (cc != null) {
+            cc.generateLib(ctx, cfg);
+            ctx.dump();
+            return true;
+        }
+        return false;
+    }
+
     public ActionCompiler getActionCompiler() {
         return actionCompiler;
     }
@@ -112,5 +131,9 @@ public abstract class ThingMLCompiler {
 
     public BuildCompiler getBuildCompiler() {
         return buildCompiler;
+    }
+
+    public void addConnectorCompilers(Map<String, ConnectorCompiler> connectorCompilers) {
+        this.connectorCompilers.putAll(connectorCompilers);
     }
 }

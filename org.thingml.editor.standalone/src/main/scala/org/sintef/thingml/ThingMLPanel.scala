@@ -108,6 +108,7 @@ class ThingMLPanel extends JPanel {
   val bThingML2 = new JMenuItem("ThingML/Comm2")
   val j = new JMenuItem("state.js")
   val jWS = new JMenuItem("WebSocket")
+  val jKevoreeJS = new JMenuItem("Kevoree")
 
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
@@ -357,6 +358,27 @@ class ThingMLPanel extends JPanel {
     }
   })
 
+  jKevoreeJS.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty) return;
+
+      try {
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        val compiler = new JavaScriptCompiler();
+        thingmlModel.allConfigurations().foreach { c =>
+          val file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName)
+          file.mkdirs()
+          compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/"))
+          compiler.compileConnector("kevoree-js", c)
+        }
+      }
+      catch {
+        case t: Throwable => t.printStackTrace()
+      }
+    }
+  })
+
   jWS.addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent) {
       println("Input file : " + targetFile)
@@ -386,6 +408,7 @@ class ThingMLPanel extends JPanel {
   javaMenu.add(bSwing)
   javaMenu.add(bKevoree)
   jsMenu.add(j);
+  jsMenu.add(jKevoreeJS);
   jsMenu.add(jWS);
   compilersMenu.add(bThingML)
   compilersMenu.add(bThingML2)

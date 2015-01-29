@@ -24,13 +24,24 @@ import org.thingml.compilers.api.ApiCompiler;
 import org.thingml.compilers.api.JavaScriptApiCompiler;
 import org.thingml.compilers.build.BuildCompiler;
 import org.thingml.compilers.build.JSBuildCompiler;
+import org.thingml.compilers.connectors.ConnectorCompiler;
+import org.thingml.compilers.connectors.JS2Kevoree;
 import org.thingml.compilers.main.JSMainGenerator;
 import org.thingml.compilers.main.MainGenerator;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ffl on 25.11.14.
  */
 public class JavaScriptCompiler extends OpaqueThingMLCompiler {
+
+    {
+        Map<String, ConnectorCompiler> connectorCompilerMap = new HashMap<>();
+        connectorCompilerMap.put("kevoree-js", new JS2Kevoree());
+        addConnectorCompilers(connectorCompilerMap);
+    }
 
     public JavaScriptCompiler() {
         super(new JSActionCompiler(), new JavaScriptApiCompiler(), new JSMainGenerator(), new JSBuildCompiler());
@@ -61,7 +72,6 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(Configuration cfg) {
-        Context ctx = new Context(this);
         ctx.setThisRef("_this.");
         org.thingml.jsgenerator.JavaScriptGenerator.compileAndRun(cfg, ThingMLHelpers.findContainingModel(cfg), false, getOutputDirectory(), ctx);
     }

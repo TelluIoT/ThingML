@@ -29,7 +29,7 @@ public class JS2Kevoree extends ConnectorCompiler {
 
     @Override
     public void generateLib(Context ctx, Configuration cfg) {
-        StringBuilder builder = ctx.getBuilder("/" + cfg.getName() + ".js" );
+        StringBuilder builder = ctx.getBuilder(cfg.getName() + "/" + cfg.getName() + ".js" );
         builder.append("var Connector = require('./Connector');\n");
         builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
 
