@@ -370,9 +370,9 @@ class ThingMLPanel extends JPanel {
           val file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName)
           file.mkdirs()
           compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/"))
-          compiler.compileConnector("kevoree-js", c)
           val ctx = new Context(compiler)
           compiler.getBuildCompiler.generate(c, ctx)
+          compiler.compileConnector("kevoree-js", c)
           ctx.dump()
         }
       }

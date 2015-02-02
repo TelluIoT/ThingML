@@ -31,8 +31,39 @@ import java.util.Map;
  */
 public class JS2Kevoree extends ConnectorCompiler {
 
-    @Override
-    public void generateLib(Context ctx, Configuration cfg) {
+    private void generateKevScript(Context ctx, Configuration cfg) {
+        StringBuilder kevScript = ctx.getBuilder(cfg.getName() + "/kevs/main.kevs" );
+        kevScript.append("//create a default JavaScript node\n");
+        kevScript.append("add node0 : JavascriptNode\n");
+
+        kevScript.append("//create a default group to manage the node(s)\n");
+        kevScript.append("add sync : WSGroup\n");
+        kevScript.append("set sync.port/node0 = \"9000\"\n");
+
+        kevScript.append("attach node0 sync\n\n");
+
+        kevScript.append("//instantiate Kevoree/ThingML components\n");
+        kevScript.append("add node0." + cfg.getName() + "_0 : " + cfg.getName() + "\n");
+
+        kevScript.append("start sync\n");
+        kevScript.append("//start node0\n\n");
+        kevScript.append("\n");
+
+        PrintWriter w = null;
+        try {
+            new File(ctx.getOutputDir() + "/" + cfg.getName() + "/kevs").mkdirs();
+            w = new PrintWriter(new FileWriter(new File(ctx.getOutputDir() + "/" + cfg.getName() + "/kevs/main.kevs")));
+            w.println(kevScript);
+            w.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(w);
+        }
+
+    }
+
+    private void generateGruntFile(Context ctx, Configuration cfg) {
         //copy Gruntfile.js
         try {
             final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/Gruntfile.js");
@@ -48,7 +79,9 @@ public class JS2Kevoree extends ConnectorCompiler {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    private void updatePackageJSON(Context ctx, Configuration cfg) {
         //Update package.json
         try {
             final InputStream input = new FileInputStream(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json");
@@ -60,6 +93,7 @@ public class JS2Kevoree extends ConnectorCompiler {
             input.close();
 
             final JsonObject json = JsonObject.readFrom(pack);
+            json.set("main", "lib/" + cfg.getName() + ".js");
             final JsonObject deps = json.get("dependencies").asObject();
             deps.add("kevoree-entities", "^7.0.0");
             final JsonObject devDeps = json.get("devDependencies").asObject();
@@ -74,21 +108,29 @@ public class JS2Kevoree extends ConnectorCompiler {
             final JsonObject kevProp = JsonObject.readFrom("{\"package\":\"my.package\"}");
             json.add("kevoree", kevProp);
 
-            //FIXME: I can create a package_kev.json which contains all I need, but I cannot update the existing package.json. No exception is thrown, but the original file is not updated...
             final File f = new File(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json");
-            System.out.println("Can write? " + f.canWrite());
             final OutputStream output = new FileOutputStream(f);
-            System.out.println("JSON: " + json.toString());
-            System.out.println("BSON: " + json.toString().getBytes().length);
             IOUtils.write(json.toString(), output);
             IOUtils.closeQuietly(output);
-            //IOUtils.copy(new FileInputStream(ctx.getOutputDir() + "/" + cfg.getName() + "/package_kev.json"), new FileOutputStream(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json"));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    private void generateWrapper(Context ctx, Configuration cfg) {
         //Generate wrapper
-        StringBuilder builder = ctx.getBuilder(cfg.getName() + "/" + cfg.getName() + ".js" );
+
+        //Move all .js file (previously generated) into lib folder
+        final File dir = new File(ctx.getOutputDir() + "/" + cfg.getName());
+        final File lib = new File(dir, "lib");
+        lib.mkdirs();
+        for(File f : dir.listFiles()) {
+            if (f.getAbsolutePath().endsWith("js")) {
+                f.renameTo(new File(lib, f.getName()));
+            }
+        }
+
+        StringBuilder builder = ctx.getBuilder(cfg.getName() + "/lib/" + cfg.getName() + ".js" );
         builder.append("var Connector = require('./Connector');\n");
         builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
 
@@ -116,9 +158,9 @@ public class JS2Kevoree extends ConnectorCompiler {
         for(Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
             for(Port p : (List<Port>)e.getValue()) {
-                 if (p.getSends().size() > 0) {
-                     builder.append("this." + i.getName() + ".get" + ctx.firstToUpper(p.getName()) + "Listeners().push(this.out_" + i.getName() + "_" + p.getName() + "_out.bind(this));\n");
-                 }
+                if (p.getSends().size() > 0) {
+                    builder.append("this." + i.getName() + ".get" + ctx.firstToUpper(p.getName()) + "Listeners().push(this.out_" + i.getName() + "_" + p.getName() + "_out.bind(this));\n");
+                }
             }
         }
 
@@ -182,5 +224,13 @@ public class JS2Kevoree extends ConnectorCompiler {
         }
         builder.append("});\n\n");
         builder.append("module.exports = " + cfg.getName() + ";\n");
+    }
+
+    @Override
+    public void generateLib(Context ctx, Configuration cfg) {
+        generateWrapper(ctx, cfg);
+        generateGruntFile(ctx, cfg);
+        updatePackageJSON(ctx, cfg);
+        generateKevScript(ctx, cfg);
     }
 }
