@@ -21,6 +21,7 @@ import org.thingml.compilers.Context;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -32,11 +33,13 @@ public class JavaBuildCompiler extends BuildCompiler{
     public void generate(Configuration cfg, Context ctx) {
         //TODO: update POM
         try {
-            List<String> pomLines = IOUtils.readLines(this.getClass().getClassLoader().getResourceAsStream("pomtemplates/javapom.xml"));
+            InputStream input = this.getClass().getClassLoader().getResourceAsStream("pomtemplates/javapom.xml");
+            List<String> pomLines = IOUtils.readLines(input);
             String pom = "";
             for(String line : pomLines) {
-                pom += line;
+                pom += line + "\n";
             }
+            input.close();
             pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName());
 
             //Add ThingML dependencies

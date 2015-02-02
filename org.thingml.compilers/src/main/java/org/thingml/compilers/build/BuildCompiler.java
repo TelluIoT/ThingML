@@ -18,13 +18,42 @@ package org.thingml.compilers.build;
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.Context;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by bmori on 17.12.2014.
  */
 public class BuildCompiler {
 
+    protected Set<String> properties = new HashSet<>();
+    protected Set<String> deps = new HashSet<>();
+    protected Set<String> devDeps = new HashSet<>();
+    protected Set<String> repos = new HashSet<>();
+    protected Set<String> scripts = new HashSet<>();
+
     public void generate(Configuration cfg, Context ctx) {
         throw(new UnsupportedOperationException("Project structure and build scripts are platform-specific."));
+    }
+
+    public void addDependency(String dep) {
+        deps.add(dep);
+    }
+
+    public void addDevDependency(String dep) {
+        devDeps.add(dep);
+    }
+
+    public void addConfigProperty(String prop) {
+        properties.add(prop);
+    }
+
+    public void addRepository(String repo) {
+        repos.add(repo);
+    }
+
+    public void addScripts(String script) {
+        scripts.add(script);
     }
 
 }

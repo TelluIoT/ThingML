@@ -15,9 +15,18 @@
  */
 package org.thingml.compilers.build;
 
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Created by bmori on 17.12.2014.
@@ -25,24 +34,32 @@ import org.thingml.compilers.Context;
 public class JSBuildCompiler extends BuildCompiler {
 
     public void generate(Configuration cfg, Context ctx) {
-        final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/package.json");
-
-        builder.append("{\n");
-        builder.append("\"name\": \"" + cfg.getName() + "\",\n");
-        builder.append("\"version\": \"1.0.0\",\n");
-        builder.append("\"description\": \"" + cfg.getName() + " configuration generated from ThingML\",\n");
-        builder.append("\"main\": \"behavior.js\",\n");
-        builder.append("\"dependencies\": {\n");
-        builder.append("\"state.js\": \"^4.1.5\"");
-        for(Thing t : cfg.allThings()) {
-            for(String dep : t.annotation("js_dep")) {
-                builder.append(",\n" + dep);
+        try {
+            final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/package.json");
+            final List<String> packLines = IOUtils.readLines(input);
+            String pack = "";
+            for(String line : packLines) {
+                pack += line + "\n";
             }
-        }
-        builder.append("\n");
-        builder.append("}\n");
-        builder.append("}\n");
+            input.close();
+            pack = pack.replace("<NAME>", cfg.getName());
 
+            final JsonObject json = JsonObject.readFrom(pack);
+            final JsonValue deps = json.get("dependencies");
+            for(Thing t : cfg.allThings()) {
+                for(String dep : t.annotation("js_dep")) {
+                    deps.asObject().add(dep.split(":")[0].trim(), dep.split(":")[1].trim());
+                }
+            }
+
+            final File f = new File(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json");
+            f.setWritable(true);
+            final PrintWriter w = new PrintWriter(new FileWriter(f));
+            w.println(json.toString());
+            w.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

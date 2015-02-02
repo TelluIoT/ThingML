@@ -110,11 +110,11 @@ object JavaScriptGenerator {
 
   def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false, outdir : File = null, ctx : Context) {
     ctx.setCurrentConfiguration(cfg)
-    ctx.getCompiler.getBuildCompiler.generate(cfg, ctx)
     compile(cfg, model, true, ctx)
+    ctx.getCompiler.getBuildCompiler.generate(cfg, ctx)
     ctx.dump()
 
-    if (!doingTests && outdir == null) {
+    /*if (!doingTests && outdir == null) {
       new Thread(new Runnable {
         override def run() {
           val runtime = Runtime.getRuntime().exec((if (isWindows) "cmd /k start " else "") + "node behavior.js", null, new File(ctx.getOutputDir));
@@ -133,7 +133,7 @@ object JavaScriptGenerator {
           runtime.destroy();
         }
       }).start()
-    }
+    }*/
 
   }
 

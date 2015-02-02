@@ -1,0 +1,14 @@
+{
+  "name": "<NAME>",
+  "version": "1.0.0",
+  "description": "<NAME> configuration generated from ThingML",
+  "main": "main.js",
+  "private": true,
+  "dependencies": {
+    "state.js": "^4.1.5"
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+  }
+}

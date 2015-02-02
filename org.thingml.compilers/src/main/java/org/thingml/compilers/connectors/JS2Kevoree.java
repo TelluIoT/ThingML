@@ -15,10 +15,14 @@
  */
 package org.thingml.compilers.connectors;
 
+import com.eclipsesource.json.JsonObject;
+import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.build.BuildCompiler;
 import org.thingml.compilers.main.JSMainGenerator;
 
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +33,61 @@ public class JS2Kevoree extends ConnectorCompiler {
 
     @Override
     public void generateLib(Context ctx, Configuration cfg) {
+        //copy Gruntfile.js
+        try {
+            final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/Gruntfile.js");
+            final List<String> pomLines = IOUtils.readLines(input);
+            String pom = "";
+            for(String line : pomLines) {
+                pom += line + "\n";
+            }
+            input.close();
+            final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDir() + "/" + cfg.getName() +  "/Gruntfile.js")));
+            w.println(pom);
+            w.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //Update package.json
+        try {
+            final InputStream input = new FileInputStream(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json");
+            final List<String> packLines = IOUtils.readLines(input);
+            String pack = "";
+            for (String line : packLines) {
+                pack += line + "\n";
+            }
+            input.close();
+
+            final JsonObject json = JsonObject.readFrom(pack);
+            final JsonObject deps = json.get("dependencies").asObject();
+            deps.add("kevoree-entities", "^7.0.0");
+            final JsonObject devDeps = json.get("devDependencies").asObject();
+            devDeps.add("grunt", "^0.4.1");
+            devDeps.add("grunt-kevoree", "^5.0.0");
+            devDeps.add("grunt-kevoree-genmodel", "^2.0.0");
+            devDeps.add("grunt-kevoree-registry", "^2.0.0");
+            final JsonObject scripts = json.get("scripts").asObject();
+            scripts.add("prepublish", "grunt");
+            scripts.add("postpublish", "grunt publish");
+
+            final JsonObject kevProp = JsonObject.readFrom("{\"package\":\"my.package\"}");
+            json.add("kevoree", kevProp);
+
+            //FIXME: I can create a package_kev.json which contains all I need, but I cannot update the existing package.json. No exception is thrown, but the original file is not updated...
+            final File f = new File(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json");
+            System.out.println("Can write? " + f.canWrite());
+            final OutputStream output = new FileOutputStream(f);
+            System.out.println("JSON: " + json.toString());
+            System.out.println("BSON: " + json.toString().getBytes().length);
+            IOUtils.write(json.toString(), output);
+            IOUtils.closeQuietly(output);
+            //IOUtils.copy(new FileInputStream(ctx.getOutputDir() + "/" + cfg.getName() + "/package_kev.json"), new FileOutputStream(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //Generate wrapper
         StringBuilder builder = ctx.getBuilder(cfg.getName() + "/" + cfg.getName() + ".js" );
         builder.append("var Connector = require('./Connector');\n");
         builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");

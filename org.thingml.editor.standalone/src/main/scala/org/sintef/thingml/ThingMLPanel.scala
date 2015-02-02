@@ -371,6 +371,9 @@ class ThingMLPanel extends JPanel {
           file.mkdirs()
           compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/"))
           compiler.compileConnector("kevoree-js", c)
+          val ctx = new Context(compiler)
+          compiler.getBuildCompiler.generate(c, ctx)
+          ctx.dump()
         }
       }
       catch {
