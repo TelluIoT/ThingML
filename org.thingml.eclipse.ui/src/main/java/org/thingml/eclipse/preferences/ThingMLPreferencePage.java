@@ -55,6 +55,8 @@ public class ThingMLPreferencePage
 			new StringFieldEditor(PreferenceConstants.P_STRING, "ArduinoIDE Folder:", getFieldEditorParent()));
 		addField(
 				new StringFieldEditor(PreferenceConstants.T_STRING, "Arduino Library Folder:", getFieldEditorParent()));
+        addField(
+                new StringFieldEditor(PreferenceConstants.PACK_STRING, "Default package:", getFieldEditorParent()));
 	}
 
 	/* (non-Javadoc)

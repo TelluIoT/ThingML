@@ -125,8 +125,10 @@ public class JavaMainGenerator extends MainGenerator {
 
     @Override
     public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
-        StringBuilder builder = ctx.getBuilder("src/main/java/org/thingml/generated/Main.java");
-        ctx.addProperty("pack", "org.thingml.generated");
+        final String pack = ctx.getProperty("package").orElse("org.thingml.generated");
+        final String src = "src/main/java/" + pack.replace(".", "/");
+
+        StringBuilder builder = ctx.getBuilder(src + "/Main.java");
 
         boolean api = false;
         boolean gui = false;
@@ -152,9 +154,9 @@ public class JavaMainGenerator extends MainGenerator {
             }
         }
 
-        JavaHelper.generateHeader(builder, ctx, true, api, cfg.allMessages().size() > 0);
+        JavaHelper.generateHeader(pack, pack, builder, ctx, true, api, cfg.allMessages().size() > 0);
         if (gui) {
-            builder.append("import org.thingml.generated.gui.*;\n");
+            builder.append("import " + pack + ".gui.*;\n");
         }
 
 
@@ -173,6 +175,9 @@ public class JavaMainGenerator extends MainGenerator {
         generateInstances(cfg, ctx, builder);
 
         builder.append("//Starting Things\n");
+        for(Instance i : cfg.allInstances()) {
+            builder.append(ctx.getInstanceName(i) + ".init();\n");
+        }
         for(Instance i : cfg.allInstances()) {
             builder.append(ctx.getInstanceName(i) + ".start();\n");
         }

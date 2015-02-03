@@ -51,7 +51,7 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(Configuration cfg) {
+    public void do_call_compiler(Configuration cfg, String... options) {
         CGenerator.opaqueCompileToLinux(cfg, this);
     }
 }

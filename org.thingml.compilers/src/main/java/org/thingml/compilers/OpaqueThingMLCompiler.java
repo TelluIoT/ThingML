@@ -49,7 +49,7 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
     }
 
     @Override
-    public boolean compile(Configuration cfg) {
+    public boolean compile(Configuration cfg, String... options) {
         final OutputStream stream = getMessageStream();
         if (stream != null) {
             m = new PrintStream(stream);
@@ -58,7 +58,7 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
         try {
             println("Running "+getName()+" compiler on configuration " + cfg.getName());
-            do_call_compiler(cfg);
+            do_call_compiler(cfg, options);
             println("Compilation complete.");
         }
         catch (Error err) {
@@ -68,6 +68,6 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
         return true;
     }
 
-    public abstract void do_call_compiler(Configuration cfg);
+    public abstract void do_call_compiler(Configuration cfg, String... options);
 
 }

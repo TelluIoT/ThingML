@@ -43,8 +43,6 @@ object JavaGenerator {
   implicit def javaGeneratorAspect(self: Instance): InstanceJavaGenerator = InstanceJavaGenerator(self)
   implicit def javaGeneratorAspect(self: Connector): ConnectorJavaGenerator = ConnectorJavaGenerator(self)
 
-  implicit def javaGeneratorAspect(self: EnumerationLiteral): EnumerationLiteralJavaGenerator = EnumerationLiteralJavaGenerator(self)
-
   implicit def javaGeneratorAspect(self: Variable): VariableJavaGenerator = VariableJavaGenerator(self)
 
   implicit def javaGeneratorAspect(self: Type) = self match {
@@ -102,7 +100,7 @@ object JavaGenerator {
     case _                           => new ExpressionJavaGenerator(self)
   }
 
-  def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false, outdir : File = null, ctx : Context) {
+  def compileAndRun(cfg: Configuration, model: ThingMLModel, doingTests: Boolean = false, outdir : File = null, ctx : Context, pack : String = "org.thingml.generated") {
     //ConfigurationImpl.MergedConfigurationCache.clearCache();
 
     //doingTests should be ignored, it is only used when calling from org.thingml.cmd
@@ -114,7 +112,8 @@ object JavaGenerator {
     if (outdir != null) tmpFolder = outdir.getAbsolutePath + File.separator;
     else new File(tmpFolder).deleteOnExit
 
-    compile(cfg, "org.thingml.generated", model, ctx)
+    ctx.addProperty("package", pack);
+    compile(cfg, pack, model, ctx)
     ctx.dump()
     //val rootDir = tmpFolder + cfg.getName
 
@@ -158,21 +157,17 @@ object JavaGenerator {
       ctx.getCompiler.getApiCompiler.generate(th, ctx)
     }
 
-    //TODO: to be migrated in API generator
-    model.allUsedSimpleTypes.filter { t => t.isInstanceOf[Enumeration] }.foreach { e =>
-      e.generateJava(ctx.getBuilder("src/main/java/org/thingml/generated/api/" + ctx.firstToUpper(e.getName) + "_ENUM.java"), ctx)
-    }
-
     ctx.getCompiler.getMainCompiler.generate(t, model, ctx);
 
     // Generate code for things which appear in the configuration
     //TODO: we should not generate all the messages defined in the model, just the one relevant for the configuration
     t.allMessages.foreach {
       m =>
-        var builder = ctx.getBuilder("src/main/java/org/thingml/generated/messages/" + ctx.firstToUpper(m.getName()) + "MessageType.java")
-        ctx.addProperty("pack", "org.thingml.generated.messages")
+        val rootPack = ctx.getProperty("package").orElse("org.thingml.generated")
+        val pack = ctx.getProperty("package").orElse("org.thingml.generated") + ".messages"
+        val builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(m.getName()) + "MessageType.java")
 
-        JavaHelper.generateHeader(builder, ctx, false, t.allInstances().collect{case i => i.getType}.filter{thing => thing.allPorts.filter{p => p.isDefined("public", "true")}.size > 0}.size > 0 || model.allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, t.allMessages().size() > 0)
+        JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, t.allInstances().collect{case i => i.getType}.filter{thing => thing.allPorts.filter{p => p.isDefined("public", "true")}.size > 0}.size > 0 || model.allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, t.allMessages().size() > 0)
         builder append "public class " + ctx.firstToUpper(m.getName()) + "MessageType extends EventType {\n"
         builder append "public " + ctx.firstToUpper(m.getName()) + "MessageType() {name = \"" + m.getName + "\";}\n\n"
         builder append "public Event instantiate(final Port port"
@@ -434,10 +429,10 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
 
   override def generateJava(ctx : Context) {
     //Context.thing = self
-    ctx.addProperty("pack", "org.thingml.generated")
-    val builder = ctx.getBuilder("src/main/java/org/thingml/generated/" + ctx.firstToUpper(self.getName) + ".java")
+    var pack = ctx.getProperty("package").orElse("org.thingml.generated")
+    val builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(self.getName) + ".java")
 
-    JavaHelper.generateHeader(builder, ctx, false, self.allPorts.filter{p => p.isDefined("public", "true")}.size > 0 || self.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, self.allMessages().size() > 0)
+    JavaHelper.generateHeader(pack, pack, builder, ctx, false, self.allPorts.filter{p => p.isDefined("public", "true")}.size > 0 || self.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, self.allMessages().size() > 0)
     builder append "\n/**\n"
     builder append " * Definition for type : " + self.getName + "\n"
     builder append " **/\n"
@@ -634,25 +629,6 @@ case class VariableJavaGenerator(val self: Variable) extends ThingMLJavaGenerato
   }
 }
 
-case class EnumerationLiteralJavaGenerator(val self: EnumerationLiteral) extends ThingMLJavaGenerator(self) {
-
-  def enum_val: String = {
-    self.getAnnotations.filter {
-      a => a.getName == "enum_val"
-    }.headOption match {
-      case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
-      case None => {
-        println("[WARNING] Missing annotation enum_val on litteral " + self.getName + " in enum " + self.eContainer().asInstanceOf[ThingMLElement].getName + ", will use default value 0.")
-        return "0"
-      }
-    }
-  }
-
-  def Java_name = {
-    self.eContainer().asInstanceOf[ThingMLElement].getName.toUpperCase + "_" + self.getName.toUpperCase
-  }
-}
-
 case class HandlerJavaGenerator(val self: Handler) extends ThingMLJavaGenerator(self) {
 
   val handlerInstanceName = "handler_" + self.hashCode
@@ -767,32 +743,8 @@ case class PrimitiveTypeJavaGenerator(override val self: PrimitiveType) extends 
 }
 
 case class EnumerationJavaGenerator(override val self: Enumeration) extends TypeJavaGenerator(self) {
-
-    
   override def generateJava(builder : java.lang.StringBuilder, ctx : Context) {
-    ctx.addProperty("pack", "org.thingml.generated.api")
-    JavaHelper.generateHeader(builder, ctx, false, false, false)
-
-    val raw_type = self.getAnnotations.filter {
-      a => a.getName == "java_type"
-    }.headOption match {
-      case Some(a) =>
-        a.asInstanceOf[PlatformAnnotation].getValue
-      case None =>
-    }
-
-    val enumName = ctx.firstToUpper(self.getName) + "_ENUM"
-
-    builder append "// Definition of Enumeration  " + self.getName + "\n"
-    builder append "public enum " + enumName + " {\n"
-    builder append self.getLiterals.collect {case l =>
-      l.Java_name + " ((" + raw_type + ") " + l.enum_val +")"
-    }.mkString("", ",\n", ";\n\n")
-    builder append "private final " + raw_type + " id;\n\n"
-    builder append enumName + "(" + raw_type + " id) {\n"
-    builder append "this.id = id;\n"
-    builder append "}\n"
-    builder append "}\n"
+    ctx.getCompiler.getApiCompiler.asInstanceOf[JavaApiCompiler].generateEnumeration(self, ctx, builder);
   }
 }
 

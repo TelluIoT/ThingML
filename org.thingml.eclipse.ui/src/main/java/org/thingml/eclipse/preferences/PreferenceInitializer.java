@@ -32,9 +32,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.P_STRING,
-				"C:\\Users\\bmori\\ide\\arduino-0022");
+				"");
 		store.setDefault(PreferenceConstants.T_STRING,
-				"C:\\Users\\bmori\\ide\\arduino-0022");
+				"");
+        store.setDefault(PreferenceConstants.PACK_STRING,
+                "eu.heads");
 	}
 
 }

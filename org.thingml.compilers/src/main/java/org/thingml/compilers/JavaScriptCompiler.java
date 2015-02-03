@@ -71,7 +71,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(Configuration cfg) {
+    public void do_call_compiler(Configuration cfg, String... options) {
         ctx.setThisRef("_this.");
         org.thingml.jsgenerator.JavaScriptGenerator.compileAndRun(cfg, ThingMLHelpers.findContainingModel(cfg), false, getOutputDirectory(), ctx);
     }

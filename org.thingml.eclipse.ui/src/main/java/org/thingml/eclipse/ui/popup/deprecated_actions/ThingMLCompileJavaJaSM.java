@@ -22,12 +22,15 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
+import org.thingml.eclipse.preferences.PreferenceConstants;
+import org.thingml.eclipse.ui.Activator;
 
 public class ThingMLCompileJavaJaSM implements IObjectActionDelegate {
 
@@ -69,9 +72,13 @@ public class ThingMLCompileJavaJaSM implements IObjectActionDelegate {
 
 
         ThingMLCompiler compiler = new JavaCompiler();
+        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+        String pack = store.getString(PreferenceConstants.PACK_STRING);
+        String[] options = new String[1];
+        options[0] = pack;
         for (Configuration c : thingmlModel.getConfigs()) {
             compiler.setOutputDirectory(new java.io.File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName()));
-            compiler.compile(c);
+            compiler.compile(c, options);
         }
 	}
 

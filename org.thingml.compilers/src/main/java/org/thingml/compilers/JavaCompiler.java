@@ -25,6 +25,7 @@ import org.thingml.compilers.main.JavaMainGenerator;
 import org.thingml.javagenerator.JavaGenerator;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Created by ffl on 25.11.14.
@@ -55,8 +56,8 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(Configuration cfg) {
+    public void do_call_compiler(Configuration cfg, String... options) {
         Context ctx = new Context(this, "match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@");
-        JavaGenerator.compileAndRun(cfg, ThingMLHelpers.findContainingModel(cfg), false, getOutputDirectory(), ctx);
+        JavaGenerator.compileAndRun(cfg, ThingMLHelpers.findContainingModel(cfg), false, getOutputDirectory(), ctx, Optional.ofNullable(options[0]).orElse("org.thingml.generated"));
     }
 }

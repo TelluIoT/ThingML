@@ -26,10 +26,7 @@ import java.lang.StringBuilder;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Context {
 
@@ -224,8 +221,12 @@ public class Context {
         properties.put(key, value);
     }
 
-    public String getProperty(String key) {
-        return properties.get(key);
+    public Optional<String> getProperty(String key) {
+        String property = properties.get(key);
+        if (property == null)
+            return Optional.empty();
+        else
+            return Optional.of(property);
     }
 
     public boolean isDefined(String key, String value) {

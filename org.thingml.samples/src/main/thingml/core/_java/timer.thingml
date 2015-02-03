@@ -27,7 +27,7 @@ thing TimerJava includes Timer
 					timer!timer_timeout()
 				'} catch (Exception ex) {
 				}
-				interrupt();
+				//interrupt();
 			    }
               };'
              timer = 't' 

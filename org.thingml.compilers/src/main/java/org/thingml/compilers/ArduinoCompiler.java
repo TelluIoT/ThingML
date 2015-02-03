@@ -53,7 +53,7 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(Configuration cfg) {
+    public void do_call_compiler(Configuration cfg, String... options) {
         CGenerator.opaqueArduinoCodeGenerator(cfg, this);
     }
 }

@@ -61,7 +61,7 @@ public class FakeThingMLCompiler extends ThingMLCompiler {
     }
 
     @Override
-    public boolean compile(Configuration cfg) {
+    public boolean compile(Configuration cfg, String... options) {
         return true;
     }
 

@@ -104,7 +104,7 @@ public abstract class ThingMLCompiler {
     /**************************************************************
      * Entry point of the compiler
      **************************************************************/
-    public abstract boolean compile(Configuration cfg);
+    public abstract boolean compile(Configuration cfg, String... options);
 
     public boolean compileConnector(String connector, Configuration cfg) {
         ctx.setCurrentConfiguration(cfg);
