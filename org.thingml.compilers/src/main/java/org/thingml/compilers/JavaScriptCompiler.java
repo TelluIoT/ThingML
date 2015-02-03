@@ -29,6 +29,7 @@ import org.thingml.compilers.connectors.JS2Kevoree;
 import org.thingml.compilers.main.JSMainGenerator;
 import org.thingml.compilers.main.MainGenerator;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,6 +74,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
         ctx.setThisRef("_this.");
+        new File(ctx.getOutputDir() + "/" + cfg.getName()).mkdirs();
         org.thingml.jsgenerator.JavaScriptGenerator.compileAndRun(cfg, ThingMLHelpers.findContainingModel(cfg), false, getOutputDirectory(), ctx);
     }
 }

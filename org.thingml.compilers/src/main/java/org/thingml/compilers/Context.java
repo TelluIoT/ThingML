@@ -19,6 +19,7 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Connector;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.Variable;
+import sun.misc.IOUtils;
 
 import java.io.*;
 import java.lang.String;
@@ -170,9 +171,11 @@ public class Context {
      */
     public void copy(InputStream source, String targetDir, String targetFile) {
         try {
-            Files.copy(source, FileSystems.getDefault().getPath(compiler.getOutputDirectory() + "/" +  targetDir, targetFile), StandardCopyOption.REPLACE_EXISTING);
+            new File(compiler.getOutputDirectory() + "/" +  targetDir).mkdirs();
+            org.apache.commons.io.IOUtils.copy(source, new FileOutputStream(compiler.getOutputDirectory() + "/" +  targetDir + "/" + targetFile));
+            //Files.copy(source, FileSystems.getDefault().getPath(compiler.getOutputDirectory() + "/" +  targetDir, targetFile), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
-            System.err.println("Problem while copying file");
+            System.err.println("Problem while copying file to " + targetDir + "/" + targetFile);
             e.printStackTrace();
         }
     }
