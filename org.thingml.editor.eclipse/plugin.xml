@@ -142,15 +142,15 @@
 	</extension>
 	
 	<extension point="org.eclipse.core.runtime.adapters">
-		<factory adaptableType="org.sintef.thingml.resource.thingml.ui.ThingmlEditor" class="org.sintef.thingml.resource.thingml.ui.debug.ThingmlAdapterFactory">
+		<factory adaptableType="org.sintef.thingml.resource.thingml.ui.ThingmlEditor" class="org.sintef.thingml.util.ThingmlAdapterFactory">
 			<adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget">
 			</adapter>
 		</factory>
-		<factory adaptableType="org.sintef.thingml.resource.thingml.debug.ThingmlDebugVariable" class="org.sintef.thingml.resource.thingml.ui.debug.ThingmlAdapterFactory">
+		<factory adaptableType="org.sintef.thingml.resource.thingml.debug.ThingmlDebugVariable" class="org.sintef.thingml.util.ThingmlAdapterFactory">
 			<adapter type="org.eclipse.debug.internal.ui.viewers.model.provisional.IElementLabelProvider">
 			</adapter>
 		</factory>
-		<factory adaptableType="org.sintef.thingml.resource.thingml.debug.ThingmlDebugVariable" class="org.sintef.thingml.resource.thingml.ui.debug.ThingmlAdapterFactory">
+		<factory adaptableType="org.sintef.thingml.resource.thingml.debug.ThingmlDebugVariable" class="org.sintef.thingml.util.ThingmlAdapterFactory">
 			<adapter type="org.eclipse.debug.internal.ui.viewers.model.provisional.IElementContentProvider">
 			</adapter>
 		</factory>

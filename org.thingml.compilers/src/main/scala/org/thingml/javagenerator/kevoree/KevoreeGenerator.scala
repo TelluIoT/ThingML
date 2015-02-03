@@ -237,6 +237,9 @@ object KevoreeGenerator {
     builder append "@Start\n"
     builder append "public void startComponent() {\n"
     cfg.allInstances().foreach { i =>
+      builder append ctx.getInstanceName(i) + ".init();\n"
+    }
+    cfg.allInstances().foreach { i =>
       builder append ctx.getInstanceName(i) + ".start();\n"
     }
     builder append "}\n\n"
