@@ -97,16 +97,23 @@ public class JSMainGenerator extends MainGenerator {
                 }
             }
             builder.append(");\n");
-            builder.append(i.getName() + ".setThis(" + i.getName() + ");\n");
+            builder.append(reference(i.getName(), useThis) + ".setThis(" + reference(i.getName(), useThis) + ");\n");
         }
         for (Connector c : cfg.allConnectors()) {
             if (c.getRequired().getSends().size() > 0) {
-                builder.append(c.getCli().getInstance().getName() + ".getConnectors().push(new Connector(" + c.getCli().getInstance().getName() + ", " + c.getSrv().getInstance().getName() + ", \"" + c.getRequired().getName() + "_c\", \"" + c.getProvided().getName() + "_s\"));\n");
+                builder.append(reference(c.getCli().getInstance().getName(), useThis) + ".getConnectors().push(new Connector(" + reference(c.getCli().getInstance().getName(), useThis) + ", " + reference(c.getSrv().getInstance().getName(), useThis) + ", \"" + c.getRequired().getName() + "_c\", \"" + c.getProvided().getName() + "_s\"));\n");
             }
             if (c.getProvided().getSends().size() > 0) {
-                builder.append(c.getSrv().getInstance().getName() + ".getConnectors().push(new Connector(" + c.getSrv().getInstance().getName() + ", " + c.getCli().getInstance().getName() + ", \"" + c.getProvided().getName() + "_c\", \"" + c.getRequired().getName() + "_s\"));\n");
+                builder.append(reference(c.getSrv().getInstance().getName(), useThis) + ".getConnectors().push(new Connector(" + reference(c.getSrv().getInstance().getName(), useThis) + ", " + reference(c.getCli().getInstance().getName(), useThis) + ", \"" + c.getProvided().getName() + "_c\", \"" + c.getRequired().getName() + "_s\"));\n");
             }
         }
+    }
+
+    private static String reference(String ref, boolean useThis) {
+        if (useThis)
+            return "this." + ref;
+        else
+            return ref;
     }
 
     @Override

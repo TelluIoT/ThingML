@@ -43,7 +43,7 @@ public class JS2Kevoree extends ConnectorCompiler {
         kevScript.append("attach node0 sync\n\n");
 
         kevScript.append("//instantiate Kevoree/ThingML components\n");
-        kevScript.append("add node0." + cfg.getName() + "_0 : " + cfg.getName() + "\n");
+        kevScript.append("add node0." + cfg.getName() + "_0 : my.package." + cfg.getName() + "\n");
 
         kevScript.append("start sync\n");
         kevScript.append("//start node0\n\n");
