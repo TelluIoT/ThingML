@@ -16,6 +16,7 @@
 package org.thingml.eclipse.ui.popup.deprecated_actions;
 
 import org.eclipse.core.internal.resources.File;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -61,7 +62,7 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
 				.getActiveWorkbenchWindow().getSelectionService()
 				.getSelection()).getFirstElement();
 		java.io.File f1 = f.getLocation().toFile();
-		ThingMLModel thingmlModel = LoadModelUtil.getInstance()
+		/*ThingMLModel thingmlModel = LoadModelUtil.getInstance()
 				.loadThingMLmodel(f1);
 		java.io.File ftemp = null;
 		String tempDir = System.getProperty("java.io.tmpdir") + "tmp"
@@ -71,11 +72,12 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
 			ftemp.mkdir();
 		for (Configuration c : thingmlModel.getConfigs())
 				KevoreeGenerator.compileAndRun(c, thingmlModel);
+		*/
 
 
 
 
-
+		
 
 
 
@@ -93,11 +95,10 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
         if (toCompile.isEmpty()) {
             ThingMLConsole.getInstance().printError("ERROR: The selected model does not contain any concrete Configuration to compile. \n");
             ThingMLConsole.getInstance().printError("Compilation stopped.\n");
-            return null;
         }
 
         // Create the output directory in the current project in a folder "/thingml-gen/<platform>/"
-        IProject project = target_file.getProject();
+        IProject project = f.getProject();
         java.io.File project_folder =  project.getLocation().toFile();
         java.io.File thingmlgen_folder = new java.io.File(project_folder, "thingml-gen");
 
@@ -106,15 +107,15 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
             thingmlgen_folder.mkdir();
         }
 
-        java.io.File platform_folder = new java.io.File(thingmlgen_folder, compiler.getPlatform());
+        java.io.File platform_folder = new java.io.File(thingmlgen_folder, "java");
         if (!platform_folder.exists()) {
-            ThingMLConsole.getInstance().printDebug("Creating folder " + compiler.getPlatform() + " in "+ thingmlgen_folder.getAbsolutePath() + "\n");
+            ThingMLConsole.getInstance().printDebug("Creating folder java in "+ thingmlgen_folder.getAbsolutePath() + "\n");
             platform_folder.mkdir();
         }
 
         // Compile all the configuration
         for ( Configuration cfg :  toCompile ) {
-            KevoreeGenerator.compileAndRun(cfg, model, thingmlgen_folder.getAbsolutePath());
+            KevoreeGenerator.compileAndRun(cfg, model, platform_folder.getAbsolutePath());
         }
 
 

@@ -258,8 +258,8 @@ object KevoreeGenerator {
     w.println(code);
     w.close();
 
-    compilePom(cfg)
-    compileKevScript(cfg)
+    compilePom(cfg, outputFolder)
+    compileKevScript(cfg, outputFolder)
 
     //javax.swing.JOptionPane.showMessageDialog(null, "Kevoree wrappers generated");
   }
@@ -290,7 +290,7 @@ object KevoreeGenerator {
   }
 
 
-  def compileKevScript(cfg: Configuration) {
+  def compileKevScript(cfg: Configuration, outputFolder : String) {
     var kevScript: StringBuilder = new StringBuilder()
 
     kevScript append "repo \"http://repo1.maven.org/maven2\"\n"
@@ -351,7 +351,11 @@ object KevoreeGenerator {
     kevScript append "//start node0\n\n"
     kevScript append "\n"
 
-    val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/kevs"
+
+    val rootDir = if (outputFolder == null)System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName else outputFolder
+    val outputDir = rootDir + "/src/main/java/org/thingml/generated/kevoree"
+
+    //val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/kevs"
     val outputDirFile = new File(rootDir)
     outputDirFile.mkdirs
     val w = new PrintWriter(new FileWriter(new File(rootDir + "/main.kevs")));
@@ -359,8 +363,8 @@ object KevoreeGenerator {
     w.close();
   }
 
-  def compilePom(cfg: Configuration) {
-    val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
+  def compilePom(cfg: Configuration, outputFolder : String) {
+    val rootDir = if (outputFolder == null)System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName else outputFolder
     var pom = Source.fromInputStream(new FileInputStream(rootDir + "/pom.xml"), "utf-8").getLines().mkString("\n")
     val kevoreePlugin = "\n<plugin>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.mavenplugin</artifactId>\n<version>${kevoree.version}</version>\n<extensions>true</extensions>\n<configuration>\n<nodename>node0</nodename><model>src/main/kevs/main.kevs</model>\n</configuration>\n<executions>\n<execution>\n<goals>\n<goal>generate</goal>\n</goals>\n</execution>\n</executions>\n</plugin>\n</plugins>\n"
     pom = pom.replace("</plugins>", kevoreePlugin)
