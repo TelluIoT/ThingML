@@ -17,6 +17,7 @@ package org.thingml.eclipse.ui.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -183,6 +184,8 @@ public class CompileThingFile implements IHandler {
 			
 		} catch (Throwable e) {
 			ThingMLConsole.getInstance().printError("ERROR: Exeption calling ThingML Compiler: " + e.getLocalizedMessage());
+            ThingMLConsole.getInstance().printError("Please contact the ThingML development team");
+            e.printStackTrace(new PrintStream(ThingMLConsole.getInstance().getErrorSteam()));
 			e.printStackTrace();
 		}
 		
