@@ -62,30 +62,6 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
 				.getActiveWorkbenchWindow().getSelectionService()
 				.getSelection()).getFirstElement();
 		java.io.File f1 = f.getLocation().toFile();
-		/*ThingMLModel thingmlModel = LoadModelUtil.getInstance()
-				.loadThingMLmodel(f1);
-		java.io.File ftemp = null;
-		String tempDir = System.getProperty("java.io.tmpdir") + "tmp"
-				+ System.nanoTime();
-		ftemp = new java.io.File(tempDir);
-		if (!ftemp.exists())
-			ftemp.mkdir();
-		for (Configuration c : thingmlModel.getConfigs())
-				KevoreeGenerator.compileAndRun(c, thingmlModel);
-		*/
-
-
-
-
-		
-
-
-
-
-
-
-
-
         ThingMLModel model = LoadModelUtil.getInstance().loadThingMLmodel(f1);
         ArrayList<Configuration> toCompile = new ArrayList<Configuration>();
         for ( Configuration cfg :  model.allConfigurations() ) {
@@ -117,18 +93,6 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
         for ( Configuration cfg :  toCompile ) {
             KevoreeGenerator.compileAndRun(cfg, model, platform_folder.getAbsolutePath());
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
 	}
 

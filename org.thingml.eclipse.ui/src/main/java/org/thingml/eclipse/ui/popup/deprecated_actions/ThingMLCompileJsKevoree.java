@@ -15,9 +15,14 @@
  */
 package org.thingml.eclipse.ui.popup.deprecated_actions;
 
+import java.util.ArrayList;
+
 import org.thingml.compilers.*;
 import org.thingml.compilers.actions.*;
+import org.thingml.eclipse.ui.ThingMLConsole;
+import org.thingml.javagenerator.kevoree.KevoreeGenerator;
 import org.eclipse.core.internal.resources.File;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -58,24 +63,42 @@ public class ThingMLCompileJsKevoree implements IObjectActionDelegate {
 				.getActiveWorkbenchWindow().getSelectionService()
 				.getSelection()).getFirstElement();
 		java.io.File f1 = f.getLocation().toFile();
-		ThingMLModel thingmlModel = LoadModelUtil.getInstance()
-				.loadThingMLmodel(f1);
-		java.io.File ftemp = null;
-		String tempDir = System.getProperty("java.io.tmpdir") + "tmp"
-				+ System.nanoTime();
-		ftemp = new java.io.File(tempDir);
-		if (!ftemp.exists())
-			ftemp.mkdir();
-
-        ThingMLCompiler compiler = new JavaScriptCompiler();
-        for (Configuration c : thingmlModel.getConfigs()) {
-            compiler.setOutputDirectory(new java.io.File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName()));
-            Context ctx = new Context(compiler);
-            compiler.getBuildCompiler().generate(c, ctx);
-            compiler.compileConnector("kevoree-js", c);
-            ctx.dump();
+        ThingMLModel model = LoadModelUtil.getInstance().loadThingMLmodel(f1);
+        ArrayList<Configuration> toCompile = new ArrayList<Configuration>();
+        for ( Configuration cfg :  model.allConfigurations() ) {
+            if (!cfg.isFragment()) toCompile.add(cfg);
         }
 
+        if (toCompile.isEmpty()) {
+            ThingMLConsole.getInstance().printError("ERROR: The selected model does not contain any concrete Configuration to compile. \n");
+            ThingMLConsole.getInstance().printError("Compilation stopped.\n");
+        }
+
+        // Create the output directory in the current project in a folder "/thingml-gen/<platform>/"
+        IProject project = f.getProject();
+        java.io.File project_folder =  project.getLocation().toFile();
+        java.io.File thingmlgen_folder = new java.io.File(project_folder, "thingml-gen");
+
+        if (!thingmlgen_folder.exists()) {
+            ThingMLConsole.getInstance().printDebug("Creating thingml-gen folder in " + project_folder.getAbsolutePath()  + "\n");
+            thingmlgen_folder.mkdir();
+        }
+
+        java.io.File platform_folder = new java.io.File(thingmlgen_folder, "javascript");
+        if (!platform_folder.exists()) {
+            ThingMLConsole.getInstance().printDebug("Creating folder javascript in "+ thingmlgen_folder.getAbsolutePath() + "\n");
+            platform_folder.mkdir();
+        }
+
+        // Compile all the configuration
+        ThingMLCompiler compiler = new JavaScriptCompiler();
+        for ( Configuration cfg :  toCompile ) {
+            compiler.setOutputDirectory(platform_folder);
+            Context ctx = new Context(compiler);
+            compiler.getBuildCompiler().generate(cfg, ctx);
+            compiler.compileConnector("kevoree-js", cfg);
+            ctx.dump();
+        }
 	}
 
 	/**

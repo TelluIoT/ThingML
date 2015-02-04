@@ -16,6 +16,7 @@
 package org.thingml.compilers.connectors;
 
 import com.eclipsesource.json.JsonObject;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
@@ -125,7 +126,7 @@ public class JS2Kevoree extends ConnectorCompiler {
         final File lib = new File(dir, "lib");
         lib.mkdirs();
         for(File f : dir.listFiles()) {
-            if (f.getAbsolutePath().endsWith("js")) {
+            if (FilenameUtils.getExtension(f.getAbsolutePath()).equals("js")) {
                 f.renameTo(new File(lib, f.getName()));
             }
         }

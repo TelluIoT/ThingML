@@ -172,7 +172,9 @@ public class Context {
     public void copy(InputStream source, String targetDir, String targetFile) {
         try {
             new File(compiler.getOutputDirectory() + "/" +  targetDir).mkdirs();
-            org.apache.commons.io.IOUtils.copy(source, new FileOutputStream(compiler.getOutputDirectory() + "/" +  targetDir + "/" + targetFile));
+            OutputStream out = new FileOutputStream(compiler.getOutputDirectory() + "/" +  targetDir + "/" + targetFile);
+            org.apache.commons.io.IOUtils.copy(source, out);
+            out.close();
             //Files.copy(source, FileSystems.getDefault().getPath(compiler.getOutputDirectory() + "/" +  targetDir, targetFile), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
             System.err.println("Problem while copying file to " + targetDir + "/" + targetFile);
