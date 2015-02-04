@@ -328,7 +328,7 @@ class ThingMLPanel extends JPanel {
       try {
         val thingmlModel = loadThingMLmodel(targetFile.get)
         thingmlModel.allConfigurations().foreach { c =>
-          KevoreeGenerator.compileAndRun(c, thingmlModel)
+          KevoreeGenerator.compileAndRun(c, thingmlModel, null)
         }
       }
       catch {

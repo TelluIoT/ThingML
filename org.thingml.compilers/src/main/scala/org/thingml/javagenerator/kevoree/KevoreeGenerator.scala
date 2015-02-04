@@ -78,15 +78,12 @@ object KevoreeGenerator {
   /*
    * 
    */
-  def compileAndRun(cfg: Configuration, model: ThingMLModel) {
-    new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/").deleteOnExit
-
-    val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName
-    val outputDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/java/org/thingml/generated/kevoree"
+  def compileAndRun(cfg: Configuration, model: ThingMLModel, outputFolder : String) {
+    val rootDir = if (outputFolder == null)System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName else outputFolder
+    val outputDir = rootDir + "/src/main/java/org/thingml/generated/kevoree"
 
     val outputDirFile = new File(outputDir)
     outputDirFile.mkdirs
-
 
     Context.init
     Context.pack = "org.thingml.generated"

@@ -26,8 +26,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
+import org.thingml.eclipse.ui.ThingMLConsole;
 import org.thingml.javagenerator.JavaGenerator;
 import org.thingml.javagenerator.kevoree.KevoreeGenerator;
+
+import java.util.ArrayList;
 
 public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
 
@@ -68,6 +71,64 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
 			ftemp.mkdir();
 		for (Configuration c : thingmlModel.getConfigs())
 				KevoreeGenerator.compileAndRun(c, thingmlModel);
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ThingMLModel model = LoadModelUtil.getInstance().loadThingMLmodel(f1);
+        ArrayList<Configuration> toCompile = new ArrayList<Configuration>();
+        for ( Configuration cfg :  model.allConfigurations() ) {
+            if (!cfg.isFragment()) toCompile.add(cfg);
+        }
+
+        if (toCompile.isEmpty()) {
+            ThingMLConsole.getInstance().printError("ERROR: The selected model does not contain any concrete Configuration to compile. \n");
+            ThingMLConsole.getInstance().printError("Compilation stopped.\n");
+            return null;
+        }
+
+        // Create the output directory in the current project in a folder "/thingml-gen/<platform>/"
+        IProject project = target_file.getProject();
+        java.io.File project_folder =  project.getLocation().toFile();
+        java.io.File thingmlgen_folder = new java.io.File(project_folder, "thingml-gen");
+
+        if (!thingmlgen_folder.exists()) {
+            ThingMLConsole.getInstance().printDebug("Creating thingml-gen folder in " + project_folder.getAbsolutePath()  + "\n");
+            thingmlgen_folder.mkdir();
+        }
+
+        java.io.File platform_folder = new java.io.File(thingmlgen_folder, compiler.getPlatform());
+        if (!platform_folder.exists()) {
+            ThingMLConsole.getInstance().printDebug("Creating folder " + compiler.getPlatform() + " in "+ thingmlgen_folder.getAbsolutePath() + "\n");
+            platform_folder.mkdir();
+        }
+
+        // Compile all the configuration
+        for ( Configuration cfg :  toCompile ) {
+            KevoreeGenerator.compileAndRun(cfg, model, thingmlgen_folder.getAbsolutePath());
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 	}
 
 	/**
