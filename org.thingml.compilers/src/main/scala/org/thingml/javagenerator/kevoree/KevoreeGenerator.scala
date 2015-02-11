@@ -358,7 +358,9 @@ object KevoreeGenerator {
     //val rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName + "/src/main/kevs"
     val outputDirFile = new File(rootDir)
     outputDirFile.mkdirs
-    val w = new PrintWriter(new FileWriter(new File(rootDir + "/src/main/kevs/main.kevs")));
+    val kevF = new File(rootDir + "/src/main/kevs/")
+    kevF.mkdirs()
+    val w = new PrintWriter(new FileWriter(new File(kevF, "main.kevs")));
     w.println(kevScript);
     w.close();
   }
