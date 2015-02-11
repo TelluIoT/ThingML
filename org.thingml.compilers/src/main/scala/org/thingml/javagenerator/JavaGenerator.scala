@@ -167,7 +167,7 @@ object JavaGenerator {
         val pack = ctx.getProperty("package").orElse("org.thingml.generated") + ".messages"
         val builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(m.getName()) + "MessageType.java")
 
-        JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, t.allInstances().collect{case i => i.getType}.filter{thing => thing.allPorts.filter{p => p.isDefined("public", "true")}.size > 0}.size > 0 || model.allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, t.allMessages().size() > 0)
+        JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, t.allInstances().collect{case i => i.getType}.filter{thing => thing.allPorts.filter{p => !p.isDefined("public", "false")}.size > 0}.size > 0 || model.allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, t.allMessages().size() > 0)
         builder append "public class " + ctx.firstToUpper(m.getName()) + "MessageType extends EventType {\n"
         builder append "public " + ctx.firstToUpper(m.getName()) + "MessageType() {name = \"" + m.getName + "\";}\n\n"
         builder append "public Event instantiate(final Port port"
@@ -432,14 +432,14 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
     var pack = ctx.getProperty("package").orElse("org.thingml.generated")
     val builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(self.getName) + ".java")
 
-    JavaHelper.generateHeader(pack, pack, builder, ctx, false, self.allPorts.filter{p => p.isDefined("public", "true")}.size > 0 || self.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, self.allMessages().size() > 0)
+    JavaHelper.generateHeader(pack, pack, builder, ctx, false, self.allPorts.filter{p => !p.isDefined("public", "false")}.size > 0 || self.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, self.allMessages().size() > 0)
     builder append "\n/**\n"
     builder append " * Definition for type : " + self.getName + "\n"
     builder append " **/\n"
 
     val traits = new util.ArrayList[String]()
     self.allPorts().foreach { p =>
-      if (p.isDefined("public", "true") && p.getReceives.size() > 0) {
+      if (!p.isDefined("public", "false") && p.getReceives.size() > 0) {
         traits += "I" + ctx.firstToUpper(self.getName) + "_" + p.getName
       }
     }
@@ -452,7 +452,7 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
     builder append "public class " + ctx.firstToUpper(self.getName) + " extends Component " + (if (traits.size()>0) "implements " + traits.mkString(", ") else "") + " {\n\n"
 
     self.allPorts().foreach{ p =>
-      if (p.isDefined("public", "true") && p.getSends.size() > 0) {
+      if (!p.isDefined("public", "false") && p.getSends.size() > 0) {
         builder append "private Collection<I" + ctx.firstToUpper(self.getName) + "_" + p.getName + "Client> " + p.getName + "_clients = Collections.synchronizedCollection(new LinkedList<I" + ctx.firstToUpper(self.getName)+ "_" + p.getName + "Client>());\n"
 
         builder append "public synchronized void registerOn" + ctx.firstToUpper(p.getName) + "(I" + ctx.firstToUpper(self.getName) + "_" + p.getName + "Client client){\n"
@@ -465,7 +465,7 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
       }
     }
 
-    self.allPorts().filter{p => p.isDefined("public", "true")}.foreach{ p =>
+    self.allPorts().filter{p => !p.isDefined("public", "false")}.foreach{ p =>
       p.getReceives.foreach{m =>
         builder append "@Override\n"
         builder append "public synchronized void " + m.getName + "_via_" + p.getName + "("
@@ -487,7 +487,7 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
         if (m.getParameters.size > 0)
           builder append ", "
         builder append m.getParameters.collect{ case p => ctx.protectKeyword(p.Java_var_name)}.mkString(", ") + "), " + p.getName + "_port);\n"
-        if (p.isDefined("public", "true")) {
+        if (!p.isDefined("public", "false")) {
           builder append "//send to other clients\n"
           builder append "for(I" + ctx.firstToUpper(self.getName) + "_" + p.getName + "Client client : " + p.getName + "_clients){\n"
           builder append "client." + m.getName + "_from_" + p.getName() + "(" + m.getParameters.collect { case p => ctx.protectKeyword(p.Java_var_name)}.mkString(", ") + ");\n"
