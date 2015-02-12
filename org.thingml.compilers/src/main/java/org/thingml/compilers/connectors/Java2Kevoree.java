@@ -19,7 +19,9 @@ import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
+import org.sintef.thingml.impl.ConfigurationImpl;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.helpers.JavaHelper;
 import org.thingml.compilers.main.JSMainGenerator;
 import org.thingml.compilers.main.JavaMainGenerator;
 
@@ -295,73 +297,79 @@ public class Java2Kevoree extends ConnectorCompiler {
         builder.append("private void initThingML() {\n");
         JavaMainGenerator.generateInstances(cfg, ctx, builder);
 
-        /*cfg.danglingPorts().foreach { case (i, ports) =>
-            ports.foreach { p =>
-            if (p.getSends.size() > 0) {
-                builder append "final I" + i.getType.getName + "_" + p.getName + "Client " + i.getName + "_" + p.getName + "_listener = new I" + i.getType.getName + "_" + p.getName + "Client(){\n"
-                p.getSends.foreach { m =>
-                    builder append "@Override\n"
-                    builder append "public void " + m.getName + "_from_" + p.getName + "("
-                    var id: Int = 0
-                    for (pa <- m.getParameters) {
-                        if (id > 0) builder.append(", ")
-                        builder.append(JavaHelper.getJavaType(pa.getType, pa.getCardinality != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)))
-                        id += 1
+        for(Map.Entry<Instance, List<Port>> e : cfg.danglingPorts().entrySet()) {
+            final Instance i = e.getKey();
+            final List<Port> ports = e.getValue();
+            for(Port p : ports){
+                if (p.getSends().size() > 0) {
+                    builder.append("final I" + i.getType().getName() + "_" + p.getName() + "Client " + i.getName() + "_" + p.getName() + "_listener = new I" + i.getType().getName() + "_" + p.getName() + "Client(){\n");
+                    for(Message m : p.getSends()) {
+                        builder.append("@Override\n");
+                        builder.append("public void " + m.getName() + "_from_" + p.getName() + "(");
+                        int id = 0;
+                        for (Parameter pa : m.getParameters()) {
+                            if (id > 0)
+                                builder.append(", ");
+                            builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                            id ++;
+                        }
+                        builder.append(") {\n");
+                        builder.append("final String msg = \"{\\\"message\\\":\\\"" + m.getName() + "\\\",\\\"port\\\":\\\"" + p.getName() + "_c" + "\\\"");
+                        for (Parameter pa : m.getParameters()) {
+                            boolean isString = pa.getType().isDefined("java_type", "String");
+                            boolean isChar = pa.getType().isDefined("java_type", "char");
+                            boolean isArray = (pa.getCardinality() != null);
+                            //FIXME
+                            //builder append ", \\\"" + pa.getName + "\\\":" + (if (isArray) "[" else "") + (if (isString || isChar) "\\\"" else "\"") + " + " + ctx.protectKeyword(ctx.getVariableName(pa)) + (if (isString) ".replace(\"\\n\", \"\\\\n\")" else "") + " + " + (if (isString || isChar) "\\\"" else "\"") + (if (isArray) "]" else "")
+                        }
+                        builder.append("}\";\n");
+                        builder.append("try {\n");
+                        builder.append(i.getName() + "_" + p.getName() + "Port_out.send(msg, null);\n");
+                        builder.append("} catch(NullPointerException npe) {\n");
+                        builder.append("Log.warn(\"Port " + i.getName() + "_" + p.getName() + "Port_out is not connected.\\nMessage \" + msg + \" has been lost.\\nConnect a channel (and maybe restart your component " + cfg.getName() + ")\");\n");
+                        builder.append("}\n");
+                        builder.append("}\n");
                     }
-                    builder append ") {\n"
-                    builder append "final String msg = \"{\\\"message\\\":\\\"" + m.getName() + "\\\",\\\"port\\\":\\\"" + p.getName + "_c" + "\\\""
-                    m.getParameters.foreach { pa =>
-                        val isString = pa.getType.isDefined("java_type", "String")
-                        val isChar = pa.getType.isDefined("java_type", "char")
-                        val isArray = (pa.getCardinality != null)
-                        builder append ", \\\"" + pa.getName + "\\\":" + (if (isArray) "[" else "") + (if (isString || isChar) "\\\"" else "\"") + " + " + ctx.protectKeyword(ctx.getVariableName(pa)) + (if (isString) ".replace(\"\\n\", \"\\\\n\")" else "") + " + " + (if (isString || isChar) "\\\"" else "\"") + (if (isArray) "]" else "")
-                    }
-                    builder append "}\";\n"
-                    builder append "try {\n"
-                    builder append i.getName + "_" + p.getName + "Port_out.send(msg, null);\n"
-                    builder append "} catch(NullPointerException npe) {\n"
-                    builder append "Log.warn(\"Port " + i.getName + "_" + p.getName + "Port_out is not connected.\\nMessage \" + msg + \" has been lost.\\nConnect a channel (and maybe restart your component " + cfg.getName + ")\");\n"
-                    builder append "}\n"
-                    builder append "}\n"
+                    builder.append("};\n");
+                    builder.append(ctx.getInstanceName(i) + ".registerOn" + ctx.firstToUpper(p.getName()) + "(" + i.getName() + "_" + p.getName() + "_listener);\n");
                 }
-                builder append "};\n"
-                builder append ctx.getInstanceName(i) + ".registerOn" + Context.firstToUpper(p.getName()) + "(" + i.getName + "_" + p.getName + "_listener);\n"
             }
         }
+
+        builder.append("}\n\n");
+
+
+        builder.append("@Start\n");
+        builder.append("public void startComponent() {\n");
+        for(Instance i : cfg.allInstances()) {
+            builder.append(ctx.getInstanceName(i) + ".init();\n");
         }
-        builder append "}\n\n"
-
-
-        builder append "@Start\n"
-        builder append "public void startComponent() {\n"
-        cfg.allInstances().foreach { i =>
-            builder append ctx.getInstanceName(i) + ".init();\n"
+        for(Instance i : cfg.allInstances()) {
+            builder.append(ctx.getInstanceName(i) + ".start();\n");
         }
-        cfg.allInstances().foreach { i =>
-            builder append ctx.getInstanceName(i) + ".start();\n"
+        builder.append("}\n\n");
+
+        builder.append("@Stop\n");
+        builder.append("public void stopComponent() {");
+        for(Instance i : cfg.allInstances()) {
+            builder.append(ctx.getInstanceName(i) + ".stop();\n");
         }
-        builder append "}\n\n"
+        builder.append("}\n\n");
+        builder.append("}\n");
 
-        builder append "@Stop\n"
-        builder append "public void stopComponent() {"
-        cfg.allInstances().foreach { i =>
-            builder append ctx.getInstanceName(i) + ".stop();\n"
+
+        final String file_name = "K" + ctx.firstToUpper(cfg.getName());
+        final String code = builder.toString();
+
+        try {
+            final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDir() + "/" + file_name + ".java")));
+            System.out.println("code generated at " + ctx.getOutputDir() + "/" + file_name + ".java");
+            w.println(code);
+            w.close();
+        } catch (Exception e){
+            System.err.println("Problem while saving generating Kevoree code: " + e.getMessage());
+            e.printStackTrace();
         }
-        builder append "}\n\n"
-        builder append "}\n"
-
-
-        Context.file_name = "K" + Context.firstToUpper(cfg.getName())
-        val code = builder.toString
-
-        var w = new PrintWriter(new FileWriter(new File(outputDir + "/" + Context.file_name + ".java")));
-        System.out.println("code generated at " + outputDir + "/" + Context.file_name + ".java");
-        w.println(code);
-        w.close(); */
-
-
-
-
     }
 
     @Override
