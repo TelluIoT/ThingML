@@ -188,7 +188,7 @@ public class Java2Kevoree extends ConnectorCompiler {
             }
         }
 
-        //FIXME: merge with previous loop + temp builder to avoid browsing the map twice
+        //FIXME: [NOT URGENT] merge with previous loop + temp builder to avoid browsing the map twice
         for (Map.Entry<Instance, List<Port>> entry : cfg.danglingPorts().entrySet()) {
             Instance i = entry.getKey();
             List<Port> ports = entry.getValue();
@@ -262,8 +262,7 @@ public class Java2Kevoree extends ConnectorCompiler {
                         ctx.getCompiler().getActionCompiler().generate(e, builder, ctx);
                         builder.append("\")");
                     }
-                    //FIXME
-                    //builder.append("\nprivate " + p.getType.java_type(Context.ctx, p.getCardinality != null) + " " + i.getName + "_" + p.Java_var_name);
+                    builder.append("\nprivate " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + i.getName() + "_" + ctx.getVariableName(p));
                     if (e != null) {
                         builder.append(" = ");
                         ctx.getCompiler().getActionCompiler().generate(e, builder, ctx);
@@ -275,11 +274,10 @@ public class Java2Kevoree extends ConnectorCompiler {
             builder.append("//Getters and Setters for non readonly/final attributes\n");
             i.getType().allPropertiesInDepth().forEach ( p -> {
                 if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
-                    //FIXME
-                    //builder.append("public " + p.getType.java_type(Context.ctx, p.getCardinality != null) + " get" + i.getName() + "_" + Context.firstToUpper(p.Java_var_name) + "() {\nreturn " + i.getName() + "_" + p.Java_var_name + ";\n}\n\n");
-                    //builder append "public void set" + i.getName + "_" + Context.firstToUpper(p.Java_var_name) + "(" + p.getType.java_type(Context.ctx, p.getCardinality != null) + " " + p.Java_var_name + "){\n"
-                    //builder append "this." + i.getName + "_" + p.Java_var_name + " = " + p.Java_var_name + ";\n"
-                    //builder append "this." + ctx.getInstanceName(i) + ".set" + i.getType.getName + "_" + p.getName + "__var(" + p.Java_var_name + ");\n"
+                    builder.append("public " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " get" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + i.getName() + "_" + ctx.getVariableName(p) + ";\n}\n\n");
+                    builder.append("public void set" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p) + "){\n");
+                    builder.append("this." + i.getName() + "_" + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
+                    builder.append("this." + ctx.getInstanceName(i) + ".set" + i.getType().getName() + "_" + p.getName() + "__var(" + ctx.getVariableName(p) + ");\n");
                     builder.append("}\n\n");
                 }
             });
@@ -319,8 +317,15 @@ public class Java2Kevoree extends ConnectorCompiler {
                             boolean isString = pa.getType().isDefined("java_type", "String");
                             boolean isChar = pa.getType().isDefined("java_type", "char");
                             boolean isArray = (pa.getCardinality() != null);
-                            //FIXME
-                            //builder append ", \\\"" + pa.getName + "\\\":" + (if (isArray) "[" else "") + (if (isString || isChar) "\\\"" else "\"") + " + " + ctx.protectKeyword(ctx.getVariableName(pa)) + (if (isString) ".replace(\"\\n\", \"\\\\n\")" else "") + " + " + (if (isString || isChar) "\\\"" else "\"") + (if (isArray) "]" else "")
+
+                            builder.append(", \\\"" + pa.getName() + "\\\":");
+                            if (isArray) builder.append("[");
+                            if (isString || isChar) builder.append("\\\""); else builder.append("\"");
+                            builder.append(" + " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                            if (isString) builder.append(".replace(\"\\n\", \"\\\\n\")");
+                            builder.append(" + ");
+                            if (isString || isChar) builder.append("\\\""); else builder.append("\"");
+                            if (isArray) builder.append("]");
                         }
                         builder.append("}\";\n");
                         builder.append("try {\n");
