@@ -118,7 +118,7 @@ object KevoreeGenerator {
           builder append "@Input\n"
           builder append "public void " + i.getName + "_" + p.getName + "Port(String string) {\n"
           builder append "final JsonObject json = JsonObject.readFrom(string);\n"
-          builder append "if (json.get(\"port\").asString().equals(\"" + p.getName + "_c\")) {\n" //might be a redundant check
+          builder append "//if (json.get(\"port\").asString().equals(\"" + p.getName + "_c\")) {\n" //might be a redundant check
           var id = 0
           p.getReceives.foreach { m =>
             if (id > 0)
@@ -144,7 +144,7 @@ object KevoreeGenerator {
             builder append "}\n"
             id = id + 1
           }
-          builder append "}\n"
+          builder append "//}\n"
           builder append "}\n\n"
         }
       }
