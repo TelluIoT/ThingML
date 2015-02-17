@@ -153,19 +153,18 @@ object KevoreeGenerator {
     builder append "//Attributes\n"
     cfg.allInstances().foreach { i =>
       var self = i.getType
-
       self.allPropertiesInDepth.filter(p => p.isChangeable && p.getCardinality == null && p.getType.isDefined("java_primitive", "true") && p.eContainer().isInstanceOf[Thing]).foreach { p => //We just expose top-level attributes (defined in the Thing, not e.g. in the state machine) to Kevoree
         builder append "@Param "
-        val e = self.initExpression(p)
+        val e = cfg.initExpressions(i, p).get(0);
         if (e != null) {
           builder append "(defaultValue = \""
-          e.generateJava(builder, Context.ctx)
+          e.generateJava(builder, Context.ctx) //FIXME: we should use the default value defined at the instance level, not in the type
           builder append "\")"
         }
         builder append "\nprivate " + p.getType.java_type(Context.ctx, p.getCardinality != null) + " " + i.getName + "_" + p.Java_var_name
         if (e != null) {
           builder append " = "
-          e.generateJava(builder, Context.ctx)
+          e.generateJava(builder, Context.ctx)  //FIXME: we should use the default value defined at the instance level, not in the type
         }
         builder append ";\n"
       }

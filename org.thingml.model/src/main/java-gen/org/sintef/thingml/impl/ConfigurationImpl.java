@@ -654,6 +654,22 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * @return
      * @generated NOT
      */
+    public List<Expression> initExpressions(Instance i, Property p) {
+        List<Expression> result = new ArrayList<>();
+        for(AbstractMap.SimpleImmutableEntry<Property, Expression> entry : initExpressionsForInstance(i)) {
+            if (EcoreUtil.equals(entry.getKey(), p)) {
+                result.add(entry.getValue());
+            }
+        }
+        return result;
+    }
+
+        /**
+         *
+         * @param i
+         * @return
+         * @generated NOT
+         */
     public List<AbstractMap.SimpleImmutableEntry<Property, Expression>> initExpressionsForInstance(Instance i) {
         List<AbstractMap.SimpleImmutableEntry<Property, Expression>> result = new ArrayList<AbstractMap.SimpleImmutableEntry<Property, Expression>>();
 

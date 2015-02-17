@@ -242,4 +242,12 @@ public interface Configuration extends AnnotatedElement {
      */
     Map<Instance, List<Port>> danglingPorts();
 
+    /**
+     *
+     * @param i
+     * @return
+     * @generated NOT
+     */
+    List<Expression> initExpressions(Instance i, Property p);
+
 } // Configuration
