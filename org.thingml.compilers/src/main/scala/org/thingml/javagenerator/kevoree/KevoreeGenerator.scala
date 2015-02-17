@@ -292,13 +292,13 @@ object KevoreeGenerator {
   def compileKevScript(cfg: Configuration, outputFolder : String) {
     var kevScript: StringBuilder = new StringBuilder()
 
-    kevScript append "repo \"http://repo1.maven.org/maven2\"\n"
+    /*kevScript append "repo \"http://repo1.maven.org/maven2\"\n"
     kevScript append "repo \"http://maven.thingml.org\"\n\n"
 
     kevScript append "//include standard Kevoree libraries\n"
     kevScript append "include mvn:org.kevoree.library.java:org.kevoree.library.java.javaNode:release\n"
     kevScript append "include mvn:org.kevoree.library.java:org.kevoree.library.java.channels:release\n"
-    kevScript append "include mvn:org.kevoree.library.java:org.kevoree.library.java.ws:release\n\n"
+    kevScript append "include mvn:org.kevoree.library.java:org.kevoree.library.java.ws:release\n\n"*/
 
     kevScript append "//include external libraries that may be needed by ThingML components\n"
     cfg.allThingMLMavenDep.foreach { dep =>
@@ -324,7 +324,7 @@ object KevoreeGenerator {
     kevScript append "attach node0 sync\n\n"
 
     kevScript append "//instantiate Kevoree/ThingML components\n"
-    kevScript append "add node0." + cfg.getName + " : K" + cfg.getName + "\n"
+    kevScript append "add node0." + cfg.getName + " : org.thingml.generated.kevoree.K" + cfg.getName + "\n"
     /*cfg.allInstances.foreach{i =>
       kevScript append "add node0." + i.instanceName + " : K"+ i.getType.getName() + "\n"
     }
