@@ -194,7 +194,27 @@ public class ThingMLHelpers {
 	public static ArrayList<ThingMLModel> allThingMLModelModels(ThingMLModel model) {
 		ArrayList<ThingMLModel> result = new ArrayList<ThingMLModel>();
 		result.add(model);
-		for ( ThingMLModel m : model.getImports()) result.addAll(allThingMLModelModels(m));
+
+        ArrayList<ThingMLModel> temp = new ArrayList<ThingMLModel>();
+
+        int prevSize = result.size();
+        int newSize = prevSize;
+        do {
+            for (ThingMLModel m : result) {
+                for(ThingMLModel m2 : m.getImports()) {
+                    if (!temp.contains(m2)) {
+                        temp.add(m2);
+                    }
+                }
+            }
+            for (ThingMLModel m : temp) {
+                if (!result.contains(m)) {
+                    result.add(m);
+                }
+            }
+            prevSize = newSize;
+            newSize = result.size();
+        } while (newSize > prevSize);
 		return result;
 	}
 	
