@@ -16,6 +16,7 @@
 package org.thingml.eclipse.ui;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -106,6 +107,21 @@ public class ThingMLConsole {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	//FIXME: move that into a FileHelper class
+	public void deleteFolder(File folder) {
+	    File[] files = folder.listFiles();
+	    if(files!=null) { //some JVMs return null for empty dirs
+	        for(File f: files) {
+	            if(f.isDirectory()) {
+	                deleteFolder(f);
+	            } else {
+	                f.delete();
+	            }
+	        }
+	    }
+	    folder.delete();
 	}
 	
 }

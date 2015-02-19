@@ -144,26 +144,18 @@ public class CompileThingFile implements IHandler {
 		}
 		
 		java.io.File platform_folder = new java.io.File(thingmlgen_folder, compiler.getPlatform());
-		if (!platform_folder.exists()) {
+            if (platform_folder.exists()) {
+                ThingMLConsole.getInstance().printDebug("Cleaning folder " + compiler.getPlatform() + " in "+ thingmlgen_folder.getAbsolutePath() + "\n");
+                ThingMLConsole.getInstance().deleteFolder(platform_folder);
+    			project.refreshLocal(IResource.DEPTH_INFINITE, null);
+            }
 			ThingMLConsole.getInstance().printDebug("Creating folder " + compiler.getPlatform() + " in "+ thingmlgen_folder.getAbsolutePath() + "\n");
 			platform_folder.mkdir();
-		}
+			project.refreshLocal(IResource.DEPTH_INFINITE, null);
+		
 		
 		// Compile all the configuration
-		for ( Configuration cfg :  toCompile ) {
-			
-			// create an output folder for that configuration (Actually done by the compiler)
-			/*
-			java.io.File ouput_folder = new java.io.File(platform_folder, cfg.getName());
-			ThingMLConsole.getInstance().printDebug("Compiling configuration " + cfg.getName() + " to folder " + ouput_folder.getAbsolutePath() + "\n");
-			if (ouput_folder.exists()) {
-				ThingMLConsole.getInstance().printDebug("WARNING: output folder already exists, generated files will be overwritten (other files won't be deleted).");
-			}
-			else {
-				ouput_folder.mkdir();
-			}
-			*/
-			
+		for ( Configuration cfg :  toCompile ) {			
 			compiler.setOutputDirectory(platform_folder);
 			compiler.setErrorStream(ThingMLConsole.getInstance().getErrorSteam());
 			compiler.setMessageStream(ThingMLConsole.getInstance().getMessageSteam());

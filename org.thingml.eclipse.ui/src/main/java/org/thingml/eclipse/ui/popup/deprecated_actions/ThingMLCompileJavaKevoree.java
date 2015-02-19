@@ -84,10 +84,12 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
         }
 
         java.io.File platform_folder = new java.io.File(thingmlgen_folder, "java");
-        if (!platform_folder.exists()) {
-            ThingMLConsole.getInstance().printDebug("Creating folder java in "+ thingmlgen_folder.getAbsolutePath() + "\n");
-            platform_folder.mkdir();
+        if (platform_folder.exists()) {
+            ThingMLConsole.getInstance().printDebug("cleaning folder " + thingmlgen_folder.getAbsolutePath() + "\n");
+            ThingMLConsole.getInstance().deleteFolder(platform_folder);
         }
+        ThingMLConsole.getInstance().printDebug("Creating folder java in "+ thingmlgen_folder.getAbsolutePath() + "\n");
+        platform_folder.mkdir();
 
         // Compile all the configuration
         for ( Configuration cfg :  toCompile ) {
