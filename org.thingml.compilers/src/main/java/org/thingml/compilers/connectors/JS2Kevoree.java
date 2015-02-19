@@ -153,7 +153,7 @@ public class JS2Kevoree extends ConnectorCompiler {
 
 
         builder.append("start: function (done) {\n");
-        builder.append("this._super(function () {\n");
+        //builder.append("this._super(function () {\n");
         JSMainGenerator.generateInstances(cfg, builder, ctx, true);
 
         for(Map.Entry e : cfg.danglingPorts().entrySet()) {
@@ -170,7 +170,7 @@ public class JS2Kevoree extends ConnectorCompiler {
         }
 
         builder.append("done();\n");
-        builder.append("}.bind(this));\n");
+        //builder.append("}.bind(this));\n");
         builder.append("},\n\n");
 
 
