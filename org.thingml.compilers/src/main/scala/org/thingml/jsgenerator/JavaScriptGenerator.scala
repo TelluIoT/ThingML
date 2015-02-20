@@ -169,6 +169,7 @@ object JavaScriptGenerator {
     ctx.copy(this.getClass.getClassLoader.getResourceAsStream("javascript/lib/Connector.js"), t.getName, "Connector.js")
 
     if(model.allUsedSimpleTypes.filter { ty => ty.isInstanceOf[Enumeration]}.size > 0) {
+      println("DEBUG: hasEnum")
       ctx.addProperty("hasEnum", "true")
     }
     model.allUsedSimpleTypes.filter { ty => ty.isInstanceOf[Enumeration]}.foreach { e =>
@@ -263,7 +264,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
   }
 
   override def generateJavaScript(builder: StringBuilder, ctx : Context) {
-    if("true" == ctx.getProperty("hasEnum")) {
+    if("true" == ctx.getProperty("hasEnum").orElse("false")) {
       builder append "var Enum = require('./enums');\n"
     }
     builder append "var StateFactory = require('./state-factory');\n"
