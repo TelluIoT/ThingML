@@ -2063,6 +2063,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
 
 case class FunctionCGenerator(val self: Function) extends ThingMLCGenerator(self) {
 
+  //FIXME: helpers regarding annotations are already implemented as derived properties on any ThingML element: use that!
   def annotation(name: String): String = {
     self.getAnnotations.filter {
       a => a.getName == name
@@ -2326,10 +2327,11 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
     builder append "\n"
 
     builder append "// Declaration of functions:\n"
-    self.allFunctions.foreach {
-      f =>
+    self.allFunctions.foreach { f =>
+      if (!f.isDefined("abstract", "true")) {
         f.generateCforThing(builder, context, self)
         builder append "\n"
+      }
     }
     builder append "\n"
 
@@ -2522,8 +2524,10 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
 
     self.allFunctions.foreach {
       f =>
-        f.generatePrototypeforThingDirect(builder, context, self)
-        builder append ";\n"
+        if (!f.isDefined("abstract", "true")) {
+          f.generatePrototypeforThingDirect(builder, context, self)
+          builder append ";\n"
+        }
     }
 
   }

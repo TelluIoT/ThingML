@@ -382,7 +382,7 @@ public class ThingMLHelpers {
 		}
 		return result;
 	}
-	
+
 	public static ArrayList<Function> allFunctions(Thing thing) {
 		ArrayList<Function> result = new ArrayList<Function>();
 		for (Thing t : allThingFragments(thing)) {
