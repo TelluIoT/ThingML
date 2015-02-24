@@ -21,16 +21,26 @@ import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.JavaActionCompiler;
 import org.thingml.compilers.api.JavaApiCompiler;
 import org.thingml.compilers.build.JavaBuildCompiler;
+import org.thingml.compilers.connectors.ConnectorCompiler;
+import org.thingml.compilers.connectors.Java2Kevoree;
 import org.thingml.compilers.main.JavaMainGenerator;
 import org.thingml.javagenerator.JavaGenerator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
  * Created by ffl on 25.11.14.
  */
 public class JavaCompiler extends OpaqueThingMLCompiler {
+
+    {
+        Map<String, ConnectorCompiler> connectorCompilerMap = new HashMap<>();
+        connectorCompilerMap.put("kevoree-java", new Java2Kevoree());
+        addConnectorCompilers(connectorCompilerMap);
+    }
 
     public JavaCompiler() {
         super(new JavaActionCompiler(), new JavaApiCompiler(), new JavaMainGenerator(), new JavaBuildCompiler());

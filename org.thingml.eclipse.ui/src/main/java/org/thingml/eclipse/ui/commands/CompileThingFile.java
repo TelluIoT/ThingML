@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -43,6 +44,8 @@ import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.ThingMLCompilerRegistry;
+import org.thingml.eclipse.preferences.PreferenceConstants;
+import org.thingml.eclipse.ui.Activator;
 import org.thingml.eclipse.ui.ThingMLConsole;
 import org.thingml.eclipse.ui.popup.deprecated_actions.LoadModelUtil;
 
@@ -153,6 +156,11 @@ public class CompileThingFile implements IHandler {
 			platform_folder.mkdir();
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		
+	        
+			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+			String pack = store.getString(PreferenceConstants.PACK_STRING);
+	        String[] options = new String[1];
+	        options[0] = pack;
 		
 		// Compile all the configuration
 		for ( Configuration cfg :  toCompile ) {			
@@ -160,7 +168,7 @@ public class CompileThingFile implements IHandler {
 			compiler.setErrorStream(ThingMLConsole.getInstance().getErrorSteam());
 			compiler.setMessageStream(ThingMLConsole.getInstance().getMessageSteam());
 			
-			boolean result = compiler.compile(cfg);
+			boolean result = compiler.compile(cfg, options);
 			
 			if (result) {
 				ThingMLConsole.getInstance().printDebug("Configuration " + cfg.getName() + " compiled successfully.\n");

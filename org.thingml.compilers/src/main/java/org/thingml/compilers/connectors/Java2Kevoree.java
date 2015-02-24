@@ -34,29 +34,20 @@ import java.util.Map;
  */
 public class Java2Kevoree extends ConnectorCompiler {
 
-    private void generateKevScript(Context ctx, Configuration cfg) {
+    private void generateKevScript(Context ctx, Configuration cfg, String pack) {
         StringBuilder kevScript = new StringBuilder();
 
-        kevScript.append("repo \"http://repo1.maven.org/maven2\"\n");
-        kevScript.append("repo \"http://maven.thingml.org\"\n\n");
 
-        kevScript.append("//include standard Kevoree libraries\n");
-        kevScript.append("include mvn:org.kevoree.library.java:org.kevoree.library.java.javaNode:release\n");
-        kevScript.append("include mvn:org.kevoree.library.java:org.kevoree.library.java.channels:release\n");
-        kevScript.append("include mvn:org.kevoree.library.java:org.kevoree.library.java.ws:release\n\n");
-
-        kevScript.append("//include external libraries that may be needed by ThingML components\n");
+        //FIXME: we should include repo for all deps not available on Maven central
+        /*kevScript.append("//include external libraries that may be needed by ThingML components\n");
         cfg.allThingMLMavenDep().forEach( dep ->
             kevScript.append("include mvn:org.thingml:" + dep + ":0.6.0-SNAPSHOT\n")
-        );
-        //TODO: properly manage external dependencies
-        /*cfg.allMavenDep.foreach { dep =>
-            pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep)
-        } */
+        );*/
+
         kevScript.append("\n");
 
-        kevScript.append("//include Kevoree wrappers of ThingML components\n");
-        kevScript.append("include mvn:org.thingml.generated:" + cfg.getName() + ":1.0-SNAPSHOT\n\n");
+        kevScript.append("repo \"http://maven.thingml.org\"\n\n");
+        kevScript.append("include mvn:org.thingml:org.thingml.jasm:0.1.0-SNAPSHOT\n\n");
 
         kevScript.append("//create a default Java node\n");
         kevScript.append("add node0 : JavaNode\n");
@@ -69,36 +60,21 @@ public class Java2Kevoree extends ConnectorCompiler {
         kevScript.append("attach node0 sync\n\n");
 
         kevScript.append("//instantiate Kevoree/ThingML components\n");
-        kevScript.append("add node0." + cfg.getName() + " : K" + cfg.getName() + "\n");
-    /*cfg.allInstances.foreach{i =>
-      kevScript append "add node0." + i.instanceName + " : K"+ i.getType.getName() + "\n"
-    }
-    kevScript append "\n"
+        kevScript.append("add node0." + cfg.getName() + " : " + pack + ".kevoree.K" + cfg.getName() + "/1.0-SNAPSHOT\n");
 
-    kevScript append "//instantiate Kevoree channels and bind component\n"
+        /*
+          no need to generate channels and bindings. Connectors defined in ThingML are managed internally.
+          Ports not connected in ThingML should be connected later on in Kevoree (we do not have the info how to connect them)
+         */
 
-    cfg.allConnectors.foreach{con=>
-      if (! (con.getRequired.getAnnotations.find{a => a.getName == "internal"}.isDefined || con.getProvided.getAnnotations.find{a => a.getName == "internal"}.isDefined)) {
-        if (con.getRequired.getSends.size > 0 && con.getProvided.getReceives.size > 0) {
-          kevScript append "add channel_" + con.hashCode + " : AsyncBroadcast\n"
-          kevScript append "bind node0." + con.getCli.getInstance().instanceName + "." + con.getRequired.getName + "Port_out channel_" + con.hashCode + "\n"
-          kevScript append "bind node0." + con.getSrv.getInstance().instanceName + "." + con.getProvided.getName + "Port channel_" + con.hashCode + "\n"
-        }
-        if (con.getRequired.getReceives.size > 0 && con.getProvided.getSends.size > 0) {
-          kevScript append "add channel_" + con.hashCode + "_re : AsyncBroadcast\n"
-          kevScript append "bind node0." + con.getCli.getInstance().instanceName + "." + con.getRequired.getName + "Port channel_" + con.hashCode + "_re\n"
-          kevScript append "bind node0." + con.getSrv.getInstance().instanceName + "." + con.getProvided.getName + "Port_out channel_" + con.hashCode + "_re\n"
-        }
-      }
-    } */
         kevScript.append("start sync\n");
         kevScript.append("//start node0\n\n");
         kevScript.append("\n");
 
         PrintWriter w = null;
         try {
-            new File(ctx.getOutputDir() + "/" + cfg.getName() + "/kevs").mkdirs();
-            w = new PrintWriter(new FileWriter(new File(ctx.getOutputDir() + "/" + cfg.getName() + "/kevs/main.kevs")));
+            new File(ctx.getOutputDir() + "/src/main/kevs").mkdirs();
+            w = new PrintWriter(new FileWriter(new File(ctx.getOutputDir() + "/src/main/kevs/main.kevs")));
             w.println(kevScript);
             w.close();
         } catch (IOException e) {
@@ -112,7 +88,7 @@ public class Java2Kevoree extends ConnectorCompiler {
     private void updatePOM(Context ctx, Configuration cfg) {
         //Update POM.xml
         try {
-            final InputStream input = new FileInputStream(ctx.getOutputDir() + "/" + cfg.getName() + "/POM.xml");
+            final InputStream input = new FileInputStream(ctx.getOutputDir() + "/POM.xml");
             final List<String> packLines = IOUtils.readLines(input);
             String pom = "";
             for (String line : packLines) {
@@ -128,7 +104,7 @@ public class Java2Kevoree extends ConnectorCompiler {
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>com.eclipsesource.minimal-json</groupId>\n<artifactId>minimal-json</artifactId>\n<version>0.9.2</version>\n</dependency>\n<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
 
-            final File f = new File(ctx.getOutputDir() + "/" + cfg.getName() + "/POM.xml");
+            final File f = new File(ctx.getOutputDir() + "/POM.xml");
             final OutputStream output = new FileOutputStream(f);
             IOUtils.write(pom, output);
             IOUtils.closeQuietly(output);
@@ -137,11 +113,11 @@ public class Java2Kevoree extends ConnectorCompiler {
         }
     }
 
-    private void generateWrapper(Context ctx, Configuration cfg) {
-        final String pack = ctx.getProperty("package").orElse("org.thingml.generated");
+    private void generateWrapper(Context ctx, Configuration cfg, String pack) {
+        //final String pack = ctx.getProperty("package").orElse("org.thingml.generated");
 
         //Generate wrapper
-        StringBuilder builder = ctx.getBuilder(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName() + "/" + cfg.getName() + ".java");
+        StringBuilder builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/kevoree/K" + cfg.getName() + ".java");
 
         builder.append("/**\n");
         builder.append(" * File generated by the ThingML IDE\n");
@@ -157,10 +133,10 @@ public class Java2Kevoree extends ConnectorCompiler {
         }
         builder.append("import org.kevoree.annotation.*;\n");
         builder.append("import org.kevoree.log.Log;\n");
-        builder.append("import org.thingml.generated.api.*;\n");
+        builder.append("import " + pack + ".api.*;\n");
         builder.append("import org.thingml.java.*;\n");
         builder.append("import org.thingml.java.ext.*;\n");
-        builder.append("import org.thingml.generated.messages.*;\n\n");
+        builder.append("import " + pack + ".messages.*;\n\n");
 
         builder.append("import com.eclipsesource.json.JsonObject;\n\n");
 
@@ -256,7 +232,7 @@ public class Java2Kevoree extends ConnectorCompiler {
             for(Property p : i.getType().allPropertiesInDepth()) {
                 if(p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
                     builder.append("@Param ");
-                    Expression e = i.getType().initExpression(p);
+                    final Expression e = cfg.initExpressions(i,p).get(0);
                     if (e != null) {
                         builder.append("(defaultValue = \"");
                         ctx.getCompiler().getActionCompiler().generate(e, builder, ctx);
@@ -366,7 +342,7 @@ public class Java2Kevoree extends ConnectorCompiler {
         final String file_name = "K" + ctx.firstToUpper(cfg.getName());
         final String code = builder.toString();
 
-        try {
+        /*try {
             final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDir() + "/" + file_name + ".java")));
             System.out.println("code generated at " + ctx.getOutputDir() + "/" + file_name + ".java");
             w.println(code);
@@ -374,13 +350,16 @@ public class Java2Kevoree extends ConnectorCompiler {
         } catch (Exception e){
             System.err.println("Problem while saving generating Kevoree code: " + e.getMessage());
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
-    public void generateLib(Context ctx, Configuration cfg) {
-        generateWrapper(ctx, cfg);
+    public void generateLib(Context ctx, Configuration cfg, String... options) {
+        String pack = "org.thingml.generated";
+        if (options.length > 0 && options[0] != null)
+            pack = options[0];
+        generateWrapper(ctx, cfg, pack);
         updatePOM(ctx, cfg);
-        generateKevScript(ctx, cfg);
+        generateKevScript(ctx, cfg, pack);
     }
 }

@@ -23,7 +23,7 @@ import org.thingml.compilers.Context;
  */
 public class ConnectorCompiler {
 
-    public void generateLib(Context ctx, Configuration cfg) {
+    public void generateLib(Context ctx, Configuration cfg, String... options) {
         throw(new UnsupportedOperationException("Connector libs are platform-specific."));
     }
 

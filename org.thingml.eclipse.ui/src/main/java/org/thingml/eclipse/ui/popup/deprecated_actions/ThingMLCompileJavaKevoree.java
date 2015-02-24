@@ -19,6 +19,7 @@ import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.widgets.Shell;
@@ -27,6 +28,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
+import org.thingml.eclipse.preferences.PreferenceConstants;
+import org.thingml.eclipse.ui.Activator;
 import org.thingml.eclipse.ui.ThingMLConsole;
 import org.thingml.javagenerator.JavaGenerator;
 import org.thingml.javagenerator.kevoree.KevoreeGenerator;
@@ -91,6 +94,11 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
         ThingMLConsole.getInstance().printDebug("Creating folder java in "+ thingmlgen_folder.getAbsolutePath() + "\n");
         platform_folder.mkdir();
 
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		String pack = store.getString(PreferenceConstants.PACK_STRING);
+        String[] options = new String[1];
+        options[0] = pack;
+        
         // Compile all the configuration
         for ( Configuration cfg :  toCompile ) {
             KevoreeGenerator.compileAndRun(cfg, model, platform_folder.getAbsolutePath());

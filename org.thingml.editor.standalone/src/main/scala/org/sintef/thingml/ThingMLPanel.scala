@@ -34,7 +34,6 @@ import org.thingml.compilers.actions.{JavaActionCompiler, JSActionCompiler}
 import org.thingml.cppgenerator.CPPGenerator
 import org.thingml.javagenerator.JavaGenerator
 import org.thingml.javagenerator.extension.{HTTPGenerator, WebSocketGenerator, MQTTGenerator}
-import org.thingml.javagenerator.kevoree.KevoreeGenerator
 
 import akka.actor.{Props, ActorSystem, ReceiveTimeout, Actor}
 import org.thingml.jsgenerator.JavaScriptGenerator
@@ -326,9 +325,20 @@ class ThingMLPanel extends JPanel {
       if (targetFile.isEmpty) return;
 
       try {
-        val thingmlModel = loadThingMLmodel(targetFile.get)
+        /*val thingmlModel = loadThingMLmodel(targetFile.get)
         thingmlModel.allConfigurations().foreach { c =>
           KevoreeGenerator.compileAndRun(c, thingmlModel, null)
+        } */
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        val compiler = new JavaCompiler()
+        thingmlModel.allConfigurations().foreach { c =>
+          val file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName)
+          file.mkdirs()
+          compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName + "/"))
+          val ctx = new Context(compiler)
+          compiler.getBuildCompiler.generate(c, ctx)
+          compiler.compileConnector("kevoree-java", c)
+          ctx.dump()
         }
       }
       catch {

@@ -106,11 +106,11 @@ public abstract class ThingMLCompiler {
      **************************************************************/
     public abstract boolean compile(Configuration cfg, String... options);
 
-    public boolean compileConnector(String connector, Configuration cfg) {
+    public boolean compileConnector(String connector, Configuration cfg, String... options) {
         ctx.setCurrentConfiguration(cfg);
         final ConnectorCompiler cc = connectorCompilers.get(connector);
         if (cc != null) {
-            cc.generateLib(ctx, cfg);
+            cc.generateLib(ctx, cfg, options);
             ctx.dump();
             return true;
         }

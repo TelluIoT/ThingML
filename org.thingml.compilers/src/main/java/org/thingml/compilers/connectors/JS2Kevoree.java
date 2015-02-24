@@ -228,7 +228,7 @@ public class JS2Kevoree extends ConnectorCompiler {
     }
 
     @Override
-    public void generateLib(Context ctx, Configuration cfg) {
+    public void generateLib(Context ctx, Configuration cfg, String... options) {
         generateWrapper(ctx, cfg);
         generateGruntFile(ctx, cfg);
         updatePackageJSON(ctx, cfg);
