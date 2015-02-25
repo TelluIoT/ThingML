@@ -27,7 +27,6 @@ import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
 import org.thingml.cgenerator.CGenerator;
-import org.thingml.javagenerator.kevoree.KevoreeGenerator;
 
 public class ThingMLCompilePosixC implements IObjectActionDelegate {
 

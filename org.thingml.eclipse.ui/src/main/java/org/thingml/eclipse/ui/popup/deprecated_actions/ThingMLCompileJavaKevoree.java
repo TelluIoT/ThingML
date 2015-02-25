@@ -28,11 +28,14 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.JavaCompiler;
+import org.thingml.compilers.JavaScriptCompiler;
+import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.eclipse.preferences.PreferenceConstants;
 import org.thingml.eclipse.ui.Activator;
 import org.thingml.eclipse.ui.ThingMLConsole;
 import org.thingml.javagenerator.JavaGenerator;
-import org.thingml.javagenerator.kevoree.KevoreeGenerator;
 
 import java.util.ArrayList;
 
@@ -87,12 +90,12 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
         }
 
         java.io.File platform_folder = new java.io.File(thingmlgen_folder, "java");
-        if (platform_folder.exists()) {
+        /*if (platform_folder.exists()) {
             ThingMLConsole.getInstance().printDebug("cleaning folder " + thingmlgen_folder.getAbsolutePath() + "\n");
             ThingMLConsole.getInstance().deleteFolder(platform_folder);
         }
         ThingMLConsole.getInstance().printDebug("Creating folder java in "+ thingmlgen_folder.getAbsolutePath() + "\n");
-        platform_folder.mkdir();
+        platform_folder.mkdir();*/
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		String pack = store.getString(PreferenceConstants.PACK_STRING);
@@ -100,8 +103,13 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
         options[0] = pack;
         
         // Compile all the configuration
-        for ( Configuration cfg :  toCompile ) {
-            KevoreeGenerator.compileAndRun(cfg, model, platform_folder.getAbsolutePath());
+        ThingMLCompiler compiler = new JavaCompiler();
+        for ( Configuration cfg :  toCompile ) {        	
+            compiler.setOutputDirectory(platform_folder);
+            Context ctx = new Context(compiler);
+            compiler.getBuildCompiler().generate(cfg, ctx);
+            compiler.compileConnector("kevoree-java", cfg, options);
+            ctx.dump();        	        	
         }
 
 	}

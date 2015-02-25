@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import org.thingml.compilers.*;
 import org.thingml.compilers.actions.*;
 import org.thingml.eclipse.ui.ThingMLConsole;
-import org.thingml.javagenerator.kevoree.KevoreeGenerator;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;

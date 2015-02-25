@@ -27,7 +27,6 @@ import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
 import org.thingml.javagenerator.extension.MQTTGenerator;
-import org.thingml.javagenerator.kevoree.KevoreeGenerator;
 
 public class ThingMLCompileJSWS implements IObjectActionDelegate {
 
