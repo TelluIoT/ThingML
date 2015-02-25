@@ -96,7 +96,7 @@ public class JS2Kevoree extends ConnectorCompiler {
             final JsonObject json = JsonObject.readFrom(pack);
             json.set("main", "lib/" + cfg.getName() + ".js");
             final JsonObject deps = json.get("dependencies").asObject();
-            deps.add("kevoree-entities", "^7.0.0");
+            deps.add("kevoree-entities", "^8.0.0");
             final JsonObject devDeps = json.get("devDependencies").asObject();
             devDeps.add("grunt", "^0.4.1");
             devDeps.add("grunt-kevoree", "^5.0.0");

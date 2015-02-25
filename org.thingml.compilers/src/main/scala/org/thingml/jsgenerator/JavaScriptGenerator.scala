@@ -163,7 +163,7 @@ object JavaScriptGenerator {
     builder append "</html>"*/
 
 
-    var builder = ctx.getBuilder(t.getName + "/" + t.getName + ".js")
+    //var builder = ctx.getBuilder(t.getName + "/" + t.getName + ".js")
 
     ctx.copy(this.getClass.getClassLoader.getResourceAsStream("javascript/lib/state-factory.js"), t.getName, "state-factory.js")
     ctx.copy(this.getClass.getClassLoader.getResourceAsStream("javascript/lib/Connector.js"), t.getName, "Connector.js")
@@ -176,7 +176,7 @@ object JavaScriptGenerator {
       e.generateJavaScript(ctx.getBuilder(t.getName + "/enums.js"), ctx)
     }
 
-    t.generateJavaScript(builder, ctx)
+    t.generateJavaScript(null, ctx)
     ctx.getCompiler.getMainCompiler.generate(t, model, ctx)
 
   }
@@ -324,7 +324,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
 
     builder append "//callbacks for third-party listeners\n"
     self.allPorts().foreach { p =>
-      if (p.isDefined("public", "true") && p.getSends.size() > 0) {
+      if (!p.isDefined("public", "false") && p.getSends.size() > 0) {
         builder append "var " + p.getName + "Listeners = [];\n"
         builder append "this.get" + ctx.firstToUpper(p.getName) + "Listeners = function() {\n"
         builder append "return " + p.getName + "Listeners;\n"
@@ -359,7 +359,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
         }
         builder append "}';\n"
         builder append "_send(msg);\n"
-        if (p.isDefined("public", "true") && p.getSends.size() > 0) {
+        if (!p.isDefined("public", "false") && p.getSends.size() > 0) {
           builder append "//notify listeners\n"
           builder append "var arrayLength = " + p.getName + "Listeners.length;\n"
           builder append "for (var i = 0; i < arrayLength; i++) {\n"
