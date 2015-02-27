@@ -84,13 +84,12 @@ public class ThingMLCompileJsKevoree implements IObjectActionDelegate {
         }
 
         java.io.File platform_folder = new java.io.File(thingmlgen_folder, "javascript");
-        if (platform_folder.exists()) {
-            ThingMLConsole.getInstance().printDebug("cleaning folder " + thingmlgen_folder.getAbsolutePath() + "\n");
-            ThingMLConsole.getInstance().deleteFolder(platform_folder);            
+        if (!platform_folder.exists()) {
+        	ThingMLConsole.getInstance().printError("Javascript folder does not exist in "+ thingmlgen_folder.getAbsolutePath() + ". Please generate plain JS first.\n");
+        	ThingMLConsole.getInstance().printDebug("Creating folder javascript in "+ thingmlgen_folder.getAbsolutePath() + "\n");
+            platform_folder.mkdir();
         }
-        ThingMLConsole.getInstance().printDebug("Creating folder javascript in "+ thingmlgen_folder.getAbsolutePath() + "\n");
-        platform_folder.mkdir();
-
+        
         // Compile all the configuration
         ThingMLCompiler compiler = new JavaScriptCompiler();
         for ( Configuration cfg :  toCompile ) {

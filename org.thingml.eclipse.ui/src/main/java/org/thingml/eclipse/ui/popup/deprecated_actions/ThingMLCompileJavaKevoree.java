@@ -85,17 +85,12 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
         java.io.File thingmlgen_folder = new java.io.File(project_folder, "thingml-gen");
 
         if (!thingmlgen_folder.exists()) {
+        	ThingMLConsole.getInstance().printError("Java folder does not exist in "+ thingmlgen_folder.getAbsolutePath() + ". Please generate plain Java first.\n");
             ThingMLConsole.getInstance().printDebug("Creating thingml-gen folder in " + project_folder.getAbsolutePath()  + "\n");
             thingmlgen_folder.mkdir();
         }
 
         java.io.File platform_folder = new java.io.File(thingmlgen_folder, "java");
-        /*if (platform_folder.exists()) {
-            ThingMLConsole.getInstance().printDebug("cleaning folder " + thingmlgen_folder.getAbsolutePath() + "\n");
-            ThingMLConsole.getInstance().deleteFolder(platform_folder);
-        }
-        ThingMLConsole.getInstance().printDebug("Creating folder java in "+ thingmlgen_folder.getAbsolutePath() + "\n");
-        platform_folder.mkdir();*/
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		String pack = store.getString(PreferenceConstants.PACK_STRING);
