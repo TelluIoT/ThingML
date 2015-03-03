@@ -175,12 +175,12 @@ public class JS2Kevoree extends ConnectorCompiler {
 
 
         builder.append("stop: function (done) {\n");
-        builder.append("this._super(function () {\n");
+        //builder.append("this._super(function () {\n");
         for(Instance i : cfg.allInstances()) {
             builder.append(i.getName() + "._stop();\n");
         }
         builder.append("done();\n");
-        builder.append("}.bind(this));\n");
+        //builder.append("}.bind(this));\n");
         builder.append("}");
 
         //int id = 0;
