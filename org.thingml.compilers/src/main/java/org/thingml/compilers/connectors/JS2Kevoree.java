@@ -141,7 +141,7 @@ public class JS2Kevoree extends ConnectorCompiler {
 
         builder.append("/**\n* Kevoree component\n* @type {" + cfg.getName() +  "}\n*/\n");
         builder.append("var " + cfg.getName() + " = AbstractComponent.extend({\n");
-        builder.append("toString: 'TestTimerJS',\n");
+        builder.append("toString: '" + cfg.getName() + "',\n");
 
         //TODO: generate dictionnay for attributes
 

@@ -296,11 +296,11 @@ public class Java2Kevoree extends ConnectorCompiler {
 
                             builder.append(", \\\"" + pa.getName() + "\\\":");
                             if (isArray) builder.append("[");
-                            if (isString || isChar) builder.append("\\\""); else builder.append("\"");
+                            if (isString || isChar) builder.append("\\\"\""); else builder.append("\"");
                             builder.append(" + " + ctx.protectKeyword(ctx.getVariableName(pa)));
                             if (isString) builder.append(".replace(\"\\n\", \"\\\\n\")");
                             builder.append(" + ");
-                            if (isString || isChar) builder.append("\\\""); else builder.append("\"");
+                            if (isString || isChar) builder.append("\"\\\""); else builder.append("\"");
                             if (isArray) builder.append("]");
                         }
                         builder.append("}\";\n");
