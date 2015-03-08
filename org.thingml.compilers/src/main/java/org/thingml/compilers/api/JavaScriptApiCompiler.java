@@ -82,10 +82,10 @@ public class JavaScriptApiCompiler extends ApiCompiler {
                     }
                     builder.append(") {\n");
                     builder.append("this._receive('{\"message\":\"" + m.getName() + "\",\"port\":\"" + p.getName());
-                    if(p instanceof ProvidedPort)
+                    //if(p instanceof ProvidedPort)
                         builder.append("_s");
-                    else
-                        builder.append("_c");
+                    /*else
+                        builder.append("_c");*/
                     builder.append("\"");
                     for(Parameter pa : m.getParameters()) {
                         if (pa.getType().isDefined("js_type", "String") || pa.getType().isDefined("js_type", "char")) {
