@@ -285,7 +285,7 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
     builder append "public " + Context.firstToUpper(self.getName) + "Mock(String name){\n"
     builder append "super(name, " +  self.allPorts.size + ");\n"
     generatePortDef()
-    builder append "initGUI();"
+    builder append "initGUI(name);"
     builder append "}\n\n"
 
     builder append "@Override\n"
@@ -381,7 +381,7 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
     }
     builder append "}\n\n"
 
-    builder append "private void initGUI(){\n"
+    builder append "private void initGUI(String name){\n"
     
     builder append "GridBagConstraints c = new GridBagConstraints();\n"
     builder append "c.gridwidth = 1;\n"
@@ -392,7 +392,7 @@ case class ThingSwingGenerator(val self: Thing) extends ThingMLSwingGenerator(se
     
     builder append "c.gridy = 0;\n"
     builder append "c.gridx = 0;\n"
-    builder append "frame = new JFrame(\"" + self.getName + " Mock Simulator\");\n"
+    builder append "frame = new JFrame(name);\n"
     builder append "frame.setLayout(new GridBagLayout());\n"
     builder append "frame.add(tabbedPane, c);\n"
     
