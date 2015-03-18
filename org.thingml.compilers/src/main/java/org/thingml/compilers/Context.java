@@ -121,7 +121,9 @@ public class Context {
      * @return value with first letter in upper case
      */
     public String firstToUpper(String value) {
-        if (value.length() > 1)
+        if (value == null)
+            return null;
+        else if (value.length() > 1)
             return value.substring(0,1).toUpperCase() + value.substring(1);
         else
             return value.substring(0,1).toUpperCase();

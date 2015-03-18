@@ -19,6 +19,8 @@ import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.helpers.JavaHelper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,6 +30,9 @@ public class JavaApiCompiler extends ApiCompiler {
 
 
     public void generateEnumeration(Enumeration e, Context ctx, StringBuilder builder) throws Exception{
+        System.out.println("generateEnumeration " + e.getName());
+
+
         final String pack = ctx.getProperty("package").orElse("org.thingml.generated");
         //final String src = "src/main/java/" + pack.replaceAll(".", "/");
 
@@ -67,14 +72,16 @@ public class JavaApiCompiler extends ApiCompiler {
         for(Type t : thing.findContainingModel().allUsedSimpleTypes()) {
             if (t instanceof Enumeration) {
                 Enumeration e = (Enumeration) t;
-                final StringBuilder builder = ctx.getBuilder(src + "/api/" + ctx.firstToUpper(e.getName()) + "_ENUM.java");
-                try {
-                    generateEnumeration(e, ctx, builder);
-                } catch (Exception e1) {
-                    System.err.println("ERROR: Enuemration " + e.getName() + " should define an @enum_val for all its literals");
-                    System.err.println("Node code will be generated for Enumeration " + e.getName() + " possibly leading to compilation errors");
-                    builder.delete(0, builder.capacity());
-                }
+                    final StringBuilder builder = ctx.getBuilder(src + "/api/" + ctx.firstToUpper(e.getName()) + "_ENUM.java");
+                    try {
+                        if (builder.length() == 0) {//FIXME: hack to avoid enums to be generated twice.
+                            generateEnumeration(e, ctx, builder);
+                        }
+                    } catch (Exception e1) {
+                        System.err.println("ERROR: Enuemration " + e.getName() + " should define an @enum_val for all its literals");
+                        System.err.println("Node code will be generated for Enumeration " + e.getName() + " possibly leading to compilation errors");
+                        builder.delete(0, builder.capacity());
+                    }
             }
         }
 

@@ -47,7 +47,7 @@ object JavaGenerator {
 
   implicit def javaGeneratorAspect(self: Type) = self match {
     case t: PrimitiveType => PrimitiveTypeJavaGenerator(t)
-    case t: Enumeration   => EnumerationJavaGenerator(t)
+    //case t: Enumeration   => EnumerationJavaGenerator(t)
     case _                => new TypeJavaGenerator(self)
   }
 
@@ -742,11 +742,11 @@ case class PrimitiveTypeJavaGenerator(override val self: PrimitiveType) extends 
   }
 }
 
-case class EnumerationJavaGenerator(override val self: Enumeration) extends TypeJavaGenerator(self) {
+/*case class EnumerationJavaGenerator(override val self: Enumeration) extends TypeJavaGenerator(self) {
   override def generateJava(builder : java.lang.StringBuilder, ctx : Context) {
-    ctx.getCompiler.getApiCompiler.asInstanceOf[JavaApiCompiler].generateEnumeration(self, ctx, builder);
+    //ctx.getCompiler.getApiCompiler.asInstanceOf[JavaApiCompiler].generateEnumeration(self, ctx, builder);
   }
-}
+}*/
 
 /**
  * Action abstract class
