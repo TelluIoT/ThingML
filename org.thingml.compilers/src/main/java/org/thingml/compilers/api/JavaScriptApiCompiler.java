@@ -44,6 +44,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
             builder.append("//Public API for third parties\n");
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._init = function() {\n");
             ctx.mark("useThis");
+            ctx.setThisRef("this.");
             //execute onEntry of the root state machine
             if (thing.allStateMachines().get(0).getEntry() != null)
                 ctx.getCompiler().getActionCompiler().generate(thing.allStateMachines().get(0).getEntry(), builder, ctx);
@@ -56,6 +57,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
             builder.append("}\n");
             builder.append("this.ready = true;\n");
             ctx.unmark("useThis");
+            ctx.setThisRef("_this.");
             builder.append("}\n\n");
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(message) {//takes a JSONified message\n");
