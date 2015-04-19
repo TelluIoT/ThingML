@@ -542,7 +542,7 @@ case class ThingJavaScriptGenerator(val self: Thing) extends ThingMLJavaScriptGe
     builder append "return \"" + self.getName + "\";\n"
     builder append "}\n\n"
 
-    builder append "module.exports = " + self.getName + ";\n"
+    builder append "module.exports = " + ctx.firstToUpper(self.getName) + ";\n"
   }
 
 }
