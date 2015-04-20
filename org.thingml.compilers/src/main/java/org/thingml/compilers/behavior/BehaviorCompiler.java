@@ -23,7 +23,7 @@ import org.thingml.compilers.Context;
  */
 public class BehaviorCompiler {
 
-    public void generateState(State s, StringBuilder builder, Context ctx, String... options) {
+    public void generateState(State s, StringBuilder builder, Context ctx) {
         if (s instanceof StateMachine) {
             generateStateMachine((StateMachine)s, builder, ctx);
         } else if (s instanceof CompositeState) {
@@ -33,26 +33,26 @@ public class BehaviorCompiler {
         }
     }
 
-    protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx, String... options) {
+    protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
         throw new UnsupportedOperationException("to be implemented");
     }
 
-    protected void generateCompositeState(CompositeState cs, StringBuilder builder, Context ctx, String... options) {
+    protected void generateCompositeState(CompositeState cs, StringBuilder builder, Context ctx) {
         throw new UnsupportedOperationException("to be implemented");
     }
 
-    protected void generateAtomicState(State s, StringBuilder builder, Context ctx, String... options) {
-        throw new UnsupportedOperationException("to be implemented");
-    }
-
-
-
-    public void generateRegion(Region r, StringBuilder builder, Context ctx, String... options) {
+    protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
         throw new UnsupportedOperationException("to be implemented");
     }
 
 
-    public void generateHandler(Handler h, Message msg, Port p, StringBuilder builder, Context ctx, String... options) {
+
+    public void generateRegion(Region r, StringBuilder builder, Context ctx) {
+        throw new UnsupportedOperationException("to be implemented");
+    }
+
+
+    public void generateHandler(Handler h, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (h instanceof Transition) {
             generateTransition((Transition)h, msg, p, builder, ctx);
         } else if (h instanceof InternalTransition) {
@@ -60,11 +60,11 @@ public class BehaviorCompiler {
         }
     }
 
-    protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx, String... options) {
+    protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         throw new UnsupportedOperationException("to be implemented");
     }
 
-    protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx, String... options) {
+    protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         throw new UnsupportedOperationException("to be implemented");
     }
 

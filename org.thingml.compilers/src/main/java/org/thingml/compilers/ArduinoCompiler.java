@@ -19,6 +19,7 @@ import org.sintef.thingml.Configuration;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
+import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.build.BuildCompiler;
 import org.thingml.compilers.main.MainGenerator;
 
@@ -30,7 +31,7 @@ import java.io.PrintStream;
 public class ArduinoCompiler extends OpaqueThingMLCompiler {
 
     public ArduinoCompiler() {
-        super(new ActionCompiler(), new ApiCompiler(), new MainGenerator(), new BuildCompiler());
+        super(new ActionCompiler(), new ApiCompiler(), new MainGenerator(), new BuildCompiler(), new BehaviorCompiler());
     }
 
     @Override

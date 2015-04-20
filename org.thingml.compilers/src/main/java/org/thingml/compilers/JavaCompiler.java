@@ -20,6 +20,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.JavaActionCompiler;
 import org.thingml.compilers.api.JavaApiCompiler;
+import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.build.JavaBuildCompiler;
 import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.compilers.connectors.Java2Kevoree;
@@ -43,7 +44,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     }
 
     public JavaCompiler() {
-        super(new JavaActionCompiler(), new JavaApiCompiler(), new JavaMainGenerator(), new JavaBuildCompiler());
+        super(new JavaActionCompiler(), new JavaApiCompiler(), new JavaMainGenerator(), new JavaBuildCompiler(), new BehaviorCompiler());
     }
 
     @Override
