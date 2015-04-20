@@ -59,25 +59,77 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             builder.append("var t0 = new StateFactory.buildEmptyTransition(this._initial_" + sm.qname("_") + ", " + sm.getInitial().qname("_") + ");\n");
         }
         //TODO: we should revise some derived properties, not so nice to use in Java...
-        /*for(Map<Message, List<Handler>> entry : sm.allMessageHandlers().values()) {
-            for(List<Handler> handlers : entry.values()) {
+        final Map<Port, Map<Message, List<Handler>>> allHanders = sm.allMessageHandlers();
+        for(Map.Entry<Port, Map<Message, List<Handler>>> entry : allHanders.entrySet()) {
+            final Port p = entry.getKey();
+            final Map<Message, List<Handler>> map = entry.getValue();
+            for(Map.Entry<Message, List<Handler>> entry2 : map.entrySet()) {
+                final List<Handler> handlers = entry2.getValue();
+                final Message m = entry2.getKey();
                 for(Handler h : handlers) {
-                    generateHandler();
+                    generateHandler(h, m, p, builder, ctx);
                 }
             }
-        }*/
+        }
     }
 
-    protected void generateCompositeState(CompositeState cs, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented");
+    private void generateActionsForState(State s, StringBuilder builder, Context ctx) {
+        if (s.getEntry() != null)
+            builder.append(s.qname("_") + ".entry = [" + s.qname("_") + "_entry];\n");
+        if (s.getExit() != null)
+            builder.append(s.qname("_") + ".exit = [" + s.qname("_") + "_exit];\n");
+    }
+
+    protected void generateCompositeState(CompositeState c, StringBuilder builder, Context ctx) {
+        String containerName = ctx.getProperty("container").get();
+        if (c.hasSeveralRegions()) {
+            builder.append("var " + c.qname("_") + " = StateFactory.buildOrthogonalState(\"" + c.getName() + "\", " + containerName + ");\n");
+            builder.append("var " + c.qname("_") + "_default = StateFactory.buildRegion(\"_default\", " + c.qname("_") + ");\n");
+            if (c.isHistory())
+                builder.append("var _initial_" + c.qname("_") + " = StateFactory.buildHistoryState(\"_initial\", " + c.qname("_") + ");\n");
+            else
+                builder.append("var _initial_" + c.qname("_") + " = StateFactory.buildInitialState(\"_initial\", " + c.qname("_") + ");\n");
+            builder.append("var t0_" + c.qname("_") + " = StateFactory.buildEmptyTransition(_initial_" + c.qname("_") + ", " + c.getInitial().qname("_") + ");\n");
+            for(State s : c.getSubstate()) {
+                ctx.addProperty("container", c.qname("_") + "_default");
+                generateState(s, builder, ctx);
+            }
+            for(Region r : c.getRegion()) {
+                ctx.addProperty("container", c.qname("_"));
+                generateRegion(r, builder, ctx);
+            }
+        } else {
+            builder.append("var " + c.qname("_") + " = StateFactory.buildCompositeState(\"" + c.getName() + "\", " + containerName + ");\n");
+            for(State s : c.getSubstate()) {
+                ctx.addProperty("container", c.qname("_"));
+                generateState(s, builder, ctx);
+            }
+        }
+        if (c.isHistory())
+            builder.append("var _initial_" + c.qname("_") + " = StateFactory.buildHistoryState(\"_initial\", " + c.qname("_") + ");\n");
+        else
+            builder.append("var _initial_" + c.qname("_") + " = StateFactory.buildInitialState(\"_initial\", " + c.qname("_") + ");\n");
+        builder.append("var t0_" + c.qname("_") + " = StateFactory.buildEmptyTransition(_initial_" + c.qname("_") + ", " + c.getInitial().qname("_") + ");\n");
     }
 
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented");
+        String containerName = ctx.getProperty("container").get();
+        builder.append("var " + s.qname("_") + " = StateFactory.buildSimpleState(\"" + s.getName() + "\", " + containerName + ");\n");
+        generateActionsForState(s, builder, ctx);
     }
 
     public void generateRegion(Region r, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented");
+        String containerName = ctx.getProperty("container").get();
+        builder.append("var " + r.qname("_") + "_reg = StateFactory.buildRegion(\"" + r.getName() + "\", " + containerName + ");\n");
+        if (r.isHistory())
+            builder.append("var _initial_" + r.qname("_") + "_reg = StateFactory.buildHistoryState(\"_initial\", " + r.qname("_") + "_reg);\n");
+        else
+            builder.append("var _initial_" + r.qname("_") + "_reg = StateFactory.buildInitialState(\"_initial\", " + r.qname("_") + "_reg);\n");
+        for(State s : r.getSubstate()) {
+            ctx.addProperty("container", r.qname("_") + "_reg");
+            generateState(s, builder, ctx);
+        }
+        builder.append("var t0_" + r.qname("_") + "_reg = StateFactory.buildEmptyTransition(_initial_" + r.qname("_") + "_reg, " + r.getInitial().qname("_") + ");\n");
     }
 
     private void generateHandlerAction(Handler h, StringBuilder builder, Context ctx) {
