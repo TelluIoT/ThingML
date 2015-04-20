@@ -103,6 +103,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
                 builder.append("this.");
             builder.append(s.qname("_") + "_exit];\n");
 
+
         }
     }
 
