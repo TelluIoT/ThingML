@@ -144,7 +144,9 @@ public class JSMainGenerator extends MainGenerator {
         builder.append("process.on('SIGINT', function() {\n");
         builder.append("console.log(\"Stopping components... CTRL+D to force shutdown\");\n");
         for (Instance i : cfg.allInstances()) {
-            builder.append(i.getName() + "._stop();\n");
+            if(i.getType().allStateMachines().size() > 0) {
+                builder.append(i.getName() + "._stop();\n");
+            }
         }
         builder.append("});\n\n");
     }

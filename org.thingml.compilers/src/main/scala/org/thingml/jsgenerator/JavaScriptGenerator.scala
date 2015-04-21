@@ -197,7 +197,7 @@ case class ConfigurationJavaScriptGenerator(val self: Configuration) extends Thi
   override def generateJavaScript(builder : StringBuilder, ctx : Context) {
     ctx.setCurrentConfiguration(self)
     self.allThings.foreach { thing =>
-      thing.generateJavaScript(ctx.getBuilder(self.getName + "/" + thing.getName + ".js"), ctx)
+      thing.generateJavaScript(ctx.getBuilder(self.getName + "/" + ctx.firstToUpper(thing.getName) + ".js"), ctx)
     }
   }
 
