@@ -60,6 +60,10 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             }
             builder.append("var t0 = new StateFactory.buildEmptyTransition(this._initial_" + sm.qname("_") + ", " + sm.getInitial().qname("_") + ");\n");
         }
+        for(Handler h : sm.allEmptyHandlers()) {
+            generateHandler(h, null, null, builder, ctx);
+        }
+
         //TODO: we should revise some derived properties, not so nice to use in Java...
         final Map<Port, Map<Message, List<Handler>>> allHanders = sm.allMessageHandlers();
         for(Map.Entry<Port, Map<Message, List<Handler>>> entry : allHanders.entrySet()) {
