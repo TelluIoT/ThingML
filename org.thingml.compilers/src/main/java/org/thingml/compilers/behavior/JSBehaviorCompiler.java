@@ -27,7 +27,6 @@ import java.util.Map;
  */
 public class JSBehaviorCompiler extends BehaviorCompiler {
 
-    ThingMLCompiler compiler;//TODO: should be properly initialized
     private int ti = 0;
 
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
@@ -46,18 +45,25 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             else
                 builder.append("var _initial_" + sm.qname("_") + "_default = StateFactory.buildInitialState(\"_initial\", " + sm.qname("_") + "_default);\n");
             for (State s : sm.getSubstate()) {
-                generateState(s, builder, ctx, sm.qname("_") + "_default");
+                ctx.addProperty("container", sm.qname("_") + "_default");
+                generateState(s, builder, ctx);
             }
             builder.append("var t0_" + sm.qname("_") + "_default = StateFactory.buildEmptyTransition(_initial_" + sm.qname("_") + "_default, " + sm.getInitial().qname("_") + ");\n");
             for (Region r : sm.getRegion()) {
-                generateRegion(r, builder, ctx, "_orth_" + sm.qname("_"));
+                ctx.addProperty("container", "_orth_" + sm.qname("_"));
+                generateRegion(r, builder, ctx);
             }
         } else {
             for (State s : sm.getSubstate()) {
-                generateState(s, builder, ctx, "this." + sm.qname("_"));
+                ctx.addProperty("container", "this." + sm.qname("_"));
+                generateState(s, builder, ctx);
             }
             builder.append("var t0 = new StateFactory.buildEmptyTransition(this._initial_" + sm.qname("_") + ", " + sm.getInitial().qname("_") + ");\n");
         }
+        for(Handler h : sm.allEmptyHandlers()) {
+            generateHandler(h, null, null, builder, ctx);
+        }
+
         //TODO: we should revise some derived properties, not so nice to use in Java...
         final Map<Port, Map<Message, List<Handler>>> allHanders = sm.allMessageHandlers();
         for(Map.Entry<Port, Map<Message, List<Handler>>> entry : allHanders.entrySet()) {
@@ -71,13 +77,38 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
                 }
             }
         }
+        generateActionsForState(sm, builder, ctx);
     }
 
     private void generateActionsForState(State s, StringBuilder builder, Context ctx) {
-        if (s.getEntry() != null)
-            builder.append(s.qname("_") + ".entry = [" + s.qname("_") + "_entry];\n");
-        if (s.getExit() != null)
-            builder.append(s.qname("_") + ".exit = [" + s.qname("_") + "_exit];\n");
+        if (s.getEntry() != null) {
+            builder.append("function " + s.qname("_") + "_entry(context, message) {\n");
+            ctx.getCompiler().getActionCompiler().generate(s.getEntry(),builder, ctx);
+            builder.append("}\n\n");
+        }
+        if (s.getExit() != null) {
+            builder.append("function " + s.qname("_") + "_exit(context, message) {\n");
+            ctx.getCompiler().getActionCompiler().generate(s.getExit(), builder, ctx);
+            builder.append("}\n\n");
+        }
+        if (s.getEntry() != null) {
+            if (s instanceof StateMachine)//FIXME: ugly
+                builder.append("this.");
+            builder.append(s.qname("_") + ".entry = [");
+            if (s instanceof StateMachine)//FIXME: ugly
+                builder.append("this.");
+            builder.append(s.qname("_") + "_entry];\n");
+        }
+        if (s.getExit() != null) {
+            if (s instanceof StateMachine)//FIXME: ugly
+                builder.append("this.");
+            builder.append(s.qname("_") + ".exit = [");
+            if (s instanceof StateMachine)//FIXME: ugly
+                builder.append("this.");
+            builder.append(s.qname("_") + "_exit];\n");
+
+
+        }
     }
 
     protected void generateCompositeState(CompositeState c, StringBuilder builder, Context ctx) {
@@ -110,6 +141,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
         else
             builder.append("var _initial_" + c.qname("_") + " = StateFactory.buildInitialState(\"_initial\", " + c.qname("_") + ");\n");
         builder.append("var t0_" + c.qname("_") + " = StateFactory.buildEmptyTransition(_initial_" + c.qname("_") + ", " + c.getInitial().qname("_") + ");\n");
+        generateActionsForState(c, builder, ctx);
     }
 
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
@@ -136,14 +168,14 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
         if (h.getEvent().size() == 0) {
             builder.append("function t" + ti + "_effect(context, message) {\n");
             builder.append("var json = JSON.parse(message);\n");
-            compiler.getActionCompiler().generate(h.getAction(), builder, ctx);
+            ctx.getCompiler().getActionCompiler().generate(h.getAction(), builder, ctx);
             builder.append("}\n\n");
         }
         else {
             for(Event ev : h.getEvent()) {
                 builder.append("function t" + ti + "_effect(context, message) {\n");
                 builder.append("var json = JSON.parse(message);\n");
-                compiler.getActionCompiler().generate(h.getAction(), builder, ctx);
+                ctx.getCompiler().getActionCompiler().generate(h.getAction(), builder, ctx);
                 builder.append("}\n\n");
             }
         }
@@ -152,10 +184,10 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (t.getEvent().size() == 0) {
-            builder.append("var t" + ti + " = StateFactory.buildEmptyTransition(" + t.getSource().qname("_") + ", " + t.getTarget().qname("_") + ");\n");
+            builder.append("var t" + ti + " = StateFactory.buildEmptyTransition(" + t.getSource().qname("_") + ", " + t.getTarget().qname("_"));
             if (t.getGuard() != null) {
                 builder.append(", function (s, c) {var json = JSON.parse(c); ");
-                compiler.getActionCompiler().generate(t.getGuard(), builder, ctx);
+                ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
                 builder.append("}");
             }
             builder.append(");\n");
@@ -164,7 +196,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             builder.append(", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName() + "_s"/*(if(p.isInstanceOf[ProvidedPort]) "_s" else "_c")*/ + "\" && json.message === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
-                compiler.getActionCompiler().generate(t.getGuard(), builder, ctx);
+                ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
             }
             builder.append("});\n");
         }
@@ -179,7 +211,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             builder.append("var t" + ti + " = StateFactory.buildEmptyTransition(" + ((State) t.eContainer()).qname("_") + ", null");
             if (t.getGuard() != null) {
                 builder.append(", function (s, c) {var json = JSON.parse(c); ");
-                compiler.getActionCompiler().generate(t.getGuard(), builder, ctx);
+                ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
                 builder.append("}");
             }
             builder.append(");\n");
@@ -189,7 +221,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             builder.append(", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName() + "_s" + "\" && json.message === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
-                compiler.getActionCompiler().generate(t.getGuard(), builder, ctx);
+                ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
             }
             builder.append("});\n");
         }
