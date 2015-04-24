@@ -184,7 +184,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (t.getEvent().size() == 0) {
-            builder.append("var t" + ti + " = StateFactory.buildEmptyTransition(" + t.getSource().qname("_") + ", " + t.getTarget().qname("_") + ");\n");
+            builder.append("var t" + ti + " = StateFactory.buildEmptyTransition(" + t.getSource().qname("_") + ", " + t.getTarget().qname("_"));
             if (t.getGuard() != null) {
                 builder.append(", function (s, c) {var json = JSON.parse(c); ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
