@@ -25,7 +25,7 @@ import org.thingml.compilers.helpers.JavaHelper;
 public class JavaScriptApiCompiler extends ApiCompiler {
 
     public void generate(Thing thing, Context ctx) {
-        final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/" + thing.getName() + ".js");
+        final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/" + ctx.firstToUpper(thing.getName()) + ".js");
 
         if (thing.allStateMachines().size()>0) {
             //Lifecycle
