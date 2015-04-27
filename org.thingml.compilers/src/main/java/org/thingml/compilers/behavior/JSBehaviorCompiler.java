@@ -60,6 +60,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             }
             builder.append("var t0 = new StateFactory.buildEmptyTransition(this._initial_" + sm.qname("_") + ", " + sm.getInitial().qname("_") + ");\n");
         }
+
         for(Handler h : sm.allEmptyHandlers()) {
             generateHandler(h, null, null, builder, ctx);
         }
@@ -172,12 +173,10 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             builder.append("}\n\n");
         }
         else {
-            for(Event ev : h.getEvent()) {
                 builder.append("function t" + ti + "_effect(context, message) {\n");
                 builder.append("var json = JSON.parse(message);\n");
                 ctx.getCompiler().getActionCompiler().generate(h.getAction(), builder, ctx);
                 builder.append("}\n\n");
-            }
         }
         builder.append("t" + ti + ".effect = [t" + ti + "_effect];\n");
     }
