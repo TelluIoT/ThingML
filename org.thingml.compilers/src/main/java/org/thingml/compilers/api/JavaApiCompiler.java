@@ -64,7 +64,8 @@ public class JavaApiCompiler extends ApiCompiler {
     }
 
 
-    public void generate(Thing thing, Context ctx) {
+    @Override
+    public void generatePublicAPI(Thing thing, Context ctx) {
         final String pack = ctx.getProperty("package").orElse("org.thingml.generated");
         final String src = "src/main/java/" + pack.replace(".", "/");
 

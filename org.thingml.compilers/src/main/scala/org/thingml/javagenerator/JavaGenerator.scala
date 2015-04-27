@@ -154,7 +154,7 @@ object JavaGenerator {
   def compile(t: Configuration, pack: String, model: ThingMLModel, ctx : Context) {
     ctx.setCurrentConfiguration(t)
     t.allThings().foreach{th =>
-      ctx.getCompiler.getApiCompiler.generate(th, ctx)
+      ctx.getCompiler.getApiCompiler.generatePublicAPI(th, ctx)
     }
 
     ctx.getCompiler.getMainCompiler.generate(t, model, ctx);

@@ -15,7 +15,7 @@
  */
 package org.thingml.compilers;
 
-import org.sintef.thingml.Configuration;
+import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.actions.ActionCompiler;
@@ -77,6 +77,38 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
     public void do_call_compiler(Configuration cfg, String... options) {
         ctx.setThisRef("_this.");
         new File(ctx.getOutputDir() + "/" + cfg.getName()).mkdirs();
-        org.thingml.jsgenerator.JavaScriptGenerator.compileAndRun(cfg, ThingMLHelpers.findContainingModel(cfg), false, getOutputDirectory(), ctx);
+        ctx.setCurrentConfiguration(cfg);
+        compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
+        ctx.getCompiler().getBuildCompiler().generate(cfg, ctx);
+        ctx.dump();
+    }
+
+    private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
+        ctx.copy(this.getClass().getClassLoader().getResourceAsStream("javascript/lib/state-factory.js"), t.getName(), "state-factory.js");
+        ctx.copy(this.getClass().getClassLoader().getResourceAsStream("javascript/lib/Connector.js"), t.getName(), "Connector.js");
+
+        for(Type ty : model.allUsedSimpleTypes()) {
+            if (ty instanceof Enumeration) {
+                Enumeration e = (Enumeration) ty;
+                ctx.addProperty("hasEnum", "true");
+                StringBuilder builder = ctx.getBuilder("enum.js"); //FIXME: this code should be integrated into the compilation framework
+                builder.append("// Definition of Enumeration  " + e.getName() + "\n");
+                builder.append("var " + e.getName() + "_ENUM = {\n");
+                int i = 0;
+                for(EnumerationLiteral l : e.getLiterals()) {
+                    if (i > 0)
+                        builder.append(",\n");
+                    builder.append(l.getName().toUpperCase() + ": \"" + l.getName() + "\"");
+                    i++;
+                }
+                builder.append("}\n");
+                builder.append("exports." + e.getName() + "_ENUM = " + e.getName() + "_ENUM;\n");
+            }
+        }
+        for(Thing thing : t.allThings()) {
+            ctx.getCompiler().getApiCompiler().generateComponent(thing, ctx);
+            ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
+        }
+        ctx.getCompiler().getMainCompiler().generate(t, model, ctx);
     }
 }

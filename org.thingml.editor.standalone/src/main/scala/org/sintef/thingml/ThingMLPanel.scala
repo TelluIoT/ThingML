@@ -36,7 +36,6 @@ import org.thingml.javagenerator.JavaGenerator
 import org.thingml.javagenerator.extension.{HTTPGenerator, WebSocketGenerator, MQTTGenerator}
 
 import akka.actor.{Props, ActorSystem, ReceiveTimeout, Actor}
-import org.thingml.jsgenerator.JavaScriptGenerator
 import org.thingml.jsgenerator.extension.JSWebSocketGenerator
 import scala.collection.JavaConversions._
 import scala.concurrent.duration._
