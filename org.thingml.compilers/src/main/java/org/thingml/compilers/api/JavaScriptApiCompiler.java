@@ -229,6 +229,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
                    if(j > 0)
                        builder.append(", ");
                     builder.append(ctx.protectKeyword(pa.getName()));
+                    j++;
                 }
                 builder.append(") {\n");
                 builder.append("var msg = '{\"message\":\"" + m.getName() + "\",\"port\":\"" + p.getName() + "_c" + "\"");
