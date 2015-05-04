@@ -1,0 +1,82 @@
+import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+
+thing fragment TestsMsgs {
+    message msg1();
+    message msg2();
+    message msg3();
+}
+
+thing TestStreamWithMultipleEvents includes Test, TestsMsgs
+@test "n # iii"
+@test "s # iii"
+@test "S # iii"
+@conf "connector test.requiredService => test.providedService"
+{
+    provided port providedService {
+        sends msg1, msg2, msg3
+    }
+    
+    required port requiredService {
+        receives msg1, msg2, msg3  
+    }
+    
+    statechart TestStreamWithMultipleEvents init Init {
+        state Init {
+            transition -> First
+            event m : harnessIn?testIn
+			guard m.c == '\'n\''
+
+            transition -> Second
+            event m : harnessIn?testIn
+			guard m.c == '\'s\''
+
+            transition -> Third
+            event m : harnessIn?testIn
+			guard m.c == '\'S\''
+        }
+        
+        state First {
+            on entry do
+                providedService!msg1()
+                providedService!msg2()
+                providedService!msg3()
+            end
+            
+            internal
+            event requiredService?msg1
+            event requiredService?msg2
+            event requiredService?msg3
+            action harnessOut!testOut('\'i\'')     
+        }
+        
+        state Second {
+            on entry do
+                providedService!msg1()
+                providedService!msg2()
+                providedService!msg3()
+            end
+            
+            internal
+            @stream ""
+            event requiredService?msg1
+            event requiredService?msg2
+            event requiredService?msg3
+            action harnessOut!testOut('\'i\'')     
+        }
+        
+        state Third {
+            on entry do
+                providedService!msg1()
+                providedService!msg2()
+                providedService!msg3()
+            end
+            
+            internal
+            @stream "1 2"
+            event requiredService?msg1
+            event requiredService?msg2
+            event requiredService?msg3
+            action harnessOut!testOut('\'i\'')     
+        }
+    }
+}

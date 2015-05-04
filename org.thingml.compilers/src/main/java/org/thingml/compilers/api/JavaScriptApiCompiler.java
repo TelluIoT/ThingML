@@ -15,9 +15,15 @@
  */
 package org.thingml.compilers.api;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.util.EList;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.cep.JSCepLinker;
+import org.thingml.compilers.cepLibrairy.javascript.JSCepLibrary;
 import org.thingml.compilers.helpers.JavaHelper;
+
+import java.util.Arrays;
 
 /**
  * Created by bmori on 09.12.2014.
@@ -110,6 +116,14 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         if(ctx.getProperty("hasEnum").isPresent() && ctx.getProperty("hasEnum").get().equals("true")) {
             builder.append("var Enum = require('./enums');\n");
         }
+
+        /** MODIFICATION **/
+        if(ctx.hasProperty("hasStream")) {
+            builder.append("var Rx = require('rx'),\n" +
+                    "\tEventEmitter = require('events').EventEmitter;\n");
+        }
+        /** END **/
+
         builder.append("var StateFactory = require('./state-factory');\n");
         builder.append("\n/**\n");
         builder.append(" * Definition for type : " + thing.getName() + "\n");
@@ -269,6 +283,30 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         for(StateMachine b : thing.allStateMachines()) {
             ctx.getCompiler().getBehaviorCompiler().generateState(b, builder, ctx);
         }
+
+
+        /** MODIFICATION **/
+        //fixme
+        builder.append("// CEP \n");
+        for(StateMachine sm : thing.allStateMachines()) {
+            for(State state : sm.allStates()) {
+                for(InternalTransition internalTransition : state.getInternal()) {
+                    if(internalTransition.hasAnnotation("stream")) {
+                        String annotationValue = internalTransition.annotation("stream").toString().replace("[","").replace("]","");
+                        String[] annSplit = annotationValue.split("\\.");
+                        String event = annSplit[0];
+                        String eventPropertyName = annSplit[1];
+                        String functionCall = annSplit[2];
+                        EList<Parameter> params = ((ReceiveMessage)internalTransition.getEvent().get(0)).getMessage().getParameters();
+
+                        builder.append(JSCepLibrary.instance.createStreamFromEvent(params,eventPropertyName,event,functionCall));
+                    }
+                }
+            }
+        }
+        /** END **/
+
+
 
         builder.append("}\n");
 
