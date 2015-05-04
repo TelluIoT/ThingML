@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.cepLibrairy.parser;
+package org.thingml.compilers.cep.architecture;
+
+import org.sintef.thingml.Event;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.ReceiveMessage;
 
 /**
  * @author ludovic
  */
-public interface CEPParser {
-    CEPParser instance = new CEPParserImpl();
-    ParseResult parse(String annotationValue);
+public class SimpleStream extends Stream {
+
 }

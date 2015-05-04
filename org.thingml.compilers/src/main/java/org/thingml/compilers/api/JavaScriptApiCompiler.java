@@ -15,15 +15,11 @@
  */
 package org.thingml.compilers.api;
 
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.util.EList;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.cep.JSCepLinker;
-import org.thingml.compilers.cepLibrairy.javascript.JSCepLibrary;
-import org.thingml.compilers.helpers.JavaHelper;
-
-import java.util.Arrays;
+import org.thingml.compilers.cep.architecture.RootStream;
+import org.thingml.compilers.cep.architecture.Stream;
+import org.thingml.compilers.cep.compiler.javascript.JSCepLibrary;
 
 /**
  * Created by bmori on 09.12.2014.
@@ -111,7 +107,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
     }
 
     @Override
-    public void generateComponent(Thing thing, Context ctx) {
+    public void generateComponent(Thing thing, Context ctx, RootStream streams) {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/" + ctx.firstToUpper(thing.getName()) + ".js");
         if(ctx.getProperty("hasEnum").isPresent() && ctx.getProperty("hasEnum").get().equals("true")) {
             builder.append("var Enum = require('./enums');\n");
@@ -286,23 +282,8 @@ public class JavaScriptApiCompiler extends ApiCompiler {
 
 
         /** MODIFICATION **/
-        //fixme
-        builder.append("// CEP \n");
-        for(StateMachine sm : thing.allStateMachines()) {
-            for(State state : sm.allStates()) {
-                for(InternalTransition internalTransition : state.getInternal()) {
-                    if(internalTransition.hasAnnotation("stream")) {
-                        String annotationValue = internalTransition.annotation("stream").toString().replace("[","").replace("]","");
-                        String[] annSplit = annotationValue.split("\\.");
-                        String event = annSplit[0];
-                        String eventPropertyName = annSplit[1];
-                        String functionCall = annSplit[2];
-                        EList<Parameter> params = ((ReceiveMessage)internalTransition.getEvent().get(0)).getMessage().getParameters();
-
-                        builder.append(JSCepLibrary.instance.createStreamFromEvent(params,eventPropertyName,event,functionCall));
-                    }
-                }
-            }
+        for(Stream stream : streams.getStreams()) {
+            builder.append(JSCepLibrary.instance.createStreamFromEvent(stream,ctx));
         }
         /** END **/
 
