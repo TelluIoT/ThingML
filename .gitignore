@@ -21,5 +21,6 @@ org.thingml.compilers/src/test/resources/thingml
 /launch.bat
 
 
+org.thingml.tests/src/main/thingml/tests/_javascript
 
 
