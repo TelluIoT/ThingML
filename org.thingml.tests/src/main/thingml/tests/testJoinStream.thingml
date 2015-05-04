@@ -1,0 +1,46 @@
+import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+import "../../../../../org.thingml.samples/src/main/thingml/datatypes.thingml"
+
+thing fragment TestsMsgs {
+    message msg1(val : Integer);
+    message msg2(val : Integer);
+}
+
+thing TestJoinStream includes Test, TestsMsgs
+@test "n # i"
+@conf "connector test.requiredService => test.providedService"
+{
+    provided port providedService {
+        sends msg1, msg2
+    }
+    
+    required port requiredService {
+        receives msg1, msg2  
+    }
+    
+    function joinMethod(vMsgs1 : Integer, vMsgs2 : Integer) : Integer do
+        return vMsgs1 + vMsgs2
+    end
+    
+    statechart TestStreamWithMultipleEvents init Init {
+        state Init {
+            transition -> First
+            event m : harnessIn?testIn
+			guard m.c == '\'n\''
+        }
+        
+        state First {
+            on entry do
+                providedService!msg1(5)
+                providedService!msg2(3)
+            end
+            
+            internal
+            @stream "join(requiredService?msg2,10,joinMethod)"
+            event e : requiredService?msg1
+            action do
+                if(e.val == 8) harnessOut!testOut('\'i\'') 
+            end    
+        }
+    }
+}

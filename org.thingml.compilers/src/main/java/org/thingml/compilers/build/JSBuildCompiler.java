@@ -52,6 +52,13 @@ public class JSBuildCompiler extends BuildCompiler {
                 }
             }
 
+            /**MODIFICATION**/
+            if(ctx.hasProperty("hasStream")) {
+                deps.asObject().add("rx","^2.4.3");
+                deps.asObject().add("events","^1.0.2");
+            }
+            /**END**/
+
             final File f = new File(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json");
             f.setWritable(true);
             final PrintWriter w = new PrintWriter(new FileWriter(f));

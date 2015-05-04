@@ -130,6 +130,13 @@ public class JSMainGenerator extends MainGenerator {
         for(Thing t : cfg.allThings()) {
             builder.append("var " + ctx.firstToUpper(t.getName()) + " = require('./" + ctx.firstToUpper(t.getName()) + "');\n");
         }
+
+        /** MODIFICATION **/
+        if(ctx.hasProperty("hasStream")) {
+            builder.append("var EventEmitter = require('events').EventEmitter;\n");
+        }
+        /** END **/
+
         builder.append("process.stdin.resume();//to keep Node.js alive even when it is nothing more to do...\n");
 
         generateInstances(cfg, builder, ctx, false);

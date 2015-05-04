@@ -26,6 +26,7 @@ import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.behavior.JSBehaviorCompiler;
 import org.thingml.compilers.build.BuildCompiler;
 import org.thingml.compilers.build.JSBuildCompiler;
+import org.thingml.compilers.cep.JSCepLinker;
 import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.compilers.connectors.JS2Kevoree;
 import org.thingml.compilers.main.JSMainGenerator;
@@ -106,6 +107,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
             }
         }
         for(Thing thing : t.allThings()) {
+            JSCepLinker.instance.modification(ctx,ctx.getCurrentConfiguration(),thing);
             ctx.getCompiler().getApiCompiler().generateComponent(thing, ctx);
             ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
         }
