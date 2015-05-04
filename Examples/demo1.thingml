@@ -1,0 +1,70 @@
+/**
+Expected result:
+> npm install
+> node main.js
+Entry S1
+Entry S2
+message receive
+Hack!! val1= 5; val2= 4; 
+Hack!! 
+message receive
+message receive
+**/
+
+datatype Integer
+    @js_type "short";
+
+thing fragment Demo1Msgs {
+    message m1();
+    message m2(val1 : Integer, val2 : Integer);
+    message m3();
+}
+
+thing Demo1 includes Demo1Msgs{
+    required port receiveService {
+        receives m1, m2, m3
+    }
+    
+    provided port sendService {
+        sends m1, m2, m3
+    }
+    
+    statechart Demo1 init S1 {
+        state S1 {
+            on entry do
+                print "Entry S1"
+                sendService!m1()
+            end
+            
+            //you declare the second and third event like streams
+            //the values of stream annotation must be in ascending order 
+            transition -> S2
+            @stream "2 3"
+            event receiveService?m1
+            event receiveService?m2
+            event receiveService?m3
+        }
+        
+        state S2 {
+            on entry do 
+                print "Entry S2"
+                sendService!m1()
+                sendService!m2(5,4)
+                sendService!m3()
+            end
+            
+            internal
+            @stream "2 3"
+            event receiveService?m1
+            event receiveService?m2
+            event receiveService?m3
+            action print "message receive"    
+        }   
+    }
+    
+}
+
+configuration demo1Cfg {
+    instance demo : Demo1
+    connector demo.receiveService => demo.sendService    
+}
