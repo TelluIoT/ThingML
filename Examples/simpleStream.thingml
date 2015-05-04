@@ -1,0 +1,59 @@
+/*
+Expected result : 
+> npm install
+> node main.js
+Hello Receive
+Hello Send!
+Hack!!
+Transition working...
+Bye Receive
+*/
+thing fragment SimpleMsgs {
+	message cep();
+}
+
+thing Send includes SimpleMsgs {
+    provided port cepService {
+		sends cep
+	}
+
+    statechart Send init Init {
+        state Init {
+            on entry do
+                print "Hello Send!"
+                cepService!cep()
+            end    
+        }
+    }  
+}
+
+thing Receive includes SimpleMsgs 
+{
+	required port cepService {
+		receives cep
+	}
+    
+    statechart Simple init Init {
+		state Init {
+			on entry do 
+				print "Hello Receive"
+			end
+			
+            transition -> End
+            @stream ""
+			event cepService?cep
+            action print "Transition working..."
+        }
+		
+		state End {
+			on entry print "Bye Receive"
+		}
+	}
+}
+
+configuration simple {
+	instance receive : Receive
+    instance send : Send
+    
+    connector receive.cepService => send.cepService
+}

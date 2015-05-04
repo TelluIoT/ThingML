@@ -1,0 +1,69 @@
+/**
+Expected result:
+> npm install
+> node main.js
+Entry S1
+Entry S2
+message receive
+Hack!! 
+Hack!! 
+message receive
+message receive
+
+**/
+
+datatype Integer
+    @js_type "short";
+
+thing fragment Demo2Msgs {
+    message m1();
+    message m2();
+    message m3();
+}
+
+thing Demo2 includes Demo2Msgs{
+    required port receiveService {
+        receives m1, m2, m3
+    }
+    
+    provided port sendService {
+        sends m1, m2, m3
+    }
+    
+    statechart Demo1 init S1 {
+        state S1 {
+            on entry do
+                print "Entry S1"
+                sendService!m1()
+            end
+            
+            transition -> S2
+            @stream "merge(2,3)"
+            event receiveService?m1
+            event receiveService?m2
+            event receiveService?m3
+        }
+        
+        state S2 {
+            on entry do 
+                print "Entry S2"
+                sendService!m1()
+                sendService!m2()
+                sendService!m3()
+            end
+            
+            internal
+            @stream "merge(2,3)"
+            event receiveService?m1
+            event receiveService?m2
+            event receiveService?m3
+            action print "message receive"    
+        }   
+    }
+    
+}
+
+configuration demo2Cfg {
+    instance demo : Demo2
+    connector demo.receiveService => demo.sendService    
+}
