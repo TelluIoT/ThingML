@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.cepLibrairy.javascript;
+package org.thingml.compilers.cep.compiler.javascript;
 
 import org.sintef.thingml.Parameter;
-import org.thingml.compilers.cepLibrairy.CepLibrary;
-
-import java.util.List;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.cep.architecture.SimpleStream;
+import org.thingml.compilers.cep.compiler.CepLibrary;
 
 /**
  * @author ludovic
@@ -28,23 +28,23 @@ public class JSCepLibrary extends CepLibrary {
 
     //todo delete hack message
     public static final JSCepLibrary instance = new JSCepLibrary();
+
     @Override
-    public String createStreamFromEvent(List<Parameter> params, String eventPropertyName, String event, String functionCall) {
-        String result = "Rx.Observable.fromEvent(this." + eventPropertyName +",'"+event+"').subscribe(\n\t" +
+    public String createStreamFromEvent(SimpleStream stream, Context ctx) {
+        String result = "Rx.Observable.fromEvent(this." + ctx.getVariableName(stream.getEventProperty()) +",'"+ stream.getEventProperty().getName() +"').subscribe(\n\t" +
                 "function(x){\n\t\t" +
                 "var json = JSON.parse(x);\n\t\t" +
                 "console.log(\"Hack!! \"";
 
-        for (Parameter param : params) {
+        for (Parameter param : stream.getMessage().getMessage().getParameters()) {
             result += " + \"" + param.getName() + "= \" + json." + param.getName() + "+ \"; \"" ;
         }
 
-
-
+        String functionCall = "send" + ctx.firstToUpper(stream.getStreamMessage().getName()) + "On" + ctx.firstToUpper(stream.getPortSend().getName());
         result  += ");\n\t\t" +
                 "process.nextTick("+functionCall+".bind(_this";
 
-        for (Parameter param : params) {
+        for (Parameter param : stream.getMessage().getMessage().getParameters()) {
             result += ", json." + param.getName();
         }
 
@@ -52,10 +52,6 @@ public class JSCepLibrary extends CepLibrary {
                 "},\n\t" +
                 "function(err){console.log(\"Error : \" + err)},\n\t" +
                 "function(){console.log(\"End\")});\n\n";
-
-
-
-
 
         return result;
     }

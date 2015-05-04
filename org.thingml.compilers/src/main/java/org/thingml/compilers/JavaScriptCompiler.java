@@ -17,7 +17,6 @@ package org.thingml.compilers;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.JSActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
@@ -26,7 +25,8 @@ import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.behavior.JSBehaviorCompiler;
 import org.thingml.compilers.build.BuildCompiler;
 import org.thingml.compilers.build.JSBuildCompiler;
-import org.thingml.compilers.cep.JSCepLinker;
+import org.thingml.compilers.cep.linker.JSCepLinker;
+import org.thingml.compilers.cep.architecture.RootStream;
 import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.compilers.connectors.JS2Kevoree;
 import org.thingml.compilers.main.JSMainGenerator;
@@ -107,8 +107,11 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
             }
         }
         for(Thing thing : t.allThings()) {
-            JSCepLinker.instance.modification(ctx,ctx.getCurrentConfiguration(),thing);
-            ctx.getCompiler().getApiCompiler().generateComponent(thing, ctx);
+            /** MODIFICATION **/
+            RootStream streams = new RootStream();
+            JSCepLinker.instance.modifyThing(ctx, ctx.getCurrentConfiguration(), thing, streams);
+            ctx.getCompiler().getApiCompiler().generateComponent(thing, ctx,streams);
+            /** END **/
             ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
         }
         ctx.getCompiler().getMainCompiler().generate(t, model, ctx);

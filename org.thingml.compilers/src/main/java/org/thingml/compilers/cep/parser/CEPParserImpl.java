@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.cepLibrairy.parser;
+package org.thingml.compilers.cep.parser;
 
 import java.util.ArrayList;
 import java.util.List;

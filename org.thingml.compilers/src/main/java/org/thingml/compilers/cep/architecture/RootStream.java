@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.cepLibrairy;
+package org.thingml.compilers.cep.architecture;
 
-import org.sintef.thingml.Parameter;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author ludovic
  */
-public abstract class CepLibrary {
-    //todo remove/change signature : functionCall ?
-    public abstract String createStreamFromEvent(List<Parameter> params, String eventPropertyName, String event, String functionCall);
+public class RootStream {
+    private List<Stream> streams;
+
+    public RootStream() {
+        this.streams = new ArrayList<Stream>();
+    }
+
+    public List<Stream> getStreams() {
+        return streams;
+    }
 }
