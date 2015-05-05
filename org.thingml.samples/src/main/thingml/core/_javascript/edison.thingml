@@ -3,7 +3,7 @@ import "./timer.thingml"
 datatype GPIO;
 
 thing fragment Edison 
-@js_dep "\"mraa\":\"^0.5.4\""
+@js_dep "mraa:^0.5.4"
 {
     
 }
