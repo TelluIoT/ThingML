@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.cep.parser;
+package org.thingml.compilers.cep.architecture;
 
-import org.sintef.thingml.Handler;
-import org.sintef.thingml.Thing;
-import org.thingml.compilers.cep.architecture.RootStream;
-
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author ludovic
  */
-public interface CEPParser {
-    CEPParser instance = new CEPParserImpl();
+public class TimeStream extends Stream {
+    private int timeMs;
 
-    ParseResult parse(String annotationValue);
+    public TimeStream(int timeMs) {
+        this.timeMs = timeMs;
+    }
+
+    public int getTimeMs() {
+        return timeMs;
+    }
 }

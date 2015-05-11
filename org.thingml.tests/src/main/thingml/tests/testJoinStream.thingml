@@ -36,10 +36,11 @@ thing TestJoinStream includes Test, TestsMsgs
             end
             
             internal
-            @stream "join(requiredService?msg2,10,joinMethod)"
-            event e : requiredService?msg1
+            @stream "join(1,2,10,joinMethod)"
+            event requiredService?msg1
+            event requiredService?msg2
             action do
-                if(e.val == 8) harnessOut!testOut('\'i\'') 
+                harnessOut!testOut('\'8\'') 
             end    
         }
     }

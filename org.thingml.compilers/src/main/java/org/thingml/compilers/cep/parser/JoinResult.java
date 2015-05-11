@@ -19,31 +19,31 @@ package org.thingml.compilers.cep.parser;
  * @author ludovic
  */
 public class JoinResult {
-    private String portName;
-    private String messageName;
-    private String timeToWait;
-    private String methodName;
+    private String idEvt1;
+    private String idEvt2;
+    private String timeMS;
+    private String funcValueName;
 
-    public JoinResult(String portName, String messageName, String timeToWait, String methodName) {
-        this.portName = portName;
-        this.messageName = messageName;
-        this.timeToWait = timeToWait;
-        this.methodName = methodName;
+    public JoinResult(String idEvt1, String idEvt2, String timeMS, String funcValueName) {
+        this.idEvt1 = idEvt1;
+        this.idEvt2 = idEvt2;
+        this.timeMS = timeMS;
+        this.funcValueName = funcValueName;
     }
 
-    public String getPortName() {
-        return portName;
+    public String getIdEvt1() {
+        return idEvt1;
     }
 
-    public String getMessageName() {
-        return messageName;
+    public String getIdEvt2() {
+        return idEvt2;
     }
 
-    public String getTimeToWait() {
-        return timeToWait;
+    public String getTimeMS() {
+        return timeMS;
     }
 
-    public String getMethodName() {
-        return methodName;
+    public String getFuncValueName() {
+        return funcValueName;
     }
 }

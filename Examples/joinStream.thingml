@@ -1,0 +1,44 @@
+datatype Integer
+    @js_type "short";
+    
+thing fragment TestsMsgs {
+    message msg1(titou : Integer);
+    message msg2(titou : Integer);
+}
+
+thing TestJoinStream includes  TestsMsgs
+{
+    provided port providedService {
+        sends msg1, msg2
+    }
+    
+    required port requiredService {
+        receives msg1, msg2  
+    }
+    
+    function joinMethod(vMsgs1 : Integer, vMsgs2 : Integer) : Integer do
+       return vMsgs1 + vMsgs2
+    end
+    
+    statechart TestStreamWithMultipleEvents init Init {
+        state Init {
+             on entry do
+                providedService!msg1(5)
+                providedService!msg2(3)
+            end
+            
+            internal
+            @stream "join(1,2,10,joinMethod)"
+            event e : requiredService?msg1
+            event requiredService?msg2
+            action do
+                print "ok"
+            end  
+        }
+    }
+}
+
+configuration joinCfg {
+    instance test : TestJoinStream
+    connector test.requiredService => test.providedService    
+}
