@@ -22,10 +22,11 @@ import org.sintef.thingml.*;
  * @author ludovic
  */
 public abstract class Stream{
-    private ReceiveMessage message;
     private Property eventProperty;
     private Message streamMessage;
     private Port portSend;
+    private String name;
+    private boolean withSubscribe;
 
     public Property getEventProperty() {
         return eventProperty;
@@ -43,19 +44,27 @@ public abstract class Stream{
         this.streamMessage = streamMessage;
     }
 
-    public ReceiveMessage getMessage() {
-        return message;
-    }
-
-    public void setMessage(ReceiveMessage message) {
-        this.message = message;
-    }
-
     public Port getPortSend() {
         return portSend;
     }
 
     public void setPortSend(Port portSend) {
         this.portSend = portSend;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isWithSubscribe() {
+        return withSubscribe;
+    }
+
+    public void setWithSubscribe(boolean withSubscribe) {
+        this.withSubscribe = withSubscribe;
     }
 }

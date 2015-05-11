@@ -15,6 +15,11 @@
  */
 package org.thingml.compilers.cep.parser;
 
+import org.sintef.thingml.Handler;
+import org.sintef.thingml.Thing;
+import org.thingml.compilers.cep.architecture.RootStream;
+import org.thingml.compilers.cep.linker.utils.GetAnnotedTransitions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +46,13 @@ public class CEPParserImpl implements CEPParser {
 
     private JoinResult parseJoin(String joinValues) {
 
-        joinValues = cleanString(joinValues,"join","(",")");
+        joinValues = cleanString(joinValues,"join(",")");
 
+        //idEvt1,idEvt2,timeInMS,funcName
         String[] values = joinValues.split(",");
-        String[] receiveMessage = values[0].split("\\?");
-        JoinResult result = new JoinResult(receiveMessage[0],receiveMessage[1],values[1],values[2]);
+        //String[] receiveMessage = values[0].split("\\?");
+        //JoinResult result = new JoinResult(receiveMessage[0],receiveMessage[1],values[1],values[2]);
+        JoinResult result = new JoinResult(values[0],values[1],values[2],values[3]);
 
         return result;
     }
@@ -65,8 +72,6 @@ public class CEPParserImpl implements CEPParser {
 
         return result;
     }
-
-
 
     private String cleanString(String toClean, String... toEliminate) {
         for (String s : toEliminate) {

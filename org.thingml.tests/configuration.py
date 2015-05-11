@@ -32,9 +32,9 @@ testType="functional"
 #Functional tests options
 #If useBlacklist is True, runs all tests not present in blacklist
 #If useBlacklist is False, runs all tests present in whitelist
-useBlacklist=True
+useBlacklist=False
 blacklist=("tester testJoinStream")
-whitelist=("testDeepCompositeStates")
+whitelist=("testJoinStream")
 
 #Performance tests options
 perfTestNumber = 1 #Number of generated tests

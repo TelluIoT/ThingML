@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.cep.parser;
-
-import org.sintef.thingml.Handler;
-import org.sintef.thingml.Thing;
-import org.thingml.compilers.cep.architecture.RootStream;
+package org.thingml.compilers.cep.architecture;
 
 import java.util.List;
 
 /**
  * @author ludovic
  */
-public interface CEPParser {
-    CEPParser instance = new CEPParserImpl();
+public abstract class ComplexStream extends Stream{
+    protected List<Stream> streams;
 
-    ParseResult parse(String annotationValue);
+    public List<Stream> getStreams() {
+        return streams;
+    }
+
+    public void setStreams(List<Stream> streams) {
+        this.streams = streams;
+    }
 }

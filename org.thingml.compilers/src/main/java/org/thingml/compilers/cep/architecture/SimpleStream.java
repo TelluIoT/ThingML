@@ -23,5 +23,14 @@ import org.sintef.thingml.ReceiveMessage;
  * @author ludovic
  */
 public class SimpleStream extends Stream {
+    private ReceiveMessage message;
+
+    public ReceiveMessage getMessage() {
+        return message;
+    }
+
+    public void setMessage(ReceiveMessage message) {
+        this.message = message;
+    }
 
 }

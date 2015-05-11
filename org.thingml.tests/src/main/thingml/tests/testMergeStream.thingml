@@ -1,9 +1,12 @@
 import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+import "../../../../../org.thingml.samples/src/main/thingml/datatypes.thingml"
 
 thing fragment TestsMsgs {
     message msg1();
     message msg2();
     message msg3();
+    message msg4(val1 : Integer, val2: Integer);
+    message msg5(val1 : Integer, val2: Integer);
 }
 
 thing TestMergeStream includes Test, TestsMsgs
@@ -11,14 +14,15 @@ thing TestMergeStream includes Test, TestsMsgs
 @test "s # iii"
 @test "S # iii"
 @test "m # iii"
+@test "M # ii"
 @conf "connector test.requiredService => test.providedService"
 {
     provided port providedService {
-        sends msg1, msg2, msg3
+        sends msg1, msg2, msg3, msg4, msg5
     }
     
     required port requiredService {
-        receives msg1, msg2, msg3  
+        receives msg1, msg2, msg3, msg4, msg5   
     }
     
     statechart TestStreamWithMultipleEvents init Init {
@@ -38,6 +42,10 @@ thing TestMergeStream includes Test, TestsMsgs
             transition -> Fourth
             event m : harnessIn?testIn
 			guard m.c == '\'m\''
+
+            transition -> Fifth
+            event m : harnessIn?testIn
+			guard m.c == '\'M\''
         }
         
         state First {
@@ -97,6 +105,19 @@ thing TestMergeStream includes Test, TestsMsgs
             event requiredService?msg1
             event requiredService?msg2
             event requiredService?msg3
+            action harnessOut!testOut('\'i\'')     
+        }
+        
+        state Fifth {
+            on entry do
+                providedService!msg5(1,2)
+                providedService!msg4(3,4)
+            end
+            
+            internal
+            @stream "merge(1,2)"
+            event requiredService?msg5
+            event requiredService?msg4
             action harnessOut!testOut('\'i\'')     
         }
     }

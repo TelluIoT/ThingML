@@ -21,6 +21,7 @@ import org.sintef.thingml.impl.PrimitiveTypeImpl;
 import org.thingml.compilers.Context;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -42,7 +43,8 @@ public class JSCepLinker extends CepLinker {
 
         int i = index;
         for(int idEvt : values) {
-            newTransition.getEvent().add(handler.getEvent().get(idEvt - 1 - i));
+            Event e = handler.getEvent().get(idEvt - 1 - i);
+            newTransition.getEvent().add(e);
             i++;
         }
 
