@@ -29,7 +29,6 @@ import org.thingml.compilers.cep.compiler.CepLibrary;
 public class JSCepLibrary extends CepLibrary {
     private JSCepLibrary(){}
 
-    //todo delete hack message
     public static final JSCepLibrary instance = new JSCepLibrary();
 
     @Override

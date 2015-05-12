@@ -23,6 +23,8 @@ import org.thingml.compilers.cep.architecture.TimeStream;
 
 /**
  * @author ludovic
+ * Transform CEP concepts in code :
+ * JS currently use ReactiveX librairy
  */
 public abstract class CepLibrary {
     public String createStreamFromEvent(Stream stream, Context ctx) {

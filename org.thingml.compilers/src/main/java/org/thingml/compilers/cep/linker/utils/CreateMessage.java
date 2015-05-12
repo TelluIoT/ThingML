@@ -34,12 +34,22 @@ public class CreateMessage {
     }
 
     public static Message createMessage(Thing owner, List<Parameter> parameters, String name, ProvidedPort portReceive, RequiredPort portSend) {
+        //simulate thingml code :
+        // message ${name}(${parameters}...);
         Message message = ThingmlFactory.eINSTANCE.createMessage();
         message.setName(name);
         owner.getMessages().add(message);
+
+        // required port [...] { sends message }
         portSend.getSends().add(message);
+
+        // provided port [...] { receives message }
         portReceive.getReceives().add(message);
 
+        //add parameter
+        //We are force to duplicate parameters
+        //otherwise the parameters are delete of the original list
+        //todo check si copy est necessaire
         List<Parameter> listParams = new ArrayList<>();
         for(Parameter param : parameters) {
             Parameter p = ThingmlFactory.eINSTANCE.createParameter();

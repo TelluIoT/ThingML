@@ -12,7 +12,8 @@ message receive
 **/
 
 datatype Integer
-    @js_type "short";
+    @js_type "short"
+    @java_type "int";
 
 thing fragment Demo1Msgs {
     message m1();
@@ -58,7 +59,9 @@ thing Demo1 includes Demo1Msgs{
             event receiveService?m1
             event receiveService?m2
             event receiveService?m3
-            action print "message receive"    
+            action do 
+                print "message receive "   
+            end
         }   
     }
     
