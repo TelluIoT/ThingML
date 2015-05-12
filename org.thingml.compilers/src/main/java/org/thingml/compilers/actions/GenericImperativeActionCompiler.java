@@ -222,7 +222,9 @@ public class GenericImperativeActionCompiler extends ActionCompiler {
 
     @Override
     public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
+        builder.append("(");
         generate(expression.getExp(), builder, ctx);
+        builder.append(")");
     }
 
     @Override
