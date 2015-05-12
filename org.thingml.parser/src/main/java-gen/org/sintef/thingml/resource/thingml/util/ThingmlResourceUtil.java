@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.util;
 
@@ -29,12 +20,7 @@ public class ThingmlResourceUtil {
 	 * @return all proxy objects that are not resolvable
 	 */
 	public static java.util.Set<org.eclipse.emf.ecore.EObject> findUnresolvedProxies(org.eclipse.emf.ecore.resource.ResourceSet resourceSet) {
-		java.util.Set<org.eclipse.emf.ecore.EObject> unresolvedProxies = new java.util.LinkedHashSet<org.eclipse.emf.ecore.EObject>();
-		
-		for (org.eclipse.emf.ecore.resource.Resource resource : resourceSet.getResources()) {
-			unresolvedProxies.addAll(findUnresolvedProxies(resource));
-		}
-		return unresolvedProxies;
+		return new org.sintef.thingml.resource.thingml.util.ThingmlInterruptibleEcoreResolver().findUnresolvedProxies(resourceSet);
 	}
 	
 	/**
@@ -45,21 +31,7 @@ public class ThingmlResourceUtil {
 	 * @return all proxy objects that are not resolvable
 	 */
 	public static java.util.Set<org.eclipse.emf.ecore.EObject> findUnresolvedProxies(org.eclipse.emf.ecore.resource.Resource resource) {
-		java.util.Set<org.eclipse.emf.ecore.EObject> unresolvedProxies = new java.util.LinkedHashSet<org.eclipse.emf.ecore.EObject>();
-		
-		for (java.util.Iterator<org.eclipse.emf.ecore.EObject> elementIt = org.eclipse.emf.ecore.util.EcoreUtil.getAllContents(resource, true); elementIt.hasNext(); ) {
-			org.eclipse.emf.ecore.InternalEObject nextElement = (org.eclipse.emf.ecore.InternalEObject) elementIt.next();
-			if (nextElement.eIsProxy()) {
-				unresolvedProxies.add(nextElement);
-			}
-			for (org.eclipse.emf.ecore.EObject crElement : nextElement.eCrossReferences()) {
-				crElement = org.eclipse.emf.ecore.util.EcoreUtil.resolve(crElement, resource);
-				if (crElement.eIsProxy()) {
-					unresolvedProxies.add(crElement);
-				}
-			}
-		}
-		return unresolvedProxies;
+		return new org.sintef.thingml.resource.thingml.util.ThingmlInterruptibleEcoreResolver().findUnresolvedProxies(resource);
 	}
 	
 	/**
@@ -80,10 +52,21 @@ public class ThingmlResourceUtil {
 		}
 	}
 	
-	public static org.sintef.thingml.resource.thingml.mopp.ThingmlResource getResource(org.eclipse.core.resources.IFile file) {
-		org.eclipse.emf.ecore.resource.ResourceSet rs = new org.eclipse.emf.ecore.resource.impl.ResourceSetImpl();
-		org.eclipse.emf.ecore.resource.Resource csResource = rs.getResource(org.eclipse.emf.common.util.URI.createPlatformResourceURI(file.getFullPath().toString(),true), true);
-		return (org.sintef.thingml.resource.thingml.mopp.ThingmlResource) csResource;
+	public static String getProxyIdentifier(org.eclipse.emf.ecore.EObject eObject) {
+		String deresolvedReference = null;
+		if (eObject instanceof org.eclipse.emf.ecore.EObject) {
+			org.eclipse.emf.ecore.EObject eObjectToDeResolve = (org.eclipse.emf.ecore.EObject) eObject;
+			if (eObjectToDeResolve.eIsProxy()) {
+				deresolvedReference = ((org.eclipse.emf.ecore.InternalEObject) eObjectToDeResolve).eProxyURI().fragment();
+				// If the proxy was created by EMFText, we can try to recover the identifier from
+				// the proxy URI
+				if (deresolvedReference != null && deresolvedReference.startsWith(org.sintef.thingml.resource.thingml.IThingmlContextDependentURIFragment.INTERNAL_URI_FRAGMENT_PREFIX)) {
+					deresolvedReference = deresolvedReference.substring(org.sintef.thingml.resource.thingml.IThingmlContextDependentURIFragment.INTERNAL_URI_FRAGMENT_PREFIX.length());
+					deresolvedReference = deresolvedReference.substring(deresolvedReference.indexOf("_") + 1);
+				}
+			}
+		}
+		return deresolvedReference;
 	}
 	
 	public static org.sintef.thingml.resource.thingml.mopp.ThingmlResource getResource(java.io.File file) {
@@ -109,6 +92,27 @@ public class ThingmlResourceUtil {
 	}
 	
 	/**
+	 * Returns the resource after parsing the given text.
+	 */
+	public static org.eclipse.emf.ecore.resource.Resource getResource(String text) {
+		org.sintef.thingml.resource.thingml.mopp.ThingmlMetaInformation metaInformation = new org.sintef.thingml.resource.thingml.mopp.ThingmlMetaInformation();
+		metaInformation.registerResourceFactory();
+		org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI.createURI("temp." + metaInformation.getSyntaxName());
+		org.eclipse.emf.ecore.resource.ResourceSet resourceSet = new org.eclipse.emf.ecore.resource.impl.ResourceSetImpl();
+		org.eclipse.emf.ecore.resource.Resource resource = resourceSet.createResource(uri);
+		if (resource == null) {
+			return null;
+		}
+		java.io.ByteArrayInputStream inputStream = new java.io.ByteArrayInputStream(text.getBytes());
+		try {
+			resource.load(inputStream, null);
+		} catch (java.io.IOException ioe) {
+			return null;
+		}
+		return resource;
+	}
+	
+	/**
 	 * Returns the root element of the resource with the given URI.
 	 */
 	public static org.sintef.thingml.ThingMLModel getResourceContent(org.eclipse.emf.common.util.URI uri) {
@@ -131,11 +135,52 @@ public class ThingmlResourceUtil {
 		return (org.sintef.thingml.ThingMLModel) root;
 	}
 	
+	/**
+	 * Returns the root element after parsing the given text.
+	 */
+	public static org.sintef.thingml.ThingMLModel getResourceContent(String text) {
+		org.eclipse.emf.ecore.resource.Resource resource = getResource(text);
+		if (resource == null) {
+			return null;
+		}
+		java.util.List<org.eclipse.emf.ecore.EObject> contents = resource.getContents();
+		if (contents == null || contents.isEmpty()) {
+			return null;
+		}
+		org.eclipse.emf.ecore.EObject root = contents.get(0);
+		return (org.sintef.thingml.ThingMLModel) root;
+	}
+	
 	public static void saveResource(java.io.File file, org.eclipse.emf.ecore.resource.Resource resource) throws java.io.IOException {
 		java.util.Map<?, ?> options = java.util.Collections.EMPTY_MAP;
 		java.io.OutputStream outputStream = new java.io.FileOutputStream(file);
 		resource.save(outputStream, options);
 		outputStream.close();
+	}
+	
+	public static String getText(org.eclipse.emf.ecore.EObject eObject) {
+		org.sintef.thingml.resource.thingml.mopp.ThingmlMetaInformation metaInformation = new org.sintef.thingml.resource.thingml.mopp.ThingmlMetaInformation();
+		metaInformation.registerResourceFactory();
+		org.eclipse.emf.ecore.resource.ResourceSet rs = null;
+		org.sintef.thingml.resource.thingml.IThingmlTextResource resource = (org.sintef.thingml.resource.thingml.IThingmlTextResource) eObject.eResource();
+		if (resource != null) {
+			rs = resource.getResourceSet();
+		}
+		if (rs == null) {
+			rs = new org.eclipse.emf.ecore.resource.impl.ResourceSetImpl();
+		}
+		if (resource == null) {
+			org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI.createURI("temp." + metaInformation.getSyntaxName());
+			resource = (org.sintef.thingml.resource.thingml.IThingmlTextResource) rs.createResource(uri);
+		}
+		java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream();
+		org.sintef.thingml.resource.thingml.IThingmlTextPrinter printer = metaInformation.createPrinter(outputStream, resource);
+		try {
+			printer.print(eObject);
+		} catch (java.io.IOException e) {
+			return null;
+		}
+		return outputStream.toString();
 	}
 	
 	public static boolean containsErrors(org.eclipse.emf.ecore.resource.Resource resource) {

@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml;
 
@@ -34,8 +25,9 @@ public interface IThingmlReferenceResolver<ContainerType extends org.eclipse.emf
 	 * @param reference The reference that points to the target of the reference.
 	 * @param position The index of the reference (if it has an upper bound greater
 	 * than 1).
-	 * @param resolveFuzzy return objects that do not match exactly
-	 * @param result an object that can be sued to store the result of the resolve
+	 * @param resolveFuzzy If true, the resolver must return all objects, even the
+	 * ones that do not match the identifier
+	 * @param result an object that can be used to store the result of the resolve
 	 * operation.
 	 */
 	public void resolve(String identifier, ContainerType container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<ReferenceType> result);

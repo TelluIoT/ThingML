@@ -97,7 +97,7 @@ public abstract class PortImpl extends AnnotatedElementImpl implements Port {
 	 */
 	public Thing getOwner() {
 		if (eContainerFeatureID() != ThingmlPackage.PORT__OWNER) return null;
-		return (Thing)eContainer();
+		return (Thing)eInternalContainer();
 	}
 
 	/**

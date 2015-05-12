@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.ui;
 
@@ -86,6 +77,9 @@ public class ThingmlOccurrence {
 		}
 		int caretOffset = textWidget.getCaretOffset();
 		caretOffset = projectionViewer.widgetOffset2ModelOffset(caretOffset);
+		if (textResource == null) {
+			return null;
+		}
 		org.sintef.thingml.resource.thingml.IThingmlLocationMap locationMap = textResource.getLocationMap();
 		java.util.List<org.eclipse.emf.ecore.EObject> elementsAtOffset = locationMap.getElementsAt(caretOffset);
 		
@@ -192,8 +186,7 @@ public class ThingmlOccurrence {
 		org.sintef.thingml.resource.thingml.IThingmlLocationMap locationMap = textResource.getLocationMap();
 		org.eclipse.jface.text.rules.IToken token;
 		int defPosition = -1;
-		boolean isNull = definitionElement == null;
-		if (isNull) {
+		if (definitionElement == null) {
 			definitionElement = elementsAtDefinition.get(0);
 		}
 		org.eclipse.emf.ecore.resource.Resource resource = definitionElement.eResource();
@@ -221,7 +214,7 @@ public class ThingmlOccurrence {
 			if (text != null && text.equals(tokenText) && tokenScanner.getTokenOffset() != defPosition) {
 				occEO = tryToResolve(locationMap.getElementsAt(tokenScanner.getTokenOffset()));
 				if (occEO != null) {
-					if ((isNull && elementsAtDefinition.contains(occEO)) || !isNull && definitionElement.equals(occEO)) {
+					if (elementsAtDefinition.contains(occEO) || definitionElement.equals(occEO)) {
 						addAnnotation(document, org.sintef.thingml.resource.thingml.ui.ThingmlPositionCategory.PROXY, text);
 					}
 				}

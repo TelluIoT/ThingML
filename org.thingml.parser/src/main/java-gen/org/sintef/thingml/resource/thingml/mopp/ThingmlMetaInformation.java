@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.mopp;
 
@@ -58,7 +49,7 @@ public class ThingmlMetaInformation implements org.sintef.thingml.resource.thing
 	}
 	
 	public String[] getTokenNames() {
-		return new org.sintef.thingml.resource.thingml.mopp.ThingmlParser(null).getTokenNames();
+		return org.sintef.thingml.resource.thingml.mopp.ThingmlParser.tokenNames;
 	}
 	
 	public org.sintef.thingml.resource.thingml.IThingmlTokenStyle getDefaultTokenStyle(String tokenName) {
@@ -107,6 +98,29 @@ public class ThingmlMetaInformation implements org.sintef.thingml.resource.thing
 	
 	public String getLaunchConfigurationType() {
 		return "org.sintef.thingml.resource.thingml.ui.launchConfigurationType";
+	}
+	
+	public org.sintef.thingml.resource.thingml.IThingmlNameProvider createNameProvider() {
+		return new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultNameProvider();
+	}
+	
+	public String[] getSyntaxHighlightableTokenNames() {
+		org.sintef.thingml.resource.thingml.mopp.ThingmlAntlrTokenHelper tokenHelper = new org.sintef.thingml.resource.thingml.mopp.ThingmlAntlrTokenHelper();
+		java.util.List<String> highlightableTokens = new java.util.ArrayList<String>();
+		String[] parserTokenNames = getTokenNames();
+		for (int i = 0; i < parserTokenNames.length; i++) {
+			// If ANTLR is used we need to normalize the token names
+			if (!tokenHelper.canBeUsedForSyntaxHighlighting(i)) {
+				continue;
+			}
+			String tokenName = tokenHelper.getTokenName(parserTokenNames, i);
+			if (tokenName == null) {
+				continue;
+			}
+			highlightableTokens.add(tokenName);
+		}
+		highlightableTokens.add(org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyleInformationProvider.TASK_ITEM_TOKEN_NAME);
+		return highlightableTokens.toArray(new String[highlightableTokens.size()]);
 	}
 	
 }

@@ -1937,6 +1937,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getConditionalAction_ElseAction() {
+		return (EReference)conditionalActionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getPropertyReference() {
 		return propertyReferenceEClass;
 	}
@@ -2578,6 +2587,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		loopActionEClass = createEClass(LOOP_ACTION);
 
 		conditionalActionEClass = createEClass(CONDITIONAL_ACTION);
+		createEReference(conditionalActionEClass, CONDITIONAL_ACTION__ELSE_ACTION);
 
 		propertyReferenceEClass = createEClass(PROPERTY_REFERENCE);
 		createEReference(propertyReferenceEClass, PROPERTY_REFERENCE__PROPERTY);
@@ -2946,6 +2956,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(loopActionEClass, LoopAction.class, "LoopAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(conditionalActionEClass, ConditionalAction.class, "ConditionalAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getConditionalAction_ElseAction(), this.getAction(), null, "elseAction", null, 1, 1, ConditionalAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(propertyReferenceEClass, PropertyReference.class, "PropertyReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getPropertyReference_Property(), this.getVariable(), null, "property", null, 1, 1, PropertyReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

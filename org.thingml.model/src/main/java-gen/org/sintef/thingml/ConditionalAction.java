@@ -21,10 +21,42 @@ package org.sintef.thingml;
  * A representation of the model object '<em><b>Conditional Action</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <p>
+ * The following features are supported:
+ * <ul>
+ *   <li>{@link org.sintef.thingml.ConditionalAction#getElseAction <em>Else Action</em>}</li>
+ * </ul>
+ * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getConditionalAction()
  * @model
  * @generated
  */
 public interface ConditionalAction extends ControlStructure {
+
+	/**
+	 * Returns the value of the '<em><b>Else Action</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Else Action</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Else Action</em>' containment reference.
+	 * @see #setElseAction(Action)
+	 * @see org.sintef.thingml.ThingmlPackage#getConditionalAction_ElseAction()
+	 * @model containment="true" required="true"
+	 * @generated
+	 */
+	Action getElseAction();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.ConditionalAction#getElseAction <em>Else Action</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Else Action</em>' containment reference.
+	 * @see #getElseAction()
+	 * @generated
+	 */
+	void setElseAction(Action value);
 } // ConditionalAction

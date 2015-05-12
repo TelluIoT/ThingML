@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.ui;
 
@@ -42,7 +33,7 @@ public class ThingmlNewProjectWizard extends org.eclipse.jface.wizard.Wizard imp
 	/**
 	 * The description of the project creation page
 	 */
-	private String pageDescription = "";
+	private String pageDescription = "Enter a name and select a location where the new project shall be created.";
 	
 	/**
 	 *  The name of the project in the project creation page
@@ -52,7 +43,7 @@ public class ThingmlNewProjectWizard extends org.eclipse.jface.wizard.Wizard imp
 	/**
 	 * The name of the new project zip file (relative to the UI plugin's root)
 	 */
-	private String  newProjectZip="ThingML_Basics.zip";
+	private String  newProjectZip="newProject.zip";
 	
 	/**
 	 * The configuration element associated with this new project wizard
@@ -308,6 +299,12 @@ public class ThingmlNewProjectWizard extends org.eclipse.jface.wizard.Wizard imp
 	 * dNewProjectCreationPage(String)
 	 */
 	public void init(org.eclipse.ui.IWorkbench workbench, org.eclipse.jface.viewers.IStructuredSelection selection) {
+		// Set default image for all wizard pages
+		org.eclipse.core.runtime.IPath path = new org.eclipse.core.runtime.Path("icons/new_project_wizban.gif");
+		org.osgi.framework.Bundle bundle = org.sintef.thingml.resource.thingml.ui.ThingmlUIPlugin.getDefault().getBundle();
+		java.net.URL url = org.eclipse.core.runtime.FileLocator.find(bundle, path, null);
+		org.eclipse.jface.resource.ImageDescriptor descriptor = org.eclipse.jface.resource.ImageDescriptor.createFromURL(url);
+		setDefaultPageImageDescriptor(descriptor);
 		
 		wizardNewProjectCreationPage = new org.eclipse.ui.dialogs.WizardNewProjectCreationPage(pageName);
 		wizardNewProjectCreationPage.setTitle(pageTitle);

@@ -33,6 +33,10 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.Type;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 

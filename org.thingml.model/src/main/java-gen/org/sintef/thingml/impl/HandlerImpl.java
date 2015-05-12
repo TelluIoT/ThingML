@@ -33,6 +33,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.sintef.thingml.Action;
+import org.sintef.thingml.Event;
+import org.sintef.thingml.Expression;
+import org.sintef.thingml.Handler;
+import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
 
 /**

@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.ui;
 
@@ -33,7 +24,7 @@ public class ThingmlBackgroundParsingStrategy {
 	/**
 	 * the background parsing task (may be null)
 	 */
-	private org.eclipse.core.runtime.jobs.Job job;
+	private ParsingJob job = null;
 	
 	/**
 	 * Schedules a task for background parsing that will be started after a delay.
@@ -65,42 +56,58 @@ public class ThingmlBackgroundParsingStrategy {
 		// multiple threads. the creation of multiple tasks would imply that multiple
 		// background parsing threads for one editor are created, which is not desired.
 		synchronized (lock) {
-			// cancel old task
-			if (job != null) {
-				// stop current parser (if there is one)
-				job.cancel();
-				try {
-					job.join();
-				} catch (InterruptedException e) {}
+			if (job == null || job.getState() != org.eclipse.core.runtime.jobs.Job.RUNNING) {
+				// schedule new task
+				job = new ParsingJob();
+				job.resource = resource;
+				job.editor = editor;
+				job.newContents = contents;
+				job.schedule();
+			} else {
+				job.newContents = contents;
 			}
-			
-			// schedule new task
-			job = new org.eclipse.core.runtime.jobs.Job("parsing document") {
-				
-				protected org.eclipse.core.runtime.IStatus run(org.eclipse.core.runtime.IProgressMonitor monitor) {
-					try {
-						resource.reload(new java.io.ByteArrayInputStream(contents.getBytes()), null);
-					} catch (java.io.IOException e) {
-						e.printStackTrace();
-					}
-					// the post parsing stuff must be executed in a separate job to avoid deadlocks on
-					// the document
-					org.eclipse.core.runtime.jobs.Job finishJob = new org.eclipse.core.runtime.jobs.Job("refreshing views") {
-						protected org.eclipse.core.runtime.IStatus run(org.eclipse.core.runtime.IProgressMonitor monitor) {
-							editor.notifyBackgroundParsingFinished();
-							return org.eclipse.core.runtime.Status.OK_STATUS;
-						}
-					};
-					finishJob.schedule(10);
-					return org.eclipse.core.runtime.Status.OK_STATUS;
-				}
-				
-				protected void canceling() {
-					resource.cancelReload();
-				}
-			};
-			job.schedule(delay);
 		}
 	}
+	
+	private class ParsingJob extends org.eclipse.core.runtime.jobs.Job {
+		private org.sintef.thingml.resource.thingml.ui.ThingmlEditor editor;
+		private org.sintef.thingml.resource.thingml.IThingmlTextResource resource;
+		
+		public ParsingJob() {
+			super("parsing document");
+		}
+		
+		private String newContents = null;
+		
+		protected org.eclipse.core.runtime.IStatus run(org.eclipse.core.runtime.IProgressMonitor monitor) {
+			while (newContents != null ) {
+				while (newContents != null) {
+					try {
+						String currentContent = newContents;
+						newContents = null;
+						String encoding = null;
+						if (resource instanceof org.sintef.thingml.resource.thingml.mopp.ThingmlResource) {
+							org.sintef.thingml.resource.thingml.mopp.ThingmlResource concreteResource = (org.sintef.thingml.resource.thingml.mopp.ThingmlResource) resource;
+							encoding = concreteResource.getEncoding(null);
+						}
+						byte[] bytes = null;
+						if (encoding != null) {
+							bytes = currentContent.getBytes(encoding);
+						} else {
+							bytes = currentContent.getBytes();
+						}
+						resource.reload(new java.io.ByteArrayInputStream(bytes), null);
+						if (newContents != null) {
+							Thread.sleep(DELAY);
+						}
+					} catch (java.lang.Exception e) {
+						e.printStackTrace();
+					}
+				}
+				editor.notifyBackgroundParsingFinished();
+			}
+			return org.eclipse.core.runtime.Status.OK_STATUS;
+		}
+	};
 	
 }

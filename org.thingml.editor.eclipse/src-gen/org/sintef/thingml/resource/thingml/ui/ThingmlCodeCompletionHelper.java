@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.ui;
 
@@ -24,6 +15,8 @@ package org.sintef.thingml.resource.thingml.ui;
 public class ThingmlCodeCompletionHelper {
 	
 	private org.sintef.thingml.resource.thingml.mopp.ThingmlAttributeValueProvider attributeValueProvider = new org.sintef.thingml.resource.thingml.mopp.ThingmlAttributeValueProvider();
+	
+	private org.sintef.thingml.resource.thingml.IThingmlMetaInformation metaInformation = new org.sintef.thingml.resource.thingml.mopp.ThingmlMetaInformation();
 	
 	/**
 	 * Computes a set of proposals for the given document assuming the cursor is at
@@ -60,13 +53,21 @@ public class ThingmlCodeCompletionHelper {
 		java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> allProposals = new java.util.LinkedHashSet<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal>();
 		java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> rightProposals = deriveProposals(expectedAfterCursor, content, resource, cursorOffset);
 		java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> leftProposals = deriveProposals(expectedBeforeCursor, content, resource, cursorOffset - 1);
+		removeKeywordsEndingBeforeIndex(leftProposals, cursorOffset);
 		// Second, the set of left proposals (i.e., the ones before the cursor) is checked
 		// for emptiness. If the set is empty, the right proposals (i.e., the ones after
 		// the cursor) are also considered. If the set is not empty, the right proposal
 		// are discarded, because it does not make sense to propose them until the element
 		// before the cursor was completed.
 		allProposals.addAll(leftProposals);
-		if (leftProposals.isEmpty()) {
+		// Count the proposals before the cursor that match the prefix
+		int leftMatchingProposals = 0;
+		for (org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal leftProposal : leftProposals) {
+			if (leftProposal.getMatchesPrefix()) {
+				leftMatchingProposals++;
+			}
+		}
+		if (leftMatchingProposals == 0) {
 			allProposals.addAll(rightProposals);
 		}
 		// Third, the proposals are sorted according to their relevance. Proposals that
@@ -74,6 +75,13 @@ public class ThingmlCodeCompletionHelper {
 		// sorted alphabetically.
 		final java.util.List<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> sortedProposals = new java.util.ArrayList<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal>(allProposals);
 		java.util.Collections.sort(sortedProposals);
+		org.eclipse.emf.ecore.EObject root = null;
+		if (!resource.getContents().isEmpty()) {
+			root = resource.getContents().get(0);
+		}
+		for (org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal proposal : sortedProposals) {
+			proposal.setRoot(root);
+		}
 		return sortedProposals.toArray(new org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal[sortedProposals.size()]);
 	}
 	
@@ -87,13 +95,55 @@ public class ThingmlCodeCompletionHelper {
 		return expectedElements.toArray(new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal[expectedElements.size()]);
 	}
 	
-	private void removeDuplicateEntries(java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> expectedElements) {
-		for (int i = 0; i < expectedElements.size() - 1; i++) {
+	/**
+	 * Removes all expected elements that refer to the same terminal and that start at
+	 * the same position.
+	 */
+	protected void removeDuplicateEntries(java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> expectedElements) {
+		int size = expectedElements.size();
+		// We split the list of expected elements into buckets where each bucket contains
+		// the elements that start at the same position.
+		java.util.Map<Integer, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal>> map = new java.util.LinkedHashMap<Integer, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal>>();
+		for (int i = 0; i < size; i++) {
 			org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal elementAtIndex = expectedElements.get(i);
-			for (int j = i + 1; j < expectedElements.size();) {
+			int start1 = elementAtIndex.getStartExcludingHiddenTokens();
+			java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> list = map.get(start1);
+			if (list == null) {
+				list = new java.util.ArrayList<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal>();
+				map.put(start1, list);
+			}
+			list.add(elementAtIndex);
+		}
+		
+		// Then, we remove all duplicate elements from each bucket individually.
+		for (int position : map.keySet()) {
+			java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> list = map.get(position);
+			removeDuplicateEntriesFromBucket(list);
+		}
+		
+		// After removing all duplicates, we merge the buckets.
+		expectedElements.clear();
+		for (int position : map.keySet()) {
+			java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> list = map.get(position);
+			expectedElements.addAll(list);
+		}
+	}
+	
+	/**
+	 * Removes all expected elements that refer to the same terminal. Attention: This
+	 * method assumes that the given list of expected terminals contains only elements
+	 * that start at the same position.
+	 */
+	protected void removeDuplicateEntriesFromBucket(java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> expectedElements) {
+		int size = expectedElements.size();
+		for (int i = 0; i < size - 1; i++) {
+			org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal elementAtIndex = expectedElements.get(i);
+			org.sintef.thingml.resource.thingml.IThingmlExpectedElement terminal = elementAtIndex.getTerminal();
+			for (int j = i + 1; j < size;) {
 				org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal elementAtNext = expectedElements.get(j);
-				if (elementAtIndex.equals(elementAtNext) && elementAtIndex.getStartExcludingHiddenTokens() == elementAtNext.getStartExcludingHiddenTokens()) {
+				if (terminal.equals(elementAtNext.getTerminal())) {
 					expectedElements.remove(j);
+					size--;
 				} else {
 					j++;
 				}
@@ -101,11 +151,21 @@ public class ThingmlCodeCompletionHelper {
 		}
 	}
 	
-	private void removeInvalidEntriesAtEnd(java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> expectedElements) {
+	protected void removeInvalidEntriesAtEnd(java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> expectedElements) {
 		for (int i = 0; i < expectedElements.size() - 1;) {
 			org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal elementAtIndex = expectedElements.get(i);
 			org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal elementAtNext = expectedElements.get(i + 1);
-			if (elementAtIndex.getStartExcludingHiddenTokens() == elementAtNext.getStartExcludingHiddenTokens() && shouldRemove(elementAtIndex.getFollowSetID(), elementAtNext.getFollowSetID())) {
+			
+			// If the two expected elements have a different parent in the syntax definition,
+			// we must not discard the second element, because is probably stems from a parent
+			// rule.
+			org.sintef.thingml.resource.thingml.grammar.ThingmlSyntaxElement symtaxElementOfThis = elementAtIndex.getTerminal().getSymtaxElement();
+			org.sintef.thingml.resource.thingml.grammar.ThingmlSyntaxElement symtaxElementOfNext = elementAtNext.getTerminal().getSymtaxElement();
+			boolean differentParent = symtaxElementOfNext.getParent() != symtaxElementOfThis.getParent();
+			
+			boolean sameStartExcludingHiddenTokens = elementAtIndex.getStartExcludingHiddenTokens() == elementAtNext.getStartExcludingHiddenTokens();
+			boolean differentFollowSet = elementAtIndex.getFollowSetID() != elementAtNext.getFollowSetID();
+			if (sameStartExcludingHiddenTokens && differentFollowSet && !differentParent) {
 				expectedElements.remove(i + 1);
 			} else {
 				i++;
@@ -113,11 +173,26 @@ public class ThingmlCodeCompletionHelper {
 		}
 	}
 	
-	public boolean shouldRemove(int followSetID1, int followSetID2) {
-		return followSetID1 != followSetID2;
+	/**
+	 * Removes all proposals for keywords that end before the given index.
+	 */
+	protected void removeKeywordsEndingBeforeIndex(java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> proposals, int index) {
+		java.util.List<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> toRemove = new java.util.ArrayList<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal>();
+		for (org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal proposal : proposals) {
+			org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedTerminal = proposal.getExpectedTerminal();
+			org.sintef.thingml.resource.thingml.IThingmlExpectedElement terminal = expectedTerminal.getTerminal();
+			if (terminal instanceof org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString) {
+				org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString csString = (org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString) terminal;
+				int startExcludingHiddenTokens = expectedTerminal.getStartExcludingHiddenTokens();
+				if (startExcludingHiddenTokens + csString.getValue().length() - 1 < index) {
+					toRemove.add(proposal);
+				}
+			}
+		}
+		proposals.removeAll(toRemove);
 	}
 	
-	private String findPrefix(java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> expectedElements, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedAtCursor, String content, int cursorOffset) {
+	protected String findPrefix(java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> expectedElements, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedAtCursor, String content, int cursorOffset) {
 		if (cursorOffset < 0) {
 			return "";
 		}
@@ -136,7 +211,7 @@ public class ThingmlCodeCompletionHelper {
 		return prefix;
 	}
 	
-	private java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> deriveProposals(java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> expectedElements, String content, org.sintef.thingml.resource.thingml.IThingmlTextResource resource, int cursorOffset) {
+	protected java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> deriveProposals(java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> expectedElements, String content, org.sintef.thingml.resource.thingml.IThingmlTextResource resource, int cursorOffset) {
 		java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> resultSet = new java.util.LinkedHashSet<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal>();
 		for (org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedElement : expectedElements) {
 			resultSet.addAll(deriveProposals(expectedElement, content, resource, cursorOffset));
@@ -144,93 +219,62 @@ public class ThingmlCodeCompletionHelper {
 		return resultSet;
 	}
 	
-	private java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> deriveProposals(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedTerminal, String content, org.sintef.thingml.resource.thingml.IThingmlTextResource resource, int cursorOffset) {
-		org.sintef.thingml.resource.thingml.IThingmlMetaInformation metaInformation = resource.getMetaInformation();
-		org.sintef.thingml.resource.thingml.IThingmlLocationMap locationMap = resource.getLocationMap();
+	protected java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> deriveProposals(final org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedTerminal, String content, org.sintef.thingml.resource.thingml.IThingmlTextResource resource, int cursorOffset) {
 		org.sintef.thingml.resource.thingml.IThingmlExpectedElement expectedElement = (org.sintef.thingml.resource.thingml.IThingmlExpectedElement) expectedTerminal.getTerminal();
 		if (expectedElement instanceof org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString) {
 			org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString csString = (org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString) expectedElement;
-			return handleKeyword(csString, expectedTerminal.getPrefix());
+			return handleKeyword(expectedTerminal, csString, expectedTerminal.getPrefix());
 		} else if (expectedElement instanceof org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedBooleanTerminal) {
 			org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedBooleanTerminal expectedBooleanTerminal = (org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedBooleanTerminal) expectedElement;
-			return handleBooleanTerminal(expectedBooleanTerminal, expectedTerminal.getPrefix());
+			return handleBooleanTerminal(expectedTerminal, expectedBooleanTerminal, expectedTerminal.getPrefix());
 		} else if (expectedElement instanceof org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedEnumerationTerminal) {
 			org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedEnumerationTerminal expectedEnumerationTerminal = (org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedEnumerationTerminal) expectedElement;
-			return handleEnumerationTerminal(expectedEnumerationTerminal, expectedTerminal.getPrefix());
+			return handleEnumerationTerminal(expectedTerminal, expectedEnumerationTerminal, expectedTerminal.getPrefix());
 		} else if (expectedElement instanceof org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature) {
-			org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature expectedFeature = (org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature) expectedElement;
-			org.eclipse.emf.ecore.EStructuralFeature feature = expectedFeature.getFeature();
-			org.eclipse.emf.ecore.EClassifier featureType = feature.getEType();
-			java.util.List<org.eclipse.emf.ecore.EObject> elementsAtCursor = locationMap.getElementsAt(cursorOffset);
-			org.eclipse.emf.ecore.EObject container = null;
-			// we need to skip the proxy elements at the cursor, because they are not the
-			// container for the reference we try to complete
-			for (int i = 0; i < elementsAtCursor.size(); i++) {
-				container = elementsAtCursor.get(i);
-				if (!container.eIsProxy()) {
-					break;
-				}
-			}
-			// if no container can be found, the cursor is probably at the end of the
-			// document. we need to create artificial containers.
-			if (container == null) {
-				boolean attachedArtificialContainer = false;
-				org.eclipse.emf.ecore.EClass containerClass = expectedTerminal.getTerminal().getRuleMetaclass();
-				org.eclipse.emf.ecore.EStructuralFeature[] containmentTrace = expectedTerminal.getContainmentTrace();
-				java.util.List<org.eclipse.emf.ecore.EObject> contentList = null;
-				for (org.eclipse.emf.ecore.EStructuralFeature eStructuralFeature : containmentTrace) {
-					if (attachedArtificialContainer) {
-						break;
-					}
-					org.eclipse.emf.ecore.EClass neededClass = eStructuralFeature.getEContainingClass();
-					// fill the content list during the first iteration of the loop
-					if (contentList == null) {
-						contentList = new java.util.ArrayList<org.eclipse.emf.ecore.EObject>();
-						java.util.Iterator<org.eclipse.emf.ecore.EObject> allContents = resource.getAllContents();
-						while (allContents.hasNext()) {
-							org.eclipse.emf.ecore.EObject next = allContents.next();
-							contentList.add(next);
-						}
-					}
-					// find object to attach artificial container to
-					for (int i = contentList.size() - 1; i >= 0; i--) {
-						org.eclipse.emf.ecore.EObject object = contentList.get(i);
-						if (neededClass.isInstance(object)) {
-							org.eclipse.emf.ecore.EObject newContainer = containerClass.getEPackage().getEFactoryInstance().create(containerClass);
-							if (eStructuralFeature.getEType().isInstance(newContainer)) {
-								org.sintef.thingml.resource.thingml.util.ThingmlEObjectUtil.setFeature(object, eStructuralFeature, newContainer, false);
-								container = newContainer;
-								attachedArtificialContainer = true;
+			final org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature expectedFeature = (org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature) expectedElement;
+			final org.eclipse.emf.ecore.EStructuralFeature feature = expectedFeature.getFeature();
+			final org.eclipse.emf.ecore.EClassifier featureType = feature.getEType();
+			final org.eclipse.emf.ecore.EObject container = findCorrectContainer(expectedTerminal);
+			
+			// Here it gets really crazy. We need to modify the model in a way that reflects
+			// the state the model would be in, if the expected terminal were present. After
+			// computing the corresponding completion proposals, the original state of the
+			// model is restored. This procedure is required, because different models can be
+			// required for different completion situations. This can be particularly observed
+			// when the user has not yet typed a character that starts an element to be
+			// completed.
+			final java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> proposals = new java.util.ArrayList<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal>();
+			expectedTerminal.materialize(new Runnable() {
+				
+				public void run() {
+					if (feature instanceof org.eclipse.emf.ecore.EReference) {
+						org.eclipse.emf.ecore.EReference reference = (org.eclipse.emf.ecore.EReference) feature;
+						if (featureType instanceof org.eclipse.emf.ecore.EClass) {
+							if (reference.isContainment()) {
+								// the FOLLOW set should contain only non-containment references
+								assert false;
+							} else {
+								proposals.addAll(handleNCReference(expectedTerminal, container, reference, expectedTerminal.getPrefix(), expectedFeature.getTokenName()));
 							}
 						}
-					}
-				}
-			}
-			
-			if (feature instanceof org.eclipse.emf.ecore.EReference) {
-				org.eclipse.emf.ecore.EReference reference = (org.eclipse.emf.ecore.EReference) feature;
-				if (featureType instanceof org.eclipse.emf.ecore.EClass) {
-					if (reference.isContainment()) {
-						// the FOLLOW set should contain only non-containment references
-						assert false;
+					} else if (feature instanceof org.eclipse.emf.ecore.EAttribute) {
+						org.eclipse.emf.ecore.EAttribute attribute = (org.eclipse.emf.ecore.EAttribute) feature;
+						if (featureType instanceof org.eclipse.emf.ecore.EEnum) {
+							org.eclipse.emf.ecore.EEnum enumType = (org.eclipse.emf.ecore.EEnum) featureType;
+							proposals.addAll(handleEnumAttribute(expectedTerminal, expectedFeature, enumType, expectedTerminal.getPrefix(), container));
+						} else {
+							// handle EAttributes (derive default value depending on the type of the
+							// attribute, figure out token resolver, and call deResolve())
+							proposals.addAll(handleAttribute(expectedTerminal, expectedFeature, container, attribute, expectedTerminal.getPrefix()));
+						}
 					} else {
-						return handleNCReference(metaInformation, container, reference, expectedTerminal.getPrefix(), expectedFeature.getTokenName());
+						// there should be no other subclass of EStructuralFeature
+						assert false;
 					}
 				}
-			} else if (feature instanceof org.eclipse.emf.ecore.EAttribute) {
-				org.eclipse.emf.ecore.EAttribute attribute = (org.eclipse.emf.ecore.EAttribute) feature;
-				if (featureType instanceof org.eclipse.emf.ecore.EEnum) {
-					org.eclipse.emf.ecore.EEnum enumType = (org.eclipse.emf.ecore.EEnum) featureType;
-					return handleEnumAttribute(metaInformation, expectedFeature, enumType, expectedTerminal.getPrefix(), container);
-				} else {
-					// handle EAttributes (derive default value depending on the type of the
-					// attribute, figure out token resolver, and call deResolve())
-					return handleAttribute(metaInformation, expectedFeature, container, attribute, expectedTerminal.getPrefix());
-				}
-			} else {
-				// there should be no other subclass of EStructuralFeature
-				assert false;
-			}
+			});
+			// Return the proposals that were computed in the closure call.
+			return proposals;
 		} else {
 			// there should be no other class implementing IExpectedElement
 			assert false;
@@ -238,7 +282,7 @@ public class ThingmlCodeCompletionHelper {
 		return java.util.Collections.emptyList();
 	}
 	
-	private java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleEnumAttribute(org.sintef.thingml.resource.thingml.IThingmlMetaInformation metaInformation, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature expectedFeature, org.eclipse.emf.ecore.EEnum enumType, String prefix, org.eclipse.emf.ecore.EObject container) {
+	protected java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleEnumAttribute(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedTerminal, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature expectedFeature, org.eclipse.emf.ecore.EEnum enumType, String prefix, org.eclipse.emf.ecore.EObject container) {
 		java.util.Collection<org.eclipse.emf.ecore.EEnumLiteral> enumLiterals = enumType.getELiterals();
 		java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> result = new java.util.LinkedHashSet<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal>();
 		for (org.eclipse.emf.ecore.EEnumLiteral literal : enumLiterals) {
@@ -248,12 +292,12 @@ public class ThingmlCodeCompletionHelper {
 			org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver(expectedFeature.getTokenName());
 			String resolvedLiteral = tokenResolver.deResolve(unResolvedLiteral, expectedFeature.getFeature(), container);
 			boolean matchesPrefix = matches(resolvedLiteral, prefix);
-			result.add(new org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal(resolvedLiteral, prefix, matchesPrefix, expectedFeature.getFeature(), container));
+			result.add(new org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal(expectedTerminal, resolvedLiteral, prefix, matchesPrefix, expectedFeature.getFeature(), container));
 		}
 		return result;
 	}
 	
-	private java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleNCReference(org.sintef.thingml.resource.thingml.IThingmlMetaInformation metaInformation, org.eclipse.emf.ecore.EObject container, org.eclipse.emf.ecore.EReference reference, String prefix, String tokenName) {
+	protected java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleNCReference(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedTerminal, org.eclipse.emf.ecore.EObject container, org.eclipse.emf.ecore.EReference reference, String prefix, String tokenName) {
 		// proposals for non-containment references are derived by calling the reference
 		// resolver switch in fuzzy mode.
 		org.sintef.thingml.resource.thingml.IThingmlReferenceResolverSwitch resolverSwitch = metaInformation.getReferenceResolverSwitch();
@@ -275,7 +319,7 @@ public class ThingmlCodeCompletionHelper {
 						image = getImage((org.eclipse.emf.ecore.EObject) target);
 					}
 					boolean matchesPrefix = matches(identifier, prefix);
-					resultSet.add(new org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal(identifier, prefix, matchesPrefix, reference, container, image));
+					resultSet.add(new org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal(expectedTerminal, identifier, prefix, matchesPrefix, reference, container, image));
 				}
 			}
 			return resultSet;
@@ -283,7 +327,7 @@ public class ThingmlCodeCompletionHelper {
 		return java.util.Collections.emptyList();
 	}
 	
-	private java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleAttribute(org.sintef.thingml.resource.thingml.IThingmlMetaInformation metaInformation, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature expectedFeature, org.eclipse.emf.ecore.EObject container, org.eclipse.emf.ecore.EAttribute attribute, String prefix) {
+	protected java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleAttribute(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedTerminal, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature expectedFeature, org.eclipse.emf.ecore.EObject container, org.eclipse.emf.ecore.EAttribute attribute, String prefix) {
 		java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> resultSet = new java.util.LinkedHashSet<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal>();
 		Object[] defaultValues = attributeValueProvider.getDefaultValues(attribute);
 		if (defaultValues != null) {
@@ -296,7 +340,7 @@ public class ThingmlCodeCompletionHelper {
 						if (tokenResolver != null) {
 							String defaultValueAsString = tokenResolver.deResolve(defaultValue, attribute, container);
 							boolean matchesPrefix = matches(defaultValueAsString, prefix);
-							resultSet.add(new org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal(defaultValueAsString, prefix, matchesPrefix, expectedFeature.getFeature(), container));
+							resultSet.add(new org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal(expectedTerminal, defaultValueAsString, prefix, matchesPrefix, expectedFeature.getFeature(), container));
 						}
 					}
 				}
@@ -305,36 +349,46 @@ public class ThingmlCodeCompletionHelper {
 		return resultSet;
 	}
 	
-	private java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleKeyword(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString csString, String prefix) {
+	/**
+	 * Creates a set of completion proposals from the given keyword.
+	 */
+	protected java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleKeyword(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedTerminal, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString csString, String prefix) {
 		String proposal = csString.getValue();
 		boolean matchesPrefix = matches(proposal, prefix);
-		return java.util.Collections.singleton(new org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal(proposal, prefix, matchesPrefix, null, null));
+		return java.util.Collections.singleton(new org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal(expectedTerminal, proposal, prefix, matchesPrefix, null, null));
 	}
 	
-	private java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleBooleanTerminal(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedBooleanTerminal expectedBooleanTerminal, String prefix) {
+	/**
+	 * Creates a set of (two) completion proposals from the given boolean terminal.
+	 */
+	protected java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleBooleanTerminal(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedTerminal, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedBooleanTerminal expectedBooleanTerminal, String prefix) {
 		java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> result = new java.util.LinkedHashSet<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal>(2);
 		org.sintef.thingml.resource.thingml.grammar.ThingmlBooleanTerminal booleanTerminal = expectedBooleanTerminal.getBooleanTerminal();
-		result.addAll(handleLiteral(booleanTerminal.getAttribute(), prefix, booleanTerminal.getTrueLiteral()));
-		result.addAll(handleLiteral(booleanTerminal.getAttribute(), prefix, booleanTerminal.getFalseLiteral()));
+		result.addAll(handleLiteral(expectedTerminal, booleanTerminal.getAttribute(), prefix, booleanTerminal.getTrueLiteral()));
+		result.addAll(handleLiteral(expectedTerminal, booleanTerminal.getAttribute(), prefix, booleanTerminal.getFalseLiteral()));
 		return result;
 	}
 	
-	private java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleEnumerationTerminal(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedEnumerationTerminal expectedEnumerationTerminal, String prefix) {
+	/**
+	 * Creates a set of completion proposals from the given enumeration terminal. For
+	 * each enumeration literal one proposal is created.
+	 */
+	protected java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleEnumerationTerminal(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedTerminal, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedEnumerationTerminal expectedEnumerationTerminal, String prefix) {
 		java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> result = new java.util.LinkedHashSet<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal>(2);
 		org.sintef.thingml.resource.thingml.grammar.ThingmlEnumerationTerminal enumerationTerminal = expectedEnumerationTerminal.getEnumerationTerminal();
 		java.util.Map<String, String> literalMapping = enumerationTerminal.getLiteralMapping();
 		for (String literalName : literalMapping.keySet()) {
-			result.addAll(handleLiteral(enumerationTerminal.getAttribute(), prefix, literalMapping.get(literalName)));
+			result.addAll(handleLiteral(expectedTerminal, enumerationTerminal.getAttribute(), prefix, literalMapping.get(literalName)));
 		}
 		return result;
 	}
 	
-	private java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleLiteral(org.eclipse.emf.ecore.EAttribute attribute, String prefix, String literal) {
+	protected java.util.Collection<org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal> handleLiteral(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedTerminal, org.eclipse.emf.ecore.EAttribute attribute, String prefix, String literal) {
 		if ("".equals(literal)) {
 			return java.util.Collections.emptySet();
 		}
 		boolean matchesPrefix = matches(literal, prefix);
-		return java.util.Collections.singleton(new org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal(literal, prefix, matchesPrefix, null, null));
+		return java.util.Collections.singleton(new org.sintef.thingml.resource.thingml.ui.ThingmlCompletionProposal(expectedTerminal, literal, prefix, matchesPrefix, null, null));
 	}
 	
 	/**
@@ -342,7 +396,7 @@ public class ThingmlCodeCompletionHelper {
 	 * the current document content, the cursor position, and the position where the
 	 * element is expected.
 	 */
-	private void setPrefixes(java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> expectedElements, String content, int cursorOffset) {
+	protected void setPrefixes(java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal> expectedElements, String content, int cursorOffset) {
 		if (cursorOffset < 0) {
 			return;
 		}
@@ -365,7 +419,13 @@ public class ThingmlCodeCompletionHelper {
 		return expectedAtCursor.toArray(new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal[expectedAtCursor.size()]);
 	}
 	
-	private int getEnd(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal[] allExpectedElements, int indexInList) {
+	/**
+	 * Calculates the end index of the expected element at allExpectedElements[index].
+	 * To determine the end, the subsequent expected elements from the array of all
+	 * expected elements are used. An element is considered to end one character
+	 * before the next elements starts.
+	 */
+	protected int getEnd(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal[] allExpectedElements, int indexInList) {
 		org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal elementAtIndex = allExpectedElements[indexInList];
 		int startIncludingHidden = elementAtIndex.getStartIncludingHiddenTokens();
 		int startExcludingHidden = elementAtIndex.getStartExcludingHiddenTokens();
@@ -380,11 +440,19 @@ public class ThingmlCodeCompletionHelper {
 		return Integer.MAX_VALUE;
 	}
 	
-	private boolean matches(String proposal, String prefix) {
+	/**
+	 * Checks whether the given proposed string matches the prefix. The two strings
+	 * are compared ignoring the case. The prefix is also considered to match if is a
+	 * camel case representation of the proposal.
+	 */
+	protected boolean matches(String proposal, String prefix) {
+		if (proposal == null || prefix == null) {
+			return false;
+		}
 		return (proposal.toLowerCase().startsWith(prefix.toLowerCase()) || org.sintef.thingml.resource.thingml.util.ThingmlStringUtil.matchCamelCase(prefix, proposal) != null) && !proposal.equals(prefix);
 	}
 	
-	public org.eclipse.swt.graphics.Image getImage(org.eclipse.emf.ecore.EObject element) {
+	protected org.eclipse.swt.graphics.Image getImage(org.eclipse.emf.ecore.EObject element) {
 		if (!org.eclipse.core.runtime.Platform.isRunning()) {
 			return null;
 		}
@@ -395,4 +463,93 @@ public class ThingmlCodeCompletionHelper {
 		org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider labelProvider = new org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider(adapterFactory);
 		return labelProvider.getImage(element);
 	}
+	
+	protected org.eclipse.emf.ecore.EObject findCorrectContainer(org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedTerminal expectedTerminal) {
+		org.eclipse.emf.ecore.EObject container = expectedTerminal.getContainer();
+		org.eclipse.emf.ecore.EClass ruleMetaclass = expectedTerminal.getTerminal().getRuleMetaclass();
+		if (ruleMetaclass.isInstance(container)) {
+			// container is correct for expected terminal
+			return container;
+		}
+		// the container is wrong
+		org.eclipse.emf.ecore.EObject parent = null;
+		org.eclipse.emf.ecore.EObject previousParent = null;
+		org.eclipse.emf.ecore.EObject correctContainer = null;
+		org.eclipse.emf.ecore.EObject hookableParent = null;
+		org.sintef.thingml.resource.thingml.grammar.ThingmlContainmentTrace containmentTrace = expectedTerminal.getContainmentTrace();
+		org.eclipse.emf.ecore.EClass startClass = containmentTrace.getStartClass();
+		org.sintef.thingml.resource.thingml.mopp.ThingmlContainedFeature currentLink = null;
+		org.sintef.thingml.resource.thingml.mopp.ThingmlContainedFeature previousLink = null;
+		org.sintef.thingml.resource.thingml.mopp.ThingmlContainedFeature[] containedFeatures = containmentTrace.getPath();
+		for (int i = 0; i < containedFeatures.length; i++) {
+			currentLink = containedFeatures[i];
+			if (i > 0) {
+				previousLink = containedFeatures[i - 1];
+			}
+			org.eclipse.emf.ecore.EClass containerClass = currentLink.getContainerClass();
+			hookableParent = findHookParent(container, startClass, currentLink, parent);
+			if (hookableParent != null) {
+				// we found the correct parent
+				break;
+			} else {
+				previousParent = parent;
+				parent = containerClass.getEPackage().getEFactoryInstance().create(containerClass);
+				if (parent != null) {
+					if (previousParent == null) {
+						// replace container for expectedTerminal with correctContainer
+						correctContainer = parent;
+					} else {
+						// This assignment is only performed to get rid of a warning about a potential
+						// null pointer access. Variable 'previousLink' cannot be null here, because it is
+						// initialized for all loop iterations where 'i' is greather than 0 and for the
+						// case where 'i' equals zero, this path is never executed, because
+						// 'previousParent' is null in this case.
+						org.sintef.thingml.resource.thingml.mopp.ThingmlContainedFeature link = previousLink;
+						org.sintef.thingml.resource.thingml.util.ThingmlEObjectUtil.setFeature(parent, link.getFeature(), previousParent, false);
+					}
+				}
+			}
+		}
+		
+		if (correctContainer == null) {
+			correctContainer = container;
+		}
+		
+		if (currentLink == null) {
+			return correctContainer;
+		}
+		
+		hookableParent = findHookParent(container, startClass, currentLink, parent);
+		
+		final org.eclipse.emf.ecore.EObject finalHookableParent = hookableParent;
+		final org.eclipse.emf.ecore.EStructuralFeature finalFeature = currentLink.getFeature();
+		final org.eclipse.emf.ecore.EObject finalParent = parent;
+		if (parent != null && hookableParent != null) {
+			expectedTerminal.setAttachmentCode(new Runnable() {
+				
+				public void run() {
+					org.sintef.thingml.resource.thingml.util.ThingmlEObjectUtil.setFeature(finalHookableParent, finalFeature, finalParent, false);
+				}
+			});
+		}
+		return correctContainer;
+	}
+	
+	/**
+	 * Walks up the containment hierarchy to find an EObject that is able to hold
+	 * (contain) the given object.
+	 */
+	protected org.eclipse.emf.ecore.EObject findHookParent(org.eclipse.emf.ecore.EObject container, org.eclipse.emf.ecore.EClass startClass, org.sintef.thingml.resource.thingml.mopp.ThingmlContainedFeature currentLink, org.eclipse.emf.ecore.EObject object) {
+		org.eclipse.emf.ecore.EClass containerClass = currentLink.getContainerClass();
+		while (container != null) {
+			if (containerClass.isInstance(object)) {
+				if (startClass.equals(container.eClass())) {
+					return container;
+				}
+			}
+			container = container.eContainer();
+		}
+		return null;
+	}
+	
 }

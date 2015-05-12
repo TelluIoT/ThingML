@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.mopp;
 
@@ -138,6 +129,8 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 	private org.sintef.thingml.resource.thingml.IThingmlLocationMap locationMap;
 	private int proxyCounter = 0;
 	private org.sintef.thingml.resource.thingml.IThingmlTextParser parser;
+	private org.sintef.thingml.resource.thingml.util.ThingmlLayoutUtil layoutUtil = new org.sintef.thingml.resource.thingml.util.ThingmlLayoutUtil();
+	private org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper markerHelper;
 	private java.util.Map<String, org.sintef.thingml.resource.thingml.IThingmlContextDependentURIFragment<? extends org.eclipse.emf.ecore.EObject>> internalURIFragmentMap = new java.util.LinkedHashMap<String, org.sintef.thingml.resource.thingml.IThingmlContextDependentURIFragment<? extends org.eclipse.emf.ecore.EObject>>();
 	private java.util.Map<String, org.sintef.thingml.resource.thingml.IThingmlQuickFix> quickFixMap = new java.util.LinkedHashMap<String, org.sintef.thingml.resource.thingml.IThingmlQuickFix>();
 	private java.util.Map<?, ?> loadOptions;
@@ -149,9 +142,19 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 	private org.sintef.thingml.resource.thingml.IThingmlResourcePostProcessor runningPostProcessor;
 	
 	/**
-	 * A flag to indicate whether reloading of the resource shall be cancelled.
+	 * A flag (and lock) to indicate whether reloading of the resource shall be
+	 * cancelled.
 	 */
-	private boolean terminateReload = false;
+	private Boolean terminateReload = false;
+	private Object terminateReloadLock = new Object();
+	private Object loadingLock = new Object();
+	private boolean delayNotifications = false;
+	private java.util.List<org.eclipse.emf.common.notify.Notification> delayedNotifications = new java.util.ArrayList<org.eclipse.emf.common.notify.Notification>();
+	private java.io.InputStream latestReloadInputStream = null;
+	private java.util.Map<?, ?> latestReloadOptions = null;
+	private org.sintef.thingml.resource.thingml.util.ThingmlInterruptibleEcoreResolver interruptibleResolver;
+	
+	protected org.sintef.thingml.resource.thingml.mopp.ThingmlMetaInformation metaInformation = new org.sintef.thingml.resource.thingml.mopp.ThingmlMetaInformation();
 	
 	public ThingmlResource() {
 		super();
@@ -164,85 +167,180 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 	}
 	
 	protected void doLoad(java.io.InputStream inputStream, java.util.Map<?,?> options) throws java.io.IOException {
-		this.loadOptions = options;
-		this.terminateReload = false;
-		String encoding = null;
-		java.io.InputStream actualInputStream = inputStream;
-		Object inputStreamPreProcessorProvider = null;
-		if (options != null) {
-			inputStreamPreProcessorProvider = options.get(org.sintef.thingml.resource.thingml.IThingmlOptions.INPUT_STREAM_PREPROCESSOR_PROVIDER);
-		}
-		if (inputStreamPreProcessorProvider != null) {
-			if (inputStreamPreProcessorProvider instanceof org.sintef.thingml.resource.thingml.IThingmlInputStreamProcessorProvider) {
-				org.sintef.thingml.resource.thingml.IThingmlInputStreamProcessorProvider provider = (org.sintef.thingml.resource.thingml.IThingmlInputStreamProcessorProvider) inputStreamPreProcessorProvider;
-				org.sintef.thingml.resource.thingml.mopp.ThingmlInputStreamProcessor processor = provider.getInputStreamProcessor(inputStream);
-				actualInputStream = processor;
-				encoding = processor.getOutputEncoding();
+		synchronized (loadingLock) {
+			if (processTerminationRequested()) {
+				return;
 			}
-		}
-		
-		parser = getMetaInformation().createParser(actualInputStream, encoding);
-		parser.setOptions(options);
-		org.sintef.thingml.resource.thingml.IThingmlReferenceResolverSwitch referenceResolverSwitch = getReferenceResolverSwitch();
-		referenceResolverSwitch.setOptions(options);
-		org.sintef.thingml.resource.thingml.IThingmlParseResult result = parser.parse();
-		clearState();
-		getContentsInternal().clear();
-		org.eclipse.emf.ecore.EObject root = null;
-		if (result != null) {
-			root = result.getRoot();
-			if (root != null) {
-				getContentsInternal().add(root);
+			this.loadOptions = options;
+			delayNotifications = true;
+			resetLocationMap();
+			String encoding = getEncoding(options);
+			java.io.InputStream actualInputStream = inputStream;
+			Object inputStreamPreProcessorProvider = null;
+			if (options != null) {
+				inputStreamPreProcessorProvider = options.get(org.sintef.thingml.resource.thingml.IThingmlOptions.INPUT_STREAM_PREPROCESSOR_PROVIDER);
 			}
-			java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlCommand<org.sintef.thingml.resource.thingml.IThingmlTextResource>> commands = result.getPostParseCommands();
-			if (commands != null) {
-				for (org.sintef.thingml.resource.thingml.IThingmlCommand<org.sintef.thingml.resource.thingml.IThingmlTextResource>  command : commands) {
-					command.execute(this);
+			if (inputStreamPreProcessorProvider != null) {
+				if (inputStreamPreProcessorProvider instanceof org.sintef.thingml.resource.thingml.IThingmlInputStreamProcessorProvider) {
+					org.sintef.thingml.resource.thingml.IThingmlInputStreamProcessorProvider provider = (org.sintef.thingml.resource.thingml.IThingmlInputStreamProcessorProvider) inputStreamPreProcessorProvider;
+					org.sintef.thingml.resource.thingml.mopp.ThingmlInputStreamProcessor processor = provider.getInputStreamProcessor(inputStream);
+					actualInputStream = processor;
 				}
 			}
-		}
-		getReferenceResolverSwitch().setOptions(options);
-		if (getErrors().isEmpty()) {
-			runPostProcessors(options);
-			if (root != null) {
-				runValidators(root);
+			
+			parser = getMetaInformation().createParser(actualInputStream, encoding);
+			parser.setOptions(options);
+			org.sintef.thingml.resource.thingml.IThingmlReferenceResolverSwitch referenceResolverSwitch = getReferenceResolverSwitch();
+			referenceResolverSwitch.setOptions(options);
+			org.sintef.thingml.resource.thingml.IThingmlParseResult result = parser.parse();
+			// dispose parser, we don't need it anymore
+			parser = null;
+			
+			if (processTerminationRequested()) {
+				// do nothing if reload was already restarted
+				return;
 			}
+			
+			clearState();
+			getContentsInternal().clear();
+			org.eclipse.emf.ecore.EObject root = null;
+			if (result != null) {
+				root = result.getRoot();
+				if (root != null) {
+					if (isLayoutInformationRecordingEnabled()) {
+						layoutUtil.transferAllLayoutInformationToModel(root);
+					}
+					if (processTerminationRequested()) {
+						// the next reload will add new content
+						return;
+					}
+					getContentsInternal().add(root);
+				}
+				java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlCommand<org.sintef.thingml.resource.thingml.IThingmlTextResource>> commands = result.getPostParseCommands();
+				if (commands != null) {
+					for (org.sintef.thingml.resource.thingml.IThingmlCommand<org.sintef.thingml.resource.thingml.IThingmlTextResource>  command : commands) {
+						command.execute(this);
+					}
+				}
+			}
+			getReferenceResolverSwitch().setOptions(options);
+			if (getErrors().isEmpty()) {
+				if (!runPostProcessors(options)) {
+					return;
+				}
+				if (root != null) {
+					runValidators(root);
+				}
+			}
+			notifyDelayed();
 		}
 	}
 	
+	protected boolean processTerminationRequested() {
+		if (terminateReload) {
+			delayNotifications = false;
+			delayedNotifications.clear();
+			return true;
+		}
+		return false;
+	}
+	protected void notifyDelayed() {
+		delayNotifications = false;
+		for (org.eclipse.emf.common.notify.Notification delayedNotification : delayedNotifications) {
+			super.eNotify(delayedNotification);
+		}
+		delayedNotifications.clear();
+	}
+	public void eNotify(org.eclipse.emf.common.notify.Notification notification) {
+		if (delayNotifications) {
+			delayedNotifications.add(notification);
+		} else {
+			super.eNotify(notification);
+		}
+	}
+	/**
+	 * Reloads the contents of this resource from the given stream.
+	 */
 	public void reload(java.io.InputStream inputStream, java.util.Map<?,?> options) throws java.io.IOException {
-		try {
-			isLoaded = false;
-			java.util.Map<Object, Object> loadOptions = addDefaultLoadOptions(options);
-			doLoad(inputStream, loadOptions);
-			org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(this);
-		} catch (org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException tpe) {
-			// do nothing - the resource is left unchanged if this exception is thrown
+		synchronized (terminateReloadLock) {
+			latestReloadInputStream = inputStream;
+			latestReloadOptions = options;
+			if (terminateReload == true) {
+				// //reload already requested
+			}
+			terminateReload = true;
 		}
-		isLoaded = true;
+		cancelReload();
+		synchronized (loadingLock) {
+			synchronized (terminateReloadLock) {
+				terminateReload = false;
+			}
+			isLoaded = false;
+			java.util.Map<Object, Object> loadOptions = addDefaultLoadOptions(latestReloadOptions);
+			try {
+				doLoad(latestReloadInputStream, loadOptions);
+			} catch (org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException tpe) {
+				// do nothing - the resource is left unchanged if this exception is thrown
+			}
+			resolveAfterParsing();
+			isLoaded = true;
+		}
 	}
 	
-	public void cancelReload() {
+	/**
+	 * Cancels reloading this resource. The running parser and post processors are
+	 * terminated.
+	 */
+	protected void cancelReload() {
+		// Cancel parser
 		org.sintef.thingml.resource.thingml.IThingmlTextParser parserCopy = parser;
-		parserCopy.terminate();
-		this.terminateReload = true;
+		if (parserCopy != null) {
+			parserCopy.terminate();
+		}
+		// Cancel post processor(s)
 		org.sintef.thingml.resource.thingml.IThingmlResourcePostProcessor runningPostProcessorCopy = runningPostProcessor;
 		if (runningPostProcessorCopy != null) {
 			runningPostProcessorCopy.terminate();
+		}
+		// Cancel reference resolving
+		org.sintef.thingml.resource.thingml.util.ThingmlInterruptibleEcoreResolver interruptibleResolverCopy = interruptibleResolver;
+		if (interruptibleResolverCopy != null) {
+			interruptibleResolverCopy.terminate();
 		}
 	}
 	
 	protected void doSave(java.io.OutputStream outputStream, java.util.Map<?,?> options) throws java.io.IOException {
 		org.sintef.thingml.resource.thingml.IThingmlTextPrinter printer = getMetaInformation().createPrinter(outputStream, this);
 		org.sintef.thingml.resource.thingml.IThingmlReferenceResolverSwitch referenceResolverSwitch = getReferenceResolverSwitch();
+		printer.setEncoding(getEncoding(options));
 		referenceResolverSwitch.setOptions(options);
 		for (org.eclipse.emf.ecore.EObject root : getContentsInternal()) {
+			if (isLayoutInformationRecordingEnabled()) {
+				layoutUtil.transferAllLayoutInformationFromModel(root);
+			}
 			printer.print(root);
+			if (isLayoutInformationRecordingEnabled()) {
+				layoutUtil.transferAllLayoutInformationToModel(root);
+			}
 		}
 	}
 	
 	protected String getSyntaxName() {
 		return "thingml";
+	}
+	
+	public String getEncoding(java.util.Map<?, ?> options) {
+		String encoding = null;
+		if (new org.sintef.thingml.resource.thingml.util.ThingmlRuntimeUtil().isEclipsePlatformAvailable()) {
+			encoding = new org.sintef.thingml.resource.thingml.util.ThingmlEclipseProxy().getPlatformResourceEncoding(uri);
+		}
+		if (options != null) {
+			Object encodingOption = options.get(org.sintef.thingml.resource.thingml.IThingmlOptions.OPTION_ENCODING);
+			if (encodingOption != null) {
+				encoding = encodingOption.toString();
+			}
+		}
+		return encoding;
 	}
 	
 	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolverSwitch getReferenceResolverSwitch() {
@@ -256,8 +354,15 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 		return new org.sintef.thingml.resource.thingml.mopp.ThingmlMetaInformation();
 	}
 	
+	/**
+	 * Clears the location map by replacing it with a new instance.
+	 */
 	protected void resetLocationMap() {
-		locationMap = new org.sintef.thingml.resource.thingml.mopp.ThingmlLocationMap();
+		if (isLocationMapEnabled()) {
+			locationMap = new org.sintef.thingml.resource.thingml.mopp.ThingmlLocationMap();
+		} else {
+			locationMap = new org.sintef.thingml.resource.thingml.mopp.ThingmlDevNullLocationMap();
+		}
 	}
 	
 	public void addURIFragment(String internalURIFragment, org.sintef.thingml.resource.thingml.IThingmlContextDependentURIFragment<? extends org.eclipse.emf.ecore.EObject> uriFragment) {
@@ -282,8 +387,8 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 				result = uriFragment.resolve();
 			} catch (Exception e) {
 				String message = "An expection occured while resolving the proxy for: "+ id + ". (" + e.toString() + ")";
-				addProblem(new org.sintef.thingml.resource.thingml.mopp.ThingmlProblem(message, org.sintef.thingml.resource.thingml.ThingmlEProblemType.UNRESOLVED_REFERENCE, org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity.ERROR),uriFragment.getProxy());
-				org.sintef.thingml.resource.thingml.mopp.ThingmlPlugin.logError(message, e);
+				addProblem(new org.sintef.thingml.resource.thingml.mopp.ThingmlProblem(message, org.sintef.thingml.resource.thingml.ThingmlEProblemType.UNRESOLVED_REFERENCE, org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity.ERROR), uriFragment.getProxy());
+				new org.sintef.thingml.resource.thingml.util.ThingmlRuntimeUtil().logError(message, e);
 			}
 			if (result == null) {
 				// the resolving did call itself
@@ -321,7 +426,7 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 		}
 	}
 	
-	private org.eclipse.emf.ecore.EObject getResultElement(org.sintef.thingml.resource.thingml.IThingmlContextDependentURIFragment<? extends org.eclipse.emf.ecore.EObject> uriFragment, org.sintef.thingml.resource.thingml.IThingmlReferenceMapping<? extends org.eclipse.emf.ecore.EObject> mapping, org.eclipse.emf.ecore.EObject proxy, final String errorMessage) {
+	protected org.eclipse.emf.ecore.EObject getResultElement(org.sintef.thingml.resource.thingml.IThingmlContextDependentURIFragment<? extends org.eclipse.emf.ecore.EObject> uriFragment, org.sintef.thingml.resource.thingml.IThingmlReferenceMapping<? extends org.eclipse.emf.ecore.EObject> mapping, org.eclipse.emf.ecore.EObject proxy, final String errorMessage) {
 		if (mapping instanceof org.sintef.thingml.resource.thingml.IThingmlURIMapping<?>) {
 			org.eclipse.emf.common.util.URI uri = ((org.sintef.thingml.resource.thingml.IThingmlURIMapping<? extends org.eclipse.emf.ecore.EObject>)mapping).getTargetIdentifier();
 			if (uri != null) {
@@ -363,19 +468,19 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 		}
 	}
 	
-	private void removeDiagnostics(org.eclipse.emf.ecore.EObject cause, java.util.List<org.eclipse.emf.ecore.resource.Resource.Diagnostic> diagnostics) {
+	protected void removeDiagnostics(org.eclipse.emf.ecore.EObject cause, java.util.List<org.eclipse.emf.ecore.resource.Resource.Diagnostic> diagnostics) {
 		// remove all errors/warnings from this resource
 		for (org.eclipse.emf.ecore.resource.Resource.Diagnostic errorCand : new org.eclipse.emf.common.util.BasicEList<org.eclipse.emf.ecore.resource.Resource.Diagnostic>(diagnostics)) {
 			if (errorCand instanceof org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic) {
 				if (((org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic) errorCand).wasCausedBy(cause)) {
 					diagnostics.remove(errorCand);
-					org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper.unmark(this, cause);
+					unmark(cause);
 				}
 			}
 		}
 	}
 	
-	private void attachResolveError(org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<?> result, org.eclipse.emf.ecore.EObject proxy) {
+	protected void attachResolveError(org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<?> result, org.eclipse.emf.ecore.EObject proxy) {
 		// attach errors to this resource
 		assert result != null;
 		final String errorMessage = result.getErrorMessage();
@@ -386,7 +491,7 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 		}
 	}
 	
-	private void attachResolveWarnings(org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<? extends org.eclipse.emf.ecore.EObject> result, org.eclipse.emf.ecore.EObject proxy) {
+	protected void attachResolveWarnings(org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<? extends org.eclipse.emf.ecore.EObject> result, org.eclipse.emf.ecore.EObject proxy) {
 		assert result != null;
 		assert result.wasResolved();
 		if (result.wasResolved()) {
@@ -410,15 +515,18 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 		loadOptions = null;
 	}
 	
-	protected void runPostProcessors(java.util.Map<?, ?> loadOptions) {
-		org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper.unmark(this, org.sintef.thingml.resource.thingml.ThingmlEProblemType.ANALYSIS_PROBLEM);
-		if (terminateReload) {
-			return;
+	/**
+	 * Runs all post processors to process this resource.
+	 */
+	protected boolean runPostProcessors(java.util.Map<?, ?> loadOptions) {
+		unmark(org.sintef.thingml.resource.thingml.ThingmlEProblemType.ANALYSIS_PROBLEM);
+		if (processTerminationRequested()) {
+			return false;
 		}
 		// first, run the generated post processor
 		runPostProcessor(new org.sintef.thingml.resource.thingml.mopp.ThingmlResourcePostProcessor());
 		if (loadOptions == null) {
-			return;
+			return true;
 		}
 		// then, run post processors that are registered via the load options extension
 		// point
@@ -429,8 +537,8 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 			} else if (resourcePostProcessorProvider instanceof java.util.Collection<?>) {
 				java.util.Collection<?> resourcePostProcessorProviderCollection = (java.util.Collection<?>) resourcePostProcessorProvider;
 				for (Object processorProvider : resourcePostProcessorProviderCollection) {
-					if (terminateReload) {
-						return;
+					if (processTerminationRequested()) {
+						return false;
 					}
 					if (processorProvider instanceof org.sintef.thingml.resource.thingml.IThingmlResourcePostProcessorProvider) {
 						org.sintef.thingml.resource.thingml.IThingmlResourcePostProcessorProvider csProcessorProvider = (org.sintef.thingml.resource.thingml.IThingmlResourcePostProcessorProvider) processorProvider;
@@ -440,14 +548,18 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 				}
 			}
 		}
+		return true;
 	}
 	
+	/**
+	 * Runs the given post processor to process this resource.
+	 */
 	protected void runPostProcessor(org.sintef.thingml.resource.thingml.IThingmlResourcePostProcessor postProcessor) {
 		try {
 			this.runningPostProcessor = postProcessor;
 			postProcessor.process(this);
 		} catch (Exception e) {
-			org.sintef.thingml.resource.thingml.mopp.ThingmlPlugin.logError("Exception while running a post-processor.", e);
+			new org.sintef.thingml.resource.thingml.util.ThingmlRuntimeUtil().logError("Exception while running a post-processor.", e);
 		}
 		this.runningPostProcessor = null;
 	}
@@ -455,7 +567,13 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 	public void load(java.util.Map<?, ?> options) throws java.io.IOException {
 		java.util.Map<Object, Object> loadOptions = addDefaultLoadOptions(options);
 		super.load(loadOptions);
-		org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(this);
+		resolveAfterParsing();
+	}
+	
+	protected void resolveAfterParsing() {
+		interruptibleResolver = new org.sintef.thingml.resource.thingml.util.ThingmlInterruptibleEcoreResolver();
+		interruptibleResolver.resolveAll(this);
+		interruptibleResolver = null;
 	}
 	
 	public void setURI(org.eclipse.emf.common.util.URI uri) {
@@ -465,6 +583,10 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 		super.setURI(uri);
 	}
 	
+	/**
+	 * Returns the location map that contains information about the position of the
+	 * contents of this resource in the original textual representation.
+	 */
 	public org.sintef.thingml.resource.thingml.IThingmlLocationMap getLocationMap() {
 		return locationMap;
 	}
@@ -472,9 +594,18 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 	public void addProblem(org.sintef.thingml.resource.thingml.IThingmlProblem problem, org.eclipse.emf.ecore.EObject element) {
 		ElementBasedTextDiagnostic diagnostic = new ElementBasedTextDiagnostic(locationMap, getURI(), problem, element);
 		getDiagnostics(problem.getSeverity()).add(diagnostic);
-		if (isMarkerCreationEnabled()) {
-			org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper.mark(this, diagnostic);
-		}
+		mark(diagnostic);
+		addQuickFixesToQuickFixMap(problem);
+	}
+	
+	public void addProblem(org.sintef.thingml.resource.thingml.IThingmlProblem problem, int column, int line, int charStart, int charEnd) {
+		PositionBasedTextDiagnostic diagnostic = new PositionBasedTextDiagnostic(getURI(), problem, column, line, charStart, charEnd);
+		getDiagnostics(problem.getSeverity()).add(diagnostic);
+		mark(diagnostic);
+		addQuickFixesToQuickFixMap(problem);
+	}
+	
+	protected void addQuickFixesToQuickFixMap(org.sintef.thingml.resource.thingml.IThingmlProblem problem) {
 		java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlQuickFix> quickFixes = problem.getQuickFixes();
 		if (quickFixes != null) {
 			for (org.sintef.thingml.resource.thingml.IThingmlQuickFix quickFix : quickFixes) {
@@ -482,14 +613,6 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 					quickFixMap.put(quickFix.getContextAsString(), quickFix);
 				}
 			}
-		}
-	}
-	
-	public void addProblem(org.sintef.thingml.resource.thingml.IThingmlProblem problem, int column, int line, int charStart, int charEnd) {
-		PositionBasedTextDiagnostic diagnostic = new PositionBasedTextDiagnostic(getURI(), problem, column, line, charStart, charEnd);
-		getDiagnostics(problem.getSeverity()).add(diagnostic);
-		if (isMarkerCreationEnabled()) {
-			org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper.mark(this, diagnostic);
 		}
 	}
 	
@@ -511,7 +634,7 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 		addProblem(new org.sintef.thingml.resource.thingml.mopp.ThingmlProblem(message, type, org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity.WARNING), cause);
 	}
 	
-	private java.util.List<org.eclipse.emf.ecore.resource.Resource.Diagnostic> getDiagnostics(org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity severity) {
+	protected java.util.List<org.eclipse.emf.ecore.resource.Resource.Diagnostic> getDiagnostics(org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity severity) {
 		if (severity == org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity.ERROR) {
 			return getErrors();
 		} else {
@@ -521,59 +644,14 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 	
 	protected java.util.Map<Object, Object> addDefaultLoadOptions(java.util.Map<?, ?> loadOptions) {
 		java.util.Map<Object, Object> loadOptionsCopy = org.sintef.thingml.resource.thingml.util.ThingmlMapUtil.copySafelyToObjectToObjectMap(loadOptions);
-		if (org.eclipse.core.runtime.Platform.isRunning()) {
-			// find default load option providers
-			org.eclipse.core.runtime.IExtensionRegistry extensionRegistry = org.eclipse.core.runtime.Platform.getExtensionRegistry();
-			org.eclipse.core.runtime.IConfigurationElement configurationElements[] = extensionRegistry.getConfigurationElementsFor(org.sintef.thingml.resource.thingml.mopp.ThingmlPlugin.EP_DEFAULT_LOAD_OPTIONS_ID);
-			for (org.eclipse.core.runtime.IConfigurationElement element : configurationElements) {
-				try {
-					org.sintef.thingml.resource.thingml.IThingmlOptionProvider provider = (org.sintef.thingml.resource.thingml.IThingmlOptionProvider) element.createExecutableExtension("class");
-					final java.util.Map<?, ?> options = provider.getOptions();
-					final java.util.Collection<?> keys = options.keySet();
-					for (Object key : keys) {
-						addLoadOption(loadOptionsCopy, key, options.get(key));
-					}
-				} catch (org.eclipse.core.runtime.CoreException ce) {
-					org.sintef.thingml.resource.thingml.mopp.ThingmlPlugin.logError("Exception while getting default options.", ce);
-				}
-			}
+		// first add static option provider
+		loadOptionsCopy.putAll(new org.sintef.thingml.resource.thingml.mopp.ThingmlOptionProvider().getOptions());
+		
+		// second, add dynamic option providers that are registered via extension
+		if (new org.sintef.thingml.resource.thingml.util.ThingmlRuntimeUtil().isEclipsePlatformAvailable()) {
+			new org.sintef.thingml.resource.thingml.util.ThingmlEclipseProxy().getDefaultLoadOptionProviderExtensions(loadOptionsCopy);
 		}
 		return loadOptionsCopy;
-	}
-	
-	/**
-	 * Adds a new key,value pair to the list of options. If there is already an option
-	 * with the same key, the two values are collected in a list.
-	 */
-	private void addLoadOption(java.util.Map<Object, Object> options,Object key, Object value) {
-		// check if there is already an option set
-		if (options.containsKey(key)) {
-			Object currentValue = options.get(key);
-			if (currentValue instanceof java.util.List<?>) {
-				// if the current value is a list, we add the new value to this list
-				java.util.List<?> currentValueAsList = (java.util.List<?>) currentValue;
-				java.util.List<Object> currentValueAsObjectList = org.sintef.thingml.resource.thingml.util.ThingmlListUtil.copySafelyToObjectList(currentValueAsList);
-				if (value instanceof java.util.Collection<?>) {
-					currentValueAsObjectList.addAll((java.util.Collection<?>) value);
-				} else {
-					currentValueAsObjectList.add(value);
-				}
-				options.put(key, currentValueAsObjectList);
-			} else {
-				// if the current value is not a list, we create a fresh list and add both the old
-				// (current) and the new value to this list
-				java.util.List<Object> newValueList = new java.util.ArrayList<Object>();
-				newValueList.add(currentValue);
-				if (value instanceof java.util.Collection<?>) {
-					newValueList.addAll((java.util.Collection<?>) value);
-				} else {
-					newValueList.add(value);
-				}
-				options.put(key, newValueList);
-			}
-		} else {
-			options.put(key, value);
-		}
 	}
 	
 	/**
@@ -586,11 +664,9 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 		internalURIFragmentMap.clear();
 		getErrors().clear();
 		getWarnings().clear();
-		if (isMarkerCreationEnabled()) {
-			org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper.unmark(this, org.sintef.thingml.resource.thingml.ThingmlEProblemType.UNKNOWN);
-			org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper.unmark(this, org.sintef.thingml.resource.thingml.ThingmlEProblemType.SYNTAX_ERROR);
-			org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper.unmark(this, org.sintef.thingml.resource.thingml.ThingmlEProblemType.UNRESOLVED_REFERENCE);
-		}
+		unmark(org.sintef.thingml.resource.thingml.ThingmlEProblemType.UNKNOWN);
+		unmark(org.sintef.thingml.resource.thingml.ThingmlEProblemType.SYNTAX_ERROR);
+		unmark(org.sintef.thingml.resource.thingml.ThingmlEProblemType.UNRESOLVED_REFERENCE);
 		proxyCounter = 0;
 		resolverSwitch = null;
 	}
@@ -602,81 +678,89 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 	 * interfere when changing the list.
 	 */
 	public org.eclipse.emf.common.util.EList<org.eclipse.emf.ecore.EObject> getContents() {
+		if (terminateReload) {
+			// the contents' state is currently unclear
+			return new org.eclipse.emf.common.util.BasicEList<org.eclipse.emf.ecore.EObject>();
+		}
 		return new org.sintef.thingml.resource.thingml.util.ThingmlCopiedEObjectInternalEList((org.eclipse.emf.ecore.util.InternalEList<org.eclipse.emf.ecore.EObject>) super.getContents());
 	}
 	
 	/**
-	 * Returns the raw contents of this resource.
+	 * Returns the raw contents of this resource. In contrast to getContents(), this
+	 * methods does not return a copy of the content list, but the original list.
 	 */
 	public org.eclipse.emf.common.util.EList<org.eclipse.emf.ecore.EObject> getContentsInternal() {
+		if (terminateReload) {
+			// the contents' state is currently unclear
+			return new org.eclipse.emf.common.util.BasicEList<org.eclipse.emf.ecore.EObject>();
+		}
 		return super.getContents();
 	}
 	
+	/**
+	 * Returns all warnings that are associated with this resource.
+	 */
 	public org.eclipse.emf.common.util.EList<org.eclipse.emf.ecore.resource.Resource.Diagnostic> getWarnings() {
+		if (terminateReload) {
+			// the contents' state is currently unclear
+			return new org.eclipse.emf.common.util.BasicEList<org.eclipse.emf.ecore.resource.Resource.Diagnostic>();
+		}
 		return new org.sintef.thingml.resource.thingml.util.ThingmlCopiedEList<org.eclipse.emf.ecore.resource.Resource.Diagnostic>(super.getWarnings());
 	}
 	
+	/**
+	 * Returns all errors that are associated with this resource.
+	 */
 	public org.eclipse.emf.common.util.EList<org.eclipse.emf.ecore.resource.Resource.Diagnostic> getErrors() {
+		if (terminateReload) {
+			// the contents' state is currently unclear
+			return new org.eclipse.emf.common.util.BasicEList<org.eclipse.emf.ecore.resource.Resource.Diagnostic>();
+		}
 		return new org.sintef.thingml.resource.thingml.util.ThingmlCopiedEList<org.eclipse.emf.ecore.resource.Resource.Diagnostic>(super.getErrors());
 	}
 	
-	@SuppressWarnings("restriction")	
-	private void runValidators(org.eclipse.emf.ecore.EObject root) {
-		// checking constraints provided by EMF validator classes was disabled
+	protected void runValidators(org.eclipse.emf.ecore.EObject root) {
+		// checking constraints provided by EMF validator classes was disabled by option
+		// 'disableEValidators'.
 		
-		// check EMF validation constraints
-		// EMF validation does not work if OSGi is not running
-		// The EMF validation framework code throws a NPE if the validation plug-in is not
-		// loaded. This is a bug, which is fixed in the Helios release. Nonetheless, we
-		// need to catch the exception here.
-		if (org.eclipse.core.runtime.Platform.isRunning()) {
-			// The EMF validation framework code throws a NPE if the validation plug-in is not
-			// loaded. This is a workaround for bug 322079.
-			if (org.eclipse.emf.validation.internal.EMFModelValidationPlugin.getPlugin() != null) {
-				try {
-					org.eclipse.emf.validation.service.ModelValidationService service = org.eclipse.emf.validation.service.ModelValidationService.getInstance();
-					org.eclipse.emf.validation.service.IBatchValidator validator = service.<org.eclipse.emf.ecore.EObject, org.eclipse.emf.validation.service.IBatchValidator>newValidator(org.eclipse.emf.validation.model.EvaluationMode.BATCH);
-					validator.setIncludeLiveConstraints(true);
-					org.eclipse.core.runtime.IStatus status = validator.validate(root);
-					addStatus(status, root);
-				} catch (Throwable t) {
-					org.sintef.thingml.resource.thingml.mopp.ThingmlPlugin.logError("Exception while checking contraints provided by EMF validator classes.", t);
-				}
-			}
-		}
-	}
-	
-	private void addStatus(org.eclipse.core.runtime.IStatus status, org.eclipse.emf.ecore.EObject root) {
-		java.util.List<org.eclipse.emf.ecore.EObject> causes = new java.util.ArrayList<org.eclipse.emf.ecore.EObject>();
-		causes.add(root);
-		if (status instanceof org.eclipse.emf.validation.model.ConstraintStatus) {
-			org.eclipse.emf.validation.model.ConstraintStatus constraintStatus = (org.eclipse.emf.validation.model.ConstraintStatus) status;
-			java.util.Set<org.eclipse.emf.ecore.EObject> resultLocus = constraintStatus.getResultLocus();
-			causes.clear();
-			causes.addAll(resultLocus);
-		}
-		boolean hasChildren = status.getChildren() != null && status.getChildren().length > 0;
-		// Ignore composite status objects that have children. The actual status
-		// information is then contained in the child objects.
-		if (!status.isMultiStatus() || !hasChildren) {
-			if (status.getSeverity() == org.eclipse.core.runtime.IStatus.ERROR) {
-				for (org.eclipse.emf.ecore.EObject cause : causes) {
-					addError(status.getMessage(), org.sintef.thingml.resource.thingml.ThingmlEProblemType.ANALYSIS_PROBLEM, cause);
-				}
-			}
-			if (status.getSeverity() == org.eclipse.core.runtime.IStatus.WARNING) {
-				for (org.eclipse.emf.ecore.EObject cause : causes) {
-					addWarning(status.getMessage(), org.sintef.thingml.resource.thingml.ThingmlEProblemType.ANALYSIS_PROBLEM, cause);
-				}
-			}
-		}
-		for (org.eclipse.core.runtime.IStatus child : status.getChildren()) {
-			addStatus(child, root);
+		if (new org.sintef.thingml.resource.thingml.util.ThingmlRuntimeUtil().isEclipsePlatformAvailable()) {
+			new org.sintef.thingml.resource.thingml.util.ThingmlEclipseProxy().checkEMFValidationConstraints(this, root);
 		}
 	}
 	
 	public org.sintef.thingml.resource.thingml.IThingmlQuickFix getQuickFix(String quickFixContext) {
 		return quickFixMap.get(quickFixContext);
+	}
+	
+	protected void mark(org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic diagnostic) {
+		org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper markerHelper = getMarkerHelper();
+		if (markerHelper != null) {
+			markerHelper.mark(this, diagnostic);
+		}
+	}
+	
+	protected void unmark(org.eclipse.emf.ecore.EObject cause) {
+		org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper markerHelper = getMarkerHelper();
+		if (markerHelper != null) {
+			markerHelper.unmark(this, cause);
+		}
+	}
+	
+	protected void unmark(org.sintef.thingml.resource.thingml.ThingmlEProblemType analysisProblem) {
+		org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper markerHelper = getMarkerHelper();
+		if (markerHelper != null) {
+			markerHelper.unmark(this, analysisProblem);
+		}
+	}
+	
+	protected org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper getMarkerHelper() {
+		if (isMarkerCreationEnabled() && new org.sintef.thingml.resource.thingml.util.ThingmlRuntimeUtil().isEclipsePlatformAvailable()) {
+			if (markerHelper == null) {
+				markerHelper = new org.sintef.thingml.resource.thingml.mopp.ThingmlMarkerHelper();
+			}
+			return markerHelper;
+		}
+		return null;
 	}
 	
 	public boolean isMarkerCreationEnabled() {
@@ -685,4 +769,19 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 		}
 		return !loadOptions.containsKey(org.sintef.thingml.resource.thingml.IThingmlOptions.DISABLE_CREATING_MARKERS_FOR_PROBLEMS);
 	}
+	
+	protected boolean isLocationMapEnabled() {
+		if (loadOptions == null) {
+			return true;
+		}
+		return !loadOptions.containsKey(org.sintef.thingml.resource.thingml.IThingmlOptions.DISABLE_LOCATION_MAP);
+	}
+	
+	protected boolean isLayoutInformationRecordingEnabled() {
+		if (loadOptions == null) {
+			return true;
+		}
+		return !loadOptions.containsKey(org.sintef.thingml.resource.thingml.IThingmlOptions.DISABLE_LAYOUT_INFORMATION_RECORDING);
+	}
+	
 }

@@ -163,7 +163,7 @@ public class TransitionImpl extends HandlerImpl implements Transition {
 	 */
 	public State getSource() {
 		if (eContainerFeatureID() != ThingmlPackage.TRANSITION__SOURCE) return null;
-		return (State)eContainer();
+		return (State)eInternalContainer();
 	}
 
 	/**

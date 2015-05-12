@@ -1,22 +1,21 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.ui;
 
 /**
  * A text editor for 'thingml' models.
+ * <p>
+ * This editor has id
+ * <code>org.sintef.thingml.resource.thingml.ui.ThingmlEditor</code>
+ * The editor's context menu has id
+ * <code>org.sintef.thingml.resource.thingml.EditorContext</code>.
+ * The editor's ruler context menu has id
+ * <code>org.sintef.thingml.resource.thingml.EditorRuler</code>.
+ * </p>
  */
 public class ThingmlEditor extends org.eclipse.ui.editors.text.TextEditor implements org.eclipse.emf.edit.domain.IEditingDomainProvider, org.eclipse.jface.viewers.ISelectionProvider, org.eclipse.jface.viewers.ISelectionChangedListener, org.eclipse.emf.common.ui.viewer.IViewerProvider, org.sintef.thingml.resource.thingml.IThingmlResourceProvider, org.sintef.thingml.resource.thingml.ui.IThingmlBracketHandlerProvider, org.sintef.thingml.resource.thingml.ui.IThingmlAnnotationModelProvider {
 	
@@ -38,7 +37,7 @@ public class ThingmlEditor extends org.eclipse.ui.editors.text.TextEditor implem
 	
 	public ThingmlEditor() {
 		super();
-		setSourceViewerConfiguration(new org.sintef.thingml.resource.thingml.ui.ThingmlEditorConfiguration(this, this, this, colorManager));
+		setSourceViewerConfiguration(new org.sintef.thingml.resource.thingml.ui.ThingmlSourceViewerConfiguration(this, this, this, colorManager));
 		initializeEditingDomain();
 		org.eclipse.core.resources.ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener, org.eclipse.core.resources.IResourceChangeEvent.POST_CHANGE);
 		addSelectionChangedListener(this);
@@ -183,6 +182,7 @@ public class ThingmlEditor extends org.eclipse.ui.editors.text.TextEditor implem
 	
 	public void dispose() {
 		colorManager.dispose();
+		org.eclipse.core.resources.ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
 		super.dispose();
 	}
 	
@@ -445,8 +445,8 @@ public class ThingmlEditor extends org.eclipse.ui.editors.text.TextEditor implem
 						continue;
 					}
 					
-					int annotationLayer = annotationAccess.getLayer(annotation);
 					if (annotationAccess != null) {
+						int annotationLayer = annotationAccess.getLayer(annotation);
 						if (annotationLayer < layer) {
 							continue;
 						}
@@ -499,7 +499,14 @@ public class ThingmlEditor extends org.eclipse.ui.editors.text.TextEditor implem
 			Object object = structuredSelection.getFirstElement();
 			if (object instanceof org.eclipse.emf.ecore.EObject) {
 				org.eclipse.emf.ecore.EObject element = (org.eclipse.emf.ecore.EObject) object;
-				org.sintef.thingml.resource.thingml.IThingmlTextResource textResource = (org.sintef.thingml.resource.thingml.IThingmlTextResource) element.eResource();
+				org.eclipse.emf.ecore.resource.Resource resource = element.eResource();
+				if (resource == null) {
+					return false;
+				}
+				if (!(resource instanceof org.sintef.thingml.resource.thingml.IThingmlTextResource)) {
+					return false;
+				}
+				org.sintef.thingml.resource.thingml.IThingmlTextResource textResource = (org.sintef.thingml.resource.thingml.IThingmlTextResource) resource;
 				org.sintef.thingml.resource.thingml.IThingmlLocationMap locationMap = textResource.getLocationMap();
 				int destination = locationMap.getCharStart(element);
 				if (destination < 0) {

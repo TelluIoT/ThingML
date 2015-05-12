@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.ui;
 
@@ -216,7 +207,11 @@ public class ThingmlTextHover implements org.eclipse.jface.text.ITextHover, org.
 	// The warning about overriding or implementing a deprecated API cannot be avoided
 	// because the SourceViewerConfiguration class depends on ITextHover.
 	public String getHoverInfo(org.eclipse.jface.text.ITextViewer textViewer, org.eclipse.jface.text.IRegion hoverRegion) {
-		return ((org.sintef.thingml.resource.thingml.ui.ThingmlDocBrowserInformationControlInput) getHoverInfo2(textViewer, hoverRegion)).getHtml();
+		Object hoverInfo = getHoverInfo2(textViewer, hoverRegion);
+		if (hoverInfo == null) {
+			return null;
+		}
+		return ((org.sintef.thingml.resource.thingml.ui.ThingmlDocBrowserInformationControlInput) hoverInfo).getHtml();
 	}
 	
 	public org.eclipse.jface.text.IRegion getHoverRegion(org.eclipse.jface.text.ITextViewer textViewer, int offset) {
@@ -247,6 +242,9 @@ public class ThingmlTextHover implements org.eclipse.jface.text.ITextHover, org.
 	
 	private org.sintef.thingml.resource.thingml.ui.ThingmlDocBrowserInformationControlInput internalGetHoverInfo(org.eclipse.jface.text.ITextViewer textViewer, org.eclipse.jface.text.IRegion hoverRegion) {
 		org.sintef.thingml.resource.thingml.IThingmlTextResource textResource = resourceProvider.getResource();
+		if (textResource == null) {
+			return null;
+		}
 		org.sintef.thingml.resource.thingml.IThingmlLocationMap locationMap = textResource.getLocationMap();
 		java.util.List<org.eclipse.emf.ecore.EObject> elementsAtOffset = locationMap.getElementsAt(hoverRegion.getOffset());
 		if (elementsAtOffset == null || elementsAtOffset.size() == 0) {
@@ -309,10 +307,8 @@ public class ThingmlTextHover implements org.eclipse.jface.text.ITextHover, org.
 		String css = styleSheet;
 		// Sets background color for the hover text window
 		css += "body {background-color:#FFFFE1;}\n";
-		if (css != null) {
-			org.eclipse.swt.graphics.FontData fontData = org.eclipse.jface.resource.JFaceResources.getFontRegistry().getFontData(FONT)[0];
-			css = org.sintef.thingml.resource.thingml.ui.ThingmlHTMLPrinter.convertTopLevelFont(css, fontData);
-		}
+		org.eclipse.swt.graphics.FontData fontData = org.eclipse.jface.resource.JFaceResources.getFontRegistry().getFontData(FONT)[0];
+		css = org.sintef.thingml.resource.thingml.ui.ThingmlHTMLPrinter.convertTopLevelFont(css, fontData);
 		
 		return css;
 	}

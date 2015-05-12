@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.util;
 
@@ -104,14 +95,43 @@ public class ThingmlStringUtil {
 	 */
 	public static String explode(Object[] parts, String glue) {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < parts.length; i++) {
+		int length = parts.length;
+		for (int i = 0; i < length; i++) {
 			Object next = parts[i];
 			sb.append(next.toString());
-			if (i < parts.length - 1) {
+			if (i < length - 1) {
 				sb.append(glue);
 			}
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * Concatenates the given parts and puts 'glue' between them. The toStringFunction
+	 * is used to convert the parts to strings.
+	 */
+	public static <T> String explode(java.util.Collection<T> parts, String glue, org.sintef.thingml.resource.thingml.IThingmlFunction1<String, T> toStringFunction) {
+		String[] partsAsArray = new String[parts.size()];
+		int i = 0;
+		for (T part : parts) {
+			partsAsArray[i] = toStringFunction.execute(part);
+			i++;
+		}
+		return explode(partsAsArray, glue);
+	}
+	
+	/**
+	 * Concatenates the given parts and puts 'glue' between them. The toStringFunction
+	 * is used to convert the parts to strings.
+	 */
+	public static <T> String explode(T[] parts, String glue, org.sintef.thingml.resource.thingml.IThingmlFunction1<String, T> toStringFunction) {
+		String[] partsAsArray = new String[parts.length];
+		int i = 0;
+		for (T part : parts) {
+			partsAsArray[i] = toStringFunction.execute(part);
+			i++;
+		}
+		return explode(partsAsArray, glue);
 	}
 	
 	/**

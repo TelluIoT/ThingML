@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.ui;
 
@@ -22,13 +13,23 @@ public class ThingmlOutlinePage extends org.eclipse.ui.part.Page implements org.
 	
 	public final static String CONTEXT_MENU_ID = "org.sintef.thingml.resource.thingml.ui.outlinecontext";
 	
-	private org.sintef.thingml.resource.thingml.ui.ThingmlEditor editor;
-	private org.eclipse.jface.viewers.TreeViewer treeViewer;
+	/**
+	 * The auto expand level determines the depth to which the outline tree is
+	 * expanded by default.
+	 */
+	public static int AUTO_EXPAND_LEVEL = 2;
+	
+	/**
+	 * The provider for the resource that is displayed in the outline page. Normally
+	 * this is the current editor.
+	 */
+	private org.sintef.thingml.resource.thingml.IThingmlResourceProvider resourceProvider;
+	private org.sintef.thingml.resource.thingml.ui.ThingmlOutlinePageTreeViewer treeViewer;
 	private org.eclipse.core.runtime.ListenerList selectionChangedListeners = new org.eclipse.core.runtime.ListenerList();
 	
-	public ThingmlOutlinePage(org.sintef.thingml.resource.thingml.ui.ThingmlEditor textEditor) {
+	public ThingmlOutlinePage(org.sintef.thingml.resource.thingml.IThingmlResourceProvider resourceProvider) {
 		super();
-		this.editor = textEditor;
+		this.resourceProvider = resourceProvider;
 	}
 	
 	public void createControl(org.eclipse.swt.widgets.Composite parent) {
@@ -44,17 +45,18 @@ public class ThingmlOutlinePage extends org.eclipse.ui.part.Page implements org.
 		adapterFactory.addAdapterFactory(new org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory());
 		org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider contentProvider = new org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider(adapterFactory);
-		treeViewer.setAutoExpandLevel(3);
+		treeViewer.setAutoExpandLevel(AUTO_EXPAND_LEVEL);
 		treeViewer.setContentProvider(contentProvider);
 		treeViewer.setLabelProvider(new org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider(adapterFactory));
-		org.eclipse.emf.ecore.resource.ResourceSet resourceSet = editor.getResourceSet();
-		org.eclipse.emf.common.util.EList<org.eclipse.emf.ecore.resource.Resource> resources = resourceSet.getResources();
-		treeViewer.setInput(resources.get(0));
-		if (!resources.isEmpty()) {
+		org.eclipse.emf.ecore.resource.Resource resource = resourceProvider.getResource();
+		treeViewer.setInput(resource);
+		if (resource != null) {
 			// Select the root object in the view.
-			treeViewer.setSelection(new org.eclipse.jface.viewers.StructuredSelection(resources.get(0)), true);
+			treeViewer.setSelection(new org.eclipse.jface.viewers.StructuredSelection(resource), true);
 		}
+		treeViewer.setComparator(new org.sintef.thingml.resource.thingml.ui.ThingmlOutlinePageTreeViewerComparator());
 		createContextMenu();
+		createActions();
 	}
 	
 	private void createContextMenu() {
@@ -75,6 +77,16 @@ public class ThingmlOutlinePage extends org.eclipse.ui.part.Page implements org.
 	
 	private void fillContextMenu(org.eclipse.jface.action.IMenuManager manager) {
 		manager.add(new org.eclipse.jface.action.GroupMarker(org.eclipse.ui.IWorkbenchActionConstants.MB_ADDITIONS));
+	}
+	
+	private void createActions() {
+		org.eclipse.ui.part.IPageSite site = getSite();
+		org.eclipse.ui.IActionBars actionBars = site.getActionBars();
+		org.eclipse.jface.action.IToolBarManager toolBarManager = actionBars.getToolBarManager();
+		java.util.List<org.eclipse.jface.action.IAction> actions = new org.sintef.thingml.resource.thingml.ui.ThingmlOutlinePageActionProvider().getActions(treeViewer);
+		for (org.eclipse.jface.action.IAction action : actions) {
+			toolBarManager.add(action);
+		}
 	}
 	
 	public void addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener listener) {

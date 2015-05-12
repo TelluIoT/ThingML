@@ -5,6 +5,7 @@ START ThingMLModel
 
 OPTIONS {
 
+	reloadGeneratorModel = "true"; 
 	memoize = "true";
 	tokenspace = "0";
 	usePredefinedTokens = "false";
@@ -217,7 +218,7 @@ RULES {
 	
 	ExternStatement::= statement[STRING_EXT] ("&" segments)*;
 	
-	ConditionalAction ::= "if" #1 "(" #1 condition #1 ")" !1 action;
+	ConditionalAction ::= "if" #1 "(" #1 condition #1 ")" !1 action !1 "else" !1 elseAction;
 	
 	LoopAction ::= "while" #1 "(" #1 condition #1 ")" !1 action;
 	
@@ -261,43 +262,43 @@ RULES {
 	@Operator(type="binary_left_associative", weight="5", superclass="Expression")
 	DivExpression ::= lhs #1 "/" #1 rhs;
 	
-	@Operator(type="binary_right_associative", weight="5", superclass="Expression")
+	@Operator(type="binary_right_associative", weight="6", superclass="Expression")
 	ModExpression ::= lhs #1 "%" #1 rhs;
 	
- 	@Operator(type="unary_prefix", weight="6", superclass="Expression")	
+ 	@Operator(type="unary_prefix", weight="7", superclass="Expression")	
 	UnaryMinus ::= "-" term;
 	
-	@Operator(type="unary_prefix", weight="6", superclass="Expression")	
+	@Operator(type="unary_prefix", weight="7", superclass="Expression")	
 	NotExpression ::= "not" #1 term;
 	
-	@Operator(type="primitive", weight="8", superclass="Expression")
+	@Operator(type="primitive", weight="9", superclass="Expression")
 	EventReference ::= msgRef[] "." paramRef[];	
 	
-	@Operator(type="primitive", weight="8", superclass="Expression")
+	@Operator(type="primitive", weight="9", superclass="Expression")
 	ExpressionGroup ::= "(" exp ")";
 	 
-	@Operator(type="primitive", weight="8", superclass="Expression")
+	@Operator(type="primitive", weight="9", superclass="Expression")
 	PropertyReference ::= property[] ;
 
-	@Operator(type="primitive", weight="8", superclass="Expression")
+	@Operator(type="primitive", weight="9", superclass="Expression")
 	IntegerLiteral ::= intValue[INTEGER_LITERAL];
 	
-	@Operator(type="primitive", weight="8", superclass="Expression")
+	@Operator(type="primitive", weight="9", superclass="Expression")
 	StringLiteral ::= stringValue[STRING_LITERAL];
 	
-	@Operator(type="primitive", weight="8", superclass="Expression")
+	@Operator(type="primitive", weight="9", superclass="Expression")
 	BooleanLiteral ::= boolValue[BOOLEAN_LITERAL];
 	
-	@Operator(type="primitive", weight="8", superclass="Expression")
+	@Operator(type="primitive", weight="9", superclass="Expression")
 	EnumLiteralRef ::= enum[] ":" literal[];
 	
-	@Operator(type="unary_postfix", weight="7", superclass="Expression")
+	@Operator(type="unary_postfix", weight="8", superclass="Expression")
 	ArrayIndex ::= array "[" index "]";
 	
-	@Operator(type="primitive", weight="8", superclass="Expression")
+	@Operator(type="primitive", weight="9", superclass="Expression")
 	FunctionCallExpression ::= function[] "(" (parameters ("," #1 parameters)* )? ")";
 	
-	@Operator(type="primitive", weight="8", superclass="Expression")
+	@Operator(type="primitive", weight="9", superclass="Expression")
 	ExternExpression::= expression[STRING_EXT] ("&" segments)*;
 	
 	

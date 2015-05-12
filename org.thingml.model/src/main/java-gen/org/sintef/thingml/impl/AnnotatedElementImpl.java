@@ -15,6 +15,7 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.Collection;
 import java.util.*;
 
 import org.eclipse.emf.common.notify.NotificationChain;

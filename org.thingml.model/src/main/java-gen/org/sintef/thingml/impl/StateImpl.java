@@ -15,6 +15,7 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.Collection;
 import java.util.*;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -32,6 +33,12 @@ import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.sintef.thingml.Action;
+import org.sintef.thingml.InternalTransition;
+import org.sintef.thingml.Property;
+import org.sintef.thingml.State;
+import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.Transition;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 

@@ -40,7 +40,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 */
 	public static ThingmlFactory init() {
 		try {
-			ThingmlFactory theThingmlFactory = (ThingmlFactory)EPackage.Registry.INSTANCE.getEFactory("http://thingml"); 
+			ThingmlFactory theThingmlFactory = (ThingmlFactory)EPackage.Registry.INSTANCE.getEFactory(ThingmlPackage.eNS_URI);
 			if (theThingmlFactory != null) {
 				return theThingmlFactory;
 			}

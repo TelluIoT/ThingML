@@ -15,6 +15,7 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.Collection;
 import java.util.*;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -30,6 +31,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.sintef.thingml.CompositeState;
+import org.sintef.thingml.ParallelRegion;
+import org.sintef.thingml.Region;
+import org.sintef.thingml.State;
+import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
 
 /**

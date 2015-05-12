@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.mopp;
 
@@ -21,10 +12,12 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 		
 		private String text;
 		private String tokenName;
+		private org.eclipse.emf.ecore.EObject container;
 		
-		public PrintToken(String text, String tokenName) {
+		public PrintToken(String text, String tokenName, org.eclipse.emf.ecore.EObject container) {
 			this.text = text;
 			this.tokenName = tokenName;
+			this.container = container;
 		}
 		
 		public String getText() {
@@ -35,13 +28,93 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 			return tokenName;
 		}
 		
+		public org.eclipse.emf.ecore.EObject getContainer() {
+			return container;
+		}
+		
+		public String toString() {
+			return "'" + text + "' [" + tokenName + "]";
+		}
+		
+	}
+	
+	/**
+	 * The PrintCountingMap keeps tracks of the values that must be printed for each
+	 * feature of an EObject. It is also used to store the indices of all values that
+	 * have been printed. This knowledge is used to avoid printing values twice. We
+	 * must store the concrete indices of the printed values instead of basically
+	 * counting them, because values may be printed in an order that differs from the
+	 * order in which they are stored in the EObject's feature.
+	 */
+	protected class PrintCountingMap {
+		
+		private java.util.Map<String, java.util.List<Object>> featureToValuesMap = new java.util.LinkedHashMap<String, java.util.List<Object>>();
+		private java.util.Map<String, java.util.Set<Integer>> featureToPrintedIndicesMap = new java.util.LinkedHashMap<String, java.util.Set<Integer>>();
+		
+		public void setFeatureValues(String featureName, java.util.List<Object> values) {
+			featureToValuesMap.put(featureName, values);
+			// If the feature does not have values it won't be printed. An entry in
+			// 'featureToPrintedIndicesMap' is therefore not needed in this case.
+			if (values != null) {
+				featureToPrintedIndicesMap.put(featureName, new java.util.LinkedHashSet<Integer>());
+			}
+		}
+		
+		public java.util.Set<Integer> getIndicesToPrint(String featureName) {
+			return featureToPrintedIndicesMap.get(featureName);
+		}
+		
+		public void addIndexToPrint(String featureName, int index) {
+			featureToPrintedIndicesMap.get(featureName).add(index);
+		}
+		
+		public int getCountLeft(org.sintef.thingml.resource.thingml.grammar.ThingmlTerminal terminal) {
+			org.eclipse.emf.ecore.EStructuralFeature feature = terminal.getFeature();
+			String featureName = feature.getName();
+			java.util.List<Object> totalValuesToPrint = featureToValuesMap.get(featureName);
+			java.util.Set<Integer> printedIndices = featureToPrintedIndicesMap.get(featureName);
+			if (totalValuesToPrint == null) {
+				return 0;
+			}
+			if (feature instanceof org.eclipse.emf.ecore.EAttribute) {
+				// for attributes we do not need to check the type, since the CS languages does
+				// not allow type restrictions for attributes.
+				return totalValuesToPrint.size() - printedIndices.size();
+			} else if (feature instanceof org.eclipse.emf.ecore.EReference) {
+				org.eclipse.emf.ecore.EReference reference = (org.eclipse.emf.ecore.EReference) feature;
+				if (!reference.isContainment()) {
+					// for non-containment references we also do not need to check the type, since the
+					// CS languages does not allow type restrictions for these either.
+					return totalValuesToPrint.size() - printedIndices.size();
+				}
+			}
+			// now we're left with containment references for which we check the type of the
+			// objects to print
+			java.util.List<Class<?>> allowedTypes = getAllowedTypes(terminal);
+			java.util.Set<Integer> indicesWithCorrectType = new java.util.LinkedHashSet<Integer>();
+			int index = 0;
+			for (Object valueToPrint : totalValuesToPrint) {
+				for (Class<?> allowedType : allowedTypes) {
+					if (allowedType.isInstance(valueToPrint)) {
+						indicesWithCorrectType.add(index);
+					}
+				}
+				index++;
+			}
+			indicesWithCorrectType.removeAll(printedIndices);
+			return indicesWithCorrectType.size();
+		}
+		
+		public int getNextIndexToPrint(String featureName) {
+			int printedValues = featureToPrintedIndicesMap.get(featureName).size();
+			return printedValues;
+		}
+		
 	}
 	
 	public final static String NEW_LINE = java.lang.System.getProperties().getProperty("line.separator");
 	
-	private final PrintToken SPACE_TOKEN = new PrintToken(" ", null);
-	private final PrintToken TAB_TOKEN = new PrintToken("\t", null);
-	private final PrintToken NEW_LINE_TOKEN = new PrintToken(NEW_LINE, null);
+	private final org.sintef.thingml.resource.thingml.util.ThingmlEClassUtil eClassUtil = new org.sintef.thingml.resource.thingml.util.ThingmlEClassUtil();
 	
 	/**
 	 * Holds the resource that is associated with this printer. May be null if the
@@ -51,6 +124,7 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 	
 	private java.util.Map<?, ?> options;
 	private java.io.OutputStream outputStream;
+	private String encoding = System.getProperty("file.encoding");
 	protected java.util.List<PrintToken> tokenOutputStream;
 	private org.sintef.thingml.resource.thingml.IThingmlTokenResolverFactory tokenResolverFactory = new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenResolverFactory();
 	private boolean handleTokenSpaceAutomatically = false;
@@ -100,8 +174,8 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 		// print all remaining formatting elements
 		java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations = getCopyOfLayoutInformation(element);
 		org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation eofLayoutInformation = getLayoutInformation(layoutInformations, null, null, null);
-		printFormattingElements(formattingElements, layoutInformations, eofLayoutInformation);
-		java.io.PrintWriter writer = new java.io.PrintWriter(new java.io.BufferedOutputStream(outputStream));
+		printFormattingElements(element, formattingElements, layoutInformations, eofLayoutInformation);
+		java.io.PrintWriter writer = new java.io.PrintWriter(new java.io.OutputStreamWriter(new java.io.BufferedOutputStream(outputStream), encoding));
 		if (handleTokenSpaceAutomatically) {
 			printSmart(writer);
 		} else {
@@ -381,7 +455,7 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 	}
 	
 	public void decorateTree(org.sintef.thingml.resource.thingml.mopp.ThingmlSyntaxElementDecorator decorator, org.eclipse.emf.ecore.EObject eObject) {
-		java.util.Map<String, Integer> printCountingMap = initializePrintCountingMap(eObject);
+		PrintCountingMap printCountingMap = initializePrintCountingMap(eObject);
 		java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlSyntaxElementDecorator> keywordsToPrint = new java.util.ArrayList<org.sintef.thingml.resource.thingml.mopp.ThingmlSyntaxElementDecorator>();
 		decorateTreeBasic(decorator, eObject, printCountingMap, keywordsToPrint);
 		for (org.sintef.thingml.resource.thingml.mopp.ThingmlSyntaxElementDecorator keywordToPrint : keywordsToPrint) {
@@ -392,10 +466,10 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 	}
 	
 	/**
-	 * Tries to decorate the decorator with an attribute value, or reference holded by
-	 * eObject. Returns true if an attribute value or reference was found.
+	 * Tries to decorate the decorator with an attribute value, or reference held by
+	 * the given EObject. Returns true if an attribute value or reference was found.
 	 */
-	public boolean decorateTreeBasic(org.sintef.thingml.resource.thingml.mopp.ThingmlSyntaxElementDecorator decorator, org.eclipse.emf.ecore.EObject eObject, java.util.Map<String, Integer> printCountingMap, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlSyntaxElementDecorator> keywordsToPrint) {
+	public boolean decorateTreeBasic(org.sintef.thingml.resource.thingml.mopp.ThingmlSyntaxElementDecorator decorator, org.eclipse.emf.ecore.EObject eObject, PrintCountingMap printCountingMap, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlSyntaxElementDecorator> keywordsToPrint) {
 		boolean foundFeatureToPrint = false;
 		org.sintef.thingml.resource.thingml.grammar.ThingmlSyntaxElement syntaxElement = decorator.getDecoratedElement();
 		org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality cardinality = syntaxElement.getCardinality();
@@ -411,11 +485,22 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 				if (feature == org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.ANONYMOUS_FEATURE) {
 					return false;
 				}
-				int countLeft = printCountingMap.get(feature.getName());
+				String featureName = feature.getName();
+				int countLeft = printCountingMap.getCountLeft(terminal);
 				if (countLeft > terminal.getMandatoryOccurencesAfter()) {
-					decorator.addIndexToPrint(countLeft);
-					printCountingMap.put(feature.getName(), countLeft - 1);
-					keepDecorating = true;
+					// normally we print the element at the next index
+					int indexToPrint = printCountingMap.getNextIndexToPrint(featureName);
+					// But, if there are type restrictions for containments, we must choose an index
+					// of an element that fits (i.e., which has the correct type)
+					if (terminal instanceof org.sintef.thingml.resource.thingml.grammar.ThingmlContainment) {
+						org.sintef.thingml.resource.thingml.grammar.ThingmlContainment containment = (org.sintef.thingml.resource.thingml.grammar.ThingmlContainment) terminal;
+						indexToPrint = findElementWithCorrectType(eObject, feature, printCountingMap.getIndicesToPrint(featureName), containment);
+					}
+					if (indexToPrint >= 0) {
+						decorator.addIndexToPrint(indexToPrint);
+						printCountingMap.addIndexToPrint(featureName, indexToPrint);
+						keepDecorating = true;
+					}
 				}
 			}
 			if (syntaxElement instanceof org.sintef.thingml.resource.thingml.grammar.ThingmlChoice) {
@@ -464,14 +549,41 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 		return foundFeatureToPrint;
 	}
 	
+	private int findElementWithCorrectType(org.eclipse.emf.ecore.EObject eObject, org.eclipse.emf.ecore.EStructuralFeature feature, java.util.Set<Integer> indicesToPrint, org.sintef.thingml.resource.thingml.grammar.ThingmlContainment containment) {
+		// By default the type restrictions that are defined in the CS definition are
+		// considered when printing models. You can change this behavior by setting the
+		// 'ignoreTypeRestrictionsForPrinting' option to true.
+		boolean ignoreTypeRestrictions = false;
+		org.eclipse.emf.ecore.EClass[] allowedTypes = containment.getAllowedTypes();
+		Object value = eObject.eGet(feature);
+		if (value instanceof java.util.List<?>) {
+			java.util.List<?> valueList = (java.util.List<?>) value;
+			int listSize = valueList.size();
+			for (int index = 0; index < listSize; index++) {
+				if (indicesToPrint.contains(index)) {
+					continue;
+				}
+				Object valueAtIndex = valueList.get(index);
+				if (eClassUtil.isInstance(valueAtIndex, allowedTypes) || ignoreTypeRestrictions) {
+					return index;
+				}
+			}
+		} else {
+			if (eClassUtil.isInstance(value, allowedTypes) || ignoreTypeRestrictions) {
+				return 0;
+			}
+		}
+		return -1;
+	}
+	
 	/**
 	 * Checks whether decorating the given node will use at least one attribute value,
-	 * or reference holded by eObject. Returns true if a printable attribute value or
+	 * or reference held by eObject. Returns true if a printable attribute value or
 	 * reference was found. This method is used to decide which choice to pick, when
 	 * multiple choices are available. We pick the choice that prints at least one
 	 * attribute or reference.
 	 */
-	public boolean doesPrintFeature(org.sintef.thingml.resource.thingml.mopp.ThingmlSyntaxElementDecorator decorator, org.eclipse.emf.ecore.EObject eObject, java.util.Map<String, Integer> printCountingMap) {
+	public boolean doesPrintFeature(org.sintef.thingml.resource.thingml.mopp.ThingmlSyntaxElementDecorator decorator, org.eclipse.emf.ecore.EObject eObject, PrintCountingMap printCountingMap) {
 		org.sintef.thingml.resource.thingml.grammar.ThingmlSyntaxElement syntaxElement = decorator.getDecoratedElement();
 		if (syntaxElement instanceof org.sintef.thingml.resource.thingml.grammar.ThingmlTerminal) {
 			org.sintef.thingml.resource.thingml.grammar.ThingmlTerminal terminal = (org.sintef.thingml.resource.thingml.grammar.ThingmlTerminal) syntaxElement;
@@ -479,7 +591,7 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 			if (feature == org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.ANONYMOUS_FEATURE) {
 				return false;
 			}
-			int countLeft = printCountingMap.get(feature.getName());
+			int countLeft = printCountingMap.getCountLeft(terminal);
 			if (countLeft > terminal.getMandatoryOccurencesAfter()) {
 				// found a feature to print
 				return true;
@@ -557,10 +669,10 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 	}
 	
 	public void printKeyword(org.eclipse.emf.ecore.EObject eObject, org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword keyword, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations) {
-		org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation layoutInformation = getLayoutInformation(layoutInformations, keyword, null, eObject);
-		printFormattingElements(foundFormattingElements, layoutInformations, layoutInformation);
+		org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation keywordLayout = getLayoutInformation(layoutInformations, keyword, null, eObject);
+		printFormattingElements(eObject, foundFormattingElements, layoutInformations, keywordLayout);
 		String value = keyword.getValue();
-		tokenOutputStream.add(new PrintToken(value, "'" + org.sintef.thingml.resource.thingml.util.ThingmlStringUtil.escapeToANTLRKeyword(value) + "'"));
+		tokenOutputStream.add(new PrintToken(value, "'" + org.sintef.thingml.resource.thingml.util.ThingmlStringUtil.escapeToANTLRKeyword(value) + "'", eObject));
 	}
 	
 	public void printFeature(org.eclipse.emf.ecore.EObject eObject, org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder placeholder, int count, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations) {
@@ -572,15 +684,17 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 		}
 	}
 	
-	public void printAttribute(org.eclipse.emf.ecore.EObject eObject, org.eclipse.emf.ecore.EAttribute attribute, org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder placeholder, int count, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations) {
-		String result;
-		Object attributeValue = getValue(eObject, attribute, count);
-		org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation layoutInformation = getLayoutInformation(layoutInformations, placeholder, attributeValue, eObject);
-		String visibleTokenText = getVisibleTokenText(layoutInformation);
+	public void printAttribute(org.eclipse.emf.ecore.EObject eObject, org.eclipse.emf.ecore.EAttribute attribute, org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder placeholder, int index, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations) {
+		String result = null;
+		Object attributeValue = org.sintef.thingml.resource.thingml.util.ThingmlEObjectUtil.getFeatureValue(eObject, attribute, index);
+		org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation attributeLayout = getLayoutInformation(layoutInformations, placeholder, attributeValue, eObject);
+		String visibleTokenText = getVisibleTokenText(attributeLayout);
 		// if there is text for the attribute we use it
 		if (visibleTokenText != null) {
 			result = visibleTokenText;
-		} else {
+		}
+		
+		if (result == null) {
 			// if no text is available, the attribute is deresolved to obtain its textual
 			// representation
 			org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver(placeholder.getTokenName());
@@ -588,24 +702,27 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 			String deResolvedValue = tokenResolver.deResolve(attributeValue, attribute, eObject);
 			result = deResolvedValue;
 		}
+		
 		if (result != null && !"".equals(result)) {
-			printFormattingElements(foundFormattingElements, layoutInformations, layoutInformation);
+			printFormattingElements(eObject, foundFormattingElements, layoutInformations, attributeLayout);
 			// write result to the output stream
-			tokenOutputStream.add(new PrintToken(result, placeholder.getTokenName()));
+			tokenOutputStream.add(new PrintToken(result, placeholder.getTokenName(), eObject));
 		}
 	}
 	
 	
-	public void printBooleanTerminal(org.eclipse.emf.ecore.EObject eObject, org.sintef.thingml.resource.thingml.grammar.ThingmlBooleanTerminal booleanTerminal, int count, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations) {
+	public void printBooleanTerminal(org.eclipse.emf.ecore.EObject eObject, org.sintef.thingml.resource.thingml.grammar.ThingmlBooleanTerminal booleanTerminal, int index, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations) {
 		org.eclipse.emf.ecore.EAttribute attribute = booleanTerminal.getAttribute();
-		String result;
-		Object attributeValue = getValue(eObject, attribute, count);
-		org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation layoutInformation = getLayoutInformation(layoutInformations, booleanTerminal, attributeValue, eObject);
-		String visibleTokenText = getVisibleTokenText(layoutInformation);
+		String result = null;
+		Object attributeValue = org.sintef.thingml.resource.thingml.util.ThingmlEObjectUtil.getFeatureValue(eObject, attribute, index);
+		org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation attributeLayout = getLayoutInformation(layoutInformations, booleanTerminal, attributeValue, eObject);
+		String visibleTokenText = getVisibleTokenText(attributeLayout);
 		// if there is text for the attribute we use it
 		if (visibleTokenText != null) {
 			result = visibleTokenText;
-		} else {
+		}
+		
+		if (result == null) {
 			// if no text is available, the boolean attribute is converted to its textual
 			// representation using the literals of the boolean terminal
 			if (Boolean.TRUE.equals(attributeValue)) {
@@ -614,40 +731,44 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 				result = booleanTerminal.getFalseLiteral();
 			}
 		}
+		
 		if (result != null && !"".equals(result)) {
-			printFormattingElements(foundFormattingElements, layoutInformations, layoutInformation);
+			printFormattingElements(eObject, foundFormattingElements, layoutInformations, attributeLayout);
 			// write result to the output stream
-			tokenOutputStream.add(new PrintToken(result, "'" + org.sintef.thingml.resource.thingml.util.ThingmlStringUtil.escapeToANTLRKeyword(result) + "'"));
+			tokenOutputStream.add(new PrintToken(result, "'" + org.sintef.thingml.resource.thingml.util.ThingmlStringUtil.escapeToANTLRKeyword(result) + "'", eObject));
 		}
 	}
 	
 	
-	public void printEnumerationTerminal(org.eclipse.emf.ecore.EObject eObject, org.sintef.thingml.resource.thingml.grammar.ThingmlEnumerationTerminal enumTerminal, int count, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations) {
+	public void printEnumerationTerminal(org.eclipse.emf.ecore.EObject eObject, org.sintef.thingml.resource.thingml.grammar.ThingmlEnumerationTerminal enumTerminal, int index, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations) {
 		org.eclipse.emf.ecore.EAttribute attribute = enumTerminal.getAttribute();
-		String result;
-		Object attributeValue = getValue(eObject, attribute, count);
-		org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation layoutInformation = getLayoutInformation(layoutInformations, enumTerminal, attributeValue, eObject);
-		String visibleTokenText = getVisibleTokenText(layoutInformation);
+		String result = null;
+		Object attributeValue = org.sintef.thingml.resource.thingml.util.ThingmlEObjectUtil.getFeatureValue(eObject, attribute, index);
+		org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation attributeLayout = getLayoutInformation(layoutInformations, enumTerminal, attributeValue, eObject);
+		String visibleTokenText = getVisibleTokenText(attributeLayout);
 		// if there is text for the attribute we use it
 		if (visibleTokenText != null) {
 			result = visibleTokenText;
-		} else {
+		}
+		
+		if (result == null) {
 			// if no text is available, the enumeration attribute is converted to its textual
 			// representation using the literals of the enumeration terminal
 			assert attributeValue instanceof org.eclipse.emf.common.util.Enumerator;
 			result = enumTerminal.getText(((org.eclipse.emf.common.util.Enumerator) attributeValue).getName());
 		}
+		
 		if (result != null && !"".equals(result)) {
-			printFormattingElements(foundFormattingElements, layoutInformations, layoutInformation);
+			printFormattingElements(eObject, foundFormattingElements, layoutInformations, attributeLayout);
 			// write result to the output stream
-			tokenOutputStream.add(new PrintToken(result, "'" + org.sintef.thingml.resource.thingml.util.ThingmlStringUtil.escapeToANTLRKeyword(result) + "'"));
+			tokenOutputStream.add(new PrintToken(result, "'" + org.sintef.thingml.resource.thingml.util.ThingmlStringUtil.escapeToANTLRKeyword(result) + "'", eObject));
 		}
 	}
 	
 	
-	public void printContainedObject(org.eclipse.emf.ecore.EObject eObject, org.sintef.thingml.resource.thingml.grammar.ThingmlContainment containment, int count, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations) {
+	public void printContainedObject(org.eclipse.emf.ecore.EObject eObject, org.sintef.thingml.resource.thingml.grammar.ThingmlContainment containment, int index, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations) {
 		org.eclipse.emf.ecore.EStructuralFeature reference = containment.getFeature();
-		Object o = getValue(eObject, reference, count);
+		Object o = org.sintef.thingml.resource.thingml.util.ThingmlEObjectUtil.getFeatureValue(eObject, reference, index);
 		// save current number of tabs to restore them after printing the contained object
 		int oldTabsBeforeCurrentObject = tabsBeforeCurrentObject;
 		int oldCurrentTabs = currentTabs;
@@ -662,14 +783,14 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 		currentTabs = oldCurrentTabs;
 	}
 	
-	public void printFormattingElements(java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations, org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation layoutInformation) {
+	public void printFormattingElements(org.eclipse.emf.ecore.EObject eObject, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations, org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation layoutInformation) {
 		String hiddenTokenText = getHiddenTokenText(layoutInformation);
 		if (hiddenTokenText != null) {
 			// removed used information
 			if (layoutInformations != null) {
 				layoutInformations.remove(layoutInformation);
 			}
-			tokenOutputStream.add(new PrintToken(hiddenTokenText, null));
+			tokenOutputStream.add(new PrintToken(hiddenTokenText, null, eObject));
 			foundFormattingElements.clear();
 			startedPrintingObject = false;
 			setTabsBeforeCurrentObject(0);
@@ -681,15 +802,15 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 				if (foundFormattingElement instanceof org.sintef.thingml.resource.thingml.grammar.ThingmlWhiteSpace) {
 					int amount = ((org.sintef.thingml.resource.thingml.grammar.ThingmlWhiteSpace) foundFormattingElement).getAmount();
 					for (int i = 0; i < amount; i++) {
-						tokenOutputStream.add(SPACE_TOKEN);
+						tokenOutputStream.add(createSpaceToken(eObject));
 					}
 				}
 				if (foundFormattingElement instanceof org.sintef.thingml.resource.thingml.grammar.ThingmlLineBreak) {
 					currentTabs = ((org.sintef.thingml.resource.thingml.grammar.ThingmlLineBreak) foundFormattingElement).getTabs();
 					printedTabs += currentTabs;
-					tokenOutputStream.add(NEW_LINE_TOKEN);
+					tokenOutputStream.add(createNewLineToken(eObject));
 					for (int i = 0; i < tabsBeforeCurrentObject + currentTabs; i++) {
-						tokenOutputStream.add(TAB_TOKEN);
+						tokenOutputStream.add(createTabToken(eObject));
 					}
 				}
 			}
@@ -702,7 +823,7 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 				startedPrintingObject = false;
 			} else {
 				if (!handleTokenSpaceAutomatically) {
-					tokenOutputStream.add(new PrintToken(getWhiteSpaceString(tokenSpace), null));
+					tokenOutputStream.add(new PrintToken(getWhiteSpaceString(tokenSpace), null, eObject));
 				}
 			}
 		}
@@ -718,30 +839,21 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 		startedPrintingContainedObject = true;
 	}
 	
-	private Object getValue(org.eclipse.emf.ecore.EObject eObject, org.eclipse.emf.ecore.EStructuralFeature feature, int count) {
-		// get value of feature
-		Object o = eObject.eGet(feature);
-		if (o instanceof java.util.List<?>) {
-			java.util.List<?> list = (java.util.List<?>) o;
-			int index = list.size() - count;
-			o = list.get(index);
-		}
-		return o;
-	}
-	
 	@SuppressWarnings("unchecked")	
-	public void printReference(org.eclipse.emf.ecore.EObject eObject, org.eclipse.emf.ecore.EReference reference, org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder placeholder, int count, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations) {
+	public void printReference(org.eclipse.emf.ecore.EObject eObject, org.eclipse.emf.ecore.EReference reference, org.sintef.thingml.resource.thingml.grammar.ThingmlPlaceholder placeholder, int index, java.util.List<org.sintef.thingml.resource.thingml.grammar.ThingmlFormattingElement> foundFormattingElements, java.util.List<org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation> layoutInformations) {
 		String tokenName = placeholder.getTokenName();
-		Object referencedObject = getValue(eObject, reference, count);
+		Object referencedObject = org.sintef.thingml.resource.thingml.util.ThingmlEObjectUtil.getFeatureValue(eObject, reference, index, false);
 		// first add layout before the reference
-		org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation layoutInformation = getLayoutInformation(layoutInformations, placeholder, referencedObject, eObject);
-		printFormattingElements(foundFormattingElements, layoutInformations, layoutInformation);
+		org.sintef.thingml.resource.thingml.mopp.ThingmlLayoutInformation referenceLayout = getLayoutInformation(layoutInformations, placeholder, referencedObject, eObject);
+		printFormattingElements(eObject, foundFormattingElements, layoutInformations, referenceLayout);
 		// proxy objects must be printed differently
 		String deresolvedReference = null;
 		if (referencedObject instanceof org.eclipse.emf.ecore.EObject) {
 			org.eclipse.emf.ecore.EObject eObjectToDeResolve = (org.eclipse.emf.ecore.EObject) referencedObject;
 			if (eObjectToDeResolve.eIsProxy()) {
 				deresolvedReference = ((org.eclipse.emf.ecore.InternalEObject) eObjectToDeResolve).eProxyURI().fragment();
+				// If the proxy was created by EMFText, we can try to recover the identifier from
+				// the proxy URI
 				if (deresolvedReference != null && deresolvedReference.startsWith(org.sintef.thingml.resource.thingml.IThingmlContextDependentURIFragment.INTERNAL_URI_FRAGMENT_PREFIX)) {
 					deresolvedReference = deresolvedReference.substring(org.sintef.thingml.resource.thingml.IThingmlContextDependentURIFragment.INTERNAL_URI_FRAGMENT_PREFIX.length());
 					deresolvedReference = deresolvedReference.substring(deresolvedReference.indexOf("_") + 1);
@@ -761,28 +873,33 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 		tokenResolver.setOptions(getOptions());
 		String deresolvedToken = tokenResolver.deResolve(deresolvedReference, reference, eObject);
 		// write result to output stream
-		tokenOutputStream.add(new PrintToken(deresolvedToken, tokenName));
+		tokenOutputStream.add(new PrintToken(deresolvedToken, tokenName, eObject));
 	}
 	
-	public java.util.Map<String, Integer> initializePrintCountingMap(org.eclipse.emf.ecore.EObject eObject) {
-		// The printCountingMap contains a mapping from feature names to the number of
+	@SuppressWarnings("unchecked")	
+	public PrintCountingMap initializePrintCountingMap(org.eclipse.emf.ecore.EObject eObject) {
+		// The PrintCountingMap contains a mapping from feature names to the number of
 		// remaining elements that still need to be printed. The map is initialized with
 		// the number of elements stored in each structural feature. For lists this is the
 		// list size. For non-multiple features it is either 1 (if the feature is set) or
 		// 0 (if the feature is null).
-		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>();
+		PrintCountingMap printCountingMap = new PrintCountingMap();
 		java.util.List<org.eclipse.emf.ecore.EStructuralFeature> features = eObject.eClass().getEAllStructuralFeatures();
 		for (org.eclipse.emf.ecore.EStructuralFeature feature : features) {
-			int count = 0;
-			Object featureValue = eObject.eGet(feature);
+			// We get the feature value without resolving it, because resolving is not
+			// required to count the number of elements that are referenced by the feature.
+			// Moreover, triggering reference resolving is not desired here, because we'd also
+			// like to print models that contain unresolved references.
+			Object featureValue = eObject.eGet(feature, false);
 			if (featureValue != null) {
 				if (featureValue instanceof java.util.List<?>) {
-					count = ((java.util.List<?>) featureValue).size();
+					printCountingMap.setFeatureValues(feature.getName(), (java.util.List<Object>) featureValue);
 				} else {
-					count = 1;
+					printCountingMap.setFeatureValues(feature.getName(), java.util.Collections.singletonList(featureValue));
 				}
+			} else {
+				printCountingMap.setFeatureValues(feature.getName(), null);
 			}
-			printCountingMap.put(feature.getName(), count);
 		}
 		return printCountingMap;
 	}
@@ -793,6 +910,16 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 	
 	public void setOptions(java.util.Map<?,?> options) {
 		this.options = options;
+	}
+	
+	public String getEncoding() {
+		return encoding;
+	}
+	
+	public void setEncoding(String encoding) {
+		if (encoding != null) {
+			this.encoding = encoding;
+		}
 	}
 	
 	public org.sintef.thingml.resource.thingml.IThingmlTextResource getResource() {
@@ -828,7 +955,16 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 			if (syntaxElement == layoutInformation.getSyntaxElement()) {
 				if (object == null) {
 					return layoutInformation;
-				} else if (object == layoutInformation.getObject(container)) {
+				}
+				// The layout information adapter must only try to resolve the object it refers
+				// to, if we compare with a non-proxy object. If we're printing a resource that
+				// contains proxy objects, resolving must not be triggered.
+				boolean isNoProxy = true;
+				if (object instanceof org.eclipse.emf.ecore.EObject) {
+					org.eclipse.emf.ecore.EObject eObject = (org.eclipse.emf.ecore.EObject) object;
+					isNoProxy = !eObject.eIsProxy();
+				}
+				if (isSame(object, layoutInformation.getObject(container, isNoProxy))) {
 					return layoutInformation;
 				}
 			}
@@ -917,12 +1053,17 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 		// stores the text that was already successfully checked (i.e., is can be scanned
 		// correctly and can thus be printed).
 		String validBlock = "";
+		char lastCharWritten = ' ';
 		for (int i = 0; i < tokenOutputStream.size(); i++) {
 			PrintToken tokenI = tokenOutputStream.get(i);
 			currentBlock.append(tokenI.getText());
 			// if declared or preserved whitespace is found - print block
 			if (tokenI.getTokenName() == null) {
-				writer.write(currentBlock.toString());
+				char[] charArray = currentBlock.toString().toCharArray();
+				writer.write(charArray);
+				if (charArray.length > 0) {
+					lastCharWritten = charArray[charArray.length - 1];
+				}
 				// reset all values
 				currentBlock = new StringBuilder();
 				currentBlockStart = i + 1;
@@ -965,9 +1106,17 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 			} else {
 				// sequence is not valid, must print whitespace to separate tokens
 				// print text that is valid so far
-				writer.write(validBlock);
+				char[] charArray = validBlock.toString().toCharArray();
+				writer.write(charArray);
+				if (charArray.length > 0) {
+					lastCharWritten = charArray[charArray.length - 1];
+				}
 				// print separating whitespace
-				writer.write(" ");
+				// if no whitespace (or tab or linebreak) is already there
+				if (lastCharWritten != ' ' && lastCharWritten != '\t' && lastCharWritten != '\n' && lastCharWritten != '\r') {
+					lastCharWritten = ' ';
+					writer.write(lastCharWritten);
+				}
 				// add current token as initial value for next iteration
 				currentBlock = new StringBuilder(tokenI.getText());
 				currentBlockStart = i;
@@ -976,6 +1125,41 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 		}
 		// flush remaining valid text to writer
 		writer.write(validBlock);
+	}
+	
+	private boolean isSame(Object o1, Object o2) {
+		if (o1 instanceof String || o1 instanceof Integer || o1 instanceof Long || o1 instanceof Byte || o1 instanceof Short || o1 instanceof Float || o2 instanceof Double) {
+			return o1.equals(o2);
+		}
+		return o1 == o2;
+	}
+	
+	protected java.util.List<Class<?>> getAllowedTypes(org.sintef.thingml.resource.thingml.grammar.ThingmlTerminal terminal) {
+		java.util.List<Class<?>> allowedTypes = new java.util.ArrayList<Class<?>>();
+		allowedTypes.add(terminal.getFeature().getEType().getInstanceClass());
+		if (terminal instanceof org.sintef.thingml.resource.thingml.grammar.ThingmlContainment) {
+			org.sintef.thingml.resource.thingml.grammar.ThingmlContainment printingContainment = (org.sintef.thingml.resource.thingml.grammar.ThingmlContainment) terminal;
+			org.eclipse.emf.ecore.EClass[] typeRestrictions = printingContainment.getAllowedTypes();
+			if (typeRestrictions != null && typeRestrictions.length > 0) {
+				allowedTypes.clear();
+				for (org.eclipse.emf.ecore.EClass eClass : typeRestrictions) {
+					allowedTypes.add(eClass.getInstanceClass());
+				}
+			}
+		}
+		return allowedTypes;
+	}
+	
+	protected PrintToken createSpaceToken(org.eclipse.emf.ecore.EObject container) {
+		return new PrintToken(" ", null, container);
+	}
+	
+	protected PrintToken createTabToken(org.eclipse.emf.ecore.EObject container) {
+		return new PrintToken("\t", null, container);
+	}
+	
+	protected PrintToken createNewLineToken(org.eclipse.emf.ecore.EObject container) {
+		return new PrintToken(NEW_LINE, null, container);
 	}
 	
 }

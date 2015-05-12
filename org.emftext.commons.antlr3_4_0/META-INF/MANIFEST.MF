@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ANTLR 3.3.0 Runtime Classes
+Bundle-SymbolicName: org.emftext.commons.antlr3_4_0;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: Software Technology Group - TU Dresden Germany
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.antlr.runtime3_4_0,
+  org.antlr.runtime3_4_0.debug,
+  org.antlr.runtime3_4_0.misc,
+  org.antlr.runtime3_4_0.tree

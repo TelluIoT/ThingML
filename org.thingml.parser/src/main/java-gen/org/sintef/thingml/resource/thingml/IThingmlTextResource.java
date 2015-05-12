@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml;
 
@@ -43,13 +34,6 @@ public interface IThingmlTextResource extends org.eclipse.emf.ecore.resource.Res
 	public void reload(java.io.InputStream stream, java.util.Map<?,?> options) throws java.io.IOException;
 	
 	/**
-	 * Try to cancel a current reload of this resource. It is not guaranteed that
-	 * canceling is successful. If this resource has already finished parsing the new
-	 * content, it will replace its content unconditionally.
-	 */
-	public void cancelReload();
-	
-	/**
 	 * Returns a map containing information about the location of model elements in
 	 * the text.
 	 * 
@@ -79,15 +63,21 @@ public interface IThingmlTextResource extends org.eclipse.emf.ecore.resource.Res
 	 */
 	public <ContainerType extends org.eclipse.emf.ecore.EObject, ReferenceType extends org.eclipse.emf.ecore.EObject> void registerContextDependentProxy(org.sintef.thingml.resource.thingml.IThingmlContextDependentURIFragmentFactory<ContainerType, ReferenceType> factory, ContainerType container, org.eclipse.emf.ecore.EReference reference, String id, org.eclipse.emf.ecore.EObject proxyElement, int position);
 	
+	@Deprecated	
+	public void addWarning(String message, org.eclipse.emf.ecore.EObject cause);
+	
 	/**
 	 * Attaches a warning with the given message to object 'cause'.
 	 */
-	public void addWarning(String message, org.eclipse.emf.ecore.EObject cause);
+	public void addWarning(String message, org.sintef.thingml.resource.thingml.ThingmlEProblemType type, org.eclipse.emf.ecore.EObject cause);
+	
+	@Deprecated	
+	public void addError(String message, org.eclipse.emf.ecore.EObject cause);
 	
 	/**
 	 * Attaches an error with the given message to object 'cause'.
 	 */
-	public void addError(String message, org.eclipse.emf.ecore.EObject cause);
+	public void addError(String message, org.sintef.thingml.resource.thingml.ThingmlEProblemType type, org.eclipse.emf.ecore.EObject cause);
 	
 	/**
 	 * Returns the quick fix for the given context. This method is used by the

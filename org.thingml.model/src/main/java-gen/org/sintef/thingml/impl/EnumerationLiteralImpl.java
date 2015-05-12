@@ -69,7 +69,7 @@ public class EnumerationLiteralImpl extends AnnotatedElementImpl implements Enum
 	 */
 	public Enumeration getEnum() {
 		if (eContainerFeatureID() != ThingmlPackage.ENUMERATION_LITERAL__ENUM) return null;
-		return (Enumeration)eContainer();
+		return (Enumeration)eInternalContainer();
 	}
 
 	/**

@@ -17,6 +17,8 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.sintef.thingml.StateMachine;
+import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
 
 import java.util.ArrayList;

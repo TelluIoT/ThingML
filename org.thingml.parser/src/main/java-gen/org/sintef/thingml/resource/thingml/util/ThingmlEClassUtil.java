@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.util;
 
@@ -59,7 +50,14 @@ public class ThingmlEClassUtil {
 	org.eclipse.emf.ecore.EClass classB) {
 		String nsURI_A = classA.getEPackage().getNsURI();
 		String nsURI_B = classB.getEPackage().getNsURI();
-		return (nsURI_A == null && nsURI_B == null) || nsURI_A.equals(nsURI_B);
+		if (nsURI_A == null && nsURI_B == null) {
+			return true;
+		}
+		if (nsURI_A != null) {
+			return nsURI_A.equals(nsURI_B);
+		} else {
+			return false;
+		}
 	}
 	
 	public boolean namesAreEqual(org.eclipse.emf.ecore.EClass classA, org.eclipse.emf.ecore.EClass classB) {
@@ -72,6 +70,18 @@ public class ThingmlEClassUtil {
 	
 	public boolean isNotConcrete(org.eclipse.emf.ecore.EClass eClass) {
 		return !isConcrete(eClass);
+	}
+	
+	/**
+	 * Returns true if the given object is an instance of one of the EClasses.
+	 */
+	public boolean isInstance(Object object, org.eclipse.emf.ecore.EClass[] allowedTypes) {
+		for (org.eclipse.emf.ecore.EClass allowedType : allowedTypes) {
+			if (allowedType.isInstance(object)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

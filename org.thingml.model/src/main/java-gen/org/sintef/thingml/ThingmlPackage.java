@@ -2983,13 +2983,22 @@ public interface ThingmlPackage extends EPackage {
 	int CONDITIONAL_ACTION__CONDITION = CONTROL_STRUCTURE__CONDITION;
 
 	/**
+	 * The feature id for the '<em><b>Else Action</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITIONAL_ACTION__ELSE_ACTION = CONTROL_STRUCTURE_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Conditional Action</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONDITIONAL_ACTION_FEATURE_COUNT = CONTROL_STRUCTURE_FEATURE_COUNT + 0;
+	int CONDITIONAL_ACTION_FEATURE_COUNT = CONTROL_STRUCTURE_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.PropertyReferenceImpl <em>Property Reference</em>}' class.
@@ -5181,6 +5190,17 @@ public interface ThingmlPackage extends EPackage {
 	EClass getConditionalAction();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.ConditionalAction#getElseAction <em>Else Action</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Else Action</em>'.
+	 * @see org.sintef.thingml.ConditionalAction#getElseAction()
+	 * @see #getConditionalAction()
+	 * @generated
+	 */
+	EReference getConditionalAction_ElseAction();
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.PropertyReference <em>Property Reference</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6903,6 +6923,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EClass CONDITIONAL_ACTION = eINSTANCE.getConditionalAction();
+
+		/**
+		 * The meta object literal for the '<em><b>Else Action</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CONDITIONAL_ACTION__ELSE_ACTION = eINSTANCE.getConditionalAction_ElseAction();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.PropertyReferenceImpl <em>Property Reference</em>}' class.
