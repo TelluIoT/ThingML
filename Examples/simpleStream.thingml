@@ -41,7 +41,7 @@ thing Receive includes SimpleMsgs
 			
             transition -> End
             @stream ""
-			event cepService?cep
+			event e : cepService?cep
             action print "Transition working..."
         }
 		

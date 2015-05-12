@@ -50,8 +50,6 @@ public class CEPParserImpl implements CEPParser {
 
         //idEvt1,idEvt2,timeInMS,funcName
         String[] values = joinValues.split(",");
-        //String[] receiveMessage = values[0].split("\\?");
-        //JoinResult result = new JoinResult(receiveMessage[0],receiveMessage[1],values[1],values[2]);
         JoinResult result = new JoinResult(values[0],values[1],values[2],values[3]);
 
         return result;
@@ -60,9 +58,6 @@ public class CEPParserImpl implements CEPParser {
     private List<Integer> parseMerge(String values) {
         List<Integer> result = new ArrayList<>();
 
-        /*values = values.replace("merge","");
-        values = values.replace("(","");
-        values = values.replace(")","");*/
         values = cleanString(values,"merge","(",")");
         String[] sId = values.split(",");
 

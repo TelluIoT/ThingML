@@ -38,8 +38,11 @@ public class ConnectNewPorts {
     }
 
     public void connect(Configuration conf) {
+        //Simulate thingml code :
+        // connect instance1.requiredPort => instance1.providedPort
         InstanceRef instanceRefSend = ThingmlFactory.eINSTANCE.createInstanceRef();
         InstanceRef instanceRefRcve = ThingmlFactory.eINSTANCE.createInstanceRef();
+
         for(Instance instance : conf.getInstances()) {
             if(instance.getType().getName().equals(owner.getName())) {
                 instanceRefSend.setInstance(instance);

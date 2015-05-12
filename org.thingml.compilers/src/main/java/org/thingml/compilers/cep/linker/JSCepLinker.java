@@ -35,9 +35,13 @@ public class JSCepLinker extends CepLinker {
     @Override
     protected InternalTransitionImpl createInternalTransition(Context ctx, Handler handler,
                                                             Property eventProperty, List<Integer> values, int index) {
+
+        //inject JS code in the internal "on entry" action
+        //this code transform a ThingML event in ReactiveX event (which is a JS event)
         ExternStatement action = ThingmlFactory.eINSTANCE.createExternStatement();
         action.setStatement("_this." + ctx.getVariableName(eventProperty) + ".emit('" + eventProperty.getName() + "',message)");
 
+        //create an internal with the same guard and a part of events of the transitions
         InternalTransitionImpl newTransition = (InternalTransitionImpl) ThingmlFactory.eINSTANCE.createInternalTransition();
         newTransition.setAction(action);
 
@@ -55,8 +59,12 @@ public class JSCepLinker extends CepLinker {
 
     @Override
     protected Property createEventProperty(Thing thing, String eventPropertyName) {
+        //simulate ThingML Code :
+        // datatype EventEmitter
+        //  @js_type "EventEmitter";
         PrimitiveType eventEmitterType = ThingmlFactory.eINSTANCE.createPrimitiveType();
         eventEmitterType.setName("EventEmitter");
+
 
         PlatformAnnotation annotation = ThingmlFactory.eINSTANCE.createPlatformAnnotation();
         annotation.setName("js_type");
@@ -67,7 +75,8 @@ public class JSCepLinker extends CepLinker {
         ((PrimitiveTypeImpl)eventEmitterType).eSet(ThingmlPackage.ANNOTATED_ELEMENT__ANNOTATIONS, annotations);
         thing.findContainingModel().getTypes().add(eventEmitterType);
 
-
+        //simulate ThingML Code :
+        // property eventPropertyName : EventEmitter = 'new EventEmitter()'
         Property eventProperty = ThingmlFactory.eINSTANCE.createProperty();
         eventProperty.setName(eventPropertyName);
         eventProperty.setType(eventEmitterType);

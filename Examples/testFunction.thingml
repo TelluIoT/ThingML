@@ -1,0 +1,43 @@
+datatype Integer
+    @js_type "short";
+        
+thing TestJoinStream
+{
+   function method1() : Integer do
+       var v1 : Integer = 4
+       var v2 : Integer = 3
+       
+       var v3 : Integer = (v1 + v2) * 2
+       print "method1() : expected = 14, result = " + v3
+    end
+    
+    function method2() : Integer do
+       var v1 : Integer = 4
+       var v2 : Integer = 3
+       
+       var v3 : Integer = (v1 + v2) * ((v1 - v2) * 2)
+       print "method2() : expected = 14, result = " + v3
+    end
+    
+    statechart TestStreamWithMultipleEvents init Init {
+        state Init {
+             on entry do
+                 method1()
+                 method2()
+                 
+                 var v1 : Integer = 4
+                 var v2 : Integer = 3
+       
+                 var v3 : Integer = (v1 + v2) * ((v1 - v2) * 2)
+                 print "on entry : expected = 14, result = " + v3
+            end
+            
+            
+        }
+    }
+}
+
+configuration joinCfg {
+    instance test : TestJoinStream
+   
+}

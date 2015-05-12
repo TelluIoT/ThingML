@@ -1,6 +1,6 @@
 datatype Integer
     @js_type "short";
-    
+        
 thing fragment TestsMsgs {
     message msg1(titou : Integer);
     message msg2(titou : Integer);
@@ -17,6 +17,18 @@ thing TestJoinStream includes  TestsMsgs
     }
     
     function joinMethod(vMsgs1 : Integer, vMsgs2 : Integer) : Integer do
+       var tmp1 : Integer = vMsgs1
+       var tmp2 : Integer = vMsgs2
+       print "2/ tmp1 : " + tmp1 + " et tmp2 : " + tmp2
+       tmp1 = tmp1 * 2
+       print "3/ tmp1 : " + tmp1 + " et tmp2 : " + tmp2
+       tmp2 = tmp2 - 4
+       print "4/ tmp1 : " + tmp1 + " et tmp2 : " + tmp2
+       print "Je suis une carotte pas cuite"
+       tmp1 = tmp1 + tmp2 * 2
+       print "5/ tmp1 : " + tmp1 + " et tmp2 : " + tmp2
+       tmp2 = tmp2 / 10
+       print "6/tmp1 : " + tmp1 + " et tmp2 : " + tmp2
        return vMsgs1 + vMsgs2
     end
     
@@ -27,13 +39,15 @@ thing TestJoinStream includes  TestsMsgs
                 providedService!msg2(3)
             end
             
-            internal
+            transition -> End
             @stream "join(1,2,10,joinMethod)"
-            event e : requiredService?msg1
-            event requiredService?msg2
-            action do
-                print "ok"
-            end  
+            event e1 : requiredService?msg1
+            event e2 : requiredService?msg2
+
+        }
+        
+        state End {
+            on entry  print "ok"   
         }
     }
 }

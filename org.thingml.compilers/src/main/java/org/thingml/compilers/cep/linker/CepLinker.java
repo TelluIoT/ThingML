@@ -55,6 +55,8 @@ public class CepLinker {
                 annotationValue = "1";
             }
 
+            //create and connect two ports
+            // the ports are used to send messages between CEP and statemachine
             String requiredPortName = thing.getName() + "_send_port_transition_" + indexTransition;
             String providedPortName = thing.getName() + "_receive_port_transition_" + indexTransition;
             ConnectNewPorts connector = new ConnectNewPorts(requiredPortName,providedPortName, thing);
@@ -173,6 +175,18 @@ public class CepLinker {
         }
     }
 
+    /**
+     * Transform each events, present in the annotation, to streams
+     * @param ctx
+     * @param thing
+     * @param streams
+     * @param handler
+     * @param eventPropertyName
+     * @param streamMessageName
+     * @param portSend
+     * @param portReceive
+     * @param parseResult
+     */
     private void parseIdEvents(Context ctx, Thing thing, RootStream streams, Handler handler, String eventPropertyName,
                                String streamMessageName, RequiredPort portSend, ProvidedPort portReceive, ParseResult parseResult) {
         int indexEvent = 0;
@@ -207,6 +221,8 @@ public class CepLinker {
         InternalTransitionImpl newTransition = createInternalTransition(ctx, handler, eventProperty, values, index);
 
         checkParamsEvent(newTransition);
+        //the checkParamsEvent method assure us that all the parameters are the same
+        // so we take the parameters of the first message
         Message message = CreateMessage.createMessage(thing, ((ReceiveMessage) newTransition.getEvent().get(0)).getMessage().getParameters(),
                 streamMessageName, portReceive, portSend);
         stream.setStreamMessage(message);
@@ -225,6 +241,10 @@ public class CepLinker {
         throw(new UnsupportedOperationException("The operation CepLinker.createEventProperty is platform-specific and should be refined!"));
     }
 
+    /**
+     * Check if the params the messages have the same type
+     * @param transition
+     */
     private void checkParamsEvent(InternalTransition transition) {
         Iterator<Event> itEvt = transition.getEvent().iterator();
         List<Parameter> firstParams = ((ReceiveMessage)itEvt.next()).getMessage().getParameters();
