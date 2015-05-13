@@ -107,7 +107,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
     @Override
     public void generateComponent(Thing thing, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/" + ctx.firstToUpper(thing.getName()) + ".js");
-        if(ctx.getProperty("hasEnum").isPresent() && ctx.getProperty("hasEnum").get().equals("true")) {
+        if(ctx.getProperty("hasEnum") != null && ctx.getProperty("hasEnum").equals("true")) {
             builder.append("var Enum = require('./enums');\n");
         }
         builder.append("var StateFactory = require('./state-factory');\n");

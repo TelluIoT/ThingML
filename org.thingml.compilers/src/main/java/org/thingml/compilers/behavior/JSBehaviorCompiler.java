@@ -113,7 +113,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
     }
 
     protected void generateCompositeState(CompositeState c, StringBuilder builder, Context ctx) {
-        String containerName = ctx.getProperty("container").get();
+        String containerName = ctx.getProperty("container");
         if (c.hasSeveralRegions()) {
             builder.append("var " + c.qname("_") + " = StateFactory.buildOrthogonalState(\"" + c.getName() + "\", " + containerName + ");\n");
             builder.append("var " + c.qname("_") + "_default = StateFactory.buildRegion(\"_default\", " + c.qname("_") + ");\n");
@@ -146,13 +146,13 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
     }
 
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
-        String containerName = ctx.getProperty("container").get();
+        String containerName = ctx.getProperty("container");
         builder.append("var " + s.qname("_") + " = StateFactory.buildSimpleState(\"" + s.getName() + "\", " + containerName + ");\n");
         generateActionsForState(s, builder, ctx);
     }
 
     public void generateRegion(Region r, StringBuilder builder, Context ctx) {
-        String containerName = ctx.getProperty("container").get();
+        String containerName = ctx.getProperty("container");
         builder.append("var " + r.qname("_") + "_reg = StateFactory.buildRegion(\"" + r.getName() + "\", " + containerName + ");\n");
         if (r.isHistory())
             builder.append("var _initial_" + r.qname("_") + "_reg = StateFactory.buildHistoryState(\"_initial\", " + r.qname("_") + "_reg);\n");

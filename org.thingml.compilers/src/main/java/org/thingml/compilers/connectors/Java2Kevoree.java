@@ -148,9 +148,11 @@ public class Java2Kevoree extends ConnectorCompiler {
 
 
         builder.append("//Things\n");
-        cfg.allInstances().forEach(i ->
-                        builder.append("private " + ctx.firstToUpper(i.getType().getName()) + " " + ctx.getInstanceName(i) + ";\n")
-        );
+
+        for (Instance i :  cfg.allInstances()) {
+            builder.append("private " + ctx.firstToUpper(i.getType().getName()) + " " + ctx.getInstanceName(i) + ";\n");
+        }
+
 
         builder.append("//Output ports (dangling ports in the ThingML configuration)\n");
         for (Map.Entry<Instance, List<Port>> entry : cfg.danglingPorts().entrySet()) {
@@ -180,40 +182,25 @@ public class Java2Kevoree extends ConnectorCompiler {
                             builder.append("else ");
                         builder.append("if (json.get(\"message\").asString().equals(\"" + m.getName() + "\")) {\n");
                         builder.append("final Event msg = " + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(m.getName()) + "Type().instantiate(" + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port()");
-                        m.getParameters().forEach(pa -> {
+
+                        for (Parameter pa : m.getParameters() ) {
+
                             builder.append(", (" + pa.getType().annotation("java_type").toArray()[0] + ") json.get(\"" + pa.getName() + "\")");
-                            switch ((String) pa.getType().annotation("java_type").toArray()[0]) {
-                                case "int":
-                                    builder.append(".asInt()");
-                                    break;
-                                case "short":
-                                    builder.append(".asInt()");
-                                    break;
-                                case "long":
-                                    builder.append(".asLong()");
-                                    break;
-                                case "double":
-                                    builder.append(".asDouble()");
-                                    break;
-                                case "float":
-                                    builder.append(".asFloat()");
-                                    break;
-                                case "char":
-                                    builder.append(".asString().charAt(0)");
-                                    break;
-                                case "String":
-                                    builder.append(".asString()");
-                                    break;
-                                case "byte":
-                                    builder.append(".asString().getBytes[0]");
-                                    break;
-                                case "boolean":
-                                    builder.append(".asBoolean()");
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
+
+                            String t = pa.getType().annotation("java_type").toArray()[0].toString();
+
+                           // switch ((String) pa.getType().annotation("java_type").toArray()[0]) {
+                                if (t.equals("int")) builder.append(".asInt()");
+                                else if (t.equals("short")) builder.append(".asInt()");
+                                else if (t.equals("long")) builder.append(".asLong()");
+                                else if (t.equals("double")) builder.append(".asDouble()");
+                                else if (t.equals("float")) builder.append(".asFloat()");
+                                else if (t.equals("char")) builder.append(".asString().charAt(0)");
+                                else if (t.equals("String")) builder.append(".asString()");
+                                else if (t.equals("byte")) builder.append(".asString().getBytes[0]");
+                                else if (t.equals("boolean")) builder.append(".asBoolean()");
+
+                        }
                         builder.append(");\n");
                         builder.append(ctx.getInstanceName(i) + ".receive(msg, " + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
                         builder.append("}\n");
@@ -228,7 +215,8 @@ public class Java2Kevoree extends ConnectorCompiler {
 
 
         builder.append("//Attributes\n");
-        cfg.allInstances().forEach ( i -> {
+        for (Instance i : cfg.allInstances()) {
+
             for(Property p : i.getType().allPropertiesInDepth()) {
                 if(p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
                     builder.append("@Param ");
@@ -248,7 +236,7 @@ public class Java2Kevoree extends ConnectorCompiler {
             }
 
             builder.append("//Getters and Setters for non readonly/final attributes\n");
-            i.getType().allPropertiesInDepth().forEach ( p -> {
+            for (Property p : i.getType().allPropertiesInDepth()) {
                 if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
                     builder.append("public " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " get" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + i.getName() + "_" + ctx.getVariableName(p) + ";\n}\n\n");
                     builder.append("public void set" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p) + "){\n");
@@ -256,9 +244,9 @@ public class Java2Kevoree extends ConnectorCompiler {
                     builder.append("this." + ctx.getInstanceName(i) + ".set" + i.getType().getName() + "_" + p.getName() + "__var(" + ctx.getVariableName(p) + ");\n");
                     builder.append("}\n\n");
                 }
-            });
+            }
 
-    });
+    }
 
 
         builder.append("//Empty Constructor\n");

@@ -5,7 +5,7 @@
     <groupId>org.emftext</groupId>
     <artifactId>org.emftext.commons.antlr</artifactId>
     <packaging>jar</packaging>
-    <name>EMFText :: ANTLR Runtime 3.4</name>
+    <name>EMFText :: ANTLR Runtime</name>
 
     <version>3.4.0</version>
     <parent>

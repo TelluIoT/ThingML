@@ -5,7 +5,7 @@
     <groupId>org.thingml</groupId>
     <artifactId>org.thingml.parser.eclipse</artifactId>
     <name>ThingML :: Parser :: Eclipse</name>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.thingml</groupId>
@@ -13,110 +13,35 @@
         <version>0.6.0-SNAPSHOT</version>
     </parent>
 
-    <build>
-    <!--
-      Manage mutli-source java project. Copy the src files inside the
-      targetPath, the unique location for maven compiling Drawback : once
-      compiled the sources are not visible as java packages
-    -->
-        <sourceDirectory>../src/main/java</sourceDirectory>
-        <resources>
-            <resource>
-                <directory>..</directory>
-                <includes>
-                    <include>plugin.properties</include>
-                    <include>plugin.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>../icons</directory>
-                <targetPath>icons</targetPath>
-            </resource>
-            <resource>
-                <directory>../css</directory>
-                <targetPath>css</targetPath>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
+		<build>
+	
+		<sourceDirectory>../src/main/java</sourceDirectory>
+	
+    <plugins>
+
+    <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+            <execution>
+                <id>add-source</id>
+                <phase>generate-sources</phase>
+                <goals>
+                    <goal>add-source</goal>
+                </goals>
                 <configuration>
-                    <argLine>-Xmx1024m</argLine>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <sources>
+                        <source>../src/main/java-gen</source>
+                    </sources>
                 </configuration>
-            </plugin>
-      <!-- Add generated source to build cycle -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>../src/main/java-gen</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.3.4</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Bundle-SymbolicName>org.sintef.thingml.resource.thingml;singleton:=true</Bundle-SymbolicName>
-                        <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-                        <Bundle-Vendor>SINETF</Bundle-Vendor>
-                        <Bundle-ClassPath>.</Bundle-ClassPath>
-             <!-- Dependency used for compiling all the bundle (with dependecy to org.eclipse.core.* -->
-             
-                        <Require-Bundle>
-              	org.eclipse.core.resources,
-                <!--org.eclipse.emf,-->
-                org.eclipse.emf.codegen.ecore,
-                org.eclipse.emf.ecore,
-                org.eclipse.emf.ecore.edit,
-                org.eclipse.emf.validation,
-                org.eclipse.emf.workspace,
-                org.emftext.access;resolution:=optional,
-                org.emftext.commons.antlr3_3_0,
-                org.sintef.thingml.model
-                        </Require-Bundle>
-            
-                        <Export-Package>
-              org.sintef.thingml.resource.thingml,
-              org.sintef.thingml.resource.thingml.analysis,
-              org.sintef.thingml.resource.thingml.grammar,
-              org.sintef.thingml.resource.thingml.mopp,
-              org.sintef.thingml.resource.thingml.util
-                        </Export-Package>
-                        <Private-Package>
-              org.antlr.*
-                        </Private-Package>
-            <!--
-              specify the packages that should be imported to correctly build
-              the bundle (i.e <packaging>bundle<packaging> ".*" to also include
-              sub packages use the ! for avoiding to import some packages that
-              are already there with the Require-Bundle
-            -->
-                        <Import-Package>
-              !*
-                        </Import-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-        </plugins>
+            </execution>
+        </executions>
+    </plugin>
+  
+    </plugins>
     </build>
+
     <dependencies>
         
         <dependency>
@@ -128,21 +53,32 @@
         <dependency>
             <groupId>org.emftext</groupId>
             <artifactId>org.emftext.commons.antlr</artifactId>
-            <version>3.4cd.0</version>
+            <version>3.4.0</version>
         </dependency>
-	
-        <dependency>
+
+    
+		<dependency>
+            <groupId>org.eclipse.maven</groupId>
+            <artifactId>org.eclipse.emf.ecore</artifactId>
+            <version>${eclipse.version}</version>
+        </dependency>
+		
+		<dependency>
+            <groupId>org.eclipse.maven</groupId>
+            <artifactId>org.eclipse.emf.common</artifactId>
+            <version>${eclipse.version}</version>
+        </dependency>
+		
+		<dependency>
+            <groupId>org.eclipse.maven</groupId>
+            <artifactId>org.eclipse.emf.ecore.change</artifactId>
+            <version>${eclipse.version}</version>
+        </dependency>
+		
+		 <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
             <version>4.2.0</version>
-        </dependency>
-    
-    <!-- OSGI Version of EMF -->
-    
-        <dependency>
-            <groupId>org.kevoree.extra</groupId>
-            <artifactId>org.kevoree.extra.emf.library</artifactId>
-            <version>${emf.version}</version>
         </dependency>
 	
     <!-- DEPENDANCIES TO ECLIPSE PLUGINS (just for compiling) -->
@@ -165,6 +101,12 @@
             <version>${eclipse.version}</version>
         </dependency>
     
+	    <dependency>
+            <groupId>org.eclipse.maven</groupId>
+            <artifactId>org.eclipse.debug.core</artifactId>
+            <version>${eclipse.version}</version>
+        </dependency>
+	
         <dependency>
             <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.equinox.common</artifactId>

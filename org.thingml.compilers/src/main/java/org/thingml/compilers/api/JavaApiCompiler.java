@@ -19,9 +19,6 @@ import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.helpers.JavaHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by bmori on 09.12.2014.
@@ -33,11 +30,13 @@ public class JavaApiCompiler extends ApiCompiler {
         System.out.println("generateEnumeration " + e.getName());
 
 
-        final String pack = ctx.getProperty("package").orElse("org.thingml.generated");
+        String pack = ctx.getProperty("package");
+        if (pack == null) pack = "org.thingml.generated";
         //final String src = "src/main/java/" + pack.replaceAll(".", "/");
 
         JavaHelper.generateHeader(pack + ".api", pack, builder, ctx, false, false, false);
-        String raw_type = e.annotation("java_type").stream().findFirst().orElse("Object");
+        String raw_type = "Object";
+        if (!e.annotation("java_type").isEmpty())raw_type = e.annotation("java_type").toArray()[0].toString();
 
         String enumName = ctx.firstToUpper(e.getName()) + "_ENUM";
 
@@ -47,7 +46,14 @@ public class JavaApiCompiler extends ApiCompiler {
             int i = 0;
             for (EnumerationLiteral l : e.getLiterals()) {
                 String java_name = ((ThingMLElement)l.eContainer()).getName().toUpperCase() + "_" + l.getName().toUpperCase();
-                String enum_val = l.annotation("enum_val").stream().findFirst().orElseThrow(Exception::new);
+                String enum_val = "";
+                if (!l.annotation("enum_val").isEmpty()) {
+                    enum_val = l.annotation("enum_val").toArray()[0].toString();
+                }
+                else {
+                    throw new Exception("Cannot find value for enum " + l);
+                }
+
                 if (i > 0)
                     builder.append(", ");
                 builder.append(java_name + "((" + raw_type + ") " + enum_val + ")");
@@ -66,7 +72,9 @@ public class JavaApiCompiler extends ApiCompiler {
 
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
-        final String pack = ctx.getProperty("package").orElse("org.thingml.generated");
+        String pack = "org.thingml.generated";
+        if (ctx.getProperty("package") != null) pack = "org.thingml.generated";
+
         final String src = "src/main/java/" + pack.replace(".", "/");
 
         //Enumerations

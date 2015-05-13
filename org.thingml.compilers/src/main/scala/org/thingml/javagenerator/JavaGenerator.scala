@@ -163,8 +163,13 @@ object JavaGenerator {
     //TODO: we should not generate all the messages defined in the model, just the one relevant for the configuration
     t.allMessages.foreach {
       m =>
-        val rootPack = ctx.getProperty("package").orElse("org.thingml.generated")
-        val pack = ctx.getProperty("package").orElse("org.thingml.generated") + ".messages"
+        var rootPack = ctx.getProperty("package")
+        if (rootPack == null) rootPack = "org.thingml.generated"
+        var pack = ctx.getProperty("package")
+        if (pack == null) pack = "org.thingml.generated"
+        pack += ".messages"
+
+
         val builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(m.getName()) + "MessageType.java")
 
         JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, t.allInstances().collect{case i => i.getType}.filter{thing => thing.allPorts.filter{p => !p.isDefined("public", "false")}.size > 0}.size > 0 || model.allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, t.allMessages().size() > 0)
@@ -429,7 +434,10 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
 
   override def generateJava(ctx : Context) {
     //Context.thing = self
-    var pack = ctx.getProperty("package").orElse("org.thingml.generated")
+    var pack = ctx.getProperty("package")
+    if (pack == null) pack =  "org.thingml.generated"
+
+
     val builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(self.getName) + ".java")
 
     JavaHelper.generateHeader(pack, pack, builder, ctx, false, self.allPorts.filter{p => !p.isDefined("public", "false")}.size > 0 || self.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, self.allMessages().size() > 0)

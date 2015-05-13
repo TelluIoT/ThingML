@@ -26,11 +26,11 @@ import java.util.Set;
  */
 public class BuildCompiler {
 
-    protected Set<String> properties = new HashSet<>();
-    protected Set<String> deps = new HashSet<>();
-    protected Set<String> devDeps = new HashSet<>();
-    protected Set<String> repos = new HashSet<>();
-    protected Set<String> scripts = new HashSet<>();
+    protected Set<String> properties = new HashSet<String>();
+    protected Set<String> deps = new HashSet<String>();
+    protected Set<String> devDeps = new HashSet<String>();
+    protected Set<String> repos = new HashSet<String>();
+    protected Set<String> scripts = new HashSet<String>();
 
     public void generate(Configuration cfg, Context ctx) {
         throw(new UnsupportedOperationException("Project structure and build scripts are platform-specific."));

@@ -4,13 +4,28 @@ START ThingMLModel
 
 
 OPTIONS {
-
+	
 	reloadGeneratorModel = "true"; 
 	memoize = "true";
 	tokenspace = "0";
 	usePredefinedTokens = "false";
 	srcFolder = "src/main/java";
+	
+	// PROCESS TO RE-GENERATE THE THINGML COMPILER FROM THIS FILE
+	//
+	// The code should be generated *2 times*, once for eclipse and once for standalone
+	// The generated code shares all the code that is manually edited in (src/main/java) so there is no need to create the resolvers twice.
+	// Bellow are the different options to use.
+	// Generate the standalone version first and then the eclipse version.
+	
+	// 1. FOR STANDALONE
+	//srcGenFolder = "src/main/java-gen-standalone";
+	//generateUIPlugin = "false";
+	//removeEclipseDependentCode = "true";
+	
+	// 2. FOR ECLIPSE Comment the lines bellow
 	srcGenFolder = "src/main/java-gen";
+	
 }
 
 TOKENS{
