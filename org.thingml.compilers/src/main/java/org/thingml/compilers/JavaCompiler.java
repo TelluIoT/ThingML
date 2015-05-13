@@ -30,7 +30,6 @@ import org.thingml.javagenerator.JavaGenerator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Created by ffl on 25.11.14.
@@ -38,7 +37,7 @@ import java.util.Optional;
 public class JavaCompiler extends OpaqueThingMLCompiler {
 
     {
-        Map<String, ConnectorCompiler> connectorCompilerMap = new HashMap<>();
+        Map<String, ConnectorCompiler> connectorCompilerMap = new HashMap<String, ConnectorCompiler>();
         connectorCompilerMap.put("kevoree-java", new Java2Kevoree());
         addConnectorCompilers(connectorCompilerMap);
     }

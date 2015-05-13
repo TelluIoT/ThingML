@@ -43,7 +43,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.junit.Test;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.ThingmlPackage;
-import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
+//import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 
 /**
  *
@@ -61,7 +61,7 @@ public class StandaloneParserTestLoadFile extends TestCase {
     public void runTest() throws IOException {
            // Register the generated package and the XMI Factory
             EPackage.Registry.INSTANCE.put(ThingmlPackage.eNS_URI, ThingmlPackage.eINSTANCE);
-            Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
+            //Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
 
             // Load the model
             ResourceSet rs = new ResourceSetImpl();

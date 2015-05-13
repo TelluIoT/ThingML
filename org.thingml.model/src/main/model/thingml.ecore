@@ -236,8 +236,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LoopAction" eSuperTypes="#//ControlStructure"/>
   <eClassifiers xsi:type="ecore:EClass" name="ConditionalAction" eSuperTypes="#//ControlStructure">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="elseAction" lowerBound="1"
-        eType="#//Action" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="elseAction" eType="#//Action"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PropertyReference" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="property" lowerBound="1"

@@ -143,25 +143,38 @@
         <dependency>
             <groupId>org.emftext</groupId>
             <artifactId>org.emftext.commons.antlr</artifactId>
-            <version>3.3.0</version>
+            <version>3.4.0</version>
         </dependency>
 		
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-            <version>4.2.0</version>
-        </dependency>
-        
+
         <!-- OSGI Version of EMF -->
 	
-        <dependency>
-            <groupId>org.kevoree.extra</groupId>
-            <artifactId>org.kevoree.extra.emf.library</artifactId>
-            <version>${emf.version}</version>
+		<dependency>
+            <groupId>org.eclipse.maven</groupId>
+            <artifactId>org.eclipse.emf.ecore</artifactId>
+            <version>${eclipse.version}</version>
+        </dependency>
+		
+		<dependency>
+            <groupId>org.eclipse.maven</groupId>
+            <artifactId>org.eclipse.emf.common</artifactId>
+            <version>${eclipse.version}</version>
+        </dependency>
+		
+		<dependency>
+            <groupId>org.eclipse.maven</groupId>
+            <artifactId>org.eclipse.emf.ecore.change</artifactId>
+            <version>${eclipse.version}</version>
         </dependency>
         
         <!-- DEPENDANCIES TO ECLIPSE PLUGINS (just for compiling) -->
 
+		<dependency>
+		  <groupId>org.eclipse.maven</groupId>
+		  <artifactId>org.eclipse.debug.ui</artifactId>
+		  <version>${eclipse.version}</version>
+		</dependency>
+		
         <dependency>
             <groupId>org.eclipse.maven</groupId>
             <artifactId>org.eclipse.emf.validation</artifactId>

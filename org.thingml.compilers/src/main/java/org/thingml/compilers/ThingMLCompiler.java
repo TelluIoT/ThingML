@@ -43,7 +43,7 @@ public abstract class ThingMLCompiler {
     private BehaviorCompiler behaviorCompiler;
 
     //we might need several connector compilers has different ports might use different connectors
-    private Map<String, ConnectorCompiler> connectorCompilers = new HashMap<>();
+    private Map<String, ConnectorCompiler> connectorCompilers = new HashMap<String, ConnectorCompiler>();
 
     public ThingMLCompiler() {
         this.actionCompiler = new ActionCompiler();

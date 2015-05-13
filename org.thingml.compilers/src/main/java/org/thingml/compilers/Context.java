@@ -36,7 +36,7 @@ public class Context {
     private String thisRef = "";
 
     //Contains instantiation statements that will go into the main
-    private Map<Instance, StringBuilder> instances = new HashMap<>();
+    private Map<Instance, StringBuilder> instances = new HashMap<Instance, StringBuilder>();
 
     //Contains entries like <path to the file relative to rootDir, code (to be) generated for that file>
     private Map<String, StringBuilder> builders = new HashMap<String, StringBuilder>();
@@ -228,12 +228,8 @@ public class Context {
         properties.put(key, value);
     }
 
-    public Optional<String> getProperty(String key) {
-        String property = properties.get(key);
-        if (property == null)
-            return Optional.empty();
-        else
-            return Optional.of(property);
+    public String getProperty(String key) {
+        return properties.get(key);
     }
 
     public boolean isDefined(String key, String value) {

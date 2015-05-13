@@ -42,7 +42,7 @@ import java.util.Map;
 public class JavaScriptCompiler extends OpaqueThingMLCompiler {
 
     {
-        Map<String, ConnectorCompiler> connectorCompilerMap = new HashMap<>();
+        Map<String, ConnectorCompiler> connectorCompilerMap = new HashMap<String, ConnectorCompiler>();
         connectorCompilerMap.put("kevoree-js", new JS2Kevoree());
         addConnectorCompilers(connectorCompilerMap);
     }

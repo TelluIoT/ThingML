@@ -105,8 +105,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
@@ -197,7 +197,7 @@
     </repositories>
 
     <modules>
-        <module>org.emftext.commons.antlr3_3_0</module>
+        <module>org.emftext.commons.antlr3_4_0</module>
         <module>org.thingml.model</module>
         <module>org.thingml.parser</module>
         <module>org.thingml.compilers</module>
