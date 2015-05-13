@@ -130,7 +130,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
     }
     public ThingmlParser(TokenStream input, RecognizerSharedState state) {
         super(input, state);
-        this.state.initializeRuleMemo(212 + 1);
+        this.state.initializeRuleMemo(213 + 1);
          
 
     }
@@ -554,7 +554,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
     				break;
     			}
     		}
-    		int followSetID = 435;
+    		int followSetID = 436;
     		int i;
     		for (i = tokenIndexOfLastCompleteElement; i < tokenStream.size(); i++) {
     			org.antlr.runtime3_4_0.CommonToken nextToken = (org.antlr.runtime3_4_0.CommonToken) tokenStream.get(i);
@@ -15672,7 +15672,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ConditionalAction"
-    // Thingml.g:10064:1: parse_org_sintef_thingml_ConditionalAction returns [org.sintef.thingml.ConditionalAction element = null] : a0= 'if' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ;
+    // Thingml.g:10064:1: parse_org_sintef_thingml_ConditionalAction returns [org.sintef.thingml.ConditionalAction element = null] : a0= 'if' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )? ;
     public final org.sintef.thingml.ConditionalAction parse_org_sintef_thingml_ConditionalAction() throws RecognitionException {
         org.sintef.thingml.ConditionalAction element =  null;
 
@@ -15694,8 +15694,8 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 33) ) { return element; }
 
-            // Thingml.g:10067:2: (a0= 'if' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
-            // Thingml.g:10068:2: a0= 'if' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) a5= 'else' (a6_0= parse_org_sintef_thingml_Action )
+            // Thingml.g:10067:2: (a0= 'if' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )? )
+            // Thingml.g:10068:2: a0= 'if' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )?
             {
             a0=(Token)match(input,59,FOLLOW_59_in_parse_org_sintef_thingml_ConditionalAction9980); if (state.failed) return element;
 
@@ -15841,107 +15841,211 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2373]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2374]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2375]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2376]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2377]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2378]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2379]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2380]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2381]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2382]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2383]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2384]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2385]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2386]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2387]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2388]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2389]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2390]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2391]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2392]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2393]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2394]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2395]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2396]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2397]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2398]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2399]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2400]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2401]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2402]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2403]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2404]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2405]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2406]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2407]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2408]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2409]);
             	}
 
-            a5=(Token)match(input,49,FOLLOW_49_in_parse_org_sintef_thingml_ConditionalAction10066); if (state.failed) return element;
+            // Thingml.g:10219:2: ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )?
+            int alt100=2;
+            int LA100_0 = input.LA(1);
 
-            if ( state.backtracking==0 ) {
-            		if (element == null) {
-            			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createConditionalAction();
-            			startIncompleteElement(element);
-            		}
-            		collectHiddenTokens(element);
-            		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_31_0_0_10, null, true);
-            		copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a5, element);
-            	}
+            if ( (LA100_0==49) ) {
+                int LA100_1 = input.LA(2);
 
-            if ( state.backtracking==0 ) {
-            		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2374]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2375]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2376]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2377]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2378]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2379]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2380]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2381]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2382]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2383]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2384]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2385]);
-            	}
+                if ( (synpred108_Thingml()) ) {
+                    alt100=1;
+                }
+            }
+            switch (alt100) {
+                case 1 :
+                    // Thingml.g:10220:3: (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
+                    {
+                    // Thingml.g:10220:3: (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:10221:4: a5= 'else' (a6_0= parse_org_sintef_thingml_Action )
+                    {
+                    a5=(Token)match(input,49,FOLLOW_49_in_parse_org_sintef_thingml_ConditionalAction10075); if (state.failed) return element;
 
-            // Thingml.g:10208:2: (a6_0= parse_org_sintef_thingml_Action )
-            // Thingml.g:10209:3: a6_0= parse_org_sintef_thingml_Action
-            {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10084);
-            a6_0=parse_org_sintef_thingml_Action();
+                    if ( state.backtracking==0 ) {
+                    				if (element == null) {
+                    					element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createConditionalAction();
+                    					startIncompleteElement(element);
+                    				}
+                    				collectHiddenTokens(element);
+                    				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_31_0_0_9_0_0_1, null, true);
+                    				copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a5, element);
+                    			}
 
-            state._fsp--;
-            if (state.failed) return element;
+                    if ( state.backtracking==0 ) {
+                    				// expected elements (follow set)
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2410]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2411]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2412]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2413]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2414]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2415]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2416]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2417]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2418]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2419]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2420]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2421]);
+                    			}
 
-            if ( state.backtracking==0 ) {
-            			if (terminateParsing) {
-            				throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
-            			}
-            			if (element == null) {
-            				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createConditionalAction();
-            				startIncompleteElement(element);
-            			}
-            			if (a6_0 != null) {
-            				if (a6_0 != null) {
-            					Object value = a6_0;
-            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.CONDITIONAL_ACTION__ELSE_ACTION), value);
-            					completedElement(value, true);
-            				}
-            				collectHiddenTokens(element);
-            				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_31_0_0_12, a6_0, true);
-            				copyLocalizationInfos(a6_0, element);
-            			}
-            		}
+                    // Thingml.g:10246:4: (a6_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:10247:5: a6_0= parse_org_sintef_thingml_Action
+                    {
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10101);
+                    a6_0=parse_org_sintef_thingml_Action();
+
+                    state._fsp--;
+                    if (state.failed) return element;
+
+                    if ( state.backtracking==0 ) {
+                    					if (terminateParsing) {
+                    						throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+                    					}
+                    					if (element == null) {
+                    						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createConditionalAction();
+                    						startIncompleteElement(element);
+                    					}
+                    					if (a6_0 != null) {
+                    						if (a6_0 != null) {
+                    							Object value = a6_0;
+                    							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.CONDITIONAL_ACTION__ELSE_ACTION), value);
+                    							completedElement(value, true);
+                    						}
+                    						collectHiddenTokens(element);
+                    						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_31_0_0_9_0_0_3, a6_0, true);
+                    						copyLocalizationInfos(a6_0, element);
+                    					}
+                    				}
+
+                    }
+
+
+                    if ( state.backtracking==0 ) {
+                    				// expected elements (follow set)
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2422]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2423]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2424]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2425]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2426]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2427]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2428]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2429]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2430]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2431]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2432]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2433]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2434]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2435]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2436]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2437]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2438]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2439]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2440]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2441]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2442]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2443]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2444]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2445]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2446]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2447]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2448]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2449]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2450]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2451]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2452]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2453]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2454]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2455]);
+                    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2456]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2457]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2458]);
+                    			}
+
+                    }
+
+
+                    }
+                    break;
 
             }
 
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2386]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2387]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2388]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2389]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2390]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2391]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2392]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2393]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2394]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2395]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2396]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2397]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2398]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2399]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2400]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2401]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2402]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2403]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2404]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2405]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2406]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2407]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2408]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2409]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2410]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2411]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2412]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2413]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2414]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2415]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2416]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2417]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2418]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2419]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2420]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2421]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2422]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2459]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2460]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2461]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2462]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2463]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2464]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2465]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2466]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2467]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2468]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2469]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2470]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2471]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2472]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2473]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2474]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2475]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2476]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2477]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2478]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2479]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2480]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2481]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2482]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2483]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2484]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2485]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2486]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2487]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2488]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2489]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2490]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2491]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2492]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2493]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2494]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2495]);
             	}
 
             }
@@ -15964,7 +16068,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_LoopAction"
-    // Thingml.g:10272:1: parse_org_sintef_thingml_LoopAction returns [org.sintef.thingml.LoopAction element = null] : a0= 'while' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ;
+    // Thingml.g:10353:1: parse_org_sintef_thingml_LoopAction returns [org.sintef.thingml.LoopAction element = null] : a0= 'while' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ;
     public final org.sintef.thingml.LoopAction parse_org_sintef_thingml_LoopAction() throws RecognitionException {
         org.sintef.thingml.LoopAction element =  null;
 
@@ -15983,10 +16087,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 34) ) { return element; }
 
-            // Thingml.g:10275:2: (a0= 'while' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) )
-            // Thingml.g:10276:2: a0= 'while' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action )
+            // Thingml.g:10356:2: (a0= 'while' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) )
+            // Thingml.g:10357:2: a0= 'while' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action )
             {
-            a0=(Token)match(input,85,FOLLOW_85_in_parse_org_sintef_thingml_LoopAction10117); if (state.failed) return element;
+            a0=(Token)match(input,85,FOLLOW_85_in_parse_org_sintef_thingml_LoopAction10157); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -16000,10 +16104,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2423]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2496]);
             	}
 
-            a1=(Token)match(input,20,FOLLOW_20_in_parse_org_sintef_thingml_LoopAction10131); if (state.failed) return element;
+            a1=(Token)match(input,20,FOLLOW_20_in_parse_org_sintef_thingml_LoopAction10171); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -16017,23 +16121,23 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2424]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2425]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2426]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2427]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2428]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2429]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2430]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2431]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2432]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2433]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2434]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2497]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2498]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2499]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2500]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2501]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2502]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2503]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2504]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2505]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2506]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2507]);
             	}
 
-            // Thingml.g:10314:2: (a2_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:10315:3: a2_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:10395:2: (a2_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:10396:3: a2_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LoopAction10149);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LoopAction10189);
             a2_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -16064,10 +16168,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2435]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2508]);
             	}
 
-            a3=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_LoopAction10167); if (state.failed) return element;
+            a3=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_LoopAction10207); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -16081,24 +16185,24 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2436]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2437]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2438]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2439]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2440]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2441]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2442]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2443]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2444]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2445]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2446]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2447]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2509]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2510]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2511]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2512]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2513]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2514]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2515]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2516]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2517]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2518]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2519]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2520]);
             	}
 
-            // Thingml.g:10365:2: (a4_0= parse_org_sintef_thingml_Action )
-            // Thingml.g:10366:3: a4_0= parse_org_sintef_thingml_Action
+            // Thingml.g:10446:2: (a4_0= parse_org_sintef_thingml_Action )
+            // Thingml.g:10447:3: a4_0= parse_org_sintef_thingml_Action
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_LoopAction10185);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_LoopAction10225);
             a4_0=parse_org_sintef_thingml_Action();
 
             state._fsp--;
@@ -16129,43 +16233,43 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2448]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2449]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2450]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2451]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2452]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2453]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2454]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2455]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2456]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2457]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2458]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2459]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2460]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2461]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2462]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2463]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2464]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2465]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2466]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2467]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2468]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2469]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2470]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2471]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2472]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2473]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2474]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2475]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2476]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2477]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2478]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2479]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2480]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2481]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2482]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2483]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2484]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2521]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2522]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2523]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2524]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2525]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2526]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2527]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2528]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2529]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2530]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2531]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2532]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2533]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2534]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2535]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2536]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2537]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2538]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2539]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2540]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2541]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2542]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2543]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2544]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2545]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2546]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2547]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2548]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2549]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2550]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2551]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2552]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2553]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2554]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2555]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2556]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2557]);
             	}
 
             }
@@ -16188,7 +16292,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_PrintAction"
-    // Thingml.g:10429:1: parse_org_sintef_thingml_PrintAction returns [org.sintef.thingml.PrintAction element = null] : a0= 'print' (a1_0= parse_org_sintef_thingml_Expression ) ;
+    // Thingml.g:10510:1: parse_org_sintef_thingml_PrintAction returns [org.sintef.thingml.PrintAction element = null] : a0= 'print' (a1_0= parse_org_sintef_thingml_Expression ) ;
     public final org.sintef.thingml.PrintAction parse_org_sintef_thingml_PrintAction() throws RecognitionException {
         org.sintef.thingml.PrintAction element =  null;
 
@@ -16203,10 +16307,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 35) ) { return element; }
 
-            // Thingml.g:10432:2: (a0= 'print' (a1_0= parse_org_sintef_thingml_Expression ) )
-            // Thingml.g:10433:2: a0= 'print' (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:10513:2: (a0= 'print' (a1_0= parse_org_sintef_thingml_Expression ) )
+            // Thingml.g:10514:2: a0= 'print' (a1_0= parse_org_sintef_thingml_Expression )
             {
-            a0=(Token)match(input,71,FOLLOW_71_in_parse_org_sintef_thingml_PrintAction10218); if (state.failed) return element;
+            a0=(Token)match(input,71,FOLLOW_71_in_parse_org_sintef_thingml_PrintAction10258); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -16220,23 +16324,23 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2485]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2486]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2487]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2488]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2489]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2490]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2491]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2492]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2493]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2494]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2495]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2558]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2559]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2560]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2561]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2562]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2563]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2564]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2565]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2566]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2567]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2568]);
             	}
 
-            // Thingml.g:10457:2: (a1_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:10458:3: a1_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:10538:2: (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:10539:3: a1_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PrintAction10236);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PrintAction10276);
             a1_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -16267,43 +16371,43 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2496]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2497]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2498]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2499]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2500]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2501]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2502]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2503]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2504]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2505]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2506]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2507]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2508]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2509]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2510]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2511]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2512]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2513]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2514]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2515]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2516]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2517]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2518]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2519]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2520]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2521]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2522]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2523]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2524]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2525]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2526]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2527]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2528]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2529]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2530]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2531]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2532]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2569]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2570]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2571]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2572]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2573]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2574]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2575]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2576]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2577]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2578]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2579]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2580]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2581]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2582]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2583]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2584]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2585]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2586]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2587]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2588]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2589]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2590]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2591]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2592]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2593]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2594]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2595]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2596]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2597]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2598]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2599]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2600]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2601]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2602]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2603]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2604]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2605]);
             	}
 
             }
@@ -16326,7 +16430,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ErrorAction"
-    // Thingml.g:10521:1: parse_org_sintef_thingml_ErrorAction returns [org.sintef.thingml.ErrorAction element = null] : a0= 'error' (a1_0= parse_org_sintef_thingml_Expression ) ;
+    // Thingml.g:10602:1: parse_org_sintef_thingml_ErrorAction returns [org.sintef.thingml.ErrorAction element = null] : a0= 'error' (a1_0= parse_org_sintef_thingml_Expression ) ;
     public final org.sintef.thingml.ErrorAction parse_org_sintef_thingml_ErrorAction() throws RecognitionException {
         org.sintef.thingml.ErrorAction element =  null;
 
@@ -16341,10 +16445,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 36) ) { return element; }
 
-            // Thingml.g:10524:2: (a0= 'error' (a1_0= parse_org_sintef_thingml_Expression ) )
-            // Thingml.g:10525:2: a0= 'error' (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:10605:2: (a0= 'error' (a1_0= parse_org_sintef_thingml_Expression ) )
+            // Thingml.g:10606:2: a0= 'error' (a1_0= parse_org_sintef_thingml_Expression )
             {
-            a0=(Token)match(input,53,FOLLOW_53_in_parse_org_sintef_thingml_ErrorAction10269); if (state.failed) return element;
+            a0=(Token)match(input,53,FOLLOW_53_in_parse_org_sintef_thingml_ErrorAction10309); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -16358,23 +16462,23 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2533]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2534]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2535]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2536]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2537]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2538]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2539]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2540]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2541]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2542]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2543]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2606]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2607]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2608]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2609]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2610]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2611]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2612]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2613]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2614]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2615]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2616]);
             	}
 
-            // Thingml.g:10549:2: (a1_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:10550:3: a1_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:10630:2: (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:10631:3: a1_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ErrorAction10287);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ErrorAction10327);
             a1_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -16405,43 +16509,43 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2544]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2545]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2546]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2547]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2548]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2549]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2550]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2551]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2552]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2553]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2554]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2555]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2556]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2557]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2558]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2559]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2560]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2561]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2562]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2563]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2564]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2565]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2566]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2567]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2568]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2569]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2570]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2571]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2572]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2573]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2574]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2575]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2576]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2577]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2578]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2579]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2580]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2617]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2618]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2619]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2620]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2621]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2622]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2623]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2624]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2625]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2626]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2627]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2628]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2629]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2630]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2631]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2632]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2633]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2634]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2635]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2636]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2637]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2638]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2639]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2640]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2641]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2642]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2643]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2644]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2645]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2646]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2647]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2648]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2649]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2650]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2651]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2652]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2653]);
             	}
 
             }
@@ -16464,7 +16568,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ReturnAction"
-    // Thingml.g:10613:1: parse_org_sintef_thingml_ReturnAction returns [org.sintef.thingml.ReturnAction element = null] : a0= 'return' (a1_0= parse_org_sintef_thingml_Expression ) ;
+    // Thingml.g:10694:1: parse_org_sintef_thingml_ReturnAction returns [org.sintef.thingml.ReturnAction element = null] : a0= 'return' (a1_0= parse_org_sintef_thingml_Expression ) ;
     public final org.sintef.thingml.ReturnAction parse_org_sintef_thingml_ReturnAction() throws RecognitionException {
         org.sintef.thingml.ReturnAction element =  null;
 
@@ -16479,10 +16583,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 37) ) { return element; }
 
-            // Thingml.g:10616:2: (a0= 'return' (a1_0= parse_org_sintef_thingml_Expression ) )
-            // Thingml.g:10617:2: a0= 'return' (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:10697:2: (a0= 'return' (a1_0= parse_org_sintef_thingml_Expression ) )
+            // Thingml.g:10698:2: a0= 'return' (a1_0= parse_org_sintef_thingml_Expression )
             {
-            a0=(Token)match(input,77,FOLLOW_77_in_parse_org_sintef_thingml_ReturnAction10320); if (state.failed) return element;
+            a0=(Token)match(input,77,FOLLOW_77_in_parse_org_sintef_thingml_ReturnAction10360); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -16496,23 +16600,23 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2581]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2582]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2583]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2584]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2585]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2586]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2587]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2588]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2589]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2590]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2591]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2654]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2655]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2656]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2657]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2658]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2659]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2660]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2661]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2662]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2663]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2664]);
             	}
 
-            // Thingml.g:10641:2: (a1_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:10642:3: a1_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:10722:2: (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:10723:3: a1_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ReturnAction10338);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ReturnAction10378);
             a1_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -16543,43 +16647,43 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2592]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2593]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2594]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2595]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2596]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2597]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2598]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2599]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2600]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2601]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2602]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2603]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2604]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2605]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2606]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2607]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2608]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2609]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2610]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2611]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2612]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2613]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2614]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2615]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2616]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2617]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2618]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2619]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2620]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2621]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2622]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2623]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2624]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2625]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2626]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2627]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2628]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2665]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2666]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2667]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2668]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2669]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2670]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2671]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2672]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2673]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2674]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2675]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2676]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2677]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2678]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2679]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2680]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2681]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2682]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2683]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2684]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2685]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2686]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2687]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2688]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2689]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2690]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2691]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2692]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2693]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2694]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2695]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2696]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2697]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2698]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2699]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2700]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2701]);
             	}
 
             }
@@ -16602,7 +16706,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_FunctionCallStatement"
-    // Thingml.g:10705:1: parse_org_sintef_thingml_FunctionCallStatement returns [org.sintef.thingml.FunctionCallStatement element = null] : (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' ;
+    // Thingml.g:10786:1: parse_org_sintef_thingml_FunctionCallStatement returns [org.sintef.thingml.FunctionCallStatement element = null] : (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' ;
     public final org.sintef.thingml.FunctionCallStatement parse_org_sintef_thingml_FunctionCallStatement() throws RecognitionException {
         org.sintef.thingml.FunctionCallStatement element =  null;
 
@@ -16622,13 +16726,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 38) ) { return element; }
 
-            // Thingml.g:10708:2: ( (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' )
-            // Thingml.g:10709:2: (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')'
+            // Thingml.g:10789:2: ( (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' )
+            // Thingml.g:10790:2: (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')'
             {
-            // Thingml.g:10709:2: (a0= TEXT )
-            // Thingml.g:10710:3: a0= TEXT
+            // Thingml.g:10790:2: (a0= TEXT )
+            // Thingml.g:10791:3: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallStatement10375); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallStatement10415); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -16668,10 +16772,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2629]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2702]);
             	}
 
-            a1=(Token)match(input,20,FOLLOW_20_in_parse_org_sintef_thingml_FunctionCallStatement10396); if (state.failed) return element;
+            a1=(Token)match(input,20,FOLLOW_20_in_parse_org_sintef_thingml_FunctionCallStatement10436); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -16685,38 +16789,38 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2630]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2631]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2632]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2633]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2634]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2635]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2636]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2637]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2638]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2639]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2640]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2641]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2703]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2704]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2705]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2706]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2707]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2708]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2709]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2710]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2711]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2712]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2713]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2714]);
             	}
 
-            // Thingml.g:10774:2: ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
-            int alt101=2;
-            int LA101_0 = input.LA(1);
+            // Thingml.g:10855:2: ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
+            int alt102=2;
+            int LA102_0 = input.LA(1);
 
-            if ( ((LA101_0 >= BOOLEAN_LITERAL && LA101_0 <= INTEGER_LITERAL)||(LA101_0 >= STRING_EXT && LA101_0 <= TEXT)||LA101_0==20||LA101_0==25||LA101_0==67) ) {
-                alt101=1;
+            if ( ((LA102_0 >= BOOLEAN_LITERAL && LA102_0 <= INTEGER_LITERAL)||(LA102_0 >= STRING_EXT && LA102_0 <= TEXT)||LA102_0==20||LA102_0==25||LA102_0==67) ) {
+                alt102=1;
             }
-            switch (alt101) {
+            switch (alt102) {
                 case 1 :
-                    // Thingml.g:10775:3: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:10856:3: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
                     {
-                    // Thingml.g:10775:3: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
-                    // Thingml.g:10776:4: (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
+                    // Thingml.g:10856:3: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:10857:4: (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
                     {
-                    // Thingml.g:10776:4: (a2_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:10777:5: a2_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:10857:4: (a2_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:10858:5: a2_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement10425);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement10465);
                     a2_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
@@ -16747,29 +16851,29 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     if ( state.backtracking==0 ) {
                     				// expected elements (follow set)
-                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2642]);
-                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2643]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2715]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2716]);
                     			}
 
-                    // Thingml.g:10803:4: ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
-                    loop100:
+                    // Thingml.g:10884:4: ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
+                    loop101:
                     do {
-                        int alt100=2;
-                        int LA100_0 = input.LA(1);
+                        int alt101=2;
+                        int LA101_0 = input.LA(1);
 
-                        if ( (LA100_0==24) ) {
-                            alt100=1;
+                        if ( (LA101_0==24) ) {
+                            alt101=1;
                         }
 
 
-                        switch (alt100) {
+                        switch (alt101) {
                     	case 1 :
-                    	    // Thingml.g:10804:5: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:10885:5: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
                     	    {
-                    	    // Thingml.g:10804:5: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
-                    	    // Thingml.g:10805:6: a3= ',' (a4_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:10885:5: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:10886:6: a3= ',' (a4_0= parse_org_sintef_thingml_Expression )
                     	    {
-                    	    a3=(Token)match(input,24,FOLLOW_24_in_parse_org_sintef_thingml_FunctionCallStatement10466); if (state.failed) return element;
+                    	    a3=(Token)match(input,24,FOLLOW_24_in_parse_org_sintef_thingml_FunctionCallStatement10506); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    						if (element == null) {
@@ -16783,23 +16887,23 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    						// expected elements (follow set)
-                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2644]);
-                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2645]);
-                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2646]);
-                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2647]);
-                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2648]);
-                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2649]);
-                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2650]);
-                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2651]);
-                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2652]);
-                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2653]);
-                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2654]);
+                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2717]);
+                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2718]);
+                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2719]);
+                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2720]);
+                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2721]);
+                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2722]);
+                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2723]);
+                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2724]);
+                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2725]);
+                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2726]);
+                    	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2727]);
                     	    					}
 
-                    	    // Thingml.g:10829:6: (a4_0= parse_org_sintef_thingml_Expression )
-                    	    // Thingml.g:10830:7: a4_0= parse_org_sintef_thingml_Expression
+                    	    // Thingml.g:10910:6: (a4_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:10911:7: a4_0= parse_org_sintef_thingml_Expression
                     	    {
-                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement10500);
+                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement10540);
                     	    a4_0=parse_org_sintef_thingml_Expression();
 
                     	    state._fsp--;
@@ -16830,8 +16934,8 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    						// expected elements (follow set)
-                    	    						addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2655]);
-                    	    						addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2656]);
+                    	    						addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2728]);
+                    	    						addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2729]);
                     	    					}
 
                     	    }
@@ -16841,15 +16945,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    break;
 
                     	default :
-                    	    break loop100;
+                    	    break loop101;
                         }
                     } while (true);
 
 
                     if ( state.backtracking==0 ) {
                     				// expected elements (follow set)
-                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2657]);
-                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2658]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2730]);
+                    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2731]);
                     			}
 
                     }
@@ -16863,10 +16967,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2659]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2732]);
             	}
 
-            a5=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_FunctionCallStatement10574); if (state.failed) return element;
+            a5=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_FunctionCallStatement10614); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -16880,43 +16984,43 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             		// expected elements (follow set)
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2660]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2661]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2662]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2663]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2664]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2665]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2666]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2667]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2668]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2669]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2670]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2671]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2672]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2673]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2674]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2675]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2676]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2677]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2678]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2679]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2680]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2681]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2682]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2683]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2684]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2685]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2686]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2687]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2688]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2689]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2690]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2691]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2692]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2693]);
-            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2694]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2695]);
-            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2696]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2733]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2734]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2735]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2736]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2737]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2738]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2739]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2740]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2741]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2742]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2743]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2744]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2745]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2746]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2747]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2748]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2749]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2750]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2751]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2752]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2753]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2754]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2755]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2756]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2757]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2758]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2759]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2760]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2761]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2762]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2763]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2764]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2765]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2766]);
+            		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2767]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2768]);
+            		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2769]);
             	}
 
             }
@@ -16939,7 +17043,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_1"
-    // Thingml.g:10923:1: parseop_Expression_level_1 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_2 ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |) ;
+    // Thingml.g:11004:1: parseop_Expression_level_1 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_2 ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_1() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -16956,83 +17060,83 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 39) ) { return element; }
 
-            // Thingml.g:10926:2: (leftArg= parseop_Expression_level_2 ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |) )
-            // Thingml.g:10927:2: leftArg= parseop_Expression_level_2 ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |)
+            // Thingml.g:11007:2: (leftArg= parseop_Expression_level_2 ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |) )
+            // Thingml.g:11008:2: leftArg= parseop_Expression_level_2 ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_110603);
+            pushFollow(FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_110643);
             leftArg=parseop_Expression_level_2();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:10927:39: ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |)
-            int alt103=2;
-            int LA103_0 = input.LA(1);
+            // Thingml.g:11008:39: ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |)
+            int alt104=2;
+            int LA104_0 = input.LA(1);
 
-            if ( (LA103_0==69) ) {
-                int LA103_1 = input.LA(2);
+            if ( (LA104_0==69) ) {
+                int LA104_1 = input.LA(2);
 
-                if ( (synpred111_Thingml()) ) {
-                    alt103=1;
+                if ( (synpred112_Thingml()) ) {
+                    alt104=1;
                 }
                 else if ( (true) ) {
-                    alt103=2;
+                    alt104=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 103, 1, input);
+                        new NoViableAltException("", 104, 1, input);
 
                     throw nvae;
 
                 }
             }
-            else if ( (LA103_0==EOF||LA103_0==ANNOTATION||LA103_0==STRING_EXT||LA103_0==TEXT||(LA103_0 >= T_OPTIONAL && LA103_0 <= T_READONLY)||LA103_0==19||(LA103_0 >= 21 && LA103_0 <= 25)||LA103_0==28||LA103_0==31||LA103_0==33||LA103_0==35||(LA103_0 >= 37 && LA103_0 <= 44)||LA103_0==46||(LA103_0 >= 48 && LA103_0 <= 50)||LA103_0==53||(LA103_0 >= 56 && LA103_0 <= 57)||LA103_0==59||(LA103_0 >= 63 && LA103_0 <= 64)||LA103_0==66||LA103_0==68||(LA103_0 >= 71 && LA103_0 <= 73)||(LA103_0 >= 75 && LA103_0 <= 77)||(LA103_0 >= 79 && LA103_0 <= 81)||(LA103_0 >= 83 && LA103_0 <= 85)||LA103_0==87) ) {
-                alt103=2;
+            else if ( (LA104_0==EOF||LA104_0==ANNOTATION||LA104_0==STRING_EXT||LA104_0==TEXT||(LA104_0 >= T_OPTIONAL && LA104_0 <= T_READONLY)||LA104_0==19||(LA104_0 >= 21 && LA104_0 <= 25)||LA104_0==28||LA104_0==31||LA104_0==33||LA104_0==35||(LA104_0 >= 37 && LA104_0 <= 44)||LA104_0==46||(LA104_0 >= 48 && LA104_0 <= 50)||LA104_0==53||(LA104_0 >= 56 && LA104_0 <= 57)||LA104_0==59||(LA104_0 >= 63 && LA104_0 <= 64)||LA104_0==66||LA104_0==68||(LA104_0 >= 71 && LA104_0 <= 73)||(LA104_0 >= 75 && LA104_0 <= 77)||(LA104_0 >= 79 && LA104_0 <= 81)||(LA104_0 >= 83 && LA104_0 <= 85)||LA104_0==87) ) {
+                alt104=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return element;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 103, 0, input);
+                    new NoViableAltException("", 104, 0, input);
 
                 throw nvae;
 
             }
-            switch (alt103) {
+            switch (alt104) {
                 case 1 :
-                    // Thingml.g:10927:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
+                    // Thingml.g:11008:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
                     {
-                    // Thingml.g:10927:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
-                    int cnt102=0;
-                    loop102:
+                    // Thingml.g:11008:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
+                    int cnt103=0;
+                    loop103:
                     do {
-                        int alt102=2;
-                        int LA102_0 = input.LA(1);
+                        int alt103=2;
+                        int LA103_0 = input.LA(1);
 
-                        if ( (LA102_0==69) ) {
-                            int LA102_2 = input.LA(2);
+                        if ( (LA103_0==69) ) {
+                            int LA103_2 = input.LA(2);
 
-                            if ( (synpred110_Thingml()) ) {
-                                alt102=1;
+                            if ( (synpred111_Thingml()) ) {
+                                alt103=1;
                             }
 
 
                         }
 
 
-                        switch (alt102) {
+                        switch (alt103) {
                     	case 1 :
-                    	    // Thingml.g:10928:3: () a0= 'or' rightArg= parseop_Expression_level_2
+                    	    // Thingml.g:11009:3: () a0= 'or' rightArg= parseop_Expression_level_2
                     	    {
-                    	    // Thingml.g:10928:3: ()
-                    	    // Thingml.g:10928:4: 
+                    	    // Thingml.g:11009:3: ()
+                    	    // Thingml.g:11009:4: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,69,FOLLOW_69_in_parseop_Expression_level_110623); if (state.failed) return element;
+                    	    a0=(Token)match(input,69,FOLLOW_69_in_parseop_Expression_level_110663); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    			if (element == null) {
@@ -17046,20 +17150,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    			// expected elements (follow set)
-                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2697]);
-                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2698]);
-                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2699]);
-                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2700]);
-                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2701]);
-                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2702]);
-                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2703]);
-                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2704]);
-                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2705]);
-                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2706]);
-                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2707]);
+                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2770]);
+                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2771]);
+                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2772]);
+                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2773]);
+                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2774]);
+                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2775]);
+                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2776]);
+                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2777]);
+                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2778]);
+                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2779]);
+                    	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2780]);
                     	    		}
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_110640);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_110680);
                     	    rightArg=parseop_Expression_level_2();
 
                     	    state._fsp--;
@@ -17111,20 +17215,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    break;
 
                     	default :
-                    	    if ( cnt102 >= 1 ) break loop102;
+                    	    if ( cnt103 >= 1 ) break loop103;
                     	    if (state.backtracking>0) {state.failed=true; return element;}
                                 EarlyExitException eee =
-                                    new EarlyExitException(102, input);
+                                    new EarlyExitException(103, input);
                                 throw eee;
                         }
-                        cnt102++;
+                        cnt103++;
                     } while (true);
 
 
                     }
                     break;
                 case 2 :
-                    // Thingml.g:10993:21: 
+                    // Thingml.g:11074:21: 
                     {
                     if ( state.backtracking==0 ) { element = leftArg; }
 
@@ -17154,7 +17258,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_2"
-    // Thingml.g:10998:1: parseop_Expression_level_2 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_3 ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |) ;
+    // Thingml.g:11079:1: parseop_Expression_level_2 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_3 ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_2() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -17171,83 +17275,83 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 40) ) { return element; }
 
-            // Thingml.g:11001:9: (leftArg= parseop_Expression_level_3 ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |) )
-            // Thingml.g:11002:9: leftArg= parseop_Expression_level_3 ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |)
+            // Thingml.g:11082:9: (leftArg= parseop_Expression_level_3 ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |) )
+            // Thingml.g:11083:9: leftArg= parseop_Expression_level_3 ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_210686);
+            pushFollow(FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_210726);
             leftArg=parseop_Expression_level_3();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:11002:37: ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |)
-            int alt105=2;
-            int LA105_0 = input.LA(1);
+            // Thingml.g:11083:37: ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |)
+            int alt106=2;
+            int LA106_0 = input.LA(1);
 
-            if ( (LA105_0==42) ) {
-                int LA105_1 = input.LA(2);
+            if ( (LA106_0==42) ) {
+                int LA106_1 = input.LA(2);
 
-                if ( (synpred113_Thingml()) ) {
-                    alt105=1;
+                if ( (synpred114_Thingml()) ) {
+                    alt106=1;
                 }
                 else if ( (true) ) {
-                    alt105=2;
+                    alt106=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 105, 1, input);
+                        new NoViableAltException("", 106, 1, input);
 
                     throw nvae;
 
                 }
             }
-            else if ( (LA105_0==EOF||LA105_0==ANNOTATION||LA105_0==STRING_EXT||LA105_0==TEXT||(LA105_0 >= T_OPTIONAL && LA105_0 <= T_READONLY)||LA105_0==19||(LA105_0 >= 21 && LA105_0 <= 25)||LA105_0==28||LA105_0==31||LA105_0==33||LA105_0==35||(LA105_0 >= 37 && LA105_0 <= 41)||(LA105_0 >= 43 && LA105_0 <= 44)||LA105_0==46||(LA105_0 >= 48 && LA105_0 <= 50)||LA105_0==53||(LA105_0 >= 56 && LA105_0 <= 57)||LA105_0==59||(LA105_0 >= 63 && LA105_0 <= 64)||LA105_0==66||(LA105_0 >= 68 && LA105_0 <= 69)||(LA105_0 >= 71 && LA105_0 <= 73)||(LA105_0 >= 75 && LA105_0 <= 77)||(LA105_0 >= 79 && LA105_0 <= 81)||(LA105_0 >= 83 && LA105_0 <= 85)||LA105_0==87) ) {
-                alt105=2;
+            else if ( (LA106_0==EOF||LA106_0==ANNOTATION||LA106_0==STRING_EXT||LA106_0==TEXT||(LA106_0 >= T_OPTIONAL && LA106_0 <= T_READONLY)||LA106_0==19||(LA106_0 >= 21 && LA106_0 <= 25)||LA106_0==28||LA106_0==31||LA106_0==33||LA106_0==35||(LA106_0 >= 37 && LA106_0 <= 41)||(LA106_0 >= 43 && LA106_0 <= 44)||LA106_0==46||(LA106_0 >= 48 && LA106_0 <= 50)||LA106_0==53||(LA106_0 >= 56 && LA106_0 <= 57)||LA106_0==59||(LA106_0 >= 63 && LA106_0 <= 64)||LA106_0==66||(LA106_0 >= 68 && LA106_0 <= 69)||(LA106_0 >= 71 && LA106_0 <= 73)||(LA106_0 >= 75 && LA106_0 <= 77)||(LA106_0 >= 79 && LA106_0 <= 81)||(LA106_0 >= 83 && LA106_0 <= 85)||LA106_0==87) ) {
+                alt106=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return element;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 105, 0, input);
+                    new NoViableAltException("", 106, 0, input);
 
                 throw nvae;
 
             }
-            switch (alt105) {
+            switch (alt106) {
                 case 1 :
-                    // Thingml.g:11002:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
+                    // Thingml.g:11083:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
                     {
-                    // Thingml.g:11002:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
-                    int cnt104=0;
-                    loop104:
+                    // Thingml.g:11083:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
+                    int cnt105=0;
+                    loop105:
                     do {
-                        int alt104=2;
-                        int LA104_0 = input.LA(1);
+                        int alt105=2;
+                        int LA105_0 = input.LA(1);
 
-                        if ( (LA104_0==42) ) {
-                            int LA104_2 = input.LA(2);
+                        if ( (LA105_0==42) ) {
+                            int LA105_2 = input.LA(2);
 
-                            if ( (synpred112_Thingml()) ) {
-                                alt104=1;
+                            if ( (synpred113_Thingml()) ) {
+                                alt105=1;
                             }
 
 
                         }
 
 
-                        switch (alt104) {
+                        switch (alt105) {
                     	case 1 :
-                    	    // Thingml.g:11003:2: () a0= 'and' rightArg= parseop_Expression_level_3
+                    	    // Thingml.g:11084:2: () a0= 'and' rightArg= parseop_Expression_level_3
                     	    {
-                    	    // Thingml.g:11003:2: ()
-                    	    // Thingml.g:11003:3: 
+                    	    // Thingml.g:11084:2: ()
+                    	    // Thingml.g:11084:3: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,42,FOLLOW_42_in_parseop_Expression_level_210702); if (state.failed) return element;
+                    	    a0=(Token)match(input,42,FOLLOW_42_in_parseop_Expression_level_210742); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    		if (element == null) {
@@ -17261,20 +17365,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    		// expected elements (follow set)
-                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2708]);
-                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2709]);
-                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2710]);
-                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2711]);
-                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2712]);
-                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2713]);
-                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2714]);
-                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2715]);
-                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2716]);
-                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2717]);
-                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2718]);
+                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2781]);
+                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2782]);
+                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2783]);
+                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2784]);
+                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2785]);
+                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2786]);
+                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2787]);
+                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2788]);
+                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2789]);
+                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2790]);
+                    	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2791]);
                     	    	}
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_210716);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_210756);
                     	    rightArg=parseop_Expression_level_3();
 
                     	    state._fsp--;
@@ -17326,20 +17430,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    break;
 
                     	default :
-                    	    if ( cnt104 >= 1 ) break loop104;
+                    	    if ( cnt105 >= 1 ) break loop105;
                     	    if (state.backtracking>0) {state.failed=true; return element;}
                                 EarlyExitException eee =
-                                    new EarlyExitException(104, input);
+                                    new EarlyExitException(105, input);
                                 throw eee;
                         }
-                        cnt104++;
+                        cnt105++;
                     } while (true);
 
 
                     }
                     break;
                 case 2 :
-                    // Thingml.g:11068:20: 
+                    // Thingml.g:11149:20: 
                     {
                     if ( state.backtracking==0 ) { element = leftArg; }
 
@@ -17369,7 +17473,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_3"
-    // Thingml.g:11073:1: parseop_Expression_level_3 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_4 ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |) ;
+    // Thingml.g:11154:1: parseop_Expression_level_3 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_4 ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_3() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -17386,32 +17490,32 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 41) ) { return element; }
 
-            // Thingml.g:11076:9: (leftArg= parseop_Expression_level_4 ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |) )
-            // Thingml.g:11077:9: leftArg= parseop_Expression_level_4 ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |)
+            // Thingml.g:11157:9: (leftArg= parseop_Expression_level_4 ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |) )
+            // Thingml.g:11158:9: leftArg= parseop_Expression_level_4 ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310757);
+            pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310797);
             leftArg=parseop_Expression_level_4();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:11077:37: ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |)
-            int alt107=2;
+            // Thingml.g:11158:37: ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |)
+            int alt108=2;
             switch ( input.LA(1) ) {
             case 31:
                 {
-                int LA107_1 = input.LA(2);
+                int LA108_1 = input.LA(2);
 
-                if ( (synpred117_Thingml()) ) {
-                    alt107=1;
+                if ( (synpred118_Thingml()) ) {
+                    alt108=1;
                 }
                 else if ( (true) ) {
-                    alt107=2;
+                    alt108=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 107, 1, input);
+                        new NoViableAltException("", 108, 1, input);
 
                     throw nvae;
 
@@ -17420,18 +17524,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                 break;
             case 35:
                 {
-                int LA107_2 = input.LA(2);
+                int LA108_2 = input.LA(2);
 
-                if ( (synpred117_Thingml()) ) {
-                    alt107=1;
+                if ( (synpred118_Thingml()) ) {
+                    alt108=1;
                 }
                 else if ( (true) ) {
-                    alt107=2;
+                    alt108=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 107, 2, input);
+                        new NoViableAltException("", 108, 2, input);
 
                     throw nvae;
 
@@ -17440,18 +17544,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                 break;
             case 33:
                 {
-                int LA107_3 = input.LA(2);
+                int LA108_3 = input.LA(2);
 
-                if ( (synpred117_Thingml()) ) {
-                    alt107=1;
+                if ( (synpred118_Thingml()) ) {
+                    alt108=1;
                 }
                 else if ( (true) ) {
-                    alt107=2;
+                    alt108=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 107, 3, input);
+                        new NoViableAltException("", 108, 3, input);
 
                     throw nvae;
 
@@ -17506,34 +17610,34 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             case 85:
             case 87:
                 {
-                alt107=2;
+                alt108=2;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return element;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 107, 0, input);
+                    new NoViableAltException("", 108, 0, input);
 
                 throw nvae;
 
             }
 
-            switch (alt107) {
+            switch (alt108) {
                 case 1 :
-                    // Thingml.g:11077:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
+                    // Thingml.g:11158:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
                     {
-                    // Thingml.g:11077:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
-                    int cnt106=0;
-                    loop106:
+                    // Thingml.g:11158:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
+                    int cnt107=0;
+                    loop107:
                     do {
-                        int alt106=4;
+                        int alt107=4;
                         switch ( input.LA(1) ) {
                         case 31:
                             {
-                            int LA106_2 = input.LA(2);
+                            int LA107_2 = input.LA(2);
 
-                            if ( (synpred114_Thingml()) ) {
-                                alt106=1;
+                            if ( (synpred115_Thingml()) ) {
+                                alt107=1;
                             }
 
 
@@ -17541,10 +17645,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             break;
                         case 35:
                             {
-                            int LA106_3 = input.LA(2);
+                            int LA107_3 = input.LA(2);
 
-                            if ( (synpred115_Thingml()) ) {
-                                alt106=2;
+                            if ( (synpred116_Thingml()) ) {
+                                alt107=2;
                             }
 
 
@@ -17552,10 +17656,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             break;
                         case 33:
                             {
-                            int LA106_4 = input.LA(2);
+                            int LA107_4 = input.LA(2);
 
-                            if ( (synpred116_Thingml()) ) {
-                                alt106=3;
+                            if ( (synpred117_Thingml()) ) {
+                                alt107=3;
                             }
 
 
@@ -17564,19 +17668,19 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         }
 
-                        switch (alt106) {
+                        switch (alt107) {
                     	case 1 :
-                    	    // Thingml.g:11078:0: () a0= '<' rightArg= parseop_Expression_level_4
+                    	    // Thingml.g:11159:0: () a0= '<' rightArg= parseop_Expression_level_4
                     	    {
-                    	    // Thingml.g:11078:2: ()
-                    	    // Thingml.g:11078:2: 
+                    	    // Thingml.g:11159:2: ()
+                    	    // Thingml.g:11159:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,31,FOLLOW_31_in_parseop_Expression_level_310770); if (state.failed) return element;
+                    	    a0=(Token)match(input,31,FOLLOW_31_in_parseop_Expression_level_310810); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    	if (element == null) {
@@ -17590,20 +17694,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    	// expected elements (follow set)
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2719]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2720]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2721]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2722]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2723]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2724]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2725]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2726]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2727]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2728]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2729]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2792]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2793]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2794]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2795]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2796]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2797]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2798]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2799]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2800]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2801]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2802]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310781);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310821);
                     	    rightArg=parseop_Expression_level_4();
 
                     	    state._fsp--;
@@ -17654,17 +17758,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // Thingml.g:11144:0: () a0= '>' rightArg= parseop_Expression_level_4
+                    	    // Thingml.g:11225:0: () a0= '>' rightArg= parseop_Expression_level_4
                     	    {
-                    	    // Thingml.g:11144:2: ()
-                    	    // Thingml.g:11144:2: 
+                    	    // Thingml.g:11225:2: ()
+                    	    // Thingml.g:11225:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,35,FOLLOW_35_in_parseop_Expression_level_310799); if (state.failed) return element;
+                    	    a0=(Token)match(input,35,FOLLOW_35_in_parseop_Expression_level_310839); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    	if (element == null) {
@@ -17678,20 +17782,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    	// expected elements (follow set)
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2730]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2731]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2732]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2733]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2734]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2735]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2736]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2737]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2738]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2739]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2740]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2803]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2804]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2805]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2806]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2807]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2808]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2809]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2810]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2811]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2812]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2813]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310810);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310850);
                     	    rightArg=parseop_Expression_level_4();
 
                     	    state._fsp--;
@@ -17742,17 +17846,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    }
                     	    break;
                     	case 3 :
-                    	    // Thingml.g:11210:0: () a0= '==' rightArg= parseop_Expression_level_4
+                    	    // Thingml.g:11291:0: () a0= '==' rightArg= parseop_Expression_level_4
                     	    {
-                    	    // Thingml.g:11210:2: ()
-                    	    // Thingml.g:11210:2: 
+                    	    // Thingml.g:11291:2: ()
+                    	    // Thingml.g:11291:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,33,FOLLOW_33_in_parseop_Expression_level_310828); if (state.failed) return element;
+                    	    a0=(Token)match(input,33,FOLLOW_33_in_parseop_Expression_level_310868); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    	if (element == null) {
@@ -17766,20 +17870,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    	// expected elements (follow set)
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2741]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2742]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2743]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2744]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2745]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2746]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2747]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2748]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2749]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2750]);
-                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2751]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2814]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2815]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2816]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2817]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2818]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2819]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2820]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2821]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2822]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2823]);
+                    	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2824]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310839);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310879);
                     	    rightArg=parseop_Expression_level_4();
 
                     	    state._fsp--;
@@ -17831,20 +17935,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    break;
 
                     	default :
-                    	    if ( cnt106 >= 1 ) break loop106;
+                    	    if ( cnt107 >= 1 ) break loop107;
                     	    if (state.backtracking>0) {state.failed=true; return element;}
                                 EarlyExitException eee =
-                                    new EarlyExitException(106, input);
+                                    new EarlyExitException(107, input);
                                 throw eee;
                         }
-                        cnt106++;
+                        cnt107++;
                     } while (true);
 
 
                     }
                     break;
                 case 2 :
-                    // Thingml.g:11275:20: 
+                    // Thingml.g:11356:20: 
                     {
                     if ( state.backtracking==0 ) { element = leftArg; }
 
@@ -17874,7 +17978,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_4"
-    // Thingml.g:11280:1: parseop_Expression_level_4 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_5 ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |) ;
+    // Thingml.g:11361:1: parseop_Expression_level_4 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_5 ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_4() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -17891,32 +17995,32 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 42) ) { return element; }
 
-            // Thingml.g:11283:9: (leftArg= parseop_Expression_level_5 ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |) )
-            // Thingml.g:11284:9: leftArg= parseop_Expression_level_5 ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |)
+            // Thingml.g:11364:9: (leftArg= parseop_Expression_level_5 ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |) )
+            // Thingml.g:11365:9: leftArg= parseop_Expression_level_5 ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_410877);
+            pushFollow(FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_410917);
             leftArg=parseop_Expression_level_5();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:11284:37: ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |)
-            int alt109=2;
+            // Thingml.g:11365:37: ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |)
+            int alt110=2;
             switch ( input.LA(1) ) {
             case 23:
                 {
-                int LA109_1 = input.LA(2);
+                int LA110_1 = input.LA(2);
 
-                if ( (synpred120_Thingml()) ) {
-                    alt109=1;
+                if ( (synpred121_Thingml()) ) {
+                    alt110=1;
                 }
                 else if ( (true) ) {
-                    alt109=2;
+                    alt110=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 109, 1, input);
+                        new NoViableAltException("", 110, 1, input);
 
                     throw nvae;
 
@@ -17925,18 +18029,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                 break;
             case 25:
                 {
-                int LA109_2 = input.LA(2);
+                int LA110_2 = input.LA(2);
 
-                if ( (synpred120_Thingml()) ) {
-                    alt109=1;
+                if ( (synpred121_Thingml()) ) {
+                    alt110=1;
                 }
                 else if ( (true) ) {
-                    alt109=2;
+                    alt110=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 109, 2, input);
+                        new NoViableAltException("", 110, 2, input);
 
                     throw nvae;
 
@@ -17992,62 +18096,62 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             case 85:
             case 87:
                 {
-                alt109=2;
+                alt110=2;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return element;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 109, 0, input);
+                    new NoViableAltException("", 110, 0, input);
 
                 throw nvae;
 
             }
 
-            switch (alt109) {
+            switch (alt110) {
                 case 1 :
-                    // Thingml.g:11284:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
+                    // Thingml.g:11365:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
                     {
-                    // Thingml.g:11284:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
-                    int cnt108=0;
-                    loop108:
+                    // Thingml.g:11365:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
+                    int cnt109=0;
+                    loop109:
                     do {
-                        int alt108=3;
-                        int LA108_0 = input.LA(1);
+                        int alt109=3;
+                        int LA109_0 = input.LA(1);
 
-                        if ( (LA108_0==23) ) {
-                            int LA108_2 = input.LA(2);
-
-                            if ( (synpred118_Thingml()) ) {
-                                alt108=1;
-                            }
-
-
-                        }
-                        else if ( (LA108_0==25) ) {
-                            int LA108_3 = input.LA(2);
+                        if ( (LA109_0==23) ) {
+                            int LA109_2 = input.LA(2);
 
                             if ( (synpred119_Thingml()) ) {
-                                alt108=2;
+                                alt109=1;
+                            }
+
+
+                        }
+                        else if ( (LA109_0==25) ) {
+                            int LA109_3 = input.LA(2);
+
+                            if ( (synpred120_Thingml()) ) {
+                                alt109=2;
                             }
 
 
                         }
 
 
-                        switch (alt108) {
+                        switch (alt109) {
                     	case 1 :
-                    	    // Thingml.g:11285:0: () a0= '+' rightArg= parseop_Expression_level_5
+                    	    // Thingml.g:11366:0: () a0= '+' rightArg= parseop_Expression_level_5
                     	    {
-                    	    // Thingml.g:11285:2: ()
-                    	    // Thingml.g:11285:2: 
+                    	    // Thingml.g:11366:2: ()
+                    	    // Thingml.g:11366:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,23,FOLLOW_23_in_parseop_Expression_level_410890); if (state.failed) return element;
+                    	    a0=(Token)match(input,23,FOLLOW_23_in_parseop_Expression_level_410930); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    if (element == null) {
@@ -18061,20 +18165,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    // expected elements (follow set)
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2752]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2753]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2754]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2755]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2756]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2757]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2758]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2759]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2760]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2761]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2762]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2825]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2826]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2827]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2828]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2829]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2830]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2831]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2832]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2833]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2834]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2835]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_410901);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_410941);
                     	    rightArg=parseop_Expression_level_5();
 
                     	    state._fsp--;
@@ -18125,17 +18229,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // Thingml.g:11351:0: () a0= '-' rightArg= parseop_Expression_level_5
+                    	    // Thingml.g:11432:0: () a0= '-' rightArg= parseop_Expression_level_5
                     	    {
-                    	    // Thingml.g:11351:2: ()
-                    	    // Thingml.g:11351:2: 
+                    	    // Thingml.g:11432:2: ()
+                    	    // Thingml.g:11432:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,25,FOLLOW_25_in_parseop_Expression_level_410919); if (state.failed) return element;
+                    	    a0=(Token)match(input,25,FOLLOW_25_in_parseop_Expression_level_410959); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    if (element == null) {
@@ -18149,20 +18253,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    // expected elements (follow set)
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2763]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2764]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2765]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2766]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2767]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2768]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2769]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2770]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2771]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2772]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2773]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2836]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2837]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2838]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2839]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2840]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2841]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2842]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2843]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2844]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2845]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2846]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_410930);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_410970);
                     	    rightArg=parseop_Expression_level_5();
 
                     	    state._fsp--;
@@ -18214,20 +18318,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    break;
 
                     	default :
-                    	    if ( cnt108 >= 1 ) break loop108;
+                    	    if ( cnt109 >= 1 ) break loop109;
                     	    if (state.backtracking>0) {state.failed=true; return element;}
                                 EarlyExitException eee =
-                                    new EarlyExitException(108, input);
+                                    new EarlyExitException(109, input);
                                 throw eee;
                         }
-                        cnt108++;
+                        cnt109++;
                     } while (true);
 
 
                     }
                     break;
                 case 2 :
-                    // Thingml.g:11416:20: 
+                    // Thingml.g:11497:20: 
                     {
                     if ( state.backtracking==0 ) { element = leftArg; }
 
@@ -18257,7 +18361,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_5"
-    // Thingml.g:11421:1: parseop_Expression_level_5 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_6 ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |) ;
+    // Thingml.g:11502:1: parseop_Expression_level_5 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_6 ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_5() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -18274,32 +18378,32 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 43) ) { return element; }
 
-            // Thingml.g:11424:9: (leftArg= parseop_Expression_level_6 ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |) )
-            // Thingml.g:11425:9: leftArg= parseop_Expression_level_6 ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |)
+            // Thingml.g:11505:9: (leftArg= parseop_Expression_level_6 ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |) )
+            // Thingml.g:11506:9: leftArg= parseop_Expression_level_6 ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_510968);
+            pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_511008);
             leftArg=parseop_Expression_level_6();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:11425:37: ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |)
-            int alt111=2;
+            // Thingml.g:11506:37: ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |)
+            int alt112=2;
             switch ( input.LA(1) ) {
             case 22:
                 {
-                int LA111_1 = input.LA(2);
+                int LA112_1 = input.LA(2);
 
-                if ( (synpred123_Thingml()) ) {
-                    alt111=1;
+                if ( (synpred124_Thingml()) ) {
+                    alt112=1;
                 }
                 else if ( (true) ) {
-                    alt111=2;
+                    alt112=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 111, 1, input);
+                        new NoViableAltException("", 112, 1, input);
 
                     throw nvae;
 
@@ -18308,18 +18412,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                 break;
             case 28:
                 {
-                int LA111_2 = input.LA(2);
+                int LA112_2 = input.LA(2);
 
-                if ( (synpred123_Thingml()) ) {
-                    alt111=1;
+                if ( (synpred124_Thingml()) ) {
+                    alt112=1;
                 }
                 else if ( (true) ) {
-                    alt111=2;
+                    alt112=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 111, 2, input);
+                        new NoViableAltException("", 112, 2, input);
 
                     throw nvae;
 
@@ -18375,62 +18479,62 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             case 85:
             case 87:
                 {
-                alt111=2;
+                alt112=2;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return element;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 111, 0, input);
+                    new NoViableAltException("", 112, 0, input);
 
                 throw nvae;
 
             }
 
-            switch (alt111) {
+            switch (alt112) {
                 case 1 :
-                    // Thingml.g:11425:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
+                    // Thingml.g:11506:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
                     {
-                    // Thingml.g:11425:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
-                    int cnt110=0;
-                    loop110:
+                    // Thingml.g:11506:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
+                    int cnt111=0;
+                    loop111:
                     do {
-                        int alt110=3;
-                        int LA110_0 = input.LA(1);
+                        int alt111=3;
+                        int LA111_0 = input.LA(1);
 
-                        if ( (LA110_0==22) ) {
-                            int LA110_2 = input.LA(2);
-
-                            if ( (synpred121_Thingml()) ) {
-                                alt110=1;
-                            }
-
-
-                        }
-                        else if ( (LA110_0==28) ) {
-                            int LA110_3 = input.LA(2);
+                        if ( (LA111_0==22) ) {
+                            int LA111_2 = input.LA(2);
 
                             if ( (synpred122_Thingml()) ) {
-                                alt110=2;
+                                alt111=1;
+                            }
+
+
+                        }
+                        else if ( (LA111_0==28) ) {
+                            int LA111_3 = input.LA(2);
+
+                            if ( (synpred123_Thingml()) ) {
+                                alt111=2;
                             }
 
 
                         }
 
 
-                        switch (alt110) {
+                        switch (alt111) {
                     	case 1 :
-                    	    // Thingml.g:11426:0: () a0= '*' rightArg= parseop_Expression_level_6
+                    	    // Thingml.g:11507:0: () a0= '*' rightArg= parseop_Expression_level_6
                     	    {
-                    	    // Thingml.g:11426:2: ()
-                    	    // Thingml.g:11426:2: 
+                    	    // Thingml.g:11507:2: ()
+                    	    // Thingml.g:11507:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,22,FOLLOW_22_in_parseop_Expression_level_510981); if (state.failed) return element;
+                    	    a0=(Token)match(input,22,FOLLOW_22_in_parseop_Expression_level_511021); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    if (element == null) {
@@ -18444,20 +18548,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    // expected elements (follow set)
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2774]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2775]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2776]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2777]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2778]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2779]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2780]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2781]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2782]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2783]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2784]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2847]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2848]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2849]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2850]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2851]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2852]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2853]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2854]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2855]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2856]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2857]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_510992);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_511032);
                     	    rightArg=parseop_Expression_level_6();
 
                     	    state._fsp--;
@@ -18508,17 +18612,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // Thingml.g:11492:0: () a0= '/' rightArg= parseop_Expression_level_6
+                    	    // Thingml.g:11573:0: () a0= '/' rightArg= parseop_Expression_level_6
                     	    {
-                    	    // Thingml.g:11492:2: ()
-                    	    // Thingml.g:11492:2: 
+                    	    // Thingml.g:11573:2: ()
+                    	    // Thingml.g:11573:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,28,FOLLOW_28_in_parseop_Expression_level_511010); if (state.failed) return element;
+                    	    a0=(Token)match(input,28,FOLLOW_28_in_parseop_Expression_level_511050); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    if (element == null) {
@@ -18532,20 +18636,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    // expected elements (follow set)
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2785]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2786]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2787]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2788]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2789]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2790]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2791]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2792]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2793]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2794]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2795]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2858]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2859]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2860]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2861]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2862]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2863]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2864]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2865]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2866]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2867]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2868]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_511021);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_511061);
                     	    rightArg=parseop_Expression_level_6();
 
                     	    state._fsp--;
@@ -18597,20 +18701,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    break;
 
                     	default :
-                    	    if ( cnt110 >= 1 ) break loop110;
+                    	    if ( cnt111 >= 1 ) break loop111;
                     	    if (state.backtracking>0) {state.failed=true; return element;}
                                 EarlyExitException eee =
-                                    new EarlyExitException(110, input);
+                                    new EarlyExitException(111, input);
                                 throw eee;
                         }
-                        cnt110++;
+                        cnt111++;
                     } while (true);
 
 
                     }
                     break;
                 case 2 :
-                    // Thingml.g:11557:20: 
+                    // Thingml.g:11638:20: 
                     {
                     if ( state.backtracking==0 ) { element = leftArg; }
 
@@ -18640,7 +18744,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_6"
-    // Thingml.g:11562:1: parseop_Expression_level_6 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_7 ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |) ;
+    // Thingml.g:11643:1: parseop_Expression_level_6 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_7 ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_6() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -18657,56 +18761,56 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 44) ) { return element; }
 
-            // Thingml.g:11565:9: (leftArg= parseop_Expression_level_7 ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |) )
-            // Thingml.g:11566:9: leftArg= parseop_Expression_level_7 ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |)
+            // Thingml.g:11646:9: (leftArg= parseop_Expression_level_7 ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |) )
+            // Thingml.g:11647:9: leftArg= parseop_Expression_level_7 ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_7_in_parseop_Expression_level_611059);
+            pushFollow(FOLLOW_parseop_Expression_level_7_in_parseop_Expression_level_611099);
             leftArg=parseop_Expression_level_7();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:11566:37: ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |)
-            int alt112=2;
-            int LA112_0 = input.LA(1);
+            // Thingml.g:11647:37: ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |)
+            int alt113=2;
+            int LA113_0 = input.LA(1);
 
-            if ( (LA112_0==38) ) {
-                int LA112_1 = input.LA(2);
+            if ( (LA113_0==38) ) {
+                int LA113_1 = input.LA(2);
 
-                if ( (synpred124_Thingml()) ) {
-                    alt112=1;
+                if ( (synpred125_Thingml()) ) {
+                    alt113=1;
                 }
                 else if ( (true) ) {
-                    alt112=2;
+                    alt113=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 112, 1, input);
+                        new NoViableAltException("", 113, 1, input);
 
                     throw nvae;
 
                 }
             }
-            else if ( (LA112_0==EOF||LA112_0==ANNOTATION||LA112_0==STRING_EXT||LA112_0==TEXT||(LA112_0 >= T_OPTIONAL && LA112_0 <= T_READONLY)||LA112_0==19||(LA112_0 >= 21 && LA112_0 <= 25)||LA112_0==28||LA112_0==31||LA112_0==33||LA112_0==35||LA112_0==37||(LA112_0 >= 39 && LA112_0 <= 44)||LA112_0==46||(LA112_0 >= 48 && LA112_0 <= 50)||LA112_0==53||(LA112_0 >= 56 && LA112_0 <= 57)||LA112_0==59||(LA112_0 >= 63 && LA112_0 <= 64)||LA112_0==66||(LA112_0 >= 68 && LA112_0 <= 69)||(LA112_0 >= 71 && LA112_0 <= 73)||(LA112_0 >= 75 && LA112_0 <= 77)||(LA112_0 >= 79 && LA112_0 <= 81)||(LA112_0 >= 83 && LA112_0 <= 85)||LA112_0==87) ) {
-                alt112=2;
+            else if ( (LA113_0==EOF||LA113_0==ANNOTATION||LA113_0==STRING_EXT||LA113_0==TEXT||(LA113_0 >= T_OPTIONAL && LA113_0 <= T_READONLY)||LA113_0==19||(LA113_0 >= 21 && LA113_0 <= 25)||LA113_0==28||LA113_0==31||LA113_0==33||LA113_0==35||LA113_0==37||(LA113_0 >= 39 && LA113_0 <= 44)||LA113_0==46||(LA113_0 >= 48 && LA113_0 <= 50)||LA113_0==53||(LA113_0 >= 56 && LA113_0 <= 57)||LA113_0==59||(LA113_0 >= 63 && LA113_0 <= 64)||LA113_0==66||(LA113_0 >= 68 && LA113_0 <= 69)||(LA113_0 >= 71 && LA113_0 <= 73)||(LA113_0 >= 75 && LA113_0 <= 77)||(LA113_0 >= 79 && LA113_0 <= 81)||(LA113_0 >= 83 && LA113_0 <= 85)||LA113_0==87) ) {
+                alt113=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return element;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 112, 0, input);
+                    new NoViableAltException("", 113, 0, input);
 
                 throw nvae;
 
             }
-            switch (alt112) {
+            switch (alt113) {
                 case 1 :
-                    // Thingml.g:11566:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
+                    // Thingml.g:11647:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
                     {
-                    // Thingml.g:11566:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
-                    // Thingml.g:11567:4: a0= '\\u0025' rightArg= parseop_Expression_level_6
+                    // Thingml.g:11647:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
+                    // Thingml.g:11648:4: a0= '\\u0025' rightArg= parseop_Expression_level_6
                     {
-                    a0=(Token)match(input,38,FOLLOW_38_in_parseop_Expression_level_611067); if (state.failed) return element;
+                    a0=(Token)match(input,38,FOLLOW_38_in_parseop_Expression_level_611107); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     if (element == null) {
@@ -18720,20 +18824,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     if ( state.backtracking==0 ) {
                     // expected elements (follow set)
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2796]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2797]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2798]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2799]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2800]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2801]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2802]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2803]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2804]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2805]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2806]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2869]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2870]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2871]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2872]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2873]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2874]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2875]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2876]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2877]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2878]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2879]);
                     }
 
-                    pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_611078);
+                    pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_611118);
                     rightArg=parseop_Expression_level_6();
 
                     state._fsp--;
@@ -18785,7 +18889,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:11629:19: 
+                    // Thingml.g:11710:19: 
                     {
                     if ( state.backtracking==0 ) { element = leftArg; }
 
@@ -18815,7 +18919,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_7"
-    // Thingml.g:11634:1: parseop_Expression_level_7 returns [org.sintef.thingml.Expression element = null] : (a0= '-' arg= parseop_Expression_level_8 |a0= 'not' arg= parseop_Expression_level_8 |arg= parseop_Expression_level_8 );
+    // Thingml.g:11715:1: parseop_Expression_level_7 returns [org.sintef.thingml.Expression element = null] : (a0= '-' arg= parseop_Expression_level_8 |a0= 'not' arg= parseop_Expression_level_8 |arg= parseop_Expression_level_8 );
     public final org.sintef.thingml.Expression parseop_Expression_level_7() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -18830,17 +18934,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 45) ) { return element; }
 
-            // Thingml.g:11637:0: (a0= '-' arg= parseop_Expression_level_8 |a0= 'not' arg= parseop_Expression_level_8 |arg= parseop_Expression_level_8 )
-            int alt113=3;
+            // Thingml.g:11718:0: (a0= '-' arg= parseop_Expression_level_8 |a0= 'not' arg= parseop_Expression_level_8 |arg= parseop_Expression_level_8 )
+            int alt114=3;
             switch ( input.LA(1) ) {
             case 25:
                 {
-                alt113=1;
+                alt114=1;
                 }
                 break;
             case 67:
                 {
-                alt113=2;
+                alt114=2;
                 }
                 break;
             case BOOLEAN_LITERAL:
@@ -18850,23 +18954,23 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             case TEXT:
             case 20:
                 {
-                alt113=3;
+                alt114=3;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return element;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 113, 0, input);
+                    new NoViableAltException("", 114, 0, input);
 
                 throw nvae;
 
             }
 
-            switch (alt113) {
+            switch (alt114) {
                 case 1 :
-                    // Thingml.g:11638:0: a0= '-' arg= parseop_Expression_level_8
+                    // Thingml.g:11719:0: a0= '-' arg= parseop_Expression_level_8
                     {
-                    a0=(Token)match(input,25,FOLLOW_25_in_parseop_Expression_level_711113); if (state.failed) return element;
+                    a0=(Token)match(input,25,FOLLOW_25_in_parseop_Expression_level_711153); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     if (element == null) {
@@ -18880,20 +18984,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     if ( state.backtracking==0 ) {
                     // expected elements (follow set)
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2807]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2808]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2809]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2810]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2811]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2812]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2813]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2814]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2815]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2816]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2817]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2880]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2881]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2882]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2883]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2884]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2885]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2886]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2887]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2888]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2889]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2890]);
                     }
 
-                    pushFollow(FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_711124);
+                    pushFollow(FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_711164);
                     arg=parseop_Expression_level_8();
 
                     state._fsp--;
@@ -18922,9 +19026,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:11682:0: a0= 'not' arg= parseop_Expression_level_8
+                    // Thingml.g:11763:0: a0= 'not' arg= parseop_Expression_level_8
                     {
-                    a0=(Token)match(input,67,FOLLOW_67_in_parseop_Expression_level_711133); if (state.failed) return element;
+                    a0=(Token)match(input,67,FOLLOW_67_in_parseop_Expression_level_711173); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     if (element == null) {
@@ -18938,20 +19042,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     if ( state.backtracking==0 ) {
                     // expected elements (follow set)
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2818]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2819]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2820]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2821]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2822]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2823]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2824]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2825]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2826]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2827]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2828]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2891]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2892]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2893]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2894]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2895]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2896]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2897]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2898]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2899]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2900]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2901]);
                     }
 
-                    pushFollow(FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_711144);
+                    pushFollow(FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_711184);
                     arg=parseop_Expression_level_8();
 
                     state._fsp--;
@@ -18980,9 +19084,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 3 :
-                    // Thingml.g:11727:5: arg= parseop_Expression_level_8
+                    // Thingml.g:11808:5: arg= parseop_Expression_level_8
                     {
-                    pushFollow(FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_711154);
+                    pushFollow(FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_711194);
                     arg=parseop_Expression_level_8();
 
                     state._fsp--;
@@ -19012,7 +19116,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_8"
-    // Thingml.g:11730:1: parseop_Expression_level_8 returns [org.sintef.thingml.Expression element = null] : arg= parseop_Expression_level_9 (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |) ;
+    // Thingml.g:11811:1: parseop_Expression_level_8 returns [org.sintef.thingml.Expression element = null] : arg= parseop_Expression_level_9 (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_8() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -19030,53 +19134,53 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 46) ) { return element; }
 
-            // Thingml.g:11733:5: (arg= parseop_Expression_level_9 (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |) )
-            // Thingml.g:11734:5: arg= parseop_Expression_level_9 (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |)
+            // Thingml.g:11814:5: (arg= parseop_Expression_level_9 (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |) )
+            // Thingml.g:11815:5: arg= parseop_Expression_level_9 (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_9_in_parseop_Expression_level_811176);
+            pushFollow(FOLLOW_parseop_Expression_level_9_in_parseop_Expression_level_811216);
             arg=parseop_Expression_level_9();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:11734:33: (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |)
-            int alt114=2;
-            int LA114_0 = input.LA(1);
+            // Thingml.g:11815:33: (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |)
+            int alt115=2;
+            int LA115_0 = input.LA(1);
 
-            if ( (LA114_0==37) ) {
-                int LA114_1 = input.LA(2);
+            if ( (LA115_0==37) ) {
+                int LA115_1 = input.LA(2);
 
-                if ( (synpred127_Thingml()) ) {
-                    alt114=1;
+                if ( (synpred128_Thingml()) ) {
+                    alt115=1;
                 }
                 else if ( (true) ) {
-                    alt114=2;
+                    alt115=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 114, 1, input);
+                        new NoViableAltException("", 115, 1, input);
 
                     throw nvae;
 
                 }
             }
-            else if ( (LA114_0==EOF||LA114_0==ANNOTATION||LA114_0==STRING_EXT||LA114_0==TEXT||(LA114_0 >= T_OPTIONAL && LA114_0 <= T_READONLY)||LA114_0==19||(LA114_0 >= 21 && LA114_0 <= 25)||LA114_0==28||LA114_0==31||LA114_0==33||LA114_0==35||(LA114_0 >= 38 && LA114_0 <= 44)||LA114_0==46||(LA114_0 >= 48 && LA114_0 <= 50)||LA114_0==53||(LA114_0 >= 56 && LA114_0 <= 57)||LA114_0==59||(LA114_0 >= 63 && LA114_0 <= 64)||LA114_0==66||(LA114_0 >= 68 && LA114_0 <= 69)||(LA114_0 >= 71 && LA114_0 <= 73)||(LA114_0 >= 75 && LA114_0 <= 77)||(LA114_0 >= 79 && LA114_0 <= 81)||(LA114_0 >= 83 && LA114_0 <= 85)||LA114_0==87) ) {
-                alt114=2;
+            else if ( (LA115_0==EOF||LA115_0==ANNOTATION||LA115_0==STRING_EXT||LA115_0==TEXT||(LA115_0 >= T_OPTIONAL && LA115_0 <= T_READONLY)||LA115_0==19||(LA115_0 >= 21 && LA115_0 <= 25)||LA115_0==28||LA115_0==31||LA115_0==33||LA115_0==35||(LA115_0 >= 38 && LA115_0 <= 44)||LA115_0==46||(LA115_0 >= 48 && LA115_0 <= 50)||LA115_0==53||(LA115_0 >= 56 && LA115_0 <= 57)||LA115_0==59||(LA115_0 >= 63 && LA115_0 <= 64)||LA115_0==66||(LA115_0 >= 68 && LA115_0 <= 69)||(LA115_0 >= 71 && LA115_0 <= 73)||(LA115_0 >= 75 && LA115_0 <= 77)||(LA115_0 >= 79 && LA115_0 <= 81)||(LA115_0 >= 83 && LA115_0 <= 85)||LA115_0==87) ) {
+                alt115=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return element;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 114, 0, input);
+                    new NoViableAltException("", 115, 0, input);
 
                 throw nvae;
 
             }
-            switch (alt114) {
+            switch (alt115) {
                 case 1 :
-                    // Thingml.g:11735:0: a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']'
+                    // Thingml.g:11816:0: a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']'
                     {
-                    a0=(Token)match(input,37,FOLLOW_37_in_parseop_Expression_level_811183); if (state.failed) return element;
+                    a0=(Token)match(input,37,FOLLOW_37_in_parseop_Expression_level_811223); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     if (element == null) {
@@ -19090,23 +19194,23 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     if ( state.backtracking==0 ) {
                     // expected elements (follow set)
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2829]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2830]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2831]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2832]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2833]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2834]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2835]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2836]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2837]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2838]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2839]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2902]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2903]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2904]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2905]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2906]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2907]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2908]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2909]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2910]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2911]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2912]);
                     }
 
-                    // Thingml.g:11759:6: (a1_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:11760:6: a1_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:11840:6: (a1_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:11841:6: a1_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parseop_Expression_level_811196);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parseop_Expression_level_811236);
                     a1_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
@@ -19137,10 +19241,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     if ( state.backtracking==0 ) {
                     // expected elements (follow set)
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2840]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2913]);
                     }
 
-                    a2=(Token)match(input,39,FOLLOW_39_in_parseop_Expression_level_811208); if (state.failed) return element;
+                    a2=(Token)match(input,39,FOLLOW_39_in_parseop_Expression_level_811248); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     if (element == null) {
@@ -19154,60 +19258,60 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     if ( state.backtracking==0 ) {
                     // expected elements (follow set)
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2841]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2842]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2843]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2844]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2845]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2846]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2847]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2848]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2849]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2850]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2851]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2852]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2853]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2854]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2855]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2856]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2857]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2858]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2859]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2860]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2861]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2862]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2863]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2864]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2865]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2866]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2867]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2868]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2869]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2870]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2871]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2872]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2873]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2874]);
-                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2875]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2876]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2877]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2878]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2879]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2880]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2881]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2882]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2883]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2884]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2885]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2886]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2887]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2888]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2889]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2890]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2891]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2892]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2893]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2894]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2914]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2915]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2916]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2917]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2918]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2919]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2920]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2921]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2922]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2923]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2924]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2925]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2926]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2927]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2928]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2929]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2930]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2931]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2932]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2933]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2934]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2935]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2936]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2937]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2938]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2939]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2940]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2941]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2942]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2943]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2944]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2945]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2946]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2947]);
+                    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2948]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2949]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2950]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2951]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2952]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2953]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2954]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2955]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2956]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2957]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2958]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2959]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2960]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2961]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2962]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2963]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2964]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2965]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2966]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2967]);
                     }
 
                     if ( state.backtracking==0 ) {
@@ -19233,7 +19337,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:11872:15: 
+                    // Thingml.g:11953:15: 
                     {
                     if ( state.backtracking==0 ) { element = arg; }
 
@@ -19263,7 +19367,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_9"
-    // Thingml.g:11876:1: parseop_Expression_level_9 returns [org.sintef.thingml.Expression element = null] : (c0= parse_org_sintef_thingml_EventReference |c1= parse_org_sintef_thingml_ExpressionGroup |c2= parse_org_sintef_thingml_PropertyReference |c3= parse_org_sintef_thingml_IntegerLiteral |c4= parse_org_sintef_thingml_StringLiteral |c5= parse_org_sintef_thingml_BooleanLiteral |c6= parse_org_sintef_thingml_EnumLiteralRef |c7= parse_org_sintef_thingml_FunctionCallExpression |c8= parse_org_sintef_thingml_ExternExpression );
+    // Thingml.g:11957:1: parseop_Expression_level_9 returns [org.sintef.thingml.Expression element = null] : (c0= parse_org_sintef_thingml_EventReference |c1= parse_org_sintef_thingml_ExpressionGroup |c2= parse_org_sintef_thingml_PropertyReference |c3= parse_org_sintef_thingml_IntegerLiteral |c4= parse_org_sintef_thingml_StringLiteral |c5= parse_org_sintef_thingml_BooleanLiteral |c6= parse_org_sintef_thingml_EnumLiteralRef |c7= parse_org_sintef_thingml_FunctionCallExpression |c8= parse_org_sintef_thingml_ExternExpression );
     public final org.sintef.thingml.Expression parseop_Expression_level_9() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -19293,15 +19397,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 47) ) { return element; }
 
-            // Thingml.g:11879:0: (c0= parse_org_sintef_thingml_EventReference |c1= parse_org_sintef_thingml_ExpressionGroup |c2= parse_org_sintef_thingml_PropertyReference |c3= parse_org_sintef_thingml_IntegerLiteral |c4= parse_org_sintef_thingml_StringLiteral |c5= parse_org_sintef_thingml_BooleanLiteral |c6= parse_org_sintef_thingml_EnumLiteralRef |c7= parse_org_sintef_thingml_FunctionCallExpression |c8= parse_org_sintef_thingml_ExternExpression )
-            int alt115=9;
+            // Thingml.g:11960:0: (c0= parse_org_sintef_thingml_EventReference |c1= parse_org_sintef_thingml_ExpressionGroup |c2= parse_org_sintef_thingml_PropertyReference |c3= parse_org_sintef_thingml_IntegerLiteral |c4= parse_org_sintef_thingml_StringLiteral |c5= parse_org_sintef_thingml_BooleanLiteral |c6= parse_org_sintef_thingml_EnumLiteralRef |c7= parse_org_sintef_thingml_FunctionCallExpression |c8= parse_org_sintef_thingml_ExternExpression )
+            int alt116=9;
             switch ( input.LA(1) ) {
             case TEXT:
                 {
                 switch ( input.LA(2) ) {
                 case 27:
                     {
-                    alt115=1;
+                    alt116=1;
                     }
                     break;
                 case EOF:
@@ -19355,23 +19459,23 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                 case 85:
                 case 87:
                     {
-                    alt115=3;
+                    alt116=3;
                     }
                     break;
                 case 29:
                     {
-                    alt115=7;
+                    alt116=7;
                     }
                     break;
                 case 20:
                     {
-                    alt115=8;
+                    alt116=8;
                     }
                     break;
                 default:
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 115, 1, input);
+                        new NoViableAltException("", 116, 1, input);
 
                     throw nvae;
 
@@ -19381,43 +19485,43 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                 break;
             case 20:
                 {
-                alt115=2;
+                alt116=2;
                 }
                 break;
             case INTEGER_LITERAL:
                 {
-                alt115=4;
+                alt116=4;
                 }
                 break;
             case STRING_LITERAL:
                 {
-                alt115=5;
+                alt116=5;
                 }
                 break;
             case BOOLEAN_LITERAL:
                 {
-                alt115=6;
+                alt116=6;
                 }
                 break;
             case STRING_EXT:
                 {
-                alt115=9;
+                alt116=9;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return element;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 115, 0, input);
+                    new NoViableAltException("", 116, 0, input);
 
                 throw nvae;
 
             }
 
-            switch (alt115) {
+            switch (alt116) {
                 case 1 :
-                    // Thingml.g:11880:0: c0= parse_org_sintef_thingml_EventReference
+                    // Thingml.g:11961:0: c0= parse_org_sintef_thingml_EventReference
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_EventReference_in_parseop_Expression_level_911245);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_EventReference_in_parseop_Expression_level_911285);
                     c0=parse_org_sintef_thingml_EventReference();
 
                     state._fsp--;
@@ -19428,9 +19532,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:11881:2: c1= parse_org_sintef_thingml_ExpressionGroup
+                    // Thingml.g:11962:2: c1= parse_org_sintef_thingml_ExpressionGroup
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ExpressionGroup_in_parseop_Expression_level_911253);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ExpressionGroup_in_parseop_Expression_level_911293);
                     c1=parse_org_sintef_thingml_ExpressionGroup();
 
                     state._fsp--;
@@ -19441,9 +19545,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 3 :
-                    // Thingml.g:11882:2: c2= parse_org_sintef_thingml_PropertyReference
+                    // Thingml.g:11963:2: c2= parse_org_sintef_thingml_PropertyReference
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_PropertyReference_in_parseop_Expression_level_911261);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_PropertyReference_in_parseop_Expression_level_911301);
                     c2=parse_org_sintef_thingml_PropertyReference();
 
                     state._fsp--;
@@ -19454,9 +19558,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 4 :
-                    // Thingml.g:11883:2: c3= parse_org_sintef_thingml_IntegerLiteral
+                    // Thingml.g:11964:2: c3= parse_org_sintef_thingml_IntegerLiteral
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_IntegerLiteral_in_parseop_Expression_level_911269);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_IntegerLiteral_in_parseop_Expression_level_911309);
                     c3=parse_org_sintef_thingml_IntegerLiteral();
 
                     state._fsp--;
@@ -19467,9 +19571,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 5 :
-                    // Thingml.g:11884:2: c4= parse_org_sintef_thingml_StringLiteral
+                    // Thingml.g:11965:2: c4= parse_org_sintef_thingml_StringLiteral
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_StringLiteral_in_parseop_Expression_level_911277);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_StringLiteral_in_parseop_Expression_level_911317);
                     c4=parse_org_sintef_thingml_StringLiteral();
 
                     state._fsp--;
@@ -19480,9 +19584,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 6 :
-                    // Thingml.g:11885:2: c5= parse_org_sintef_thingml_BooleanLiteral
+                    // Thingml.g:11966:2: c5= parse_org_sintef_thingml_BooleanLiteral
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_BooleanLiteral_in_parseop_Expression_level_911285);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_BooleanLiteral_in_parseop_Expression_level_911325);
                     c5=parse_org_sintef_thingml_BooleanLiteral();
 
                     state._fsp--;
@@ -19493,9 +19597,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 7 :
-                    // Thingml.g:11886:2: c6= parse_org_sintef_thingml_EnumLiteralRef
+                    // Thingml.g:11967:2: c6= parse_org_sintef_thingml_EnumLiteralRef
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_EnumLiteralRef_in_parseop_Expression_level_911293);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_EnumLiteralRef_in_parseop_Expression_level_911333);
                     c6=parse_org_sintef_thingml_EnumLiteralRef();
 
                     state._fsp--;
@@ -19506,9 +19610,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 8 :
-                    // Thingml.g:11887:2: c7= parse_org_sintef_thingml_FunctionCallExpression
+                    // Thingml.g:11968:2: c7= parse_org_sintef_thingml_FunctionCallExpression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_FunctionCallExpression_in_parseop_Expression_level_911301);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_FunctionCallExpression_in_parseop_Expression_level_911341);
                     c7=parse_org_sintef_thingml_FunctionCallExpression();
 
                     state._fsp--;
@@ -19519,9 +19623,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 9 :
-                    // Thingml.g:11888:2: c8= parse_org_sintef_thingml_ExternExpression
+                    // Thingml.g:11969:2: c8= parse_org_sintef_thingml_ExternExpression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ExternExpression_in_parseop_Expression_level_911309);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ExternExpression_in_parseop_Expression_level_911349);
                     c8=parse_org_sintef_thingml_ExternExpression();
 
                     state._fsp--;
@@ -19551,7 +19655,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_EventReference"
-    // Thingml.g:11891:1: parse_org_sintef_thingml_EventReference returns [org.sintef.thingml.EventReference element = null] : (a0= TEXT ) a1= '.' (a2= TEXT ) ;
+    // Thingml.g:11972:1: parse_org_sintef_thingml_EventReference returns [org.sintef.thingml.EventReference element = null] : (a0= TEXT ) a1= '.' (a2= TEXT ) ;
     public final org.sintef.thingml.EventReference parse_org_sintef_thingml_EventReference() throws RecognitionException {
         org.sintef.thingml.EventReference element =  null;
 
@@ -19566,13 +19670,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 48) ) { return element; }
 
-            // Thingml.g:11894:4: ( (a0= TEXT ) a1= '.' (a2= TEXT ) )
-            // Thingml.g:11895:4: (a0= TEXT ) a1= '.' (a2= TEXT )
+            // Thingml.g:11975:4: ( (a0= TEXT ) a1= '.' (a2= TEXT ) )
+            // Thingml.g:11976:4: (a0= TEXT ) a1= '.' (a2= TEXT )
             {
-            // Thingml.g:11895:4: (a0= TEXT )
-            // Thingml.g:11896:4: a0= TEXT
+            // Thingml.g:11976:4: (a0= TEXT )
+            // Thingml.g:11977:4: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EventReference11333); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EventReference11373); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -19612,10 +19716,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2895]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2968]);
             }
 
-            a1=(Token)match(input,27,FOLLOW_27_in_parse_org_sintef_thingml_EventReference11346); if (state.failed) return element;
+            a1=(Token)match(input,27,FOLLOW_27_in_parse_org_sintef_thingml_EventReference11386); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -19629,13 +19733,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2896]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2969]);
             }
 
-            // Thingml.g:11949:4: (a2= TEXT )
-            // Thingml.g:11950:4: a2= TEXT
+            // Thingml.g:12030:4: (a2= TEXT )
+            // Thingml.g:12031:4: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EventReference11359); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EventReference11399); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -19675,60 +19779,60 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2897]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2898]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2899]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2900]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2901]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2902]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2903]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2904]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2905]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2906]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2907]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2908]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2909]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2910]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2911]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2912]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2913]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2914]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2915]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2916]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2917]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2918]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2919]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2920]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2921]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2922]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2923]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2924]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2925]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2926]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2927]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2928]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2929]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2930]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2931]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2932]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2933]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2934]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2935]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2936]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2937]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2938]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2939]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2940]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2941]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2942]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2943]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2944]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2945]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2946]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2947]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2948]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2949]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2950]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2970]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2971]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2972]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2973]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2974]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2975]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2976]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2977]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2978]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2979]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2980]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2981]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2982]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2983]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2984]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2985]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2986]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2987]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2988]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2989]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2990]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2991]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2992]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2993]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2994]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2995]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2996]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2997]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2998]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2999]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3000]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3001]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3002]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3003]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3004]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3005]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3006]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3007]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3008]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3009]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3010]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3011]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3012]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3013]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3014]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3015]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3016]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3017]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3018]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3019]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3020]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3021]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3022]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3023]);
             }
 
             }
@@ -19751,7 +19855,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ExpressionGroup"
-    // Thingml.g:12044:1: parse_org_sintef_thingml_ExpressionGroup returns [org.sintef.thingml.ExpressionGroup element = null] : a0= '(' (a1_0= parse_org_sintef_thingml_Expression ) a2= ')' ;
+    // Thingml.g:12125:1: parse_org_sintef_thingml_ExpressionGroup returns [org.sintef.thingml.ExpressionGroup element = null] : a0= '(' (a1_0= parse_org_sintef_thingml_Expression ) a2= ')' ;
     public final org.sintef.thingml.ExpressionGroup parse_org_sintef_thingml_ExpressionGroup() throws RecognitionException {
         org.sintef.thingml.ExpressionGroup element =  null;
 
@@ -19767,10 +19871,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 49) ) { return element; }
 
-            // Thingml.g:12047:4: (a0= '(' (a1_0= parse_org_sintef_thingml_Expression ) a2= ')' )
-            // Thingml.g:12048:4: a0= '(' (a1_0= parse_org_sintef_thingml_Expression ) a2= ')'
+            // Thingml.g:12128:4: (a0= '(' (a1_0= parse_org_sintef_thingml_Expression ) a2= ')' )
+            // Thingml.g:12129:4: a0= '(' (a1_0= parse_org_sintef_thingml_Expression ) a2= ')'
             {
-            a0=(Token)match(input,20,FOLLOW_20_in_parse_org_sintef_thingml_ExpressionGroup11387); if (state.failed) return element;
+            a0=(Token)match(input,20,FOLLOW_20_in_parse_org_sintef_thingml_ExpressionGroup11427); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -19784,23 +19888,23 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2951]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2952]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2953]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2954]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2955]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2956]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2957]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2958]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2959]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2960]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2961]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3024]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3025]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3026]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3027]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3028]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3029]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3030]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3031]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3032]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3033]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3034]);
             }
 
-            // Thingml.g:12072:6: (a1_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:12073:6: a1_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:12153:6: (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:12154:6: a1_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExpressionGroup11400);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExpressionGroup11440);
             a1_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -19831,10 +19935,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2962]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3035]);
             }
 
-            a2=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_ExpressionGroup11412); if (state.failed) return element;
+            a2=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_ExpressionGroup11452); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -19848,60 +19952,60 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2963]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2964]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2965]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2966]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2967]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2968]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2969]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2970]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2971]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2972]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2973]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2974]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2975]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2976]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2977]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2978]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2979]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2980]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2981]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2982]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2983]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2984]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2985]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2986]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2987]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2988]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2989]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2990]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2991]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2992]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2993]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2994]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2995]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2996]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2997]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2998]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2999]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3000]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3001]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3002]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3003]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3004]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3005]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3006]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3007]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3008]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3009]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3010]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3011]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3012]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3013]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3014]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3015]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3016]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3036]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3037]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3038]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3039]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3040]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3041]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3042]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3043]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3044]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3045]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3046]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3047]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3048]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3049]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3050]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3051]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3052]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3053]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3054]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3055]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3056]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3057]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3058]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3059]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3060]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3061]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3062]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3063]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3064]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3065]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3066]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3067]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3068]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3069]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3070]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3071]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3072]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3073]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3074]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3075]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3076]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3077]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3078]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3079]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3080]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3081]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3082]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3083]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3084]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3085]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3086]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3087]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3088]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3089]);
             }
 
             }
@@ -19924,7 +20028,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_PropertyReference"
-    // Thingml.g:12167:1: parse_org_sintef_thingml_PropertyReference returns [org.sintef.thingml.PropertyReference element = null] : (a0= TEXT ) ;
+    // Thingml.g:12248:1: parse_org_sintef_thingml_PropertyReference returns [org.sintef.thingml.PropertyReference element = null] : (a0= TEXT ) ;
     public final org.sintef.thingml.PropertyReference parse_org_sintef_thingml_PropertyReference() throws RecognitionException {
         org.sintef.thingml.PropertyReference element =  null;
 
@@ -19937,13 +20041,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 50) ) { return element; }
 
-            // Thingml.g:12170:4: ( (a0= TEXT ) )
-            // Thingml.g:12171:4: (a0= TEXT )
+            // Thingml.g:12251:4: ( (a0= TEXT ) )
+            // Thingml.g:12252:4: (a0= TEXT )
             {
-            // Thingml.g:12171:4: (a0= TEXT )
-            // Thingml.g:12172:4: a0= TEXT
+            // Thingml.g:12252:4: (a0= TEXT )
+            // Thingml.g:12253:4: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_PropertyReference11440); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_PropertyReference11480); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -19983,60 +20087,60 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3017]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3018]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3019]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3020]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3021]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3022]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3023]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3024]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3025]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3026]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3027]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3028]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3029]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3030]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3031]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3032]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3033]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3034]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3035]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3036]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3037]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3038]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3039]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3040]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3041]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3042]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3043]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3044]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3045]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3046]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3047]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3048]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3049]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3050]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3051]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3052]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3053]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3054]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3055]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3056]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3057]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3058]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3059]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3060]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3061]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3062]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3063]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3064]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3065]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3066]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3067]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3068]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3069]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3070]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3090]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3091]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3092]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3093]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3094]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3095]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3096]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3097]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3098]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3099]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3100]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3101]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3102]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3103]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3104]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3105]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3106]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3107]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3108]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3109]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3110]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3111]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3112]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3113]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3114]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3115]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3116]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3117]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3118]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3119]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3120]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3121]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3122]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3123]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3124]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3125]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3126]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3127]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3128]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3129]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3130]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3131]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3132]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3133]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3134]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3135]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3136]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3137]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3138]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3139]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3140]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3141]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3142]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3143]);
             }
 
             }
@@ -20059,7 +20163,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_IntegerLiteral"
-    // Thingml.g:12266:1: parse_org_sintef_thingml_IntegerLiteral returns [org.sintef.thingml.IntegerLiteral element = null] : (a0= INTEGER_LITERAL ) ;
+    // Thingml.g:12347:1: parse_org_sintef_thingml_IntegerLiteral returns [org.sintef.thingml.IntegerLiteral element = null] : (a0= INTEGER_LITERAL ) ;
     public final org.sintef.thingml.IntegerLiteral parse_org_sintef_thingml_IntegerLiteral() throws RecognitionException {
         org.sintef.thingml.IntegerLiteral element =  null;
 
@@ -20072,13 +20176,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 51) ) { return element; }
 
-            // Thingml.g:12269:4: ( (a0= INTEGER_LITERAL ) )
-            // Thingml.g:12270:4: (a0= INTEGER_LITERAL )
+            // Thingml.g:12350:4: ( (a0= INTEGER_LITERAL ) )
+            // Thingml.g:12351:4: (a0= INTEGER_LITERAL )
             {
-            // Thingml.g:12270:4: (a0= INTEGER_LITERAL )
-            // Thingml.g:12271:4: a0= INTEGER_LITERAL
+            // Thingml.g:12351:4: (a0= INTEGER_LITERAL )
+            // Thingml.g:12352:4: a0= INTEGER_LITERAL
             {
-            a0=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_IntegerLiteral11470); if (state.failed) return element;
+            a0=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_IntegerLiteral11510); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -20114,60 +20218,60 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3071]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3072]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3073]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3074]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3075]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3076]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3077]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3078]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3079]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3080]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3081]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3082]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3083]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3084]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3085]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3086]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3087]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3088]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3089]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3090]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3091]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3092]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3093]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3094]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3095]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3096]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3097]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3098]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3099]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3100]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3101]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3102]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3103]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3104]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3105]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3106]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3107]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3108]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3109]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3110]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3111]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3112]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3113]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3114]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3115]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3116]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3117]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3118]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3119]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3120]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3121]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3122]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3123]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3124]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3144]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3145]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3146]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3147]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3148]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3149]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3150]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3151]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3152]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3153]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3154]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3155]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3156]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3157]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3158]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3159]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3160]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3161]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3162]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3163]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3164]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3165]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3166]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3167]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3168]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3169]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3170]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3171]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3172]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3173]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3174]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3175]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3176]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3177]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3178]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3179]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3180]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3181]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3182]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3183]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3184]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3185]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3186]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3187]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3188]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3189]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3190]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3191]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3192]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3193]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3194]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3195]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3196]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3197]);
             }
 
             }
@@ -20190,7 +20294,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_StringLiteral"
-    // Thingml.g:12361:1: parse_org_sintef_thingml_StringLiteral returns [org.sintef.thingml.StringLiteral element = null] : (a0= STRING_LITERAL ) ;
+    // Thingml.g:12442:1: parse_org_sintef_thingml_StringLiteral returns [org.sintef.thingml.StringLiteral element = null] : (a0= STRING_LITERAL ) ;
     public final org.sintef.thingml.StringLiteral parse_org_sintef_thingml_StringLiteral() throws RecognitionException {
         org.sintef.thingml.StringLiteral element =  null;
 
@@ -20203,13 +20307,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 52) ) { return element; }
 
-            // Thingml.g:12364:4: ( (a0= STRING_LITERAL ) )
-            // Thingml.g:12365:4: (a0= STRING_LITERAL )
+            // Thingml.g:12445:4: ( (a0= STRING_LITERAL ) )
+            // Thingml.g:12446:4: (a0= STRING_LITERAL )
             {
-            // Thingml.g:12365:4: (a0= STRING_LITERAL )
-            // Thingml.g:12366:4: a0= STRING_LITERAL
+            // Thingml.g:12446:4: (a0= STRING_LITERAL )
+            // Thingml.g:12447:4: a0= STRING_LITERAL
             {
-            a0=(Token)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_parse_org_sintef_thingml_StringLiteral11500); if (state.failed) return element;
+            a0=(Token)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_parse_org_sintef_thingml_StringLiteral11540); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -20245,60 +20349,60 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3125]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3126]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3127]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3128]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3129]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3130]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3131]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3132]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3133]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3134]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3135]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3136]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3137]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3138]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3139]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3140]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3141]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3142]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3143]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3144]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3145]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3146]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3147]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3148]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3149]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3150]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3151]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3152]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3153]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3154]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3155]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3156]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3157]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3158]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3159]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3160]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3161]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3162]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3163]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3164]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3165]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3166]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3167]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3168]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3169]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3170]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3171]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3172]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3173]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3174]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3175]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3176]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3177]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3178]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3198]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3199]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3200]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3201]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3202]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3203]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3204]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3205]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3206]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3207]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3208]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3209]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3210]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3211]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3212]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3213]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3214]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3215]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3216]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3217]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3218]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3219]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3220]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3221]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3222]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3223]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3224]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3225]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3226]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3227]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3228]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3229]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3230]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3231]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3232]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3233]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3234]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3235]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3236]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3237]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3238]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3239]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3240]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3241]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3242]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3243]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3244]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3245]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3246]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3247]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3248]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3249]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3250]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3251]);
             }
 
             }
@@ -20321,7 +20425,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_BooleanLiteral"
-    // Thingml.g:12456:1: parse_org_sintef_thingml_BooleanLiteral returns [org.sintef.thingml.BooleanLiteral element = null] : (a0= BOOLEAN_LITERAL ) ;
+    // Thingml.g:12537:1: parse_org_sintef_thingml_BooleanLiteral returns [org.sintef.thingml.BooleanLiteral element = null] : (a0= BOOLEAN_LITERAL ) ;
     public final org.sintef.thingml.BooleanLiteral parse_org_sintef_thingml_BooleanLiteral() throws RecognitionException {
         org.sintef.thingml.BooleanLiteral element =  null;
 
@@ -20334,13 +20438,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 53) ) { return element; }
 
-            // Thingml.g:12459:4: ( (a0= BOOLEAN_LITERAL ) )
-            // Thingml.g:12460:4: (a0= BOOLEAN_LITERAL )
+            // Thingml.g:12540:4: ( (a0= BOOLEAN_LITERAL ) )
+            // Thingml.g:12541:4: (a0= BOOLEAN_LITERAL )
             {
-            // Thingml.g:12460:4: (a0= BOOLEAN_LITERAL )
-            // Thingml.g:12461:4: a0= BOOLEAN_LITERAL
+            // Thingml.g:12541:4: (a0= BOOLEAN_LITERAL )
+            // Thingml.g:12542:4: a0= BOOLEAN_LITERAL
             {
-            a0=(Token)match(input,BOOLEAN_LITERAL,FOLLOW_BOOLEAN_LITERAL_in_parse_org_sintef_thingml_BooleanLiteral11530); if (state.failed) return element;
+            a0=(Token)match(input,BOOLEAN_LITERAL,FOLLOW_BOOLEAN_LITERAL_in_parse_org_sintef_thingml_BooleanLiteral11570); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -20376,60 +20480,60 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3179]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3180]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3181]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3182]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3183]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3184]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3185]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3186]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3187]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3188]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3189]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3190]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3191]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3192]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3193]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3194]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3195]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3196]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3197]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3198]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3199]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3200]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3201]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3202]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3203]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3204]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3205]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3206]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3207]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3208]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3209]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3210]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3211]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3212]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3213]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3214]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3215]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3216]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3217]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3218]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3219]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3220]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3221]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3222]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3223]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3224]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3225]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3226]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3227]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3228]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3229]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3230]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3231]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3232]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3252]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3253]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3254]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3255]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3256]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3257]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3258]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3259]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3260]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3261]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3262]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3263]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3264]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3265]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3266]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3267]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3268]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3269]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3270]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3271]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3272]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3273]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3274]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3275]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3276]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3277]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3278]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3279]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3280]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3281]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3282]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3283]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3284]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3285]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3286]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3287]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3288]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3289]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3290]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3291]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3292]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3293]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3294]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3295]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3296]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3297]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3298]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3299]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3300]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3301]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3302]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3303]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3304]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3305]);
             }
 
             }
@@ -20452,7 +20556,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_EnumLiteralRef"
-    // Thingml.g:12551:1: parse_org_sintef_thingml_EnumLiteralRef returns [org.sintef.thingml.EnumLiteralRef element = null] : (a0= TEXT ) a1= ':' (a2= TEXT ) ;
+    // Thingml.g:12632:1: parse_org_sintef_thingml_EnumLiteralRef returns [org.sintef.thingml.EnumLiteralRef element = null] : (a0= TEXT ) a1= ':' (a2= TEXT ) ;
     public final org.sintef.thingml.EnumLiteralRef parse_org_sintef_thingml_EnumLiteralRef() throws RecognitionException {
         org.sintef.thingml.EnumLiteralRef element =  null;
 
@@ -20467,13 +20571,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 54) ) { return element; }
 
-            // Thingml.g:12554:4: ( (a0= TEXT ) a1= ':' (a2= TEXT ) )
-            // Thingml.g:12555:4: (a0= TEXT ) a1= ':' (a2= TEXT )
+            // Thingml.g:12635:4: ( (a0= TEXT ) a1= ':' (a2= TEXT ) )
+            // Thingml.g:12636:4: (a0= TEXT ) a1= ':' (a2= TEXT )
             {
-            // Thingml.g:12555:4: (a0= TEXT )
-            // Thingml.g:12556:4: a0= TEXT
+            // Thingml.g:12636:4: (a0= TEXT )
+            // Thingml.g:12637:4: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef11560); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef11600); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -20513,10 +20617,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3233]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3306]);
             }
 
-            a1=(Token)match(input,29,FOLLOW_29_in_parse_org_sintef_thingml_EnumLiteralRef11573); if (state.failed) return element;
+            a1=(Token)match(input,29,FOLLOW_29_in_parse_org_sintef_thingml_EnumLiteralRef11613); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -20530,13 +20634,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3234]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3307]);
             }
 
-            // Thingml.g:12609:4: (a2= TEXT )
-            // Thingml.g:12610:4: a2= TEXT
+            // Thingml.g:12690:4: (a2= TEXT )
+            // Thingml.g:12691:4: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef11586); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef11626); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -20576,60 +20680,60 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3235]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3236]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3237]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3238]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3239]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3240]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3241]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3242]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3243]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3244]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3245]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3246]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3247]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3248]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3249]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3250]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3251]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3252]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3253]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3254]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3255]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3256]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3257]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3258]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3259]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3260]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3261]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3262]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3263]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3264]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3265]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3266]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3267]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3268]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3269]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3270]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3271]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3272]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3273]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3274]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3275]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3276]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3277]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3278]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3279]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3280]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3281]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3282]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3283]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3284]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3285]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3286]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3287]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3288]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3308]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3309]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3310]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3311]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3312]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3313]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3314]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3315]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3316]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3317]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3318]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3319]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3320]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3321]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3322]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3323]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3324]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3325]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3326]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3327]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3328]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3329]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3330]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3331]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3332]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3333]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3334]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3335]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3336]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3337]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3338]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3339]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3340]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3341]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3342]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3343]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3344]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3345]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3346]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3347]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3348]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3349]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3350]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3351]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3352]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3353]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3354]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3355]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3356]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3357]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3358]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3359]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3360]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3361]);
             }
 
             }
@@ -20652,7 +20756,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_FunctionCallExpression"
-    // Thingml.g:12704:1: parse_org_sintef_thingml_FunctionCallExpression returns [org.sintef.thingml.FunctionCallExpression element = null] : (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' ;
+    // Thingml.g:12785:1: parse_org_sintef_thingml_FunctionCallExpression returns [org.sintef.thingml.FunctionCallExpression element = null] : (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' ;
     public final org.sintef.thingml.FunctionCallExpression parse_org_sintef_thingml_FunctionCallExpression() throws RecognitionException {
         org.sintef.thingml.FunctionCallExpression element =  null;
 
@@ -20672,13 +20776,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 55) ) { return element; }
 
-            // Thingml.g:12707:4: ( (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' )
-            // Thingml.g:12708:4: (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')'
+            // Thingml.g:12788:4: ( (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' )
+            // Thingml.g:12789:4: (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')'
             {
-            // Thingml.g:12708:4: (a0= TEXT )
-            // Thingml.g:12709:4: a0= TEXT
+            // Thingml.g:12789:4: (a0= TEXT )
+            // Thingml.g:12790:4: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallExpression11616); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallExpression11656); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -20718,10 +20822,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3289]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3362]);
             }
 
-            a1=(Token)match(input,20,FOLLOW_20_in_parse_org_sintef_thingml_FunctionCallExpression11629); if (state.failed) return element;
+            a1=(Token)match(input,20,FOLLOW_20_in_parse_org_sintef_thingml_FunctionCallExpression11669); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -20735,38 +20839,38 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3290]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3291]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3292]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3293]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3294]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3295]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3296]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3297]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3298]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3299]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3300]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3301]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3363]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3364]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3365]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3366]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3367]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3368]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3369]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3370]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3371]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3372]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3373]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3374]);
             }
 
-            // Thingml.g:12773:0: ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
-            int alt117=2;
-            int LA117_0 = input.LA(1);
+            // Thingml.g:12854:0: ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
+            int alt118=2;
+            int LA118_0 = input.LA(1);
 
-            if ( ((LA117_0 >= BOOLEAN_LITERAL && LA117_0 <= INTEGER_LITERAL)||(LA117_0 >= STRING_EXT && LA117_0 <= TEXT)||LA117_0==20||LA117_0==25||LA117_0==67) ) {
-                alt117=1;
+            if ( ((LA118_0 >= BOOLEAN_LITERAL && LA118_0 <= INTEGER_LITERAL)||(LA118_0 >= STRING_EXT && LA118_0 <= TEXT)||LA118_0==20||LA118_0==25||LA118_0==67) ) {
+                alt118=1;
             }
-            switch (alt117) {
+            switch (alt118) {
                 case 1 :
-                    // Thingml.g:12774:0: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:12855:0: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
                     {
-                    // Thingml.g:12774:6: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
-                    // Thingml.g:12775:6: (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
+                    // Thingml.g:12855:6: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:12856:6: (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
                     {
-                    // Thingml.g:12775:6: (a2_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:12776:6: a2_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:12856:6: (a2_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:12857:6: a2_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression11646);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression11686);
                     a2_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
@@ -20797,29 +20901,29 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     if ( state.backtracking==0 ) {
                     // expected elements (follow set)
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3302]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3303]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3375]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3376]);
                     }
 
-                    // Thingml.g:12802:0: ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
-                    loop116:
+                    // Thingml.g:12883:0: ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
+                    loop117:
                     do {
-                        int alt116=2;
-                        int LA116_0 = input.LA(1);
+                        int alt117=2;
+                        int LA117_0 = input.LA(1);
 
-                        if ( (LA116_0==24) ) {
-                            alt116=1;
+                        if ( (LA117_0==24) ) {
+                            alt117=1;
                         }
 
 
-                        switch (alt116) {
+                        switch (alt117) {
                     	case 1 :
-                    	    // Thingml.g:12803:0: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:12884:0: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
                     	    {
-                    	    // Thingml.g:12803:4: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
-                    	    // Thingml.g:12804:4: a3= ',' (a4_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:12884:4: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:12885:4: a3= ',' (a4_0= parse_org_sintef_thingml_Expression )
                     	    {
-                    	    a3=(Token)match(input,24,FOLLOW_24_in_parse_org_sintef_thingml_FunctionCallExpression11662); if (state.failed) return element;
+                    	    a3=(Token)match(input,24,FOLLOW_24_in_parse_org_sintef_thingml_FunctionCallExpression11702); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    if (element == null) {
@@ -20833,23 +20937,23 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    // expected elements (follow set)
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3304]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3305]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3306]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3307]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3308]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3309]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3310]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3311]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3312]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3313]);
-                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3314]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3377]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3378]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3379]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3380]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3381]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3382]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3383]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3384]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3385]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3386]);
+                    	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3387]);
                     	    }
 
-                    	    // Thingml.g:12828:6: (a4_0= parse_org_sintef_thingml_Expression )
-                    	    // Thingml.g:12829:6: a4_0= parse_org_sintef_thingml_Expression
+                    	    // Thingml.g:12909:6: (a4_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:12910:6: a4_0= parse_org_sintef_thingml_Expression
                     	    {
-                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression11675);
+                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression11715);
                     	    a4_0=parse_org_sintef_thingml_Expression();
 
                     	    state._fsp--;
@@ -20880,8 +20984,8 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    if ( state.backtracking==0 ) {
                     	    // expected elements (follow set)
-                    	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3315]);
-                    	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3316]);
+                    	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3388]);
+                    	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3389]);
                     	    }
 
                     	    }
@@ -20891,15 +20995,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    break;
 
                     	default :
-                    	    break loop116;
+                    	    break loop117;
                         }
                     } while (true);
 
 
                     if ( state.backtracking==0 ) {
                     // expected elements (follow set)
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3317]);
-                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3318]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3390]);
+                    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3391]);
                     }
 
                     }
@@ -20913,10 +21017,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3319]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3392]);
             }
 
-            a5=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_FunctionCallExpression11703); if (state.failed) return element;
+            a5=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_FunctionCallExpression11743); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -20930,60 +21034,60 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3320]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3321]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3322]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3323]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3324]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3325]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3326]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3327]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3328]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3329]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3330]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3331]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3332]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3333]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3334]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3335]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3336]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3337]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3338]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3339]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3340]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3341]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3342]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3343]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3344]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3345]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3346]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3347]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3348]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3349]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3350]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3351]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3352]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3353]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3354]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3355]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3356]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3357]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3358]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3359]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3360]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3361]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3362]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3363]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3364]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3365]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3366]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3367]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3368]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3369]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3370]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3371]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3372]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3373]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3393]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3394]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3395]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3396]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3397]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3398]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3399]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3400]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3401]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3402]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3403]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3404]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3405]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3406]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3407]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3408]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3409]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3410]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3411]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3412]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3413]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3414]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3415]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3416]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3417]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3418]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3419]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3420]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3421]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3422]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3423]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3424]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3425]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3426]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3427]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3428]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3429]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3430]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3431]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3432]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3433]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3434]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3435]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3436]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3437]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3438]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3439]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3440]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3441]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3442]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3443]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3444]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3445]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3446]);
             }
 
             }
@@ -21006,7 +21110,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ExternExpression"
-    // Thingml.g:12939:1: parse_org_sintef_thingml_ExternExpression returns [org.sintef.thingml.ExternExpression element = null] : (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )* ;
+    // Thingml.g:13020:1: parse_org_sintef_thingml_ExternExpression returns [org.sintef.thingml.ExternExpression element = null] : (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )* ;
     public final org.sintef.thingml.ExternExpression parse_org_sintef_thingml_ExternExpression() throws RecognitionException {
         org.sintef.thingml.ExternExpression element =  null;
 
@@ -21022,13 +21126,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 56) ) { return element; }
 
-            // Thingml.g:12942:4: ( (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )* )
-            // Thingml.g:12943:4: (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )*
+            // Thingml.g:13023:4: ( (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )* )
+            // Thingml.g:13024:4: (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )*
             {
-            // Thingml.g:12943:4: (a0= STRING_EXT )
-            // Thingml.g:12944:4: a0= STRING_EXT
+            // Thingml.g:13024:4: (a0= STRING_EXT )
+            // Thingml.g:13025:4: a0= STRING_EXT
             {
-            a0=(Token)match(input,STRING_EXT,FOLLOW_STRING_EXT_in_parse_org_sintef_thingml_ExternExpression11731); if (state.failed) return element;
+            a0=(Token)match(input,STRING_EXT,FOLLOW_STRING_EXT_in_parse_org_sintef_thingml_ExternExpression11771); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -21064,87 +21168,87 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3374]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3375]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3376]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3377]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3378]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3379]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3380]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3381]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3382]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3383]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3384]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3385]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3386]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3387]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3388]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3389]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3390]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3391]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3392]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3393]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3394]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3395]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3396]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3397]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3398]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3399]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3400]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3401]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3402]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3403]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3404]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3405]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3406]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3407]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3408]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3409]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3410]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3411]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3412]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3413]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3414]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3415]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3416]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3417]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3418]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3419]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3420]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3421]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3422]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3423]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3424]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3425]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3426]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3427]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3447]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3448]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3449]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3450]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3451]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3452]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3453]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3454]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3455]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3456]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3457]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3458]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3459]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3460]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3461]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3462]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3463]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3464]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3465]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3466]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3467]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3468]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3469]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3470]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3471]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3472]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3473]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3474]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3475]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3476]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3477]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3478]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3479]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3480]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3481]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3482]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3483]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3484]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3485]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3486]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3487]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3488]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3489]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3490]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3491]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3492]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3493]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3494]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3495]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3496]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3497]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3498]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3499]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3500]);
             }
 
-            // Thingml.g:13032:0: ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )*
-            loop118:
+            // Thingml.g:13113:0: ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )*
+            loop119:
             do {
-                int alt118=2;
-                int LA118_0 = input.LA(1);
+                int alt119=2;
+                int LA119_0 = input.LA(1);
 
-                if ( (LA118_0==19) ) {
-                    int LA118_2 = input.LA(2);
+                if ( (LA119_0==19) ) {
+                    int LA119_2 = input.LA(2);
 
-                    if ( (synpred138_Thingml()) ) {
-                        alt118=1;
+                    if ( (synpred139_Thingml()) ) {
+                        alt119=1;
                     }
 
 
                 }
 
 
-                switch (alt118) {
+                switch (alt119) {
             	case 1 :
-            	    // Thingml.g:13033:0: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
+            	    // Thingml.g:13114:0: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
             	    {
-            	    // Thingml.g:13033:4: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
-            	    // Thingml.g:13034:4: a1= '&' (a2_0= parse_org_sintef_thingml_Expression )
+            	    // Thingml.g:13114:4: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
+            	    // Thingml.g:13115:4: a1= '&' (a2_0= parse_org_sintef_thingml_Expression )
             	    {
-            	    a1=(Token)match(input,19,FOLLOW_19_in_parse_org_sintef_thingml_ExternExpression11748); if (state.failed) return element;
+            	    a1=(Token)match(input,19,FOLLOW_19_in_parse_org_sintef_thingml_ExternExpression11788); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    if (element == null) {
@@ -21158,23 +21262,23 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             	    if ( state.backtracking==0 ) {
             	    // expected elements (follow set)
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3428]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3429]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3430]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3431]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3432]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3433]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3434]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3435]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3436]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3437]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3438]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3501]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3502]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3503]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3504]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3505]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3506]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3507]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3508]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3509]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3510]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3511]);
             	    }
 
-            	    // Thingml.g:13058:6: (a2_0= parse_org_sintef_thingml_Expression )
-            	    // Thingml.g:13059:6: a2_0= parse_org_sintef_thingml_Expression
+            	    // Thingml.g:13139:6: (a2_0= parse_org_sintef_thingml_Expression )
+            	    // Thingml.g:13140:6: a2_0= parse_org_sintef_thingml_Expression
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExternExpression11761);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExternExpression11801);
             	    a2_0=parse_org_sintef_thingml_Expression();
 
             	    state._fsp--;
@@ -21205,60 +21309,60 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             	    if ( state.backtracking==0 ) {
             	    // expected elements (follow set)
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3439]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3440]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3441]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3442]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3443]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3444]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3445]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3446]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3447]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3448]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3449]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3450]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3451]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3452]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3453]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3454]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3455]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3456]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3457]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3458]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3459]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3460]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3461]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3462]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3463]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3464]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3465]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3466]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3467]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3468]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3469]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3470]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3471]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3472]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3473]);
-            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3474]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3475]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3476]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3477]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3478]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3479]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3480]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3481]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3482]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3483]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3484]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3485]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3486]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3487]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3488]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3489]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3490]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3491]);
-            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3492]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3512]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3513]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3514]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3515]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3516]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3517]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3518]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3519]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3520]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3521]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3522]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3523]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3524]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3525]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3526]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3527]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3528]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3529]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3530]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3531]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3532]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3533]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3534]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3535]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3536]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3537]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3538]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3539]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3540]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3541]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3542]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3543]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3544]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3545]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3546]);
+            	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3547]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3548]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3549]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3550]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3551]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3552]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3553]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3554]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3555]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3556]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3557]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3558]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3559]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3560]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3561]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3562]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3563]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3564]);
+            	    addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3565]);
             	    }
 
             	    }
@@ -21268,67 +21372,67 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    break;
 
             	default :
-            	    break loop118;
+            	    break loop119;
                 }
             } while (true);
 
 
             if ( state.backtracking==0 ) {
             // expected elements (follow set)
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3493]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3494]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3495]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3496]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3497]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3498]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3499]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3500]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3501]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3502]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3503]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3504]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3505]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3506]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3507]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3508]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3509]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3510]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3511]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3512]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3513]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3514]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3515]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3516]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3517]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3518]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3519]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3520]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3521]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3522]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3523]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3524]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3525]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3526]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3527]);
-            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3528]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3529]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3530]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3531]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3532]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3533]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3534]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3535]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3536]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3537]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3538]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3539]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3540]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3541]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3542]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3543]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3544]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3545]);
-            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3546]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3566]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3567]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3568]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3569]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3570]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3571]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3572]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3573]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3574]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3575]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3576]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3577]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3578]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3579]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3580]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3581]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3582]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3583]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3584]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3585]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3586]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3587]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3588]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3589]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3590]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3591]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3592]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3593]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3594]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3595]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3596]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3597]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3598]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3599]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3600]);
+            addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3601]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3602]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3603]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3604]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3605]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3606]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3607]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3608]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3609]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3610]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3611]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3612]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3613]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3614]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3615]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3616]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3617]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3618]);
+            addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3619]);
             }
 
             }
@@ -21351,7 +21455,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Type"
-    // Thingml.g:13199:1: parse_org_sintef_thingml_Type returns [org.sintef.thingml.Type element = null] : (c0= parse_org_sintef_thingml_Thing |c1= parse_org_sintef_thingml_PrimitiveType |c2= parse_org_sintef_thingml_Enumeration );
+    // Thingml.g:13280:1: parse_org_sintef_thingml_Type returns [org.sintef.thingml.Type element = null] : (c0= parse_org_sintef_thingml_Thing |c1= parse_org_sintef_thingml_PrimitiveType |c2= parse_org_sintef_thingml_Enumeration );
     public final org.sintef.thingml.Type parse_org_sintef_thingml_Type() throws RecognitionException {
         org.sintef.thingml.Type element =  null;
 
@@ -21367,38 +21471,38 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 57) ) { return element; }
 
-            // Thingml.g:13200:0: (c0= parse_org_sintef_thingml_Thing |c1= parse_org_sintef_thingml_PrimitiveType |c2= parse_org_sintef_thingml_Enumeration )
-            int alt119=3;
+            // Thingml.g:13281:0: (c0= parse_org_sintef_thingml_Thing |c1= parse_org_sintef_thingml_PrimitiveType |c2= parse_org_sintef_thingml_Enumeration )
+            int alt120=3;
             switch ( input.LA(1) ) {
             case 82:
                 {
-                alt119=1;
+                alt120=1;
                 }
                 break;
             case 47:
                 {
-                alt119=2;
+                alt120=2;
                 }
                 break;
             case 52:
                 {
-                alt119=3;
+                alt120=3;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return element;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 119, 0, input);
+                    new NoViableAltException("", 120, 0, input);
 
                 throw nvae;
 
             }
 
-            switch (alt119) {
+            switch (alt120) {
                 case 1 :
-                    // Thingml.g:13201:0: c0= parse_org_sintef_thingml_Thing
+                    // Thingml.g:13282:0: c0= parse_org_sintef_thingml_Thing
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Thing_in_parse_org_sintef_thingml_Type11792);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Thing_in_parse_org_sintef_thingml_Type11832);
                     c0=parse_org_sintef_thingml_Thing();
 
                     state._fsp--;
@@ -21409,9 +21513,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:13202:2: c1= parse_org_sintef_thingml_PrimitiveType
+                    // Thingml.g:13283:2: c1= parse_org_sintef_thingml_PrimitiveType
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_PrimitiveType_in_parse_org_sintef_thingml_Type11800);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_PrimitiveType_in_parse_org_sintef_thingml_Type11840);
                     c1=parse_org_sintef_thingml_PrimitiveType();
 
                     state._fsp--;
@@ -21422,9 +21526,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 3 :
-                    // Thingml.g:13203:2: c2= parse_org_sintef_thingml_Enumeration
+                    // Thingml.g:13284:2: c2= parse_org_sintef_thingml_Enumeration
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Enumeration_in_parse_org_sintef_thingml_Type11808);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Enumeration_in_parse_org_sintef_thingml_Type11848);
                     c2=parse_org_sintef_thingml_Enumeration();
 
                     state._fsp--;
@@ -21454,7 +21558,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Expression"
-    // Thingml.g:13207:1: parse_org_sintef_thingml_Expression returns [org.sintef.thingml.Expression element = null] : c= parseop_Expression_level_1 ;
+    // Thingml.g:13288:1: parse_org_sintef_thingml_Expression returns [org.sintef.thingml.Expression element = null] : c= parseop_Expression_level_1 ;
     public final org.sintef.thingml.Expression parse_org_sintef_thingml_Expression() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -21466,10 +21570,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 58) ) { return element; }
 
-            // Thingml.g:13208:3: (c= parseop_Expression_level_1 )
-            // Thingml.g:13209:3: c= parseop_Expression_level_1
+            // Thingml.g:13289:3: (c= parseop_Expression_level_1 )
+            // Thingml.g:13290:3: c= parseop_Expression_level_1
             {
-            pushFollow(FOLLOW_parseop_Expression_level_1_in_parse_org_sintef_thingml_Expression11827);
+            pushFollow(FOLLOW_parseop_Expression_level_1_in_parse_org_sintef_thingml_Expression11867);
             c=parseop_Expression_level_1();
 
             state._fsp--;
@@ -21497,7 +21601,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Action"
-    // Thingml.g:13213:1: parse_org_sintef_thingml_Action returns [org.sintef.thingml.Action element = null] : (c0= parse_org_sintef_thingml_SendAction |c1= parse_org_sintef_thingml_VariableAssignment |c2= parse_org_sintef_thingml_ActionBlock |c3= parse_org_sintef_thingml_LocalVariable |c4= parse_org_sintef_thingml_ExternStatement |c5= parse_org_sintef_thingml_ConditionalAction |c6= parse_org_sintef_thingml_LoopAction |c7= parse_org_sintef_thingml_PrintAction |c8= parse_org_sintef_thingml_ErrorAction |c9= parse_org_sintef_thingml_ReturnAction |c10= parse_org_sintef_thingml_FunctionCallStatement );
+    // Thingml.g:13294:1: parse_org_sintef_thingml_Action returns [org.sintef.thingml.Action element = null] : (c0= parse_org_sintef_thingml_SendAction |c1= parse_org_sintef_thingml_VariableAssignment |c2= parse_org_sintef_thingml_ActionBlock |c3= parse_org_sintef_thingml_LocalVariable |c4= parse_org_sintef_thingml_ExternStatement |c5= parse_org_sintef_thingml_ConditionalAction |c6= parse_org_sintef_thingml_LoopAction |c7= parse_org_sintef_thingml_PrintAction |c8= parse_org_sintef_thingml_ErrorAction |c9= parse_org_sintef_thingml_ReturnAction |c10= parse_org_sintef_thingml_FunctionCallStatement );
     public final org.sintef.thingml.Action parse_org_sintef_thingml_Action() throws RecognitionException {
         org.sintef.thingml.Action element =  null;
 
@@ -21529,32 +21633,32 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 59) ) { return element; }
 
-            // Thingml.g:13214:0: (c0= parse_org_sintef_thingml_SendAction |c1= parse_org_sintef_thingml_VariableAssignment |c2= parse_org_sintef_thingml_ActionBlock |c3= parse_org_sintef_thingml_LocalVariable |c4= parse_org_sintef_thingml_ExternStatement |c5= parse_org_sintef_thingml_ConditionalAction |c6= parse_org_sintef_thingml_LoopAction |c7= parse_org_sintef_thingml_PrintAction |c8= parse_org_sintef_thingml_ErrorAction |c9= parse_org_sintef_thingml_ReturnAction |c10= parse_org_sintef_thingml_FunctionCallStatement )
-            int alt120=11;
+            // Thingml.g:13295:0: (c0= parse_org_sintef_thingml_SendAction |c1= parse_org_sintef_thingml_VariableAssignment |c2= parse_org_sintef_thingml_ActionBlock |c3= parse_org_sintef_thingml_LocalVariable |c4= parse_org_sintef_thingml_ExternStatement |c5= parse_org_sintef_thingml_ConditionalAction |c6= parse_org_sintef_thingml_LoopAction |c7= parse_org_sintef_thingml_PrintAction |c8= parse_org_sintef_thingml_ErrorAction |c9= parse_org_sintef_thingml_ReturnAction |c10= parse_org_sintef_thingml_FunctionCallStatement )
+            int alt121=11;
             switch ( input.LA(1) ) {
             case TEXT:
                 {
                 switch ( input.LA(2) ) {
                 case 18:
                     {
-                    alt120=1;
+                    alt121=1;
                     }
                     break;
                 case 32:
                 case 37:
                     {
-                    alt120=2;
+                    alt121=2;
                     }
                     break;
                 case 20:
                     {
-                    alt120=11;
+                    alt121=11;
                     }
                     break;
                 default:
                     if (state.backtracking>0) {state.failed=true; return element;}
                     NoViableAltException nvae =
-                        new NoViableAltException("", 120, 1, input);
+                        new NoViableAltException("", 121, 1, input);
 
                     throw nvae;
 
@@ -21564,59 +21668,59 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                 break;
             case 48:
                 {
-                alt120=3;
+                alt121=3;
                 }
                 break;
             case T_READONLY:
             case 84:
                 {
-                alt120=4;
+                alt121=4;
                 }
                 break;
             case STRING_EXT:
                 {
-                alt120=5;
+                alt121=5;
                 }
                 break;
             case 59:
                 {
-                alt120=6;
+                alt121=6;
                 }
                 break;
             case 85:
                 {
-                alt120=7;
+                alt121=7;
                 }
                 break;
             case 71:
                 {
-                alt120=8;
+                alt121=8;
                 }
                 break;
             case 53:
                 {
-                alt120=9;
+                alt121=9;
                 }
                 break;
             case 77:
                 {
-                alt120=10;
+                alt121=10;
                 }
                 break;
             default:
                 if (state.backtracking>0) {state.failed=true; return element;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 120, 0, input);
+                    new NoViableAltException("", 121, 0, input);
 
                 throw nvae;
 
             }
 
-            switch (alt120) {
+            switch (alt121) {
                 case 1 :
-                    // Thingml.g:13215:0: c0= parse_org_sintef_thingml_SendAction
+                    // Thingml.g:13296:0: c0= parse_org_sintef_thingml_SendAction
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_SendAction_in_parse_org_sintef_thingml_Action11846);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_SendAction_in_parse_org_sintef_thingml_Action11886);
                     c0=parse_org_sintef_thingml_SendAction();
 
                     state._fsp--;
@@ -21627,9 +21731,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:13216:2: c1= parse_org_sintef_thingml_VariableAssignment
+                    // Thingml.g:13297:2: c1= parse_org_sintef_thingml_VariableAssignment
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_VariableAssignment_in_parse_org_sintef_thingml_Action11854);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_VariableAssignment_in_parse_org_sintef_thingml_Action11894);
                     c1=parse_org_sintef_thingml_VariableAssignment();
 
                     state._fsp--;
@@ -21640,9 +21744,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 3 :
-                    // Thingml.g:13217:2: c2= parse_org_sintef_thingml_ActionBlock
+                    // Thingml.g:13298:2: c2= parse_org_sintef_thingml_ActionBlock
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ActionBlock_in_parse_org_sintef_thingml_Action11862);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ActionBlock_in_parse_org_sintef_thingml_Action11902);
                     c2=parse_org_sintef_thingml_ActionBlock();
 
                     state._fsp--;
@@ -21653,9 +21757,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 4 :
-                    // Thingml.g:13218:2: c3= parse_org_sintef_thingml_LocalVariable
+                    // Thingml.g:13299:2: c3= parse_org_sintef_thingml_LocalVariable
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_LocalVariable_in_parse_org_sintef_thingml_Action11870);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_LocalVariable_in_parse_org_sintef_thingml_Action11910);
                     c3=parse_org_sintef_thingml_LocalVariable();
 
                     state._fsp--;
@@ -21666,9 +21770,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 5 :
-                    // Thingml.g:13219:2: c4= parse_org_sintef_thingml_ExternStatement
+                    // Thingml.g:13300:2: c4= parse_org_sintef_thingml_ExternStatement
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ExternStatement_in_parse_org_sintef_thingml_Action11878);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ExternStatement_in_parse_org_sintef_thingml_Action11918);
                     c4=parse_org_sintef_thingml_ExternStatement();
 
                     state._fsp--;
@@ -21679,9 +21783,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 6 :
-                    // Thingml.g:13220:2: c5= parse_org_sintef_thingml_ConditionalAction
+                    // Thingml.g:13301:2: c5= parse_org_sintef_thingml_ConditionalAction
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ConditionalAction_in_parse_org_sintef_thingml_Action11886);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ConditionalAction_in_parse_org_sintef_thingml_Action11926);
                     c5=parse_org_sintef_thingml_ConditionalAction();
 
                     state._fsp--;
@@ -21692,9 +21796,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 7 :
-                    // Thingml.g:13221:2: c6= parse_org_sintef_thingml_LoopAction
+                    // Thingml.g:13302:2: c6= parse_org_sintef_thingml_LoopAction
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_LoopAction_in_parse_org_sintef_thingml_Action11894);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_LoopAction_in_parse_org_sintef_thingml_Action11934);
                     c6=parse_org_sintef_thingml_LoopAction();
 
                     state._fsp--;
@@ -21705,9 +21809,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 8 :
-                    // Thingml.g:13222:2: c7= parse_org_sintef_thingml_PrintAction
+                    // Thingml.g:13303:2: c7= parse_org_sintef_thingml_PrintAction
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_PrintAction_in_parse_org_sintef_thingml_Action11902);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_PrintAction_in_parse_org_sintef_thingml_Action11942);
                     c7=parse_org_sintef_thingml_PrintAction();
 
                     state._fsp--;
@@ -21718,9 +21822,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 9 :
-                    // Thingml.g:13223:2: c8= parse_org_sintef_thingml_ErrorAction
+                    // Thingml.g:13304:2: c8= parse_org_sintef_thingml_ErrorAction
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ErrorAction_in_parse_org_sintef_thingml_Action11910);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ErrorAction_in_parse_org_sintef_thingml_Action11950);
                     c8=parse_org_sintef_thingml_ErrorAction();
 
                     state._fsp--;
@@ -21731,9 +21835,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 10 :
-                    // Thingml.g:13224:2: c9= parse_org_sintef_thingml_ReturnAction
+                    // Thingml.g:13305:2: c9= parse_org_sintef_thingml_ReturnAction
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ReturnAction_in_parse_org_sintef_thingml_Action11918);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ReturnAction_in_parse_org_sintef_thingml_Action11958);
                     c9=parse_org_sintef_thingml_ReturnAction();
 
                     state._fsp--;
@@ -21744,9 +21848,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 11 :
-                    // Thingml.g:13225:2: c10= parse_org_sintef_thingml_FunctionCallStatement
+                    // Thingml.g:13306:2: c10= parse_org_sintef_thingml_FunctionCallStatement
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_FunctionCallStatement_in_parse_org_sintef_thingml_Action11926);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_FunctionCallStatement_in_parse_org_sintef_thingml_Action11966);
                     c10=parse_org_sintef_thingml_FunctionCallStatement();
 
                     state._fsp--;
@@ -21776,7 +21880,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Port"
-    // Thingml.g:13229:1: parse_org_sintef_thingml_Port returns [org.sintef.thingml.Port element = null] : (c0= parse_org_sintef_thingml_RequiredPort |c1= parse_org_sintef_thingml_ProvidedPort );
+    // Thingml.g:13310:1: parse_org_sintef_thingml_Port returns [org.sintef.thingml.Port element = null] : (c0= parse_org_sintef_thingml_RequiredPort |c1= parse_org_sintef_thingml_ProvidedPort );
     public final org.sintef.thingml.Port parse_org_sintef_thingml_Port() throws RecognitionException {
         org.sintef.thingml.Port element =  null;
 
@@ -21790,29 +21894,29 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 60) ) { return element; }
 
-            // Thingml.g:13230:0: (c0= parse_org_sintef_thingml_RequiredPort |c1= parse_org_sintef_thingml_ProvidedPort )
-            int alt121=2;
-            int LA121_0 = input.LA(1);
+            // Thingml.g:13311:0: (c0= parse_org_sintef_thingml_RequiredPort |c1= parse_org_sintef_thingml_ProvidedPort )
+            int alt122=2;
+            int LA122_0 = input.LA(1);
 
-            if ( (LA121_0==T_OPTIONAL||LA121_0==76) ) {
-                alt121=1;
+            if ( (LA122_0==T_OPTIONAL||LA122_0==76) ) {
+                alt122=1;
             }
-            else if ( (LA121_0==73) ) {
-                alt121=2;
+            else if ( (LA122_0==73) ) {
+                alt122=2;
             }
             else {
                 if (state.backtracking>0) {state.failed=true; return element;}
                 NoViableAltException nvae =
-                    new NoViableAltException("", 121, 0, input);
+                    new NoViableAltException("", 122, 0, input);
 
                 throw nvae;
 
             }
-            switch (alt121) {
+            switch (alt122) {
                 case 1 :
-                    // Thingml.g:13231:0: c0= parse_org_sintef_thingml_RequiredPort
+                    // Thingml.g:13312:0: c0= parse_org_sintef_thingml_RequiredPort
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_RequiredPort_in_parse_org_sintef_thingml_Port11945);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_RequiredPort_in_parse_org_sintef_thingml_Port11985);
                     c0=parse_org_sintef_thingml_RequiredPort();
 
                     state._fsp--;
@@ -21823,9 +21927,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:13232:2: c1= parse_org_sintef_thingml_ProvidedPort
+                    // Thingml.g:13313:2: c1= parse_org_sintef_thingml_ProvidedPort
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ProvidedPort_in_parse_org_sintef_thingml_Port11953);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ProvidedPort_in_parse_org_sintef_thingml_Port11993);
                     c1=parse_org_sintef_thingml_ProvidedPort();
 
                     state._fsp--;
@@ -21855,7 +21959,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Event"
-    // Thingml.g:13236:1: parse_org_sintef_thingml_Event returns [org.sintef.thingml.Event element = null] : c0= parse_org_sintef_thingml_ReceiveMessage ;
+    // Thingml.g:13317:1: parse_org_sintef_thingml_Event returns [org.sintef.thingml.Event element = null] : c0= parse_org_sintef_thingml_ReceiveMessage ;
     public final org.sintef.thingml.Event parse_org_sintef_thingml_Event() throws RecognitionException {
         org.sintef.thingml.Event element =  null;
 
@@ -21867,10 +21971,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 61) ) { return element; }
 
-            // Thingml.g:13237:4: (c0= parse_org_sintef_thingml_ReceiveMessage )
-            // Thingml.g:13238:4: c0= parse_org_sintef_thingml_ReceiveMessage
+            // Thingml.g:13318:4: (c0= parse_org_sintef_thingml_ReceiveMessage )
+            // Thingml.g:13319:4: c0= parse_org_sintef_thingml_ReceiveMessage
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_Event11972);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_Event12012);
             c0=parse_org_sintef_thingml_ReceiveMessage();
 
             state._fsp--;
@@ -21914,33 +22018,39 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
     }
     // $ANTLR end synpred58_Thingml
 
-    // $ANTLR start synpred110_Thingml
-    public final void synpred110_Thingml_fragment() throws RecognitionException {
-        Token a0=null;
-        org.sintef.thingml.Expression rightArg =null;
+    // $ANTLR start synpred108_Thingml
+    public final void synpred108_Thingml_fragment() throws RecognitionException {
+        Token a5=null;
+        org.sintef.thingml.Action a6_0 =null;
 
 
-        // Thingml.g:10928:3: ( () a0= 'or' rightArg= parseop_Expression_level_2 )
-        // Thingml.g:10928:3: () a0= 'or' rightArg= parseop_Expression_level_2
+        // Thingml.g:10220:3: ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )
+        // Thingml.g:10220:3: (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
         {
-        // Thingml.g:10928:3: ()
-        // Thingml.g:10928:4: 
+        // Thingml.g:10220:3: (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
+        // Thingml.g:10221:4: a5= 'else' (a6_0= parse_org_sintef_thingml_Action )
         {
-        }
+        a5=(Token)match(input,49,FOLLOW_49_in_synpred108_Thingml10075); if (state.failed) return ;
 
-
-        a0=(Token)match(input,69,FOLLOW_69_in_synpred110_Thingml10623); if (state.failed) return ;
-
-        pushFollow(FOLLOW_parseop_Expression_level_2_in_synpred110_Thingml10640);
-        rightArg=parseop_Expression_level_2();
+        // Thingml.g:10246:4: (a6_0= parse_org_sintef_thingml_Action )
+        // Thingml.g:10247:5: a6_0= parse_org_sintef_thingml_Action
+        {
+        pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_synpred108_Thingml10101);
+        a6_0=parse_org_sintef_thingml_Action();
 
         state._fsp--;
         if (state.failed) return ;
 
         }
 
+
+        }
+
+
+        }
+
     }
-    // $ANTLR end synpred110_Thingml
+    // $ANTLR end synpred108_Thingml
 
     // $ANTLR start synpred111_Thingml
     public final void synpred111_Thingml_fragment() throws RecognitionException {
@@ -21948,52 +22058,22 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:10927:40: ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ )
-        // Thingml.g:10927:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
+        // Thingml.g:11009:3: ( () a0= 'or' rightArg= parseop_Expression_level_2 )
+        // Thingml.g:11009:3: () a0= 'or' rightArg= parseop_Expression_level_2
         {
-        // Thingml.g:10927:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
-        int cnt156=0;
-        loop156:
-        do {
-            int alt156=2;
-            int LA156_0 = input.LA(1);
-
-            if ( (LA156_0==69) ) {
-                alt156=1;
-            }
+        // Thingml.g:11009:3: ()
+        // Thingml.g:11009:4: 
+        {
+        }
 
 
-            switch (alt156) {
-        	case 1 :
-        	    // Thingml.g:10928:3: () a0= 'or' rightArg= parseop_Expression_level_2
-        	    {
-        	    // Thingml.g:10928:3: ()
-        	    // Thingml.g:10928:4: 
-        	    {
-        	    }
+        a0=(Token)match(input,69,FOLLOW_69_in_synpred111_Thingml10663); if (state.failed) return ;
 
+        pushFollow(FOLLOW_parseop_Expression_level_2_in_synpred111_Thingml10680);
+        rightArg=parseop_Expression_level_2();
 
-        	    a0=(Token)match(input,69,FOLLOW_69_in_synpred111_Thingml10623); if (state.failed) return ;
-
-        	    pushFollow(FOLLOW_parseop_Expression_level_2_in_synpred111_Thingml10640);
-        	    rightArg=parseop_Expression_level_2();
-
-        	    state._fsp--;
-        	    if (state.failed) return ;
-
-        	    }
-        	    break;
-
-        	default :
-        	    if ( cnt156 >= 1 ) break loop156;
-        	    if (state.backtracking>0) {state.failed=true; return ;}
-                    EarlyExitException eee =
-                        new EarlyExitException(156, input);
-                    throw eee;
-            }
-            cnt156++;
-        } while (true);
-
+        state._fsp--;
+        if (state.failed) return ;
 
         }
 
@@ -22006,63 +22086,35 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:11003:2: ( () a0= 'and' rightArg= parseop_Expression_level_3 )
-        // Thingml.g:11003:2: () a0= 'and' rightArg= parseop_Expression_level_3
+        // Thingml.g:11008:40: ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ )
+        // Thingml.g:11008:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
         {
-        // Thingml.g:11003:2: ()
-        // Thingml.g:11003:3: 
-        {
-        }
-
-
-        a0=(Token)match(input,42,FOLLOW_42_in_synpred112_Thingml10702); if (state.failed) return ;
-
-        pushFollow(FOLLOW_parseop_Expression_level_3_in_synpred112_Thingml10716);
-        rightArg=parseop_Expression_level_3();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-
-    }
-    // $ANTLR end synpred112_Thingml
-
-    // $ANTLR start synpred113_Thingml
-    public final void synpred113_Thingml_fragment() throws RecognitionException {
-        Token a0=null;
-        org.sintef.thingml.Expression rightArg =null;
-
-
-        // Thingml.g:11002:38: ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ )
-        // Thingml.g:11002:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
-        {
-        // Thingml.g:11002:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
+        // Thingml.g:11008:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
         int cnt157=0;
         loop157:
         do {
             int alt157=2;
             int LA157_0 = input.LA(1);
 
-            if ( (LA157_0==42) ) {
+            if ( (LA157_0==69) ) {
                 alt157=1;
             }
 
 
             switch (alt157) {
         	case 1 :
-        	    // Thingml.g:11003:2: () a0= 'and' rightArg= parseop_Expression_level_3
+        	    // Thingml.g:11009:3: () a0= 'or' rightArg= parseop_Expression_level_2
         	    {
-        	    // Thingml.g:11003:2: ()
-        	    // Thingml.g:11003:3: 
+        	    // Thingml.g:11009:3: ()
+        	    // Thingml.g:11009:4: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,42,FOLLOW_42_in_synpred113_Thingml10702); if (state.failed) return ;
+        	    a0=(Token)match(input,69,FOLLOW_69_in_synpred112_Thingml10663); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_3_in_synpred113_Thingml10716);
-        	    rightArg=parseop_Expression_level_3();
+        	    pushFollow(FOLLOW_parseop_Expression_level_2_in_synpred112_Thingml10680);
+        	    rightArg=parseop_Expression_level_2();
 
         	    state._fsp--;
         	    if (state.failed) return ;
@@ -22084,6 +22136,34 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         }
 
     }
+    // $ANTLR end synpred112_Thingml
+
+    // $ANTLR start synpred113_Thingml
+    public final void synpred113_Thingml_fragment() throws RecognitionException {
+        Token a0=null;
+        org.sintef.thingml.Expression rightArg =null;
+
+
+        // Thingml.g:11084:2: ( () a0= 'and' rightArg= parseop_Expression_level_3 )
+        // Thingml.g:11084:2: () a0= 'and' rightArg= parseop_Expression_level_3
+        {
+        // Thingml.g:11084:2: ()
+        // Thingml.g:11084:3: 
+        {
+        }
+
+
+        a0=(Token)match(input,42,FOLLOW_42_in_synpred113_Thingml10742); if (state.failed) return ;
+
+        pushFollow(FOLLOW_parseop_Expression_level_3_in_synpred113_Thingml10756);
+        rightArg=parseop_Expression_level_3();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+
+    }
     // $ANTLR end synpred113_Thingml
 
     // $ANTLR start synpred114_Thingml
@@ -22092,169 +22172,35 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:11078:2: ( () a0= '<' rightArg= parseop_Expression_level_4 )
-        // Thingml.g:11078:2: () a0= '<' rightArg= parseop_Expression_level_4
+        // Thingml.g:11083:38: ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ )
+        // Thingml.g:11083:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
         {
-        // Thingml.g:11078:2: ()
-        // Thingml.g:11078:2: 
-        {
-        }
-
-
-        a0=(Token)match(input,31,FOLLOW_31_in_synpred114_Thingml10770); if (state.failed) return ;
-
-        pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred114_Thingml10781);
-        rightArg=parseop_Expression_level_4();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-
-    }
-    // $ANTLR end synpred114_Thingml
-
-    // $ANTLR start synpred115_Thingml
-    public final void synpred115_Thingml_fragment() throws RecognitionException {
-        Token a0=null;
-        org.sintef.thingml.Expression rightArg =null;
-
-
-        // Thingml.g:11144:2: ( () a0= '>' rightArg= parseop_Expression_level_4 )
-        // Thingml.g:11144:2: () a0= '>' rightArg= parseop_Expression_level_4
-        {
-        // Thingml.g:11144:2: ()
-        // Thingml.g:11144:2: 
-        {
-        }
-
-
-        a0=(Token)match(input,35,FOLLOW_35_in_synpred115_Thingml10799); if (state.failed) return ;
-
-        pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred115_Thingml10810);
-        rightArg=parseop_Expression_level_4();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-
-    }
-    // $ANTLR end synpred115_Thingml
-
-    // $ANTLR start synpred116_Thingml
-    public final void synpred116_Thingml_fragment() throws RecognitionException {
-        Token a0=null;
-        org.sintef.thingml.Expression rightArg =null;
-
-
-        // Thingml.g:11210:2: ( () a0= '==' rightArg= parseop_Expression_level_4 )
-        // Thingml.g:11210:2: () a0= '==' rightArg= parseop_Expression_level_4
-        {
-        // Thingml.g:11210:2: ()
-        // Thingml.g:11210:2: 
-        {
-        }
-
-
-        a0=(Token)match(input,33,FOLLOW_33_in_synpred116_Thingml10828); if (state.failed) return ;
-
-        pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred116_Thingml10839);
-        rightArg=parseop_Expression_level_4();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-
-    }
-    // $ANTLR end synpred116_Thingml
-
-    // $ANTLR start synpred117_Thingml
-    public final void synpred117_Thingml_fragment() throws RecognitionException {
-        Token a0=null;
-        org.sintef.thingml.Expression rightArg =null;
-
-
-        // Thingml.g:11077:38: ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ )
-        // Thingml.g:11077:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
-        {
-        // Thingml.g:11077:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
+        // Thingml.g:11083:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
         int cnt158=0;
         loop158:
         do {
-            int alt158=4;
-            switch ( input.LA(1) ) {
-            case 31:
-                {
-                alt158=1;
-                }
-                break;
-            case 35:
-                {
-                alt158=2;
-                }
-                break;
-            case 33:
-                {
-                alt158=3;
-                }
-                break;
+            int alt158=2;
+            int LA158_0 = input.LA(1);
 
+            if ( (LA158_0==42) ) {
+                alt158=1;
             }
+
 
             switch (alt158) {
         	case 1 :
-        	    // Thingml.g:11078:0: () a0= '<' rightArg= parseop_Expression_level_4
+        	    // Thingml.g:11084:2: () a0= 'and' rightArg= parseop_Expression_level_3
         	    {
-        	    // Thingml.g:11078:2: ()
-        	    // Thingml.g:11078:2: 
-        	    {
-        	    }
-
-
-        	    a0=(Token)match(input,31,FOLLOW_31_in_synpred117_Thingml10770); if (state.failed) return ;
-
-        	    pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred117_Thingml10781);
-        	    rightArg=parseop_Expression_level_4();
-
-        	    state._fsp--;
-        	    if (state.failed) return ;
-
-        	    }
-        	    break;
-        	case 2 :
-        	    // Thingml.g:11144:0: () a0= '>' rightArg= parseop_Expression_level_4
-        	    {
-        	    // Thingml.g:11144:2: ()
-        	    // Thingml.g:11144:2: 
+        	    // Thingml.g:11084:2: ()
+        	    // Thingml.g:11084:3: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,35,FOLLOW_35_in_synpred117_Thingml10799); if (state.failed) return ;
+        	    a0=(Token)match(input,42,FOLLOW_42_in_synpred114_Thingml10742); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred117_Thingml10810);
-        	    rightArg=parseop_Expression_level_4();
-
-        	    state._fsp--;
-        	    if (state.failed) return ;
-
-        	    }
-        	    break;
-        	case 3 :
-        	    // Thingml.g:11210:0: () a0= '==' rightArg= parseop_Expression_level_4
-        	    {
-        	    // Thingml.g:11210:2: ()
-        	    // Thingml.g:11210:2: 
-        	    {
-        	    }
-
-
-        	    a0=(Token)match(input,33,FOLLOW_33_in_synpred117_Thingml10828); if (state.failed) return ;
-
-        	    pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred117_Thingml10839);
-        	    rightArg=parseop_Expression_level_4();
+        	    pushFollow(FOLLOW_parseop_Expression_level_3_in_synpred114_Thingml10756);
+        	    rightArg=parseop_Expression_level_3();
 
         	    state._fsp--;
         	    if (state.failed) return ;
@@ -22276,6 +22222,90 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         }
 
     }
+    // $ANTLR end synpred114_Thingml
+
+    // $ANTLR start synpred115_Thingml
+    public final void synpred115_Thingml_fragment() throws RecognitionException {
+        Token a0=null;
+        org.sintef.thingml.Expression rightArg =null;
+
+
+        // Thingml.g:11159:2: ( () a0= '<' rightArg= parseop_Expression_level_4 )
+        // Thingml.g:11159:2: () a0= '<' rightArg= parseop_Expression_level_4
+        {
+        // Thingml.g:11159:2: ()
+        // Thingml.g:11159:2: 
+        {
+        }
+
+
+        a0=(Token)match(input,31,FOLLOW_31_in_synpred115_Thingml10810); if (state.failed) return ;
+
+        pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred115_Thingml10821);
+        rightArg=parseop_Expression_level_4();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+
+    }
+    // $ANTLR end synpred115_Thingml
+
+    // $ANTLR start synpred116_Thingml
+    public final void synpred116_Thingml_fragment() throws RecognitionException {
+        Token a0=null;
+        org.sintef.thingml.Expression rightArg =null;
+
+
+        // Thingml.g:11225:2: ( () a0= '>' rightArg= parseop_Expression_level_4 )
+        // Thingml.g:11225:2: () a0= '>' rightArg= parseop_Expression_level_4
+        {
+        // Thingml.g:11225:2: ()
+        // Thingml.g:11225:2: 
+        {
+        }
+
+
+        a0=(Token)match(input,35,FOLLOW_35_in_synpred116_Thingml10839); if (state.failed) return ;
+
+        pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred116_Thingml10850);
+        rightArg=parseop_Expression_level_4();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+
+    }
+    // $ANTLR end synpred116_Thingml
+
+    // $ANTLR start synpred117_Thingml
+    public final void synpred117_Thingml_fragment() throws RecognitionException {
+        Token a0=null;
+        org.sintef.thingml.Expression rightArg =null;
+
+
+        // Thingml.g:11291:2: ( () a0= '==' rightArg= parseop_Expression_level_4 )
+        // Thingml.g:11291:2: () a0= '==' rightArg= parseop_Expression_level_4
+        {
+        // Thingml.g:11291:2: ()
+        // Thingml.g:11291:2: 
+        {
+        }
+
+
+        a0=(Token)match(input,33,FOLLOW_33_in_synpred117_Thingml10868); if (state.failed) return ;
+
+        pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred117_Thingml10879);
+        rightArg=parseop_Expression_level_4();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+
+    }
     // $ANTLR end synpred117_Thingml
 
     // $ANTLR start synpred118_Thingml
@@ -22284,94 +22314,47 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:11285:2: ( () a0= '+' rightArg= parseop_Expression_level_5 )
-        // Thingml.g:11285:2: () a0= '+' rightArg= parseop_Expression_level_5
+        // Thingml.g:11158:38: ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ )
+        // Thingml.g:11158:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
         {
-        // Thingml.g:11285:2: ()
-        // Thingml.g:11285:2: 
-        {
-        }
-
-
-        a0=(Token)match(input,23,FOLLOW_23_in_synpred118_Thingml10890); if (state.failed) return ;
-
-        pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred118_Thingml10901);
-        rightArg=parseop_Expression_level_5();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-
-    }
-    // $ANTLR end synpred118_Thingml
-
-    // $ANTLR start synpred119_Thingml
-    public final void synpred119_Thingml_fragment() throws RecognitionException {
-        Token a0=null;
-        org.sintef.thingml.Expression rightArg =null;
-
-
-        // Thingml.g:11351:2: ( () a0= '-' rightArg= parseop_Expression_level_5 )
-        // Thingml.g:11351:2: () a0= '-' rightArg= parseop_Expression_level_5
-        {
-        // Thingml.g:11351:2: ()
-        // Thingml.g:11351:2: 
-        {
-        }
-
-
-        a0=(Token)match(input,25,FOLLOW_25_in_synpred119_Thingml10919); if (state.failed) return ;
-
-        pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred119_Thingml10930);
-        rightArg=parseop_Expression_level_5();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-
-    }
-    // $ANTLR end synpred119_Thingml
-
-    // $ANTLR start synpred120_Thingml
-    public final void synpred120_Thingml_fragment() throws RecognitionException {
-        Token a0=null;
-        org.sintef.thingml.Expression rightArg =null;
-
-
-        // Thingml.g:11284:38: ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ )
-        // Thingml.g:11284:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
-        {
-        // Thingml.g:11284:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
+        // Thingml.g:11158:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
         int cnt159=0;
         loop159:
         do {
-            int alt159=3;
-            int LA159_0 = input.LA(1);
-
-            if ( (LA159_0==23) ) {
+            int alt159=4;
+            switch ( input.LA(1) ) {
+            case 31:
+                {
                 alt159=1;
-            }
-            else if ( (LA159_0==25) ) {
+                }
+                break;
+            case 35:
+                {
                 alt159=2;
-            }
+                }
+                break;
+            case 33:
+                {
+                alt159=3;
+                }
+                break;
 
+            }
 
             switch (alt159) {
         	case 1 :
-        	    // Thingml.g:11285:0: () a0= '+' rightArg= parseop_Expression_level_5
+        	    // Thingml.g:11159:0: () a0= '<' rightArg= parseop_Expression_level_4
         	    {
-        	    // Thingml.g:11285:2: ()
-        	    // Thingml.g:11285:2: 
+        	    // Thingml.g:11159:2: ()
+        	    // Thingml.g:11159:2: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,23,FOLLOW_23_in_synpred120_Thingml10890); if (state.failed) return ;
+        	    a0=(Token)match(input,31,FOLLOW_31_in_synpred118_Thingml10810); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred120_Thingml10901);
-        	    rightArg=parseop_Expression_level_5();
+        	    pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred118_Thingml10821);
+        	    rightArg=parseop_Expression_level_4();
 
         	    state._fsp--;
         	    if (state.failed) return ;
@@ -22379,18 +22362,37 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         	    }
         	    break;
         	case 2 :
-        	    // Thingml.g:11351:0: () a0= '-' rightArg= parseop_Expression_level_5
+        	    // Thingml.g:11225:0: () a0= '>' rightArg= parseop_Expression_level_4
         	    {
-        	    // Thingml.g:11351:2: ()
-        	    // Thingml.g:11351:2: 
+        	    // Thingml.g:11225:2: ()
+        	    // Thingml.g:11225:2: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,25,FOLLOW_25_in_synpred120_Thingml10919); if (state.failed) return ;
+        	    a0=(Token)match(input,35,FOLLOW_35_in_synpred118_Thingml10839); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred120_Thingml10930);
-        	    rightArg=parseop_Expression_level_5();
+        	    pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred118_Thingml10850);
+        	    rightArg=parseop_Expression_level_4();
+
+        	    state._fsp--;
+        	    if (state.failed) return ;
+
+        	    }
+        	    break;
+        	case 3 :
+        	    // Thingml.g:11291:0: () a0= '==' rightArg= parseop_Expression_level_4
+        	    {
+        	    // Thingml.g:11291:2: ()
+        	    // Thingml.g:11291:2: 
+        	    {
+        	    }
+
+
+        	    a0=(Token)match(input,33,FOLLOW_33_in_synpred118_Thingml10868); if (state.failed) return ;
+
+        	    pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred118_Thingml10879);
+        	    rightArg=parseop_Expression_level_4();
 
         	    state._fsp--;
         	    if (state.failed) return ;
@@ -22412,6 +22414,62 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         }
 
     }
+    // $ANTLR end synpred118_Thingml
+
+    // $ANTLR start synpred119_Thingml
+    public final void synpred119_Thingml_fragment() throws RecognitionException {
+        Token a0=null;
+        org.sintef.thingml.Expression rightArg =null;
+
+
+        // Thingml.g:11366:2: ( () a0= '+' rightArg= parseop_Expression_level_5 )
+        // Thingml.g:11366:2: () a0= '+' rightArg= parseop_Expression_level_5
+        {
+        // Thingml.g:11366:2: ()
+        // Thingml.g:11366:2: 
+        {
+        }
+
+
+        a0=(Token)match(input,23,FOLLOW_23_in_synpred119_Thingml10930); if (state.failed) return ;
+
+        pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred119_Thingml10941);
+        rightArg=parseop_Expression_level_5();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+
+    }
+    // $ANTLR end synpred119_Thingml
+
+    // $ANTLR start synpred120_Thingml
+    public final void synpred120_Thingml_fragment() throws RecognitionException {
+        Token a0=null;
+        org.sintef.thingml.Expression rightArg =null;
+
+
+        // Thingml.g:11432:2: ( () a0= '-' rightArg= parseop_Expression_level_5 )
+        // Thingml.g:11432:2: () a0= '-' rightArg= parseop_Expression_level_5
+        {
+        // Thingml.g:11432:2: ()
+        // Thingml.g:11432:2: 
+        {
+        }
+
+
+        a0=(Token)match(input,25,FOLLOW_25_in_synpred120_Thingml10959); if (state.failed) return ;
+
+        pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred120_Thingml10970);
+        rightArg=parseop_Expression_level_5();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+
+    }
     // $ANTLR end synpred120_Thingml
 
     // $ANTLR start synpred121_Thingml
@@ -22420,94 +22478,38 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:11426:2: ( () a0= '*' rightArg= parseop_Expression_level_6 )
-        // Thingml.g:11426:2: () a0= '*' rightArg= parseop_Expression_level_6
+        // Thingml.g:11365:38: ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ )
+        // Thingml.g:11365:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
         {
-        // Thingml.g:11426:2: ()
-        // Thingml.g:11426:2: 
-        {
-        }
-
-
-        a0=(Token)match(input,22,FOLLOW_22_in_synpred121_Thingml10981); if (state.failed) return ;
-
-        pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred121_Thingml10992);
-        rightArg=parseop_Expression_level_6();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-
-    }
-    // $ANTLR end synpred121_Thingml
-
-    // $ANTLR start synpred122_Thingml
-    public final void synpred122_Thingml_fragment() throws RecognitionException {
-        Token a0=null;
-        org.sintef.thingml.Expression rightArg =null;
-
-
-        // Thingml.g:11492:2: ( () a0= '/' rightArg= parseop_Expression_level_6 )
-        // Thingml.g:11492:2: () a0= '/' rightArg= parseop_Expression_level_6
-        {
-        // Thingml.g:11492:2: ()
-        // Thingml.g:11492:2: 
-        {
-        }
-
-
-        a0=(Token)match(input,28,FOLLOW_28_in_synpred122_Thingml11010); if (state.failed) return ;
-
-        pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred122_Thingml11021);
-        rightArg=parseop_Expression_level_6();
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        }
-
-    }
-    // $ANTLR end synpred122_Thingml
-
-    // $ANTLR start synpred123_Thingml
-    public final void synpred123_Thingml_fragment() throws RecognitionException {
-        Token a0=null;
-        org.sintef.thingml.Expression rightArg =null;
-
-
-        // Thingml.g:11425:38: ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ )
-        // Thingml.g:11425:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
-        {
-        // Thingml.g:11425:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
+        // Thingml.g:11365:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
         int cnt160=0;
         loop160:
         do {
             int alt160=3;
             int LA160_0 = input.LA(1);
 
-            if ( (LA160_0==22) ) {
+            if ( (LA160_0==23) ) {
                 alt160=1;
             }
-            else if ( (LA160_0==28) ) {
+            else if ( (LA160_0==25) ) {
                 alt160=2;
             }
 
 
             switch (alt160) {
         	case 1 :
-        	    // Thingml.g:11426:0: () a0= '*' rightArg= parseop_Expression_level_6
+        	    // Thingml.g:11366:0: () a0= '+' rightArg= parseop_Expression_level_5
         	    {
-        	    // Thingml.g:11426:2: ()
-        	    // Thingml.g:11426:2: 
+        	    // Thingml.g:11366:2: ()
+        	    // Thingml.g:11366:2: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,22,FOLLOW_22_in_synpred123_Thingml10981); if (state.failed) return ;
+        	    a0=(Token)match(input,23,FOLLOW_23_in_synpred121_Thingml10930); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred123_Thingml10992);
-        	    rightArg=parseop_Expression_level_6();
+        	    pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred121_Thingml10941);
+        	    rightArg=parseop_Expression_level_5();
 
         	    state._fsp--;
         	    if (state.failed) return ;
@@ -22515,18 +22517,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         	    }
         	    break;
         	case 2 :
-        	    // Thingml.g:11492:0: () a0= '/' rightArg= parseop_Expression_level_6
+        	    // Thingml.g:11432:0: () a0= '-' rightArg= parseop_Expression_level_5
         	    {
-        	    // Thingml.g:11492:2: ()
-        	    // Thingml.g:11492:2: 
+        	    // Thingml.g:11432:2: ()
+        	    // Thingml.g:11432:2: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,28,FOLLOW_28_in_synpred123_Thingml11010); if (state.failed) return ;
+        	    a0=(Token)match(input,25,FOLLOW_25_in_synpred121_Thingml10959); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred123_Thingml11021);
-        	    rightArg=parseop_Expression_level_6();
+        	    pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred121_Thingml10970);
+        	    rightArg=parseop_Expression_level_5();
 
         	    state._fsp--;
         	    if (state.failed) return ;
@@ -22548,6 +22550,62 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         }
 
     }
+    // $ANTLR end synpred121_Thingml
+
+    // $ANTLR start synpred122_Thingml
+    public final void synpred122_Thingml_fragment() throws RecognitionException {
+        Token a0=null;
+        org.sintef.thingml.Expression rightArg =null;
+
+
+        // Thingml.g:11507:2: ( () a0= '*' rightArg= parseop_Expression_level_6 )
+        // Thingml.g:11507:2: () a0= '*' rightArg= parseop_Expression_level_6
+        {
+        // Thingml.g:11507:2: ()
+        // Thingml.g:11507:2: 
+        {
+        }
+
+
+        a0=(Token)match(input,22,FOLLOW_22_in_synpred122_Thingml11021); if (state.failed) return ;
+
+        pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred122_Thingml11032);
+        rightArg=parseop_Expression_level_6();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+
+    }
+    // $ANTLR end synpred122_Thingml
+
+    // $ANTLR start synpred123_Thingml
+    public final void synpred123_Thingml_fragment() throws RecognitionException {
+        Token a0=null;
+        org.sintef.thingml.Expression rightArg =null;
+
+
+        // Thingml.g:11573:2: ( () a0= '/' rightArg= parseop_Expression_level_6 )
+        // Thingml.g:11573:2: () a0= '/' rightArg= parseop_Expression_level_6
+        {
+        // Thingml.g:11573:2: ()
+        // Thingml.g:11573:2: 
+        {
+        }
+
+
+        a0=(Token)match(input,28,FOLLOW_28_in_synpred123_Thingml11050); if (state.failed) return ;
+
+        pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred123_Thingml11061);
+        rightArg=parseop_Expression_level_6();
+
+        state._fsp--;
+        if (state.failed) return ;
+
+        }
+
+    }
     // $ANTLR end synpred123_Thingml
 
     // $ANTLR start synpred124_Thingml
@@ -22556,15 +22614,95 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:11566:38: ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) )
-        // Thingml.g:11566:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
+        // Thingml.g:11506:38: ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ )
+        // Thingml.g:11506:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
         {
-        // Thingml.g:11566:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
-        // Thingml.g:11567:4: a0= '\\u0025' rightArg= parseop_Expression_level_6
-        {
-        a0=(Token)match(input,38,FOLLOW_38_in_synpred124_Thingml11067); if (state.failed) return ;
+        // Thingml.g:11506:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
+        int cnt161=0;
+        loop161:
+        do {
+            int alt161=3;
+            int LA161_0 = input.LA(1);
 
-        pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred124_Thingml11078);
+            if ( (LA161_0==22) ) {
+                alt161=1;
+            }
+            else if ( (LA161_0==28) ) {
+                alt161=2;
+            }
+
+
+            switch (alt161) {
+        	case 1 :
+        	    // Thingml.g:11507:0: () a0= '*' rightArg= parseop_Expression_level_6
+        	    {
+        	    // Thingml.g:11507:2: ()
+        	    // Thingml.g:11507:2: 
+        	    {
+        	    }
+
+
+        	    a0=(Token)match(input,22,FOLLOW_22_in_synpred124_Thingml11021); if (state.failed) return ;
+
+        	    pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred124_Thingml11032);
+        	    rightArg=parseop_Expression_level_6();
+
+        	    state._fsp--;
+        	    if (state.failed) return ;
+
+        	    }
+        	    break;
+        	case 2 :
+        	    // Thingml.g:11573:0: () a0= '/' rightArg= parseop_Expression_level_6
+        	    {
+        	    // Thingml.g:11573:2: ()
+        	    // Thingml.g:11573:2: 
+        	    {
+        	    }
+
+
+        	    a0=(Token)match(input,28,FOLLOW_28_in_synpred124_Thingml11050); if (state.failed) return ;
+
+        	    pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred124_Thingml11061);
+        	    rightArg=parseop_Expression_level_6();
+
+        	    state._fsp--;
+        	    if (state.failed) return ;
+
+        	    }
+        	    break;
+
+        	default :
+        	    if ( cnt161 >= 1 ) break loop161;
+        	    if (state.backtracking>0) {state.failed=true; return ;}
+                    EarlyExitException eee =
+                        new EarlyExitException(161, input);
+                    throw eee;
+            }
+            cnt161++;
+        } while (true);
+
+
+        }
+
+    }
+    // $ANTLR end synpred124_Thingml
+
+    // $ANTLR start synpred125_Thingml
+    public final void synpred125_Thingml_fragment() throws RecognitionException {
+        Token a0=null;
+        org.sintef.thingml.Expression rightArg =null;
+
+
+        // Thingml.g:11647:38: ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) )
+        // Thingml.g:11647:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
+        {
+        // Thingml.g:11647:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
+        // Thingml.g:11648:4: a0= '\\u0025' rightArg= parseop_Expression_level_6
+        {
+        a0=(Token)match(input,38,FOLLOW_38_in_synpred125_Thingml11107); if (state.failed) return ;
+
+        pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred125_Thingml11118);
         rightArg=parseop_Expression_level_6();
 
         state._fsp--;
@@ -22576,24 +22714,24 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         }
 
     }
-    // $ANTLR end synpred124_Thingml
+    // $ANTLR end synpred125_Thingml
 
-    // $ANTLR start synpred127_Thingml
-    public final void synpred127_Thingml_fragment() throws RecognitionException {
+    // $ANTLR start synpred128_Thingml
+    public final void synpred128_Thingml_fragment() throws RecognitionException {
         Token a0=null;
         Token a2=null;
         org.sintef.thingml.Expression a1_0 =null;
 
 
-        // Thingml.g:11735:4: (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' )
-        // Thingml.g:11735:4: a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']'
+        // Thingml.g:11816:4: (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' )
+        // Thingml.g:11816:4: a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']'
         {
-        a0=(Token)match(input,37,FOLLOW_37_in_synpred127_Thingml11183); if (state.failed) return ;
+        a0=(Token)match(input,37,FOLLOW_37_in_synpred128_Thingml11223); if (state.failed) return ;
 
-        // Thingml.g:11759:6: (a1_0= parse_org_sintef_thingml_Expression )
-        // Thingml.g:11760:6: a1_0= parse_org_sintef_thingml_Expression
+        // Thingml.g:11840:6: (a1_0= parse_org_sintef_thingml_Expression )
+        // Thingml.g:11841:6: a1_0= parse_org_sintef_thingml_Expression
         {
-        pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_synpred127_Thingml11196);
+        pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_synpred128_Thingml11236);
         a1_0=parse_org_sintef_thingml_Expression();
 
         state._fsp--;
@@ -22602,31 +22740,31 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         }
 
 
-        a2=(Token)match(input,39,FOLLOW_39_in_synpred127_Thingml11208); if (state.failed) return ;
+        a2=(Token)match(input,39,FOLLOW_39_in_synpred128_Thingml11248); if (state.failed) return ;
 
         }
 
     }
-    // $ANTLR end synpred127_Thingml
+    // $ANTLR end synpred128_Thingml
 
-    // $ANTLR start synpred138_Thingml
-    public final void synpred138_Thingml_fragment() throws RecognitionException {
+    // $ANTLR start synpred139_Thingml
+    public final void synpred139_Thingml_fragment() throws RecognitionException {
         Token a1=null;
         org.sintef.thingml.Expression a2_0 =null;
 
 
-        // Thingml.g:13033:4: ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )
-        // Thingml.g:13033:4: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
+        // Thingml.g:13114:4: ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )
+        // Thingml.g:13114:4: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
         {
-        // Thingml.g:13033:4: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
-        // Thingml.g:13034:4: a1= '&' (a2_0= parse_org_sintef_thingml_Expression )
+        // Thingml.g:13114:4: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
+        // Thingml.g:13115:4: a1= '&' (a2_0= parse_org_sintef_thingml_Expression )
         {
-        a1=(Token)match(input,19,FOLLOW_19_in_synpred138_Thingml11748); if (state.failed) return ;
+        a1=(Token)match(input,19,FOLLOW_19_in_synpred139_Thingml11788); if (state.failed) return ;
 
-        // Thingml.g:13058:6: (a2_0= parse_org_sintef_thingml_Expression )
-        // Thingml.g:13059:6: a2_0= parse_org_sintef_thingml_Expression
+        // Thingml.g:13139:6: (a2_0= parse_org_sintef_thingml_Expression )
+        // Thingml.g:13140:6: a2_0= parse_org_sintef_thingml_Expression
         {
-        pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_synpred138_Thingml11761);
+        pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_synpred139_Thingml11801);
         a2_0=parse_org_sintef_thingml_Expression();
 
         state._fsp--;
@@ -22641,43 +22779,29 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         }
 
     }
-    // $ANTLR end synpred138_Thingml
+    // $ANTLR end synpred139_Thingml
 
     // Delegated rules
 
+    public final boolean synpred128_Thingml() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred128_Thingml_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
     public final boolean synpred111_Thingml() {
         state.backtracking++;
         int start = input.mark();
         try {
             synpred111_Thingml_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred127_Thingml() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred127_Thingml_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred110_Thingml() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred110_Thingml_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -22841,11 +22965,53 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         state.failed=false;
         return success;
     }
+    public final boolean synpred108_Thingml() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred108_Thingml_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
     public final boolean synpred122_Thingml() {
         state.backtracking++;
         int start = input.mark();
         try {
             synpred122_Thingml_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred125_Thingml() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred125_Thingml_fragment(); // can never throw exception
+        } catch (RecognitionException re) {
+            System.err.println("impossible: "+re);
+        }
+        boolean success = !state.failed;
+        input.rewind(start);
+        state.backtracking--;
+        state.failed=false;
+        return success;
+    }
+    public final boolean synpred139_Thingml() {
+        state.backtracking++;
+        int start = input.mark();
+        try {
+            synpred139_Thingml_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -22874,20 +23040,6 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         int start = input.mark();
         try {
             synpred115_Thingml_fragment(); // can never throw exception
-        } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);
-        }
-        boolean success = !state.failed;
-        input.rewind(start);
-        state.backtracking--;
-        state.failed=false;
-        return success;
-    }
-    public final boolean synpred138_Thingml() {
-        state.backtracking++;
-        int start = input.mark();
-        try {
-            synpred138_Thingml_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -23186,153 +23338,155 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
     public static final BitSet FOLLOW_20_in_parse_org_sintef_thingml_ConditionalAction9994 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
     public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConditionalAction10012 = new BitSet(new long[]{0x0000000000200000L});
     public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_ConditionalAction10030 = new BitSet(new long[]{0x0821000000011400L,0x0000000000302080L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10048 = new BitSet(new long[]{0x0002000000000000L});
-    public static final BitSet FOLLOW_49_in_parse_org_sintef_thingml_ConditionalAction10066 = new BitSet(new long[]{0x0821000000011400L,0x0000000000302080L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10084 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_85_in_parse_org_sintef_thingml_LoopAction10117 = new BitSet(new long[]{0x0000000000100000L});
-    public static final BitSet FOLLOW_20_in_parse_org_sintef_thingml_LoopAction10131 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LoopAction10149 = new BitSet(new long[]{0x0000000000200000L});
-    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_LoopAction10167 = new BitSet(new long[]{0x0821000000011400L,0x0000000000302080L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_LoopAction10185 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_71_in_parse_org_sintef_thingml_PrintAction10218 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PrintAction10236 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_53_in_parse_org_sintef_thingml_ErrorAction10269 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ErrorAction10287 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_77_in_parse_org_sintef_thingml_ReturnAction10320 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ReturnAction10338 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallStatement10375 = new BitSet(new long[]{0x0000000000100000L});
-    public static final BitSet FOLLOW_20_in_parse_org_sintef_thingml_FunctionCallStatement10396 = new BitSet(new long[]{0x0000000002301C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement10425 = new BitSet(new long[]{0x0000000001200000L});
-    public static final BitSet FOLLOW_24_in_parse_org_sintef_thingml_FunctionCallStatement10466 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement10500 = new BitSet(new long[]{0x0000000001200000L});
-    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_FunctionCallStatement10574 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_110603 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000020L});
-    public static final BitSet FOLLOW_69_in_parseop_Expression_level_110623 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_110640 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000020L});
-    public static final BitSet FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_210686 = new BitSet(new long[]{0x0000040000000002L});
-    public static final BitSet FOLLOW_42_in_parseop_Expression_level_210702 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_210716 = new BitSet(new long[]{0x0000040000000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310757 = new BitSet(new long[]{0x0000000A80000002L});
-    public static final BitSet FOLLOW_31_in_parseop_Expression_level_310770 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310781 = new BitSet(new long[]{0x0000000A80000002L});
-    public static final BitSet FOLLOW_35_in_parseop_Expression_level_310799 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310810 = new BitSet(new long[]{0x0000000A80000002L});
-    public static final BitSet FOLLOW_33_in_parseop_Expression_level_310828 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310839 = new BitSet(new long[]{0x0000000A80000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_410877 = new BitSet(new long[]{0x0000000002800002L});
-    public static final BitSet FOLLOW_23_in_parseop_Expression_level_410890 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_410901 = new BitSet(new long[]{0x0000000002800002L});
-    public static final BitSet FOLLOW_25_in_parseop_Expression_level_410919 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_410930 = new BitSet(new long[]{0x0000000002800002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_510968 = new BitSet(new long[]{0x0000000010400002L});
-    public static final BitSet FOLLOW_22_in_parseop_Expression_level_510981 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_510992 = new BitSet(new long[]{0x0000000010400002L});
-    public static final BitSet FOLLOW_28_in_parseop_Expression_level_511010 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_511021 = new BitSet(new long[]{0x0000000010400002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_7_in_parseop_Expression_level_611059 = new BitSet(new long[]{0x0000004000000002L});
-    public static final BitSet FOLLOW_38_in_parseop_Expression_level_611067 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_611078 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_25_in_parseop_Expression_level_711113 = new BitSet(new long[]{0x0000000000101C60L});
-    public static final BitSet FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_711124 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_67_in_parseop_Expression_level_711133 = new BitSet(new long[]{0x0000000000101C60L});
-    public static final BitSet FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_711144 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_711154 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_9_in_parseop_Expression_level_811176 = new BitSet(new long[]{0x0000002000000002L});
-    public static final BitSet FOLLOW_37_in_parseop_Expression_level_811183 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parseop_Expression_level_811196 = new BitSet(new long[]{0x0000008000000000L});
-    public static final BitSet FOLLOW_39_in_parseop_Expression_level_811208 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_EventReference_in_parseop_Expression_level_911245 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ExpressionGroup_in_parseop_Expression_level_911253 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PropertyReference_in_parseop_Expression_level_911261 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_IntegerLiteral_in_parseop_Expression_level_911269 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_StringLiteral_in_parseop_Expression_level_911277 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_BooleanLiteral_in_parseop_Expression_level_911285 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_EnumLiteralRef_in_parseop_Expression_level_911293 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_FunctionCallExpression_in_parseop_Expression_level_911301 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ExternExpression_in_parseop_Expression_level_911309 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EventReference11333 = new BitSet(new long[]{0x0000000008000000L});
-    public static final BitSet FOLLOW_27_in_parse_org_sintef_thingml_EventReference11346 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EventReference11359 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_20_in_parse_org_sintef_thingml_ExpressionGroup11387 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExpressionGroup11400 = new BitSet(new long[]{0x0000000000200000L});
-    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_ExpressionGroup11412 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_PropertyReference11440 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_IntegerLiteral11470 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_parse_org_sintef_thingml_StringLiteral11500 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_BOOLEAN_LITERAL_in_parse_org_sintef_thingml_BooleanLiteral11530 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef11560 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_29_in_parse_org_sintef_thingml_EnumLiteralRef11573 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef11586 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallExpression11616 = new BitSet(new long[]{0x0000000000100000L});
-    public static final BitSet FOLLOW_20_in_parse_org_sintef_thingml_FunctionCallExpression11629 = new BitSet(new long[]{0x0000000002301C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression11646 = new BitSet(new long[]{0x0000000001200000L});
-    public static final BitSet FOLLOW_24_in_parse_org_sintef_thingml_FunctionCallExpression11662 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression11675 = new BitSet(new long[]{0x0000000001200000L});
-    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_FunctionCallExpression11703 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_EXT_in_parse_org_sintef_thingml_ExternExpression11731 = new BitSet(new long[]{0x0000000000080002L});
-    public static final BitSet FOLLOW_19_in_parse_org_sintef_thingml_ExternExpression11748 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExternExpression11761 = new BitSet(new long[]{0x0000000000080002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Thing_in_parse_org_sintef_thingml_Type11792 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PrimitiveType_in_parse_org_sintef_thingml_Type11800 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Enumeration_in_parse_org_sintef_thingml_Type11808 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_1_in_parse_org_sintef_thingml_Expression11827 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_SendAction_in_parse_org_sintef_thingml_Action11846 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_VariableAssignment_in_parse_org_sintef_thingml_Action11854 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ActionBlock_in_parse_org_sintef_thingml_Action11862 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_LocalVariable_in_parse_org_sintef_thingml_Action11870 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ExternStatement_in_parse_org_sintef_thingml_Action11878 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ConditionalAction_in_parse_org_sintef_thingml_Action11886 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_LoopAction_in_parse_org_sintef_thingml_Action11894 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PrintAction_in_parse_org_sintef_thingml_Action11902 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ErrorAction_in_parse_org_sintef_thingml_Action11910 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ReturnAction_in_parse_org_sintef_thingml_Action11918 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_FunctionCallStatement_in_parse_org_sintef_thingml_Action11926 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_RequiredPort_in_parse_org_sintef_thingml_Port11945 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ProvidedPort_in_parse_org_sintef_thingml_Port11953 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_Event11972 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10048 = new BitSet(new long[]{0x0002000000000002L});
+    public static final BitSet FOLLOW_49_in_parse_org_sintef_thingml_ConditionalAction10075 = new BitSet(new long[]{0x0821000000011400L,0x0000000000302080L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10101 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_85_in_parse_org_sintef_thingml_LoopAction10157 = new BitSet(new long[]{0x0000000000100000L});
+    public static final BitSet FOLLOW_20_in_parse_org_sintef_thingml_LoopAction10171 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LoopAction10189 = new BitSet(new long[]{0x0000000000200000L});
+    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_LoopAction10207 = new BitSet(new long[]{0x0821000000011400L,0x0000000000302080L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_LoopAction10225 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_71_in_parse_org_sintef_thingml_PrintAction10258 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PrintAction10276 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_53_in_parse_org_sintef_thingml_ErrorAction10309 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ErrorAction10327 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_77_in_parse_org_sintef_thingml_ReturnAction10360 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ReturnAction10378 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallStatement10415 = new BitSet(new long[]{0x0000000000100000L});
+    public static final BitSet FOLLOW_20_in_parse_org_sintef_thingml_FunctionCallStatement10436 = new BitSet(new long[]{0x0000000002301C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement10465 = new BitSet(new long[]{0x0000000001200000L});
+    public static final BitSet FOLLOW_24_in_parse_org_sintef_thingml_FunctionCallStatement10506 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement10540 = new BitSet(new long[]{0x0000000001200000L});
+    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_FunctionCallStatement10614 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_110643 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000020L});
+    public static final BitSet FOLLOW_69_in_parseop_Expression_level_110663 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_110680 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000020L});
+    public static final BitSet FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_210726 = new BitSet(new long[]{0x0000040000000002L});
+    public static final BitSet FOLLOW_42_in_parseop_Expression_level_210742 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_210756 = new BitSet(new long[]{0x0000040000000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310797 = new BitSet(new long[]{0x0000000A80000002L});
+    public static final BitSet FOLLOW_31_in_parseop_Expression_level_310810 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310821 = new BitSet(new long[]{0x0000000A80000002L});
+    public static final BitSet FOLLOW_35_in_parseop_Expression_level_310839 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310850 = new BitSet(new long[]{0x0000000A80000002L});
+    public static final BitSet FOLLOW_33_in_parseop_Expression_level_310868 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_310879 = new BitSet(new long[]{0x0000000A80000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_410917 = new BitSet(new long[]{0x0000000002800002L});
+    public static final BitSet FOLLOW_23_in_parseop_Expression_level_410930 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_410941 = new BitSet(new long[]{0x0000000002800002L});
+    public static final BitSet FOLLOW_25_in_parseop_Expression_level_410959 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_410970 = new BitSet(new long[]{0x0000000002800002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_511008 = new BitSet(new long[]{0x0000000010400002L});
+    public static final BitSet FOLLOW_22_in_parseop_Expression_level_511021 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_511032 = new BitSet(new long[]{0x0000000010400002L});
+    public static final BitSet FOLLOW_28_in_parseop_Expression_level_511050 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_511061 = new BitSet(new long[]{0x0000000010400002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_7_in_parseop_Expression_level_611099 = new BitSet(new long[]{0x0000004000000002L});
+    public static final BitSet FOLLOW_38_in_parseop_Expression_level_611107 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_611118 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_25_in_parseop_Expression_level_711153 = new BitSet(new long[]{0x0000000000101C60L});
+    public static final BitSet FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_711164 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_67_in_parseop_Expression_level_711173 = new BitSet(new long[]{0x0000000000101C60L});
+    public static final BitSet FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_711184 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_711194 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_9_in_parseop_Expression_level_811216 = new BitSet(new long[]{0x0000002000000002L});
+    public static final BitSet FOLLOW_37_in_parseop_Expression_level_811223 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parseop_Expression_level_811236 = new BitSet(new long[]{0x0000008000000000L});
+    public static final BitSet FOLLOW_39_in_parseop_Expression_level_811248 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_EventReference_in_parseop_Expression_level_911285 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ExpressionGroup_in_parseop_Expression_level_911293 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PropertyReference_in_parseop_Expression_level_911301 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_IntegerLiteral_in_parseop_Expression_level_911309 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_StringLiteral_in_parseop_Expression_level_911317 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_BooleanLiteral_in_parseop_Expression_level_911325 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_EnumLiteralRef_in_parseop_Expression_level_911333 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_FunctionCallExpression_in_parseop_Expression_level_911341 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ExternExpression_in_parseop_Expression_level_911349 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EventReference11373 = new BitSet(new long[]{0x0000000008000000L});
+    public static final BitSet FOLLOW_27_in_parse_org_sintef_thingml_EventReference11386 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EventReference11399 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_20_in_parse_org_sintef_thingml_ExpressionGroup11427 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExpressionGroup11440 = new BitSet(new long[]{0x0000000000200000L});
+    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_ExpressionGroup11452 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_PropertyReference11480 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_IntegerLiteral11510 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_parse_org_sintef_thingml_StringLiteral11540 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_BOOLEAN_LITERAL_in_parse_org_sintef_thingml_BooleanLiteral11570 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef11600 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_29_in_parse_org_sintef_thingml_EnumLiteralRef11613 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef11626 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallExpression11656 = new BitSet(new long[]{0x0000000000100000L});
+    public static final BitSet FOLLOW_20_in_parse_org_sintef_thingml_FunctionCallExpression11669 = new BitSet(new long[]{0x0000000002301C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression11686 = new BitSet(new long[]{0x0000000001200000L});
+    public static final BitSet FOLLOW_24_in_parse_org_sintef_thingml_FunctionCallExpression11702 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression11715 = new BitSet(new long[]{0x0000000001200000L});
+    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_FunctionCallExpression11743 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_EXT_in_parse_org_sintef_thingml_ExternExpression11771 = new BitSet(new long[]{0x0000000000080002L});
+    public static final BitSet FOLLOW_19_in_parse_org_sintef_thingml_ExternExpression11788 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExternExpression11801 = new BitSet(new long[]{0x0000000000080002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Thing_in_parse_org_sintef_thingml_Type11832 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PrimitiveType_in_parse_org_sintef_thingml_Type11840 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Enumeration_in_parse_org_sintef_thingml_Type11848 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_1_in_parse_org_sintef_thingml_Expression11867 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_SendAction_in_parse_org_sintef_thingml_Action11886 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_VariableAssignment_in_parse_org_sintef_thingml_Action11894 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ActionBlock_in_parse_org_sintef_thingml_Action11902 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_LocalVariable_in_parse_org_sintef_thingml_Action11910 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ExternStatement_in_parse_org_sintef_thingml_Action11918 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ConditionalAction_in_parse_org_sintef_thingml_Action11926 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_LoopAction_in_parse_org_sintef_thingml_Action11934 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PrintAction_in_parse_org_sintef_thingml_Action11942 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ErrorAction_in_parse_org_sintef_thingml_Action11950 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ReturnAction_in_parse_org_sintef_thingml_Action11958 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_FunctionCallStatement_in_parse_org_sintef_thingml_Action11966 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_RequiredPort_in_parse_org_sintef_thingml_Port11985 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ProvidedPort_in_parse_org_sintef_thingml_Port11993 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_Event12012 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_parse_org_sintef_thingml_StateMachine_in_synpred58_Thingml5210 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_69_in_synpred110_Thingml10623 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_2_in_synpred110_Thingml10640 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_69_in_synpred111_Thingml10623 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_2_in_synpred111_Thingml10640 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000020L});
-    public static final BitSet FOLLOW_42_in_synpred112_Thingml10702 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_3_in_synpred112_Thingml10716 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_42_in_synpred113_Thingml10702 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_3_in_synpred113_Thingml10716 = new BitSet(new long[]{0x0000040000000002L});
-    public static final BitSet FOLLOW_31_in_synpred114_Thingml10770 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred114_Thingml10781 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_35_in_synpred115_Thingml10799 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred115_Thingml10810 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_33_in_synpred116_Thingml10828 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred116_Thingml10839 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_31_in_synpred117_Thingml10770 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred117_Thingml10781 = new BitSet(new long[]{0x0000000A80000002L});
-    public static final BitSet FOLLOW_35_in_synpred117_Thingml10799 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred117_Thingml10810 = new BitSet(new long[]{0x0000000A80000002L});
-    public static final BitSet FOLLOW_33_in_synpred117_Thingml10828 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred117_Thingml10839 = new BitSet(new long[]{0x0000000A80000002L});
-    public static final BitSet FOLLOW_23_in_synpred118_Thingml10890 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred118_Thingml10901 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_25_in_synpred119_Thingml10919 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred119_Thingml10930 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_23_in_synpred120_Thingml10890 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred120_Thingml10901 = new BitSet(new long[]{0x0000000002800002L});
-    public static final BitSet FOLLOW_25_in_synpred120_Thingml10919 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred120_Thingml10930 = new BitSet(new long[]{0x0000000002800002L});
-    public static final BitSet FOLLOW_22_in_synpred121_Thingml10981 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred121_Thingml10992 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_28_in_synpred122_Thingml11010 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred122_Thingml11021 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_22_in_synpred123_Thingml10981 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred123_Thingml10992 = new BitSet(new long[]{0x0000000010400002L});
-    public static final BitSet FOLLOW_28_in_synpred123_Thingml11010 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred123_Thingml11021 = new BitSet(new long[]{0x0000000010400002L});
-    public static final BitSet FOLLOW_38_in_synpred124_Thingml11067 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred124_Thingml11078 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_37_in_synpred127_Thingml11183 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_synpred127_Thingml11196 = new BitSet(new long[]{0x0000008000000000L});
-    public static final BitSet FOLLOW_39_in_synpred127_Thingml11208 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_19_in_synpred138_Thingml11748 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_synpred138_Thingml11761 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_49_in_synpred108_Thingml10075 = new BitSet(new long[]{0x0821000000011400L,0x0000000000302080L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_synpred108_Thingml10101 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_69_in_synpred111_Thingml10663 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_2_in_synpred111_Thingml10680 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_69_in_synpred112_Thingml10663 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_2_in_synpred112_Thingml10680 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000020L});
+    public static final BitSet FOLLOW_42_in_synpred113_Thingml10742 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_3_in_synpred113_Thingml10756 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_42_in_synpred114_Thingml10742 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_3_in_synpred114_Thingml10756 = new BitSet(new long[]{0x0000040000000002L});
+    public static final BitSet FOLLOW_31_in_synpred115_Thingml10810 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred115_Thingml10821 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_35_in_synpred116_Thingml10839 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred116_Thingml10850 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_33_in_synpred117_Thingml10868 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred117_Thingml10879 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_31_in_synpred118_Thingml10810 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred118_Thingml10821 = new BitSet(new long[]{0x0000000A80000002L});
+    public static final BitSet FOLLOW_35_in_synpred118_Thingml10839 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred118_Thingml10850 = new BitSet(new long[]{0x0000000A80000002L});
+    public static final BitSet FOLLOW_33_in_synpred118_Thingml10868 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred118_Thingml10879 = new BitSet(new long[]{0x0000000A80000002L});
+    public static final BitSet FOLLOW_23_in_synpred119_Thingml10930 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred119_Thingml10941 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_25_in_synpred120_Thingml10959 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred120_Thingml10970 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_23_in_synpred121_Thingml10930 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred121_Thingml10941 = new BitSet(new long[]{0x0000000002800002L});
+    public static final BitSet FOLLOW_25_in_synpred121_Thingml10959 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred121_Thingml10970 = new BitSet(new long[]{0x0000000002800002L});
+    public static final BitSet FOLLOW_22_in_synpred122_Thingml11021 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred122_Thingml11032 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_28_in_synpred123_Thingml11050 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred123_Thingml11061 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_22_in_synpred124_Thingml11021 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred124_Thingml11032 = new BitSet(new long[]{0x0000000010400002L});
+    public static final BitSet FOLLOW_28_in_synpred124_Thingml11050 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred124_Thingml11061 = new BitSet(new long[]{0x0000000010400002L});
+    public static final BitSet FOLLOW_38_in_synpred125_Thingml11107 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred125_Thingml11118 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_37_in_synpred128_Thingml11223 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_synpred128_Thingml11236 = new BitSet(new long[]{0x0000008000000000L});
+    public static final BitSet FOLLOW_39_in_synpred128_Thingml11248 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_19_in_synpred139_Thingml11788 = new BitSet(new long[]{0x0000000002101C60L,0x0000000000000008L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_synpred139_Thingml11801 = new BitSet(new long[]{0x0000000000000002L});
 
 }

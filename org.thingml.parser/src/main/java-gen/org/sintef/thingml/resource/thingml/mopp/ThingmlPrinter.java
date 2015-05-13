@@ -5833,6 +5833,9 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		printCountingMap.put("elseAction", temp == null ? 0 : 1);
 		// print collected hidden tokens
 		int count;
+		java.io.StringWriter sWriter = null;
+		java.io.PrintWriter out1 = null;
+		java.util.Map<String, Integer> printCountingMap1 = null;
 		// DEFINITION PART BEGINS (CsString)
 		out.print("if");
 		// DEFINITION PART BEGINS (WhiteSpaces)
@@ -5867,6 +5870,24 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 			}
 			printCountingMap.put("action", count - 1);
 		}
+		// DEFINITION PART BEGINS (CompoundDefinition)
+		sWriter = new java.io.StringWriter();
+		out1 = new java.io.PrintWriter(sWriter);
+		printCountingMap1 = new java.util.LinkedHashMap<String, Integer>(printCountingMap);
+		print_org_sintef_thingml_ConditionalAction_0(element, localtab, out1, printCountingMap1);
+		if (printCountingMap.equals(printCountingMap1)) {
+			out1.close();
+		} else {
+			out1.flush();
+			out1.close();
+			out.print(sWriter.toString());
+			printCountingMap.putAll(printCountingMap1);
+		}
+	}
+	
+	public void print_org_sintef_thingml_ConditionalAction_0(org.sintef.thingml.ConditionalAction element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
+		String localtab = outertab;
+		int count;
 		// DEFINITION PART BEGINS (LineBreak)
 		localtab += "	";
 		out.println();

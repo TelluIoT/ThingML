@@ -11,6 +11,7 @@ OPTIONS {
 	usePredefinedTokens = "false";
 	srcFolder = "src/main/java";
 	
+	
 	// PROCESS TO RE-GENERATE THE THINGML COMPILER FROM THIS FILE
 	//
 	// The code should be generated *2 times*, once for eclipse and once for standalone
@@ -26,6 +27,7 @@ OPTIONS {
 	// 2. FOR ECLIPSE Comment the lines bellow
 	srcGenFolder = "src/main/java-gen";
 	
+	// IMPORTANT: In the generated eclipse plugins it is required to change the Vendor to SINTEF and the Version from "1.0.0" to "0.x.0.qualifier"
 }
 
 TOKENS{
@@ -233,7 +235,7 @@ RULES {
 	
 	ExternStatement::= statement[STRING_EXT] ("&" segments)*;
 	
-	ConditionalAction ::= "if" #1 "(" #1 condition #1 ")" !1 action !1 "else" !1 elseAction;
+	ConditionalAction ::= "if" #1 "(" #1 condition #1 ")" !1 action (!1 "else" !1 elseAction)?;
 	
 	LoopAction ::= "while" #1 "(" #1 condition #1 ")" !1 action;
 	
