@@ -84,7 +84,13 @@ public class GenericImperativeActionCompiler extends ActionCompiler {
         generate(action.getCondition(), builder, ctx);
         builder.append(") {\n");
         generate(action.getAction(), builder, ctx);
-        builder.append("\n}\n");
+        builder.append("\n}");
+        if (action.getElseAction() != null) {
+            builder.append(" else {\n");
+            generate(action.getElseAction(), builder, ctx);
+            builder.append("\n}");
+        }
+        builder.append("\n");
     }
 
     @Override
