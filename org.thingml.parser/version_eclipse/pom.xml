@@ -128,7 +128,7 @@
         <dependency>
             <groupId>org.emftext</groupId>
             <artifactId>org.emftext.commons.antlr</artifactId>
-            <version>3.3.0</version>
+            <version>3.4cd.0</version>
         </dependency>
 	
         <dependency>
