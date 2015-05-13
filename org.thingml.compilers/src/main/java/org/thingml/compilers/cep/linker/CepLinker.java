@@ -20,6 +20,8 @@ import org.sintef.thingml.impl.InternalTransitionImpl;
 import org.sintef.thingml.impl.TransitionImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.cep.architecture.*;
+import org.thingml.compilers.cep.architecture.SimpleStream;
+import org.thingml.compilers.cep.architecture.Stream;
 import org.thingml.compilers.cep.linker.utils.ConnectNewPorts;
 import org.thingml.compilers.cep.linker.utils.CreateMessage;
 import org.thingml.compilers.cep.linker.utils.GetAnnotedTransitions;

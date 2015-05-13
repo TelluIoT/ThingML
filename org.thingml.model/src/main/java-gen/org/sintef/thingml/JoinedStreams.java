@@ -13,50 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ */
 package org.sintef.thingml;
 
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Conditional Action</b></em>'.
+ * A representation of the model object '<em><b>Joined Streams</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.sintef.thingml.ConditionalAction#getElseAction <em>Else Action</em>}</li>
+ *   <li>{@link org.sintef.thingml.JoinedStreams#getJoinOperator <em>Join Operator</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.sintef.thingml.ThingmlPackage#getConditionalAction()
+ * @see org.sintef.thingml.ThingmlPackage#getJoinedStreams()
  * @model
  * @generated
  */
-public interface ConditionalAction extends ControlStructure {
-
+public interface JoinedStreams extends ComplexStream {
 	/**
-	 * Returns the value of the '<em><b>Else Action</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Join Operator</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Else Action</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Join Operator</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Else Action</em>' containment reference.
-	 * @see #setElseAction(Action)
-	 * @see org.sintef.thingml.ThingmlPackage#getConditionalAction_ElseAction()
-	 * @model containment="true"
+	 * @return the value of the '<em>Join Operator</em>' reference.
+	 * @see #setJoinOperator(Operator)
+	 * @see org.sintef.thingml.ThingmlPackage#getJoinedStreams_JoinOperator()
+	 * @model
 	 * @generated
 	 */
-	Action getElseAction();
+	Operator getJoinOperator();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.ConditionalAction#getElseAction <em>Else Action</em>}' containment reference.
+	 * Sets the value of the '{@link org.sintef.thingml.JoinedStreams#getJoinOperator <em>Join Operator</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Else Action</em>' containment reference.
-	 * @see #getElseAction()
+	 * @param value the new value of the '<em>Join Operator</em>' reference.
+	 * @see #getJoinOperator()
 	 * @generated
 	 */
-	void setElseAction(Action value);
-} // ConditionalAction
+	void setJoinOperator(Operator value);
+
+} // JoinedStreams

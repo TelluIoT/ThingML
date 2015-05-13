@@ -13,50 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ */
 package org.sintef.thingml;
 
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Conditional Action</b></em>'.
+ * A representation of the model object '<em><b>Operator Parameter</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.sintef.thingml.ConditionalAction#getElseAction <em>Else Action</em>}</li>
+ *   <li>{@link org.sintef.thingml.OperatorParameter#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.sintef.thingml.ThingmlPackage#getConditionalAction()
+ * @see org.sintef.thingml.ThingmlPackage#getOperatorParameter()
  * @model
  * @generated
  */
-public interface ConditionalAction extends ControlStructure {
-
+public interface OperatorParameter extends ThingMLElement {
 	/**
-	 * Returns the value of the '<em><b>Else Action</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Type</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Else Action</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Type</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Else Action</em>' containment reference.
-	 * @see #setElseAction(Action)
-	 * @see org.sintef.thingml.ThingmlPackage#getConditionalAction_ElseAction()
-	 * @model containment="true"
+	 * @return the value of the '<em>Type</em>' reference.
+	 * @see #setType(Message)
+	 * @see org.sintef.thingml.ThingmlPackage#getOperatorParameter_Type()
+	 * @model required="true"
 	 * @generated
 	 */
-	Action getElseAction();
+	Message getType();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.ConditionalAction#getElseAction <em>Else Action</em>}' containment reference.
+	 * Sets the value of the '{@link org.sintef.thingml.OperatorParameter#getType <em>Type</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Else Action</em>' containment reference.
-	 * @see #getElseAction()
+	 * @param value the new value of the '<em>Type</em>' reference.
+	 * @see #getType()
 	 * @generated
 	 */
-	void setElseAction(Action value);
-} // ConditionalAction
+	void setType(Message value);
+
+} // OperatorParameter

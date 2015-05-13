@@ -393,6 +393,34 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createLocalVariableAdapter();
 			}
 			@Override
+			public Adapter caseStream(Stream object) {
+				return createStreamAdapter();
+			}
+			@Override
+			public Adapter caseSimpleStream(SimpleStream object) {
+				return createSimpleStreamAdapter();
+			}
+			@Override
+			public Adapter caseComplexStream(ComplexStream object) {
+				return createComplexStreamAdapter();
+			}
+			@Override
+			public Adapter caseMergedStreams(MergedStreams object) {
+				return createMergedStreamsAdapter();
+			}
+			@Override
+			public Adapter caseJoinedStreams(JoinedStreams object) {
+				return createJoinedStreamsAdapter();
+			}
+			@Override
+			public Adapter caseOperator(Operator object) {
+				return createOperatorAdapter();
+			}
+			@Override
+			public Adapter caseOperatorParameter(OperatorParameter object) {
+				return createOperatorParameterAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -1501,6 +1529,104 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createLocalVariableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Stream <em>Stream</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Stream
+	 * @generated
+	 */
+	public Adapter createStreamAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SimpleStream <em>Simple Stream</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.SimpleStream
+	 * @generated
+	 */
+	public Adapter createSimpleStreamAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ComplexStream <em>Complex Stream</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ComplexStream
+	 * @generated
+	 */
+	public Adapter createComplexStreamAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.MergedStreams <em>Merged Streams</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.MergedStreams
+	 * @generated
+	 */
+	public Adapter createMergedStreamsAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.JoinedStreams <em>Joined Streams</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.JoinedStreams
+	 * @generated
+	 */
+	public Adapter createJoinedStreamsAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Operator <em>Operator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Operator
+	 * @generated
+	 */
+	public Adapter createOperatorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.OperatorParameter <em>Operator Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.OperatorParameter
+	 * @generated
+	 */
+	public Adapter createOperatorParameterAdapter() {
 		return null;
 	}
 

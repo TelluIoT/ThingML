@@ -20,12 +20,12 @@ OPTIONS {
 	// Generate the standalone version first and then the eclipse version.
 	
 	// 1. FOR STANDALONE
-	//srcGenFolder = "src/main/java-gen-standalone";
-	//generateUIPlugin = "false";
-	//removeEclipseDependentCode = "true";
+	srcGenFolder = "src/main/java-gen-standalone";
+	generateUIPlugin = "false";
+	removeEclipseDependentCode = "true";
 	
 	// 2. FOR ECLIPSE Comment the lines bellow
-	srcGenFolder = "src/main/java-gen";
+	//srcGenFolder = "src/main/java-gen";
 	
 	// IMPORTANT: In the generated eclipse plugins it is required to change the Vendor to SINTEF and the Version from "1.0.0" to "0.x.0.qualifier"
 }
@@ -143,6 +143,13 @@ TOKENSTYLES{
 	"import" COLOR #444444, BOLD;
 	"set" COLOR #444444, BOLD;
 	
+	//CEP
+	"operator" COLOR #444444, BOLD;
+	"stream" COLOR #A22000, BOLD;
+	"from" COLOR #444444, BOLD;
+	"pattern" COLOR #444444, BOLD;
+	"->" COLOR #444444, BOLD;
+	
 	"(" COLOR #444444, BOLD;
 	")" COLOR #444444, BOLD;
 	"{" COLOR #444444, BOLD;
@@ -166,7 +173,8 @@ RULES {
 	
 	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( "[" cardinality "]")? )? #1 body ;
 	
-	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour )* !0 "}" ;
+	// MODICATION
+	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour | operators )* !0 "}" ;
 	
 	RequiredPort ::= !1 (optional[T_OPTIONAL])? "required" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 
@@ -196,14 +204,32 @@ RULES {
 	
 	ParallelRegion ::= "region" #1 name[] #1 "init" #1 initial[] ("keeps" #1 history[T_HISTORY])? (annotations)* #1 "{"(!1 substate)* !0 "}"  ;
 	
-	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? (!1 "before" #1 before)? (!1 "after" #1 after)? ;
+	// MODIFICATION
+	//Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? (!1 "before" #1 before)? (!1 "after" #1 after)? ;
+	//InternalTransition ::= !1 "internal" (#1 name[])? (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
+	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? (!1 "before" #1 before)? (!1 "after" #1 after)? ;
 
-	InternalTransition ::= !1 "internal" (#1 name[])? (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
+	InternalTransition ::= !1 "internal" (#1 name[])? (annotations)* ( !1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
 
-	ReceiveMessage ::= (name[] #1 ":" #1)? port[] "?" message[] ;
+	// MODIFICATION
+	//ReceiveMessage ::= (name[] #1 ":" #1)? port[] "?" message[] ;
+	ReceiveMessage ::= "event" #1 (name[] #1 ":" #1)? port[] "?" message[] ;
 	
 	PropertyAssign ::= "set" #1 property[] ("[" index "]")* #1 "=" #1 init ; 
 	
+	
+	// *******************************
+	// * Complex Event Processing
+	// *******************************
+	
+	SimpleStream ::= "stream" #1 (name[] #1 ":" #1)? "from" #1 source;
+	
+	MergedStreams ::= "stream" #1 (name[] #1 ":" #1)? "from" ( streams ("," #1 streams)*);
+	
+	JoinedStreams ::= "stream" #1 (name[] #1 ":" #1)? "from" #1 "pattern" #1 "[" ( streams ("," #1 streams)*) "->" joinOperator[] "]" ;
+	
+	OperatorParameter ::= name[] ":" type[];
+	Operator ::= "operator" #1 name[] "(" (params ("," #1 params)*)? ")" "{}";
 
 	// *******************************
 	// * Configurations and Instances

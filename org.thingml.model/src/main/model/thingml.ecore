@@ -35,6 +35,8 @@
         eType="#//Message" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="functions" upperBound="-1"
         eType="#//Function" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
+        eType="#//Operator" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//Variable"/>
   <eClassifiers xsi:type="ecore:EClass" name="Variable" abstract="true" eSuperTypes="#//TypedElement #//AnnotatedElement"/>
@@ -328,5 +330,25 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="changeable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Stream" abstract="true" eSuperTypes="#//Event"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SimpleStream" eSuperTypes="#//Stream">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" lowerBound="1"
+        eType="#//ReceiveMessage" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComplexStream" abstract="true" eSuperTypes="#//Stream">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="streams" lowerBound="1"
+        upperBound="-1" eType="#//Stream" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MergedStreams" eSuperTypes="#//ComplexStream"/>
+  <eClassifiers xsi:type="ecore:EClass" name="JoinedStreams" eSuperTypes="#//ComplexStream">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="joinOperator" eType="#//Operator"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Operator" eSuperTypes="#//ThingMLElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="params" upperBound="-1"
+        eType="#//OperatorParameter" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OperatorParameter" eSuperTypes="#//ThingMLElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//Message"/>
   </eClassifiers>
 </ecore:EPackage>

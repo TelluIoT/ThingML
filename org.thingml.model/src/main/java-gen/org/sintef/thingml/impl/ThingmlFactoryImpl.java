@@ -131,6 +131,11 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.FUNCTION_CALL_STATEMENT: return createFunctionCallStatement();
 			case ThingmlPackage.FUNCTION_CALL_EXPRESSION: return createFunctionCallExpression();
 			case ThingmlPackage.LOCAL_VARIABLE: return createLocalVariable();
+			case ThingmlPackage.SIMPLE_STREAM: return createSimpleStream();
+			case ThingmlPackage.MERGED_STREAMS: return createMergedStreams();
+			case ThingmlPackage.JOINED_STREAMS: return createJoinedStreams();
+			case ThingmlPackage.OPERATOR: return createOperator();
+			case ThingmlPackage.OPERATOR_PARAMETER: return createOperatorParameter();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -754,6 +759,56 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public LocalVariable createLocalVariable() {
 		LocalVariableImpl localVariable = new LocalVariableImpl();
 		return localVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SimpleStream createSimpleStream() {
+		SimpleStreamImpl simpleStream = new SimpleStreamImpl();
+		return simpleStream;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MergedStreams createMergedStreams() {
+		MergedStreamsImpl mergedStreams = new MergedStreamsImpl();
+		return mergedStreams;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JoinedStreams createJoinedStreams() {
+		JoinedStreamsImpl joinedStreams = new JoinedStreamsImpl();
+		return joinedStreams;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Operator createOperator() {
+		OperatorImpl operator = new OperatorImpl();
+		return operator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public OperatorParameter createOperatorParameter() {
+		OperatorParameterImpl operatorParameter = new OperatorParameterImpl();
+		return operatorParameter;
 	}
 
 	/**

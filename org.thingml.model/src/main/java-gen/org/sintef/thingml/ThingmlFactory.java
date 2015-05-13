@@ -593,6 +593,51 @@ public interface ThingmlFactory extends EFactory {
 	LocalVariable createLocalVariable();
 
 	/**
+	 * Returns a new object of class '<em>Simple Stream</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Simple Stream</em>'.
+	 * @generated
+	 */
+	SimpleStream createSimpleStream();
+
+	/**
+	 * Returns a new object of class '<em>Merged Streams</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Merged Streams</em>'.
+	 * @generated
+	 */
+	MergedStreams createMergedStreams();
+
+	/**
+	 * Returns a new object of class '<em>Joined Streams</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Joined Streams</em>'.
+	 * @generated
+	 */
+	JoinedStreams createJoinedStreams();
+
+	/**
+	 * Returns a new object of class '<em>Operator</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Operator</em>'.
+	 * @generated
+	 */
+	Operator createOperator();
+
+	/**
+	 * Returns a new object of class '<em>Operator Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Operator Parameter</em>'.
+	 * @generated
+	 */
+	OperatorParameter createOperatorParameter();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

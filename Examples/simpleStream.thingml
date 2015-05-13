@@ -29,6 +29,11 @@ thing Send includes SimpleMsgs {
 
 thing Receive includes SimpleMsgs 
 {
+    operator toto () do
+    
+    end
+    
+    
 	required port cepService {
 		receives cep
 	}
