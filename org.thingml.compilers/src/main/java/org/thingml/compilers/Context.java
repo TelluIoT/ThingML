@@ -247,4 +247,12 @@ public class Context {
     public void setThisRef(String thisRef) {
         this.thisRef = thisRef;
     }
+
+    public String errorMessage(String msg) {
+        return "// ERROR: " + msg;
+    }
+
+    public String printMessage(String msg) {
+        return "// PRINT: " + msg;
+    }
 }
