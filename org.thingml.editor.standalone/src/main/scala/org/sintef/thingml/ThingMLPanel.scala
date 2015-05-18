@@ -86,10 +86,13 @@ class ThingMLPanel extends JPanel {
   val linuxMenu = new JMenu("Linux");
   val javaMenu = new JMenu("Java");
   val jsMenu = new JMenu("JavaScript");
+  val umlMenu = new JMenu("UML");
   compilersMenu.add(arduinoMenu);
   compilersMenu.add(linuxMenu);
   compilersMenu.add(javaMenu);
   compilersMenu.add(jsMenu);
+  compilersMenu.add(umlMenu);
+
 
   val b = new JMenuItem("Arduino")
   val bC = new JMenuItem("Posix C")
@@ -107,6 +110,7 @@ class ThingMLPanel extends JPanel {
   val j = new JMenuItem("state.js")
   val jWS = new JMenuItem("WebSocket")
   val jKevoreeJS = new JMenuItem("Kevoree")
+  val plantUML = new JMenuItem("PlantUML")
 
   val filechooser = new JFileChooser();
   filechooser.setDialogTitle("Select target directory");
@@ -391,6 +395,28 @@ class ThingMLPanel extends JPanel {
     }
   })
 
+  plantUML.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      println("Input file : " + targetFile)
+      if (targetFile.isEmpty) return;
+
+      try {
+        val thingmlModel = loadThingMLmodel(targetFile.get)
+        val compiler = new PlantUMLCompiler();
+        thingmlModel.allConfigurations().foreach { c =>
+          val file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName + "/docs")
+          file.mkdirs()
+          compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/"))
+          val ctx = new Context(compiler)
+          compiler.do_call_compiler(c)
+        }
+      }
+      catch {
+        case t: Throwable => t.printStackTrace()
+      }
+    }
+  })
+
   jWS.addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent) {
       println("Input file : " + targetFile)
@@ -422,6 +448,7 @@ class ThingMLPanel extends JPanel {
   jsMenu.add(j);
   jsMenu.add(jKevoreeJS);
   jsMenu.add(jWS);
+  umlMenu.add(plantUML);
   compilersMenu.add(bThingML)
   compilersMenu.add(bThingML2)
   menubar.add(compilersMenu)
