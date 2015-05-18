@@ -17,29 +17,17 @@ package org.thingml.compilers.cep.linker;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.impl.InternalTransitionImpl;
-import org.sintef.thingml.impl.TransitionImpl;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.cep.architecture.*;
-import org.thingml.compilers.cep.architecture.SimpleStream;
-import org.thingml.compilers.cep.architecture.Stream;
 import org.thingml.compilers.cep.linker.utils.ConnectNewPorts;
 import org.thingml.compilers.cep.linker.utils.CreateMessage;
-import org.thingml.compilers.cep.linker.utils.GetAnnotedTransitions;
-import org.thingml.compilers.cep.parser.CEPParser;
-import org.thingml.compilers.cep.parser.JoinResult;
-import org.thingml.compilers.cep.parser.ParseResult;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * @author ludovic
  */
 public class CepLinker {
-    public void modifyThing(Context ctx, Configuration conf, Thing thing, RootStream streams) {
+    /*public void modifyThing(Context ctx, Configuration conf, Thing thing, RootStream streams) {
         List<Handler> transitions = GetAnnotedTransitions.getAllAnnotedTransitions(thing);
 
         if(!transitions.isEmpty()) {
@@ -189,7 +177,7 @@ public class CepLinker {
      * @param portReceive
      * @param parseResult
      */
-    private void parseIdEvents(Context ctx, Thing thing, RootStream streams, Handler handler, String eventPropertyName,
+    /*private void parseIdEvents(Context ctx, Thing thing, RootStream streams, Handler handler, String eventPropertyName,
                                String streamMessageName, RequiredPort portSend, ProvidedPort portReceive, ParseResult parseResult) {
         int indexEvent = 0;
         for(int iDEvent : parseResult.getIdEventToStream()) {
@@ -233,21 +221,22 @@ public class CepLinker {
         stream.setMessage(receiveMessage);
 
         handler.findContainingState().getInternal().add(newTransition);
-    }
+    }*/
 
-    protected InternalTransitionImpl createInternalTransition(Context ctx, Handler handler, Property eventProperty, List<Integer> values, int index) {
+    /*protected InternalTransitionImpl createInternalTransition(Context ctx, Handler handler, Property eventProperty, List<Integer> values, int index) {
         throw(new UnsupportedOperationException("The operation CepLinker.createInternalTransition is platform-specific and should be refined!"));
-    }
+    }*/
 
     protected Property createEventProperty(Thing thing, String eventPropertyName) {
         throw(new UnsupportedOperationException("The operation CepLinker.createEventProperty is platform-specific and should be refined!"));
     }
 
+    /*
     /**
-     * Check if the params the messages have the same type
+     * Check if the params of the messages have the same type
      * @param transition
      */
-    private void checkParamsEvent(InternalTransition transition) {
+    /*private void checkParamsEvent(InternalTransition transition) {
         Iterator<Event> itEvt = transition.getEvent().iterator();
         List<Parameter> firstParams = ((ReceiveMessage)itEvt.next()).getMessage().getParameters();
 
@@ -266,5 +255,68 @@ public class CepLinker {
             }
 
         }
+    }*/
+
+    public void modifyThing(Context ctx, Configuration conf, Thing thing) {
+        List<Handler> handlers = thing.allTransitionsWithStream();
+
+        if(!handlers.isEmpty()) {
+            ctx.addProperty("hasStream","true");
+        }
+
+        int indexTransition=0;
+        for(Handler h : handlers) {
+            String eventPropertyName = thing.getName() + "_event_transition_" + indexTransition; //fixme in resolver?
+            String streamMessageName = thing.getName() + "_stream_message_" + indexTransition;  //fixme in resolver?
+
+            //fixme optim : two ports by things (?)
+            //create and connect two ports
+            // the ports are used to send messages between CEP and statemachine
+            String requiredPortName = thing.getName() + "_send_port_transition_" + indexTransition;
+            String providedPortName = thing.getName() + "_receive_port_transition_" + indexTransition;
+            ConnectNewPorts connector = new ConnectNewPorts(requiredPortName,providedPortName, thing);
+            connector.connect(conf);
+            RequiredPort portSend = connector.getRequiredPort();
+            ProvidedPort portReceive = connector.getProvidedPort();
+
+            int index = 0;
+            for(Stream s : h.allStreams()) {
+                String evtProName = eventPropertyName + "_" + index;
+                String sMsgName = streamMessageName + "_" + index;
+                if(s instanceof SimpleStream) { //fixme
+                    SimpleStream sStream = (SimpleStream) s;
+                    sStream.setPortSend(portSend);
+
+                    Property eventProperty = createEventProperty(thing, evtProName);
+                    sStream.setEventProperty(eventProperty);
+
+                    //createInternalTransition
+                    ExternStatement action = ThingmlFactory.eINSTANCE.createExternStatement();
+                    action.setStatement("_this." + ctx.getVariableName(eventProperty) + ".emit('" + eventProperty.getName() + "',message)");
+
+                    InternalTransitionImpl newTransition = (InternalTransitionImpl) ThingmlFactory.eINSTANCE.createInternalTransition();
+                    newTransition.setAction(action);
+                    newTransition.getEvent().add(sStream.getSource());
+                    newTransition.setGuard(h.getGuard());
+
+                    Message streamMessage = CreateMessage.createMessage(thing, ((ReceiveMessage) newTransition.getEvent().get(0)).getMessage().getParameters(),
+                            sMsgName, portReceive,portSend);
+                    sStream.setStreamMessage(streamMessage);
+
+                    ReceiveMessage receiveMessage = CreateMessage.createReceiveMessage(h,portReceive,streamMessage);
+                    sStream.setSource(receiveMessage);
+
+                    h.findContainingState().getInternal().add(newTransition);
+
+                } else {
+                    throw new UnsupportedOperationException("Only SimpleStream compilation is currently implemented.");
+                }
+
+                index++;
+            }
+
+            indexTransition ++;
+        }
+
     }
 }

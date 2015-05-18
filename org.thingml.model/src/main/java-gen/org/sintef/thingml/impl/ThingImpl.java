@@ -741,4 +741,34 @@ public class ThingImpl extends TypeImpl implements Thing {
         return result;
     }
 
+	/** MODIFICATION **/
+	@Override
+	public List<Handler> allTransitionsWithStream() {
+		List<Handler> result = new ArrayList<Handler>();
+
+		for(StateMachine sm : getBehaviour()) {
+			for(State state : sm.allStates()) {
+				addHandlers(state.getInternal(),result);
+				addHandlers(state.getOutgoing(),result);
+			}
+		}
+
+		return result;
+	}
+
+	private void addHandlers(EList<? extends Handler> handlers, List<Handler> result) {
+		for(Handler h : handlers) {
+			/*for(Event e : h.getEvent()) {
+				if(e instanceof Stream) {
+					result.add(h);
+					break;
+				}
+			}*/
+			if(!h.allStreams().isEmpty()) {
+				result.add(h);
+			}
+		}
+	}
+	/** END **/
+
 } //ThingImpl

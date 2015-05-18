@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @author ludovic
  */
-public abstract class ComplexStream extends Stream{
+/*public abstract class ComplexStream extends Stream{
     protected List<Stream> streams;
 
     public List<Stream> getStreams() {
@@ -30,4 +30,4 @@ public abstract class ComplexStream extends Stream{
     public void setStreams(List<Stream> streams) {
         this.streams = streams;
     }
-}
+}*/

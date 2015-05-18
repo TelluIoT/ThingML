@@ -15,17 +15,14 @@
  */
 package org.thingml.compilers.api;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.SendAction;
 import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.cep.architecture.RootStream;
 
 /**
  * Created by bmori on 09.12.2014.
  */
 public class ApiCompiler {
-    public void generateComponent(Thing thing, Context ctx, RootStream streams) {
+    public void generateComponent(Thing thing, Context ctx) {
         throw(new UnsupportedOperationException("Component implementations are platform-specific. Cannot generate component for Thing " + thing.getName()));
     }
 

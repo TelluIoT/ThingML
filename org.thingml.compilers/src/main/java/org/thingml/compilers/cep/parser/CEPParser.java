@@ -15,17 +15,11 @@
  */
 package org.thingml.compilers.cep.parser;
 
-import org.sintef.thingml.Handler;
-import org.sintef.thingml.Thing;
-import org.thingml.compilers.cep.architecture.RootStream;
-
-import java.util.List;
-
 /**
  * @author ludovic
  */
 public interface CEPParser {
-    CEPParser instance = new CEPParserImpl();
+    /*CEPParser instance = new CEPParserImpl();
 
-    ParseResult parse(String annotationValue);
+    ParseResult parse(String annotationValue);*/
 }

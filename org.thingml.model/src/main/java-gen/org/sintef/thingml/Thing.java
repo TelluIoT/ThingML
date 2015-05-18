@@ -305,4 +305,11 @@ public interface Thing extends Type {
      */
     List<PropertyAssign> initExpressionsForArray(Property p);
 
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    List<Handler> allTransitionsWithStream();
+
 } // Thing

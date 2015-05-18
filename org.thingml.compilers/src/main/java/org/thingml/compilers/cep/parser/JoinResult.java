@@ -19,7 +19,7 @@ package org.thingml.compilers.cep.parser;
  * @author ludovic
  */
 public class JoinResult {
-    private String idEvt1;
+    /*private String idEvt1;
     private String idEvt2;
     private String timeMS;
     private String funcValueName;
@@ -45,5 +45,5 @@ public class JoinResult {
 
     public String getFuncValueName() {
         return funcValueName;
-    }
+    }*/
 }

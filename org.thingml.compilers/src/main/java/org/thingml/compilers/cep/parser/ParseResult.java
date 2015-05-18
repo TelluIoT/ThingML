@@ -21,7 +21,7 @@ import java.util.*;
  * @author ludovic
  */
 public class ParseResult {
-    private List<Integer> idEventToStream;
+    /*private List<Integer> idEventToStream;
 
     private int id;
     private Map<Integer,List<Integer>> idMergedEvent;
@@ -73,5 +73,5 @@ public class ParseResult {
 
     public void setJoinResult(JoinResult joinResult) {
         this.joinResult = joinResult;
-    }
+    }*/
 }

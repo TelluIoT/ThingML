@@ -29,10 +29,10 @@ import java.util.List;
  */
 //todo add abstract class
 public class JSCepLinker extends CepLinker {
-    private JSCepLinker(){}
+   private JSCepLinker(){}
     public static JSCepLinker instance = new JSCepLinker();
 
-    @Override
+    /*@Override
     protected InternalTransitionImpl createInternalTransition(Context ctx, Handler handler,
                                                             Property eventProperty, List<Integer> values, int index) {
 
@@ -55,10 +55,10 @@ public class JSCepLinker extends CepLinker {
         newTransition.setGuard(handler.getGuard());
 
         return newTransition;
-    }
+    }*/
 
     @Override
-    protected Property createEventProperty(Thing thing, String eventPropertyName) {
+    protected Property createEventProperty(Thing thing, String eventPropertyName) { //fixme default in MM (?)
         //simulate ThingML Code :
         // datatype EventEmitter
         //  @js_type "EventEmitter";

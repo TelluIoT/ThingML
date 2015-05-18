@@ -16,11 +16,8 @@
 package org.thingml.compilers.cep.compiler.javascript;
 
 import org.sintef.thingml.Parameter;
+import org.sintef.thingml.SimpleStream;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.cep.architecture.JoinStream;
-import org.thingml.compilers.cep.architecture.SimpleStream;
-import org.thingml.compilers.cep.architecture.Stream;
-import org.thingml.compilers.cep.architecture.TimeStream;
 import org.thingml.compilers.cep.compiler.CepLibrary;
 
 /**
@@ -36,21 +33,27 @@ public class JSCepLibrary extends CepLibrary {
         String result = "var " + stream.getName() +
                 " = Rx.Observable.fromEvent(this." + ctx.getVariableName(stream.getEventProperty()) +",'"+ stream.getEventProperty().getName() +"')";
 
-        if(stream.isWithSubscribe()) {
+        if(stream.getWithSubscribe()) {
             result += ".subscribe(\n\t" +
                     "function(x){\n\t\t" +
                             "var json = JSON.parse(x);\n\t\t" +
                             "console.log(\"Hack!! \"";
 
-            for (Parameter param : stream.getMessage().getMessage().getParameters()) {
+            /*for (Parameter param : stream.getMessage().getMessage().getParameters()) {
+                result += " + \"" + param.getName() + "= \" + json." + param.getName() + "+ \"; \"" ;
+            }*/
+
+            for (Parameter param : stream.getSource().getMessage().getParameters()) {
                 result += " + \"" + param.getName() + "= \" + json." + param.getName() + "+ \"; \"" ;
             }
-
             String functionCall = "send" + ctx.firstToUpper(stream.getStreamMessage().getName()) + "On" + ctx.firstToUpper(stream.getPortSend().getName());
             result  += ");\n\t\t" +
                     "process.nextTick("+functionCall+".bind(_this";
 
-            for (Parameter param : stream.getMessage().getMessage().getParameters()) {
+            /*for (Parameter param : stream.getMessage().getMessage().getParameters()) {
+                result += ", json." + param.getName();
+            }*/
+            for (Parameter param : stream.getSource().getMessage().getParameters()) {
                 result += ", json." + param.getName();
             }
 
@@ -65,7 +68,7 @@ public class JSCepLibrary extends CepLibrary {
         return result;
     }
 
-    @Override
+    /*@Override
     public String createStreamFromEvent(TimeStream stream, Context ctx) {
         return "Rx.Observable.interval("+ stream.getTimeMs() +");";
     }
@@ -97,5 +100,5 @@ public class JSCepLibrary extends CepLibrary {
 
 
         return result;
-    }
+    }*/
 }

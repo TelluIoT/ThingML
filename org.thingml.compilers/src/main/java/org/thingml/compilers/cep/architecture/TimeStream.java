@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author ludovic
  */
-public class TimeStream extends Stream {
+/*public class TimeStream extends Stream {
     private int timeMs;
 
     public TimeStream(int timeMs) {
@@ -30,4 +30,4 @@ public class TimeStream extends Stream {
     public int getTimeMs() {
         return timeMs;
     }
-}
+}*/

@@ -17,8 +17,6 @@ package org.thingml.compilers.api;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.cep.architecture.RootStream;
-import org.thingml.compilers.cep.architecture.Stream;
 import org.thingml.compilers.cep.compiler.javascript.JSCepLibrary;
 
 /**
@@ -107,7 +105,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
     }
 
     @Override
-    public void generateComponent(Thing thing, Context ctx, RootStream streams) {
+    public void generateComponent(Thing thing, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/" + ctx.firstToUpper(thing.getName()) + ".js");
         if(ctx.getProperty("hasEnum") != null && ctx.getProperty("hasEnum").equals("true")) {
             builder.append("var Enum = require('./enums');\n");
@@ -282,8 +280,10 @@ public class JavaScriptApiCompiler extends ApiCompiler {
 
 
         /** MODIFICATION **/
-        for(Stream stream : streams.getStreams()) {
-            builder.append(JSCepLibrary.instance.createStreamFromEvent(stream,ctx));
+        for(Handler h : thing.allTransitionsWithStream()) { //fixme put into the generateState method
+            for(Stream stream : h.allStreams()) {
+                builder.append(JSCepLibrary.instance.createStreamFromEvent(stream,ctx));
+            }
         }
         /** END **/
 

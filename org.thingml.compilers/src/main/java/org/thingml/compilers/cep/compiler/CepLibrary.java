@@ -15,11 +15,9 @@
  */
 package org.thingml.compilers.cep.compiler;
 
+import org.sintef.thingml.SimpleStream;
+import org.sintef.thingml.Stream;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.cep.architecture.JoinStream;
-import org.thingml.compilers.cep.architecture.SimpleStream;
-import org.thingml.compilers.cep.architecture.Stream;
-import org.thingml.compilers.cep.architecture.TimeStream;
 
 /**
  * @author ludovic
@@ -30,15 +28,15 @@ public abstract class CepLibrary {
     public String createStreamFromEvent(Stream stream, Context ctx) {
         if(stream instanceof SimpleStream) {
             return createStreamFromEvent((SimpleStream)stream,ctx);
-        } else if(stream instanceof TimeStream) {
+        } /*else if(stream instanceof TimeStream) {
             return createStreamFromEvent((TimeStream)stream,ctx);
         } else if(stream instanceof JoinStream) {
             return createStreamFromEvent((JoinStream)stream,ctx);
-        }
+        }*/
         throw(new UnsupportedOperationException("Case for " + stream.getClass() + " is missing in CepLibrary.createStreamFromEvent method"));
     }
 
     public abstract String createStreamFromEvent(SimpleStream stream, Context ctx);
-    public abstract String createStreamFromEvent(TimeStream stream, Context ctx);
-    public abstract String createStreamFromEvent(JoinStream stream, Context ctx);
+    /*public abstract String createStreamFromEvent(TimeStream stream, Context ctx);
+    public abstract String createStreamFromEvent(JoinStream stream, Context ctx);*/
 }

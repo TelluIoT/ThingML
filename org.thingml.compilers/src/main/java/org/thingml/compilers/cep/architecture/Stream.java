@@ -21,7 +21,7 @@ import org.sintef.thingml.*;
 /**
  * @author ludovic
  */
-public abstract class Stream{
+/*public abstract class Stream{
     private Property eventProperty;
     private Message streamMessage;
     private Port portSend;
@@ -67,4 +67,4 @@ public abstract class Stream{
     public void setWithSubscribe(boolean withSubscribe) {
         this.withSubscribe = withSubscribe;
     }
-}
+}*/

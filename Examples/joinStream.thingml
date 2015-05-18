@@ -29,8 +29,11 @@ thing TestJoinStream includes  TestsMsgs
        print "5/ tmp1 : " + tmp1 + " et tmp2 : " + tmp2
        tmp2 = tmp2 / 10
        print "6/tmp1 : " + tmp1 + " et tmp2 : " + tmp2
+       
        return vMsgs1 + vMsgs2
     end
+    
+    operator toto () {}
     
     statechart TestStreamWithMultipleEvents init Init {
         state Init {
@@ -43,6 +46,7 @@ thing TestJoinStream includes  TestsMsgs
             @stream "join(1,2,10,joinMethod)"
             event e1 : requiredService?msg1
             event e2 : requiredService?msg2
+            
 
         }
         

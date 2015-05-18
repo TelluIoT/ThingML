@@ -15,10 +15,8 @@
  */
 package org.sintef.thingml.impl;
 
-import java.util.AbstractMap;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -319,4 +317,14 @@ public abstract class HandlerImpl extends AnnotatedElementImpl implements Handle
         return result;
     }
 
+	@Override
+	public List<Stream> allStreams() {
+		List<Stream> result = new ArrayList<Stream>();
+		for(Event e : getEvent()) {
+			if(e instanceof Stream) {
+				result.add((Stream) e);
+			}
+		}
+		return result;
+	}
 } //HandlerImpl

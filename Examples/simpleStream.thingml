@@ -1,5 +1,5 @@
 /*
-Expected result : 
+Expected result (the 2 first lines of the output can be in reverse order): 
 > npm install
 > node main.js
 Hello Receive
@@ -29,11 +29,7 @@ thing Send includes SimpleMsgs {
 
 thing Receive includes SimpleMsgs 
 {
-    operator toto () do
-    
-    end
-    
-    
+  
 	required port cepService {
 		receives cep
 	}
@@ -44,9 +40,8 @@ thing Receive includes SimpleMsgs
 				print "Hello Receive"
 			end
 			
-            transition -> End
-            @stream ""
-			event e : cepService?cep
+            transition t1 -> End
+            stream stream1 from event cepService?cep
             action print "Transition working..."
         }
 		

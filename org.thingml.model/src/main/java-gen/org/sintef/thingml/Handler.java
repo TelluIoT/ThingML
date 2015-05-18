@@ -18,6 +18,7 @@ package org.sintef.thingml;
 import org.eclipse.emf.common.util.EList;
 
 import java.util.AbstractMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -116,4 +117,12 @@ public interface Handler extends AnnotatedElement {
      */
     Set<AbstractMap.SimpleImmutableEntry<Port, ReceiveMessage>> allTriggeringPorts();
 
+	/** MODIFICATION **/
+	/**
+	 *
+	 * @return
+	 * @generated NOT
+	 */
+	public List<Stream> allStreams();
+	/** END **/
 } // Handler

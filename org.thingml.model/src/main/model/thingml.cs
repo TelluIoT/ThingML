@@ -27,6 +27,7 @@ OPTIONS {
 	// 2. FOR ECLIPSE Comment the lines bellow
 	//srcGenFolder = "src/main/java-gen";
 	
+	
 	// IMPORTANT: In the generated eclipse plugins it is required to change the Vendor to SINTEF and the Version from "1.0.0" to "0.x.0.qualifier"
 }
 
@@ -222,7 +223,7 @@ RULES {
 	// * Complex Event Processing
 	// *******************************
 	
-	SimpleStream ::= "stream" #1 (name[] #1 ":" #1)? "from" #1 source;
+	SimpleStream ::= "stream" #1 name[] #1 "from" #1 source;
 	
 	MergedStreams ::= "stream" #1 (name[] #1 ":" #1)? "from" ( streams ("," #1 streams)*);
 	

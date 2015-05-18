@@ -20,7 +20,7 @@ import org.sintef.thingml.Function;
 /**
  * @author ludovic
  */
-public class JoinStream extends ComplexStream {
+/*public class JoinStream extends ComplexStream {
     TimeStream waitStream;
     Function joinFunction;
 
@@ -39,4 +39,4 @@ public class JoinStream extends ComplexStream {
     public void setJoinFunction(Function joinFunction) {
         this.joinFunction = joinFunction;
     }
-}
+}*/

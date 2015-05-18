@@ -12,8 +12,7 @@ message receive
 **/
 
 datatype Integer
-    @js_type "short"
-    @java_type "int";
+    @js_type "short";
 
 thing fragment Demo1Msgs {
     message m1();
@@ -39,11 +38,17 @@ thing Demo1 includes Demo1Msgs{
             
             //you declare the second and third event like streams
             //the values of stream annotation must be in ascending order 
-            transition -> S2
+            /*transition -> S2
             @stream "2 3"
             event receiveService?m1
             event receiveService?m2
-            event receiveService?m3
+            event receiveService?m3*/
+            transition -> S2
+            event receiveService?m1
+            stream stream1 from event receiveService?m2
+            stream stream2 from event receiveService?m3
+            
+            
         }
         
         state S2 {
@@ -54,15 +59,23 @@ thing Demo1 includes Demo1Msgs{
                 sendService!m3()
             end
             
-            internal
+            /*internal
             @stream "2 3"
             event receiveService?m1
             event receiveService?m2
             event receiveService?m3
             action do 
                 print "message receive "   
+            end*/
+           
+            internal
+            event receiveService?m1
+            stream stream3 from event receiveService?m2
+            stream stream4 from event receiveService?m3
+            action do 
+                print "message receive "   
             end
-        }   
+        }  
     }
     
 }

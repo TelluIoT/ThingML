@@ -22,7 +22,7 @@ import org.sintef.thingml.ReceiveMessage;
 /**
  * @author ludovic
  */
-public class SimpleStream extends Stream {
+/*public class SimpleStream extends Stream {
     private ReceiveMessage message;
 
     public ReceiveMessage getMessage() {
@@ -33,4 +33,4 @@ public class SimpleStream extends Stream {
         this.message = message;
     }
 
-}
+}*/

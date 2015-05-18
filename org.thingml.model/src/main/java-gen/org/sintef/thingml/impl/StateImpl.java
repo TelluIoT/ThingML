@@ -532,6 +532,11 @@ public class StateImpl extends AnnotatedElementImpl implements State {
             for(Handler t : handlers){
                 //println("  Processisng handler " + t + " Event = " + t.getEvent)
                 for(Event e : t.getEvent()){
+					/** MODIFICATION **/
+					if(e instanceof SimpleStream) {
+						e = ((SimpleStream) e).getSource();
+					}
+					/** END **/
                     if (e instanceof ReceiveMessage) {
                         ReceiveMessage rm = (ReceiveMessage)e;
                         Map<Message, List<Handler>> phdlrs = result.get(rm.getPort());

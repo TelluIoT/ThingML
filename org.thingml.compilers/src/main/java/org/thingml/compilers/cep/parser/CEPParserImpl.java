@@ -15,19 +15,11 @@
  */
 package org.thingml.compilers.cep.parser;
 
-import org.sintef.thingml.Handler;
-import org.sintef.thingml.Thing;
-import org.thingml.compilers.cep.architecture.RootStream;
-import org.thingml.compilers.cep.linker.utils.GetAnnotedTransitions;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author ludovic
  */
 public class CEPParserImpl implements CEPParser {
-    @Override
+   /* @Override
     public ParseResult parse(String annotationValue) {
         ParseResult result = new ParseResult();
         String[] values = annotationValue.split(" ");
@@ -74,5 +66,5 @@ public class CEPParserImpl implements CEPParser {
         }
 
         return toClean;
-    }
+    }*/
 }

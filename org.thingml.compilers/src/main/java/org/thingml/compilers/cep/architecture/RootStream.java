@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * @author ludovic
  */
-public class RootStream {
+/*public class RootStream {
     private List<Stream> streams;
 
     public RootStream() {
@@ -31,4 +31,4 @@ public class RootStream {
     public List<Stream> getStreams() {
         return streams;
     }
-}
+}*/
