@@ -26,20 +26,23 @@ import java.util.Map;
  */
 public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
 
-    private void doBuildAction(Action a, String prefix, StringBuilder builder, Context ctx) {
+    private void doBuildAction(Action a, StringBuilder builder, Context ctx) {
         if (a instanceof ActionBlock) {
             ActionBlock block = (ActionBlock) a;
-            builder.append("do\n");
+            StringBuilder temp = new StringBuilder();
+            builder.append("do\\n");
             if (block.getActions().size() < 6) {//TODO: decide when to collapse blocks or not
                 for(Action a1 : block.getActions()) {
-                    ctx.getCompiler().getActionCompiler().generate(a1, builder,ctx);
+                    ctx.getCompiler().getActionCompiler().generate(a1, temp,ctx);
                 }
             } else {
-                ctx.getCompiler().getActionCompiler().generate(block.getActions().get(0), builder,ctx);
-                builder.append("...//long block has been collapsed");
-                ctx.getCompiler().getActionCompiler().generate(block.getActions().get(block.getActions().size()-1), builder,ctx);
+                ctx.getCompiler().getActionCompiler().generate(block.getActions().get(0), temp,ctx);
+                temp.append("...//long block has been collapsed\\n");
+                ctx.getCompiler().getActionCompiler().generate(block.getActions().get(block.getActions().size()-1), temp,ctx);
             }
-            builder.append("end\n");
+            String s = temp.toString().replace("\n", "\\n");
+            builder.append(s);
+            builder.append("end");
         } else {
             ctx.getCompiler().getActionCompiler().generate(a, builder, ctx);
         }
@@ -49,7 +52,7 @@ public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
 
     private void buildActions(State s, StringBuilder builder, Context ctx) {
             if(s.getEntry() != null) {//TODO: pretty-print ThingML actions and expressions
-                builder.append("\t" + s.getName() + " : Entry / EntryActions() = ");
+                builder.append("\t" + s.getName() + " : entry / ");
                 Action a = s.getEntry();
                 doBuildAction(a, builder, ctx);
             }
@@ -60,21 +63,14 @@ public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
             }
     }
 
-    private void generateHandlers(CompositeState c, StringBuilder builder, Context ctx) {
-        for(Handler h : c.allEmptyHandlers()) {
-            generateHandler(h, null, null, builder, ctx);
-        }
-
-        //TODO: we should revise some derived properties, not so nice to use in Java...
-        final Map<Port, Map<Message, List<Handler>>> allHanders = c.allMessageHandlers();
-        for(Map.Entry<Port, Map<Message, List<Handler>>> entry : allHanders.entrySet()) {
-            final Port p = entry.getKey();
-            final Map<Message, List<Handler>> map = entry.getValue();
-            for(Map.Entry<Message, List<Handler>> entry2 : map.entrySet()) {
-                final List<Handler> handlers = entry2.getValue();
-                final Message m = entry2.getKey();
-                for(Handler h : handlers) {
-                    generateHandler(h, m, p, builder, ctx);
+    private void generateHandlers(State c, StringBuilder builder, Context ctx) {
+        for(Handler h : c.getOutgoing()) {
+            if(h.getEvent().size() == 0) {
+                generateHandler(h, null, null, builder, ctx);
+            } else {
+                for(Event e : h.getEvent()) {
+                    ReceiveMessage rm = (ReceiveMessage)e;
+                    generateHandler(h, rm.getMessage(), rm.getPort(), builder, ctx);
                 }
             }
         }
@@ -92,6 +88,10 @@ public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
 
         generateHandlers(sm, builder, ctx);
 
+        for(Region r : sm.getRegion()) {
+            generateRegion(r, builder, ctx);
+        }
+
         builder.append("}\n");
         builder.append("@enduml\n");
     }
@@ -105,6 +105,10 @@ public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
 
         generateHandlers(c, builder, ctx);
 
+        for(Region r : c.getRegion()) {
+            generateRegion(r, builder, ctx);
+        }
+
         buildActions(c, builder, ctx);
         builder.append("}\n");
     }
@@ -112,6 +116,7 @@ public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
         builder.append("state " + s.getName() + "{\n");
         buildActions(s, builder, ctx);
+        generateHandlers(s, builder, ctx);
         builder.append("}\n");
     }
 
