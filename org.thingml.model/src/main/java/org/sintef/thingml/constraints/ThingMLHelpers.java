@@ -765,6 +765,20 @@ public class ThingMLHelpers {
 		}
 		return result;
 	}
-
+	
+	public static ArrayList<Event> findEvents(SimpleStreamReference er, String name, boolean fuzzy) {
+		ArrayList<Event> result = new ArrayList<Event>();
+		Handler h = findContainingHandler(er);
+		if (h == null || h.getEvent().size() > 1 ) return result;
+		else {
+			Event evt = h.getEvent().get(0);
+			if (evt instanceof SimpleStream && evt.getName().startsWith(name)) {
+				if (fuzzy) result.add(evt);
+				else if (evt.getName().equals(name)) result.add(evt);
+			}
+		}
+		return result;
+	}
+	
 	
 }

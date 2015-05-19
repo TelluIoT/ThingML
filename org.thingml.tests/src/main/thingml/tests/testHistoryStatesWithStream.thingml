@@ -10,75 +10,65 @@ thing TestHistoryStatesWithStream includes Test
 			on entry harnessOut!testOut('\'I\'')
 			
 			transition -> C1
-            @stream ""
-			event m : harnessIn?testIn
-			guard m.c == '\'y\''
+			stream s1 from event m : harnessIn?testIn
+			guard s1->c == '\'y\''
 			
 			transition -> C2
-            @stream ""
-			event m : harnessIn?testIn
-			guard m.c == '\'z\''
+			stream s2 from event m : harnessIn?testIn
+			guard s2->c == '\'z\''
 		}
 		
 		composite state C1 init C1S1 keeps history {
 		
 		transition -> I
-        @stream ""
-		event m : harnessIn?testIn
-		guard m.c == '\'i\''
+		stream s3 from event m : harnessIn?testIn
+		guard s3->c == '\'i\''
 
 		transition -> C2
-        @stream ""
-		event m : harnessIn?testIn
-		guard m.c == '\'z\''
+		stream s4 from event m : harnessIn?testIn
+		guard s4->c == '\'z\''
 		
 			state C1S1 {
 				on entry harnessOut!testOut('\'1\'')
 
 				transition -> C1S2
-                @stream ""
-				event m : harnessIn?testIn
-				guard m.c == '\'n\''
+				stream s5 from event m : harnessIn?testIn
+				guard s5->c == '\'n\''
 			}
 			
 			state C1S2 {
 				on entry harnessOut!testOut('\'2\'')
 
 				transition -> C1S1
-                @stream ""
-				event m : harnessIn?testIn
-				guard m.c == '\'n\''
+				stream s6 from event m : harnessIn?testIn
+				guard s6->c == '\'n\''
 			}
 		}	
 		
 		composite state C2 init C2S1 keeps history {
 				
 			transition -> I
-            @stream ""
-			event m : harnessIn?testIn
-			guard m.c == '\'i\''
+			stream s7 from event m : harnessIn?testIn
+			guard s7->c == '\'i\''
     
 			transition -> C1
-            @stream ""
-			event m : harnessIn?testIn
-			guard m.c == '\'y\''
+			stream s8 from event m : harnessIn?testIn
+			guard s8->c == '\'y\''
 				
 			state C2S1 {	
 				on entry harnessOut!testOut('\'3\'')
     
 				transition -> C2S2
-                @stream ""
-				event m : harnessIn?testIn
-				guard m.c == '\'n\''
+				stream s9 from event m : harnessIn?testIn
+				guard s9->c == '\'n\''
 			}
 				
 			state C2S2 {
 				on entry harnessOut!testOut('\'4\'')
 
 				transition -> C2S1
-                @stream ""
-				event m : harnessIn?testIn
-				guard m.c == '\'n\''
+				stream s10 from event m : harnessIn?testIn
+				guard s10->c == '\'n\''
 			}
 		}
 	}

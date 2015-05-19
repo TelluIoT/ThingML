@@ -74,6 +74,7 @@ public class ThingmlSyntaxCoverageInformationProvider {
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getEventReference(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getSimpleStreamReference(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getPropertyReference(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getIntegerLiteral(),

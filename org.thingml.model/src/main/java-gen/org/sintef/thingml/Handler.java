@@ -32,6 +32,7 @@ import java.util.Set;
  *   <li>{@link org.sintef.thingml.Handler#getEvent <em>Event</em>}</li>
  *   <li>{@link org.sintef.thingml.Handler#getGuard <em>Guard</em>}</li>
  *   <li>{@link org.sintef.thingml.Handler#getAction <em>Action</em>}</li>
+ *   <li>{@link org.sintef.thingml.Handler#getTrigger <em>Trigger</em>}</li>
  * </ul>
  * </p>
  *
@@ -108,7 +109,33 @@ public interface Handler extends AnnotatedElement {
 	 */
 	void setAction(Action value);
 
-    //derived properties
+    /**
+	 * Returns the value of the '<em><b>Trigger</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Trigger</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Trigger</em>' containment reference.
+	 * @see #setTrigger(SimpleStreamReference)
+	 * @see org.sintef.thingml.ThingmlPackage#getHandler_Trigger()
+	 * @model containment="true"
+	 * @generated
+	 */
+	SimpleStreamReference getTrigger();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.Handler#getTrigger <em>Trigger</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Trigger</em>' containment reference.
+	 * @see #getTrigger()
+	 * @generated
+	 */
+	void setTrigger(SimpleStreamReference value);
+
+				//derived properties
 
     /**
      *

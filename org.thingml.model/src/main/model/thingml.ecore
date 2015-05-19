@@ -87,6 +87,8 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="action" eType="#//Action"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="trigger" eType="#//SimpleStreamReference"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Transition" eSuperTypes="#//Handler">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
@@ -359,5 +361,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OperatorParameter" eSuperTypes="#//ThingMLElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" lowerBound="1" eType="#//Message"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SimpleStreamReference" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="paramRef" lowerBound="1"
+        eType="#//Parameter"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="streamRef" lowerBound="1"
+        eType="#//SimpleStream"/>
   </eClassifiers>
 </ecore:EPackage>

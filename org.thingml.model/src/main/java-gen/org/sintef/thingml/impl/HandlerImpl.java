@@ -35,6 +35,7 @@ import org.sintef.thingml.Action;
 import org.sintef.thingml.Event;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.Handler;
+import org.sintef.thingml.SimpleStreamReference;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
 
@@ -48,6 +49,7 @@ import org.sintef.thingml.*;
  *   <li>{@link org.sintef.thingml.impl.HandlerImpl#getEvent <em>Event</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.HandlerImpl#getGuard <em>Guard</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.HandlerImpl#getAction <em>Action</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.HandlerImpl#getTrigger <em>Trigger</em>}</li>
  * </ul>
  * </p>
  *
@@ -83,6 +85,16 @@ public abstract class HandlerImpl extends AnnotatedElementImpl implements Handle
 	 * @ordered
 	 */
 	protected Action action;
+
+	/**
+	 * The cached value of the '{@link #getTrigger() <em>Trigger</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTrigger()
+	 * @generated
+	 * @ordered
+	 */
+	protected SimpleStreamReference trigger;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -206,6 +218,49 @@ public abstract class HandlerImpl extends AnnotatedElementImpl implements Handle
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public SimpleStreamReference getTrigger() {
+		return trigger;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetTrigger(SimpleStreamReference newTrigger, NotificationChain msgs) {
+		SimpleStreamReference oldTrigger = trigger;
+		trigger = newTrigger;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.HANDLER__TRIGGER, oldTrigger, newTrigger);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setTrigger(SimpleStreamReference newTrigger) {
+		if (newTrigger != trigger) {
+			NotificationChain msgs = null;
+			if (trigger != null)
+				msgs = ((InternalEObject)trigger).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.HANDLER__TRIGGER, null, msgs);
+			if (newTrigger != null)
+				msgs = ((InternalEObject)newTrigger).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.HANDLER__TRIGGER, null, msgs);
+			msgs = basicSetTrigger(newTrigger, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.HANDLER__TRIGGER, newTrigger, newTrigger));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -215,6 +270,8 @@ public abstract class HandlerImpl extends AnnotatedElementImpl implements Handle
 				return basicSetGuard(null, msgs);
 			case ThingmlPackage.HANDLER__ACTION:
 				return basicSetAction(null, msgs);
+			case ThingmlPackage.HANDLER__TRIGGER:
+				return basicSetTrigger(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -233,6 +290,8 @@ public abstract class HandlerImpl extends AnnotatedElementImpl implements Handle
 				return getGuard();
 			case ThingmlPackage.HANDLER__ACTION:
 				return getAction();
+			case ThingmlPackage.HANDLER__TRIGGER:
+				return getTrigger();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -256,6 +315,9 @@ public abstract class HandlerImpl extends AnnotatedElementImpl implements Handle
 			case ThingmlPackage.HANDLER__ACTION:
 				setAction((Action)newValue);
 				return;
+			case ThingmlPackage.HANDLER__TRIGGER:
+				setTrigger((SimpleStreamReference)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -277,6 +339,9 @@ public abstract class HandlerImpl extends AnnotatedElementImpl implements Handle
 			case ThingmlPackage.HANDLER__ACTION:
 				setAction((Action)null);
 				return;
+			case ThingmlPackage.HANDLER__TRIGGER:
+				setTrigger((SimpleStreamReference)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -295,6 +360,8 @@ public abstract class HandlerImpl extends AnnotatedElementImpl implements Handle
 				return guard != null;
 			case ThingmlPackage.HANDLER__ACTION:
 				return action != null;
+			case ThingmlPackage.HANDLER__TRIGGER:
+				return trigger != null;
 		}
 		return super.eIsSet(featureID);
 	}

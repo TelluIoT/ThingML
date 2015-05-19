@@ -3,10 +3,12 @@ Expected result:
 > npm install
 > node main.js
 Entry S1
+Hack!!
 Entry S2
-message receive
+Hack!! 
 Hack!! val1= 5; val2= 4; 
 Hack!! 
+message receive
 message receive
 message receive
 **/
@@ -38,17 +40,10 @@ thing Demo1 includes Demo1Msgs{
             
             //you declare the second and third event like streams
             //the values of stream annotation must be in ascending order 
-            /*transition -> S2
-            @stream "2 3"
-            event receiveService?m1
-            event receiveService?m2
-            event receiveService?m3*/
             transition -> S2
-            event receiveService?m1
+            stream stream0 from event receiveService?m1
             stream stream1 from event receiveService?m2
-            stream stream2 from event receiveService?m3
-            
-            
+            stream stream2 from event receiveService?m3         
         }
         
         state S2 {
@@ -59,22 +54,14 @@ thing Demo1 includes Demo1Msgs{
                 sendService!m3()
             end
             
-            /*internal
-            @stream "2 3"
-            event receiveService?m1
-            event receiveService?m2
-            event receiveService?m3
-            action do 
-                print "message receive "   
-            end*/
-           
             internal
-            event receiveService?m1
-            stream stream3 from event receiveService?m2
-            stream stream4 from event receiveService?m3
+            stream stream3 from event receiveService?m1
+            stream stream4 from event receiveService?m2
+            stream stream5 from event receiveService?m3
             action do 
                 print "message receive "   
             end
+          
         }  
     }
     

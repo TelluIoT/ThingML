@@ -10,9 +10,8 @@ thing TestDeepCompositeStatesWithStream includes Test
 	
 		state I {
 			transition -> C1
-            @stream ""
-			event m : harnessIn?testIn
-			guard m.c == '\'n\''
+			stream s1 from event harnessIn?testIn
+			guard s1->c == '\'n\''
 		}
 		
 		composite state C1 init C2 {
@@ -21,9 +20,8 @@ thing TestDeepCompositeStatesWithStream includes Test
 		on exit harnessOut!testOut('\'5\'')
 		
         transition -> I
-        @stream ""
-		event m : harnessIn?testIn
-		guard m.c == '\'a\''
+		stream s2 from event m : harnessIn?testIn
+		guard s2->c == '\'a\''
 		
 			state C1S1 {
 				on entry harnessOut!testOut('\'4\'')
@@ -35,9 +33,8 @@ thing TestDeepCompositeStatesWithStream includes Test
 				on entry harnessOut!testOut('\'1\'')
 				
                 transition -> C1S1
-				@stream ""
-                event m : harnessIn?testIn
-				guard m.c == '\'a\''
+                stream s3 from event m : harnessIn?testIn
+				guard s3->c == '\'a\''
 				
 				state C2S1 {	
 					on entry harnessOut!testOut('\'3\'')
@@ -50,9 +47,8 @@ thing TestDeepCompositeStatesWithStream includes Test
                     on exit harnessOut!testOut('\'6\'')
 					
                     transition -> C2S1
-					@stream ""
-                    event m : harnessIn?testIn
-					guard m.c == '\'a\''
+                    stream s4 from event m : harnessIn?testIn
+					guard s4->c == '\'a\''
 					
 					state C3S1{
 					}
@@ -62,9 +58,8 @@ thing TestDeepCompositeStatesWithStream includes Test
 		region r init r_I{
 		state r_I {
 			transition -> r_C1
-			@stream ""
-            event m : harnessIn?testIn
-			guard m.c == '\'n\''
+            stream s5 from event m : harnessIn?testIn
+			guard s5->c == '\'n\''
 		}
 		
 		composite state r_C1 init r_C2 {
@@ -73,9 +68,8 @@ thing TestDeepCompositeStatesWithStream includes Test
 		on exit harnessOut!testOut('\'f\'')
 		
         transition -> r_I
-		@stream ""
-        event m : harnessIn?testIn
-		guard m.c == '\'a\''
+        stream s6 from event m : harnessIn?testIn
+		guard s6->c == '\'a\''
 		
 			state r_C1S1 {
 				on entry harnessOut!testOut('\'e\'')
@@ -87,9 +81,8 @@ thing TestDeepCompositeStatesWithStream includes Test
 				on entry harnessOut!testOut('\'b\'')
 				
                 transition -> r_C1S1
-				@stream ""
-                event m : harnessIn?testIn
-				guard m.c == '\'a\''
+                stream s7 from event m : harnessIn?testIn
+				guard s7->c == '\'a\''
 				
 				state r_C2S1 {	
 					on entry harnessOut!testOut('\'d\'')
@@ -102,9 +95,8 @@ thing TestDeepCompositeStatesWithStream includes Test
                     on exit harnessOut!testOut('\'g\'')
                     
 					transition -> r_C2S1
-                    @stream ""
-					event m : harnessIn?testIn
-					guard m.c == '\'a\''
+					stream s8 from event m : harnessIn?testIn
+					guard s8->c == '\'a\''
 					
 					state r_C3S1{
 					}

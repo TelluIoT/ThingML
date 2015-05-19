@@ -57,8 +57,7 @@ thing TestStreamWithMultipleEvents includes Test, TestsMsgs
             end
             
             internal
-            @stream ""
-            event requiredService?msg1
+            stream s1 from event requiredService?msg1
             event requiredService?msg2
             event requiredService?msg3
             action harnessOut!testOut('\'i\'')     
@@ -72,9 +71,8 @@ thing TestStreamWithMultipleEvents includes Test, TestsMsgs
             end
             
             internal
-            @stream "1 2"
-            event requiredService?msg1
-            event requiredService?msg2
+            stream s2 from event requiredService?msg1
+            stream s3 from event requiredService?msg2
             event requiredService?msg3
             action harnessOut!testOut('\'i\'')     
         }

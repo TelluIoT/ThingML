@@ -421,6 +421,10 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createOperatorParameterAdapter();
 			}
 			@Override
+			public Adapter caseSimpleStreamReference(SimpleStreamReference object) {
+				return createSimpleStreamReferenceAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -1627,6 +1631,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createOperatorParameterAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SimpleStreamReference <em>Simple Stream Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.SimpleStreamReference
+	 * @generated
+	 */
+	public Adapter createSimpleStreamReferenceAdapter() {
 		return null;
 	}
 

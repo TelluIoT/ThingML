@@ -1304,13 +1304,22 @@ public interface ThingmlPackage extends EPackage {
 	int HANDLER__ACTION = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Trigger</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int HANDLER__TRIGGER = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Handler</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int HANDLER_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
+	int HANDLER_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.TransitionImpl <em>Transition</em>}' class.
@@ -1366,6 +1375,15 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int TRANSITION__ACTION = HANDLER__ACTION;
+
+	/**
+	 * The feature id for the '<em><b>Trigger</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TRANSITION__TRIGGER = HANDLER__TRIGGER;
 
 	/**
 	 * The feature id for the '<em><b>Target</b></em>' reference.
@@ -1466,6 +1484,15 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERNAL_TRANSITION__ACTION = HANDLER__ACTION;
+
+	/**
+	 * The feature id for the '<em><b>Trigger</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERNAL_TRANSITION__TRIGGER = HANDLER__TRIGGER;
 
 	/**
 	 * The number of structural features of the '<em>Internal Transition</em>' class.
@@ -4215,6 +4242,44 @@ public interface ThingmlPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.SimpleStreamReferenceImpl <em>Simple Stream Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.SimpleStreamReferenceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleStreamReference()
+	 * @generated
+	 */
+	int SIMPLE_STREAM_REFERENCE = 85;
+
+	/**
+	 * The feature id for the '<em><b>Param Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_STREAM_REFERENCE__PARAM_REF = EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Stream Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_STREAM_REFERENCE__STREAM_REF = EXPRESSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Simple Stream Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_STREAM_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.ThingMLModel <em>Thing ML Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4723,6 +4788,17 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getHandler_Action();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Handler#getTrigger <em>Trigger</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Trigger</em>'.
+	 * @see org.sintef.thingml.Handler#getTrigger()
+	 * @see #getHandler()
+	 * @generated
+	 */
+	EReference getHandler_Trigger();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Transition <em>Transition</em>}'.
@@ -6330,6 +6406,38 @@ public interface ThingmlPackage extends EPackage {
 	EReference getOperatorParameter_Type();
 
 	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.SimpleStreamReference <em>Simple Stream Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Simple Stream Reference</em>'.
+	 * @see org.sintef.thingml.SimpleStreamReference
+	 * @generated
+	 */
+	EClass getSimpleStreamReference();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.SimpleStreamReference#getParamRef <em>Param Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Param Ref</em>'.
+	 * @see org.sintef.thingml.SimpleStreamReference#getParamRef()
+	 * @see #getSimpleStreamReference()
+	 * @generated
+	 */
+	EReference getSimpleStreamReference_ParamRef();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.SimpleStreamReference#getStreamRef <em>Stream Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Stream Ref</em>'.
+	 * @see org.sintef.thingml.SimpleStreamReference#getStreamRef()
+	 * @see #getSimpleStreamReference()
+	 * @generated
+	 */
+	EReference getSimpleStreamReference_StreamRef();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6770,6 +6878,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference HANDLER__ACTION = eINSTANCE.getHandler_Action();
+
+		/**
+		 * The meta object literal for the '<em><b>Trigger</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference HANDLER__TRIGGER = eINSTANCE.getHandler_Trigger();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.TransitionImpl <em>Transition</em>}' class.
@@ -8120,6 +8236,32 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference OPERATOR_PARAMETER__TYPE = eINSTANCE.getOperatorParameter_Type();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.SimpleStreamReferenceImpl <em>Simple Stream Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.SimpleStreamReferenceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleStreamReference()
+		 * @generated
+		 */
+		EClass SIMPLE_STREAM_REFERENCE = eINSTANCE.getSimpleStreamReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Param Ref</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SIMPLE_STREAM_REFERENCE__PARAM_REF = eINSTANCE.getSimpleStreamReference_ParamRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Stream Ref</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SIMPLE_STREAM_REFERENCE__STREAM_REF = eINSTANCE.getSimpleStreamReference_StreamRef();
 
 	}
 

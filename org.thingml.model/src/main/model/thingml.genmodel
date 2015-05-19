@@ -66,6 +66,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Handler/event"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Handler/guard"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Handler/action"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Handler/trigger"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Transition">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Transition/target"/>
@@ -262,6 +263,10 @@
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//OperatorParameter">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//OperatorParameter/type"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//SimpleStreamReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//SimpleStreamReference/paramRef"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//SimpleStreamReference/streamRef"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

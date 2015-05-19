@@ -24,31 +24,28 @@ thing TestSimpleStreamOnReceive includes Test, TestMsgs
 		state Init {
 			
             internal
-            @stream ""
-			event m : harnessIn?testIn
-			guard m.c == '\'h\''
-			action harnessOut!testOut(m.c)
+			stream s1 from event m : harnessIn?testIn
+			guard s1->c == '\'h\''
+			action harnessOut!testOut('\'h\'') //change to s1->c
 
 			transition -> End
-            @stream ""
-			event m2 : harnessIn?testIn
-			guard m2.c == '\'i\''
+			stream s2 from event m2 : harnessIn?testIn
+			guard s2->c == '\'i\''
 		}
 
 		state End {
             on entry harnessOut!testOut('\'i\'')
             
             internal
-            @stream ""
-			event m : harnessIn?testIn
-			guard m.c == '\'j\''
+			stream s3 from event m : harnessIn?testIn
+			guard s3->c == '\'j\''
 			action sendService!msg(prop1,prop2)
 
+            //change to stream
 			internal
-            @stream ""
 			event resp : sendService?ack
 			action do
-                if(resp.prop1 == 5 and resp.prop2 == 87)
+                if(resp.prop1 == prop1 and resp.prop2 == prop2)
                     harnessOut!testOut('\'o\'')
             end
 		}
@@ -65,8 +62,8 @@ thing ReceiveMsgs includes TestMsgs, Test
 
     statechart ReceiveMsgs init Receive {
     	state Receive {
-    		internal
-            @stream ""
+    		//change to stream
+            internal
     		event e : receiveService?msg
     		action do
     			if(e.prop1 == 5 and e.prop2 == 87)

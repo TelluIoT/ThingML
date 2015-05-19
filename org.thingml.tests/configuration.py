@@ -34,7 +34,7 @@ testType="functional"
 #If useBlacklist is False, runs all tests present in whitelist
 useBlacklist=False
 blacklist=("tester testJoinStream")
-whitelist=("")
+whitelist=("testSimpleStreamOnReceive testDeepCompositeStatesWithStream testHistoryStatesWithStream testStreamWithMultipleEvents")
 
 #Performance tests options
 perfTestNumber = 1 #Number of generated tests

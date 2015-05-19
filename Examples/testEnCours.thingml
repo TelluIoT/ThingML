@@ -1,0 +1,83 @@
+/**
+Expected result:
+> npm install
+> node main.js
+Entry S1
+Hack!!
+Entry S2
+Hack!! 
+Hack!! val1= 5; val2= 4; 
+Hack!! 
+message receive
+message receive
+message receive
+**/
+
+datatype Integer
+    @js_type "short";
+
+thing fragment Demo1Msgs {
+    message m1();
+    message m2(val1 : Integer, val2 : Integer);
+    message m3();
+}
+
+thing Demo1 includes Demo1Msgs{
+    required port receiveService {
+        receives m1, m2, m3
+    }
+    
+    provided port sendService {
+        sends m1, m2, m3
+    }
+    
+        
+    statechart Demo1 init S1 {
+        state S1 {
+            on entry do 
+                print "Entry S1"
+                sendService!m2(2,4)
+                //sendService!m2(3,4)
+                //sendService!m2(4,4)
+                //sendService!m3()
+                //sendService!m1()
+            end
+            
+            internal
+            stream stream4 from event receiveService?m2
+            trigger stream4->val1 == 2
+            action print "m2 with " + stream4->val1
+            
+            internal
+            stream stream4 from event receiveService?m2
+            trigger stream4->val1 == 3
+            action print "m2 with " + stream4->val1
+            
+            internal
+            stream stream4 from event receiveService?m3
+            stream stream4 from event receiveService?m1
+            action print "m3"
+          
+            
+          
+        }  
+        
+        state S2 {
+            on entry print "Entry S2"
+        }
+        
+        state S3 {
+            on entry print "Entry S3"
+        }
+        
+        state S4 {
+            on entry print "Entry S4"
+        }
+    }
+    
+}
+
+configuration testCfg {
+    instance demo : Demo1
+    connector demo.receiveService => demo.sendService    
+}

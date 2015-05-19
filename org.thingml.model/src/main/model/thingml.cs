@@ -208,9 +208,9 @@ RULES {
 	// MODIFICATION
 	//Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? (!1 "before" #1 before)? (!1 "after" #1 after)? ;
 	//InternalTransition ::= !1 "internal" (#1 name[])? (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
-	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? (!1 "before" #1 before)? (!1 "after" #1 after)? ;
-
-	InternalTransition ::= !1 "internal" (#1 name[])? (annotations)* ( !1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
+	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ((( !1 event:ReceiveMessage )*  ( !1 "guard" #1 guard)?) | (( !1 event:Stream )*  ( !1 "trigger" #1 guard)?) ) (!1 "action" #1 action)? (!1 "before" #1 before)? (!1 "after" #1 after)? ;
+	
+	InternalTransition ::= !1 "internal" (#1 name[])? (annotations)* ((( !1 event:ReceiveMessage )*  ( !1 "guard" #1 guard)?) | (( !1 event:Stream )*  ( !1 "trigger" #1 guard)?) ) (!1 "action" #1 action)?  ;
 
 	// MODIFICATION
 	//ReceiveMessage ::= (name[] #1 ":" #1)? port[] "?" message[] ;
@@ -318,6 +318,9 @@ RULES {
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	EventReference ::= msgRef[] "." paramRef[];	
 	
+	@Operator(type="primitive", weight="9", superclass="Expression")
+	SimpleStreamReference  ::= streamRef[] "->" paramRef[];
+		
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	ExpressionGroup ::= "(" exp ")";
 	 

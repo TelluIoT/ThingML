@@ -151,6 +151,11 @@ public class ActionCompiler {
             generate((ExternExpression) expression, builder, ctx);
         }else if(expression instanceof  FunctionCallExpression) {
             generate((FunctionCallExpression) expression, builder, ctx);
+        } else if(expression instanceof SimpleStreamReference) {
+            EventReference eventReference = ThingmlFactory.eINSTANCE.createEventReference();
+            eventReference.setMsgRef(((SimpleStreamReference)expression).getStreamRef().getSource());
+            eventReference.setParamRef(((SimpleStreamReference) expression).getParamRef());
+            generate((EventReference) eventReference, builder, ctx);
         }
     }
 
