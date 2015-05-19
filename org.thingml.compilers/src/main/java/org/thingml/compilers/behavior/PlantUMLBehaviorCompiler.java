@@ -37,11 +37,10 @@ public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
                 }
             } else {
                 ctx.getCompiler().getActionCompiler().generate(block.getActions().get(0), temp,ctx);
-                temp.append("...//long block has been collapsed\\n");
+                temp.append("...//long block has been collapsed\n");
                 ctx.getCompiler().getActionCompiler().generate(block.getActions().get(block.getActions().size()-1), temp,ctx);
             }
-            String s = temp.toString().replace("\n", "\\n");
-            builder.append(s);
+            builder.append(protectString(temp.toString()));
             builder.append("end");
         } else {
             ctx.getCompiler().getActionCompiler().generate(a, builder, ctx);
@@ -128,11 +127,35 @@ public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
         }
     }
 
+    private void generateGuardAndActions(Handler t, StringBuilder builder, Context ctx) {
+        StringBuilder temp = new StringBuilder();
+        if (t.getGuard() != null) {
+            temp.append("\nif ");
+            ctx.getCompiler().getActionCompiler().generate(t.getGuard(), temp, ctx);
+        }
+        if(t.getAction() != null) {
+            temp.append("\ndo ");
+            ctx.getCompiler().getActionCompiler().generate(t.getAction(), temp, ctx);
+        }
+        builder.append(protectString(temp.toString()));
+    }
+
+    private String protectString(String s) {
+        return s.replace("\\n", "\\\\n").replace("\n", "\\n").replace(System.getProperty("line.separator"), "\\n").replace("\t","").replace("\r","").replace("\"", "\'\'");
+    }
+
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-        builder.append(t.getSource().getName() + " --> " + t.getTarget().getName() + " : " + msg.getName() + "?" + p.getName() + "\n");
+        builder.append(t.getSource().getName() + " --> " + t.getTarget().getName() + " : ");
+        if (msg != null && p != null) {
+            builder.append(msg.getName() + "?" + p.getName());
+        }
+        generateGuardAndActions(t, builder, ctx);
+        builder.append("\n");
     }
 
     protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-        builder.append("\t" + t.findContainingState().getName() + " : internal " + msg.getName() + "?" + p.getName() + "\n");
+        builder.append("\t" + t.findContainingState().getName() + " : internal " + msg.getName() + "?" + p.getName());
+        generateGuardAndActions(t, builder, ctx);
+        builder.append("\n");
     }
 }
