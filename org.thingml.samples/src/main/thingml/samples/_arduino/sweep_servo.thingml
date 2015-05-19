@@ -1,0 +1,17 @@
+import "../sweep_servo.thingml"
+import "../../hardware/bricks/_arduino/servo.thingml"
+import "../../core/_arduino/timer.thingml"
+
+configuration SweepServoArduino
+{       
+	instance servo : ServoArduino
+		set servo.pin = DigitalPin:PIN_9
+		set servo.max_rotate_angle = 155
+	// The timer
+	instance timer : TimerArduino
+	instance app : SweepServo
+		set app.max_rotate_angle = 155
+	
+	connector app.timer => timer.timer
+	connector app.ServoDrift => servo.ServeDrift
+}
