@@ -1,0 +1,81 @@
+import "../hardware/bricks/servo.thingml"
+
+thing SweepServo includes ServoMsgs, TimerMsgs
+{
+	property max_rotate_angle : UInt8 = 180
+	property min_rotate_angle : UInt8 = 0
+	property current_rotate_position : UInt8
+	readonly property increment : UInt8 = 1
+	readonly property dicrement : Int8 = -1
+	property direction : Boolean = true
+	property timer_timeout : UInt8 = 15
+	
+	required port timer 
+    {	
+		sends timer_start
+        receives timer_timeout
+	}
+	
+	required port ServoDrift {
+		sends rotate, angle
+		receives angle_position
+	}
+
+    statechart RotationImpl init Running 
+    {            
+        state Running {
+            on entry ServoDrift!angle()
+      
+            transition -> PosRotation
+            event m :  ServoDrift?angle_position
+            guard direction and m.angle < max_rotate_angle
+            action current_rotate_position = m.angle
+            
+            transition -> NegRotation
+            event m :  ServoDrift?angle_position
+            guard m.angle == max_rotate_angle
+            action current_rotate_position = m.angle
+            
+            transition -> NegRotation
+            event m :  ServoDrift?angle_position
+            guard not direction and m.angle > min_rotate_angle
+            action current_rotate_position = m.angle
+            
+            transition -> PosRotation
+            event m :  ServoDrift?angle_position
+            guard m.angle == min_rotate_angle
+            action current_rotate_position = m.angle
+        	
+        }
+        
+        state PosRotation  {
+            on entry do
+            	direction = true
+                timer!timer_start(timer_timeout)
+            end
+            
+        	transition -> Running
+        	event timer?timer_timeout
+        	action do
+        		current_rotate_position = current_rotate_position + increment
+        		ServoDrift!rotate(current_rotate_position)
+        	end
+        }
+        
+        state NegRotation {
+            on entry do
+                direction = false
+                timer!timer_start(timer_timeout)
+            end
+            
+        	transition -> Running
+        	event timer?timer_timeout
+        	action do
+        		current_rotate_position = current_rotate_position + dicrement
+        		ServoDrift!rotate(current_rotate_position)
+        	end
+        }
+        
+        
+    }
+}
