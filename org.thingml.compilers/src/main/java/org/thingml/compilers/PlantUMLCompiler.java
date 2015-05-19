@@ -25,6 +25,7 @@ import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.behavior.PlantUMLBehaviorCompiler;
 import org.thingml.compilers.build.BuildCompiler;
 import org.thingml.compilers.main.MainGenerator;
+import org.thingml.compilers.main.PlantUMLMainGenerator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -35,7 +36,7 @@ import java.util.List;
 public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     public PlantUMLCompiler() {
-        super(new ThingMLPrettyPrinter(), new ApiCompiler(), new MainGenerator(), new BuildCompiler(), new PlantUMLBehaviorCompiler());
+        super(new ThingMLPrettyPrinter(), new ApiCompiler(), new PlantUMLMainGenerator(), new BuildCompiler(), new PlantUMLBehaviorCompiler());
     }
 
     public PlantUMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler) {
@@ -84,6 +85,17 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
                 File png = list.get(0).getPngFile();
             }
         }
+
+
+        File source = new File(ctx.getOutputDir() + "/" + t.getName() + "/docs/" + t.getName() + ".plantuml");
+        List<GeneratedImage> list = null;
+        try {
+            SourceFileReader reader = new SourceFileReader(source);
+            list = reader.getGeneratedImages();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        File png = list.get(0).getPngFile();
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
@@ -92,5 +104,6 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
                 getBehaviorCompiler().generateState(sm, ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
             }
         }
+        getMainCompiler().generate(t, model, ctx);
     }
 }
