@@ -46,6 +46,20 @@ public class JS2Kevoree extends ConnectorCompiler {
         kevScript.append("//instantiate Kevoree/ThingML components\n");
         kevScript.append("add node0." + cfg.getName() + "_0 : my.package." + cfg.getName() + "\n");
 
+        kevScript.append("//instantiate Kevoree/ThingML proxy components\n");
+        int id = 0;
+        for(Instance i : cfg.allInstances()) {
+            for(Port p : i.getType().allPorts()) {
+                if (p.hasAnnotation("external")) {
+                    kevScript.append("add node0." + p.getName() + "_" + id + " : my.package." + p.getName() + "\n");
+                    kevScript.append("add chan" + id + " : LocalChannel\n");
+                    kevScript.append("bind node0." + cfg.getName() + ".out_" + i.getName() + "_" + p.getName() + "_out chan" + id + "\n");
+                    kevScript.append("bind node0." + p.getName() + "_" + id + ".in_" + p.getName() + " chan" + id + "\n");
+                }
+                id++;
+            }
+        }
+
         kevScript.append("start sync\n");
         kevScript.append("//start node0\n\n");
         kevScript.append("\n");
@@ -131,7 +145,7 @@ public class JS2Kevoree extends ConnectorCompiler {
             }
         }
 
-        StringBuilder builder = ctx.getBuilder(cfg.getName() + "/lib/" + cfg.getName() + ".js" );
+        final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/lib/" + cfg.getName() + ".js" );
         builder.append("var Connector = require('./Connector');\n");
         builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
 
@@ -153,7 +167,6 @@ public class JS2Kevoree extends ConnectorCompiler {
 
 
         builder.append("start: function (done) {\n");
-        //builder.append("this._super(function () {\n");
         JSMainGenerator.generateInstances(cfg, builder, ctx, true);
 
         for(Map.Entry e : cfg.danglingPorts().entrySet()) {
@@ -170,20 +183,15 @@ public class JS2Kevoree extends ConnectorCompiler {
         }
 
         builder.append("done();\n");
-        //builder.append("}.bind(this));\n");
         builder.append("},\n\n");
 
 
         builder.append("stop: function (done) {\n");
-        //builder.append("this._super(function () {\n");
         for(Instance i : cfg.allInstances()) {
             builder.append(i.getName() + "._stop();\n");
         }
         builder.append("done();\n");
-        //builder.append("}.bind(this));\n");
         builder.append("}");
-
-        //int id = 0;
 
         for(Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
@@ -220,11 +228,66 @@ public class JS2Kevoree extends ConnectorCompiler {
             for(Port p : (List<Port>)e.getValue()) {
                 if (p.getSends().size() > 0) {
                     builder.append(",\nout_" + i.getName() + "_" + p.getName() + "_out: function(msg) {/* This will be overwritten @runtime by Kevoree JS */}");
+                    if (p.hasAnnotation("external")) {
+                        generateProxy(cfg, p, ctx);
+                    }
                 }
             }
         }
         builder.append("});\n\n");
         builder.append("module.exports = " + cfg.getName() + ";\n");
+    }
+
+    private void generateProxy(Configuration cfg, Port p, Context ctx) {//FIXME: avoid code duplication from the main wrapper generator...
+        if (p.getSends().size() > 0) {
+            final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/lib/external_" + p.getName() + ".js");
+            builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
+            builder.append("/**\n* Kevoree proxy component for external port\n* @type {" + p.getName() + "}\n*/\n");
+            builder.append("var " + p.getName() + " = AbstractComponent.extend({\n");
+            builder.append("toString: '" + p.getName() + "',\n");
+
+            builder.append("construct: function() {\n");
+            builder.append("},\n\n");
+
+            builder.append("start: function (done) {\n");
+            builder.append("done();\n");
+            builder.append("},\n\n");
+
+            builder.append("stop: function (done) {\n");
+            builder.append("done();\n");
+            builder.append("},\n");
+
+            builder.append("in_" + p.getName() + ": function (msg) {\n");
+            builder.append("var json = JSON.parse(msg);\n");
+            int i = 0;
+            for(Message m : p.getSends()) {
+                if (i > 0) {
+                    builder.append("else ");
+                }
+                builder.append("if (json.message === " + m.getName() + ") {\n");
+                builder.append("this.out_" + p.getName() + "_" + m.getName() + "(");
+                int j = 0;
+                for(Parameter pa : m.getParameters()) {
+                    if (j>0) {
+                        builder.append("+ \"; \" +");
+                    }
+                    builder.append("json." + pa.getName());
+                    j++;
+                }
+                builder.append(");\n");
+                builder.append("}");
+                i++;
+            }
+            builder.append("}");
+
+            for(Message m : p.getSends()) {
+                builder.append(",\nout_" + p.getName() + "_" + m.getName() + ": function(msg) {/* This will be overwritten @runtime by Kevoree JS */}");
+            }
+
+            builder.append("}");
+            builder.append("});\n\n");
+            builder.append("module.exports = " + p.getName() + ";\n");
+        }
     }
 
     @Override
