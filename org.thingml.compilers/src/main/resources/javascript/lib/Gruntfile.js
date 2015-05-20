@@ -16,7 +16,12 @@ module.exports = function (grunt) {
         },
 
         // pushes your model on http://registry.kevoree.org
-        kevoree_registry: { src: 'kevlib.json' }
+        kevoree_registry: { src: 'kevlib.json' },
+        kevoree: {
+            options: {
+        	    mergeLocalLibraries: []
+        	}
+        }
     });
 
     grunt.loadNpmTasks('grunt-kevoree');

@@ -32,6 +32,26 @@ import java.util.Map;
  */
 public class JS2Kevoree extends ConnectorCompiler {
 
+    private void updateMainGruntfile(Configuration cfg, Port p, Context ctx) {
+        try {
+            final InputStream input = new FileInputStream(ctx.getOutputDir() + "/" + cfg.getName() + "/Gruntfile.js");
+            final List<String> packLines = IOUtils.readLines(input);
+            String pack = "";
+            for (String line : packLines) {
+                pack += line + "\n";
+            }
+            input.close();
+            pack = pack.replace("mergeLocalLibraries: [", "mergeLocalLibraries: ['../" + p.getName() + "'");//FIXME: won't work if more than two (we need to add a comma
+
+            final File f = new File(ctx.getOutputDir() + "/" + cfg.getName() + "/Gruntfile.js");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(pack, output);
+            IOUtils.closeQuietly(output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void generateKevScript(Context ctx, Configuration cfg) {
         StringBuilder kevScript = ctx.getBuilder(cfg.getName() + "/kevs/main.kevs" );
         kevScript.append("//create a default JavaScript node\n");
@@ -53,8 +73,8 @@ public class JS2Kevoree extends ConnectorCompiler {
                 if (p.hasAnnotation("external")) {
                     kevScript.append("add node0." + p.getName() + "_" + id + " : my.package." + p.getName() + "\n");
                     kevScript.append("add chan" + id + " : LocalChannel\n");
-                    kevScript.append("bind node0." + cfg.getName() + ".out_" + i.getName() + "_" + p.getName() + "_out chan" + id + "\n");
-                    kevScript.append("bind node0." + p.getName() + "_" + id + ".in_" + p.getName() + " chan" + id + "\n");
+                    kevScript.append("bind node0." + cfg.getName() + "_0." + i.getName() + "_" + p.getName() + "_out chan" + id + "\n");
+                    kevScript.append("bind node0." + p.getName() + "_" + id + "." + p.getName() + " chan" + id + "\n");
                 }
                 id++;
             }
@@ -78,7 +98,7 @@ public class JS2Kevoree extends ConnectorCompiler {
 
     }
 
-    private void generateGruntFile(Context ctx, Configuration cfg) {
+    private void generateGruntFile(Context ctx, String outputdir) {
         //copy Gruntfile.js
         try {
             final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/Gruntfile.js");
@@ -88,7 +108,7 @@ public class JS2Kevoree extends ConnectorCompiler {
                 pom += line + "\n";
             }
             input.close();
-            final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDir() + "/" + cfg.getName() +  "/Gruntfile.js")));
+            final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDir() + "/" + outputdir +  "/Gruntfile.js")));
             w.println(pom);
             w.close();
         } catch (Exception e) {
@@ -140,7 +160,7 @@ public class JS2Kevoree extends ConnectorCompiler {
         final File lib = new File(dir, "lib");
         lib.mkdirs();
         for(File f : dir.listFiles()) {
-            if (FilenameUtils.getExtension(f.getAbsolutePath()).equals("js")) {
+            if (FilenameUtils.getExtension(f.getAbsolutePath()).equals("js") && !f.getName().equals("Gruntfile.js")) {
                 f.renameTo(new File(lib, f.getName()));
             }
         }
@@ -198,6 +218,7 @@ public class JS2Kevoree extends ConnectorCompiler {
             for(Port p : (List<Port>)e.getValue()) {
                 if (p.getReceives().size() > 0) {
                     builder.append(",\nin_" + i.getName() + "_" + p.getName() + "_in: function (msg) {\n");
+                    builder.append("try {\n");
                     builder.append("var json = JSON.parse(msg);\n");
                     int id = 0;
                     for(Message m : p.getReceives()) {
@@ -218,6 +239,9 @@ public class JS2Kevoree extends ConnectorCompiler {
                         builder.append("}\n");
                         id++;
                     }
+                    builder.append("} catch(err) {\n");
+                    builder.append("console.log('Cannot parse msg: ' + msg);\n");
+                    builder.append("};\n");
                     builder.append("}");
                 }
             }
@@ -238,9 +262,9 @@ public class JS2Kevoree extends ConnectorCompiler {
         builder.append("module.exports = " + cfg.getName() + ";\n");
     }
 
-    private void generateProxy(Configuration cfg, Port p, Context ctx) {//FIXME: avoid code duplication from the main wrapper generator...
+    private void generateProxy(Configuration cfg, Port p, Context ctx) {//FIXME: avoid code duplication from the main wrapper generator...  One idea is to generate a ThingML component on the fly, and compile it as a normal ThingML/KevoreeJS component....
         if (p.getSends().size() > 0) {
-            final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/lib/external_" + p.getName() + ".js");
+            final StringBuilder builder = ctx.getBuilder(p.getName() + "/lib/" + p.getName() + ".js");
             builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
             builder.append("/**\n* Kevoree proxy component for external port\n* @type {" + p.getName() + "}\n*/\n");
             builder.append("var " + p.getName() + " = AbstractComponent.extend({\n");
@@ -258,13 +282,14 @@ public class JS2Kevoree extends ConnectorCompiler {
             builder.append("},\n");
 
             builder.append("in_" + p.getName() + ": function (msg) {\n");
+            builder.append("try {\n");
             builder.append("var json = JSON.parse(msg);\n");
             int i = 0;
             for(Message m : p.getSends()) {
                 if (i > 0) {
                     builder.append("else ");
                 }
-                builder.append("if (json.message === " + m.getName() + ") {\n");
+                builder.append("if (json.message === \"" + m.getName() + "\") {\n");
                 builder.append("this.out_" + p.getName() + "_" + m.getName() + "(");
                 int j = 0;
                 for(Parameter pa : m.getParameters()) {
@@ -278,6 +303,9 @@ public class JS2Kevoree extends ConnectorCompiler {
                 builder.append("}");
                 i++;
             }
+            builder.append("} catch(err){\n");
+            builder.append("console.log('Cannot parse msg: ' + msg);\n");
+            builder.append("}\n");
             builder.append("}");
 
             for(Message m : p.getSends()) {
@@ -285,16 +313,38 @@ public class JS2Kevoree extends ConnectorCompiler {
             }
 
             builder.append("}");
-            builder.append("});\n\n");
+            builder.append(");\n\n");
             builder.append("module.exports = " + p.getName() + ";\n");
+
+
+            new File(ctx.getOutputDir() + "/" + p.getName()).mkdirs();
+            generateGruntFile(ctx, p.getName());
+            updateMainGruntfile(cfg, p, ctx);
+            try {
+                final InputStream input = new FileInputStream(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json");
+                final List<String> packLines = IOUtils.readLines(input);
+                String pack = "";
+                for (String line : packLines) {
+                    pack += line + "\n";
+                }
+                input.close();
+
+                pack = pack.replace(cfg.getName(), p.getName());
+                final File f = new File(ctx.getOutputDir() + "/" + p.getName() + "/package.json");
+                final OutputStream output = new FileOutputStream(f);
+                IOUtils.write(pack, output);
+                IOUtils.closeQuietly(output);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public void generateLib(Context ctx, Configuration cfg, String... options) {
-        generateWrapper(ctx, cfg);
-        generateGruntFile(ctx, cfg);
         updatePackageJSON(ctx, cfg);
+        generateGruntFile(ctx, cfg.getName());
+        generateWrapper(ctx, cfg);
         generateKevScript(ctx, cfg);
     }
 }
