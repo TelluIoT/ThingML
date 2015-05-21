@@ -82,6 +82,9 @@
                             **/*.cs
                         </exclude>
                         <exclude>
+                            **/*.bat
+                        </exclude>
+                        <exclude>
                             **/test_out/**/*.*
                         </exclude>
                         <exclude>
