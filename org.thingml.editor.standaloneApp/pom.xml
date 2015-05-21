@@ -49,7 +49,7 @@
     <build>
         <plugins>
 
-            <plugin>
+            <!--<plugin>
                <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
                 <version>2.0.8</version>
@@ -152,7 +152,7 @@
                         <lib>${java.lib.location}</lib>
                     </libs>
                 </configuration>
-            </plugin>
+            </plugin>-->
 
 
             <plugin>
@@ -231,6 +231,15 @@
           <descriptorRef>jar-with-dependencies</descriptorRef>
         </descriptorRefs>
       </configuration>
+      <executions>
+    <execution>
+      <id>make-assembly</id> <!-- this is used for inheritance merges -->
+      <phase>package</phase> <!-- bind to the packaging phase -->
+      <goals>
+        <goal>single</goal>
+      </goals>
+    </execution>
+  </executions>
     </plugin>
 			
         </plugins>
