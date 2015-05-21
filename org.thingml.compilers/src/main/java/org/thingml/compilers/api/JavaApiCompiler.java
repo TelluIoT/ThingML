@@ -19,6 +19,9 @@ import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.helpers.JavaHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by bmori on 09.12.2014.
@@ -81,16 +84,16 @@ public class JavaApiCompiler extends ApiCompiler {
         for(Type t : thing.findContainingModel().allUsedSimpleTypes()) {
             if (t instanceof Enumeration) {
                 Enumeration e = (Enumeration) t;
-                    final StringBuilder builder = ctx.getBuilder(src + "/api/" + ctx.firstToUpper(e.getName()) + "_ENUM.java");
-                    try {
-                        if (builder.length() == 0) {//FIXME: hack to avoid enums to be generated twice.
-                            generateEnumeration(e, ctx, builder);
-                        }
-                    } catch (Exception e1) {
-                        System.err.println("ERROR: Enuemration " + e.getName() + " should define an @enum_val for all its literals");
-                        System.err.println("Node code will be generated for Enumeration " + e.getName() + " possibly leading to compilation errors");
-                        builder.delete(0, builder.capacity());
+                final StringBuilder builder = ctx.getBuilder(src + "/api/" + ctx.firstToUpper(e.getName()) + "_ENUM.java");
+                try {
+                    if (builder.length() == 0) {//FIXME: hack to avoid enums to be generated twice.
+                        generateEnumeration(e, ctx, builder);
                     }
+                } catch (Exception e1) {
+                    System.err.println("ERROR: Enuemration " + e.getName() + " should define an @enum_val for all its literals");
+                    System.err.println("Node code will be generated for Enumeration " + e.getName() + " possibly leading to compilation errors");
+                    builder.delete(0, builder.capacity());
+                }
             }
         }
 
@@ -139,5 +142,123 @@ public class JavaApiCompiler extends ApiCompiler {
                 builder.append("}");
             }
         }
+    }
+
+    @Override
+    public void generateComponent(Thing thing, Context ctx) {
+        String pack = ctx.getProperty("package");
+        if (pack == null) pack = "org.thingml.generated";
+
+        final StringBuilder builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(thing.getName()) + ".java");
+        //JavaHelper.generateHeader(pack, pack, builder, ctx, false, self.allPorts.filter{p => !p.isDefined("public", "false")}.size > 0 || self.eContainer().asInstanceOf[ThingMLModel].allUsedSimpleTypes().filter{ty => ty.isInstanceOf[Enumeration]}.size>0, self.allMessages().size() > 0)
+        JavaHelper.generateHeader(pack + ".api", pack, builder, ctx, false, false, false); //FIXME: proper values for boolean
+
+        builder.append("\n/**\n");
+        builder.append(" * Definition for type : " + thing.getName() + "\n");
+        builder.append(" **/\n");
+
+        List<String> interfaces = new ArrayList<String>();
+        for (Port p : thing.allPorts()) {
+            if (!p.isDefined("public", "false") && p.getReceives().size() > 0) {
+                interfaces.add("I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName());
+            }
+        }
+        if (thing.hasAnnotation("java_interface")) {
+            interfaces.addAll(thing.annotation("java_interface"));
+        }
+        builder.append("public class " + ctx.firstToUpper(thing.getName()) + " extends Component ");
+        if (interfaces.size() > 0) {
+            builder.append("implements ");
+            int id = 0;
+            for (String i : interfaces) {
+                if (id > 0) {
+                    builder.append(", ");
+                }
+                builder.append(i);
+                id++;
+            }
+        }
+        builder.append(" {\n\n");
+
+        for (Port p : thing.allPorts()) {
+            if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
+                builder.append("private Collection<I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client> " + p.getName() + "_clients = Collections.synchronizedCollection(new LinkedList<I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client>());\n");
+
+                builder.append("public synchronized void registerOn" + ctx.firstToUpper(p.getName()) + "(I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client client){\n");
+                builder.append(p.getName() + "_clients.add(client);\n");
+                builder.append("}\n\n");
+
+                builder.append("public synchronized void unregisterFrom" + ctx.firstToUpper(p.getName()) + "(I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client client){\n");
+                builder.append(p.getName() + "_clients.remove(client);\n");
+                builder.append("}\n\n");
+            }
+        }
+
+        for (Port p : thing.allPorts()) {
+            if (!p.isDefined("public", "false")) {
+                for (Message m : p.getReceives()) {
+                    builder.append("@Override\n");
+                    builder.append("public synchronized void " + m.getName() + "_via_" + p.getName() + "(");
+                    int id = 0;
+                    for (Parameter pa : m.getParameters()) {
+                        if (id > 0) {
+                            builder.append(", ");
+                        }
+                        builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                    }
+                    builder.append("){\n");
+                    builder.append("receive(" + m.getName() + "Type.instantiate(" + p.getName() + "_port");
+
+                    for (Parameter pa : m.getParameters()) {
+                        builder.append(", " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                    }
+                    builder.append("), " + p.getName() + "_port);\n");
+                    builder.append("}\n\n");
+                }
+            }
+        }
+
+
+
+        for (Port p : thing.allPorts()) {
+            for(Message m : p.getSends()) {
+                builder.append("private void send" + ctx.firstToUpper(m.getName()) + "_via_" + p.getName() + "(");
+                int id = 0;
+                for(Parameter pa : m.getParameters()) {
+                    if (id > 0) {
+                        builder.append(", ");
+                    }
+                    builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                }
+                builder.append("){\n");
+
+                builder.append("//ThingML send\n");
+                builder.append("send(" + m.getName() + "Type.instantiate(" + p.getName() + "_port");
+                for(Parameter pa : m.getParameters()) {
+                    builder.append(", " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                }
+                builder.append("), " + p.getName() + "_port);\n");
+
+                if (!p.isDefined("public", "false")) {
+                    builder.append("//send to other clients\n");
+                    builder.append("for(I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client client : " + p.getName() + "_clients){\n");
+                    builder.append("client." + m.getName() + "_from_" + p.getName() + "(");
+                    id = 0;
+                    for(Parameter pa : m.getParameters()) {
+                        if (id > 0) {
+                            builder.append(", ");
+                        }
+                        builder.append(ctx.protectKeyword(ctx.getVariableName(pa)));
+                        id++;
+                    }
+                    builder.append(");\n");
+                    builder.append("}");
+                }
+                builder.append("}\n\n");
+            }
+        }
+
+
+
     }
 }
