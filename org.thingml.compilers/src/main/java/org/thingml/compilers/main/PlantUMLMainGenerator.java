@@ -29,10 +29,15 @@ public class PlantUMLMainGenerator extends MainGenerator {
         builder.append("@startuml\n");
         builder.append("node \"" + cfg.getName() + "\"{\n");
         for (Instance i : cfg.allInstances()) {
+            boolean hasPort = false;
             for(Port p: i.getType().allPorts()) {
                 if (p instanceof ProvidedPort) {
                     builder.append(p.getName() + "_" + i.getName() + " - [" + i.getName() + "]\n");
+                    hasPort = true;
                 }
+            }
+            if (!hasPort) {
+                builder.append("[" + i.getName() + "]\n");
             }
         }
         for (Connector c : cfg.allConnectors()) {

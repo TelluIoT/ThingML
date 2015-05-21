@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.behavior;
 
+import org.eclipse.emf.common.util.EList;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 
@@ -62,16 +63,23 @@ public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
             }
     }
 
+    private void doGenerateHanderls(Handler h, StringBuilder builder, Context ctx) {
+        if(h.getEvent().size() == 0) {
+            generateHandler(h, null, null, builder, ctx);
+        } else {
+            for(Event e : h.getEvent()) {
+                ReceiveMessage rm = (ReceiveMessage)e;
+                generateHandler(h, rm.getMessage(), rm.getPort(), builder, ctx);
+            }
+        }
+    }
+
     private void generateHandlers(State c, StringBuilder builder, Context ctx) {
         for(Handler h : c.getOutgoing()) {
-            if(h.getEvent().size() == 0) {
-                generateHandler(h, null, null, builder, ctx);
-            } else {
-                for(Event e : h.getEvent()) {
-                    ReceiveMessage rm = (ReceiveMessage)e;
-                    generateHandler(h, rm.getMessage(), rm.getPort(), builder, ctx);
-                }
-            }
+            doGenerateHanderls(h, builder, ctx);
+        }
+        for(Handler h : c.getInternal()) {
+            doGenerateHanderls(h, builder, ctx);
         }
     }
 
@@ -145,7 +153,10 @@ public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
     }
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-        builder.append(t.getSource().getName() + " --> " + t.getTarget().getName() + " : ");
+        builder.append(t.getSource().getName() + " --> " + t.getTarget().getName());
+        if((msg!=null && p!=null) || t.getAction()!=null || t.getGuard() !=null) {
+            builder.append(" : ");
+        }
         if (msg != null && p != null) {
             builder.append(msg.getName() + "?" + p.getName());
         }

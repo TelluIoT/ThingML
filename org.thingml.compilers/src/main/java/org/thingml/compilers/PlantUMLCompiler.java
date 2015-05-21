@@ -27,9 +27,7 @@ import org.thingml.compilers.build.BuildCompiler;
 import org.thingml.compilers.main.MainGenerator;
 import org.thingml.compilers.main.PlantUMLMainGenerator;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -63,39 +61,88 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(Configuration cfg, String... options) {
+    public void do_call_compiler(final Configuration cfg, String... options) {
         new File(ctx.getOutputDir() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
         ctx.dump();
-        exportPNG(cfg);
+        final Thread png = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                exportPNG(cfg);
+            }
+        });
+        final Thread svg = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                exportSVG(cfg);
+            }
+        });
+
+        png.start();
+        svg.start();
     }
 
     private void exportPNG(Configuration t) {
         for(Thing th : t.allThings()) {
             for (StateMachine sm : th.allStateMachines()) {
-                File source = new File(ctx.getOutputDir() + "/" + t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml");
-                List<GeneratedImage> list = null;
+                SourceStringReader reader = new SourceStringReader(ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml").toString());
+// Write the first image to "png"
                 try {
-                    SourceFileReader reader = new SourceFileReader(source);
-                    list = reader.getGeneratedImages();
+                    String desc = reader.generateImage(new FileOutputStream(ctx.getOutputDir() + "/" + t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".png"));
+                    if (desc == null) {
+                        System.err.println("Something went wrong while exporting PNG from PlantUML specs for Thing " + th.getName() + " in configuration " + t.getName());
+                    }
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-                File png = list.get(0).getPngFile();
+// Return a null string if no generation
             }
         }
 
-
-        File source = new File(ctx.getOutputDir() + "/" + t.getName() + "/docs/" + t.getName() + ".plantuml");
-        List<GeneratedImage> list = null;
+        SourceStringReader reader = new SourceStringReader(ctx.getBuilder(t.getName() + "/docs/" + t.getName() + ".plantuml").toString());
         try {
-            SourceFileReader reader = new SourceFileReader(source);
-            list = reader.getGeneratedImages();
+            String desc = reader.generateImage(new FileOutputStream(ctx.getOutputDir() + "/" + t.getName() + "/docs/" + t.getName() + ".png"));
+            if (desc == null) {
+                System.err.println("Something went wrong while exporting PNG from PlantUML specs for configuration " + t.getName());
+            }
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        File png = list.get(0).getPngFile();
+    }
+
+    private void exportSVG(Configuration t) {
+        for(Thing th : t.allThings()) {
+            for (StateMachine sm : th.allStateMachines()) {
+                SourceStringReader reader = new SourceStringReader(ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml").toString());
+                final ByteArrayOutputStream os = new ByteArrayOutputStream();
+                // Write the first image to "os"
+                try {
+                    String desc = reader.generateImage(os, new FileFormatOption(FileFormat.SVG));
+                    os.close();
+                    final String svg = new String(os.toByteArray(), Charset.forName("UTF-8"));
+                    PrintWriter out = new PrintWriter(ctx.getOutputDir() + "/" + t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".svg");
+                    out.print(svg);
+                    out.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+
+        SourceStringReader reader = new SourceStringReader(ctx.getBuilder(t.getName() + "/docs/" + t.getName() + ".plantuml").toString());
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        // Write the first image to "os"
+        try {
+            String desc = reader.generateImage(os, new FileFormatOption(FileFormat.SVG));
+            os.close();
+            final String svg = new String(os.toByteArray(), Charset.forName("UTF-8"));
+            PrintWriter out = new PrintWriter(ctx.getOutputDir() + "/" + t.getName() + "/docs/" + t.getName() + ".svg");
+            out.print(svg);
+            out.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
