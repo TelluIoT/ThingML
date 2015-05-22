@@ -155,7 +155,7 @@ public class ActionCompiler {
             EventReference eventReference = ThingmlFactory.eINSTANCE.createEventReference();
             eventReference.setMsgRef(((SimpleStreamReference)expression).getStreamRef().getSource());
             eventReference.setParamRef(((SimpleStreamReference) expression).getParamRef());
-            generate((EventReference) eventReference, builder, ctx);
+            generate(eventReference, builder, ctx);
         }
     }
 

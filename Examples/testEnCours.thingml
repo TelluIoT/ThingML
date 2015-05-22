@@ -2,97 +2,74 @@ datatype Integer
     @js_type "short";
 
 thing fragment TestMsgs {
-	message msg(prop1: Integer, prop2 : Integer);
-	message ack(prop1: Integer, prop2 : Integer);
-    message testIn(c : Integer);
+    message testIn(c : Integer);    
 }
 
-thing TestSimpleStreamOnReceive includes TestMsgs
-@test "hij # hio"
-//@conf "instance receive : ReceiveMsgs"
-//@conf "connector receive.receiveService => test.sendService"
+thing TestMixStreamsAndEvent includes TestMsgs
+@test "ab # 12"
+@test "ac # 13"
+@test "ad # 14"
 {
-	provided port harnessIn {
-        receives testIn
+    provided port harnessOut {
+        sends testIn     
     }
     
-    required port harnessOut {
-        sends testIn
+    required port harnessIn {
+        receives testIn        
     }
+	 
+	statechart TestInit init S1 {
 
-	
-
-	statechart TestInit init I {
-        state I {
+		state S1 {
             on entry do
-                print "I"
-                harnessOut!testIn(1)
+                //harnessOut!testIn(1)
+                harnessOut!testIn(2)
+                //harnessOut!testIn(3)
+                //harnessOut!testIn(4)
             end
+			
+            internal
+			stream s1 from event harnessIn?testIn
+			trigger s1->c == 1
+			action print "1"
+
+			transition -> S2
+            //internal
+			event e : harnessIn?testIn
+			guard e.c == 2
+
+            transition -> S3
+			event e : harnessIn?testIn
+			guard e.c == 3
+
+            transition -> S4
+			event e : harnessIn?testIn
+			guard e.c == 4
+
             
-            transition -> C1
-            stream s1 from event harnessIn?testIn
-            trigger s1->c == 1
-            
-            transition -> C2
-            stream s2 from event harnessIn?testIn
-              
-        }
-        
-        composite state C1 init C1S1 keeps history {
-            transition -> I
-            stream s2 from event harnessIn?testIn
-            trigger s2->c == 2
-            
-            transition -> C2
-            stream s3 from event harnessIn?testIn
-            trigger s3->c == 3
-            
-               state C1S1 {
-                on entry do
-                    print "C1S1"
-                    harnessOut!testIn(3)
-                end
-                
-                    transition -> C1S2
-                    stream s4 from event harnessIn?testIn
-                    trigger s4->c == 4    
-               }
-               
-                  state C1S2 {
-                    on entry print "C1S2"    
-                  }   
-        }
-        
-        state C2 {
-            on entry print "C2"    
-        }
+		}
+
+		state S2 {
+            on entry do
+                print "S2"
+            end
+		}
+
+        state S3 {
+            on entry do
+                print "S3"
+            end
+		}
+
+        state S4 {
+            on entry do
+                print "S4"
+            end
+		}
 	}
 }
 
-configuration testEnCoursCfg {
-    instance  test : TestSimpleStreamOnReceive
-    connector test.harnessOut => test.harnessIn
+configuration testCfg {
+    instance test : TestMixStreamsAndEvent
+    connector test.harnessIn => test.harnessOut
 }
-
-/*thing ReceiveMsgs includes TestMsgs, Test
-{
-
-	required port receiveService {
-    		receives msg
-    		sends ack
-    }
-
-    statechart ReceiveMsgs init Receive {
-    	state Receive {
-            internal
-    		stream s5 from event receiveService?msg
-    		action do
-    			if(s5->prop1 == 5 and s5->prop2 == 87) do
-                    receiveService!ack(s5->prop1,s5->prop2)
-                    print "if ReceiveMsgs"
-                end
-    		end
-    	}
-    }
-
-}*/

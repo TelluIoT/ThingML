@@ -25,6 +25,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.cep.linker.utils.ConnectNewPorts;
 import org.thingml.compilers.cep.linker.utils.CreateMessage;
 
+import javax.activation.UnsupportedDataTypeException;
 import java.security.Guard;
 import java.util.ArrayList;
 import java.util.List;
@@ -286,6 +287,7 @@ public class CepLinker {
                 }
 
 
+                // create CEP engine
                 int indexHandler = 0;
                 for(Handler handler : handlersWithStream) {
                     for (Stream stream : handler.allStreams()) {
@@ -336,6 +338,67 @@ public class CepLinker {
                                 handler.getEvent().add(s);
                             }
                         }*/
+                    }
+                }
+
+
+                List<Handler> handlers = new ArrayList<>();
+
+                handlersWithStream.clear();
+                for(Handler h : state.getInternal()) {
+                    if(!h.allStreams().isEmpty()) handlersWithStream.add(h);
+                    else handlers.add(h);
+                }
+
+                handlers.addAll(state.getOutgoing());
+
+                for(Handler hWithStream : handlersWithStream) {
+                    for (Stream stream : hWithStream.allStreams()) {
+                        if(stream instanceof SimpleStream) {
+                            SimpleStream sStream = (SimpleStream) stream;
+                            ReceiveMessage rmStream = sStream.getSource();
+                            for(Handler h : handlers) {
+                                ReceiveMessage event = (ReceiveMessage) h.getEvent().get(0);
+
+                                if(event.getMessage().getName().equals(rmStream.getMessage().getName())
+                                        && event.getPort().getName().equals(rmStream.getPort().getName())) {
+
+                                    EqualsExpression hGuard = (EqualsExpression) h.getGuard();
+                                    EqualsExpression copyHGuard = ThingmlFactory.eINSTANCE.createEqualsExpression();
+
+                                    Expression rhs;
+                                    if(hGuard.getRhs() instanceof IntegerLiteral) {
+                                        IntegerLiteral integerLiteral = ThingmlFactory.eINSTANCE.createIntegerLiteral();
+                                        integerLiteral.setIntValue(((IntegerLiteral) hGuard.getRhs()).getIntValue());
+                                        rhs = integerLiteral;
+                                    } else if (hGuard.getRhs() instanceof ExternExpression){
+                                        ExternExpression externExpression = ThingmlFactory.eINSTANCE.createExternExpression();
+                                        externExpression.setExpression(((ExternExpression)hGuard.getRhs()).getExpression());
+                                        rhs = externExpression;
+                                    } else {
+                                        throw new UnsupportedOperationException("Not good...");
+                                    }
+                                    copyHGuard.setRhs(rhs);
+                                    EventReference eventReference = ThingmlFactory.eINSTANCE.createEventReference();
+                                    eventReference.setMsgRef(((EventReference)hGuard.getLhs()).getMsgRef());
+                                    eventReference.setParamRef(((EventReference) hGuard.getLhs()).getParamRef());
+                                    copyHGuard.setLhs(eventReference);
+
+                                    if(hWithStream.getGuard() == null) {
+                                        NotExpression notExpression = ThingmlFactory.eINSTANCE.createNotExpression();
+                                        notExpression.setTerm(copyHGuard);
+                                        hWithStream.setGuard(notExpression);
+                                    } else {
+                                        OrExpression orExpression = ThingmlFactory.eINSTANCE.createOrExpression();
+                                        orExpression.setLhs(((NotExpression) hWithStream.getGuard()).getTerm());
+                                        orExpression.setRhs(copyHGuard);
+                                        ((NotExpression) hWithStream.getGuard()).setTerm(orExpression);
+                                    }
+                                }
+                            }
+                        } else {
+                            throw new UnsupportedOperationException("I don't know what I have to do.");
+                        }
                     }
                 }
 
