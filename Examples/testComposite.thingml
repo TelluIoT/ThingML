@@ -1,0 +1,81 @@
+datatype Integer
+    @js_type "short";
+
+thing fragment Demo1Msgs {
+    message m1();
+    message m2(val1 : Integer, val2 : Integer);
+    message m3();
+}
+
+thing Demo1 includes Demo1Msgs{
+    required port receiveService {
+        receives m1, m2, m3
+    }
+    
+    provided port sendService {
+        sends m1, m2, m3
+    }
+    
+    statechart Demo1 init S1 {
+        state S1 {
+            on entry do
+                print "S1"
+                sendService!m1()
+            end
+            
+            transition -> S2
+            stream s1 from event receiveService?m1
+        }
+        
+        composite state S2 init S3 {
+            on entry do
+                print "S2"
+            end
+            
+            internal
+            stream s2 from event receiveService?m2
+            trigger s2->val1 == 2
+            action print "S2 internal"
+            
+                      
+            state S3 {
+                on entry do
+                    print "S3"
+                    //sendService!m2(2,87)
+                    //sendService!m2(3,87)
+                    sendService!m2(4,87)
+                    //sendService!m3()
+                end
+                
+                transition -> S4
+                stream s3 from event receiveService?m2
+                trigger s3->val1 == 4
+                
+                internal
+                stream s4 from event receiveService?m2
+                trigger s4->val1 == 3
+                action print "S3 internal"
+                                
+            }
+            
+            state S4 {
+                on entry do
+                    print "S4"
+                    //sendService!m2(3,87)
+                    sendService!m2(4,87)
+                end
+                
+                internal
+                stream s5 from event receiveService?m2
+                trigger s5->val1 == 4
+                action print "S4 internal"
+            }    
+        }
+    }
+    
+}
+
+configuration demo1Cfg {
+    instance demo : Demo1
+    connector demo.receiveService => demo.sendService    
+}

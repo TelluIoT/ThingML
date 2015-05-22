@@ -242,12 +242,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//LocalVariable/init"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//LocalVariable/changeable"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="thingml.ecore#//Stream">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/portSend"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/streamMessage"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/eventProperty"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//Stream/withSubscribe"/>
-    </genClasses>
+    <genClasses image="false" ecoreClass="thingml.ecore#//Stream"/>
     <genClasses ecoreClass="thingml.ecore#//SimpleStream">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//SimpleStream/source"/>
     </genClasses>

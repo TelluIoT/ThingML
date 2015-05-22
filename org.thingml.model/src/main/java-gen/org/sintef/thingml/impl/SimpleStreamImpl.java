@@ -19,12 +19,9 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.sintef.thingml.ReceiveMessage;
 import org.sintef.thingml.SimpleStream;
 import org.sintef.thingml.ThingmlPackage;
@@ -43,6 +40,8 @@ import org.sintef.thingml.ThingmlPackage;
  * @generated
  */
 public class SimpleStreamImpl extends StreamImpl implements SimpleStream {
+
+
 	/**
 	 * The cached value of the '{@link #getSource() <em>Source</em>}' containment reference.
 	 * <!-- begin-user-doc -->

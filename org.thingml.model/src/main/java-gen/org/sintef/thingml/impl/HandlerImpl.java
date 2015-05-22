@@ -384,6 +384,7 @@ public abstract class HandlerImpl extends AnnotatedElementImpl implements Handle
         return result;
     }
 
+	//fixme useless
 	@Override
 	public List<Stream> allStreams() {
 		List<Stream> result = new ArrayList<Stream>();

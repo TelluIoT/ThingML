@@ -23,16 +23,16 @@ thing TestStreamWithMultipleEvents includes Test, TestsMsgs
     statechart TestStreamWithMultipleEvents init Init {
         state Init {
             transition -> First
-            event m : harnessIn?testIn
-			guard m.c == '\'n\''
+            stream s1 from event harnessIn?testIn
+			trigger s1->c == '\'n\''
 
             transition -> Second
-            event m : harnessIn?testIn
-			guard m.c == '\'s\''
+            stream s2 from event harnessIn?testIn
+			trigger s2->c == '\'s\''
 
             transition -> Third
-            event m : harnessIn?testIn
-			guard m.c == '\'S\''
+            stream s3 from event harnessIn?testIn
+			trigger s3->c == '\'S\''
         }
         
         state First {
@@ -43,9 +43,9 @@ thing TestStreamWithMultipleEvents includes Test, TestsMsgs
             end
             
             internal
-            event requiredService?msg1
-            event requiredService?msg2
-            event requiredService?msg3
+            stream s4 from event requiredService?msg1
+            stream s5 from event requiredService?msg2
+            stream s6 from event requiredService?msg3
             action harnessOut!testOut('\'i\'')     
         }
         
@@ -57,9 +57,9 @@ thing TestStreamWithMultipleEvents includes Test, TestsMsgs
             end
             
             internal
-            stream s1 from event requiredService?msg1
-            event requiredService?msg2
-            event requiredService?msg3
+            stream s7 from event requiredService?msg1
+            stream s8 from event requiredService?msg2
+            stream s9 from event requiredService?msg3
             action harnessOut!testOut('\'i\'')     
         }
         
@@ -71,9 +71,9 @@ thing TestStreamWithMultipleEvents includes Test, TestsMsgs
             end
             
             internal
-            stream s2 from event requiredService?msg1
-            stream s3 from event requiredService?msg2
-            event requiredService?msg3
+            stream s10 from event requiredService?msg1
+            stream s11 from event requiredService?msg2
+            stream s12 from event requiredService?msg3
             action harnessOut!testOut('\'i\'')     
         }
     }

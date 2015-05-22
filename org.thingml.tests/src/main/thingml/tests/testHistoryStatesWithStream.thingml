@@ -10,30 +10,30 @@ thing TestHistoryStatesWithStream includes Test
 			on entry harnessOut!testOut('\'I\'')
 			
 			transition -> C1
-			stream s1 from event m : harnessIn?testIn
-			guard s1->c == '\'y\''
+			stream s1 from event harnessIn?testIn
+			trigger s1->c == '\'y\''
 			
 			transition -> C2
-			stream s2 from event m : harnessIn?testIn
-			guard s2->c == '\'z\''
+			stream s2 from event harnessIn?testIn
+			trigger s2->c == '\'z\''
 		}
 		
 		composite state C1 init C1S1 keeps history {
 		
 		transition -> I
 		stream s3 from event m : harnessIn?testIn
-		guard s3->c == '\'i\''
+		trigger s3->c == '\'i\''
 
 		transition -> C2
 		stream s4 from event m : harnessIn?testIn
-		guard s4->c == '\'z\''
+		trigger s4->c == '\'z\''
 		
 			state C1S1 {
 				on entry harnessOut!testOut('\'1\'')
 
 				transition -> C1S2
 				stream s5 from event m : harnessIn?testIn
-				guard s5->c == '\'n\''
+				trigger s5->c == '\'n\''
 			}
 			
 			state C1S2 {
@@ -41,34 +41,34 @@ thing TestHistoryStatesWithStream includes Test
 
 				transition -> C1S1
 				stream s6 from event m : harnessIn?testIn
-				guard s6->c == '\'n\''
+				trigger s6->c == '\'m\''
 			}
 		}	
 		
 		composite state C2 init C2S1 keeps history {
 				
 			transition -> I
-			stream s7 from event m : harnessIn?testIn
-			guard s7->c == '\'i\''
+			stream s1 from event m : harnessIn?testIn
+			trigger s1->c == '\'i\''
     
 			transition -> C1
-			stream s8 from event m : harnessIn?testIn
-			guard s8->c == '\'y\''
+			stream s2 from event m : harnessIn?testIn
+			trigger s2->c == '\'y\''
 				
 			state C2S1 {	
 				on entry harnessOut!testOut('\'3\'')
     
 				transition -> C2S2
-				stream s9 from event m : harnessIn?testIn
-				guard s9->c == '\'n\''
+				stream s3 from event m : harnessIn?testIn
+				trigger s3->c == '\'n\''
 			}
 				
 			state C2S2 {
 				on entry harnessOut!testOut('\'4\'')
 
 				transition -> C2S1
-				stream s10 from event m : harnessIn?testIn
-				guard s10->c == '\'n\''
+				stream s1 from event m : harnessIn?testIn
+				trigger s1->c == '\'n\''
 			}
 		}
 	}

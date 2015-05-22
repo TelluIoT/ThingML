@@ -16,6 +16,7 @@
 package org.thingml.compilers.api;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.cep.CepStream;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.cep.compiler.javascript.JSCepLibrary;
 
@@ -280,10 +281,13 @@ public class JavaScriptApiCompiler extends ApiCompiler {
 
 
         /** MODIFICATION **/
-        for(Handler h : thing.allTransitionsWithStream()) { //fixme put into the generateState method
+       /* for(Handler h : thing.allTransitionsWithStream()) { //fixme put into the generateState method
             for(Stream stream : h.allStreams()) {
                 builder.append(JSCepLibrary.instance.createStreamFromEvent(stream,ctx));
             }
+        }*/
+        for(CepStream cepStream : thing.getCepStreams()) {
+            builder.append(JSCepLibrary.instance.createStreamFromEvent(cepStream,ctx));
         }
         /** END **/
 

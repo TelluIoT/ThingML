@@ -223,11 +223,11 @@ RULES {
 	// * Complex Event Processing
 	// *******************************
 	
-	SimpleStream ::= "stream" #1 name[] #1 "from" #1 source;
+	SimpleStream ::= "stream" (name[] #1)? #1 "from" #1 source;
 	
-	MergedStreams ::= "stream" #1 (name[] #1 ":" #1)? "from" ( streams ("," #1 streams)*);
+	MergedStreams ::= "stream" (name[] #1)? #1 "from" #1 "pattern" #1 "[" ( streams ("," #1 streams)+) "]";
 	
-	JoinedStreams ::= "stream" #1 (name[] #1 ":" #1)? "from" #1 "pattern" #1 "[" ( streams ("," #1 streams)*) "->" joinOperator[] "]" ;
+	JoinedStreams ::= "stream" #1 (name[] #1)? "from" #1 "pattern" #1 "[" ( streams ("," #1 streams)*) "->" joinOperator[] "]" ;
 	
 	OperatorParameter ::= name[] ":" type[];
 	Operator ::= "operator" #1 name[] "(" (params ("," #1 params)*)? ")" "{}";

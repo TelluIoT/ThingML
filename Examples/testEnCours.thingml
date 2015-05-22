@@ -1,83 +1,98 @@
-/**
-Expected result:
-> npm install
-> node main.js
-Entry S1
-Hack!!
-Entry S2
-Hack!! 
-Hack!! val1= 5; val2= 4; 
-Hack!! 
-message receive
-message receive
-message receive
-**/
-
 datatype Integer
     @js_type "short";
 
-thing fragment Demo1Msgs {
-    message m1();
-    message m2(val1 : Integer, val2 : Integer);
-    message m3();
+thing fragment TestMsgs {
+	message msg(prop1: Integer, prop2 : Integer);
+	message ack(prop1: Integer, prop2 : Integer);
+    message testIn(c : Integer);
 }
 
-thing Demo1 includes Demo1Msgs{
-    required port receiveService {
-        receives m1, m2, m3
+thing TestSimpleStreamOnReceive includes TestMsgs
+@test "hij # hio"
+//@conf "instance receive : ReceiveMsgs"
+//@conf "connector receive.receiveService => test.sendService"
+{
+	provided port harnessIn {
+        receives testIn
     }
     
-    provided port sendService {
-        sends m1, m2, m3
+    required port harnessOut {
+        sends testIn
     }
-    
-        
-    statechart Demo1 init S1 {
-        state S1 {
-            on entry do 
-                print "Entry S1"
-                sendService!m2(2,4)
-                //sendService!m2(3,4)
-                //sendService!m2(4,4)
-                //sendService!m3()
-                //sendService!m1()
+
+	
+
+	statechart TestInit init I {
+        state I {
+            on entry do
+                print "I"
+                harnessOut!testIn(1)
             end
             
-            internal
-            stream stream4 from event receiveService?m2
-            trigger stream4->val1 == 2
-            action print "m2 with " + stream4->val1
+            transition -> C1
+            stream s1 from event harnessIn?testIn
+            trigger s1->c == 1
             
-            internal
-            stream stream4 from event receiveService?m2
-            trigger stream4->val1 == 3
-            action print "m2 with " + stream4->val1
-            
-            internal
-            stream stream4 from event receiveService?m3
-            stream stream4 from event receiveService?m1
-            action print "m3"
-          
-            
-          
-        }  
-        
-        state S2 {
-            on entry print "Entry S2"
+            transition -> C2
+            stream s2 from event harnessIn?testIn
+              
         }
         
-        state S3 {
-            on entry print "Entry S3"
+        composite state C1 init C1S1 keeps history {
+            transition -> I
+            stream s2 from event harnessIn?testIn
+            trigger s2->c == 2
+            
+            transition -> C2
+            stream s3 from event harnessIn?testIn
+            trigger s3->c == 3
+            
+               state C1S1 {
+                on entry do
+                    print "C1S1"
+                    harnessOut!testIn(3)
+                end
+                
+                    transition -> C1S2
+                    stream s4 from event harnessIn?testIn
+                    trigger s4->c == 4    
+               }
+               
+                  state C1S2 {
+                    on entry print "C1S2"    
+                  }   
         }
         
-        state S4 {
-            on entry print "Entry S4"
+        state C2 {
+            on entry print "C2"    
         }
-    }
-    
+	}
 }
 
-configuration testCfg {
-    instance demo : Demo1
-    connector demo.receiveService => demo.sendService    
+configuration testEnCoursCfg {
+    instance  test : TestSimpleStreamOnReceive
+    connector test.harnessOut => test.harnessIn
 }
+
+/*thing ReceiveMsgs includes TestMsgs, Test
+{
+
+	required port receiveService {
+    		receives msg
+    		sends ack
+    }
+
+    statechart ReceiveMsgs init Receive {
+    	state Receive {
+            internal
+    		stream s5 from event receiveService?msg
+    		action do
+    			if(s5->prop1 == 5 and s5->prop2 == 87) do
+                    receiveService!ack(s5->prop1,s5->prop2)
+                    print "if ReceiveMsgs"
+                end
+    		end
+    	}
+    }
+
+}*/

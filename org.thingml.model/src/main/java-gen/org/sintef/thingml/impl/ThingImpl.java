@@ -44,6 +44,7 @@ import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
+import org.sintef.thingml.cep.CepStream;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 
 /**
@@ -167,6 +168,13 @@ public class ThingImpl extends TypeImpl implements Thing {
 	 * @ordered
 	 */
 	protected EList<Operator> operators;
+
+	/**
+	 * MODIFICATION
+	 * @author ludovic
+	 * @generated NOT
+	 */
+	protected List<CepStream> cepStreams;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -758,16 +766,18 @@ public class ThingImpl extends TypeImpl implements Thing {
 
 	private void addHandlers(EList<? extends Handler> handlers, List<Handler> result) {
 		for(Handler h : handlers) {
-			/*for(Event e : h.getEvent()) {
-				if(e instanceof Stream) {
-					result.add(h);
-					break;
-				}
-			}*/
 			if(!h.allStreams().isEmpty()) {
 				result.add(h);
 			}
 		}
+	}
+
+	@Override
+	public List<CepStream> getCepStreams() {
+		if(cepStreams == null) {
+			cepStreams =  new ArrayList<>();
+		}
+		return cepStreams;
 	}
 	/** END **/
 

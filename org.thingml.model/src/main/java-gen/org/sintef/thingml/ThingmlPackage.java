@@ -3821,49 +3821,13 @@ public interface ThingmlPackage extends EPackage {
 	int STREAM__NAME = EVENT__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Port Send</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STREAM__PORT_SEND = EVENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Stream Message</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STREAM__STREAM_MESSAGE = EVENT_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Event Property</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STREAM__EVENT_PROPERTY = EVENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>With Subscribe</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STREAM__WITH_SUBSCRIBE = EVENT_FEATURE_COUNT + 3;
-
-	/**
 	 * The number of structural features of the '<em>Stream</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STREAM_FEATURE_COUNT = EVENT_FEATURE_COUNT + 4;
+	int STREAM_FEATURE_COUNT = EVENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.SimpleStreamImpl <em>Simple Stream</em>}' class.
@@ -3883,42 +3847,6 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int SIMPLE_STREAM__NAME = STREAM__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Port Send</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SIMPLE_STREAM__PORT_SEND = STREAM__PORT_SEND;
-
-	/**
-	 * The feature id for the '<em><b>Stream Message</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SIMPLE_STREAM__STREAM_MESSAGE = STREAM__STREAM_MESSAGE;
-
-	/**
-	 * The feature id for the '<em><b>Event Property</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SIMPLE_STREAM__EVENT_PROPERTY = STREAM__EVENT_PROPERTY;
-
-	/**
-	 * The feature id for the '<em><b>With Subscribe</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SIMPLE_STREAM__WITH_SUBSCRIBE = STREAM__WITH_SUBSCRIBE;
 
 	/**
 	 * The feature id for the '<em><b>Source</b></em>' containment reference.
@@ -3958,42 +3886,6 @@ public interface ThingmlPackage extends EPackage {
 	int COMPLEX_STREAM__NAME = STREAM__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Port Send</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPLEX_STREAM__PORT_SEND = STREAM__PORT_SEND;
-
-	/**
-	 * The feature id for the '<em><b>Stream Message</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPLEX_STREAM__STREAM_MESSAGE = STREAM__STREAM_MESSAGE;
-
-	/**
-	 * The feature id for the '<em><b>Event Property</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPLEX_STREAM__EVENT_PROPERTY = STREAM__EVENT_PROPERTY;
-
-	/**
-	 * The feature id for the '<em><b>With Subscribe</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPLEX_STREAM__WITH_SUBSCRIBE = STREAM__WITH_SUBSCRIBE;
-
-	/**
 	 * The feature id for the '<em><b>Streams</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4031,42 +3923,6 @@ public interface ThingmlPackage extends EPackage {
 	int MERGED_STREAMS__NAME = COMPLEX_STREAM__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Port Send</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MERGED_STREAMS__PORT_SEND = COMPLEX_STREAM__PORT_SEND;
-
-	/**
-	 * The feature id for the '<em><b>Stream Message</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MERGED_STREAMS__STREAM_MESSAGE = COMPLEX_STREAM__STREAM_MESSAGE;
-
-	/**
-	 * The feature id for the '<em><b>Event Property</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MERGED_STREAMS__EVENT_PROPERTY = COMPLEX_STREAM__EVENT_PROPERTY;
-
-	/**
-	 * The feature id for the '<em><b>With Subscribe</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MERGED_STREAMS__WITH_SUBSCRIBE = COMPLEX_STREAM__WITH_SUBSCRIBE;
-
-	/**
 	 * The feature id for the '<em><b>Streams</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4102,42 +3958,6 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int JOINED_STREAMS__NAME = COMPLEX_STREAM__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Port Send</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JOINED_STREAMS__PORT_SEND = COMPLEX_STREAM__PORT_SEND;
-
-	/**
-	 * The feature id for the '<em><b>Stream Message</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JOINED_STREAMS__STREAM_MESSAGE = COMPLEX_STREAM__STREAM_MESSAGE;
-
-	/**
-	 * The feature id for the '<em><b>Event Property</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JOINED_STREAMS__EVENT_PROPERTY = COMPLEX_STREAM__EVENT_PROPERTY;
-
-	/**
-	 * The feature id for the '<em><b>With Subscribe</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JOINED_STREAMS__WITH_SUBSCRIBE = COMPLEX_STREAM__WITH_SUBSCRIBE;
 
 	/**
 	 * The feature id for the '<em><b>Streams</b></em>' containment reference list.
@@ -6247,50 +6067,6 @@ public interface ThingmlPackage extends EPackage {
 	EClass getStream();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.Stream#getPortSend <em>Port Send</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Port Send</em>'.
-	 * @see org.sintef.thingml.Stream#getPortSend()
-	 * @see #getStream()
-	 * @generated
-	 */
-	EReference getStream_PortSend();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.Stream#getStreamMessage <em>Stream Message</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Stream Message</em>'.
-	 * @see org.sintef.thingml.Stream#getStreamMessage()
-	 * @see #getStream()
-	 * @generated
-	 */
-	EReference getStream_StreamMessage();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.Stream#getEventProperty <em>Event Property</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Event Property</em>'.
-	 * @see org.sintef.thingml.Stream#getEventProperty()
-	 * @see #getStream()
-	 * @generated
-	 */
-	EReference getStream_EventProperty();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.sintef.thingml.Stream#getWithSubscribe <em>With Subscribe</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>With Subscribe</em>'.
-	 * @see org.sintef.thingml.Stream#getWithSubscribe()
-	 * @see #getStream()
-	 * @generated
-	 */
-	EAttribute getStream_WithSubscribe();
-
-	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.SimpleStream <em>Simple Stream</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8104,38 +7880,6 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EClass STREAM = eINSTANCE.getStream();
-
-		/**
-		 * The meta object literal for the '<em><b>Port Send</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference STREAM__PORT_SEND = eINSTANCE.getStream_PortSend();
-
-		/**
-		 * The meta object literal for the '<em><b>Stream Message</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference STREAM__STREAM_MESSAGE = eINSTANCE.getStream_StreamMessage();
-
-		/**
-		 * The meta object literal for the '<em><b>Event Property</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference STREAM__EVENT_PROPERTY = eINSTANCE.getStream_EventProperty();
-
-		/**
-		 * The meta object literal for the '<em><b>With Subscribe</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute STREAM__WITH_SUBSCRIBE = eINSTANCE.getStream_WithSubscribe();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.SimpleStreamImpl <em>Simple Stream</em>}' class.

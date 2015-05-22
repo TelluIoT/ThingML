@@ -2460,42 +2460,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getStream_PortSend() {
-		return (EReference)streamEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getStream_StreamMessage() {
-		return (EReference)streamEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getStream_EventProperty() {
-		return (EReference)streamEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getStream_WithSubscribe() {
-		return (EAttribute)streamEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getSimpleStream() {
 		return simpleStreamEClass;
 	}
@@ -2909,10 +2873,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEAttribute(localVariableEClass, LOCAL_VARIABLE__CHANGEABLE);
 
 		streamEClass = createEClass(STREAM);
-		createEReference(streamEClass, STREAM__PORT_SEND);
-		createEReference(streamEClass, STREAM__STREAM_MESSAGE);
-		createEReference(streamEClass, STREAM__EVENT_PROPERTY);
-		createEAttribute(streamEClass, STREAM__WITH_SUBSCRIBE);
 
 		simpleStreamEClass = createEClass(SIMPLE_STREAM);
 		createEReference(simpleStreamEClass, SIMPLE_STREAM__SOURCE);
@@ -3315,10 +3275,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEAttribute(getLocalVariable_Changeable(), ecorePackage.getEBoolean(), "changeable", "true", 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(streamEClass, Stream.class, "Stream", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getStream_PortSend(), this.getPort(), null, "portSend", null, 1, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getStream_StreamMessage(), this.getMessage(), null, "streamMessage", null, 1, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getStream_EventProperty(), this.getProperty(), null, "eventProperty", null, 1, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getStream_WithSubscribe(), ecorePackage.getEBooleanObject(), "withSubscribe", "true", 0, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(simpleStreamEClass, SimpleStream.class, "SimpleStream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSimpleStream_Source(), this.getReceiveMessage(), null, "source", null, 1, 1, SimpleStream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

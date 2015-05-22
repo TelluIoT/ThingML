@@ -11,7 +11,7 @@ thing TestDeepCompositeStatesWithStream includes Test
 		state I {
 			transition -> C1
 			stream s1 from event harnessIn?testIn
-			guard s1->c == '\'n\''
+			trigger s1->c == '\'n\''
 		}
 		
 		composite state C1 init C2 {
@@ -21,7 +21,7 @@ thing TestDeepCompositeStatesWithStream includes Test
 		
         transition -> I
 		stream s2 from event m : harnessIn?testIn
-		guard s2->c == '\'a\''
+		trigger s2->c == '\'a\''
 		
 			state C1S1 {
 				on entry harnessOut!testOut('\'4\'')
@@ -34,7 +34,7 @@ thing TestDeepCompositeStatesWithStream includes Test
 				
                 transition -> C1S1
                 stream s3 from event m : harnessIn?testIn
-				guard s3->c == '\'a\''
+				trigger s3->c == '\'a\''
 				
 				state C2S1 {	
 					on entry harnessOut!testOut('\'3\'')
@@ -48,7 +48,7 @@ thing TestDeepCompositeStatesWithStream includes Test
 					
                     transition -> C2S1
                     stream s4 from event m : harnessIn?testIn
-					guard s4->c == '\'a\''
+					trigger s4->c == '\'a\''
 					
 					state C3S1{
 					}
@@ -59,7 +59,7 @@ thing TestDeepCompositeStatesWithStream includes Test
 		state r_I {
 			transition -> r_C1
             stream s5 from event m : harnessIn?testIn
-			guard s5->c == '\'n\''
+			trigger s5->c == '\'n\''
 		}
 		
 		composite state r_C1 init r_C2 {
@@ -69,7 +69,7 @@ thing TestDeepCompositeStatesWithStream includes Test
 		
         transition -> r_I
         stream s6 from event m : harnessIn?testIn
-		guard s6->c == '\'a\''
+		trigger s6->c == '\'a\''
 		
 			state r_C1S1 {
 				on entry harnessOut!testOut('\'e\'')
@@ -82,7 +82,7 @@ thing TestDeepCompositeStatesWithStream includes Test
 				
                 transition -> r_C1S1
                 stream s7 from event m : harnessIn?testIn
-				guard s7->c == '\'a\''
+				trigger s7->c == '\'a\''
 				
 				state r_C2S1 {	
 					on entry harnessOut!testOut('\'d\'')
@@ -96,7 +96,7 @@ thing TestDeepCompositeStatesWithStream includes Test
                     
 					transition -> r_C2S1
 					stream s8 from event m : harnessIn?testIn
-					guard s8->c == '\'a\''
+					trigger s8->c == '\'a\''
 					
 					state r_C3S1{
 					}

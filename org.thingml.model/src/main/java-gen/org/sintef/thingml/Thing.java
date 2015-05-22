@@ -16,6 +16,7 @@
 package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
+import org.sintef.thingml.cep.CepStream;
 
 import java.util.List;
 
@@ -306,10 +307,20 @@ public interface Thing extends Type {
     List<PropertyAssign> initExpressionsForArray(Property p);
 
     /**
-     *
+     * MODIFICATION
+     * @author ludovic
      * @return
      * @generated NOT
      */
     List<Handler> allTransitionsWithStream();
+
+    /**
+     * MODIFICATION
+     * @author ludovic
+     * @return
+     * @generated NOT
+     */
+    List<CepStream> getCepStreams();
+
 
 } // Thing

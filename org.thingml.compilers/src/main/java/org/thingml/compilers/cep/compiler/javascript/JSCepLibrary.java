@@ -17,6 +17,7 @@ package org.thingml.compilers.cep.compiler.javascript;
 
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.SimpleStream;
+import org.sintef.thingml.cep.CepStream;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.cep.compiler.CepLibrary;
 
@@ -29,9 +30,9 @@ public class JSCepLibrary extends CepLibrary {
     public static final JSCepLibrary instance = new JSCepLibrary();
 
     @Override
-    public String createStreamFromEvent(SimpleStream stream, Context ctx) {
-        String result = "var " + stream.getName() +
-                " = Rx.Observable.fromEvent(this." + ctx.getVariableName(stream.getEventProperty()) +",'"+ stream.getEventProperty().getName() +"')";
+    public String createStreamFromEvent(CepStream stream, Context ctx) {
+        String result = "var " + /*stream.qname("_")*/ "stream" +
+                " = Rx.Observable.fromEvent(this." + ctx.getVariableName(/*stream.getEventProperty()*/stream.getEventProperty()) +",'"+ stream.getEventProperty().getName() +"')";
 
         if(stream.getWithSubscribe()) {
             result += ".subscribe(\n\t" +
@@ -43,7 +44,7 @@ public class JSCepLibrary extends CepLibrary {
                 result += " + \"" + param.getName() + "= \" + json." + param.getName() + "+ \"; \"" ;
             }*/
 
-            for (Parameter param : stream.getSource().getMessage().getParameters()) {
+            for (Parameter param : /*stream.getSource().getMessage().getParameters()*/ stream.getStreamMessage().getParameters()) {
                 result += " + \"" + param.getName() + "= \" + json." + param.getName() + "+ \"; \"" ;
             }
             String functionCall = "send" + ctx.firstToUpper(stream.getStreamMessage().getName()) + "On" + ctx.firstToUpper(stream.getPortSend().getName());
@@ -53,7 +54,7 @@ public class JSCepLibrary extends CepLibrary {
             /*for (Parameter param : stream.getMessage().getMessage().getParameters()) {
                 result += ", json." + param.getName();
             }*/
-            for (Parameter param : stream.getSource().getMessage().getParameters()) {
+            for (Parameter param : /*stream.getSource().getMessage().getParameters()*/ stream.getStreamMessage().getParameters()) {
                 result += ", json." + param.getName();
             }
 

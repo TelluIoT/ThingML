@@ -15,7 +15,11 @@
  */
 package org.thingml.compilers.cep.linker;
 
+import org.eclipse.emf.ecore.EObject;
 import org.sintef.thingml.*;
+import org.sintef.thingml.cep.CEPStreamImpl;
+import org.sintef.thingml.cep.CepStream;
+import org.sintef.thingml.impl.CompositeStateImpl;
 import org.sintef.thingml.impl.InternalTransitionImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.cep.linker.utils.ConnectNewPorts;
@@ -262,17 +266,16 @@ public class CepLinker {
     }*/
 
     public void modifyThing(Context ctx, Configuration conf, Thing thing) {
+        String requiredPortName = thing.getName() + "_send_port_state_" ;
+        String providedPortName = thing.getName() + "_receive_port_state_" ;
+        ConnectNewPorts connector = new ConnectNewPorts(requiredPortName,providedPortName, thing);
+        connector.connect(conf);
+        RequiredPort portSend = connector.getRequiredPort();
+        ProvidedPort portReceive = connector.getProvidedPort();
+
        for(StateMachine stateMachine : thing.allStateMachines()) {
             for(State state : stateMachine.allStates()) {
-                //fixme optim : two ports by things (?)
-                //create and connect two ports
-                // the ports are used to send messages between CEP and statemachine
-                String requiredPortName = thing.getName() + "_send_port_state_" + state.getName();
-                String providedPortName = thing.getName() + "_receive_port_state_" + state.getName();
-                ConnectNewPorts connector = new ConnectNewPorts(requiredPortName,providedPortName, thing);
-                connector.connect(conf);
-                RequiredPort portSend = connector.getRequiredPort();
-                ProvidedPort portReceive = connector.getProvidedPort();
+
 
                 List<Handler> handlersWithStream = new ArrayList<>();
                 for(Handler h : state.getInternal()) {
@@ -288,37 +291,51 @@ public class CepLinker {
                     for (Stream stream : handler.allStreams()) {
                         if (indexHandler == 0) ctx.addProperty("hasStream", "true");
 
-                        SimpleStream simpleStream = (SimpleStream) stream;
-                        String eventPropertyName = thing.getName() + "_event_transition_" + indexHandler;
-                        Property eventProperty = createEventProperty(thing, eventPropertyName);
+                        if (stream instanceof SimpleStream) {
+                            SimpleStream simpleStream = (SimpleStream) stream;
+                            Message streamMessage;
+                            Optional<CepStream> opt = getInternalIfExists(state, simpleStream.getSource());
+                            CepStream cepStream;
+                            if (opt.isPresent()) {
+                                cepStream = opt.get();
+                                streamMessage = cepStream.getStreamMessage();
+                                portReceive = cepStream.getPortReceive();
+                            } else {
+                                cepStream = new CEPStreamImpl();
+                                InternalTransition newTransition = ThingmlFactory.eINSTANCE.createInternalTransition();
+                                newTransition.getEvent().add(simpleStream);
+                                state.getInternal().add(newTransition);
 
-                        String streamMessageName = thing.getName() + "_stream_message_" + indexHandler;
-                        Message streamMessage = CreateMessage.createMessage(thing, simpleStream.getSource().getMessage().getParameters(),
-                                streamMessageName, portReceive, portSend);
-                        ReceiveMessage receiveMessage = CreateMessage.createReceiveMessage(handler, portReceive, streamMessage);
+                                String eventPropertyName = thing.getName() + "_event_transition_" + state.getName() + indexHandler;
+                                Property eventProperty = createEventProperty(thing, eventPropertyName);
 
-                        Optional<InternalTransition> opt = getInternalIfExists(state, simpleStream.getSource());
-                        InternalTransition newTransition;
-                        if (opt.isPresent()) {
-                            newTransition = opt.get();
-                        } else {
-                            newTransition = ThingmlFactory.eINSTANCE.createInternalTransition();
-                            ActionBlock actionBlock = ThingmlFactory.eINSTANCE.createActionBlock();
-                            newTransition.setAction(actionBlock);
-                            newTransition.getEvent().add(simpleStream.getSource());
-                            state.getInternal().add(newTransition);
-                        }
+                                ExternStatement action = ThingmlFactory.eINSTANCE.createExternStatement();
+                                action.setStatement("_this." + ctx.getVariableName(eventProperty) + ".emit('" + eventProperty.getName() + "',message)");
+                                newTransition.setAction(action);
 
-                        ExternStatement action = ThingmlFactory.eINSTANCE.createExternStatement();
-                        action.setStatement("_this." + ctx.getVariableName(eventProperty) + ".emit('" + eventProperty.getName() + "',message)");
-                        ((ActionBlock) newTransition.getAction()).getActions().add(action);
+                                String streamMessageName = thing.getName() + "_stream_message_" + state.getName() + indexHandler;
+                                streamMessage = CreateMessage.createMessage(thing, simpleStream.getSource().getMessage().getParameters(),
+                                                                                streamMessageName, portReceive, portSend);
 
-                        simpleStream.setSource(receiveMessage);
-                        simpleStream.setEventProperty(eventProperty);
-                        simpleStream.setPortSend(portSend);
-                        simpleStream.setStreamMessage(streamMessage);
+                                cepStream.setPortReceive(portReceive);
+                                cepStream.setPortSend(portSend);
+                                cepStream.setStreamMessage(streamMessage);
+                                cepStream.setEventProperty(eventProperty);
+                                simpleStream.setCepStream(cepStream);
+                                thing.getCepStreams().add(cepStream);
 
-                        indexHandler++;
+                            }
+
+                            simpleStream.setCepStream(cepStream);
+                            handler.getEvent().clear(); //fixme
+                            CreateMessage.createReceiveMessage(handler, portReceive, streamMessage);
+                            indexHandler++;
+                        }/* else if(stream instanceof MergedStreams) {
+                            MergedStreams mergedStreams = (MergedStreams) stream;
+                            for(Stream s : mergedStreams.getStreams()) {
+                                handler.getEvent().add(s);
+                            }
+                        }*/
                     }
                 }
 
@@ -329,16 +346,36 @@ public class CepLinker {
 
     }
 
-    private Optional<InternalTransition> getInternalIfExists(State s, ReceiveMessage looking) {
-        for(InternalTransition it : s.getInternal()) {
-            if(it.getEvent().get(0) instanceof ReceiveMessage) { //les intern qu on cree ont forcement que des receivemessage
-                ReceiveMessage rm = (ReceiveMessage) it.getEvent().get(0); //pas plus de 1 event sur l'internal cree
+    private Optional<CepStream> getInternalIfExists(State s, ReceiveMessage looking) {
+        //fixme optimization
+        EObject parent = s.eContainer();
+        while (parent.getClass() == CompositeStateImpl.class) {
+            for (InternalTransition it : ((CompositeState)parent).getInternal()) {
+                if (it.getEvent().get(0) instanceof SimpleStream) { //les intern qu on cree ont forcement que des receivemessage
+                    SimpleStream stream = (SimpleStream) it.getEvent().get(0); //pas plus de 1 event sur l'internal cree
+                    ReceiveMessage rm = stream.getSource();
+                    if (rm.getMessage().getName().equals(looking.getMessage().getName()) &&
+                            rm.getPort().getName().equals(looking.getPort().getName())) {
+                        return Optional.of(stream.getCepStream());
+                    }
+                }
+            }
+            parent = parent.eContainer();
+        }
+
+        for (InternalTransition it : s.getInternal()) {
+            if (it.getEvent().get(0) instanceof SimpleStream) { //les intern qu on cree ont forcement que des receivemessage
+                SimpleStream stream = (SimpleStream) it.getEvent().get(0); //pas plus de 1 event sur l'internal cree
+                ReceiveMessage rm = stream.getSource();
                 if (rm.getMessage().getName().equals(looking.getMessage().getName()) &&
                         rm.getPort().getName().equals(looking.getPort().getName())) {
-                    return Optional.of(it);
+                    if(stream.getCepStream() != null) {
+                        return Optional.of(stream.getCepStream());
+                    }
                 }
             }
         }
+
 
         return Optional.empty();
     }

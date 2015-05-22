@@ -333,16 +333,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="changeable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Stream" abstract="true" eSuperTypes="#//Event">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="portSend" lowerBound="1"
-        eType="#//Port"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="streamMessage" lowerBound="1"
-        eType="#//Message"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="eventProperty" lowerBound="1"
-        eType="#//Property"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="withSubscribe" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
-        defaultValueLiteral="true"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Stream" abstract="true" eSuperTypes="#//Event"/>
   <eClassifiers xsi:type="ecore:EClass" name="SimpleStream" eSuperTypes="#//Stream">
     <eStructuralFeatures xsi:type="ecore:EReference" name="source" lowerBound="1"
         eType="#//ReceiveMessage" containment="true"/>

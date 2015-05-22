@@ -17,6 +17,7 @@ package org.thingml.compilers.cep.compiler;
 
 import org.sintef.thingml.SimpleStream;
 import org.sintef.thingml.Stream;
+import org.sintef.thingml.cep.CepStream;
 import org.thingml.compilers.Context;
 
 /**
@@ -25,18 +26,19 @@ import org.thingml.compilers.Context;
  * JS currently use ReactiveX librairy
  */
 public abstract class CepLibrary {
-    public String createStreamFromEvent(Stream stream, Context ctx) {
-        if(stream instanceof SimpleStream) {
+    public String createStreamFromEvent(CepStream stream, Context ctx) {
+        /*if(stream instanceof SimpleStream) {
             return createStreamFromEvent((SimpleStream)stream,ctx);
-        } /*else if(stream instanceof TimeStream) {
+        } else if(stream instanceof TimeStream) {
             return createStreamFromEvent((TimeStream)stream,ctx);
         } else if(stream instanceof JoinStream) {
             return createStreamFromEvent((JoinStream)stream,ctx);
-        }*/
-        throw(new UnsupportedOperationException("Case for " + stream.getClass() + " is missing in CepLibrary.createStreamFromEvent method"));
+        }
+        throw(new UnsupportedOperationException("Case for " + stream.getClass() + " is missing in CepLibrary.createStreamFromEvent method"));*/
+        return createStreamFromEvent(stream,ctx);
     }
 
-    public abstract String createStreamFromEvent(SimpleStream stream, Context ctx);
+    //public abstract String createStreamFromEvent(SimpleStream stream, Context ctx);
     /*public abstract String createStreamFromEvent(TimeStream stream, Context ctx);
     public abstract String createStreamFromEvent(JoinStream stream, Context ctx);*/
 }

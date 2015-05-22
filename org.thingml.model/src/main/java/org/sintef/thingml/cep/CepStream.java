@@ -13,36 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- */
-package org.sintef.thingml;
+package org.sintef.thingml.cep;
 
-
-import org.sintef.thingml.cep.CepStream;
+import org.sintef.thingml.*;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Stream</b></em>'.
- * <!-- end-user-doc -->
- *
- *
- * @see org.sintef.thingml.ThingmlPackage#getStream()
- * @model abstract="true"
- * @generated
+ * @author ludovic
  */
-public interface Stream extends Event {
-    /**
-     * MODIFICATION
-     * @author ludovic
-     * @generated NOT
-     */
-    CepStream getCepStream();
+public interface CepStream {
 
-    /**
-     * MODIFICATION
-     * @author ludovic
-     * @generated NOT
-     */
-    void setCepStream(CepStream cepStream);
+    Property getEventProperty();
+    void setEventProperty(Property value);
 
-} // Stream
+    RequiredPort getPortSend();
+    void setPortSend(RequiredPort value);
+
+    ProvidedPort getPortReceive();
+    void setPortReceive(ProvidedPort portReceive);
+
+    Message getStreamMessage();
+    void setStreamMessage(Message value);
+
+    boolean getWithSubscribe();
+    void setWithSubscribe(boolean value);
+}
