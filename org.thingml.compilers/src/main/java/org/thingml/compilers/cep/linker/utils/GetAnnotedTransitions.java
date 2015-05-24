@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author ludovic
  */
-public class GetAnnotedTransitions {
+/*public class GetAnnotedTransitions {
 
     public static List<Handler> getAllAnnotedTransitions(Thing thing) {
         List<Handler> result = new ArrayList<>();
@@ -49,4 +49,4 @@ public class GetAnnotedTransitions {
             }
         }
     }
-}
+}*/

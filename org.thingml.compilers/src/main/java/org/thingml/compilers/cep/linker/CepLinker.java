@@ -24,6 +24,7 @@ import org.sintef.thingml.impl.InternalTransitionImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.cep.linker.utils.ConnectNewPorts;
 import org.thingml.compilers.cep.linker.utils.CreateMessage;
+import org.thingml.compilers.cep.linker.utils.TransformGuard;
 
 import javax.activation.UnsupportedDataTypeException;
 import java.security.Guard;
@@ -363,7 +364,7 @@ public class CepLinker {
                                 if(event.getMessage().getName().equals(rmStream.getMessage().getName())
                                         && event.getPort().getName().equals(rmStream.getPort().getName())) {
 
-                                    EqualsExpression hGuard = (EqualsExpression) h.getGuard();
+                                    /*EqualsExpression hGuard = (EqualsExpression) h.getGuard();
                                     EqualsExpression copyHGuard = ThingmlFactory.eINSTANCE.createEqualsExpression();
 
                                     Expression rhs;
@@ -382,7 +383,9 @@ public class CepLinker {
                                     EventReference eventReference = ThingmlFactory.eINSTANCE.createEventReference();
                                     eventReference.setMsgRef(((EventReference)hGuard.getLhs()).getMsgRef());
                                     eventReference.setParamRef(((EventReference) hGuard.getLhs()).getParamRef());
-                                    copyHGuard.setLhs(eventReference);
+                                    copyHGuard.setLhs(eventReference);*/
+
+                                    Expression copyHGuard = TransformGuard.copyAndTransformGuard(h.getGuard());
 
                                     if(hWithStream.getGuard() == null) {
                                         NotExpression notExpression = ThingmlFactory.eINSTANCE.createNotExpression();

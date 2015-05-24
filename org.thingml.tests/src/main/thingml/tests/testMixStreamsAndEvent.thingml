@@ -5,23 +5,26 @@ thing TestMixStreamsAndEvent includes Test
 @test "ac # 13"
 @test "ad # 14"
 {
-	 
+	function aFunction(x1 : Integer, x2 : Integer, x3 : Integer) : Boolean do
+        return  ((x1 == x2) and (x2 == x3))
+    end
+     
 	statechart TestInit init S1 {
 
 		state S1 {
 			
             internal
 			stream s1 from event harnessIn?testIn
-			trigger s1->c == '\'a\''
+			trigger (1== '1' and not(1>5 and 1==-5) and (1 == 2 or 2==2) and s1->c == '\'a\'')
 			action harnessOut!testOut('\'1\'') 
 
 			transition -> S2
 			event e : harnessIn?testIn
-			guard e.c == '\'b\''
+			guard (e.c == '\'b\'')
 
             transition -> S3
 			event e : harnessIn?testIn
-			guard e.c == '\'c\''
+			guard (1== '1' and not(1>5 and 1==-5) and (1 == 2 or 2==2) and e.c == '\'c\'')
 
             transition -> S4
 			event e : harnessIn?testIn
