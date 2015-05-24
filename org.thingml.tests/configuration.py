@@ -32,8 +32,8 @@ testType="functional"
 #Functional tests options
 #If useBlacklist is True, runs all tests not present in blacklist
 #If useBlacklist is False, runs all tests present in whitelist
-useBlacklist=False
-blacklist=("tester testJoinStream")
+useBlacklist=True
+blacklist=("tester testJoinStream testMergeStream")
 # whitelist=("testSimpleStreamOnReceive testDeepCompositeStatesWithStream testHistoryStatesWithStream testMixStreamsAndEvent testStreamWithMultipleEvents")
 whitelist=("testMixStreamsAndEvent")
 

@@ -20,14 +20,11 @@ import org.sintef.thingml.*;
 import org.sintef.thingml.cep.CEPStreamImpl;
 import org.sintef.thingml.cep.CepStream;
 import org.sintef.thingml.impl.CompositeStateImpl;
-import org.sintef.thingml.impl.InternalTransitionImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.cep.linker.utils.ConnectNewPorts;
 import org.thingml.compilers.cep.linker.utils.CreateMessage;
 import org.thingml.compilers.cep.linker.utils.TransformGuard;
 
-import javax.activation.UnsupportedDataTypeException;
-import java.security.Guard;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -291,11 +288,12 @@ public class CepLinker {
                 // create CEP engine
                 int indexHandler = 0;
                 for(Handler handler : handlersWithStream) {
+                    int indexStream = 0;
                     for (Stream stream : handler.allStreams()) {
                         if (indexHandler == 0) ctx.addProperty("hasStream", "true");
 
                         if (stream instanceof SimpleStream) {
-                            SimpleStream simpleStream = (SimpleStream) stream;
+                            final SimpleStream simpleStream = (SimpleStream) stream;
                             Message streamMessage;
                             Optional<CepStream> opt = getInternalIfExists(state, simpleStream.getSource());
                             CepStream cepStream;
@@ -330,7 +328,12 @@ public class CepLinker {
                             }
 
                             simpleStream.setCepStream(cepStream);
-                            handler.getEvent().clear(); //fixme
+                            handler.getEvent().removeIf(new Predicate<Event>() {
+                                @Override
+                                public boolean test(Event event) {
+                                   return event.qname("_").equals(simpleStream.qname("_"));
+                                }
+                            });
                             CreateMessage.createReceiveMessage(handler, portReceive, streamMessage);
                             indexHandler++;
                         }/* else if(stream instanceof MergedStreams) {
@@ -339,18 +342,17 @@ public class CepLinker {
                                 handler.getEvent().add(s);
                             }
                         }*/
+                        indexStream++;
                     }
                 }
 
 
                 List<Handler> handlers = new ArrayList<>();
-
                 handlersWithStream.clear();
                 for(Handler h : state.getInternal()) {
                     if(!h.allStreams().isEmpty()) handlersWithStream.add(h);
                     else handlers.add(h);
                 }
-
                 handlers.addAll(state.getOutgoing());
 
                 for(Handler hWithStream : handlersWithStream) {
@@ -364,28 +366,7 @@ public class CepLinker {
                                 if(event.getMessage().getName().equals(rmStream.getMessage().getName())
                                         && event.getPort().getName().equals(rmStream.getPort().getName())) {
 
-                                    /*EqualsExpression hGuard = (EqualsExpression) h.getGuard();
-                                    EqualsExpression copyHGuard = ThingmlFactory.eINSTANCE.createEqualsExpression();
-
-                                    Expression rhs;
-                                    if(hGuard.getRhs() instanceof IntegerLiteral) {
-                                        IntegerLiteral integerLiteral = ThingmlFactory.eINSTANCE.createIntegerLiteral();
-                                        integerLiteral.setIntValue(((IntegerLiteral) hGuard.getRhs()).getIntValue());
-                                        rhs = integerLiteral;
-                                    } else if (hGuard.getRhs() instanceof ExternExpression){
-                                        ExternExpression externExpression = ThingmlFactory.eINSTANCE.createExternExpression();
-                                        externExpression.setExpression(((ExternExpression)hGuard.getRhs()).getExpression());
-                                        rhs = externExpression;
-                                    } else {
-                                        throw new UnsupportedOperationException("Not good...");
-                                    }
-                                    copyHGuard.setRhs(rhs);
-                                    EventReference eventReference = ThingmlFactory.eINSTANCE.createEventReference();
-                                    eventReference.setMsgRef(((EventReference)hGuard.getLhs()).getMsgRef());
-                                    eventReference.setParamRef(((EventReference) hGuard.getLhs()).getParamRef());
-                                    copyHGuard.setLhs(eventReference);*/
-
-                                    Expression copyHGuard = TransformGuard.copyAndTransformGuard(h.getGuard());
+                                    Expression copyHGuard = TransformGuard.copyExpression(h.getGuard());
 
                                     if(hWithStream.getGuard() == null) {
                                         NotExpression notExpression = ThingmlFactory.eINSTANCE.createNotExpression();

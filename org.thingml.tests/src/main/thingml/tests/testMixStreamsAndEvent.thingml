@@ -1,57 +1,45 @@
 import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 
 thing TestMixStreamsAndEvent includes Test
-@test "ab # 12"
-@test "ac # 13"
-@test "ad # 14"
+@test "sabsB # 1sa2AB"
 {
 	function aFunction(x1 : Integer, x2 : Integer, x3 : Integer) : Boolean do
         return  ((x1 == x2) and (x2 == x3))
     end
      
-	statechart TestInit init S1 {
-
-		state S1 {
-			
-            internal
-			stream s1 from event harnessIn?testIn
-			trigger (1== '1' and not(1>5 and 1==-5) and (1 == 2 or 2==2) and s1->c == '\'a\'')
-			action harnessOut!testOut('\'1\'') 
-
-			transition -> S2
-			event e : harnessIn?testIn
-			guard (e.c == '\'b\'')
-
-            transition -> S3
-			event e : harnessIn?testIn
-			guard (1== '1' and not(1>5 and 1==-5) and (1 == 2 or 2==2) and e.c == '\'c\'')
-
-            transition -> S4
-			event e : harnessIn?testIn
-			guard e.c == '\'d\''
-
+	statechart TestInit init S3 {
+        composite state S3 init S1 {
+            internal 
+            stream s from event harnessIn?testIn
+            trigger s->c == '\'s\''
+            action harnessOut!testOut('\'s\'') 
             
-		}
-
-		state S2 {
-            on entry do
-                print "S2"
-                harnessOut!testOut('\'2\'')
-            end
-		}
-
-        state S3 {
-            on entry do
-                print "S3"
-                harnessOut!testOut('\'3\'')
-            end
-		}
-
-        state S4 {
-            on entry do
-                print "S4"
-                harnessOut!testOut('\'4\'')
-            end
-		}
+            state S1 {
+                on entry harnessOut!testOut('\'1\'')
+                
+                internal 
+                stream s from event harnessIn?testIn
+                trigger s->c == '\'a\''
+                action harnessOut!testOut('\'a\'') 
+                
+                transition -> S2
+                event e : harnessIn?testIn
+                guard e.c == '\'b\''
+            }
+            
+            state S2 {
+                on entry harnessOut!testOut('\'2\'')
+                
+                internal 
+                event e : harnessIn?testIn
+                guard (1== '1' and not(1>5 and 1==-5) and (1 == 2 or 2==2) and e.c == '\'s\'')
+                action harnessOut!testOut('\'A\'')
+                
+                internal 
+                stream s from event harnessIn?testIn
+                trigger s->c == '\'B\''
+                action harnessOut!testOut('\'B\'')
+            }  
+        }
 	}
 }

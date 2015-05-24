@@ -4,20 +4,21 @@ thing fragment TestsMsgs {
     message msg1();
     message msg2();
     message msg3();
+    message msg4();
+    message msg5();
+    message msg6();
 }
 
 thing TestStreamWithMultipleEvents includes Test, TestsMsgs
-@test "n # iii"
-@test "s # iii"
-@test "S # iii"
+@test "nN # iiiILLLlll"
 @conf "connector test.requiredService => test.providedService"
 {
     provided port providedService {
-        sends msg1, msg2, msg3
+        sends msg1, msg2, msg3, msg4, msg5, msg6
     }
     
     required port requiredService {
-        receives msg1, msg2, msg3  
+        receives msg1, msg2, msg3, msg4, msg5, msg6  
     }
     
     statechart TestStreamWithMultipleEvents init Init {
@@ -25,14 +26,6 @@ thing TestStreamWithMultipleEvents includes Test, TestsMsgs
             transition -> First
             stream s1 from event harnessIn?testIn
 			trigger s1->c == '\'n\''
-
-            transition -> Second
-            stream s2 from event harnessIn?testIn
-			trigger s2->c == '\'s\''
-
-            transition -> Third
-            stream s3 from event harnessIn?testIn
-			trigger s3->c == '\'S\''
         }
         
         state First {
@@ -43,38 +36,40 @@ thing TestStreamWithMultipleEvents includes Test, TestsMsgs
             end
             
             internal
-            stream s4 from event requiredService?msg1
-            stream s5 from event requiredService?msg2
-            stream s6 from event requiredService?msg3
-            action harnessOut!testOut('\'i\'')     
+            stream from event requiredService?msg1
+            stream from event requiredService?msg2
+            stream from event requiredService?msg3
+            action harnessOut!testOut('\'i\'')  
+            
+            transition -> Second
+            event e : harnessIn?testIn
+            guard e.c == '\'N\''   
         }
         
         state Second {
-            on entry do
+             on entry do
+                harnessOut!testOut('\'I\'')
+                
                 providedService!msg1()
                 providedService!msg2()
                 providedService!msg3()
-            end
+                providedService!msg4()
+                providedService!msg5()
+                providedService!msg6()
+             end
+             
+            internal
+            stream from event requiredService?msg1
+            stream from event requiredService?msg2
+            stream from event requiredService?msg3
+            action harnessOut!testOut('\'l\'')
             
             internal
-            stream s7 from event requiredService?msg1
-            stream s8 from event requiredService?msg2
-            stream s9 from event requiredService?msg3
-            action harnessOut!testOut('\'i\'')     
-        }
-        
-        state Third {
-            on entry do
-                providedService!msg1()
-                providedService!msg2()
-                providedService!msg3()
-            end
-            
-            internal
-            stream s10 from event requiredService?msg1
-            stream s11 from event requiredService?msg2
-            stream s12 from event requiredService?msg3
-            action harnessOut!testOut('\'i\'')     
+            event requiredService?msg4
+            event requiredService?msg5
+            event requiredService?msg6
+            action harnessOut!testOut('\'L\'')
+                
         }
     }
 }
