@@ -44,7 +44,7 @@ public class FilePanel extends JPanel implements Runnable{
             filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             filechooser.setDialogTitle("Select base directory for ThingML files");
 
-            File dir = ThingMLSettings.get_default_work_dir();
+            File dir = ThingMLSettings.getInstance().get_default_work_dir();
 
             if (dir != null) {
                 filechooser.setSelectedFile(dir);
@@ -52,7 +52,7 @@ public class FilePanel extends JPanel implements Runnable{
 
             int returnVal = filechooser.showOpenDialog(null);
             if (filechooser.getSelectedFile() != null && returnVal == JFileChooser.APPROVE_OPTION) {
-                ThingMLSettings.store_default_work_dir(filechooser.getSelectedFile());
+                ThingMLSettings.getInstance().store_default_work_dir(filechooser.getSelectedFile());
                 root = filechooser.getSelectedFile();
             } else {
                 System.exit(0);

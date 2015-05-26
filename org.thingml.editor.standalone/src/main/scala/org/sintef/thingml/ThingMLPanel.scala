@@ -50,7 +50,7 @@ class ThingMLPanel extends JPanel {
 
   this.setLayout(new BorderLayout())
   jsyntaxpane.DefaultSyntaxKit.initKit();
-  jsyntaxpane.DefaultSyntaxKit.registerContentType("text/thingml", classOf[ThingMLJSyntaxKit].getName());
+  jsyntaxpane.DefaultSyntaxKit.registerContentType("text/thingml", classOf[org.sintef.thingml.ThingMLJSyntaxKit].getName());
   var codeEditor = new JEditorPane();
   var scrPane = new JScrollPane(codeEditor);
   codeEditor.setContentType("text/thingml; charset=UTF-8");
@@ -124,10 +124,10 @@ class ThingMLPanel extends JPanel {
         // Load the model
         val thingmlModel = loadThingMLmodel(targetFile.get)
 
-        var arduino_dir = ThingMLSettings.get_arduino_dir_or_choose_if_not_set(ThingMLPanel.this)
+        var arduino_dir = ThingMLSettings.getInstance().get_arduino_dir_or_choose_if_not_set(ThingMLPanel.this)
 
         if (arduino_dir != null) {
-          CGenerator.compileAndRunArduino(thingmlModel, arduino_dir, ThingMLSettings.get_arduino_lib_dir())
+          CGenerator.compileAndRunArduino(thingmlModel, arduino_dir, ThingMLSettings.getInstance().get_arduino_lib_dir())
         }
       }
       catch {
