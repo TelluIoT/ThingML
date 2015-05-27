@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.sintef.thingml.Action;
 import org.sintef.thingml.ControlStructure;
 import org.sintef.thingml.Expression;
@@ -52,7 +53,6 @@ public abstract class ControlStructureImpl extends ActionImpl implements Control
 	 * @ordered
 	 */
 	protected Action action;
-
 	/**
 	 * The cached value of the '{@link #getCondition() <em>Condition</em>}' containment reference.
 	 * <!-- begin-user-doc -->

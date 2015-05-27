@@ -27,6 +27,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/assign"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/messages"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/functions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/streams"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Parameter"/>
     <genClasses image="false" ecoreClass="thingml.ecore#//Variable"/>
@@ -239,6 +240,11 @@
     <genClasses ecoreClass="thingml.ecore#//LocalVariable">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//LocalVariable/init"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//LocalVariable/changeable"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//Stream">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/inputs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/output"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//Stream/finalStream"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

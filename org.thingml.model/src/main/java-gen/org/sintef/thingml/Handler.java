@@ -107,7 +107,7 @@ public interface Handler extends AnnotatedElement {
 	 */
 	void setAction(Action value);
 
-    //derived properties
+				//derived properties
 
     /**
      *

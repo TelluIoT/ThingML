@@ -63,6 +63,9 @@ public class JavaScriptApiCompiler extends ApiCompiler {
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(message) {//takes a JSONified message\n");
             builder.append("this.getQueue().push(message);\n");
+            /** MODIFICATION **/
+            builder.append("this.cepDispatch(message);\n");
+            /** END **/
             builder.append("if (this.ready) {\n");
             builder.append("var msg = this.getQueue().shift();\n");
             builder.append("while(msg != null) {\n");
@@ -110,6 +113,15 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         if(ctx.getProperty("hasEnum") != null && ctx.getProperty("hasEnum").equals("true")) {
             builder.append("var Enum = require('./enums');\n");
         }
+
+        /** MODIFICATION **/
+        if(thing.getStreams().size() > 0) {
+            builder.append("var Rx = require('rx'),\n" +
+                    "\tEventEmitter = require('events').EventEmitter;\n");
+        }
+        /** END **/
+
+
         builder.append("var StateFactory = require('./state-factory');\n");
         builder.append("\n/**\n");
         builder.append(" * Definition for type : " + thing.getName() + "\n");
@@ -152,6 +164,11 @@ public class JavaScriptApiCompiler extends ApiCompiler {
             }
         }//TODO: public/private properties?
 
+        /** MODIFICATION **/
+        if(thing.getStreams().size() > 0) {
+            builder.append("this.eventEmitterForStream = new EventEmitter();\n"); //fixme more dynamic
+        }
+        /** END **/
 
         builder.append("//bindings\n");
         builder.append("var connectors = [];\n");
@@ -174,6 +191,19 @@ public class JavaScriptApiCompiler extends ApiCompiler {
                 builder.append("}\n");
             }
         }
+
+        /** MODIFICATION **/
+        builder.append("//CEP dispatch functions\n");
+        builder.append("this.cepDispatch = function (message) {\n" +
+                "var json = JSON.parse(message);\n");
+        for (Stream s : thing.getStreams()) {
+            ReceiveMessage first = s.getInputs().get(0); //fixme
+            builder.append("if(json.port === \"" + first.getPort().getName() + "_s" + "\" && json.message === \"" + first.getMessage().getName() + "\") {\n" +
+                    "\tthis.eventEmitterForStream.emit('" + s.qname("_") + "',message);" +
+                    "}");
+        }
+        builder.append("}\n");
+        /** END **/
 
         builder.append("//ThingML-defined functions\n");
         for(Function f : thing.allFunctions()) {   //FIXME: should be extracted
@@ -269,6 +299,12 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         for(StateMachine b : thing.allStateMachines()) {
             ctx.getCompiler().getBehaviorCompiler().generateState(b, builder, ctx);
         }
+
+        /** MODIFICATION **/
+        for(Stream stream : thing.getStreams()) {
+            ctx.getCompiler().getCepCompiler().generateStream(stream,builder,ctx);
+        }
+        /** END **/
 
         builder.append("}\n");
 

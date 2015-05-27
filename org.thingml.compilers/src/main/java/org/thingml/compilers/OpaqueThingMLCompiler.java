@@ -20,6 +20,7 @@ import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
 import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.build.BuildCompiler;
+import org.thingml.compilers.cep.CepCompiler;
 import org.thingml.compilers.main.MainGenerator;
 
 import java.io.OutputStream;
@@ -30,8 +31,8 @@ import java.io.PrintStream;
  */
 public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
-    public OpaqueThingMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler) {
-        super(actionCompiler, apiCompiler, mainCompiler, buildCompiler, behaviorCompiler);
+    public OpaqueThingMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler, CepCompiler cepCompiler) {
+        super(actionCompiler, apiCompiler, mainCompiler, buildCompiler, behaviorCompiler,cepCompiler);
     }
     PrintStream m, e;
 

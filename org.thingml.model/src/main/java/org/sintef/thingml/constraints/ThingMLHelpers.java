@@ -176,6 +176,19 @@ public class ThingMLHelpers {
 			}
 		}
 	}
+
+	public static Stream findContainingStream(EObject object) {
+		if (object instanceof Stream) return (Stream)object;
+		else {
+			EObject container = object.eContainer();
+			if (container != null) {
+				return findContainingStream(container);
+			}
+			else {
+				return null;
+			}
+		}
+	}
 	
 	/* ***********************************************************
 	 * Type checking and expressions
@@ -755,7 +768,18 @@ public class ThingMLHelpers {
 	public static ArrayList<Event> findEvents(EventReference er, String name, boolean fuzzy) {
 		ArrayList<Event> result = new ArrayList<Event>();
 		Handler h = findContainingHandler(er);
-		if (h == null || h.getEvent().size() > 1) return result;
+		//if (h == null || h.getEvent().size() > 1) return result;
+		if(h == null) {
+			Stream s = findContainingStream(er);
+			if(s == null) return result;
+			for(ReceiveMessage rm : s.getInputs()) {
+				if(rm.getName().startsWith(name)) {
+					if(fuzzy) result.add(rm);
+					else if(rm.getName().equals(name)) result.add(rm);
+				}
+			}
+		}
+		else if(h.getEvent().size() > 1) return result;
 		else {
 			Event evt = h.getEvent().get(0);
 			if (evt instanceof ReceiveMessage && evt.getName().startsWith(name)) {

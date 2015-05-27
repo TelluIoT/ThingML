@@ -1,0 +1,63 @@
+datatype Integer
+    @js_type "short";
+
+thing fragment SimpleMsgs {
+	message msg(c : Integer);
+    message cep(k : Inteker);
+}
+
+thing Send includes SimpleMsgs {
+    provided port cepService {
+		sends msg
+	}
+
+    statechart Send init Init {
+        state Init {
+            on entry do
+                print "Hello Send!"
+                cepService!msg(5)
+            end    
+        }
+    }  
+}
+
+thing Receive includes SimpleMsgs 
+{
+  
+	required port cepService {
+		receives msg, cep
+	}
+
+    provided port cepSendService {
+		sends cep
+	}
+
+    stream simpleStream do
+        input m : cepService?msg
+        output cepSendService!cep(m.c)
+    end
+    
+    statechart Simple init Init {
+		state Init {
+			on entry do 
+				print "Hello Receive"
+			end
+			
+            transition t1 -> End
+            event m : cepService?cep
+
+        }
+		
+		state End {
+			on entry print "Bye Receive"
+		}
+	}
+}
+
+configuration simple {
+	instance receive : Receive
+    instance send : Send
+    
+    connector receive.cepService => send.cepService
+    connector receive.cepService => receive.cepSendService
+}

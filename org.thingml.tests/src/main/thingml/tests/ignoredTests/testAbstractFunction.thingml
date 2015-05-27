@@ -19,6 +19,8 @@ thing TestAbstractFunction includes Test, Foo
         harnessOut!testOut('\'x\'')    	
     end
     
+    
+    
     statechart TestAbstractFunction init INIT {
     
     	state INIT {

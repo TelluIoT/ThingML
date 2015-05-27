@@ -45,7 +45,7 @@ public interface ConditionalAction extends ControlStructure {
 	 * @return the value of the '<em>Else Action</em>' containment reference.
 	 * @see #setElseAction(Action)
 	 * @see org.sintef.thingml.ThingmlPackage#getConditionalAction_ElseAction()
-	 * @model containment="true" required="true"
+	 * @model containment="true"
 	 * @generated
 	 */
 	Action getElseAction();

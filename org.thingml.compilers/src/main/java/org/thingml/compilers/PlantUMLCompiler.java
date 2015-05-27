@@ -24,6 +24,7 @@ import org.thingml.compilers.api.ApiCompiler;
 import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.behavior.PlantUMLBehaviorCompiler;
 import org.thingml.compilers.build.BuildCompiler;
+import org.thingml.compilers.cep.CepCompiler;
 import org.thingml.compilers.main.MainGenerator;
 import org.thingml.compilers.main.PlantUMLMainGenerator;
 
@@ -34,11 +35,11 @@ import java.util.List;
 public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     public PlantUMLCompiler() {
-        super(new ThingMLPrettyPrinter(), new ApiCompiler(), new PlantUMLMainGenerator(), new BuildCompiler(), new PlantUMLBehaviorCompiler());
+        super(new ThingMLPrettyPrinter(), new ApiCompiler(), new PlantUMLMainGenerator(), new BuildCompiler(), new PlantUMLBehaviorCompiler(), new CepCompiler());
     }
 
-    public PlantUMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler) {
-        super(actionCompiler, apiCompiler, mainCompiler, buildCompiler, behaviorCompiler);
+    public PlantUMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler, CepCompiler cepCompiler) {
+        super(actionCompiler, apiCompiler, mainCompiler, buildCompiler, behaviorCompiler, cepCompiler);
     }
 
     @Override

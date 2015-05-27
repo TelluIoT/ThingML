@@ -60,7 +60,6 @@ public class FunctionCallStatementImpl extends ActionImpl implements FunctionCal
 	 * @ordered
 	 */
 	protected EList<Expression> parameters;
-
 	/**
 	 * The cached value of the '{@link #getFunction() <em>Function</em>}' reference.
 	 * <!-- begin-user-doc -->

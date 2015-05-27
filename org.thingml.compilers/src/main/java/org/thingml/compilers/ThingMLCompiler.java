@@ -20,6 +20,7 @@ import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
 import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.build.BuildCompiler;
+import org.thingml.compilers.cep.CepCompiler;
 import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.compilers.main.MainGenerator;
 
@@ -42,6 +43,10 @@ public abstract class ThingMLCompiler {
     private BuildCompiler buildCompiler;
     private BehaviorCompiler behaviorCompiler;
 
+    /*MODIFICATION*/
+    private CepCompiler cepCompiler;
+    /*END*/
+
     //we might need several connector compilers has different ports might use different connectors
     private Map<String, ConnectorCompiler> connectorCompilers = new HashMap<String, ConnectorCompiler>();
 
@@ -52,14 +57,16 @@ public abstract class ThingMLCompiler {
         this.buildCompiler = new BuildCompiler();
         this.behaviorCompiler = new BehaviorCompiler();
         connectorCompilers.put("default", new ConnectorCompiler());
+        this.cepCompiler = new CepCompiler();
     }
 
-    public ThingMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler) {
+    public ThingMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler, CepCompiler cepCompiler) {
         this.actionCompiler = actionCompiler;
         this.apiCompiler = apiCompiler;
         this.mainCompiler = mainCompiler;
         this.buildCompiler = buildCompiler;
         this.behaviorCompiler = behaviorCompiler;
+        this.cepCompiler = cepCompiler;
     }
 
     public abstract ThingMLCompiler clone();
@@ -139,6 +146,8 @@ public abstract class ThingMLCompiler {
     }
 
     public BehaviorCompiler getBehaviorCompiler() {return behaviorCompiler; }
+
+    public CepCompiler getCepCompiler(){return cepCompiler;}
 
     public void addConnectorCompilers(Map<String, ConnectorCompiler> connectorCompilers) {
         this.connectorCompilers.putAll(connectorCompilers);

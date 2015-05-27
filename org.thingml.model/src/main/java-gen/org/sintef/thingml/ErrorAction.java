@@ -15,6 +15,8 @@
  */
 package org.sintef.thingml;
 
+import org.eclipse.emf.ecore.EObject;
+
 
 /**
  * <!-- begin-user-doc -->

@@ -20,6 +20,7 @@ import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
 import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.build.BuildCompiler;
+import org.thingml.compilers.cep.CepCompiler;
 import org.thingml.compilers.main.MainGenerator;
 
 import java.io.File;
@@ -40,8 +41,8 @@ public class FakeThingMLCompiler extends ThingMLCompiler {
         setMessageStream(System.err);
     }
 
-    public FakeThingMLCompiler (ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler) {
-        super(actionCompiler, apiCompiler, mainCompiler, buildCompiler, behaviorCompiler);
+    public FakeThingMLCompiler (ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler, CepCompiler cepCompiler) {
+        super(actionCompiler, apiCompiler, mainCompiler, buildCompiler, behaviorCompiler, cepCompiler);
         File folder = new File("tmp/ThingML");
         folder.delete();
         folder.mkdirs();
@@ -54,7 +55,7 @@ public class FakeThingMLCompiler extends ThingMLCompiler {
 
     @Override
     public ThingMLCompiler clone() {
-        return new FakeThingMLCompiler(new ActionCompiler(), new ApiCompiler(), new MainGenerator(), new BuildCompiler(), new BehaviorCompiler());
+        return new FakeThingMLCompiler(new ActionCompiler(), new ApiCompiler(), new MainGenerator(), new BuildCompiler(), new BehaviorCompiler(), new CepCompiler());
     }
 
     @Override

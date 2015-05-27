@@ -26,6 +26,8 @@ import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.behavior.JSBehaviorCompiler;
 import org.thingml.compilers.build.BuildCompiler;
 import org.thingml.compilers.build.JSBuildCompiler;
+import org.thingml.compilers.cep.CepCompiler;
+import org.thingml.compilers.cep.JSCepCompiler;
 import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.compilers.connectors.JS2Kevoree;
 import org.thingml.compilers.main.JSMainGenerator;
@@ -47,11 +49,11 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
     }
 
     public JavaScriptCompiler() {
-        super(new JSActionCompiler(), new JavaScriptApiCompiler(), new JSMainGenerator(), new JSBuildCompiler(), new JSBehaviorCompiler());
+        super(new JSActionCompiler(), new JavaScriptApiCompiler(), new JSMainGenerator(), new JSBuildCompiler(), new JSBehaviorCompiler(), new JSCepCompiler());
     }
 
-    public JavaScriptCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler) {
-        super(actionCompiler, apiCompiler, mainCompiler, buildCompiler, behaviorCompiler);
+    public JavaScriptCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler, CepCompiler cepCompiler) {
+        super(actionCompiler, apiCompiler, mainCompiler, buildCompiler, behaviorCompiler,cepCompiler);
     }
 
     @Override

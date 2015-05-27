@@ -39,6 +39,7 @@ public class ThingmlSyntaxCoverageInformationProvider {
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getInternalTransition(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getReceiveMessage(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getPropertyAssign(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getStream(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getConfiguration(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getConfigInclude(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getInstance(),

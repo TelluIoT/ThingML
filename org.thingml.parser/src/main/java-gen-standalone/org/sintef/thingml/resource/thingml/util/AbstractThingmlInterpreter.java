@@ -535,6 +535,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
+		if (object instanceof org.sintef.thingml.Stream) {
+			result = interprete_org_sintef_thingml_Stream((org.sintef.thingml.Stream) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		return result;
 	}
 	
@@ -847,6 +853,10 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	}
 	
 	public ResultType interprete_org_sintef_thingml_LocalVariable(org.sintef.thingml.LocalVariable localVariable, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_Stream(org.sintef.thingml.Stream stream, ContextType context) {
 		return null;
 	}
 	

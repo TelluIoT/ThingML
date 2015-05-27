@@ -16,6 +16,7 @@
 package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -34,6 +35,7 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface ActionBlock extends Action {
+
 	/**
 	 * Returns the value of the '<em><b>Actions</b></em>' containment reference list.
 	 * The list contents are of type {@link org.sintef.thingml.Action}.

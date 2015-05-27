@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.PrintAction;
 import org.sintef.thingml.ThingmlPackage;

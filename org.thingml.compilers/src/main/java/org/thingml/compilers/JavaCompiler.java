@@ -22,6 +22,7 @@ import org.thingml.compilers.actions.JavaActionCompiler;
 import org.thingml.compilers.api.JavaApiCompiler;
 import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.build.JavaBuildCompiler;
+import org.thingml.compilers.cep.CepCompiler;
 import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.compilers.connectors.Java2Kevoree;
 import org.thingml.compilers.main.JavaMainGenerator;
@@ -43,7 +44,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     }
 
     public JavaCompiler() {
-        super(new JavaActionCompiler(), new JavaApiCompiler(), new JavaMainGenerator(), new JavaBuildCompiler(), new BehaviorCompiler());
+        super(new JavaActionCompiler(), new JavaApiCompiler(), new JavaMainGenerator(), new JavaBuildCompiler(), new BehaviorCompiler(), new CepCompiler()); //fixme change cep compiler
     }
 
     @Override

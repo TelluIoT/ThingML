@@ -20,12 +20,12 @@ OPTIONS {
 	// Generate the standalone version first and then the eclipse version.
 	
 	// 1. FOR STANDALONE
-	//srcGenFolder = "src/main/java-gen-standalone";
-	//generateUIPlugin = "false";
-	//removeEclipseDependentCode = "true";
+	srcGenFolder = "src/main/java-gen-standalone";
+	generateUIPlugin = "false";
+	removeEclipseDependentCode = "true";
 	
 	// 2. FOR ECLIPSE Comment the lines bellow
-	srcGenFolder = "src/main/java-gen";
+	//srcGenFolder = "src/main/java-gen";
 	
 	// IMPORTANT: In the generated eclipse plugins it is required to change the Vendor to SINTEF and the Version from "1.0.0" to "0.x.0.qualifier"
 }
@@ -143,6 +143,11 @@ TOKENSTYLES{
 	"import" COLOR #444444, BOLD;
 	"set" COLOR #444444, BOLD;
 	
+	// CEP
+	"stream" COLOR #444444, BOLD;
+	"input" COLOR #A22000, BOLD;
+	"output" COLOR #A22000, BOLD;
+	
 	"(" COLOR #444444, BOLD;
 	")" COLOR #444444, BOLD;
 	"{" COLOR #444444, BOLD;
@@ -166,7 +171,7 @@ RULES {
 	
 	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( "[" cardinality "]")? )? #1 body ;
 	
-	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour )* !0 "}" ;
+	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour | streams)* !0 "}" ;
 	
 	RequiredPort ::= !1 (optional[T_OPTIONAL])? "required" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 
@@ -204,6 +209,13 @@ RULES {
 	
 	PropertyAssign ::= "set" #1 property[] ("[" index "]")* #1 "=" #1 init ; 
 	
+	// *******************************
+	// * CEP
+	// *******************************
+	Stream ::= "stream" #1 name[] "do" 
+				!1 "input"  #1 inputs
+				!1 "output" #1 output
+				"end";
 
 	// *******************************
 	// * Configurations and Instances

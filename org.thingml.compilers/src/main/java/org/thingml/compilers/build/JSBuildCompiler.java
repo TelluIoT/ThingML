@@ -50,6 +50,17 @@ public class JSBuildCompiler extends BuildCompiler {
                 for(String dep : t.annotation("js_dep")) {
                     deps.asObject().add(dep.split(":")[0].trim(), dep.split(":")[1].trim());
                 }
+
+            }
+
+            for(Thing t : cfg.allThings()) {
+                /**MODIFICATION**/
+                if(t.getStreams().size() > 0) {
+                    deps.asObject().add("rx","^2.4.3");
+                    deps.asObject().add("events","^1.0.2");
+                    break;
+                }
+                /** END **/
             }
 
             final File f = new File(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json");
