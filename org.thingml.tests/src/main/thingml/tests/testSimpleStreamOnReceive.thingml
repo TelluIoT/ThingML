@@ -30,13 +30,13 @@ thing TestSimpleStreamOnReceive includes Test, TestMsgs
     }
 
     stream simpleStream do
-        input e : harnessIn?testIn
-        output cepSend!cepTestIn(e.c)
+        input : e : harnessIn?testIn
+        output : cepSend!cepTestIn(e.c)
     end
     
     stream ackStream do
-        input e : sendService?ack
-        output cepSend!cepAck(e.prop1,e.prop2)
+        input : e : sendService?ack
+        output : cepSend!cepAck(e.prop1,e.prop2)
     end
     
     property prop1 : Integer = 5
@@ -97,8 +97,8 @@ thing Receive includes TestMsgs, Test, ReceiveMsgs
     }
     
     stream simpleStream do
-        input e : receiveService?msg
-        output cepSend!cep(e.prop1,e.prop2)
+        input : e : receiveService?msg
+        output : cepSend!cep(e.prop1,e.prop2)
     end
 
     statechart ReceiveMsgs init Receive {

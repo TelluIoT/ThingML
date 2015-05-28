@@ -17,8 +17,8 @@ thing TestHistoryStatesWithStream includes Test, TestMsgs
     }
     
     stream testStream do
-        input m : harnessIn?testIn
-        output cepSend!cepMsg(m.c)
+        input : m : harnessIn?testIn
+        output : cepSend!cepMsg(m.c)
     end
     
 	statechart TestHistoryStates init I {

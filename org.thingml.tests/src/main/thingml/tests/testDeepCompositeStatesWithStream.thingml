@@ -21,8 +21,8 @@ thing TestDeepCompositeStatesWithStream includes Test, TestMsgs
     
     
     stream testIn do
-        input e : harnessIn?testIn
-        output cepSendService!cep(e.c)
+        input : e : harnessIn?testIn
+        output : cepSendService!cep(e.c)
     end
     
 	statechart TestDeepCompositeStates init I {

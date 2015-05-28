@@ -60,7 +60,7 @@
             <styles xmi:type="notation:ShapeStyle" xmi:id="_qh-mAQRKEeWSbMm-2EjqYQ" fontName="Sans" fontHeight="8"/>
             <layoutConstraint xmi:type="notation:Bounds" xmi:id="_qh-mAgRKEeWSbMm-2EjqYQ" x="624" y="270"/>
           </children>
-          <children xmi:type="notation:Node" xmi:id="_3LbZ0ARKEeWSbMm-2EjqYQ" type="2003" element="_3LJF8ARKEeWSbMm-2EjqYQ">
+          <children xmi:type="notation:Node" xmi:id="_3LbZ0ARKEeWSbMm-2EjqYQ" visible="false" type="2003" element="_3LJF8ARKEeWSbMm-2EjqYQ">
             <children xmi:type="notation:Node" xmi:id="_3LcA4ARKEeWSbMm-2EjqYQ" type="5007"/>
             <children xmi:type="notation:Node" xmi:id="_3LcA4QRKEeWSbMm-2EjqYQ" type="7004">
               <styles xmi:type="notation:SortingStyle" xmi:id="_3LcA4gRKEeWSbMm-2EjqYQ"/>
@@ -336,7 +336,7 @@
           <foregroundColor xmi:type="viewpoint:RGBValues" xmi:id="_a1G7JARjEeWSbMm-2EjqYQ" red="255" green="252" blue="216"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
-        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_WMfKMARjEeWSbMm-2EjqYQ" name="finalStream : EBoolean = true" tooltipText="&#xA;ERROR : The required feature 'eAttributeType' of 'org.eclipse.emf.ecore.impl.EAttributeImpl@268917ff{platform:/resource/org.sintef.thingml.model/src/main/model/thingml.ecore#//Stream/newAttribute}' must be set&#xA;ERROR : The typed element must have a type">
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_WMfKMARjEeWSbMm-2EjqYQ" name="finalStream : EBoolean = true" tooltipText="">
           <target xmi:type="ecore:EAttribute" href="thingml.ecore#//Stream/finalStream"/>
           <semanticElements xmi:type="ecore:EAttribute" href="thingml.ecore#//Stream/finalStream"/>
           <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_czbpAgRjEeWSbMm-2EjqYQ" labelFormat="bold" labelAlignment="LEFT" description="_czbpAARjEeWSbMm-2EjqYQ">
@@ -436,9 +436,10 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@edgeMappings[name='EC_EReference']"/>
       </ownedDiagramElements>
-      <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_3LJF8ARKEeWSbMm-2EjqYQ" name="Action" tooltipText="" incomingEdges="_3LY9kARKEeWSbMm-2EjqYQ" width="12" height="10">
+      <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_3LJF8ARKEeWSbMm-2EjqYQ" name="Action" visible="false" tooltipText="" incomingEdges="_3LY9kARKEeWSbMm-2EjqYQ" width="12" height="10">
         <target xmi:type="ecore:EClass" href="thingml.ecore#//Action"/>
         <semanticElements xmi:type="ecore:EClass" href="thingml.ecore#//Action"/>
+        <graphicalFilters xmi:type="diagram:HideFilter" xmi:id="_IlrDQAU0EeWIPPvVPUzBqA"/>
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
         <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
         <arrangeConstraints>KEEP_RATIO</arrangeConstraints>

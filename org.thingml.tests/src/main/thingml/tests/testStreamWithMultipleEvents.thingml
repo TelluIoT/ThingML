@@ -1,0 +1,75 @@
+import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+
+thing fragment TestsMsgs {
+    message msg1();
+    message msg2();
+    message msg3();
+    message msg4();
+    message msg5();
+    message msg6();
+}
+
+thing TestStreamWithMultipleEvents includes Test, TestsMsgs
+@test "nN # iiiILLLlll"
+@conf "connector test.requiredService => test.providedService"
+{
+    provided port providedService {
+        sends msg1, msg2, msg3, msg4, msg5, msg6
+    }
+    
+    required port requiredService {
+        receives msg1, msg2, msg3, msg4, msg5, msg6  
+    }
+    
+    statechart TestStreamWithMultipleEvents init Init {
+        state Init {
+            transition -> First
+            stream s1 from event harnessIn?testIn
+			trigger s1->c == '\'n\''
+        }
+        
+        state First {
+            on entry do
+                providedService!msg1()
+                providedService!msg2()
+                providedService!msg3()
+            end
+            
+            internal
+            stream from event requiredService?msg1
+            stream from event requiredService?msg2
+            stream from event requiredService?msg3
+            action harnessOut!testOut('\'i\'')  
+            
+            transition -> Second
+            event e : harnessIn?testIn
+            guard e.c == '\'N\''   
+        }
+        
+        state Second {
+             on entry do
+                harnessOut!testOut('\'I\'')
+                
+                providedService!msg1()
+                providedService!msg2()
+                providedService!msg3()
+                providedService!msg4()
+                providedService!msg5()
+                providedService!msg6()
+             end
+             
+            internal
+            stream from event requiredService?msg1
+            stream from event requiredService?msg2
+            stream from event requiredService?msg3
+            action harnessOut!testOut('\'l\'')
+            
+            internal
+            event requiredService?msg4
+            event requiredService?msg5
+            event requiredService?msg6
+            action harnessOut!testOut('\'L\'')
+                
+        }
+    }
+}
