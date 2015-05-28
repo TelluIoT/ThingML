@@ -91,6 +91,33 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
             menuframe.setBorder(BorderFactory.createEmptyBorder());
             add(menuframe, BorderLayout.CENTER);
 
+            final ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
+
+            JMenu newCompilersMenu = new JMenu("Compile to [NEW]");
+            for(final String id : registry.getCompilerIds()) {
+                JMenuItem item = new JMenuItem(id);
+                newCompilersMenu.add(item);
+                item.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("Input file : " + targetFile);
+                        if (targetFile == null) return;
+                        try {
+                            ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
+                            ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                            for (Configuration c : thingmlModel.allConfigurations()) {
+                                File file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName());
+                                file.mkdirs();
+                                compiler.setOutputDirectory(file);
+                                compiler.compile(c);
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+            //START TO BE REMOVED AFTER MIGRATION
             JMenu compilersMenu = new JMenu("Compile to");
             JMenu arduinoMenu = new JMenu("Arduino");
             JMenu linuxMenu = new JMenu("Linux");
@@ -428,6 +455,8 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
             compilersMenu.add(bThingML);
             compilersMenu.add(bThingML2);
             menubar.add(compilersMenu);
+            //END TO BE REMOVED AFTER MIGRATION
+            menubar.add(newCompilersMenu);
 
             codeEditor.getDocument().addDocumentListener(new DocumentListener() {
                 public void removeUpdate(DocumentEvent e) {
