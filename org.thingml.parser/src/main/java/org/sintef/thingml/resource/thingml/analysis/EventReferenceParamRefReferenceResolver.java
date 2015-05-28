@@ -45,7 +45,7 @@ public class EventReferenceParamRefReferenceResolver implements org.sintef.thing
 		ReceiveMessage rm = container.getMsgRef();
 		if (rm != null) {
 			Message m = rm.getMessage();
-			for (Parameter p : m.getParameters()) {
+c			for (Parameter p : m.getParameters()) {
 				if (resolveFuzzy) {
 					if (p.getName().startsWith(identifier))
 						result.addMapping(p.getName(), p);

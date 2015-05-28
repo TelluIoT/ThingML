@@ -9,7 +9,7 @@ thing TestDeepCompositeStatesWithStream includes Test, TestMsgs
 @test "na # (012abc|abc012)(63gd|gd63)"
 @test "naa # (012abc|abc012)(63gd|gd63)(74he|he74)"
 @test "naaa # (012abc|abc012)(63gd|gd63)(74he|he74)(85if|if85)"
-@connector "connector test.cepRcvService => test.cepSendService"
+@conf "connector test.cepRcvService => test.cepSendService"
 {
     provided port cepSendService {
          sends cep   
@@ -100,7 +100,7 @@ thing TestDeepCompositeStatesWithStream includes Test, TestMsgs
 				on entry harnessOut!testOut('\'b\'')
 				
                 transition -> r_C1S1
-                event m : harnessIn?testIn
+                event m : cepRcvService?cep
 				guard m.c == '\'a\''
 				
 				state r_C2S1 {	
@@ -114,7 +114,7 @@ thing TestDeepCompositeStatesWithStream includes Test, TestMsgs
                     on exit harnessOut!testOut('\'g\'')
                     
 					transition -> r_C2S1
-					event m : harnessIn?testIn
+					event m : cepRcvService?cep
 					guard m.c == '\'a\''
 					
 					state r_C3S1{

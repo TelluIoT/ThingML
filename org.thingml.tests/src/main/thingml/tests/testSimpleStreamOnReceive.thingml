@@ -1,0 +1,116 @@
+import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+import "../../../../../org.thingml.samples/src/main/thingml/datatypes.thingml"
+
+thing fragment TestMsgs {
+	message msg(prop1: Integer, prop2 : Integer);
+	message ack(prop1: Integer, prop2 : Integer);
+    
+    message cepTestIn(c : Char);
+    message cepAck(prop1: Integer, prop2 : Integer);
+}
+
+thing TestSimpleStreamOnReceive includes Test, TestMsgs
+@test "hij # hio"
+@conf "instance receive : Receive"
+@conf "connector receive.receiveService => test.sendService"
+@conf "connector test.cepSend => test.cepRcv"
+@conf "connector receive.cepSend => receive.cepRcv"
+{
+	provided port sendService {
+		sends msg 
+		receives ack
+	}
+
+    required port cepSend {
+        sends cepTestIn, cepAck
+    }
+    
+    provided port cepRcv {
+        receives cepTestIn, cepAck
+    }
+
+    stream simpleStream do
+        input e : harnessIn?testIn
+        output cepSend!cepTestIn(e.c)
+    end
+    
+    stream ackStream do
+        input e : sendService?ack
+        output cepSend!cepAck(e.prop1,e.prop2)
+    end
+    
+    property prop1 : Integer = 5
+	property prop2 : Integer = 87
+
+	statechart TestInit init Init {
+
+		state Init {
+			
+            internal
+			event e : cepRcv?cepTestIn
+			guard e.c == '\'h\''
+			action harnessOut!testOut(e.c) 
+
+			transition -> End
+			event e : cepRcv?cepTestIn
+			guard e.c == '\'i\''
+		}
+
+		state End {
+            on entry do
+                print "State : End"
+                harnessOut!testOut('\'i\'')
+            end
+            
+            internal
+			event e : cepRcv?cepTestIn
+			guard e.c == '\'j\''
+			action do 
+                sendService!msg(prop1,prop2)
+            end
+
+			internal
+			event e : cepRcv?cepAck
+            action harnessOut!testOut('\'o\'') 
+		}
+	}
+}
+
+thing fragment ReceiveMsgs {
+    message cep(v1 : Integer, v2 : Integer);    
+}
+
+thing Receive includes TestMsgs, Test, ReceiveMsgs
+{
+
+    required port cepSend {
+        sends cep
+    }
+    
+    provided port cepRcv {
+        receives cep
+    }
+
+	required port receiveService {
+    		receives msg
+    		sends ack
+    }
+    
+    stream simpleStream do
+        input e : receiveService?msg
+        output cepSend!cep(e.prop1,e.prop2)
+    end
+
+    statechart ReceiveMsgs init Receive {
+    	state Receive {
+            internal
+    		event e : cepRcv?cep
+    		action do
+    			if(e.v1 == 5 and e.v2 == 87) do
+                    receiveService!ack(e.v1,e.v2)
+                end
+    		end
+    	}
+    }
+
+}

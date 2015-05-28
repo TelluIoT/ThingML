@@ -12,4 +12,8 @@ configuration TestSimpleStreamOnReceive {
  connector harness.timer => timer.timer
 	connector test.harnessOut => dump.dump
 	connector test.harnessIn => harness.test
+	instance receive : Receive
+	connector receive.receiveService => test.sendService
+	connector test.cepSend => test.cepRcv
+	connector receive.cepSend => receive.cepRcv
 }

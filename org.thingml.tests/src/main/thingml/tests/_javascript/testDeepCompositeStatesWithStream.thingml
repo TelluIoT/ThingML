@@ -12,4 +12,5 @@ configuration TestDeepCompositeStatesWithStream {
  connector harness.timer => timer.timer
 	connector test.harnessOut => dump.dump
 	connector test.harnessIn => harness.test
+	connector test.cepRcvService => test.cepSendService
 }

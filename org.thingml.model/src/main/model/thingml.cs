@@ -213,7 +213,8 @@ RULES {
 	// * CEP
 	// *******************************
 	Stream ::= "stream" #1 name[] "do" 
-				!1 "input"  #1 inputs
+				!1 "input"  
+					!1#1 inputs (!1#1 inputs)*
 				!1 "output" #1 output
 				"end";
 

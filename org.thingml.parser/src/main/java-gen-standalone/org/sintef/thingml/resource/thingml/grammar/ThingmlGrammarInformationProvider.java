@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.grammar;
 
@@ -648,14 +639,21 @@ public class ThingmlGrammarInformationProvider {
 	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword THINGML_20_0_0_3 = new org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword("do", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
 	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlLineBreak THINGML_20_0_0_4 = new org.sintef.thingml.resource.thingml.grammar.ThingmlLineBreak(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, 1);
 	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword THINGML_20_0_0_5 = new org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword("input", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlWhiteSpace THINGML_20_0_0_6 = new org.sintef.thingml.resource.thingml.grammar.ThingmlWhiteSpace(1, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlContainment THINGML_20_0_0_7 = new org.sintef.thingml.resource.thingml.grammar.ThingmlContainment(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStream().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.STREAM__INPUTS), org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, new org.eclipse.emf.ecore.EClass[] {org.sintef.thingml.ThingmlPackage.eINSTANCE.getReceiveMessage(), }, 0);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlLineBreak THINGML_20_0_0_8 = new org.sintef.thingml.resource.thingml.grammar.ThingmlLineBreak(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, 1);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword THINGML_20_0_0_9 = new org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword("output", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlWhiteSpace THINGML_20_0_0_10 = new org.sintef.thingml.resource.thingml.grammar.ThingmlWhiteSpace(1, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlContainment THINGML_20_0_0_11 = new org.sintef.thingml.resource.thingml.grammar.ThingmlContainment(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStream().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.STREAM__OUTPUT), org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, new org.eclipse.emf.ecore.EClass[] {org.sintef.thingml.ThingmlPackage.eINSTANCE.getSendAction(), }, 0);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword THINGML_20_0_0_12 = new org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword("end", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
-	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlSequence THINGML_20_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlSequence(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_20_0_0_0, THINGML_20_0_0_1, THINGML_20_0_0_2, THINGML_20_0_0_3, THINGML_20_0_0_4, THINGML_20_0_0_5, THINGML_20_0_0_6, THINGML_20_0_0_7, THINGML_20_0_0_8, THINGML_20_0_0_9, THINGML_20_0_0_10, THINGML_20_0_0_11, THINGML_20_0_0_12);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlLineBreak THINGML_20_0_0_6 = new org.sintef.thingml.resource.thingml.grammar.ThingmlLineBreak(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, 1);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlWhiteSpace THINGML_20_0_0_7 = new org.sintef.thingml.resource.thingml.grammar.ThingmlWhiteSpace(1, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlContainment THINGML_20_0_0_8 = new org.sintef.thingml.resource.thingml.grammar.ThingmlContainment(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStream().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.STREAM__INPUTS), org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, new org.eclipse.emf.ecore.EClass[] {org.sintef.thingml.ThingmlPackage.eINSTANCE.getReceiveMessage(), }, 0);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlLineBreak THINGML_20_0_0_9_0_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlLineBreak(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, 1);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlWhiteSpace THINGML_20_0_0_9_0_0_1 = new org.sintef.thingml.resource.thingml.grammar.ThingmlWhiteSpace(1, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlContainment THINGML_20_0_0_9_0_0_2 = new org.sintef.thingml.resource.thingml.grammar.ThingmlContainment(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStream().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.STREAM__INPUTS), org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, new org.eclipse.emf.ecore.EClass[] {org.sintef.thingml.ThingmlPackage.eINSTANCE.getReceiveMessage(), }, 0);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlSequence THINGML_20_0_0_9_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlSequence(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_20_0_0_9_0_0_0, THINGML_20_0_0_9_0_0_1, THINGML_20_0_0_9_0_0_2);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlChoice THINGML_20_0_0_9_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlChoice(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_20_0_0_9_0_0);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlCompound THINGML_20_0_0_9 = new org.sintef.thingml.resource.thingml.grammar.ThingmlCompound(THINGML_20_0_0_9_0, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.STAR);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlLineBreak THINGML_20_0_0_10 = new org.sintef.thingml.resource.thingml.grammar.ThingmlLineBreak(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, 1);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword THINGML_20_0_0_11 = new org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword("output", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlWhiteSpace THINGML_20_0_0_12 = new org.sintef.thingml.resource.thingml.grammar.ThingmlWhiteSpace(1, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlContainment THINGML_20_0_0_13 = new org.sintef.thingml.resource.thingml.grammar.ThingmlContainment(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStream().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.STREAM__OUTPUT), org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, new org.eclipse.emf.ecore.EClass[] {org.sintef.thingml.ThingmlPackage.eINSTANCE.getSendAction(), }, 0);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword THINGML_20_0_0_14 = new org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword("end", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
+	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlSequence THINGML_20_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlSequence(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_20_0_0_0, THINGML_20_0_0_1, THINGML_20_0_0_2, THINGML_20_0_0_3, THINGML_20_0_0_4, THINGML_20_0_0_5, THINGML_20_0_0_6, THINGML_20_0_0_7, THINGML_20_0_0_8, THINGML_20_0_0_9, THINGML_20_0_0_10, THINGML_20_0_0_11, THINGML_20_0_0_12, THINGML_20_0_0_13, THINGML_20_0_0_14);
 	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlChoice THINGML_20_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlChoice(org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE, THINGML_20_0_0);
 	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlRule THINGML_20 = new org.sintef.thingml.resource.thingml.grammar.ThingmlRule(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStream(), THINGML_20_0, org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
 	public final static org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword THINGML_21_0_0_0 = new org.sintef.thingml.resource.thingml.grammar.ThingmlKeyword("configuration", org.sintef.thingml.resource.thingml.grammar.ThingmlCardinality.ONE);
