@@ -184,6 +184,19 @@ public class Context {
         }
     }
 
+    public String getTemplateByID(String template_id) {
+        final InputStream input = this.getClass().getClassLoader().getResourceAsStream(template_id);
+        String result = null;
+        try {
+
+            result = org.apache.commons.io.IOUtils.toString(input);
+            input.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public void mark(String marker) {
         markers.add(marker);
     }
