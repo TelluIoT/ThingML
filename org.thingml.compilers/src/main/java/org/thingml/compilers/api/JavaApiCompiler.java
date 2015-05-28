@@ -468,6 +468,7 @@ public class JavaApiCompiler extends ApiCompiler {
                 if (i > 0)
                     builder.append(", ");
                 builder.append(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(p)));
+                i++;
             }
             builder.append(") {\n");
             ctx.getCompiler().getActionCompiler().generate(f.getBody(), builder, ctx);
