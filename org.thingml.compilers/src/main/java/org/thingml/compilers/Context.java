@@ -102,6 +102,12 @@ public class Context {
         return b;
     }
 
+    public StringBuilder getNewBuilder(String path) {
+        StringBuilder b = new StringBuilder();
+        builders.put(path, b);
+        return b;
+    }
+
     /**
      *
      * @param value, to be escaped

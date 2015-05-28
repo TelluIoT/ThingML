@@ -107,7 +107,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
         }
         for(Thing thing : t.allThings()) {
             ctx.getCompiler().getApiCompiler().generateComponent(thing, ctx);
-            ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
+            //ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
         }
         ctx.getCompiler().getMainCompiler().generate(t, model, ctx);
     }

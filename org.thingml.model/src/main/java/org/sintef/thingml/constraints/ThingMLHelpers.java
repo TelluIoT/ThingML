@@ -395,7 +395,14 @@ public class ThingMLHelpers {
 		ArrayList<Message> result = new ArrayList<Message>();
 		for (Thing t : allThingFragments(thing)) {
 			for (Message msg : t.getMessages()) {
-				if (!result.contains(msg)) result.add(msg);
+				boolean isPresent = false;
+				for(Message m : result) {
+					if (EcoreUtil.equals(msg, m)) {
+						isPresent = true;
+						break;
+					}
+				}
+				if (!isPresent) result.add(msg);
 			}
 		}
 		return result;
