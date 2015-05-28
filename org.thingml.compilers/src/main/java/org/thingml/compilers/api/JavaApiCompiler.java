@@ -270,6 +270,7 @@ public class JavaApiCompiler extends ApiCompiler {
                             builder.append(", ");
                         }
                         builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                        id++;
                     }
                     builder.append("){\n");
                     builder.append("receive(" + m.getName() + "Type.instantiate(" + p.getName() + "_port");
