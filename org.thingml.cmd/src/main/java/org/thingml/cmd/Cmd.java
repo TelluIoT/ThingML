@@ -24,11 +24,7 @@ import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.cgenerator.CGenerator;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.JavaCompiler;
-import org.thingml.compilers.JavaScriptCompiler;
-import org.thingml.compilers.OpaqueThingMLCompiler;
-import org.thingml.javagenerator.JavaGenerator;
+import org.thingml.compilers.*;
 
 import java.io.File;
 
@@ -91,7 +87,7 @@ public class Cmd {
                         folder.mkdirs();
                         compiler.setOutputDirectory(folder);
                         Context ctx = new Context(compiler, "match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@");
-                        JavaGenerator.compileAndRun(c, ThingMLHelpers.findContainingModel(c), true, compiler.getOutputDirectory(), ctx, "org.thingml.generated");
+                        compiler.do_call_compiler(c, "org.thingml.generated", "doingTests");
                     }
                 }
                 else if (args[0].equals("arduino"))
