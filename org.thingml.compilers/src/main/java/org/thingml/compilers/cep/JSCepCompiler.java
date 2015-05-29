@@ -58,14 +58,18 @@ public class JSCepCompiler extends CepCompiler {
                                 "\t\tvar m1J = JSON.parse(m1);\n" + //fixme
                                 "\t\tvar m2J = JSON.parse(m2);\n"); //fixme
 
-            List<Expression> parameters = new ArrayList<>();
+//            List<Expression> parameters = new ArrayList<>();
+            List<StreamExpression> newParameters = new ArrayList<>();
             String returnString = "'{ ";
             int i = 0;
-            for(Expression p : stream.getOutput().getParameters()) {
+//            for(Expression p : stream.getOutput().getParameters()) {
+            /*for(StreamExpression p : stream.getOutput().getParameters()) {
+
 
                 String name = stream.getOutput().getMessage().getParameters().get(i).getName();
                 builder.append("\t\tvar " + name + " = ");
-                ctx.getCompiler().getActionCompiler().generate(TransformExpression.copyExpression(p),builder,ctx);
+//                ctx.getCompiler().getActionCompiler().generate(TransformExpression.copyExpression(p),builder,ctx);
+                ctx.getCompiler().getActionCompiler().generate(TransformExpression.copyExpression(p.getExpression()),builder,ctx);
                 builder.append(";\n");
                 if(i==0)
                     returnString += "\"" + name + "\": ' + " + name + " + '";
@@ -76,7 +80,29 @@ public class JSCepCompiler extends CepCompiler {
                 externExpression.setExpression("json." + name);
                 parameters.add(externExpression);
                 i++;
+            }*/
+
+            for(StreamExpression se : stream.getSelection()) {
+
+                builder.append("\t\tvar " + se.getName() + " = ");
+                ctx.getCompiler().getActionCompiler().generate(TransformExpression.copyExpression(se.getExpression()),builder,ctx);
+                builder.append(";\n");
+                if(i==0)
+                    returnString += "\"" + se.getName() + "\": ' + " + se.getName() + " + '";
+                else
+                    returnString += ", \"" + se.getName() + "\" : ' + " + se.getName() + " + '";
+
+                ExternExpression externExpression = ThingmlFactory.eINSTANCE.createExternExpression();
+                externExpression.setExpression("json." + se.getName());
+                //parameters.add(externExpression);
+                StreamExpression streamExpression = ThingmlFactory.eINSTANCE.createStreamExpression();
+                streamExpression.setExpression(externExpression);
+                streamExpression.setName(se.getName());
+                newParameters.add(streamExpression);
+
+                i++;
             }
+
             returnString += "}';";
             builder.append("\t\treturn " + returnString + "\n");
             builder.append("\t}).subscribe(\n\t" +
@@ -85,7 +111,7 @@ public class JSCepCompiler extends CepCompiler {
             builder.append("\t\t\t");
 
             stream.getOutput().getParameters().clear();
-            stream.getOutput().getParameters().addAll(parameters);
+            stream.getOutput().getParameters().addAll(newParameters);
             ctx.getCompiler().getActionCompiler().generate(stream.getOutput(),builder,ctx);
 
 

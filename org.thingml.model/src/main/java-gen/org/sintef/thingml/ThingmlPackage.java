@@ -3803,22 +3803,31 @@ public interface ThingmlPackage extends EPackage {
 	int STREAM__INPUTS = THING_ML_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Output</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STREAM__OUTPUT = THING_ML_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Final Stream</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STREAM__FINAL_STREAM = THING_ML_ELEMENT_FEATURE_COUNT + 2;
+	int STREAM__FINAL_STREAM = THING_ML_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Selection</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM__SELECTION = THING_ML_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Output</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM__OUTPUT = THING_ML_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Stream</em>' class.
@@ -3827,7 +3836,91 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STREAM_FEATURE_COUNT = THING_ML_ELEMENT_FEATURE_COUNT + 3;
+	int STREAM_FEATURE_COUNT = THING_ML_ELEMENT_FEATURE_COUNT + 4;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamExpressionImpl <em>Stream Expression</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.StreamExpressionImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamExpression()
+	 * @generated
+	 */
+	int STREAM_EXPRESSION = 79;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_EXPRESSION__NAME = THING_ML_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_EXPRESSION__EXPRESSION = THING_ML_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Stream Expression</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_EXPRESSION_FEATURE_COUNT = THING_ML_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamOutputImpl <em>Stream Output</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.StreamOutputImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamOutput()
+	 * @generated
+	 */
+	int STREAM_OUTPUT = 80;
+
+	/**
+	 * The feature id for the '<em><b>Parameters</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_OUTPUT__PARAMETERS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Message</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_OUTPUT__MESSAGE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Port</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_OUTPUT__PORT = 2;
+
+	/**
+	 * The number of structural features of the '<em>Stream Output</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_OUTPUT_FEATURE_COUNT = 3;
 
 
 	/**
@@ -5809,6 +5902,70 @@ public interface ThingmlPackage extends EPackage {
 	EReference getStream_Output();
 
 	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.StreamExpression <em>Stream Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Stream Expression</em>'.
+	 * @see org.sintef.thingml.StreamExpression
+	 * @generated
+	 */
+	EClass getStreamExpression();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.StreamExpression#getExpression <em>Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Expression</em>'.
+	 * @see org.sintef.thingml.StreamExpression#getExpression()
+	 * @see #getStreamExpression()
+	 * @generated
+	 */
+	EReference getStreamExpression_Expression();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.StreamOutput <em>Stream Output</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Stream Output</em>'.
+	 * @see org.sintef.thingml.StreamOutput
+	 * @generated
+	 */
+	EClass getStreamOutput();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.sintef.thingml.StreamOutput#getParameters <em>Parameters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Parameters</em>'.
+	 * @see org.sintef.thingml.StreamOutput#getParameters()
+	 * @see #getStreamOutput()
+	 * @generated
+	 */
+	EReference getStreamOutput_Parameters();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.StreamOutput#getMessage <em>Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Message</em>'.
+	 * @see org.sintef.thingml.StreamOutput#getMessage()
+	 * @see #getStreamOutput()
+	 * @generated
+	 */
+	EReference getStreamOutput_Message();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.StreamOutput#getPort <em>Port</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Port</em>'.
+	 * @see org.sintef.thingml.StreamOutput#getPort()
+	 * @see #getStreamOutput()
+	 * @generated
+	 */
+	EReference getStreamOutput_Port();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.sintef.thingml.Stream#isFinalStream <em>Final Stream</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5818,6 +5975,17 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getStream_FinalStream();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Stream#getSelection <em>Selection</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Selection</em>'.
+	 * @see org.sintef.thingml.Stream#getSelection()
+	 * @see #getStream()
+	 * @generated
+	 */
+	EReference getStream_Selection();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -7496,12 +7664,72 @@ public interface ThingmlPackage extends EPackage {
 		EReference STREAM__OUTPUT = eINSTANCE.getStream_Output();
 
 		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.StreamExpressionImpl <em>Stream Expression</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.StreamExpressionImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamExpression()
+		 * @generated
+		 */
+		EClass STREAM_EXPRESSION = eINSTANCE.getStreamExpression();
+
+		/**
+		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM_EXPRESSION__EXPRESSION = eINSTANCE.getStreamExpression_Expression();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.StreamOutputImpl <em>Stream Output</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.StreamOutputImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamOutput()
+		 * @generated
+		 */
+		EClass STREAM_OUTPUT = eINSTANCE.getStreamOutput();
+
+		/**
+		 * The meta object literal for the '<em><b>Parameters</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM_OUTPUT__PARAMETERS = eINSTANCE.getStreamOutput_Parameters();
+
+		/**
+		 * The meta object literal for the '<em><b>Message</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM_OUTPUT__MESSAGE = eINSTANCE.getStreamOutput_Message();
+
+		/**
+		 * The meta object literal for the '<em><b>Port</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM_OUTPUT__PORT = eINSTANCE.getStreamOutput_Port();
+
+		/**
 		 * The meta object literal for the '<em><b>Final Stream</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EAttribute STREAM__FINAL_STREAM = eINSTANCE.getStream_FinalStream();
+
+		/**
+		 * The meta object literal for the '<em><b>Selection</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM__SELECTION = eINSTANCE.getStream_Selection();
 
 	}
 

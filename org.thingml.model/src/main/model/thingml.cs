@@ -212,9 +212,13 @@ RULES {
 	// *******************************
 	// * CEP
 	// *******************************
+	StreamExpression ::= name[] ":" expression;
+	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
+	
 	Stream ::= "stream" #1 name[] "do" 
-				!1 "input" #1 ":" #1 inputs ("," #1 inputs)*
-				!1 "output" #1 ":" #1 output
+				(!1 "select" #1 ( selection ("," #1 selection)* )?)?
+				!1 "from" #1 inputs ("," #1 inputs)*
+				!1 "action" #1 output
 				"end";
 
 	// *******************************

@@ -243,8 +243,17 @@
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Stream">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/inputs"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/output"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//Stream/finalStream"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/selection"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/output"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//StreamExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//StreamExpression/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//StreamOutput">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StreamOutput/parameters"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StreamOutput/message"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StreamOutput/port"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

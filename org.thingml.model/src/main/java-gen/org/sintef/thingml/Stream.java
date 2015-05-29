@@ -28,8 +28,9 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.sintef.thingml.Stream#getInputs <em>Inputs</em>}</li>
- *   <li>{@link org.sintef.thingml.Stream#getOutput <em>Output</em>}</li>
  *   <li>{@link org.sintef.thingml.Stream#isFinalStream <em>Final Stream</em>}</li>
+ *   <li>{@link org.sintef.thingml.Stream#getSelection <em>Selection</em>}</li>
+ *   <li>{@link org.sintef.thingml.Stream#getOutput <em>Output</em>}</li>
  * </ul>
  * </p>
  *
@@ -63,12 +64,12 @@ public interface Stream extends ThingMLElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Output</em>' containment reference.
-	 * @see #setOutput(SendAction)
+	 * @see #setOutput(StreamOutput)
 	 * @see org.sintef.thingml.ThingmlPackage#getStream_Output()
 	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	SendAction getOutput();
+	StreamOutput getOutput();
 
 	/**
 	 * Sets the value of the '{@link org.sintef.thingml.Stream#getOutput <em>Output</em>}' containment reference.
@@ -78,7 +79,7 @@ public interface Stream extends ThingMLElement {
 	 * @see #getOutput()
 	 * @generated
 	 */
-	void setOutput(SendAction value);
+	void setOutput(StreamOutput value);
 
 	/**
 	 * Returns the value of the '<em><b>Final Stream</b></em>' attribute.
@@ -106,5 +107,21 @@ public interface Stream extends ThingMLElement {
 	 * @generated
 	 */
 	void setFinalStream(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Selection</b></em>' containment reference list.
+	 * The list contents are of type {@link org.sintef.thingml.StreamExpression}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Selection</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Selection</em>' containment reference list.
+	 * @see org.sintef.thingml.ThingmlPackage#getStream_Selection()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StreamExpression> getSelection();
 
 } // Stream

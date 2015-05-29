@@ -397,6 +397,14 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createStreamAdapter();
 			}
 			@Override
+			public Adapter caseStreamExpression(StreamExpression object) {
+				return createStreamExpressionAdapter();
+			}
+			@Override
+			public Adapter caseStreamOutput(StreamOutput object) {
+				return createStreamOutputAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -1519,6 +1527,34 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStreamAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamExpression <em>Stream Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.StreamExpression
+	 * @generated
+	 */
+	public Adapter createStreamExpressionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamOutput <em>Stream Output</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.StreamOutput
+	 * @generated
+	 */
+	public Adapter createStreamOutputAdapter() {
 		return null;
 	}
 

@@ -36,6 +36,8 @@ import org.sintef.thingml.Action;
 import org.sintef.thingml.ReceiveMessage;
 import org.sintef.thingml.SendAction;
 import org.sintef.thingml.Stream;
+import org.sintef.thingml.StreamExpression;
+import org.sintef.thingml.StreamOutput;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
@@ -46,8 +48,9 @@ import org.sintef.thingml.ThingmlPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#getInputs <em>Inputs</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.StreamImpl#getOutput <em>Output</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#isFinalStream <em>Final Stream</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.StreamImpl#getSelection <em>Selection</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.StreamImpl#getOutput <em>Output</em>}</li>
  * </ul>
  * </p>
  *
@@ -63,16 +66,6 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 	 * @ordered
 	 */
 	protected EList<ReceiveMessage> inputs;
-
-	/**
-	 * The cached value of the '{@link #getOutput() <em>Output</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getOutput()
-	 * @generated
-	 * @ordered
-	 */
-	protected SendAction output;
 
 	/**
 	 * The default value of the '{@link #isFinalStream() <em>Final Stream</em>}' attribute.
@@ -93,6 +86,26 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 	 * @ordered
 	 */
 	protected boolean finalStream = FINAL_STREAM_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getSelection() <em>Selection</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSelection()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StreamExpression> selection;
+
+	/**
+	 * The cached value of the '{@link #getOutput() <em>Output</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getOutput()
+	 * @generated
+	 * @ordered
+	 */
+	protected StreamOutput output;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -130,7 +143,7 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SendAction getOutput() {
+	public StreamOutput getOutput() {
 		return output;
 	}
 
@@ -139,8 +152,8 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetOutput(SendAction newOutput, NotificationChain msgs) {
-		SendAction oldOutput = output;
+	public NotificationChain basicSetOutput(StreamOutput newOutput, NotificationChain msgs) {
+		StreamOutput oldOutput = output;
 		output = newOutput;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.STREAM__OUTPUT, oldOutput, newOutput);
@@ -154,7 +167,7 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setOutput(SendAction newOutput) {
+	public void setOutput(StreamOutput newOutput) {
 		if (newOutput != output) {
 			NotificationChain msgs = null;
 			if (output != null)
@@ -194,11 +207,25 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<StreamExpression> getSelection() {
+		if (selection == null) {
+			selection = new EObjectContainmentEList<StreamExpression>(StreamExpression.class, this, ThingmlPackage.STREAM__SELECTION);
+		}
+		return selection;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ThingmlPackage.STREAM__INPUTS:
 				return ((InternalEList<?>)getInputs()).basicRemove(otherEnd, msgs);
+			case ThingmlPackage.STREAM__SELECTION:
+				return ((InternalEList<?>)getSelection()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.STREAM__OUTPUT:
 				return basicSetOutput(null, msgs);
 		}
@@ -215,10 +242,12 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 		switch (featureID) {
 			case ThingmlPackage.STREAM__INPUTS:
 				return getInputs();
-			case ThingmlPackage.STREAM__OUTPUT:
-				return getOutput();
 			case ThingmlPackage.STREAM__FINAL_STREAM:
 				return isFinalStream();
+			case ThingmlPackage.STREAM__SELECTION:
+				return getSelection();
+			case ThingmlPackage.STREAM__OUTPUT:
+				return getOutput();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -236,11 +265,15 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 				getInputs().clear();
 				getInputs().addAll((Collection<? extends ReceiveMessage>)newValue);
 				return;
-			case ThingmlPackage.STREAM__OUTPUT:
-				setOutput((SendAction)newValue);
-				return;
 			case ThingmlPackage.STREAM__FINAL_STREAM:
 				setFinalStream((Boolean)newValue);
+				return;
+			case ThingmlPackage.STREAM__SELECTION:
+				getSelection().clear();
+				getSelection().addAll((Collection<? extends StreamExpression>)newValue);
+				return;
+			case ThingmlPackage.STREAM__OUTPUT:
+				setOutput((StreamOutput)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -257,11 +290,14 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 			case ThingmlPackage.STREAM__INPUTS:
 				getInputs().clear();
 				return;
-			case ThingmlPackage.STREAM__OUTPUT:
-				setOutput((SendAction)null);
-				return;
 			case ThingmlPackage.STREAM__FINAL_STREAM:
 				setFinalStream(FINAL_STREAM_EDEFAULT);
+				return;
+			case ThingmlPackage.STREAM__SELECTION:
+				getSelection().clear();
+				return;
+			case ThingmlPackage.STREAM__OUTPUT:
+				setOutput((StreamOutput)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -277,10 +313,12 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 		switch (featureID) {
 			case ThingmlPackage.STREAM__INPUTS:
 				return inputs != null && !inputs.isEmpty();
-			case ThingmlPackage.STREAM__OUTPUT:
-				return output != null;
 			case ThingmlPackage.STREAM__FINAL_STREAM:
 				return finalStream != FINAL_STREAM_EDEFAULT;
+			case ThingmlPackage.STREAM__SELECTION:
+				return selection != null && !selection.isEmpty();
+			case ThingmlPackage.STREAM__OUTPUT:
+				return output != null;
 		}
 		return super.eIsSet(featureID);
 	}

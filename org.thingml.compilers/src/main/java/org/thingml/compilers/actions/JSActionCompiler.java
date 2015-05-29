@@ -140,4 +140,5 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
         }
         builder.append(");\n");
     }
+
 }

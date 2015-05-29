@@ -602,6 +602,24 @@ public interface ThingmlFactory extends EFactory {
 	Stream createStream();
 
 	/**
+	 * Returns a new object of class '<em>Stream Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Stream Expression</em>'.
+	 * @generated
+	 */
+	StreamExpression createStreamExpression();
+
+	/**
+	 * Returns a new object of class '<em>Stream Output</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Stream Output</em>'.
+	 * @generated
+	 */
+	StreamOutput createStreamOutput();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

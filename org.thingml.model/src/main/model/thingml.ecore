@@ -334,9 +334,22 @@
   <eClassifiers xsi:type="ecore:EClass" name="Stream" eSuperTypes="#//ThingMLElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputs" lowerBound="1"
         upperBound="-1" eType="#//ReceiveMessage" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="output" lowerBound="1"
-        eType="#//SendAction" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="finalStream" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selection" upperBound="-1"
+        eType="#//StreamExpression" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="output" lowerBound="1"
+        eType="#//StreamOutput" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StreamExpression" eSuperTypes="#//ThingMLElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expression" lowerBound="1"
+        eType="#//Expression" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StreamOutput">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
+        eType="#//StreamExpression"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="message" lowerBound="1"
+        eType="#//Message"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="port" lowerBound="1" eType="#//Port"/>
   </eClassifiers>
 </ecore:EPackage>

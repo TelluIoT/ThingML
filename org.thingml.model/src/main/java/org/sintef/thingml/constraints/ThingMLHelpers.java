@@ -769,6 +769,7 @@ public class ThingMLHelpers {
 		ArrayList<Event> result = new ArrayList<Event>();
 		Handler h = findContainingHandler(er);
 		//if (h == null || h.getEvent().size() > 1) return result;
+		/** MODIFICATION **/
 		if(h == null) {
 			Stream s = findContainingStream(er);
 			if(s == null) return result;
@@ -780,6 +781,7 @@ public class ThingMLHelpers {
 			}
 		}
 		else if(h.getEvent().size() > 1) return result;
+        /** END **/
 		else {
 			Event evt = h.getEvent().get(0);
 			if (evt instanceof ReceiveMessage && evt.getName().startsWith(name)) {
@@ -790,5 +792,19 @@ public class ThingMLHelpers {
 		return result;
 	}
 
-	
+
+    /** MODIFICATION **/
+    public static List<StreamExpression> findStreamExpression(StreamOutput so, String identifier, boolean fuzzy) {
+        List<StreamExpression> result = new ArrayList<>();
+        Stream stream = (Stream) so.eContainer();
+
+        for(StreamExpression streamExpression : stream.getSelection()) {
+            if(streamExpression.getName().startsWith(identifier)) {
+                if (fuzzy) result.add(streamExpression);
+                else if(streamExpression.getName().equals(identifier)) result.add(streamExpression);
+            }
+        }
+        return result;
+    }
+    /** END **/
 }

@@ -702,6 +702,19 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.STREAM_EXPRESSION: {
+				StreamExpression streamExpression = (StreamExpression)theEObject;
+				T result = caseStreamExpression(streamExpression);
+				if (result == null) result = caseThingMLElement(streamExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.STREAM_OUTPUT: {
+				StreamOutput streamOutput = (StreamOutput)theEObject;
+				T result = caseStreamOutput(streamOutput);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -1888,6 +1901,36 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseStream(Stream object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Stream Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Stream Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStreamExpression(StreamExpression object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Stream Output</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Stream Output</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStreamOutput(StreamOutput object) {
 		return null;
 	}
 

@@ -25,6 +25,8 @@ public class ActionCompiler {
             generate((Action)o, builder, ctx);
         } else if (o instanceof Expression){
             generate((Expression)o, builder, ctx);
+        } else if(o instanceof StreamOutput) { // MODIFICATION
+            generate((StreamOutput)o, builder, ctx);
         } else {
             throw (new UnsupportedOperationException("This action/Expression (" + o.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
@@ -244,5 +246,16 @@ public class ActionCompiler {
 
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
         throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    // CEP Action
+    public void generate(StreamOutput streamOutput, StringBuilder builder, Context ctx) {
+        SendAction sendAction = ThingmlFactory.eINSTANCE.createSendAction();
+        sendAction.setMessage(streamOutput.getMessage()); //fixme we loose message after
+        sendAction.setPort(streamOutput.getPort());
+        for(StreamExpression se : streamOutput.getParameters()) {
+            sendAction.getParameters().add(se.getExpression());
+        }
+        generate(sendAction,builder,ctx);
     }
 }
