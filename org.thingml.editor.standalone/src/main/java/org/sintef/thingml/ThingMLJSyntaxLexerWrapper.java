@@ -48,17 +48,21 @@ public class ThingMLJSyntaxLexerWrapper implements Lexer {
 
 
     private TokenType getType(IThingmlTextToken tok) {
-        switch(tok.getName()) {
-            case "SL_COMMENT" : return TokenType.COMMENT;
-            case "ML_COMMENT" : return TokenType.COMMENT;
-            case "ANNOTATION" : return TokenType.REGEX;
-            case "STRING_LITERAL" : return TokenType.STRING;
-            default :
+        switch (tok.getName()) {
+            case "SL_COMMENT":
+                return TokenType.COMMENT;
+            case "ML_COMMENT":
+                return TokenType.COMMENT;
+            case "ANNOTATION":
+                return TokenType.REGEX;
+            case "STRING_LITERAL":
+                return TokenType.STRING;
+            default:
                 TokenType n = ThingMLStyle.styles.get(tok.getName());
                 if (n == null)
                     n = TokenType.DEFAULT;
                 return n;
-            }
         }
     }
+}
 

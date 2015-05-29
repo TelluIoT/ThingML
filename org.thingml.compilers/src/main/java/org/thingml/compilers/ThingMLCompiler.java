@@ -25,6 +25,7 @@ import org.thingml.compilers.main.MainGenerator;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,5 +143,9 @@ public abstract class ThingMLCompiler {
 
     public void addConnectorCompilers(Map<String, ConnectorCompiler> connectorCompilers) {
         this.connectorCompilers.putAll(connectorCompilers);
+    }
+
+    public Map<String, ConnectorCompiler> getConnectorCompilers() {
+        return Collections.unmodifiableMap(connectorCompilers);
     }
 }

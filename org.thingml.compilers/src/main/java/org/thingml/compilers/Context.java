@@ -194,9 +194,10 @@ public class Context {
         final InputStream input = this.getClass().getClassLoader().getResourceAsStream(template_id);
         String result = null;
         try {
-
-            result = org.apache.commons.io.IOUtils.toString(input);
-            input.close();
+            if (input != null) {
+                result = org.apache.commons.io.IOUtils.toString(input);
+                input.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

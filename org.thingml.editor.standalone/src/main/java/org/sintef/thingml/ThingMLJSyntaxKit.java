@@ -50,13 +50,12 @@ public class ThingMLJSyntaxKit extends DefaultSyntaxKit {
         //config.setProperty("LineNumbers.CurrentBack","0x333300")
 
 
-
         SyntaxStyle STRINGSTYLE = new SyntaxStyle(new Color(204, 102, 0), false, true);
-        jsyntaxpane.SyntaxStyles.getInstance().put(TokenType.STRING,STRINGSTYLE);
+        jsyntaxpane.SyntaxStyles.getInstance().put(TokenType.STRING, STRINGSTYLE);
         SyntaxStyle ANNOTSTYLE = new SyntaxStyle(Color.BLUE, true, false);
-        jsyntaxpane.SyntaxStyles.getInstance().put(TokenType.REGEX,ANNOTSTYLE);
-        SyntaxStyle COMMENTSTYLE = new SyntaxStyle(new Color(51,153,3), true, false);
-        jsyntaxpane.SyntaxStyles.getInstance().put(TokenType.COMMENT,COMMENTSTYLE);
+        jsyntaxpane.SyntaxStyles.getInstance().put(TokenType.REGEX, ANNOTSTYLE);
+        SyntaxStyle COMMENTSTYLE = new SyntaxStyle(new Color(51, 153, 3), true, false);
+        jsyntaxpane.SyntaxStyles.getInstance().put(TokenType.COMMENT, COMMENTSTYLE);
 
 
         //UGLY REFLECTIVE GENERATION
@@ -70,7 +69,7 @@ public class ThingMLJSyntaxKit extends DefaultSyntaxKit {
                     if (tStyle != null) {
                         int[] colorTab = tStyle.getColorAsRGB();
                         ThingMLStyle.styles.put(kw.getValue(), newTType);
-                        SyntaxStyle sstyle = new SyntaxStyle(new Color(colorTab[0], colorTab[1], colorTab[2]), tStyle.isBold(),tStyle.isItalic());
+                        SyntaxStyle sstyle = new SyntaxStyle(new Color(colorTab[0], colorTab[1], colorTab[2]), tStyle.isBold(), tStyle.isItalic());
                         jsyntaxpane.SyntaxStyles.getInstance().put(newTType, sstyle);
                     } else {
                         ThingMLStyle.styles.put(kw.getValue(), newTType);

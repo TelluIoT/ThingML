@@ -25,6 +25,7 @@ import org.sintef.thingml.resource.thingml.mopp.ThingmlResource;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.*;
+import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.cppgenerator.CPPGenerator;
 import org.thingml.javagenerator.extension.HTTPGenerator;
 import org.thingml.javagenerator.extension.MQTTGenerator;
@@ -45,8 +46,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -94,16 +96,44 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
             final ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
 
             JMenu newCompilersMenu = new JMenu("Compile to [NEW]");
-            for(final String id : registry.getCompilerIds()) {
+            for (final String id : registry.getCompilerIds()) {
                 JMenuItem item = new JMenuItem(id);
-                newCompilersMenu.add(item);
+                ThingMLCompiler c = registry.createCompilerInstanceByName(id);
+                if (c.getConnectorCompilers().size() > 0) {
+                    JMenu compilerMenu = new JMenu(c.getPlatform());
+                    newCompilersMenu.add(compilerMenu);
+                    compilerMenu.add(item);
+                    for (final Map.Entry<String, ConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
+                        JMenuItem connectorMenu = new JMenuItem(connectorCompiler.getKey());
+                        compilerMenu.add(connectorMenu);
+                        connectorMenu.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                                ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
+                                for (Configuration c : thingmlModel.allConfigurations()) {
+                                    File file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName());
+                                    compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/"));
+                                    if (!file.exists()) {
+                                        file.mkdirs();
+                                        compiler.compile(c);
+                                    }
+                                    compiler.compileConnector(connectorCompiler.getKey(), c);
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    newCompilersMenu.add(item);
+                }
+
                 item.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         System.out.println("Input file : " + targetFile);
                         if (targetFile == null) return;
                         try {
+                            final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                             ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
-                            ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                             for (Configuration c : thingmlModel.allConfigurations()) {
                                 File file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName());
                                 file.mkdirs();
@@ -115,6 +145,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                         }
                     }
                 });
+                c = null;
             }
 
             //START TO BE REMOVED AFTER MIGRATION
