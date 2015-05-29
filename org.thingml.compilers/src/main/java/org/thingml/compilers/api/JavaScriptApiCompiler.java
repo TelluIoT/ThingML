@@ -197,10 +197,9 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         builder.append("this.cepDispatch = function (message) {\n" +
                 "var json = JSON.parse(message);\n");
         for (Stream s : thing.getStreams()) {
-//            ReceiveMessage first = s.getInputs().get(0); //fixme
             for(ReceiveMessage rm : s.getInputs()) {
                 builder.append("if(json.port === \"" + rm.getPort().getName() + "_s" + "\" && json.message === \"" + rm.getMessage().getName() + "\") {\n" +
-                        "\tthis.eventEmitterForStream.emit('" + s.qname("_") + "',message);\n" +
+                        "\tthis.eventEmitterForStream.emit('" + s.qname("_") + "_" + rm.getMessage().getName() + "',message);\n" +
                         "}\n");
             }
         }

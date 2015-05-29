@@ -6,7 +6,7 @@ thing fragment Demo1Msgs {
     message m2(val1 : Integer, val2 : Integer);
     message m3();
     
-    message cep(x: Integer, y: Integer);
+    message cep(x: Integer);
 }
 
 thing Demo1 includes Demo1Msgs{
@@ -18,9 +18,17 @@ thing Demo1 includes Demo1Msgs{
         sends m1, m2, m3, cep
     }
     
+    function toto () : Integer do
+        return 56
+    end 
+    
+    function toto2 (x : Integer, y:Integer, z : Integer, w : Integer ) : Integer do
+        return x + y + z + w
+    end 
+    
     stream simpleStream do
         input : e : receiveService?m2, e1 : receiveService?m1
-        output : sendService!cep(e.val1 + e1.v1 , e.val2 + e1.v2)
+        output : sendService!cep((e.val1 + e1.v1) * 2 - (e.val2 / e1.v2) + toto())// ,toto2(e.val1,e.val2,e1.v1,e1.v2),0)
     end
        
     statechart Demo1 init S1 {

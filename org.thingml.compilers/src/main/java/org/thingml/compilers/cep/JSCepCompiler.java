@@ -15,11 +15,11 @@
  */
 package org.thingml.compilers.cep;
 
-import org.sintef.thingml.Expression;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.ReceiveMessage;
-import org.sintef.thingml.Stream;
+import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ludovic
@@ -56,18 +56,40 @@ public class JSCepCompiler extends CepCompiler {
             builder.append("var " + stream.qname("_") + " = " + nameSTream1 + ".join(" + nameSTream2 + ",wait1,wait1,\n" +
                             "\tfunction(m1,m2) {\n" + //fixme
                                 "\t\tvar m1J = JSON.parse(m1);\n" + //fixme
-                                "\t\tvar m2J = JSON.parse(m2);\n" + //fixme
-                            "\t}).subscribe(\n\t" +
-                                 "\t\tfunction(x) {\n" +
-                                    "\t\t\tvar json = JSON.parse(x);\n" +
-                                    "\t\t\tconsole.log(json);\n" +
-                            "\t});\n");
+                                "\t\tvar m2J = JSON.parse(m2);\n"); //fixme
 
+            List<Expression> parameters = new ArrayList<>();
+            String returnString = "'{ ";
+            int i = 0;
             for(Expression p : stream.getOutput().getParameters()) {
+
+                String name = stream.getOutput().getMessage().getParameters().get(i).getName();
+                builder.append("\t\tvar " + name + " = ");
                 ctx.getCompiler().getActionCompiler().generate(TransformExpression.copyExpression(p),builder,ctx);
+                builder.append(";\n");
+                if(i==0)
+                    returnString += "\"" + name + "\": ' + " + name + " + '";
+                else
+                    returnString += ", \"" + name + "\" : ' + " + name + " + '";
+
+                ExternExpression externExpression = ThingmlFactory.eINSTANCE.createExternExpression();
+                externExpression.setExpression("json." + name);
+                parameters.add(externExpression);
+                i++;
             }
+            returnString += "}';";
+            builder.append("\t\treturn " + returnString + "\n");
+            builder.append("\t}).subscribe(\n\t" +
+                                 "\t\tfunction(x) {\n" +
+                                    "\t\t\tvar json = JSON.parse(x);\n");
+            builder.append("\t\t\t");
+
+            stream.getOutput().getParameters().clear();
+            stream.getOutput().getParameters().addAll(parameters);
+            ctx.getCompiler().getActionCompiler().generate(stream.getOutput(),builder,ctx);
 
 
+            builder.append("\t});\n");
         } else {
             throw new UnsupportedOperationException("Incorrect number of inputs or parameters for stream " + stream.getName());
         }
