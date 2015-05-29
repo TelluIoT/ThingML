@@ -243,7 +243,6 @@
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Stream">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/inputs"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//Stream/finalStream"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/selection"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/output"/>
     </genClasses>
@@ -255,5 +254,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StreamOutput/message"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StreamOutput/port"/>
     </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//SimpleStream"/>
+    <genClasses ecoreClass="thingml.ecore#//MergedStream"/>
+    <genClasses ecoreClass="thingml.ecore#//JoinedStream"/>
   </genPackages>
 </genmodel:GenModel>

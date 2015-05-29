@@ -405,6 +405,18 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createStreamOutputAdapter();
 			}
 			@Override
+			public Adapter caseSimpleStream(SimpleStream object) {
+				return createSimpleStreamAdapter();
+			}
+			@Override
+			public Adapter caseMergedStream(MergedStream object) {
+				return createMergedStreamAdapter();
+			}
+			@Override
+			public Adapter caseJoinedStream(JoinedStream object) {
+				return createJoinedStreamAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -1555,6 +1567,48 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStreamOutputAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SimpleStream <em>Simple Stream</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.SimpleStream
+	 * @generated
+	 */
+	public Adapter createSimpleStreamAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.MergedStream <em>Merged Stream</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.MergedStream
+	 * @generated
+	 */
+	public Adapter createMergedStreamAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.JoinedStream <em>Joined Stream</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.JoinedStream
+	 * @generated
+	 */
+	public Adapter createJoinedStreamAdapter() {
 		return null;
 	}
 

@@ -7,15 +7,17 @@ thing fragment Demo1Msgs {
     message m3();
     
     message cep(x: Integer, y: Integer);
+    message cep2();
+    message cep3();
 }
 
 thing Demo1 includes Demo1Msgs{
     required port receiveService {
-        receives m1, m2, m3, cep
+        receives m1, m2, m3, cep, cep2, cep3
     }
     
     provided port sendService {
-        sends m1, m2, m3, cep
+        sends m1, m2, m3, cep, cep2, cep3
     }
     
     function toto () : Integer do
@@ -27,12 +29,21 @@ thing Demo1 includes Demo1Msgs{
     end 
     
     stream simpleStream do
-        /*input : e : receiveService?m2, e1 : receiveService?m1
-        output : sendService!cep((e.val1 + e1.v1) * 2 - (e.val2 / e1.v2) + toto())// ,toto2(e.val1,e.val2,e1.v1,e1.v2),0)*/
+        select a : (e.v1 + e.v2) * 2 - (e.v2 / e.v2) + toto(), b : e.v2
+        from e : receiveService?m1
+        action sendService!cep(a,b)
+    end
+    
+    /*stream mergedStreams do
+        from receiveService?m2, receiveService?m1
+        action sendService!cep3()
+    end
+    
+    stream joinStream do
         select a : (e.val1 + e1.v1) * 2 - (e.val2 / e1.v2) + toto(), b : toto2(e.val1,e.val2,e1.v1,e1.v2)
         from e : receiveService?m2, e1 : receiveService?m1
-        action : sendService!cep(a,b)
-    end
+        action sendService!cep(a,b)
+    end*/
        
     statechart Demo1 init S1 {
         state S1 {
@@ -45,7 +56,15 @@ thing Demo1 includes Demo1Msgs{
              
             internal
             event e : receiveService?cep
-            action print "YouYou " +  e.x + "; " + e.y     
+            action print "YouYou " +  e.x + "; " + e.y  
+            
+            internal
+            event e : receiveService?cep2
+            action print "YouYou cep2" 
+            
+            internal
+            event e : receiveService?cep3
+            action print "YouYou cep3"    
         }
     }
     

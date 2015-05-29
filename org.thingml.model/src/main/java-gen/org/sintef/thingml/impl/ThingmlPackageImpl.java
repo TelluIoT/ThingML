@@ -61,10 +61,12 @@ import org.sintef.thingml.Instance;
 import org.sintef.thingml.InstanceRef;
 import org.sintef.thingml.IntegerLiteral;
 import org.sintef.thingml.InternalTransition;
+import org.sintef.thingml.JoinedStream;
 import org.sintef.thingml.Literal;
 import org.sintef.thingml.LocalVariable;
 import org.sintef.thingml.LoopAction;
 import org.sintef.thingml.LowerExpression;
+import org.sintef.thingml.MergedStream;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.MinusExpression;
 import org.sintef.thingml.ModExpression;
@@ -86,6 +88,7 @@ import org.sintef.thingml.Region;
 import org.sintef.thingml.RequiredPort;
 import org.sintef.thingml.ReturnAction;
 import org.sintef.thingml.SendAction;
+import org.sintef.thingml.SimpleStream;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
@@ -679,6 +682,27 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass streamOutputEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass simpleStreamEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass mergedStreamEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass joinedStreamEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -2421,7 +2445,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	public EReference getStream_Output() {
-		return (EReference)streamEClass.getEStructuralFeatures().get(3);
+		return (EReference)streamEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2483,8 +2507,26 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getStream_FinalStream() {
-		return (EAttribute)streamEClass.getEStructuralFeatures().get(1);
+	public EClass getSimpleStream() {
+		return simpleStreamEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getMergedStream() {
+		return mergedStreamEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJoinedStream() {
+		return joinedStreamEClass;
 	}
 
 	/**
@@ -2493,7 +2535,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	public EReference getStream_Selection() {
-		return (EReference)streamEClass.getEStructuralFeatures().get(2);
+		return (EReference)streamEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2788,7 +2830,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		streamEClass = createEClass(STREAM);
 		createEReference(streamEClass, STREAM__INPUTS);
-		createEAttribute(streamEClass, STREAM__FINAL_STREAM);
 		createEReference(streamEClass, STREAM__SELECTION);
 		createEReference(streamEClass, STREAM__OUTPUT);
 
@@ -2799,6 +2840,12 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(streamOutputEClass, STREAM_OUTPUT__PARAMETERS);
 		createEReference(streamOutputEClass, STREAM_OUTPUT__MESSAGE);
 		createEReference(streamOutputEClass, STREAM_OUTPUT__PORT);
+
+		simpleStreamEClass = createEClass(SIMPLE_STREAM);
+
+		mergedStreamEClass = createEClass(MERGED_STREAM);
+
+		joinedStreamEClass = createEClass(JOINED_STREAM);
 	}
 
 	/**
@@ -2908,6 +2955,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		localVariableEClass.getESuperTypes().add(this.getAction());
 		streamEClass.getESuperTypes().add(this.getThingMLElement());
 		streamExpressionEClass.getESuperTypes().add(this.getThingMLElement());
+		simpleStreamEClass.getESuperTypes().add(this.getStream());
+		mergedStreamEClass.getESuperTypes().add(this.getStream());
+		joinedStreamEClass.getESuperTypes().add(this.getStream());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(thingMLModelEClass, ThingMLModel.class, "ThingMLModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3172,9 +3222,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getLocalVariable_Init(), this.getExpression(), null, "init", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getLocalVariable_Changeable(), ecorePackage.getEBoolean(), "changeable", "true", 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(streamEClass, Stream.class, "Stream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(streamEClass, Stream.class, "Stream", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getStream_Inputs(), this.getReceiveMessage(), null, "inputs", null, 1, -1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getStream_FinalStream(), ecorePackage.getEBoolean(), "finalStream", "true", 1, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStream_Selection(), this.getStreamExpression(), null, "selection", null, 0, -1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStream_Output(), this.getStreamOutput(), null, "output", null, 1, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -3185,6 +3234,12 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getStreamOutput_Parameters(), this.getStreamExpression(), null, "parameters", null, 0, -1, StreamOutput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStreamOutput_Message(), this.getMessage(), null, "message", null, 1, 1, StreamOutput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStreamOutput_Port(), this.getPort(), null, "port", null, 1, 1, StreamOutput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(simpleStreamEClass, SimpleStream.class, "SimpleStream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(mergedStreamEClass, MergedStream.class, "MergedStream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(joinedStreamEClass, JoinedStream.class, "JoinedStream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

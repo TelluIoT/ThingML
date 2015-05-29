@@ -331,11 +331,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="changeable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Stream" eSuperTypes="#//ThingMLElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Stream" abstract="true" eSuperTypes="#//ThingMLElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputs" lowerBound="1"
         upperBound="-1" eType="#//ReceiveMessage" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="finalStream" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="selection" upperBound="-1"
         eType="#//StreamExpression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="output" lowerBound="1"
@@ -352,4 +350,7 @@
         eType="#//Message"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" lowerBound="1" eType="#//Port"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SimpleStream" eSuperTypes="#//Stream"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MergedStream" eSuperTypes="#//Stream"/>
+  <eClassifiers xsi:type="ecore:EClass" name="JoinedStream" eSuperTypes="#//Stream"/>
 </ecore:EPackage>

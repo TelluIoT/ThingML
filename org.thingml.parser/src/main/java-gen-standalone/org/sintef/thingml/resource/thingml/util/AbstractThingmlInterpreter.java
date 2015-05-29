@@ -535,6 +535,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
+		if (object instanceof org.sintef.thingml.JoinedStream) {
+			result = interprete_org_sintef_thingml_JoinedStream((org.sintef.thingml.JoinedStream) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		if (object instanceof org.sintef.thingml.Stream) {
 			result = interprete_org_sintef_thingml_Stream((org.sintef.thingml.Stream) object, context);
 		}
@@ -549,6 +555,18 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.StreamOutput) {
 			result = interprete_org_sintef_thingml_StreamOutput((org.sintef.thingml.StreamOutput) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.SimpleStream) {
+			result = interprete_org_sintef_thingml_SimpleStream((org.sintef.thingml.SimpleStream) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.MergedStream) {
+			result = interprete_org_sintef_thingml_MergedStream((org.sintef.thingml.MergedStream) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -877,6 +895,18 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	}
 	
 	public ResultType interprete_org_sintef_thingml_StreamOutput(org.sintef.thingml.StreamOutput streamOutput, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_SimpleStream(org.sintef.thingml.SimpleStream simpleStream, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_MergedStream(org.sintef.thingml.MergedStream mergedStream, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_JoinedStream(org.sintef.thingml.JoinedStream joinedStream, ContextType context) {
 		return null;
 	}
 	

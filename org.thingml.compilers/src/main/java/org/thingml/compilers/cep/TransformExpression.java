@@ -79,7 +79,7 @@ public class TransformExpression {
 
     private static Expression copyExpression(EventReference guard) {
         ExternExpression externExpression = ThingmlFactory.eINSTANCE.createExternExpression();
-        externExpression.setExpression( guard.getMsgRef().getMessage().getName() + "J." + guard.getParamRef().getName()); //fixme
+        externExpression.setExpression(guard.getMsgRef().getMessage().getName() + "J." + guard.getParamRef().getName()); //fixme
         return externExpression;
     }
 

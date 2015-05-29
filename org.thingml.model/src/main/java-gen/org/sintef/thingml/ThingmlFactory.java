@@ -593,15 +593,6 @@ public interface ThingmlFactory extends EFactory {
 	LocalVariable createLocalVariable();
 
 	/**
-	 * Returns a new object of class '<em>Stream</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Stream</em>'.
-	 * @generated
-	 */
-	Stream createStream();
-
-	/**
 	 * Returns a new object of class '<em>Stream Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -618,6 +609,33 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	StreamOutput createStreamOutput();
+
+	/**
+	 * Returns a new object of class '<em>Simple Stream</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Simple Stream</em>'.
+	 * @generated
+	 */
+	SimpleStream createSimpleStream();
+
+	/**
+	 * Returns a new object of class '<em>Merged Stream</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Merged Stream</em>'.
+	 * @generated
+	 */
+	MergedStream createMergedStream();
+
+	/**
+	 * Returns a new object of class '<em>Joined Stream</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Joined Stream</em>'.
+	 * @generated
+	 */
+	JoinedStream createJoinedStream();
 
 	/**
 	 * Returns the package supported by this factory.

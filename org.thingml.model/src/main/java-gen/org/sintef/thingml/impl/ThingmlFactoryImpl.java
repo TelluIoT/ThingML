@@ -131,9 +131,11 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.FUNCTION_CALL_STATEMENT: return createFunctionCallStatement();
 			case ThingmlPackage.FUNCTION_CALL_EXPRESSION: return createFunctionCallExpression();
 			case ThingmlPackage.LOCAL_VARIABLE: return createLocalVariable();
-			case ThingmlPackage.STREAM: return createStream();
 			case ThingmlPackage.STREAM_EXPRESSION: return createStreamExpression();
 			case ThingmlPackage.STREAM_OUTPUT: return createStreamOutput();
+			case ThingmlPackage.SIMPLE_STREAM: return createSimpleStream();
+			case ThingmlPackage.MERGED_STREAM: return createMergedStream();
+			case ThingmlPackage.JOINED_STREAM: return createJoinedStream();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -764,16 +766,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Stream createStream() {
-		StreamImpl stream = new StreamImpl();
-		return stream;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public StreamExpression createStreamExpression() {
 		StreamExpressionImpl streamExpression = new StreamExpressionImpl();
 		return streamExpression;
@@ -787,6 +779,36 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public StreamOutput createStreamOutput() {
 		StreamOutputImpl streamOutput = new StreamOutputImpl();
 		return streamOutput;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SimpleStream createSimpleStream() {
+		SimpleStreamImpl simpleStream = new SimpleStreamImpl();
+		return simpleStream;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MergedStream createMergedStream() {
+		MergedStreamImpl mergedStream = new MergedStreamImpl();
+		return mergedStream;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JoinedStream createJoinedStream() {
+		JoinedStreamImpl joinedStream = new JoinedStreamImpl();
+		return joinedStream;
 	}
 
 	/**

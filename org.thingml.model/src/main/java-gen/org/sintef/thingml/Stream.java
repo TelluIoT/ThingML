@@ -28,14 +28,13 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.sintef.thingml.Stream#getInputs <em>Inputs</em>}</li>
- *   <li>{@link org.sintef.thingml.Stream#isFinalStream <em>Final Stream</em>}</li>
  *   <li>{@link org.sintef.thingml.Stream#getSelection <em>Selection</em>}</li>
  *   <li>{@link org.sintef.thingml.Stream#getOutput <em>Output</em>}</li>
  * </ul>
  * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getStream()
- * @model
+ * @model abstract="true"
  * @generated
  */
 public interface Stream extends ThingMLElement {
@@ -80,33 +79,6 @@ public interface Stream extends ThingMLElement {
 	 * @generated
 	 */
 	void setOutput(StreamOutput value);
-
-	/**
-	 * Returns the value of the '<em><b>Final Stream</b></em>' attribute.
-	 * The default value is <code>"true"</code>.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Final Stream</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Final Stream</em>' attribute.
-	 * @see #setFinalStream(boolean)
-	 * @see org.sintef.thingml.ThingmlPackage#getStream_FinalStream()
-	 * @model default="true" required="true"
-	 * @generated
-	 */
-	boolean isFinalStream();
-
-	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Stream#isFinalStream <em>Final Stream</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Final Stream</em>' attribute.
-	 * @see #isFinalStream()
-	 * @generated
-	 */
-	void setFinalStream(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Selection</b></em>' containment reference list.

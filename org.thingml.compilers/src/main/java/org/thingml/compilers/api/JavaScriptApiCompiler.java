@@ -196,10 +196,31 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         builder.append("//CEP dispatch functions\n");
         builder.append("this.cepDispatch = function (message) {\n" +
                 "var json = JSON.parse(message);\n");
-        for (Stream s : thing.getStreams()) {
-            for(ReceiveMessage rm : s.getInputs()) {
+        /*for (Stream s : thing.getStreams()) {
+            if(s.getInputs().size() == 1 || s.getOutput().getParameters().size() > 0) {
+                for (ReceiveMessage rm : s.getInputs()) {
+                    builder.append("if(json.port === \"" + rm.getPort().getName() + "_s" + "\" && json.message === \"" + rm.getMessage().getName() + "\") {\n" +
+                            "\tthis.eventEmitterForStream.emit('" + s.qname("_") + "_" + rm.getMessage().getName() + "',message);\n" +
+                            "}\n");
+                }
+            } else {
+                for (ReceiveMessage rm : s.getInputs()) {
+                    builder.append("if(json.port === \"" + rm.getPort().getName() + "_s" + "\" && json.message === \"" + rm.getMessage().getName() + "\") {\n" +
+                            "\tthis.eventEmitterForStream.emit('" + s.qname("_") + "',message);\n" +
+                            "}\n");
+                }
+            }
+        }*/
+
+        for(Stream s : thing.getStreams()) {
+            for (ReceiveMessage rm : s.getInputs()) {
+                String eventName = s.qname("_");
+                if (s instanceof SimpleStream || s instanceof JoinedStream) {
+                    eventName += "_" + rm.getPort().getName() + "_" +  rm.getMessage().getName();
+                }
+
                 builder.append("if(json.port === \"" + rm.getPort().getName() + "_s" + "\" && json.message === \"" + rm.getMessage().getName() + "\") {\n" +
-                        "\tthis.eventEmitterForStream.emit('" + s.qname("_") + "_" + rm.getMessage().getName() + "',message);\n" +
+                        "\tthis.eventEmitterForStream.emit('" + eventName + "',message);\n" +
                         "}\n");
             }
         }

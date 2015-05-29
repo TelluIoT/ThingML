@@ -48,7 +48,6 @@ import org.sintef.thingml.ThingmlPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#getInputs <em>Inputs</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.StreamImpl#isFinalStream <em>Final Stream</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#getSelection <em>Selection</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#getOutput <em>Output</em>}</li>
  * </ul>
@@ -56,7 +55,7 @@ import org.sintef.thingml.ThingmlPackage;
  *
  * @generated
  */
-public class StreamImpl extends ThingMLElementImpl implements Stream {
+public abstract class StreamImpl extends ThingMLElementImpl implements Stream {
 	/**
 	 * The cached value of the '{@link #getInputs() <em>Inputs</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -66,26 +65,6 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 	 * @ordered
 	 */
 	protected EList<ReceiveMessage> inputs;
-
-	/**
-	 * The default value of the '{@link #isFinalStream() <em>Final Stream</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isFinalStream()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean FINAL_STREAM_EDEFAULT = true;
-
-	/**
-	 * The cached value of the '{@link #isFinalStream() <em>Final Stream</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isFinalStream()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean finalStream = FINAL_STREAM_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getSelection() <em>Selection</em>}' containment reference list.
@@ -186,27 +165,6 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isFinalStream() {
-		return finalStream;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setFinalStream(boolean newFinalStream) {
-		boolean oldFinalStream = finalStream;
-		finalStream = newFinalStream;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.STREAM__FINAL_STREAM, oldFinalStream, finalStream));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EList<StreamExpression> getSelection() {
 		if (selection == null) {
 			selection = new EObjectContainmentEList<StreamExpression>(StreamExpression.class, this, ThingmlPackage.STREAM__SELECTION);
@@ -242,8 +200,6 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 		switch (featureID) {
 			case ThingmlPackage.STREAM__INPUTS:
 				return getInputs();
-			case ThingmlPackage.STREAM__FINAL_STREAM:
-				return isFinalStream();
 			case ThingmlPackage.STREAM__SELECTION:
 				return getSelection();
 			case ThingmlPackage.STREAM__OUTPUT:
@@ -264,9 +220,6 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 			case ThingmlPackage.STREAM__INPUTS:
 				getInputs().clear();
 				getInputs().addAll((Collection<? extends ReceiveMessage>)newValue);
-				return;
-			case ThingmlPackage.STREAM__FINAL_STREAM:
-				setFinalStream((Boolean)newValue);
 				return;
 			case ThingmlPackage.STREAM__SELECTION:
 				getSelection().clear();
@@ -290,9 +243,6 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 			case ThingmlPackage.STREAM__INPUTS:
 				getInputs().clear();
 				return;
-			case ThingmlPackage.STREAM__FINAL_STREAM:
-				setFinalStream(FINAL_STREAM_EDEFAULT);
-				return;
 			case ThingmlPackage.STREAM__SELECTION:
 				getSelection().clear();
 				return;
@@ -313,30 +263,12 @@ public class StreamImpl extends ThingMLElementImpl implements Stream {
 		switch (featureID) {
 			case ThingmlPackage.STREAM__INPUTS:
 				return inputs != null && !inputs.isEmpty();
-			case ThingmlPackage.STREAM__FINAL_STREAM:
-				return finalStream != FINAL_STREAM_EDEFAULT;
 			case ThingmlPackage.STREAM__SELECTION:
 				return selection != null && !selection.isEmpty();
 			case ThingmlPackage.STREAM__OUTPUT:
 				return output != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (finalStream: ");
-		result.append(finalStream);
-		result.append(')');
-		return result.toString();
 	}
 
 } //StreamImpl
