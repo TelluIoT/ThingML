@@ -24,12 +24,11 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.io.*;
-import java.util.*;
 
 /**
  * Created by bmori on 21.05.2015.
  */
-public class FilePanel extends JPanel implements Runnable{
+public class FilePanel extends JPanel implements Runnable {
 
     SimpleFileManager simpleFileManager = null;
     JTree tree = new JTree();
@@ -81,7 +80,7 @@ public class FilePanel extends JPanel implements Runnable{
         tree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
-                TreePath path =e.getNewLeadSelectionPath();
+                TreePath path = e.getNewLeadSelectionPath();
                 String file = path.getLastPathComponent().toString();
                 while (path.getParentPath() != null) {
                     path = path.getParentPath();

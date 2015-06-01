@@ -29,7 +29,9 @@
 package org.sintef.thingml;
 
 
-import com.apple.eawt.*;
+import com.apple.eawt.Application;
+import com.apple.eawt.ApplicationAdapter;
+import com.apple.eawt.ApplicationEvent;
 
 /**
  * User: ffouquet
@@ -38,10 +40,10 @@ import com.apple.eawt.*;
  */
 public class MacIntegration {
 
-    public static void addOSXIntegration(final ThingMLPanel editor){
+    public static void addOSXIntegration(final ThingMLPanel editor) {
         Application app = Application.getApplication();
         //app.setEnabledAboutMenu(true);
-	    //app.setEnabledPreferencesMenu(true);
+        //app.setEnabledPreferencesMenu(true);
   /*
         app.setOpenURIHandler(new com.apple.eawt.OpenURIHandler() {
             @Override
@@ -75,7 +77,7 @@ public class MacIntegration {
 
             @Override
             public void handleOpenFile(ApplicationEvent applicationEvent) {
-                System.out.println("open => "+applicationEvent.getFilename());
+                System.out.println("open => " + applicationEvent.getFilename());
                 //editor.codeEditor().setText(editor.codeEditor()+"\n"+applicationEvent.getFilename());
             }
 

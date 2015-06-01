@@ -27,6 +27,7 @@ import org.thingml.compilers.build.BuildCompiler;
 import org.thingml.compilers.build.JSBuildCompiler;
 import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.compilers.connectors.JS2Kevoree;
+import org.thingml.compilers.connectors.JS2NodeRED;
 import org.thingml.compilers.main.JSMainGenerator;
 import org.thingml.compilers.main.MainGenerator;
 
@@ -42,6 +43,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
     {
         Map<String, ConnectorCompiler> connectorCompilerMap = new HashMap<String, ConnectorCompiler>();
         connectorCompilerMap.put("kevoree-js", new JS2Kevoree());
+        connectorCompilerMap.put("node-red", new JS2NodeRED());
         addConnectorCompilers(connectorCompilerMap);
     }
 

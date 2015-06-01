@@ -31,28 +31,23 @@ import java.util.Map;
  */
 public class JS2NodeRED extends ConnectorCompiler {
 
-    private void generateWrapper(Context ctx, Configuration cfg) {
+    int inputs = 0;
+
+    private void generateNodeJS(Context ctx, Configuration cfg) {
         //Generate wrapper
 
-        //Move all .js file (previously generated) into lib folder
-        final File dir = new File(ctx.getOutputDir() + "/" + cfg.getName());
-
-        final StringBuilder builder = ctx.getBuilder(cfg.getName() + cfg.getName() + "_nodered.js" );
+        final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/" + cfg.getName() + "_nodered.js" );
         builder.append("var Connector = require('./Connector');\n");
 
         for(Thing t : cfg.allThings()) {
             builder.append("var " + t.getName() + " = require('./" + t.getName() + "');\n");
         }
 
-        builder.append("/**\n* Node-RED node*/\n");
+        builder.append("/**\n* Node-RED node for " + cfg.getName() + "\n*/\n");
         builder.append("module.exports = function(RED) {\n");
         builder.append("function " + ctx.firstToUpper(cfg.getName()) + "Node(config) {\n");
         builder.append("RED.nodes.createNode(this, config);\n");
         builder.append("var node = this;\n");
-
-        for(Instance i : cfg.danglingPorts().keySet()) {
-            builder.append("this." + i.getName() + " = null;\n");
-        }
 
         JSMainGenerator.generateInstances(cfg, builder, ctx, true);
 
@@ -69,10 +64,13 @@ public class JS2NodeRED extends ConnectorCompiler {
             builder.append("this." + i.getName() + "._init();\n");
         }
 
+        builder.append("this.status({fill:\"green\",shape:\"dot\",text:\"on\"});\n");
+
         builder.append("this.on('close', function(done) {\n");
         for(Instance i : cfg.allInstances()) {
             builder.append(i.getName() + "._stop();\n");
         }
+        builder.append("this.status({fill:\"red\",shape:\"dot\",text:\"off\"});\n");
         builder.append("done();\n");
         builder.append("});\n");
 
@@ -81,7 +79,30 @@ public class JS2NodeRED extends ConnectorCompiler {
             for(Port p : (List<Port>)e.getValue()) {
                 if (p.getReceives().size() > 0) {
                     builder.append("this.on('" + i.getName() + "_" + p.getName() + "', function(msg) {\n");
-
+                    builder.append("this.status({fill:\"green\",shape:\"ring\",text:\"incoming\"});\n");
+                    builder.append("var json = JSON.parse(msg);\n");//FIXME: generate try/catch
+                    int id = 0;
+                    for(Message m : p.getReceives()) {
+                        if (id > 0) builder.append("else ");
+                        builder.append("if (json.message === '" + m.getName() + "') {\n");
+                        builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(");
+                        int j = 0;
+                        for(Parameter param : m.getParameters()) {
+                            if (j > 0) {
+                                builder.append(", ");
+                            }
+                            builder.append("json." + param.getName());
+                            j++;
+                        }
+                        builder.append(");\n");
+                        builder.append("this.status({fill:\"green\",shape:\"ring\",text:\"" + m.getName() + "\"});\n");
+                        builder.append("}\n");
+                        id++;
+                    }
+                    inputs = id;
+                    builder.append("else {\n");
+                    builder.append("this.status({fill:\"yellow\",shape:\"ring\",text:\"msg lost\"});\n");
+                    builder.append("}\n");
                     builder.append("});\n");
                 }
             }
@@ -92,8 +113,47 @@ public class JS2NodeRED extends ConnectorCompiler {
 
     }
 
+    private void generateHTML(Context ctx, Configuration cfg) {
+        final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/" + cfg.getName() + "_nodered.html");
+
+        String template = ctx.getTemplateByID("javascript/lib/nodered.html");
+        template = template.replace("$CFG_NAME$", cfg.getName());
+        template = template.replace("$#INPUTS$", String.valueOf(inputs));
+
+        int outputs = 0;
+        for(Map.Entry e : cfg.danglingPorts().entrySet()) {
+            final Instance i = (Instance) e.getKey();
+            for (Port p : (List<Port>) e.getValue()) {
+                outputs += p.getSends().size();
+            }
+        }
+
+        for(Map.Entry e : cfg.danglingPorts().entrySet()) {
+            final Instance i = (Instance) e.getKey();
+            for(Property p : i.getType().allPropertiesInDepth()) {
+                StringBuilder temp = new StringBuilder();
+                temp.append("<div class=\"form-row\">\n");
+                temp.append("<label for=\"node-input-" + i.getName() + "_" + p.getName() + "\"><i class=\"icon-tag\"></i> " + i.getName() + "_" + p.getName() + "</label>\n");
+                temp.append("<input type=\"text\" id=\"node-input-" + i.getName() + "_" + p.getName() + "\">\n");
+                temp.append("</div>\n");
+                template = template.replace("<!--MESSAGE HERE-->", "<!--MESSAGE HERE-->\n" + temp.toString());
+            }
+            for (Port p : (List<Port>) e.getValue()) {
+                outputs += p.getSends().size();
+            }
+        }
+
+        template = template.replace("$#OUTPUTS$", String.valueOf(outputs));
+
+        String align = (inputs > outputs) ? "right" : "left";
+        template = template.replace("$ALIGNE$", align);
+
+        builder.append(template);
+    }
+
     @Override
     public void generateLib(Context ctx, Configuration cfg, String... options) {
-        generateWrapper(ctx, cfg);
+        generateNodeJS(ctx, cfg);
+        generateHTML(ctx, cfg);
     }
 }
