@@ -34,7 +34,7 @@ public class JS2Kevoree extends ConnectorCompiler {
 
     private void updateMainGruntfile(Configuration cfg, Port p, Context ctx) {
         try {
-            final InputStream input = new FileInputStream(ctx.getOutputDir() + "/" + cfg.getName() + "/Gruntfile.js");
+            final InputStream input = new FileInputStream(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName() + "/Gruntfile.js");
             final List<String> packLines = IOUtils.readLines(input);
             String pack = "";
             for (String line : packLines) {
@@ -43,7 +43,7 @@ public class JS2Kevoree extends ConnectorCompiler {
             input.close();
             pack = pack.replace("mergeLocalLibraries: [", "mergeLocalLibraries: ['../" + p.getName() + "'");//FIXME: won't work if more than two (we need to add a comma
 
-            final File f = new File(ctx.getOutputDir() + "/" + cfg.getName() + "/Gruntfile.js");
+            final File f = new File(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName() + "/Gruntfile.js");
             final OutputStream output = new FileOutputStream(f);
             IOUtils.write(pack, output);
             IOUtils.closeQuietly(output);
@@ -86,8 +86,8 @@ public class JS2Kevoree extends ConnectorCompiler {
 
         PrintWriter w = null;
         try {
-            new File(ctx.getOutputDir() + "/" + cfg.getName() + "/kevs").mkdirs();
-            w = new PrintWriter(new FileWriter(new File(ctx.getOutputDir() + "/" + cfg.getName() + "/kevs/main.kevs")));
+            new File(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName() + "/kevs").mkdirs();
+            w = new PrintWriter(new FileWriter(new File(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName() + "/kevs/main.kevs")));
             w.println(kevScript);
             w.close();
         } catch (IOException e) {
@@ -108,7 +108,7 @@ public class JS2Kevoree extends ConnectorCompiler {
                 pom += line + "\n";
             }
             input.close();
-            final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDir() + "/" + outputdir +  "/Gruntfile.js")));
+            final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getCompiler().getOutputDirectory() + "/" + outputdir +  "/Gruntfile.js")));
             w.println(pom);
             w.close();
         } catch (Exception e) {
@@ -119,7 +119,7 @@ public class JS2Kevoree extends ConnectorCompiler {
     private void updatePackageJSON(Context ctx, Configuration cfg) {
         //Update package.json
         try {
-            final InputStream input = new FileInputStream(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json");
+            final InputStream input = new FileInputStream(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName() + "/package.json");
             final List<String> packLines = IOUtils.readLines(input);
             String pack = "";
             for (String line : packLines) {
@@ -143,7 +143,7 @@ public class JS2Kevoree extends ConnectorCompiler {
             final JsonObject kevProp = JsonObject.readFrom("{\"package\":\"my.package\"}");
             json.add("kevoree", kevProp);
 
-            final File f = new File(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json");
+            final File f = new File(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName() + "/package.json");
             final OutputStream output = new FileOutputStream(f);
             IOUtils.write(json.toString(), output);
             IOUtils.closeQuietly(output);
@@ -156,7 +156,7 @@ public class JS2Kevoree extends ConnectorCompiler {
         //Generate wrapper
 
         //Move all .js file (previously generated) into lib folder
-        final File dir = new File(ctx.getOutputDir() + "/" + cfg.getName());
+        final File dir = new File(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName());
         final File lib = new File(dir, "lib");
         lib.mkdirs();
         for(File f : dir.listFiles()) {
@@ -317,11 +317,11 @@ public class JS2Kevoree extends ConnectorCompiler {
             builder.append("module.exports = " + p.getName() + ";\n");
 
 
-            new File(ctx.getOutputDir() + "/" + p.getName()).mkdirs();
+            new File(ctx.getCompiler().getOutputDirectory() + "/" + p.getName()).mkdirs();
             generateGruntFile(ctx, p.getName());
             updateMainGruntfile(cfg, p, ctx);
             try {
-                final InputStream input = new FileInputStream(ctx.getOutputDir() + "/" + cfg.getName() + "/package.json");
+                final InputStream input = new FileInputStream(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName() + "/package.json");
                 final List<String> packLines = IOUtils.readLines(input);
                 String pack = "";
                 for (String line : packLines) {
@@ -330,7 +330,7 @@ public class JS2Kevoree extends ConnectorCompiler {
                 input.close();
 
                 pack = pack.replace(cfg.getName(), p.getName());
-                final File f = new File(ctx.getOutputDir() + "/" + p.getName() + "/package.json");
+                final File f = new File(ctx.getCompiler().getOutputDirectory() + "/" + p.getName() + "/package.json");
                 final OutputStream output = new FileOutputStream(f);
                 IOUtils.write(pack, output);
                 IOUtils.closeQuietly(output);

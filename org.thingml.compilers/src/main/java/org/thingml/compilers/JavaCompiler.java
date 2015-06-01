@@ -83,7 +83,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         }
         if (getOutputDirectory() != null) tmpFolder = getOutputDirectory().getAbsolutePath() + File.separator;
         else new File(tmpFolder).deleteOnExit();
-        ctx.addProperty("package", pack);
+        ctx.addContextAnnotation("package", pack);
         ctx.setCurrentConfiguration(cfg);
         for(Thing th : cfg.allThings()) {
             ctx.getCompiler().getApiCompiler().generatePublicAPI(th, ctx);

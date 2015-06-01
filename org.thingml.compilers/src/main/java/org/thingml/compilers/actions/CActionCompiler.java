@@ -44,14 +44,14 @@ public class CActionCompiler extends GenericImperativeActionCompiler {
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
-        builder.append(ctx.errorMessage(b.toString()) + "\n");
+        //builder.append(ctx.errorMessage(b.toString()) + "\n");
     }
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
-        builder.append(ctx.printMessage(b.toString()) + "\n");
+        //builder.append(ctx.printMessage(b.toString()) + "\n");
     }
 
 

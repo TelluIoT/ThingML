@@ -316,7 +316,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                     try {
                         ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
                         for(Configuration c : thingmlModel.allConfigurations()){
-                            String rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName();
+                            String rootDir = System.getContextAnnotation("java.io.tmpdir") + "/ThingML_temp/" + c.getName();
                             org.thingml.coapgenerator.extension.CoAPGenerator.compileAndRun(c, thingmlModel);
                         }
                     } catch (Exception ex) {

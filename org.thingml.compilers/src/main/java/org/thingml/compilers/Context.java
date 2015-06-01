@@ -37,6 +37,10 @@ public class Context {
     private Map<String, String> contextAnnotations = new HashMap<String, String>();
 
 
+    public ThingMLCompiler getCompiler() {
+        return compiler;
+    }
+
 
     public Configuration getCurrentConfiguration() {
         return currentConfiguration;
@@ -101,22 +105,6 @@ public class Context {
         }
     }
 
-    /**
-     * Copies a file into the file located at target (related to outputDir)
-     * @param source
-     */
-    public void copy(InputStream source, String targetDir, String targetFile) {
-        try {
-            new File(compiler.getOutputDirectory() + "/" +  targetDir).mkdirs();
-            OutputStream out = new FileOutputStream(compiler.getOutputDirectory() + "/" +  targetDir + "/" + targetFile);
-            org.apache.commons.io.IOUtils.copy(source, out);
-            out.close();
-            //Files.copy(source, FileSystems.getDefault().getPath(compiler.getOutputDirectory() + "/" +  targetDir, targetFile), StandardCopyOption.REPLACE_EXISTING);
-        } catch (Exception e) {
-            System.err.println("Problem while copying file to " + targetDir + "/" + targetFile);
-            e.printStackTrace();
-        }
-    }
 
     public String getTemplateByID(String template_id) {
         final InputStream input = this.getClass().getClassLoader().getResourceAsStream(template_id);
@@ -132,38 +120,30 @@ public class Context {
         return result;
     }
 
-    public void mark(String marker) {
-        markers.add(marker);
+    public void addMarker(String marker) {
+        addContextAnnotation(marker, marker);
     }
 
-    public void unmark(String marker) {
-        markers.remove(marker);
+    public void removerMarker(String marker) {
+        removeContextAnnotation(marker);
     }
 
-    public boolean isDefined(String marker) {
-        return markers.contains(marker);
-    }
-
-
-    public ThingMLCompiler getCompiler() {
-        return compiler;
-    }
-
-
-
-    public void addProperty(String key, String value) {
+    public void addContextAnnotation(String key, String value) {
         contextAnnotations.put(key, value);
     }
 
-    public String getProperty(String key) {
+    public String getContextAnnotation(String key) {
         return contextAnnotations.get(key);
     }
+    public String removeContextAnnotation(String key) {
+        return contextAnnotations.remove(key);
+    }
 
-    public boolean isDefined(String key, String value) {
+    public boolean hasContextAnnotation(String key, String value) {
         return contextAnnotations.containsKey(key) && contextAnnotations.get(key).equals(value);
     }
 
-    public boolean hasProperty(String key) {
+    public boolean hasContextAnnotation(String key) {
         return contextAnnotations.containsKey(key);
     }
 

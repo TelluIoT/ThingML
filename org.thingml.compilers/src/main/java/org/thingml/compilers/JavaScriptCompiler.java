@@ -76,8 +76,8 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
-        ctx.setThisRef("_this.");
-        new File(ctx.getOutputDir() + "/" + cfg.getName()).mkdirs();
+        ctx.addContextAnnotation("thisRef", "_this.");
+        new File(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
         ctx.getCompiler().getBuildCompiler().generate(cfg, ctx);
@@ -85,13 +85,13 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
-        ctx.copy(this.getClass().getClassLoader().getResourceAsStream("javascript/lib/state-factory.js"), t.getName(), "state-factory.js");
-        ctx.copy(this.getClass().getClassLoader().getResourceAsStream("javascript/lib/Connector.js"), t.getName(), "Connector.js");
+        ctx.getBuilder(t.getName() + File.separator + "state-factory.js").append(ctx.getTemplateByID("javascript/lib/state-factory.js"));
+        ctx.getBuilder(t.getName() + File.separator + "Connector.js").append(ctx.getTemplateByID("javascript/lib/Connector.js"));
 
         for(Type ty : model.allUsedSimpleTypes()) {
             if (ty instanceof Enumeration) {
                 Enumeration e = (Enumeration) ty;
-                ctx.addProperty("hasEnum", "true");
+                ctx.addContextAnnotation("hasEnum", "true");
                 StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/enums.js"); //FIXME: this code should be integrated into the compilation framework
                 builder.append("// Definition of Enumeration  " + e.getName() + "\n");
                 builder.append("var " + e.getName() + "_ENUM = {\n");

@@ -18,7 +18,7 @@ package org.thingml.compilers.actions;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 
-import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper;
+import org.sintef.thingml.resource.thingml.analysis.helper.*;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -48,7 +48,7 @@ public class GenericImperativeActionCompiler extends ActionCompiler {
         }
         else {//simple variable or we re-affect the whole array
             if (action.getProperty().eContainer() instanceof Thing && !(action.getProperty().isDefined("private", "true"))) {
-                builder.append(ctx.getThisRef());
+                builder.append(ctx.getContextAnnotation("thisRef"));
             }
             builder.append(action.getProperty().qname("_") + "_var");
             builder.append(" = ");

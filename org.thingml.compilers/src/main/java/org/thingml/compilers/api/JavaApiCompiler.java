@@ -33,7 +33,7 @@ public class JavaApiCompiler extends ApiCompiler {
         System.out.println("generateEnumeration " + e.getName());
 
 
-        String pack = ctx.getProperty("package");
+        String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
         //final String src = "src/main/java/" + pack.replaceAll(".", "/");
 
@@ -74,7 +74,7 @@ public class JavaApiCompiler extends ApiCompiler {
 
     public void generateMessages(Message m, Context ctx, boolean hasAPI) {
         String pack = "org.thingml.generated";
-        if (ctx.getProperty("package") != null) pack = "org.thingml.generated";
+        if (ctx.getContextAnnotation("package") != null) pack = "org.thingml.generated";
         String rootPack = pack;
         pack += ".messages";
 
@@ -123,7 +123,7 @@ public class JavaApiCompiler extends ApiCompiler {
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
         String pack = "org.thingml.generated";
-        if (ctx.getProperty("package") != null) pack = "org.thingml.generated";
+        if (ctx.getContextAnnotation("package") != null) pack = "org.thingml.generated";
 
         final String src = "src/main/java/" + pack.replace(".", "/");
 
@@ -210,7 +210,7 @@ public class JavaApiCompiler extends ApiCompiler {
 
     @Override
     public void generateComponent(Thing thing, Context ctx) {
-        String pack = ctx.getProperty("package");
+        String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
 
         final StringBuilder builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(thing.getName()) + ".java");
