@@ -18,10 +18,8 @@ package org.thingml.compilers;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.JavaActionCompiler;
 import org.thingml.compilers.api.JavaApiCompiler;
-import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.behavior.JavaBehaviorCompiler;
 import org.thingml.compilers.build.JavaBuildCompiler;
 import org.thingml.compilers.connectors.ConnectorCompiler;
@@ -29,7 +27,6 @@ import org.thingml.compilers.connectors.Java2Kevoree;
 import org.thingml.compilers.main.JavaMainGenerator;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,6 +91,6 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         }
         ctx.getCompiler().getMainCompiler().generate(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
         ctx.getCompiler().getBuildCompiler().generate(cfg, ctx);
-        ctx.dump();
+        ctx.writeGeneratedCodeToFiles();
     }
 }

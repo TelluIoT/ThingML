@@ -29,7 +29,6 @@ import org.thingml.compilers.main.PlantUMLMainGenerator;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.List;
 
 public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
@@ -65,7 +64,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
         new File(ctx.getOutputDir() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
-        ctx.dump();
+        ctx.writeGeneratedCodeToFiles();
         final Thread png = new Thread(new Runnable() {
             @Override
             public void run() {

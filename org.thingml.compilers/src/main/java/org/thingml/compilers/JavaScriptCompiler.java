@@ -17,7 +17,6 @@ package org.thingml.compilers;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.JSActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
@@ -80,7 +79,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
         ctx.getCompiler().getBuildCompiler().generate(cfg, ctx);
-        ctx.dump();
+        ctx.writeGeneratedCodeToFiles();
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
