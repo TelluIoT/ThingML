@@ -431,7 +431,7 @@ public class CApiCompiler extends ApiCompiler {
     protected void generateCforThingLinuxThread(Function func, Thing thing, StringBuilder builder, Context ctx) {
 
         if (func.getType() != null) {
-            ctx.printMessage("WARNING: function with annotation fork_linux_thread must return void");
+            System.err.println("WARNING: function with annotation fork_linux_thread must return void");
         }
 
         String template = ctx.getTemplateByID("ctemplates/fork.c");

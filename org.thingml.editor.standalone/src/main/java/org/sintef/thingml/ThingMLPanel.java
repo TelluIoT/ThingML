@@ -353,7 +353,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                             Context ctx = new Context(compiler);
                             compiler.getBuildCompiler().generate(c, ctx);
                             compiler.compileConnector("kevoree-java", c);
-                            ctx.dump();
+                            ctx.writeGeneratedCodeToFiles();
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -394,7 +394,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                             Context ctx = new Context(compiler);
                             compiler.getBuildCompiler().generate(c, ctx);
                             compiler.compileConnector("kevoree-js", c);
-                            ctx.dump();
+                            ctx.writeGeneratedCodeToFiles();
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
