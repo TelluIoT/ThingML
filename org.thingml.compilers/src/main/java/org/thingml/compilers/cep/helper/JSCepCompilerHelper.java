@@ -50,14 +50,15 @@ public class JSCepCompilerHelper {
             builder.append("\t\tvar " + rm.getMessage().getName() + "J = JSON.parse(x);\n");
         }
 
-        /** Useful for debugging **/
-        builder.append("\t\tconsole.log(\"Hack!! \"");
+        /** Useful for debugging
+         * Print a message on the console when the stream receive a ThingML message**/
+       /* builder.append("\t\tconsole.log(\"Hack!! \"");
         for(ReceiveMessage rm : stream.getInputs()) {
             for(Parameter p : rm.getMessage().getParameters()) {
                 builder.append(" + \"" + p.getName() + "= \" + " + rm.getMessage().getName() + "J." + p.getName() + "+ \"; \"");
             }
         }
-        builder.append(");\n");
+        builder.append(");\n");*/
         /** END **/
     }
 

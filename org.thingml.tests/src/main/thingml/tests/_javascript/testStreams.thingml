@@ -1,16 +1,16 @@
 import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/test.thingml"
-import "../testStreamWithMultipleEvents.thingml"
+import "../testStreams.thingml"
 import "../tester.thingml"
 import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/timer.thingml"
 
-configuration TestStreamWithMultipleEvents {
+configuration TestStreams {
 	instance harness : Tester
 	instance dump : TestDumpJS
-	instance test : TestStreamWithMultipleEvents
+	instance test : TestStreams
  instance timer : TimerJS
 	connector harness.testEnd => dump.dumpEnd
  connector harness.timer => timer.timer
 	connector test.harnessOut => dump.dump
 	connector test.harnessIn => harness.test
-	connector test.requiredService => test.providedService
+	connector test.rcvPort => test.sendPort
 }

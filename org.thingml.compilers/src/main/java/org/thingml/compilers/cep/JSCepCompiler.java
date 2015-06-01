@@ -51,7 +51,7 @@ public class JSCepCompiler extends CepCompiler {
 
             builder.append("\t\tvar " + se.getName() + " = ");
             ctx.getCompiler().getActionCompiler().generate(TransformEventRef.instance.copyExpression(se.getExpression()), builder, ctx);
-
+            builder.append(";\n");
             newParameters.add(JSCepCompilerHelper.generateStreamExpression(se.getName()));
         }
         builder.append(";\n");
@@ -101,8 +101,8 @@ public class JSCepCompiler extends CepCompiler {
 
         builder.append("var " + stream.qname("_") + " = " + nameSTream1 + ".join(" + nameSTream2 + ",wait1,wait1,\n" +
                 "\tfunction(m1,m2) {\n" +
-                "\t\tvar m1J = JSON.parse(m1);\n" + //fixme
-                "\t\tvar m2J = JSON.parse(m2);\n"); //fixme
+                "\t\tvar " + stream.getInputs().get(1).getMessage().getName() + "J = JSON.parse(m1);\n" + //fixme
+                "\t\tvar "+  stream.getInputs().get(0).getMessage().getName() + "J = JSON.parse(m2);\n"); //fixme
 
         List<StreamExpression> newParameters = new ArrayList<>();
         String returnString = "'{ ";

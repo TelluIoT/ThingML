@@ -21,8 +21,9 @@ thing TestMixStreamsAndEvent includes Test, TestMsgs
     }
     
      stream testStream do
-        input : m : harnessIn?testIn
-        output : cepSend!cepMsg(m.c)
+        select c : m.c
+        from m : harnessIn?testIn
+        action cepSend!cepMsg(c)
     end
      
 	statechart TestInit init S3 {
