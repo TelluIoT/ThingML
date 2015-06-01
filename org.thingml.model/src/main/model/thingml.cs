@@ -215,12 +215,6 @@ RULES {
 	StreamExpression ::= name[] ":" expression;
 	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
 	
-	//Stream ::= "stream" #1 name[] "do" 
-	//			(!1 "select" #1 ( selection ("," #1 selection)* )?)?
-	//			!1 "from" #1 inputs ("," #1 inputs)*
-	//			!1 "action" #1 output
-	//			"end";
-				
 	SimpleStream ::= "stream" #1 name[] #1 "do"
 					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
 					 !1 "from" #1 inputs
@@ -228,7 +222,6 @@ RULES {
 					 "end";
 
 	MergedStream ::= "stream" #1 name[] #1 "do"
-					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
 					 !1 "from" #1 inputs (#1 "|" #1 inputs)*
 					 !1 "action" #1 output
 					 "end";

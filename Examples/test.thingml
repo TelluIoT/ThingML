@@ -5,6 +5,7 @@ thing fragment Demo1Msgs {
     message m1(v1 : Integer, v2 : Integer);
     message m2(val1 : Integer, val2 : Integer);
     message m3();
+    message m4();
     
     message cep(x: Integer, y: Integer);
     message cep2();
@@ -13,11 +14,11 @@ thing fragment Demo1Msgs {
 
 thing Demo1 includes Demo1Msgs{
     required port receiveService {
-        receives m1, m2, m3, cep, cep2, cep3
+        receives m1, m2, m3, m4, cep, cep2, cep3
     }
     
     provided port sendService {
-        sends m1, m2, m3, cep, cep2, cep3
+        sends m1, m2, m3, m4, cep, cep2, cep3
     }
     
     function toto () : Integer do
@@ -34,16 +35,17 @@ thing Demo1 includes Demo1Msgs{
         action sendService!cep(a,b)
     end
     
-    /*stream mergedStreams do
-        from receiveService?m2, receiveService?m1
+    stream mergedStreams do
+        //from receiveService?m2 | receiveService?m1
+        from receiveService?m3 | receiveService?m4
         action sendService!cep3()
     end
     
     stream joinStream do
         select a : (e.val1 + e1.v1) * 2 - (e.val2 / e1.v2) + toto(), b : toto2(e.val1,e.val2,e1.v1,e1.v2)
-        from e : receiveService?m2, e1 : receiveService?m1
+        from e : receiveService?m2 & e1 : receiveService?m1
         action sendService!cep(a,b)
-    end*/
+    end
        
     statechart Demo1 init S1 {
         state S1 {
@@ -52,6 +54,7 @@ thing Demo1 includes Demo1Msgs{
                 sendService!m1(5,7)
                 sendService!m2(2,5)
                 sendService!m3()
+                sendService!m4()
             end
              
             internal

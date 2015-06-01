@@ -16,6 +16,7 @@
 package org.thingml.compilers.api;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.helpers.JavaHelper;
 
@@ -215,7 +216,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         for(Stream s : thing.getStreams()) {
             for (ReceiveMessage rm : s.getInputs()) {
                 String eventName = s.qname("_");
-                if (s instanceof SimpleStream || s instanceof JoinedStream) {
+                if (s instanceof SimpleStream || s instanceof JoinedStream) { //fixme add to ThingMLHelpers
                     eventName += "_" + rm.getPort().getName() + "_" +  rm.getMessage().getName();
                 }
 

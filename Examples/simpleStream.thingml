@@ -33,8 +33,9 @@ thing Receive includes SimpleMsgs
 	}
 
     stream simpleStream do
-        input : m : cepService?msg
-        output : cepSendService!cep(m.c)
+        select a : m.c 
+        from m : cepService?msg
+        action cepSendService!cep(a)
     end
     
     statechart Simple init Init {
