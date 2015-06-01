@@ -16,6 +16,7 @@
 package org.thingml.compilers.api;
 
 import org.sintef.thingml.*;
+import org.thingml.compilers.CCompilerContext;
 import org.thingml.compilers.Context;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class CApiCompiler extends ApiCompiler {
 
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
-        generateCHeader(thing, ctx, "prefix");
+        generateCHeader(thing, (CCompilerContext)ctx, "prefix");
     }
 
     @Override
@@ -36,7 +37,7 @@ public class CApiCompiler extends ApiCompiler {
     }
 
 
-    protected void generateCImpl(Thing thing, Context ctx, String prefix) {
+    protected void generateCImpl(Thing thing, CCompilerContext ctx, String prefix) {
 
         StringBuilder builder = new StringBuilder();
 
@@ -89,7 +90,7 @@ public class CApiCompiler extends ApiCompiler {
 
     }
 
-    protected void generateCGlobalAnnotation(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generateCGlobalAnnotation(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         if (thing.hasAnnotation("c_global")) {
             builder.append("\n// BEGIN: Code from the c_global annotation " + thing.getName());
             for (String code : thing.annotation("c_global")) {
@@ -100,14 +101,14 @@ public class CApiCompiler extends ApiCompiler {
         }
     }
 
-    protected void generateEntryActions(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generateEntryActions(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (thing.allStateMachines().isEmpty()) return;
 
         StateMachine sm = thing.allStateMachines().get(0); // There has to be one and only one state machine here
 
         builder.append("void " + sm.qname("_") + "_OnEntry(int state, ");
-        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName(thing) + ") {\n");
+        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName(thing) + ") {\n");
         builder.append("switch(state) {\n");
         for(CompositeState cs : sm.allContainedCompositeStates()) {
             ArrayList<Region> regions = new ArrayList<Region>();
@@ -116,7 +117,7 @@ public class CApiCompiler extends ApiCompiler {
             // Init state
             for(Region r : regions) {
                 if (!r.isHistory()) {
-                    builder.append(getInstanceVarName(thing) + "->" + getStateVarName(r) + " = " + getStateID(r.getInitial()) + ";\n");
+                    builder.append(ctx.getInstanceVarName(thing) + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
                 }
             }
             // Execute Entry actions
@@ -124,7 +125,7 @@ public class CApiCompiler extends ApiCompiler {
 
             // Recurse on contained states
             for(Region r : regions) {
-                builder.append(sm.qname("_") + "_OnEntry(" + getInstanceVarName(thing) + "->" + getStateVarName(r) + ", " + getInstanceVarName(thing) + ");\n");
+                builder.append(sm.qname("_") + "_OnEntry(" + ctx.getInstanceVarName(thing) + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName(thing) + ");\n");
             }
             builder.append("break;\n");
         }
@@ -139,14 +140,14 @@ public class CApiCompiler extends ApiCompiler {
         builder.append("}\n");
     }
 
-    protected void generateExitActions(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generateExitActions(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (thing.allStateMachines().isEmpty()) return;
 
         StateMachine sm = thing.allStateMachines().get(0); // There has to be one and only one state machine here
 
         builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
-        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName(thing) + ") {\n");
+        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName(thing) + ") {\n");
         builder.append("switch(state) {\n");
 
 
@@ -156,7 +157,7 @@ public class CApiCompiler extends ApiCompiler {
             regions.addAll(cs.getRegion());
             // Init state
             for(Region r : regions) {
-                builder.append(sm.qname("_") + "_OnExit(" + getInstanceVarName(thing) + "->" + getStateVarName(r) + ", " + getInstanceVarName(thing) + ");\n");
+                builder.append(sm.qname("_") + "_OnExit(" + ctx.getInstanceVarName(thing) + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName(thing) + ");\n");
             }
             // Execute Exit actions
             if (cs.getExit() != null) ctx.getCompiler().getActionCompiler().generate(cs.getExit(), builder, ctx);
@@ -174,7 +175,7 @@ public class CApiCompiler extends ApiCompiler {
         builder.append("}\n");
     }
 
-    protected void generateEventHandlers(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generateEventHandlers(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (thing.allStateMachines().isEmpty()) return;
 
@@ -184,8 +185,8 @@ public class CApiCompiler extends ApiCompiler {
         
         for(Port port : handlers.keySet()) {
             for(Message msg : handlers.get(port).keySet() ) {
-                builder.append("void " + getHandlerName(thing, port, msg));
-                appendFormalParameters(thing, builder, msg);
+                builder.append("void " + ctx.getHandlerName(thing, port, msg));
+                ctx.appendFormalParameters(thing, builder, msg);
                 builder.append(" {\n");
 
                 //FIXME: Implement the message debug in the context
@@ -208,8 +209,8 @@ public class CApiCompiler extends ApiCompiler {
 
         // Add handler for empty transitions if needed
         if (sm.hasEmptyHandlers()) {
-            builder.append("void " + getEmptyHandlerName(thing));
-            appendFormalParametersEmptyHandler(thing, builder);
+            builder.append("void " + ctx.getEmptyHandlerName(thing));
+            ctx.appendFormalParametersEmptyHandler(thing, builder);
             builder.append(" {\n");
 
             // dispatch the current message to sub-regions
@@ -223,7 +224,7 @@ public class CApiCompiler extends ApiCompiler {
         }
     }
 
-    public void generateEmptyHandlers(Thing thing, State s, StringBuilder builder, CompositeState cs, Region r, Context ctx) {
+    public void generateEmptyHandlers(Thing thing, State s, StringBuilder builder, CompositeState cs, Region r, CCompilerContext ctx) {
         boolean first = true;
 
         // Gather all the empty transitions
@@ -250,15 +251,15 @@ public class CApiCompiler extends ApiCompiler {
                 ctx.getCompiler().getActionCompiler().generate(et.getBefore(), builder, ctx);
 
                 // Execute the exit actions for current states (starting at the deepest)
-                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + getStateID(et.getSource()) + ", " + getInstanceVarName(thing) + ");\n");
+                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName(thing) + ");\n");
                 // Set the new current state
-                builder.append(getInstanceStructName(thing) + "->" + getStateVarName(r) + " = " + getStateID(et.getTarget()) + ";\n");
+                builder.append(ctx.getInstanceStructName(thing) + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(et.getTarget()) + ";\n");
 
                 // Do the action
                 ctx.getCompiler().getActionCompiler().generate(et.getAction(), builder, ctx);
 
                 // Enter the target state and initialize its children
-                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + getStateID(et.getTarget()) + ", " + getInstanceVarName(thing) + ");\n");
+                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + ctx.getStateID(et.getTarget()) + ", " + ctx.getInstanceVarName(thing) + ");\n");
 
                 ctx.getCompiler().getActionCompiler().generate(et.getAfter(), builder, ctx);
             }
@@ -268,7 +269,7 @@ public class CApiCompiler extends ApiCompiler {
 
     }
 
-    protected void dispatchToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, Context ctx) {
+    protected void dispatchToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx) {
 
         ArrayList<Region> regions = new ArrayList<Region>();
         regions.add(cs); 
@@ -277,13 +278,13 @@ public class CApiCompiler extends ApiCompiler {
         for(Region r : regions) {
 
             // for all states of the region, if the state can handle the message and that state is active we forward the message
-            builder.append("uint8_t "+getStateVarName(r)+"_event_consumed = 0;\n");
+            builder.append("uint8_t "+ ctx.getStateVarName(r)+"_event_consumed = 0;\n");
 
             ArrayList<State> states = new ArrayList<State>();
             for (State s : r.getSubstate()) if (s.canHandle(port, msg)) states.add(s);
             for (State s : states) {
                 if (states.get(0) != s) builder.append("else ");
-                builder.append("if (" + getInstanceVarName(thing) + "->" + getStateVarName(r) + " == " + getStateID(s) + ") {\n"); // s is the current state
+                builder.append("if (" + ctx.getInstanceVarName(thing) + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
                 if (s instanceof CompositeState) {
                     dispatchToSubRegions(thing, builder, (CompositeState) s, port, msg, ctx);
                 }
@@ -293,17 +294,17 @@ public class CApiCompiler extends ApiCompiler {
         }
 
         if (cs.eContainer() instanceof  Region) {
-            builder.append(getStateVarName( (Region)cs.eContainer() )+"_event_consumed = 0 ");
+            builder.append(ctx.getStateVarName( (Region)cs.eContainer() )+"_event_consumed = 0 ");
             for (Region r : cs.directSubRegions()){
                 // for all states of the region, if the state can handle the message and that state is active we forward the message
-                builder.append("| " + getStateVarName(r)+"_event_consumed ");
+                builder.append("| " + ctx.getStateVarName(r)+"_event_consumed ");
             }
             builder.append(";\n");
         }
     }
 
 
-    protected void generateMessageHandlers(Thing thing, State s, Port port, Message msg, StringBuilder builder, CompositeState cs, Region r, Context ctx) {
+    protected void generateMessageHandlers(Thing thing, State s, Port port, Message msg, StringBuilder builder, CompositeState cs, Region r, CCompilerContext ctx) {
 
         boolean first = true;
 
@@ -331,7 +332,7 @@ public class CApiCompiler extends ApiCompiler {
             if (first) first = false;
             else builder.append("else ");
 
-            if (cs != null) builder.append("if (" + getStateVarName(r)+ "_event_consumed == 0 && ");
+            if (cs != null) builder.append("if (" + ctx.getStateVarName(r)+ "_event_consumed == 0 && ");
             else builder.append("if (");
             if (h.getGuard() != null) ctx.getCompiler().getActionCompiler().generate(h.getGuard(), builder, ctx);
             else builder.append("1");
@@ -340,7 +341,7 @@ public class CApiCompiler extends ApiCompiler {
             if (mh instanceof InternalTransition) {
                 InternalTransition it = (InternalTransition)mh;
                 ctx.getCompiler().getActionCompiler().generate(it.getAction(), builder, ctx);
-                if (r != null) builder.append(getStateVarName(r)+ "_event_consumed = 1;\n");
+                if (r != null) builder.append(ctx.getStateVarName(r)+ "_event_consumed = 1;\n");
             }
             else if (mh instanceof Transition) {
                 Transition et = (Transition)mh;
@@ -348,26 +349,26 @@ public class CApiCompiler extends ApiCompiler {
                 ctx.getCompiler().getActionCompiler().generate(et.getBefore(), builder, ctx);
 
                 // Execute the exit actions for current states (starting at the deepest)
-                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + getStateID(et.getSource()) + ", " + getInstanceVarName(thing) + ");\n");
+                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName(thing) + ");\n");
                 // Set the new current state
-                builder.append(getInstanceVarName(thing) + "->" + getStateVarName(r) + " = " + getStateID(et.getTarget()) + ";\n");
+                builder.append(ctx.getInstanceVarName(thing) + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(et.getTarget()) + ";\n");
 
                 // Do the action
                 ctx.getCompiler().getActionCompiler().generate(et.getAction(), builder, ctx);
 
                 // Enter the target state and initialize its children
-                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + getStateID(et.getTarget()) + ", " + getInstanceVarName(thing) + ");\n");
+                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + ctx.getStateID(et.getTarget()) + ", " + ctx.getInstanceVarName(thing) + ");\n");
 
                 ctx.getCompiler().getActionCompiler().generate(et.getAfter(), builder, ctx);
 
                         // The event has been consumed
-                if (r != null) builder.append(getStateVarName(r)+ "_event_consumed = 1;\n");
+                if (r != null) builder.append(ctx.getStateVarName(r)+ "_event_consumed = 1;\n");
             }
             builder.append("}\n");
         }
     }
 
-    protected void dispatchEmptyToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Context ctx) {
+    protected void dispatchEmptyToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx) {
 
         for(Region r : cs.directSubRegions()) {
 
@@ -375,7 +376,7 @@ public class CApiCompiler extends ApiCompiler {
             for (State s : r.getSubstate()) if (s.hasEmptyHandlers()) states.add(s);
             for (State s : states) {
                 if (states.get(0) != s) builder.append("else ");
-                builder.append("if (" + getInstanceVarName(thing) + "->" + getStateVarName(r) + " == " + getStateID(s) + ") {\n"); // s is the current state
+                builder.append("if (" + ctx.getInstanceVarName(thing) + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
                 // dispatch to sub-regions if it is a composite
                 if (s instanceof CompositeState) {
                     dispatchEmptyToSubRegions(thing, builder, (CompositeState)s, ctx);
@@ -388,7 +389,7 @@ public class CApiCompiler extends ApiCompiler {
         }
     }
     
-    protected void generateCFunctions(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generateCFunctions(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Declaration of functions:\n");
         for(Function f : thing.allFunctions()) {
             if (!f.isDefined("abstract", "true")) { // Generate only for concrete functions
@@ -403,7 +404,7 @@ public class CApiCompiler extends ApiCompiler {
     
     
 
-    protected void generateCFunction(Function func, Thing thing, StringBuilder builder, Context ctx) {
+    protected void generateCFunction(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx) {
         // Test for any special function
         if (func.isDefined("fork_linux_thread", "true")) {
             generateCforThingLinuxThread(func, thing, builder, ctx);
@@ -415,7 +416,7 @@ public class CApiCompiler extends ApiCompiler {
 
 
 
-    protected void generateCforThingDirect(Function func, Thing thing, StringBuilder builder, Context ctx) {
+    protected void generateCforThingDirect(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         builder.append("// Definition of function " + func.getName() + "\n");
         generatePrototypeforThingDirect(func, builder, ctx, thing);
@@ -428,7 +429,7 @@ public class CApiCompiler extends ApiCompiler {
         builder.append("}\n");
     }
 
-    protected void generateCforThingLinuxThread(Function func, Thing thing, StringBuilder builder, Context ctx) {
+    protected void generateCforThingLinuxThread(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (func.getType() != null) {
             System.err.println("WARNING: function with annotation fork_linux_thread must return void");
@@ -436,18 +437,18 @@ public class CApiCompiler extends ApiCompiler {
 
         String template = ctx.getTemplateByID("ctemplates/fork.c");
 
-        template = template.replace("/*NAME*/", getCName(func, thing));
+        template = template.replace("/*NAME*/", ctx.getCName(func, thing));
 
         StringBuilder b_code = new StringBuilder();
         ctx.getCompiler().getActionCompiler().generate(func.getBody(), b_code, ctx);
         template = template.replace("/*CODE*/", b_code.toString());
 
         StringBuilder b_params = new StringBuilder();
-        b_params.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName(thing));
+        b_params.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName(thing));
 
         for (Parameter p : func.getParameters()) {
             b_params.append(", ");
-            b_params.append(getCType(p.getType()));
+            b_params.append(ctx.getCType(p.getType()));
             if (p.getCardinality() != null) builder.append("*");
             b_params.append(" " + p.getName());
         }
@@ -459,7 +460,7 @@ public class CApiCompiler extends ApiCompiler {
 
 
         StringBuilder a_params = new StringBuilder();
-        a_params.append("params." + getInstanceVarName(thing));
+        a_params.append("params." + ctx.getInstanceVarName(thing));
         for (Parameter p : func.getParameters()) {
             a_params.append(", ");
             a_params.append("params." + p.getName());
@@ -467,7 +468,7 @@ public class CApiCompiler extends ApiCompiler {
         template = template.replace("/*ACTUAL_PARAMS*/", a_params.toString());
 
         StringBuilder s_params = new StringBuilder();
-        s_params.append("params." + getInstanceVarName(thing) + " = " + getInstanceVarName(thing) + ";\n");
+        s_params.append("params." + ctx.getInstanceVarName(thing) + " = " + ctx.getInstanceVarName(thing) + ";\n");
         for (Parameter p : func.getParameters()) {
             s_params.append("  params." + p.getName() + " = " + p.getName() + ";\n");
         }
@@ -477,7 +478,7 @@ public class CApiCompiler extends ApiCompiler {
 
     }
 
-    protected void generateCHeader(Thing thing, Context ctx, String prefix) {
+    protected void generateCHeader(Thing thing, CCompilerContext ctx, String prefix) {
 
         StringBuilder builder = new StringBuilder();
 
@@ -508,7 +509,7 @@ public class CApiCompiler extends ApiCompiler {
         ctx.getBuilder(prefix + thing.getName() + ".h").append(htemplate);
     }
 
-    protected void generateCHeaderAnnotation(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generateCHeaderAnnotation(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (thing.hasAnnotation("c_header")) {
             builder.append("\n// BEGIN: Code from the c_header annotation " + thing.getName());
@@ -520,9 +521,9 @@ public class CApiCompiler extends ApiCompiler {
         }
     }
 
-    protected void generateInstanceStruct(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Definition of the instance stuct:\n");
-        builder.append("struct " + getInstanceStructName(thing) + " {\n");
+        builder.append("struct " + ctx.getInstanceStructName(thing) + " {\n");
 
         builder.append("// Variables for the ID of the instance\n");
         builder.append("int id;\n");
@@ -537,14 +538,14 @@ public class CApiCompiler extends ApiCompiler {
         if (thing.allStateMachines().size() > 0) {
             StateMachine sm = thing.allStateMachines().get(0);
             for (Region r : sm.allContainedRegions()) {
-                builder.append("int " + getStateVarName(r) + ";\n");
+                builder.append("int " + ctx.getStateVarName(r) + ";\n");
             }
         }
 
         // Create variables for all the properties defined in the Thing and States
         builder.append("// Variables for the properties of the instance\n");
         for (Property p : thing.allPropertiesInDepth()) {
-            builder.append(getCType(p.getType()) + " " + getCVarName(p));
+            builder.append(ctx.getCType(p.getType()) + " " + ctx.getCVarName(p));
             if (p.getCardinality() != null) {//array
                 builder.append("[");
                 ctx.getCompiler().getActionCompiler().generate(p.getCardinality(), builder, ctx);
@@ -555,10 +556,10 @@ public class CApiCompiler extends ApiCompiler {
         builder.append("\n");
     }
 
-    protected void generatePublicPrototypes(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Declaration of prototypes outgoing messages:\n");
 
-        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName(thing) + ");\n");
+        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName(thing) + ");\n");
 
         if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             StateMachine sm = thing.allStateMachines().get(0); // There should be one and only one
@@ -568,28 +569,28 @@ public class CApiCompiler extends ApiCompiler {
             Map<Port, Map<Message, List<Handler>>> handlers = sm.allMessageHandlers();
             for (Port port : handlers.keySet()) {
                 for (Message msg : handlers.get(port).keySet()) {
-                    builder.append("void " + getHandlerName(thing, port, msg));
-                    appendFormalParameters(thing, builder, msg);
+                    builder.append("void " + ctx.getHandlerName(thing, port, msg));
+                    ctx.appendFormalParameters(thing, builder, msg);
                     builder.append(";\n");
                 }
             }
         }
     }
 
-    protected void generatePrivatePrototypes(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generatePrivatePrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         // Exit actions
         if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             StateMachine sm = thing.allStateMachines().get(0);
             builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
         }
 
-        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName(thing) + ");\n");
+        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName(thing) + ");\n");
 
         // Message Sending
         for(Port port : thing.getPorts()) {
             for (Message msg : port.getSends()) {
-                builder.append("void " + getSenderName(thing, port, msg));
-                appendFormalParameters(thing, builder, msg);
+                builder.append("void " + ctx.getSenderName(thing, port, msg));
+                ctx.appendFormalParameters(thing, builder, msg);
                 builder.append(";\n");
             }
         }
@@ -602,7 +603,7 @@ public class CApiCompiler extends ApiCompiler {
         }
     }
 
-    protected void generatePrototypeforThingDirect(Function func, StringBuilder builder, Context ctx, Thing thing) {
+    protected void generatePrototypeforThingDirect(Function func, StringBuilder builder, CCompilerContext ctx, Thing thing) {
 
         if (func.hasAnnotation("c_prototype")) {
             // generate the given prototype. Any parameters are ignored.
@@ -620,18 +621,18 @@ public class CApiCompiler extends ApiCompiler {
         else {
             // Generate the normal prototype
             if (func.getType() != null) {
-                builder.append(getCType(func.getType()));
+                builder.append(ctx.getCType(func.getType()));
                 if (func.getCardinality() != null) builder.append("*");
             }
             else builder.append("void");
 
-            builder.append(" " + getCName(func, thing) + "(");
+            builder.append(" " + ctx.getCName(func, thing) + "(");
 
-            builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName(thing));
+            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName(thing));
 
             for(Parameter p : func.getParameters()) {
                 builder.append(", ");
-                builder.append(getCType(p.getType()));
+                builder.append(ctx.getCType(p.getType()));
                 if (p.getCardinality() != null) builder.append("*");
                 builder.append(" " + p.getName());
             }
@@ -639,13 +640,13 @@ public class CApiCompiler extends ApiCompiler {
         }
     }
 
-    protected void generatePublicMessageSendingOperations(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generatePublicMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Declaration of callbacks for incoming messages:\n");
         for(Port port : thing.getPorts()) {
             for (Message msg : port.getSends()) {
-                builder.append("void register_" + getSenderName(thing, port, msg) + "_listener(");
+                builder.append("void register_" + ctx.getSenderName(thing, port, msg) + "_listener(");
                 builder.append("void (*_listener)");
-                appendFormalTypeSignature(thing, builder, msg);
+                ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append(");\n");
 
             }
@@ -653,234 +654,49 @@ public class CApiCompiler extends ApiCompiler {
         builder.append("\n");
     }
 
-    protected void generatePrivateMessageSendingOperations(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generatePrivateMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         for(Port port : thing.getPorts()) {
             for (Message msg : port.getSends()) {
                 // Variable for the function pointer
-                builder.append("void (*" + getSenderName(thing, port, msg) + "_listener)");
-                appendFormalTypeSignature(thing, builder, msg);
+                builder.append("void (*" + ctx.getSenderName(thing, port, msg) + "_listener)");
+                ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append("= 0x0;\n");
 
-                builder.append("void register_" + getSenderName(thing, port, msg) + "_listener(");
+                builder.append("void register_" + ctx.getSenderName(thing, port, msg) + "_listener(");
                 builder.append("void (*_listener)");
-                appendFormalTypeSignature(thing, builder, msg);
+                ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append("){\n");
-                builder.append("" + getSenderName(thing, port, msg) + "_listener = _listener;\n");
+                builder.append("" + ctx.getSenderName(thing, port, msg) + "_listener = _listener;\n");
                 builder.append("}\n");
 
                 // Operation which calls on the function pointer if it is not NULL
-                builder.append("void " + getSenderName(thing, port, msg));
-                appendFormalParameters(thing, builder, msg);
+                builder.append("void " + ctx.getSenderName(thing, port, msg));
+                ctx.appendFormalParameters(thing, builder, msg);
                 builder.append("{\n");
                 // if (timer_receive_timeout_listener != 0) timer_receive_timeout_listener(timer_id);
-                builder.append("if (" + getSenderName(thing, port, msg) + "_listener != 0x0) " + getSenderName(thing, port, msg) + "_listener");
-                appendFormalParameters(thing, builder, msg);
+                builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) " + ctx.getSenderName(thing, port, msg) + "_listener");
+                ctx.appendFormalParameters(thing, builder, msg);
                 builder.append(";\n}\n");
             }
         }
         builder.append("\n");
     }
 
-    protected void generateStateIDs(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generateStateIDs(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             StateMachine sm = thing.allStateMachines().get(0);
             builder.append("// Definition of the states:\n");
             List<State> states = sm.allContainedStates();
             for (int i=0; i<states.size(); i++) {
-                builder.append("#define " + getStateID(states.get(i)) + " " + i + "\n");
+                builder.append("#define " + ctx.getStateID(states.get(i)) + " " + i + "\n");
             }
             builder.append("\n");
         }
     }
 
 
-    /**************************************************************************
-     * HELPER FUNCTIONS WHICH SHOULD BE SHARED, in the context???
-     **************************************************************************/
 
-    // FUNCTIONS FOR NAMING IN THE GENERATED CODE
-
-    public String getInstanceStructName(Thing thing) {
-        return thing.qname("_") + "_Instance";
-    }
-
-    public String getInstanceVarName(Thing thing) {
-        return "_instance";
-    }
-
-    public String getHandlerName(Thing thing, Port p, Message m) {
-        return thing.qname("_") + "_handle_" + p.getName() + "_" + m.getName();
-    }
-
-    public String getEmptyHandlerName(Thing thing) {
-        return  thing.qname("_") + "_handle_empty_event";
-    }
-
-    public String getSenderName(Thing thing, Port p, Message m) {
-        return thing.qname("_") + "_send_" + p.getName() + "_" + m.getName();
-    }
-
-    public String getCName(Function f, Thing thing) {
-        return  "f_" + thing.getName() + "_" + f.getName();
-    }
-
-    public String getStateVarName(Region r) {
-        return r.qname("_") + "_State";
-    }
-
-    public String getStateID(State s) {
-        return s.qname("_").toUpperCase() + "_STATE";
-    }
-
-    public String getCVarName(Variable v) {
-        return v.qname("_") + "_var";
-    }
-
-
-    // FUNCTIONS FOR MESSAGES and PARAMETERS
-
-    public void appendFormalParameters(Thing thing, StringBuilder builder, Message m) {
-        builder.append("(");
-        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName(thing));
-        for (Parameter p : m.getParameters()) {
-            builder.append(", ");
-            builder.append(getCType(p.getType()));
-            if (p.getCardinality() != null) builder.append("*");
-            builder.append(" " + p.getName());
-        }
-        builder.append(")");
-    }
-
-    public void appendFormalParametersEmptyHandler(Thing thing, StringBuilder builder) {
-        builder.append("(");
-        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName(thing));
-        builder.append(")");
-    }
-
-    public void appendActualParameters(Thing thing, StringBuilder builder, Message m, String instance_param) {
-        if (instance_param == null) instance_param = getInstanceVarName(thing);
-        builder.append("(");
-        builder.append(instance_param);
-        for (Parameter p : m.getParameters()) {
-            builder.append(", ");
-            builder.append(p.getName());
-        }
-        builder.append(")");
-    }
-
-    public void appendFormalTypeSignature(Thing thing, StringBuilder builder, Message m) {
-        builder.append("(");
-        builder.append("struct " + getInstanceStructName(thing) + " *");
-        for (Parameter p : m.getParameters()) {
-            builder.append(", ");
-            builder.append(getCType(p.getType()));
-            if (p.getCardinality() != null) builder.append("*");
-        }
-        builder.append(")");
-    }
-
-    // FUNCTIONS FOR TYPES
-
-    public String getCType(Type t) {
-        if (t.hasAnnotation("c_type")) {
-            return t.annotation("c_type").iterator().next();
-        }
-        else {
-            System.err.println("Warning: Missing annotation c_type for type " + t.getName() + ", using " + t.getName() + " as the C type.");
-            return t.getName();
-        }
-    }
-
-    public String getROSType(Type t) {
-        if (t.hasAnnotation("ros_type")) {
-            return t.annotation("ros_type").iterator().next();
-        }
-        else {
-            System.err.println("Warning: Missing annotation ros_type for type " + t.getName() + ", using " + t.getName() + " as the ROS type.");
-            return t.getName();
-        }
-    }
-
-    public int getCByteSize(Type t, int pointerSize) {
-        if (t.hasAnnotation("c_byte_size")) {
-            String v = t.annotation("c_byte_size").iterator().next();
-            if (v.equals("*")) {
-                return pointerSize;
-            }
-            else {
-                try {
-                    return Integer.parseInt(v);
-                }
-                catch (NumberFormatException e) {
-                    System.err.println("Warning: Wrong annotation c_byte_size for type " + t.getName() + ", should be an Integer or *.");
-                }
-            }
-        }
-        System.err.println("Warning: Missing annotation c_byte_size for type " + t.getName() + ", using 2 as the byte size.");
-        return 2;
-    }
-
-    public boolean isPointer(Type t) {
-        if (t.hasAnnotation("c_byte_size")) {
-            String v = t.annotation("c_byte_size").iterator().next();
-            return v.equals("*");
-        }
-        System.err.println("Warning: Missing annotation c_byte_size for type " + t.getName() + ", using 2 as the byte size.");
-        return false;
-    }
-
-    public boolean hasByteBuffer(Type t) {
-        return t.hasAnnotation("c_byte_buffer");
-    }
-
-    public String byteBufferName(Type t) {
-        if (t.hasAnnotation("c_byte_buffer")) {
-            return t.annotation("c_byte_buffer").iterator().next();
-        }
-        else {
-            System.err.println("Warning: Missing annotation c_byte_buffer for type " + t.getName() + ", using " + t.getName() + "_buf as as the buffer name.");
-            return t.getName() + "_buf";
-        }
-    }
-
-    // FUNCTIONS TO SERIALIZE AND DESERIALIZE TYPES
-
-    public String deserializeFromByte(Type t, String buffer, int idx, Context ctx) {
-        String result = "";
-        int i = getCByteSize(t, 0);
-        int index = idx;
-
-        if (isPointer(t)) {
-            // This should not happen and should be checked before.
-            throw  new Error("ERROR: Attempting to serialize a pointer (for type " + t.getName() + "). This is not allowed.");
-        }
-        else {
-            while (i > 0) {
-                i = i - 1;
-                if (i == 0) result += buffer + "[" + index + "]";
-                else result += "(" + buffer + "[" + index + "]" + "<<" + (8 * i) + ") + ";
-                index = index + 1;
-            }
-        }
-        return result;
-    }
-
-    public void bytesToSerialize(Type t, StringBuilder builder, Context ctx, String variable) {
-        int i = getCByteSize(t, 0);
-        String v = variable;
-        if (isPointer(t)) {
-            // This should not happen and should be checked before.
-            throw  new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
-        }
-        else {
-            while (i > 0) {
-                i = i - 1;
-                if (i == 0) builder.append("_fifo_enqueue(" + v + " & 0xFF);\n");
-                else builder.append("_fifo_enqueue((" + v + ">>" + (8 * i) + ") & 0xFF);\n");
-            }
-        }
-    }
 
 
 }

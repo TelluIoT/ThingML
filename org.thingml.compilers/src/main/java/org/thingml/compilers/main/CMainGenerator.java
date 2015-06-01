@@ -17,6 +17,7 @@ package org.thingml.compilers.main;
 
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
+import org.thingml.compilers.CCompilerContext;
 import org.thingml.compilers.Context;
 
 /**
@@ -29,7 +30,7 @@ public class CMainGenerator extends MainGenerator {
     }
 
 
-    protected void generateCForConfiguration(Configuration cfg, StringBuilder builder, Context ctx) {
+    protected void generateCForConfiguration(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
         builder.append("\n");
         builder.append("/*****************************************************************************\n");

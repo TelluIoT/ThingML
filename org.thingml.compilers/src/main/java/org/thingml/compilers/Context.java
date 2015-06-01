@@ -30,6 +30,12 @@ public class Context {
     private ThingMLCompiler compiler;
     private Configuration currentConfiguration;
 
+
+    public Context(ThingMLCompiler compiler) {
+        this.compiler = compiler;
+    }
+
+
     // Store the output of the compilers. The key is typically a file name but finer grained generatedCode may also be used by the compilers.
     private Map<String, StringBuilder> generatedCode = new HashMap<String, StringBuilder>();
 
