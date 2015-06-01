@@ -36,9 +36,9 @@ thing Demo1 includes Demo1Msgs{
     end
     
     stream mergedStreams do
-        //from receiveService?m2 | receiveService?m1
-        from receiveService?m3 | receiveService?m4
-        action sendService!cep3()
+        from receiveService?m2 | receiveService?m1
+        //from receiveService?m3 | receiveService?m4
+        action sendService!cep()
     end
     
     stream joinStream do

@@ -807,5 +807,29 @@ public class ThingMLHelpers {
         return result;
     }
 
+	public static String getEventName(Stream s, ReceiveMessage rm) {
+		if(s instanceof SimpleStream) {
+			return getEventName((SimpleStream)s,rm);
+		} else if(s instanceof MergedStream) {
+			return getEventName((MergedStream)s,rm);
+		} else if(s instanceof JoinedStream) {
+			return getEventName((JoinedStream)s,rm);
+		} else {
+			throw new UnsupportedOperationException("This stream (" + s.getClass().getName() + ") is unknown... Please update the ThingMLHelpers as a new kind of stream might have been introduced in ThingML");
+		}
+	}
+
+	public static String getEventName(SimpleStream s, ReceiveMessage rm) {
+		return s.qname("_") + "_" + rm.getPort().getName() + "_" + rm.getMessage().getName();
+	}
+
+	public static String getEventName(MergedStream s, ReceiveMessage rm) {
+		return s.qname("_");
+	}
+
+	public static String getEventName(JoinedStream s, ReceiveMessage rm) {
+		return s.qname("_") + "_" + rm.getPort().getName() + "_" + rm.getMessage().getName();
+	}
+
     /** END **/
 }
