@@ -140,4 +140,10 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
         }
         builder.append(");\n");
     }
+
+    @Override
+    public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
+        generate(expression.getLhs(), builder, ctx);
+        builder.append(" === ");
+        generate(expression.getRhs(), builder, ctx);    }
 }
