@@ -16,6 +16,9 @@
 package org.thingml.compilers;
 
 import org.sintef.thingml.*;
+import scala.collection.mutable.HashTable;
+
+import java.util.Hashtable;
 
 /**
  * Created by ffl on 01.06.15.
@@ -26,8 +29,27 @@ public class CCompilerContext extends Context {
         super(c);
     }
 
+    // The concrete thing for which the code is being generated
+    Thing concrete_thing = null;
+
+    public void set_concrete_thing(Thing t) {
+        concrete_thing = t;
+    }
+
+    public Thing get_concrete_thing() {
+        return concrete_thing;
+    }
+
+    public void clear_concrete_thing() {
+        concrete_thing = null;
+    }
+
+    public boolean sync_fifo() {
+        return false;
+    }
+
     /**************************************************************************
-     * HELPER FUNCTIONS WHICH SHOULD BE SHARED, in the context???
+     * HELPER FUNCTIONS shared by different parts of the compiler
      **************************************************************************/
 
     // FUNCTIONS FOR NAMING IN THE GENERATED CODE
@@ -40,8 +62,42 @@ public class CCompilerContext extends Context {
         return "_instance";
     }
 
+    public String getInstanceVarName(Instance inst) {
+        return inst.getName() + "_var";
+    }
+
+    public String getInstanceVarDecl(Instance inst) {
+        return "struct " + getInstanceStructName(inst.getType()) + " " + getInstanceVarName(inst) + ";";
+    }
+
     public String getHandlerName(Thing thing, Port p, Message m) {
         return thing.qname("_") + "_handle_" + p.getName() + "_" + m.getName();
+    }
+
+    protected Hashtable<Thing, Hashtable<Port, Hashtable<Message,Integer>>> handlerCodes = new Hashtable<Thing, Hashtable<Port, Hashtable<Message,Integer>>>();
+    protected int handlerCodeCpt = 1;
+
+    public int getHandlerCode(Thing t, Port p, Message m) {
+
+        Hashtable<Port, Hashtable<Message,Integer>> handler_codes = handlerCodes.get(t);
+        if (handler_codes == null) {
+            handler_codes = new Hashtable<Port, Hashtable<Message,Integer>>();
+            handlerCodes.put(t, handler_codes);
+        }
+
+        Hashtable<Message,Integer> table = handler_codes.get(p);
+        if (table == null) {
+            table = new Hashtable<Message,Integer>();
+            handler_codes.put(p, table);
+        }
+
+        Integer result = table.get(m);
+        if (result == null) {
+            result = handlerCodeCpt;
+            handlerCodeCpt += 1;
+            table.put(m, result);
+        }
+        return result;
     }
 
     public String getEmptyHandlerName(Thing thing) {
@@ -109,6 +165,15 @@ public class CCompilerContext extends Context {
             if (p.getCardinality() != null) builder.append("*");
         }
         builder.append(")");
+    }
+
+    public int getMessageSerializationSize(Message m) {
+        int result = 2; // 2 bytes to store the port/message code
+        result += 2; // to store the id of the source instance
+        for(Parameter p : m.getParameters()) {
+            result += this.getCByteSize(p.getType(), 0);
+        }
+        return result;
     }
 
     // FUNCTIONS FOR TYPES
