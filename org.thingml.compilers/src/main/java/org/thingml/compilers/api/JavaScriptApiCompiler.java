@@ -38,7 +38,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
                 ctx.getCompiler().getActionCompiler().generate(thing.allStateMachines().get(0).getExit(), builder, ctx);
             ctx.removerMarker("useThis");
             //exit the rest
-            builder.append("}\n\n");
+            builder.append("};\n\n");
 
             //Communication
             builder.append("//Public API for third parties\n");
@@ -51,25 +51,25 @@ public class JavaScriptApiCompiler extends ApiCompiler {
             builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".initialise( this._initial_" + thing.allStateMachines().get(0).qname("_") + " );\n");
 
             builder.append("var msg = this.getQueue().shift();\n");
-            builder.append("while(msg != null) {\n");
+            builder.append("while(msg !== null && msg !== undefined) {\n");
             builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".process(this._initial_" + thing.allStateMachines().get(0).qname("_") + ", msg);\n");
             builder.append("msg = this.getQueue().shift();\n");
             builder.append("}\n");
             builder.append("this.ready = true;\n");
             ctx.removerMarker("useThis");
             ctx.addContextAnnotation("thisRef", "_this.");
-            builder.append("}\n\n");
+            builder.append("};\n\n");
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(message) {//takes a JSONified message\n");
             builder.append("this.getQueue().push(message);\n");
             builder.append("if (this.ready) {\n");
             builder.append("var msg = this.getQueue().shift();\n");
-            builder.append("while(msg != null) {\n");
+            builder.append("while(msg !== null && msg !== undefined) {\n");
             builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".process(this._initial_" + thing.allStateMachines().get(0).qname("_") + ", msg);\n");
             builder.append("msg = this.getQueue().shift();\n");
             builder.append("}\n");
             builder.append("}\n");
-            builder.append("}\n");
+            builder.append("};\n");
         }
 
         for (Port p : thing.allPorts()) {
@@ -97,7 +97,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
                         }
                     }
                     builder.append("}');\n");
-                    builder.append("}\n\n");
+                    builder.append("};\n\n");
                 }
             }
         }
@@ -130,7 +130,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         builder.append("var _this;\n");
         builder.append("this.setThis = function(__this) {\n");
         builder.append("_this = __this;\n");
-        builder.append("}\n\n");
+        builder.append("};\n\n");
 
         builder.append("this.ready = false;\n");
 
@@ -156,13 +156,13 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         builder.append("var connectors = [];\n");
         builder.append("this.getConnectors = function() {\n");
         builder.append("return connectors;\n");
-        builder.append("}\n\n");
+        builder.append("};\n\n");
 
         builder.append("//message queue\n");
         builder.append("var queue = [];\n");
         builder.append("this.getQueue = function() {\n");
         builder.append("return queue;\n");
-        builder.append("}\n\n");
+        builder.append("};\n\n");
 
         builder.append("//callbacks for third-party listeners\n");
         for(Port p : thing.allPorts()) {
@@ -170,7 +170,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
                 builder.append("var " + p.getName() + "Listeners = [];\n");
                 builder.append("this.get" + ctx.firstToUpper(p.getName()) + "Listeners = function() {\n");
                 builder.append("return " + p.getName() + "Listeners;\n");
-                builder.append("}\n");
+                builder.append("};\n");
             }
         }
 
@@ -208,7 +208,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
                     j++;
                 }
                 builder.append(");");
-                builder.append("}\n\n");
+                builder.append("};\n\n");
             }
         }
 
@@ -275,7 +275,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
 
         builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.getName = function() {\n");
         builder.append("return \"" + thing.getName() + "\";\n");
-        builder.append("}\n\n");
+        builder.append("};\n\n");
 
         builder.append("module.exports = " + ctx.firstToUpper(thing.getName()) + ";\n");
     }
