@@ -64,14 +64,14 @@ thing Sample includes CepMsgs,  SampleMsgs{
     end
     
     stream forwardMessageWithParams do
-        select a : evt.v1, b : evt.v2
         from evt : rcvPort?m2
+        select a : evt.v1, b : evt.v2
         action sendPort!cep2(a,b)
     end
     
     stream transformingMessageValue do
-        select a : (evt.v1 * 2) + 5, b : complexTransforming(evt.v2)
         from evt : rcvPort?m2
+        select a : (evt.v1 * 2) + 5, b : complexTransforming(evt.v2)
         action sendPort!cep2(a,b)
     end
     
@@ -86,8 +86,8 @@ thing Sample includes CepMsgs,  SampleMsgs{
     end
     
     stream joinMessages do
-        select a : e1.a * e2.v1, b : e1.b * e2.v2, c : e1.c * e2.v3
         from e1 : rcvPort?m7 & e2 : rcvPort?m8
+        select a : e1.a * e2.v1, b : e1.b * e2.v2, c : e1.c * e2.v3
         action sendPort!cep5(a,b,c)
     end
     
@@ -112,7 +112,7 @@ thing Sample includes CepMsgs,  SampleMsgs{
             internal
             event rcvPort?cep1
             action print "cep message receive." 
-            
+                        
             internal 
             event e : rcvPort?cep2
             action print "cep2 message receive with values (" + e.val1 + ";" + e.val2 +")."
@@ -128,6 +128,7 @@ thing Sample includes CepMsgs,  SampleMsgs{
             internal
             event e : rcvPort?cep5
             action print "cep5 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ")."
+            
         }    
     }
     

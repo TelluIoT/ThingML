@@ -32,7 +32,7 @@ public class TransformEventRef extends CopyExpression {
     @Override
     public Expression copyExpression(EventReference expression) {
         ExternExpression externExpression = ThingmlFactory.eINSTANCE.createExternExpression();
-        externExpression.setExpression(/*expression.getMsgRef().getMessage().getName() + "J." + expression.getParamRef().getName()*/JSCepCompilerHelper.generateJsonAccessParam(expression.getMsgRef(),expression.getParamRef()));
+        externExpression.setExpression(JSCepCompilerHelper.generateJsonAccessParam(expression.getMsgRef(),expression.getParamRef()));
         return externExpression;
     }
 

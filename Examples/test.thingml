@@ -30,8 +30,8 @@ thing Demo1 includes Demo1Msgs{
     end 
     
     stream simpleStream do
-        select a : (e.v1 + e.v2) * 2 - (e.v2 / e.v2) + toto(), b : e.v2
         from e : receiveService?m1
+        select a : (e.v1 + e.v2) * 2 - (e.v2 / e.v2) + toto(), b : e.v2
         action sendService!cep(a,b)
     end
     
@@ -42,8 +42,8 @@ thing Demo1 includes Demo1Msgs{
     end
     
     stream joinStream do
+        from e : receiveService?m2 & e1 : receiveService?m
         select a : (e.val1 + e1.v1) * 2 - (e.val2 / e1.v2) + toto(), b : toto2(e.val1,e.val2,e1.v1,e1.v2)
-        from e : receiveService?m2 & e1 : receiveService?m1
         action sendService!cep(a,b)
     end
        

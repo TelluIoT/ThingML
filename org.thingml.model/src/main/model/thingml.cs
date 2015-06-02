@@ -216,8 +216,8 @@ RULES {
 	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
 	
 	SimpleStream ::= "stream" #1 name[] #1 "do"
-					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
 					 !1 "from" #1 inputs
+					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
 					 !1 "action" #1 output
 					 "end";
 
@@ -227,8 +227,8 @@ RULES {
 					 "end";
 					 
 	JoinedStream ::= "stream" #1 name[] #1 "do"
-					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
 					 !1 "from" #1 inputs (#1 "&" #1 inputs)*
+					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
 					 !1 "action" #1 output
 					 "end";
 	// *******************************
