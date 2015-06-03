@@ -52,14 +52,14 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
     end
     
     stream forwardMessageWithParams do
-        select a : evt.v1, b : evt.v2
         from evt : rcvPort?m2
+        select a : evt.v1, b : evt.v2
         action sendPort!cep2(a,b)
     end
     
     stream transformingMessageValue do
-        select a : (evt.v1 * 2) + 5, b : complexTransforming(evt.v2)
         from evt : rcvPort?m2
+         select a : (evt.v1 * 2) + 5, b : complexTransforming(evt.v2)
         action sendPort!cep2(a,b)
     end
     
@@ -74,8 +74,8 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
     end
     
     stream joinMessages do
-        select a : e1.a * e2.v1, b : e1.b * e2.v2, c : e1.c * e2.v3
         from e1 : rcvPort?m7 & e2 : rcvPort?m8
+        select a : e1.a * e2.v1, b : e1.b * e2.v2, c : e1.c * e2.v3
         action sendPort!cep5(a,b,c)
     end
     
