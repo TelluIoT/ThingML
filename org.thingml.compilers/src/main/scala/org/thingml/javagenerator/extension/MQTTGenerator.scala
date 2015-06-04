@@ -296,14 +296,14 @@ case class ThingJavaGenerator(val self: Thing) extends ThingMLJavaGenerator(self
       builder append "System.err.println(\"Cannot open config.properties\");\n"
       builder append "} else {\n"
       builder append "prop.load(inputStream);\n"
-      builder append "mqttBroker = prop.getProperty(\"mqttBroker\");\n"
-      builder append "deviceId = prop.getProperty(\"deviceId\");\n"
+      builder append "mqttBroker = prop.getContextAnnotation(\"mqttBroker\");\n"
+      builder append "deviceId = prop.getContextAnnotation(\"deviceId\");\n"
       p.getSends.foreach { m =>
-        builder append m.getName + "_pub = prop.getProperty(\"" + m.getName + "Topic\");\n"
+        builder append m.getName + "_pub = prop.getContextAnnotation(\"" + m.getName + "Topic\");\n"
       }
 
       p.getReceives.foreach { m =>
-        builder append m.getName + "_sub = prop.getProperty(\"" + m.getName + "Topic\");\n"
+        builder append m.getName + "_sub = prop.getContextAnnotation(\"" + m.getName + "Topic\");\n"
       }
       builder append "inputStream.close();\n"
       builder append "}\n"

@@ -28,13 +28,13 @@ import java.io.InputStream;
  */
 public class ThingMLFrame extends JFrame {
 
-    FilePanel filePanel  = null;
+    FilePanel filePanel = null;
     ThingMLPanel editor = new ThingMLPanel();
     String argsFlat = "";
 
     public ThingMLFrame(String args[]) {
         int i = 0;
-        for(String s : args) {
+        for (String s : args) {
             if (i > 0) {
                 argsFlat += "=";
             }
@@ -42,7 +42,7 @@ public class ThingMLFrame extends JFrame {
         }
 
         if (argsFlat.contains("-open=")) {
-            File filePath = new File( argsFlat.substring(argsFlat.indexOf("=") + 1));
+            File filePath = new File(argsFlat.substring(argsFlat.indexOf("=") + 1));
             filePanel = new FilePanel(editor, this, filePath.getParentFile());
 
             String content = "";

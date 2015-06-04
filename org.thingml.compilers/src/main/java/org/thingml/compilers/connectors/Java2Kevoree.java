@@ -15,14 +15,10 @@
  */
 package org.thingml.compilers.connectors;
 
-import com.eclipsesource.json.JsonObject;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
-import org.sintef.thingml.impl.ConfigurationImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.helpers.JavaHelper;
-import org.thingml.compilers.main.JSMainGenerator;
 import org.thingml.compilers.main.JavaMainGenerator;
 
 import java.io.*;
@@ -73,8 +69,8 @@ public class Java2Kevoree extends ConnectorCompiler {
 
         PrintWriter w = null;
         try {
-            new File(ctx.getOutputDir() + "/src/main/kevs").mkdirs();
-            w = new PrintWriter(new FileWriter(new File(ctx.getOutputDir() + "/src/main/kevs/main.kevs")));
+            new File(ctx.getCompiler().getOutputDirectory() + "/src/main/kevs").mkdirs();
+            w = new PrintWriter(new FileWriter(new File(ctx.getCompiler().getOutputDirectory() + "/src/main/kevs/main.kevs")));
             w.println(kevScript);
             w.close();
         } catch (IOException e) {
@@ -88,7 +84,7 @@ public class Java2Kevoree extends ConnectorCompiler {
     private void updatePOM(Context ctx, Configuration cfg) {
         //Update POM.xml
         try {
-            final InputStream input = new FileInputStream(ctx.getOutputDir() + "/POM.xml");
+            final InputStream input = new FileInputStream(ctx.getCompiler().getOutputDirectory() + "/POM.xml");
             final List<String> packLines = IOUtils.readLines(input);
             String pom = "";
             for (String line : packLines) {
@@ -104,7 +100,7 @@ public class Java2Kevoree extends ConnectorCompiler {
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>com.eclipsesource.minimal-json</groupId>\n<artifactId>minimal-json</artifactId>\n<version>0.9.2</version>\n</dependency>\n<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
 
-            final File f = new File(ctx.getOutputDir() + "/POM.xml");
+            final File f = new File(ctx.getCompiler().getOutputDirectory() + "/POM.xml");
             final OutputStream output = new FileOutputStream(f);
             IOUtils.write(pom, output);
             IOUtils.closeQuietly(output);
@@ -114,7 +110,7 @@ public class Java2Kevoree extends ConnectorCompiler {
     }
 
     private void generateWrapper(Context ctx, Configuration cfg, String pack) {
-        //final String pack = ctx.getProperty("package").orElse("org.thingml.generated");
+        //final String pack = ctx.getContextAnnotation("package").orElse("org.thingml.generated");
 
         //Generate wrapper
         StringBuilder builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/kevoree/K" + cfg.getName() + ".java");
@@ -128,7 +124,7 @@ public class Java2Kevoree extends ConnectorCompiler {
 
         builder.append("package " + pack + ".kevoree;\n");
         builder.append("import " + pack + ".*;\n");
-        if (ctx.isDefined("extendGUI", "true")) {
+        if (ctx.hasContextAnnotation("extendGUI", "true")) {
             builder.append("import " + pack + ".gui.*;\n");
         }
         builder.append("import org.kevoree.annotation.*;\n");

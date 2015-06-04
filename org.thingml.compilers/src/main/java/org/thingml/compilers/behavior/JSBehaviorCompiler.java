@@ -17,7 +17,6 @@ package org.thingml.compilers.behavior;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ThingMLCompiler;
 
 import java.util.List;
 import java.util.Map;
@@ -27,10 +26,10 @@ import java.util.Map;
  */
 public class JSBehaviorCompiler extends BehaviorCompiler {
 
-    private int ti = 0;
+    private int ti = 1;
 
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
-        ti = 0;
+        ti = 1;
         builder.append("this." + sm.qname("_") + " = StateFactory.buildRegion(\"" + sm.getName() + "\");\n");
         if (sm.isHistory())
             builder.append("this._initial_" + sm.qname("_") + " = StateFactory.buildHistoryState(\"_initial\", this." + sm.qname("_") + ");\n");
@@ -45,17 +44,17 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             else
                 builder.append("var _initial_" + sm.qname("_") + "_default = StateFactory.buildInitialState(\"_initial\", " + sm.qname("_") + "_default);\n");
             for (State s : sm.getSubstate()) {
-                ctx.addProperty("container", sm.qname("_") + "_default");
+                ctx.addContextAnnotation("container", sm.qname("_") + "_default");
                 generateState(s, builder, ctx);
             }
             builder.append("var t0_" + sm.qname("_") + "_default = StateFactory.buildEmptyTransition(_initial_" + sm.qname("_") + "_default, " + sm.getInitial().qname("_") + ");\n");
             for (Region r : sm.getRegion()) {
-                ctx.addProperty("container", "_orth_" + sm.qname("_"));
+                ctx.addContextAnnotation("container", "_orth_" + sm.qname("_"));
                 generateRegion(r, builder, ctx);
             }
         } else {
             for (State s : sm.getSubstate()) {
-                ctx.addProperty("container", "this." + sm.qname("_"));
+                ctx.addContextAnnotation("container", "this." + sm.qname("_"));
                 generateState(s, builder, ctx);
             }
             builder.append("var t0 = new StateFactory.buildEmptyTransition(this._initial_" + sm.qname("_") + ", " + sm.getInitial().qname("_") + ");\n");
@@ -113,7 +112,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
     }
 
     protected void generateCompositeState(CompositeState c, StringBuilder builder, Context ctx) {
-        String containerName = ctx.getProperty("container");
+        String containerName = ctx.getContextAnnotation("container");
         if (c.hasSeveralRegions()) {
             builder.append("var " + c.qname("_") + " = StateFactory.buildOrthogonalState(\"" + c.getName() + "\", " + containerName + ");\n");
             builder.append("var " + c.qname("_") + "_default = StateFactory.buildRegion(\"_default\", " + c.qname("_") + ");\n");
@@ -123,17 +122,17 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
                 builder.append("var _initial_" + c.qname("_") + " = StateFactory.buildInitialState(\"_initial\", " + c.qname("_") + ");\n");
             builder.append("var t0_" + c.qname("_") + " = StateFactory.buildEmptyTransition(_initial_" + c.qname("_") + ", " + c.getInitial().qname("_") + ");\n");
             for(State s : c.getSubstate()) {
-                ctx.addProperty("container", c.qname("_") + "_default");
+                ctx.addContextAnnotation("container", c.qname("_") + "_default");
                 generateState(s, builder, ctx);
             }
             for(Region r : c.getRegion()) {
-                ctx.addProperty("container", c.qname("_"));
+                ctx.addContextAnnotation("container", c.qname("_"));
                 generateRegion(r, builder, ctx);
             }
         } else {
             builder.append("var " + c.qname("_") + " = StateFactory.buildCompositeState(\"" + c.getName() + "\", " + containerName + ");\n");
             for(State s : c.getSubstate()) {
-                ctx.addProperty("container", c.qname("_"));
+                ctx.addContextAnnotation("container", c.qname("_"));
                 generateState(s, builder, ctx);
             }
         }
@@ -146,20 +145,20 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
     }
 
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
-        String containerName = ctx.getProperty("container");
+        String containerName = ctx.getContextAnnotation("container");
         builder.append("var " + s.qname("_") + " = StateFactory.buildSimpleState(\"" + s.getName() + "\", " + containerName + ");\n");
         generateActionsForState(s, builder, ctx);
     }
 
     public void generateRegion(Region r, StringBuilder builder, Context ctx) {
-        String containerName = ctx.getProperty("container");
+        String containerName = ctx.getContextAnnotation("container");
         builder.append("var " + r.qname("_") + "_reg = StateFactory.buildRegion(\"" + r.getName() + "\", " + containerName + ");\n");
         if (r.isHistory())
             builder.append("var _initial_" + r.qname("_") + "_reg = StateFactory.buildHistoryState(\"_initial\", " + r.qname("_") + "_reg);\n");
         else
             builder.append("var _initial_" + r.qname("_") + "_reg = StateFactory.buildInitialState(\"_initial\", " + r.qname("_") + "_reg);\n");
         for(State s : r.getSubstate()) {
-            ctx.addProperty("container", r.qname("_") + "_reg");
+            ctx.addContextAnnotation("container", r.qname("_") + "_reg");
             generateState(s, builder, ctx);
         }
         builder.append("var t0_" + r.qname("_") + "_reg = StateFactory.buildEmptyTransition(_initial_" + r.qname("_") + "_reg, " + r.getInitial().qname("_") + ");\n");
@@ -185,9 +184,9 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
         if (t.getEvent().size() == 0) {
             builder.append("var t" + ti + " = StateFactory.buildEmptyTransition(" + t.getSource().qname("_") + ", " + t.getTarget().qname("_"));
             if (t.getGuard() != null) {
-                builder.append(", function (s, c) {var json = JSON.parse(c); ");
+                builder.append(", function (s, c) {var json = JSON.parse(c); return ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
-                builder.append("}");
+                builder.append(";}");
             }
             builder.append(");\n");
         } else {
@@ -197,7 +196,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
                 builder.append(" && ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
             }
-            builder.append("});\n");
+            builder.append(";});\n");
         }
         if (t.getAction() != null) {
             generateHandlerAction(t, builder, ctx);
@@ -209,9 +208,9 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
         if (t.getEvent().size() == 0) {
             builder.append("var t" + ti + " = StateFactory.buildEmptyTransition(" + ((State) t.eContainer()).qname("_") + ", null");
             if (t.getGuard() != null) {
-                builder.append(", function (s, c) {var json = JSON.parse(c); ");
+                builder.append(", function (s, c) {var json = JSON.parse(c); return ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
-                builder.append("}");
+                builder.append(";}");
             }
             builder.append(");\n");
         } else {
@@ -222,7 +221,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
                 builder.append(" && ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
             }
-            builder.append("});\n");
+            builder.append(";});\n");
         }
         if (t.getAction() != null) {
             generateHandlerAction(t, builder, ctx);

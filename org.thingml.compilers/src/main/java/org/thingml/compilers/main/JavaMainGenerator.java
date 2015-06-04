@@ -125,7 +125,7 @@ public class JavaMainGenerator extends MainGenerator {
 
     @Override
     public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
-        String pack = ctx.getProperty("package");
+        String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
 
         final String src = "src/main/java/" + pack.replace(".", "/");

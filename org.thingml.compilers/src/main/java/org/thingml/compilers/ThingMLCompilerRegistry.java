@@ -32,6 +32,7 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new ArduinoCompiler());
             instance.addCompiler(new PosixCompiler());
             instance.addCompiler(new JavaScriptCompiler());
+            instance.addCompiler(new EspruinoCompiler());
             instance.addCompiler(new JavaCompiler());
             instance.addCompiler(new PlantUMLCompiler());
         }

@@ -44,7 +44,7 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-        if (ctx.isDefined("useThis"))
+        if (ctx.hasContextAnnotation("useThis"))
             builder.append("this.");
         builder.append(action.getFunction().getName() + "(");
 
@@ -141,4 +141,9 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
         builder.append(");\n");
     }
 
+    @Override
+    public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
+        generate(expression.getLhs(), builder, ctx);
+        builder.append(" === ");
+        generate(expression.getRhs(), builder, ctx);    }
 }

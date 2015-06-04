@@ -30,7 +30,6 @@ import org.thingml.compilers.main.PlantUMLMainGenerator;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.List;
 
 public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
@@ -63,10 +62,10 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(final Configuration cfg, String... options) {
-        new File(ctx.getOutputDir() + "/" + cfg.getName()).mkdirs();
+        new File(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
-        ctx.dump();
+        ctx.writeGeneratedCodeToFiles();
         final Thread png = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -90,7 +89,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
                 SourceStringReader reader = new SourceStringReader(ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml").toString());
 // Write the first image to "png"
                 try {
-                    String desc = reader.generateImage(new FileOutputStream(ctx.getOutputDir() + "/" + t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".png"));
+                    String desc = reader.generateImage(new FileOutputStream(ctx.getCompiler().getOutputDirectory() + "/" + t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".png"));
                     if (desc == null) {
                         System.err.println("Something went wrong while exporting PNG from PlantUML specs for Thing " + th.getName() + " in configuration " + t.getName());
                     }
@@ -103,7 +102,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
         SourceStringReader reader = new SourceStringReader(ctx.getBuilder(t.getName() + "/docs/" + t.getName() + ".plantuml").toString());
         try {
-            String desc = reader.generateImage(new FileOutputStream(ctx.getOutputDir() + "/" + t.getName() + "/docs/" + t.getName() + ".png"));
+            String desc = reader.generateImage(new FileOutputStream(ctx.getCompiler().getOutputDirectory() + "/" + t.getName() + "/docs/" + t.getName() + ".png"));
             if (desc == null) {
                 System.err.println("Something went wrong while exporting PNG from PlantUML specs for configuration " + t.getName());
             }
@@ -122,7 +121,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
                     String desc = reader.generateImage(os, new FileFormatOption(FileFormat.SVG));
                     os.close();
                     final String svg = new String(os.toByteArray(), Charset.forName("UTF-8"));
-                    PrintWriter out = new PrintWriter(ctx.getOutputDir() + "/" + t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".svg");
+                    PrintWriter out = new PrintWriter(ctx.getCompiler().getOutputDirectory() + "/" + t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".svg");
                     out.print(svg);
                     out.close();
                 } catch (IOException e1) {
@@ -138,7 +137,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
             String desc = reader.generateImage(os, new FileFormatOption(FileFormat.SVG));
             os.close();
             final String svg = new String(os.toByteArray(), Charset.forName("UTF-8"));
-            PrintWriter out = new PrintWriter(ctx.getOutputDir() + "/" + t.getName() + "/docs/" + t.getName() + ".svg");
+            PrintWriter out = new PrintWriter(ctx.getCompiler().getOutputDirectory() + "/" + t.getName() + "/docs/" + t.getName() + ".svg");
             out.print(svg);
             out.close();
         } catch (IOException e1) {

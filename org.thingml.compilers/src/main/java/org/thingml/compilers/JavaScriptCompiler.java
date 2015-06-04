@@ -17,7 +17,6 @@ package org.thingml.compilers;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.JSActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
@@ -30,6 +29,7 @@ import org.thingml.compilers.cep.CepCompiler;
 import org.thingml.compilers.cep.JSCepCompiler;
 import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.compilers.connectors.JS2Kevoree;
+import org.thingml.compilers.connectors.JS2NodeRED;
 import org.thingml.compilers.main.JSMainGenerator;
 import org.thingml.compilers.main.MainGenerator;
 
@@ -45,6 +45,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
     {
         Map<String, ConnectorCompiler> connectorCompilerMap = new HashMap<String, ConnectorCompiler>();
         connectorCompilerMap.put("kevoree-js", new JS2Kevoree());
+        connectorCompilerMap.put("node-red", new JS2NodeRED());
         addConnectorCompilers(connectorCompilerMap);
     }
 
@@ -77,22 +78,22 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
-        ctx.setThisRef("_this.");
-        new File(ctx.getOutputDir() + "/" + cfg.getName()).mkdirs();
+        ctx.addContextAnnotation("thisRef", "_this.");
+        new File(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
         ctx.getCompiler().getBuildCompiler().generate(cfg, ctx);
-        ctx.dump();
+        ctx.writeGeneratedCodeToFiles();
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
-        ctx.copy(this.getClass().getClassLoader().getResourceAsStream("javascript/lib/state-factory.js"), t.getName(), "state-factory.js");
-        ctx.copy(this.getClass().getClassLoader().getResourceAsStream("javascript/lib/Connector.js"), t.getName(), "Connector.js");
+        ctx.getBuilder(t.getName() + File.separator + "state-factory.js").append(ctx.getTemplateByID("javascript/lib/state-factory.js"));
+        ctx.getBuilder(t.getName() + File.separator + "Connector.js").append(ctx.getTemplateByID("javascript/lib/Connector.js"));
 
         for(Type ty : model.allUsedSimpleTypes()) {
             if (ty instanceof Enumeration) {
                 Enumeration e = (Enumeration) ty;
-                ctx.addProperty("hasEnum", "true");
+                ctx.addContextAnnotation("hasEnum", "true");
                 StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/enums.js"); //FIXME: this code should be integrated into the compilation framework
                 builder.append("// Definition of Enumeration  " + e.getName() + "\n");
                 builder.append("var " + e.getName() + "_ENUM = {\n");
@@ -109,7 +110,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
         }
         for(Thing thing : t.allThings()) {
             ctx.getCompiler().getApiCompiler().generateComponent(thing, ctx);
-            ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
+            //ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
         }
         ctx.getCompiler().getMainCompiler().generate(t, model, ctx);
     }

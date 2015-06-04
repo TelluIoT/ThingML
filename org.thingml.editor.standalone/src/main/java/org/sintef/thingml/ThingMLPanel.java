@@ -25,6 +25,7 @@ import org.sintef.thingml.resource.thingml.mopp.ThingmlResource;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.*;
+import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.cppgenerator.CPPGenerator;
 import org.thingml.javagenerator.extension.HTTPGenerator;
 import org.thingml.javagenerator.extension.MQTTGenerator;
@@ -45,8 +46,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -91,6 +93,62 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
             menuframe.setBorder(BorderFactory.createEmptyBorder());
             add(menuframe, BorderLayout.CENTER);
 
+            final ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
+
+            JMenu newCompilersMenu = new JMenu("Compile to [NEW]");
+            for (final String id : registry.getCompilerIds()) {
+                JMenuItem item = new JMenuItem(id);
+                ThingMLCompiler c = registry.createCompilerInstanceByName(id);
+                if (c.getConnectorCompilers().size() > 0) {
+                    JMenu compilerMenu = new JMenu(c.getPlatform());
+                    newCompilersMenu.add(compilerMenu);
+                    compilerMenu.add(item);
+                    for (final Map.Entry<String, ConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
+                        JMenuItem connectorMenu = new JMenuItem(connectorCompiler.getKey());
+                        compilerMenu.add(connectorMenu);
+                        connectorMenu.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                                ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
+                                for (Configuration c : thingmlModel.allConfigurations()) {
+                                    File file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName());
+                                    compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/"));
+                                    if (!file.exists()) {
+                                        file.mkdirs();
+                                        compiler.compile(c);
+                                    }
+                                    compiler.compileConnector(connectorCompiler.getKey(), c);
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    newCompilersMenu.add(item);
+                }
+
+                item.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("Input file : " + targetFile);
+                        if (targetFile == null) return;
+                        try {
+                            final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                            ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
+                            for (Configuration c : thingmlModel.allConfigurations()) {
+                                File file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName());
+                                file.mkdirs();
+                                compiler.setOutputDirectory(file);
+                                compiler.compile(c);
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+                c = null;
+            }
+
+            //START TO BE REMOVED AFTER MIGRATION
             JMenu compilersMenu = new JMenu("Compile to");
             JMenu arduinoMenu = new JMenu("Arduino");
             JMenu linuxMenu = new JMenu("Linux");
@@ -258,7 +316,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                     try {
                         ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
                         for(Configuration c : thingmlModel.allConfigurations()){
-                            String rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName();
+                            String rootDir = System.getContextAnnotation("java.io.tmpdir") + "/ThingML_temp/" + c.getName();
                             org.thingml.coapgenerator.extension.CoAPGenerator.compileAndRun(c, thingmlModel);
                         }
                     } catch (Exception ex) {
@@ -326,7 +384,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                             Context ctx = new Context(compiler);
                             compiler.getBuildCompiler().generate(c, ctx);
                             compiler.compileConnector("kevoree-java", c);
-                            ctx.dump();
+                            ctx.writeGeneratedCodeToFiles();
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -367,7 +425,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                             Context ctx = new Context(compiler);
                             compiler.getBuildCompiler().generate(c, ctx);
                             compiler.compileConnector("kevoree-js", c);
-                            ctx.dump();
+                            ctx.writeGeneratedCodeToFiles();
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -428,6 +486,8 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
             compilersMenu.add(bThingML);
             compilersMenu.add(bThingML2);
             menubar.add(compilersMenu);
+            //END TO BE REMOVED AFTER MIGRATION
+            menubar.add(newCompilersMenu);
 
             codeEditor.getDocument().addDocumentListener(new DocumentListener() {
                 public void removeUpdate(DocumentEvent e) {

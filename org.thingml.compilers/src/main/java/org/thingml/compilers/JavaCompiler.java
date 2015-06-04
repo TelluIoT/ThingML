@@ -16,19 +16,19 @@
 package org.thingml.compilers;
 
 import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.JavaActionCompiler;
 import org.thingml.compilers.api.JavaApiCompiler;
-import org.thingml.compilers.behavior.BehaviorCompiler;
+import org.thingml.compilers.behavior.JavaBehaviorCompiler;
 import org.thingml.compilers.build.JavaBuildCompiler;
-import org.thingml.compilers.cep.CepCompiler;
 import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.compilers.connectors.Java2Kevoree;
 import org.thingml.compilers.main.JavaMainGenerator;
 import org.thingml.javagenerator.JavaGenerator;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,9 +69,31 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
         Context ctx = new Context(this, "match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@");
+        ctx.addContextAnnotation("thisRef", "");
         String pack = "org.thingml.generated";
+        boolean doingTests = false;
         if (options != null && options.length > 0)
             pack = options[0];
-        JavaGenerator.compileAndRun(cfg, ThingMLHelpers.findContainingModel(cfg), false, getOutputDirectory(), ctx, pack);
+        if (options != null && options.length > 1) {
+            if (options[1].equals("doingTest")) {
+                doingTests = true;
+            }
+        }
+
+        String tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/";
+        if (doingTests){
+            tmpFolder="tmp/ThingML_Java/";
+        }
+        if (getOutputDirectory() != null) tmpFolder = getOutputDirectory().getAbsolutePath() + File.separator;
+        else new File(tmpFolder).deleteOnExit();
+        ctx.addContextAnnotation("package", pack);
+        ctx.setCurrentConfiguration(cfg);
+        for(Thing th : cfg.allThings()) {
+            ctx.getCompiler().getApiCompiler().generatePublicAPI(th, ctx);
+            ctx.getCompiler().getApiCompiler().generateComponent(th, ctx);
+        }
+        ctx.getCompiler().getMainCompiler().generate(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
+        ctx.getCompiler().getBuildCompiler().generate(cfg, ctx);
+        ctx.writeGeneratedCodeToFiles();
     }
 }

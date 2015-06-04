@@ -280,10 +280,10 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
     val arduino = new File(arduinoDir)
 
     var classpath: String = ""
-    //if (!isWindows()) classpath=System.getProperty("java.class.path")
+    //if (!isWindows()) classpath=System.getContextAnnotation("java.class.path")
 
     var libpath: String = ""
-    //if (!isWindows()) libpath = System.getProperty("java.library.path")
+    //if (!isWindows()) libpath = System.getContextAnnotation("java.library.path")
 
     if (libpath.length() > 0) {
       libpath = File.pathSeparator + libpath

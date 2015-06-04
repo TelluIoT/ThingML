@@ -39,17 +39,17 @@ public class ThingMLSettings {
 
     public boolean isWindows() {
         String os = System.getProperty("os.name").toLowerCase();
-        return (os.indexOf( "win" ) >= 0);
+        return (os.indexOf("win") >= 0);
     }
 
     public boolean isMac() {
         String os = System.getProperty("os.name").toLowerCase();
-        return (os.indexOf( "mac" ) >= 0);
+        return (os.indexOf("mac") >= 0);
     }
 
     public boolean isUnix() {
         String os = System.getProperty("os.name").toLowerCase();
-        return (os.indexOf( "nix") >=0 || os.indexOf( "nux") >=0);
+        return (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0);
     }
 
     public boolean isValidArduinoDir(String arduino_dir) {
@@ -68,7 +68,6 @@ public class ThingMLSettings {
         List<String> file_list = new ArrayList<String>(Arrays.asList(arduino_dir_file.list()));
 
 
-
         if (!file_list.contains("hardware")) return false;
         if (!file_list.contains("lib")) return false;
         if (!file_list.contains("libraries")) return false;
@@ -80,7 +79,7 @@ public class ThingMLSettings {
     public File get_settings_file() {
         // Get the user home dir
         File userdir = new File(System.getProperty("user.home"));
-        if (!userdir.exists() || !userdir.isDirectory())  {
+        if (!userdir.exists() || !userdir.isDirectory()) {
             System.err.println("ERROR : Cannot find user directory");
         }
 
@@ -105,7 +104,7 @@ public class ThingMLSettings {
                 // Create the file
                 settings.store(new FileOutputStream(settings_file), null);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return settings;
@@ -139,12 +138,10 @@ public class ThingMLSettings {
 
         if (isWindows()) {
             return result;
-        }
-        else if (isMac()) {
+        } else if (isMac()) {
             // TODO: check where le libraries are on a MAC !
             return result;
-        }
-        else if (isUnix()) {
+        } else if (isUnix()) {
             // Special case for the arduino install from Ubuntu packet
             if (result == "/usr/share/arduino") return "/usr/lib/jni";
 
@@ -171,7 +168,7 @@ public class ThingMLSettings {
         String _arduino_dir = settings.getProperty("arduino_dir");
 
         // Ask for the arduino_dir if it is not registered
-        while ( !isValidArduinoDir(_arduino_dir) ) {
+        while (!isValidArduinoDir(_arduino_dir)) {
             JFileChooser arduino_dir_fc = new JFileChooser();
             arduino_dir_fc.setDialogTitle("Select your arduino installation directory");
             arduino_dir_fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -179,8 +176,7 @@ public class ThingMLSettings {
             if (returnVal == 0) {
                 _arduino_dir = arduino_dir_fc.getSelectedFile().toString();
 
-            }
-            else return null; // Abort
+            } else return null; // Abort
         }
 
         settings.put("arduino_dir", _arduino_dir);
