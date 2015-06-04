@@ -1,0 +1,44 @@
+datatype Integer
+    @js_type "short";
+
+thing fragment HeatingMsgs {
+    message heatingOnMax();
+}
+
+thing fragment HeatingCepMsgs {
+    message cHeatingOnMax();    
+}
+
+thing Heating includes HeatingMsgs, HeatingCepMsgs {
+    provided port sendService {
+        sends heatingOnMax, cHeatingOnMax
+    }
+    
+    required port rcvService {
+        receives heatingOnMax, cHeatingOnMax
+    }
+    
+    stream forwardMessage do
+        from rcvService?heatingOnMax
+        action sendService!cHeatingOnMax()
+    end
+    
+    statechart Heating init Idle {
+        state Idle {
+            on entry sendService!heatingOnMax()
+            
+            transition -> End
+            event rcvService?cHeatingOnMax
+            action print "The heating is on its maximum capacity."
+        }
+        
+        state End {
+            on entry print "Bye Bye"    
+        }
+    }
+}
+
+configuration heatingCfg {
+    instance h : Heating
+    connector h.rcvService => h.sendService
+}
