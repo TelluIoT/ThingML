@@ -65,6 +65,10 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
         }
         catch (Error err) {
             erroln("Compilation error:" + err.getMessage());
+            err.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
         return true;

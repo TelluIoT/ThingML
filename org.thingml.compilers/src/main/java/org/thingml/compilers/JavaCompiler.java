@@ -18,15 +18,15 @@ package org.thingml.compilers;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.JavaActionCompiler;
 import org.thingml.compilers.api.JavaApiCompiler;
+import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.behavior.JavaBehaviorCompiler;
 import org.thingml.compilers.build.JavaBuildCompiler;
+import org.thingml.compilers.cep.CepCompiler;
 import org.thingml.compilers.connectors.ConnectorCompiler;
 import org.thingml.compilers.connectors.Java2Kevoree;
 import org.thingml.compilers.main.JavaMainGenerator;
-import org.thingml.javagenerator.JavaGenerator;
 
 import java.io.File;
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     }
 
     public JavaCompiler() {
-        super(new JavaActionCompiler(), new JavaApiCompiler(), new JavaMainGenerator(), new JavaBuildCompiler(), new BehaviorCompiler(), new CepCompiler()); //fixme change cep compiler
+        super(new JavaActionCompiler(), new JavaApiCompiler(), new JavaMainGenerator(), new JavaBuildCompiler(), new JavaBehaviorCompiler(), new CepCompiler()); //fixme change cep compiler
     }
 
     @Override

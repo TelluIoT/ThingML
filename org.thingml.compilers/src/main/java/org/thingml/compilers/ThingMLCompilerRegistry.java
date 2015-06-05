@@ -15,6 +15,8 @@
  */
 package org.thingml.compilers;
 
+import org.thingml.compilers.cep.CepCompiler;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
@@ -35,6 +37,7 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new EspruinoCompiler());
             instance.addCompiler(new JavaCompiler());
             instance.addCompiler(new PlantUMLCompiler());
+
         }
         return instance;
     }

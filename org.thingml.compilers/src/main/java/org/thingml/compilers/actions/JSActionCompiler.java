@@ -67,7 +67,11 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
 
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
-        builder.append("var " + ctx.getVariableName(action));
+        if(action.isChangeable())
+            builder.append("var ");
+        else
+            builder.append("const");
+        builder.append(ctx.getVariableName(action));
         if (action.getInit() != null) {
             builder.append(" = ");
             generate(action.getInit(), builder, ctx);
@@ -100,7 +104,7 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
 
     @Override
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
-        builder.append("json." + ctx.protectKeyword(expression.getParamRef().getName()));
+        builder.append("v_" + ctx.protectKeyword(expression.getParamRef().getName()));
     }
 
     @Override

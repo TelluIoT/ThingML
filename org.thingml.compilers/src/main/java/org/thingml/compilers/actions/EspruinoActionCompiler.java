@@ -25,14 +25,13 @@ public class EspruinoActionCompiler extends JSActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        builder.append("send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + "(");
+        builder.append("send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + ".bind(_this"/* + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName())*/);
         int i = 0;
         for(Expression p : action.getParameters()) {
             int j = 0;
             for(Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    if (i>0)
-                        builder.append(", ");
+                    builder.append(", ");
                     generate(p, builder, ctx);
                     break;
                 }
@@ -40,6 +39,6 @@ public class EspruinoActionCompiler extends JSActionCompiler {
             }
             i++;
         }
-        builder.append(");\n");
+        builder.append(")();\n");
     }
 }

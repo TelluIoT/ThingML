@@ -52,7 +52,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
             builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".initialise( this._initial_" + thing.allStateMachines().get(0).qname("_") + " );\n");
 
             builder.append("var msg = this.getQueue().shift();\n");
-            builder.append("while(msg !== null && msg !== undefined) {\n");
+            builder.append("while(msg !== undefined) {\n");
             builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".process(this._initial_" + thing.allStateMachines().get(0).qname("_") + ", msg);\n");
             builder.append("msg = this.getQueue().shift();\n");
             builder.append("}\n");
@@ -61,23 +61,28 @@ public class JavaScriptApiCompiler extends ApiCompiler {
             ctx.addContextAnnotation("thisRef", "_this.");
             builder.append("};\n\n");
 
-            builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(message) {//takes a JSONified message\n");
-            builder.append("this.getQueue().push(message);\n");
+
+            builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function() {\n");
+            builder.append("this.getQueue().push(arguments);\n");
             /** MODIFICATION **/
             builder.append("this.cepDispatch(message);\n");
             /** END **/
             builder.append("if (this.ready) {\n");
             builder.append("var msg = this.getQueue().shift();\n");
-            builder.append("while(msg !== null && msg !== undefined) {\n");
+            builder.append("while(msg !== undefined) {\n");
             builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".process(this._initial_" + thing.allStateMachines().get(0).qname("_") + ", msg);\n");
             builder.append("msg = this.getQueue().shift();\n");
             builder.append("}\n");
             builder.append("}\n");
             builder.append("};\n");
-        }
 
+            generatePublicPort(thing, builder, ctx);
+        }
+    }
+
+    protected void generatePublicPort(Thing thing, StringBuilder builder, Context ctx) {
         for (Port p : thing.allPorts()) {
-            if (!p.isDefined("public", "false") && p.getReceives().size() > 0) {
+            if (p.getReceives().size() > 0) {
                 for (Message m : p.getReceives()) {
                     builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
                     int i = 0;
@@ -85,24 +90,65 @@ public class JavaScriptApiCompiler extends ApiCompiler {
                         if (i > 0)
                             builder.append(", ");
                         builder.append(ctx.protectKeyword(pa.getName()));
+                        i++;
                     }
                     builder.append(") {\n");
-                    builder.append("this._receive('{\"message\":\"" + m.getName() + "\",\"port\":\"" + p.getName());
-                    //if(p instanceof ProvidedPort)
-                    builder.append("_s");
-                    /*else
-                        builder.append("_c");*/
-                    builder.append("\"");
+                    builder.append("this._receive(\"" + p.getName() + "\", \"" + m.getName() + "\"");
                     for (Parameter pa : m.getParameters()) {
-                        if (pa.getType().isDefined("js_type", "String") || pa.getType().isDefined("js_type", "char")) {
-                            builder.append(", \"" + pa.getName() + "\":\"' + " + ctx.protectKeyword(pa.getName()) + " + '\"");//TODO: only string params should have \" \" for their values...
-                        } else {
-                            builder.append(", \"" + pa.getName() + "\":' + " + ctx.protectKeyword(pa.getName()) + " + '");//TODO: only string params should have \" \" for their values...
-                        }
+                        builder.append(", " + ctx.protectKeyword(pa.getName()));
                     }
-                    builder.append("}');\n");
+                    builder.append(");\n");
                     builder.append("};\n\n");
                 }
+            }
+        }
+    }
+
+    protected void generateListeners(Thing thing, StringBuilder builder, Context ctx) {
+        builder.append("//callbacks for third-party listeners\n");
+        for(Port p : thing.allPorts()) {
+            for(Message m : p.getSends()) {
+                builder.append("const " + m.getName() + "On" + p.getName() + "Listeners = [];\n");
+                builder.append("this.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners = function() {\n");
+                builder.append("return " + m.getName() + "On" + p.getName() + "Listeners;\n");
+                builder.append("};\n");
+            }
+        }
+    }
+
+    protected void callListeners(Port p, Message m, StringBuilder builder, Context ctx) {
+        if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
+            builder.append("//notify listeners\n");
+            builder.append("const arrayLength = " + m.getName() + "On" + p.getName() + "Listeners.length;\n");
+            builder.append("for (var _i = 0; _i < arrayLength; _i++) {\n");
+            builder.append(m.getName() + "On" + p.getName() + "Listeners[_i](");
+            int i = 0;
+            for(Parameter pa : m.getParameters()) {
+                if (i > 0) {
+                    builder.append(", ");
+                }
+                builder.append(ctx.protectKeyword(pa.getName()));
+                i++;
+            }
+            builder.append(");\n");
+            builder.append("}\n");
+        }
+    }
+
+    protected void generateSendMethods(Thing thing, StringBuilder builder, Context ctx) {
+        for(Port p : thing.allPorts()) {
+            for(Message m : p.getSends()) {
+                builder.append("function send" + ctx.firstToUpper(m.getName()) + "On" + ctx.firstToUpper(p.getName()) + "(");
+                int j = 0;
+                for(Parameter pa : m.getParameters()) {
+                    if(j > 0)
+                        builder.append(", ");
+                    builder.append(ctx.protectKeyword(pa.getName()));
+                    j++;
+                }
+                builder.append(") {\n");
+                callListeners(p, m, builder, ctx);
+                builder.append("}\n\n");
             }
         }
     }
@@ -150,7 +196,11 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         builder.append("//Attributes\n");
         for(Property p : thing.allPropertiesInDepth()) {
             if (p.isDefined("private", "true") || !(p.eContainer() instanceof Thing)) {
-                builder.append("var " + p.qname("_") + "_var");
+                if (p.isChangeable())
+                    builder.append("var ");
+                else
+                    builder.append("const ");
+                builder.append(p.qname("_") + "_var");
                 Expression initExp = thing.initExpression(p);
                 if (initExp != null) {
                     builder.append(" = ");
@@ -177,20 +227,13 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         builder.append("};\n\n");
 
         builder.append("//message queue\n");
-        builder.append("var queue = [];\n");
+        builder.append("const queue = [];\n");
         builder.append("this.getQueue = function() {\n");
         builder.append("return queue;\n");
         builder.append("};\n\n");
 
-        builder.append("//callbacks for third-party listeners\n");
-        for(Port p : thing.allPorts()) {
-            if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
-                builder.append("var " + p.getName() + "Listeners = [];\n");
-                builder.append("this.get" + ctx.firstToUpper(p.getName()) + "Listeners = function() {\n");
-                builder.append("return " + p.getName() + "Listeners;\n");
-                builder.append("};\n");
-            }
-        }
+        generateListeners(thing, builder, ctx);
+        
 
         /** MODIFICATION **/
         builder.append("//CEP dispatch functions\n");
@@ -258,49 +301,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         builder.append("}\n");
         builder.append("}\n\n");
 
-        for(Port p : thing.allPorts()) {
-            for(Message m : p.getSends()) {
-                builder.append("function send" + ctx.firstToUpper(m.getName()) + "On" + ctx.firstToUpper(p.getName()) + "(");
-                int j = 0;
-                for(Parameter pa : m.getParameters()) {
-                   if(j > 0)
-                       builder.append(", ");
-                    builder.append(ctx.protectKeyword(pa.getName()));
-                    j++;
-                }
-                builder.append(") {\n");
-                builder.append("var msg = '{\"message\":\"" + m.getName() + "\",\"port\":\"" + p.getName() + "_c" + "\"");
-                for(Parameter pa : m.getParameters()) {
-                    final boolean isString = pa.getType().isDefined("js_type", "String");
-                    final boolean isChar = pa.getType().isDefined("js_type", "char");
-                    final boolean isArray = (pa.getCardinality() != null);
-                    builder.append(", \"" + pa.getName() + "\":");
-                    if(isArray)
-                        builder.append("[");
-                    if (isString || isChar)
-                        builder.append("\"");
-                    builder.append("' + ");
-                    if(isString)
-                        builder.append(ctx.protectKeyword(pa.getName()) + ".replace(\"\\n\", \"\\\\n\")");
-                    else
-                        builder.append(ctx.protectKeyword(pa.getName()) + " + '");
-                    if (isString || isChar)
-                        builder.append("\"");
-                    if(isArray)
-                        builder.append("]");
-                }
-                builder.append("}';\n");
-                builder.append("_send(msg);\n");
-                if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
-                    builder.append("//notify listeners\n");
-                    builder.append("var arrayLength = " + p.getName() + "Listeners.length;\n");
-                    builder.append("for (var i = 0; i < arrayLength; i++) {\n");
-                    builder.append(p.getName() + "Listeners[i](msg);\n");
-                    builder.append("}\n");
-                }
-                builder.append("}\n\n");
-            }
-        }
+        generateSendMethods(thing, builder, ctx);
 
         builder.append("//State machine (states and regions)\n");
         for(StateMachine b : thing.allStateMachines()) {
@@ -315,7 +316,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
 
         builder.append("}\n");
 
-        ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
+        generatePublicAPI(thing, ctx);
 
         builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.getName = function() {\n");
         builder.append("return \"" + thing.getName() + "\";\n");
