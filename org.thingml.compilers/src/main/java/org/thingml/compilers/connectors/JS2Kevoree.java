@@ -66,20 +66,6 @@ public class JS2Kevoree extends ConnectorCompiler {
         kevScript.append("//instantiate Kevoree/ThingML components\n");
         kevScript.append("add node0." + cfg.getName() + "_0 : my.package." + cfg.getName() + "\n");
 
-        kevScript.append("//instantiate Kevoree/ThingML proxy components\n");
-        int id = 0;
-        for(Instance i : cfg.allInstances()) {
-            for(Port p : i.getType().allPorts()) {
-                if (p.hasAnnotation("external")) {
-                    kevScript.append("add node0." + p.getName() + "_" + id + " : my.package." + p.getName() + "\n");
-                    kevScript.append("add chan" + id + " : LocalChannel\n");
-                    kevScript.append("bind node0." + cfg.getName() + "_0." + i.getName() + "_" + p.getName() + "_out chan" + id + "\n");
-                    kevScript.append("bind node0." + p.getName() + "_" + id + "." + p.getName() + " chan" + id + "\n");
-                }
-                id++;
-            }
-        }
-
         kevScript.append("start sync\n");
         kevScript.append("//start node0\n\n");
         kevScript.append("\n");
@@ -166,7 +152,7 @@ public class JS2Kevoree extends ConnectorCompiler {
         }
 
         final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/lib/" + cfg.getName() + ".js" );
-        builder.append("var Connector = require('./Connector');\n");
+        //builder.append("var Connector = require('./Connector');\n");
         builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
 
         for(Thing t : cfg.allThings()) {
@@ -180,35 +166,29 @@ public class JS2Kevoree extends ConnectorCompiler {
         //TODO: generate dictionnay for attributes
 
         builder.append("construct: function() {\n");
-        for(Instance i : cfg.danglingPorts().keySet()) {
-            builder.append("this." + i.getName() + " = null;\n");
-        }
+        JSMainGenerator.generateInstances(cfg, builder, ctx, true);
+            for(Map.Entry e : cfg.danglingPorts().entrySet()) {
+                final Instance i = (Instance) e.getKey();
+                for(Port p : (List<Port>)e.getValue()) {
+                    for(Message m : p.getSends()) {
+                        builder.append("this." + i.getName() + ".get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().push(this." + shortName(i, p, m) + "_proxy.bind(this));\n");
+                    }
+                }
+            }
         builder.append("},\n\n");
 
 
         builder.append("start: function (done) {\n");
-        JSMainGenerator.generateInstances(cfg, builder, ctx, true);
-
-        for(Map.Entry e : cfg.danglingPorts().entrySet()) {
-            final Instance i = (Instance) e.getKey();
-            for(Port p : (List<Port>)e.getValue()) {
-                if (p.getSends().size() > 0) {
-                    builder.append("this." + i.getName() + ".get" + ctx.firstToUpper(p.getName()) + "Listeners().push(this.out_" + i.getName() + "_" + p.getName() + "_out.bind(this));\n");
-                }
-            }
-        }
-
         for(Instance i : cfg.danglingPorts().keySet()) {
             builder.append("this." + i.getName() + "._init();\n");
         }
-
         builder.append("done();\n");
         builder.append("},\n\n");
 
 
         builder.append("stop: function (done) {\n");
         for(Instance i : cfg.allInstances()) {
-            builder.append(i.getName() + "._stop();\n");
+            builder.append("this." + i.getName() + "._stop();\n");
         }
         builder.append("done();\n");
         builder.append("}");
@@ -216,32 +196,9 @@ public class JS2Kevoree extends ConnectorCompiler {
         for(Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
             for(Port p : (List<Port>)e.getValue()) {
-                if (p.getReceives().size() > 0) {
-                    builder.append(",\nin_" + i.getName() + "_" + p.getName() + "_in: function (msg) {\n");
-                    builder.append("try {\n");
-                    builder.append("var json = JSON.parse(msg);\n");
-                    int id = 0;
-                    for(Message m : p.getReceives()) {
-                        if (id > 0) {
-                            builder.append("else ");
-                        }
-                        builder.append("if (json.message === '" + m.getName() + "') {\n");
-                        builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(");
-                        int j = 0;
-                        for(Parameter param : m.getParameters()) {
-                            if (j > 0) {
-                                builder.append(", ");
-                            }
-                            builder.append("json." + param.getName());
-                            j++;
-                        }
-                        builder.append(");\n");
-                        builder.append("}\n");
-                        id++;
-                    }
-                    builder.append("} catch(err) {\n");
-                    builder.append("console.log('Cannot parse msg: ' + msg);\n");
-                    builder.append("};\n");
+                for(Message m : p.getReceives()) {
+                    builder.append(",\nin_" + shortName(i, p, m) + "_in: function (msg) {\n");
+                    builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(msg.split(' ;'));\n");
                     builder.append("}");
                 }
             }
@@ -250,11 +207,9 @@ public class JS2Kevoree extends ConnectorCompiler {
         for(Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
             for(Port p : (List<Port>)e.getValue()) {
-                if (p.getSends().size() > 0) {
-                    builder.append(",\nout_" + i.getName() + "_" + p.getName() + "_out: function(msg) {/* This will be overwritten @runtime by Kevoree JS */}");
-                    if (p.hasAnnotation("external")) {
-                        generateProxy(cfg, p, ctx);
-                    }
+                for(Message m : p.getSends()) {
+                    builder.append(",\n" + shortName(i, p, m) + "_proxy: function() {this.out_" + shortName(i, p, m) + "_out(Array.prototype.slice.call(arguments).join('; '));}");
+                    builder.append(",\nout_" + shortName(i, p, m) + "_out: function(msg) {/* This will be overwritten @runtime by Kevoree JS */}");
                 }
             }
         }
@@ -262,82 +217,28 @@ public class JS2Kevoree extends ConnectorCompiler {
         builder.append("module.exports = " + cfg.getName() + ";\n");
     }
 
-    private void generateProxy(Configuration cfg, Port p, Context ctx) {//FIXME: avoid code duplication from the main wrapper generator...  One idea is to generate a ThingML component on the fly, and compile it as a normal ThingML/KevoreeJS component....
-        if (p.getSends().size() > 0) {
-            final StringBuilder builder = ctx.getBuilder(p.getName() + "/lib/" + p.getName() + ".js");
-            builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
-            builder.append("/**\n* Kevoree proxy component for external port\n* @type {" + p.getName() + "}\n*/\n");
-            builder.append("var " + p.getName() + " = AbstractComponent.extend({\n");
-            builder.append("toString: '" + p.getName() + "',\n");
+    private String shortName(Instance i, Port p, Message m) {
+        String result = "";
 
-            builder.append("construct: function() {\n");
-            builder.append("},\n\n");
-
-            builder.append("start: function (done) {\n");
-            builder.append("done();\n");
-            builder.append("},\n\n");
-
-            builder.append("stop: function (done) {\n");
-            builder.append("done();\n");
-            builder.append("},\n");
-
-            builder.append("in_" + p.getName() + ": function (msg) {\n");
-            builder.append("try {\n");
-            builder.append("var json = JSON.parse(msg);\n");
-            int i = 0;
-            for(Message m : p.getSends()) {
-                if (i > 0) {
-                    builder.append("else ");
-                }
-                builder.append("if (json.message === \"" + m.getName() + "\") {\n");
-                builder.append("this.out_" + p.getName() + "_" + m.getName() + "(");
-                int j = 0;
-                for(Parameter pa : m.getParameters()) {
-                    if (j>0) {
-                        builder.append("+ \"; \" +");
-                    }
-                    builder.append("json." + pa.getName());
-                    j++;
-                }
-                builder.append(");\n");
-                builder.append("}");
-                i++;
-            }
-            builder.append("} catch(err){\n");
-            builder.append("console.log('Cannot parse msg: ' + msg);\n");
-            builder.append("}\n");
-            builder.append("}");
-
-            for(Message m : p.getSends()) {
-                builder.append(",\nout_" + p.getName() + "_" + m.getName() + ": function(msg) {/* This will be overwritten @runtime by Kevoree JS */}");
-            }
-
-            builder.append("}");
-            builder.append(");\n\n");
-            builder.append("module.exports = " + p.getName() + ";\n");
-
-
-            new File(ctx.getCompiler().getOutputDirectory() + "/" + p.getName()).mkdirs();
-            generateGruntFile(ctx, p.getName());
-            updateMainGruntfile(cfg, p, ctx);
-            try {
-                final InputStream input = new FileInputStream(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName() + "/package.json");
-                final List<String> packLines = IOUtils.readLines(input);
-                String pack = "";
-                for (String line : packLines) {
-                    pack += line + "\n";
-                }
-                input.close();
-
-                pack = pack.replace(cfg.getName(), p.getName());
-                final File f = new File(ctx.getCompiler().getOutputDirectory() + "/" + p.getName() + "/package.json");
-                final OutputStream output = new FileOutputStream(f);
-                IOUtils.write(pack, output);
-                IOUtils.closeQuietly(output);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (i.getName().length() > 3) {
+            result += i.getName().substring(0, 3);
+        } else {
+            result += i.getName();
         }
+
+        result += "_";
+
+        if (p.getName().length() > 3) {
+            result += p.getName().substring(0, 3);
+        } else {
+            result += p.getName();
+        }
+
+        result += "_";
+
+        result += m.getName();
+
+        return result;
     }
 
     @Override
