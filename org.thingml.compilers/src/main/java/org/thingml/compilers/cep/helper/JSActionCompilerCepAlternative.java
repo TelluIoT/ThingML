@@ -16,24 +16,24 @@
 package org.thingml.compilers.cep.helper;
 
 import org.sintef.thingml.EventReference;
-import org.sintef.thingml.Expression;
-import org.sintef.thingml.ExternExpression;
-import org.sintef.thingml.ThingmlFactory;
+import org.sintef.thingml.Parameter;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.actions.JSActionCompiler;
+
+import java.util.List;
 
 /**
  * @author ludovic
  */
-public class TransformEventRef extends CopyExpression {
-
-    public static final TransformEventRef instance = new TransformEventRef();
-
-    private TransformEventRef(){}
-
+public class JSActionCompilerCepAlternative extends JSActionCompiler {
     @Override
-    public Expression copyExpression(EventReference expression) {
-        ExternExpression externExpression = ThingmlFactory.eINSTANCE.createExternExpression();
-        externExpression.setExpression(JSCepCompilerHelper.generateJsonAccessParam(expression.getMsgRef(),expression.getParamRef()));
-        return externExpression;
+    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
+        List<Parameter> parameters = expression.getMsgRef().getMessage().getParameters();
+        for(int i = 0; i<parameters.size();i++) {
+            if(parameters.get(i).getName().equals(expression.getParamRef().getName())) {
+                builder.append(expression.getMsgRef().getMessage().getName() + "[" + (i + 2) + "]");
+                break;
+            }
+        }
     }
-
 }

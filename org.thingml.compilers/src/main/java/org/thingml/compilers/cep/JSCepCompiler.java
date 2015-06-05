@@ -19,7 +19,7 @@ import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.cep.helper.JSCepCompilerHelper;
-import org.thingml.compilers.cep.helper.TransformEventRef;
+import org.thingml.compilers.cep.helper.JSActionCompilerCepAlternative;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +28,11 @@ import java.util.List;
  * @author ludovic
  */
 public class JSCepCompiler extends CepCompiler {
+    private JSActionCompilerCepAlternative actionCompiler;
+
+    public JSCepCompiler() {
+        actionCompiler = new JSActionCompilerCepAlternative();
+    }
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
        if(stream instanceof SimpleStream) {
@@ -44,13 +49,12 @@ public class JSCepCompiler extends CepCompiler {
 
 
     public void generateStream(SimpleStream stream, StringBuilder builder, Context ctx) {
-        JSCepCompilerHelper.generateBeginingStream(stream, builder, ctx, ThingMLHelpers.getEventName(stream, stream.getInputs().get(0)));
+        JSCepCompilerHelper.generateBeginingStream(stream, builder, ctx, ThingMLHelpers.getEventName(stream, stream.getInputs().get(0)),stream.getInputs().get(0).getMessage().getName());
 
         List<StreamExpression> newParameters = new ArrayList<>();
         for (StreamExpression se : stream.getSelection()) {
-
             builder.append("\t\tvar " + se.getName() + " = ");
-            ctx.getCompiler().getActionCompiler().generate(TransformEventRef.instance.copyExpression(se.getExpression()), builder, ctx);
+            actionCompiler.generate(se.getExpression(),builder,ctx);
             builder.append(";\n");
             newParameters.add(JSCepCompilerHelper.generateStreamExpression(se.getName()));
         }
@@ -65,24 +69,13 @@ public class JSCepCompiler extends CepCompiler {
 
 
     public void generateStream(MergedStream stream, StringBuilder builder, Context ctx) {
-        JSCepCompilerHelper.generateBeginingStream(stream, builder, ctx, ThingMLHelpers.getEventName(stream, null));
-
-        if(stream.getInputs().get(0).getMessage().getParameters().size() == 0) {
-            ctx.getCompiler().getActionCompiler().generate(stream.getOutput(), builder, ctx);
-        } else {
-            List<StreamExpression> newParamters = new ArrayList<>();
-            for(ReceiveMessage rm : stream.getInputs()) {
-                Parameter first = rm.getMessage().getParameters().get(0);
-                builder.append("\t\tif(!(typeof " + rm.getMessage().getName() + "J." + first.getName() + "=== 'undefined')) { \n");
-                builder.append("\t\t\t");
-                for (Parameter p : rm.getMessage().getParameters()) {
-                    newParamters.add(JSCepCompilerHelper.generateStreamExpression(/*rm.getMessage().getName() + "J." + p.getName()*/JSCepCompilerHelper.generateJsonAccessParam(rm,p)));
-                }
-                JSCepCompilerHelper.generateOutPut(stream, builder, ctx, newParamters);
-                builder.append("\t\t}\n");
-                newParamters.clear();
-            }
+        JSCepCompilerHelper.generateBeginingStream(stream, builder, ctx, ThingMLHelpers.getEventName(stream, null), "x");
+        List<StreamExpression> newParamters = new ArrayList<>();
+        List<Parameter> parameters = stream.getInputs().get(0).getMessage().getParameters();
+        for (int i = 0; i < parameters.size(); i++) {
+            newParamters.add(JSCepCompilerHelper.generateStreamExpression("x[" + (i + 2) + "]"));
         }
+        JSCepCompilerHelper.generateOutPut(stream, builder, ctx, newParamters);
 
         builder.append("\t});\n");
     }
@@ -92,43 +85,41 @@ public class JSCepCompiler extends CepCompiler {
         builder.append("function wait1() { return Rx.Observable.timer(50); }\n");
 
         for (ReceiveMessage rm : stream.getInputs()) {
-            builder.append("var " + stream.qname("_") + "_" + rm.getMessage().getName() + " = Rx.Observable.fromEvent(this.eventEmitterForStream" + ", '" + /*stream.qname("_") + "_" + rm.getPort().getName() + "_" + rm.getMessage().getName()*/ThingMLHelpers.getEventName(stream, rm) + "');\n");
+            builder.append("var " + stream.qname("_") + "_" + rm.getMessage().getName() + " = Rx.Observable.fromEvent(this.eventEmitterForStream" + ", '" + ThingMLHelpers.getEventName(stream, rm) + "');\n");
         }
 
 
-        String nameSTream1 = stream.qname("_") + "_" + stream.getInputs().get(1).getMessage().getName(), //currently : join is between two streams
-                nameSTream2 = stream.qname("_") + "_" + stream.getInputs().get(0).getMessage().getName();
+        String message1Name = stream.getInputs().get(1).getMessage().getName(),
+                message2Name = stream.getInputs().get(0).getMessage().getName();
+        String nameSTream1 = stream.qname("_") + "_" + message1Name, //currently : join is between two streams
+                nameSTream2 = stream.qname("_") + "_" + message2Name;
 
         builder.append("var " + stream.qname("_") + " = " + nameSTream1 + ".join(" + nameSTream2 + ",wait1,wait1,\n" +
-                "\tfunction(m1,m2) {\n" +
-                "\t\tvar " + stream.getInputs().get(1).getMessage().getName() + "J = JSON.parse(m1);\n" + //fixme
-                "\t\tvar "+  stream.getInputs().get(0).getMessage().getName() + "J = JSON.parse(m2);\n"); //fixme
+                "\tfunction(" + message1Name + "," + message2Name +") {\n" );//+
 
         List<StreamExpression> newParameters = new ArrayList<>();
-        String returnString = "'{ ";
+        String returnString = "{ ";
         int i = 0;
         for (StreamExpression se : stream.getSelection()) {
 
             builder.append("\t\tvar " + se.getName() + " = ");
-            ctx.getCompiler().getActionCompiler().generate(TransformEventRef.instance.copyExpression(se.getExpression()), builder, ctx);
+            actionCompiler.generate(se.getExpression(),builder,ctx);
             builder.append(";\n");
             if(i>0) {
                 returnString += ", ";
             }
-            returnString += "\"" + se.getName() + "\": ' + " + se.getName() + " + '";
+            returnString += "'" + i + "'" + " : " + se.getName();
 
-            newParameters.add(JSCepCompilerHelper.generateStreamExpression("json." + se.getName()));
+            newParameters.add(JSCepCompilerHelper.generateStreamExpression("x[" + i + "]"));
 
             i++;
         }
 
-        returnString += "}';";
+        returnString += " };";
         builder.append("\t\treturn " + returnString + "\n");
         builder.append("\t}).subscribe(\n\t" +
-                "\t\tfunction(x) {\n" +
-                "\t\t\tvar json = JSON.parse(x);\n");
+                "\t\tfunction(x) {\n");
         builder.append("\t\t\t");
-
         JSCepCompilerHelper.generateOutPut(stream, builder, ctx, newParameters);
 
         builder.append("\t});\n");

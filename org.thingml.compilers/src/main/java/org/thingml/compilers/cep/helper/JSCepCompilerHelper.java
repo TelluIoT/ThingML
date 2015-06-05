@@ -41,15 +41,13 @@ public class JSCepCompilerHelper {
         ctx.getCompiler().getActionCompiler().generate(streamOutput, builder, ctx);
     }
 
-    public static void generateBeginingStream(Stream stream, StringBuilder builder, Context ctx, String eventName) {
+    public static void generateBeginingStream(Stream stream, StringBuilder builder, Context ctx, String eventName, String nameParam) {
         builder.append("var " + stream.qname("_") + " = Rx.Observable.fromEvent(this.eventEmitterForStream" + ", '" + eventName + "')");
         builder.append(".subscribe(\n\t" +
-                "function(x) {\n");
+                "function(" + nameParam + ") {\n");
 
-        for(ReceiveMessage rm : stream.getInputs()) {
-            builder.append("\t\tvar " + rm.getMessage().getName() + "J = JSON.parse(x);\n");
-        }
 
+        //fixme
         /** Useful for debugging
          * Print a message on the console when the stream receive a ThingML message**/
        /* builder.append("\t\tconsole.log(\"Hack!! \"");
@@ -62,7 +60,4 @@ public class JSCepCompilerHelper {
         /** END **/
     }
 
-    public static String generateJsonAccessParam(ReceiveMessage rm, Parameter p) {
-        return rm.getMessage().getName() + "J." + p.getName();
-    }
 }

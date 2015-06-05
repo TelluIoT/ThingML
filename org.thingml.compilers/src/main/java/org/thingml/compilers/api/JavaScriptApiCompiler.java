@@ -65,7 +65,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function() {\n");
             builder.append("this.getQueue().push(arguments);\n");
             /** MODIFICATION **/
-            builder.append("this.cepDispatch(message);\n");
+            builder.append("this.cepDispatch(arguments);\n");
             /** END **/
             builder.append("if (this.ready) {\n");
             builder.append("var msg = this.getQueue().shift();\n");
@@ -237,18 +237,12 @@ public class JavaScriptApiCompiler extends ApiCompiler {
 
         /** MODIFICATION **/
         builder.append("//CEP dispatch functions\n");
-        builder.append("this.cepDispatch = function (message) {\n" +
-                "var json = JSON.parse(message);\n");
+        builder.append("this.cepDispatch = function (message) {\n");
 
         for(Stream s : thing.getStreams()) {
             for (ReceiveMessage rm : s.getInputs()) {
-               /* String eventName = s.qname("_");
-                if (s instanceof SimpleStream || s instanceof JoinedStream) { //fixme add to ThingMLHelpers
-                    eventName += "_" + rm.getPort().getName() + "_" +  rm.getMessage().getName();
-                }*/
-
-                builder.append("if(json.port === \"" + rm.getPort().getName() + "_s" + "\" && json.message === \"" + rm.getMessage().getName() + "\") {\n" +
-                        "\tthis.eventEmitterForStream.emit('" + /*eventName*/ ThingMLHelpers.getEventName(s,rm) + "',message);\n" +
+               builder.append("if(message[0] === \"" + rm.getPort().getName() + "\" && message[1] === \"" + rm.getMessage().getName() + "\") {\n" +
+                        "\tthis.eventEmitterForStream.emit('" + ThingMLHelpers.getEventName(s,rm) + "',message);\n" +
                         "}\n");
             }
         }
