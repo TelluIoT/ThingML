@@ -164,16 +164,22 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
         builder.append("var t0_" + r.qname("_") + "_reg = StateFactory.buildEmptyTransition(_initial_" + r.qname("_") + "_reg, " + r.getInitial().qname("_") + ");\n");
     }
 
-    private void generateHandlerAction(Handler h, StringBuilder builder, Context ctx) {
+    //FIXME: avoid duplication in the following 3 methods!!!
+    private void generateHandlerAction(Handler h, Message m, StringBuilder builder, Context ctx) {
         if (h.getEvent().size() == 0) {
             builder.append("function t" + ti + "_effect(context, message) {\n");
-            builder.append("var json = JSON.parse(message);\n");
+            //builder.append("var json = JSON.parse(message);\n");
             ctx.getCompiler().getActionCompiler().generate(h.getAction(), builder, ctx);
             builder.append("}\n\n");
         }
         else {
                 builder.append("function t" + ti + "_effect(context, message) {\n");
-                builder.append("var json = JSON.parse(message);\n");
+                //builder.append("var json = JSON.parse(message);\n");
+            int i = 2;
+            for(Parameter pa : m.getParameters()) {
+                builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
+                i++;
+            }
                 ctx.getCompiler().getActionCompiler().generate(h.getAction(), builder, ctx);
                 builder.append("}\n\n");
         }
@@ -184,14 +190,26 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
         if (t.getEvent().size() == 0) {
             builder.append("var t" + ti + " = StateFactory.buildEmptyTransition(" + t.getSource().qname("_") + ", " + t.getTarget().qname("_"));
             if (t.getGuard() != null) {
-                builder.append(", function (s, c) {var json = JSON.parse(c); return ");
+                builder.append(", function (s, c) {");
+                int i = 2;
+                for(Parameter pa : msg.getParameters()) {
+                    builder.append(" v_" + pa.getName() + " = " + "c[" + i + "];");
+                    i++;
+                }
+                builder.append(" return ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
                 builder.append(";}");
             }
             builder.append(");\n");
         } else {
             builder.append("var t" + ti + " = StateFactory.buildTransition(" + t.getSource().qname("_") + ", " + t.getTarget().qname("_"));
-            builder.append(", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName() + "_s"/*(if(p.isInstanceOf[ProvidedPort]) "_s" else "_c")*/ + "\" && json.message === \"" + msg.getName() + "\"");
+            builder.append(", function (s, c) {");
+            int i = 2;
+            for(Parameter pa : msg.getParameters()) {
+                builder.append(" v_" + pa.getName() + " = " + "c[" + i + "];");
+                i++;
+            }
+            builder.append("return c[0] === \"" + p.getName() + "\" && c[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
@@ -199,7 +217,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             builder.append(";});\n");
         }
         if (t.getAction() != null) {
-            generateHandlerAction(t, builder, ctx);
+            generateHandlerAction(t, msg, builder, ctx);
         }
         ti++;
     }
@@ -208,7 +226,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
         if (t.getEvent().size() == 0) {
             builder.append("var t" + ti + " = StateFactory.buildEmptyTransition(" + ((State) t.eContainer()).qname("_") + ", null");
             if (t.getGuard() != null) {
-                builder.append(", function (s, c) {var json = JSON.parse(c); return ");
+                //builder.append(", function (s, c) {var json = JSON.parse(c); return ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
                 builder.append(";}");
             }
@@ -216,7 +234,13 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
         } else {
             builder.append("var t" + ti + " = StateFactory.buildTransition(" + ((State) t.eContainer()).qname("_") + ", null");
 
-            builder.append(", function (s, c) {var json = JSON.parse(c); return json.port === \"" + p.getName() + "_s" + "\" && json.message === \"" + msg.getName() + "\"");
+            builder.append(", function (s, c) {");
+            int i = 2;
+            for(Parameter pa : msg.getParameters()) {
+                builder.append(" v_" + pa.getName() + " = " + "c[" + i + "];");
+                i++;
+            }
+            builder.append("return c[0] === \"" + p.getName() + "\" && c[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
@@ -224,7 +248,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             builder.append(";});\n");
         }
         if (t.getAction() != null) {
-            generateHandlerAction(t, builder, ctx);
+            generateHandlerAction(t, msg, builder, ctx);
         }
         ti++;
     }

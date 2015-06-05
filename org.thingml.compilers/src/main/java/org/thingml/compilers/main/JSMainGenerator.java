@@ -100,11 +100,25 @@ public class JSMainGenerator extends MainGenerator {
             builder.append(reference(i.getName(), useThis) + ".setThis(" + reference(i.getName(), useThis) + ");\n");
         }
         for (Connector c : cfg.allConnectors()) {
-            if (c.getRequired().getSends().size() > 0) {
-                builder.append(reference(c.getCli().getInstance().getName(), useThis) + ".getConnectors().push(new Connector(" + reference(c.getCli().getInstance().getName(), useThis) + ", " + reference(c.getSrv().getInstance().getName(), useThis) + ", \"" + c.getRequired().getName() + "_c\", \"" + c.getProvided().getName() + "_s\"));\n");
+            for(Message req : c.getRequired().getReceives()) {
+                for (Message prov : c.getProvided().getSends()) {
+                    if(req.getName().equals(prov.getName())) {
+                        builder.append(c.getSrv().getInstance().getName() + ".get" + ctx.firstToUpper(prov.getName()) + "on" + c.getProvided().getName() + "Listeners().push(");
+                        builder.append(c.getCli().getInstance().getName() + ".receive" + req.getName() + "On" + c.getRequired().getName() + ".bind(" + c.getCli().getInstance().getName() + ")");
+                        builder.append(");\n");
+                        break;
+                    }
+                }
             }
-            if (c.getProvided().getSends().size() > 0) {
-                builder.append(reference(c.getSrv().getInstance().getName(), useThis) + ".getConnectors().push(new Connector(" + reference(c.getSrv().getInstance().getName(), useThis) + ", " + reference(c.getCli().getInstance().getName(), useThis) + ", \"" + c.getProvided().getName() + "_c\", \"" + c.getRequired().getName() + "_s\"));\n");
+            for(Message req : c.getProvided().getReceives()) {
+                for (Message prov : c.getRequired().getSends()) {
+                    if(req.getName().equals(prov.getName())) {
+                        builder.append(c.getCli().getInstance().getName() + ".get" + ctx.firstToUpper(prov.getName()) + "on" + c.getRequired().getName() + "Listeners().push(");
+                        builder.append(c.getSrv().getInstance().getName() + ".receive" + req.getName() + "On" + c.getProvided().getName() + ".bind(" + c.getSrv().getInstance().getName() + ")");
+                        builder.append(");\n");
+                        break;
+                    }
+                }
             }
         }
     }
@@ -120,7 +134,7 @@ public class JSMainGenerator extends MainGenerator {
     public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/main.js");
 
-        builder.append("var Connector = require('./Connector');\n");
+        //builder.append("var Connector = require('./Connector');\n");
         for(Type ty : model.allUsedSimpleTypes()) {
             if (ty instanceof Enumeration) {
                 builder.append("var Enum = require('./enums');\n");
