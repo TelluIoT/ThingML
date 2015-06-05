@@ -23,6 +23,10 @@ import org.thingml.compilers.Context;
  */
 public class JavaScriptApiCompiler extends ApiCompiler {
 
+    protected String const_() {
+        return "const ";
+    }
+
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/" + ctx.firstToUpper(thing.getName()) + ".js");
@@ -104,7 +108,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         builder.append("//callbacks for third-party listeners\n");
         for(Port p : thing.allPorts()) {
             for(Message m : p.getSends()) {
-                builder.append("const " + m.getName() + "On" + p.getName() + "Listeners = [];\n");
+                builder.append(const_() + m.getName() + "On" + p.getName() + "Listeners = [];\n");
                 builder.append("this.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners = function() {\n");
                 builder.append("return " + m.getName() + "On" + p.getName() + "Listeners;\n");
                 builder.append("};\n");
@@ -115,7 +119,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
     protected void callListeners(Port p, Message m, StringBuilder builder, Context ctx) {
         if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
             builder.append("//notify listeners\n");
-            builder.append("const arrayLength = " + m.getName() + "On" + p.getName() + "Listeners.length;\n");
+            builder.append(const_() + "arrayLength = " + m.getName() + "On" + p.getName() + "Listeners.length;\n");
             builder.append("for (var _i = 0; _i < arrayLength; _i++) {\n");
             builder.append(m.getName() + "On" + p.getName() + "Listeners[_i](");
             int i = 0;
@@ -186,7 +190,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
                 if (p.isChangeable())
                     builder.append("var ");
                 else
-                    builder.append("const ");
+                    builder.append(const_());
                 builder.append(p.qname("_") + "_var");
                 Expression initExp = thing.initExpression(p);
                 if (initExp != null) {
@@ -202,7 +206,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         }//TODO: public/private properties?
 
         builder.append("//message queue\n");
-        builder.append("const queue = [];\n");
+        builder.append(const_() + "queue = [];\n");
         builder.append("this.getQueue = function() {\n");
         builder.append("return queue;\n");
         builder.append("};\n\n");

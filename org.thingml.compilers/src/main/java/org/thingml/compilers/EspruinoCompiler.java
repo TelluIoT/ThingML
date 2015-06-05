@@ -21,6 +21,7 @@ import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.EspruinoActionCompiler;
 import org.thingml.compilers.actions.JSActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
+import org.thingml.compilers.api.EspruinoApiCompiler;
 import org.thingml.compilers.api.JavaScriptApiCompiler;
 import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.behavior.JSBehaviorCompiler;
@@ -42,7 +43,7 @@ import java.util.Map;
 public class EspruinoCompiler extends JavaScriptCompiler {
 
    public EspruinoCompiler() {
-        super(new EspruinoActionCompiler(), new JavaScriptApiCompiler(), new JSMainGenerator(), new JSBuildCompiler(), new JSBehaviorCompiler());
+        super(new EspruinoActionCompiler(), new EspruinoApiCompiler(), new JSMainGenerator(), new JSBuildCompiler(), new JSBehaviorCompiler());
     }
 
     public EspruinoCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler) {
