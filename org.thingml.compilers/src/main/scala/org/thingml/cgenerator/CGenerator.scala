@@ -707,7 +707,11 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
 
     mtemplate = mtemplate.replace("/*NAME*/", cfg.getName)
 
-    mtemplate = mtemplate.replace("/*CC*/", "cc")
+    if(cfg.annotation("compiler").size() > 0) {
+      mtemplate = mtemplate.replace("/*CC*/", cfg.annotation("compiler").head)
+    } else {
+      mtemplate = mtemplate.replace("/*CC*/", "cc")
+    }
 
     if (context.debug) {
       mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -DDEBUG")
