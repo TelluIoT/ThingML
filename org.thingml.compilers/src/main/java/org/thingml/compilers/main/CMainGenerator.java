@@ -16,6 +16,7 @@
 package org.thingml.compilers.main;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.CCompilerContext;
 import org.thingml.compilers.Context;
 
@@ -30,6 +31,148 @@ public class CMainGenerator extends MainGenerator {
 
     public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
 
+    }
+
+    protected void compileToLinux(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {
+
+        compileCModules(cfg, ctx);
+
+        // GENERATE THE CONFIGURATION AND A MAIN
+        String ctemplate = ctx.getTemplateByID("ctemplates/linux_main.c");
+        ctemplate = ctemplate.replace("/*NAME*/", cfg.getName());
+        StringBuilder builder = new StringBuilder();
+
+        String c_global = "";
+        for (String s : cfg.annotation("c_global")) c_global += s + "\n";
+        ctemplate = ctemplate.replace("/*C_GLOBALS*/", c_global);
+
+        String c_header = "";
+        for (String s : cfg.annotation("c_header")) c_header += s + "\n";
+        ctemplate = ctemplate.replace("/*C_HEADERS*/", c_header);
+
+        String c_main = "";
+        for (String s : cfg.annotation("c_main")) c_main += s + "\n";
+        ctemplate = ctemplate.replace("/*C_MAIN*/", c_main);
+
+        generateIncludes(cfg, builder, ctx);
+        ctemplate = ctemplate.replace("/*INCLUDES*/", builder.toString());
+
+        builder = new StringBuilder();
+        generateCForConfiguration(cfg, builder, ctx);
+        ctemplate = ctemplate.replace("/*CONFIGURATION*/", builder.toString());
+
+        StringBuilder initb = new StringBuilder();
+        generateCfgInitializationCode(cfg, initb, ctx);
+
+        StringBuilder pollb = new StringBuilder();
+        generatePollingCode(cfg, pollb, ctx);
+
+        ctemplate = ctemplate.replace("/*INIT_CODE*/", initb.toString());
+        ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString());
+        ctx.getBuilder(cfg.getName() + ".c").append(ctemplate);
+
+        generateMakefile(cfg, model, ctx);
+
+    }
+
+    protected void generateMakefile(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {
+
+        //GENERATE THE MAKEFILE
+        String mtemplate = ctx.getTemplateByID("ctemplates/Makefile");
+        mtemplate = mtemplate.replace("/*NAME*/", cfg.getName());
+
+        String compiler = "cc"; // default value
+        if (cfg.hasAnnotation("c_compiler")) compiler = cfg.annotation("c_compiler").iterator().next();
+        mtemplate = mtemplate.replace("/*CC*/", compiler);
+
+        if (ctx.enableDebug()) mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -DDEBUG");
+        else mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -O2 -w");
+
+        String srcs = "";
+        String objs = "";
+
+        // Add the modules for the Things
+        for(Thing t : cfg.allThings()) {
+            srcs += t.getName() + ".c ";
+            objs += t.getName() + ".o ";
+        }
+
+        // Add the module for the Configuration
+        srcs += cfg.getName() + ".c ";
+        objs += cfg.getName() + ".o ";
+
+        // Add any additional modules from the annotations
+        for (String s : cfg.annotation("add_c_modules")) {
+            String[] mods = s.split(" ");
+            for (int i=0; i<mods.length; i++) {
+                srcs += mods[i].trim() + ".c ";
+                objs += mods[i].trim() + ".o ";
+            }
+        }
+        srcs = srcs.trim();
+        objs = objs.trim();
+
+        String libs = "";
+        for (String s : cfg.annotation("add_c_libraries")) {
+            String[] strs = s.split(" ");
+            for (int i=0; i<strs.length; i++) {
+                libs += "-l " + strs[i].trim() + " ";
+            }
+        }
+        libs = libs.trim();
+
+        String preproc = "";
+        for (String s : cfg.annotation("add_c_directives")) {
+            String[] strs = s.split(" ");
+            for (int i=0; i<strs.length; i++) {
+                preproc += "-D " + strs[i].trim() + " ";
+            }
+        }
+        preproc = preproc.trim();
+
+        mtemplate = mtemplate.replace("/*SOURCES*/", srcs);
+        mtemplate = mtemplate.replace("/*OBJECTS*/", objs);
+        mtemplate = mtemplate.replace("/*LIBS*/", libs);
+        mtemplate = mtemplate.replace("/*PREPROC_DIRECTIVES*/", preproc);
+
+        ctx.getBuilder("Makefile").append(mtemplate);
+    }
+
+    protected void compileCModules(Configuration cfg, CCompilerContext ctx) {
+
+        // GENERATE THE TYPEDEFS HEADER
+        String typedefs_template = ctx.getTemplateByID("ctemplates/thingml_typedefs.h");
+        StringBuilder b = new StringBuilder();
+        generateTypedefs(cfg, b, ctx);
+        typedefs_template = typedefs_template.replace("/*TYPEDEFS*/", b.toString());
+        ctx.getBuilder(ctx.getPrefix() + "thingml_typedefs.h").append(typedefs_template);
+
+        // GENERATE A MODULE FOR EACH THING
+        for (Thing thing: cfg.allThings()) {
+            ctx.set_concrete_thing(thing);
+            // GENERATE HEADER
+            ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
+
+            // GENERATE IMPL
+            ctx.getCompiler().getApiCompiler().generateComponent(thing, ctx);
+        }
+        ctx.clear_concrete_thing();
+
+        // GENERATE THE RUNTIME HEADER
+        String rhtemplate = ctx.getTemplateByID("ctemplates/runtime.h");
+        rhtemplate = rhtemplate.replace("/*NAME*/", cfg.getName());
+        ctx.getBuilder(ctx.getPrefix() + "runtime.h").append(rhtemplate);
+
+        // GENERATE THE RUNTIME IMPL
+        String rtemplate = ctx.getTemplateByID("ctemplates/runtime.c");
+        rtemplate = rtemplate.replace("/*NAME*/", cfg.getName());
+
+        String fifotemplate = ctx.getTemplateByID("ctemplates/fifo.c");
+        fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + ctx.fifoSize());
+        fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + cfg.allInstances().size());
+
+        rtemplate = rtemplate.replace("/*FIFO*/", fifotemplate);
+        ctx.getBuilder(ctx.getPrefix() + "runtime.c").append(rtemplate);
     }
 
 
@@ -59,6 +202,27 @@ public class CMainGenerator extends MainGenerator {
         generateCfgInitializationCode(cfg, builder, ctx);
 
 
+    }
+
+    protected void generateTypedefs(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+
+        for (Type t : cfg.findContainingModel().allUsedSimpleTypes()) {
+            if (t instanceof Enumeration) {
+                builder.append("// Definition of Enumeration  " + t.getName() + "\n");
+                for (EnumerationLiteral l : ((Enumeration)t).getLiterals()) {
+                    builder.append("#define " + ctx.getEnumLiteralName((Enumeration) t, l) + " " + ctx.getEnumLiteralValue((Enumeration) t, l) + "\n");
+                }
+                builder.append("\n");
+            }
+        }
+
+    }
+
+    protected void generateIncludes(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
+        for (Thing t : model.allThings()) {
+            builder.append("#include \"" + t.getName() + ".h\"\n");
+        }
     }
 
     protected void generateMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
@@ -330,6 +494,56 @@ public class CMainGenerator extends MainGenerator {
             StateMachine sm = inst.getType().allStateMachines().get(0);
             builder.append(sm.qname("_") + "_OnEntry(" + ctx.getStateID(sm) + ", &" + ctx.getInstanceVarName(inst) + ");\n");
         }
+    }
+
+    protected void generatePollingCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+
+        ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
+
+        // FIXME: Extract the arduino specific part bellow
+
+        Thing arduino_scheduler = null;
+        for (Thing t : model.allThings()) {
+            if (t.getName().equals("ThingMLScheduler"))  {
+                arduino_scheduler = t;
+                break;
+            }
+        }
+        if (arduino_scheduler != null) {
+            Message poll_msg = null;
+            for (Message m : arduino_scheduler.allMessages()) {
+                if (m.getName().equals("poll")) { poll_msg = m; break; }
+            }
+
+            if (poll_msg != null) {
+                // Send a poll message to all components which can receive it
+                for (Instance i : cfg.allInstances()) {
+                    for (Port p : i.getType().allPorts()) {
+                        if (p.getReceives().contains(poll_msg)) {
+                            builder.append(ctx.getHandlerName(i.getType(), p, poll_msg) + "(&" + ctx.getInstanceVarName(i) + ");\n");
+                        }
+                    }
+                }
+
+            }
+        }
+
+        // END OF THE ARDUINO SPECIFIC CODE
+
+        // Call empty transition handler (if needed)
+        for (Instance i : cfg.allInstances()) {
+
+            if (i.getType().allStateMachines().size()>0) { // There has to be only 1
+                StateMachine sm = i.getType().allStateMachines().get(0);
+                if (sm.hasEmptyHandlers()) {
+                    builder.append(ctx.getEmptyHandlerName(i.getType()) + "(&" + ctx.getInstanceVarName(i) + ");\n");
+                }
+            }
+
+
+
+        }
+
     }
 
 

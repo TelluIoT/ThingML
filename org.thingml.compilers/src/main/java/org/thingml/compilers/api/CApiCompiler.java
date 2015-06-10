@@ -28,16 +28,16 @@ public class CApiCompiler extends ApiCompiler {
 
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
-        generateCHeader(thing, (CCompilerContext)ctx, "prefix");
+        generateCHeader(thing, (CCompilerContext)ctx);
     }
 
     @Override
     public void generateComponent(Thing thing, Context ctx) {
-
+        generateCImpl(thing, (CCompilerContext)ctx);
     }
 
 
-    protected void generateCImpl(Thing thing, CCompilerContext ctx, String prefix) {
+    protected void generateCImpl(Thing thing, CCompilerContext ctx) {
 
         StringBuilder builder = new StringBuilder();
 
@@ -86,7 +86,7 @@ public class CApiCompiler extends ApiCompiler {
         itemplate = itemplate.replace("/*CODE*/", builder.toString());
 
         // Save the result in the context with the right file name
-        ctx.getBuilder(prefix + thing.getName() + ".c").append(itemplate);
+        ctx.getBuilder(ctx.getPrefix() + thing.getName() + ".c").append(itemplate);
 
     }
 
@@ -478,7 +478,7 @@ public class CApiCompiler extends ApiCompiler {
 
     }
 
-    protected void generateCHeader(Thing thing, CCompilerContext ctx, String prefix) {
+    protected void generateCHeader(Thing thing, CCompilerContext ctx) {
 
         StringBuilder builder = new StringBuilder();
 
@@ -506,7 +506,7 @@ public class CApiCompiler extends ApiCompiler {
         htemplate = htemplate.replace("/*HEADER*/", builder.toString());
 
         // Save the result in the context with the right file name
-        ctx.getBuilder(prefix + thing.getName() + ".h").append(htemplate);
+        ctx.getBuilder(ctx.getPrefix() + thing.getName() + ".h").append(htemplate);
     }
 
     protected void generateCHeaderAnnotation(Thing thing, StringBuilder builder, CCompilerContext ctx) {

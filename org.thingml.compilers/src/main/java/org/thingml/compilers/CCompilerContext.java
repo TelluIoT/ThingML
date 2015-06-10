@@ -48,6 +48,20 @@ public class CCompilerContext extends Context {
         return false;
     }
 
+    public int fifoSize() {
+        return 256;
+    }
+
+    public String getPrefix() {
+        return "";
+    }
+
+    public boolean enableDebug() {
+        //FIXME: This should come from somewhere
+        return false;
+    }
+
+
     /**************************************************************************
      * HELPER FUNCTIONS shared by different parts of the compiler
      **************************************************************************/
@@ -56,6 +70,20 @@ public class CCompilerContext extends Context {
 
     public String getInstanceStructName(Thing thing) {
         return thing.qname("_") + "_Instance";
+    }
+
+    public String getEnumLiteralName(Enumeration e, EnumerationLiteral l) {
+        return e.getName().toUpperCase() + "_" + l.getName().toUpperCase();
+    }
+
+    public String getEnumLiteralValue(Enumeration e, EnumerationLiteral l) {
+        if (l.hasAnnotation("enum_val")) {
+            return l.annotation("enum_val").iterator().next();
+        }
+        else {
+            System.err.println("Warning: Missing annotation enum_val on litteral " + l.getName() + " in enum " + e.getName() + ", will use default value 0.");
+            return "0";
+        }
     }
 
     public String getInstanceVarName(Thing thing) {
