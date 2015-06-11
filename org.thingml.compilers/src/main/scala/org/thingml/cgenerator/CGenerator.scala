@@ -31,7 +31,6 @@ import java.lang.{Boolean, StringBuilder}
 import java.util.{ArrayList, Hashtable}
 
 import org.sintef.thingml._
-import org.thingml.graphexport.ThingMLGraphExport
 
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
@@ -475,40 +474,6 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
 
     val model = ThingMLHelpers.findContainingModel(cfg)
 
-    try {
-      var dots = ThingMLGraphExport.allGraphviz(model)
-      import scala.collection.JavaConversions._
-      for (name <- dots.keySet) {
-        System.out.println(" -> Writing file " + name + ".dot")
-        var w: PrintWriter = new PrintWriter(new FileWriter(docfolder.getAbsolutePath + File.separator + name + ".dot"))
-        w.println(dots.get(name))
-        w.close
-      }
-    }
-    catch {
-      case t: Throwable => {
-        t.printStackTrace
-      }
-    }
-
-
-
-    try {
-      var gml = ThingMLGraphExport.allGraphML(model)
-      import scala.collection.JavaConversions._
-      for (name <- gml.keySet) {
-        System.out.println(" -> Writing file " + name + ".graphml")
-        var w: PrintWriter = new PrintWriter(new FileWriter(docfolder.getAbsolutePath + File.separator + name + ".graphml"))
-        w.println(gml.get(name))
-        w.close
-      }
-    }
-    catch {
-      case t: Throwable => {
-        t.printStackTrace
-      }
-    }
-
     var pb: ProcessBuilder = new ProcessBuilder("make")
     pb.directory(out)
     var p: Process = pb.start
@@ -542,40 +507,6 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
     docfolder.mkdirs
 
     val model = ThingMLHelpers.findContainingModel(cfg)
-
-    try {
-      var dots = ThingMLGraphExport.allGraphviz(model)
-      import scala.collection.JavaConversions._
-      for (name <- dots.keySet) {
-        System.out.println(" -> Writing file " + name + ".dot")
-        var w: PrintWriter = new PrintWriter(new FileWriter(docfolder.getAbsolutePath + File.separator + name + ".dot"))
-        w.println(dots.get(name))
-        w.close
-      }
-    }
-    catch {
-      case t: Throwable => {
-        t.printStackTrace
-      }
-    }
-
-
-
-    try {
-      var gml = ThingMLGraphExport.allGraphML(model)
-      import scala.collection.JavaConversions._
-      for (name <- gml.keySet) {
-        System.out.println(" -> Writing file " + name + ".graphml")
-        var w: PrintWriter = new PrintWriter(new FileWriter(docfolder.getAbsolutePath + File.separator + name + ".graphml"))
-        w.println(gml.get(name))
-        w.close
-      }
-    }
-    catch {
-      case t: Throwable => {
-        t.printStackTrace
-      }
-    }
   }
 
   def opaqueCompileToLinux(cfg: Configuration, compiler: ThingMLCompiler, ctx : CCompilerContext) {

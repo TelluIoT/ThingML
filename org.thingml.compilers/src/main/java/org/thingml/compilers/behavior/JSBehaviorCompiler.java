@@ -26,40 +26,23 @@ import java.util.Map;
  */
 public class JSBehaviorCompiler extends BehaviorCompiler {
 
-    private int ti = 1;
-
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
-        ti = 1;
-        builder.append("this." + sm.qname("_") + " = StateFactory.buildRegion(\"" + sm.getName() + "\");\n");
+        builder.append("this." + sm.qname("_") + " = new StateJS.StateMachine(\"" + sm.getName() + "\")");
+        generateActionsForState(sm, builder, ctx);
+        builder.append(";\n");
         if (sm.isHistory())
-            builder.append("this._initial_" + sm.qname("_") + " = StateFactory.buildHistoryState(\"_initial\", this." + sm.qname("_") + ");\n");
+            builder.append("this._initial_" + sm.qname("_") + " = new StateJS.PseudoState(\"_initial\", this." + sm.qname("_") + ", StateJS.PseudoStateKind.ShallowHistory);\n");
         else
-            builder.append("this._initial_" + sm.qname("_") + " = StateFactory.buildInitialState(\"_initial\", this." + sm.qname("_") + ");\n");
-        if (sm.hasSeveralRegions()) {
-            builder.append("var _orth_" + sm.qname("_") + " = StateFactory.buildOrthogonalState(\"_orth_" + sm.qname("_") + "\", this." + sm.qname("_") + " );\n");
-            builder.append("var t0 = new StateFactory.buildEmptyTransition(this._initial_" + sm.qname("_") + ", _orth_" + sm.qname("_") + ");\n");
-            builder.append("var " + sm.qname("_") + "_default = StateFactory.buildRegion(\"_default\", _orth_" + sm.qname("_") + ");\n");
-            if (sm.isHistory())
-                builder.append("var _initial_" + sm.qname("_") + "_default = StateFactory.buildHistoryState(\"_initial\", " + sm.qname("_") + "_default);\n");
-            else
-                builder.append("var _initial_" + sm.qname("_") + "_default = StateFactory.buildInitialState(\"_initial\", " + sm.qname("_") + "_default);\n");
-            for (State s : sm.getSubstate()) {
-                ctx.addContextAnnotation("container", sm.qname("_") + "_default");
-                generateState(s, builder, ctx);
-            }
-            builder.append("var t0_" + sm.qname("_") + "_default = StateFactory.buildEmptyTransition(_initial_" + sm.qname("_") + "_default, " + sm.getInitial().qname("_") + ");\n");
-            for (Region r : sm.getRegion()) {
-                ctx.addContextAnnotation("container", "_orth_" + sm.qname("_"));
-                generateRegion(r, builder, ctx);
-            }
-        } else {
-            for (State s : sm.getSubstate()) {
-                ctx.addContextAnnotation("container", "this." + sm.qname("_"));
-                generateState(s, builder, ctx);
-            }
-            builder.append("var t0 = new StateFactory.buildEmptyTransition(this._initial_" + sm.qname("_") + ", " + sm.getInitial().qname("_") + ");\n");
+            builder.append("this._initial_" + sm.qname("_") + " = new StateJS.PseudoState(\"_initial\", this." + sm.qname("_") + ", StateJS.PseudoStateKind.Initial);\n");
+        for (Region r : sm.getRegion()) {
+            ctx.addContextAnnotation("container", "this." + sm.qname("_"));
+            generateRegion(r, builder, ctx);
         }
-
+        for (State s : sm.getSubstate()) {
+            ctx.addContextAnnotation("container", "this." + sm.qname("_"));
+            generateState(s, builder, ctx);
+        }
+        builder.append("this._initial_" + sm.qname("_") + ".to(" + sm.getInitial().qname("_") + ");\n");
         for(Handler h : sm.allEmptyHandlers()) {
             generateHandler(h, null, null, builder, ctx);
         }
@@ -77,50 +60,31 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
                 }
             }
         }
-        generateActionsForState(sm, builder, ctx);
     }
 
     private void generateActionsForState(State s, StringBuilder builder, Context ctx) {
         if (s.getEntry() != null) {
-            builder.append("function " + s.qname("_") + "_entry(context, message) {\n");
-            ctx.getCompiler().getActionCompiler().generate(s.getEntry(),builder, ctx);
-            builder.append("}\n\n");
+            builder.append(".entry(function () {\n");
+            ctx.getCompiler().getActionCompiler().generate(s.getEntry(), builder, ctx);
+            builder.append("})\n\n");
         }
         if (s.getExit() != null) {
-            builder.append("function " + s.qname("_") + "_exit(context, message) {\n");
+            builder.append(".exit(function () {\n");
             ctx.getCompiler().getActionCompiler().generate(s.getExit(), builder, ctx);
-            builder.append("}\n\n");
-        }
-        if (s.getEntry() != null) {
-            if (s instanceof StateMachine)//FIXME: ugly
-                builder.append("this.");
-            builder.append(s.qname("_") + ".entry = [");
-            if (s instanceof StateMachine)//FIXME: ugly
-                builder.append("this.");
-            builder.append(s.qname("_") + "_entry];\n");
-        }
-        if (s.getExit() != null) {
-            if (s instanceof StateMachine)//FIXME: ugly
-                builder.append("this.");
-            builder.append(s.qname("_") + ".exit = [");
-            if (s instanceof StateMachine)//FIXME: ugly
-                builder.append("this.");
-            builder.append(s.qname("_") + "_exit];\n");
-
-
+            builder.append("})\n\n");
         }
     }
 
     protected void generateCompositeState(CompositeState c, StringBuilder builder, Context ctx) {
         String containerName = ctx.getContextAnnotation("container");
         if (c.hasSeveralRegions()) {
-            builder.append("var " + c.qname("_") + " = StateFactory.buildOrthogonalState(\"" + c.getName() + "\", " + containerName + ");\n");
-            builder.append("var " + c.qname("_") + "_default = StateFactory.buildRegion(\"_default\", " + c.qname("_") + ");\n");
+            builder.append("var " + c.qname("_") + " = new StateJS.Region(\"" + c.getName() + "\", " + containerName + ");\n");
+            builder.append("var " + c.qname("_") + "_default = new StateJS.Region(\"_default\", " + c.qname("_") + ");\n");
             if (c.isHistory())
-                builder.append("var _initial_" + c.qname("_") + " = StateFactory.buildHistoryState(\"_initial\", " + c.qname("_") + ");\n");
+                builder.append("var _initial_" + c.qname("_") + " = new StateJS.pseudoState(\"_initial\", " + c.qname("_") + ", StateJS.PseudoStateKind.ShallowHistory);\n");
             else
-                builder.append("var _initial_" + c.qname("_") + " = StateFactory.buildInitialState(\"_initial\", " + c.qname("_") + ");\n");
-            builder.append("var t0_" + c.qname("_") + " = StateFactory.buildEmptyTransition(_initial_" + c.qname("_") + ", " + c.getInitial().qname("_") + ");\n");
+                builder.append("var _initial_" + c.qname("_") + " = new StateJS.pseudoState(\"_initial\", " + c.qname("_") + ", StateJS.PseudoStateKind.Initial);\n");
+            builder.append("_initial_" + c.qname("_") + ".to(" + c.getInitial().qname("_") + ");\n");
             for(State s : c.getSubstate()) {
                 ctx.addContextAnnotation("container", c.qname("_") + "_default");
                 generateState(s, builder, ctx);
@@ -130,50 +94,52 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
                 generateRegion(r, builder, ctx);
             }
         } else {
-            builder.append("var " + c.qname("_") + " = StateFactory.buildCompositeState(\"" + c.getName() + "\", " + containerName + ");\n");
+            builder.append("var " + c.qname("_") + " = new StateJS.State(\"" + c.getName() + "\", " + containerName + ")");
+            generateActionsForState(c, builder, ctx);
+            builder.append(";\n");
             for(State s : c.getSubstate()) {
                 ctx.addContextAnnotation("container", c.qname("_"));
                 generateState(s, builder, ctx);
             }
         }
         if (c.isHistory())
-            builder.append("var _initial_" + c.qname("_") + " = StateFactory.buildHistoryState(\"_initial\", " + c.qname("_") + ");\n");
+            builder.append("var _initial_" + c.qname("_") + " = new StateJS.PseudoState(\"_initial\", " + c.qname("_") + ", StateJS.PseudoStateKind.ShallowHistory);\n");
         else
-            builder.append("var _initial_" + c.qname("_") + " = StateFactory.buildInitialState(\"_initial\", " + c.qname("_") + ");\n");
-        builder.append("var t0_" + c.qname("_") + " = StateFactory.buildEmptyTransition(_initial_" + c.qname("_") + ", " + c.getInitial().qname("_") + ");\n");
-        generateActionsForState(c, builder, ctx);
+            builder.append("var _initial_" + c.qname("_") + " = new StateJS.PseudoState(\"_initial\", " + c.qname("_") + ", StateJS.PseudoStateKind.Initial);\n");
+        builder.append("_initial_" + c.qname("_") + ".to(" + c.getInitial().qname("_") + ");\n");
     }
 
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
         String containerName = ctx.getContextAnnotation("container");
-        builder.append("var " + s.qname("_") + " = StateFactory.buildSimpleState(\"" + s.getName() + "\", " + containerName + ");\n");
+        builder.append("var " + s.qname("_") + " = new StateJS.State(\"" + s.getName() + "\", " + containerName + ")");
         generateActionsForState(s, builder, ctx);
+        builder.append(";\n");
     }
 
     public void generateRegion(Region r, StringBuilder builder, Context ctx) {
         String containerName = ctx.getContextAnnotation("container");
-        builder.append("var " + r.qname("_") + "_reg = StateFactory.buildRegion(\"" + r.getName() + "\", " + containerName + ");\n");
+        builder.append("var " + r.qname("_") + "_reg = new StateJS.Region(\"" + r.getName() + "\", " + containerName + ");\n");
         if (r.isHistory())
-            builder.append("var _initial_" + r.qname("_") + "_reg = StateFactory.buildHistoryState(\"_initial\", " + r.qname("_") + "_reg);\n");
+            builder.append("var _initial_" + r.qname("_") + "_reg = new StateJS.PseudoState(\"_initial\", " + r.qname("_") + "_reg, StateJS.PseudoStateKind.ShallowHistory);\n");
         else
-            builder.append("var _initial_" + r.qname("_") + "_reg = StateFactory.buildInitialState(\"_initial\", " + r.qname("_") + "_reg);\n");
+            builder.append("var _initial_" + r.qname("_") + "_reg = new StateJS.PseudoState(\"_initial\", " + r.qname("_") + "_reg, StateJS.PseudoStateKind.Initial);\n");
         for(State s : r.getSubstate()) {
             ctx.addContextAnnotation("container", r.qname("_") + "_reg");
             generateState(s, builder, ctx);
         }
-        builder.append("var t0_" + r.qname("_") + "_reg = StateFactory.buildEmptyTransition(_initial_" + r.qname("_") + "_reg, " + r.getInitial().qname("_") + ");\n");
+        builder.append("_initial_" + r.qname("_") + "_reg.to(" + r.getInitial().qname("_") + ");\n");
     }
 
     //FIXME: avoid duplication in the following 3 methods!!!
     private void generateHandlerAction(Handler h, Message m, StringBuilder builder, Context ctx) {
         if (h.getEvent().size() == 0) {
-            builder.append("function t" + ti + "_effect(context, message) {\n");
+            builder.append(".effect(function (message) {\n");
             //builder.append("var json = JSON.parse(message);\n");
             ctx.getCompiler().getActionCompiler().generate(h.getAction(), builder, ctx);
-            builder.append("}\n\n");
+            builder.append("})\n\n");
         }
         else {
-                builder.append("function t" + ti + "_effect(context, message) {\n");
+                builder.append(".effect(function (message) {\n");
                 //builder.append("var json = JSON.parse(message);\n");
             int i = 2;
             for(Parameter pa : m.getParameters()) {
@@ -181,76 +147,73 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
                 i++;
             }
                 ctx.getCompiler().getActionCompiler().generate(h.getAction(), builder, ctx);
-                builder.append("}\n\n");
+                builder.append("})");
         }
-        builder.append("t" + ti + ".effect = [t" + ti + "_effect];\n");
     }
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (t.getEvent().size() == 0) {
-            builder.append("var t" + ti + " = StateFactory.buildEmptyTransition(" + t.getSource().qname("_") + ", " + t.getTarget().qname("_"));
+            builder.append(t.getSource().qname("_") + ".to(" + t.getTarget().qname("_") + ")");
             if (t.getGuard() != null) {
-                builder.append(", function (s, c) {");
+                builder.append(".when(function (message) {");
                 int i = 2;
                 for(Parameter pa : msg.getParameters()) {
-                    builder.append(" v_" + pa.getName() + " = " + "c[" + i + "];");
+                    builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
                     i++;
                 }
                 builder.append(" return ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
-                builder.append(";}");
+                builder.append(";})");
             }
-            builder.append(");\n");
+
         } else {
-            builder.append("var t" + ti + " = StateFactory.buildTransition(" + t.getSource().qname("_") + ", " + t.getTarget().qname("_"));
-            builder.append(", function (s, c) {");
+            builder.append(t.getSource().qname("_") + ".to(" + t.getTarget().qname("_") + ")");
+            builder.append(".when(function (message) {");
             int i = 2;
             for(Parameter pa : msg.getParameters()) {
-                builder.append(" v_" + pa.getName() + " = " + "c[" + i + "];");
+                builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
                 i++;
             }
-            builder.append("return c[0] === \"" + p.getName() + "\" && c[1] === \"" + msg.getName() + "\"");
+            builder.append("return message[0] === \"" + p.getName() + "\" && message[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
             }
-            builder.append(";});\n");
+            builder.append(";})");
         }
         if (t.getAction() != null) {
             generateHandlerAction(t, msg, builder, ctx);
         }
-        ti++;
+        builder.append(";\n");
     }
 
     protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (t.getEvent().size() == 0) {
-            builder.append("var t" + ti + " = StateFactory.buildEmptyTransition(" + ((State) t.eContainer()).qname("_") + ", null");
+            builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
             if (t.getGuard() != null) {
-                //builder.append(", function (s, c) {var json = JSON.parse(c); return ");
+                builder.append(".when(function(message) {return ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
-                builder.append(";}");
+                builder.append(";})");
             }
-            builder.append(");\n");
         } else {
-            builder.append("var t" + ti + " = StateFactory.buildTransition(" + ((State) t.eContainer()).qname("_") + ", null");
-
-            builder.append(", function (s, c) {");
+            builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
+            builder.append(".when(function (message) {");
             int i = 2;
             for(Parameter pa : msg.getParameters()) {
-                builder.append(" v_" + pa.getName() + " = " + "c[" + i + "];");
+                builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
                 i++;
             }
-            builder.append("return c[0] === \"" + p.getName() + "\" && c[1] === \"" + msg.getName() + "\"");
+            builder.append("return message[0] === \"" + p.getName() + "\" && message[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
             }
-            builder.append(";});\n");
+            builder.append(";})");
         }
         if (t.getAction() != null) {
             generateHandlerAction(t, msg, builder, ctx);
         }
-        ti++;
+        builder.append(";\n");
     }
 
 }
