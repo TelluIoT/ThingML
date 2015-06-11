@@ -1,0 +1,97 @@
+import "Sender.thingml"
+
+thing fragment StreamCepMsgs {
+    message cep_forwardMessage();
+    message cep_forwardMessageWithParams(p1 : Double, p2 : Double, p3 : Double, p4 : Double, p5 : Double);
+    message cep_forwardWithModif(p1 : Double, p2 : Double, p3 : Double, p4 : Double, p5 : Double);
+    
+    message cep_endBench();
+}
+
+thing StreamWithCep includes StreamCepMsgs, SenderMsgs {
+    provided port senderService {
+        receives forwardMessage, forwardMessageWithParams, forwardWithModif, endBench
+    }
+    
+    required port cepService {
+        sends cep_forwardMessage, cep_forwardMessageWithParams, cep_forwardWithModif, cep_endBench
+    }
+    
+    function complexFunction(param : Double) : Double do
+        return param % 3
+    end
+    
+    stream forwardStream do
+        from senderService?forwardMessage
+        action cepService!cep_forwardMessage()
+    end
+    
+     stream forwardStreamWithParams do
+        from evt : senderService?forwardMessageWithParams
+        select p1 : evt.p1, p2 : evt.p2, p3 : evt.p3, p4 : evt.p4, p5 : evt.p5
+        action cepService!cep_forwardMessageWithParams(p1,p2,p3,p4,p5)
+    end
+    
+    stream forwardStreamWithModif do
+        from evt : senderService?forwardWithModif
+        select p1 : complexFunction(evt.p1), p2 : complexFunction(evt.p2), 
+                p3 : complexFunction(evt.p3), p4 : complexFunction(evt.p4), p5 : complexFunction(evt.p5)
+        action cepService!cep_forwardWithModif(p1,p2,p3,p4,p5)
+    end
+    
+    stream forwardEnd do
+        from senderService?endBench
+        action cepService!cep_endBench()
+    end
+    
+    statechart Stream init Init {
+       state Init{}    
+    }
+}
+
+thing fragment StreamMsgs {
+    message c_forwardMessage();
+    message c_forwardMessageWithParams(p1 : Double, p2 : Double, p3 : Double, p4 : Double, p5 : Double);
+    message c_forwardWithModif(p1 : Double, p2 : Double, p3 : Double, p4 : Double, p5 : Double);
+    
+    message c_endBench();
+} 
+
+thing StreamWithoutCEP includes StreamMsgs, SenderMsgs {
+     provided port senderService {
+        receives forwardMessage, forwardMessageWithParams, forwardWithModif, endBench
+    }
+    
+    required port cService {
+        sends c_forwardMessage, c_forwardMessageWithParams, c_forwardWithModif, c_endBench
+    }
+    
+    function complexFunction(param : Double) : Double do
+        return param % 3
+    end
+    
+    statechart StreamWithoutCEP init Init {
+        state Init {
+            //forwardStream
+            internal 
+            event senderService?forwardMessage
+            action cService!c_forwardMessage()
+            
+            //forwardStreamWithParams
+            internal 
+            event evt : senderService?forwardMessageWithParams
+            action cService!c_forwardMessageWithParams(evt.p1, evt.p2, evt.p3, evt.p4, evt.p5)
+            
+            //forwardStreamWithModif
+            internal 
+            event evt : senderService?forwardWithModif
+            action cService!c_forwardMessageWithParams(evt.p1 % 3, evt.p2 % 3 , 
+                                evt.p3 % 3, evt.p4 % 3, evt.p5 % 3)
+                                
+            //forwardEnd
+            internal
+            event senderService?endBench
+            action cService!c_endBench()
+        }    
+    }
+}

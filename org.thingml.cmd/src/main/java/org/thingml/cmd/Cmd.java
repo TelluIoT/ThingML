@@ -33,18 +33,18 @@ import java.io.File;
  */
 public class Cmd {
 
-    public static File targetFile = null;
+//    public static File targetFile = null;
 
-    private static Cmd ourInstance = new Cmd();
+//    private static Cmd ourInstance = new Cmd();
 
-    public static Cmd getInstance() {
-        return ourInstance;
-    }
+//    public static Cmd getInstance() {
+//        return ourInstance;
+//    }
 
-    private Cmd() {
-    }
+//    private Cmd() {
+//    }
 
-    private static ThingMLModel loadThingMLmodel(File file) {
+    public static ThingMLModel loadThingMLmodel(File file) {
         try {
             Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
             reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
@@ -60,43 +60,49 @@ public class Cmd {
         }
     }
 
+    public static void compile(String compilerName, ThingMLModel thingmlModel) {
+//        ThingMLModel thingmlModel = Cmd.loadThingMLmodel(targetFile);
+        if (compilerName.equals("linux")) {
+            CGenerator.compileToLinuxAndNotMake(thingmlModel);
+        } else if (compilerName.equals("javascript")) {
+            OpaqueThingMLCompiler compiler = new JavaScriptCompiler();
+            for(Configuration c : thingmlModel.allConfigurations()) {
+                File folder = new File("tmp/ThingML_Javascript/");
+                folder.mkdirs();
+                compiler.setOutputDirectory(folder);
+                compiler.compile(c);
+            }
+        }
+        else if (compilerName.equals("java")) {
+            OpaqueThingMLCompiler compiler = new JavaCompiler();
+            for(Configuration c : thingmlModel.allConfigurations()) {
+                File folder = new File("tmp/ThingML_Java/" + c.getName());
+                folder.mkdirs();
+                compiler.setOutputDirectory(folder);
+                Context ctx = new Context(compiler, "match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@");
+                compiler.do_call_compiler(c, "org.thingml.generated", "doingTests");
+            }
+        }
+        else if (compilerName.equals("arduino")) {
+            CGenerator.compileAndRunArduino(thingmlModel, "", "", true);
+        }
+    }
+
     public static void main(String args[]) {
         if (args.length==2) {
             File currentDirectory = new File(System.getProperty("user.dir"));
-            targetFile = new File(currentDirectory.getParent(),args[1]);
+            File targetFile = new File(currentDirectory.getParent(),args[1]);
             System.out.println("Compiler: " + args[0]);
             System.out.println("Input file : " + targetFile);
-            if (targetFile == null) return;
-            try {
+//            if (targetFile == null) return;
+//            compile(args[0]);
+            if(targetFile.exists()) {
                 ThingMLModel thingmlModel = Cmd.loadThingMLmodel(targetFile);
-                if (args[0].equals("linux"))
-                    CGenerator.compileToLinuxAndNotMake(thingmlModel);
-                else if (args[0].equals("javascript")) {
-                    OpaqueThingMLCompiler compiler = new JavaScriptCompiler();
-                    for(Configuration c : thingmlModel.allConfigurations()) {
-                        File folder = new File("tmp/ThingML_Javascript/");
-                        folder.mkdirs();
-                        compiler.setOutputDirectory(folder);
-                        compiler.compile(c);
-                    }
-                }
-                else if (args[0].equals("java")) {
-                    OpaqueThingMLCompiler compiler = new JavaCompiler();
-                    for(Configuration c : thingmlModel.allConfigurations()) {
-                        File folder = new File("tmp/ThingML_Java/" + c.getName());
-                        folder.mkdirs();
-                        compiler.setOutputDirectory(folder);
-                        Context ctx = new Context(compiler, "match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@");
-                        compiler.do_call_compiler(c, "org.thingml.generated", "doingTests");
-                    }
-                }
-                else if (args[0].equals("arduino"))
-                    CGenerator.compileAndRunArduino(thingmlModel, "", "", true);
-            } catch (Exception e) {
-                e.printStackTrace();
+                compile(args[0], thingmlModel);
             }
+
         }
-        System.exit(0);
+//        System.exit(0);
     }
 
 }

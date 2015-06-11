@@ -1,0 +1,12 @@
+import "Receive.thingml"
+import "Sender.thingml"
+import "Stream.thingml"
+
+configuration benchForwardWithoutCfg {
+    instance sender : Sender
+    instance streamWithoutCep : StreamWithoutCEP
+    instance receiver : Receiver
+    
+    connector sender.senderService => streamWithoutCep.senderService
+    connector streamWithoutCep.cService => receiver.cService
+}

@@ -19,3 +19,4 @@ test_out/
 org.thingml.compilers/src/test/resources/thingml
 *~
 /launch.bat
+org.thingml.cep.benchmark/tmp/
