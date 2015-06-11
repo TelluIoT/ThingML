@@ -98,6 +98,11 @@ public class JSMainGenerator extends MainGenerator {
             }
             builder.append(");\n");
             builder.append(reference(i.getName(), useThis) + ".setThis(" + reference(i.getName(), useThis) + ");\n");
+            if (useThis) {
+                builder.append("this." + i.getName() + ".build();\n");
+            } else {
+                builder.append(i.getName() + ".build();\n");
+            }
         }
         for (Connector c : cfg.allConnectors()) {
             for(Message req : c.getRequired().getReceives()) {

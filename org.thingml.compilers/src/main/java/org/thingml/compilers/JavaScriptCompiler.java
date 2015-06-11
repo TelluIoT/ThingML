@@ -85,7 +85,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
-        ctx.getBuilder(t.getName() + File.separator + "state-factory.js").append(ctx.getTemplateByID("javascript/lib/state-factory.js"));
+        //ctx.getBuilder(t.getName() + File.separator + "state-factory.js").append(ctx.getTemplateByID("javascript/lib/state-factory.js"));
         //ctx.getBuilder(t.getName() + File.separator + "Connector.js").append(ctx.getTemplateByID("javascript/lib/Connector.js"));
 
         for(Type ty : model.allUsedSimpleTypes()) {

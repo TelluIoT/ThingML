@@ -52,11 +52,12 @@ public class JavaScriptApiCompiler extends ApiCompiler {
             //execute onEntry of the root state machine
             if (thing.allStateMachines().get(0).getEntry() != null)
                 ctx.getCompiler().getActionCompiler().generate(thing.allStateMachines().get(0).getEntry(), builder, ctx);
-            builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".initialise( this._initial_" + thing.allStateMachines().get(0).qname("_") + " );\n");
+            builder.append("this." + thing.allStateMachines().get(0).getName() + "_instance = new StateJS.StateMachineInstance(\"" + thing.allStateMachines().get(0).getName() + "_instance" + "\");\n");
+            builder.append("StateJS.initialise( this." + thing.allStateMachines().get(0).qname("_") + ", this." +  thing.allStateMachines().get(0).getName() + "_instance" + " );\n");
 
             builder.append("var msg = this.getQueue().shift();\n");
             builder.append("while(msg !== undefined) {\n");
-            builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".process(this._initial_" + thing.allStateMachines().get(0).qname("_") + ", msg);\n");
+            builder.append("StateJS.evaluate(this." + thing.allStateMachines().get(0).qname("_") + ", this." + thing.allStateMachines().get(0).getName() + "_instance" + ", msg);\n");
             builder.append("msg = this.getQueue().shift();\n");
             builder.append("}\n");
             builder.append("this.ready = true;\n");
@@ -70,7 +71,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
             builder.append("if (this.ready) {\n");
             builder.append("var msg = this.getQueue().shift();\n");
             builder.append("while(msg !== undefined) {\n");
-            builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".process(this._initial_" + thing.allStateMachines().get(0).qname("_") + ", msg);\n");
+            builder.append("StateJS.evaluate(this." + thing.allStateMachines().get(0).qname("_") + ", this." + thing.allStateMachines().get(0).getName() + "_instance" + ", msg);\n");
             builder.append("msg = this.getQueue().shift();\n");
             builder.append("}\n");
             builder.append("}\n");
@@ -159,7 +160,8 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         if(ctx.getContextAnnotation("hasEnum") != null && ctx.getContextAnnotation("hasEnum").equals("true")) {
             builder.append("var Enum = require('./enums');\n");
         }
-        builder.append("var StateFactory = require('./state-factory');\n");
+        //builder.append("var StateFactory = require('./state-factory');\n");
+        builder.append("var StateJS = require('state.js');\n");
         builder.append("\n/**\n");
         builder.append(" * Definition for type : " + thing.getName() + "\n");
         builder.append(" **/\n");
@@ -256,9 +258,11 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         generateSendMethods(thing, builder, ctx);
 
         builder.append("//State machine (states and regions)\n");
+        builder.append("this.build = function() {\n");
         for(StateMachine b : thing.allStateMachines()) {
             ctx.getCompiler().getBehaviorCompiler().generateState(b, builder, ctx);
         }
+        builder.append("}\n");
 
         builder.append("}\n");
 
