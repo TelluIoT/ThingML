@@ -157,7 +157,7 @@ public class CCompilerContext extends Context {
 
     public void appendFormalParameters(Thing thing, StringBuilder builder, Message m) {
         builder.append("(");
-        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName(thing));
+        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName());
         for (Parameter p : m.getParameters()) {
             builder.append(", ");
             builder.append(getCType(p.getType()));
@@ -169,12 +169,12 @@ public class CCompilerContext extends Context {
 
     public void appendFormalParametersEmptyHandler(Thing thing, StringBuilder builder) {
         builder.append("(");
-        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName(thing));
+        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName());
         builder.append(")");
     }
 
     public void appendActualParameters(Thing thing, StringBuilder builder, Message m, String instance_param) {
-        if (instance_param == null) instance_param = getInstanceVarName(thing);
+        if (instance_param == null) instance_param = getInstanceVarName();
         builder.append("(");
         builder.append(instance_param);
         for (Parameter p : m.getParameters()) {

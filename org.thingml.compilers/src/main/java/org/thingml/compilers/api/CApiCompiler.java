@@ -108,7 +108,7 @@ public class CApiCompiler extends ApiCompiler {
         StateMachine sm = thing.allStateMachines().get(0); // There has to be one and only one state machine here
 
         builder.append("void " + sm.qname("_") + "_OnEntry(int state, ");
-        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName(thing) + ") {\n");
+        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
         builder.append("switch(state) {\n");
         for(CompositeState cs : sm.allContainedCompositeStates()) {
             ArrayList<Region> regions = new ArrayList<Region>();
@@ -117,7 +117,7 @@ public class CApiCompiler extends ApiCompiler {
             // Init state
             for(Region r : regions) {
                 if (!r.isHistory()) {
-                    builder.append(ctx.getInstanceVarName(thing) + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
+                    builder.append(ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
                 }
             }
             // Execute Entry actions
@@ -125,7 +125,7 @@ public class CApiCompiler extends ApiCompiler {
 
             // Recurse on contained states
             for(Region r : regions) {
-                builder.append(sm.qname("_") + "_OnEntry(" + ctx.getInstanceVarName(thing) + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName(thing) + ");\n");
+                builder.append(sm.qname("_") + "_OnEntry(" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName() + ");\n");
             }
             builder.append("break;\n");
         }
@@ -147,7 +147,7 @@ public class CApiCompiler extends ApiCompiler {
         StateMachine sm = thing.allStateMachines().get(0); // There has to be one and only one state machine here
 
         builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
-        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName(thing) + ") {\n");
+        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
         builder.append("switch(state) {\n");
 
 
@@ -157,7 +157,7 @@ public class CApiCompiler extends ApiCompiler {
             regions.addAll(cs.getRegion());
             // Init state
             for(Region r : regions) {
-                builder.append(sm.qname("_") + "_OnExit(" + ctx.getInstanceVarName(thing) + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName(thing) + ");\n");
+                builder.append(sm.qname("_") + "_OnExit(" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName() + ");\n");
             }
             // Execute Exit actions
             if (cs.getExit() != null) ctx.getCompiler().getActionCompiler().generate(cs.getExit(), builder, ctx);
@@ -251,7 +251,7 @@ public class CApiCompiler extends ApiCompiler {
                 ctx.getCompiler().getActionCompiler().generate(et.getBefore(), builder, ctx);
 
                 // Execute the exit actions for current states (starting at the deepest)
-                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName(thing) + ");\n");
+                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName() + ");\n");
                 // Set the new current state
                 builder.append(ctx.getInstanceStructName(thing) + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(et.getTarget()) + ";\n");
 
@@ -259,7 +259,7 @@ public class CApiCompiler extends ApiCompiler {
                 ctx.getCompiler().getActionCompiler().generate(et.getAction(), builder, ctx);
 
                 // Enter the target state and initialize its children
-                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + ctx.getStateID(et.getTarget()) + ", " + ctx.getInstanceVarName(thing) + ");\n");
+                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + ctx.getStateID(et.getTarget()) + ", " + ctx.getInstanceVarName() + ");\n");
 
                 ctx.getCompiler().getActionCompiler().generate(et.getAfter(), builder, ctx);
             }
@@ -284,7 +284,7 @@ public class CApiCompiler extends ApiCompiler {
             for (State s : r.getSubstate()) if (s.canHandle(port, msg)) states.add(s);
             for (State s : states) {
                 if (states.get(0) != s) builder.append("else ");
-                builder.append("if (" + ctx.getInstanceVarName(thing) + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
+                builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
                 if (s instanceof CompositeState) {
                     dispatchToSubRegions(thing, builder, (CompositeState) s, port, msg, ctx);
                 }
@@ -349,15 +349,15 @@ public class CApiCompiler extends ApiCompiler {
                 ctx.getCompiler().getActionCompiler().generate(et.getBefore(), builder, ctx);
 
                 // Execute the exit actions for current states (starting at the deepest)
-                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName(thing) + ");\n");
+                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName() + ");\n");
                 // Set the new current state
-                builder.append(ctx.getInstanceVarName(thing) + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(et.getTarget()) + ";\n");
+                builder.append(ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(et.getTarget()) + ";\n");
 
                 // Do the action
                 ctx.getCompiler().getActionCompiler().generate(et.getAction(), builder, ctx);
 
                 // Enter the target state and initialize its children
-                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + ctx.getStateID(et.getTarget()) + ", " + ctx.getInstanceVarName(thing) + ");\n");
+                builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + ctx.getStateID(et.getTarget()) + ", " + ctx.getInstanceVarName() + ");\n");
 
                 ctx.getCompiler().getActionCompiler().generate(et.getAfter(), builder, ctx);
 
@@ -376,7 +376,7 @@ public class CApiCompiler extends ApiCompiler {
             for (State s : r.getSubstate()) if (s.hasEmptyHandlers()) states.add(s);
             for (State s : states) {
                 if (states.get(0) != s) builder.append("else ");
-                builder.append("if (" + ctx.getInstanceVarName(thing) + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
+                builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
                 // dispatch to sub-regions if it is a composite
                 if (s instanceof CompositeState) {
                     dispatchEmptyToSubRegions(thing, builder, (CompositeState)s, ctx);
@@ -444,7 +444,7 @@ public class CApiCompiler extends ApiCompiler {
         template = template.replace("/*CODE*/", b_code.toString());
 
         StringBuilder b_params = new StringBuilder();
-        b_params.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName(thing));
+        b_params.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName());
 
         for (Parameter p : func.getParameters()) {
             b_params.append(", ");
@@ -460,7 +460,7 @@ public class CApiCompiler extends ApiCompiler {
 
 
         StringBuilder a_params = new StringBuilder();
-        a_params.append("params." + ctx.getInstanceVarName(thing));
+        a_params.append("params." + ctx.getInstanceVarName());
         for (Parameter p : func.getParameters()) {
             a_params.append(", ");
             a_params.append("params." + p.getName());
@@ -468,7 +468,7 @@ public class CApiCompiler extends ApiCompiler {
         template = template.replace("/*ACTUAL_PARAMS*/", a_params.toString());
 
         StringBuilder s_params = new StringBuilder();
-        s_params.append("params." + ctx.getInstanceVarName(thing) + " = " + ctx.getInstanceVarName(thing) + ";\n");
+        s_params.append("params." + ctx.getInstanceVarName() + " = " + ctx.getInstanceVarName() + ";\n");
         for (Parameter p : func.getParameters()) {
             s_params.append("  params." + p.getName() + " = " + p.getName() + ";\n");
         }
@@ -559,7 +559,7 @@ public class CApiCompiler extends ApiCompiler {
     protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Declaration of prototypes outgoing messages:\n");
 
-        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName(thing) + ");\n");
+        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
         if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             StateMachine sm = thing.allStateMachines().get(0); // There should be one and only one
@@ -584,7 +584,7 @@ public class CApiCompiler extends ApiCompiler {
             builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
         }
 
-        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName(thing) + ");\n");
+        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
         // Message Sending
         for(Port port : thing.getPorts()) {
@@ -628,7 +628,7 @@ public class CApiCompiler extends ApiCompiler {
 
             builder.append(" " + ctx.getCName(func, thing) + "(");
 
-            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName(thing));
+            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName());
 
             for(Parameter p : func.getParameters()) {
                 builder.append(", ");
