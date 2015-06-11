@@ -142,7 +142,7 @@ public class JSActionCompiler extends GenericImperativeActionCompiler {
             }
             i++;
         }
-        builder.append(");\n");
+        builder.append(")\n");
     }
 
     @Override
