@@ -5,11 +5,12 @@ thing TestGuardFunction includes Test
 @test "t # EXTE"
 @test "titi # EXTEIXTEI"
 {
-	statechart TestInternalTransition init I {
-	
-	  function f() : Boolean do
+    
+    function f() : Boolean do
 	    return true
-	  end
+	end
+    
+	statechart TestInternalTransition init I {	
 	
 		state I {
 			on entry harnessOut!testOut('\'E\'')

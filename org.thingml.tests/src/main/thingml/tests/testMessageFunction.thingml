@@ -1,7 +1,7 @@
 import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
 
 
-thing TestHello includes Test 
+thing TestMessageFunction includes Test 
 @test "hellohello # worldworld"
 @test "hallo # w"
 {
