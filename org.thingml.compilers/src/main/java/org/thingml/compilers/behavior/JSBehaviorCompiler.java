@@ -94,7 +94,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
                 generateRegion(r, builder, ctx);
             }
         } else {
-            builder.append("var " + c.qname("_") + " = new StateJS.CompositeState(\"" + c.getName() + "\", " + containerName + ")");
+            builder.append("var " + c.qname("_") + " = new StateJS.State(\"" + c.getName() + "\", " + containerName + ")");
             generateActionsForState(c, builder, ctx);
             builder.append(";\n");
             for(State s : c.getSubstate()) {
