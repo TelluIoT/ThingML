@@ -16,6 +16,7 @@
 package org.thingml.compilers.actions;
 
 import org.sintef.thingml.*;
+import org.thingml.compilers.CCompilerContext;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.helpers.JavaHelper;
 
@@ -26,18 +27,91 @@ public class CActionCompiler extends GenericImperativeActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented for C");
+        CCompilerContext context = (CCompilerContext)ctx;
+
+        Thing thing = context.get_concrete_thing();
+
+        //FIXME: Re-implement debug properly
+        /*
+        if (context.debug_message_send(self.getMessage)) {
+            builder.append(context.print_debug_message("-> " + thing.sender_name(self.getPort, self.getMessage)) + "\n"
+        }
+        */
+        
+        builder.append(context.getSenderName(thing, action.getPort(), action.getMessage()));
+
+        builder.append("(" + context.getInstanceVarName());
+        for (Expression p : action.getParameters()) {
+            builder.append(", ");
+            generate(p, builder, context);
+        }
+        builder.append(");\n");
     }
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented for C");
 
+        CCompilerContext context = (CCompilerContext)ctx;
+        
+        builder.append(context.getCName(action.getFunction(), context.get_concrete_thing()));
+
+        builder.append("(_instance");
+        for (Expression p : action.getParameters()) {
+            builder.append(", ");
+            generate(p, builder, context);
+        }
+        builder.append(");\n");
     }
 
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented for C");
+
+        CCompilerContext context = (CCompilerContext)ctx;
+
+        String propertyName = context.getCType(action.getType()) + " " + action.getName();
+        builder.append(propertyName);
+        if (action.getCardinality() != null) {//array declaration
+            StringBuilder tempBuilder = new StringBuilder();
+            generate(action.getCardinality(), tempBuilder, context);
+            builder.append("[" + tempBuilder.toString() + "];\n");
+
+            if (action.getInit() != null && action.getInit() instanceof  PropertyReference) {//we want to assign the array, we have to copy all values of the target array
+                PropertyReference pr  = (PropertyReference)action.getInit();
+                if (pr.getProperty().getCardinality() != null) {
+                    //the target is indeed an array
+                    builder.append("int i = 0;\n");
+                    builder.append("for(i = 0; i < sizeof(" + action.getName() + ") / sizeof(" + context.getCType(action.getType()) + "); i++) {\n");
+                    builder.append(action.getName() + "[i] = ");
+                    String propertyName2 = "";
+                    if (pr.getProperty() instanceof Parameter) {
+                        propertyName2 = pr.getProperty().getName();
+                    }
+                    else if (pr.getProperty() instanceof Property) {
+                        propertyName2 = context.getInstanceVarName() + "->" + pr.getProperty().qname("_") + "_var";
+                    }
+                    else if (pr.getProperty() instanceof LocalVariable) {
+                        propertyName2 = pr.getProperty().getName();
+                    }
+
+                    builder.append(propertyName2 + "[i];\n");
+                    builder.append("}\n");
+                } else {
+                    System.err.println("ERROR: Array " + propertyName + " should be assigned from an array. " + pr.getProperty() + " is not an array.");
+                }
+            }
+        }
+
+    /*if (self.getCardinality != null) {
+      builder.append("["
+      self.getCardinality.generateC(builder, context)
+      builder.append("]"
+    }*/
+        else if (action.getInit() != null) {
+            builder.append(" = ");
+            generate(action.getInit(), builder, context);
+        }
+        builder.append(";\n");
+
     }
 
     @Override
@@ -81,7 +155,17 @@ public class CActionCompiler extends GenericImperativeActionCompiler {
 
     @Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented for C");
+
+        CCompilerContext context = (CCompilerContext)ctx;
+        
+        builder.append(context.getCName(expression.getFunction(), context.get_concrete_thing()));
+
+        builder.append("(_instance");
+        for (Expression p : expression.getParameters()) {
+            builder.append(", ");
+            generate(p, builder, context);
+        }
+        builder.append(")");
     }
 
     //TODO: check if some inherited methods should be overidden

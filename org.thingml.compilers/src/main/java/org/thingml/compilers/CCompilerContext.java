@@ -48,6 +48,20 @@ public class CCompilerContext extends Context {
         return false;
     }
 
+    public int fifoSize() {
+        return 256;
+    }
+
+    public String getPrefix() {
+        return "";
+    }
+
+    public boolean enableDebug() {
+        //FIXME: This should come from somewhere
+        return false;
+    }
+
+
     /**************************************************************************
      * HELPER FUNCTIONS shared by different parts of the compiler
      **************************************************************************/
@@ -58,7 +72,21 @@ public class CCompilerContext extends Context {
         return thing.qname("_") + "_Instance";
     }
 
-    public String getInstanceVarName(Thing thing) {
+    public String getEnumLiteralName(Enumeration e, EnumerationLiteral l) {
+        return e.getName().toUpperCase() + "_" + l.getName().toUpperCase();
+    }
+
+    public String getEnumLiteralValue(Enumeration e, EnumerationLiteral l) {
+        if (l.hasAnnotation("enum_val")) {
+            return l.annotation("enum_val").iterator().next();
+        }
+        else {
+            System.err.println("Warning: Missing annotation enum_val on litteral " + l.getName() + " in enum " + e.getName() + ", will use default value 0.");
+            return "0";
+        }
+    }
+
+    public String getInstanceVarName() {
         return "_instance";
     }
 
@@ -129,7 +157,7 @@ public class CCompilerContext extends Context {
 
     public void appendFormalParameters(Thing thing, StringBuilder builder, Message m) {
         builder.append("(");
-        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName(thing));
+        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName());
         for (Parameter p : m.getParameters()) {
             builder.append(", ");
             builder.append(getCType(p.getType()));
@@ -141,12 +169,12 @@ public class CCompilerContext extends Context {
 
     public void appendFormalParametersEmptyHandler(Thing thing, StringBuilder builder) {
         builder.append("(");
-        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName(thing));
+        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName());
         builder.append(")");
     }
 
     public void appendActualParameters(Thing thing, StringBuilder builder, Message m, String instance_param) {
-        if (instance_param == null) instance_param = getInstanceVarName(thing);
+        if (instance_param == null) instance_param = getInstanceVarName();
         builder.append("(");
         builder.append(instance_param);
         for (Parameter p : m.getParameters()) {
