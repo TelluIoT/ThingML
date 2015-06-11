@@ -23,13 +23,13 @@ import org.thingml.compilers.helpers.JavaHelper;
 /**
  * Created by bmori on 01.12.2014.
  */
-public class CActionCompiler extends GenericImperativeActionCompiler {
+public abstract class CActionCompiler extends GenericImperativeActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
         CCompilerContext context = (CCompilerContext)ctx;
 
-        Thing thing = context.get_concrete_thing();
+        Thing thing = context.getConcreteThing();
 
         //FIXME: Re-implement debug properly
         /*
@@ -53,7 +53,7 @@ public class CActionCompiler extends GenericImperativeActionCompiler {
 
         CCompilerContext context = (CCompilerContext)ctx;
         
-        builder.append(context.getCName(action.getFunction(), context.get_concrete_thing()));
+        builder.append(context.getCName(action.getFunction(), context.getConcreteThing()));
 
         builder.append("(_instance");
         for (Expression p : action.getParameters()) {
@@ -115,21 +115,6 @@ public class CActionCompiler extends GenericImperativeActionCompiler {
     }
 
     @Override
-    public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-        final StringBuilder b = new StringBuilder();
-        generate(action.getMsg(), b, ctx);
-        //builder.append(ctx.errorMessage(b.toString()) + "\n");
-    }
-
-    @Override
-    public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-        final StringBuilder b = new StringBuilder();
-        generate(action.getMsg(), b, ctx);
-        //builder.append(ctx.printMessage(b.toString()) + "\n");
-    }
-
-
-    @Override
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
         builder.append(expression.getParamRef().getName());
     }
@@ -158,7 +143,7 @@ public class CActionCompiler extends GenericImperativeActionCompiler {
 
         CCompilerContext context = (CCompilerContext)ctx;
         
-        builder.append(context.getCName(expression.getFunction(), context.get_concrete_thing()));
+        builder.append(context.getCName(expression.getFunction(), context.getConcreteThing()));
 
         builder.append("(_instance");
         for (Expression p : expression.getParameters()) {

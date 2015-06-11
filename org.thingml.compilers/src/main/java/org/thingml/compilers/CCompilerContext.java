@@ -23,25 +23,25 @@ import java.util.Hashtable;
 /**
  * Created by ffl on 01.06.15.
  */
-public class CCompilerContext extends Context {
+public abstract class CCompilerContext extends Context {
 
     public CCompilerContext(ThingMLCompiler c) {
         super(c);
     }
 
     // The concrete thing for which the code is being generated
-    Thing concrete_thing = null;
+    protected Thing concreteThing = null;
 
-    public void set_concrete_thing(Thing t) {
-        concrete_thing = t;
+    public void setConcreteThing(Thing t) {
+        concreteThing = t;
     }
 
-    public Thing get_concrete_thing() {
-        return concrete_thing;
+    public Thing getConcreteThing() {
+        return concreteThing;
     }
 
-    public void clear_concrete_thing() {
-        concrete_thing = null;
+    public void clearConcreteThing() {
+        concreteThing = null;
     }
 
     public boolean sync_fifo() {

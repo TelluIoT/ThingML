@@ -19,6 +19,7 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.actions.ActionCompiler;
 import org.thingml.compilers.actions.CActionCompiler;
+import org.thingml.compilers.actions.CActionCompilerPosix;
 import org.thingml.compilers.api.ApiCompiler;
 import org.thingml.compilers.api.CApiCompiler;
 import org.thingml.compilers.behavior.BehaviorCompiler;
@@ -34,7 +35,7 @@ import java.io.File;
 public class PosixCompiler extends OpaqueThingMLCompiler {
 
     public PosixCompiler() {
-        super(new CActionCompiler(), new CApiCompiler(), new CMainGenerator(), new BuildCompiler(), new BehaviorCompiler());
+        super(new CActionCompilerPosix(), new CApiCompiler(), new CMainGenerator(), new BuildCompiler(), new BehaviorCompiler());
     }
 
     @Override
@@ -60,7 +61,7 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
     public void do_call_compiler(Configuration cfg, String... options) {
 
         // Generate Modules
-        CCompilerContext ctx = new CCompilerContext(this);
+        CCompilerContext ctx = new CCompilerContextPosix(this);
         
         ctx.setCurrentConfiguration(cfg);
         ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));

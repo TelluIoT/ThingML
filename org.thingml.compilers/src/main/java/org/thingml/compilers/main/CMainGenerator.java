@@ -150,14 +150,14 @@ public class CMainGenerator extends MainGenerator {
 
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing: cfg.allThings()) {
-            ctx.set_concrete_thing(thing);
+            ctx.setConcreteThing(thing);
             // GENERATE HEADER
             ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
 
             // GENERATE IMPL
             ctx.getCompiler().getApiCompiler().generateComponent(thing, ctx);
         }
-        ctx.clear_concrete_thing();
+        ctx.clearConcreteThing();
 
         // GENERATE THE RUNTIME HEADER
         String rhtemplate = ctx.getTemplateByID("ctemplates/runtime.h");
@@ -232,7 +232,7 @@ public class CMainGenerator extends MainGenerator {
             for(Port p : t.allPorts()) {
                 if (p.isDefined("sync_send", "true")) continue; // do not generate for synchronous ports
 
-                ctx.set_concrete_thing(t);
+                ctx.setConcreteThing(t);
                 Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
                 for(Message m : allMessageDispatch.keySet()) {
                     builder.append("// Enqueue of messages " + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
@@ -272,13 +272,13 @@ public class CMainGenerator extends MainGenerator {
                 }
             }
         }
-        ctx.clear_concrete_thing();
+        ctx.clearConcreteThing();
     }
 
     protected void generateMessageDispatchers(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         for (Thing t : cfg.allThings()) {
             for(Port p : t.allPorts()) {
-                ctx.set_concrete_thing(t);
+                ctx.setConcreteThing(t);
                 Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
                 for(Message m : allMessageDispatch.keySet()) {
                     // definition of handler for message m coming from instances of t thought port p
@@ -308,7 +308,7 @@ public class CMainGenerator extends MainGenerator {
                 }
             }
         }
-        ctx.clear_concrete_thing();
+        ctx.clearConcreteThing();
     }
 
     protected void generateMessageProcessQueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
@@ -328,7 +328,7 @@ public class CMainGenerator extends MainGenerator {
             for(Port p : t.allPorts()) {
                 if (p.isDefined("sync_send", "true")) continue; // do not generate for synchronous ports
 
-                ctx.set_concrete_thing(t);
+                ctx.setConcreteThing(t);
                 Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
 
                 for(Message m : allMessageDispatch.keySet()) {
@@ -337,7 +337,7 @@ public class CMainGenerator extends MainGenerator {
                 }
             }
         }
-        ctx.clear_concrete_thing();
+        ctx.clearConcreteThing();
 
         // Allocate a buffer to store the message bytes.
         // Size of the buffer is "size-2" because we have already read 2 bytes
@@ -355,7 +355,7 @@ public class CMainGenerator extends MainGenerator {
             for(Port p : t.allPorts()) {
                 if (p.isDefined("sync_send", "true")) continue; // do not generate for synchronous ports
 
-                ctx.set_concrete_thing(t);
+                ctx.setConcreteThing(t);
                 Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
 
                 for(Message m : allMessageDispatch.keySet()) {
@@ -387,7 +387,7 @@ public class CMainGenerator extends MainGenerator {
                 }
             }
         }
-        ctx.clear_concrete_thing();
+        ctx.clearConcreteThing();
         builder.append("}\n");
         builder.append("}\n");
     }
@@ -401,7 +401,7 @@ public class CMainGenerator extends MainGenerator {
         for(Thing t : cfg.allThings()) {
             for(Port port : t.allPorts()) {
                 for (Message msg : port.getSends()) {
-                    ctx.set_concrete_thing(t);
+                    ctx.setConcreteThing(t);
 
                     // check if there is an connector for this message
                     boolean found = false;
@@ -432,7 +432,7 @@ public class CMainGenerator extends MainGenerator {
         }
 
 
-        ctx.clear_concrete_thing();
+        ctx.clearConcreteThing();
 
         builder.append("\n");
         //builder.append("// Initialize instance variables and states\n"
