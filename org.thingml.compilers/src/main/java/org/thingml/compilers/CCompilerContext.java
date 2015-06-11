@@ -86,7 +86,7 @@ public class CCompilerContext extends Context {
         }
     }
 
-    public String getInstanceVarName(Thing thing) {
+    public String getInstanceVarName() {
         return "_instance";
     }
 
