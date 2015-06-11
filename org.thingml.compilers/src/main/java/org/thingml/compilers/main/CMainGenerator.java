@@ -30,7 +30,8 @@ import java.util.Map;
 public class CMainGenerator extends MainGenerator {
 
     public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
-
+        CCompilerContext c = (CCompilerContext)ctx;
+        compileToLinux(cfg, model, c);
     }
 
     protected void compileToLinux(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {

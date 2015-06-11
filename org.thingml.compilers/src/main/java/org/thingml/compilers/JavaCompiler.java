@@ -82,7 +82,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         if (doingTests){
             tmpFolder="tmp/ThingML_Java/";
         }
-        if (getOutputDirectory() != null) tmpFolder = getOutputDirectory().getAbsolutePath() + File.separator;
+        if (ctx.getOutputDirectory() != null) tmpFolder = ctx.getOutputDirectory().getAbsolutePath() + File.separator;
         else new File(tmpFolder).deleteOnExit();
         ctx.addContextAnnotation("package", pack);
         ctx.setCurrentConfiguration(cfg);

@@ -69,8 +69,8 @@ public class Java2Kevoree extends ConnectorCompiler {
 
         PrintWriter w = null;
         try {
-            new File(ctx.getCompiler().getOutputDirectory() + "/src/main/kevs").mkdirs();
-            w = new PrintWriter(new FileWriter(new File(ctx.getCompiler().getOutputDirectory() + "/src/main/kevs/main.kevs")));
+            new File(ctx.getOutputDirectory() + "/src/main/kevs").mkdirs();
+            w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/src/main/kevs/main.kevs")));
             w.println(kevScript);
             w.close();
         } catch (IOException e) {
@@ -84,7 +84,7 @@ public class Java2Kevoree extends ConnectorCompiler {
     private void updatePOM(Context ctx, Configuration cfg) {
         //Update POM.xml
         try {
-            final InputStream input = new FileInputStream(ctx.getCompiler().getOutputDirectory() + "/POM.xml");
+            final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/POM.xml");
             final List<String> packLines = IOUtils.readLines(input);
             String pom = "";
             for (String line : packLines) {
@@ -100,7 +100,7 @@ public class Java2Kevoree extends ConnectorCompiler {
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>com.eclipsesource.minimal-json</groupId>\n<artifactId>minimal-json</artifactId>\n<version>0.9.2</version>\n</dependency>\n<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
 
-            final File f = new File(ctx.getCompiler().getOutputDirectory() + "/POM.xml");
+            final File f = new File(ctx.getOutputDirectory() + "/POM.xml");
             final OutputStream output = new FileOutputStream(f);
             IOUtils.write(pom, output);
             IOUtils.closeQuietly(output);

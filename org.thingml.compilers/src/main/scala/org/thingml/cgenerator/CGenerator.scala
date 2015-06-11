@@ -35,7 +35,7 @@ import org.thingml.graphexport.ThingMLGraphExport
 
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
-import org.thingml.compilers.{FakeThingMLCompiler, ThingMLCompiler}
+import org.thingml.compilers.{CCompilerContext, FakeThingMLCompiler, ThingMLCompiler}
 
 object SimpleCopyTemplate {
 
@@ -229,8 +229,8 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
   }
 
 
-  def opaqueArduinoCodeGenerator(cfg: Configuration, compiler: ThingMLCompiler ) {
-    var folder = compiler.getOutputDirectory();
+  def opaqueArduinoCodeGenerator(cfg: Configuration, compiler: ThingMLCompiler, ctx : CCompilerContext ) {
+    var folder = ctx.getOutputDirectory();
     // Create a folder having the name of the config
     folder = new File(folder, cfg.getName);
     folder.mkdirs
@@ -578,9 +578,9 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
     }
   }
 
-  def opaqueCompileToLinux(cfg: Configuration, compiler: ThingMLCompiler) {
+  def opaqueCompileToLinux(cfg: Configuration, compiler: ThingMLCompiler, ctx : CCompilerContext) {
 
-    var folder = compiler.getOutputDirectory();
+    var folder = ctx.getOutputDirectory();
     // Create a folder having the name of the config
     folder = new File(folder, cfg.getName);
     folder.mkdirs
@@ -1132,8 +1132,8 @@ class CGeneratorContext(src: Configuration, comp: ThingMLCompiler) {
   var cfg = src
   var compiler = comp
 
-  var msg_printer = new PrintStream(comp.getMessageStream)
-  var err_printer = new PrintStream(comp.getErrorStream)
+  var msg_printer = System.out//new PrintStream(comp.getMessageStream)
+  var err_printer = System.err//new PrintStream(comp.getErrorStream)
 
   def printMessage(message : String) {
     msg_printer.print(message);

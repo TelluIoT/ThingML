@@ -16,12 +16,17 @@
 package org.thingml.compilers;
 
 import org.sintef.thingml.Configuration;
-import org.thingml.cgenerator.CGenerator;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.actions.ActionCompiler;
+import org.thingml.compilers.actions.CActionCompiler;
 import org.thingml.compilers.api.ApiCompiler;
+import org.thingml.compilers.api.CApiCompiler;
 import org.thingml.compilers.behavior.BehaviorCompiler;
 import org.thingml.compilers.build.BuildCompiler;
+import org.thingml.compilers.main.CMainGenerator;
 import org.thingml.compilers.main.MainGenerator;
+
+import java.io.File;
 
 /**
  * Created by ffl on 25.11.14.
@@ -29,7 +34,7 @@ import org.thingml.compilers.main.MainGenerator;
 public class PosixCompiler extends OpaqueThingMLCompiler {
 
     public PosixCompiler() {
-        super(new ActionCompiler(), new ApiCompiler(), new MainGenerator(), new BuildCompiler(), new BehaviorCompiler());
+        super(new CActionCompiler(), new CApiCompiler(), new CMainGenerator(), new BuildCompiler(), new BehaviorCompiler());
     }
 
     @Override
@@ -53,6 +58,21 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
-        CGenerator.opaqueCompileToLinux(cfg, this);
+
+        // Generate Modules
+        CCompilerContext ctx = new CCompilerContext(this);
+        
+        ctx.setCurrentConfiguration(cfg);
+        ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
+        getMainCompiler().generate(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
+
+
+
+        ctx.writeGeneratedCodeToFiles();
+
+
+
+
+        //CGenerator.opaqueCompileToLinux(cfg, this);
     }
 }

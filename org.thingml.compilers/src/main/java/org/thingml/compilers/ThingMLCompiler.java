@@ -74,37 +74,6 @@ public abstract class ThingMLCompiler {
     /**************************************************************
      * Parameters common to all compilers
      **************************************************************/
-    private File outputDirectory = null;
-
-    public void setOutputDirectory(File outDir) {
-        if (!outDir.exists()) throw new Error("ERROR: The output directory does not exist (" + outDir.getAbsolutePath() + ").");
-        if (!outDir.isDirectory()) throw new Error("ERROR: The output directory has to be a directory (" + outDir.getAbsolutePath() + ").");
-        if (!outDir.canWrite()) throw new Error("ERROR: The output directory is not writable (" + outDir.getAbsolutePath() + ").");
-        outputDirectory = outDir;
-    }
-
-    public File getOutputDirectory() {
-        return outputDirectory;
-    }
-
-    private OutputStream messageStream;
-    private OutputStream errorStream;
-
-    public OutputStream getErrorStream() {
-        return errorStream;
-    }
-
-    public void setErrorStream(OutputStream errorStream) {
-        this.errorStream = errorStream;
-    }
-
-    public OutputStream getMessageStream() {
-        return messageStream;
-    }
-
-    public void setMessageStream(OutputStream messageStream) {
-        this.messageStream = messageStream;
-    }
 
     /**************************************************************
      * Entry point of the compiler
@@ -147,4 +116,39 @@ public abstract class ThingMLCompiler {
     public Map<String, ConnectorCompiler> getConnectorCompilers() {
         return Collections.unmodifiableMap(connectorCompilers);
     }
+    
+    private OutputStream messageStream = System.out;
+    private OutputStream errorStream = System.err;
+
+    public OutputStream getErrorStream() {
+        return errorStream;
+    }
+
+    public void setErrorStream(OutputStream errorStream) {
+        this.errorStream = errorStream;
+    }
+
+    public OutputStream getMessageStream() {
+        return messageStream;
+    }
+
+    public void setMessageStream(OutputStream messageStream) {
+        this.messageStream = messageStream;
+    }
+    
+   private File outputDirectory = null;
+
+    public void setOutputDirectory(File outDir) {
+        outDir.mkdirs();
+        if (!outDir.exists()) throw new Error("ERROR: The output directory does not exist (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.isDirectory()) throw new Error("ERROR: The output directory has to be a directory (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.canWrite()) throw new Error("ERROR: The output directory is not writable (" + outDir.getAbsolutePath() + ").");
+        outputDirectory = outDir;
+    }
+
+    public File getOutputDirectory() {
+        return outputDirectory;
+    }
+
+    
 }

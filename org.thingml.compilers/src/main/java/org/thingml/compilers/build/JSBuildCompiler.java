@@ -52,7 +52,7 @@ public class JSBuildCompiler extends BuildCompiler {
                 }
             }
 
-            final File f = new File(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName() + "/package.json");
+            final File f = new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/package.json");
             f.setWritable(true);
             final PrintWriter w = new PrintWriter(new FileWriter(f));
             w.println(json.toString());

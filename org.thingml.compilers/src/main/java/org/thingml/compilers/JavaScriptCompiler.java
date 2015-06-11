@@ -77,7 +77,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
         ctx.addContextAnnotation("thisRef", "_this.");
-        new File(ctx.getCompiler().getOutputDirectory() + "/" + cfg.getName()).mkdirs();
+        new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
         ctx.getCompiler().getBuildCompiler().generate(cfg, ctx);

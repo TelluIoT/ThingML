@@ -99,7 +99,7 @@ public class Context {
      */
     public void writeTextFile(String path, String content) {
         try {
-            File file = new File(compiler.getOutputDirectory(), path);
+            File file = new File(getOutputDirectory(), path);
             if (!file.getParentFile().exists())
                 file.getParentFile().mkdirs();
             PrintWriter w = new PrintWriter(file);
@@ -239,6 +239,23 @@ public class Context {
             return value;
         }
     }
+    
+    
+    private File outputDirectory = null;
+
+    public void setOutputDirectory(File outDir) {
+        outDir.mkdirs();
+        if (!outDir.exists()) throw new Error("ERROR: The output directory does not exist (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.isDirectory()) throw new Error("ERROR: The output directory has to be a directory (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.canWrite()) throw new Error("ERROR: The output directory is not writable (" + outDir.getAbsolutePath() + ").");
+        outputDirectory = outDir;
+    }
+
+    public File getOutputDirectory() {
+        if (outputDirectory == null) return compiler.getOutputDirectory();
+        else return outputDirectory;
+    }
+    
 
 
 }

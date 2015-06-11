@@ -51,7 +51,7 @@ public class JavaBuildCompiler extends BuildCompiler{
             for(String dep : cfg.allMavenDep()) {
                 pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep);
             }
-            PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getCompiler().getOutputDirectory() + "/pom.xml")));
+            PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/pom.xml")));
             w.println(pom);
             w.close();
         } catch (Exception e) {

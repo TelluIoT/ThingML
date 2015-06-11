@@ -31,24 +31,13 @@ public class FakeThingMLCompiler extends ThingMLCompiler {
 
     public FakeThingMLCompiler() {
         super();
-        File folder = new File("tmp/ThingML");
-        folder.delete();
-        folder.mkdirs();
-        folder.deleteOnExit();
-        setOutputDirectory(folder);
-        setErrorStream(System.out);
-        setMessageStream(System.err);
+
     }
 
     public FakeThingMLCompiler (ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler) {
         super(actionCompiler, apiCompiler, mainCompiler, buildCompiler, behaviorCompiler);
         File folder = new File("tmp/ThingML");
-        folder.delete();
-        folder.mkdirs();
-        folder.deleteOnExit();
-        setOutputDirectory(folder);
-        setErrorStream(System.out);
-        setMessageStream(System.err);
+
     }
 
 

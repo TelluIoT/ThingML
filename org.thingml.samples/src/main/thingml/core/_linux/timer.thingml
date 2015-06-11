@@ -39,7 +39,7 @@ thing TimerLinux includes Timer, ClockMsgs
 
 }
 
-configuration fragment TimerLinux {
+configuration fragment TimerLinuxCFG {
 	instance clock : ClockLinux
 	set clock.period = 1000
 	instance timer : TimerLinux
