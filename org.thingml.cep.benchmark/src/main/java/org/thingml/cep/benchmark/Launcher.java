@@ -73,10 +73,12 @@ public class Launcher {
                         npmINstall.start();
                         Process process = nodeMain.start();
                         System.out.println("Execution : " + configuration.getName() + " with nbIter = " + integer);;
-                        while(process.isAlive());
+                        process.waitFor();
 
                     } catch (IOException ioex) {
                         ioex.printStackTrace();
+                    } catch (InterruptedException iex) {
+                        iex.printStackTrace();
                     }
                 }
 
