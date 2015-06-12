@@ -151,16 +151,22 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
         }
     }
 
+    protected void generateMessageParam(Message msg, StringBuilder builder) {
+        if (msg != null) {
+            int i = 2;
+            for (Parameter pa : msg.getParameters()) {
+                builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
+                i++;
+            }
+        }
+    }
+
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (t.getEvent().size() == 0) {
             builder.append(t.getSource().qname("_") + ".to(" + t.getTarget().qname("_") + ")");
             if (t.getGuard() != null) {
                 builder.append(".when(function (message) {");
-                int i = 2;
-                for(Parameter pa : msg.getParameters()) {
-                    builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
-                    i++;
-                }
+                generateMessageParam(msg, builder);
                 builder.append(" return ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
                 builder.append(";})");
@@ -169,11 +175,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
         } else {
             builder.append(t.getSource().qname("_") + ".to(" + t.getTarget().qname("_") + ")");
             builder.append(".when(function (message) {");
-            int i = 2;
-            for(Parameter pa : msg.getParameters()) {
-                builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
-                i++;
-            }
+            generateMessageParam(msg, builder);
             builder.append("return message[0] === \"" + p.getName() + "\" && message[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
@@ -198,11 +200,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
         } else {
             builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
             builder.append(".when(function (message) {");
-            int i = 2;
-            for(Parameter pa : msg.getParameters()) {
-                builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
-                i++;
-            }
+            generateMessageParam(msg, builder);
             builder.append("return message[0] === \"" + p.getName() + "\" && message[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");

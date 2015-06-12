@@ -13,9 +13,9 @@ thing TestGuardAutoTransition includes Test
 			on entry harnessOut!testOut('\'I\'')
 			
 			transition -> J
+            		guard f()
 			action harnessOut!testOut('\'J\'')
-			guard f()
-			
+						
 			transition -> K
 			event m : harnessIn?testIn
 			guard m.c == '\'t\''
