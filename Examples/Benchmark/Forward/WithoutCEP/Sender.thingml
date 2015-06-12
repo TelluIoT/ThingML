@@ -7,6 +7,7 @@ thing fragment SenderMsgs {
     message forwardWithModif(p1 : Double, p2 : Double, p3 : Double, p4 : Double, p5 : Double);
     
     message endBench();
+    message redo();
 }
 
 thing Sender includes SenderMsgs {
@@ -16,14 +17,20 @@ thing Sender includes SenderMsgs {
     
     required port senderService {
         sends forwardMessage, forwardMessageWithParams, forwardWithModif, endBench
+        receives redo
     }
         
-    property nbIter : Double = 100000
-    statechart Sender init Idle {        
-        state Idle {
+    property initRedo : Double = 10000
+    property nbIter : Double = 10000
+    property redo : Double = 10000
+    
+    statechart Sender init Init {        
+        state Init {
          on entry do
             var i :Double = 0
-            'console.log("START TIME C : " + process.hrtime());'
+            if(redo == initRedo) do
+               'console.log("START TIME C : " + process.hrtime());'
+            end
             while (i<nbIter) do
                 senderService!forwardMessage()
                 senderService!forwardMessageWithParams(1,2,3,4,5)
@@ -31,7 +38,28 @@ thing Sender includes SenderMsgs {
                 i = i + 1
             end
             senderService!endBench()
-         end    
+            redo = redo - 1
+            print "Redo = " + redo
+         end  
+         
+         transition -> Idle  
+        }
+        
+        state Idle {
+            transition -> Init
+            event senderService?redo
+            guard redo > 0
+            
+            transition -> End
+            event senderService?redo
+            guard redo == 0
+        }
+        
+        state End {
+            on entry do
+                'console.log("END TIME C : " + process.hrtime());' 
+                print "Bye"   
+            end 
         }
     }
 }

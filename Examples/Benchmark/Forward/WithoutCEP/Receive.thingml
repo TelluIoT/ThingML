@@ -1,11 +1,16 @@
 import "Stream.thingml"
+import "Sender.thingml"
 
 datatype Integer
     @js_type "short";
 
-thing Receiver includes StreamMsgs{
+thing Receiver includes StreamMsgs, SenderMsgs{
     provided port cService {
         receives c_forwardMessage, c_forwardMessageWithParams, c_forwardWithModif, c_endBench
+    }
+    
+    provided port senderService {
+        sends redo
     }
     
     property msgReceived : Integer = 0
@@ -22,8 +27,9 @@ thing Receiver includes StreamMsgs{
             internal
             event cService?c_endBench
             action do
-                 'console.log("END TIME C : " + process.hrtime());'
-                 print "[Receiver] End with " + msgReceived + " message(s) received"
+                 
+                 //print "[Receiver] End with " + msgReceived + " message(s) received"
+                 senderService!redo()
             end
         }       
     }    

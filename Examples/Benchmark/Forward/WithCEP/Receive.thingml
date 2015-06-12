@@ -1,14 +1,20 @@
 import "Stream.thingml"
+import "Sender.thingml"
 
 datatype Integer
     @js_type "short";
 
-thing Receiver includes StreamCepMsgs{
+thing Receiver includes StreamCepMsgs, SenderMsgs{
     provided port cepService {
         receives cep_forwardMessage, cep_forwardMessageWithParams, cep_forwardWithModif, cep_endBench
     }
     
+     provided port senderService {
+        sends redo
+    }
+    
     property msgReceived : Integer = 0
+    
     statechart Receiver init Init {
         state Init {
             internal 
@@ -22,9 +28,10 @@ thing Receiver includes StreamCepMsgs{
             internal
             event cepService?cep_endBench
             action do
-                 'console.log("END TIME CEP : " + process.hrtime());'
-                 print "[Receiver] End with " + msgReceived + " message(s) received"
+                 //'console.log("END TIME CEP : " + process.hrtime());'
+                 //print "[Receiver] End with " + msgReceived + " message(s) received"
                  msgReceived = 0
+                 senderService!redo()
             end
         } 
         

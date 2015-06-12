@@ -191,10 +191,13 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             builder.append("var t" + ti + " = StateFactory.buildEmptyTransition(" + t.getSource().qname("_") + ", " + t.getTarget().qname("_"));
             if (t.getGuard() != null) {
                 builder.append(", function (s, c) {");
-                int i = 2;
-                for(Parameter pa : msg.getParameters()) {
-                    builder.append(" v_" + pa.getName() + " = " + "c[" + i + "];");
-                    i++;
+
+                if(msg != null) {
+                    int i = 2;
+                    for (Parameter pa : msg.getParameters()) {
+                        builder.append(" v_" + pa.getName() + " = " + "c[" + i + "];");
+                        i++;
+                    }
                 }
                 builder.append(" return ");
                 ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);

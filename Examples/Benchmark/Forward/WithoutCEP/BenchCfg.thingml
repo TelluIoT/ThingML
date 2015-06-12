@@ -9,4 +9,5 @@ configuration benchForwardWithoutCfg {
     
     connector sender.senderService => streamWithoutCep.senderService
     connector streamWithoutCep.cService => receiver.cService
+    connector sender.senderService =>  receiver.senderService
 }

@@ -29,11 +29,13 @@ import java.util.List;
  */
 public class Launcher {
 
-    private  static List<Integer> nbIterList;
+    private  static List<Double> nbIterList;
 
     private static void initList() {
         nbIterList = new ArrayList<>();
-        nbIterList.add(10);
+        nbIterList.add(1e9);
+        //nbIterList.add(10e9);
+        //nbIterList.add(100e9);
         //nbIterList.add(100000);
         //nbIterList.add(1000000000);
     }
@@ -44,13 +46,16 @@ public class Launcher {
             for(int i = 1; i <3; i++) {
                 ThingMLModel model = Cmd.loadThingMLmodel(new File(args[i]));
 
-                for (Integer integer : nbIterList) {
+                for (Double d : nbIterList) {
                     for (Thing thing : model.allThings()) {
                         if (thing.getName().equals("Sender")) {
                             for (Property property : thing.allProperties()) {
                                 if (property.getName().equals("nbIter")) {
-                                    IntegerLiteral newValue = ThingmlFactory.eINSTANCE.createIntegerLiteral();
+                                    /*IntegerLiteral newValue = ThingmlFactory.eINSTANCE.createIntegerLiteral();
                                     newValue.setIntValue(integer);
+                                    property.setInit(newValue);*/
+                                    DoubleLiteral newValue = ThingmlFactory.eINSTANCE.createDoubleLiteral();
+                                    newValue.setDoubleValue(d);
                                     property.setInit(newValue);
                                     break;
                                 }
@@ -71,9 +76,12 @@ public class Launcher {
 
                     try {
                         npmINstall.start();
+
+                        System.out.println("Execution : " + configuration.getName() + " with nbIter = " + d);
                         Process process = nodeMain.start();
-                        System.out.println("Execution : " + configuration.getName() + " with nbIter = " + integer);;
                         process.waitFor();
+                        process.getErrorStream();
+
 
                     } catch (IOException ioex) {
                         ioex.printStackTrace();
