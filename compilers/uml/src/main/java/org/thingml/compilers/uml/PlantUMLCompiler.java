@@ -49,7 +49,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public String getPlatform() {
+    public String getID() {
         return "UML";
     }
 

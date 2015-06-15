@@ -60,11 +60,11 @@ public class ThingMLCompilerRegistry {
     }
 
     public void addCompiler(ThingMLCompiler c) {
-        compilers.put(c.getName(), c);
+        compilers.put(c.getID(), c);
     }
 
-    public ThingMLCompiler createCompilerInstanceByName(String name) {
-        return compilers.get(name).clone();
+    public ThingMLCompiler createCompilerInstanceByName(String id) {
+        return compilers.get(id).clone();
     }
 
 }

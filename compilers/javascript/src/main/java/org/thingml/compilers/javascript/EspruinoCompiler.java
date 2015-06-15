@@ -41,8 +41,8 @@ public class EspruinoCompiler extends JavaScriptCompiler {
     }
 
     @Override
-    public String getPlatform() {
-        return "javascript";
+    public String getID() {
+        return "espruino";
     }
 
     @Override

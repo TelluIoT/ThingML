@@ -57,8 +57,8 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public String getPlatform() {
-        return "javascript";
+    public String getID() {
+        return "nodejs";
     }
 
     @Override

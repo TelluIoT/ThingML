@@ -61,7 +61,7 @@ public abstract class ThingMLCompiler {
     /**************************************************************
      * META-DATA about this particular compiler
      **************************************************************/
-    public abstract String getPlatform();
+    public abstract String getID();
     public abstract String getName();
     public abstract String getDescription();
 

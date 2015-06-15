@@ -33,7 +33,7 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public String getPlatform() {
+    public String getID() {
         return "arduino";
     }
 

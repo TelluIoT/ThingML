@@ -48,7 +48,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public String getPlatform() {
+    public String getID() {
         return "java";
     }
 

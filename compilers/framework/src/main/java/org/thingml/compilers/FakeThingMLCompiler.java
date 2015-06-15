@@ -42,7 +42,7 @@ public class FakeThingMLCompiler extends ThingMLCompiler {
     }
 
     @Override
-    public String getPlatform() {
+    public String getID() {
         return "Fake";
     }
 
