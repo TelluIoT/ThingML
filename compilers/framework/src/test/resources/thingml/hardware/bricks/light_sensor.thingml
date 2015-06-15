@@ -1,0 +1,52 @@
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the light sensor. 
+//*
+
+import "../../thingml.thingml"
+import "../io/analog_input.thingml"
+
+thing fragment LightSensorMsgs 
+{
+	message read_light ();
+	message light_value (val : UInt16);
+}
+
+thing fragment LightSensorClient includes LightSensorMsgs 
+{
+	required port LightSensor 
+    {
+		sends read_light
+		receives light_value
+	}    
+}
+
+thing LightSensor includes LightSensorMsgs, AnalogInputMsgs
+{  
+	provided port LightSensor 
+    {
+		receives read_light
+		sends light_value
+	}
+
+    required port AnalogInput
+    {
+        receives analog_input_value
+        sends read_analog_input    
+    }
+    
+    statechart LightSensorImpl init Running 
+    {        
+        internal event m : AnalogInput?analog_input_value
+    	action LightSensor!light_value (m.value)
+   
+        state Running 
+        {   
+        	internal force_reading event LightSensor?read_light
+        	action AnalogInput!read_analog_input ()
+        }   
+    }
+}
+ 

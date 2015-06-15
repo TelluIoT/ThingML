@@ -1,0 +1,33 @@
+import "../../core/_linux/timer.thingml"
+
+thing RPiTest includes TimerClient {
+    
+    property delay : Integer = 2//period of the timer in s
+    
+    statechart behavior init start {
+        state start {
+            on entry do
+                timer!timer_start(delay)
+                print("on entry\n")
+            end    
+            
+            on exit do
+                print("on exit\n")
+            end
+            
+            transition onTimeout -> start
+            event to : timer?timer_timeout
+            action do
+                print("on transit\n")
+            end
+        }    
+    }
+}
+
+configuration RPiConfig
+{
+    instance app : RPiTest
+    group timer : TimerLinux
+    
+    connector app.timer => timer.timer.timer
+}

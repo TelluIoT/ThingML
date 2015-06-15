@@ -1,0 +1,39 @@
+import "../../hardware/devices/_arduino/servo.thingml"
+import "../../hardware/bricks/_arduino/rotation_sensor.thingml"
+
+thing RotSensorDisplay includes ServoMsg, RotationSensorMsgs
+{	
+	required port Servo
+    {	
+		sends servo_write
+	}
+
+	required port RotSensor
+	{
+		sends read_rotation
+		receives rotation_value 
+	}
+	
+   	statechart RotSensorDisplayImpl init Running
+   	{
+   		state Running
+   		{
+   			internal refresh event m : RotSensor?rotation_value
+   			action Servo!servo_write (m.val / 6) 
+   		}	
+   	}
+}
+
+configuration RotSensorDisplay
+{
+	group rot_sensor : RotationSensorArduino
+		set rot_sensor.io.analog_input.pin = AnalogPin:A_4
+	
+	instance servo : ServoArduino
+        set servo.pin = 9
+	
+	// Application configuration.
+	instance app : RotSensorDisplay
+	connector app.Servo => servo.Servo
+	connector app.RotSensor => rot_sensor.rotation_sensor.RotationSensor
+}

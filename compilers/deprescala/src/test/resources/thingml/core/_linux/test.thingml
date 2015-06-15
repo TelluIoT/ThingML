@@ -1,0 +1,57 @@
+import "../test.thingml"
+
+
+thing TestDumpLinux includes TestDump
+@c_header "#include <stdio.h>"
+@c_global "FILE* testFile = NULL;"
+{
+	function write(c : Char) 
+	do
+		
+    'if (testFile != NULL)
+    {
+        fprintf(testFile,"%c",c); 
+    }
+	printf("%c\n",c);'
+ 
+	end
+	
+	statechart LinuxHarness init Testing {
+		property transitionsCount : Integer = 0
+		
+		state Testing {
+            on entry 'testFile = fopen("dump", "w+");'
+            internal event m : dump?testOut
+            action do write(m.c)
+            	transitionsCount=transitionsCount+1
+            end
+            
+            transition -> Failed 
+            event dump?testFailure
+            action 'printf("*FAILURE*");'
+            
+            
+            transition -> End
+            event dumpEnd?testEnd
+		}
+		
+		state Failed {
+
+		}
+		
+		state End {
+			on entry do
+				'char cmd[80];
+sprintf(cmd, "ps -p %d -o %ccpu > stats",getpid(),\'%\');
+system(cmd);
+sprintf(cmd, "ps -p %d -o %cmem >> stats",getpid(),\'%\');
+system(cmd);'
+'sprintf(cmd, "echo \"%d\" > transitionsCount",' & transitionsCount & ');'
+'system(cmd);
+fclose(testFile);
+ProfilerStop();
+exit(0);'
+			end
+		}
+	}
+}

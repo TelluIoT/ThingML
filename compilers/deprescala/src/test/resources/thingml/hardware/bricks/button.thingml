@@ -1,0 +1,51 @@
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the big button. 
+//*
+
+import "../../thingml.thingml"
+import "../io/digital_input.thingml"
+
+thing fragment ButtonMsgs 
+{
+	message press ();
+	message release ();
+}
+
+thing fragment ButtonClient includes ButtonMsgs 
+{
+	required port Button 
+	{
+		receives press, release
+	}    
+}
+
+thing Button includes ButtonMsgs, DigitalInputMsgs
+{		
+	provided port Button 
+	{
+		sends press
+		sends release
+	}
+	
+	required port DigitalInput
+    {
+		receives digital_input_value    
+    }
+	
+	 statechart ButtonImpl init Running 
+	 {
+        state Running
+        {    
+            internal event m : DigitalInput?digital_input_value
+            guard m.value == DigitalState:HIGH 
+            action Button!press ()   
+            
+            internal event m : DigitalInput?digital_input_value
+            guard m.value == DigitalState:LOW 
+            action Button!release ()
+        }
+    }
+}

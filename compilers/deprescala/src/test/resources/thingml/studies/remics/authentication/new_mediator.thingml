@@ -1,0 +1,94 @@
+// 
+// (c) SINTEF 2011
+//
+// Define the behavior of a mediator that briges between a authentication server 
+// and a client whose protocols differ. The client is sending the credentials in a
+// single message, whereas the server expects two separated messages (one for the
+// login and one for the password), resulting two separated acknowlegments.
+//
+// See also client.thingml, server.thingml
+// 
+// by Franck CHAUVEL <franck.chauve@sintef.no>
+// and Brice MORIN <brice.morin@sintef.no>
+//
+import "API1.thingml"
+import "API2.thingml"
+
+thing NewMediator includes API1, API2{
+
+	property password: String // Use to store the password
+		
+	provided port Client {
+		receives log
+		sends ack 
+	}
+	
+	required port Server {
+		sends login, password
+		receives access
+	}
+	statechart Authentication init Ready {
+	
+		state Ready {
+			on entry print "Mediator: Ready, Waiting for credential ..."
+			
+			transition -> CheckLogin    //wrong here  should be CheckLogin, not CheckPassword
+				event e: Client?log
+				action do
+					password = e.password
+					Server!login(e.login)
+				end
+		}
+		
+		
+		state CheckLogin {
+		
+            on entry print "Mediator: got login, if name accecpt??????????"
+			// The login is accepted by the server
+			transition -> CheckPassword
+				event e: Server?access
+				guard e.result
+				action Server!password(password)
+				
+			// The login is refused by the server
+			transition -> Ready
+				event e: Server?access
+				guard not(e.result)
+				action Client!ack(false)
+		
+		}
+		
+		
+		state CheckPassword  {
+			on entry print "Mediator: Login accepted"
+            on exit print "going to init state"
+
+			// The password is accepted by the server
+			transition -> Ready
+				event e: Server?access
+				guard e.result
+				action do 
+                    Client!ack(true)
+                    print "Mediator: Password accepted"
+				    print "Mediator: You are now logged in"
+                end
+				
+			// The password is refused by the server
+			transition -> CheckLogin
+				event e: Server?access
+				guard not (e.result)
+				action 
+                    do Client!ack(false)
+                end 
+		}
+		
+		
+		state LoggedOn {
+			on entry do 
+				print "Mediator: Password accepted"
+				print "Mediator: You are now logged in"
+			end
+		}
+			
+	}
+}

@@ -1,0 +1,157 @@
+//*
+// Fabien Fleurey - 20/08/2011
+//
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+//      - Lcd screen 1602 (1) -> Default pins (D_10, D_11, D_12, D_13, A_0, A_1, A_2)
+//      - Sound sensor (1) or Light Sensor (1) or Rotation sensor (1) or Temperature sensor (1) ->  Default pin: A_4 
+//
+// The screen displays the value of the sensor of your choice.
+// Keep in mind that in this example, you have to use only one sensor at the time.
+//*
+
+import "../../bricks/lcd_screen.thingml"
+import "../../bricks/rotation_sensor.thingml"
+import "../../bricks/temperature_sensor.thingml"
+import "../../bricks/light_sensor.thingml"
+import "../../bricks/sound_sensor.thingml"
+
+import "../../bricks/electricity_meter.thingml" //tmp
+
+thing fragment SimpleSensorDisplay includes LcdScreenMsgs
+{
+	required port LcdScreen
+	{
+		sends print_string, set_cursor, print_value
+	}
+}
+
+// Use only one of the four things following.
+
+thing SimpleRotSensorDisplay includes SimpleSensorDisplay, RotationSensorMsgs
+{
+	required port RotationSensor
+	{
+		receives rotation_value
+        sends read_rotation
+	}
+	
+	statechart SimpleRotSensorDisplayImpl init Running
+	{
+		on entry LcdScreen!print_string ("Rotation val:")
+		
+		state Running
+		{
+			on entry LcdScreen!set_cursor (0, 1)
+
+			transition refresh -> Running
+			event m : RotationSensor?rotation_value
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ") // Erase the old value.
+                end
+		}
+	}
+}
+
+thing SimpleTempSensorDisplay includes SimpleSensorDisplay, TemperatureSensorMsgs
+{
+	required port TempSensor
+	{
+		receives temperature_value
+	}
+	
+	statechart SimpleTempSensorDisplayImpl init Running
+	{
+		on entry LcdScreen!print_string ("Temperature:")
+		
+		state Running
+		{
+			on entry LcdScreen!set_cursor (0, 1)
+
+			transition refresh -> Running
+			event m : TempSensor?temperature_value
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ")
+                end
+		}
+	}
+}
+
+thing SimpleLightSensorDisplay includes SimpleSensorDisplay, LightSensorMsgs
+{
+	required port LightSensor
+	{
+		receives light_value
+	}
+	
+	statechart SimpleLightSensorDisplayImpl init Running
+	{
+		on entry LcdScreen!print_string ("Light value:")
+		
+		state Running
+		{
+			on entry LcdScreen!set_cursor (0, 1)
+
+			transition refresh -> Running
+			event m : LightSensor?light_value
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ")
+                end
+		}
+	}
+}
+
+thing SimpleSoundSensorDisplay includes SimpleSensorDisplay, SoundSensorMsgs
+{
+	required port SoundSensor
+	{
+		receives sound_value
+	}
+	
+	statechart SimpleSoundSensorDisplayImpl init Running
+	{
+		on entry LcdScreen!print_string ("Sound value:")
+		
+		state Running
+		{
+			on entry LcdScreen!set_cursor (0, 1)
+
+			transition refresh -> Running
+			event m : SoundSensor?sound_value
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ")
+                end
+		}
+	}
+}
+
+thing SimpleTest includes SimpleSensorDisplay, ElectricityMeterMsgs
+{
+	required port Elc
+	{
+		receives electricity_value
+	}
+	
+	statechart SimpleSoundSensorDisplayImpl init Running
+	{
+		on entry LcdScreen!print_string ("Electricity:")
+		
+		state Running
+		{
+			on entry LcdScreen!set_cursor (0, 1)
+
+			transition refresh -> Running
+			event m : Elc?electricity_value
+			action do
+                LcdScreen!print_value (m.val)
+                LcdScreen!print_string ("    ")
+                end
+		}
+	}
+}

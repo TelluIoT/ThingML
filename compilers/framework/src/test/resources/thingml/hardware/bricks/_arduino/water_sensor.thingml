@@ -1,0 +1,18 @@
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the water sensor. 
+//*
+
+import "../water_sensor.thingml"
+import "../../io/_arduino/digital_input.thingml"
+
+
+configuration fragment WaterSensorArduino
+{
+    group io : OnChangeDigitalInputArduino
+
+    instance water_sensor : WaterSensor
+    connector water_sensor.DigitalInput => io.digital_input.DigitalInput
+} 

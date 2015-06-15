@@ -1,0 +1,30 @@
+import "../hardware/bricks/led.thingml"
+
+thing Blink4Leds includes LedMsgs, TimerMsgs
+{
+
+	required port timer
+	{
+		sends timer_start
+        receives timer_timeout
+	}
+	
+	required port leds
+	{
+		sends led_toggle
+	}
+
+    statechart Blink4LedsImpl init Blinking 
+    {    
+        state Blinking 
+        {    
+            on entry timer!timer_start(500)
+            
+            internal Blink1 event timer?timer_timeout
+            action do
+            	leds!led_toggle()
+            	timer!timer_start(500)
+            end
+        }
+    }
+}

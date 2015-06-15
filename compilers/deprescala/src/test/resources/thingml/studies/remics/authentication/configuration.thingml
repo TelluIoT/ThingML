@@ -1,0 +1,58 @@
+// 
+// (c) SINTEF 2011
+//
+// Define several configurations where clients are connected to loggin server
+// + Config 1: One single client is directly connected to the regular server
+// + Config 2: Connection between five clients and a regular server
+// + Config 3: One client is connected to the substitute server through 
+// the use of the mediator
+// + Config 4: Many clients are connected to the server through the mediator.
+// This configuration is not yet supposed to work, as there is no support for session
+//
+// Authors:
+// + Franck CHAUVEL <franck.chauvel@sintef.no>
+//
+
+
+import "client.thingml"
+import "server.thingml"
+import "substitute_server.thingml"
+import "mediator.thingml"
+ 
+ 
+// Config 1: Simple connection between the client and the server
+configuration RemicsOneClientOneServer {
+	instance client: Client
+	instance server: Server
+	connector client.LoginServer => server.LoginClient
+}
+
+/*// Config 2: Simple connection between a fake client (mock up) and the server
+configuration RemicsOneFakeClientOneServer {
+	instance client: API1FakeClient
+	instance server: Server
+	connector client.LoginServer => server.LoginClient
+}*/
+
+// Config 3: Simple connection between the client and a fake server (mock up)
+configuration RemicsOneClientOneFakeServer {
+	instance client: Client
+	instance server: API1FakeServer
+	connector client.LoginServer => server.LoginClient
+}
+
+// Config 4: Connection between the client and the alternative server 
+// through the mediator
+configuration RemicsMediator {
+	instance client: Client
+        set client.login = "bmorin"
+        set client.pwd = "clio"
+	instance substitute: SubstituteServer
+	instance mediator: Mediator
+	
+	connector client.LoginServer => mediator.Client
+	connector mediator.Server => substitute.LoginClient
+}
+
+//Config 5: Same as config 4, but with a graphical mock-up instead of substitute server
+//TODO

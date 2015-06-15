@@ -1,0 +1,61 @@
+// 
+// (c) SINTEF 2011
+//
+// Define the behavior of an authentication server, which first waits for a login, 
+// checks (and return an acknowledgement) and then waits for the password and check
+// it as well. The authentication is successful if both the login and password are
+// accepted. 
+//
+// TODO: In this simple example, the server can only authentify one single user. It would
+// better to extend it to several user.
+// 
+// by Franck CHAUVEL <franck.chauve@sintef.no>
+// and Brice MORIN <brice.morin@sintef.no>
+//
+import "API2.thingml"
+
+thing SubstituteServer includes API2 {
+
+	property username: String = "bmorin"
+	property password: String = "clio"
+		
+	provided port LoginClient {
+		receives login, password
+		sends access
+	}
+	
+	statechart Authentication init WaitingForLogin {
+	
+		state WaitingForLogin {
+			on entry print "Server side: Ready, Waiting for credential ..."
+			
+			transition -> WaitingForPassword
+				event e: LoginClient?login
+				guard e.login == username
+				action LoginClient!access(true)
+		}
+		
+		
+		state WaitingForPassword  {
+			
+			// The password received is the good one
+			transition -> LoggedOn
+				event e: LoginClient?password
+				guard e.pwd == password
+				action LoginClient!access(true)
+				
+			// The password received is wrong, so the server rolls back 
+			// its initial state
+			transition -> WaitingForLogin
+				event e: LoginClient?password
+				guard not (e.pwd == password) // This should be working
+				action LoginClient!access(false)
+		}
+		
+		
+		state LoggedOn {
+			on entry print "Server side: You are now logged in"
+		}
+			
+	}
+}

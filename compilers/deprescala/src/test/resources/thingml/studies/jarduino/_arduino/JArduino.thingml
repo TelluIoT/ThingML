@@ -1,0 +1,203 @@
+import "../bricks/led.thingml"
+import "../core/arduino_timer.thingml"
+import "../devices/serial.thingml"
+
+thing JArduinoProxy includes ArduinoStdlibMsgs, SerialMsgs
+{
+
+	//*********************************
+	// Ports to forward on the network
+	//*********************************
+	required port DigitalIO {
+		sends pin_mode, digital_read, digital_write
+		receives digital_read_result
+	}
+	required port AnalogIO {
+		sends analog_reference, analog_read, analog_write
+		receives analog_read_result
+	}
+	required port AdvancedIO {
+		sends tone, no_tone
+	}
+	required port Ping {
+		sends ping
+		receives pong
+	}
+	required port Interrupts {
+		sends attach_interrupt, detach_interrupt
+		receives interrupt_notification
+	}
+	required port EEPROM {
+		sends eeprom_read, eeprom_sync_write, eeprom_write
+		receives eeprom_value, eeprom_write_ack
+	}
+	
+	//**************
+	// Network Port
+	//**************
+	 required port Network {
+	 	sends print_byte
+	 	receives receive_byte
+	 }
+	 
+	 //******************
+	 // Packet properties
+	 //******************
+ 	 readonly property START_BYTE : Byte = '0x12'
+	 readonly property STOP_BYTE : Byte = '0x13'
+	 readonly property ESCAPE_BYTE : Byte = '0x7D'
+	 
+	 readonly property MAX_PACKET_SIZE : UInt8 = 16
+	 property buffer : Byte[16]
+	 property index : UInt8
+	 
+	 function sendHeader() do
+	 	Network!print_byte(START_BYTE)
+	 	sendDataByte(1) // source addr (not used)
+	 	sendDataByte(0) // target addr (not used)
+	 	sendDataByte(0) // frame num (not used)
+	 end
+	 
+	  function sendTrailer() do
+	  	Network!print_byte(STOP_BYTE)
+	  end
+	 
+	 function sendDataByte(b : Byte) do
+	 	// Escape special values
+	 	if (b == START_BYTE or b == STOP_BYTE or b == ESCAPE_BYTE) Network!print_byte(ESCAPE_BYTE)
+	 	// Send the byte
+	 	Network!print_byte(b)
+	 end
+	 
+	 function storeByte(b : Byte) do
+	 	buffer[index] = b
+		index = index + 1
+	 end
+	 
+	 function forwardMessage() do
+	 	if (index > 4) do // Ignore incomplete packets
+			if (buffer[4] == 2) DigitalIO!pin_mode(buffer[5], buffer[6])
+			if (buffer[4] == 4) DigitalIO!digital_read(buffer[5])
+			if (buffer[4] == 3) DigitalIO!digital_write(buffer[5], buffer[6])
+			if (buffer[4] == 6) AnalogIO!analog_reference(buffer[5])
+			if (buffer[4] == 7) AnalogIO!analog_read(buffer[5])
+			if (buffer[4] == 9) AnalogIO!analog_write(buffer[5], buffer[6])
+			if (buffer[4] == 10) AdvancedIO!tone(buffer[5], '('&buffer[6]&' << 8)' + buffer[7], '('&buffer[8]&' << 8)' + buffer[9])
+			if (buffer[4] == 11) AdvancedIO!no_tone(buffer[5])
+			if (buffer[4] == 66) Ping!ping()
+			if (buffer[4] == 21) Interrupts!attach_interrupt(buffer[5], buffer[6])
+			if (buffer[4] == 22) Interrupts!detach_interrupt(buffer[5])
+			if (buffer[4] == 31) EEPROM!eeprom_read('('&buffer[5]&' << 8)' + buffer[6])
+			if (buffer[4] == 34) EEPROM!eeprom_sync_write('('&buffer[5]&' << 8)' + buffer[6], buffer[7])
+			if (buffer[4] == 33) EEPROM!eeprom_write('('&buffer[5]&' << 8)' + buffer[6], buffer[7])
+  		end
+	 end
+	 
+	 statechart JArduinoProxyImpl init Idle {
+	 
+	 //***************************
+	 // HANDLERS TO SEND MESSAGES
+	 //***************************
+	 
+	 internal event m : DigitalIO?digital_read_result action do
+	 	sendHeader()
+	 	sendDataByte(1) // Length of paramters
+	 	sendDataByte(5) // Command code
+	 	// Parameters
+	 	sendDataByte(m.value)
+	 	sendTrailer()
+	 end
+	 
+	 internal event m : AnalogIO?analog_read_result action do
+	 	sendHeader()
+	 	sendDataByte(2) // Length of paramters
+	 	sendDataByte(8) // Command code
+	 	// Parameters
+	 	sendDataByte('('& m.value &' >> 8) & 0x00ff')
+	 	sendDataByte('('& m.value &') & 0x00ff')
+	 	sendTrailer()
+	 end
+	 
+	 internal event m : Ping?pong action do
+	 	sendHeader()
+	 	sendDataByte(0) // Length of paramters
+	 	sendDataByte(67) // Command code
+	 	sendTrailer()
+	 end
+	 
+	 internal event m : Interrupts?interrupt_notification action do
+	 	sendHeader()
+	 	sendDataByte(1) // Length of paramters
+	 	sendDataByte(23) // Command code
+	 	// Parameters
+	 	sendDataByte(m.interrupt)
+	 	sendTrailer()
+	 end
+	 
+	 internal event m : EEPROM?eeprom_value action do
+	 	sendHeader()
+	 	sendDataByte(1) // Length of paramters
+	 	sendDataByte(32) // Command code
+	 	// Parameters
+	 	sendDataByte(m.value)
+	 	sendTrailer()
+	 end
+	 
+	 internal event m : EEPROM?eeprom_write_ack action do
+	 	sendHeader()
+	 	sendDataByte(0) // Length of paramters
+	 	sendDataByte(35) // Command code
+	 	// Parameters
+	 	sendTrailer()
+	 end
+
+	 //*************************************
+	 // STATES TO HANLDLE MESSAGE RECEPTION
+	 //*************************************
+
+		state Idle {
+		 	on entry index = 0
+		 	
+		 	transition -> ReceiveMessage event m : Network?receive_byte
+		 	guard m.b == START_BYTE
+		}
+		 
+		state ReceiveMessage {
+				
+		 	transition -> Escape event m : Network?receive_byte
+		 	guard m.b == ESCAPE_BYTE
+		 	
+		 	transition -> ReceiveMessage event m : Network?receive_byte
+		 	guard not (m.b == ESCAPE_BYTE or m.b == STOP_BYTE)
+		 	action storeByte(m.b)
+		 	
+		 	transition -> Idle event m : Network?receive_byte
+		 	guard m.b == STOP_BYTE
+		 	action forwardMessage()
+		 	
+		 	internal event m : Network?receive_byte
+		 	guard m.b == START_BYTE // Should not happen with a reliable channel
+		 	action index = 0 // Reset if it happens (some bytes have been lost at some point)
+		}
+		 
+		state Escape {
+		 	transition receive -> ReceiveMessage
+		 	event m : Network?receive_byte
+		 	action storeByte(m.b)
+		}
+	 }
+}
+
+configuration JArduino 
+{       
+	instance arduino : Arduino
+	instance serial : Serial
+	instance proxy : JArduinoProxy
+	connector proxy.DigitalIO => arduino.DigitalIO
+	connector proxy.AnalogIO => arduino.AnalogIO
+	connector proxy.AdvancedIO => arduino.AdvancedIO
+	connector proxy.Ping => arduino.Ping
+	//connector proxy.Interrupts => arduino.Interrupts
+	connector proxy.EEPROM => arduino.EEPROM
+	connector proxy.Network => serial.Serial
+}

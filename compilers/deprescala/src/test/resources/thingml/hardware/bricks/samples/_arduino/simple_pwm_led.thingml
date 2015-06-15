@@ -1,0 +1,29 @@
+//*
+// Fabien Fleurey - 20/08/2011
+//
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+//      - led (1)   		  ->  Default pin: PWM_9
+// 		- Rotation sensor (1) ->  Default pin: A_4
+//
+// The led intensity is controlled by the rotation sensor.
+//*
+
+import "../simple_pwm_led.thingml"
+import "../../../bricks/_arduino/rotation_sensor.thingml"
+import "../../../io/_arduino/pwm_output.thingml"
+
+
+configuration SimplePwmLed
+{
+	group pwm : PwmOutputArduino
+		set pwm.pwm.pin = PWMPin:PWM_PIN_9
+	group rot_sensor : RotationSensorArduino
+		set rot_sensor.io.analog_input.pin = AnalogPin:A_4
+		
+	instance simple_pwm_led : SimplePwmLed
+	connector simple_pwm_led.RotSensor => rot_sensor.rotation_sensor.RotationSensor
+	connector simple_pwm_led.Pwm => pwm.pwm.Pwm
+}

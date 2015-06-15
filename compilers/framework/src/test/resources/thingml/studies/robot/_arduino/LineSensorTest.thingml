@@ -1,0 +1,32 @@
+import "../LineSensorTest.thingml"
+import "2WDBase.thingml"
+import "LineSensor.thingml"
+import "../../../hardware/bricks/_arduino/led.thingml"
+import "../../../hardware/io/_arduino/analog_input.thingml"
+
+configuration LineSensorTestArduino {
+
+	instance robot : LineSensorTest
+	
+	group motors : TwoWDBaseWithHBridgeArduino
+	connector robot.TwoWDBase => motors.base.TwoWDBase
+	
+	instance timer : TimerArduino
+	connector robot.Timer => timer.timer
+	
+	group linesens : LineSensorArduino
+	set linesens.left.analog_input.pin = AnalogPin:A_0
+	set linesens.center.analog_input.pin = AnalogPin:A_1
+	set linesens.right.analog_input.pin = AnalogPin:A_2
+	connector robot.LineSensor => linesens.sensor.LineSensor
+
+    group gain : PeriodicAnalogInputArduino
+	set gain.analog_input.pin = AnalogPin:A_3
+	set gain.periodic_analog_input.refresh_rate = 250
+	connector robot.Gain => gain.periodic_analog_input.PeriodicAnalogInput
+
+    group led : LedArduino
+    set led.io.digital_output.pin = DigitalPin:PIN_13
+    connector robot.Led => led.led.Led
+	
+}

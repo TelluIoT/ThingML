@@ -1,0 +1,97 @@
+import "../../thingml.thingml"
+import "../io/pwm_output.thingml"
+import "../io/digital_output.thingml"
+
+
+thing fragment HBridgeMotorMsg {
+    message set_speed(speed : Int16);
+    message stop();   
+}
+
+thing fragment HBridgeMotor includes HBridgeMotorMsg, PwmOutputMsgs, DigitalOutputMsgs
+{
+    provided port HBridgeMotor {
+        receives set_speed, stop
+    }
+}
+
+thing HBridgeMotorUC includes HBridgeMotor
+{
+    required port Pwm {
+        sends set_pwm_value
+    }
+    
+    required port I1 {
+        sends set_digital_output
+    }
+    
+    required port I2 {
+        sends set_digital_output
+    }
+    
+    statechart HBridgeMotorUC init stoped {
+
+    	state stoped {
+    		on entry do
+    			Pwm!set_pwm_value(0)
+    			I1!set_digital_output(DigitalState:LOW)
+    			I2!set_digital_output(DigitalState:LOW)
+    		end
+    		
+    		transition -> forward event m : HBridgeMotor?set_speed
+    		guard m.speed > 0 and m.speed < 256
+    		after Pwm!set_pwm_value(m.speed)
+    		
+    		transition -> backward event m : HBridgeMotor?set_speed
+    		guard m.speed > -256 and m.speed < 0
+    		after Pwm!set_pwm_value(-m.speed)
+    	}
+    	
+    	state forward {
+    	
+    		on entry do
+    			I1!set_digital_output(DigitalState:LOW)
+    			I2!set_digital_output(DigitalState:HIGH)
+    		end
+    		
+    		transition -> stoped event HBridgeMotor?stop
+    		
+    		internal event m : HBridgeMotor?set_speed
+    		guard m.speed > 0 and m.speed < 256
+    		action Pwm!set_pwm_value(m.speed)
+    		
+    		transition -> backward event m : HBridgeMotor?set_speed
+    		guard m.speed > -256 and m.speed < 0
+    		action Pwm!set_pwm_value(0)
+    		after Pwm!set_pwm_value(-m.speed)
+    		
+    		transition -> stoped event m : HBridgeMotor?set_speed
+    		guard m.speed == 0
+    	}
+    	
+    	state backward {
+    	
+    		on entry do
+    			I1!set_digital_output(DigitalState:HIGH)
+    			I2!set_digital_output(DigitalState:LOW)
+    		end
+    		
+    		transition -> stoped event HBridgeMotor?stop
+    		
+    		transition -> forward event m : HBridgeMotor?set_speed
+    		guard m.speed > 0 and m.speed < 256
+    		action Pwm!set_pwm_value(0)
+    		after Pwm!set_pwm_value(m.speed)
+    		
+    		internal event m : HBridgeMotor?set_speed
+    		guard m.speed > -256 and m.speed < 0
+    		action Pwm!set_pwm_value(-m.speed)
+    		
+    		transition -> stoped event m : HBridgeMotor?set_speed
+    		guard m.speed == 0
+    	
+    	}
+    
+    }
+    
+}

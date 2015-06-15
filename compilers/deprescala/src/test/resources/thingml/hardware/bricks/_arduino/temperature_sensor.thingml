@@ -1,0 +1,18 @@
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the temperature sensor. 
+//*
+
+import "../temperature_sensor.thingml"
+import "../../io/_arduino/analog_input.thingml"
+
+configuration fragment TemperatureSensorArduino
+{
+    group io : OnChangeAnalogInputArduino
+    	set io.change_analog_input.refresh_rate = 500
+
+    instance temperature_sensor : TemperatureSensor
+    connector temperature_sensor.AnalogInput => io.analog_input.AnalogInput
+}

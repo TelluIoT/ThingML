@@ -1,0 +1,93 @@
+import "2WDBase.thingml"
+import "Bumper.thingml"
+import "LineSensor.thingml"
+import "../../hardware/io/analog_input.thingml"
+import "../../hardware/bricks/led.thingml"
+
+thing LineSensorTest includes TwoWDBaseMsg, AnalogInputMsgs, TimerMsgs, LedMsgs, BumperMsg, LineSensorMsgs
+{
+ 	required port TwoWDBase {
+ 		 sends set_motors_speed, stop
+ 	}
+ 	
+ 	required port LineSensor {
+ 		receives line_sensor_data
+        sends calibrate_line_sensor
+ 	}
+ 
+    required port Gain {
+ 		receives analog_input_value
+ 	}
+ 	
+ 	required port Timer {
+ 		 sends timer_start, timer_cancel
+ 		 receives timer_timeout
+ 	}
+    
+    required port Led {
+        sends led_on, led_off, led_toggle
+    }	
+    
+    property gain : Int16 = 512
+	
+	statechart LineSensorTestImpl init Init
+	{	
+    
+        internal event m : Gain?analog_input_value
+        action gain = m.value
+        
+        state Init {
+            
+            on entry do 
+            	Timer!timer_start(2000) // Let the gyro power up
+            	Led!led_on()
+            end
+            
+            transition -> KeepLine event Timer?timer_timeout
+            action do 
+                Led!led_off()
+                LineSensor!calibrate_line_sensor()
+            end
+            
+        }
+
+		state KeepLine {
+			
+			internal event m : LineSensor?line_sensor_data
+			guard m.status == LineStatus:NONE
+			action do 
+				Led!led_toggle()
+            	if(m.integral < 0) TwoWDBase!set_motors_speed(-80, 0)
+            	if (m.integral > 0) TwoWDBase!set_motors_speed(0, -80)
+			end
+            
+            internal event m : LineSensor?line_sensor_data
+			guard m.status == LineStatus:ALL
+			action TwoWDBase!set_motors_speed(-80, -80)
+            
+            internal event m : LineSensor?line_sensor_data
+			guard m.status == LineStatus:LEFT
+			action do 
+                Led!led_toggle()
+                var ctrl : Int16 = -gain/10 + m.integral/2
+				TwoWDBase!set_motors_speed(-150, -ctrl-150)
+            end
+            
+            internal event m : LineSensor?line_sensor_data
+			guard m.status == LineStatus:RIGHT
+			action do 
+                Led!led_toggle()
+                var ctrl : Int16 = gain/10 + m.integral/2
+				TwoWDBase!set_motors_speed(ctrl-150, -150)
+            end
+            
+            internal event m : LineSensor?line_sensor_data
+			guard m.status == LineStatus:CENTER
+			action do 
+                Led!led_toggle()
+				TwoWDBase!set_motors_speed(-150, -150)
+            end
+            
+		}
+	}
+}

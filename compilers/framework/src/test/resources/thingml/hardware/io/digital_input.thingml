@@ -1,0 +1,127 @@
+//*
+// Fabien Fleurey - 20/08/2011
+// Core library.
+//
+// This file provides an interface with the Arduino core to use digital input. 
+// All more external things which use digital input should pass by this way.
+// 
+// Three modes are available to fit your needs: simple, periodic and on change.
+//*
+
+import "../../thingml.thingml"
+
+thing fragment DigitalInputMsgs
+{
+    message read_digital_input ();
+	message digital_input_value (value : DigitalState);
+}
+
+thing fragment DigitalInput includes DigitalInputMsgs
+{	
+	provided port DigitalInput 
+    {
+		receives read_digital_input
+		sends digital_input_value
+	}
+}
+
+thing PeriodicDigitalInput includes DigitalInputMsgs, TimerMsgs
+{
+	readonly property refresh_rate : Long = 5000
+	
+	provided port PeriodicDigitalInput 
+    {
+		sends digital_input_value
+	}
+	
+	required port Timer
+	{
+		sends timer_start
+		receives timer_timeout
+	}
+	
+	required port DigitalInput 
+    {
+		sends read_digital_input
+		receives digital_input_value
+	}
+	
+	statechart PeriodicDigitalInputImpl init Running
+	{			
+		state Running
+		{
+			on entry Timer!timer_start (refresh_rate)
+			
+			transition -> Waiting
+			event Timer?timer_timeout
+			action DigitalInput!read_digital_input()
+		}
+		
+		state Waiting
+		{
+			transition -> Running
+			event m : DigitalInput?digital_input_value
+			action PeriodicDigitalInput!digital_input_value (m.value)
+		}
+	}
+}
+
+thing OnChangeDigitalInput includes DigitalInputMsgs, ThingMLScheduler
+{
+	
+	provided port OnChangeDigitalInput 
+    {
+		sends digital_input_value
+	}
+	
+	required port DigitalInput 
+    {
+		sends read_digital_input
+		receives digital_input_value
+	}
+    
+    required port Polling 
+    {
+		receives poll
+	}
+	
+    statechart OnChangeDigitalInputImpl init Low 
+    {    
+
+        // Detect changes in the io pins and send messages for every changes
+        state Low 
+        {    
+            on entry OnChangeDigitalInput!digital_input_value (DigitalState:LOW)
+            
+            transition -> High
+            event m: DigitalInput?digital_input_value
+            guard m.value == DigitalState:HIGH   
+        }
+        
+        state High 
+        {    
+            on entry OnChangeDigitalInput!digital_input_value (DigitalState:HIGH)
+            
+            transition pressed -> Low
+            event m: DigitalInput?digital_input_value
+            guard m.value == DigitalState:LOW  
+        }
+        
+        // Region which polls the io pin (Waits for the result before polling again)
+        region Polling init Poll 
+        {
+            state Poll 
+            { 
+                transition -> Wait 
+                event Polling?poll 
+                action DigitalInput!read_digital_input() 
+            } 
+            
+            state Wait 
+            { 
+                transition -> Poll 
+                event m: DigitalInput?digital_input_value 
+            }  
+        }
+    }   
+}

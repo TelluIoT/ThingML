@@ -1,0 +1,61 @@
+import "../../hardware/devices/_arduino/lcd_screen_sensor_disp.thingml"
+import "../../hardware/bricks/_arduino/rotation_sensor.thingml"
+
+//import "../../hardware/bricks/_arduino/button.thingml"
+//import "../../hardware/bricks/_arduino/led.thingml"
+//import "../../hardware/bricks/_arduino/temperature_sensor.thingml"
+
+thing SensorsDisplay includes LcdScreenMsgs, RotationSensorMsgs
+{		
+	property tempDisplay : UInt8 = 0
+	property potDisplay : UInt8 = 1
+
+    property rssi : Int16
+	
+	required port Display 
+    {	
+		sends initDisplay, refreshDisplay, setDisplay
+	}
+
+	required port Rot
+	{
+		receives rotation_value
+	}
+	
+   	statechart SensorsDisplayImpl init Pot
+   	{
+   		on entry Display!initDisplay (potDisplay, "VID RSSI", "%", 0, 0, 100)
+        	
+        internal event m : Rot?rotation_value
+        action do 
+            // 75..250
+            var x : Integer
+            rssi = 'map('&m.val&', 75, 250, 0, 100)'
+            if (rssi > 100) rssi = 100
+            if (rssi < 0) rssi = 0
+            Display!refreshDisplay (potDisplay, rssi)
+        end
+        	
+        
+        state Pot
+        {		
+        	on entry Display!setDisplay (potDisplay)
+        }
+   	}
+}
+
+configuration SensorsDisplay
+{
+	// Rotation sensor configuration.
+	group rot_sensor : RotationSensorArduino
+		set rot_sensor.io.analog_input.pin = AnalogPin:A_0
+		set rot_sensor.io.change_analog_input.refresh_rate = 100
+    
+    // Screen device configuration.
+	instance screen : LcdScreen
+	
+    // Application's ports connections.
+	instance app : SensorsDisplay	
+	connector app.Display => screen.Display
+    connector app.Rot => rot_sensor.rotation_sensor.RotationSensor
+}

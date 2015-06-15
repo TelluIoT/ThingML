@@ -1,0 +1,75 @@
+
+import "API2.thingml"
+import "test_client.thingml"
+
+thing NewServer includes API2,API3 {
+
+	property msg: String = "restart"
+    property username:String = "bmorin"
+    property password:String = "clio"
+		
+	provided port LoginClient {
+		receives login, password
+		sends access
+	}
+/*
+    required port Send{
+        sends CtlMsg
+    } 
+    provided port Receive{
+         receives CtlMsg
+    }
+*/
+	
+	statechart Authentication init WaitingForLogin {
+	
+		state WaitingForLogin {
+			on entry print "Server side: Ready, Waiting for credential ..."
+			
+			transition -> WaitingForPassword
+				event e: LoginClient?login
+				guard e.login == username
+				action LoginClient!access(true)
+
+            internal
+				event e: LoginClient?login
+				guard not (e.login == username) 
+				action LoginClient!access(false)
+		}
+		
+		
+		state WaitingForPassword  {
+			on entry print "Server side: waiting for Password"
+            on exit print "Server side: going to initial state"
+			// The password received is the good one
+            // turn to initial state
+			transition -> WaitingForLogin
+				event e: LoginClient?password
+				guard e.pwd == password
+				action LoginClient!access(true)
+				
+			// The password received is wrong, so the server rolls back 
+			// its initial state
+			transition -> WaitingForLogin
+				event e: LoginClient?password
+				guard not (e.pwd == password) // This should be working
+				action LoginClient!access(false)
+		}
+		
+		/*
+		state LoggedOn {
+			on entry do 
+                print "Server side: You are now logged in"
+                Send!CtlMsg(msg)
+            end
+            on exit print "never"
+            
+            transition -> WaitingForLogin
+                event e:Receive?CtlMsg
+                guard (e.msg == "restart")
+                action print "Server side: going to ready state"              
+		}
+        */
+			
+	}
+}

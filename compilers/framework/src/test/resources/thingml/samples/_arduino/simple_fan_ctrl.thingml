@@ -1,0 +1,122 @@
+
+import "../../hardware/devices/_arduino/tinypwm.thingml"
+import "../../hardware/devices/_arduino/fan_sensors.thingml"
+
+import "../../hardware/bricks/_arduino/lcd_screen.thingml"
+import "../../hardware/bricks/_arduino/rotation_sensor.thingml"
+
+import "../../hardware/io/_arduino/analog_input.thingml"
+
+
+thing SimpleFanCtrl includes TinyPWMMsgs, RotationSensorMsgs, LcdScreenMsgs, FanSensorsMsgs
+{
+    
+	required port PWM 
+    {	
+		sends set_pwm, set_pwm_a, set_pwm_b
+	}
+
+    required port LcdScreen
+	{
+		sends clear, print_string, print_value, set_cursor
+	}
+
+    required port Pot1
+	{
+		receives rotation_value
+	}
+
+    required port Pot2
+	{
+		receives rotation_value
+	}
+
+    required port Sensors {
+        sends read_fan_sensor
+        receives fan_sensor_rpm
+	}
+
+    statechart BlinkImpl init Fan1 {
+        
+        property fan1 : Long = 0
+        property fan2 : Long = 0
+        
+        property cpt : Int8 = 0
+        
+        on entry PWM!set_pwm(0, 0)
+        
+        internal event m : Pot1?rotation_value
+        action PWM!set_pwm_a(m.val / 4)
+        
+        internal event m : Pot2?rotation_value
+        action PWM!set_pwm_b(m.val / 4)
+        
+        state Fan1 {
+            on entry Sensors!read_fan_sensor(FanSensorPin:FAN_SENSOR_PIN_2)
+            transition -> Fan2
+            event m : Sensors?fan_sensor_rpm
+            action fan1 = fan1 + m.rpm
+        }
+        
+        state Fan2 {
+            on entry Sensors!read_fan_sensor(FanSensorPin:FAN_SENSOR_PIN_3)
+            
+            on exit do
+            
+                if (cpt == 7) do
+                    
+                    fan1 = fan1 / 8
+                    fan2 = fan2 / 8
+                
+                    // update display
+                    LcdScreen!clear()
+                    LcdScreen!print_string("Fan 1 : ")
+                    LcdScreen!print_value(fan1)
+                    LcdScreen!set_cursor (0, 1)
+                    LcdScreen!print_string("Fan 2 : ")
+                    LcdScreen!print_value(fan2)
+                    
+                    cpt = 0
+                end
+                cpt = cpt + 1
+            end
+            
+            transition -> Fan1
+            event m : Sensors?fan_sensor_rpm
+            action fan2 = fan2 + m.rpm
+        }
+        
+    }
+}
+
+configuration SimpleFanCtrl {       
+
+    // Arduino board
+    instance arduino : Arduino
+    
+    // Pot 1 
+   group pot_sensor_1 : RotationSensorArduino
+   set pot_sensor_1.io.analog_input.pin = AnalogPin:A_4
+	
+    // Pot 2
+   group pot_sensor_2 : RotationSensorArduino
+   set pot_sensor_2.io.analog_input.pin = AnalogPin:A_5
+    
+    // Lcd Screen
+    instance lcd_screen : LcdScreen
+	
+    // TinyPWM
+    instance tiny_pwm : TinyPWM
+    
+    // Fan Sensors
+    instance fan_sensors : FanSensors
+    
+    // Main application
+    instance main : SimpleFanCtrl
+    connector main.Pot1 => pot_sensor_1.rotation_sensor.RotationSensor
+    connector main.Pot2 => pot_sensor_2.rotation_sensor.RotationSensor
+    connector main.PWM => tiny_pwm.PWM
+    connector main.LcdScreen => lcd_screen.LcdScreen
+    connector main.Sensors => fan_sensors.FanSensors
+	
+}

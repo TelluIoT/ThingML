@@ -1,0 +1,79 @@
+//*
+// Fabien Fleurey - 20/08/2011
+// Core library.
+//
+// This file provides an interface with the Arduino core to use analog input. 
+// All more external things which use analog input should pass by this way.
+// 
+// Three modes are available to fit your needs: simple, periodic and on change.
+//*
+
+import "../analog_input.thingml"
+import "../../../hardware/arduino/_arduino/arduino.thingml"
+import "../../../core/_arduino/timer.thingml"
+
+thing fragment AnalogInputArduino includes AnalogInput, ArduinoMsgs
+@pim "AnalogInput"
+@platform "arduino"
+{
+	readonly property pin : AnalogPin = AnalogPin:A_4
+	
+	required port AnalogIO
+	{
+		receives analog_read_result
+		sends analog_read
+	}
+	
+	statechart SimpleAnalogInputImp init Running
+	{
+		state Running
+		{
+			transition WaitingResult -> Waiting
+			event AnalogInput?read_analog_input
+			action AnalogIO!analog_read (pin)
+		}
+		
+		state Waiting
+		{
+			transition ResultCatched -> Running
+			event m : AnalogIO?analog_read_result
+			guard m.pin == pin
+			action AnalogInput!analog_input_value (m.value)
+		}
+	}
+}
+
+configuration fragment AnalogInputArduino
+{
+    instance arduino : ArduinoArduino
+    instance analog_input : AnalogInputArduino
+    connector analog_input.AnalogIO => arduino.AnalogIO
+}
+
+configuration fragment PeriodicAnalogInputArduino
+{
+    instance arduino : ArduinoArduino
+    
+    instance analog_input : AnalogInputArduino
+    connector analog_input.AnalogIO => arduino.AnalogIO
+    
+    instance timer : TimerArduino
+    instance periodic_analog_input : PeriodicAnalogInput
+    
+    connector periodic_analog_input.AnalogInput => analog_input.AnalogInput
+    connector periodic_analog_input.Timer => timer.timer
+}
+
+configuration fragment OnChangeAnalogInputArduino
+{
+    instance arduino : ArduinoArduino
+    
+    instance analog_input : AnalogInputArduino
+    connector analog_input.AnalogIO => arduino.AnalogIO
+    
+    instance timer : TimerArduino
+    instance change_analog_input : OnChangeAnalogInput
+    
+    connector change_analog_input.AnalogInput => analog_input.AnalogInput
+    connector change_analog_input.Timer => timer.timer
+} 

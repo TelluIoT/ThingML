@@ -1,0 +1,41 @@
+//*
+// Fabien Fleurey - 20/08/2011
+// Core library.
+//
+// This file provides an interface with the Arduino core to use digital output. 
+// All more external things which use digital output should pass by this way.
+//*
+
+import "../digital_output.thingml"
+import "../../../hardware/arduino/_arduino/arduino.thingml"
+
+thing DigitalOutputArduino includes DigitalOutput, ArduinoMsgs
+@pim "DigitalOutput"
+@platform "arduino"
+{	
+	readonly property pin : DigitalPin = DigitalPin:PIN_13
+	
+	required port DigitalIO
+    {
+        sends pin_mode, digital_write    
+    }
+    
+    statechart DigitalOutpuImpl init Running
+    {
+    	on entry DigitalIO!pin_mode (pin, PinMode:OUTPUT)
+    	
+    	state Running
+    	{
+    		internal event m : DigitalOutput?set_digital_output
+    		action DigitalIO!digital_write (pin, m.value)
+    	}
+    }
+}
+
+configuration fragment DigitalOutputArduino
+{
+    instance arduino : ArduinoArduino
+
+    instance digital_output : DigitalOutputArduino
+    connector digital_output.DigitalIO => arduino.DigitalIO
+}

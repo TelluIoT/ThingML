@@ -1,0 +1,132 @@
+import "../comm.thingml"
+ 
+thing SerialLinux includes Serial
+@pim "Serial"
+@platform "posix"
+@c_header "
+#include <string.h> // string function definitions
+#include <fcntl.h> // File control definitions
+#include <errno.h> // Error number definitions
+#include <termios.h> // POSIX terminal control definitions
+#include <time.h>   // time calls
+"
+{
+    
+    readonly property serial_port : String = "/dev/ttyACM0"
+    property file_descriptor : Integer = -1
+
+    function open_serial() do
+        '        
+        printf("Opening serial port at %s...\n", ' & serial_port & ');'
+        '' & file_descriptor & '= open(' & serial_port & ', O_RDWR | O_NOCTTY | O_NDELAY);
+              
+        if (' & file_descriptor & '< 0) {
+            perror("Error opening serial port");
+        }
+        else {
+              
+            //fcntl(file_descriptor, F_SETFL, FNDELAY); // To make reading non-blocking ?
+            fcntl(' & file_descriptor & ', F_SETFL, 0); // To restore normal blocking read from the port
+              
+            printf("Configuring port %s...\n", ' & serial_port & ');
+              
+            struct termios port_settings;
+              
+            tcgetattr(' & file_descriptor & ', &port_settings); // get current options
+              
+            cfsetispeed(&port_settings, B9600);    // set baud rates to 9600
+            cfsetospeed(&port_settings, B9600);
+              
+            port_settings.c_cflag &= ~PARENB;           // Set 8N1, No Parity
+            port_settings.c_cflag &= ~CSTOPB;
+            port_settings.c_cflag &= ~CSIZE;
+            port_settings.c_cflag |= CS8;
+              
+            port_settings.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); // Raw input mode
+              
+            port_settings.c_oflag &= ~OPOST; // Raw output mode
+             
+            tcsetattr(' & file_descriptor & ', TCSANOW, &port_settings);    // apply the settings to the port
+            sleep(1);
+        }'             
+    end
+ 
+    function serial_write(byte: Byte) : Integer do
+        'if (write('& file_descriptor &', ' & byte & ', 1) < 0) {
+            perror("Error writing to serial port");
+            return -1;
+        }
+        return 0;'
+    end
+ 
+    function serial_receiver_process()
+    @fork_linux_thread "true"
+    do
+        'char buffer[256]; // Data read from the serial port
+ 
+        int n; // used to store the results of select and read
+        int i; // loop index
+              
+        while (1) {
+              
+            struct timeval timeout; // timeout waiting for incoming data
+            timeout.tv_sec = 10;         // 10 second timeout
+            timeout.tv_usec = 0;
+              
+            fd_set rdfs;                        // The file descriptor to wait on
+            FD_ZERO( &rdfs );
+            FD_SET( '& file_descriptor &', &rdfs ); // set to the file descriptor
+              
+            n = select('& file_descriptor &'+1, &rdfs, NULL, NULL, &timeout); // Wait for timeout for something to be available to read
+              
+            if (n < 0) {
+                perror("Error waiting for incoming data from the serial port");
+                break;
+            }
+            else if (n == 0) { // timeout
+                printf("Timeout waiting for incoming data from the serial port\n");
+                break;
+            }
+            else { // there is something to read
+                n = read('& file_descriptor &', &buffer, 256);
+              
+                if (n<0) {
+                    perror("Error reading from the serial port");
+                    break;
+                }
+                else if (n==0) {
+                    printf("Nothing to read from the serial port\n"); // Should never happen unless there are too many transmission errors with wrong CRCs
+                    break;
+                }
+                else { // There are n incoming bytes in buffer
+                    char c;
+                    for (i = 0; i<n; i++) {
+                        c = buffer[i];
+                        printf("Incoming message: %c", c);'
+                        IOStream!receive_byte('c')
+                    '}
+                }
+            }                 
+         }'
+     end
+              
+    statechart SerialImpl init Receiving 
+    {        
+        state Receiving 
+        {
+            on entry do
+                open_serial()
+                while(file_descriptor < 0)do end//TODO: use a timeout
+                serial_receiver_process()
+            end
+            
+            internal event m : IOStream?write_byte
+            action serial_write(m.b)            
+        }
+    }            
+ 
+}
+
+configuration SerialConfiguration {
+    instance serial : SerialLinux   
+}

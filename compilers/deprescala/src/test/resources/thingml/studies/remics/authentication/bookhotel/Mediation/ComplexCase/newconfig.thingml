@@ -1,0 +1,16 @@
+
+
+import "Client.thingml"
+import "Server.thingml"
+import "mediator_ComplexCase.thingml"
+
+
+configuration ComplexCaseMediation{
+    instance control:Control
+    instance c1:FakeClient
+    instance s1:Server
+    instance m1:Mediator_ComplexCase
+    connector control.ControlPort=>m1.PrvPort_Control
+    connector c1.Toserver => m1.PrvPort_ComplexCase_c1_Toserver
+    connector m1.ReqPort_ComplexCase_s1_Toclient=> s1.Toclient
+}

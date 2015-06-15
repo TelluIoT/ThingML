@@ -1,0 +1,21 @@
+import "../blink2leds.thingml"
+import "../../hardware/bricks/_arduino/led.thingml"
+import "../../core/_arduino/timer.thingml"
+
+configuration Blink2Leds 
+{       
+	group led1 : LedArduino
+		set led1.io.digital_output.pin = DigitalPin:PIN_9
+	group led2 : LedArduino
+		set led2.io.digital_output.pin = DigitalPin:PIN_10
+		
+	instance timer1 : TimerArduino
+	instance timer2 : TimerArduino
+	
+	// The blink application
+	instance app : Blink2Leds
+	connector app.led1 => led1.led.Led
+	connector app.timer1 => timer1.timer
+	connector app.led2 => led2.led.Led
+	connector app.timer2 => timer2.timer
+}

@@ -1,0 +1,14 @@
+import "../soft_button.thingml"
+
+import "../../../hardware/bricks/_scala/button.thingml"
+import "../../../core/_scala/timer.thingml"
+
+configuration SoftButtonScala
+{
+    instance button : ButtonScala
+    connector button.Sensor => button.SensorMockUp
+    instance timer : TimerScala
+    instance soft_button : SoftButton
+    connector soft_button.Timer => timer.timer
+    connector soft_button.Button => button.Button
+}

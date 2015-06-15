@@ -1,0 +1,27 @@
+import "../SimpleGyroTest.thingml"
+import "2WDBase.thingml"
+import "Bumper.thingml"
+//import "../../../hardware/io/_arduino/analog_input.thingml"
+import "../../../hardware/bricks/_arduino/led.thingml"
+import "../../../hardware/devices/_arduino/analog_gyro.thingml"
+
+configuration SimpleGyroTestArduino {
+
+	instance robot : SimpleGyroTest
+	
+	group motors : TwoWDBaseWithHBridgeArduino
+	connector robot.TwoWDBase => motors.base.TwoWDBase
+	
+	instance timer : TimerArduino
+	connector robot.Timer => timer.timer
+	
+	group gyro : AnalogGyroArduino
+	set gyro.io.analog_input.pin = AnalogPin:A_4
+	set gyro.io.periodic_analog_input.refresh_rate = 10
+	connector robot.Gyro => gyro.analog_gyro.Gyro
+
+    group led : LedArduino
+    set led.io.digital_output.pin = DigitalPin:PIN_13
+    connector robot.Led => led.led.Led
+	
+}

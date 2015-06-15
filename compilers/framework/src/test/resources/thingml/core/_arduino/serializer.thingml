@@ -1,0 +1,29 @@
+import "../serializer.thingml"
+
+//Defines the way the datatypes of the ThingML framework are serialized in Scala
+//TODO: do it for all the remaining datatypes
+thing fragment SerializerArduino  includes Serializer
+{
+    //Integer    
+    function serializeInteger(d : Integer)
+    do
+        storeByte('('& d &' >> 8) & 0x00ff')
+        storeByte('('& d &') & 0x00ff')
+    end
+    
+    //UInt16
+    function serializeUInt16(d : UInt16)
+    do
+        storeByte('('& d &' >> 8) & 0x00ff')
+        storeByte('('& d &') & 0x00ff')    
+    end  
+}
+
+thing fragment DeserializerArduino includes Deserializer {
+    //Integer        
+    function deserializeInteger() : Integer
+    do
+        var res : Integer = '' & readByte() & ' << 8 ' + readByte()
+        return res
+    end       
+}

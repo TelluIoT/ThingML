@@ -1,0 +1,51 @@
+import "../../core/_scala/serializer.thingml"
+import "../../core/serializer.thingml"
+import "../../core/comm.thingml"
+import "../../core/_scala/comm.thingml"
+
+//test messages
+thing fragment testMsgs {
+    message m4(i : Integer, s : String)@code "12";
+    message m2(i : Integer);
+    message m1()@code "27";
+    message m3(s : String);
+}
+
+//test thing
+thing TestThing includes testMsgs
+@mock "true"
+{
+    required port out {
+       sends m1, m2, m3, m4
+    }
+    
+    provided port in {
+       receives m1, m2, m3, m4
+    }        
+}
+
+/**
+ * @remote annotations allows defining which ports are remote
+ * syntax: instanceName::TypeName::PortName::messageName
+ * note: wildcards can be used for any of these elements.
+ */
+configuration test 
+@remote "test::TestThing::.*::.*"
+{
+    //Messages are sent and received without serialization
+    instance test : TestThing
+    connector test.out => test.in
+    
+    //Messages are serialized, sent to network, received, deserialized and sent to the former thing
+    //hopefully, this has the same behavior than the configuration above...
+/*    instance testRemote : TestThing
+    instance network : SerialScala
+    instance serializer : MessageSerializer
+    instance deserializer : MessageDeserializer
+    
+    connector testRemote.out => serializer.in_serial
+    connector serializer.network => network.IOStream
+    connector deserializer.network => network.IOStream
+    connector deserializer.out_serial => testRemote.in
+*/    
+}

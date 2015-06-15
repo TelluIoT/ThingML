@@ -1,0 +1,48 @@
+//*
+// Fabien Fleurey - 20/08/2011
+// Core library.
+//
+// This file provides an interface with the Arduino core to use analog write
+// (PWM mode). All more external things which use PWM should pass 
+// by this way.
+//*
+
+import "../pwm_output.thingml"
+import "../../../hardware/arduino/_arduino/arduino.thingml"
+
+thing PwmOutputArduino includes PwmOutput, ArduinoMsgs
+@pim "PwmOutput"
+@platform "arduino"
+{
+	readonly property pin : PWMPin = PWMPin:PWM_PIN_3
+
+    
+    required port DigitalIO
+	{
+		sends pin_mode
+	}
+
+	required port AnalogIO
+	{
+		sends analog_write
+	}
+	
+	statechart PwmOutputArduinoImpl init Running
+	{
+		state Running
+		{
+            on entry DigitalIO!pin_mode(pin, PinMode:OUTPUT)
+    
+			internal event m : Pwm?set_pwm_value
+			action AnalogIO!analog_write (pin, m.value)
+		}
+	}
+}
+
+configuration fragment PwmOutputArduino
+{
+	instance arduino : ArduinoArduino
+	
+	instance pwm : PwmOutputArduino
+	connector pwm.AnalogIO => arduino.AnalogIO
+}

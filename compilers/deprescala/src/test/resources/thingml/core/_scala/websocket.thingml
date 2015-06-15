@@ -1,0 +1,189 @@
+import "../websocket.thingml"
+import "timer.thingml"
+
+datatype WSServer
+@java_type "org.thingml.utils.WSServer";
+
+thing WebSocketServerScala includes WebSocketServer
+@pim "WebSocketServer"
+@platform "scala"
+@scala_trait "org.thingml.utils.WSServerObserver"
+@thingml_maven_dep "org.thingml.utils.ws"
+{
+    
+    property server : WSServer
+    
+    function onOpen() @override "true"
+    do
+        lifecycle!onOpen()
+    end   
+    
+    function onClose() @override "true"
+    do
+        lifecycle!onClose()
+    end
+    
+    function onError(msg : String) @override "true"
+    do
+        err!onError(msg)
+    end
+    
+    function onMessage(msg : String) @override "true"
+    do
+        messaging!onMessage(msg)
+    end
+    
+    statechart behavior init Init {
+    
+        state Init {
+            
+            on entry do
+                'org.java_websocket.WebSocketImpl.DEBUG = true;'
+                print("\tPORT: " + _port)
+                server = 'new org.thingml.utils.WSServer(' & _port & ', root.asInstanceOf[org.thingml.utils.WSServerObserver])'
+            end
+            
+            transition -> Started
+            
+        }
+        
+        state Started {
+            
+            on entry '' & server & '.start();'
+            
+            internal event s : messaging?send
+            action '' & server & '.send(' & s.msg & ');'
+            
+            transition -> Stopped
+            event lifecycle?stop
+            
+        }
+        
+        state Stopped {
+            
+            on entry '' & server & '.stop();'
+            
+            transition -> Started
+            event lifecycle?start
+            
+        }
+                
+    }
+    
+}
+
+datatype WSClient
+@java_type "org.thingml.utils.WSClient";
+
+thing WebSocketClientScala includes WebSocketServer
+@pim "WebSocketClient"
+@platform "scala"
+@scala_trait "org.thingml.utils.WSClientObserver"
+@thingml_maven_dep "org.thingml.utils.ws"
+{
+    property client : WSClient
+    
+    property status : WS_ERR
+    
+    function onOpen() @override "true"
+    do
+        lifecycle!onOpen()
+    end   
+    
+    function onClose() @override "true"
+    do
+        lifecycle!onClose()
+    end
+    
+    function onError(msg : String) @override "true"
+    do
+        err!onError(msg)
+    end
+    
+    function onMessage(msg : String) @override "true"
+    do
+        messaging!onMessage(msg)
+        if(msg == "Connection refused: connect")
+            status = WS_ERR:CONNECTION_REFUSED
+    end
+    
+    statechart behavior init Init {
+    
+        state Init {
+            
+            on entry do
+                print("DEBUG3: " + _port)
+                client = 'new org.thingml.utils.WSClient(' & _port & ', root.asInstanceOf[org.thingml.utils.WSClientObserver])'
+            end
+            
+            transition -> Started
+            
+        }
+        
+        state Started {
+            
+            on entry '' & client & '.start();'
+            
+            internal event s : messaging?send
+            action '' & client & '.send(' & s.msg & ');'
+            
+            transition -> Stopped
+            event lifecycle?stop
+            
+        }
+        
+        state Stopped {
+            
+            on entry '' & client & '.stop();'
+            
+            transition -> Started
+            event lifecycle?start
+            
+        }
+                
+    }
+    
+    
+}
+
+thing Test includes TimerClient, WebSocketTest {
+    statechart behavior init Loop {
+
+        internal event e : lifecycle?onOpen
+        action print("test::onOpen")
+        
+        internal event lifecycle?onClose
+        action print("test::onClose")
+        
+        internal event err?onError
+        action print("test::onError")
+        
+        internal event m : messaging?onMessage
+        action print("test::onMessage" + m.msg)
+        
+        state Loop {
+            on entry timer!timer_start(1000)
+            
+            transition -> Loop
+            event t : timer?timer_timeout
+            action do
+                print("sending ping...")
+                messaging!send("ping")
+            end
+        }
+    }
+}
+
+configuration testWS {
+    instance server : WebSocketServerScala    
+        set server._port = "8887"    
+    instance client : WebSocketClientScala
+        set client._port = "ws://localhost:8887"    
+    instance test : Test
+    instance timer : TimerScala
+    
+    connector test.timer => timer.timer
+    connector test.err => client.err
+    connector test.lifecycle => client.lifecycle
+    connector test.messaging => client.messaging
+}

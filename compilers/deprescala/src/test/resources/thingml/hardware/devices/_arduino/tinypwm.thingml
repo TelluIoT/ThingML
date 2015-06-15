@@ -1,0 +1,160 @@
+import "../../arduino/_arduino/arduino.thingml"
+import "../../bricks/led.thingml"
+
+thing fragment TinyPWMMsgs {
+    message set_pwm_a(pwm : UInt8);
+    message set_pwm_b(pwm : UInt8);
+	message set_pwm(pwma : UInt8, pwmb : UInt8);
+}
+
+thing TinyPWM includes TinyPWMMsgs, LedMsgs
+@singleton "true"
+@c_global "
+#include <avr/io.h>
+#include <util/delay.h>
+#include <inttypes.h>
+#include <avr/interrupt.h>
+
+// Configuration of the network connection
+#define PORTNET PORTB	// Port used for communication
+#define DDRNET 	DDRB	// Port used for communication
+#define NETACT 	PB5 	// Output to visualize network activity
+#define NETSCL 	PB0	// Clock line for the serial communication
+#define NETSDA 	PB1 	// Data line for the serial communication
+
+// Configuration of the network
+#define NET_DELAY 50 	// Delay between clock ticks
+#define PACKET_SIZE 4	// Fixed size for the packets to be sent
+
+void init_network() {
+	// INIT NET
+	DDRNET |= _BV(NETACT); // output NET
+	PORTNET &= ~_BV(NETACT); // OFF
+	DDRNET |= _BV(NETSCL); // output SCL
+	PORTNET |= _BV(NETSCL); // 1
+	DDRNET |= _BV(NETSDA); // output SDA
+	PORTNET |= _BV(NETSDA); // 1
+}
+
+void network_send(uint8_t* packet) {
+	uint8_t i, d;
+
+	PORTNET |= _BV(NETACT); // LED ON
+
+	// Send START
+	PORTNET |= _BV(NETSCL); // SCL = 1
+	_delay_us(NET_DELAY);
+	PORTNET &= ~_BV(NETSDA); // SDA = 0
+
+	// Wait
+	_delay_us(NET_DELAY);
+	_delay_us(NET_DELAY);
+
+	for (i=0; i<PACKET_SIZE; i++) {
+		for (d=1; d>0; d=d<<1) {
+
+			PORTNET &= ~_BV(NETSCL); // SCL = 0
+			_delay_us(NET_DELAY);
+			if (packet[i] & d) PORTNET |= _BV(NETSDA); // SDA = 1
+			else PORTNET &= ~_BV(NETSDA); // SDA = 0
+			_delay_us(NET_DELAY);
+			PORTNET |= _BV(NETSCL); // SCL = 1
+			_delay_us(NET_DELAY);
+			_delay_us(NET_DELAY);
+		}
+	}
+
+	// Send STOP
+	PORTNET &= ~_BV(NETSCL); // SCL = 0
+	_delay_us(NET_DELAY);
+	PORTNET &= ~_BV(NETSDA); // SDA = 0
+	_delay_us(NET_DELAY);
+	PORTNET |= _BV(NETSCL); // SCL = 1
+	_delay_us(NET_DELAY);
+	_delay_us(NET_DELAY);
+	PORTNET |= _BV(NETSDA); // SDA = 1
+
+	PORTNET &= ~_BV(NETACT); // LED OFF
+}
+
+#define CMD_STOP_ALL  0x01 // No params
+#define CMD_SET_PWM   0x02 // B3=Chan1 B4=Chan2
+#define CMD_SET_LED   0x03 // B3=LED
+#define CMD_SET_PWMA   0x04 // B3=Chan1
+#define CMD_SET_PWMB   0x05 // B3=Chan2
+
+void stop_all_pwm() {
+  uint8_t packet[PACKET_SIZE];
+  packet[0] = 0; // broadcast
+  packet[1] = CMD_STOP_ALL;
+  packet[2] = 0;
+  packet[3] = 0;
+  network_send(packet);
+}
+
+void set_led(uint8_t led) {
+  uint8_t packet[PACKET_SIZE];
+  packet[0] = 0; // broadcast
+  packet[1] = CMD_SET_LED;
+  packet[2] = led;
+  packet[3] = 0;
+  network_send(packet);
+}
+
+void set_pwm(uint8_t pwm1, uint8_t pwm2) {
+  uint8_t packet[PACKET_SIZE];
+  packet[0] = 0; // broadcast
+  packet[1] = CMD_SET_PWM;
+  packet[2] = pwm1;
+  packet[3] = pwm2;
+  network_send(packet);
+}
+
+void set_pwm_x(uint8_t channel, uint8_t pwm) {
+  uint8_t packet[PACKET_SIZE];
+  packet[0] = 0; // broadcast
+  packet[1] = channel;
+  packet[2] = pwm;
+  packet[3] = 0;
+  network_send(packet);
+}
+
+"
+{	
+	
+	provided port PWM {
+        receives set_pwm, set_pwm_a, set_pwm_b
+	}
+
+    provided port LED 
+    {
+		receives led_on, led_off, led_toggle
+	}
+	
+    
+    statechart TinyPWMImpl init LED_OFF {
+        
+        on entry 'init_network();'
+        
+        internal event m : PWM?set_pwm
+        action 'set_pwm('& m.pwma &', '& m.pwmb &');'
+        
+        internal event m : PWM?set_pwm_a
+        action 'set_pwm_x(CMD_SET_PWMA, '& m.pwm &');'
+        
+        internal event m : PWM?set_pwm_b
+        action 'set_pwm_x(CMD_SET_PWMB, '& m.pwm &');'
+        
+        state LED_OFF {
+            on entry 'set_led(0);'
+            transition switch_on -> LED_ON event LED?led_on event LED?led_toggle
+        }
+        
+        state LED_ON {
+            on entry 'set_led(1);'
+            transition switch_off -> LED_OFF event LED?led_off event LED?led_toggle
+        }
+    
+    }
+
+}

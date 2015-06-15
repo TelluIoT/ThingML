@@ -1,0 +1,35 @@
+import "../../core/_linux/clock.thingml"
+
+thing ClockTestApp includes ClockMsgs {
+
+	required port clock1 { receives clock_tick }
+	required port clock2 { receives clock_tick }
+	
+	statechart 	LinuxClockTestAppImpl init Running {
+		state Running {
+			internal event clock1?clock_tick action print "Tick 1\n"
+			internal event clock2?clock_tick action print "Tick 2\n"
+		}
+	}
+}
+
+configuration LinuxClockTest 
+  @output_folder "/home/thingml_out/"
+  @debug "true"
+  @debug_fifo "true"
+  @debug_message_send ".*"
+  @debug_message_receive ".*"
+{
+	// Create a first clock with a 2 sec period
+	instance c1 : ClockLinux 
+	set c1.period = 2000
+	
+	// Create a second clock with a 5 sec period
+	instance c2 : ClockLinux
+	set c2.period = 5000
+	
+	// Create and connect the test app
+	instance app : ClockTestApp
+	connector app.clock1 => c1.signal
+	connector app.clock2 => c2.signal
+}
