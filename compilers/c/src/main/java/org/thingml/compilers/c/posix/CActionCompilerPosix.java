@@ -13,29 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c;
+package org.thingml.compilers.c.posix;
 
 import org.sintef.thingml.ErrorAction;
 import org.sintef.thingml.PrintAction;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.c.CActionCompiler;
 
 /**
  * Created by ffl on 11.06.15.
  */
-public class CActionCompilerArduino extends CActionCompiler {
+public class CActionCompilerPosix extends CActionCompiler {
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
-        builder.append("// PRINT: " + b.toString() + "\n");
+        builder.append("fprintf(stdout, " + b.toString() + ");\n");
     }
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
-        builder.append("// PRINT ERROR: " + b.toString() + "\n");
+        builder.append("fprintf(stderr, " + b.toString() + ");\n");
     }
 
 }

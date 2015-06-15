@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c;
+package org.thingml.compilers.c.posix;
 
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.constraints.ThingMLHelpers;
@@ -21,6 +21,9 @@ import org.thingml.compilers.OpaqueThingMLCompiler;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.BehaviorCompiler;
 import org.thingml.compilers.BuildCompiler;
+import org.thingml.compilers.c.CApiCompiler;
+import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.CMainGenerator;
 
 import java.io.File;
 

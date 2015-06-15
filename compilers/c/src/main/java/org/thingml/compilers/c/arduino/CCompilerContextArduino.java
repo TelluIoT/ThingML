@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c;
+package org.thingml.compilers.c.arduino;
 
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.c.CCompilerContext;
 
 /**
  * Created by ffl on 11.06.15.

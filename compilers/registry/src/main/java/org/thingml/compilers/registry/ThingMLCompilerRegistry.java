@@ -19,7 +19,7 @@ package org.thingml.compilers.registry;
 
 import org.thingml.compilers.ArduinoCompiler;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.c.PosixCompiler;
+import org.thingml.compilers.c.posix.PosixCompiler;
 import org.thingml.compilers.javascript.EspruinoCompiler;
 import org.thingml.compilers.javascript.JavaScriptCompiler;
 import org.thingml.compilers.java.JavaCompiler;
