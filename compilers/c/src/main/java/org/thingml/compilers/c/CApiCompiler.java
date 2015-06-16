@@ -109,6 +109,7 @@ public class CApiCompiler extends ApiCompiler {
 
         builder.append("void " + sm.qname("_") + "_OnEntry(int state, ");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
+
         builder.append("switch(state) {\n");
         for(CompositeState cs : sm.allContainedCompositeStates()) {
             ArrayList<Region> regions = new ArrayList<Region>();
@@ -553,18 +554,18 @@ public class CApiCompiler extends ApiCompiler {
             }
             builder.append(";\n");
         }
-        builder.append("\n");
+        builder.append("\n};\n");
     }
 
     protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Declaration of prototypes outgoing messages:\n");
 
-        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
-
         if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             StateMachine sm = thing.allStateMachines().get(0); // There should be one and only one
             // Entry actions
             builder.append("void " + sm.qname("_") + "_OnEntry(int state, ");
+            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
+
             // Message Handlers
             Map<Port, Map<Message, List<Handler>>> handlers = sm.allMessageHandlers();
             for (Port port : handlers.keySet()) {

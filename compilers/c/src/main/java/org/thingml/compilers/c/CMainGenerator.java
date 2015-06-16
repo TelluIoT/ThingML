@@ -221,7 +221,8 @@ public class CMainGenerator extends MainGenerator {
 
     protected void generateIncludes(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
-        for (Thing t : model.allThings()) {
+        for (Thing t : cfg.allThings()) {
+
             builder.append("#include \"" + t.getName() + ".h\"\n");
         }
     }
