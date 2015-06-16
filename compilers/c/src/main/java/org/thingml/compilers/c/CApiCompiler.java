@@ -112,6 +112,7 @@ public class CApiCompiler extends ApiCompiler {
 
         builder.append("switch(state) {\n");
         for(CompositeState cs : sm.allContainedCompositeStates()) {
+            builder.append("case " + ctx.getStateID(cs) + ":\n");
             ArrayList<Region> regions = new ArrayList<Region>();
             regions.add(cs);
             regions.addAll(cs.getRegion());
@@ -132,6 +133,7 @@ public class CApiCompiler extends ApiCompiler {
         }
 
         for(State s : sm.allContainedSimpleStates()) {
+            builder.append("case " + ctx.getStateID(s) + ":\n");
             if (s.getEntry() != null) ctx.getCompiler().getActionCompiler().generate(s.getEntry(), builder, ctx);
             builder.append("break;\n");
         }
@@ -153,6 +155,7 @@ public class CApiCompiler extends ApiCompiler {
 
 
         for(CompositeState cs : sm.allContainedCompositeStates()) {
+            builder.append("case " + ctx.getStateID(cs) + ":\n");
             ArrayList<Region> regions = new ArrayList<Region>();
             regions.add(cs);
             regions.addAll(cs.getRegion());
@@ -167,6 +170,7 @@ public class CApiCompiler extends ApiCompiler {
         }
 
         for(State s : sm.allContainedSimpleStates()) { // just a leaf state: execute exit actions
+            builder.append("case " + ctx.getStateID(s) + ":\n");
             if (s.getExit() != null) ctx.getCompiler().getActionCompiler().generate(s.getExit(), builder, ctx);
             builder.append("break;\n");
         }
@@ -339,13 +343,13 @@ public class CApiCompiler extends ApiCompiler {
             else builder.append("1");
             builder.append(") {\n");
 
-            if (mh instanceof InternalTransition) {
-                InternalTransition it = (InternalTransition)mh;
+            if (h instanceof InternalTransition) {
+                InternalTransition it = (InternalTransition)h;
                 ctx.getCompiler().getActionCompiler().generate(it.getAction(), builder, ctx);
                 if (r != null) builder.append(ctx.getStateVarName(r)+ "_event_consumed = 1;\n");
             }
-            else if (mh instanceof Transition) {
-                Transition et = (Transition)mh;
+            else if (h instanceof Transition) {
+                Transition et = (Transition)h;
 
                 ctx.getCompiler().getActionCompiler().generate(et.getBefore(), builder, ctx);
 
@@ -643,7 +647,7 @@ public class CApiCompiler extends ApiCompiler {
 
     protected void generatePublicMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Declaration of callbacks for incoming messages:\n");
-        for(Port port : thing.getPorts()) {
+        for(Port port : thing.allPorts()) {
             for (Message msg : port.getSends()) {
                 builder.append("void register_" + ctx.getSenderName(thing, port, msg) + "_listener(");
                 builder.append("void (*_listener)");
@@ -656,7 +660,7 @@ public class CApiCompiler extends ApiCompiler {
     }
 
     protected void generatePrivateMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        for(Port port : thing.getPorts()) {
+        for(Port port : thing.allPorts()) {
             for (Message msg : port.getSends()) {
                 // Variable for the function pointer
                 builder.append("void (*" + ctx.getSenderName(thing, port, msg) + "_listener)");
@@ -676,7 +680,7 @@ public class CApiCompiler extends ApiCompiler {
                 builder.append("{\n");
                 // if (timer_receive_timeout_listener != 0) timer_receive_timeout_listener(timer_id);
                 builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) " + ctx.getSenderName(thing, port, msg) + "_listener");
-                ctx.appendFormalParameters(thing, builder, msg);
+                ctx.appendActualParameters(thing, builder, msg, null);
                 builder.append(";\n}\n");
             }
         }

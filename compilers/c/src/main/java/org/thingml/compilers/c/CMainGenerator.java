@@ -63,7 +63,7 @@ public class CMainGenerator extends MainGenerator {
         ctemplate = ctemplate.replace("/*CONFIGURATION*/", builder.toString());
 
         StringBuilder initb = new StringBuilder();
-        generateCfgInitializationCode(cfg, initb, ctx);
+        generateInitializationCode(cfg, initb, ctx);
 
         StringBuilder pollb = new StringBuilder();
         generatePollingCode(cfg, pollb, ctx);
@@ -497,6 +497,52 @@ public class CMainGenerator extends MainGenerator {
             builder.append(sm.qname("_") + "_OnEntry(" + ctx.getStateID(sm) + ", &" + ctx.getInstanceVarName(inst) + ");\n");
         }
     }
+
+protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+
+    ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
+
+    //FIXME: Re-implement debug properly
+    /*
+    if (context.debug) {
+      builder append context.init_debug_mode() + "\n"
+    }
+    */
+    // Call the initialization function
+    builder.append("initialize_configuration_" + cfg.getName() + "();\n");
+
+    // Serach for the ThingMLSheduler Thing
+    Thing arduino_scheduler = null;
+    for (Thing t : model.allThings()) {
+        if (t.getName().equals("ThingMLScheduler"))  {
+            arduino_scheduler = t;
+            break;
+        }
+    }
+
+    if (arduino_scheduler != null) {
+        
+         Message setup_msg = null;
+            for (Message m : arduino_scheduler.allMessages()) {
+                if (m.getName().equals("setup")) { setup_msg = m; break; }
+            }
+        
+            if (setup_msg != null) {
+                // Send a poll message to all components which can receive it
+                for (Instance i : cfg.allInstances()) {
+                    for (Port p : i.getType().allPorts()) {
+                        if (p.getReceives().contains(setup_msg)) {
+                            builder.append(ctx.getHandlerName(i.getType(), p, setup_msg) + "(&" + ctx.getInstanceVarName(i) + ");\n");
+                        }
+                    }
+                }
+
+            }
+
+      }
+    }
+  
+
 
     protected void generatePollingCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 

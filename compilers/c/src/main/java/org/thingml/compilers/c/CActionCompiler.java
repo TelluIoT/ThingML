@@ -61,6 +61,29 @@ public abstract class CActionCompiler extends GenericImperativeActionCompiler {
         }
         builder.append(");\n");
     }
+    
+    @Override
+    public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
+        CCompilerContext context = (CCompilerContext)ctx;
+        String propertyName = action.getProperty().getName();
+      
+        if (action.getProperty() instanceof Property) {
+            propertyName = context.getInstanceVarName() + "->" + action.getProperty().qname("_") + "_var";
+        }
+                
+
+        builder.append(propertyName);
+     
+        for (Expression idx : action.getIndex()) {
+          builder.append("[");
+          this.generate(idx, builder, context);
+          builder.append("]");
+      }
+      builder.append(" = ");
+      this.generate(action.getExpression(), builder, context);
+      builder.append(";\n");
+  
+    }
 
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
