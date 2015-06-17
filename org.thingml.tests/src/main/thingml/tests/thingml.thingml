@@ -1,0 +1,11 @@
+/* ThingML Framework */
+
+// Base datatypes
+import "datatypes.thingml"
+
+// Import everithing in core
+import "core/scheduler.thingml"
+import "core/timer.thingml"
+import "core/test.thingml"
+import "core/random.thingml"
+import "core/timestamp.thingml"

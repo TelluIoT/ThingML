@@ -1,4 +1,4 @@
-import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+import "thingml.thingml"
 
 // Three servers on the same port and one client.
 
