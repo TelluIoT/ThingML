@@ -85,10 +85,10 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         ctx.setCurrentConfiguration(cfg);
         for(Thing th : cfg.allThings()) {
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(th, ctx);
-            ctx.getCompiler().getThingApiCompiler().generateComponent(th, ctx);
+            ctx.getCompiler().getThingImplCompiler().generateImplementation(th, ctx);
         }
         ctx.getCompiler().getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
-        ctx.getCompiler().getCfgBuildCompiler().generate(cfg, ctx);
+        ctx.getCompiler().getCfgBuildCompiler().generateBuildScript(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
     }
 }
