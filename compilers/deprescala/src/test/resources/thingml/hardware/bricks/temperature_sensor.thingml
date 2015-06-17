@@ -1,0 +1,78 @@
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the temperature sensor. 
+//*
+
+import "../../thingml.thingml"
+import "../io/analog_input.thingml"
+
+thing fragment TemperatureSensorMsgs 
+{
+	message read_temperature ();
+	message temperature_value (val : Int16);
+}
+
+thing TemperatureSensorClient includes TemperatureSensorMsgs 
+{
+	required port TemperatureSensor 
+    {
+		sends read_temperature
+		receives temperature_value
+	}
+    
+}
+
+thing TemperatureSensor includes TemperatureSensorMsgs, AnalogInputMsgs
+@c_header "#include <math.h>"
+{   
+
+	function convertTemperature(adc : Int16) : Int16 do
+		var tmp : Double
+ 		tmp = 'log('& (10240000 / adc ) - 10000 &')'
+ 		tmp = 1 / ( '0.001129148' + ('0.000234125' + ('0.0000000876741' * tmp * tmp )) * tmp )
+ 		tmp = tmp - '273.15' // Convert Kelvin to Celcius'
+ 		return '(int)'& tmp	
+	end
+
+    property temp : Int16 = 0
+    
+	provided port TemperatureSensor 
+    {
+		receives read_temperature
+		sends temperature_value
+	}
+
+    required port AnalogInput
+    {
+        receives analog_input_value
+        sends read_analog_input    
+    }
+    
+    statechart TempSensorImpl init Read 
+    {    
+        state Running 
+        {   
+            internal event m : AnalogInput?analog_input_value
+    	    action do
+                TemperatureSensor!temperature_value ((temp + convertTemperature(m.value)) / 2)
+                temp = convertTemperature(m.value)
+                end
+            
+        	transition force_reading -> Read
+            event TemperatureSensor?read_temperature
+        	action AnalogInput!read_analog_input ()
+        }        
+        
+        state Read
+        {
+            transition read -> Running
+            event m : AnalogInput?analog_input_value
+    	    action do
+                temp = convertTemperature(m.value)     
+                TemperatureSensor!temperature_value (convertTemperature(m.value))
+                end
+        }
+    }
+}

@@ -1,0 +1,141 @@
+/*
+*This is a logger for Configratrion(ExtraConfig) generated automatically
+*/
+import "configs.thingml"
+thing Logger_ExtraConfig includes ControlMessage,Logger,API1BookHotel
+{
+provided port PrvPort_ExtraConfig_c1_ServerBookPort {
+receives rRequest,inputID,typeRequest,number
+sends rReply,idReply,typeReply,result
+}
+required port ReqPort_ExtraConfig_s1_CilentBookPort {
+sends rRequest,inputID,typeRequest,number
+receives rReply,idReply,typeReply,result
+}
+provided port PrvPort_Control{
+receives startMsg, stopMsg
+}
+statechart Logger init Ready {
+state Ready{
+on entry do
+clearlog()
+print "Ready, Waiting for startMsg trigger"
+end
+transition->Logging
+event e:PrvPort_Control?startMsg
+}
+state Logging{
+on entry do
+print "Logger start!"
+log("@startuml")
+log("autonumber \"<b>[000]\"")
+log("participant Logger as \"Logger_ExtraConfig \" <<(L,#EEEEEE)>> #99FF99")
+end
+on exit do
+log("@enduml")
+printlog()
+writeFile()
+end
+
+transition-> Ready
+event e: PrvPort_Control?stopMsg
+
+internal
+event e: PrvPort_ExtraConfig_c1_ServerBookPort?rRequest
+action do
+log("\"ExtraConfig_c1:API1BookHotelFakeClient\" -> Logger : rRequest("+"\""+e.roomRequest+"\""+")")
+ReqPort_ExtraConfig_s1_CilentBookPort!rRequest(e.roomRequest)
+log("Logger -> \"ExtraConfig_s1:Server\" : rRequest("+"\""+e.roomRequest+"\""+")")
+end
+internal
+event e: PrvPort_ExtraConfig_c1_ServerBookPort?inputID
+action do
+log("\"ExtraConfig_c1:API1BookHotelFakeClient\" -> Logger : inputID("+"\""+e.ID+"\""+")")
+ReqPort_ExtraConfig_s1_CilentBookPort!inputID(e.ID)
+log("Logger -> \"ExtraConfig_s1:Server\" : inputID("+"\""+e.ID+"\""+")")
+end
+internal
+event e: PrvPort_ExtraConfig_c1_ServerBookPort?typeRequest
+action do
+log("\"ExtraConfig_c1:API1BookHotelFakeClient\" -> Logger : typeRequest("+"\""+e.RTRequest+"\""+")")
+ReqPort_ExtraConfig_s1_CilentBookPort!typeRequest(e.RTRequest)
+log("Logger -> \"ExtraConfig_s1:Server\" : typeRequest("+"\""+e.RTRequest+"\""+")")
+end
+internal
+event e: PrvPort_ExtraConfig_c1_ServerBookPort?number
+action do
+log("\"ExtraConfig_c1:API1BookHotelFakeClient\" -> Logger : number("+e.SingleRoomNumber+","+e.DoubleRoomNumber+")")
+ReqPort_ExtraConfig_s1_CilentBookPort!number(e.SingleRoomNumber,e.DoubleRoomNumber)
+log("Logger -> \"ExtraConfig_s1:Server\" : number("+e.SingleRoomNumber+","+e.DoubleRoomNumber+")")
+end
+
+internal
+event e: ReqPort_ExtraConfig_s1_CilentBookPort?rReply
+action do
+log("\"ExtraConfig_s1:Server\" -> Logger : rReply("+e.roomReply+")")
+PrvPort_ExtraConfig_c1_ServerBookPort!rReply(e.roomReply)
+log("Logger -> \"ExtraConfig_c1:API1BookHotelFakeClient\" : rReply("+e.roomReply+")")
+end
+
+internal
+event e: ReqPort_ExtraConfig_s1_CilentBookPort?idReply
+action do
+log("\"ExtraConfig_s1:Server\" -> Logger : idReply("+e.reply+")")
+PrvPort_ExtraConfig_c1_ServerBookPort!idReply(e.reply)
+log("Logger -> \"ExtraConfig_c1:API1BookHotelFakeClient\" : idReply("+e.reply+")")
+end
+internal
+event e: ReqPort_ExtraConfig_s1_CilentBookPort?typeReply
+action do
+log("\"ExtraConfig_s1:Server\" -> Logger : typeReply("+"\""+e.single+"\""+","+"\""+e.double+"\""+")")
+PrvPort_ExtraConfig_c1_ServerBookPort!typeReply(e.single,e.double)
+log("Logger -> \"ExtraConfig_c1:API1BookHotelFakeClient\" : typeReply("+"\""+e.single+"\""+","+"\""+e.double+"\""+")")
+end
+internal
+event e: ReqPort_ExtraConfig_s1_CilentBookPort?result
+action do
+log("\"ExtraConfig_s1:Server\" -> Logger : result("+e.bookresult+")")
+PrvPort_ExtraConfig_c1_ServerBookPort!result(e.bookresult)
+log("Logger -> \"ExtraConfig_c1:API1BookHotelFakeClient\" : result("+e.bookresult+")")
+end
+}
+}
+}
+
+thing Logger
+@scala_trait "org.thingml.utils.log.Access2File"
+@thingml_maven_dep "org.thingml.utils"
+{
+property trace_buffer :String
+function log(trace:String) do
+print "==LOG: "+trace+" !=="
+trace_buffer = trace_buffer + trace +"\n"
+end
+function printlog() do
+print "====TRACE====\n"
+print trace_buffer
+end
+function clearlog() do
+trace_buffer =""
+end
+function writeFile() do
+'this.asInstanceOf[org.thingml.utils.log.Access2File].writeFile(' & trace_buffer & ',"C:/Users/bmori/AppData/Local/Temp/ThingML_temp/Config_Logger_ExtraConfig/log_ExtraConfig")'
+end
+}
+
+thing Control includes ControlMessage
+@mock "true"{
+required port ControlPort{
+sends startMsg, stopMsg
+}
+}
+
+configuration Config_Logger_ExtraConfig{
+instance control: Control
+instance logger: Logger_ExtraConfig
+instance ins_ExtraConfig_s1: Server
+instance ins_ExtraConfig_c1: API1BookHotelFakeClient
+connector control.ControlPort => logger.PrvPort_Control
+connector ins_ExtraConfig_c1.ServerBookPort=> logger.PrvPort_ExtraConfig_c1_ServerBookPort
+connector logger.ReqPort_ExtraConfig_s1_CilentBookPort=> ins_ExtraConfig_s1.CilentBookPort
+}

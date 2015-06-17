@@ -1,0 +1,27 @@
+import "../blink4leds.thingml"
+import "../../hardware/bricks/_arduino/led.thingml"
+import "../../core/_arduino/timer.thingml"
+
+configuration Blink4Leds {       
+
+	// The arduino board with 4 LEDs on pin 10, 13, 6, 8
+	group led1 : LedArduino
+		set led1.io.digital_output.pin = DigitalPin:PIN_10
+	group led2 : LedArduino
+		set led2.io.digital_output.pin = DigitalPin:PIN_13
+	group led3 : LedArduino
+		set led3.io.digital_output.pin = DigitalPin:PIN_6
+	group led4 : LedArduino
+		set led4.io.digital_output.pin = DigitalPin:PIN_8
+	
+	instance timer : TimerArduino
+	
+	// The blink application
+	instance app : Blink4Leds
+	connector app.leds => led1.led.Led
+	connector app.leds => led2.led.Led
+	connector app.leds => led3.led.Led
+	connector app.leds => led4.led.Led
+
+	connector app.timer => timer.timer
+}

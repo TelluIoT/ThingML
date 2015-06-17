@@ -110,10 +110,10 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                                compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/"));
                                 ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
                                 for (Configuration c : thingmlModel.allConfigurations()) {
                                     File file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName());
-                                    compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/"));
                                     if (!file.exists()) {
                                         file.mkdirs();
                                         compiler.compile(c);
@@ -134,10 +134,10 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                         try {
                             final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                             ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
+                            compiler.setOutputDirectory( new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/"));
                             for (Configuration c : thingmlModel.allConfigurations()) {
                                 File file = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName());
                                 file.mkdirs();
-                                compiler.setOutputDirectory(file);
                                 compiler.compile(c);
                             }
                         } catch (Exception ex) {

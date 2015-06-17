@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.thingml</groupId>
+    <artifactId>compilers</artifactId>
+    <name>ThingML :: Compilers</name>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>org.thingml</groupId>
+        <artifactId>org.thingml.root</artifactId>
+        <version>0.6.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modules>
+        <module>framework</module>
+        <module>java</module>
+		<module>javascript</module>
+		<module>c</module>
+		<module>uml</module>
+		<module>deprescala</module>
+        <module>registry</module>
+    </modules>
+
+</project>

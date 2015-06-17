@@ -1,0 +1,117 @@
+//*
+// Fabien Fleurey - 20/08/2011
+// Core library.
+//
+// This file provides an interface to use analog input. 
+// All more external things which use analog input should pass by this way.
+// 
+// Three modes are available to fit your needs: simple, periodic and on change.
+//*
+
+import "../../thingml.thingml"
+
+thing fragment AnalogInputMsgs
+{
+	message read_analog_input ();
+	message analog_input_value (value : Int16);
+}
+
+thing fragment AnalogInput includes AnalogInputMsgs
+{
+	provided port AnalogInput 
+	{
+		receives read_analog_input
+		sends analog_input_value 
+	}
+}
+
+
+thing PeriodicAnalogInput includes AnalogInputMsgs, TimerMsgs
+{
+	readonly property refresh_rate : Long = 5000
+
+	provided port PeriodicAnalogInput 
+	{
+		sends analog_input_value 
+	}
+
+	required port Timer
+	{
+		receives timer_timeout
+		sends timer_start
+	}
+	
+	required port AnalogInput 
+	{
+		sends read_analog_input
+		receives analog_input_value 
+	}
+	
+	statechart PeriodicAnalogInputImpl init Running
+	{	
+		state Running
+		{
+			on entry Timer!timer_start (refresh_rate)
+			
+			transition wait -> Waiting
+			event Timer?timer_timeout
+			action AnalogInput!read_analog_input()
+		}
+		
+		state Waiting
+		{
+			transition got -> Running 
+			event m : AnalogInput?analog_input_value
+			action PeriodicAnalogInput!analog_input_value (m.value)
+		}
+	}
+}
+
+thing OnChangeAnalogInput includes AnalogInputMsgs, TimerMsgs
+{
+	readonly property refresh_rate : UInt8 = 20
+	
+	provided port OnChangeAnalogInput 
+	{
+		sends analog_input_value 
+	}
+
+	required port Timer
+	{
+		receives timer_timeout
+		sends timer_start
+	}
+	
+	required port AnalogInput 
+	{
+		sends read_analog_input
+		receives analog_input_value 
+	}
+	
+	statechart OnChangeAnalogInputImpl init Running
+	{
+	
+		property oldValue : Int16 = -1
+		
+		state Running
+		{
+			on entry Timer!timer_start (refresh_rate)
+			
+			transition wait -> Waiting 
+			event Timer?timer_timeout
+			action AnalogInput!read_analog_input()
+		} 
+		
+		state Waiting
+		{
+			transition -> Running
+			event m : AnalogInput?analog_input_value
+			action do
+                if (not (m.value == oldValue)) do
+				    OnChangeAnalogInput!analog_input_value (m.value)
+				    oldValue = m.value
+                    end
+			end
+		}
+	}	
+}

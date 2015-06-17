@@ -1,0 +1,28 @@
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the lcd screen. 
+//*
+
+import "../../thingml.thingml"
+
+thing fragment LcdScreenMsgs includes FormatedOutputStreamMsgs, OutputByteStreamMsgs
+{
+	message clear ();
+	message home ();
+	message set_cursor (col : UInt8, row : UInt8);
+	message print_string (s : String);
+	message display (b : Boolean);
+}
+
+thing LcdScreen includes LcdScreenMsgs
+{
+    readonly property col : UInt8 = 16
+    readonly property row : UInt8 = 2
+    
+	provided port LcdScreen 
+    {
+		receives clear, home, set_cursor, write_byte, print_string, print_value, display 
+	}
+}

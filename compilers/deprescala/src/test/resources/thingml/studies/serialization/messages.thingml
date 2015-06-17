@@ -1,0 +1,9 @@
+import "../../datatypes.thingml"
+
+//test messages
+thing fragment testMsgs {
+    message m4(i : Integer, s : String)@code "4";
+    message m2(i : Integer)@code "2";
+    message m1()@code "1";
+    message m3(s : String)@code "3";
+}

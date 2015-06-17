@@ -1,0 +1,20 @@
+import "../sim2D.thingml"
+
+
+thing FakeSimulatedThing includes SimulatedThing {
+    provided port motion {
+        receives forward, backward, turn  
+    }
+    
+    required port monitoring {
+        sends getValue
+        receives value
+    }
+}
+
+thing FakeSimulatedSensor includes SimulatedSensor {
+    provided port monitoring {
+        receives getValue
+        sends value
+    }
+}

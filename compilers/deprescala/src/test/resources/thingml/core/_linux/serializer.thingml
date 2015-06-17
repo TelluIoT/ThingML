@@ -1,0 +1,175 @@
+import "../serializer.thingml"
+
+//Defines the way the datatypes of the ThingML framework are serialized in cpp
+//TODO: do it for all the remaining datatypes
+
+thing fragment ArraySerializerCPP includes PacketManager, OutputByteArrayMsgs
+@c_header "
+#include <string>
+" 
+{
+    required port out @sync_send "true" {
+        sends write_bytes    
+    }
+    
+    function bytesToString(bytes : Byte[256], str : String) : String 
+    do
+    	var i : Integer = 0
+    	var current : Byte
+    	var leave : Boolean = false
+    	while(i < 256 and not leave) do
+    		current = bytes[i]
+    		str[i] = bytes[i]
+    		i = i + 1
+    		if((not (current == ESCAPE_BYTE)) and (bytes[i] == STOP_BYTE)) do
+    			str[i] = bytes[i]
+    			str[i+1] = '\'\0\''
+    			leave = true
+    		end
+    	end
+    	return str
+    end
+    
+    function escape(escaped : Byte[34]) : Byte[34] do
+    
+        readonly var stop : Integer = DATA_POSITION + buffer[LENGTH_POSITION]// - 1
+        var i : Integer = 0
+        var j : Integer = 0
+        escaped[j] = START_BYTE
+        j = j+1
+        var current : Byte
+        while(i < stop) do
+          current = buffer[i]
+          if (current == START_BYTE or current == STOP_BYTE or current == ESCAPE_BYTE) do
+              escaped[j] = ESCAPE_BYTE
+              j = j + 1
+          end
+          escaped[j] = current
+          j = j+1
+          i = i+1
+        end
+        escaped[j] = STOP_BYTE
+        return escaped
+    end
+    
+    //Integer    
+    function serializeInteger(d : Integer)
+    do
+        storeByte('('& d &' >> 8) & 0x00ff')
+        storeByte('('& d &') & 0x00ff')
+    end
+    
+    //UInt16
+    function serializeUInt16(d : UInt16)
+    do
+        storeByte('('& d &' >> 8) & 0x00ff')
+        storeByte('('& d &') & 0x00ff')    
+    end
+    
+    //String
+    function serializeString(str : String) 
+    do
+        var size : UInt8 = 'strlen(' & str & ');'
+        if(size + 1 > remainLengthString) do // 1 byte is used to store the length of a string
+        	'printf("string is too long, cutting the string\n");'
+        	size = remainLengthString	
+        end
+        storeByte(''& size &' & 0xff')
+        remainLengthString = remainLengthString - 1
+        var bytes_to_write : Integer = remainLengthString
+        var i : Integer = 0
+        while(i < bytes_to_write) do
+            storeByte('' & str[i] & ' & 0xff')
+            remainLengthString = remainLengthString -1
+            i = i + 1
+        end
+    end
+    
+    function send() do
+    	var escaped : Byte[34]
+        out!write_bytes(escape(escaped))
+        remainLengthString = lengthString
+    end
+    
+    function ssetHeader(code : Byte, length : Byte) do
+        setHeader(code, length)
+    end
+}
+
+thing fragment ArrayDeserializerCPP includes PacketManager, InputByteArrayMsgs
+@c_header "
+#include <string>
+" 
+{
+    required port in {
+        receives receive_bytes    
+    }
+
+    function deserializeInteger() : Integer
+    do
+        var res : Integer = '' & readByte() & ' << 8 ' + readByte()
+        return res
+    end 
+
+    //String                            
+    function deserializeString(str : String) : String 
+    do
+        var size : UInt8 = readByte()
+        if(size > lengthString) do
+        	'printf("something other than the length byte of the string is read...\n");'
+        	size = lengthString
+        end
+        remainLengthString = remainLengthString + 1
+    	'strcpy(' & str & ', "");'
+        var i : Integer = 0
+        while(i < size) do
+        	str[i] = readByte()
+            i = i + 1
+            remainLengthString = remainLengthString + 1
+        end
+        str[i] = '\'\0\''
+        return str
+    end
+    
+    function stringToBytes(str : String, bytes : Byte[256]) : Byte[256]
+    do
+		var i : Integer = 0
+		while(not(str[i] == '\'\0\'') and i < 256) do
+			bytes[i] = str[i]
+			i = i + 1
+		end
+		return bytes
+    end
+    
+    function receive(bytes : Byte[34]) do //34 max size with start/stop bytes + all other bytes escaped = 2*16 + 2
+        index = 0
+        //print("receive " + bytes)
+        var size : Integer = DATA_POSITION + bytes[LENGTH_POSITION+1] + 1//bytes contains start/stop/escape bytes
+        //print("size = " + size)
+        var i : Integer = 0
+        var current : Byte = bytes[i]
+        if (current == START_BYTE) do
+            i = i + 1
+            var next : Byte = bytes[i]
+            if (not(next == STOP_BYTE)) do
+                var cont : Boolean = true
+                while(cont and i < size) do
+                    //print("i = " + i)
+                    current = next
+                    i = i + 1
+                    next = bytes[i]
+                    if (current == ESCAPE_BYTE) do
+                        current = next
+                        i = i + 1
+                        size = size + 1
+                        next = bytes[i]
+                    end
+                    storeByte(current)    
+                    cont = not(next == STOP_BYTE and not(current == ESCAPE_BYTE))
+                end
+                storeByte(current)
+                forward()
+            end
+        end
+    end    
+}

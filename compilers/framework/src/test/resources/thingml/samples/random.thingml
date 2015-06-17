@@ -1,0 +1,17 @@
+import "../datatypes.thingml"
+
+/*****************************************************************************
+ * Definition of the ThingML random generator
+ *****************************************************************************/
+thing fragment RandomMsg {
+	message answer(i : Integer);
+	message request();
+}
+thing fragment Random includes RandomMsg
+{
+	provided port random 
+    {	
+		sends answer
+        receives request
+	}
+}

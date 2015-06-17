@@ -1,0 +1,322 @@
+import "../../hardware/devices/_arduino/tinypwm.thingml"
+import "../../hardware/devices/_arduino/LM335.thingml"
+import "../../hardware/devices/_arduino/fan_sensors.thingml"
+import "../../hardware/devices/_arduino/advanced_serial.thingml"
+
+import "../../hardware/bricks/_arduino/led.thingml"
+import "../../hardware/bricks/_arduino/lcd_screen.thingml"
+import "../../hardware/bricks/_arduino/rotation_sensor.thingml"
+
+
+thing PCFanCtrl includes TinyPWMMsgs, LcdScreenMsgs, FanSensorsMsgs, LM335Msg, TimerMsgs, AdvancedSerialMsgs, LedMsgs
+{
+    
+    // LCD display to report temperatures and fans speed
+    required port LcdScreen	{
+		sends clear, print_string, print_value, set_cursor
+	}
+
+    required port AdvSerial 
+    {
+		receives receive_byte 
+        sends write_byte, print_message, print_value
+	}
+
+    // Temperature of the air sucked in the case
+    required port TempIn {
+		receives temperature
+	}
+    
+    // Temperature of the air going out
+    required port TempOut {
+		receives temperature
+	}
+    
+    // 2 PWM Channels to control the fans
+    required port PWM {	
+		sends set_pwm, set_pwm_a, set_pwm_b
+	}
+    
+    // Fan sensors to monitor the speed of up to 6 fans
+    required port FanSensors {
+        receives fan_sensor_rpm
+	}
+
+    required port Timer
+	{
+		sends timer_start
+		receives timer_timeout
+	}
+
+    required port LED {
+       sends led_toggle
+    }
+
+    statechart PCFanCtrlImpl init Running {
+        
+        property t_in : Int16 = 0
+        property t_out : Int16 = 0
+        
+        property fan1 : UInt16 = 0
+        property fan2 : UInt16 = 0
+        property fan3 : UInt16 = 0
+        property fan4 : UInt16 = 0
+        property fan5 : UInt16 = 0
+        property fan6 : UInt16 = 0
+        
+        property pwmin : UInt16 = 255
+        property pwmout : UInt16 = 255
+        
+        on entry Timer!timer_start(500)   
+        
+        // Update all values from fan sensors
+        internal event m : FanSensors?fan_sensor_rpm
+        guard m.sensor == FanSensorPin:FAN_SENSOR_PIN_2
+        action fan1 = m.rpm
+        
+        internal event m : FanSensors?fan_sensor_rpm
+        guard m.sensor == FanSensorPin:FAN_SENSOR_PIN_3
+        action fan2 = m.rpm
+        
+        internal event m : FanSensors?fan_sensor_rpm
+        guard m.sensor == FanSensorPin:FAN_SENSOR_PIN_4
+        action fan3 = m.rpm
+        
+        internal event m : FanSensors?fan_sensor_rpm
+        guard m.sensor == FanSensorPin:FAN_SENSOR_PIN_5
+        action fan4 = m.rpm
+        
+        internal event m : FanSensors?fan_sensor_rpm
+        guard m.sensor == FanSensorPin:FAN_SENSOR_PIN_6
+        action fan5 = m.rpm
+        
+        internal event m : FanSensors?fan_sensor_rpm
+        guard m.sensor == FanSensorPin:FAN_SENSOR_PIN_7
+        action fan6 = m.rpm
+        
+        // Update values from temperature sensors
+        internal event m : TempIn?temperature
+        action t_in = m.temperature
+        
+        internal event m : TempOut?temperature
+        action t_out = m.temperature 
+        
+        state Running {
+            internal event  Timer?timer_timeout
+            action do 
+                Timer!timer_start(500)
+                LED!led_toggle()
+            end
+        }
+        
+        region Control init Auto {
+
+            state Auto {
+
+                on entry do 
+                    PWM!set_pwm_a(pwmin) 
+                    PWM!set_pwm_b(pwmout) 
+                end
+                
+                transition -> Auto event Timer?timer_timeout
+                guard t_out < 22
+                action do
+                    pwmin = 27       
+                    pwmout = 27
+                end
+                
+                transition -> Auto event Timer?timer_timeout
+                guard not (t_out < 22)
+                action do
+                    pwmin = pwmin + (27 + (t_out - 22) * 12)     
+                    pwmout = pwmout + (27 + (t_out - 22) * 12)
+                    pwmin = (pwmin + 1) / 2
+                    pwmout = (pwmout + 1) / 2
+                    if (pwmin > 255) pwmin = 255
+                    if (pwmout > 255) pwmout = 255
+                end
+                
+                transition next_mode -> FullPower
+                event m : AdvSerial?receive_byte
+                guard m.b == '\'m\''
+                action AdvSerial!print_message ("Full Power mode.\n")
+                
+            }
+            
+            
+            state FullPower {
+
+                on entry do 
+                    pwmin = 255
+                    pwmout = 255
+                    PWM!set_pwm_a(pwmin) 
+                    PWM!set_pwm_b(pwmout) 
+                end
+                
+                transition -> FullPower event Timer?timer_timeout
+                
+                transition next_mode -> HalfPower
+                event m : AdvSerial?receive_byte
+                guard m.b == '\'m\''
+                action AdvSerial!print_message ("Half Power mode.\n")
+                
+            }
+            
+            state HalfPower {
+
+                on entry do 
+                    pwmin = 127
+                    pwmout = 127
+                    PWM!set_pwm_a(pwmin) 
+                    PWM!set_pwm_b(pwmout) 
+                end
+                
+                transition -> HalfPower event Timer?timer_timeout
+                
+                transition -> Stop event Timer?timer_timeout
+                
+                transition next_mode -> Stop
+                event m : AdvSerial?receive_byte
+                guard m.b == '\'m\''
+                action AdvSerial!print_message ("!!! STOP MODE !!!.\n")
+                
+            }
+            
+            state Stop {
+
+                on entry do 
+                    pwmin = 0
+                    pwmout = 0
+                    PWM!set_pwm_a(pwmin) 
+                    PWM!set_pwm_b(pwmout) 
+                end
+                
+                transition -> Stop event Timer?timer_timeout
+                
+                transition next_mode -> Auto
+                event m : AdvSerial?receive_byte
+                guard m.b == '\'m\''
+                action AdvSerial!print_message ("Auto Power Mode.\n")
+                
+            }
+            
+        }
+        
+        region LCDReport init Display {
+            state Display {
+                internal event Timer?timer_timeout
+                action do
+                
+                    // Update Display
+                    LcdScreen!clear()
+                    LcdScreen!print_string ("AIR:")
+                    LcdScreen!print_value (t_in)
+                    LcdScreen!print_string ("C   ")
+                    
+                    LcdScreen!print_string ("PC:")
+                    LcdScreen!print_value (t_out)
+                    LcdScreen!print_string ("C")
+                    
+                    LcdScreen!set_cursor (0, 1)
+                    
+                    LcdScreen!print_string ("-> ")
+                    LcdScreen!print_value ('map('& pwmin &', 0, 255, 0, 100)')
+                    LcdScreen!print_string (" == ")
+                    LcdScreen!print_value ('map('& pwmout &', 0, 255, 0, 100)')
+                    LcdScreen!print_string (" ->")
+                    
+                end
+            }
+        }
+        
+        region SerialReport init Report {
+            
+            state Report {
+                
+                property cpt : UInt8 = 0
+                
+                on exit cpt = cpt + 1
+                
+                transition -> Report event Timer?timer_timeout
+                guard cpt == 0
+                action do
+                    // Send serial report
+                    AdvSerial!print_message ("I:")
+                    AdvSerial!print_value (t_in)
+                    AdvSerial!print_message ("C\tO:")
+                    AdvSerial!print_value (t_out)
+                    AdvSerial!print_message ("C\tA:")
+                    AdvSerial!print_value ('map('& pwmin &', 0, 255, 0, 100)')
+                    AdvSerial!print_message ("%\tB:")
+                    AdvSerial!print_value ('map('& pwmout &', 0, 255, 0, 100)')
+                    AdvSerial!print_message ("%\t")
+                    
+                    AdvSerial!print_message ("F1:")
+                    AdvSerial!print_value (fan1)
+                    AdvSerial!print_message ("\tF2:")
+                    AdvSerial!print_value (fan2)
+                    AdvSerial!print_message ("\tF3:")
+                    AdvSerial!print_value (fan3)
+                    AdvSerial!print_message ("\tF4:")
+                    AdvSerial!print_value (fan4)
+                    AdvSerial!print_message ("\tF5:")
+                    AdvSerial!print_value (fan5)
+                    AdvSerial!print_message (";\n")
+
+                end
+                
+                transition -> Report event Timer?timer_timeout
+                guard cpt > 0
+                action if (cpt > 5) cpt = 0
+            }
+            
+        } 
+         
+    }
+}
+
+configuration SimpleFanCtrl       
+    @debug "true"
+    @debug_fifo "true"
+//    @debug_message_send "timer.*"
+//    @debug_message_receive "timer.*"
+{
+    // Arduino board
+    instance arduino : Arduino
+    
+    // Lcd Screen
+    instance lcd_screen : LcdScreen
+    
+    // Serial port
+    group adv_serial : AdvancedSerial
+	
+    // TinyPWM
+    instance tiny_pwm : TinyPWM
+    
+    // Fan Sensors
+    group fans : MultipleFanSensors
+    set fans.fan_sensors.number_of_fans = 5
+    
+    // Temperture Sensors
+    group tin : LM335
+    set tin.io.analog_input.pin = AnalogPin:A_5 
+    
+    group tout : LM335
+    set tout.io.analog_input.pin = AnalogPin:A_4
+    
+    // Timer
+    instance timer : TimerArduino
+    
+    
+    // Main application
+    instance main : PCFanCtrl
+    connector main.PWM => tiny_pwm.PWM
+    connector main.LED => tiny_pwm.LED
+    connector main.LcdScreen => lcd_screen.LcdScreen
+    connector main.TempOut => tout.lm335.Temp
+    connector main.TempIn => tin.lm335.Temp
+    connector main.FanSensors => fans.fan_sensors.FanSensors
+    connector main.AdvSerial => adv_serial.advanced_serial.AdvancedSerial
+    connector main.Timer => timer.timer
+    
+}

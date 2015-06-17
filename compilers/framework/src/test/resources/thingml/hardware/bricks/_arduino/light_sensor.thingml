@@ -1,0 +1,18 @@
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the light sensor. 
+//*
+
+import "../light_sensor.thingml"
+import "../../io/_arduino/analog_input.thingml"
+
+configuration fragment LightSensorArduino
+{
+    group io : OnChangeAnalogInputArduino
+    	set io.change_analog_input.refresh_rate = 500
+
+    instance light_sensor : LightSensor
+    connector light_sensor.AnalogInput => io.analog_input.AnalogInput
+} 

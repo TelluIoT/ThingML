@@ -1,0 +1,38 @@
+// 
+// (c) SINTEF 2011
+//
+// Define the behavior of a simple application that tries to login on a remote service. 
+// It sends credentials (login, password) and waits for resulting ackmowledgment. If 
+// the access is granted, it transitions to the "LoggedOn" state.
+// 
+// by Franck CHAUVEL <franck.chauve@sintef.no>
+// and Brice MORIN <brice.morin@sintef.no>
+//
+
+import "API1.thingml"
+
+thing Client includes API1{
+
+	readonly property login : String = "toto"
+	readonly property pwd: String = "pouet"
+	
+	required port LoginServer {
+		sends log
+		receives ack 
+	}
+	
+	statechart Authentication init Waiting {
+	
+		state Waiting {
+			on entry LoginServer!log(login, pwd)
+			transition -> LoggedOn 
+				event e : LoginServer?ack
+				guard e.access
+		}
+		
+		state LoggedOn {
+			on entry print "Client side: Your are logged in"
+		}
+	
+	}
+}

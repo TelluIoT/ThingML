@@ -1,0 +1,99 @@
+//*
+// Fabien Fleurey - 25/08/2011
+//
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+// 		- Button (1)  ->  Default pin: D_9
+// 		- LED (1)  ->  Default pin: D_8
+//
+// This is an example of use of soft button device. The LED turn in the opposite position
+// when the button is simply pressed, blink fast after a double click and blink slow if a 
+// long press is detected.
+//*
+
+import "../../hardware/devices/_arduino/soft_button.thingml"
+import "../../hardware/bricks/_arduino/led.thingml"
+
+thing SimpleSoftButton includes LedMsgs, TimerMsgs, SoftButtonMsgs 
+{
+    readonly property blink_fast_delay : UInt16 = 150
+    readonly property blink_slow_delay : UInt16 = 1000
+    
+    required port SoftButton 
+    {
+		receives click, double_click, long_press
+	}
+    
+    required port Timer 
+    {
+		sends timer_start, timer_cancel
+		receives timer_timeout
+	}
+
+    required port Led 
+    {	
+		sends led_toggle, led_off
+	}
+
+    statechart SimpleSoftButtonImpl init Running 
+    {    
+        composite state Running init Wait 
+        {
+   			transition -> BlinkSlow
+   			event SoftButton?long_press
+   			action Led!led_toggle ()
+
+	        state Wait 
+            {  
+	        	on entry Led!led_off ()
+	        
+	        	internal event SoftButton?click
+	        	action Led!led_toggle ()
+	        	
+	        	transition -> BlinkFast
+	        	event SoftButton?double_click
+	        	action Led!led_toggle ()         
+	        }
+	        
+	        state BlinkFast
+            {
+	        	on entry Timer!timer_start (blink_fast_delay)
+	        	
+	        	transition -> BlinkFast
+	        	event Timer?timer_timeout
+	        	action Led!led_toggle ()
+	        	
+	        	transition -> Wait
+	        	event SoftButton?click 
+	        }
+        }
+        
+        state BlinkSlow 
+        {
+        	on entry Timer!timer_start (blink_slow_delay)
+        	
+        	transition -> BlinkSlow
+	       	event Timer?timer_timeout
+	        action Led!led_toggle ()
+        	
+        	transition -> Running
+        	event SoftButton?click
+        }
+    }
+}
+
+configuration SimpleSoftButton 
+{       
+	group soft_button : SoftButton
+        set soft_button.button.io.digital_input.pin = DigitalPin:PIN_9
+	group led : LedArduino
+        set led.io.digital_output.pin = DigitalPin:PIN_8
+	
+	instance timer : TimerArduino 	
+	instance simple_soft_button : SimpleSoftButton
+	connector simple_soft_button.SoftButton => soft_button.soft_button.SoftButton
+	connector simple_soft_button.Timer => timer.timer
+    connector simple_soft_button.Led => led.led.Led
+}

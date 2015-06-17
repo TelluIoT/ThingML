@@ -1,0 +1,55 @@
+datatype Byte
+@scala_type "Byte";
+
+datatype Integer
+@scala_type "Int";
+
+thing fragment msgs {
+    message m(b : Byte);   
+}
+
+thing Emitter includes msgs {
+    required port p {
+        sends m
+    }
+    
+    function sendByte(b : Byte) do
+        p!m(b)
+    end
+    
+    function send() do
+        var i : Integer = 0
+        while (i < 1024) do
+          sendByte(i)
+          i = i + 1
+        end
+    end
+    
+    statechart behavior init send {
+        state send {
+            on entry send()
+        }    
+    }
+}
+
+thing Receiver includes msgs {
+    provided port p {
+        receives m
+    }
+    
+    statechart behavior init receive {
+        state receive {
+            internal event m : p?m
+            action do
+                print(m.b)
+            end    
+        }    
+    }    
+}
+
+configuration testSendMessageFromFunction {
+    instance e : Emitter
+    instance r : Receiver
+    
+    connector e.p => r.p    
+}

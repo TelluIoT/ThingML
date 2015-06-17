@@ -1,0 +1,97 @@
+import "../../hardware/devices/_arduino/lcd_screen_sensor_disp.thingml"
+import "../../hardware/bricks/_arduino/rotation_sensor.thingml"
+
+import "../../hardware/bricks/_arduino/button.thingml"
+import "../../hardware/bricks/_arduino/led.thingml"
+import "../../hardware/bricks/_arduino/temperature_sensor.thingml"
+
+thing SensorsDisplay includes LcdScreenMsgs, RotationSensorMsgs, TemperatureSensorMsgs, LedMsgs, ButtonMsgs
+{		
+	property tempDisplay : UInt8 = 0
+	property potDisplay : UInt8 = 1
+	
+	required port Display 
+    {	
+		sends initDisplay, refreshDisplay, setDisplay
+	}
+
+	required port Rot
+	{
+		receives rotation_value
+	}
+	
+    required port Temp
+	{
+		receives temperature_value
+	}
+
+    required port Led
+	{
+		sends led_toggle
+	}
+
+	required port Button
+    {
+        receives press
+    }
+	
+   	statechart SensorsDisplayImpl init Pot
+   	{
+   		on entry do
+        		Display!initDisplay (potDisplay, "Position", "", 0, 0, 1023)
+        		Display!initDisplay (tempDisplay, "Temperature", "C", 25, 20, 30)  
+        		end
+   	    
+   	    internal event m : Temp?temperature_value
+        action Display!refreshDisplay (tempDisplay, m.val)
+        	
+        internal event m : Rot?rotation_value
+        action Display!refreshDisplay (potDisplay, m.val)
+        	
+   	    state Temp
+        {		
+        	on entry Display!setDisplay (tempDisplay)
+        	
+        	transition switch -> Pot
+        	event Button?press
+            action Led!led_toggle ()
+        }
+        
+        state Pot
+        {		
+        	on entry Display!setDisplay (potDisplay)
+        
+        	transition switch -> Temp
+        	event Button?press
+            action Led!led_toggle ()	
+        }
+   	}
+}
+
+configuration SensorsDisplay
+{
+	// Rotation sensor configuration.
+	group rot_sensor : RotationSensorArduino
+		set rot_sensor.io.analog_input.pin = AnalogPin:A_4
+	// Temperature sensor configuration.
+	group temp_sensor : TemperatureSensorArduino
+		set temp_sensor.io.analog_input.pin = AnalogPin:A_3
+
+	// Led device configuration.
+	group led : LedArduino
+		set led.io.digital_output.pin = DigitalPin:PIN_8
+	// Button device configuration.
+	group button : ButtonArduino
+		set button.io.digital_input.pin = DigitalPin:PIN_9
+    
+    // Screen device configuration.
+	instance screen : LcdScreen
+	
+    // Application's ports connections.
+	instance app : SensorsDisplay	
+	connector app.Display => screen.Display
+    connector app.Rot => rot_sensor.rotation_sensor.RotationSensor
+    connector app.Temp => temp_sensor.temperature_sensor.TemperatureSensor
+    connector app.Led => led.led.Led
+    connector app.Button => button.button.Button
+}

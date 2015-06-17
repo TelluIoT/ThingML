@@ -1,0 +1,58 @@
+import "../../thingml.thingml"
+
+import "../../hardware/devices/h_bridge_motor.thingml"
+
+thing fragment TwoWDBaseMsg {
+    message accelerate(v : UInt8); 
+    message decelerate(v : UInt8);
+    message steer_right(v : UInt8); 
+    message steer_left(v : UInt8);
+    message set_motors_speed(left : Int16, right : Int16);
+    message stop(); 
+}
+
+thing TwoWDBase includes TwoWDBaseMsg
+{
+    provided port TwoWDBase {
+        receives accelerate, decelerate, steer_right, steer_left, stop, set_motors_speed
+    }
+}
+
+thing TwoWDBaseWithHBridge includes TwoWDBase, HBridgeMotorMsg 
+{
+ 	required port MotorLeft {
+ 		 sends set_speed
+ 	}
+ 	
+ 	required port MotorRight {
+ 		sends set_speed
+  	}
+ 	
+ 	property left_speed : Int16 = 0
+	property right_speed : Int16 = 0
+	
+	function set_motors(left : Int16, right : Int16) do
+		if (left > -256 and left < 256 and right > -256 and right < 256) do
+			left_speed = left
+			right_speed = right
+			MotorLeft!set_speed(left_speed)
+			MotorRight!set_speed(right_speed)
+		end
+	end
+	
+	statechart TwoWDBase init Active
+	{	
+		on entry set_motors(0, 0)
+    	
+    	internal event TwoWDBase?stop action set_motors(0, 0)
+    	
+		internal event m : TwoWDBase?accelerate action set_motors(left_speed + m.v, right_speed + m.v)
+		internal event m : TwoWDBase?decelerate action set_motors(left_speed - m.v, right_speed - m.v)
+		internal event m : TwoWDBase?steer_left action set_motors(left_speed - m.v, right_speed + m.v)
+		internal event m : TwoWDBase?steer_left action set_motors(left_speed + m.v, right_speed - m.v)
+		
+		internal event m : TwoWDBase?set_motors_speed action set_motors(m.left, m.right)
+		
+		state Active {}
+	}
+}

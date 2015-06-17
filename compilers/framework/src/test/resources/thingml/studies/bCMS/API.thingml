@@ -1,0 +1,60 @@
+import "../../datatypes.thingml"
+
+thing fragment bCMSMsgs {
+    //1.
+    message initCom(id : String);
+    //2.
+    message crisisDetails(id : String, lat : Double, lon : Double, time : Long, isActive : Boolean, desc : String);
+    //3.
+    message numberOfTrucks(number : Long);
+    message route(crisisID : String, pVehicles : Long, fVehicles : Long, path : String);   
+    message ackRoute();
+    //4. Note: we ack all vehicles, not each of them individually, yet
+    message dispatched();
+    //5. Note: we ack all vehicles, not each of them individually, yet
+    message arrived();
+    //6.
+    message done();
+    //7.
+    message close();
+}
+
+/*GUI*/
+thing fragment GUIbCMSMsgs {
+    //1.
+    message gui_initCom(activate : Boolean);
+    //2.
+    message gui_crisisDetails(activate : Boolean);
+    //3.
+    message gui_numberOfTrucks(activate : Boolean);
+    message gui_route(activate : Boolean);   
+    message gui_ackRoute(activate : Boolean);
+    //4.
+    message gui_dispatched(activate : Boolean);
+    //5.
+    message gui_arrived(activate : Boolean);
+    //6.
+    message gui_done(activate : Boolean);
+    //7.
+    message gui_close(activate : Boolean);   
+}
+
+thing fragment GUIbCMS_Controller includes GUIbCMSMsgs {
+    message initComOK();
+    message crisisDetailsOK();
+    message numberOfTrucksOK();
+    message dispatchedOK();
+    message arrivedOK();
+    message doneOK();
+    message closeOK();
+    
+    provided port internIN @internal "channel1" {
+        receives initComOK, crisisDetailsOK, numberOfTrucksOK, dispatchedOK, arrivedOK, doneOK, closeOK
+    }    
+    
+    required port internOUT @internal "channel1" {
+        sends initComOK, crisisDetailsOK, numberOfTrucksOK, dispatchedOK, arrivedOK, doneOK, closeOK
+    } 
+    
+              
+}

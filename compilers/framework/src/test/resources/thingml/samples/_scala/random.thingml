@@ -1,0 +1,24 @@
+import "../random.thingml"
+
+/*****************************************************************************
+ * Definition of the ThingML random generator
+ *****************************************************************************/
+thing RandomImpl includes Random
+{
+    statechart RandomImpl init start 
+    {    
+    	property number : Integer = 0
+    	state start {
+    		on entry 'r = new Random()'
+    		
+    		transition -> waiting
+    	}
+        state waiting {    
+            transition -> waiting
+			event random?request
+			action do 
+				random!answer('r.nextInt()')
+			end
+        }
+    }
+}

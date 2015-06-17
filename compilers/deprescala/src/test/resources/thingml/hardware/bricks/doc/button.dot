@@ -1,0 +1,20 @@
+//To create PNG: dot -Tpng led.dot > led.png
+
+digraph g {
+
+	graph [ rankdir = "LR"];
+	
+	node [ fontsize = "12" shape = "point"];
+	edge [];
+	
+	// Definition of the group
+	"Component" [
+	label = "<f0> Button | <f1> io.digital_input.pin : DigitalPin"
+	shape = "record"
+	];
+
+	// Definition of one port
+	"PP1" [label = "" shape = "plaintext"];
+	"Component" -> "PP1" [label = "button.Button" fontsize = "10" arrowhead = "odot"];
+
+}

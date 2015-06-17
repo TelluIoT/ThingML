@@ -1,0 +1,20 @@
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the buzzer. 
+//*
+
+import "../buzzer.thingml"
+import "../../io/_arduino/digital_output.thingml"
+import "../../../core/_arduino/timer.thingml"
+
+configuration fragment BuzzerArduino
+{
+    group io : DigitalOutputArduino
+    
+    instance timer : TimerArduino
+    instance buzzer : Buzzer	 
+    connector buzzer.DigitalOutput => io.digital_output.DigitalOutput
+    connector buzzer.Timer => timer.timer
+} 

@@ -1,0 +1,213 @@
+import "../../arduino/_arduino/arduino.thingml"
+
+datatype SensorDisplay
+@c_type "struct sensor_display_ *"
+@c_byte_size "*";
+
+
+thing fragment LcdScreenMsgs 
+{
+	message initDisplay (id : UInt8, title : String, unit : String, initValue : Integer, minValue : Integer, maxValue : Integer);
+	message refreshDisplay (id : UInt8, value : Integer);
+	message currentDisplay (id : UInt8);
+	message setDisplay (id : UInt8);
+}
+
+thing LcdScreen includes LcdScreenMsgs
+@singleton "true"
+@c_header "
+
+#include <LiquidCrystal.h>
+
+# define MAX_DISPLAY 10
+# define MAX_LENGHT_TITLE 15
+# define MAX_LENGHT_UNIT 5
+
+LiquidCrystal lcd (10, 11, 12, 13, 14, 15, 16); 
+//LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
+
+void lcd_init ()  
+{ 
+  // initialize the library with the numbers of the interface pins
+  //LiquidCrystal lcd (pin1, pin2, pin3, pin4, pin5, pin6, pin7); 
+  lcd.begin (16, 2);
+} 
+
+void bar_char_conf () 
+{
+  byte left_empty[8] = {B11111, B10000, B10000, B10000, B10000, B10000, B10000, B11111};
+  byte left_full[8] = {B11111, B10000, B10111, B10111, B10111, B10111, B10000, B11111};
+  byte right_empty[8] = {B11111, B1, B1, B1, B1, B1, B1, B11111};
+  byte right_full[8] = {B11111, B00001, B11101, B11101, B11101, B11101, B00001, B11111};
+  byte empty[8] = {B11111, B0, B0, B0, B0, B0, B0, B11111};
+  byte full[8] = {B11111, B0, B11111, B11111, B11111, B11111, B0, B11111};
+  lcd.createChar(0, left_empty);
+  lcd.createChar(1, right_empty);
+  lcd.createChar(2, left_full);
+  lcd.createChar(3, right_full);
+  lcd.createChar(4, empty);
+  lcd.createChar(5, full);
+}
+
+void adv_bar_char_conf () 
+{
+  byte empty[8] = {B11111, B0, B0, B0, B0, B0, B0, B11111};
+  byte full_1[8] = {B11111, B00000, B10000, B10000, B10000, B10000, B00000, B11111};
+  byte full_2[8] = {B11111, B00000, B11000, B11000, B11000, B11000, B00000, B11111};
+  byte full_3[8] = {B11111, B00000, B11100, B11100, B11100, B11100, B00000, B11111};
+  byte full_4[8] = {B11111, B00000, B11110, B11110, B11110, B11110, B00000, B11111};
+  byte full_5[8] = {B11111, B0, B11111, B11111, B11111, B11111, B0, B11111};
+  lcd.createChar(0, empty);
+  lcd.createChar(1, full_1);
+  lcd.createChar(2, full_2);
+  lcd.createChar(3, full_3);
+  lcd.createChar(4, full_4);
+  lcd.createChar(5, full_5);
+}
+
+unsigned short digits_counter (int d) 
+{
+  int count = 10;
+  unsigned short digits = 1;
+  for (short i = 0; i < 5; i++, count = count * 10, digits ++)
+    if (d < count)
+      break;
+  return digits;
+}
+
+struct sensor_display_ 
+{
+  unsigned short id; 
+  char title[MAX_LENGHT_TITLE];
+  char unit[MAX_LENGHT_UNIT];
+  int min_value; 
+  int max_value;
+  char top_display[16];
+  char bottom_display[16];
+};
+
+sensor_display_ sensor_display[MAX_DISPLAY];
+
+struct sensor_display_ * progressbar_display_refresh (struct sensor_display_ * disp, int value)
+{
+  // Fill the bottom screen buffer with special code caracters.
+  short index = map (value, disp->min_value, disp->max_value, 0, 16);  
+  disp->bottom_display[0] = 0; // Left empty code.
+  disp->bottom_display[15] = 1; // Right empty code.
+  for (short i = 1; i < 15; i++)
+    disp->bottom_display[i] = 4; // Mid empty code.
+  for (short i = 0; i < index; i++) 
+    {
+      if (i == 0)
+	disp->bottom_display[0] = 2; // Left full code.
+      else if (i == 15)
+	disp->bottom_display[15] = 3; // Right full code.
+      else
+	disp->bottom_display[i] = 5; // Mid full code.
+    }
+  return disp;
+}
+
+struct sensor_display_ * lcd_display_init (unsigned short id, char * title, char * unit, int init_value, int min_value, int max_value) 
+{  
+  bar_char_conf (); // Custom caracteres declaration.
+
+  // Initialize a free display according to parameters.
+  sensor_display_ * disp = &sensor_display[id]; 
+  disp->id = id;
+  strcpy (disp->title, title);
+  strcpy (disp->unit, unit);
+  disp->min_value = min_value;
+  disp->max_value = max_value;
+
+  // Fill the top screen buffer.
+    if (init_value > disp->max_value)
+    strcpy (disp->top_display, \"-XXX-\");
+  else
+  {
+      strcpy (disp->top_display, strcat (strcat (disp->top_display, disp->title), \": \"));
+      for (int i = 0; i < digits_counter (max_value) - digits_counter (init_value); i ++)
+        strcat (disp->top_display, \" \");
+      char char_val[digits_counter (disp->max_value) + 1];
+      strcat (disp->top_display, itoa (init_value, char_val, 10));
+      strcat (disp->top_display, unit);
+  } 
+  
+  progressbar_display_refresh (disp, init_value);
+  
+  return disp;
+}
+
+struct sensor_display_ * lcd_display_refresh (unsigned short id, int value)
+{
+    struct sensor_display_ * disp = &sensor_display[id];
+  // Not optimized.
+  
+  if (value > disp->max_value)
+    strcpy (disp->top_display, \"-XXX-\");
+  
+  else
+  {
+      // Fill the top screen buffer.
+      strcpy (disp->top_display, \"\");
+      strcat (strcat (disp->top_display, disp->title), \": \");
+      for (int i = 0; i < digits_counter (disp->max_value) - digits_counter (value); i ++)
+        strcat (disp->top_display, \" \");
+      char char_val[digits_counter (disp->max_value) + 1];
+      strcat (disp->top_display, itoa (value, char_val, 10));
+      strcat (disp->top_display, disp->unit); 
+      
+      progressbar_display_refresh (disp, value);
+  }  
+  return disp;
+}
+
+void sensor_print_fullscreen (unsigned short id)
+{
+  struct sensor_display_ * disp = &sensor_display[id];
+  lcd.clear ();
+  lcd.setCursor (0, 0);
+  lcd.print (disp->top_display); 
+  lcd.setCursor(0, 1);
+  for (short i = 0; i < 16; i ++)
+    lcd.write(disp->bottom_display[i]);
+}
+
+" 
+{	
+	readonly property maxDisplay : UInt8 = 1 // Max number of simultaneous display.
+	readonly property maxLengthTitle : UInt8 = 10 // Max length of the title string. 
+	readonly property maxLengthUnit : UInt8 = 5 // Max length of the unit string.
+	
+    property currentDisplay : Int8 = - 1 
+	
+	provided port Display
+	{
+		receives initDisplay, refreshDisplay, setDisplay
+		sends currentDisplay
+	}
+	
+	statechart LcdScreenImp init Running 
+	{
+        //on entry 'lcd_init (10, 11, 12, 13, 14, 15, 16);'
+        on entry 'lcd_init ();'
+		
+		state Running
+		{
+			internal initialize event d : Display?initDisplay
+			action 'lcd_display_init ('& d.id &', '& d.title &', '& d.unit &', '& d.initValue &', '& d.minValue &', '& d.maxValue &');'  
+			
+            internal display event d : Display?setDisplay
+			action do
+                'sensor_print_fullscreen ('& d.id &');'
+                currentDisplay = d.id
+                end
+                
+			internal refresh event d : Display?refreshDisplay
+			action do
+                'lcd_display_refresh ('& d.id &', '& d.value &');'
+                if (currentDisplay == d.id) 'sensor_print_fullscreen ('& d.id &');'
+                end
+		}
+	}
+}

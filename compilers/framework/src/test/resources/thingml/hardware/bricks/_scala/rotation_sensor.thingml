@@ -1,0 +1,54 @@
+import "brickAPI.thingml"
+
+import "../rotation_sensor.thingml"
+
+thing RotationSensorScala includes BrickSensor, RotationSensor
+@pim "RotationSensor"
+@platform "scala"
+@scala_trait "org.thingml.devices.Observer[Short]" 
+{
+    set device = 'new org.thingml.devices.PotentiometerDemo(0, 1023)'
+    
+    //last value sent by the mock device
+    //can be sent to cliend requesting a value (pull mode)
+    property lastValue : Integer = 'null'
+	
+	function newValue(v : Integer)@override "true" 
+	do
+        print("newValue: " + v)
+        lastValue = v
+		SensorMockUp!update()
+	end
+	
+	function register() 
+	do
+		'' & device & '.asInstanceOf[org.thingml.devices.Observable[Short]].register(this)'
+	end
+    
+	statechart behavior init Ready {
+		
+		on entry
+        do 
+		  'register()'
+		end
+
+        //This is an example of pull mode (sends the last value when requested by a client)
+        internal 
+        event m : RotationSensor?read_rotation
+        action
+        do
+            RotationSensor!rotation_value(lastValue)
+        end
+        
+        //This is an example to implement push mode (send the last value whenever the mock is udapted)
+        internal 
+        event m : Sensor?update
+        action
+        do
+            RotationSensor!rotation_value(lastValue)
+        end
+			
+		state Ready {}
+       
+	}
+}

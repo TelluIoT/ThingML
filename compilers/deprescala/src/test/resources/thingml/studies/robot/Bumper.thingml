@@ -1,0 +1,42 @@
+import "../../thingml.thingml"
+
+import "../../hardware/devices/h_bridge_motor.thingml"
+import "../../hardware/io/digital_input.thingml"
+
+thing fragment BumperMsg {
+    message bump_left();
+    message bump_right();
+}
+
+thing Bumper includes BumperMsg
+{
+    provided port Bumper {
+        sends bump_left, bump_right
+    }
+}
+
+thing BumperUC includes Bumper, DigitalInputMsgs
+{
+
+	required port LeftSensor {
+		receives digital_input_value
+	}
+	
+	required port RightSensor {
+		receives digital_input_value
+	}
+
+   statechart BumperUCImpl init Active
+	{	
+	
+		internal event m : LeftSensor?digital_input_value
+		guard m.value == DigitalState:LOW
+		action Bumper!bump_left()
+		
+		internal event m : RightSensor?digital_input_value
+		guard m.value == DigitalState:LOW
+		action Bumper!bump_right()
+		
+		state Active{}
+	}
+}

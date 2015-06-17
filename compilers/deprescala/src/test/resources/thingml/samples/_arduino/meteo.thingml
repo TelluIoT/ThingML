@@ -1,0 +1,36 @@
+import "../meteo.thingml"
+import "../../hardware/bricks/_arduino/led.thingml"
+import "../../hardware/bricks/_arduino/button.thingml"
+import "../../hardware/bricks/_arduino/light_sensor.thingml"
+import "../../hardware/bricks/_arduino/temperature_sensor.thingml"
+import "../../core/_arduino/timer.thingml"
+
+import "../../hardware/devices/_arduino/lcd_screen_sensor_disp.thingml"
+
+configuration BlinkArduino
+{       
+	group led : LedArduino
+		set led.io.digital_output.pin = DigitalPin:PIN_9
+	group led2 : LedArduino
+		set led2.io.digital_output.pin = DigitalPin:PIN_11
+	group button : ButtonArduino
+		set button.io.digital_input.pin = DigitalPin:PIN_8
+	group light : LightSensorArduino
+		set light.io.analog_input.pin = DigitalPin:PIN_1
+		set light.io.change_analog_input.refresh_rate = 100
+	group temp : TemperatureSensorArduino
+		set temp.io.analog_input.pin = DigitalPin:PIN_3
+		set temp.io.change_analog_input.refresh_rate = 100
+	// The blink application
+	instance app : Meteo
+	connector app.Led1 => led.led.Led
+	connector app.Led2 => led2.led.Led
+	connector app.Button => button.button.Button
+	connector app.LightSensor => light.light_sensor.LightSensor
+	connector app.TemperatureSensor => temp.temperature_sensor.TemperatureSensor
+
+	// Screen declaration.
+    instance screen : LcdScreen
+	connector app.Display => screen.Display
+
+}

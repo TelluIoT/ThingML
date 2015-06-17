@@ -1,0 +1,45 @@
+import "brickAPI.thingml"
+import "../temperature_sensor.thingml"
+
+
+
+thing TemperatureSensorScala includes BrickSensor, TemperatureSensor
+@scala_trait "org.thingml.devices.Observer[Short]" 
+{   
+ 
+    set device = 'new org.thingml.devices.PotentiometerDemo(-40, 130)'
+    
+    //last value sent by the mock device
+    //can be sent to cliend requesting a value (pull mode)
+    property lastValue : Integer = 'null'
+	
+	function newValue(v : Integer)@override "true" 
+	do
+        lastValue = v
+		SensorMockUp!update()
+	end
+	
+	function register() 
+	do
+		'' & device & '.asInstanceOf[org.thingml.devices.Observable[Short]].register(this)'
+	end
+ 
+	statechart behavior init Ready {
+		
+		on entry
+        do 
+		  'register()'
+		end
+
+        //This is an example of pull mode (sends the last value when requested by a client)
+        internal 
+        event m : TemperatureSensor?read_temperature
+        action
+        do
+            TemperatureSensor!temperature_value(lastValue)
+        end
+			
+		state Ready {}
+		
+	}
+}

@@ -1,0 +1,26 @@
+//*
+// Fabien Fleurey - 20/08/2011
+//
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+//      - buzzer (1)    ->  Default pin: D_8
+//
+// The buzzer plays an SOS signal.
+//*
+
+import "../simple_buzzer.thingml"
+import "../../../bricks/_arduino/buzzer.thingml"
+
+configuration SimpleBuzzerArduino
+{    
+    group buzzer : BuzzerArduino
+        set buzzer.io.digital_output.pin = DigitalPin:PIN_8
+        
+    instance timer : TimerArduino
+    
+    instance simple_buzzer : SimpleBuzzer
+	connector simple_buzzer.Buzzer => buzzer.buzzer.Buzzer
+	connector simple_buzzer.Timer => timer.timer
+}

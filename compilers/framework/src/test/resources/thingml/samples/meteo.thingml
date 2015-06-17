@@ -1,0 +1,117 @@
+//*
+// Alexandre Carteron - 07/02/2014
+//
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+//      - Light sensor (1)    ->  Default pin: A_1
+//      - Temperature sensor (1)    ->  Default pin: A_3
+//      - Led (2)    ->  Default pin: D_9 and D_11
+//      - Button (1)    ->  Default pin: D_8
+//      - Lcd screen (1)    ->  Default bus: BUS2
+//
+// The temperature and light sensors display their measures, and lights blink faster when higher values are measured. 
+// The button switches between displays of light or temperature measures.
+//
+// Light sensor displayed values between 0 and 140 and temperature sensor displayed values between 25 and 30 when this example was written.
+// Feel free to adapt tMin, tMax, lMin, and lMax properties to match the values your sensors will send.
+//*
+
+import "../hardware/bricks/led.thingml"
+import "../hardware/bricks/button.thingml"
+import "../hardware/bricks/light_sensor.thingml"
+import "../hardware/bricks/temperature_sensor.thingml"
+import "../hardware/devices/_arduino/lcd_screen_sensor_disp.thingml"
+
+thing Meteo includes LedMsgs, TimerMsgs, ButtonMsgs, LcdScreenMsgs, LightSensorMsgs, TemperatureSensorMsgs 
+{
+	required port TemperatureSensor 
+    {
+		sends read_temperature
+		receives temperature_value
+	}
+    required port Led1
+	{
+		sends led_toggle
+	}
+    required port Led2
+	{
+		sends led_toggle
+	}
+	required port Button
+	{
+		receives press, release
+	}
+	required port LightSensor 
+    {
+		sends read_light
+		receives light_value
+	}
+	required port Display @sync_send "true"
+	{
+		sends initDisplay, refreshDisplay, setDisplay
+	}
+    statechart MeteoImpl init Run 
+    {   
+        property led1 : Integer
+        property led2 : Integer
+        property lMin : Integer
+        property lMax : Integer
+        property tMin : Integer
+        property tMax : Integer
+
+	   internal event m : LightSensor?light_value
+        action  do Display!refreshDisplay (0, m.val)
+            if (m.val > lMin)do
+            if (m.val > 0)do
+                led2 = led2 + m.val - lMin end end
+            if (led2 > lMax - lMin) do
+                led2 = 0
+                Led2!led_toggle()
+            end
+        end
+	   internal event m : TemperatureSensor?temperature_value
+        action  do Display!refreshDisplay (1, m.val)
+            if (m.val > tMin)do
+            if (m.val > 0)do
+                led1 = led1 + m.val - tMin end end
+            if (led1 > tMax -tMin) do
+                led1 = 0
+                Led1!led_toggle()
+            end
+        end
+        
+		state Run
+		{
+			on entry do
+                lMin = 0
+                lMax = 150
+                tMin = 25
+                tMax = 30
+                Display!initDisplay(0,"Light","L",0,lMin,lMax)
+                Display!initDisplay(1,"Temp","C",0,tMin,tMax)
+                led1 = 0
+                led2 = 0
+				end
+
+            transition -> Light   
+            event LightSensor?light_value
+		} 
+   	    state Light
+        {		
+        	on entry Display!setDisplay (0)
+        	
+        	transition -> Temp
+        	event Button?press
+        }
+        
+   	    state Temp
+        {
+        	on entry Display!setDisplay (1)
+        	
+        	transition -> Light
+        	event Button?press
+        }
+    }
+}

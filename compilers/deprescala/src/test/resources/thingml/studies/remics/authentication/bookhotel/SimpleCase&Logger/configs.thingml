@@ -1,0 +1,17 @@
+// 
+// (c) SINTEF 2012
+//
+// Define the configuration how client connect to server
+//
+// by Runze Hao (haoshaochi@gmail.com)
+//
+
+import "bookhotel_client.thingml"
+import "bookhotel_server.thingml"
+
+configuration ExtraConfig{
+    instance c1:API1BookHotelFakeClient
+    instance s1:Server
+    connector c1.ServerBookPort => s1.CilentBookPort
+    
+}

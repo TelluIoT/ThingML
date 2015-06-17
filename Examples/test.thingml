@@ -26,6 +26,12 @@ thing Demo1 includes Demo1Msgs{
         return x + y + z + w
     end 
     
+    /*stream test do
+        from e : receiveService?m1
+        select a : e.v1, b : e.v2
+        action sendService!m2(a,b)
+    end*/
+    
        
     statechart Demo1 init S1 {
         state S1 {

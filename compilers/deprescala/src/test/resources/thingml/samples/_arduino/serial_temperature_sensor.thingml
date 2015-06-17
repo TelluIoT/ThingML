@@ -1,0 +1,195 @@
+//*
+// Fabien Fleurey - 25/08/2011
+//
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+// 		- Temperature sensor (1)  ->  Default pin: A_4
+//
+// This application provides an example of interface between the temperature sensor and the 
+// serial port. 
+//*
+
+import "../../hardware/devices/_arduino/advanced_serial.thingml"
+import "../../hardware/devices/_arduino/value_chooser.thingml"
+import "../../hardware/devices/_arduino/soft_temperature_sensor.thingml"
+
+thing SerialTempSensor includes AdvancedSerialMsgs, SoftTemperatureSensorMsgs, ValueChooserMsgs 
+{
+    property low_temp_alarm : Int16
+    property high_temp_alarm : Int16
+       
+    required port AdvSerial 
+    {
+		receives receive_byte 
+        sends write_byte, print_message, print_value
+	}
+
+    required port TempSensor 
+    {
+		 sends get_temperature, reset_min_max, subscribe_temperature, unsubscribe_temperature
+		 receives temperature
+	}
+	
+	required port TempAlarms 
+    {
+		sends activate_alarms, deactivate_alarms
+	    receives low_temp_alarm, high_temp_alarm, no_alarm
+	}                
+
+    required port ValueChooser
+    {
+        sends run
+        receives choosed_value
+    }
+    
+    statechart SerialTempSensorImpl init Running 
+    {    
+        on entry do
+            AdvSerial!print_message ("t: temperature\n")
+            AdvSerial!print_message ("s: subscribe \n")
+            AdvSerial!print_message ("u: unsubscribe\n")
+            AdvSerial!print_message ("r: reset min/max\n")
+            AdvSerial!print_message ("m: mini\nM: Maxi\n")
+            AdvSerial!print_message ("a: activate alarms\n") 
+            AdvSerial!print_message ("d: desactivate alarms\n\n")
+            end
+                       
+        state Running 
+        {
+        	internal event m : AdvSerial?receive_byte
+            guard m.b == '\'s\'' 
+        	action TempSensor!subscribe_temperature (3000)
+        	
+        	internal event m : AdvSerial?receive_byte
+            guard m.b == '\'u\'' 
+        	action TempSensor!unsubscribe_temperature ()
+        	
+        	internal event m : AdvSerial?receive_byte
+            guard m.b == '\'r\'' 
+        	action TempSensor!reset_min_max ()
+        
+        	internal event m : TempSensor?temperature
+    		action do
+                AdvSerial!print_message ("Temperature: ")
+                AdvSerial!print_value (m.t)
+                AdvSerial!write_byte ('\'\n\'')
+                end
+                
+        	internal event m : AdvSerial?receive_byte
+            guard m.b == '\'t\'' 
+        	action TempSensor!get_temperature ()
+        	
+        	transition -> GetMin 
+            event m : AdvSerial?receive_byte
+            guard m.b == '\'m\'' 
+            action TempSensor!get_temperature ()
+            
+            transition -> GetMax 
+            event m : AdvSerial?receive_byte
+            guard m.b == '\'M\'' 
+            action TempSensor!get_temperature ()    
+        }
+        
+        state GetMin
+        {
+        	transition -> Running
+        	event m : TempSensor?temperature
+    		action do
+    			AdvSerial!print_message ("Mini: ")
+    			AdvSerial!print_value (m.min)
+    			AdvSerial!write_byte ('\'\n\'')
+    			end
+        }
+        
+        state GetMax
+        {
+        	transition -> Running
+        	event m : TempSensor?temperature
+    		action do
+    			AdvSerial!print_message ("Maxi: ")
+    			AdvSerial!print_value (m.max)
+    			AdvSerial!write_byte ('\'\n\'')
+    			end
+        }
+        
+        region Alarms init Desactivated
+        {
+            state Desactivated
+            {
+                transition -> SettingLowAlarm
+                event m : AdvSerial?receive_byte
+                guard m.b == '\'a\''
+            }  
+            
+            state SettingLowAlarm
+            {
+                on entry ValueChooser!run ("Set low temperature: ", 0, 0)
+                on exit do 
+                    AdvSerial!print_value (low_temp_alarm)
+                    AdvSerial!print_message ("\n")
+                    end
+                
+                transition -> SettingHighAlarm
+                event m : ValueChooser?choosed_value
+                before low_temp_alarm = m.val
+            }
+            
+            state SettingHighAlarm
+            {
+                on entry ValueChooser!run ("Set high temperature: ", 0, 0)
+                on exit do
+                    AdvSerial!print_value (high_temp_alarm)
+                    AdvSerial!print_message ("\n")
+                    end
+                
+                transition -> Activated
+                event m : ValueChooser?choosed_value
+                before high_temp_alarm = m.val
+            }
+            
+            state Activated
+            {
+                on entry TempAlarms!activate_alarms (low_temp_alarm, high_temp_alarm)
+                
+                transition -> Desactivated
+                event m : AdvSerial?receive_byte
+                guard m.b == '\'d\''
+                
+                internal event TempAlarms?no_alarm
+                action AdvSerial!print_message ("Normal temperature\n")
+                
+                internal event m : TempAlarms?low_temp_alarm
+                action do
+                    AdvSerial!print_message ("[ALARM] Low temperature: ")
+                    AdvSerial!print_value (m.t)
+                    AdvSerial!print_message ("\n")
+                    end
+                    
+                internal event m : TempAlarms?high_temp_alarm
+                action do
+                    AdvSerial!print_message ("[ALARM] High temperature: ")
+                    AdvSerial!print_value (m.t)
+                    AdvSerial!print_message ("\n")
+                    end
+            }
+        }
+    }
+}
+
+configuration SerialTempSensor
+{
+    group adv_serial : AdvancedSerial
+    group soft_temp_sensor : SoftTemperatureSensorArduino
+        set soft_temp_sensor.temperature_sensor.io.analog_input.pin = AnalogPin:A_4  
+    group serial_value_chooser : SerialValueChooser
+
+    // Application configuration.
+	instance serial_temp_sensor : SerialTempSensor
+	connector serial_temp_sensor.AdvSerial => adv_serial.advanced_serial.AdvancedSerial
+    connector serial_temp_sensor.TempSensor => soft_temp_sensor.soft_temperature_sensor.SoftTemperatureSensor
+    // TODO: Bug in the parser on the next line
+    //connector serial_temp_sensor.TempAlarms => soft_temp_sensor.soft_temperature_sensor.SoftTemperatureSensorAlarms
+    connector serial_temp_sensor.ValueChooser => serial_value_chooser.value_chooser.ValueChooser
+}

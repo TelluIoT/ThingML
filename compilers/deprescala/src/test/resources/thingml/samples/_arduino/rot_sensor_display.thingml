@@ -1,0 +1,42 @@
+import "../../hardware/devices/_arduino/lcd_screen_sensor_disp.thingml"
+import "../../hardware/bricks/_arduino/rotation_sensor.thingml"
+
+thing RotSensorDisplay includes LcdScreenMsgs, RotationSensorMsgs
+{	
+	required port Display 
+    {	
+		sends initDisplay, refreshDisplay, setDisplay
+	}
+
+	required port RotSensor
+	{
+		sends read_rotation
+		receives rotation_value 
+	}
+	
+   	statechart RotSensorDisplayImpl init Running
+   	{
+   		on entry do 
+                Display!initDisplay (3, "Position", "", 0, 0, 1023)
+                Display!setDisplay (3)
+                end
+   		state Running
+   		{
+   			internal refresh event m : RotSensor?rotation_value
+   			action Display!refreshDisplay (3, m.val) 
+   		}	
+   	}
+}
+
+configuration RotSensorDisplay
+{
+	group rot_sensor : RotationSensorArduino
+		set rot_sensor.io.analog_input.pin = AnalogPin:A_4
+	
+	instance screen : LcdScreen
+	
+	// Application configuration.
+	instance app : RotSensorDisplay
+	connector app.Display => screen.Display
+	connector app.RotSensor => rot_sensor.rotation_sensor.RotationSensor
+}

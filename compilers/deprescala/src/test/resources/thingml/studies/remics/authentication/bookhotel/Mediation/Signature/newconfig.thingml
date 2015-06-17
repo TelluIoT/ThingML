@@ -1,0 +1,16 @@
+
+
+import "Client.thingml"
+import "Server.thingml"
+import "mediator_ExtraConfig.thingml"
+
+
+configuration NewConfig{
+    instance control:Control
+    instance c1:FakeClient
+    instance s1:Server
+    instance m1:Mediator_ExtraConfig
+    connector control.ControlPort=>m1.PrvPort_Control
+    connector c1.Toserver => m1.PrvPort_ExtraConfig_c1_Toserver
+    connector m1.ReqPort_ExtraConfig_s1_Toclient=> s1.Toclient
+}

@@ -1,0 +1,80 @@
+import "../hardware/bricks/led.thingml"
+import "../hardware/io/analog_input.thingml"
+
+thing BlinkFreq includes LedMsgs, TimerMsgs, AnalogInputMsgs
+{
+	required port Led 
+    {	
+		sends led_toggle
+	}
+	
+	required port AnalogInput 
+    {	
+		sends read_analog_input
+		receives analog_input_value
+	}
+	
+	required port TimerPot
+	{
+		sends timer_start
+        receives timer_timeout
+	}
+	
+	required port TimerLed
+	{
+		sends timer_start, timer_cancel
+        receives timer_timeout
+	}
+	
+	message update();
+	provided port ReceiveUpdate {
+		receives update
+	}
+	required port SendUpdate {
+		sends update
+	}
+
+    statechart BlinkFreqImpl init ReadPot 
+    {
+    	property delay : Int16 = 1000
+    	
+    	state ReadPot {
+    		on entry do
+    			AnalogInput!read_analog_input()
+    			TimerPot!timer_start(25)
+    		end
+    		
+    		internal event m : AnalogInput?analog_input_value
+    		action do
+    			if (m.value < delay -5 or m.value > delay +5) do
+                    //'Serial.print('& m.value &');'
+        			if (m.value == 0) delay = 1	
+                    if (m.value > 0)delay = m.value
+        				SendUpdate!update()
+    
+    			end
+    		end
+    		
+    		transition -> ReadPot
+    		event TimerPot?timer_timeout
+    	}
+    	
+    	
+    	region Led init Blink {
+    		
+    		state Blink {
+    		
+    			on entry do
+	    			Led!led_toggle()
+	    			TimerLed!timer_start(delay)
+    			end
+    			
+    			transition -> Blink event TimerLed?timer_timeout
+    			
+    			transition -> Blink event ReceiveUpdate?update
+    			action TimerLed!timer_cancel()
+    			
+    		}
+    	}
+    }
+}

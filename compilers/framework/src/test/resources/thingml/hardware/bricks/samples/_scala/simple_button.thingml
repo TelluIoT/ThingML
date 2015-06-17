@@ -1,0 +1,14 @@
+import "../simple_button.thingml"
+import "../../../bricks/_scala/button.thingml"
+import "../../../bricks/_scala/led.thingml"
+
+configuration SimpleButtonArduino
+{ 
+    instance button : ButtonScala
+        
+    instance led : LedScala
+    
+    instance simple_button : SimpleButton
+	connector simple_button.Led => led.Led
+	connector simple_button.Button => button.Button
+}

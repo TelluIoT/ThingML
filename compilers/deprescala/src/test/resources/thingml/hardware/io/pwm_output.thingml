@@ -1,0 +1,23 @@
+//*
+// Fabien Fleurey - 20/08/2011
+// Core library.
+//
+// This file provides an interface with the Arduino core to use analog write
+// (PWM mode). All more external things which use PWM should pass 
+// by this way.
+//*
+
+import "../../thingml.thingml"
+
+thing fragment PwmOutputMsgs
+{
+	message set_pwm_value (value : UInt8);
+}
+
+thing PwmOutput includes PwmOutputMsgs
+{
+	provided port Pwm
+	{
+		receives set_pwm_value
+	}
+}

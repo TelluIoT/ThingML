@@ -1,0 +1,17 @@
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the big button. 
+//*
+
+import "../button.thingml"
+import "../../io/_arduino/digital_input.thingml"
+
+configuration fragment ButtonArduino
+{
+    group io : OnChangeDigitalInputArduino
+    
+    instance button : Button
+    connector button.DigitalInput => io.change_digital_input.OnChangeDigitalInput
+}

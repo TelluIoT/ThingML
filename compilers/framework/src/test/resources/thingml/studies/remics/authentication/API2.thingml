@@ -1,0 +1,33 @@
+// 
+// (c) SINTEF 2011
+//
+// Define the behavior of a simple application that tries to login on a remote service. 
+// It sends credentials (login, password) and waits for resulting ackmowledgment. If 
+// the access is granted, it transitions to the "LoggedOn" state.
+// 
+// by Franck CHAUVEL <franck.chauve@sintef.no>
+// and Brice MORIN <brice.morin@sintef.no>
+//
+import "../../../datatypes.thingml"
+
+thing fragment API2 {
+    message login(login: String);
+	message password(pwd: String);
+	message access(result: Boolean); 
+}
+
+thing API2FakeClient includes API2
+@mock "true" {
+    required port LoginServer {
+		sends login, password
+		receives access
+    }
+}
+
+thing API2FakeServer includes API2
+@mock "true" {
+	provided port LoginClient {
+		sends access
+		receives login, password 
+	}    
+}

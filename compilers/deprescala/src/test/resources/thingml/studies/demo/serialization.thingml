@@ -1,0 +1,204 @@
+import "../../core/_scala/serializer.thingml"
+import "../../core/serializer.thingml"
+import "../../core/comm.thingml"
+import "../../core/_scala/comm.thingml"
+
+//test messages
+thing fragment testMsgs {
+    message m4(i : Integer, s : String)@code "12";
+    message m2(i : Integer);
+    message m1()@code "27";
+    message m3(s : String);
+}
+
+//test thing
+thing TestThing includes testMsgs
+@mock "true"
+{
+    required port out {
+       sends m1, m2, m3, m4
+    }
+    
+    provided port in {
+       receives m1, m2, m3, m4
+    }        
+}
+
+
+
+/////////////////////////////////////////////////
+thing fragment RemoteMsgs includes testMsgs{
+//message m1();//code=27
+//message m2(i : Integer);//code=1
+//message m3(s : String);//code=2
+//message m4(i : Integer, s : String);//code=12
+}
+
+thing MessageSerializer includes SerializerScala, RemoteMsgs {
+provided port out{
+receives m1, m2, m3, m4
+}
+
+statechart SerializerBehavior init Serialize {
+state Serialize{
+internal event m : out?m1 action
+do
+setHeader(27, 0)
+send()
+end
+
+internal event m : out?m2 action
+do
+setHeader(1, lengthInteger)
+serializeInteger(m.i)
+send()
+end
+
+internal event m : out?m3 action
+do
+setHeader(2, lengthString)
+serializeString(m.s)
+send()
+end
+
+internal event m : out?m4 action
+do
+setHeader(12, lengthInteger+lengthString)
+serializeInteger(m.i)
+serializeString(m.s)
+send()
+end
+
+}
+}
+
+}
+
+thing MessageDeserializer includes DeserializerScala, RemoteMsgs {
+required port in{
+sends m1, m2, m3, m4
+}
+
+function forward() do
+index = DATA_POSITION
+readonly var code : Byte = buffer[CODE_POSITION]
+if (code == 27) do
+deserializeM1()
+end
+if (code == 1) do
+deserializeM2()
+end
+if (code == 2) do
+deserializeM3()
+end
+if (code == 12) do
+deserializeM4()
+end
+end
+
+function deserializeM1()
+do
+in!m1()
+end
+
+function deserializeM2()
+do
+readonly var i : Integer = deserializeInteger()
+in!m2(i)
+end
+
+function deserializeM3()
+do
+readonly var s : String = deserializeString()
+in!m3(s)
+end
+
+function deserializeM4()
+do
+readonly var i : Integer = deserializeInteger()
+readonly var s : String = deserializeString()
+in!m4(i, s)
+end
+
+statechart receive init Idle {
+state Idle {
+internal event m : network?receive_bytes
+action receive(m.b)
+}
+}
+
+}
+/////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @remote annotations allows defining which ports are remote
+ * syntax: instanceName::TypeName::PortName::messageName
+ * note: wildcards can be used for any of these elements.
+ */
+/*configuration testOneInstance 
+@remote "test::TestThing::.*::.*"
+{
+    //Messages are sent and received without serialization
+    instance test : TestThing
+    connector test.out => test.in
+}*/
+
+/*configuration testSerialization
+@remote "test::TestThing::.*::.*"
+{
+    //Messages are serialized, sent to network, received, deserialized and sent to the former thing
+    //hopefully, this has the same behavior than the configuration above...
+    instance testRemote : TestThing
+    instance network : NetworkArray
+    instance serializer : MessageSerializer
+    instance deserializer : MessageDeserializer
+    
+    connector testRemote.out => serializer.out
+    connector serializer.network => network.IOStream
+    connector deserializer.network => network.IOStream
+    connector deserializer.in => testRemote.in    
+}*/
+
+
+configuration testCOaP
+@remote "testRemote::TestThing::.*::.*"
+{
+    //Messages are sent and received without serialization
+    //instance test : TestThing
+    //connector test.out => test.in
+    
+    //Messages are serialized, sent to network, received, deserialized and sent to the former thing
+    //hopefully, this has the same behavior than the configuration above...
+    instance testRemote : TestThing
+    instance network : COaP4test
+    instance serializer : MessageSerializer
+    instance deserializer : MessageDeserializer
+
+    
+    connector testRemote.out => serializer.out
+    connector serializer.network => network.IOStream
+    connector deserializer.network => network.IOStream
+    connector deserializer.in => testRemote.in
+}
+
+
+
+//TODO: this should also be generated
+thing COaP4test includes CoAPScala {
+ function initialize()
+ @override "true"
+ do
+   'new org.thingml.utils.comm.CoAPServer4testOneInstance(this, ' & coapPort & ')'  
+ end    
+}

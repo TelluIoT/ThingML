@@ -1,0 +1,33 @@
+// 
+// (c) SINTEF 2012
+//
+// Define the configuration how client connect to server
+//
+// by Runze Hao (haoshaochi@gmail.com)
+//
+
+import "Client.thingml"
+import "Server.thingml"
+//
+//
+/*
+configuration ServerMonitor{
+    instance c1:Mockup_Client
+    instance s1:FakeServer
+    connector c1.Toserver => s1.Toclient
+}
+*/
+
+/*
+configuration ClientMonitor{
+    instance s1:Mockup_Server
+    instance c1:FakeClient
+    connector c1.Toserver => s1.Toclient
+}
+
+
+configuration ComplexCase{
+    instance c1:FakeClient
+    instance s1:Server
+    connector c1.Toserver => s1.Toclient
+}*/

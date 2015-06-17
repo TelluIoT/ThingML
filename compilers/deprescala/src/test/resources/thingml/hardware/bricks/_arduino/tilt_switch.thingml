@@ -1,0 +1,18 @@
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the tilt switch. 
+//*
+
+
+import "../tilt_switch.thingml"
+import "../../io/_arduino/digital_input.thingml"
+
+configuration fragment TiltSwitchArduino
+{
+    group io : OnChangeDigitalInputArduino
+
+    instance tilt_switch : TiltSwitch
+    connector tilt_switch.DigitalInput => io.digital_input.DigitalInput
+}  

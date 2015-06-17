@@ -1,0 +1,40 @@
+//*
+// Fabien Fleurey - 20/08/2011
+//
+// This is an example of ThingML use to generate Arduino code which uses 
+// Electronic Brick components.
+//  
+// Requirements:
+//      - sound sensor (1)  -> Default pin: A_4
+//      - led (1)           -> Default pin: D_8
+//
+// The led toggle when a high sound is detected.
+//*
+
+import "../../bricks/sound_sensor.thingml"
+import "../../bricks/led.thingml"
+
+thing SimpleSoundSensor includes LedMsgs, SoundSensorMsgs
+{
+	readonly property threshold : UInt16 = 500
+	
+	required port Led
+	{
+		sends led_toggle
+	}
+	
+	required port SoundSensor
+	{
+		receives sound_value
+	}
+	
+	statechart SimpleSoundSensorImpl init Running
+	{
+		state Running
+		{
+			internal event m : SoundSensor?sound_value
+			guard m.val > threshold
+			action Led!led_toggle ()
+		}
+	}
+}

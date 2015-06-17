@@ -1,0 +1,60 @@
+import "../../hardware/bricks/_arduino/led.thingml"
+import "../../hardware/bricks/_arduino/lcd_screen.thingml"
+import "../../hardware/io/_arduino/analog_input.thingml"
+
+thing TestLM335 includes LcdScreenMsgs, AnalogInputMsgs
+{
+    
+    required port LcdScreen
+	{
+		sends print_string, set_cursor, print_value, clear
+	}
+    
+    required port AnalogInput
+    {
+        receives analog_input_value
+        sends read_analog_input    
+    }
+	
+	statechart SimpleRotSensorDisplayImpl init Running
+	{
+    
+        property temp : Int16
+        
+		on entry AnalogInput!read_analog_input()
+		
+		state Running
+		{
+			transition refresh -> Running
+			event m : AnalogInput?analog_input_value
+			action do
+                // Compute temperture
+                temp = m.value * '0.488' - 273
+                // Update Display
+                LcdScreen!clear()
+                LcdScreen!print_string ("ADC: ")
+                LcdScreen!print_value (m.value)
+                LcdScreen!set_cursor (0, 1)
+                LcdScreen!print_string ("T=")
+                LcdScreen!print_value (temp)
+                LcdScreen!print_string (" C")
+            end
+		}
+	}
+}
+
+
+
+configuration TestLM335
+{
+   group io : OnChangeAnalogInputArduino
+   
+   set io.analog_input.pin = AnalogPin:A_4
+   set io.change_analog_input.refresh_rate = 100 // 100 ms sampling is enough
+            
+   instance lcd_screen : LcdScreen
+       
+   instance main : TestLM335
+   connector main.AnalogInput => io.analog_input.AnalogInput
+   connector main.LcdScreen => lcd_screen.LcdScreen
+}

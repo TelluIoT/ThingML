@@ -1,0 +1,45 @@
+// 
+// (c) SINTEF 2011
+//
+// Define the behavior of a simple authentication server that accepts credentials and 
+// check their validity.
+// 
+// See also client.thingml, AP1.thingml 
+//
+// by Franck CHAUVEL <franck.chauve@sintef.no>
+//
+
+import "API1.thingml"
+
+thing Server includes API1 {
+
+	readonly property login : String = "toto"
+	readonly property password: String = "pouet"
+	
+	provided port LoginClient {
+		sends ack
+		receives log 
+	}
+	
+	statechart Authentication init Ready {
+	
+		state Ready {
+			on entry print "Server side: Ready, Waiting for credentials..."
+			
+			transition -> LoggedOn 
+				event e : LoginClient?log
+				guard e.password == password and e.login == login
+				action LoginClient!ack(true)
+				
+			internal
+				event e: LoginClient?log
+				guard not (e.password == password and e.login == login) 
+				action LoginClient!ack(false)
+		}
+		
+		state LoggedOn {
+			on entry print "Server side: Your are logged in"
+		}
+	
+	}
+}

@@ -1,0 +1,33 @@
+
+import "../servo.thingml"
+import "../../bricks/_scala/brickAPI.thingml"
+
+thing fragment ServoMsgs
+{
+	message setPosition(p : Integer);
+}
+
+thing ServoScala includes Brick, ServoMsgs
+{
+    set device = 'new org.thingml.devices.ServoDemo()'
+    
+	provided port Servo 
+    {
+		receives setPosition
+	}
+    
+    statechart ServoImpl init ServoDefault 
+    {    
+    	//on entry device = 'new org.thingml.devices.LedDemo()'
+    
+        state ServoDefault 
+        {
+            
+            internal event setP : Servo?setPosition action
+            do
+            '' & device & '.asInstanceOf[org.thingml.devices.ServoDemo].setPosition(' & setP.p & ')'
+            end
+            
+        }
+    }
+}

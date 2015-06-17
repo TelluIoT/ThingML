@@ -1,0 +1,81 @@
+// 
+// (c) SINTEF 2012
+//
+// Define the client 
+// 
+// by Runze Hao (haoshaochi@gmail.com)
+//
+
+import "Message.thingml"
+
+thing Client includes SplitMessage{
+
+	readonly property roomRequest : String = "book room"
+    readonly property ID : String = "123456789"
+
+
+	required port Toserver {
+		sends rRequest,inputID,rSpM1
+		receives rReply_,idReply,rSpM1_3_re
+	}
+    
+	
+// 	statechart Authentication init Ready {
+// 	
+//         //Waiting state for Booking room Request
+// 		state Ready {
+// 			on entry do 
+//                 Toserver!rRequest(roomRequest)
+//                 print "Client side: booking room request sent!"
+//             end
+// 			transition -> Finish 
+// 				event e : Toserver?idReply
+//                 action do
+//                     print"Client side: receive "+e.msg
+//                 end
+//             transition -> Finish
+//                 event e: Toserver?rReply
+//                 guard (e.msg=="false")
+//                 action do
+//                     print"Client side: deny!! receive "+e.msg
+//                 end
+//             internal
+//                 event e : Toserver?rMiM2
+//                 //guard e.msg=="true"
+//                 action do
+//                     print"Client side: receive "+e.msg+e.msg1
+//                 end
+//             internal
+//                 event e : Toserver?rMiM4
+//                 //guard e.msg=="true"
+//                 action do
+//                     print"Client side: receive "+e.msg
+//                 end
+//             internal
+//                 event e : Toserver?rReply
+//                 guard e.msg=="true"
+//                 action do
+//                     print"Client side: receive "+e.msg
+//                     Toserver!inputID(ID)
+//                 end
+// 		}
+//         
+// 		state Finish {
+// 			on entry print "finish"
+//             transition -> Ready
+//             
+// 	}
+//}
+
+
+}
+
+thing FakeClient includes SplitMessage
+@mock "true" {
+	required port Toserver {
+		sends rRequest,inputID,rSpM1
+		receives rReply_,idReply,rSpM1_3_re
+	}
+    
+    
+}

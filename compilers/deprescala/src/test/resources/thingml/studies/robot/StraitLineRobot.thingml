@@ -1,0 +1,116 @@
+import "2WDBase.thingml"
+import "Bumper.thingml"
+import "../../hardware/io/analog_input.thingml"
+import "../../hardware/bricks/led.thingml"
+import "../../hardware/devices/analog_gyro.thingml"
+
+
+enumeration Obstacle	
+    @java_type "byte"
+    @c_byte_size "1"
+	@c_type "uint8_t"
+{
+	NONE @enum_val "0"
+	LEFT @enum_val "1"
+	RIGHT @enum_val "2"
+	FRONT @enum_val "3"
+}
+
+thing StraitLineTest includes TwoWDBaseMsg, AnalogInputMsgs, TimerMsgs, LedMsgs, BumperMsg, AnalogGyroMsg
+{
+ 	required port TwoWDBase {
+ 		 sends set_motors_speed, stop
+ 	}
+ 	
+ 	required port Gyro {
+ 		sends callibrate_gyro, reset_heading
+        receives gyro_ready, gyro_data
+ 	}
+ 	
+ 	required port Timer {
+ 		 sends timer_start, timer_cancel
+ 		 receives timer_timeout
+ 	}
+    
+    required port FrontBumper {
+        receives bump_left, bump_right
+    }	
+    
+    required port Led {
+        sends led_on, led_off, led_toggle
+    }	
+ 
+	statechart StraitLineTestImpl init Init
+	{	
+        property obstacle : Obstacle = Obstacle:NONE
+        
+        state Init {
+            
+            on entry Timer!timer_start(2000) // Let the gyro power up
+            
+            internal event Timer?timer_timeout
+            action do 
+            	Gyro!callibrate_gyro()
+            	Led!led_on()
+            end
+            
+            transition -> StraitAhead event Gyro?gyro_ready
+        }
+
+		
+		state StraitAhead {
+		
+			internal event m : Gyro?gyro_data
+			action do 
+                Led!led_toggle()
+                var ctrl : Int16 = m.yaw_rate * 2 + m.gyro_heading / 2
+				TwoWDBase!set_motors_speed(75 - ctrl, 75 + ctrl) // KeepHeading
+            end
+            
+            transition -> back event FrontBumper?bump_left
+            action obstacle = Obstacle:LEFT
+            
+            transition -> back event FrontBumper?bump_right
+            action obstacle = Obstacle:RIGHT
+            
+		}
+		
+		//composite state AvoidObstacle init back {
+
+			//on entry TwoWDBase!stop()
+			
+			state back {
+    
+				on entry do 
+					TwoWDBase!set_motors_speed(-75, -75)
+					Timer!timer_cancel()
+					Timer!timer_start(1000)
+				end
+				
+				transition -> turn event Timer?timer_timeout
+			}
+			
+			state turn {
+				on entry do 
+					if (obstacle == Obstacle:RIGHT) TwoWDBase!set_motors_speed(-60, 60)
+                    if (not (obstacle == Obstacle:RIGHT)) TwoWDBase!set_motors_speed(60, -60)
+				end
+                
+                internal event m : Gyro?gyro_data
+                guard m.gyro_heading < -900 or m.gyro_heading > 900 // We have turned by 90°
+                action do
+                    TwoWDBase!set_motors_speed(0, 0)
+                    Gyro!reset_heading()
+                    obstacle = Obstacle:NONE
+                    Timer!timer_start(500)
+                end
+                
+                transition -> StraitAhead event Timer?timer_timeout
+                
+			}
+			
+			//transition -> StraitAhead event Timer?timer_timeout
+            //guard obstacle == Obstacle:NONE
+		//}
+	}
+}
