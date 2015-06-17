@@ -13,53 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c.posix;
+package org.thingml.compilers.c.arduino;
 
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
+import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.compilers.c.CThingImplCompiler;
-import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.posix.CCompilerContextPosix;
+import org.thingml.compilers.c.posix.CThingActionCompilerPosix;
+import org.thingml.compilers.c.posix.PosixCCfgBuildCompiler;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
 import java.io.File;
 
 /**
  * Created by ffl on 25.11.14.
  */
-public class PosixCompiler extends OpaqueThingMLCompiler {
+public class ArduinoCompiler extends OpaqueThingMLCompiler {
 
-    public PosixCompiler() {
-        super(new CThingActionCompilerPosix(), new CThingApiCompiler(), new CCfgMainGenerator(), new PosixCCfgBuildCompiler(), new CThingImplCompiler());
+    public ArduinoCompiler() {
+        super(new CThingActionCompilerArduino(), new CThingApiCompiler(), new CCfgMainGenerator(), new CfgBuildCompiler(), new CThingImplCompiler());
     }
 
     @Override
     public ThingMLCompiler clone() {
-        return new PosixCompiler();
+        return new ArduinoCompiler();
     }
 
     @Override
     public String getID() {
-        return "posix";
+        return "arduino";
     }
 
     @Override
     public String getName() {
-        return "C/C++ for Linux / Posix";
+        return "C/C++ for Arduino (AVR Microcontrollers)";
     }
 
     public String getDescription() {
-        return "Generates C/C++ code for Linux or other Posix runtime environments (GCC compiler).";
+        return "Generates C/C++ code for Arduino or other AVR microcontrollers (AVR-GCC compiler).";
     }
 
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
 
-        CCompilerContext ctx = new CCompilerContextPosix(this);
+        CCompilerContext ctx = new CCompilerContextArduino(this);
         
         ctx.setCurrentConfiguration(cfg);
         ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
@@ -77,9 +80,6 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
 
         // GENERATE A MODULE FOR THE CONFIGURATION (+ its dependencies)
         getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
-
-        // GENERATE A MAKEFILE
-        getCfgBuildCompiler().generateBuildScript(cfg, ctx);
 
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();

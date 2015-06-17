@@ -66,7 +66,7 @@ public class Main {
         File outdir = null;
 
         if (args.length == 3) {
-            File o = new File(args[3]);
+            File o = new File(args[2]);
             if (!o.exists() || !o.isDirectory() || !o.canWrite()) {
                 System.out.println("ERROR: Cannot find or write in output dir " + o.getAbsolutePath() + ".");
                 return;

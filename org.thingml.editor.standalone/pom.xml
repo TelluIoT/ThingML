@@ -51,6 +51,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>compilers.deprescala</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.apple</groupId>
             <artifactId>AppleJavaExtensions</artifactId>
             <version>1.4</version>

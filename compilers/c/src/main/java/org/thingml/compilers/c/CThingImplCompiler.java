@@ -28,8 +28,8 @@ import java.util.Map;
  */
 public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
-
-    public void generateComponent(Thing thing, Context ctx) {
+    @Override
+    public void generateImplementation(Thing thing, Context ctx) {
         generateCImpl(thing, (CCompilerContext)ctx);
     }
 
@@ -73,8 +73,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("// Observers for outgoing messages:\n");
         generatePrivateMessageSendingOperations(thing, builder, ctx);
         builder.append("\n");
-
-
 
         // Get the template and replace the values
         String itemplate = ctx.getTemplateByID("ctemplates/linux_thing_impl.c");
