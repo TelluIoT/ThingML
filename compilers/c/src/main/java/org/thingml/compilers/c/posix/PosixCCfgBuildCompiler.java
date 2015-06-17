@@ -18,6 +18,7 @@ package org.thingml.compilers.c.posix;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
+import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 
@@ -26,7 +27,13 @@ import org.thingml.compilers.c.CCompilerContext;
  */
 public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
 
-    protected void generateMakefile(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {
+
+    @Override
+    public void generateBuildScript(Configuration cfg, Context ctx) {
+        generateLinuxMakefile(cfg, (CCompilerContext)ctx);
+    }
+
+    protected void generateLinuxMakefile(Configuration cfg, CCompilerContext ctx) {
 
         //GENERATE THE MAKEFILE
         String mtemplate = ctx.getTemplateByID("ctemplates/Makefile");

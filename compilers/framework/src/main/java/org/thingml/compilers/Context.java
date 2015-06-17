@@ -37,7 +37,7 @@ public class Context {
 
 
     // Store the output of the compilers. The key is typically a file name but finer grained generatedCode may also be used by the compilers.
-    private Map<String, StringBuilder> generatedCode = new HashMap<String, StringBuilder>();
+    protected Map<String, StringBuilder> generatedCode = new HashMap<String, StringBuilder>();
 
     // Any any annotation to the context
     private Map<String, String> contextAnnotations = new HashMap<String, String>();

@@ -387,7 +387,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                             file.mkdirs();
                             compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName() + "/"));
                             Context ctx = new Context(compiler);
-                            compiler.getCfgBuildCompiler().generate(c, ctx);
+                            compiler.getCfgBuildCompiler().generateBuildScript(c, ctx);
                             compiler.compileConnector("kevoree-java", c);
                             ctx.writeGeneratedCodeToFiles();
                         }
@@ -428,7 +428,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                             file.mkdirs();
                             compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/"));
                             Context ctx = new Context(compiler);
-                            compiler.getCfgBuildCompiler().generate(c, ctx);
+                            compiler.getCfgBuildCompiler().generateBuildScript(c, ctx);
                             compiler.compileConnector("kevoree-js", c);
                             ctx.writeGeneratedCodeToFiles();
                         }
