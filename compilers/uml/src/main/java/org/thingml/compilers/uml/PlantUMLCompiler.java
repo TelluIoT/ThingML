@@ -149,7 +149,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
         for(Thing th : t.allThings()) {
             for(StateMachine sm : th.allStateMachines()) {
-                getThingImplCompiler().generateState(sm, ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
+                ((FSMBasedThingImplCompiler) getThingImplCompiler()).generateState(sm, ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
             }
         }
         getMainCompiler().generateMainAndInit(t, model, ctx);
