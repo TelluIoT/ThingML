@@ -155,7 +155,7 @@ public class CMainGenerator extends MainGenerator {
             ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
 
             // GENERATE IMPL
-            ctx.getCompiler().getApiCompiler().generateComponent(thing, ctx);
+            ((CBehaviorCompiler)ctx.getCompiler().getBehaviorCompiler()).generateComponent(thing, ctx);
         }
         ctx.clearConcreteThing();
 

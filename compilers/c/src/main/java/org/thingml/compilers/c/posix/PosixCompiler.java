@@ -22,6 +22,7 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.BehaviorCompiler;
 import org.thingml.compilers.BuildCompiler;
 import org.thingml.compilers.c.CApiCompiler;
+import org.thingml.compilers.c.CBehaviorCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CMainGenerator;
 
@@ -33,7 +34,7 @@ import java.io.File;
 public class PosixCompiler extends OpaqueThingMLCompiler {
 
     public PosixCompiler() {
-        super(new CActionCompilerPosix(), new CApiCompiler(), new CMainGenerator(), new BuildCompiler(), new BehaviorCompiler());
+        super(new CActionCompilerPosix(), new CApiCompiler(), new CMainGenerator(), new BuildCompiler(), new CBehaviorCompiler());
     }
 
     @Override
