@@ -31,7 +31,8 @@ import java.util.List;
  */
 public class JavaCfgBuildCompiler extends CfgBuildCompiler {
 
-    public void generate(Configuration cfg, Context ctx) {
+    @Override
+    public void generateBuildScript(Configuration cfg, Context ctx) {
         //TODO: update POM
         try {
             InputStream input = this.getClass().getClassLoader().getResourceAsStream("pomtemplates/javapom.xml");

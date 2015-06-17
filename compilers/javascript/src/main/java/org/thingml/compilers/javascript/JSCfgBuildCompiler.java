@@ -34,7 +34,8 @@ import java.util.List;
  */
 public class JSCfgBuildCompiler extends CfgBuildCompiler {
 
-    public void generate(Configuration cfg, Context ctx) {
+    @Override
+    public void generateBuildScript(Configuration cfg, Context ctx) {
         try {
             final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/package.json");
             final List<String> packLines = IOUtils.readLines(input);
