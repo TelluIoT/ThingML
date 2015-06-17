@@ -16,11 +16,12 @@
 package org.thingml.compilers;
 
 import org.sintef.thingml.*;
+import org.thingml.compilers.thing.ThingActionCompiler;
 
 /**
  * Created by bmori on 01.12.2014.
  */
-public class ThingMLPrettyPrinter extends ActionCompiler {
+public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     //ThingML pretty printer (useful for documentation, etc)
 

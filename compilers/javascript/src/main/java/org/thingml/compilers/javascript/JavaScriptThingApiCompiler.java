@@ -17,12 +17,12 @@ package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ApiCompiler;
+import org.thingml.compilers.thing.ThingApiCompiler;
 
 /**
  * Created by bmori on 09.12.2014.
  */
-public class JavaScriptApiCompiler extends ApiCompiler {
+public class JavaScriptThingApiCompiler extends ThingApiCompiler {
 
     protected String const_() {
         return "const ";
@@ -40,7 +40,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
             //It seems the very root onEntry is not called
             ctx.addMarker("useThis");
             if (thing.allStateMachines().get(0).getExit() != null)
-                ctx.getCompiler().getActionCompiler().generate(thing.allStateMachines().get(0).getExit(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(thing.allStateMachines().get(0).getExit(), builder, ctx);
             ctx.removerMarker("useThis");
             //exit the rest
             builder.append("};\n\n");
@@ -52,7 +52,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
             ctx.addContextAnnotation("thisRef", "this.");
             //execute onEntry of the root state machine
             if (thing.allStateMachines().get(0).getEntry() != null)
-                ctx.getCompiler().getActionCompiler().generate(thing.allStateMachines().get(0).getEntry(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(thing.allStateMachines().get(0).getEntry(), builder, ctx);
             builder.append("this." + thing.allStateMachines().get(0).getName() + "_instance = new StateJS.StateMachineInstance(\"" + thing.allStateMachines().get(0).getName() + "_instance" + "\");\n");
             builder.append("StateJS.initialise( this." + thing.allStateMachines().get(0).qname("_") + ", this." +  thing.allStateMachines().get(0).getName() + "_instance" + " );\n");
 
@@ -198,7 +198,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
                 Expression initExp = thing.initExpression(p);
                 if (initExp != null) {
                     builder.append(" = ");
-                    ctx.getCompiler().getActionCompiler().generate(initExp, builder, ctx);
+                    ctx.getCompiler().getThingActionCompiler().generate(initExp, builder, ctx);
                 }
                 //TODO: Init
                 builder.append(";\n");
@@ -228,7 +228,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
                     j++;
                 }
                 builder.append(") {\n");
-                ctx.getCompiler().getActionCompiler().generate(f.getBody(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(f.getBody(), builder, ctx);
                 builder.append("}\n\n");
 
 
@@ -261,7 +261,7 @@ public class JavaScriptApiCompiler extends ApiCompiler {
         builder.append("//State machine (states and regions)\n");
         builder.append("this.build = function() {\n");
         for(StateMachine b : thing.allStateMachines()) {
-            ctx.getCompiler().getBehaviorCompiler().generateState(b, builder, ctx);
+            ctx.getCompiler().getThingImplCompiler().generateState(b, builder, ctx);
         }
         builder.append("}\n");
 

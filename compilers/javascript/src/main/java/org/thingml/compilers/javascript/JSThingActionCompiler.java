@@ -17,12 +17,12 @@ package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.GenericImperativeActionCompiler;
+import org.thingml.compilers.GenericImperativeThingActionCompiler;
 
 /**
  * Created by bmori on 01.12.2014.
  */
-public class JSActionCompiler extends GenericImperativeActionCompiler {
+public class JSThingActionCompiler extends GenericImperativeThingActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {

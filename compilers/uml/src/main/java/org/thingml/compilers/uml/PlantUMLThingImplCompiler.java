@@ -15,15 +15,14 @@
  */
 package org.thingml.compilers.uml;
 
-import org.eclipse.emf.common.util.EList;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.BehaviorCompiler;
+import org.thingml.compilers.thing.ThingImplCompiler;
 
 /**
  * Created by bmori on 16.04.2015.
  */
-public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
+public class PlantUMLThingImplCompiler extends ThingImplCompiler {
 
     private void doBuildAction(Action a, StringBuilder builder, Context ctx) {
         if (a instanceof ActionBlock) {
@@ -32,17 +31,17 @@ public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
             builder.append("do\\n");
             if (block.getActions().size() < 6) {//TODO: decide when to collapse blocks or not
                 for(Action a1 : block.getActions()) {
-                    ctx.getCompiler().getActionCompiler().generate(a1, temp,ctx);
+                    ctx.getCompiler().getThingActionCompiler().generate(a1, temp,ctx);
                 }
             } else {
-                ctx.getCompiler().getActionCompiler().generate(block.getActions().get(0), temp,ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(block.getActions().get(0), temp,ctx);
                 temp.append("...//long block has been collapsed\n");
-                ctx.getCompiler().getActionCompiler().generate(block.getActions().get(block.getActions().size()-1), temp,ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(block.getActions().get(block.getActions().size()-1), temp,ctx);
             }
             builder.append(protectString(temp.toString()));
             builder.append("end");
         } else {
-            ctx.getCompiler().getActionCompiler().generate(a, builder, ctx);
+            ctx.getCompiler().getThingActionCompiler().generate(a, builder, ctx);
         }
         builder.append("\n");
     }
@@ -137,11 +136,11 @@ public class PlantUMLBehaviorCompiler extends BehaviorCompiler {
         StringBuilder temp = new StringBuilder();
         if (t.getGuard() != null) {
             temp.append("\nif ");
-            ctx.getCompiler().getActionCompiler().generate(t.getGuard(), temp, ctx);
+            ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), temp, ctx);
         }
         if(t.getAction() != null) {
             temp.append("\ndo ");
-            ctx.getCompiler().getActionCompiler().generate(t.getAction(), temp, ctx);
+            ctx.getCompiler().getThingActionCompiler().generate(t.getAction(), temp, ctx);
         }
         builder.append(protectString(temp.toString()));
     }

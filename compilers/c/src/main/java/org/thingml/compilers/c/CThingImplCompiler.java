@@ -1,7 +1,22 @@
+/**
+ * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ *
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.thingml.compilers.c;
 
 import org.sintef.thingml.*;
-import org.thingml.compilers.BehaviorCompiler;
+import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.compilers.Context;
 
 import java.util.ArrayList;
@@ -11,7 +26,7 @@ import java.util.Map;
 /**
  * Created by ffl on 17.06.15.
  */
-public class CBehaviorCompiler extends BehaviorCompiler {
+public class CThingImplCompiler extends ThingImplCompiler {
 
 
     public void generateComponent(Thing thing, Context ctx) {
@@ -170,7 +185,7 @@ public class CBehaviorCompiler extends BehaviorCompiler {
         builder.append("// Definition of function " + func.getName() + "\n");
         generatePrototypeforThingDirect(func, builder, ctx, thing);
         builder.append(" {\n");
-        ctx.getCompiler().getActionCompiler().generate(func.getBody(), builder, ctx);
+        ctx.getCompiler().getThingActionCompiler().generate(func.getBody(), builder, ctx);
 
         // FIXME: This is related to the customization of the instance var name. NOT MIGRATED FOR NOW
         //ctx.clear_instance_var_names();
@@ -189,7 +204,7 @@ public class CBehaviorCompiler extends BehaviorCompiler {
         template = template.replace("/*NAME*/", ctx.getCName(func, thing));
 
         StringBuilder b_code = new StringBuilder();
-        ctx.getCompiler().getActionCompiler().generate(func.getBody(), b_code, ctx);
+        ctx.getCompiler().getThingActionCompiler().generate(func.getBody(), b_code, ctx);
         template = template.replace("/*CODE*/", b_code.toString());
 
         StringBuilder b_params = new StringBuilder();
@@ -249,7 +264,7 @@ public class CBehaviorCompiler extends BehaviorCompiler {
                 }
             }
             // Execute Entry actions
-            if (cs.getEntry() != null) ctx.getCompiler().getActionCompiler().generate(cs.getEntry(), builder, ctx);
+            if (cs.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(cs.getEntry(), builder, ctx);
 
             // Recurse on contained states
             for(Region r : regions) {
@@ -260,7 +275,7 @@ public class CBehaviorCompiler extends BehaviorCompiler {
 
         for(State s : sm.allContainedSimpleStates()) {
             builder.append("case " + ctx.getStateID(s) + ":\n");
-            if (s.getEntry() != null) ctx.getCompiler().getActionCompiler().generate(s.getEntry(), builder, ctx);
+            if (s.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
             builder.append("break;\n");
         }
 
@@ -290,14 +305,14 @@ public class CBehaviorCompiler extends BehaviorCompiler {
                 builder.append(sm.qname("_") + "_OnExit(" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName() + ");\n");
             }
             // Execute Exit actions
-            if (cs.getExit() != null) ctx.getCompiler().getActionCompiler().generate(cs.getExit(), builder, ctx);
+            if (cs.getExit() != null) ctx.getCompiler().getThingActionCompiler().generate(cs.getExit(), builder, ctx);
             builder.append("break;\n");
 
         }
 
         for(State s : sm.allContainedSimpleStates()) { // just a leaf state: execute exit actions
             builder.append("case " + ctx.getStateID(s) + ":\n");
-            if (s.getExit() != null) ctx.getCompiler().getActionCompiler().generate(s.getExit(), builder, ctx);
+            if (s.getExit() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
             builder.append("break;\n");
         }
 
@@ -368,18 +383,18 @@ public class CBehaviorCompiler extends BehaviorCompiler {
             else builder.append("else ");
 
             builder.append("if (");
-            if (h.getGuard() != null) ctx.getCompiler().getActionCompiler().generate(h.getGuard(), builder, ctx);
+            if (h.getGuard() != null) ctx.getCompiler().getThingActionCompiler().generate(h.getGuard(), builder, ctx);
             else builder.append("1");
             builder.append(") {\n");
 
             if (h instanceof InternalTransition) {
                 InternalTransition it = (InternalTransition)h;
-                ctx.getCompiler().getActionCompiler().generate(it.getAction(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(it.getAction(), builder, ctx);
             }
             else if (h instanceof Transition) {
                 Transition et = (Transition)h;
 
-                ctx.getCompiler().getActionCompiler().generate(et.getBefore(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(et.getBefore(), builder, ctx);
 
                 // Execute the exit actions for current states (starting at the deepest)
                 builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName() + ");\n");
@@ -387,12 +402,12 @@ public class CBehaviorCompiler extends BehaviorCompiler {
                 builder.append(ctx.getInstanceStructName(thing) + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(et.getTarget()) + ";\n");
 
                 // Do the action
-                ctx.getCompiler().getActionCompiler().generate(et.getAction(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(et.getAction(), builder, ctx);
 
                 // Enter the target state and initialize its children
                 builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + ctx.getStateID(et.getTarget()) + ", " + ctx.getInstanceVarName() + ");\n");
 
-                ctx.getCompiler().getActionCompiler().generate(et.getAfter(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(et.getAfter(), builder, ctx);
             }
 
             builder.append("}\n");
@@ -465,19 +480,19 @@ public class CBehaviorCompiler extends BehaviorCompiler {
 
             if (cs != null) builder.append("if (" + ctx.getStateVarName(r)+ "_event_consumed == 0 && ");
             else builder.append("if (");
-            if (h.getGuard() != null) ctx.getCompiler().getActionCompiler().generate(h.getGuard(), builder, ctx);
+            if (h.getGuard() != null) ctx.getCompiler().getThingActionCompiler().generate(h.getGuard(), builder, ctx);
             else builder.append("1");
             builder.append(") {\n");
 
             if (h instanceof InternalTransition) {
                 InternalTransition it = (InternalTransition)h;
-                ctx.getCompiler().getActionCompiler().generate(it.getAction(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(it.getAction(), builder, ctx);
                 if (r != null) builder.append(ctx.getStateVarName(r)+ "_event_consumed = 1;\n");
             }
             else if (h instanceof Transition) {
                 Transition et = (Transition)h;
 
-                ctx.getCompiler().getActionCompiler().generate(et.getBefore(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(et.getBefore(), builder, ctx);
 
                 // Execute the exit actions for current states (starting at the deepest)
                 builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName() + ");\n");
@@ -485,12 +500,12 @@ public class CBehaviorCompiler extends BehaviorCompiler {
                 builder.append(ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(et.getTarget()) + ";\n");
 
                 // Do the action
-                ctx.getCompiler().getActionCompiler().generate(et.getAction(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(et.getAction(), builder, ctx);
 
                 // Enter the target state and initialize its children
                 builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + ctx.getStateID(et.getTarget()) + ", " + ctx.getInstanceVarName() + ");\n");
 
-                ctx.getCompiler().getActionCompiler().generate(et.getAfter(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(et.getAfter(), builder, ctx);
 
                 // The event has been consumed
                 if (r != null) builder.append(ctx.getStateVarName(r)+ "_event_consumed = 1;\n");

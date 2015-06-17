@@ -17,7 +17,7 @@ package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.MainGenerator;
+import org.thingml.compilers.configuration.CfgMainGenerator;
 
 import java.util.AbstractMap;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Created by bmori on 10.12.2014.
  */
-public class JSMainGenerator extends MainGenerator {
+public class JSCfgMainGenerator extends CfgMainGenerator {
 
     public static String getDefaultValue(Type type) {
         if (type.isDefined("java_type", "boolean"))
@@ -60,11 +60,11 @@ public class JSMainGenerator extends MainGenerator {
                     String result = "";
                     StringBuilder tempBuilder = new StringBuilder();
                     result += i.getName() + "_" + entry.getKey().getName() + "_array [";
-                    ctx.getCompiler().getActionCompiler().generate(e.getKey(), tempBuilder, ctx);
+                    ctx.getCompiler().getThingActionCompiler().generate(e.getKey(), tempBuilder, ctx);
                     result += tempBuilder.toString();
                     result += "] = ";
                     tempBuilder = new StringBuilder();
-                    ctx.getCompiler().getActionCompiler().generate(e.getValue(), tempBuilder, ctx);
+                    ctx.getCompiler().getThingActionCompiler().generate(e.getValue(), tempBuilder, ctx);
                     result += tempBuilder.toString() + ";\n";
                     builder.append(result);
                 }
@@ -95,7 +95,7 @@ public class JSMainGenerator extends MainGenerator {
                         } else {
                             if (p.getValue() != null) {
                                 StringBuilder tempbuilder = new StringBuilder();
-                                ctx.getCompiler().getActionCompiler().generate(p.getValue(), tempbuilder, ctx);
+                                ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
                                 result += tempbuilder.toString();
                             } else {
                                 result += getDefaultValue(p.getKey().getType());

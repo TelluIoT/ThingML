@@ -17,6 +17,11 @@ package org.thingml.compilers;
 
 import org.sintef.thingml.Configuration;
 import org.thingml.cgenerator.CGenerator;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.thing.ThingImplCompiler;
 
 /**
  * Created by ffl on 25.11.14.
@@ -24,7 +29,7 @@ import org.thingml.cgenerator.CGenerator;
 public class ArduinoCompiler extends OpaqueThingMLCompiler {
 
     public ArduinoCompiler() {
-        super(new ActionCompiler(), new ApiCompiler(), new MainGenerator(), new BuildCompiler(), new BehaviorCompiler());
+        super(new ThingActionCompiler(), new ThingApiCompiler(), new CfgMainGenerator(), new CfgBuildCompiler(), new ThingImplCompiler());
     }
 
     @Override

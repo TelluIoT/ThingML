@@ -25,7 +25,11 @@ import org.sintef.thingml.resource.thingml.mopp.ThingmlResource;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.*;
-import org.thingml.compilers.connectors.ConnectorCompiler;
+import org.thingml.compilers.configuration.CfgConnectorCompiler;
+import org.thingml.compilers.java.JavaCompiler;
+import org.thingml.compilers.javascript.JavaScriptCompiler;
+import org.thingml.compilers.registry.ThingMLCompilerRegistry;
+import org.thingml.compilers.uml.PlantUMLCompiler;
 import org.thingml.cppgenerator.CPPGenerator;
 import org.thingml.javagenerator.extension.HTTPGenerator;
 import org.thingml.javagenerator.extension.MQTTGenerator;
@@ -100,10 +104,10 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                 JMenuItem item = new JMenuItem(id);
                 ThingMLCompiler c = registry.createCompilerInstanceByName(id);
                 if (c.getConnectorCompilers().size() > 0) {
-                    JMenu compilerMenu = new JMenu(c.getPlatform());
+                    JMenu compilerMenu = new JMenu(c.getID());
                     newCompilersMenu.add(compilerMenu);
                     compilerMenu.add(item);
-                    for (final Map.Entry<String, ConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
+                    for (final Map.Entry<String, CfgConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
                         JMenuItem connectorMenu = new JMenuItem(connectorCompiler.getKey());
                         compilerMenu.add(connectorMenu);
                         connectorMenu.addActionListener(new ActionListener() {
@@ -382,7 +386,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                             file.mkdirs();
                             compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName() + "/"));
                             Context ctx = new Context(compiler);
-                            compiler.getBuildCompiler().generate(c, ctx);
+                            compiler.getCfgBuildCompiler().generate(c, ctx);
                             compiler.compileConnector("kevoree-java", c);
                             ctx.writeGeneratedCodeToFiles();
                         }
@@ -423,7 +427,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                             file.mkdirs();
                             compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/"));
                             Context ctx = new Context(compiler);
-                            compiler.getBuildCompiler().generate(c, ctx);
+                            compiler.getCfgBuildCompiler().generate(c, ctx);
                             compiler.compileConnector("kevoree-js", c);
                             ctx.writeGeneratedCodeToFiles();
                         }

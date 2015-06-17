@@ -19,12 +19,11 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.OpaqueThingMLCompiler;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.BehaviorCompiler;
-import org.thingml.compilers.BuildCompiler;
-import org.thingml.compilers.c.CApiCompiler;
-import org.thingml.compilers.c.CBehaviorCompiler;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.c.CCfgMainGenerator;
+import org.thingml.compilers.c.CThingApiCompiler;
+import org.thingml.compilers.c.CThingImplCompiler;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.CMainGenerator;
 
 import java.io.File;
 
@@ -34,7 +33,7 @@ import java.io.File;
 public class PosixCompiler extends OpaqueThingMLCompiler {
 
     public PosixCompiler() {
-        super(new CActionCompilerPosix(), new CApiCompiler(), new CMainGenerator(), new BuildCompiler(), new CBehaviorCompiler());
+        super(new CThingActionCompilerPosix(), new CThingApiCompiler(), new CCfgMainGenerator(), new CfgBuildCompiler(), new CThingImplCompiler());
     }
 
     @Override

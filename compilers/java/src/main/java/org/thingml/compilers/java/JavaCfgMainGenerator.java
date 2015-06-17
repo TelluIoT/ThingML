@@ -18,14 +18,14 @@ package org.thingml.compilers.java;
 import org.sintef.thingml.*;
 import org.sintef.thingml.Enumeration;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.MainGenerator;
+import org.thingml.compilers.configuration.CfgMainGenerator;
 
 import java.util.*;
 
 /**
  * Created by bmori on 10.12.2014.
  */
-public class JavaMainGenerator extends MainGenerator {
+public class JavaCfgMainGenerator extends CfgMainGenerator {
 
     public static void generateInstances(Configuration cfg, Context ctx, StringBuilder builder) {
         builder.append("//Things\n");
@@ -47,12 +47,12 @@ public class JavaMainGenerator extends MainGenerator {
                             }
                         }
                         if (l != null) {
-                            ctx.getCompiler().getActionCompiler().generate(l.getValue(), builder, ctx);
+                            ctx.getCompiler().getThingActionCompiler().generate(l.getValue(), builder, ctx);
                         } else {
-                            ctx.getCompiler().getActionCompiler().generate(a.getCardinality(), builder, ctx);
+                            ctx.getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, ctx);
                         }
                     } else {
-                        ctx.getCompiler().getActionCompiler().generate(a.getCardinality(), builder, ctx);
+                        ctx.getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, ctx);
                     }
                     builder.append("];\n");
                 }
@@ -62,11 +62,11 @@ public class JavaMainGenerator extends MainGenerator {
                         String result = "";
                         StringBuilder tempBuilder = new StringBuilder();
                         result += i.getName() + "_" + entry.getKey().getName() + "_array [";
-                        ctx.getCompiler().getActionCompiler().generate(e.getKey(), tempBuilder, ctx);
+                        ctx.getCompiler().getThingActionCompiler().generate(e.getKey(), tempBuilder, ctx);
                         result += tempBuilder.toString();
                         result += "] = ";
                         tempBuilder = new StringBuilder();
-                        ctx.getCompiler().getActionCompiler().generate(e.getValue(), tempBuilder, ctx);
+                        ctx.getCompiler().getThingActionCompiler().generate(e.getValue(), tempBuilder, ctx);
                         result += tempBuilder.toString() + ";\n";
                         builder.append(result);
                     }
@@ -92,7 +92,7 @@ public class JavaMainGenerator extends MainGenerator {
                                 if (p.getValue() != null) {
                                     StringBuilder tempbuilder = new StringBuilder();
                                     tempbuilder.append("(" + JavaHelper.getJavaType(p.getKey().getType(), false, ctx) + ")");
-                                    ctx.getCompiler().getActionCompiler().generate(p.getValue(), tempbuilder, ctx);
+                                    ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
                                     result += tempbuilder.toString();
                                 } else {
                                     result += "(" + JavaHelper.getJavaType(p.getKey().getType(), false, ctx) + ")"; //we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short

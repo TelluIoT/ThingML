@@ -13,15 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.javascript;
+package org.thingml.compilers.thing;
+
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.SendAction;
+import org.sintef.thingml.Thing;
+import org.thingml.compilers.Context;
 
 /**
  * Created by bmori on 09.12.2014.
  */
-public class EspruinoApiCompiler extends JavaScriptApiCompiler {
+public class ThingApiCompiler {
+    public void generateComponent(Thing thing, Context ctx) {
+        throw(new UnsupportedOperationException("Component implementations are platform-specific. Cannot generate component for Thing " + thing.getName()));
+    }
 
-    @Override
-    protected String const_() {
-        return "var ";
+    public void generatePublicAPI(Thing thing, Context ctx) {
+        throw(new UnsupportedOperationException("APIs are platform-specific. Cannot generate API for Thing " + thing.getName()));
     }
 }

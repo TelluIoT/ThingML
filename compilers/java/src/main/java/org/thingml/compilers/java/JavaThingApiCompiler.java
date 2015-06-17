@@ -17,7 +17,7 @@ package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ApiCompiler;
+import org.thingml.compilers.thing.ThingApiCompiler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by bmori on 09.12.2014.
  */
-public class JavaApiCompiler extends ApiCompiler {
+public class JavaThingApiCompiler extends ThingApiCompiler {
 
 
     public void generateEnumeration(Enumeration e, Context ctx, StringBuilder builder) throws Exception{
@@ -352,7 +352,7 @@ public class JavaApiCompiler extends ApiCompiler {
             Expression e = thing.initExpression(p);
             if (e != null) {
                 builder.append(ctx.getVariableName(p) + " = ");
-                ctx.getCompiler().getActionCompiler().generate(e, builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
                 builder.append(";\n");
             }
         }
@@ -415,7 +415,7 @@ public class JavaApiCompiler extends ApiCompiler {
 
         for(StateMachine b : thing.allStateMachines()) {
             for(Region r : b.allContainedRegions()) {
-                ctx.getCompiler().getBehaviorCompiler().generateRegion(r, builder, ctx);
+                ctx.getCompiler().getThingImplCompiler().generateRegion(r, builder, ctx);
             }
         }
 
@@ -473,7 +473,7 @@ public class JavaApiCompiler extends ApiCompiler {
                 i++;
             }
             builder.append(") {\n");
-            ctx.getCompiler().getActionCompiler().generate(f.getBody(), builder, ctx);
+            ctx.getCompiler().getThingActionCompiler().generate(f.getBody(), builder, ctx);
             builder.append("}\n");
         }
     }

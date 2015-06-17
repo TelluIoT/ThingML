@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers;
+package org.thingml.compilers.configuration;
 
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.Context;
@@ -21,7 +21,7 @@ import org.thingml.compilers.Context;
 /**
  * Created by bmori on 10.12.2014.
  */
-public class ConnectorCompiler {
+public class CfgSchedulerCompiler {
 
     public void generateLib(Context ctx, Configuration cfg, String... options) {
         throw(new UnsupportedOperationException("Connector libs are platform-specific."));

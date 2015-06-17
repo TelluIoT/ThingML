@@ -17,12 +17,12 @@ package org.thingml.compilers.uml;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.MainGenerator;
+import org.thingml.compilers.configuration.CfgMainGenerator;
 
 /**
  * Created by bmori on 10.12.2014.
  */
-public class PlantUMLMainGenerator extends MainGenerator {
+public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
 
     @Override
     public void generate(Configuration cfg, ThingMLModel model, Context ctx) {

@@ -16,8 +16,8 @@
 package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
+import org.thingml.compilers.configuration.CfgConnectorCompiler;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ConnectorCompiler;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Created by bmori on 27.01.2015.
  */
-public class JS2NodeRED extends ConnectorCompiler {
+public class JS2NodeRED extends CfgConnectorCompiler {
 
     int inputs = 0;
 
@@ -45,7 +45,7 @@ public class JS2NodeRED extends ConnectorCompiler {
         builder.append("RED.nodes.createNode(this, config);\n");
         builder.append("var node = this;\n");
 
-        JSMainGenerator.generateInstances(cfg, builder, ctx, true);
+        JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
 
         for(Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();

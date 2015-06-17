@@ -19,8 +19,8 @@ import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
+import org.thingml.compilers.configuration.CfgConnectorCompiler;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ConnectorCompiler;
 
 import java.io.*;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * Created by bmori on 27.01.2015.
  */
-public class JS2Kevoree extends ConnectorCompiler {
+public class JS2Kevoree extends CfgConnectorCompiler {
 
     private void updateMainGruntfile(Configuration cfg, Port p, Context ctx) {
         try {
@@ -165,7 +165,7 @@ public class JS2Kevoree extends ConnectorCompiler {
         //TODO: generate dictionnay for attributes
 
         builder.append("construct: function() {\n");
-        JSMainGenerator.generateInstances(cfg, builder, ctx, true);
+        JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
             for(Map.Entry e : cfg.danglingPorts().entrySet()) {
                 final Instance i = (Instance) e.getKey();
                 for(Port p : (List<Port>)e.getValue()) {

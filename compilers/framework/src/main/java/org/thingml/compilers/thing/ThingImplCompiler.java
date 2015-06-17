@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers;
+package org.thingml.compilers.thing;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
@@ -21,7 +21,7 @@ import org.thingml.compilers.Context;
 /**
  * Created by bmori on 15.04.2015.
  */
-public class BehaviorCompiler {
+public class ThingImplCompiler {
 
     public void generateState(State s, StringBuilder builder, Context ctx) {
         if (s instanceof StateMachine) {

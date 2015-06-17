@@ -18,10 +18,10 @@ package org.thingml.compilers.java;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.thingml.compilers.configuration.CfgConnectorCompiler;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.OpaqueThingMLCompiler;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.ConnectorCompiler;
 
 import java.io.File;
 import java.util.HashMap;
@@ -33,13 +33,13 @@ import java.util.Map;
 public class JavaCompiler extends OpaqueThingMLCompiler {
 
     {
-        Map<String, ConnectorCompiler> connectorCompilerMap = new HashMap<String, ConnectorCompiler>();
+        Map<String, CfgConnectorCompiler> connectorCompilerMap = new HashMap<String, CfgConnectorCompiler>();
         connectorCompilerMap.put("kevoree-java", new Java2Kevoree());
         addConnectorCompilers(connectorCompilerMap);
     }
 
     public JavaCompiler() {
-        super(new JavaActionCompiler(), new JavaApiCompiler(), new JavaMainGenerator(), new JavaBuildCompiler(), new JavaBehaviorCompiler());
+        super(new JavaThingActionCompiler(), new JavaThingApiCompiler(), new JavaCfgMainGenerator(), new JavaCfgBuildCompiler(), new JavaThingImplCompiler());
     }
 
     @Override
@@ -84,11 +84,11 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         ctx.addContextAnnotation("package", pack);
         ctx.setCurrentConfiguration(cfg);
         for(Thing th : cfg.allThings()) {
-            ctx.getCompiler().getApiCompiler().generatePublicAPI(th, ctx);
-            ctx.getCompiler().getApiCompiler().generateComponent(th, ctx);
+            ctx.getCompiler().getThingApiCompiler().generatePublicAPI(th, ctx);
+            ctx.getCompiler().getThingApiCompiler().generateComponent(th, ctx);
         }
         ctx.getCompiler().getMainCompiler().generate(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
-        ctx.getCompiler().getBuildCompiler().generate(cfg, ctx);
+        ctx.getCompiler().getCfgBuildCompiler().generate(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
     }
 }

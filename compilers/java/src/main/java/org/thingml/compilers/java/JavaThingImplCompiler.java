@@ -17,12 +17,12 @@ package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.BehaviorCompiler;
+import org.thingml.compilers.thing.ThingImplCompiler;
 
 /**
  * Created by bmori on 16.04.2015.
  */
-public class JavaBehaviorCompiler extends BehaviorCompiler {
+public class JavaThingImplCompiler extends ThingImplCompiler {
 
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
         generateCompositeState(sm, builder, ctx);
@@ -72,7 +72,7 @@ public class JavaBehaviorCompiler extends BehaviorCompiler {
             if (c.getEntry() != null) {
                 builder.append("@Override\n");
                 builder.append("public void onEntry() {\n");
-                ctx.getCompiler().getActionCompiler().generate(c.getEntry(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(c.getEntry(), builder, ctx);
                 builder.append("super.onEntry();\n");
                 builder.append("}\n\n");
             }
@@ -80,7 +80,7 @@ public class JavaBehaviorCompiler extends BehaviorCompiler {
                 builder.append("@Override\n");
                 builder.append("public void onExit() {\n");
                 builder.append("super.onExit();\n");
-                ctx.getCompiler().getActionCompiler().generate(c.getExit(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(c.getExit(), builder, ctx);
                 builder.append("}\n\n");
             }
             builder.append("}\n");
@@ -95,14 +95,14 @@ public class JavaBehaviorCompiler extends BehaviorCompiler {
             if (s.getEntry() != null) {
                 builder.append("@Override\n");
                 builder.append("public void onEntry() {\n");
-                ctx.getCompiler().getActionCompiler().generate(s.getEntry(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
                 builder.append("}\n\n");
             }
 
             if (s.getExit() != null) {
                 builder.append("@Override\n");
                 builder.append("public void onExit() {\n");
-                ctx.getCompiler().getActionCompiler().generate(s.getExit(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
                 builder.append("}\n\n");
             }
             builder.append("}");
@@ -188,7 +188,7 @@ public class JavaBehaviorCompiler extends BehaviorCompiler {
                             builder.append("final NullEvent ce = (NullEvent) e;\n");
                         }
                         builder.append("return ");
-                        ctx.getCompiler().getActionCompiler().generate(i.getGuard(), builder, ctx);
+                        ctx.getCompiler().getThingActionCompiler().generate(i.getGuard(), builder, ctx);
                         builder.append(";\n");
                         builder.append("}\n\n");
                     }
@@ -201,7 +201,7 @@ public class JavaBehaviorCompiler extends BehaviorCompiler {
                         } else {
                             builder.append("final NullEvent ce = (NullEvent) e;\n");
                         }
-                        ctx.getCompiler().getActionCompiler().generate(i.getAction(), builder, ctx);
+                        ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
                         builder.append("}\n\n");
                     }
                     if (i.getGuard() != null || i.getAction() != null)
@@ -225,7 +225,7 @@ public class JavaBehaviorCompiler extends BehaviorCompiler {
                 builder.append("public boolean doCheck(final Event e) {\n");
                 builder.append("final NullEvent ce = (NullEvent) e;\n");
                 builder.append("return ");
-                ctx.getCompiler().getActionCompiler().generate(i.getGuard(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(i.getGuard(), builder, ctx);
                 builder.append(";\n");
                 builder.append("}\n\n");
             }
@@ -234,7 +234,7 @@ public class JavaBehaviorCompiler extends BehaviorCompiler {
                 builder.append("@Override\n");
                 builder.append("public void doExecute(final Event e) {\n");
                 builder.append("final NullEvent ce = (NullEvent) e;\n");
-                ctx.getCompiler().getActionCompiler().generate(i.getAction(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
                 builder.append("}\n\n");
             }
             if (i.getGuard() != null || i.getAction() != null)

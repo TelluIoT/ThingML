@@ -21,7 +21,7 @@ import org.thingml.compilers.Context;
 /**
  * Created by bmori on 01.12.2014.
  */
-public class EspruinoActionCompiler extends JSActionCompiler {
+public class EspruinoThingActionCompiler extends JSThingActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers;
+package org.thingml.compilers.thing;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 
-public class ActionCompiler {
+public class ThingActionCompiler {
 
     public void generate(Object o, StringBuilder builder, Context ctx) {
         if (o instanceof Action) {

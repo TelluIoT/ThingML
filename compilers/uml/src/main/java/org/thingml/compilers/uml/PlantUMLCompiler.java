@@ -18,15 +18,12 @@ package org.thingml.compilers.uml;
 import net.sourceforge.plantuml.*;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.OpaqueThingMLCompiler;
-import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.ActionCompiler;
-import org.thingml.compilers.ThingMLPrettyPrinter;
-import org.thingml.compilers.ApiCompiler;
-import org.thingml.compilers.BehaviorCompiler;
-import org.thingml.compilers.BuildCompiler;
-import org.thingml.compilers.MainGenerator;
+import org.thingml.compilers.*;
+import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.thing.ThingImplCompiler;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -36,11 +33,11 @@ import java.nio.charset.Charset;
 public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     public PlantUMLCompiler() {
-        super(new ThingMLPrettyPrinter(), new ApiCompiler(), new PlantUMLMainGenerator(), new BuildCompiler(), new PlantUMLBehaviorCompiler());
+        super(new ThingMLPrettyPrinter(), new ThingApiCompiler(), new PlantUMLCfgMainGenerator(), new CfgBuildCompiler(), new PlantUMLThingImplCompiler());
     }
 
-    public PlantUMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler) {
-        super(actionCompiler, apiCompiler, mainCompiler, buildCompiler, behaviorCompiler);
+    public PlantUMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
+        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
     }
 
     @Override
@@ -150,7 +147,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
         for(Thing th : t.allThings()) {
             for(StateMachine sm : th.allStateMachines()) {
-                getBehaviorCompiler().generateState(sm, ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
+                getThingImplCompiler().generateState(sm, ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
             }
         }
         getMainCompiler().generate(t, model, ctx);

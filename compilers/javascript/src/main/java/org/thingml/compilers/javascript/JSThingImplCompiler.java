@@ -17,7 +17,7 @@ package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.BehaviorCompiler;
+import org.thingml.compilers.thing.ThingImplCompiler;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Created by bmori on 16.04.2015.
  */
-public class JSBehaviorCompiler extends BehaviorCompiler {
+public class JSThingImplCompiler extends ThingImplCompiler {
 
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
         builder.append("this." + sm.qname("_") + " = new StateJS.StateMachine(\"" + sm.getName() + "\")");
@@ -66,12 +66,12 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
     private void generateActionsForState(State s, StringBuilder builder, Context ctx) {
         if (s.getEntry() != null) {
             builder.append(".entry(function () {\n");
-            ctx.getCompiler().getActionCompiler().generate(s.getEntry(), builder, ctx);
+            ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
             builder.append("})\n\n");
         }
         if (s.getExit() != null) {
             builder.append(".exit(function () {\n");
-            ctx.getCompiler().getActionCompiler().generate(s.getExit(), builder, ctx);
+            ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
             builder.append("})\n\n");
         }
     }
@@ -136,7 +136,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
         if (h.getEvent().size() == 0) {
             builder.append(".effect(function (message) {\n");
             //builder.append("var json = JSON.parse(message);\n");
-            ctx.getCompiler().getActionCompiler().generate(h.getAction(), builder, ctx);
+            ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
             builder.append("})\n\n");
         }
         else {
@@ -147,7 +147,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
                 builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
                 i++;
             }
-                ctx.getCompiler().getActionCompiler().generate(h.getAction(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
                 builder.append("})");
         }
     }
@@ -169,7 +169,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
                 builder.append(".when(function (message) {");
                 generateMessageParam(msg, builder);
                 builder.append(" return ");
-                ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
                 builder.append(";})");
             }
 
@@ -180,7 +180,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             builder.append("return message[0] === \"" + p.getName() + "\" && message[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
-                ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
             }
             builder.append(";})");
         }
@@ -195,7 +195,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
             if (t.getGuard() != null) {
                 builder.append(".when(function(message) {return ");
-                ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
                 builder.append(";})");
             }
         } else {
@@ -205,7 +205,7 @@ public class JSBehaviorCompiler extends BehaviorCompiler {
             builder.append("return message[0] === \"" + p.getName() + "\" && message[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
-                ctx.getCompiler().getActionCompiler().generate(t.getGuard(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
             }
             builder.append(";})");
         }

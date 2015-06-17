@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers;
+package org.thingml.compilers.configuration;
 
 import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ThingMLModel;
 import org.thingml.compilers.Context;
 
 /**
  * Created by bmori on 10.12.2014.
  */
-public class MainGenerator {
+public class CfgConnectorCompiler {
 
-    public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
-        throw(new UnsupportedOperationException("Configuration are platform-specific."));
+    public void generateLib(Context ctx, Configuration cfg, String... options) {
+        throw(new UnsupportedOperationException("Connector libs are platform-specific."));
     }
+
 }

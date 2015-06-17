@@ -46,7 +46,7 @@
 
         <dependency>
             <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.compilers</artifactId>
+            <artifactId>compilers.registry</artifactId>
             <version>${project.version}</version>
         </dependency>
 

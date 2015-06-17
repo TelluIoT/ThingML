@@ -17,15 +17,13 @@ package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.OpaqueThingMLCompiler;
-import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.ActionCompiler;
-import org.thingml.compilers.ApiCompiler;
-import org.thingml.compilers.BehaviorCompiler;
-import org.thingml.compilers.BuildCompiler;
-import org.thingml.compilers.ConnectorCompiler;
-import org.thingml.compilers.MainGenerator;
+import org.thingml.compilers.*;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.configuration.CfgConnectorCompiler;
+import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.thing.ThingImplCompiler;
 
 import java.io.File;
 import java.util.HashMap;
@@ -37,18 +35,18 @@ import java.util.Map;
 public class JavaScriptCompiler extends OpaqueThingMLCompiler {
 
     {
-        Map<String, ConnectorCompiler> connectorCompilerMap = new HashMap<String, ConnectorCompiler>();
+        Map<String, CfgConnectorCompiler> connectorCompilerMap = new HashMap<String, CfgConnectorCompiler>();
         connectorCompilerMap.put("kevoree-js", new JS2Kevoree());
         connectorCompilerMap.put("node-red", new JS2NodeRED());
         addConnectorCompilers(connectorCompilerMap);
     }
 
     public JavaScriptCompiler() {
-        super(new JSActionCompiler(), new JavaScriptApiCompiler(), new JSMainGenerator(), new JSBuildCompiler(), new JSBehaviorCompiler());
+        super(new JSThingActionCompiler(), new JavaScriptThingApiCompiler(), new JSCfgMainGenerator(), new JSCfgBuildCompiler(), new JSThingImplCompiler());
     }
 
-    public JavaScriptCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler) {
-        super(actionCompiler, apiCompiler, mainCompiler, buildCompiler, behaviorCompiler);
+    public JavaScriptCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
+        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
     }
 
     @Override
@@ -76,7 +74,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
         new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
-        ctx.getCompiler().getBuildCompiler().generate(cfg, ctx);
+        ctx.getCompiler().getCfgBuildCompiler().generate(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
     }
 
@@ -103,8 +101,8 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
             }
         }
         for(Thing thing : t.allThings()) {
-            ctx.getCompiler().getApiCompiler().generateComponent(thing, ctx);
-            //ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
+            ctx.getCompiler().getThingApiCompiler().generateComponent(thing, ctx);
+            //ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
         }
         ctx.getCompiler().getMainCompiler().generate(t, model, ctx);
     }

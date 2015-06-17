@@ -18,7 +18,7 @@ package org.thingml.compilers.java;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.BuildCompiler;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Created by bmori on 17.12.2014.
  */
-public class JavaBuildCompiler extends BuildCompiler {
+public class JavaCfgBuildCompiler extends CfgBuildCompiler {
 
     public void generate(Configuration cfg, Context ctx) {
         //TODO: update POM

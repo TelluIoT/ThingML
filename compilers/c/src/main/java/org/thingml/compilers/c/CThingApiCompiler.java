@@ -17,14 +17,13 @@ package org.thingml.compilers.c;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ApiCompiler;
+import org.thingml.compilers.thing.ThingApiCompiler;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 
-public class CApiCompiler extends ApiCompiler {
+public class CThingApiCompiler extends ThingApiCompiler {
 
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
@@ -101,7 +100,7 @@ public class CApiCompiler extends ApiCompiler {
             builder.append(ctx.getCType(p.getType()) + " " + ctx.getCVarName(p));
             if (p.getCardinality() != null) {//array
                 builder.append("[");
-                ctx.getCompiler().getActionCompiler().generate(p.getCardinality(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(p.getCardinality(), builder, ctx);
                 builder.append("]");
             }
             builder.append(";\n");

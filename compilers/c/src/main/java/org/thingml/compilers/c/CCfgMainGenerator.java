@@ -18,7 +18,7 @@ package org.thingml.compilers.c;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.MainGenerator;
+import org.thingml.compilers.configuration.CfgMainGenerator;
 
 import java.util.AbstractMap;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Created by ffl on 29.05.15.
  */
-public class CMainGenerator extends MainGenerator {
+public class CCfgMainGenerator extends CfgMainGenerator {
 
     public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
         CCompilerContext c = (CCompilerContext)ctx;
@@ -72,72 +72,11 @@ public class CMainGenerator extends MainGenerator {
         ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString());
         ctx.getBuilder(cfg.getName() + ".c").append(ctemplate);
 
-        generateMakefile(cfg, model, ctx);
+        //generateMakefile(cfg, model, ctx);
 
     }
 
-    protected void generateMakefile(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {
 
-        //GENERATE THE MAKEFILE
-        String mtemplate = ctx.getTemplateByID("ctemplates/Makefile");
-        mtemplate = mtemplate.replace("/*NAME*/", cfg.getName());
-
-        String compiler = "cc"; // default value
-        if (cfg.hasAnnotation("c_compiler")) compiler = cfg.annotation("c_compiler").iterator().next();
-        mtemplate = mtemplate.replace("/*CC*/", compiler);
-
-        if (ctx.enableDebug()) mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -DDEBUG");
-        else mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -O2 -w");
-
-        String srcs = "";
-        String objs = "";
-
-        // Add the modules for the Things
-        for(Thing t : cfg.allThings()) {
-            srcs += t.getName() + ".c ";
-            objs += t.getName() + ".o ";
-        }
-
-        // Add the module for the Configuration
-        srcs += cfg.getName() + ".c ";
-        objs += cfg.getName() + ".o ";
-
-        // Add any additional modules from the annotations
-        for (String s : cfg.annotation("add_c_modules")) {
-            String[] mods = s.split(" ");
-            for (int i=0; i<mods.length; i++) {
-                srcs += mods[i].trim() + ".c ";
-                objs += mods[i].trim() + ".o ";
-            }
-        }
-        srcs = srcs.trim();
-        objs = objs.trim();
-
-        String libs = "";
-        for (String s : cfg.annotation("add_c_libraries")) {
-            String[] strs = s.split(" ");
-            for (int i=0; i<strs.length; i++) {
-                libs += "-l " + strs[i].trim() + " ";
-            }
-        }
-        libs = libs.trim();
-
-        String preproc = "";
-        for (String s : cfg.annotation("add_c_directives")) {
-            String[] strs = s.split(" ");
-            for (int i=0; i<strs.length; i++) {
-                preproc += "-D " + strs[i].trim() + " ";
-            }
-        }
-        preproc = preproc.trim();
-
-        mtemplate = mtemplate.replace("/*SOURCES*/", srcs);
-        mtemplate = mtemplate.replace("/*OBJECTS*/", objs);
-        mtemplate = mtemplate.replace("/*LIBS*/", libs);
-        mtemplate = mtemplate.replace("/*PREPROC_DIRECTIVES*/", preproc);
-
-        ctx.getBuilder("Makefile").append(mtemplate);
-    }
 
     protected void compileCModules(Configuration cfg, CCompilerContext ctx) {
 
@@ -152,10 +91,10 @@ public class CMainGenerator extends MainGenerator {
         for (Thing thing: cfg.allThings()) {
             ctx.setConcreteThing(thing);
             // GENERATE HEADER
-            ctx.getCompiler().getApiCompiler().generatePublicAPI(thing, ctx);
+            ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
 
             // GENERATE IMPL
-            ((CBehaviorCompiler)ctx.getCompiler().getBehaviorCompiler()).generateComponent(thing, ctx);
+            ((CThingImplCompiler)ctx.getCompiler().getThingImplCompiler()).generateComponent(thing, ctx);
         }
         ctx.clearConcreteThing();
 
@@ -467,7 +406,7 @@ public class CMainGenerator extends MainGenerator {
         for (Map.Entry<Property, Expression> init: cfg.initExpressionsForInstance(inst)) {
             if (init.getValue() != null && init.getKey().getCardinality() == null) {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(init.getKey()) + " = ");
-                        ctx.getCompiler().getActionCompiler().generate(init.getValue(), builder, ctx);
+                        ctx.getCompiler().getThingActionCompiler().generate(init.getValue(), builder, ctx);
                         builder.append(";\n");
             }
         }
@@ -480,9 +419,9 @@ public class CMainGenerator extends MainGenerator {
                 if (e.getValue() != null && e.getKey() != null) {
                     builder.append(ctx.getInstanceVarName(inst) + "." +ctx.getVariableName(p));
                     builder.append("[");
-                    ctx.getCompiler().getActionCompiler().generate(e.getKey(), builder, ctx);
+                    ctx.getCompiler().getThingActionCompiler().generate(e.getKey(), builder, ctx);
                     builder.append("] = ");
-                    ctx.getCompiler().getActionCompiler().generate(e.getValue(), builder, ctx);
+                    ctx.getCompiler().getThingActionCompiler().generate(e.getValue(), builder, ctx);
                     builder.append(";\n");
                 }
             }

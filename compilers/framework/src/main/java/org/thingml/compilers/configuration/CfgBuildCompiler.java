@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers;
+package org.thingml.compilers.configuration;
 
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.Context;
@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * Created by bmori on 17.12.2014.
  */
-public class BuildCompiler {
+public class CfgBuildCompiler {
 
     protected Set<String> properties = new HashSet<String>();
     protected Set<String> deps = new HashSet<String>();

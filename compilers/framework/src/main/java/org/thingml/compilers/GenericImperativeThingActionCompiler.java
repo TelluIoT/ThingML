@@ -16,12 +16,13 @@
 package org.thingml.compilers;
 
 import org.sintef.thingml.*;
+import org.thingml.compilers.thing.ThingActionCompiler;
 
 
 /**
  * Created by bmori on 01.12.2014.
  */
-public class GenericImperativeActionCompiler extends ActionCompiler {
+public class GenericImperativeThingActionCompiler extends ThingActionCompiler {
 
     //ThingML actions that can be compiled the same way for any imperative language like (Java, JS, C)
 

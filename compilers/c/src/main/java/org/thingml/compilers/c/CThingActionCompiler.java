@@ -17,12 +17,10 @@ package org.thingml.compilers.c;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.GenericImperativeActionCompiler;
+import org.thingml.compilers.GenericImperativeThingActionCompiler;
 
-/**
- * Created by bmori on 01.12.2014.
- */
-public abstract class CActionCompiler extends GenericImperativeActionCompiler {
+
+public abstract class CThingActionCompiler extends GenericImperativeThingActionCompiler {
 
 
     @Override

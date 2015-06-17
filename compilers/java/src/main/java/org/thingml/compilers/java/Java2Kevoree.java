@@ -17,8 +17,8 @@ package org.thingml.compilers.java;
 
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
+import org.thingml.compilers.configuration.CfgConnectorCompiler;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ConnectorCompiler;
 
 import java.io.*;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Created by bmori on 27.01.2015.
  */
-public class Java2Kevoree extends ConnectorCompiler {
+public class Java2Kevoree extends CfgConnectorCompiler {
 
     private void generateKevScript(Context ctx, Configuration cfg, String pack) {
         StringBuilder kevScript = new StringBuilder();
@@ -218,13 +218,13 @@ public class Java2Kevoree extends ConnectorCompiler {
                     final Expression e = cfg.initExpressions(i,p).get(0);
                     if (e != null) {
                         builder.append("(defaultValue = \"");
-                        ctx.getCompiler().getActionCompiler().generate(e, builder, ctx);
+                        ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
                         builder.append("\")");
                     }
                     builder.append("\nprivate " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + i.getName() + "_" + ctx.getVariableName(p));
                     if (e != null) {
                         builder.append(" = ");
-                        ctx.getCompiler().getActionCompiler().generate(e, builder, ctx);
+                        ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
                     }
                     builder.append(";\n");
                 }
@@ -252,7 +252,7 @@ public class Java2Kevoree extends ConnectorCompiler {
 
         builder.append("//Instantiates ThingML component instances and connectors\n");
         builder.append("private void initThingML() {\n");
-        JavaMainGenerator.generateInstances(cfg, ctx, builder);
+        JavaCfgMainGenerator.generateInstances(cfg, ctx, builder);
 
         for(Map.Entry<Instance, List<Port>> e : cfg.danglingPorts().entrySet()) {
             final Instance i = e.getKey();

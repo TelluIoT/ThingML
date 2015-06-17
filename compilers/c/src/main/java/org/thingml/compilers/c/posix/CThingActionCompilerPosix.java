@@ -18,12 +18,12 @@ package org.thingml.compilers.c.posix;
 import org.sintef.thingml.ErrorAction;
 import org.sintef.thingml.PrintAction;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.c.CActionCompiler;
+import org.thingml.compilers.c.CThingActionCompiler;
 
 /**
  * Created by ffl on 11.06.15.
  */
-public class CActionCompilerPosix extends CActionCompiler {
+public class CThingActionCompilerPosix extends CThingActionCompiler {
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
