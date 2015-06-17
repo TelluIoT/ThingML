@@ -29,21 +29,21 @@ import java.util.Map;
 public class JSCfgMainGenerator extends CfgMainGenerator {
 
     public static String getDefaultValue(Type type) {
-        if (type.isDefined("java_type", "boolean"))
+        if (type.isDefined("js_type", "boolean"))
             return "false";
-        else if (type.isDefined("java_type", "int"))
+        else if (type.isDefined("js_type", "int"))
             return "0";
-        else if (type.isDefined("java_type", "long"))
+        else if (type.isDefined("js_type", "long"))
             return "0";
-        else if (type.isDefined("java_type", "float"))
+        else if (type.isDefined("js_type", "float"))
             return "0.0f";
-        else if (type.isDefined("java_type", "double"))
+        else if (type.isDefined("js_type", "double"))
             return "0.0d";
-        else if (type.isDefined("java_type", "byte"))
+        else if (type.isDefined("js_type", "byte"))
             return "0";
-        else if (type.isDefined("java_type", "short"))
+        else if (type.isDefined("js_type", "short"))
             return "0";
-        else if (type.isDefined("java_type", "char"))
+        else if (type.isDefined("js_type", "char"))
             return "'\u0000'";
         else
             return "null";
