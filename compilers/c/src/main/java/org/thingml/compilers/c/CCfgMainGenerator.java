@@ -39,7 +39,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     protected void generateConfigurationImplementation(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {
 
         // GENERATE THE CONFIGURATION AND A MAIN
-        String ctemplate = ctx.getTemplateByID("ctemplates/linux_main.c");
+        String ctemplate = ctx.getCfgMainTemplate();
         ctemplate = ctemplate.replace("/*NAME*/", cfg.getName());
         StringBuilder builder = new StringBuilder();
 

@@ -30,6 +30,18 @@ public abstract class CCompilerContext extends Context {
         super(c);
     }
 
+    public String getCfgMainTemplate() {
+        return getTemplateByID("ctemplates/" + getCompiler().getID() + "_main.c");
+    }
+
+    public String getThingHeaderTemplate() {
+        return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thing_header.h");
+    }
+
+    public String getThingImplTemplate() {
+        return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thing_impl.c");
+    }
+
     // The concrete thing for which the code is being generated
     protected Thing concreteThing = null;
 
