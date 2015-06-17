@@ -75,7 +75,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
         new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
-        ctx.getCompiler().getCfgBuildCompiler().generate(cfg, ctx);
+        ctx.getCompiler().getCfgBuildCompiler().generateBuildScript(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
     }
 
@@ -102,7 +102,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
             }
         }
         for(Thing thing : t.allThings()) {
-            ctx.getCompiler().getThingApiCompiler().generateComponent(thing, ctx);
+            ctx.getCompiler().getThingImplCompiler().generateImplementation(thing, ctx);
             //ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
         }
         ctx.getCompiler().getMainCompiler().generateMainAndInit(t, model, ctx);
