@@ -24,6 +24,9 @@ import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
  */
 public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
+
+
+
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
         generateCompositeState(sm, builder, ctx);
     }
