@@ -1,0 +1,47 @@
+import "../datatypes.thingml"
+
+/*****************************************************************************
+ * Definition of the ThingML test framework
+ *****************************************************************************/
+thing fragment TestMsg {
+	message testIn(c : Char);
+	message testOut(c : Char);
+	message perfTestIn(i : Integer);
+	message perfTestOut();
+	message testFailure();
+	message perfTestEnd();
+	message testEnd();
+	message perfTestSize(time : LongLong);
+}
+thing fragment TestHarness includes TestMsg {
+	provided port test {
+		sends testIn, perfTestIn, perfTestEnd
+	}
+	required port testEnd {
+		sends testEnd,perfTestSize
+	}
+}
+
+thing fragment Test includes TestMsg {
+
+	required port harnessOut {
+		sends testOut, testFailure, perfTestOut
+	}
+	required port harnessIn {
+		receives testIn, perfTestIn, perfTestEnd
+	}
+	required port testEnd {
+		sends testEnd,perfTestSize
+	}
+}
+
+
+thing fragment TestDump includes TestMsg {
+
+	provided port dump {
+		receives testOut,testFailure, perfTestOut
+	}
+	provided port dumpEnd {
+		receives testEnd,perfTestSize
+	}
+}

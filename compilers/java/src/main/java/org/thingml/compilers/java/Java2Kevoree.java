@@ -17,8 +17,8 @@ package org.thingml.compilers.java;
 
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
+import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ConnectorCompiler;
 
 import java.io.*;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Created by bmori on 27.01.2015.
  */
-public class Java2Kevoree extends ConnectorCompiler {
+public class Java2Kevoree extends CfgExternalConnectorCompiler {
 
     private void generateKevScript(Context ctx, Configuration cfg, String pack) {
         StringBuilder kevScript = new StringBuilder();
@@ -58,7 +58,7 @@ public class Java2Kevoree extends ConnectorCompiler {
         kevScript.append("add node0." + cfg.getName() + " : " + pack + ".kevoree.K" + cfg.getName() + "/1.0-SNAPSHOT\n");
 
         /*
-          no need to generate channels and bindings. Connectors defined in ThingML are managed internally.
+          no need to generateMainAndInit channels and bindings. Connectors defined in ThingML are managed internally.
           Ports not connected in ThingML should be connected later on in Kevoree (we do not have the info how to connect them)
          */
 
@@ -91,7 +91,7 @@ public class Java2Kevoree extends ConnectorCompiler {
             }
             input.close();
 
-            final String kevoreePlugin = "\n<plugin>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.mavenplugin</artifactId>\n<version>${kevoree.version}</version>\n<extensions>true</extensions>\n<configuration>\n<nodename>node0</nodename><model>src/main/kevs/main.kevs</model>\n</configuration>\n<executions>\n<execution>\n<goals>\n<goal>generate</goal>\n</goals>\n</execution>\n</executions>\n</plugin>\n</plugins>\n";
+            final String kevoreePlugin = "\n<plugin>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.mavenplugin</artifactId>\n<version>${kevoree.version}</version>\n<extensions>true</extensions>\n<configuration>\n<nodename>node0</nodename><model>src/main/kevs/main.kevs</model>\n</configuration>\n<executions>\n<execution>\n<goals>\n<goal>generateMainAndInit</goal>\n</goals>\n</execution>\n</executions>\n</plugin>\n</plugins>\n";
             pom = pom.replace("</plugins>", kevoreePlugin);
 
             pom = pom.replace("<!--PROP-->", "<kevoree.version>5.2.5</kevoree.version>\n<!--PROP-->");
@@ -218,13 +218,13 @@ public class Java2Kevoree extends ConnectorCompiler {
                     final Expression e = cfg.initExpressions(i,p).get(0);
                     if (e != null) {
                         builder.append("(defaultValue = \"");
-                        ctx.getCompiler().getActionCompiler().generate(e, builder, ctx);
+                        ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
                         builder.append("\")");
                     }
                     builder.append("\nprivate " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + i.getName() + "_" + ctx.getVariableName(p));
                     if (e != null) {
                         builder.append(" = ");
-                        ctx.getCompiler().getActionCompiler().generate(e, builder, ctx);
+                        ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
                     }
                     builder.append(";\n");
                 }
@@ -252,7 +252,7 @@ public class Java2Kevoree extends ConnectorCompiler {
 
         builder.append("//Instantiates ThingML component instances and connectors\n");
         builder.append("private void initThingML() {\n");
-        JavaMainGenerator.generateInstances(cfg, ctx, builder);
+        JavaCfgMainGenerator.generateInstances(cfg, ctx, builder);
 
         for(Map.Entry<Instance, List<Port>> e : cfg.danglingPorts().entrySet()) {
             final Instance i = e.getKey();
@@ -337,7 +337,7 @@ public class Java2Kevoree extends ConnectorCompiler {
     }
 
     @Override
-    public void generateLib(Context ctx, Configuration cfg, String... options) {
+    public void generateExternalConnector(Configuration cfg, Context ctx, String... options) {
         String pack = "org.thingml.generated";
         if (options.length > 0 && options[0] != null)
             pack = options[0];

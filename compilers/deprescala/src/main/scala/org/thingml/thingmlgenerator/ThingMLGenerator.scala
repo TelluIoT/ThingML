@@ -144,7 +144,7 @@ case class ConfigurationThingMLGenerator(val self: Configuration) extends ThingM
   }
   
   def generateSerializer(builder: StringBuilder = Context.builder) {
-    //TODO: We should generate a PIM thing and then one PSM thing for each platform that would include the PIM thing
+    //TODO: We should generateMainAndInit a PIM thing and then one PSM thing for each platform that would include the PIM thing
     builder append "thing MessageSerializer includes SerializerScala, RemoteMsgs {\n"
     val allMessages = Context.sort(self.allRemoteMessages)
     allMessages.foreach{case (p,m) => 
@@ -199,7 +199,7 @@ case class ConfigurationThingMLGenerator(val self: Configuration) extends ThingM
   }
   
   def generateDeserializer(builder: StringBuilder = Context.builder, alt : Boolean) {
-    //TODO: We should generate a PIM thing and then one PSM thing for each platform that would include the PIM thing
+    //TODO: We should generateMainAndInit a PIM thing and then one PSM thing for each platform that would include the PIM thing
     builder append "thing MessageDeserializer includes DeserializerScala, RemoteMsgs {\n"
     val allMessages = Context.sort(self.allRemoteMessages)
     allMessages.foreach{case (p,m) => 

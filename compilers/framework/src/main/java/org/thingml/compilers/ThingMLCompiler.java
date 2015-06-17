@@ -16,6 +16,13 @@
 package org.thingml.compilers;
 
 import org.sintef.thingml.Configuration;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
+import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
+import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.thing.ThingImplCompiler;
 import java.io.File;
 import java.io.OutputStream;
 import java.util.Collections;
@@ -29,35 +36,35 @@ public abstract class ThingMLCompiler {
 
     protected Context ctx = new Context(this);
 
-    private ActionCompiler actionCompiler;
-    private ApiCompiler apiCompiler;
-    private MainGenerator mainCompiler;
-    private BuildCompiler buildCompiler;
-    private BehaviorCompiler behaviorCompiler;
+    private ThingActionCompiler thingActionCompiler;
+    private ThingApiCompiler thingApiCompiler;
+    private CfgMainGenerator mainCompiler;
+    private CfgBuildCompiler cfgBuildCompiler;
+    private ThingImplCompiler thingImplCompiler;
 
     /*MODIFICATION*/
     private CepCompiler cepCompiler;
     /*END*/
 
     //we might need several connector compilers has different ports might use different connectors
-    private Map<String, ConnectorCompiler> connectorCompilers = new HashMap<String, ConnectorCompiler>();
+    private Map<String, CfgExternalConnectorCompiler> connectorCompilers = new HashMap<String, CfgExternalConnectorCompiler>();
 
     public ThingMLCompiler() {
-        this.actionCompiler = new ActionCompiler();
-        this.apiCompiler = new ApiCompiler();
-        this.mainCompiler = new MainGenerator();
-        this.buildCompiler = new BuildCompiler();
-        this.behaviorCompiler = new BehaviorCompiler();
-        connectorCompilers.put("default", new ConnectorCompiler());
+        this.thingActionCompiler = new ThingActionCompiler();
+        this.thingApiCompiler = new ThingApiCompiler();
+        this.mainCompiler = new CfgMainGenerator();
+        this.cfgBuildCompiler = new CfgBuildCompiler();
+        this.thingImplCompiler = new FSMBasedThingImplCompiler();
+        connectorCompilers.put("default", new CfgExternalConnectorCompiler());
         this.cepCompiler = new CepCompiler();
     }
 
-    public ThingMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler, CepCompiler cepCompiler) {
-        this.actionCompiler = actionCompiler;
-        this.apiCompiler = apiCompiler;
+    public ThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler, CepCompiler cepCompiler) {
+        this.thingActionCompiler = thingActionCompiler;
+        this.thingApiCompiler = thingApiCompiler;
         this.mainCompiler = mainCompiler;
-        this.buildCompiler = buildCompiler;
-        this.behaviorCompiler = behaviorCompiler;
+        this.cfgBuildCompiler = cfgBuildCompiler;
+        this.thingImplCompiler = thingImplCompiler;
         this.cepCompiler = cepCompiler;
     }
 
@@ -81,40 +88,40 @@ public abstract class ThingMLCompiler {
 
     public boolean compileConnector(String connector, Configuration cfg, String... options) {
         ctx.setCurrentConfiguration(cfg);
-        final ConnectorCompiler cc = connectorCompilers.get(connector);
+        final CfgExternalConnectorCompiler cc = connectorCompilers.get(connector);
         if (cc != null) {
-            cc.generateLib(ctx, cfg, options);
+            cc.generateExternalConnector(cfg, ctx, options);
             ctx.writeGeneratedCodeToFiles();
             return true;
         }
         return false;
     }
 
-    public ActionCompiler getActionCompiler() {
-        return actionCompiler;
+    public ThingActionCompiler getThingActionCompiler() {
+        return thingActionCompiler;
     }
 
-    public ApiCompiler getApiCompiler() {
-        return apiCompiler;
+    public ThingApiCompiler getThingApiCompiler() {
+        return thingApiCompiler;
     }
 
-    public MainGenerator getMainCompiler() {
+    public CfgMainGenerator getMainCompiler() {
         return mainCompiler;
     }
 
-    public BuildCompiler getBuildCompiler() {
-        return buildCompiler;
+    public CfgBuildCompiler getCfgBuildCompiler() {
+        return cfgBuildCompiler;
     }
 
-    public BehaviorCompiler getBehaviorCompiler() {return behaviorCompiler; }
+    public ThingImplCompiler getThingImplCompiler() {return thingImplCompiler; }
 
     public CepCompiler getCepCompiler(){return cepCompiler;}
 
-    public void addConnectorCompilers(Map<String, ConnectorCompiler> connectorCompilers) {
+    public void addConnectorCompilers(Map<String, CfgExternalConnectorCompiler> connectorCompilers) {
         this.connectorCompilers.putAll(connectorCompilers);
     }
 
-    public Map<String, ConnectorCompiler> getConnectorCompilers() {
+    public Map<String, CfgExternalConnectorCompiler> getConnectorCompilers() {
         return Collections.unmodifiableMap(connectorCompilers);
     }
     

@@ -18,16 +18,14 @@ package org.thingml.compilers.uml;
 import net.sourceforge.plantuml.*;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.CepCompiler;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.OpaqueThingMLCompiler;
-import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.ActionCompiler;
-import org.thingml.compilers.ThingMLPrettyPrinter;
-import org.thingml.compilers.ApiCompiler;
-import org.thingml.compilers.BehaviorCompiler;
-import org.thingml.compilers.BuildCompiler;
-import org.thingml.compilers.MainGenerator;
+import org.thingml.compilers.*;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
+import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+import org.thingml.compilers.utils.ThingMLPrettyPrinter;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -37,11 +35,11 @@ import java.nio.charset.Charset;
 public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     public PlantUMLCompiler() {
-        super(new ThingMLPrettyPrinter(), new ApiCompiler(), new PlantUMLMainGenerator(), new BuildCompiler(), new PlantUMLBehaviorCompiler(), new CepCompiler());
+        super(new ThingMLPrettyPrinter(), new ThingApiCompiler(), new PlantUMLCfgMainGenerator(), new CfgBuildCompiler(), new PlantUMLThingImplCompiler(), new CepCompiler());
     }
 
-    public PlantUMLCompiler(ActionCompiler actionCompiler, ApiCompiler apiCompiler, MainGenerator mainCompiler, BuildCompiler buildCompiler, BehaviorCompiler behaviorCompiler, CepCompiler cepCompiler) {
-        super(actionCompiler, apiCompiler, mainCompiler, buildCompiler, behaviorCompiler, cepCompiler);
+    public PlantUMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, CepCompiler cepCompiler) {
+        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
     }
 
     @Override
@@ -151,9 +149,9 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
         for(Thing th : t.allThings()) {
             for(StateMachine sm : th.allStateMachines()) {
-                getBehaviorCompiler().generateState(sm, ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
+                ((FSMBasedThingImplCompiler) getThingImplCompiler()).generateState(sm, ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
             }
         }
-        getMainCompiler().generate(t, model, ctx);
+        getMainCompiler().generateMainAndInit(t, model, ctx);
     }
 }

@@ -116,6 +116,7 @@ import org.thingml.cgenerator.LowerExpressionCGenerator
 import org.thingml.cgenerator.EnumerationCGenerator
 import org.thingml.cgenerator.LoopActionCGenerator
 import org.thingml.cgenerator.ExternExpressionCGenerator
+import org.thingml.compilers.utils.{FakeThingMLCompiler, CharacterEscaper}
 
 object SimpleCopyTemplate {
 
@@ -1447,7 +1448,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
 
   def generateTypedefs(builder: StringBuilder, context: CGeneratorContext) {
     val model = ThingMLHelpers.findContainingModel(self)
-    // Generate code for enumerations (generate for all enum)
+    // Generate code for enumerations (generateMainAndInit for all enum)
     model.allSimpleTypes.filter {
       t => t.isInstanceOf[Enumeration]
     }.foreach {
@@ -1579,7 +1580,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
     }
     */
 
-    // Generate code for enumerations (generate for all enum)
+    // Generate code for enumerations (generateMainAndInit for all enum)
     builder append "\n"
     builder append "/*****************************************************************************\n"
     builder append " * Definition of simple types and enumerations\n"
@@ -1938,7 +1939,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
         var setup_msg : Message = arduino.allMessages.filter{ m => m.getName == "setup" }.head
         var poll_msg : Message = arduino.allMessages.filter{ m => m.getName == "poll" }.head
 
-        // generate the setup operation
+        // generateMainAndInit the setup operation
         builder append "void setup() {\n"
         builder append "initialize_configuration_" + self.getName + "();\n"
         self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
@@ -1947,7 +1948,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
           }
         }}
         builder append "}\n"
-        // generate the loop operation
+        // generateMainAndInit the loop operation
          builder append "void loop() {\n"
         builder append "processMessageQueue();\n"
         self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
@@ -2105,11 +2106,11 @@ case class FunctionCGenerator(val self: Function) extends ThingMLCGenerator(self
 
   def generatePrototypeforThingDirect(builder: StringBuilder, context: CGeneratorContext, thing: Thing) {
     if (self.annotation("c_prototype").size == 1) {
-      // generate the given prototype. Any parameters are ignored.
+      // generateMainAndInit the given prototype. Any parameters are ignored.
       builder append self.getAnnotations.filter(a => a.getName == "c_prototype").head.getValue
 
       if (self.annotation("c_instance_var_name").size == 1) {
-        // generate the given prototype. Any parameters are ignored.
+        // generateMainAndInit the given prototype. Any parameters are ignored.
         val nname = self.annotation("c_instance_var_name").head.trim()
         context.change_instance_var_name(nname)
         context.printlnMessage("INFO: Instance variable name changed to " + nname + " in function " + self.getName)
@@ -2785,7 +2786,7 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
 
           event => event match {
             case mh: ReceiveMessage if (mh.getPort == port && mh.getMessage == msg) => {
-              // check the guard and generate the code to handle the message
+              // check the guard and generateMainAndInit the code to handle the message
 
               if (first) first = false
               else builder append "else "

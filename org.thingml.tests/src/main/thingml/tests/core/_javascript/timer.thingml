@@ -1,0 +1,45 @@
+import "../timer.thingml"
+
+// Manage a set of software timers.
+thing TimerJS includes Timer
+@pim "Timer"
+@platform "javascript"
+@javascript "node browser"
+{
+    function cancel() 
+    do
+        'clearTimeout(this.timer);'
+    end
+    
+    function start(delay : Integer)
+    do
+        'this.timer = setTimeout(onTimeout,' & delay & ');'
+    end
+    
+    function onTimeout() 
+    do
+        timer!timer_timeout()
+    end
+    
+    statechart SoftTimer init default {
+        state default {
+            
+          internal start
+            event m : timer?timer_start
+            guard m.delay > 0
+            action do
+                start(m.delay)
+            end
+            
+          internal cancel
+            event m : timer?timer_cancel
+            action cancel()    
+        }
+    }
+}
+
+configuration TestTimerJS {
+    instance timer : TimerJS
+    instance client : SimpleTimerClient
+    connector client.timer => timer.timer    
+}

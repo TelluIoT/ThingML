@@ -1,4 +1,4 @@
-import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+import "thingml.thingml"
 
 thing TestHistoryStates includes Test 
 @test "yzyznyniyziyzniyz # I1313412I24I243I23"

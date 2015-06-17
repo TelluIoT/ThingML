@@ -18,14 +18,15 @@ package org.thingml.compilers.javascript.cepHelper;
 import org.sintef.thingml.EventReference;
 import org.sintef.thingml.Parameter;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.javascript.JSActionCompiler;
+import org.thingml.compilers.javascript.JSThingActionCompiler;
+
 
 import java.util.List;
 
 /**
  * @author ludovic
  */
-public class JSActionCompilerCepAlternative extends JSActionCompiler {
+public class JSActionCompilerCepAlternative extends JSThingActionCompiler {
     @Override
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
         List<Parameter> parameters = expression.getMsgRef().getMessage().getParameters();

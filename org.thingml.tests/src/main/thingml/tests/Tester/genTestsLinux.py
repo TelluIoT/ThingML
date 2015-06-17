@@ -64,7 +64,7 @@ def run(type):
 					'	instance harness : Tester\n'+
 					'	instance dump : TestDumpLinux\n'+
 					'	instance test : '+bigname+'\n')
-					fichier.write(' group timer : TimerLinux\n'+
+					fichier.write(' group timer : TimerLinuxCFG\n'+
 					' set timer.timer.millisecond = true\n'+
 					' set timer.timer.period = 10\n'+
 					' set timer.clock.period = 10\n\n')

@@ -38,7 +38,7 @@ public class JSCepCompilerHelper {
         streamOutput.setMessage(stream.getOutput().getMessage());
         streamOutput.setPort(stream.getOutput().getPort());
         streamOutput.getParameters().addAll(newParameters);
-        ctx.getCompiler().getActionCompiler().generate(streamOutput, builder, ctx);
+        ctx.getCompiler().getThingActionCompiler().generate(streamOutput, builder, ctx);
     }
 
     public static void generateBeginingStream(Stream stream, StringBuilder builder, Context ctx, String eventName, String nameParam) {

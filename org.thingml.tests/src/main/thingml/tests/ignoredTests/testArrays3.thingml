@@ -1,4 +1,4 @@
-import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+import "thingml.thingml"
 
 //Test if we can interpret the size of array at construction time
 thing TestArrays3 includes Test	

@@ -16,16 +16,16 @@
 package org.thingml.compilers.c.posix;
 
 import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.CepCompiler;
-import org.thingml.compilers.OpaqueThingMLCompiler;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.BehaviorCompiler;
-import org.thingml.compilers.BuildCompiler;
-import org.thingml.compilers.c.CApiCompiler;
-import org.thingml.compilers.c.CBehaviorCompiler;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.c.CCfgMainGenerator;
+import org.thingml.compilers.c.CThingApiCompiler;
+import org.thingml.compilers.c.CThingImplCompiler;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.CMainGenerator;
 
 import java.io.File;
 
@@ -35,7 +35,7 @@ import java.io.File;
 public class PosixCompiler extends OpaqueThingMLCompiler {
 
     public PosixCompiler() {
-        super(new CActionCompilerPosix(), new CApiCompiler(), new CMainGenerator(), new BuildCompiler(), new CBehaviorCompiler(), new CepCompiler());
+        super(new CThingActionCompilerPosix(), new CThingApiCompiler(), new CCfgMainGenerator(), new PosixCCfgBuildCompiler(), new CThingImplCompiler(), new CepCompiler());
     }
 
     @Override
@@ -60,20 +60,30 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
 
-        // Generate Modules
         CCompilerContext ctx = new CCompilerContextPosix(this);
         
         ctx.setCurrentConfiguration(cfg);
         ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
-        getMainCompiler().generate(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
 
+        // GENERATE A MODULE FOR EACH THING
+        for (Thing thing: cfg.allThings()) {
+            ctx.setConcreteThing(thing);
+            // GENERATE HEADER
+            ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
 
+            // GENERATE IMPL
+            ctx.getCompiler().getThingImplCompiler().generateImplementation(thing, ctx);
+            ctx.clearConcreteThing();
+        }
 
+        // GENERATE A MODULE FOR THE CONFIGURATION (+ its dependencies)
+        getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
+
+        // GENERATE A MAKEFILE
+        getCfgBuildCompiler().generateBuildScript(cfg, ctx);
+
+        // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();
 
-
-
-
-        //CGenerator.opaqueCompileToLinux(cfg, this);
     }
 }

@@ -16,8 +16,8 @@
 package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
+import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ConnectorCompiler;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Created by bmori on 27.01.2015.
  */
-public class JS2NodeRED extends ConnectorCompiler {
+public class JS2NodeRED extends CfgExternalConnectorCompiler {
 
     int inputs = 0;
 
@@ -45,7 +45,7 @@ public class JS2NodeRED extends ConnectorCompiler {
         builder.append("RED.nodes.createNode(this, config);\n");
         builder.append("var node = this;\n");
 
-        JSMainGenerator.generateInstances(cfg, builder, ctx, true);
+        JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
 
         for(Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
@@ -76,7 +76,7 @@ public class JS2NodeRED extends ConnectorCompiler {
                 if (p.getReceives().size() > 0) {
                     builder.append("this.on('" + i.getName() + "_" + p.getName() + "', function(msg) {\n");
                     builder.append("this.status({fill:\"green\",shape:\"ring\",text:\"incoming\"});\n");
-                    builder.append("var json = JSON.parse(msg);\n");//FIXME: generate try/catch
+                    builder.append("var json = JSON.parse(msg);\n");//FIXME: generateMainAndInit try/catch
                     int id = 0;
                     for(Message m : p.getReceives()) {
                         if (id > 0) builder.append("else ");
@@ -148,7 +148,7 @@ public class JS2NodeRED extends ConnectorCompiler {
     }
 
     @Override
-    public void generateLib(Context ctx, Configuration cfg, String... options) {
+    public void generateExternalConnector(Configuration cfg, Context ctx, String... options) {
         generateNodeJS(ctx, cfg);
         generateHTML(ctx, cfg);
     }
