@@ -31,12 +31,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         CCompilerContext c = (CCompilerContext)ctx;
-        compileToLinux(cfg, model, c);
+        generateCommonHeader(cfg, c);
+        generateRuntimeModule(cfg, c);
+        generateConfigurationImplementation(cfg, model, c);
     }
 
-    protected void compileToLinux(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {
-
-        compileCModules(cfg, ctx);
+    protected void generateConfigurationImplementation(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {
 
         // GENERATE THE CONFIGURATION AND A MAIN
         String ctemplate = ctx.getTemplateByID("ctemplates/linux_main.c");
@@ -72,13 +72,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString());
         ctx.getBuilder(cfg.getName() + ".c").append(ctemplate);
 
-        //generateMakefile(cfg, model, ctx);
-
     }
 
 
 
-    protected void compileCModules(Configuration cfg, CCompilerContext ctx) {
+    protected void generateCommonHeader(Configuration cfg, CCompilerContext ctx) {
 
         // GENERATE THE TYPEDEFS HEADER
         String typedefs_template = ctx.getTemplateByID("ctemplates/thingml_typedefs.h");
@@ -87,16 +85,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         typedefs_template = typedefs_template.replace("/*TYPEDEFS*/", b.toString());
         ctx.getBuilder(ctx.getPrefix() + "thingml_typedefs.h").append(typedefs_template);
 
-        // GENERATE A MODULE FOR EACH THING
-        for (Thing thing: cfg.allThings()) {
-            ctx.setConcreteThing(thing);
-            // GENERATE HEADER
-            ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
+    }
 
-            // GENERATE IMPL
-            ((CThingImplCompiler)ctx.getCompiler().getThingImplCompiler()).generateComponent(thing, ctx);
-        }
-        ctx.clearConcreteThing();
+    protected void generateRuntimeModule(Configuration cfg, CCompilerContext ctx) {
 
         // GENERATE THE RUNTIME HEADER
         String rhtemplate = ctx.getTemplateByID("ctemplates/runtime.h");

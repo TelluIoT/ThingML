@@ -18,6 +18,9 @@ package org.thingml.compilers.c.arduino;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 /**
  * Created by ffl on 11.06.15.
  */
@@ -33,6 +36,36 @@ public class CCompilerContextArduino extends CCompilerContext {
 
     public int fifoSize() {
         return 256;
+    }
+
+    @Override
+    public void writeGeneratedCodeToFiles() {
+
+        // COMBINE ALL THE GENERATED CODE IN A SINGLE PDE FILE
+
+        ArrayList<String> headers = new ArrayList<String>();
+        ArrayList<String> modules = new ArrayList<String>();
+        String main = getCurrentConfiguration().getName() + ".c";
+
+        for (String filename : generatedCode.keySet()) {
+            if (filename.endsWith(".h")) headers.add(filename);
+            if (filename.endsWith(".c") && !filename.equals(main)) modules.add(filename);
+        }
+
+        StringBuilder pde = new StringBuilder();
+
+        for (String f : headers) {
+            pde.append(generatedCode.get(f).toString());
+        }
+
+        for (String f : modules) {
+            pde.append(generatedCode.get(f).toString());
+        }
+
+        pde.append(generatedCode.get(main).toString());
+
+        writeTextFile(getCurrentConfiguration().getName() + ".pde", pde.toString());
+
     }
 
 
