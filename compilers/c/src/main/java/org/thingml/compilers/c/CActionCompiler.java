@@ -24,6 +24,15 @@ import org.thingml.compilers.GenericImperativeActionCompiler;
  */
 public abstract class CActionCompiler extends GenericImperativeActionCompiler {
 
+
+    @Override
+    public void generate(BooleanLiteral expression, StringBuilder builder, Context ctx) {
+        if (expression.isBoolValue())
+            builder.append("1");
+        else
+            builder.append("0");
+    }
+
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
         CCompilerContext context = (CCompilerContext)ctx;

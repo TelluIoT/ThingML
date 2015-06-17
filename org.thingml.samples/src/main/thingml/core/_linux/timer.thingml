@@ -14,7 +14,7 @@ thing TimerLinux includes Timer, ClockMsgs
 	required port clock { receives clock_tick }
 	
 	//To use timer in millisecond, set "millisecond" to true and "period" to the period of the clock
-	readonly property millisecond : Boolean = 0
+	readonly property millisecond : Boolean = false
 	readonly property period : Integer = 100
 	
 	statechart ClockTimerImpl init Idle {
