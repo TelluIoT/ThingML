@@ -124,7 +124,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
     }
 
     @Override
-    public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
+    public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
 

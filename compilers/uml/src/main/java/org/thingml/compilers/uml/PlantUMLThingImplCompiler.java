@@ -17,12 +17,12 @@ package org.thingml.compilers.uml;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 /**
  * Created by bmori on 16.04.2015.
  */
-public class PlantUMLThingImplCompiler extends ThingImplCompiler {
+public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
     private void doBuildAction(Action a, StringBuilder builder, Context ctx) {
         if (a instanceof ActionBlock) {

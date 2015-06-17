@@ -18,12 +18,10 @@ package org.thingml.compilers.configuration;
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.Context;
 
-/**
- * Created by bmori on 10.12.2014.
- */
+
 public class CfgSchedulerCompiler {
 
-    public void generateLib(Context ctx, Configuration cfg, String... options) {
+    public void generateSchedulingAndDispatch(Configuration cfg, Context ctx, String... options) {
         throw(new UnsupportedOperationException("Connector libs are platform-specific."));
     }
 

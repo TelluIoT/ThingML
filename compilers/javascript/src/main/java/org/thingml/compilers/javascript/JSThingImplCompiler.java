@@ -17,7 +17,7 @@ package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Created by bmori on 16.04.2015.
  */
-public class JSThingImplCompiler extends ThingImplCompiler {
+public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
         builder.append("this." + sm.qname("_") + " = new StateJS.StateMachine(\"" + sm.getName() + "\")");

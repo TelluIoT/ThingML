@@ -16,9 +16,9 @@
 package org.thingml.compilers.javascript;
 
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
-import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
@@ -31,7 +31,7 @@ public class EspruinoCompiler extends JavaScriptCompiler {
         super(new EspruinoThingActionCompiler(), new EspruinoThingApiCompiler(), new JSCfgMainGenerator(), new JSCfgBuildCompiler(), new JSThingImplCompiler());
     }
 
-    public EspruinoCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
+    public EspruinoCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
     }
 

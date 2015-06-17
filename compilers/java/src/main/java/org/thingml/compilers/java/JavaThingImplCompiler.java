@@ -17,12 +17,12 @@ package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 /**
  * Created by bmori on 16.04.2015.
  */
-public class JavaThingImplCompiler extends ThingImplCompiler {
+public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
         generateCompositeState(sm, builder, ctx);

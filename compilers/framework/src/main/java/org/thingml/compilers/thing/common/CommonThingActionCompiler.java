@@ -13,32 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers;
+package org.thingml.compilers.thing.common;
 
 import org.sintef.thingml.*;
+import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.compilers.utils.CharacterEscaper;
+
 
 /**
  * Created by bmori on 01.12.2014.
  */
-public class ThingMLPrettyPrinter extends ThingActionCompiler {
+public class CommonThingActionCompiler extends ThingActionCompiler {
 
-    //ThingML pretty printer (useful for documentation, etc)
+    //ThingML actions that can be compiled the same way for any imperative language like (Java, JS, C)
 
     @Override
-    public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        builder.append(action.getPort().getName() + "!" + action.getMessage().getName() + "(");
-        for(Expression p : action.getParameters()) {
-            generate(p, builder, ctx);
-        }
-        builder.append(")\n");
+    public void generate(SendAction action, StringBuilder builder, Context ctx) {//TODO: this might actually be factorizable if we agree on the methods' signatures to send message
+        builder.append("//Platform-specific action (" + action.getClass().getName() + ") should be refined in a sub-compiler");
     }
 
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
-        builder.append(action.getProperty().getName() + " = ");
-        generate(action.getExpression(), builder, ctx);
-        builder.append("\n");
+        if (action.getProperty().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
+            for(Expression i : action.getIndex()) {
+                builder.append(action.getProperty().qname("_") + "_var");
+                StringBuilder tempBuilder = new StringBuilder();
+                generate(i, tempBuilder, ctx);
+                builder.append("[" + tempBuilder.toString() + "]");
+                builder.append(" = ");
+                cast(action.getProperty().getType(), false, action.getExpression(), builder, ctx);
+                //generateMainAndInit(action.getExpression(), builder, ctx);
+                builder.append(";\n");
+            }
+        }
+        else {//simple variable or we re-affect the whole array
+            if (action.getProperty().eContainer() instanceof Thing && !(action.getProperty().isDefined("private", "true"))) {
+                builder.append(ctx.getContextAnnotation("thisRef"));
+            }
+            builder.append(action.getProperty().qname("_") + "_var");
+            builder.append(" = ");
+            cast(action.getProperty().getType(), action.getProperty().getCardinality()!=null, action.getExpression(), builder, ctx);
+            //generateMainAndInit(action.getExpression(), builder, ctx);
+            builder.append(";\n");
+        }
+    }
+
+    protected void cast(Type type, boolean isArray, Expression exp, StringBuilder builder, Context ctx) {
+        generate(exp, builder, ctx);
     }
 
     @Override
@@ -50,9 +72,8 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(ExternStatement action, StringBuilder builder, Context ctx) {
-        builder.append("'" + action.getStatement() + "'");
+        builder.append(action.getStatement());
         for (Expression e : action.getSegments()) {
-            builder.append(" & ");
             generate(e, builder, ctx);
         }
         builder.append("\n");
@@ -84,44 +105,29 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-        builder.append("print ");
-        generate(action.getMsg(), builder, ctx);
-        builder.append("\n");
+        builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
     }
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-        builder.append("error ");
-        generate(action.getMsg(), builder, ctx);
-        builder.append("\n");
+        builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
     }
 
     @Override
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
         builder.append("return ");
         generate(action.getExp(), builder, ctx);
-        builder.append("\n");
+        builder.append(";\n");
     }
 
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
-        if(!action.isChangeable()) {
-            builder.append("readonly ");
-        }
-        builder.append("property " + action.getName() + " : " + action.getType().getName());
-        if (action.getInit() != null) {
-            generate(action.getInit(), builder, ctx);
-        }
-        builder.append("\n");
+        builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
     }
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-        builder.append(action.getFunction().getName() + "(");
-        for(Expression p : action.getParameters()) {
-            generate(p, builder, ctx);
-        }
-        builder.append(")\n");
+        builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
     }
 
 
@@ -132,20 +138,20 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         generate(expression.getArray(), builder, ctx);
         builder.append("[");
         generate(expression.getIndex(), builder, ctx);
-        builder.append("]");
+        builder.append("]\n");
     }
 
     @Override
     public void generate(OrExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
-        builder.append(" or ");
+        builder.append(" || ");
         generate(expression.getRhs(), builder, ctx);
     }
 
     @Override
     public void generate(AndExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
-        builder.append(" and ");
+        builder.append(" && ");
         generate(expression.getRhs(), builder, ctx);
     }
 
@@ -211,14 +217,14 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(NotExpression expression, StringBuilder builder, Context ctx) {
-        builder.append(" not(");
+        builder.append(" !(");
         generate(expression.getTerm(), builder, ctx);
         builder.append(")");
     }
 
     @Override
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
-        builder.append(expression.getMsgRef().getName() + "." + expression.getParamRef().getName());
+        builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
     }
 
     @Override
@@ -230,7 +236,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        builder.append(expression.getProperty().getName());
+        builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
     }
 
     @Override
@@ -258,23 +264,19 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
-        builder.append(expression.getEnum().getName() + ":" + expression.getLiteral().getName());
+        builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
     }
 
     @Override
     public void generate(ExternExpression expression, StringBuilder builder, Context ctx) {
-        builder.append("'" + expression.getExpression() + "'");
+        builder.append(expression.getExpression());
         for(Expression e : expression.getSegments()) {
-            builder.append(" & ");
             generate(e, builder, ctx);
         }
     }
 
     @Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {//TODO: this should actually be factorizable
-        builder.append(expression.getFunction().getName() + "(");
-        for(Expression p : expression.getParameters()) {
-            generate(p, builder, ctx);
-        }
-        builder.append(")");    }
+        builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
+    }
 }

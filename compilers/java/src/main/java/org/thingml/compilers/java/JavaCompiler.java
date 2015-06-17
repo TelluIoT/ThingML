@@ -18,9 +18,9 @@ package org.thingml.compilers.java;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.configuration.CfgConnectorCompiler;
+import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.OpaqueThingMLCompiler;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.compilers.ThingMLCompiler;
 
 import java.io.File;
@@ -33,7 +33,7 @@ import java.util.Map;
 public class JavaCompiler extends OpaqueThingMLCompiler {
 
     {
-        Map<String, CfgConnectorCompiler> connectorCompilerMap = new HashMap<String, CfgConnectorCompiler>();
+        Map<String, CfgExternalConnectorCompiler> connectorCompilerMap = new HashMap<String, CfgExternalConnectorCompiler>();
         connectorCompilerMap.put("kevoree-java", new Java2Kevoree());
         addConnectorCompilers(connectorCompilerMap);
     }
@@ -87,7 +87,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(th, ctx);
             ctx.getCompiler().getThingApiCompiler().generateComponent(th, ctx);
         }
-        ctx.getCompiler().getMainCompiler().generate(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
+        ctx.getCompiler().getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
         ctx.getCompiler().getCfgBuildCompiler().generate(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
     }

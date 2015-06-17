@@ -24,11 +24,14 @@ import org.thingml.compilers.Context;
  * Created by bmori on 09.12.2014.
  */
 public class ThingApiCompiler {
+
+    /*
     public void generateComponent(Thing thing, Context ctx) {
-        throw(new UnsupportedOperationException("Component implementations are platform-specific. Cannot generate component for Thing " + thing.getName()));
+        throw(new UnsupportedOperationException("Component implementations are platform-specific. Cannot generateMainAndInit component for Thing " + thing.getName()));
     }
+    */
 
     public void generatePublicAPI(Thing thing, Context ctx) {
-        throw(new UnsupportedOperationException("APIs are platform-specific. Cannot generate API for Thing " + thing.getName()));
+        throw(new UnsupportedOperationException("APIs are platform-specific. Cannot generateMainAndInit API for Thing " + thing.getName()));
     }
 }

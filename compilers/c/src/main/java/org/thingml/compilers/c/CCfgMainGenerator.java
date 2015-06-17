@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class CCfgMainGenerator extends CfgMainGenerator {
 
-    public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
+    public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         CCompilerContext c = (CCompilerContext)ctx;
         compileToLinux(cfg, model, c);
     }
@@ -170,7 +170,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         // Generate the Enqueue operation only for ports which are not marked as "sync"
         for (Thing t : cfg.allThings()) {
             for(Port p : t.allPorts()) {
-                if (p.isDefined("sync_send", "true")) continue; // do not generate for synchronous ports
+                if (p.isDefined("sync_send", "true")) continue; // do not generateMainAndInit for synchronous ports
 
                 ctx.setConcreteThing(t);
                 Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
@@ -266,7 +266,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         // Generate dequeue code only for non syncronized ports
         for (Thing t : cfg.allThings()) {
             for(Port p : t.allPorts()) {
-                if (p.isDefined("sync_send", "true")) continue; // do not generate for synchronous ports
+                if (p.isDefined("sync_send", "true")) continue; // do not generateMainAndInit for synchronous ports
 
                 ctx.setConcreteThing(t);
                 Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
@@ -293,7 +293,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         for (Thing t : cfg.allThings()) {
             for(Port p : t.allPorts()) {
-                if (p.isDefined("sync_send", "true")) continue; // do not generate for synchronous ports
+                if (p.isDefined("sync_send", "true")) continue; // do not generateMainAndInit for synchronous ports
 
                 ctx.setConcreteThing(t);
                 Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);

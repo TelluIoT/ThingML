@@ -17,8 +17,9 @@ package org.thingml.compilers;
 
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
-import org.thingml.compilers.configuration.CfgConnectorCompiler;
+import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
@@ -43,15 +44,15 @@ public abstract class ThingMLCompiler {
     private ThingImplCompiler thingImplCompiler;
 
     //we might need several connector compilers has different ports might use different connectors
-    private Map<String, CfgConnectorCompiler> connectorCompilers = new HashMap<String, CfgConnectorCompiler>();
+    private Map<String, CfgExternalConnectorCompiler> connectorCompilers = new HashMap<String, CfgExternalConnectorCompiler>();
 
     public ThingMLCompiler() {
         this.thingActionCompiler = new ThingActionCompiler();
         this.thingApiCompiler = new ThingApiCompiler();
         this.mainCompiler = new CfgMainGenerator();
         this.cfgBuildCompiler = new CfgBuildCompiler();
-        this.thingImplCompiler = new ThingImplCompiler();
-        connectorCompilers.put("default", new CfgConnectorCompiler());
+        this.thingImplCompiler = new FSMBasedThingImplCompiler();
+        connectorCompilers.put("default", new CfgExternalConnectorCompiler());
     }
 
     public ThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
@@ -82,9 +83,9 @@ public abstract class ThingMLCompiler {
 
     public boolean compileConnector(String connector, Configuration cfg, String... options) {
         ctx.setCurrentConfiguration(cfg);
-        final CfgConnectorCompiler cc = connectorCompilers.get(connector);
+        final CfgExternalConnectorCompiler cc = connectorCompilers.get(connector);
         if (cc != null) {
-            cc.generateLib(ctx, cfg, options);
+            cc.generateExternalConnector(cfg, ctx, options);
             ctx.writeGeneratedCodeToFiles();
             return true;
         }
@@ -109,11 +110,11 @@ public abstract class ThingMLCompiler {
 
     public ThingImplCompiler getThingImplCompiler() {return thingImplCompiler; }
 
-    public void addConnectorCompilers(Map<String, CfgConnectorCompiler> connectorCompilers) {
+    public void addConnectorCompilers(Map<String, CfgExternalConnectorCompiler> connectorCompilers) {
         this.connectorCompilers.putAll(connectorCompilers);
     }
 
-    public Map<String, CfgConnectorCompiler> getConnectorCompilers() {
+    public Map<String, CfgExternalConnectorCompiler> getConnectorCompilers() {
         return Collections.unmodifiableMap(connectorCompilers);
     }
     

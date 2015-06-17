@@ -19,7 +19,6 @@ import java.io._
 import java.lang.{Boolean, StringBuilder}
 import java.util.{ArrayList, Hashtable}
 
-import org.thingml.compilers.CharacterEscaper
 
 import org.sintef.thingml._
 import org.sintef.thingml.constraints.ThingMLHelpers
@@ -27,6 +26,7 @@ import org.thingml.cppgenerator.CPPGenerator._
 
 import scala.collection.JavaConversions._
 import scala.io.Source
+import org.thingml.compilers.utils.CharacterEscaper
 
 object SimpleCopyTemplate {
 
@@ -577,7 +577,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
 
   def generateTypedefs(builder: StringBuilder, context : CGeneratorContext) {
     val model = ThingMLHelpers.findContainingModel(self)
-    // Generate code for enumerations (generate for all enum)
+    // Generate code for enumerations (generateMainAndInit for all enum)
     model.allSimpleTypes.filter{ t => t.isInstanceOf[Enumeration] }.foreach{ e =>
       e.generateC(builder, context)
     }
@@ -953,11 +953,11 @@ case class FunctionCGenerator(val self: Function) extends ThingMLCGenerator(self
 
   def generatePrototypeforThingDirect(builder: StringBuilder, context : CGeneratorContext, thing : Thing) {
         if (self.getAnnotations.filter(a=>a.getName == "c_prototype").size == 1) {
-      // generate the given prototype. Any parameters are ignored.
+      // generateMainAndInit the given prototype. Any parameters are ignored.
       builder append self.getAnnotations.filter(a=>a.getName == "c_prototype").head.getValue
 
       if (self.getAnnotations.filter(a=>a.getName == "c_instance_var_name").size == 1) {
-      // generate the given prototype. Any parameters are ignored.
+      // generateMainAndInit the given prototype. Any parameters are ignored.
         val nname = self.getAnnotations.filter(a=>a.getName == "c_instance_var_name").head.getValue.trim()
       context.change_instance_var_name (nname)
       println("INFO: Instance variable name changed to " + nname + " in function " + self.getName)
@@ -1497,7 +1497,7 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
 
           event => event match {
             case mh: ReceiveMessage if (mh.getPort == port && mh.getMessage == msg) => {
-              // check the guard and generate the code to handle the message
+              // check the guard and generateMainAndInit the code to handle the message
 
               if (first) first = false
               else builder append "else "

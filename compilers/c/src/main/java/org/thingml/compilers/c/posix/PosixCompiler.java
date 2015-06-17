@@ -17,7 +17,7 @@ package org.thingml.compilers.c.posix;
 
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.OpaqueThingMLCompiler;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
@@ -63,7 +63,7 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
         
         ctx.setCurrentConfiguration(cfg);
         ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
-        getMainCompiler().generate(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
+        getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
 
 
 

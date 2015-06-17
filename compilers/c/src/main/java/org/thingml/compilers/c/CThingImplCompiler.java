@@ -16,7 +16,7 @@
 package org.thingml.compilers.c;
 
 import org.sintef.thingml.*;
-import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.Context;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Created by ffl on 17.06.15.
  */
-public class CThingImplCompiler extends ThingImplCompiler {
+public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
 
     public void generateComponent(Thing thing, Context ctx) {
@@ -89,12 +89,12 @@ public class CThingImplCompiler extends ThingImplCompiler {
     protected void generatePrototypeforThingDirect(Function func, StringBuilder builder, CCompilerContext ctx, Thing thing) {
 
         if (func.hasAnnotation("c_prototype")) {
-            // generate the given prototype. Any parameters are ignored.
+            // generateMainAndInit the given prototype. Any parameters are ignored.
             String c_proto = func.annotation("c_prototype").iterator().next();
             builder.append(c_proto);
 
             if (func.hasAnnotation("c_instance_var_name")) {
-                // generate the given prototype. Any parameters are ignored.
+                // generateMainAndInit the given prototype. Any parameters are ignored.
                 String nname = func.annotation("c_instance_var_name").iterator().next();
                 //TODO: Find the right way to change the instance var name here
                 // ctx.change_instance_var_name(nname);

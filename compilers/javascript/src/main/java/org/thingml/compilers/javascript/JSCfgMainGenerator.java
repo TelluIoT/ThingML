@@ -157,7 +157,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
     }
 
     @Override
-    public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
+    public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/main.js");
 
         //builder.append("var Connector = require('./Connector');\n");

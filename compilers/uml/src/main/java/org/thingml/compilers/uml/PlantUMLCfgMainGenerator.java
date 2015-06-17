@@ -25,7 +25,7 @@ import org.thingml.compilers.configuration.CfgMainGenerator;
 public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
 
     @Override
-    public void generate(Configuration cfg, ThingMLModel model, Context ctx) {
+    public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/docs/" + cfg.getName() + ".plantuml");
         builder.append("@startuml\n");
         builder.append("node \"" + cfg.getName() + "\"{\n");

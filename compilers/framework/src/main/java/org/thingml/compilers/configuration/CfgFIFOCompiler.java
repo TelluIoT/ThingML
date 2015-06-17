@@ -23,8 +23,8 @@ import org.thingml.compilers.Context;
  */
 public class CfgFIFOCompiler {
 
-    public void generateLib(Context ctx, Configuration cfg, String... options) {
-        throw(new UnsupportedOperationException("Connector libs are platform-specific."));
+    public void generateFIFO(Configuration cfg, Context ctx) {
+        throw(new UnsupportedOperationException("FIFO libs are platform-specific."));
     }
 
 }

@@ -19,7 +19,7 @@ import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
-import org.thingml.compilers.configuration.CfgConnectorCompiler;
+import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.Context;
 
 import java.io.*;
@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * Created by bmori on 27.01.2015.
  */
-public class JS2Kevoree extends CfgConnectorCompiler {
+public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
     private void updateMainGruntfile(Configuration cfg, Port p, Context ctx) {
         try {
@@ -162,7 +162,7 @@ public class JS2Kevoree extends CfgConnectorCompiler {
         builder.append("var " + cfg.getName() + " = AbstractComponent.extend({\n");
         builder.append("toString: '" + cfg.getName() + "',\n");
 
-        //TODO: generate dictionnay for attributes
+        //TODO: generateMainAndInit dictionnay for attributes
 
         builder.append("construct: function() {\n");
         JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
@@ -241,7 +241,7 @@ public class JS2Kevoree extends CfgConnectorCompiler {
     }
 
     @Override
-    public void generateLib(Context ctx, Configuration cfg, String... options) {
+    public void generateExternalConnector(Configuration cfg, Context ctx, String... options) {
         updatePackageJSON(ctx, cfg);
         generateGruntFile(ctx, cfg.getName());
         generateWrapper(ctx, cfg);

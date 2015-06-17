@@ -26,15 +26,17 @@ import java.util.Set;
  */
 public class CfgBuildCompiler {
 
+
+
+    public void generateBuildScript(Configuration cfg, Context ctx) {
+        throw(new UnsupportedOperationException("Project structure and build scripts are platform-specific."));
+    }
+/*
     protected Set<String> properties = new HashSet<String>();
     protected Set<String> deps = new HashSet<String>();
     protected Set<String> devDeps = new HashSet<String>();
     protected Set<String> repos = new HashSet<String>();
     protected Set<String> scripts = new HashSet<String>();
-
-    public void generate(Configuration cfg, Context ctx) {
-        throw(new UnsupportedOperationException("Project structure and build scripts are platform-specific."));
-    }
 
     public void addDependency(String dep) {
         deps.add(dep);
@@ -55,5 +57,5 @@ public class CfgBuildCompiler {
     public void addScripts(String script) {
         scripts.add(script);
     }
-
+*/
 }

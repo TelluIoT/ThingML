@@ -166,7 +166,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
             }
         }
 
-        //generate interfaces for the others to implement, so that the thing can notify them
+        //generateMainAndInit interfaces for the others to implement, so that the thing can notify them
         for(Port p : thing.allPorts()) {
             if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
                 final StringBuilder builder = ctx.getBuilder(src + "/api/I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client.java");

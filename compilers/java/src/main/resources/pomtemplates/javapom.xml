@@ -117,7 +117,7 @@
                 <goals>
                     <goal>unpack-dependencies</goal>
                 </goals>
-                <phase>generate-resources</phase>
+                <phase>generateMainAndInit-resources</phase>
                 <configuration>
                     <outputDirectory>${basedir}</outputDirectory>
                     <includes>**/resources/**</includes>

@@ -25,11 +25,12 @@ import org.sintef.thingml.resource.thingml.mopp.ThingmlResource;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.*;
-import org.thingml.compilers.configuration.CfgConnectorCompiler;
+import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.java.JavaCompiler;
 import org.thingml.compilers.javascript.JavaScriptCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.compilers.uml.PlantUMLCompiler;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.cppgenerator.CPPGenerator;
 import org.thingml.javagenerator.extension.HTTPGenerator;
 import org.thingml.javagenerator.extension.MQTTGenerator;
@@ -107,7 +108,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                     JMenu compilerMenu = new JMenu(c.getID());
                     newCompilersMenu.add(compilerMenu);
                     compilerMenu.add(item);
-                    for (final Map.Entry<String, CfgConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
+                    for (final Map.Entry<String, CfgExternalConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
                         JMenuItem connectorMenu = new JMenuItem(connectorCompiler.getKey());
                         compilerMenu.add(connectorMenu);
                         connectorMenu.addActionListener(new ActionListener() {

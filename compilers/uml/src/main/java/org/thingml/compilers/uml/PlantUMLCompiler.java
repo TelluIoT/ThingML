@@ -19,11 +19,13 @@ import net.sourceforge.plantuml.*;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.*;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+import org.thingml.compilers.utils.ThingMLPrettyPrinter;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -36,7 +38,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
         super(new ThingMLPrettyPrinter(), new ThingApiCompiler(), new PlantUMLCfgMainGenerator(), new CfgBuildCompiler(), new PlantUMLThingImplCompiler());
     }
 
-    public PlantUMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
+    public PlantUMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
     }
 
@@ -150,6 +152,6 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
                 getThingImplCompiler().generateState(sm, ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
             }
         }
-        getMainCompiler().generate(t, model, ctx);
+        getMainCompiler().generateMainAndInit(t, model, ctx);
     }
 }
