@@ -1,0 +1,8 @@
+import "../datatypes.thingml"
+
+
+/*****************************************************************************
+ * Definition of the built-in things and messages
+ *****************************************************************************/
+
+thing fragment Timestamp {}//PSM will define a function timestamp(): LongLong returning the timestamp at the time the function is called

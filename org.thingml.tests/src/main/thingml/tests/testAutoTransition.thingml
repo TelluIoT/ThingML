@@ -1,4 +1,4 @@
-import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+import "thingml.thingml"
 
 thing TestAutoTransition includes Test 
 @test "ttt # IJJKKK"
