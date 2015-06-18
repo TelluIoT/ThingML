@@ -74,19 +74,3 @@ byte fifo_dequeue() {
   }
   return 0;
 }
-
-/*
-void _fifo_enqueue_ptr(void * ptr) {
-  int i;
-  ptr_union_t proxy;
-  proxy.pointer = ptr;
-  for (i = 0; i<PTR_MAX_SIZE; i++) _fifo_enqueue(proxy.buffer[i]);
-}
-
-void * _fifo_dequeue_ptr() {
-  int i;
-  ptr_union_t proxy;
-  for (i = 0; i<PTR_MAX_SIZE; i++) proxy.buffer[i] = _fifo_dequeue();
-  return proxy.pointer;
-}
-*/

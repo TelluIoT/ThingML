@@ -37,7 +37,7 @@ import java.io.File;
 public class ArduinoCompiler extends OpaqueThingMLCompiler {
 
     public ArduinoCompiler() {
-        super(new CThingActionCompilerArduino(), new CThingApiCompiler(), new CCfgMainGenerator(), new CfgBuildCompiler(), new CThingImplCompiler());
+        super(new CThingActionCompilerArduino(), new CThingApiCompilerArduino(), new CCfgMainGenerator(), new CfgBuildCompiler(), new CThingImplCompiler());
     }
 
     @Override

@@ -45,16 +45,17 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("// Declaration of prototypes:\n");
 
-        builder.append("#ifdef __cplusplus\n");
-        builder.append("extern \"C\" {\n");
-        builder.append("#endif\n");
+        //FIXME: If we need these cpp directives, they should be added in the specific compilers which needs them
+        //builder.append("#ifdef __cplusplus\n");
+        //builder.append("extern \"C\" {\n");
+        //builder.append("#endif\n");
 
         generatePrivatePrototypes(thing, builder, ctx);
 
-        builder.append("#ifdef __cplusplus\n");
-        builder.append("}\n");
-        builder.append("#endif\n");
-        builder.append("\n");
+        //builder.append("#ifdef __cplusplus\n");
+        //builder.append("}\n");
+        //builder.append("#endif\n");
+        //builder.append("\n");
 
         generateCFunctions(thing, builder, ctx);
 

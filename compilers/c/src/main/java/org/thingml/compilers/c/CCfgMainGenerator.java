@@ -79,7 +79,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     protected void generateCommonHeader(Configuration cfg, CCompilerContext ctx) {
 
         // GENERATE THE TYPEDEFS HEADER
-        String typedefs_template = ctx.getTemplateByID("ctemplates/thingml_typedefs.h");
+        String typedefs_template = ctx.getCommonHeaderTemplate();
         StringBuilder b = new StringBuilder();
         generateTypedefs(cfg, b, ctx);
         typedefs_template = typedefs_template.replace("/*TYPEDEFS*/", b.toString());
@@ -90,12 +90,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     protected void generateRuntimeModule(Configuration cfg, CCompilerContext ctx) {
 
         // GENERATE THE RUNTIME HEADER
-        String rhtemplate = ctx.getTemplateByID("ctemplates/runtime.h");
+        String rhtemplate = ctx.getRuntimeHeaderTemplate();
         rhtemplate = rhtemplate.replace("/*NAME*/", cfg.getName());
         ctx.getBuilder(ctx.getPrefix() + "runtime.h").append(rhtemplate);
 
         // GENERATE THE RUNTIME IMPL
-        String rtemplate = ctx.getTemplateByID("ctemplates/runtime.c");
+        String rtemplate = ctx.getRuntimeImplTemplate();
         rtemplate = rtemplate.replace("/*NAME*/", cfg.getName());
 
         String fifotemplate = ctx.getTemplateByID("ctemplates/fifo.c");
