@@ -58,7 +58,7 @@ thing Sample includes CepMsgs,  SampleMsgs{
         return value + 1
     end
     
-    /*stream forwardSimpleMessage do
+    stream forwardSimpleMessage do
         from rcvPort?m1
         action sendPort!cep1()
     end
@@ -89,7 +89,7 @@ thing Sample includes CepMsgs,  SampleMsgs{
         from e1 : rcvPort?m7 & e2 : rcvPort?m8
         select a : e1.a * e2.v1, b : e1.b * e2.v2, c : e1.c * e2.v3
         action sendPort!cep5(a,b,c)
-    end*/
+    end
     
     
     statechart Sample init Init {

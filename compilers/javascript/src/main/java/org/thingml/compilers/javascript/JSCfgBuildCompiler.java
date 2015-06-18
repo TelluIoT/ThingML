@@ -61,9 +61,11 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
                     deps.asObject().add("rx","^2.4.3");
                     deps.asObject().add("events","^1.0.2");
                     break;
+
                 }
                 /** END **/
             }
+
 
             final File f = new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/package.json");
             f.setWritable(true);

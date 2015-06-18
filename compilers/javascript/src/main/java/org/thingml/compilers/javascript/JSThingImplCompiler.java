@@ -16,6 +16,7 @@
 package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
@@ -69,6 +70,12 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         //builder.append("var StateFactory = require('./state-factory');\n");
         builder.append("var StateJS = require('state.js');\n");
+
+        if(thing.getStreams().size() > 0) {
+            builder.append("var Rx = require('rx'),\n" +
+                    "\tEventEmitter = require('events').EventEmitter;\n");
+        }
+
         builder.append("\n/**\n");
         builder.append(" * Definition for type : " + thing.getName() + "\n");
         builder.append(" **/\n");
@@ -114,6 +121,12 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }//TODO: public/private properties?
 
+        /** MODIFICATION **/
+        if(thing.getStreams().size() > 0) {
+            builder.append("this.eventEmitterForStream = new EventEmitter();\n"); //fixme more dynamic
+        }
+        /** END **/
+
         builder.append("//message queue\n");
         builder.append(const_() + "queue = [];\n");
         builder.append("this.getQueue = function() {\n");
@@ -121,6 +134,20 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("};\n\n");
 
         generateListeners(thing, builder, ctx);
+
+        /** MODIFICATION **/
+        builder.append("//CEP dispatch functions\n");
+        builder.append("this.cepDispatch = function (message) {\n");
+
+        for(Stream s : thing.getStreams()) {
+            for (ReceiveMessage rm : s.getInputs()) {
+                builder.append("if(message[0] === \"" + rm.getPort().getName() + "\" && message[1] === \"" + rm.getMessage().getName() + "\") {\n" +
+                        "\tthis.eventEmitterForStream.emit('" + ThingMLHelpers.getEventName(s, rm) + "',message);\n" +
+                        "}\n");
+            }
+        }
+        builder.append("}\n");
+        /** END **/
 
         builder.append("//ThingML-defined functions\n");
         for(Function f : thing.allFunctions()) {   //FIXME: should be extracted
@@ -170,6 +197,12 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             ((FSMBasedThingImplCompiler)ctx.getCompiler().getThingImplCompiler()).generateState(b, builder, ctx);
         }
         builder.append("}\n");
+
+        /** MODIFICATION **/
+        for(Stream stream : thing.getStreams()) {
+            ctx.getCompiler().getCepCompiler().generateStream(stream,builder,ctx);
+        }
+        /** END **/
 
         builder.append("}\n");
 

@@ -111,7 +111,7 @@ def generic_execute(type,capitalizedName,resultCounter):
 		#if os.path.exists("/usr/local/lib/yjp-2013-build-13074/") and useYourkit:
 			#del os.environ['MAVEN_OPTS']
 	if type == "Javascript":
-		os.system("sudo npm install && sudo node main.js")
+		os.system("npm install && node main.js")
 def generic_findBinSize(type,capitalizedName):
 	binsize = "error"
 	if type == "Linux":
