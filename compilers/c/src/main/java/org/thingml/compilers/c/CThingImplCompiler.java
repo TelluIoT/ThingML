@@ -75,7 +75,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("\n");
 
         // Get the template and replace the values
-        String itemplate = ctx.getTemplateByID("ctemplates/linux_thing_impl.c");
+        String itemplate = ctx.getThingImplTemplate();
         itemplate = itemplate.replace("/*NAME*/", thing.getName());
         itemplate = itemplate.replace("/*CODE*/", builder.toString());
 

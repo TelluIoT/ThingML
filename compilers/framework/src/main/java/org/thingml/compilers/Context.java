@@ -121,7 +121,8 @@ public class Context {
                 input.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            return null; // the template was not found
         }
         return result;
     }
