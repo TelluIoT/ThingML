@@ -10,8 +10,20 @@
     <dependencies>
          <dependency>
             <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.compilers</artifactId>
+            <artifactId>compilers.registry</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>compilers.deprescala</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.emftext</groupId>
+            <artifactId>org.emftext.commons.antlr</artifactId>
+            <version>3.4.0</version>
         </dependency>
 
         <dependency>
