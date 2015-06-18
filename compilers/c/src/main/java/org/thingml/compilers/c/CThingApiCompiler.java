@@ -34,6 +34,19 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
         StringBuilder builder = new StringBuilder();
 
+        generateCHeaderCode(thing, ctx, builder);
+
+        // Get the template and replace the values
+        String htemplate = ctx.getThingHeaderTemplate();
+        htemplate = htemplate.replace("/*NAME*/", thing.getName());
+        htemplate = htemplate.replace("/*HEADER*/", builder.toString());
+
+        // Save the result in the context with the right file name
+        ctx.getBuilder(ctx.getPrefix() + thing.getName() + ".h").append(htemplate);
+    }
+
+    protected void generateCHeaderCode(Thing thing, CCompilerContext ctx, StringBuilder builder) {
+
         builder.append("/*****************************************************************************\n");
         builder.append(" * Headers for type : " + thing.getName() + "\n");
         builder.append(" *****************************************************************************/\n\n");
@@ -52,14 +65,8 @@ public class CThingApiCompiler extends ThingApiCompiler {
         // when a proper private "initialize_instance" operation will be provided
         generateStateIDs(thing, builder, ctx);
 
-        // Get the template and replace the values
-        String htemplate = ctx.getTemplateByID("ctemplates/linux_thing_header.h");
-        htemplate = htemplate.replace("/*NAME*/", thing.getName());
-        htemplate = htemplate.replace("/*HEADER*/", builder.toString());
-
-        // Save the result in the context with the right file name
-        ctx.getBuilder(ctx.getPrefix() + thing.getName() + ".h").append(htemplate);
     }
+
 
     protected void generateCHeaderAnnotation(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 

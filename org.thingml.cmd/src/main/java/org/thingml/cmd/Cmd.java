@@ -25,6 +25,9 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.*;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+import org.thingml.compilers.javascript.JavaScriptCompiler;
+import org.thingml.compilers.java.JavaCompiler;
 
 import java.io.File;
 
