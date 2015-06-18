@@ -21,12 +21,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.emftext</groupId>
-            <artifactId>org.emftext.commons.antlr</artifactId>
-            <version>3.4.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.thingml</groupId>
             <artifactId>org.thingml.parser.standalone</artifactId>
             <version>${project.version}</version>
