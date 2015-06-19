@@ -24,8 +24,6 @@ from os import listdir
 from os.path import isfile, join
 
 def run(type):
-	#os.chdir(r"..")
-
 	def parse(fileName):
 		file = open(fileName)
 		result=''
@@ -48,7 +46,6 @@ def run(type):
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
 			if name != "tester":
-				#if (type == "perf" and name.startswith("perf")) or (type == "functional" and not name.startswith("perf")):
 				bigname = name[:0]+name[0].upper()+name[1:]
 				fichier = open('_java/'+name+'.thingml', 'w')
 				confLines = parse(name+'.thingml')
@@ -67,4 +64,3 @@ def run(type):
 								  '	connector test.harnessIn => harness.test\n'+confLines+'}')
 				fichier.close()
 	print ("Successful generation of java tests")
-	#os.chdir("Tester")

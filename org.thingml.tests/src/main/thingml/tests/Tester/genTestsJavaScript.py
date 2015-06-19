@@ -24,8 +24,6 @@ from os import listdir
 from os.path import isfile, join
 
 def run(type):
-	#os.chdir(r"..")
-
 	def parse(fileName):
 		file = open(fileName)
 		result=''
@@ -41,7 +39,6 @@ def run(type):
 	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
 
 
-	print("debuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuug "+os.getcwd())
 	if not os.path.exists("_javascript"):
 		os.makedirs("_javascript")
 	os.system("rm _javascript/*")
@@ -68,4 +65,3 @@ def run(type):
 								  '	connector test.harnessIn => harness.test\n'+confLines+'}')
 				fichier.close()
 	print ("Successful generation of javascript tests")
-	#os.chdir("Tester")

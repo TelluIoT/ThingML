@@ -119,13 +119,14 @@ for (a,b) in results:
 
 		if deleteTemporaryFiles and os.path.exists(capitalizedName):
 			os.system("rm -r ../../../../../target/tmp/_"+smallType+"/")
-		os.system("mvn -f ../../../../../../compilers/registry/pom.xml exec:java -Dexec.mainClass=\"org.thingml.compilers.commandline.Main\" -Dexec.args=\""+compiler+" ../_"+smallType+"/"+fileName+".thingml ../../../../../target/tmp/_" + smallType+ "\"")
+		if (not type == "Java"):
+			os.system("mvn -f ../../../../../../compilers/registry/pom.xml exec:java -Dexec.mainClass=\"org.thingml.compilers.commandline.Main\" -Dexec.args=\""+compiler+" ../_"+smallType+"/"+fileName+".thingml ../../../../../target/tmp/_" + smallType+ "\"")
+		else:
+			os.system("mvn -f ../../../../../../compilers/registry/pom.xml exec:java -Dexec.mainClass=\"org.thingml.compilers.commandline.Main\" -Dexec.args=\""+compiler+" ../_"+smallType+"/"+fileName+".thingml ../../../../../target/tmp/_" + smallType+"/"+capitalizedName + "\"")
 
 		dump=open(dumpDir+'/target/dump/'+fileName+type+'.dump', 'a')
 		#if os.path.exists("tmp/ThingML_"+type+"/"+capitalizedName):
 		os.chdir(testsDirectory + "/../../../../../target/tmp/_"+smallType+"/"+capitalizedName)
-
-		print("DEBUUUUUUUUUUUUUUUUG "+os.getcwd())
 
 		generic_compile(type)
 		generic_execute(type,capitalizedName,resultCounter)

@@ -29,10 +29,7 @@ def load_src(name, fpath):
 load_src("configuration", "../../../../../configuration.py")
 from configuration import testLanguages
 
-
-print("DEBUUUUUUUUUUUUUUUUG111111111111111 "+os.getcwd())
 os.chdir("..")
-print("DEBUUUUUUUUUUUUUUUUG222222222222222 "+os.getcwd())
 genTestsArduino.run("functional")
 genTestsLinux.run("functional")
 genTestsJavaScript.run("functional")

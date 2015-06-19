@@ -49,7 +49,6 @@ public class Main {
             return;
         }
 
-        System.out.println("COMPILER: " + args[0]);
         ThingMLCompiler compiler = registry.createCompilerInstanceByName(args[0].trim());
 
         if (compiler == null) {
@@ -57,7 +56,6 @@ public class Main {
             return;
         }
 
-        System.out.println("INPUT: " + args[1]);
         File input = new File(args[1]);
 
         if (!input.exists() || !input.isFile() || !input.canRead()) {

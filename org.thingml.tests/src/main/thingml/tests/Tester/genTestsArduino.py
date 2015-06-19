@@ -25,9 +25,6 @@ from os.path import isfile, join
 
 
 def run(type):
-	#os.chdir(r"..")
-
-
 	def parse(fileName):
 		file = open(fileName)
 		result=''
@@ -77,4 +74,3 @@ def run(type):
 						'	connector harness.timer => timer.timer\n'+confLines+'}')
 					fichier.close()
 	print ("Successful generation of arduino tests")
-	#os.chdir("Tester")

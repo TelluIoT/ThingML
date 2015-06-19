@@ -38,8 +38,8 @@ thing TimerJS includes Timer
     }
 }
 
-configuration TestTimerJS {
+/*configuration TestTimerJS {
     instance timer : TimerJS
     instance client : SimpleTimerClient
     connector client.timer => timer.timer    
-}
+}*/
