@@ -111,8 +111,19 @@ public abstract class CCompilerContext extends Context {
         }
     }
 
+    public String instance_var_name = null;
+
+    public void changeInstanceVarName(String new_name) {
+        instance_var_name = new_name;
+    }
+
+    public void clearInstanceVarName() {
+        instance_var_name = null;
+    }
+
     public String getInstanceVarName() {
-        return "_instance";
+        if (instance_var_name != null) return instance_var_name;
+        else return "_instance";
     }
 
     public String getInstanceVarName(Instance inst) {
