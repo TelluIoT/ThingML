@@ -49,6 +49,7 @@ public class Main {
             return;
         }
 
+        System.out.println("COMPILER: " + args[0]);
         ThingMLCompiler compiler = registry.createCompilerInstanceByName(args[0].trim());
 
         if (compiler == null) {
@@ -56,6 +57,7 @@ public class Main {
             return;
         }
 
+        System.out.println("INPUT: " + args[1]);
         File input = new File(args[1]);
 
         if (!input.exists() || !input.isFile() || !input.canRead()) {
@@ -67,6 +69,9 @@ public class Main {
 
         if (args.length == 3) {
             File o = new File(args[2]);
+            if(!o.exists()) {
+                new File(args[2]).mkdirs();
+            }
             if (!o.exists() || !o.isDirectory() || !o.canWrite()) {
                 System.out.println("ERROR: Cannot find or write in output dir " + o.getAbsolutePath() + ".");
                 return;
