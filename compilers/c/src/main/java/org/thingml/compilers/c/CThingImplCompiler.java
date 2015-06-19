@@ -91,14 +91,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             // generateMainAndInit the given prototype. Any parameters are ignored.
             String c_proto = func.annotation("c_prototype").iterator().next();
             builder.append(c_proto);
-
-            if (func.hasAnnotation("c_instance_var_name")) {
-                // generateMainAndInit the given prototype. Any parameters are ignored.
-                String nname = func.annotation("c_instance_var_name").iterator().next();
-                //TODO: Find the right way to change the instance var name here
-                // ctx.change_instance_var_name(nname);
-                System.out.println("WARNING: (NOT IMPLEMENTED!) Instance variable name should be changed to " + nname + " in function " + func.getName());
-            }
         }
         else {
             // Generate the normal prototype
@@ -184,10 +176,16 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("// Definition of function " + func.getName() + "\n");
         generatePrototypeforThingDirect(func, builder, ctx, thing);
         builder.append(" {\n");
+
+        if (func.hasAnnotation("c_instance_var_name")) {
+            // generateMainAndInit the given prototype. Any parameters are ignored.
+            String nname = func.annotation("c_instance_var_name").iterator().next();
+            ctx.changeInstanceVarName(nname);
+        }
+
         ctx.getCompiler().getThingActionCompiler().generate(func.getBody(), builder, ctx);
 
-        // FIXME: This is related to the customization of the instance var name. NOT MIGRATED FOR NOW
-        //ctx.clear_instance_var_names();
+        ctx.clearInstanceVarName();
 
         builder.append("}\n");
     }
@@ -398,7 +396,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 // Execute the exit actions for current states (starting at the deepest)
                 builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName() + ");\n");
                 // Set the new current state
-                builder.append(ctx.getInstanceStructName(thing) + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(et.getTarget()) + ";\n");
+                builder.append(ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(et.getTarget()) + ";\n");
 
                 // Do the action
                 ctx.getCompiler().getThingActionCompiler().generate(et.getAction(), builder, ctx);

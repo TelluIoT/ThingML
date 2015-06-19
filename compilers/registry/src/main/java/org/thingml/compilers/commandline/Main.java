@@ -105,6 +105,7 @@ public class Main {
             compiler.setOutputDirectory(outdir);
 
             for (Configuration cfg : input_model.allConfigurations()) {
+                if (cfg.isFragment()) continue; // ignore fragments
                 System.out.println("Generating code for configuration: " + cfg.getName());
                 compiler.compile(cfg);
             }
