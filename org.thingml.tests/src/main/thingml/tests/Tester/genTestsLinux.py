@@ -25,7 +25,7 @@ from os.path import isfile, join
 
 
 def run(type):
-	os.chdir(r"..")
+	#os.chdir(r"..")
 
 
 	def parse(fileName):
@@ -54,12 +54,12 @@ def run(type):
 					bigname = name[:0]+name[0].upper()+name[1:]
 					fichier = open('_linux/'+name+'.thingml', 'w')
 					confLines = parse(name+'.thingml')
-					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/test.thingml"\n'+
+					fichier.write('import "../core/_linux/test.thingml"\n'+
 					'import "../'+name+'.thingml"\n'+
 					'import "../tester.thingml"\n')
-					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timer.thingml"\n\n')
+					fichier.write('import "../core/_linux/timer.thingml"\n\n')
 					if type == "perf":
-						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timestamp.thingml"\n')
+						fichier.write('import "../core/_linux/timestamp.thingml"\n')
 					fichier.write('configuration '+bigname+'C \n@output_folder "/home/thingml_out/" {\n'+
 					'	instance harness : Tester\n'+
 					'	instance dump : TestDumpLinux\n'+
@@ -80,4 +80,4 @@ def run(type):
 						'	connector test.harnessIn => harness.test\n'+confLines+'}')
 					fichier.close()
 	print ("Successful generation of linux tests")
-	os.chdir("Tester")
+	#os.chdir("Tester")

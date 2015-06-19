@@ -24,7 +24,7 @@ class Tester:
 		testerFile = open('../tester.thingml', 'w')
 		i=0
 
-		testerFile.write('import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"\n\n'+
+		testerFile.write('import "thingml.thingml"\n\n'+
 			'//Input: '+inputString+'\n\n'+
 			'thing Tester includes TestHarness, TimerClient\n{\n\tstatechart Tester init e0 {\n')
 			
@@ -54,7 +54,7 @@ for f in onlyfiles:
 		bigname = name[:0]+name[0].upper()+name[1:]
 		print(bigname)
 		fichier = open('_arduino/'+name+'.thingml', 'w')
-		fichier.write('import "../../core/_arduino/test.thingml"\n'+
+		fichier.write('import "../core/_arduino/test.thingml"\n'+
 		'import "../'+name+'.thingml"\n\n'+
 		'configuration '+name+' {\n'+
 		'    instance test : '+bigname+'\n'+

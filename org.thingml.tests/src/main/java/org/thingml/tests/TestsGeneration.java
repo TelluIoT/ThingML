@@ -21,8 +21,8 @@ public class TestsGeneration {
 
     public static void main(String[] args) {
         try {
-            org.apache.commons.io.FileUtils.deleteDirectory(new File((new File(System.getProperty("user.dir"))).getParentFile(), "org.thingml.cmd/tmp"));
-            BufferedWriter result = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("results.html")));
+            org.apache.commons.io.FileUtils.deleteDirectory(new File("target/tmp"));
+            BufferedWriter result = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("target/results.html")));
             result.write("<!DOCTYPE html>\n" +
                     "<html>\n" +
                     "	<head>\n" +
@@ -55,7 +55,7 @@ public class TestsGeneration {
                     "		<th>Result</th>\n" +
                     "	</tr>\n");
             result.close();
-            BufferedWriter stats = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("stats.html")));
+            /*BufferedWriter stats = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("target/stats.html")));
             stats.write("<!DOCTYPE html>\n" +
                     "<html>\n" +
                     "	<head>\n" +
@@ -91,7 +91,7 @@ public class TestsGeneration {
                     "		<th>Performed transitions</th>\n" +
                     "		<th>Execution time</th>\n" +
                     "	</tr>\n");
-            stats.close();
+            stats.close();*/
 
             ProcessBuilder pb = new ProcessBuilder("python", "genTests.py");
             pb.directory(new File("src/main/thingml/tests/Tester"));
