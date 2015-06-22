@@ -58,7 +58,7 @@ A set of automatic tests can be run under Linux. Make sure you have Python insta
 - Java and Maven properly installed and configured to test the generated Java code
 - Node and NPM for JS code
 - gcc for C code
-- Ino for Arduino code: `sudo pip install ino`
+- Ino for Arduino code: `sudo apt-get install arduino && sudo pip install ino`
 
 In `org.thing.tests` edit `configuration.py` to select which compiler you want to test:
 
