@@ -7,14 +7,15 @@ NOTE: This document is an INITIAL DRAFT. If you have some corections or found th
 
 ## Compiler modules and sub-projects
 
-The ThingML code generation framework is structured in a set of modules. The figure below shows the main sub-modules of the "Compilers" project as well as their dependencies.
+The ThingML code generation framework is structured in a set of modules. The figure below shows the main sub-modules of the "Compilers" project as well as their dependencies. The idea is to have a compilation framework on top which anly depends on the ThingML Model. This framework project should capture all the code and helpers to be shared between compilers. It also defines the interfaces (as abstract classes) for all ThingML compilers. Bellow, individual modules correspond to the implementation of different families of compilers. The idea of these module is to package together sets of compilers which have the same target languages (and typically share quite a lot of code). Finally, one the bottom, the registry module puts together all the compilers and provide a simple utility to execute them from the command line.
 
 <img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Modules_Deps.png" alt="Modules Dependencies" width="600">
+
+The sections bellow provide some more information on the different modules and how to extend them.
 
 ### Framework
 
 <img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Code_Generation_Framework.png" alt="Code Generation Framework" width="600">
-
 
 ### Registry
 
