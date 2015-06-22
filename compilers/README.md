@@ -44,7 +44,7 @@ A set of automatic tests can be run under Linux. Make sure you have Python insta
 In `org.thing.tests` edit `configuration.py` to select which compiler you want to test:
 
 
-```
+```python
 #When set to False, does not remove source code after execution. 
 #May cause secondary inputs to use files from the first input
 deleteTemporaryFiles = True
