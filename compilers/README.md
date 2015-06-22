@@ -1,11 +1,18 @@
 ThingML Code Generation Framework
 =================================
 
-This folder contains a full rewrite of the old monolithic ThingML compilers as an extensible code generation framework.
+This folder contains a full rewrite of the old monolithic ThingML compilers as an extensible code generation framework. This ThingML code generation framework is developed in WP2 of the HEADS EU project. The ThingML code generation framework includes a set of ready made compilers targeting a range of different platforms (from microcontrollers to servers) but it meant to be customized and extended to support other platfoms or to fit the requirements of a specific project. This documents intends to give "getting started" information on how to tailor a particular ThingML code generator or add your own code generator.
+
+NOTE: This document is an INITIAL DRAFT. If you have some corections or found that some additional information is required please edit this document and add any corrections or anny additional material.
 
 ## Compiler modules and sub-projects
 
 ### framework
+
+![Code Generation Framework][img_cgf]
+
+[img_cgf]: https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Code_Generation_Framework.png "Code Generation Framework"
+
 
 ### registry
 
@@ -51,6 +58,7 @@ A set of automatic tests can be run under Linux. Make sure you have Python insta
 - Java and Maven properly installed and configured to test the generated Java code
 - Node and NPM for JS code
 - gcc for C code
+- Ino for Arduino code: `sudo pip install ino`
 
 In `org.thing.tests` edit `configuration.py` to select which compiler you want to test:
 
@@ -84,4 +92,4 @@ To run one specific test, simply put `useBlacklist=False`, and put the name of t
 
 
 
-The ThingML code generation framework is developed in WP2 of the HEADS EU project.
+
