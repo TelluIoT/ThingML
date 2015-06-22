@@ -17,10 +17,6 @@ This folder contains a full rewrite of the old monolithic ThingML compilers as a
 
 
 ## Using the compilers from command line
-
-
-
-## Using the compilers from command line
 The best way to execute and test the latest versions of compilers while developping or modifying it is to use the command line compiler which is recompiled and regenerated whenever the registry project is built. The compilers are packaged as a fully standalone JAR in the ``compilers/registry/target`` directory. After the project has been built this directory will contain 2 JAR files, the one to use is ``compilers.registry-XXXXXXX-SNAPSHOT-jar-with-dependencies.jar`` (where XXXXXXX is a version number). This JAR file can be copied, moved or renamed without issues.
 
 To use the compiler, just run the jar file on a command line. Java 7 or newer is required. Running the JAR with no arguments should provide a short "help" message simmilar to what is displayed below:
@@ -40,7 +36,7 @@ To use the compiler, just run the jar file on a command line. Java 7 or newer is
 
 In case you cannot see a message simmilar to this one, it means that semething is not working with your setup. Check your Java version (should be 7 or newer) and try recompiling ThingML by running ``mvn clean install`` in the root ThingML directory.
 
-If you see this message but your compiler is not in the list, it means that your compiler is not properly registered in the compiler registry (or that the ID of your compiler is not unique and collides with another one). 
+If you see this message but your compiler is not in the list, it means that your compiler is not properly registered in the compiler registry (or that the ID of your compiler is not unique and collides with another one). Make sure the ID returned by your compiler is correct and edit class ``org.thingml.compilers.registry.ThingMLCompilerRegistry`` in project ``registry``. You should just have to add your compiler in method ``getInstance()``.
 
 
 ## Testing the compilers
