@@ -11,15 +11,11 @@ The ThingML code generation framework is structured in a set of modules. The fig
 
 <img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Modules_Deps.png" alt="Modules Dependencies" width="600">
 
-
-
-![Modules Dependencies](https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Modules_Deps.png)
-
 ### framework
 
 ![Code Generation Framework][img_cgf]
 
-[img_cgf]: https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Code_Generation_Framework.png "Code Generation Framework"
+<img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Code_Generation_Framework.png" alt="Code Generation Framework" width="600">
 
 
 ### registry
