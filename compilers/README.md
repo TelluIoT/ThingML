@@ -38,7 +38,9 @@ To use the compiler, just run the jar file on a command line. Java 7 or newer is
      | <output dir> : Optional output directory - by default current directory is used
     Bye.
 
+In case you cannot see a message simmilar to this one, it means that semething is not working with your setup. Check your Java version (should be 7 or newer) and try recompiling ThingML by running ``mvn clean install`` in the root ThingML directory.
 
+If you see this message but your compiler is not in the list, it means that your compiler is not properly registered in the compiler registry (or that the ID of your compiler is not unique and collides with another one). 
 
 
 ## Testing the compilers
