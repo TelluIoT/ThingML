@@ -9,7 +9,7 @@ NOTE: This document is an INITIAL DRAFT. If you have some corections or found th
 
 The ThingML code generation framework is structured in a set of modules. The figure below shows the main sub-modules of the "Compilers" project as well as their dependencies.
 
-<img align="center" src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Modules_Deps.png" alt="Modules Dependencies" width="600">
+<img text-align="center" src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Modules_Deps.png" alt="Modules Dependencies" width="600">
 
 
 
