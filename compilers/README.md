@@ -11,18 +11,16 @@ The ThingML code generation framework is structured in a set of modules. The fig
 
 <img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Modules_Deps.png" alt="Modules Dependencies" width="600">
 
-### framework
-
-![Code Generation Framework][img_cgf]
+### Framework
 
 <img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Code_Generation_Framework.png" alt="Code Generation Framework" width="600">
 
 
-### registry
+### Registry
 
-### c / java / javascript / uml
+### C / java / javascript / uml
 
-### deprescala
+### Deprescala
 
 ## Compiling the ThingML compilers
 
