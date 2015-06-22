@@ -7,6 +7,9 @@ This folder contains a full rewrite of the old monolithic ThingML compilers as a
 
 ### framework
 
+[img_cgf]: https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Code_Generation_Framework.png "Code Generation Framework"
+
+
 ### registry
 
 ### c / java / javascript / uml
