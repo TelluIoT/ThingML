@@ -11,7 +11,7 @@ The ThingML code generation framework is structured in a set of modules. The fig
 
 ![Modules Dependencies][img_deps]
 
-[img_deps]: https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Modules_Deps.png
+[img_deps]: https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Modules_Deps.png =600px
 
 ### framework
 
