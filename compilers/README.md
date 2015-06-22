@@ -40,7 +40,9 @@ If you see this message but your compiler is not in the list, it means that your
 
 The options for the compiler are self-explainatory. First is the ID of the compiler (as listed in the compiler list), the second is the ThingML source file and the last is an output directory in which the compiler will output the generated code. The way the code is structured in the output directory varies from compilers to compilers but typically, a sub-directory with the name of the configuration will be created.
 
-NOTE: Remember that the compiler needs a Configuration to compile. Make sure that your ThingML source file contains a valid and complete configurations before calling the compiler.
+NOTE 1: Remember that the compiler needs a Configuration to compile. Make sure that your ThingML source file contains a valid and complete configurations before calling the compiler.
+
+NOTE 2: When calling the compiler, the output directory for the configuration and the output files will be overritten without warnings. You have been warned!
 
 ## Testing the compilers
 
