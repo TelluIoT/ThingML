@@ -1,7 +1,9 @@
 ThingML Code Generation Framework
 =================================
 
-This folder contains a full rewrite of the old monolithic ThingML compilers as an extensible code generation framework.
+This folder contains a full rewrite of the old monolithic ThingML compilers as an extensible code generation framework. This ThingML code generation framework is developed in WP2 of the HEADS EU project. The ThingML code generation framework includes a set of ready made compilers targeting a range of different platforms (from microcontrollers to servers) but it meant to be customized and extended to support other platfoms or to fit the requirements of a specific project. This documents intends to give "getting started" information on haow to tailor a particular ThingML code generator or add your own code generator.
+
+NOTE: This document is an INITIAL DRAFT. If you have some coorections or found that some additional information is required please edit this document and add any corrections or anny additional material.
 
 ## Compiler modules and sub-projects
 
@@ -89,4 +91,4 @@ To run one specific test, simply put `useBlacklist=False`, and put the name of t
 
 
 
-The ThingML code generation framework is developed in WP2 of the HEADS EU project.
+
