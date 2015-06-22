@@ -92,7 +92,6 @@ To run all tests, simply put `useBlacklist=True`, without changing the content o
 
 To run one specific test, simply put `useBlacklist=False`, and put the name of the test in the `whitelist` e.g. `"testDeepCompositeStates"`
 
-
-
+When everything is configured, simply type `mvn clean install` and have a cup of coffee :-)
 
 
