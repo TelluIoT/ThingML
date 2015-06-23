@@ -44,6 +44,11 @@ The figure above presents the 8 extension points of the ThingML code generation 
 
 ### Deprescala
 
+Deprescala stands for deprecated scala compiler. This project contains the previous version of the ThingML compilers which were written in Scala. 90% of the functionality of these former compilers have been re-implemented in the new code generation framework. The last 10% will be re-introduced as we need them and the Deprescala project will be removed.
+
+NOTE: Take contact with us if your are interested to know and discuss why the new code generation framework was written in Java 7 and not in Scala. It is not by accident!
+
+
 ## Compiling the ThingML compilers
 
 
