@@ -2,9 +2,9 @@
 
 The ThingML metamodel is built by combining well-proven concepts and patterns found in existing modelling languages (such as the UML) and programming languages. The contribution of ThingML is to provide a single complete language with a single coherent semantics. This section presents the different parts of the ThingML metamodel.
 
-## Top level elements
+## Model and types
 
-FIGURE
+![ThingML model and types](https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/org.thingml.model/docs/thingml_components.png)
 
 The figure above presents the top level container of the ThingML meta-model. On the top left of the figure, the class `ThingMLModel` is the root of the containment tree and represent a ThingML file. At this level, a ThingML file can import other ThingML files and contain a set of type definitions. There are three kinds of types: primitive types, enumerations and things. The primitive types and enumeration are typical contracts found in most modelling and programming languages. The Thing type of ThingML is similar to some sort of components and/or processes in other approaches. The `Things` are the main ThingML structure and contain all other concepts of the language.
 
