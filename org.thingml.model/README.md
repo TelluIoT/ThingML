@@ -15,7 +15,9 @@ Finally, the behaviour of a Thing is defined by a set of `state machines`. The s
 
 ## State machine
 
-![ThingML State Machines](https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/org.thingml.model/docs/thingml_state_machine.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/org.thingml.model/docs/thingml_state_machine.png" alt="ThingML State Machines" width="600">
+</p>
 
 The figure above presents the metamodel for the ThingML `state machines`. The ThingML `state machine` includes typical state machine concepts as found for example in Unified Modeling Language 2 (UML2). The ThingML state machines can include `composite states` and `parallel regions`. The main class of the statemachine metamodel is the `State` class. Each state can contain a set of `properties`, as set of `entry` and `exit actions` and a set of `transitions`. 
 
@@ -27,7 +29,9 @@ A `composite state` is a kind of state which can contain some sub-states. A comp
 
 ## Action and Expression language
 
-![Main ThingML Actions](https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/org.thingml.model/docs/thingml_actions.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/org.thingml.model/docs/thingml_actions.png" alt="Main ThingML Actions" width="600">
+</p>
 
 The figure above presents the main classes of the ThingML action language. In ThingML the action language is used to specify the body of functions and all the actions within the state machines (both on state and on transitions). The ThingML action language is a typical "Pascal like" imperative language. It includes basic `control structures`, `blocks` and `local variables`. It also includes `function calls` which allow calling functions defined within the Thing and a `return` action which is used in function bodies in order to return a value. `Print action` and `error action` are primitive actions which can be used to output text to the standard output and error streams. 
 
@@ -35,7 +39,9 @@ The `send action` and `external statement` are more specific to ThingML. The sen
 
 The figure below presents the ThingML `expressions`. In ThingML expressions are used to express conditions and calculations within ThingML functions and state machines. The ThingML expressions include typical expressions for literals, basic arithmetic operations and use of variables and functions. There are two types of expression which are specific to ThingML: the `external expression` and the `event reference`. The event reference expression allows referring to the data contained in messages when writing the actions associated to transitions.
 
-![ThingML Expressions](https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/org.thingml.model/docs/thingml_expressions.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/org.thingml.model/docs/thingml_expressions.png" alt="ThingML Expressions" width="600">
+</p>
 
 Up to this point, we have described the part of the ThingML metamodel which allow specifying `things`, describing their interfaces and implementing their behaviours. Figure 12 presents the configuration part of the ThingML metamodel which allows instantiating and connecting together a set of things in order to create an application.
 
@@ -47,4 +53,6 @@ The connectors allow connecting ports of the instances together. Each connector 
 
 Configurations are the entry point for the ThingML code generation framework. The ThingML compilers traverse the configuration is order to calculate the set of Things for which code should generated. For each Thing a modules is generated and these modules are instantiated and connected together according to the configuration.
 
-![ThingML Configuration](https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/org.thingml.model/docs/thingml_configuration.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/org.thingml.model/docs/thingml_configuration.png" alt="ThingML Configuration" width="600">
+</p>
