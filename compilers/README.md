@@ -15,6 +15,8 @@ The sections bellow provide some more information on the different modules and h
 
 ### Framework
 
+The idea of the code generation framework is to provide a way to independently customize different extension points. The figure below presents the 8 different extenssion points we have identified. Current implementation of the framework supports customizing all those extenssion point. However, at this point all developpers are encouraged to propose and implement refactactorinig in order to make the APIs clear and as decoupled as possible from each others.
+
 <img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Code_Generation_Framework.png" alt="Code Generation Framework" width="600">
 
 ### Registry
