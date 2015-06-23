@@ -9,26 +9,26 @@ This folder contains a full rewrite of the old monolithic ThingML compilers as a
 
 The ThingML code generation framework is structured in a set of modules. The figure below shows the main sub-modules of the "Compilers" project as well as their dependencies. The idea is to have a compilation framework on top which anly depends on the ThingML Model. This framework project should capture all the code and helpers to be shared between compilers. It also defines the interfaces (as abstract classes) for all ThingML compilers. Bellow, individual modules correspond to the implementation of different families of compilers. The idea of these module is to package together sets of compilers which have the same target languages (and typically share quite a lot of code). Finally, one the bottom, the registry module puts together all the compilers and provide a simple utility to execute them from the command line.
 
-<img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Modules_Deps.png" alt="Modules Dependencies" width="600">
+<p align="center"><img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Modules_Deps.png" alt="Modules Dependencies" width="600"></p>
 
 The sections bellow provide some more information on the different modules and how to extend them.
 
 ### Compilers architecture
 
 The architecture for the code generation framework is composed of:
-* A compiler abstract class and inheritance hierarchy
+* A compiler abstract class and inheritance hierarchy. That is the entry point for a code generator.
 * The ThingML model representing the program to compile
 * A set of shared "helper" functions within the metamodel
-* A compiler context class
-* A set of abstract classes corresponding to the 
-* 
+* A set of abstract delegate classes to generate the various parts of the code 
+* A compiler context class which is shared by all compiler delegates
+
 <p align="center"><img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/design.jpg" alt="Compilers Architecture" width="600"></p>
 
 ### Framework
 
 The idea of the code generation framework is to provide a way to independently customize different extension points. The figure below presents the 8 different extenssion points we have identified. Current implementation of the framework supports customizing all those extenssion point. However, at this point all developpers are encouraged to propose and implement refactactorinig in order to make the APIs clear and as decoupled as possible from each others.
 
-<img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Code_Generation_Framework.png" alt="Code Generation Framework" width="600">
+<p align="center"><img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/Code_Generation_Framework.png" alt="Code Generation Framework" width="600"></p>
 
 The figure above presents the 8 extension points of the ThingML code generation framework. These extension points are separated in two groups: the ones corresponding to the generation of code for "Things" and the ones corresponding to the generation of code for a Configuration (or applications). In the ThingML metamodel, the coupling between those two things is through the instances of Things which are contained in configurations. In the generated code, the idea is to also keep a separation between the reusable code which is generated for Things and the code generated to combine instances of Things together into an application. During the second period of the project, the ThingML compiler will be evolved in order to provide explicit and "easy to use" extension mechanisms for those 8 points. The next paragraphs briefly describe each of the extension points.
 
