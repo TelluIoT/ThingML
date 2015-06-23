@@ -1,4 +1,8 @@
+# ThingML metamodel
+
 The ThingML metamodel is built by combining well-proven concepts and patterns found in existing modelling languages (such as the UML) and programming languages. The contribution of ThingML is to provide a single complete language with a single coherent semantics. This section presents the different parts of the ThingML metamodel.
+
+## Top level elements
 
 FIGURE
 
@@ -7,6 +11,8 @@ The figure above presents the top level container of the ThingML meta-model. On 
 A ThingML Thing can contain a set of properties, a set of functions, a set of messages, a set of ports and a set of state machines. The `properties` are variables or constants which are local to a thing. They can be typed either by primitive types or enumeration and can be either "read only" (value calculated at compile or deployment time) or dynamic. The `functions` are local to a thing. They can be used from anywhere in a thing but are not visible from other things. The only interface of a Thing with its outside are the ports, which can send and receive a set of messages. The `messages` (and their signatures) are defined within a thing but can only be sent and received through ports. Ports can be either `required` or `provided`: this distinction is independent from the direction of messages: both required and provided ports can send and receive messages. When connecting Things together all required ports of a thing have to be connected to "compatible" provided ports. Provided ports can be left unconnected. A provided port is compatible with a required port if there is a match between the messages defined on the two ports, i.e. the provided port should, at least, be able to provide what the required port expects. 
 
 Finally, the behaviour of a Thing is defined by a set of `state machines`. The state machines can react on events occurring on the ports of the Thing.
+
+## State machine
 
 FIGURE
 
@@ -17,6 +23,8 @@ The properties correspond to variables which are local to this state (and possib
 The triggers for transitions are `events`. In the current version of ThingML events are either incoming messages on a port or the "empty event". In addition to the event, a transition can have a `guard`. The guard corresponds to an arbitrary condition which is required for the transition to fire. In case of a transition with a `ReceiveMessage` event, the guard is evaluated whenever a message of the expected type is received on the specified port. The transition is fired if the guard is true. The guard of an empty transition is constantly evaluated and the transition is fired as soon as the guard is true. The use of empty transitions with guards should be carefully considered because of performance implications.
 
 A `composite state` is a kind of state which can contain some sub-states. A composite state is also a region by itself and can contain a set of parallel `regions`. Each region has its own `initial` and `current` state during the execution. Events arriving to a composite state are dispatched to all its regions. Inside a region an event can only be consumed once. The semantics of the ThingML state machines is aligned with the semantics of UML2 statecharts and is specified and validated through a set of test cases which ensure that different code generators produce equivalent behaviours. 
+
+## Action and Expression language
 
 FIGURE
 
@@ -29,6 +37,8 @@ The figure below presents the ThingML `expressions`. In ThingML expressions are 
 FIGURE
 
 Up to this point, we have described the part of the ThingML metamodel which allow specifying `things`, describing their interfaces and implementing their behaviours. Figure 12 presents the configuration part of the ThingML metamodel which allows instantiating and connecting together a set of things in order to create an application.
+
+## Configurations
 
 ThingML `configurations` contain a set of `instances` and a set of `connectors`. The `ConfigInclude` class allows defining reusable groups of instances which can be shared between several applications. Instances have a name and are typed by a thing. The `ConfigPropertyAssig` class allows setting the values of the properties of the instantiated things. In case of read-only properties, the values are set only once at the initialization of the application and for regular dynamic properties, the values set in the configuration sets the initial value.
 
