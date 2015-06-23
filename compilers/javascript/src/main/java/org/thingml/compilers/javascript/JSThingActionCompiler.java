@@ -71,7 +71,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         if(action.isChangeable())
             builder.append("var ");
         else
-            builder.append("const");
+            builder.append("const ");
         builder.append(ctx.getVariableName(action));
         if (action.getInit() != null) {
             builder.append(" = ");

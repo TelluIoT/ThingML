@@ -38,10 +38,10 @@ public class JavaScriptThingApiCompiler extends ThingApiCompiler {
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._stop = function() {\n");
             builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".beginExit(this._initial_" + thing.allStateMachines().get(0).qname("_") + " );\n");
             //It seems the very root onEntry is not called
-            ctx.addMarker("useThis");
+            /*ctx.addMarker("useThis");
             if (thing.allStateMachines().get(0).getExit() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(thing.allStateMachines().get(0).getExit(), builder, ctx);
-            ctx.removerMarker("useThis");
+            ctx.removerMarker("useThis");*/
             //exit the rest
             builder.append("};\n\n");
 
@@ -51,8 +51,8 @@ public class JavaScriptThingApiCompiler extends ThingApiCompiler {
             ctx.addMarker("useThis");
             ctx.addContextAnnotation("thisRef", "this.");
             //execute onEntry of the root state machine
-            if (thing.allStateMachines().get(0).getEntry() != null)
-                ctx.getCompiler().getThingActionCompiler().generate(thing.allStateMachines().get(0).getEntry(), builder, ctx);
+            /*if (thing.allStateMachines().get(0).getEntry() != null)
+                ctx.getCompiler().getThingActionCompiler().generate(thing.allStateMachines().get(0).getEntry(), builder, ctx);*///Work around not needed anymore
             builder.append("this." + thing.allStateMachines().get(0).getName() + "_instance = new StateJS.StateMachineInstance(\"" + thing.allStateMachines().get(0).getName() + "_instance" + "\");\n");
             builder.append("StateJS.initialise( this." + thing.allStateMachines().get(0).qname("_") + ", this." +  thing.allStateMachines().get(0).getName() + "_instance" + " );\n");
 
