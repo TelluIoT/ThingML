@@ -53,22 +53,22 @@ In terms of dependencies the intended rule is that there should be NO DEPENDENCI
 
 As an example, the c code generator implements 2 compilers: one for generating a C project for linux and one for generating C for Arduino. Those two code generators share more than 95% of the code but also have a number of differences which have been implemented. Check out packages ``org.thingml.compilers.c`` and sub-packages ``posix`` and ``arduino`` to see how the common parts were factored and differences separated. Note that one additional difference is that defferent templates are used to "combine" the generated code. Templates can be found in folder ``src/main/ressources/ctemplates``.
 
-GETTING STARTED NOTE 1: Deciding on when to create a new modules, how to structure the code generators, when to use templates, etc. are always trade-offs and typically requires several iterations to provide a good solution. Your inputs are welcome and refactorings are always welcome. On the other hand, do not overthink the design up front, there is a good chance it will not be optimal anyways. Make a first version and then refactor and improve it.
+> GETTING STARTED NOTE 1: Deciding on when to create a new modules, how to structure the code generators, when to use templates, etc. are always trade-offs and typically requires several iterations to provide a good solution. Your inputs are welcome and refactorings are always welcome. On the other hand, do not overthink the design up front, there is a good chance it will not be optimal anyways. Make a first version and then refactor and improve it.
 
-GETTING STARTED NOTE 2: A good way of starting is to fork the repository and make your modifications directly in the existing modules. That will give you time to iterate on it and make a pull request when you are resonably happy with the solution you have implemented.
+> GETTING STARTED NOTE 2: A good way of starting is to fork the repository and make your modifications directly in the existing modules. That will give you time to iterate on it and make a pull request when you are resonably happy with the solution you have implemented.
 
 ### Deprescala
 
 Deprescala stands for deprecated scala compiler. This project contains the previous version of the ThingML compilers which were written in Scala. 90% of the functionality of these former compilers have been re-implemented in the new code generation framework. The last 10% will be re-introduced as we need them and the Deprescala project will be removed.
 
-NOTE: Take contact with us if your are interested to know and discuss why the new code generation framework was written in Java 7 and not in Scala. It is not by accident!
+> Take contact with us if your are interested to know and discuss why the new code generation framework was written in Java 7 and not in Scala. It is not by accident!
 
 
 ## Developping / Compiling the ThingML compilers
 
 Like the rest of the ThingML modules, the compilers are structures as Maven projects. All the source code is developped for Java compiler compliance 7 and compiled with Maven 3.
 
-NOTE: **We use compiler compliance Java 7 and NOT Java 8** This is not by accident or any kind denial of new technologies:-) Take contact is you want to argue. Also note that you can and should use a Java 8 JDK even if we use compiler compliance with Java 7.
+> **We use compiler compliance Java 7 and NOT Java 8** This is not by accident or any kind denial of new technologies:-) Take contact is you want to argue. Also note that you can and should use a Java 8 JDK even if we use compiler compliance with Java 7.
 
 ## Using the compilers from command line
 The best way to execute and test the latest versions of compilers while developping or modifying it is to use the command line compiler which is recompiled and regenerated whenever the registry project is built. The compilers are packaged as a fully standalone JAR in the ``compilers/registry/target`` directory. After the project has been built this directory will contain 2 JAR files, the one to use is ``compilers.registry-XXXXXXX-SNAPSHOT-jar-with-dependencies.jar`` (where XXXXXXX is a version number). This JAR file can be copied, moved or renamed without issues.
@@ -94,9 +94,9 @@ If you see this message but your compiler is not in the list, it means that your
 
 The options for the compiler are self-explainatory. First is the ID of the compiler (as listed in the compiler list), the second is the ThingML source file and the last is an output directory in which the compiler will output the generated code. The way the code is structured in the output directory varies from compilers to compilers but typically, a sub-directory with the name of the configuration will be created.
 
-NOTE 1: Remember that the compiler needs a Configuration to compile. Make sure that your ThingML source file contains a valid and complete configurations before calling the compiler.
+> Remember that the compiler needs a Configuration to compile. Make sure that your ThingML source file contains a valid and complete configurations before calling the compiler.
 
-NOTE 2: When calling the compiler, the output directory for the configuration and the output files will be overritten without warnings. You have been warned!
+> When calling the compiler, the output directory for the configuration and the output files will be overritten without warnings. You have been warned!
 
 ## Testing the compilers
 
