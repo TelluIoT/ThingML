@@ -66,9 +66,13 @@ Deprescala stands for deprecated scala compiler. This project contains the previ
 
 ## Developping / Compiling the ThingML compilers
 
-Like the rest of the ThingML modules, the compilers are structures as Maven projects. All the source code is developped for Java compiler compliance 7 and compiled with Maven 3.
+Like the rest of the ThingML modules, the compilers are structures as Maven projects. All the source code is developped for Java source compliance 7 and compiled with Maven 3.
 
 > **We use compiler compliance Java 7 and NOT Java 8** This is not by accident or any kind denial of new technologies:-) Take contact is you want to argue. Also note that you can and should use a Java 8 JDK even if we use compiler compliance with Java 7.
+
+From the command line run ``mvn clean install`` to rebuild the compilers.
+
+In terms of IDE, we recommend using an IDE which supports Maven properly. Netbeans 8 is a very good alternative, project should load, compile and execute without any fuss. Just make sure that your Netbeans has the Maven plugin installed (It is part of almost all Netbeans bundles but if it is missing just nstall it through the ``Tools->Plugin`` menu. Just serch for "maven"). IntelliJ IDEA is also a good option and should work out of the box. Eclipse is more tricky, avoid it if you do not have a good reason and/or know how to use it with Maven (it seems to have improved in the latest version but there is still some importation steps).
 
 ## Using the compilers from command line
 The best way to execute and test the latest versions of compilers while developping or modifying it is to use the command line compiler which is recompiled and regenerated whenever the registry project is built. The compilers are packaged as a fully standalone JAR in the ``compilers/registry/target`` directory. After the project has been built this directory will contain 2 JAR files, the one to use is ``compilers.registry-XXXXXXX-SNAPSHOT-jar-with-dependencies.jar`` (where XXXXXXX is a version number). This JAR file can be copied, moved or renamed without issues.
