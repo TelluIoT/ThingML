@@ -80,7 +80,7 @@ To get started clone the whole ThingML repository on your machine (you need Git 
 
 > If you intend to commit your changes at some point it might be a good idea to fork the repository on Github first so that you have your own copy of the repository which can be later merged back into the "master" ThingML repository (using pull requests).
 
-Once you have a local copy of the ThingML repository, open the compilers project in your favorite IDE. This is the root project for all compiler modules.
+Once you have a local copy of the ThingML repository, open the compilers project in your favorite IDE. This is the root project for all compiler modules. If you have Java 7 or greater installed, Maven, Git and a maven compliant IDE,there should be no extra steps to get a working developement environment. Try rebuilding the project to make sure everything is setup properly.
 
 ## Using the compilers from command line
 The best way to execute and test the latest versions of compilers while developping or modifying it is to use the command line compiler which is recompiled and regenerated whenever the registry project is built. The compilers are packaged as a fully standalone JAR in the ``compilers/registry/target`` directory. After the project has been built this directory will contain 2 JAR files, the one to use is ``compilers.registry-XXXXXXX-SNAPSHOT-jar-with-dependencies.jar`` (where XXXXXXX is a version number). This JAR file can be copied, moved or renamed without issues.
