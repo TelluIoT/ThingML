@@ -13,6 +13,17 @@ The ThingML code generation framework is structured in a set of modules. The fig
 
 The sections bellow provide some more information on the different modules and how to extend them.
 
+### Compilers architecture
+
+The architecture for the code generation framework is composed of:
+* A compiler abstract class and inheritance hierarchy
+* The ThingML model representing the program to compile
+* A set of shared "helper" functions within the metamodel
+* A compiler context class
+* A set of abstract classes corresponding to the 
+* 
+<p align="center"><img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/docs/design.jpg" alt="Compilers Architecture" width="600"></p>
+
 ### Framework
 
 The idea of the code generation framework is to provide a way to independently customize different extension points. The figure below presents the 8 different extenssion points we have identified. Current implementation of the framework supports customizing all those extenssion point. However, at this point all developpers are encouraged to propose and implement refactactorinig in order to make the APIs clear and as decoupled as possible from each others.
