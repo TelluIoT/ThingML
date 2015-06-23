@@ -68,7 +68,7 @@ NOTE: Take contact with us if your are interested to know and discuss why the ne
 
 Like the rest of the ThingML modules, the compilers are structures as Maven projects. All the source code is developped for Java compiler compliance 7 and compiled with Maven 3.
 
-NOTE 1: ** We use compiler compliance Java 7 and NOT Java 8 ** This is not by accident or any kind denial of new technologies:-) Take contact is you want to argue. Also note that you can and should use a Java 8 JDK even if we use compiler compliance with Java 7.
+NOTE: **We use compiler compliance Java 7 and NOT Java 8** This is not by accident or any kind denial of new technologies:-) Take contact is you want to argue. Also note that you can and should use a Java 8 JDK even if we use compiler compliance with Java 7.
 
 ## Using the compilers from command line
 The best way to execute and test the latest versions of compilers while developping or modifying it is to use the command line compiler which is recompiled and regenerated whenever the registry project is built. The compilers are packaged as a fully standalone JAR in the ``compilers/registry/target`` directory. After the project has been built this directory will contain 2 JAR files, the one to use is ``compilers.registry-XXXXXXX-SNAPSHOT-jar-with-dependencies.jar`` (where XXXXXXX is a version number). This JAR file can be copied, moved or renamed without issues.
