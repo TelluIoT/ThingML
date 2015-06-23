@@ -55,7 +55,7 @@ As an example, the c code generator implements 2 compilers: one for generating a
 
 GETTING STARTED NOTE 1: Deciding on when to create a new modules, how to structure the code generators, when to use templates, etc. are always trade-offs and typically requires several iterations to provide a good solution. Your inputs are welcome and refactorings are always welcome. On the other hand, do not overthink the design up front, there is a good chance it will not be optimal anyways. Make a first version and then refactor and improve it.
 
-GETTING STARTED NOTE 2: On good way of starting is to fork the repository and make your modifications directly in the existing modules. That will give you time to iterate on it and make a pull request when you are resonably happy with the solution you have implemented.
+GETTING STARTED NOTE 2: A good way of starting is to fork the repository and make your modifications directly in the existing modules. That will give you time to iterate on it and make a pull request when you are resonably happy with the solution you have implemented.
 
 ### Deprescala
 
