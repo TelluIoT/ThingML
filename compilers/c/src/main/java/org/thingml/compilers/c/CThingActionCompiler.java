@@ -108,8 +108,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                 PropertyReference pr  = (PropertyReference)action.getInit();
                 if (pr.getProperty().getCardinality() != null) {
                     //the target is indeed an array
-                    builder.append("int i = 0;\n");
-                    builder.append("for(i = 0; i < sizeof(" + action.getName() + ") / sizeof(" + context.getCType(action.getType()) + "); i++) {\n");
+                    builder.append("for(int i = 0; i < sizeof(" + action.getName() + ") / sizeof(" + context.getCType(action.getType()) + "); i++) {\n");
                     builder.append(action.getName() + "[i] = ");
                     String propertyName2 = "";
                     if (pr.getProperty() instanceof Parameter) {

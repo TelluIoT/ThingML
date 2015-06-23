@@ -49,6 +49,11 @@ public class Main {
             return;
         }
 
+        System.out.print("Running " + args[0] + " " + args[1]);
+        if (args.length == 3)
+            System.out.print(" " + args[2]);
+        System.out.println();
+
         ThingMLCompiler compiler = registry.createCompilerInstanceByName(args[0].trim());
 
         if (compiler == null) {

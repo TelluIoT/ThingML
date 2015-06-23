@@ -14,22 +14,13 @@
 # limitations under the License.
 #
 
-import tempfile
 import os
 import sys
-import re
 import exrex
 from os import listdir
 from os.path import isfile, join
-from fileUtilities import insertLine
-from fileUtilities import insertLineBefore
-from fileUtilities import find
-from fileUtilities import findAfter
-from fileUtilities import replaceLine
 
-from htmldump import dumpHTML
-
-from os.path import expanduser
+from easyprocess import Proc
 
 def load_src(name, fpath):
 	import os, imp
@@ -43,14 +34,20 @@ def generic_compile(type):
 		os.system("make")
 	if type == "Java":
 		os.system("mvn clean package")
+	if type == "Arduino":
+		os.system("mkdir src")
+		os.system("mv *.* src/")
+		os.system("cp ../../../../src/test/resources/Time.cpp src/Time.cpp")
+		os.system("cp ../../../../src/test/resources/Time.h src/Time.h")
+		os.system("ino build && ino upload")
 
-def generic_execute(type,capitalizedName,resultCounter):
+def generic_execute(type,capitalizedName, fileName):
 	if type == "Linux":
 		os.system("./"+capitalizedName)
 	if type == "Arduino":
-		os.system("ino build")
-		newdump = open('dump','w')
-		newdump.close()
+		stdout=Proc("ino serial > ../../../dump/" + fileName + type + ".dump").call(timeout=15).stdout
+		print(stdout)
+		#os.system("ino serial > ../../../dump/" + fileName + type + ".dump")
 	if type == "Java":
 		os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
 	if type == "Javascript":
@@ -60,8 +57,6 @@ fileName = sys.argv[1]
 rootDirectory = os.getcwd()
 print("Starting test in "+rootDirectory)
 
-#os.chdir(r"../../../../org.thingml.cmd")
-#compilerDirectory = os.getcwd()
 os.chdir("../../../")
 print("Compiling test in "+ os.getcwd())
 if not os.path.exists("target/tmp"):
@@ -89,9 +84,6 @@ testsDirectory = os.getcwd()
 print("Getting thingml file in "+testsDirectory)
 from Parser import Parser
 from Tester import Tester
-from PerfTester import PerfTester
-
-
 
 #Getting expected results
 os.chdir(testsDirectory)
@@ -116,6 +108,8 @@ for (a,b) in results:
 			compiler = "posix"
 		if type == "Java":
 			compiler = "java"
+		if type == "Arduino":
+			compiler = "arduino"
 
 		if deleteTemporaryFiles and os.path.exists(capitalizedName):
 			os.system("rm -r ../../../../../target/tmp/_"+smallType+"/")
@@ -125,11 +119,10 @@ for (a,b) in results:
 			os.system("mvn -f ../../../../../../compilers/registry/pom.xml exec:java -Dexec.mainClass=\"org.thingml.compilers.commandline.Main\" -Dexec.args=\""+compiler+" ../_"+smallType+"/"+fileName+".thingml ../../../../../target/tmp/_" + smallType+"/"+capitalizedName + "\"")
 
 		dump=open(dumpDir+'/target/dump/'+fileName+type+'.dump', 'a')
-		#if os.path.exists("tmp/ThingML_"+type+"/"+capitalizedName):
 		os.chdir(testsDirectory + "/../../../../../target/tmp/_"+smallType+"/"+capitalizedName)
 
 		generic_compile(type)
-		generic_execute(type,capitalizedName,resultCounter)
+		generic_execute(type,capitalizedName, fileName)
 
 		try:
 			f = open('dump', 'r')
@@ -140,8 +133,6 @@ for (a,b) in results:
 		except IOError:
 			dump.write("ErrorAtCompilation\n")
 		os.chdir("..")
-		#else:
-		#	dump.write("NoSourceCodeFound\n")
 		dump.close()
 	resultCounter = resultCounter + 1
 os.chdir(rootDirectory)
