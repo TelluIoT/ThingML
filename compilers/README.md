@@ -37,7 +37,6 @@ The figure above presents the 8 extension points of the ThingML code generation 
 
 (8) Project structure / build script: The last variation point is not generating code as such but the required file structure and build scripts in order to make the generated code well packaged  and easy to compile and deploy on the target platform. The ThingML code generation framework provides access to all the buffers in which the code has been generated and allows creating the file structure which fits the particular target platform. For example, the Arduino compiler concatenates all the generated code into a single file which can be opened by the Arduino IDE. The Linux C code generator creates separate C modules with header files and generates a Makefile to compile the application. The Java and Scala code generators create Maven project and pom.xml files in order to allow compiling and deploying the generated code. The platform expert can customize the project structure and build scripts in order to fit the best practices of the target platform.
 
-
 ### Registry
 
 The registry project is a very a small project which simply provides a place to register all different compilers. The registry project has dependencies to all code generator modules and a simple API to list and instanciate the compilers. All the menus listing the compilers in the standalone editor as well as in eclipse are generated based on the content of the registry. That means that as soon as your code generator is registered in the Registry, it will appear and be avalable in all the ThingML tools.
@@ -47,6 +46,16 @@ To add your compiler to the registry edit class ``org.thingml.compilers.registry
 The registry project also provide a simple command line interface to call the code generators. See the section "Using the compilers from command line" below for information on how to use it.
 
 ### C / java / javascript / uml
+
+The c, java, javascript and uml sub-modules contatain the actual implementation of the different code generator. This idea is not to make one module per code generator but one module per "target language" or familly of "target platforms". within each module there might be a set of variants of the code generators and new variants may be added by platform experts in order to support a new platform or a fit the requirements of a particular project.
+
+In terms of dependencies the intended rule is that there should be NO DEPENDENCIES between the different compiler modules. Anyting that is common and can be shared should be put in the framework modules. Make the effort of promoting things which are re-used in the framework and avoid duplicating code in separate modules.
+
+As an example, the c code generator implements 2 compilers: one for generating a C project for linux and one for generating C for Arduino. Those two code generators share more than 95% of the code but also have a number of differences which have been implemented. Check out packages ``org.thingml.compilers.c`` and sub-packages ``posix`` and ``arduino`` to see how the common parts were factored and differences separated. Note that one additional difference is that defferent templates are used to "combine" the generated code. Templates can be found in folder ``src/main/ressources/ctemplates``.
+
+GETTING STARTED NOTE 1: Deciding on when to create a new modules, how to structure the code generators, when to use templates, etc. are always trade-offs and typically requires several iterations to provide a good solution. Your inputs are welcome and refactorings are always welcome. On the other hand, do not overthink the design up front, there is a good chance it will not be optimal anyways. Make a first version and then refactor and improve it.
+
+GETTING STARTED NOTE 2: On good way of starting is to fork the repository and make your modifications directly in the existing modules. That will give you time to iterate on it and make a pull request when you are resonably happy with the solution you have implemented.
 
 ### Deprescala
 
