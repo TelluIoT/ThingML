@@ -75,8 +75,10 @@ From the command line run ``mvn clean install`` to rebuild the compilers.
 In terms of IDE, we recommend using an IDE which supports Maven properly. Netbeans 8 is a very good alternative, project should load, compile and execute without any fuss. Just make sure that your Netbeans has the Maven plugin installed (It is part of almost all Netbeans bundles but if it is missing just nstall it through the ``Tools->Plugin`` menu. Just serch for "maven"). IntelliJ IDEA is also a good option and should work out of the box. Eclipse is more tricky, avoid it if you do not have a good reason and/or know how to use it with Maven (it seems to have improved in the latest version but there is still some importation steps).
 
 To get started clone the whole ThingML repository on your machine (you need Git installed)
+
      git clone https://github.com/SINTEF-9012/ThingML.git
-> If you inetend to commit your changes at some point it might be a good idea to fork the repository on Github first so that you have your own copy of the repository which can be later merged back into the "master" ThingML repository (using pull resuests).
+
+> If you intend to commit your changes at some point it might be a good idea to fork the repository on Github first so that you have your own copy of the repository which can be later merged back into the "master" ThingML repository (using pull requests).
 
 Once you have a local copy of the ThingML repository, open the compilers project in your favorite IDE. This is the root project for all compiler modules.
 
