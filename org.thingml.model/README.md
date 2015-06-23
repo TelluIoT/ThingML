@@ -40,7 +40,7 @@ The `send action` and `external statement` are more specific to ThingML. The sen
 The figure below presents the ThingML `expressions`. In ThingML expressions are used to express conditions and calculations within ThingML functions and state machines. The ThingML expressions include typical expressions for literals, basic arithmetic operations and use of variables and functions. There are two types of expression which are specific to ThingML: the `external expression` and the `event reference`. The event reference expression allows referring to the data contained in messages when writing the actions associated to transitions.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/org.thingml.model/docs/thingml_expressions.png" alt="ThingML Expressions" width="600">
+  <img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/org.thingml.model/docs/thingml_expressions.png" alt="ThingML Expressions" width="800">
 </p>
 
 Up to this point, we have described the part of the ThingML metamodel which allow specifying `things`, describing their interfaces and implementing their behaviours. Figure 12 presents the configuration part of the ThingML metamodel which allows instantiating and connecting together a set of things in order to create an application.
