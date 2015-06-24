@@ -125,12 +125,18 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 builder.append(i.getName() + ".build();\n");
             }
         }
+
+        String prefix = "";
+        if (useThis) {
+            prefix = "this.";
+        }
+
         for (Connector c : cfg.allConnectors()) {
             for(Message req : c.getRequired().getReceives()) {
                 for (Message prov : c.getProvided().getSends()) {
                     if(req.getName().equals(prov.getName())) {
-                        builder.append(c.getSrv().getInstance().getName() + ".get" + ctx.firstToUpper(prov.getName()) + "on" + c.getProvided().getName() + "Listeners().push(");
-                        builder.append(c.getCli().getInstance().getName() + ".receive" + req.getName() + "On" + c.getRequired().getName() + ".bind(" + c.getCli().getInstance().getName() + ")");
+                        builder.append(prefix + c.getSrv().getInstance().getName() + ".get" + ctx.firstToUpper(prov.getName()) + "on" + c.getProvided().getName() + "Listeners().push(");
+                        builder.append(prefix + c.getCli().getInstance().getName() + ".receive" + req.getName() + "On" + c.getRequired().getName() + ".bind(" + prefix + c.getCli().getInstance().getName() + ")");
                         builder.append(");\n");
                         break;
                     }
@@ -139,8 +145,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             for(Message req : c.getProvided().getReceives()) {
                 for (Message prov : c.getRequired().getSends()) {
                     if(req.getName().equals(prov.getName())) {
-                        builder.append(c.getCli().getInstance().getName() + ".get" + ctx.firstToUpper(prov.getName()) + "on" + c.getRequired().getName() + "Listeners().push(");
-                        builder.append(c.getSrv().getInstance().getName() + ".receive" + req.getName() + "On" + c.getProvided().getName() + ".bind(" + c.getSrv().getInstance().getName() + ")");
+                        builder.append(prefix + c.getCli().getInstance().getName() + ".get" + ctx.firstToUpper(prov.getName()) + "on" + c.getRequired().getName() + "Listeners().push(");
+                        builder.append(prefix + c.getSrv().getInstance().getName() + ".receive" + req.getName() + "On" + c.getProvided().getName() + ".bind(" + prefix + c.getSrv().getInstance().getName() + ")");
                         builder.append(");\n");
                         break;
                     }

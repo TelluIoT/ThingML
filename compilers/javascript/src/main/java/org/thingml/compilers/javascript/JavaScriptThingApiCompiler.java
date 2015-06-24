@@ -36,13 +36,11 @@ public class JavaScriptThingApiCompiler extends ThingApiCompiler {
             //Lifecycle
             builder.append("//Public API for lifecycle management\n");
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._stop = function() {\n");
-            builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".beginExit(this._initial_" + thing.allStateMachines().get(0).qname("_") + " );\n");
-            //It seems the very root onEntry is not called
-            /*ctx.addMarker("useThis");
+            builder.append("this.ready = false;\n");
+            ctx.addMarker("useThis");
             if (thing.allStateMachines().get(0).getExit() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(thing.allStateMachines().get(0).getExit(), builder, ctx);
-            ctx.removerMarker("useThis");*/
-            //exit the rest
+            ctx.removerMarker("useThis");
             builder.append("};\n\n");
 
             //Communication

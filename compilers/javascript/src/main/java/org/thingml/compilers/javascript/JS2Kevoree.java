@@ -197,7 +197,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
             for(Port p : (List<Port>)e.getValue()) {
                 for(Message m : p.getReceives()) {
                     builder.append(",\nin_" + shortName(i, p, m) + "_in: function (msg) {\n");
-                    builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(msg.split(' ;'));\n");
+                    builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(msg.split(';'));\n");
                     builder.append("}");
                 }
             }
@@ -207,7 +207,17 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
             final Instance i = (Instance) e.getKey();
             for(Port p : (List<Port>)e.getValue()) {
                 for(Message m : p.getSends()) {
-                    builder.append(",\n" + shortName(i, p, m) + "_proxy: function() {this.out_" + shortName(i, p, m) + "_out(Array.prototype.slice.call(arguments).join('; '));}");
+                    builder.append(",\n" + shortName(i, p, m) + "_proxy: function() {this.out_" + shortName(i, p, m) + "_out(");
+                    int index = 0;
+                    for(Parameter pa : m.getParameters()) {
+                        if (index > 0)
+                            builder.append(" + ';' + ");
+                        builder.append("arguments[" + index + "]");
+                        index++;
+                    }
+                    if (index > 1)
+                        builder.append("''");
+                    builder.append(");}");
                     builder.append(",\nout_" + shortName(i, p, m) + "_out: function(msg) {/* This will be overwritten @runtime by Kevoree JS */}");
                 }
             }
