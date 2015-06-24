@@ -31,26 +31,6 @@ import java.util.Map;
  */
 public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
-    private void updateMainGruntfile(Configuration cfg, Port p, Context ctx) {
-        try {
-            final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/" + cfg.getName() + "/Gruntfile.js");
-            final List<String> packLines = IOUtils.readLines(input);
-            String pack = "";
-            for (String line : packLines) {
-                pack += line + "\n";
-            }
-            input.close();
-            pack = pack.replace("mergeLocalLibraries: [", "mergeLocalLibraries: ['../" + p.getName() + "'");//FIXME: won't work if more than two (we need to add a comma
-
-            final File f = new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/Gruntfile.js");
-            final OutputStream output = new FileOutputStream(f);
-            IOUtils.write(pack, output);
-            IOUtils.closeQuietly(output);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void generateKevScript(Context ctx, Configuration cfg) {
         StringBuilder kevScript = ctx.getBuilder(cfg.getName() + "/kevs/main.kevs" );
         kevScript.append("//create a default JavaScript node\n");
@@ -64,6 +44,12 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
         kevScript.append("//instantiate Kevoree/ThingML components\n");
         kevScript.append("add node0." + cfg.getName() + "_0 : my.package." + cfg.getName() + "\n");
+
+        for(String k : ctx.getCurrentConfiguration().annotation("kevscript_import")) {
+            kevScript.append(k);
+        }
+        if(ctx.getCurrentConfiguration().hasAnnotation("kevscript_import"))
+            kevScript.append("\n");
 
         kevScript.append("start sync\n");
         kevScript.append("//start node0\n\n");
@@ -93,6 +79,15 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
                 pom += line + "\n";
             }
             input.close();
+            String dep = "";
+            int i = 0;
+            for(String d : ctx.getCurrentConfiguration().annotation("kevoree_import")) {
+                if (i > 0)
+                    dep+= ", ";
+                dep += "'../" + d + "'";
+                i++;
+            }
+            pom = pom.replace("mergeLocalLibraries: []", "mergeLocalLibraries: [" + dep + "]");
             final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/" + outputdir +  "/Gruntfile.js")));
             w.println(pom);
             w.close();
