@@ -87,9 +87,9 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                             EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
                             StringBuilder tempbuilder = new StringBuilder();
                             if (enumL == null) {
-                                tempbuilder.append("Enum." + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enum_.getLiterals().get(0).getName().toUpperCase());
+                                tempbuilder.append("Enum." + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getLiterals().get(0).getName().toUpperCase());
                             } else {
-                                tempbuilder.append("Enum" + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enumL.getLiteral().getName().toUpperCase());
+                                tempbuilder.append("Enum" + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enumL.getLiteral().getName().toUpperCase());
                             }
                             result += tempbuilder.toString();
                         } else {
