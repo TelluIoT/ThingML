@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c.posix;
+package org.thingml.compilers.c.sintefboard;
 
+import org.thingml.compilers.c.posix.*;
 import org.sintef.thingml.ErrorAction;
 import org.sintef.thingml.PrintAction;
 import org.thingml.compilers.Context;
@@ -23,7 +24,7 @@ import org.thingml.compilers.c.CThingActionCompiler;
 /**
  * Created by ffl on 11.06.15.
  */
-public class CThingActionCompilerPosix extends CThingActionCompiler {
+public class CThingActionCompilerSintefboard extends CThingActionCompiler {
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {

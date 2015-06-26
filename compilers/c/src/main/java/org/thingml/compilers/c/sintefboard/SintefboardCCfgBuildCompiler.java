@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c.posix;
+package org.thingml.compilers.c.sintefboard;
 
+import org.thingml.compilers.c.posix.*;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
@@ -25,7 +26,7 @@ import org.thingml.compilers.c.CCompilerContext;
 /**
  * Created by ffl on 17.06.15.
  */
-public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
+public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
 
 
     @Override

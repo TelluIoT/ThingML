@@ -20,6 +20,7 @@ package org.thingml.compilers.registry;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.arduino.ArduinoCompiler;
 import org.thingml.compilers.c.posix.PosixCompiler;
+import org.thingml.compilers.c.sintefboard.SintefboardCompiler;
 import org.thingml.compilers.javascript.EspruinoCompiler;
 import org.thingml.compilers.javascript.JavaScriptCompiler;
 import org.thingml.compilers.java.JavaCompiler;
@@ -41,6 +42,7 @@ public class ThingMLCompilerRegistry {
             instance =  new ThingMLCompilerRegistry();
             instance.addCompiler(new ArduinoCompiler());
             instance.addCompiler(new PosixCompiler());
+            instance.addCompiler(new SintefboardCompiler());
             instance.addCompiler(new JavaCompiler());
             instance.addCompiler(new EspruinoCompiler());
             instance.addCompiler(new JavaScriptCompiler());

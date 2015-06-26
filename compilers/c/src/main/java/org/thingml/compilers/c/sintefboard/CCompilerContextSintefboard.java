@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c.posix;
+package org.thingml.compilers.c.sintefboard;
 
+import org.thingml.compilers.c.posix.*;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 
 /**
  * Created by ffl on 11.06.15.
  */
-public class CCompilerContextPosix extends CCompilerContext {
+public class CCompilerContextSintefboard extends CCompilerContext {
 
-    public CCompilerContextPosix(ThingMLCompiler c) {
+    public CCompilerContextSintefboard(ThingMLCompiler c) {
         super(c);
     }
 

@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c.posix;
+package org.thingml.compilers.c.sintefboard;
 
+import org.thingml.compilers.c.posix.*;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
@@ -29,31 +30,31 @@ import org.thingml.compilers.c.CCompilerContext;
 import java.io.File;
 
 /**
- * Created by ffl on 25.11.14.
+ * Created by steffend on 26.06.15.
  */
-public class PosixCompiler extends OpaqueThingMLCompiler {
+public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
-    public PosixCompiler() {
+    public SintefboardCompiler() {
         super(new CThingActionCompilerPosix(), new CThingApiCompiler(), new CCfgMainGenerator(), new PosixCCfgBuildCompiler(), new CThingImplCompiler());
     }
 
     @Override
     public ThingMLCompiler clone() {
-        return new PosixCompiler();
+        return new SintefboardCompiler();
     }
 
     @Override
     public String getID() {
-        return "posix";
+        return "sintefboard";
     }
 
     @Override
     public String getName() {
-        return "C/C++ for Linux / Posix";
+        return "C/C++ for Cypress PSOC3";
     }
 
     public String getDescription() {
-        return "Generates C/C++ code for Linux or other Posix runtime environments (GCC compiler).";
+        return "Copy og Posix C => Will be: Generates C/C++ code for Cypress PSCO3 environments (GCC compiler).";
     }
 
     @Override
