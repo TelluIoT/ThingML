@@ -171,6 +171,13 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     ctx.appendFormalParameters(t, builder, m);
                     builder.append("{\n");
 
+//Network forwarding
+String forwardfunction ="//";
+forwardfunction += cfg.annotation("c_external_send");
+forwardfunction += "\n";
+if(cfg.hasAnnotation("c_external_send")) forwardfunction += "//hasAnnotation\n";
+builder.append(forwardfunction);
+//Local enqueue
                     if (ctx.sync_fifo()) builder.append("fifo_lock();\n");
 
                     builder.append("if ( fifo_byte_available() > " + ctx.getMessageSerializationSize(m) + " ) {\n\n");
@@ -197,6 +204,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     }
 
                     if (ctx.sync_fifo()) builder.append("fifo_unlock_and_notify();\n");
+
+// End Local enqueue
 
                     builder.append("}\n");
 
@@ -269,7 +278,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
         ctx.clearConcreteThing();
-
+        
+        builder.append("byte param_buf[" + (max_msg_size - 2) + "];\n");
+        
         // Allocate a buffer to store the message bytes.
         // Size of the buffer is "size-2" because we have already read 2 bytes
         builder.append("byte mbuf[" + (max_msg_size - 2) + "];\n");
@@ -300,7 +311,26 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     // builder.append("Serial.println(\"FW MSG "+m.getName+"\");\n"
 
                     if (ctx.sync_fifo()) builder.append("fifo_unlock();\n");
-
+                    
+                    // Begin Horrible deserialization trick
+                    int idx_bis = 2;
+                    
+                    for (Parameter pt : m.getParameters()) {
+                        for(int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
+                            builder.append("param_buf[" + (idx_bis + ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                            builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
+                        }
+                        
+                        
+                        builder.append(ctx.getCType(pt.getType()) + " * p_" + m.getName() + "_" + pt.getName() +";\n");
+                        builder.append("p_" + m.getName() + "_" + pt.getName() +" = (" + ctx.getCType(pt.getType()) + " *) &(param_buf[" + idx_bis + "]);\n");
+                        
+                        
+                        
+                        idx_bis = idx_bis + ctx.getCByteSize(pt.getType(), 0);
+                    }
+                    // End Horrible deserialization trick
+                    
                     builder.append("dispatch_" + ctx.getSenderName(t, p, m) + "(");
                     builder.append("(struct " + ctx.getInstanceStructName(t) + "*)");
                     builder.append("instance_by_id((mbuf[0] << 8) + mbuf[1]) /* instance */");
@@ -308,7 +338,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     int idx = 2;
 
                     for (Parameter pt : m.getParameters()) {
-                        builder.append(",\n" + ctx.deserializeFromByte(pt.getType(), "mbuf", idx, ctx) + " /* " + pt.getName() + " */ ");
+                        //builder.append(",\n" + ctx.deserializeFromByte(pt.getType(), "mbuf", idx, ctx) + " /* " + pt.getName() + " */ ");
+                        builder.append(",\n *p_" + m.getName() + "_" + pt.getName() +" /* " + pt.getName() + " */ ");
                         idx = idx + ctx.getCByteSize(pt.getType(), 0);
                     }
 
@@ -352,7 +383,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                             builder.append("dispatch_" + ctx.getSenderName(t, port, msg) + ");\n");
                         }
                         else {
-                            // This is to enquqe the message and let the scheduler forward it
+                            // This is to enqueue the message and let the scheduler forward it
                             builder.append("enqueue_" + ctx.getSenderName(t, port, msg) + ");\n");
                         }
                     }
@@ -439,6 +470,12 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
     }
     */
     // Call the initialization function
+    if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
+        if(ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
+            builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next()+ ".begin(9600);\n");
+        }
+    }
+    
     builder.append("initialize_configuration_" + cfg.getName() + "();\n");
 
     // Serach for the ThingMLSheduler Thing

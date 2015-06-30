@@ -334,10 +334,12 @@ public abstract class CCompilerContext extends Context {
             throw  new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
         }
         else {
+            builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
             while (i > 0) {
                 i = i - 1;
-                if (i == 0) builder.append("_fifo_enqueue(" + v + " & 0xFF);\n");
-                else builder.append("_fifo_enqueue((" + v + ">>" + (8 * i) + ") & 0xFF);\n");
+                //if (i == 0) 
+                builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
+                //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
             }
         }
     }
