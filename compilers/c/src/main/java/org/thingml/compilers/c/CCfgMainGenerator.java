@@ -316,15 +316,15 @@ builder.append(forwardfunction);
                     int idx_bis = 2;
                     
                     for (Parameter pt : m.getParameters()) {
-                        builder.append("union u_" + m.getName() + "_" + pt.getName() +"_t {\n");
+                        builder.append("union u_" + t.getName() + "_" + p.getName() + "_" + m.getName() + "_" + pt.getName() +"_t {\n");
                         builder.append(ctx.getCType(pt.getType()) + " p;\n");
                         builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
-                        builder.append("} u_" + m.getName() + "_" + pt.getName() +";\n");
+                        builder.append("} u_" + t.getName() + "_" + p.getName() + "_" + m.getName() + "_" + pt.getName() +";\n");
                         
                         
                         for(int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
                             
-                            builder.append("u_" + m.getName() + "_" + pt.getName() +".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                            builder.append("u_" + t.getName() + "_" + p.getName() + "_" + m.getName() + "_" + pt.getName() +".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
                             builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
                             
                             //builder.append("param_buf[" + (idx_bis + ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
@@ -349,7 +349,7 @@ builder.append(forwardfunction);
 
                     for (Parameter pt : m.getParameters()) {
                         //builder.append(",\n" + ctx.deserializeFromByte(pt.getType(), "mbuf", idx, ctx) + " /* " + pt.getName() + " */ ");
-                        builder.append(",\n u_" + m.getName() + "_" + pt.getName() +".p /* " + pt.getName() + " */ ");
+                        builder.append(",\n u_" + t.getName() + "_" + p.getName() + "_" + m.getName() + "_" + pt.getName() +".p /* " + pt.getName() + " */ ");
                         idx = idx + ctx.getCByteSize(pt.getType(), 0);
                     }
 
@@ -469,6 +469,14 @@ builder.append(forwardfunction);
         }
     }
 
+protected void generateInitializationNetworkCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    
+    /*for (Connector co : cfg.getConnectors()) {
+        if
+    }*/
+    
+    }
+    
 protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
     ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
@@ -479,13 +487,17 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
       builder append context.init_debug_mode() + "\n"
     }
     */
-    // Call the initialization function
+    //Initialize stdout if needed (for arduino)
     if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
         if(ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
             builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next()+ ".begin(9600);\n");
         }
     }
     
+    //Initialize network connections if needed
+    generateInitializationNetworkCode(cfg, builder, ctx);
+    
+    // Call the initialization function
     builder.append("initialize_configuration_" + cfg.getName() + "();\n");
 
     // Serach for the ThingMLSheduler Thing
