@@ -279,7 +279,7 @@ builder.append(forwardfunction);
         }
         ctx.clearConcreteThing();
         
-        builder.append("byte param_buf[" + (max_msg_size - 2) + "];\n");
+        //builder.append("uint8_t param_buf[" + (max_msg_size - 2) + "];\n");
         
         // Allocate a buffer to store the message bytes.
         // Size of the buffer is "size-2" because we have already read 2 bytes
@@ -316,14 +316,24 @@ builder.append(forwardfunction);
                     int idx_bis = 2;
                     
                     for (Parameter pt : m.getParameters()) {
+                        builder.append("union u_" + m.getName() + "_" + pt.getName() +"_t {\n");
+                        builder.append(ctx.getCType(pt.getType()) + " p;\n");
+                        builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
+                        builder.append("} u_" + m.getName() + "_" + pt.getName() +";\n");
+                        
+                        
                         for(int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
-                            builder.append("param_buf[" + (idx_bis + ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                            
+                            builder.append("u_" + m.getName() + "_" + pt.getName() +".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
                             builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
+                            
+                            //builder.append("param_buf[" + (idx_bis + ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                            //builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
                         }
                         
                         
-                        builder.append(ctx.getCType(pt.getType()) + " * p_" + m.getName() + "_" + pt.getName() +";\n");
-                        builder.append("p_" + m.getName() + "_" + pt.getName() +" = (" + ctx.getCType(pt.getType()) + " *) &(param_buf[" + idx_bis + "]);\n");
+                        //builder.append(ctx.getCType(pt.getType()) + " * p_" + m.getName() + "_" + pt.getName() +";\n");
+                        //builder.append("p_" + m.getName() + "_" + pt.getName() +" = (" + ctx.getCType(pt.getType()) + " *) &(param_buf[" + idx_bis + "]);\n");
                         
                         
                         
@@ -339,7 +349,7 @@ builder.append(forwardfunction);
 
                     for (Parameter pt : m.getParameters()) {
                         //builder.append(",\n" + ctx.deserializeFromByte(pt.getType(), "mbuf", idx, ctx) + " /* " + pt.getName() + " */ ");
-                        builder.append(",\n *p_" + m.getName() + "_" + pt.getName() +" /* " + pt.getName() + " */ ");
+                        builder.append(",\n u_" + m.getName() + "_" + pt.getName() +".p /* " + pt.getName() + " */ ");
                         idx = idx + ctx.getCByteSize(pt.getType(), 0);
                     }
 
