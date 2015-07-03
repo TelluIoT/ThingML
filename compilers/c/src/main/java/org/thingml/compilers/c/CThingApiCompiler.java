@@ -144,6 +144,12 @@ public class CThingApiCompiler extends ThingApiCompiler {
                 builder.append("void (*_listener)");
                 ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append(");\n");
+                
+                //external
+                builder.append("void register_external_" + ctx.getSenderName(thing, port, msg) + "_listener(");
+                builder.append("void (*_listener)");
+                ctx.appendFormalTypeSignature(thing, builder, msg);
+                builder.append(");\n");
 
             }
         }

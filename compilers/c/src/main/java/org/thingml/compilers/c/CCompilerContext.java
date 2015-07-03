@@ -141,7 +141,7 @@ public abstract class CCompilerContext extends Context {
     protected Hashtable<Thing, Hashtable<Port, Hashtable<Message,Integer>>> handlerCodes = new Hashtable<Thing, Hashtable<Port, Hashtable<Message,Integer>>>();
     protected int handlerCodeCpt = 1;
 
-    public int getHandlerCode(Thing t, Port p, Message m) {
+    public int getHandlerCode(Configuration cfg, Thing t, Port p, Message m) {
 
         Hashtable<Port, Hashtable<Message,Integer>> handler_codes = handlerCodes.get(t);
         if (handler_codes == null) {
@@ -157,8 +157,44 @@ public abstract class CCompilerContext extends Context {
 
         Integer result = table.get(m);
         if (result == null) {
-            result = handlerCodeCpt;
-            handlerCodeCpt += 1;
+            if(m.hasAnnotation("code")) {
+                result = Integer.parseInt(m.annotation("code").iterator().next());
+                if (result == null) {
+                    System.err.println("Warning: @code must contain an Integer for message:" + m.getName());
+                }
+            } else {
+                boolean codeIsFree = false;
+                
+                while(!codeIsFree && (handlerCodeCpt < 65535)) {
+                    codeIsFree = true;
+                    for(Thing th : cfg.allThings()) {
+                        for(Port po : th.allPorts()) {
+                            for(Message me : po.getReceives()) {
+                                if(me.hasAnnotation("code")) {
+                                    if(Integer.parseInt(me.annotation("code").iterator().next()) == handlerCodeCpt) {
+                                        codeIsFree = false;
+                                        handlerCodeCpt += 1;
+                                    }
+                                }
+                            }
+                            for(Message me : po.getSends()) {
+                                if(me.hasAnnotation("code")) {
+                                    if(Integer.parseInt(me.annotation("code").iterator().next()) == handlerCodeCpt) {
+                                        codeIsFree = false;
+                                        handlerCodeCpt += 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                result = handlerCodeCpt;
+                handlerCodeCpt += 1;
+                if (result == null) {
+                    System.err.println("Warning: no code could be found for message:" + m.getName());
+                }
+            }
+            
             table.put(m, result);
         }
         return result;
@@ -347,7 +383,7 @@ public abstract class CCompilerContext extends Context {
                 i = i - 1;
                 //if (i == 0) 
                 //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
-                builder.append("_fifo_enqueue(u_" + variable + ".bytebuffer[" + i + "] & 0xFF);\n");
+                builder.append("_fifo_enqueue( u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
                 //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
             }
         }
