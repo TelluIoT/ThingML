@@ -29,13 +29,11 @@ import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.JavaCompiler;
-import org.thingml.compilers.JavaScriptCompiler;
+import org.thingml.compilers.java.JavaCompiler;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.eclipse.preferences.PreferenceConstants;
 import org.thingml.eclipse.ui.Activator;
 import org.thingml.eclipse.ui.ThingMLConsole;
-import org.thingml.javagenerator.JavaGenerator;
 
 import java.util.ArrayList;
 
@@ -102,9 +100,9 @@ public class ThingMLCompileJavaKevoree implements IObjectActionDelegate {
         for ( Configuration cfg :  toCompile ) {        	
             compiler.setOutputDirectory(platform_folder);
             Context ctx = new Context(compiler);
-            compiler.getBuildCompiler().generate(cfg, ctx);
+            compiler.getCfgBuildCompiler().generateBuildScript(cfg, ctx);
             compiler.compileConnector("kevoree-java", cfg, options);
-            ctx.dump();        	        	
+            ctx.writeGeneratedCodeToFiles();        	        	
         }
 
 	}

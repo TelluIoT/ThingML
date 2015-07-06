@@ -15,8 +15,6 @@
  */
 package org.thingml.eclipse.ui.popup.deprecated_actions;
 
-import org.thingml.compilers.*;
-import org.thingml.compilers.actions.*;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -29,6 +27,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
+import org.thingml.compilers.java.JavaCompiler;
+import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.eclipse.preferences.PreferenceConstants;
 import org.thingml.eclipse.ui.Activator;
 

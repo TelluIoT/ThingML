@@ -16,7 +16,7 @@
 package org.thingml.eclipse.ui.popup.deprecated_actions;
 
 import org.thingml.compilers.*;
-import org.thingml.compilers.actions.*;
+import org.thingml.compilers.javascript.JavaScriptCompiler;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
