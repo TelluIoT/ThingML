@@ -129,9 +129,13 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             StateMachine sm = thing.allStateMachines().get(0);
             builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
+            
+            //fix for empty statechart
+            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
         }
 
-        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
+        //fix for empty statechart
+        //builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
         // Message Sending
         for(Port port : thing.getPorts()) {
@@ -536,6 +540,20 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void generatePrivateMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         for(Port port : thing.allPorts()) {
             for (Message msg : port.getSends()) {
+                
+                //for external messages
+                //var
+                builder.append("void (*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
+                ctx.appendFormalTypeSignature(thing, builder, msg);
+                builder.append("= 0x0;\n");
+                //register
+                builder.append("void register_external_" + ctx.getSenderName(thing, port, msg) + "_listener(");
+                builder.append("void (*_listener)");
+                ctx.appendFormalTypeSignature(thing, builder, msg);
+                builder.append("){\n");
+                builder.append("external_" + ctx.getSenderName(thing, port, msg) + "_listener = _listener;\n");
+                builder.append("}\n");
+                
                 // Variable for the function pointer
                 builder.append("void (*" + ctx.getSenderName(thing, port, msg) + "_listener)");
                 ctx.appendFormalTypeSignature(thing, builder, msg);
@@ -555,6 +573,10 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 // if (timer_receive_timeout_listener != 0) timer_receive_timeout_listener(timer_id);
                 builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) " + ctx.getSenderName(thing, port, msg) + "_listener");
                 ctx.appendActualParameters(thing, builder, msg, null);
+                builder.append(";\n");
+                builder.append("if (external_" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) external_" + ctx.getSenderName(thing, port, msg) + "_listener");
+                ctx.appendActualParameters(thing, builder, msg, null);
+                builder.append(";\n");
                 builder.append(";\n}\n");
             }
         }
