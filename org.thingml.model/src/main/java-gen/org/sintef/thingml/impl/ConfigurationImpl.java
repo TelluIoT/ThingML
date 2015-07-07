@@ -15,30 +15,18 @@
  */
 package org.sintef.thingml.impl;
 
-import java.util.Collection;
-import java.util.*;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-
-import org.sintef.thingml.ConfigInclude;
-import org.sintef.thingml.ConfigPropertyAssign;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Connector;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
+
+import java.util.*;
 
 /**
  * <!-- begin-user-doc -->
