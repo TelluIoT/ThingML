@@ -166,7 +166,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("//Things\n");
         for (Instance i : cfg.allInstances()) {
-            if (i.getType().isMockUp()) {
+            if (i.getType().hasAnnotation("mockup")) {
                 builder.append("public static " + ctx.firstToUpper(i.getType().getName()) + "Mock " + ctx.getInstanceName(i) + ";\n");
             } else {
                 builder.append("public static " + ctx.firstToUpper(i.getType().getName()) + " " + ctx.getInstanceName(i) + ";\n");

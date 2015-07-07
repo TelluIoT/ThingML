@@ -167,7 +167,8 @@ object SwingGenerator {
     Context.pack = pack
     
     var thingMap = Map[Thing, String]()
-    model.allThings.filter{t=> !t.isFragment && t.isMockUp}.foreach {t => 
+
+    model.allThings.filter{t=> !t.isFragment && t.hasAnnotation("mockup")}.foreach {t =>
       val thingCode = compile(t, pack)
       thingMap += (t -> thingCode)
     }

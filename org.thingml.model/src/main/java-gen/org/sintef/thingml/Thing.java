@@ -191,11 +191,6 @@ public interface Thing extends Type {
     boolean isSingleton();
 
     /**
-     * @generated NOT
-     */
-    boolean isMockUp();
-
-    /**
      *
      * @return
      * @generated NOT

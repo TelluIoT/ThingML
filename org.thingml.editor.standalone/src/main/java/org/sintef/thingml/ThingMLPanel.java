@@ -36,7 +36,6 @@ import org.thingml.javagenerator.extension.HTTPGenerator;
 import org.thingml.javagenerator.extension.MQTTGenerator;
 import org.thingml.javagenerator.extension.WebSocketGenerator;
 import org.thingml.javagenerator.gui.SwingGenerator;
-import org.thingml.jsgenerator.extension.JSWebSocketGenerator;
 import org.thingml.thingmlgenerator.ThingMLGenerator;
 
 import javax.swing.*;
@@ -183,7 +182,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
             JMenuItem bThingML = new JMenuItem("ThingML/Comm");
             JMenuItem bThingML2 = new JMenuItem("ThingML/Comm2");
             //JMenuItem j = new JMenuItem("state.js");
-            JMenuItem jWS = new JMenuItem("WebSocket");
+            //JMenuItem jWS = new JMenuItem("WebSocket");
             //JMenuItem jKevoreeJS = new JMenuItem("Kevoree");
             //JMenuItem plantUML = new JMenuItem("PlantUML");
 
@@ -460,7 +459,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                 }
             });*/
 
-            jWS.addActionListener(new ActionListener() {
+            /*jWS.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Input file : " + targetFile);
                     if (targetFile == null) return;
@@ -473,7 +472,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                         ex.printStackTrace();
                     }
                 }
-            });
+            });*/
 
             //arduinoMenu.add(b);
             //linuxMenu.add(bC);
@@ -488,7 +487,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
             //javaMenu.add(bKevoree);
             //jsMenu.add(j);
             //jsMenu.add(jKevoreeJS);
-            jsMenu.add(jWS);
+            //jsMenu.add(jWS);
             //umlMenu.add(plantUML);
             compilersMenu.add(bThingML);
             compilersMenu.add(bThingML2);
