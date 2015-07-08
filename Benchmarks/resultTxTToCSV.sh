@@ -24,7 +24,7 @@ then
   exit
 fi
 
-echo "PID;%CPU,%MEM,TIME" | tee $2
-cat $1 | grep node | awk '{ printf("%s;%s;%s;%s\n", $2, $10, $11,$12); }' | tee -a $2
+echo "PID;%CPU;%MEM;TIME" | tee $2
+cat $1 | grep node | awk '{ gsub(/\./,",",$10); gsub(/\./,":",$11); printf("%s;%s;%s;%s\n", $1, $9 , $10,$11); }' | tee -a $2
 exit $?
 

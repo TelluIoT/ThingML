@@ -74,11 +74,11 @@
                         <goals>
                             <goal>java</goal>
                         </goals>
-                        <configuration>
-                            <mainClass>org.sintef.thingml.ThingMLApp</mainClass>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <mainClass>org.sintef.thingml.ThingMLApp</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
