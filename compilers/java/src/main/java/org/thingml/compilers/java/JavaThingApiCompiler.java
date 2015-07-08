@@ -83,7 +83,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
                 try {
                     generateEnumeration(e, ctx, builder);
                 } catch (Exception e1) {
-                    System.err.println("ERROR: Enuemration " + e.getName() + " should define an @enum_val for all its literals");
+                    System.err.println("ERROR: Enumeration " + e.getName() + " should define an @enum_val for all its literals");
                     System.err.println("Node code will be generated for Enumeration " + e.getName() + " possibly leading to compilation errors");
                     builder.delete(0, builder.capacity());
                 }
@@ -101,13 +101,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
                 builder.append("public interface " + "I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "{\n");
                 for(Message m : p.getReceives()) {
                     builder.append("void " + m.getName() + "_via_" + p.getName() + "(");
-                    int i = 0;
-                    for(Parameter pa : m.getParameters()) {
-                        if (i > 0)
-                            builder.append(", ");
-                        builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
-                        i++;
-                    }
+                    JavaHelper.generateParameter(m, builder, ctx);
                     builder.append(");\n");
                 }
                 builder.append("}");
@@ -123,13 +117,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
                 builder.append("public interface " + "I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client{\n");
                 for (Message m : p.getSends()) {
                     builder.append("void " + m.getName() + "_from_" + p.getName() + "(");
-                    int i = 0;
-                    for (Parameter pa : m.getParameters()) {
-                        if (i > 0)
-                            builder.append(", ");
-                        builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
-                        i++;
-                    }
+                    JavaHelper.generateParameter(m, builder, ctx);
                     builder.append(");\n");
                 }
                 builder.append("}");

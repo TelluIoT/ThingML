@@ -128,7 +128,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
 
-        final String src = "src/main/java/" + pack.replace(".", "/");
+        final String src = "/src/main/java/" + pack.replace(".", "/");
 
         StringBuilder builder = ctx.getBuilder(src + "/Main.java");
 
@@ -166,7 +166,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("//Things\n");
         for (Instance i : cfg.allInstances()) {
-            if (i.getType().hasAnnotation("mockup")) {
+            if (i.getType().hasAnnotation("mock")) {
                 builder.append("public static " + ctx.firstToUpper(i.getType().getName()) + "Mock " + ctx.getInstanceName(i) + ";\n");
             } else {
                 builder.append("public static " + ctx.firstToUpper(i.getType().getName()) + " " + ctx.getInstanceName(i) + ";\n");

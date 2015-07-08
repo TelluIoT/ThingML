@@ -35,6 +35,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     {
         Map<String, CfgExternalConnectorCompiler> connectorCompilerMap = new HashMap<String, CfgExternalConnectorCompiler>();
         connectorCompilerMap.put("kevoree-java", new Java2Kevoree());
+        connectorCompilerMap.put("swing", new Java2Swing());
         addConnectorCompilers(connectorCompilerMap);
     }
 

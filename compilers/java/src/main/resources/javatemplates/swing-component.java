@@ -13,7 +13,7 @@ private StyledDocument doc;
 public $NAME$Mock(String name){
 super(name, $PORT_NUMBER$);
 $PORT_DECL$
-initGUI(name);"
+initGUI(name);
 }
 
 @Override
@@ -119,7 +119,9 @@ return (text.endsWith("\n") ? text : text + "\n");
 }
 
 @Override
-public void actionPerformed(ActionEvent ae) {
-if (ae.getSource() == clearButton){
-screen.setText("");
+public void actionPerformed(ActionEvent ae){
+if(ae.getSource()==clearButton){
+    screen.setText("");
+}
+$ON_ACTION$
 }

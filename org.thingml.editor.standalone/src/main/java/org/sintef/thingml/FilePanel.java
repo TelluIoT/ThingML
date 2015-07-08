@@ -86,21 +86,22 @@ public class FilePanel extends JPanel implements Runnable {
                     path = path.getParentPath();
                     file = path.getLastPathComponent() + "/" + file;
                 }
-
-                File fileF = new File(root2 + "/" + file.substring(file.indexOf("/")));
-                if (fileF.isFile()) {
-                    try {
-                        final InputStream input = new FileInputStream(fileF.getAbsolutePath());
-                        final java.util.List<String> packLines = IOUtils.readLines(input);
-                        String content = "";
-                        for (String line : packLines) {
-                            content += line + "\n";
+                if (file.indexOf("/") > -1) {
+                    File fileF = new File(root2 + "/" + file.substring(file.indexOf("/")));
+                    if (fileF.isFile()) {
+                        try {
+                            final InputStream input = new FileInputStream(fileF.getAbsolutePath());
+                            final java.util.List<String> packLines = IOUtils.readLines(input);
+                            String content = "";
+                            for (String line : packLines) {
+                                content += line + "\n";
+                            }
+                            input.close();
+                            editor.loadText(content, fileF);
+                            frame.setTitle("ThingML Editor : " + e.getNewLeadSelectionPath().getLastPathComponent().toString());
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
                         }
-                        input.close();
-                        editor.loadText(content, fileF);
-                        frame.setTitle("ThingML Editor : " + e.getNewLeadSelectionPath().getLastPathComponent().toString());
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
                     }
                 }
             }

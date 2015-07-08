@@ -15,8 +15,7 @@
  */
 package org.thingml.compilers.java;
 
-import org.sintef.thingml.Enumeration;
-import org.sintef.thingml.Type;
+import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 
 /**
@@ -84,6 +83,26 @@ public class JavaHelper {
             builder.append("import " + rootPack + ".messages.*;\n\n");
 
         builder.append("import java.util.*;\n");
+    }
+
+    public static void generateParameter(Message m, StringBuilder builder, Context ctx) {
+        int i = 0;
+        for (Parameter pa : m.getParameters()) {
+            if (i > 0)
+                builder.append(", ");
+            builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+            i++;
+        }
+    }
+
+    public static void generateParameter(Function m, StringBuilder builder, Context ctx) {
+        int i = 0;
+        for (Parameter pa : m.getParameters()) {
+            if (i > 0)
+                builder.append(", ");
+            builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+            i++;
+        }
     }
 
 }

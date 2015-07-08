@@ -103,13 +103,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
             final String returnType = JavaHelper.getJavaType(f.getType(), f.getCardinality() != null, ctx);
             builder.append(returnType + " " + f.getName() + "(");
-            int i = 0;
-            for(Parameter p : f.getParameters()) {
-                if (i > 0)
-                    builder.append(", ");
-                builder.append(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(p)));
-                i++;
-            }
+            JavaHelper.generateParameter(f, builder, ctx);
             builder.append(") {\n");
             ctx.getCompiler().getThingActionCompiler().generate(f.getBody(), builder, ctx);
             builder.append("}\n");
@@ -173,17 +167,9 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 for (Message m : p.getReceives()) {
                     builder.append("@Override\n");
                     builder.append("public synchronized void " + m.getName() + "_via_" + p.getName() + "(");
-                    int id = 0;
-                    for (Parameter pa : m.getParameters()) {
-                        if (id > 0) {
-                            builder.append(", ");
-                        }
-                        builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
-                        id++;
-                    }
+                    JavaHelper.generateParameter(m, builder, ctx);
                     builder.append("){\n");
                     builder.append("receive(" + m.getName() + "Type.instantiate(" + p.getName() + "_port");
-
                     for (Parameter pa : m.getParameters()) {
                         builder.append(", " + ctx.protectKeyword(ctx.getVariableName(pa)));
                     }
@@ -198,14 +184,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         for (Port p : thing.allPorts()) {
             for(Message m : p.getSends()) {
                 builder.append("private void send" + ctx.firstToUpper(m.getName()) + "_via_" + p.getName() + "(");
-                int id = 0;
-                for(Parameter pa : m.getParameters()) {
-                    if (id > 0) {
-                        builder.append(", ");
-                    }
-                    builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
-                    id++;
-                }
+                JavaHelper.generateParameter(m, builder, ctx);
                 builder.append("){\n");
 
                 builder.append("//ThingML send\n");
@@ -219,7 +198,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append("//send to other clients\n");
                     builder.append("for(I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client client : " + p.getName() + "_clients){\n");
                     builder.append("client." + m.getName() + "_from_" + p.getName() + "(");
-                    id = 0;
+                    int id = 0;
                     for(Parameter pa : m.getParameters()) {
                         if (id > 0) {
                             builder.append(", ");
