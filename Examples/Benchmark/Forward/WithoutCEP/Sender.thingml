@@ -21,16 +21,16 @@ thing Sender includes SenderMsgs {
     }
         
     property initRedo : Double = 10000
-    property nbIter : Double = 10000
+    property nbIter : Double = 100000
     property redo : Double = 10000
     
     statechart Sender init Init {        
         state Init {
          on entry do
             var i :Double = 0
-            if(redo == initRedo) do
+            /*if(redo == initRedo) do
                'console.log("START TIME C : " + process.hrtime());'
-            end
+            end*/
             while (i<nbIter) do
                 senderService!forwardMessage()
                 senderService!forwardMessageWithParams(1,2,3,4,5)
@@ -57,7 +57,7 @@ thing Sender includes SenderMsgs {
         
         state End {
             on entry do
-                'console.log("END TIME C : " + process.hrtime());' 
+                //'console.log("END TIME C : " + process.hrtime());'
                 print "Bye"   
             end 
         }

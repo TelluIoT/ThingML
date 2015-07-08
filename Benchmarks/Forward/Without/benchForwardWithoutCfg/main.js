@@ -1,0 +1,32 @@
+var StreamWithoutCEP = require('./StreamWithoutCEP');
+var Sender = require('./Sender');
+var Receiver = require('./Receiver');
+var benchForwardWithoutCfg_receiver = new Receiver(0);
+benchForwardWithoutCfg_receiver.setThis(benchForwardWithoutCfg_receiver);
+benchForwardWithoutCfg_receiver.build();
+var benchForwardWithoutCfg_streamWithoutCep = new StreamWithoutCEP();
+benchForwardWithoutCfg_streamWithoutCep.setThis(benchForwardWithoutCfg_streamWithoutCep);
+benchForwardWithoutCfg_streamWithoutCep.build();
+var benchForwardWithoutCfg_sender = new Sender(10000, 100000, 10000);
+benchForwardWithoutCfg_sender.setThis(benchForwardWithoutCfg_sender);
+benchForwardWithoutCfg_sender.build();
+benchForwardWithoutCfg_streamWithoutCep.getC_forwardMessageoncServiceListeners().push(benchForwardWithoutCfg_receiver.receivec_forwardMessageOncService.bind(benchForwardWithoutCfg_receiver));
+benchForwardWithoutCfg_streamWithoutCep.getC_forwardMessageWithParamsoncServiceListeners().push(benchForwardWithoutCfg_receiver.receivec_forwardMessageWithParamsOncService.bind(benchForwardWithoutCfg_receiver));
+benchForwardWithoutCfg_streamWithoutCep.getC_forwardWithModifoncServiceListeners().push(benchForwardWithoutCfg_receiver.receivec_forwardWithModifOncService.bind(benchForwardWithoutCfg_receiver));
+benchForwardWithoutCfg_streamWithoutCep.getC_endBenchoncServiceListeners().push(benchForwardWithoutCfg_receiver.receivec_endBenchOncService.bind(benchForwardWithoutCfg_receiver));
+benchForwardWithoutCfg_sender.getForwardMessageonsenderServiceListeners().push(benchForwardWithoutCfg_streamWithoutCep.receiveforwardMessageOnsenderService.bind(benchForwardWithoutCfg_streamWithoutCep));
+benchForwardWithoutCfg_sender.getForwardMessageWithParamsonsenderServiceListeners().push(benchForwardWithoutCfg_streamWithoutCep.receiveforwardMessageWithParamsOnsenderService.bind(benchForwardWithoutCfg_streamWithoutCep));
+benchForwardWithoutCfg_sender.getForwardWithModifonsenderServiceListeners().push(benchForwardWithoutCfg_streamWithoutCep.receiveforwardWithModifOnsenderService.bind(benchForwardWithoutCfg_streamWithoutCep));
+benchForwardWithoutCfg_sender.getEndBenchonsenderServiceListeners().push(benchForwardWithoutCfg_streamWithoutCep.receiveendBenchOnsenderService.bind(benchForwardWithoutCfg_streamWithoutCep));
+benchForwardWithoutCfg_receiver.getRedoonsenderServiceListeners().push(benchForwardWithoutCfg_sender.receiveredoOnsenderService.bind(benchForwardWithoutCfg_sender));
+benchForwardWithoutCfg_receiver._init();
+benchForwardWithoutCfg_streamWithoutCep._init();
+benchForwardWithoutCfg_sender._init();
+//terminate all things on SIGINT (e.g. CTRL+C)
+process.on('SIGINT', function() {
+console.log("Stopping components... CTRL+D to force shutdown");
+benchForwardWithoutCfg_receiver._stop();
+benchForwardWithoutCfg_streamWithoutCep._stop();
+benchForwardWithoutCfg_sender._stop();
+});
+

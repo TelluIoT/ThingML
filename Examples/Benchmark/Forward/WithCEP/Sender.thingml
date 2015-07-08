@@ -21,16 +21,16 @@ thing Sender includes SenderMsgs {
     }
         
     property initReco : Double = 10000
-    property nbIter : Double = 10000
+    property nbIter : Double = 100000
     property nbReco : Double = 10000
     
     
     statechart Sender init Init { 
         state Init {
          on entry do
-            if(nbReco == initReco) do
+            /*if(nbReco == initReco) do
                'console.log("START TIME C : " + process.hrtime());'
-            end
+            end*/
             
             var i :Double = 0
             //'console.log("START TIME CEP : " + process.hrtime());'
@@ -61,7 +61,7 @@ thing Sender includes SenderMsgs {
         state End {
             on entry do
                 print "Bye"   
-                'console.log("END TIME CEP : " + process.hrtime());'
+                //'console.log("END TIME CEP : " + process.hrtime());'
             end 
         }
     }

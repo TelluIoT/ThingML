@@ -15,16 +15,20 @@
 # limitations under the License.
 #
 
-
-if [ $# -ne 2 ]
+if [ $# -ne 1 ]
 then
-  echo "Usage : ./resultTxtToCSV.sh [filePath.txt] [filePathToCSV.csv]"
-  echo "[filePathToCSV.csv] will be clear so be carrefull to put an empty file"
-  echo "[filePath.txt] should create with command : top -d 1 > [filePath.txt]"
+  echo "Usage : ./launchScript.sh [filePath.js]"
+  echo "Should be execute in the [filePath.js] directory"
   exit
 fi
 
-echo "PID;%CPU,%MEM,TIME" | tee $2
-cat $1 | grep node | awk '{ printf("%s;%s;%s;%s\n", $2, $10, $11,$12); }' | tee -a $2
+npm install
+
+NB_ITER=100
+for i in $(seq 1 $NB_ITER)
+do
+    node $1
+done
+
 exit $?
 
