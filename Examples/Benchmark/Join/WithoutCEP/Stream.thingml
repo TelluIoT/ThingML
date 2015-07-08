@@ -30,6 +30,12 @@ thing StreamWithCep includes StreamCepMsgs, SenderMsgs {
     
     function join1() do
         'var now = Date.now();
+        
+        for(m1 in listJoinMessage1) {
+             if(now - listJoinMessage1[m1].time > 50) {
+                 listJoinMessage1.splice(m1,1);   
+             }
+        }
                   
          for(m2 in listJoinMessage2) {
              if(now - listJoinMessage2[m2].time > 50) {
@@ -44,6 +50,12 @@ thing StreamWithCep includes StreamCepMsgs, SenderMsgs {
     
     function join2() do
         'var now = Date.now();
+        
+        for(m2 in listJoinMessage2) {
+             if(now - listJoinMessage2[m2].time > 50) {
+                 listJoinMessage2.splice(m2,1);   
+             }
+        }
                   
          for(m1 in listJoinMessage1) {
              if(now - listJoinMessage1[m1].time > 50) {
