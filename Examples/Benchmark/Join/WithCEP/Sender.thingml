@@ -18,12 +18,9 @@ thing Sender includes SenderMsgs {
         receives redo
     }
 
-    /*property nbIter : Double = 100000
-    property nbReco : Double = 10000*/
-    
-    property nbIter : Double = 8
-    property nbReco : Double = 6
-    
+    property nbIter : Double = 100000
+    property nbReco : Double = 10000
+        
     statechart Sender init Init { 
         state Init {
          on entry do

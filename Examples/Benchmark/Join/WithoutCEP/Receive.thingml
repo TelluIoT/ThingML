@@ -28,7 +28,6 @@ thing Receiver includes StreamCepMsgs, SenderMsgs{
             action do
                  //'console.log("END TIME CEP : " + process.hrtime());'
                  //print "[Receiver] End with " + msgReceived + " message(s) received"
-                 print msgReceived
                  msgReceived = 0
                  senderService!redo()
             end
