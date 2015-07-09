@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResource;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
-import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.*;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
@@ -141,54 +140,17 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
 
             //START TO BE REMOVED AFTER MIGRATION
             JMenu compilersMenu = new JMenu("Compile to");
-            //JMenu arduinoMenu = new JMenu("Arduino");
             JMenu linuxMenu = new JMenu("Linux");
-            //compilersMenu.add(arduinoMenu);
             compilersMenu.add(linuxMenu);
 
-
-            //JMenuItem b = new JMenuItem("Arduino");
-            //JMenuItem bC = new JMenuItem("Posix C");
             JMenuItem bCPP = new JMenuItem("C++");
-            JMenuItem rosC = new JMenuItem("ROS Node");
+            //JMenuItem rosC = new JMenuItem("ROS Node");
             JMenuItem bThingML = new JMenuItem("ThingML/Comm");
             JMenuItem bThingML2 = new JMenuItem("ThingML/Comm2");
 
             JFileChooser filechooser = new JFileChooser();
             filechooser.setDialogTitle("Select target directory");
             filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-            /*b.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Input file : " + targetFile);
-                    if (targetFile == null) return;
-                    try {
-                        // Load the model
-                        ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
-
-                        String arduino_dir = ThingMLSettings.getInstance().get_arduino_dir_or_choose_if_not_set(ThingMLPanel.this);
-
-                        if (arduino_dir != null) {
-                            CGenerator.compileAndRunArduino(thingmlModel.getConfigs().get(0), arduino_dir, ThingMLSettings.getInstance().get_arduino_lib_dir());//FIXME
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
-
-            bC.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Input file : " + targetFile);
-                    if (targetFile == null) return;
-                    try {
-                        ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
-                        CGenerator.compileToLinuxAndMake(thingmlModel);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });*/
 
             bCPP.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -203,7 +165,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                 }
             });
 
-            rosC.addActionListener(new ActionListener() {
+            /*rosC.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Input file : " + targetFile);
                     if (targetFile == null) return;
@@ -214,7 +176,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                         ex.printStackTrace();
                     }
                 }
-            });
+            });*/
 
             bThingML.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -246,10 +208,8 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                 }
             });
 
-            //arduinoMenu.add(b);
-            //linuxMenu.add(bC);
             linuxMenu.add(bCPP);
-            linuxMenu.add(rosC);
+            //linuxMenu.add(rosC);
             compilersMenu.add(bThingML);
             compilersMenu.add(bThingML2);
             menubar.add(compilersMenu);

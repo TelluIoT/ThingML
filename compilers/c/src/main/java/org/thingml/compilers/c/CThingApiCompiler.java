@@ -27,7 +27,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
-        generateCHeader(thing, (CCompilerContext)ctx);
+        generateCHeader(thing, (CCompilerContext) ctx);
     }
 
     protected void generateCHeader(Thing thing, CCompilerContext ctx) {
@@ -138,13 +138,13 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
     protected void generatePublicMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Declaration of callbacks for incoming messages:\n");
-        for(Port port : thing.allPorts()) {
+        for (Port port : thing.allPorts()) {
             for (Message msg : port.getSends()) {
                 builder.append("void register_" + ctx.getSenderName(thing, port, msg) + "_listener(");
                 builder.append("void (*_listener)");
                 ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append(");\n");
-                
+
                 //external
                 builder.append("void register_external_" + ctx.getSenderName(thing, port, msg) + "_listener(");
                 builder.append("void (*_listener)");
@@ -163,7 +163,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
             StateMachine sm = thing.allStateMachines().get(0);
             builder.append("// Definition of the states:\n");
             List<State> states = sm.allContainedStates();
-            for (int i=0; i<states.size(); i++) {
+            for (int i = 0; i < states.size(); i++) {
                 builder.append("#define " + ctx.getStateID(states.get(i)) + " " + i + "\n");
             }
             builder.append("\n");

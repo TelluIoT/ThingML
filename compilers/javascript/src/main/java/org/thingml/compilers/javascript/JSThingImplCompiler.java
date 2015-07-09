@@ -33,8 +33,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateListeners(Thing thing, StringBuilder builder, Context ctx) {
         builder.append("//callbacks for third-party listeners\n");
-        for(Port p : thing.allPorts()) {
-            for(Message m : p.getSends()) {
+        for (Port p : thing.allPorts()) {
+            for (Message m : p.getSends()) {
                 builder.append(const_() + m.getName() + "On" + p.getName() + "Listeners = [];\n");
                 builder.append("this.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners = function() {\n");
                 builder.append("return " + m.getName() + "On" + p.getName() + "Listeners;\n");
@@ -44,18 +44,18 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateSendMethods(Thing thing, StringBuilder builder, Context ctx) {
-        for(Port p : thing.allPorts()) {
-            for(Message m : p.getSends()) {
+        for (Port p : thing.allPorts()) {
+            for (Message m : p.getSends()) {
                 builder.append("function send" + ctx.firstToUpper(m.getName()) + "On" + ctx.firstToUpper(p.getName()) + "(");
                 int j = 0;
-                for(Parameter pa : m.getParameters()) {
-                    if(j > 0)
+                for (Parameter pa : m.getParameters()) {
+                    if (j > 0)
                         builder.append(", ");
                     builder.append(ctx.protectKeyword(pa.getName()));
                     j++;
                 }
                 builder.append(") {\n");
-                ((JavaScriptThingApiCompiler)ctx.getCompiler().getThingApiCompiler()).callListeners(p, m, builder, ctx);
+                ((JavaScriptThingApiCompiler) ctx.getCompiler().getThingApiCompiler()).callListeners(p, m, builder, ctx);
                 builder.append("}\n\n");
             }
         }
@@ -64,7 +64,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     @Override
     public void generateImplementation(Thing thing, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/" + ctx.firstToUpper(thing.getName()) + ".js");
-        if(ctx.getContextAnnotation("hasEnum") != null && ctx.getContextAnnotation("hasEnum").equals("true")) {
+        if (ctx.getContextAnnotation("hasEnum") != null && ctx.getContextAnnotation("hasEnum").equals("true")) {
             builder.append("var Enum = require('./enums');\n");
         }
         //builder.append("var StateFactory = require('./state-factory');\n");
@@ -75,7 +75,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("function " + ctx.firstToUpper(thing.getName()) + "(");
         int i = 0;
-        for(Property p : thing.allPropertiesInDepth()) {
+        for (Property p : thing.allPropertiesInDepth()) {
             if (!p.isDefined("private", "true") && p.eContainer() instanceof Thing) {
                 if (i > 0)
                     builder.append(", ");
@@ -94,7 +94,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("this.ready = false;\n");
 
         builder.append("//Attributes\n");
-        for(Property p : thing.allPropertiesInDepth()) {
+        for (Property p : thing.allPropertiesInDepth()) {
             if (p.isDefined("private", "true") || !(p.eContainer() instanceof Thing)) {
                 if (p.isChangeable())
                     builder.append("var ");
@@ -110,7 +110,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(";\n");
 
             } else {
-                builder.append("this." +p.qname("_") + "_var" + " = " + p.qname("_") + "_var" + ";\n");
+                builder.append("this." + p.qname("_") + "_var" + " = " + p.qname("_") + "_var" + ";\n");
             }
         }//TODO: public/private properties?
 
@@ -123,12 +123,12 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         generateListeners(thing, builder, ctx);
 
         builder.append("//ThingML-defined functions\n");
-        for(Function f : thing.allFunctions()) {   //FIXME: should be extracted
+        for (Function f : thing.allFunctions()) {   //FIXME: should be extracted
             if (!f.isDefined("abstract", "true")) {//should be refined in a PSM thing
                 builder.append("function " + f.getName() + "(");
                 int j = 0;
-                for(Parameter p : f.getParameters()) {
-                    if(j > 0)
+                for (Parameter p : f.getParameters()) {
+                    if (j > 0)
                         builder.append(", ");
                     builder.append(ctx.protectKeyword(p.qname("_") + "_var"));
                     j++;
@@ -140,8 +140,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
                 builder.append("this." + f.getName() + " = function(");
                 j = 0;
-                for(Parameter p : f.getParameters()) {
-                    if(j > 0)
+                for (Parameter p : f.getParameters()) {
+                    if (j > 0)
                         builder.append(", ");
                     builder.append(ctx.protectKeyword(p.qname("_") + "_var"));
                     j++;
@@ -149,8 +149,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(") {\n");
                 builder.append(f.getName() + "(");
                 j = 0;
-                for(Parameter p : f.getParameters()) {
-                    if(j > 0)
+                for (Parameter p : f.getParameters()) {
+                    if (j > 0)
                         builder.append(", ");
                     builder.append(ctx.protectKeyword(p.qname("_") + "_var"));
                     j++;
@@ -166,8 +166,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("//State machine (states and regions)\n");
         builder.append("this.build = function() {\n");
-        for(StateMachine b : thing.allStateMachines()) {
-            ((FSMBasedThingImplCompiler)ctx.getCompiler().getThingImplCompiler()).generateState(b, builder, ctx);
+        for (StateMachine b : thing.allStateMachines()) {
+            ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateState(b, builder, ctx);
         }
         builder.append("}\n");
 
@@ -199,19 +199,19 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             generateState(s, builder, ctx);
         }
         builder.append("this._initial_" + sm.qname("_") + ".to(" + sm.getInitial().qname("_") + ");\n");
-        for(Handler h : sm.allEmptyHandlers()) {
+        for (Handler h : sm.allEmptyHandlers()) {
             generateHandler(h, null, null, builder, ctx);
         }
 
         //TODO: we should revise some derived properties, not so nice to use in Java...
         final Map<Port, Map<Message, List<Handler>>> allHanders = sm.allMessageHandlers();
-        for(Map.Entry<Port, Map<Message, List<Handler>>> entry : allHanders.entrySet()) {
+        for (Map.Entry<Port, Map<Message, List<Handler>>> entry : allHanders.entrySet()) {
             final Port p = entry.getKey();
             final Map<Message, List<Handler>> map = entry.getValue();
-            for(Map.Entry<Message, List<Handler>> entry2 : map.entrySet()) {
+            for (Map.Entry<Message, List<Handler>> entry2 : map.entrySet()) {
                 final List<Handler> handlers = entry2.getValue();
                 final Message m = entry2.getKey();
-                for(Handler h : handlers) {
+                for (Handler h : handlers) {
                     generateHandler(h, m, p, builder, ctx);
                 }
             }
@@ -241,11 +241,11 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             else
                 builder.append("var _initial_" + c.qname("_") + " = new StateJS.pseudoState(\"_initial\", " + c.qname("_") + ", StateJS.PseudoStateKind.Initial);\n");
             builder.append("_initial_" + c.qname("_") + ".to(" + c.getInitial().qname("_") + ");\n");
-            for(State s : c.getSubstate()) {
+            for (State s : c.getSubstate()) {
                 ctx.addContextAnnotation("container", c.qname("_") + "_default");
                 generateState(s, builder, ctx);
             }
-            for(Region r : c.getRegion()) {
+            for (Region r : c.getRegion()) {
                 ctx.addContextAnnotation("container", c.qname("_"));
                 generateRegion(r, builder, ctx);
             }
@@ -253,7 +253,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("var " + c.qname("_") + " = new StateJS.State(\"" + c.getName() + "\", " + containerName + ")");
             generateActionsForState(c, builder, ctx);
             builder.append(";\n");
-            for(State s : c.getSubstate()) {
+            for (State s : c.getSubstate()) {
                 ctx.addContextAnnotation("container", c.qname("_"));
                 generateState(s, builder, ctx);
             }
@@ -279,7 +279,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("var _initial_" + r.qname("_") + "_reg = new StateJS.PseudoState(\"_initial\", " + r.qname("_") + "_reg, StateJS.PseudoStateKind.ShallowHistory);\n");
         else
             builder.append("var _initial_" + r.qname("_") + "_reg = new StateJS.PseudoState(\"_initial\", " + r.qname("_") + "_reg, StateJS.PseudoStateKind.Initial);\n");
-        for(State s : r.getSubstate()) {
+        for (State s : r.getSubstate()) {
             ctx.addContextAnnotation("container", r.qname("_") + "_reg");
             generateState(s, builder, ctx);
         }
@@ -293,17 +293,16 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             //builder.append("var json = JSON.parse(message);\n");
             ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
             builder.append("})\n\n");
-        }
-        else {
-                builder.append(".effect(function (message) {\n");
-                //builder.append("var json = JSON.parse(message);\n");
+        } else {
+            builder.append(".effect(function (message) {\n");
+            //builder.append("var json = JSON.parse(message);\n");
             int i = 2;
-            for(Parameter pa : m.getParameters()) {
+            for (Parameter pa : m.getParameters()) {
                 builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
                 i++;
             }
-                ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
-                builder.append("})");
+            ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
+            builder.append("})");
         }
     }
 

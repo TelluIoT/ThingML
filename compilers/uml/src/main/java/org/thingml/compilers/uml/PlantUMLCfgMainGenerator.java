@@ -31,7 +31,7 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
         builder.append("node \"" + cfg.getName() + "\"{\n");
         for (Instance i : cfg.allInstances()) {
             boolean hasPort = false;
-            for(Port p: i.getType().allPorts()) {
+            for (Port p : i.getType().allPorts()) {
                 if (p instanceof ProvidedPort) {
                     builder.append(p.getName() + "_" + i.getName() + " - [" + i.getName() + "]\n");
                     hasPort = true;

@@ -28,9 +28,9 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
         builder.append("process.nextTick(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + ".bind(_this"/* + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName())*/);
         int i = 0;
-        for(Expression p : action.getParameters()) {
+        for (Expression p : action.getParameters()) {
             int j = 0;
-            for(Parameter fp : action.getMessage().getParameters()) {
+            for (Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
                     builder.append(", ");
                     generate(p, builder, ctx);
@@ -50,11 +50,11 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         builder.append(action.getFunction().getName() + "(");
 
         int i = 0;
-        for(Expression p : action.getParameters()) {
+        for (Expression p : action.getParameters()) {
             if (i > 0)
                 builder.append(", ");
             int j = 0;
-            for(Parameter fp : action.getFunction().getParameters()) {
+            for (Parameter fp : action.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
                     generate(p, builder, ctx);
                     break;
@@ -68,7 +68,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
-        if(action.isChangeable())
+        if (action.isChangeable())
             builder.append("var ");
         else
             builder.append("const ");
@@ -76,8 +76,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         if (action.getInit() != null) {
             builder.append(" = ");
             generate(action.getInit(), builder, ctx);
-        }
-        else {
+        } else {
             if (action.getCardinality() != null) {
                 builder.append(" = []");
             }
@@ -90,9 +89,9 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-       builder.append("console.log(\"ERROR: \" + ");
-       generate(action.getMsg(), builder, ctx);
-       builder.append(");\n");
+        builder.append("console.log(\"ERROR: \" + ");
+        generate(action.getMsg(), builder, ctx);
+        builder.append(");\n");
     }
 
     @Override
@@ -110,7 +109,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        if (expression.getProperty().isDefined("private", "true") ||  !(expression.getProperty().eContainer() instanceof Thing) || (expression.getProperty() instanceof Parameter) || (expression.getProperty() instanceof LocalVariable)) {
+        if (expression.getProperty().isDefined("private", "true") || !(expression.getProperty().eContainer() instanceof Thing) || (expression.getProperty() instanceof Parameter) || (expression.getProperty() instanceof LocalVariable)) {
             builder.append(ctx.getVariableName(expression.getProperty()));
         } else {
             builder.append("_this." + ctx.getVariableName(expression.getProperty()));
@@ -122,7 +121,6 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         builder.append("Enum." + ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + expression.getLiteral().getName().toUpperCase());
 
 
-
     }
 
     @Override
@@ -130,11 +128,11 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         builder.append(expression.getFunction().getName() + "(");
 
         int i = 0;
-        for(Expression p : expression.getParameters()) {
+        for (Expression p : expression.getParameters()) {
             if (i > 0)
                 builder.append(", ");
             int j = 0;
-            for(Parameter fp : expression.getFunction().getParameters()) {
+            for (Parameter fp : expression.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
                     generate(p, builder, ctx);
                     break;
@@ -150,5 +148,6 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
         builder.append(" === ");
-        generate(expression.getRhs(), builder, ctx);    }
+        generate(expression.getRhs(), builder, ctx);
+    }
 }

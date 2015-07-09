@@ -270,12 +270,12 @@ implicit def cGeneratorAspect(self:ExternExpression) : ExternExpressionCGenerato
   }
 
   def compileAndRunArduino(model: ThingMLModel, arduinoDir: String, libdir: String, doingTests: Boolean = false) {
-  //doingTests should be ignored, it is only used when calling from org.thingml.cmd
+    //doingTests should be ignored, it is only used when calling from org.thingml.cmd
     // First look for a configuration in the model
     model.getConfigs.filter {
       c => !c.isFragment
     }.headOption match {
-    	
+
       case Some(c) => if (doingTests){compileAndNotRunArduino(c, arduinoDir, libdir)}else{compileAndRunArduino(c, arduinoDir, libdir)}
       case None =>
         // look in all configs
@@ -287,10 +287,10 @@ implicit def cGeneratorAspect(self:ExternExpression) : ExternExpressionCGenerato
         }
     }
   }
-def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: String, doingTests: Boolean = false) {
-  //doingTests should be ignored, it is only used when calling from org.thingml.cmd
-	// Create a temp folder
-	var folder = new File("tmp/ThingML_Arduino")
+  def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: String, doingTests: Boolean = false) {
+    //doingTests should be ignored, it is only used when calling from org.thingml.cmd
+    // Create a temp folder
+    var folder = new File("tmp/ThingML_Arduino")
     folder.delete
     folder.mkdirs
     folder.deleteOnExit
@@ -327,7 +327,7 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
   }
 
 
-  
+
   def compileAndRunArduino(cfg: Configuration, arduinoDir: String, libdir: String) {
 
     // Create a temp folder
@@ -597,14 +597,14 @@ def compileAndNotRunArduino(cfg: Configuration, arduinoDir: String, libdir: Stri
     // Create a folder having the name of the config
     folder = new File(folder, cfg.getName);
     folder.mkdirs
-      val files = compileToLinux(cfg, compiler)
+    val files = compileToLinux(cfg, compiler)
 
-      files.keys.foreach {
-        fname =>
-          var file = new File(folder, fname)
-          var w: PrintWriter = new PrintWriter(new FileWriter(file))
-          w.print(files.get(fname))
-          w.close
+    files.keys.foreach {
+      fname =>
+        var file = new File(folder, fname)
+        var w: PrintWriter = new PrintWriter(new FileWriter(file))
+        w.print(files.get(fname))
+        w.close
 
     }
     //return null
@@ -1745,58 +1745,58 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
   def generateMessageEnqueue(builder: StringBuilder, context: CGeneratorContext) {
     // Generate the Enqueue operation only for ports which are not marked as "sync"
     self.allThings.foreach { t =>
-        t.allPorts.filter { p =>
-          !isSyncSend(p)
-        }.foreach { p =>
-          context.set_concrete_thing(t)
-          var allMessageDispatch = self.allMessageDispatch(t, p)
-          allMessageDispatch.keySet().foreach {
-            m =>
-              builder append "// Enqueue of messages " + t.getName + "::" + p.getName + "::" + m.getName + "\n"
-              builder append "void enqueue_" + t.sender_name(p, m)
-              t.append_formal_parameters(builder, m)
-              builder append "{\n"
+      t.allPorts.filter { p =>
+        !isSyncSend(p)
+      }.foreach { p =>
+        context.set_concrete_thing(t)
+        var allMessageDispatch = self.allMessageDispatch(t, p)
+        allMessageDispatch.keySet().foreach {
+          m =>
+            builder append "// Enqueue of messages " + t.getName + "::" + p.getName + "::" + m.getName + "\n"
+            builder append "void enqueue_" + t.sender_name(p, m)
+            t.append_formal_parameters(builder, m)
+            builder append "{\n"
 
-              if (context.sync_fifo) builder append "fifo_lock();\n"
+            if (context.sync_fifo) builder append "fifo_lock();\n"
 
-              builder append "if ( fifo_byte_available() > " + message_size(m, context) + " ) {\n\n"
+            builder append "if ( fifo_byte_available() > " + message_size(m, context) + " ) {\n\n"
 
-              //DEBUG
-              // builder append "Serial.println(\"QU MSG "+m.getName+"\");\n"
+            //DEBUG
+            // builder append "Serial.println(\"QU MSG "+m.getName+"\");\n"
 
-              builder append "_fifo_enqueue( (" + handler_code(t, p, m) + " >> 8) & 0xFF );\n"
-              builder append "_fifo_enqueue( " + handler_code(t, p, m) + " & 0xFF );\n\n"
+            builder append "_fifo_enqueue( (" + handler_code(t, p, m) + " >> 8) & 0xFF );\n"
+            builder append "_fifo_enqueue( " + handler_code(t, p, m) + " & 0xFF );\n\n"
 
-              builder append "// ID of the source instance\n"
-              builder append "_fifo_enqueue( (_instance->id >> 8) & 0xFF );\n"
-              builder append "_fifo_enqueue( _instance->id & 0xFF );\n"
+            builder append "// ID of the source instance\n"
+            builder append "_fifo_enqueue( (_instance->id >> 8) & 0xFF );\n"
+            builder append "_fifo_enqueue( _instance->id & 0xFF );\n"
 
-              m.getParameters.foreach {
-                pt =>
+            m.getParameters.foreach {
+              pt =>
                 //result += p.getType.c_byte_size()
-                  builder append "\n// parameter " + pt.getName + "\n"
+                builder append "\n// parameter " + pt.getName + "\n"
 
-                  pt.getType.bytes_to_serialize(builder, context, pt.getName)
+                pt.getType.bytes_to_serialize(builder, context, pt.getName)
 
-                /*
-                pt.getType.bytes_to_serialize(pt.getName, context).foreach { l =>
-                  builder append "_fifo_enqueue( "+l+" );\n"
-                } */
-              }
+              /*
+              pt.getType.bytes_to_serialize(pt.getName, context).foreach { l =>
+                builder append "_fifo_enqueue( "+l+" );\n"
+              } */
+            }
+            builder append "}\n"
+
+            // Produce a debug message if the fifo is full
+            if (context.debug_fifo()) {
+              builder append "else {\n"
+              builder append context.print_debug_message("FIFO FULL (lost msg " + m.getName + ")") + "\n"
               builder append "}\n"
+            }
 
-              // Produce a debug message if the fifo is full
-              if (context.debug_fifo()) {
-                builder append "else {\n"
-                builder append context.print_debug_message("FIFO FULL (lost msg " + m.getName + ")") + "\n"
-                builder append "}\n"
-              }
+            if (context.sync_fifo) builder append "fifo_unlock_and_notify();\n"
 
-              if (context.sync_fifo) builder append "fifo_unlock_and_notify();\n"
+            builder append "}\n"
 
-              builder append "}\n"
-
-          }
+        }
       }
     }
     context.clear_concrete_thing()
@@ -1895,8 +1895,8 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
           var allMessageDispatch = self.allMessageDispatch(t, p)
           allMessageDispatch.keySet().foreach {
             m =>
-            // definition of handler for message m coming from instances of t thought port p
-            // Operation which calls on the function pointer if it is not NULL
+              // definition of handler for message m coming from instances of t thought port p
+              // Operation which calls on the function pointer if it is not NULL
               builder append "// Dispatch for messages " + t.getName + "::" + p.getName + "::" + m.getName + "\n"
               builder append "void dispatch_" + t.sender_name(p, m)
               t.append_formal_parameters(builder, m)
@@ -1909,7 +1909,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
                   builder append "if (_instance == &" + i.c_var_name + ") {\n"
                   mtable.get(i).foreach {
                     tgt =>
-                    // dispatch to all connected instances whi can handle the message
+                      // dispatch to all connected instances whi can handle the message
                       if (tgt.getKey.getType.composedBehaviour.canHandle(tgt.getValue, m)) {
                         builder append tgt.getKey.getType.handler_name(tgt.getValue, m)
                         tgt.getKey.getType.append_actual_parameters(builder, m, "&" + tgt.getKey.c_var_name())
@@ -2062,18 +2062,18 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
         }
       }
     }
-         // Call empty transition handler (if needed)
-      self.allInstances.foreach {
-        i =>
-          //print("Looking for empty-transition for instance " + i.getName + "...")
-          if (i.getType.getBehaviour.head.hasEmptyHandlers()) {
-            //println("YES")
-            builder append i.getType.empty_handler_name() + "(&" + i.c_var_name() + ");\n"
-          }
-          else {
-            //println("NO")
-          }
-      }
+    // Call empty transition handler (if needed)
+    self.allInstances.foreach {
+      i =>
+        //print("Looking for empty-transition for instance " + i.getName + "...")
+        if (i.getType.getBehaviour.head.hasEmptyHandlers()) {
+          //println("YES")
+          builder append i.getType.empty_handler_name() + "(&" + i.c_var_name() + ");\n"
+        }
+        else {
+          //println("NO")
+        }
+    }
 
   }
 }
@@ -2130,7 +2130,7 @@ case class FunctionCGenerator(val self: Function) extends ThingMLCGenerator(self
 
       self.getParameters.foreach {
         p =>
-        //if (p != self.getParameters.head)
+          //if (p != self.getParameters.head)
           builder append ", "
           builder append p.getType.c_type()
           if (p.getCardinality != null) builder append "*"
@@ -2173,7 +2173,7 @@ case class FunctionCGenerator(val self: Function) extends ThingMLCGenerator(self
     b_params append "struct " + thing.instance_struct_name + " *" + thing.instance_var_name
     self.getParameters.foreach {
       p =>
-      //if (p != self.getParameters.head)
+        //if (p != self.getParameters.head)
         b_params append ", "
         b_params append p.getType.c_type()
         if (p.getCardinality != null) builder append "*"
@@ -2238,16 +2238,16 @@ case class InstanceCGenerator(val self: Instance) extends ThingMLCGenerator(self
     }
     // Init array properties
     context.cfg.initExpressionsForInstanceArrays(self).foreach {case (p, l) =>
-       l.foreach { e =>
-         if (e.getValue != null && e.getKey != null) {
-           builder append c_var_name + "." + p.c_var_name
-           builder append "["
-           e.getKey.generateC(builder, context)
-           builder append "] = "
-           e.getValue.generateC(builder, context)
-           builder append ";\n";
-         }
-       }
+      l.foreach { e =>
+        if (e.getValue != null && e.getKey != null) {
+          builder append c_var_name + "." + p.c_var_name
+          builder append "["
+          e.getKey.generateC(builder, context)
+          builder append "] = "
+          e.getValue.generateC(builder, context)
+          builder append ";\n";
+        }
+      }
     }
 
     builder append "\n"
@@ -2579,7 +2579,7 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
       port => port.getSends.foreach {
         msg =>
 
-        // Variable for the function pointer
+          // Variable for the function pointer
           builder append "void (*" + sender_name(port, msg) + "_listener)"
           append_formal_type_signature(builder, msg)
           builder append "= 0x0;\n"
@@ -2780,7 +2780,7 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
       h =>
         h.getEvent.filter {
           e =>
-          // Filter only empty transition
+            // Filter only empty transition
             e.isInstanceOf[ReceiveMessage] && e.asInstanceOf[ReceiveMessage].getPort == port && e.asInstanceOf[ReceiveMessage].getMessage == msg
         }.foreach {
 
@@ -2842,8 +2842,8 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
 
     regions.foreach {
       r =>
-      //println("  processing region " + r.getName)
-      // for all states of the region, if the state can handle the message and that state is active we forward the message
+        //println("  processing region " + r.getName)
+        // for all states of the region, if the state can handle the message and that state is active we forward the message
         builder append "uint8_t "+state_var_name(r)+"_event_consumed = 0;\n"
 
         val states = r.getSubstate.filter {
@@ -2851,14 +2851,14 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
         }
         states.foreach {
           s =>
-          //println("    processing state " + s.getName)
+            //println("    processing state " + s.getName)
             if (states.head != s) builder append "else "
             builder append "if (" + instance_var_name() + "->" + state_var_name(r) + " == " + state_id(s) + ") {\n" // s is the current state
             // dispatch to sub-regions if it is a composite
             s match {
               case comp: CompositeState =>
-                  //println("  " + comp.getName + " calling dispatchToSubRegions")
-                  dispatchToSubRegions(builder, comp, port, msg, context)
+                //println("  " + comp.getName + " calling dispatchToSubRegions")
+                dispatchToSubRegions(builder, comp, port, msg, context)
               case _ => {
                 /* do nothing */
               }
@@ -2872,15 +2872,15 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
     }
 
     if (cs.eContainer().isInstanceOf[Region]) {
-    builder append state_var_name( cs.eContainer().asInstanceOf[Region] )+"_event_consumed = 0 "
-    cs.directSubRegions().foreach {
+      builder append state_var_name( cs.eContainer().asInstanceOf[Region] )+"_event_consumed = 0 "
+      cs.directSubRegions().foreach {
 
-      r =>
-      //println("  processing region " + r)
-      // for all states of the region, if the state can handle the message and that state is active we forward the message
-        builder append "| " + state_var_name(r)+"_event_consumed "
-     }
-    builder append ";\n"
+        r =>
+          //println("  processing region " + r)
+          // for all states of the region, if the state can handle the message and that state is active we forward the message
+          builder append "| " + state_var_name(r)+"_event_consumed "
+      }
+      builder append ";\n"
     }
   }
 
@@ -3191,15 +3191,15 @@ case class VariableAssignmentCGenerator(override val self: VariableAssignment) e
     }
 
     builder append propertyName
-      self.getIndex.foreach {
-        idx =>
-          builder append "["
-          idx.generateC(builder, context)
-          builder append "]"
-      }
-      builder append " = "
-      self.getExpression.generateC(builder, context)
-      builder append ";\n"
+    self.getIndex.foreach {
+      idx =>
+        builder append "["
+        idx.generateC(builder, context)
+        builder append "]"
+    }
+    builder append " = "
+    self.getExpression.generateC(builder, context)
+    builder append ";\n"
   }
 }
 
@@ -3271,11 +3271,11 @@ case class LocalVariableActionCGenerator(override val self: LocalVariable) exten
     val propertyName = self.getType.c_type() + " " + self.getName
     builder append propertyName
     if (self.getCardinality != null) {//array declaration
-      val tempBuilder = new StringBuilder()
+    val tempBuilder = new StringBuilder()
       self.getCardinality.generateC(tempBuilder, context)
       builder append "[" + tempBuilder.toString() + "];\n"
       if (self.getInit != null && self.getInit.isInstanceOf[PropertyReference]) {//we want to assign the array, we have to copy all values of the target array
-        val pr: PropertyReference = self.getInit.asInstanceOf[PropertyReference]
+      val pr: PropertyReference = self.getInit.asInstanceOf[PropertyReference]
         if (pr.getProperty.getCardinality != null) {
           //the target is indeed an array
           builder append "int i = 0;\n"

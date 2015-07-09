@@ -19,10 +19,10 @@ import org.sintef.thingml.Configuration;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -65,20 +65,26 @@ public abstract class ThingMLCompiler {
 
     public abstract ThingMLCompiler clone();
 
-    /**************************************************************
+    /**
+     * ***********************************************************
      * META-DATA about this particular compiler
-     **************************************************************/
+     * ************************************************************
+     */
     public abstract String getID();
+
     public abstract String getName();
+
     public abstract String getDescription();
 
     /**************************************************************
      * Parameters common to all compilers
      **************************************************************/
 
-    /**************************************************************
+    /**
+     * ***********************************************************
      * Entry point of the compiler
-     **************************************************************/
+     * ************************************************************
+     */
     public abstract boolean compile(Configuration cfg, String... options);
 
     public boolean compileConnector(String connector, Configuration cfg, String... options) {
@@ -108,7 +114,9 @@ public abstract class ThingMLCompiler {
         return cfgBuildCompiler;
     }
 
-    public ThingImplCompiler getThingImplCompiler() {return thingImplCompiler; }
+    public ThingImplCompiler getThingImplCompiler() {
+        return thingImplCompiler;
+    }
 
     public void addConnectorCompilers(Map<String, CfgExternalConnectorCompiler> connectorCompilers) {
         this.connectorCompilers.putAll(connectorCompilers);
@@ -117,7 +125,7 @@ public abstract class ThingMLCompiler {
     public Map<String, CfgExternalConnectorCompiler> getConnectorCompilers() {
         return Collections.unmodifiableMap(connectorCompilers);
     }
-    
+
     private OutputStream messageStream = System.out;
     private OutputStream errorStream = System.err;
 
@@ -136,14 +144,17 @@ public abstract class ThingMLCompiler {
     public void setMessageStream(OutputStream messageStream) {
         this.messageStream = messageStream;
     }
-    
-   private File outputDirectory = null;
+
+    private File outputDirectory = null;
 
     public void setOutputDirectory(File outDir) {
         outDir.mkdirs();
-        if (!outDir.exists()) throw new Error("ERROR: The output directory does not exist (" + outDir.getAbsolutePath() + ").");
-        if (!outDir.isDirectory()) throw new Error("ERROR: The output directory has to be a directory (" + outDir.getAbsolutePath() + ").");
-        if (!outDir.canWrite()) throw new Error("ERROR: The output directory is not writable (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.exists())
+            throw new Error("ERROR: The output directory does not exist (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.isDirectory())
+            throw new Error("ERROR: The output directory has to be a directory (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.canWrite())
+            throw new Error("ERROR: The output directory is not writable (" + outDir.getAbsolutePath() + ").");
         outputDirectory = outDir;
     }
 
@@ -151,5 +162,5 @@ public abstract class ThingMLCompiler {
         return outputDirectory;
     }
 
-    
+
 }

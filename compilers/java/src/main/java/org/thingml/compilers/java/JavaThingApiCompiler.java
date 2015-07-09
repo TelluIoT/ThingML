@@ -19,23 +19,20 @@ import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Created by bmori on 09.12.2014.
  */
 public class JavaThingApiCompiler extends ThingApiCompiler {
 
-    public void generateEnumeration(Enumeration e, Context ctx, StringBuilder builder) throws Exception{
+    public void generateEnumeration(Enumeration e, Context ctx, StringBuilder builder) throws Exception {
         String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
         //final String src = "src/main/java/" + pack.replaceAll(".", "/");
 
         JavaHelper.generateHeader(pack + ".api", pack, builder, ctx, false, false, false);
         String raw_type = "Object";
-        if (!e.annotation("java_type").isEmpty())raw_type = e.annotation("java_type").toArray()[0].toString();
+        if (!e.annotation("java_type").isEmpty()) raw_type = e.annotation("java_type").toArray()[0].toString();
 
         String enumName = ctx.firstToUpper(e.getName()) + "_ENUM";
 
@@ -44,12 +41,11 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         if (e.getLiterals().size() > 0) {
             int i = 0;
             for (EnumerationLiteral l : e.getLiterals()) {
-                String java_name = ((ThingMLElement)l.eContainer()).getName().toUpperCase() + "_" + l.getName().toUpperCase();
+                String java_name = ((ThingMLElement) l.eContainer()).getName().toUpperCase() + "_" + l.getName().toUpperCase();
                 String enum_val = "";
                 if (!l.annotation("enum_val").isEmpty()) {
                     enum_val = l.annotation("enum_val").toArray()[0].toString();
-                }
-                else {
+                } else {
                     throw new Exception("Cannot find value for enum " + l);
                 }
 
@@ -76,7 +72,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         final String src = "src/main/java/" + pack.replace(".", "/");
 
         //Enumerations
-        for(Type t : thing.findContainingModel().allUsedSimpleTypes()) {
+        for (Type t : thing.findContainingModel().allUsedSimpleTypes()) {
             if (t instanceof Enumeration) {
                 Enumeration e = (Enumeration) t;
                 final StringBuilder builder = ctx.getNewBuilder(src + "/api/" + ctx.firstToUpper(e.getName()) + "_ENUM.java");
@@ -93,13 +89,13 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         //Lifecycle API (start/stop) comes from the JaSM component which things extends **
 
         //Generate interfaces that the thing will implement, for others to call this API
-        for(Port p : thing.allPorts()) {
+        for (Port p : thing.allPorts()) {
             if (!p.isDefined("public", "false") && p.getReceives().size() > 0) {
                 final StringBuilder builder = ctx.getBuilder(src + "/api/I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + ".java");
                 builder.append("package " + pack + ".api;\n\n");
                 builder.append("import " + pack + ".api.*;\n\n");
                 builder.append("public interface " + "I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "{\n");
-                for(Message m : p.getReceives()) {
+                for (Message m : p.getReceives()) {
                     builder.append("void " + m.getName() + "_via_" + p.getName() + "(");
                     JavaHelper.generateParameter(m, builder, ctx);
                     builder.append(");\n");
@@ -109,7 +105,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         }
 
         //generateMainAndInit interfaces for the others to implement, so that the thing can notify them
-        for(Port p : thing.allPorts()) {
+        for (Port p : thing.allPorts()) {
             if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
                 final StringBuilder builder = ctx.getBuilder(src + "/api/I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client.java");
                 builder.append("package " + pack + ".api;\n\n");

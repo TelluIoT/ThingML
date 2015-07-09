@@ -21,11 +21,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.compilers.c.CThingImplCompiler;
-import org.thingml.compilers.c.posix.CCompilerContextPosix;
-import org.thingml.compilers.c.posix.CThingActionCompilerPosix;
-import org.thingml.compilers.c.posix.PosixCCfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
@@ -63,12 +59,12 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
     public void do_call_compiler(Configuration cfg, String... options) {
 
         CCompilerContext ctx = new CCompilerContextArduino(this);
-        
+
         ctx.setCurrentConfiguration(cfg);
         ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
 
         // GENERATE A MODULE FOR EACH THING
-        for (Thing thing: cfg.allThings()) {
+        for (Thing thing : cfg.allThings()) {
             ctx.setConcreteThing(thing);
             // GENERATE HEADER
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);

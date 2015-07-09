@@ -22,9 +22,9 @@ public class ThingActionCompiler {
 
     public void generate(Object o, StringBuilder builder, Context ctx) {
         if (o instanceof Action) {
-            generate((Action)o, builder, ctx);
-        } else if (o instanceof Expression){
-            generate((Expression)o, builder, ctx);
+            generate((Action) o, builder, ctx);
+        } else if (o instanceof Expression) {
+            generate((Expression) o, builder, ctx);
         } else {
             throw (new UnsupportedOperationException("This action/Expression (" + o.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
@@ -37,212 +37,212 @@ public class ThingActionCompiler {
         if (action instanceof SendAction)
             generate((SendAction) action, builder, ctx);
         else if (action instanceof VariableAssignment)
-            generate((VariableAssignment)action, builder, ctx);
+            generate((VariableAssignment) action, builder, ctx);
         else if (action instanceof ActionBlock)
-            generate((ActionBlock)action, builder, ctx);
+            generate((ActionBlock) action, builder, ctx);
         else if (action instanceof ExternStatement)
-            generate((ExternStatement)action, builder, ctx);
+            generate((ExternStatement) action, builder, ctx);
         else if (action instanceof ConditionalAction)
-            generate((ConditionalAction)action, builder, ctx);
+            generate((ConditionalAction) action, builder, ctx);
         else if (action instanceof LoopAction)
-            generate((LoopAction)action, builder, ctx);
+            generate((LoopAction) action, builder, ctx);
         else if (action instanceof PrintAction)
-            generate((PrintAction)action, builder, ctx);
+            generate((PrintAction) action, builder, ctx);
         else if (action instanceof ErrorAction)
-            generate((ErrorAction)action, builder, ctx);
+            generate((ErrorAction) action, builder, ctx);
         else if (action instanceof ReturnAction)
-            generate((ReturnAction)action, builder, ctx);
+            generate((ReturnAction) action, builder, ctx);
         else if (action instanceof LocalVariable)
-            generate((LocalVariable)action, builder, ctx);
+            generate((LocalVariable) action, builder, ctx);
         else if (action instanceof FunctionCallStatement)
-            generate((FunctionCallStatement)action, builder, ctx);
+            generate((FunctionCallStatement) action, builder, ctx);
     }
 
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(ActionBlock action, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(ExternStatement action, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(ConditionalAction action, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(LoopAction action, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
 
     //ThingML Expressions
     public void generate(Expression expression, StringBuilder builder, Context ctx) {
-        if (expression instanceof  ArrayIndex) {
+        if (expression instanceof ArrayIndex) {
             generate((ArrayIndex) expression, builder, ctx);
-        } else if(expression instanceof  OrExpression) {
+        } else if (expression instanceof OrExpression) {
             generate((OrExpression) expression, builder, ctx);
-        } else if(expression instanceof  AndExpression) {
+        } else if (expression instanceof AndExpression) {
             generate((AndExpression) expression, builder, ctx);
-        }else if(expression instanceof  LowerExpression) {
+        } else if (expression instanceof LowerExpression) {
             generate((LowerExpression) expression, builder, ctx);
-        }else if(expression instanceof  GreaterExpression) {
+        } else if (expression instanceof GreaterExpression) {
             generate((GreaterExpression) expression, builder, ctx);
-        }else if(expression instanceof  EqualsExpression) {
+        } else if (expression instanceof EqualsExpression) {
             generate((EqualsExpression) expression, builder, ctx);
-        }else if(expression instanceof  PlusExpression) {
+        } else if (expression instanceof PlusExpression) {
             generate((PlusExpression) expression, builder, ctx);
-        }else if(expression instanceof  MinusExpression) {
+        } else if (expression instanceof MinusExpression) {
             generate((MinusExpression) expression, builder, ctx);
-        }else if(expression instanceof  TimesExpression) {
+        } else if (expression instanceof TimesExpression) {
             generate((TimesExpression) expression, builder, ctx);
-        }else if(expression instanceof  DivExpression) {
+        } else if (expression instanceof DivExpression) {
             generate((DivExpression) expression, builder, ctx);
-        }else if(expression instanceof  ModExpression) {
+        } else if (expression instanceof ModExpression) {
             generate((ModExpression) expression, builder, ctx);
-        }else if(expression instanceof  UnaryMinus) {
+        } else if (expression instanceof UnaryMinus) {
             generate((UnaryMinus) expression, builder, ctx);
-        }else if(expression instanceof  NotExpression) {
+        } else if (expression instanceof NotExpression) {
             generate((NotExpression) expression, builder, ctx);
-        }else if(expression instanceof  EventReference) {
+        } else if (expression instanceof EventReference) {
             generate((EventReference) expression, builder, ctx);
-        }else if(expression instanceof  ExpressionGroup) {
+        } else if (expression instanceof ExpressionGroup) {
             generate((ExpressionGroup) expression, builder, ctx);
-        }else if(expression instanceof  PropertyReference) {
+        } else if (expression instanceof PropertyReference) {
             generate((PropertyReference) expression, builder, ctx);
-        }else if(expression instanceof  IntegerLiteral) {
+        } else if (expression instanceof IntegerLiteral) {
             generate((IntegerLiteral) expression, builder, ctx);
-        } else if(expression instanceof  DoubleLiteral) {
+        } else if (expression instanceof DoubleLiteral) {
             generate((DoubleLiteral) expression, builder, ctx);
-        }else if(expression instanceof  StringLiteral) {
+        } else if (expression instanceof StringLiteral) {
             generate((StringLiteral) expression, builder, ctx);
-        }else if(expression instanceof  BooleanLiteral) {
+        } else if (expression instanceof BooleanLiteral) {
             generate((BooleanLiteral) expression, builder, ctx);
-        }else if(expression instanceof  EnumLiteralRef) {
+        } else if (expression instanceof EnumLiteralRef) {
             generate((EnumLiteralRef) expression, builder, ctx);
-        }else if(expression instanceof  ExternExpression) {
+        } else if (expression instanceof ExternExpression) {
             generate((ExternExpression) expression, builder, ctx);
-        }else if(expression instanceof  FunctionCallExpression) {
+        } else if (expression instanceof FunctionCallExpression) {
             generate((FunctionCallExpression) expression, builder, ctx);
         }
     }
 
     public void generate(ArrayIndex expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(OrExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(AndExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(LowerExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(GreaterExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(PlusExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(MinusExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(TimesExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(DivExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(ModExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(UnaryMinus expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(NotExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(IntegerLiteral expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(DoubleLiteral expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(StringLiteral expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(BooleanLiteral expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(ExternExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 }

@@ -48,7 +48,7 @@ public class JavaHelper {
         StringBuilder builder = new StringBuilder();
         if (type == null) {//void
             builder.append("void");
-        } else if (type instanceof Enumeration){//enumeration
+        } else if (type instanceof Enumeration) {//enumeration
             builder.append(ctx.firstToUpper(type.getName()) + "_ENUM");
         } else {
             if (type.hasAnnotation("java_type")) {

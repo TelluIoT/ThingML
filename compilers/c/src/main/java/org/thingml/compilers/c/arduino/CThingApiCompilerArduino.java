@@ -15,15 +15,12 @@
  */
 package org.thingml.compilers.c.arduino;
 
-import org.sintef.thingml.Thing;
-import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
 
 /**
  * Created by ffl on 17.06.15.
  */
 public class CThingApiCompilerArduino extends CThingApiCompiler {
-
 
 
 }

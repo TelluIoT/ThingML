@@ -19,9 +19,9 @@ import org.sintef.thingml.Configuration;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -34,17 +34,18 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
     public OpaqueThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
     }
+
     PrintStream m, e;
 
     private void println(String msg) {
-        if (m!=null)
+        if (m != null)
             m.println(msg);
         else
             System.out.println(msg);
     }
 
     private void erroln(String msg) {
-        if (e!=null)
+        if (e != null)
             e.println(msg);
         else
             System.err.println(msg);
@@ -59,11 +60,10 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
         }
 
         try {
-            println("Running "+getName()+" compiler on configuration " + cfg.getName());
+            println("Running " + getName() + " compiler on configuration " + cfg.getName());
             do_call_compiler(cfg, options);
             println("Compilation complete.");
-        }
-        catch (Error err) {
+        } catch (Error err) {
             erroln("Compilation error:" + err.getMessage());
             err.printStackTrace();
             return false;

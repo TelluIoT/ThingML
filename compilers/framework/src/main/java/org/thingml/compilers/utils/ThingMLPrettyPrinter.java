@@ -18,7 +18,6 @@ package org.thingml.compilers.utils;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
-import org.thingml.compilers.utils.CharacterEscaper;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -30,7 +29,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
         builder.append(action.getPort().getName() + "!" + action.getMessage().getName() + "(");
-        for(Expression p : action.getParameters()) {
+        for (Expression p : action.getParameters()) {
             generate(p, builder, ctx);
         }
         builder.append(")\n");
@@ -45,7 +44,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(ActionBlock action, StringBuilder builder, Context ctx) {
-        for(Action a : action.getActions()) {
+        for (Action a : action.getActions()) {
             generate(a, builder, ctx);
         }
     }
@@ -107,7 +106,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
-        if(!action.isChangeable()) {
+        if (!action.isChangeable()) {
             builder.append("readonly ");
         }
         builder.append("property " + action.getName() + " : " + action.getType().getName());
@@ -120,7 +119,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
         builder.append(action.getFunction().getName() + "(");
-        for(Expression p : action.getParameters()) {
+        for (Expression p : action.getParameters()) {
             generate(p, builder, ctx);
         }
         builder.append(")\n");
@@ -155,7 +154,8 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     public void generate(LowerExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
         builder.append(" < ");
-        generate(expression.getRhs(), builder, ctx);    }
+        generate(expression.getRhs(), builder, ctx);
+    }
 
     @Override
     public void generate(GreaterExpression expression, StringBuilder builder, Context ctx) {
@@ -168,7 +168,8 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
         builder.append(" == ");
-        generate(expression.getRhs(), builder, ctx);    }
+        generate(expression.getRhs(), builder, ctx);
+    }
 
     @Override
     public void generate(PlusExpression expression, StringBuilder builder, Context ctx) {
@@ -252,10 +253,10 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(BooleanLiteral expression, StringBuilder builder, Context ctx) {
-       if (expression.isBoolValue())
-           builder.append("true");
-       else
-           builder.append("false");
+        if (expression.isBoolValue())
+            builder.append("true");
+        else
+            builder.append("false");
     }
 
     @Override
@@ -266,7 +267,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     @Override
     public void generate(ExternExpression expression, StringBuilder builder, Context ctx) {
         builder.append("'" + expression.getExpression() + "'");
-        for(Expression e : expression.getSegments()) {
+        for (Expression e : expression.getSegments()) {
             builder.append(" & ");
             generate(e, builder, ctx);
         }
@@ -275,8 +276,9 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     @Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {//TODO: this should actually be factorizable
         builder.append(expression.getFunction().getName() + "(");
-        for(Expression p : expression.getParameters()) {
+        for (Expression p : expression.getParameters()) {
             generate(p, builder, ctx);
         }
-        builder.append(")");    }
+        builder.append(")");
+    }
 }

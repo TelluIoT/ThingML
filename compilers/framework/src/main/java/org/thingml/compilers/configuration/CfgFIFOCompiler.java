@@ -24,7 +24,7 @@ import org.thingml.compilers.Context;
 public class CfgFIFOCompiler {
 
     public void generateFIFO(Configuration cfg, Context ctx) {
-        throw(new UnsupportedOperationException("FIFO libs are platform-specific."));
+        throw (new UnsupportedOperationException("FIFO libs are platform-specific."));
     }
 
 }

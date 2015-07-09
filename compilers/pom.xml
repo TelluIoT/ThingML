@@ -16,10 +16,10 @@
     <modules>
         <module>framework</module>
         <module>java</module>
-		<module>javascript</module>
-		<module>c</module>
-		<module>uml</module>
-     	<module>deprescala</module>
+        <module>javascript</module>
+        <module>c</module>
+        <module>uml</module>
+        <module>deprescala</module>
         <module>registry</module>
     </modules>
 

@@ -17,10 +17,9 @@ package org.thingml.compilers.c.posix;
 
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingMLModel;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
 
 /**
  * Created by ffl on 17.06.15.
@@ -30,7 +29,7 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
 
     @Override
     public void generateBuildScript(Configuration cfg, Context ctx) {
-        generateLinuxMakefile(cfg, (CCompilerContext)ctx);
+        generateLinuxMakefile(cfg, (CCompilerContext) ctx);
     }
 
     protected void generateLinuxMakefile(Configuration cfg, CCompilerContext ctx) {
@@ -50,7 +49,7 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         String objs = "";
 
         // Add the modules for the Things
-        for(Thing t : cfg.allThings()) {
+        for (Thing t : cfg.allThings()) {
             srcs += t.getName() + ".c ";
             objs += t.getName() + ".o ";
         }
@@ -62,7 +61,7 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         // Add any additional modules from the annotations
         for (String s : cfg.annotation("add_c_modules")) {
             String[] mods = s.split(" ");
-            for (int i=0; i<mods.length; i++) {
+            for (int i = 0; i < mods.length; i++) {
                 srcs += mods[i].trim() + ".c ";
                 objs += mods[i].trim() + ".o ";
             }
@@ -73,7 +72,7 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         String libs = "";
         for (String s : cfg.annotation("add_c_libraries")) {
             String[] strs = s.split(" ");
-            for (int i=0; i<strs.length; i++) {
+            for (int i = 0; i < strs.length; i++) {
                 libs += "-l " + strs[i].trim() + " ";
             }
         }
@@ -82,7 +81,7 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         String preproc = "";
         for (String s : cfg.annotation("add_c_directives")) {
             String[] strs = s.split(" ");
-            for (int i=0; i<strs.length; i++) {
+            for (int i = 0; i < strs.length; i++) {
                 preproc += "-D " + strs[i].trim() + " ";
             }
         }

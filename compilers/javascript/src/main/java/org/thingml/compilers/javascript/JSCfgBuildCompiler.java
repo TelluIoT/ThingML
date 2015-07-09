@@ -40,7 +40,7 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
             final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/package.json");
             final List<String> packLines = IOUtils.readLines(input);
             String pack = "";
-            for(String line : packLines) {
+            for (String line : packLines) {
                 pack += line + "\n";
             }
             input.close();
@@ -48,8 +48,8 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
 
             final JsonObject json = JsonObject.readFrom(pack);
             final JsonValue deps = json.get("dependencies");
-            for(Thing t : cfg.allThings()) {
-                for(String dep : t.annotation("js_dep")) {
+            for (Thing t : cfg.allThings()) {
+                for (String dep : t.annotation("js_dep")) {
                     deps.asObject().add(dep.split(":")[0].trim(), dep.split(":")[1].trim());
                 }
             }

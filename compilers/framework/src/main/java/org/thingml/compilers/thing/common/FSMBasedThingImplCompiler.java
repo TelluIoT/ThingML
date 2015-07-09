@@ -26,7 +26,7 @@ public class FSMBasedThingImplCompiler extends ThingImplCompiler {
 
     public void generateState(State s, StringBuilder builder, Context ctx) {
         if (s instanceof StateMachine) {
-            generateStateMachine((StateMachine)s, builder, ctx);
+            generateStateMachine((StateMachine) s, builder, ctx);
         } else if (s instanceof CompositeState) {
             generateCompositeState((CompositeState) s, builder, ctx);
         } else {
@@ -47,7 +47,6 @@ public class FSMBasedThingImplCompiler extends ThingImplCompiler {
     }
 
 
-
     public void generateRegion(Region r, StringBuilder builder, Context ctx) {
         throw new UnsupportedOperationException("to be implemented");
     }
@@ -55,9 +54,9 @@ public class FSMBasedThingImplCompiler extends ThingImplCompiler {
 
     public void generateHandler(Handler h, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (h instanceof Transition) {
-            generateTransition((Transition)h, msg, p, builder, ctx);
+            generateTransition((Transition) h, msg, p, builder, ctx);
         } else if (h instanceof InternalTransition) {
-            generateInternalTransition((InternalTransition)h, msg, p, builder, ctx);
+            generateInternalTransition((InternalTransition) h, msg, p, builder, ctx);
         }
     }
 

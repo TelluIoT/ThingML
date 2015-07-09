@@ -19,8 +19,8 @@ import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
-import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 
 import java.io.*;
 import java.util.List;
@@ -32,7 +32,7 @@ import java.util.Map;
 public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
     private void generateKevScript(Context ctx, Configuration cfg) {
-        StringBuilder kevScript = ctx.getBuilder(cfg.getName() + "/kevs/main.kevs" );
+        StringBuilder kevScript = ctx.getBuilder(cfg.getName() + "/kevs/main.kevs");
         kevScript.append("//create a default JavaScript node\n");
         kevScript.append("add node0 : JavascriptNode\n");
 
@@ -45,10 +45,10 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         kevScript.append("//instantiate Kevoree/ThingML components\n");
         kevScript.append("add node0." + cfg.getName() + "_0 : my.package." + cfg.getName() + "\n");
 
-        for(String k : ctx.getCurrentConfiguration().annotation("kevscript_import")) {
+        for (String k : ctx.getCurrentConfiguration().annotation("kevscript_import")) {
             kevScript.append(k);
         }
-        if(ctx.getCurrentConfiguration().hasAnnotation("kevscript_import"))
+        if (ctx.getCurrentConfiguration().hasAnnotation("kevscript_import"))
             kevScript.append("\n");
 
         kevScript.append("start sync\n");
@@ -75,20 +75,20 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
             final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/Gruntfile.js");
             final List<String> pomLines = IOUtils.readLines(input);
             String pom = "";
-            for(String line : pomLines) {
+            for (String line : pomLines) {
                 pom += line + "\n";
             }
             input.close();
             String dep = "";
             int i = 0;
-            for(String d : ctx.getCurrentConfiguration().annotation("kevoree_import")) {
+            for (String d : ctx.getCurrentConfiguration().annotation("kevoree_import")) {
                 if (i > 0)
-                    dep+= ", ";
+                    dep += ", ";
                 dep += "'../" + d + "'";
                 i++;
             }
             pom = pom.replace("mergeLocalLibraries: []", "mergeLocalLibraries: [" + dep + "]");
-            final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/" + outputdir +  "/Gruntfile.js")));
+            final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/" + outputdir + "/Gruntfile.js")));
             w.println(pom);
             w.close();
         } catch (Exception e) {
@@ -139,21 +139,21 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         final File dir = new File(ctx.getOutputDirectory() + "/" + cfg.getName());
         final File lib = new File(dir, "lib");
         lib.mkdirs();
-        for(File f : dir.listFiles()) {
+        for (File f : dir.listFiles()) {
             if (FilenameUtils.getExtension(f.getAbsolutePath()).equals("js") && !f.getName().equals("Gruntfile.js")) {
                 f.renameTo(new File(lib, f.getName()));
             }
         }
 
-        final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/lib/" + cfg.getName() + ".js" );
+        final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/lib/" + cfg.getName() + ".js");
         //builder.append("var Connector = require('./Connector');\n");
         builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
 
-        for(Thing t : cfg.allThings()) {
+        for (Thing t : cfg.allThings()) {
             builder.append("var " + t.getName() + " = require('./" + t.getName() + "');\n");
         }
 
-        builder.append("/**\n* Kevoree component\n* @type {" + cfg.getName() +  "}\n*/\n");
+        builder.append("/**\n* Kevoree component\n* @type {" + cfg.getName() + "}\n*/\n");
         builder.append("var " + cfg.getName() + " = AbstractComponent.extend({\n");
         builder.append("toString: '" + cfg.getName() + "',\n");
 
@@ -161,19 +161,19 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
         builder.append("construct: function() {\n");
         JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
-            for(Map.Entry e : cfg.danglingPorts().entrySet()) {
-                final Instance i = (Instance) e.getKey();
-                for(Port p : (List<Port>)e.getValue()) {
-                    for(Message m : p.getSends()) {
-                        builder.append("this." + i.getName() + ".get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().push(this." + shortName(i, p, m) + "_proxy.bind(this));\n");
-                    }
+        for (Map.Entry e : cfg.danglingPorts().entrySet()) {
+            final Instance i = (Instance) e.getKey();
+            for (Port p : (List<Port>) e.getValue()) {
+                for (Message m : p.getSends()) {
+                    builder.append("this." + i.getName() + ".get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().push(this." + shortName(i, p, m) + "_proxy.bind(this));\n");
                 }
             }
+        }
         builder.append("},\n\n");
 
 
         builder.append("start: function (done) {\n");
-        for(Instance i : cfg.danglingPorts().keySet()) {
+        for (Instance i : cfg.danglingPorts().keySet()) {
             builder.append("this." + i.getName() + "._init();\n");
         }
         builder.append("done();\n");
@@ -181,16 +181,16 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
 
         builder.append("stop: function (done) {\n");
-        for(Instance i : cfg.allInstances()) {
+        for (Instance i : cfg.allInstances()) {
             builder.append("this." + i.getName() + "._stop();\n");
         }
         builder.append("done();\n");
         builder.append("}");
 
-        for(Map.Entry e : cfg.danglingPorts().entrySet()) {
+        for (Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
-            for(Port p : (List<Port>)e.getValue()) {
-                for(Message m : p.getReceives()) {
+            for (Port p : (List<Port>) e.getValue()) {
+                for (Message m : p.getReceives()) {
                     builder.append(",\nin_" + shortName(i, p, m) + "_in: function (msg) {\n");
                     builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(msg.split(';'));\n");
                     builder.append("}");
@@ -198,13 +198,13 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
             }
         }
 
-        for(Map.Entry e : cfg.danglingPorts().entrySet()) {
+        for (Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
-            for(Port p : (List<Port>)e.getValue()) {
-                for(Message m : p.getSends()) {
+            for (Port p : (List<Port>) e.getValue()) {
+                for (Message m : p.getSends()) {
                     builder.append(",\n" + shortName(i, p, m) + "_proxy: function() {this.out_" + shortName(i, p, m) + "_out(");
                     int index = 0;
-                    for(Parameter pa : m.getParameters()) {
+                    for (Parameter pa : m.getParameters()) {
                         if (index > 0)
                             builder.append(" + ';' + ");
                         builder.append("arguments[" + index + "]");

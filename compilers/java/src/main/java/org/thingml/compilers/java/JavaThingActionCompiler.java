@@ -28,11 +28,11 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
         builder.append("send" + ctx.firstToUpper(action.getMessage().getName()) + "_via_" + action.getPort().getName() + "(");
         int i = 0;
-        for(Expression p : action.getParameters()) {
+        for (Expression p : action.getParameters()) {
             if (i > 0)
                 builder.append(", ");
             int j = 0;
-            for(Parameter fp : action.getMessage().getParameters()) {
+            for (Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
                     cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
                     break;
@@ -67,7 +67,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
         if (!action.isChangeable()) {
-             builder.append("final ");
+            builder.append("final ");
         }
 
         //Define the type of the variable
@@ -79,7 +79,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         //Define the initial value for that variable
         if (action.getInit() != null) {
             builder.append(" = ");
-            cast(action.getType(), action.getCardinality()!=null, action.getInit(), builder, ctx);
+            cast(action.getType(), action.getCardinality() != null, action.getInit(), builder, ctx);
             builder.append(";\n");
         } else {
             if (!action.isChangeable()) {
@@ -91,11 +91,11 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
                 generate(action.getCardinality(), builder, ctx);
                 builder.append("];");
             } else {
-                 if (action.getType().isDefined("java_primitive", "true")) {
-                     builder.append(" = " + JavaHelper.getDefaultValue(action.getType()) +  ";");
-                 } else {
+                if (action.getType().isDefined("java_primitive", "true")) {
+                    builder.append(" = " + JavaHelper.getDefaultValue(action.getType()) + ";");
+                } else {
                     builder.append(" = null;");
-                 }
+                }
             }
         }
         builder.append("\n");
@@ -103,9 +103,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-       builder.append("System.err.println(");
-       generate(action.getMsg(), builder, ctx);
-       builder.append(");\n");
+        builder.append("System.err.println(");
+        generate(action.getMsg(), builder, ctx);
+        builder.append(");\n");
     }
 
     @Override
@@ -123,7 +123,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        if (expression.getProperty() instanceof Property && ((Property)expression.getProperty()).getCardinality()==null)
+        if (expression.getProperty() instanceof Property && ((Property) expression.getProperty()).getCardinality() == null)
             builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
         else
             builder.append(ctx.getVariableName(expression.getProperty()));
@@ -131,7 +131,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
-        builder.append(ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + ((ThingMLElement)expression.getLiteral().eContainer()).getName().toUpperCase() + "_" + expression.getLiteral().getName().toUpperCase());
+        builder.append(ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + ((ThingMLElement) expression.getLiteral().eContainer()).getName().toUpperCase() + "_" + expression.getLiteral().getName().toUpperCase());
     }
 
     @Override
@@ -139,14 +139,14 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         builder.append(expression.getFunction().getName() + "(");
 
         int i = 0;
-        for(Expression p : expression.getParameters()) {
+        for (Expression p : expression.getParameters()) {
 
             if (i > 0)
                 builder.append(", ");
             int j = 0;
-            for(Parameter fp : expression.getFunction().getParameters()) {
+            for (Parameter fp : expression.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    cast(fp.getType(), fp.getCardinality()!=null, p, builder, ctx);
+                    cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
                     break;
                 }
                 j++;

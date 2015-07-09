@@ -25,6 +25,6 @@ import org.thingml.compilers.Context;
 public class CfgMainGenerator {
 
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
-        throw(new UnsupportedOperationException("Configuration are platform-specific."));
+        throw (new UnsupportedOperationException("Configuration are platform-specific."));
     }
 }

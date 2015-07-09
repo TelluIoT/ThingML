@@ -16,18 +16,18 @@
 package org.thingml.compilers.javascript;
 
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
-import org.thingml.compilers.thing.ThingActionCompiler;
-import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 /**
  * Created by ffl on 25.11.14.
  */
 public class EspruinoCompiler extends JavaScriptCompiler {
 
-   public EspruinoCompiler() {
+    public EspruinoCompiler() {
         super(new EspruinoThingActionCompiler(), new EspruinoThingApiCompiler(), new JSCfgMainGenerator(), new JSCfgBuildCompiler(), new JSThingImplCompiler());
     }
 
