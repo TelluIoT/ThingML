@@ -26,7 +26,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        builder.append("process.nextTick(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + ".bind(_this"/* + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName())*/);
+        builder.append("setImmediate(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()));
         int i = 0;
         for (Expression p : action.getParameters()) {
             int j = 0;
@@ -40,7 +40,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             }
             i++;
         }
-        builder.append("));\n");
+        builder.append(");\n");
     }
 
     @Override
