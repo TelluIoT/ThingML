@@ -26,13 +26,8 @@ import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.cgenerator.CGenerator;
 import org.thingml.compilers.*;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
-import org.thingml.compilers.java.JavaCompiler;
-import org.thingml.compilers.javascript.JavaScriptCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
-import org.thingml.compilers.uml.PlantUMLCompiler;
-import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.cppgenerator.CPPGenerator;
-import org.thingml.javagenerator.gui.SwingGenerator;
 import org.thingml.thingmlgenerator.ThingMLGenerator;
 
 import javax.swing.*;
@@ -148,24 +143,14 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
             JMenu compilersMenu = new JMenu("Compile to");
             //JMenu arduinoMenu = new JMenu("Arduino");
             JMenu linuxMenu = new JMenu("Linux");
-            JMenu javaMenu = new JMenu("Java");
-            JMenu jsMenu = new JMenu("JavaScript");
             //compilersMenu.add(arduinoMenu);
             compilersMenu.add(linuxMenu);
-            compilersMenu.add(javaMenu);
-            compilersMenu.add(jsMenu);
-            //compilersMenu.add(umlMenu);
 
 
             //JMenuItem b = new JMenuItem("Arduino");
             //JMenuItem bC = new JMenuItem("Posix C");
             JMenuItem bCPP = new JMenuItem("C++");
             JMenuItem rosC = new JMenuItem("ROS Node");
-            //JMenuItem bHTTP = new JMenuItem("HTTP");
-            //JMenuItem bMQTT = new JMenuItem("MQTT");
-            //JMenuItem bWS = new JMenuItem("WebSocket");
-            //JMenuItem bCoAP = new JMenuItem("CoAP");
-            JMenuItem bSwing = new JMenuItem("Swing");
             JMenuItem bThingML = new JMenuItem("ThingML/Comm");
             JMenuItem bThingML2 = new JMenuItem("ThingML/Comm2");
 
@@ -231,69 +216,6 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                 }
             });
 
-            /*bHTTP.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Input file : " + targetFile);
-                    if (targetFile == null) return;
-                    try {
-                        ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
-                        for (Configuration c : thingmlModel.allConfigurations()) {
-                            String rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName();
-                            HTTPGenerator.compileAndRun(c, thingmlModel, false);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
-
-            bMQTT.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Input file : " + targetFile);
-                    if (targetFile == null) return;
-                    try {
-                        ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
-                        for (Configuration c : thingmlModel.allConfigurations()) {
-                            String rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName();
-                            MQTTGenerator.compileAndRun(c, thingmlModel, false);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
-
-            bWS.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Input file : " + targetFile);
-                    if (targetFile == null) return;
-                    try {
-                        ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
-                        for (Configuration c : thingmlModel.allConfigurations()) {
-                            String rootDir = System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + c.getName();
-                            WebSocketGenerator.compileAndRun(c, thingmlModel, false);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });*/
-
-            bSwing.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Input file : " + targetFile);
-                    if (targetFile == null) return;
-                    try {
-                        ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
-                        for (Configuration c : thingmlModel.allConfigurations()) {
-                            SwingGenerator.compileAndRun(c, thingmlModel);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
-
             bThingML.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Input file : " + targetFile);
@@ -328,11 +250,6 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
             //linuxMenu.add(bC);
             linuxMenu.add(bCPP);
             linuxMenu.add(rosC);
-            //javaMenu.add(bHTTP);
-            //javaMenu.add(bMQTT);
-            //javaMenu.add(bWS);
-            //javaMenu.add(bCoAP);
-            javaMenu.add(bSwing);
             compilersMenu.add(bThingML);
             compilersMenu.add(bThingML2);
             menubar.add(compilersMenu);

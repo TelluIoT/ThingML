@@ -21,7 +21,7 @@ import org.sintef.thingml.Enumeration;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 
-import java.io.*;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -31,8 +31,8 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
 
     @Override
     public void generateExternalConnector(Configuration cfg, Context ctx, String... options) {
-        for(Instance i : cfg.allInstances()) {
-            compileType(i.getType(), ctx, "org.thingml.generated");
+        for (Instance i : cfg.allInstances()) {
+            compileType(i.getType(), ctx, "org.thingml.generated.gui");
         }
         ctx.writeGeneratedCodeToFiles();
     }
@@ -54,7 +54,23 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
             }
         }
 
-        final StringBuilder builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/gui/" + t.getName() + "Mock.java");
+        final StringBuilder builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + t.getName() + "Mock.java");
+        final StringBuilder b = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/StringHelper.java");
+
+        String helper = "";
+        try {
+            InputStream input = this.getClass().getClassLoader().getResourceAsStream("javatemplates/StringHelper.java");
+            final List<String> packLines = IOUtils.readLines(input);
+            for (String line : packLines) {
+                helper += line + "\n";
+            }
+            input.close();
+        } catch (Exception e) {
+            System.err.println("Error loading Swing template: " + e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+        b.append(helper);
+
 
         String imports = "";
         try {
@@ -73,7 +89,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         builder.append(imports);
 
         builder.append("public class " + ctx.firstToUpper(t.getName()) + "Mock extends Component implements ActionListener");
-        for(Port p : messageToReceive.keySet()) {
+        for (Port p : messageToReceive.keySet()) {
             builder.append(", I" + t.getName() + "_" + p.getName());
         }
         builder.append("{\n\n");
@@ -123,17 +139,17 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         StringBuilder tempBuilder = new StringBuilder();
 
         int i = 0;
-        for(Port p : t.allPorts()) {
+        for (Port p : t.allPorts()) {
             tempBuilder.append("final List<EventType> in_" + p.getName() + " = new ArrayList<EventType>();\n");
             tempBuilder.append("final List<EventType> out_" + p.getName() + " = new ArrayList<EventType>();\n");
-            for(Message r : p.getReceives()) {
+            for (Message r : p.getReceives()) {
                 tempBuilder.append("in_" + p.getName() + ".add(" + r.getName() + "Type);\n");
             }
-            for(Message s : p.getSends()) {
+            for (Message s : p.getSends()) {
                 tempBuilder.append("out_" + p.getName() + ".add(" + s.getName() + "Type);\n");
             }
             tempBuilder.append("port_" + ctx.firstToUpper(t.getName()) + "_" + p.getName() + " = new Port(");
-            if(p instanceof ProvidedPort)
+            if (p instanceof ProvidedPort)
                 tempBuilder.append("PortType.PROVIDED");
             else
                 tempBuilder.append("PortType.REQUIRED");
@@ -286,7 +302,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
             Port port = entry.getKey();
             for (Message msg : entry.getValue()) {
                 tempBuilder.append("Style receive" + msg.getName() + "_via_" + port.getName() + "Style = doc.addStyle(\"" + msg.getName() + "_via_" + port.getName() + "\", null);\n");
-                tempBuilder.append("StyleConstants.setBackground(receive" + msg.getName() + "_via_" + port.getName() + "Style, new Color(" + (255-rnd.nextInt(125)) + ", " + (255-rnd.nextInt(125)) + ", " + (255-rnd.nextInt(125)) + "));\n");
+                tempBuilder.append("StyleConstants.setBackground(receive" + msg.getName() + "_via_" + port.getName() + "Style, new Color(" + (255 - rnd.nextInt(125)) + ", " + (255 - rnd.nextInt(125)) + ", " + (255 - rnd.nextInt(125)) + "));\n");
             }
         }
 
@@ -294,61 +310,62 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
 
         tempBuilder = new StringBuilder();
 
-
-
-
-
         for (Map.Entry<Port, List<Message>> entry : messageToSend.entrySet()) {
             Port port = entry.getKey();
             for (Message msg : entry.getValue()) {
-            tempBuilder.append("else if ( ae.getSource() == getSend" + msg.getName() + "_via_" + port.getName() + "()) {\n");
-            tempBuilder.append("try{\n");
-            tempBuilder.append("send(" + msg.getName() + "Type.instantiate(port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName());
-            /*msg.getParameters.foreach{ p =>
-                builder append ", "
-                if (p.getCardinality == null) {
-                    if (p.getType.isInstanceOf[Enumeration]) {
-                        builder append "values_" + p.getType.getName + ".get(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
-                        //"new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
+                tempBuilder.append("else if ( ae.getSource() == getSend" + msg.getName() + "_via_" + port.getName() + "()) {\n");
+                tempBuilder.append("try{\n");
+                tempBuilder.append("send(" + msg.getName() + "Type.instantiate(port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName());
+                for (Parameter p : msg.getParameters()) {
+                    tempBuilder.append(", ");
+                    if (p.getCardinality() == null) {
+                        if (p.getType() instanceof Enumeration) {
+                            tempBuilder.append("values_" + p.getType().getName() + ".get(getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getSelectedItem().toString())");
+                        } else {
+                            tempBuilder.append("(");
+                            if (JavaHelper.getJavaType(p.getType(), false, ctx).equals("int"))
+                                tempBuilder.append("Integer");
+                            else
+                                tempBuilder.append(ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), false, ctx)));
+                            tempBuilder.append(") StringHelper.toObject (" + JavaHelper.getJavaType(p.getType(), false, ctx) + ".class, getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText())");
+                        }
                     } else {
-                        builder append "(" + (if (p.getType.java_type() == "int") "Integer" else Context.firstToUpper(p.getType.java_type())) + ") StringHelper.toObject (" +  p.getType.java_type() + ".class, getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"
+                        builder.append("getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText().getBytes()");
                     }
                 }
-                //TODO: this is a quick and dirty hack that only works with Byte[]. We need to refactor this code to make it work with any kind of Arrays
-                else {
-                    builder append "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText().getBytes()"
-                }
-            }*/
-            tempBuilder.append("), port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName() + ");\n");
+                tempBuilder.append("), port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName() + ");\n");
 
-            tempBuilder.append("for(I" + ctx.firstToUpper(t.getName()) + "_" + port.getName() + "Client l : " + port.getName() + "_listeners)\n");
-            tempBuilder.append("l." + msg.getName() + "_from_" + port.getName() + "(");
-            /*builder append (msg.getParameters.collect{ case p =>
-                (if (p.getCardinality == null) {
-                    if (p.getType.isInstanceOf[Enumeration]) {
-                        "values_" + p.getType.getName + ".get(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
-                        //"new " + p.getType.java_type + "(getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getSelectedItem().toString())"
+                tempBuilder.append("for(I" + ctx.firstToUpper(t.getName()) + "_" + port.getName() + "Client l : " + port.getName() + "_listeners)\n");
+                tempBuilder.append("l." + msg.getName() + "_from_" + port.getName() + "(");
+                int j = 0;
+                for (Parameter p : msg.getParameters()) {
+                    if (j > 0)
+                        tempBuilder.append(", ");
+                    if (p.getCardinality() == null) {
+                        if (p.getType() instanceof Enumeration) {
+                            tempBuilder.append("values_" + p.getType().getName() + ".get(getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getSelectedItem().toString())");
+                        } else {
+                            tempBuilder.append("(");
+                            if (JavaHelper.getJavaType(p.getType(), false, ctx).equals("int"))
+                                tempBuilder.append("Integer");
+                            else
+                                tempBuilder.append(ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), false, ctx)));
+                            tempBuilder.append(")StringHelper.toObject (" + JavaHelper.getJavaType(p.getType(), false, ctx) + ".class, getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText())");
+                        }
                     } else {
-                        "(" + (if (p.getType.java_type() == "int") "Integer" else Context.firstToUpper(p.getType.java_type())) + ")StringHelper.toObject (" +  p.getType.java_type() + ".class, getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText())"
+                        tempBuilder.append("getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText().getBytes()");
                     }
+
                 }
-                //TODO: this is a quick and dirty hack that only works with Byte[]. We need to refactor this code to make it work with any kind of Arrays
-                else {
-                    "getField" + msg.getName + "_via_" + port.getName + "_" + Context.firstToUpper(p.getName)+ "().getText().getBytes()"
-                })
-            }.toList).mkString(", ")*/
-            tempBuilder.append(");\n");
-            tempBuilder.append("} catch(IllegalArgumentException iae) {\n");
-            tempBuilder.append("System.err.println(\"Cannot parse arguments for message " + msg.getName() + " on port " + port.getName() + ". Please try again with proper parameters\");\n");
-            tempBuilder.append("}\n");
-            tempBuilder.append("}\n");
-        }
+                tempBuilder.append(");\n");
+                tempBuilder.append("} catch(IllegalArgumentException iae) {\n");
+                tempBuilder.append("System.err.println(\"Cannot parse arguments for message " + msg.getName() + " on port " + port.getName() + ". Please try again with proper parameters\");\n");
+                tempBuilder.append("}\n");
+                tempBuilder.append("}\n");
+            }
         }
 
         template = template.replace("$ON_ACTION$", tempBuilder.toString());
-
-
-
 
         builder.append(template);
 
@@ -363,7 +380,6 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                 builder.append("}\n");
             }
         }
-
 
         builder.append("}\n");
     }
