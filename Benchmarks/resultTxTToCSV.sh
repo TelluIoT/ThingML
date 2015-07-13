@@ -25,11 +25,16 @@ then
 fi
 
 echo "PID;%CPU;%MEM;TIME" | tee $2
-cat $1 | grep node | awk '{ gsub(/\./,":",$11); printf("%s;%s;%s;%s\n", $1, $9 , $10,$11); }' | tee -a $2
-# if result begin with weird character
-#bug : the colum title has to be manually fix
-cat $2 | awk '{split($0,a,";"); split(a[1],b,"m"); print b[3], ";", a[2], ";", a[3], ";", a[4]}' > tmp.csv
-cat tmp.csv > $2
-rm tmp.csv
+cat $1 | grep node | awk '{
+  if( NF == 13)
+  {
+    split($1,b,"m");
+    printf("%s;%s;%s;%s\n", b[3], $9 , $10,$11);
+    
+  } else {
+    printf("%s;%s;%s;%s\n", $2, $10 , $11,$12);
+  }
+
+  }' | tee -a $2
 exit $?
 
