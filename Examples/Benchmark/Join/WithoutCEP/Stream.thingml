@@ -31,14 +31,18 @@ thing StreamWithCep includes StreamCepMsgs, SenderMsgs {
     function join1() do
         'var now = Date.now();
         
+        /*console.log("J1 : ");
+        console.log(listJoinMessage1.length);
+        console.log(listJoinMessage2.length);*/
+        
         for(m1 in listJoinMessage1) {
-             if(now - listJoinMessage1[m1].time > 50) {
+             if(now - listJoinMessage1[m1].time > 100) {
                  listJoinMessage1.splice(m1,1);   
              }
         }
                   
          for(m2 in listJoinMessage2) {
-             if(now - listJoinMessage2[m2].time > 50) {
+             if(now - listJoinMessage2[m2].time > 100) {
                  listJoinMessage2.splice(m2,1);   
              } else {'
                 cepService!c_joinMessage(2,4,6,8,10)
@@ -51,14 +55,18 @@ thing StreamWithCep includes StreamCepMsgs, SenderMsgs {
     function join2() do
         'var now = Date.now();
         
+        /*console.log("J2 : ");
+        console.log(listJoinMessage1.length);
+        console.log(listJoinMessage2.length);*/
+        
         for(m2 in listJoinMessage2) {
-             if(now - listJoinMessage2[m2].time > 50) {
+             if(now - listJoinMessage2[m2].time > 100) {
                  listJoinMessage2.splice(m2,1);   
              }
         }
                   
          for(m1 in listJoinMessage1) {
-             if(now - listJoinMessage1[m1].time > 50) {
+             if(now - listJoinMessage1[m1].time > 100) {
                  listJoinMessage1.splice(m1,1);   
              } else {'
                 cepService!c_joinMessage(2,4,6,8,10)

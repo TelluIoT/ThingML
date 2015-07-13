@@ -18,7 +18,7 @@ thing Sender includes SenderMsgs {
         receives redo
     }
 
-    property nbIter : Double = 100000
+    property nbIter : Double = 10000
     property nbReco : Double = 10000
        
     statechart Sender init Init { 
@@ -32,6 +32,7 @@ thing Sender includes SenderMsgs {
                 senderCepService!joinMessage2(1,2,3,4,5)
                 i = i + 1
             end
+            
             senderCepService!endBench()
             nbReco = nbReco - 1
             print "nbReco = " + nbReco

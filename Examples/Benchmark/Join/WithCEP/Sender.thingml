@@ -18,26 +18,30 @@ thing Sender includes SenderMsgs {
         receives redo
     }
 
-    property nbIter : Double = 100000
-    property nbReco : Double = 10000
+    //property nbIter : Double = 1
+    property nbReco : Double = 100000
         
     statechart Sender init Init { 
         state Init {
+         //property i : Double = 0
+         
          on entry do
                         
             var i :Double = 0
             
-            while (i<nbIter) do
+            //while (i<nbIter) do
                 senderCepService!joinMessage1(1,2,3,4,5)
                 senderCepService!joinMessage2(1,2,3,4,5)
-                i = i + 1
-            end
+                //i = i + 1
+            //end
+            
             senderCepService!endBench()
             nbReco = nbReco - 1
-            print "nbReco = " + nbReco
+            //print "nbReco = " + nbReco
          end
          
-         transition -> Idle  
+         transition -> Idle
+         //guard i == nbIter  
         }
         
         state Idle {
