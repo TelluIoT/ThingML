@@ -1,0 +1,1 @@
+{"name":"benchForwardWithoutCfg","version":"1.0.0","description":"benchForwardWithoutCfg configuration generated from ThingML","main":"main.js","private":true,"dependencies":{"state.js":"^5.3.4"},"devDependencies":{},"scripts":{}}
