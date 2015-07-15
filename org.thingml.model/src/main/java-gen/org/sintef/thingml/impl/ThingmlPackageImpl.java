@@ -94,6 +94,7 @@ import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
 import org.sintef.thingml.StreamExpression;
 import org.sintef.thingml.StreamOutput;
+import org.sintef.thingml.StreamParamReference;
 import org.sintef.thingml.StringLiteral;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLElement;
@@ -703,6 +704,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass joinedStreamEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass streamParamReferenceEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -2534,6 +2542,24 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getStreamParamReference() {
+		return streamParamReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getStreamParamReference_IndexParam() {
+		return (EAttribute)streamParamReferenceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getStream_Selection() {
 		return (EReference)streamEClass.getEStructuralFeatures().get(1);
 	}
@@ -2846,6 +2872,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		mergedStreamEClass = createEClass(MERGED_STREAM);
 
 		joinedStreamEClass = createEClass(JOINED_STREAM);
+
+		streamParamReferenceEClass = createEClass(STREAM_PARAM_REFERENCE);
+		createEAttribute(streamParamReferenceEClass, STREAM_PARAM_REFERENCE__INDEX_PARAM);
 	}
 
 	/**
@@ -2958,6 +2987,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		simpleStreamEClass.getESuperTypes().add(this.getStream());
 		mergedStreamEClass.getESuperTypes().add(this.getStream());
 		joinedStreamEClass.getESuperTypes().add(this.getStream());
+		streamParamReferenceEClass.getESuperTypes().add(this.getExpression());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(thingMLModelEClass, ThingMLModel.class, "ThingMLModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3240,6 +3270,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(mergedStreamEClass, MergedStream.class, "MergedStream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(joinedStreamEClass, JoinedStream.class, "JoinedStream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(streamParamReferenceEClass, StreamParamReference.class, "StreamParamReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStreamParamReference_IndexParam(), ecorePackage.getEInt(), "indexParam", null, 1, 1, StreamParamReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

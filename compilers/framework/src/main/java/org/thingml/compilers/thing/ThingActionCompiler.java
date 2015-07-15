@@ -34,7 +34,6 @@ public class ThingActionCompiler {
 
 
     // ThingML Actions
-
     public void generate(Action action, StringBuilder builder, Context ctx) {
         if (action instanceof SendAction)
             generate((SendAction) action, builder, ctx);
@@ -153,6 +152,8 @@ public class ThingActionCompiler {
             generate((ExternExpression) expression, builder, ctx);
         } else if (expression instanceof FunctionCallExpression) {
             generate((FunctionCallExpression) expression, builder, ctx);
+        } else if(expression instanceof StreamParamReference) {
+            generate((StreamParamReference)expression,builder,ctx);
         }
     }
 
@@ -245,6 +246,10 @@ public class ThingActionCompiler {
     }
 
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(StreamParamReference expression, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 

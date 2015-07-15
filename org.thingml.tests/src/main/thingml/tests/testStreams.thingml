@@ -70,7 +70,8 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
     
     stream mergeMessagesWithValues do
         from rcvPort?m5 | rcvPort?m6
-        action sendPort!cep4()
+        select a : #0, b: complexTransforming(#1), c: (#2 * 2) + 5
+        action sendPort!cep4(a,b,c)
     end
     
     stream joinMessages do
@@ -123,8 +124,8 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
             event e : rcvPort?cep4
             action do
                 print "cep4 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ")."
-                if(e.a == 1 and e.b == 2 and e.c == 3) harnessOut!testOut('\'5\'')
-                if(e.a == 4 and e.b == 5 and e.c == 6) harnessOut!testOut('\'6\'')
+                if(e.a == 1 and e.b == 3 and e.c == 11) harnessOut!testOut('\'5\'')
+                if(e.a == 4 and e.b == 6 and e.c == 17) harnessOut!testOut('\'6\'')
             end
             
             internal

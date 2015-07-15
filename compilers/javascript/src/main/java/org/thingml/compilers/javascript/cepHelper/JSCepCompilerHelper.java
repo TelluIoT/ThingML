@@ -18,6 +18,7 @@ package org.thingml.compilers.javascript.cepHelper;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,23 +42,23 @@ public class JSCepCompilerHelper {
         ctx.getCompiler().getThingActionCompiler().generate(streamOutput, builder, ctx);
     }
 
-    public static void generateBeginingStream(Stream stream, StringBuilder builder, Context ctx, String eventName, String nameParam) {
+   public static void generateSimpleMergedStream(Stream stream, StringBuilder builder, Context ctx, String eventName, String nameParam, JSActionCompilerCepAlternative actionCompiler) {
         builder.append("var " + stream.qname("_") + " = Rx.Observable.fromEvent(this.eventEmitterForStream" + ", '" + eventName + "')");
         builder.append(".subscribe(\n\t" +
                 "function(" + nameParam + ") {\n");
 
+       List<StreamExpression> newParameters = new ArrayList<>();
+       for (StreamExpression se : stream.getSelection()) {
+           builder.append("\t\tvar " + se.getName() + " = ");
+           actionCompiler.generate(se.getExpression(),builder,ctx);
+           builder.append(";\n");
+           newParameters.add(JSCepCompilerHelper.generateStreamExpression(se.getName()));
+       }
+       builder.append(";\n");
+       builder.append("\t\t\t");
 
-        //fixme
-        /** Useful for debugging
-         * Print a message on the console when the stream receive a ThingML message**/
-       /* builder.append("\t\tconsole.log(\"Hack!! \"");
-        for(ReceiveMessage rm : stream.getInputs()) {
-            for(Parameter p : rm.getMessage().getParameters()) {
-                builder.append(" + \"" + p.getName() + "= \" + " + rm.getMessage().getName() + "J." + p.getName() + "+ \"; \"");
-            }
-        }
-        builder.append(");\n");*/
-        /** END **/
+       JSCepCompilerHelper.generateOutPut(stream, builder, ctx, newParameters);
+
+       builder.append("\t});\n");
     }
-
 }

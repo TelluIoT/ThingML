@@ -257,5 +257,8 @@
     <genClasses ecoreClass="thingml.ecore#//SimpleStream"/>
     <genClasses ecoreClass="thingml.ecore#//MergedStream"/>
     <genClasses ecoreClass="thingml.ecore#//JoinedStream"/>
+    <genClasses ecoreClass="thingml.ecore#//StreamParamReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//StreamParamReference/indexParam"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

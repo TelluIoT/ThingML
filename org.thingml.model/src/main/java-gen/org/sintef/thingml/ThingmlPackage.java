@@ -4081,6 +4081,35 @@ public interface ThingmlPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamParamReferenceImpl <em>Stream Param Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.StreamParamReferenceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamParamReference()
+	 * @generated
+	 */
+	int STREAM_PARAM_REFERENCE = 84;
+
+	/**
+	 * The feature id for the '<em><b>Index Param</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_PARAM_REFERENCE__INDEX_PARAM = EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Stream Param Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_PARAM_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.ThingMLModel <em>Thing ML Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6153,6 +6182,27 @@ public interface ThingmlPackage extends EPackage {
 	EClass getJoinedStream();
 
 	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.StreamParamReference <em>Stream Param Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Stream Param Reference</em>'.
+	 * @see org.sintef.thingml.StreamParamReference
+	 * @generated
+	 */
+	EClass getStreamParamReference();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.StreamParamReference#getIndexParam <em>Index Param</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Index Param</em>'.
+	 * @see org.sintef.thingml.StreamParamReference#getIndexParam()
+	 * @see #getStreamParamReference()
+	 * @generated
+	 */
+	EAttribute getStreamParamReference_IndexParam();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Stream#getSelection <em>Selection</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7920,6 +7970,24 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EClass JOINED_STREAM = eINSTANCE.getJoinedStream();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.StreamParamReferenceImpl <em>Stream Param Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.StreamParamReferenceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamParamReference()
+		 * @generated
+		 */
+		EClass STREAM_PARAM_REFERENCE = eINSTANCE.getStreamParamReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Index Param</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STREAM_PARAM_REFERENCE__INDEX_PARAM = eINSTANCE.getStreamParamReference_IndexParam();
 
 		/**
 		 * The meta object literal for the '<em><b>Selection</b></em>' containment reference list feature.

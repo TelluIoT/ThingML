@@ -31,6 +31,7 @@ object AvgBench {
 
 
 
+
     val itLines : Iterator[String] = Source.fromFile(sourceFile).getLines()
     itLines.next() //ignore column titles
 
@@ -68,7 +69,6 @@ object AvgBench {
     for(ii <- 0 until (bmax - bmin) / pas) {
       histogram += 0
     }
-
 
 
     itLines.foreach {

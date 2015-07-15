@@ -45,8 +45,7 @@ thing Demo1 includes Demo1Msgs{
              
             internal
             event e : receiveService?m1
-            action print "YouYou " +  e.v1 + "; " + e.v2 
-            
+            action print "YouYou " +  e.v1 + "; " + e.v2 + #1            
             /*internal
             event e : receiveService?m2
             action print "YouYou cep2" 

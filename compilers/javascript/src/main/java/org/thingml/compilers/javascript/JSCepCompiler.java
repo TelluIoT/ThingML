@@ -18,12 +18,12 @@ package org.thingml.compilers.javascript;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.CepCompiler;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.cepHelper.JSActionCompilerCepAlternative;
 import org.thingml.compilers.javascript.cepHelper.JSCepCompilerHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ludovic
@@ -37,9 +37,9 @@ public class JSCepCompiler extends CepCompiler {
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
        if(stream instanceof SimpleStream) {
-            generateStream((SimpleStream)stream,builder,ctx);
+           generateStream((SimpleStream)stream,builder,ctx);
         } else if(stream instanceof MergedStream) {
-            generateStream((MergedStream)stream,builder,ctx);
+           generateStream((MergedStream) stream, builder, ctx);
         } else if (stream instanceof JoinedStream) {
             generateStream((JoinedStream)stream,builder,ctx);
         } else {
@@ -48,37 +48,16 @@ public class JSCepCompiler extends CepCompiler {
 
     }
 
-
     public void generateStream(SimpleStream stream, StringBuilder builder, Context ctx) {
-        JSCepCompilerHelper.generateBeginingStream(stream, builder, ctx, ThingMLHelpers.getEventName(stream, stream.getInputs().get(0)), stream.getInputs().get(0).getMessage().getName());
-
-        List<StreamExpression> newParameters = new ArrayList<>();
-        for (StreamExpression se : stream.getSelection()) {
-            builder.append("\t\tvar " + se.getName() + " = ");
-            actionCompiler.generate(se.getExpression(),builder,ctx);
-            builder.append(";\n");
-            newParameters.add(JSCepCompilerHelper.generateStreamExpression(se.getName()));
-        }
-        builder.append(";\n");
-        builder.append("\t\t\t");
-
-        JSCepCompilerHelper.generateOutPut(stream, builder, ctx, newParameters);
-
-        builder.append("\t});\n");
+        String eventName = ThingMLHelpers.getEventName(stream, stream.getInputs().get(0));
+        String nameParam = stream.getInputs().get(0).getMessage().getName();
+        JSCepCompilerHelper.generateSimpleMergedStream(stream, builder, ctx, eventName, nameParam, actionCompiler);
     }
 
-
-
     public void generateStream(MergedStream stream, StringBuilder builder, Context ctx) {
-        JSCepCompilerHelper.generateBeginingStream(stream, builder, ctx, ThingMLHelpers.getEventName(stream, null), "x");
-        List<StreamExpression> newParamters = new ArrayList<>();
-        List<Parameter> parameters = stream.getInputs().get(0).getMessage().getParameters();
-        for (int i = 0; i < parameters.size(); i++) {
-            newParamters.add(JSCepCompilerHelper.generateStreamExpression("x[" + (i + 2) + "]"));
-        }
-        JSCepCompilerHelper.generateOutPut(stream, builder, ctx, newParamters);
-
-        builder.append("\t});\n");
+        String eventName = ThingMLHelpers.getEventName(stream, null);
+        String nameParam = "x";
+        JSCepCompilerHelper.generateSimpleMergedStream(stream, builder, ctx, eventName, nameParam, actionCompiler);
     }
 
     public void generateStream(JoinedStream stream, StringBuilder builder, Context ctx) {

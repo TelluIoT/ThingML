@@ -136,6 +136,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.SIMPLE_STREAM: return createSimpleStream();
 			case ThingmlPackage.MERGED_STREAM: return createMergedStream();
 			case ThingmlPackage.JOINED_STREAM: return createJoinedStream();
+			case ThingmlPackage.STREAM_PARAM_REFERENCE: return createStreamParamReference();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -809,6 +810,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public JoinedStream createJoinedStream() {
 		JoinedStreamImpl joinedStream = new JoinedStreamImpl();
 		return joinedStream;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StreamParamReference createStreamParamReference() {
+		StreamParamReferenceImpl streamParamReference = new StreamParamReferenceImpl();
+		return streamParamReference;
 	}
 
 	/**

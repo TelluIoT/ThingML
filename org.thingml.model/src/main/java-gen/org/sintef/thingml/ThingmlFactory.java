@@ -638,6 +638,15 @@ public interface ThingmlFactory extends EFactory {
 	JoinedStream createJoinedStream();
 
 	/**
+	 * Returns a new object of class '<em>Stream Param Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Stream Param Reference</em>'.
+	 * @generated
+	 */
+	StreamParamReference createStreamParamReference();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

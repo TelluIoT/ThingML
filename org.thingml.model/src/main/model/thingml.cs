@@ -159,6 +159,7 @@ TOKENSTYLES{
 	"?" COLOR #444444, BOLD;
 	"." COLOR #444444, BOLD;
 	":" COLOR #444444, BOLD;
+	"#" COLOR #444444, BOLD;
 	
 }
 
@@ -184,6 +185,7 @@ RULES {
 //	Dictionary::= !1 (changeable[T_READONLY])? "dictionary" #1 name[]  ":"  indexType[] "->" type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?(annotations)*;
 	
 	Parameter::= name[]  ":"  type[] ( "[" cardinality "]")?;
+	
 	
 	PrimitiveType::= "datatype" #1 name[] (annotations)* ";" ;
 	
@@ -223,6 +225,7 @@ RULES {
 
 	MergedStream ::= "stream" #1 name[] #1 "do"
 					 !1 "from" #1 inputs (#1 "|" #1 inputs)*
+					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
 					 !1 "action" #1 output
 					 "end";
 					 
@@ -316,6 +319,10 @@ RULES {
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	EventReference ::= msgRef[] "." paramRef[];	
+	
+	//CEP
+	@Operator(type="primitive", weight="9", superclass="Expression")
+	StreamParamReference ::= "#" indexParam[INTEGER_LITERAL];
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	ExpressionGroup ::= "(" exp ")";

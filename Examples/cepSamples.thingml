@@ -58,7 +58,7 @@ thing Sample includes CepMsgs,  SampleMsgs{
         return value + 1
     end
     
-    stream forwardSimpleMessage do
+    /*stream forwardSimpleMessage do
         from rcvPort?m1
         action sendPort!cep1()
     end
@@ -78,18 +78,19 @@ thing Sample includes CepMsgs,  SampleMsgs{
     stream mergedSimpleMessages do
         from rcvPort?m3 | rcvPort?m4
         action sendPort!cep3()
-    end
+    end*/
     
     stream mergeMessagesWithValues do
         from rcvPort?m5 | rcvPort?m6
+        select a : #0, b: #1, c: #2
         action sendPort!cep4()
     end
     
-    stream joinMessages do
+    /*stream joinMessages do
         from e1 : rcvPort?m7 & e2 : rcvPort?m8
         select a : e1.a * e2.v1, b : e1.b * e2.v2, c : e1.c * e2.v3
         action sendPort!cep5(a,b,c)
-    end
+    end*/
     
     
     statechart Sample init Init {

@@ -417,6 +417,10 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createJoinedStreamAdapter();
 			}
 			@Override
+			public Adapter caseStreamParamReference(StreamParamReference object) {
+				return createStreamParamReferenceAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -1609,6 +1613,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createJoinedStreamAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamParamReference <em>Stream Param Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.StreamParamReference
+	 * @generated
+	 */
+	public Adapter createStreamParamReferenceAdapter() {
 		return null;
 	}
 

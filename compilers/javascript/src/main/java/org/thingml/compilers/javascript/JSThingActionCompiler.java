@@ -119,8 +119,11 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
         builder.append("Enum." + ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + expression.getLiteral().getName().toUpperCase());
+    }
 
-
+    @Override
+    public void generate(StreamParamReference expression, StringBuilder builder, Context ctx) {
+        builder.append("x[" + (expression.getIndexParam() + 2 )+ "]");
     }
 
     @Override

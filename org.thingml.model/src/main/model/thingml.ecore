@@ -353,4 +353,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="SimpleStream" eSuperTypes="#//Stream"/>
   <eClassifiers xsi:type="ecore:EClass" name="MergedStream" eSuperTypes="#//Stream"/>
   <eClassifiers xsi:type="ecore:EClass" name="JoinedStream" eSuperTypes="#//Stream"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StreamParamReference" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexParam" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
 </ecore:EPackage>

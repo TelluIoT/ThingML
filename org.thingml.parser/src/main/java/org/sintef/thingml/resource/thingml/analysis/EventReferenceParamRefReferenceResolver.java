@@ -51,7 +51,7 @@ public class EventReferenceParamRefReferenceResolver implements org.sintef.thing
 						result.addMapping(p.getName(), p);
 				} else {
 					if (p.getName().equals(identifier))
-						result.addMapping(p.getName(), p);					
+						result.addMapping(p.getName(), p);
 				} 
 			}
 		}
