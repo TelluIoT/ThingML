@@ -43,7 +43,7 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.ThingMLCompilerRegistry;
+import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.eclipse.preferences.PreferenceConstants;
 import org.thingml.eclipse.ui.Activator;
 import org.thingml.eclipse.ui.ThingMLConsole;
@@ -71,7 +71,7 @@ public class CompileThingFile implements IHandler {
 		// Fetch the compiler to be used
 		String compilerName = event.getParameter("org.thingml.eclipse.ui.commandParameterCompilerName").toString();
 		ThingMLCompiler compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
-		ThingMLConsole.getInstance().printDebug("Compiling with \"" + compiler.getName() + "\" (Platform: " + compiler.getPlatform() + ")\n");
+		ThingMLConsole.getInstance().printDebug("Compiling with \"" + compiler.getName() + "\" (Platform: " + compiler.getID() + ")\n");
 		
 		// Fetch the input model to be used
 		IFile target_file = null;
@@ -146,13 +146,13 @@ public class CompileThingFile implements IHandler {
 			thingmlgen_folder.mkdir();
 		}
 		
-		java.io.File platform_folder = new java.io.File(thingmlgen_folder, compiler.getPlatform());
+		java.io.File platform_folder = new java.io.File(thingmlgen_folder, compiler.getID());
             if (platform_folder.exists()) {
-                ThingMLConsole.getInstance().printDebug("Cleaning folder " + compiler.getPlatform() + " in "+ thingmlgen_folder.getAbsolutePath() + "\n");
+                ThingMLConsole.getInstance().printDebug("Cleaning folder " + compiler.getID() + " in "+ thingmlgen_folder.getAbsolutePath() + "\n");
                 ThingMLConsole.getInstance().deleteFolder(platform_folder);
     			project.refreshLocal(IResource.DEPTH_INFINITE, null);
             }
-			ThingMLConsole.getInstance().printDebug("Creating folder " + compiler.getPlatform() + " in "+ thingmlgen_folder.getAbsolutePath() + "\n");
+			ThingMLConsole.getInstance().printDebug("Creating folder " + compiler.getID() + " in "+ thingmlgen_folder.getAbsolutePath() + "\n");
 			platform_folder.mkdir();
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		

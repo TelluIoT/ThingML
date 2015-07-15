@@ -30,17 +30,16 @@ def load_src(name, fpath):
 def run(type):
 	currentDir=os.getcwd()
 	load_src("configuration", "../../../../../configuration.py")
-	if not os.path.exists("../../../../test/java"):
-		os.makedirs("../../../../test/java")
-	os.chdir("../../../../test/java")
+	if not os.path.exists("../../../test/java"):
+		os.makedirs("../../../test/java")
+	os.chdir("../../../test/java")
 	os.system("rm *.java")
 	from configuration import useBlacklist    
 	from configuration import blacklist    
 	from configuration import whitelist    
 	from configuration import testLanguages
-	from configuration import testType
 	os.chdir(currentDir)
-	os.chdir(r"..")
+	#os.chdir(r"..")
 
 	mypath = "."
 	onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f)) ]
@@ -49,15 +48,10 @@ def run(type):
 		match = re.match(r"(.*)\.thingml",f)
 		if match is not None:
 			name = re.sub(r"(.*)\.thingml",r"\1",f)
-			if (useBlacklist and (name not in blacklist)) or ((not useBlacklist) and (name in whitelist)) or (testType == "perf"):
-				if testType == "perf" and name.startswith("perf"):
-					fichier = open('../../../test/java/'+name+'Test.java', 'w')
-					fichier.write('package org.thingml.tests;\n\n')
-				if testType == "functional" and not name.startswith("perf"):
-					fichier = open('../../../test/java/'+name+'Test.java', 'w')
-					fichier.write('package org.thingml.tests;\n\n')
-				if (testType == "perf" and name.startswith("perf")) or (testType == "functional" and not name.startswith("perf")):
-					fichier.write('import junit.framework.TestCase;\n\
+			if (useBlacklist and (name not in blacklist) or ((not useBlacklist) and (name in whitelist))):
+				fichier = open('../../../test/java/'+name+'Test.java', 'w')
+				fichier.write('package org.thingml.tests;\n\n')
+				fichier.write('import junit.framework.TestCase;\n\
 import org.junit.Test;\n\
 import org.junit.Before;\n\
 import org.junit.After;\n\
@@ -74,11 +68,11 @@ import java.io.*;\n\
 public class '+name+'Test extends TestCase {\n\
 	\n\
 	//private static boolean setUpIsNotDone = true;\n')
-					fichier.write('\n\
+				fichier.write('\n\
 	private static boolean '+type+'Tried = false;\n\
 	private static boolean success'+type+' = true;\n\
 	private static String message'+type+' = "";\n')
-					fichier.write('@Before\n\
+				fichier.write('@Before\n\
 	public void init(){\n\
 		//if (setUpIsNotDone)\n\
 		try{\n\
@@ -97,10 +91,9 @@ public class '+name+'Test extends TestCase {\n\
 			in.close();\n\
 		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n\
 	}\n')
-					fichier.write('@Test\n\
+				fichier.write('@Test\n\
 	public void test'+type+'(){\n')
-					if testType=="functional":
-						fichier.write('try{\n\
+				fichier.write('try{\n\
 			'+type+'Tried = true;\n\
 			System.out.println(System.getProperty("user.dir"));\n\
 			BufferedReader dump = new BufferedReader(new InputStreamReader(new FileInputStream("target/dump/'+name+'.dump")));\n\
@@ -131,18 +124,17 @@ public class '+name+'Test extends TestCase {\n\
 		success'+type+'=false;\n\
 		message'+type+' = "Error in Junit test";\n\
 		fail("Error: " + e.getMessage());}\n')
-					fichier.write('}\n')
+				fichier.write('}\n')
 					
-					fichier.write('	@After\n')
-					fichier.write('public void dump(){\n')
-					if testType=="functional":
-						fichier.write('if(true && ')
-						fichier.write(''+type+'Tried && ')
-						fichier.write('true)\n\
+				fichier.write('	@After\n')
+				fichier.write('public void dump(){\n')
+				fichier.write('if(true && ')
+				fichier.write(''+type+'Tried && ')
+				fichier.write('true)\n\
 		try{\n\
-			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("results.html", true)));\n\
+			PrintWriter result = new PrintWriter(new BufferedWriter(new FileWriter("target/results.html", true)));\n\
 			result.write("<tr><th></th><th></th><th></th></tr>\\n");\n')
-						fichier.write('\t\t\tif (success'+type+'){\n\
+				fichier.write('\t\t\tif (success'+type+'){\n\
 				result.write("<tr class=\\"green\\">\\n");\n\
 				result.write("<th>'+name+'</th><th>'+type+'</th><th>Success</th>\\n");\n\
 			}else{\n\
@@ -150,10 +142,10 @@ public class '+name+'Test extends TestCase {\n\
 				result.write("<th>'+name+'</th><th>'+type+'</th><th>"+message'+type+'+"</th>\\n");\n\
 			}\n\
 			result.write("</tr>\\n");\n')
-						fichier.write('\t\t\tresult.close();\n\
+				fichier.write('\t\t\tresult.close();\n\
 		}catch(Exception e){System.out.println("Error: " + e.getMessage());}\n')
-					fichier.write('}\n\
+				fichier.write('}\n\
 }')
-					fichier.close()
+				fichier.close()
 	print ("Successful generation of junit testers")
-	os.chdir("Tester")
+	#os.chdir("Tester")

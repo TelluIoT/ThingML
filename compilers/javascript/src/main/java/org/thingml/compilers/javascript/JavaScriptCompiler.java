@@ -18,13 +18,14 @@ package org.thingml.compilers.javascript;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.CepCompiler;
-import org.thingml.compilers.*;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import java.io.File;
 import java.util.HashMap;
@@ -83,7 +84,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
         //ctx.getBuilder(t.getName() + File.separator + "state-factory.js").append(ctx.getTemplateByID("javascript/lib/state-factory.js"));
         //ctx.getBuilder(t.getName() + File.separator + "Connector.js").append(ctx.getTemplateByID("javascript/lib/Connector.js"));
 
-        for(Type ty : model.allUsedSimpleTypes()) {
+        for (Type ty : model.allUsedSimpleTypes()) {
             if (ty instanceof Enumeration) {
                 Enumeration e = (Enumeration) ty;
                 ctx.addContextAnnotation("hasEnum", "true");
@@ -91,7 +92,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
                 builder.append("// Definition of Enumeration  " + e.getName() + "\n");
                 builder.append("var " + e.getName() + "_ENUM = {\n");
                 int i = 0;
-                for(EnumerationLiteral l : e.getLiterals()) {
+                for (EnumerationLiteral l : e.getLiterals()) {
                     if (i > 0)
                         builder.append(",\n");
                     builder.append(l.getName().toUpperCase() + ": \"" + l.getName() + "\"");
@@ -101,7 +102,7 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
                 builder.append("exports." + e.getName() + "_ENUM = " + e.getName() + "_ENUM;\n");
             }
         }
-        for(Thing thing : t.allThings()) {
+        for (Thing thing : t.allThings()) {
             ctx.getCompiler().getThingImplCompiler().generateImplementation(thing, ctx);
             //ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
         }

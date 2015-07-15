@@ -36,7 +36,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
         if (action.getProperty().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
-            for(Expression i : action.getIndex()) {
+            for (Expression i : action.getIndex()) {
                 builder.append(action.getProperty().qname("_") + "_var");
                 StringBuilder tempBuilder = new StringBuilder();
                 generate(i, tempBuilder, ctx);
@@ -46,14 +46,13 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
                 //generateMainAndInit(action.getExpression(), builder, ctx);
                 builder.append(";\n");
             }
-        }
-        else {//simple variable or we re-affect the whole array
+        } else {//simple variable or we re-affect the whole array
             if (action.getProperty().eContainer() instanceof Thing && !(action.getProperty().isDefined("private", "true"))) {
                 builder.append(ctx.getContextAnnotation("thisRef"));
             }
             builder.append(action.getProperty().qname("_") + "_var");
             builder.append(" = ");
-            cast(action.getProperty().getType(), action.getProperty().getCardinality()!=null, action.getExpression(), builder, ctx);
+            cast(action.getProperty().getType(), action.getProperty().getCardinality() != null, action.getExpression(), builder, ctx);
             //generateMainAndInit(action.getExpression(), builder, ctx);
             builder.append(";\n");
         }
@@ -65,7 +64,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     @Override
     public void generate(ActionBlock action, StringBuilder builder, Context ctx) {
-        for(Action a : action.getActions()) {
+        for (Action a : action.getActions()) {
             generate(a, builder, ctx);
         }
     }
@@ -159,7 +158,8 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     public void generate(LowerExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
         builder.append(" < ");
-        generate(expression.getRhs(), builder, ctx);    }
+        generate(expression.getRhs(), builder, ctx);
+    }
 
     @Override
     public void generate(GreaterExpression expression, StringBuilder builder, Context ctx) {
@@ -172,7 +172,8 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
         builder.append(" == ");
-        generate(expression.getRhs(), builder, ctx);    }
+        generate(expression.getRhs(), builder, ctx);
+    }
 
     @Override
     public void generate(PlusExpression expression, StringBuilder builder, Context ctx) {
@@ -256,10 +257,10 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     @Override
     public void generate(BooleanLiteral expression, StringBuilder builder, Context ctx) {
-       if (expression.isBoolValue())
-           builder.append("true");
-       else
-           builder.append("false");
+        if (expression.isBoolValue())
+            builder.append("true");
+        else
+            builder.append("false");
     }
 
     @Override
@@ -270,7 +271,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(ExternExpression expression, StringBuilder builder, Context ctx) {
         builder.append(expression.getExpression());
-        for(Expression e : expression.getSegments()) {
+        for (Expression e : expression.getSegments()) {
             generate(e, builder, ctx);
         }
     }

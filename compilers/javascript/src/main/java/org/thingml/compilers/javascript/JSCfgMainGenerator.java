@@ -87,9 +87,9 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                             EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
                             StringBuilder tempbuilder = new StringBuilder();
                             if (enumL == null) {
-                                tempbuilder.append("Enum." + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enum_.getLiterals().get(0).getName().toUpperCase());
+                                tempbuilder.append("Enum." + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getLiterals().get(0).getName().toUpperCase());
                             } else {
-                                tempbuilder.append("Enum" + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enumL.getLiteral().getName().toUpperCase());
+                                tempbuilder.append("Enum" + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enumL.getLiteral().getName().toUpperCase());
                             }
                             result += tempbuilder.toString();
                         } else {
@@ -108,7 +108,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                     }
                 }
                 for (Property a : cfg.allArrays(i)) {
-                    if (prop.equals(a) && !(prop.isDefined("private", "true"))  && prop.eContainer() instanceof Thing) {
+                    if (prop.equals(a) && !(prop.isDefined("private", "true")) && prop.eContainer() instanceof Thing) {
                         System.out.println("Array " + prop);
                         if (id > 0)
                             builder.append(", ");
@@ -125,22 +125,28 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 builder.append(i.getName() + ".build();\n");
             }
         }
+
+        String prefix = "";
+        if (useThis) {
+            prefix = "this.";
+        }
+
         for (Connector c : cfg.allConnectors()) {
-            for(Message req : c.getRequired().getReceives()) {
+            for (Message req : c.getRequired().getReceives()) {
                 for (Message prov : c.getProvided().getSends()) {
-                    if(req.getName().equals(prov.getName())) {
-                        builder.append(c.getSrv().getInstance().getName() + ".get" + ctx.firstToUpper(prov.getName()) + "on" + c.getProvided().getName() + "Listeners().push(");
-                        builder.append(c.getCli().getInstance().getName() + ".receive" + req.getName() + "On" + c.getRequired().getName() + ".bind(" + c.getCli().getInstance().getName() + ")");
+                    if (req.getName().equals(prov.getName())) {
+                        builder.append(prefix + c.getSrv().getInstance().getName() + ".get" + ctx.firstToUpper(prov.getName()) + "on" + c.getProvided().getName() + "Listeners().push(");
+                        builder.append(prefix + c.getCli().getInstance().getName() + ".receive" + req.getName() + "On" + c.getRequired().getName() + ".bind(" + prefix + c.getCli().getInstance().getName() + ")");
                         builder.append(");\n");
                         break;
                     }
                 }
             }
-            for(Message req : c.getProvided().getReceives()) {
+            for (Message req : c.getProvided().getReceives()) {
                 for (Message prov : c.getRequired().getSends()) {
-                    if(req.getName().equals(prov.getName())) {
-                        builder.append(c.getCli().getInstance().getName() + ".get" + ctx.firstToUpper(prov.getName()) + "on" + c.getRequired().getName() + "Listeners().push(");
-                        builder.append(c.getSrv().getInstance().getName() + ".receive" + req.getName() + "On" + c.getProvided().getName() + ".bind(" + c.getSrv().getInstance().getName() + ")");
+                    if (req.getName().equals(prov.getName())) {
+                        builder.append(prefix + c.getCli().getInstance().getName() + ".get" + ctx.firstToUpper(prov.getName()) + "on" + c.getRequired().getName() + "Listeners().push(");
+                        builder.append(prefix + c.getSrv().getInstance().getName() + ".receive" + req.getName() + "On" + c.getProvided().getName() + ".bind(" + prefix + c.getSrv().getInstance().getName() + ")");
                         builder.append(");\n");
                         break;
                     }
@@ -161,13 +167,13 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/main.js");
 
         //builder.append("var Connector = require('./Connector');\n");
-        for(Type ty : model.allUsedSimpleTypes()) {
+        for (Type ty : model.allUsedSimpleTypes()) {
             if (ty instanceof Enumeration) {
                 builder.append("var Enum = require('./enums');\n");
                 break;
             }
         }
-        for(Thing t : cfg.allThings()) {
+        for (Thing t : cfg.allThings()) {
             builder.append("var " + ctx.firstToUpper(t.getName()) + " = require('./" + ctx.firstToUpper(t.getName()) + "');\n");
         }
         //builder.append("process.stdin.resume();//to keep Node.js alive even when it is nothing more to do...\n");
@@ -184,7 +190,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         builder.append("process.on('SIGINT', function() {\n");
         builder.append("console.log(\"Stopping components... CTRL+D to force shutdown\");\n");
         for (Instance i : cfg.allInstances()) {
-            if(i.getType().allStateMachines().size() > 0) {
+            if (i.getType().allStateMachines().size() > 0) {
                 builder.append(i.getName() + "._stop();\n");
             }
         }

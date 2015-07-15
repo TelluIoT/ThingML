@@ -42,6 +42,18 @@ public abstract class CCompilerContext extends Context {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thing_impl.c");
     }
 
+    public String getRuntimeHeaderTemplate() {
+        return getTemplateByID("ctemplates/" + getCompiler().getID() + "_runtime.h");
+    }
+
+    public String getRuntimeImplTemplate() {
+        return getTemplateByID("ctemplates/" + getCompiler().getID() + "_runtime.c");
+    }
+
+    public String getCommonHeaderTemplate() {
+        return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thingml_typedefs.h");
+    }
+
     // The concrete thing for which the code is being generated
     protected Thing concreteThing = null;
 
@@ -80,7 +92,6 @@ public abstract class CCompilerContext extends Context {
      **************************************************************************/
 
     // FUNCTIONS FOR NAMING IN THE GENERATED CODE
-
     public String getInstanceStructName(Thing thing) {
         return thing.qname("_") + "_Instance";
     }
@@ -92,15 +103,25 @@ public abstract class CCompilerContext extends Context {
     public String getEnumLiteralValue(Enumeration e, EnumerationLiteral l) {
         if (l.hasAnnotation("enum_val")) {
             return l.annotation("enum_val").iterator().next();
-        }
-        else {
+        } else {
             System.err.println("Warning: Missing annotation enum_val on litteral " + l.getName() + " in enum " + e.getName() + ", will use default value 0.");
             return "0";
         }
     }
 
+    public String instance_var_name = null;
+
+    public void changeInstanceVarName(String new_name) {
+        instance_var_name = new_name;
+    }
+
+    public void clearInstanceVarName() {
+        instance_var_name = null;
+    }
+
     public String getInstanceVarName() {
-        return "_instance";
+        if (instance_var_name != null) return instance_var_name;
+        else return "_instance";
     }
 
     public String getInstanceVarName(Instance inst) {
@@ -115,34 +136,70 @@ public abstract class CCompilerContext extends Context {
         return thing.qname("_") + "_handle_" + p.getName() + "_" + m.getName();
     }
 
-    protected Hashtable<Thing, Hashtable<Port, Hashtable<Message,Integer>>> handlerCodes = new Hashtable<Thing, Hashtable<Port, Hashtable<Message,Integer>>>();
+    protected Hashtable<Thing, Hashtable<Port, Hashtable<Message, Integer>>> handlerCodes = new Hashtable<Thing, Hashtable<Port, Hashtable<Message, Integer>>>();
     protected int handlerCodeCpt = 1;
 
-    public int getHandlerCode(Thing t, Port p, Message m) {
+    public int getHandlerCode(Configuration cfg, Thing t, Port p, Message m) {
 
-        Hashtable<Port, Hashtable<Message,Integer>> handler_codes = handlerCodes.get(t);
+        Hashtable<Port, Hashtable<Message, Integer>> handler_codes = handlerCodes.get(t);
         if (handler_codes == null) {
-            handler_codes = new Hashtable<Port, Hashtable<Message,Integer>>();
+            handler_codes = new Hashtable<Port, Hashtable<Message, Integer>>();
             handlerCodes.put(t, handler_codes);
         }
 
-        Hashtable<Message,Integer> table = handler_codes.get(p);
+        Hashtable<Message, Integer> table = handler_codes.get(p);
         if (table == null) {
-            table = new Hashtable<Message,Integer>();
+            table = new Hashtable<Message, Integer>();
             handler_codes.put(p, table);
         }
 
         Integer result = table.get(m);
         if (result == null) {
-            result = handlerCodeCpt;
-            handlerCodeCpt += 1;
+            if (m.hasAnnotation("code")) {
+                result = Integer.parseInt(m.annotation("code").iterator().next());
+                if (result == null) {
+                    System.err.println("Warning: @code must contain an Integer for message:" + m.getName());
+                }
+            } else {
+                boolean codeIsFree = false;
+
+                while (!codeIsFree && (handlerCodeCpt < 65535)) {
+                    codeIsFree = true;
+                    for (Thing th : cfg.allThings()) {
+                        for (Port po : th.allPorts()) {
+                            for (Message me : po.getReceives()) {
+                                if (me.hasAnnotation("code")) {
+                                    if (Integer.parseInt(me.annotation("code").iterator().next()) == handlerCodeCpt) {
+                                        codeIsFree = false;
+                                        handlerCodeCpt += 1;
+                                    }
+                                }
+                            }
+                            for (Message me : po.getSends()) {
+                                if (me.hasAnnotation("code")) {
+                                    if (Integer.parseInt(me.annotation("code").iterator().next()) == handlerCodeCpt) {
+                                        codeIsFree = false;
+                                        handlerCodeCpt += 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                result = handlerCodeCpt;
+                handlerCodeCpt += 1;
+                if (result == null) {
+                    System.err.println("Warning: no code could be found for message:" + m.getName());
+                }
+            }
+
             table.put(m, result);
         }
         return result;
     }
 
     public String getEmptyHandlerName(Thing thing) {
-        return  thing.qname("_") + "_handle_empty_event";
+        return thing.qname("_") + "_handle_empty_event";
     }
 
     public String getSenderName(Thing thing, Port p, Message m) {
@@ -150,7 +207,7 @@ public abstract class CCompilerContext extends Context {
     }
 
     public String getCName(Function f, Thing thing) {
-        return  "f_" + thing.getName() + "_" + f.getName();
+        return "f_" + thing.getName() + "_" + f.getName();
     }
 
     public String getStateVarName(Region r) {
@@ -211,7 +268,7 @@ public abstract class CCompilerContext extends Context {
     public int getMessageSerializationSize(Message m) {
         int result = 2; // 2 bytes to store the port/message code
         result += 2; // to store the id of the source instance
-        for(Parameter p : m.getParameters()) {
+        for (Parameter p : m.getParameters()) {
             result += this.getCByteSize(p.getType(), 0);
         }
         return result;
@@ -222,8 +279,7 @@ public abstract class CCompilerContext extends Context {
     public String getCType(Type t) {
         if (t.hasAnnotation("c_type")) {
             return t.annotation("c_type").iterator().next();
-        }
-        else {
+        } else {
             System.err.println("Warning: Missing annotation c_type for type " + t.getName() + ", using " + t.getName() + " as the C type.");
             return t.getName();
         }
@@ -232,8 +288,7 @@ public abstract class CCompilerContext extends Context {
     public String getROSType(Type t) {
         if (t.hasAnnotation("ros_type")) {
             return t.annotation("ros_type").iterator().next();
-        }
-        else {
+        } else {
             System.err.println("Warning: Missing annotation ros_type for type " + t.getName() + ", using " + t.getName() + " as the ROS type.");
             return t.getName();
         }
@@ -244,12 +299,10 @@ public abstract class CCompilerContext extends Context {
             String v = t.annotation("c_byte_size").iterator().next();
             if (v.equals("*")) {
                 return pointerSize;
-            }
-            else {
+            } else {
                 try {
                     return Integer.parseInt(v);
-                }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     System.err.println("Warning: Wrong annotation c_byte_size for type " + t.getName() + ", should be an Integer or *.");
                 }
             }
@@ -274,8 +327,7 @@ public abstract class CCompilerContext extends Context {
     public String byteBufferName(Type t) {
         if (t.hasAnnotation("c_byte_buffer")) {
             return t.annotation("c_byte_buffer").iterator().next();
-        }
-        else {
+        } else {
             System.err.println("Warning: Missing annotation c_byte_buffer for type " + t.getName() + ", using " + t.getName() + "_buf as as the buffer name.");
             return t.getName() + "_buf";
         }
@@ -290,9 +342,8 @@ public abstract class CCompilerContext extends Context {
 
         if (isPointer(t)) {
             // This should not happen and should be checked before.
-            throw  new Error("ERROR: Attempting to serialize a pointer (for type " + t.getName() + "). This is not allowed.");
-        }
-        else {
+            throw new Error("ERROR: Attempting to serialize a pointer (for type " + t.getName() + "). This is not allowed.");
+        } else {
             while (i > 0) {
                 i = i - 1;
                 if (i == 0) result += buffer + "[" + index + "]";
@@ -308,13 +359,23 @@ public abstract class CCompilerContext extends Context {
         String v = variable;
         if (isPointer(t)) {
             // This should not happen and should be checked before.
-            throw  new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
-        }
-        else {
+            throw new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
+        } else {
+            //builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
+
+
+            builder.append("union u_" + v + "_t {\n");
+            builder.append(getCType(t) + " p;\n");
+            builder.append("byte bytebuffer[" + getCByteSize(t, 0) + "];\n");
+            builder.append("} u_" + v + ";\n");
+            builder.append("u_" + v + ".p = " + v + ";\n");
+
             while (i > 0) {
                 i = i - 1;
-                if (i == 0) builder.append("_fifo_enqueue(" + v + " & 0xFF);\n");
-                else builder.append("_fifo_enqueue((" + v + ">>" + (8 * i) + ") & 0xFF);\n");
+                //if (i == 0) 
+                //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
+                builder.append("_fifo_enqueue( u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
+                //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
             }
         }
     }

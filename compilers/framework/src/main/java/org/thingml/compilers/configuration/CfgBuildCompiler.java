@@ -24,9 +24,8 @@ import org.thingml.compilers.Context;
 public class CfgBuildCompiler {
 
 
-
     public void generateBuildScript(Configuration cfg, Context ctx) {
-        throw(new UnsupportedOperationException("Project structure and build scripts are platform-specific."));
+        throw (new UnsupportedOperationException("Project structure and build scripts are platform-specific."));
     }
 /*
     protected Set<String> properties = new HashSet<String>();

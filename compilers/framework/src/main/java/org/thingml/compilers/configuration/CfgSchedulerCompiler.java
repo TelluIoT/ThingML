@@ -22,7 +22,7 @@ import org.thingml.compilers.Context;
 public class CfgSchedulerCompiler {
 
     public void generateSchedulingAndDispatch(Configuration cfg, Context ctx, String... options) {
-        throw(new UnsupportedOperationException("Connector libs are platform-specific."));
+        throw (new UnsupportedOperationException("Connector libs are platform-specific."));
     }
 
 }

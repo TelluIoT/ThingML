@@ -38,7 +38,7 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
             InputStream input = this.getClass().getClassLoader().getResourceAsStream("pomtemplates/javapom.xml");
             List<String> pomLines = IOUtils.readLines(input);
             String pom = "";
-            for(String line : pomLines) {
+            for (String line : pomLines) {
                 pom += line + "\n";
             }
             input.close();
@@ -47,10 +47,10 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
             //Add ThingML dependencies
             String thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n";
             //TODO: will not work if more than one thingml dep. We should re-declare the whole <dependency>
-            for(String dep : cfg.allThingMLMavenDep()) {
+            for (String dep : cfg.allThingMLMavenDep()) {
                 pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"));
             }
-            for(String dep : cfg.allMavenDep()) {
+            for (String dep : cfg.allMavenDep()) {
                 pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep);
             }
             PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/pom.xml")));

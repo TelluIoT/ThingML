@@ -15,7 +15,9 @@
  */
 package org.thingml.compilers.javascript;
 
-import org.sintef.thingml.*;
+import org.sintef.thingml.Expression;
+import org.sintef.thingml.Parameter;
+import org.sintef.thingml.SendAction;
 import org.thingml.compilers.Context;
 
 /**
@@ -27,9 +29,9 @@ public class EspruinoThingActionCompiler extends JSThingActionCompiler {
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
         builder.append("send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + "(");
         int i = 0;
-        for(Expression p : action.getParameters()) {
+        for (Expression p : action.getParameters()) {
             int j = 0;
-            for(Parameter fp : action.getMessage().getParameters()) {
+            for (Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
                     if (i > 0)
                         builder.append(", ");

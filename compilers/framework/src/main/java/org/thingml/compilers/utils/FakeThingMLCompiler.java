@@ -20,9 +20,9 @@ import org.thingml.compilers.CepCompiler;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import java.io.File;
 
 /**
@@ -35,8 +35,8 @@ public class FakeThingMLCompiler extends ThingMLCompiler {
 
     }
 
-    public FakeThingMLCompiler (ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, CepCompiler cepCompiler) {
-        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
+    public FakeThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, CepCompiler cepCompiler) {
+        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler,cepCompiler);
         File folder = new File("tmp/ThingML");
     }
 

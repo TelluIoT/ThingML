@@ -1,2 +1,5 @@
 To execute the editor from command line:
+<!---
 mvn exec:java -Dexec.mainClass="org.sintef.thingml.ThingMLApp"
+-->
+mvn exec:java

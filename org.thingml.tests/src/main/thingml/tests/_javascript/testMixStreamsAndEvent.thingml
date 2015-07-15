@@ -1,7 +1,7 @@
-import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/test.thingml"
+import "../core/_javascript/test.thingml"
 import "../testMixStreamsAndEvent.thingml"
 import "../tester.thingml"
-import "../../../../../../org.thingml.samples/src/main/thingml/core/_javascript/timer.thingml"
+import "../core/_javascript/timer.thingml"
 
 configuration TestMixStreamsAndEvent {
 	instance harness : Tester

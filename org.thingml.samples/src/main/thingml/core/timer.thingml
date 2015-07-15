@@ -33,6 +33,10 @@ thing fragment TimerClient includes TimerMsgs
     
 }
 
+thing TimerClientMock includes TimerClient
+@mock "true"
+{}
+
 thing SimpleTimerClient includes TimerClient 
 {
     property t1 : Long = 1000

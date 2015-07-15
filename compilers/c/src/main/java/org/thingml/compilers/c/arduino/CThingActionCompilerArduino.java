@@ -29,14 +29,20 @@ public class CThingActionCompilerArduino extends CThingActionCompiler {
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
-        builder.append("// PRINT: " + b.toString() + "\n");
+
+        builder.append("// PRINT ERROR: " + b.toString());
     }
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
-        builder.append("// PRINT ERROR: " + b.toString() + "\n");
+        if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
+            builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next() + ".print(" + b.toString() + ");\n");
+            builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next() + ".print(\"\\n\");\n");
+        } else {
+            builder.append("// PRINT: " + b.toString());
+        }
     }
 
 }

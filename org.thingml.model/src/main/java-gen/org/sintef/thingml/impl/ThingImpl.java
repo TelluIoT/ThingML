@@ -524,15 +524,6 @@ public class ThingImpl extends TypeImpl implements Thing {
      * @return
      * @generated NOT
      */
-    public boolean isMockUp() {
-        return isDefined("mock", "true");
-    }
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
     public List<Transition> allTransitionsWithAction() {
         //var result = new ArrayList[Handler]()
         final List<Transition> result = new ArrayList<Transition>();

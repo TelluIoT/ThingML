@@ -15,8 +15,6 @@
  */
 package org.thingml.compilers.thing;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.SendAction;
 import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 
@@ -32,6 +30,6 @@ public class ThingApiCompiler {
     */
 
     public void generatePublicAPI(Thing thing, Context ctx) {
-        throw(new UnsupportedOperationException("APIs are platform-specific. Cannot generateMainAndInit API for Thing " + thing.getName()));
+        throw (new UnsupportedOperationException("APIs are platform-specific. Cannot generateMainAndInit API for Thing " + thing.getName()));
     }
 }

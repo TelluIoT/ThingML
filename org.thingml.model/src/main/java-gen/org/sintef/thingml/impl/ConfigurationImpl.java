@@ -601,7 +601,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * @return
      * @generated NOT
      */
-    public Set<String> allThingMLMavenDep() {
+    public Set<String> allThingMLMavenDep() {//FIXME: should be moved in a JavaHelper
         Set<String> result = new HashSet<String>();
         for(Thing t : allThings()) {
             for(String dep : t.annotation("thingml_maven_dep")) {
@@ -617,7 +617,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * @return
      * @generated NOT
      */
-    public Set<String> allMavenDep() {
+    public Set<String> allMavenDep() {//FIXME: should be moved in a JavaHelper
         Set<String> result = new HashSet<String>();
         for(Thing t : allThings()) {
             for(String dep : t.annotation("maven_dep")) {

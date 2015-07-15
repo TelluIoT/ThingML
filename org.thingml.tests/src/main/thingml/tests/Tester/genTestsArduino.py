@@ -25,9 +25,6 @@ from os.path import isfile, join
 
 
 def run(type):
-	os.chdir(r"..")
-
-
 	def parse(fileName):
 		file = open(fileName)
 		result=''
@@ -54,12 +51,12 @@ def run(type):
 					bigname = name[:0]+name[0].upper()+name[1:]
 					fichier = open('_arduino/'+name+'.thingml', 'w')
 					confLines = parse(name+'.thingml')
-					fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_arduino/test.thingml"\n'+
+					fichier.write('import "../core/_arduino/test.thingml"\n'+
 					'import "../'+name+'.thingml"\n'+
 					'import "../tester.thingml"\n'+
-					'import "../../../../../../org.thingml.samples/src/main/thingml/core/_arduino/timer.thingml"\n\n')
+					'import "../core/_arduino/timer.thingml"\n\n')
 					if type == "perf":
-						fichier.write('import "../../../../../../org.thingml.samples/src/main/thingml/core/_arduino/random.thingml"\n\n')
+						fichier.write('import "../core/_arduino/random.thingml"\n\n')
 					fichier.write('configuration '+bigname+' \n@output_folder "/home/thingml_out/" {\n'+
 					'	instance timer : TimerArduino\n'+
 					'	instance harness : Tester\n'+
@@ -77,4 +74,3 @@ def run(type):
 						'	connector harness.timer => timer.timer\n'+confLines+'}')
 					fichier.close()
 	print ("Successful generation of arduino tests")
-	os.chdir("Tester")

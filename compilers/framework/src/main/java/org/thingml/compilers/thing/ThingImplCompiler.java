@@ -15,14 +15,14 @@
  */
 package org.thingml.compilers.thing;
 
-import org.sintef.thingml.*;
+import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 
 
 public class ThingImplCompiler {
 
     public void generateImplementation(Thing thing, Context ctx) {
-        throw(new UnsupportedOperationException("Implementations are platform-specific. Cannot generateMainAndInit API for Thing " + thing.getName()));
+        throw (new UnsupportedOperationException("Implementations are platform-specific. Cannot generateMainAndInit API for Thing " + thing.getName()));
     }
 
 }

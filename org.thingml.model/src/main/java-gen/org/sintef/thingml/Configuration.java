@@ -187,14 +187,14 @@ public interface Configuration extends AnnotatedElement {
      * @return
      * @generated NOT
      */
-    Set<String> allThingMLMavenDep();
+    Set<String> allThingMLMavenDep();//FIXME: should be moved in a JavaHelper
 
     /**
      *
      * @return
      * @generated NOT
      */
-    Set<String> allMavenDep();
+    Set<String> allMavenDep();//FIXME: should be moved in a JavaHelper
 
     /**
      *

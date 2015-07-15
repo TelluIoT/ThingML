@@ -18,7 +18,7 @@ package org.thingml.eclipse.ui.popup.deprecated_actions;
 import java.util.ArrayList;
 
 import org.thingml.compilers.*;
-import org.thingml.compilers.actions.*;
+import org.thingml.compilers.javascript.JavaScriptCompiler;
 import org.thingml.eclipse.ui.ThingMLConsole;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IProject;
@@ -83,7 +83,7 @@ public class ThingMLCompileJsKevoree implements IObjectActionDelegate {
             thingmlgen_folder.mkdir();
         }
 
-        java.io.File platform_folder = new java.io.File(thingmlgen_folder, "javascript");
+        java.io.File platform_folder = new java.io.File(thingmlgen_folder, "nodejs");
         if (!platform_folder.exists()) {
         	ThingMLConsole.getInstance().printError("Javascript folder does not exist in "+ thingmlgen_folder.getAbsolutePath() + ". Please generate plain JS first.\n");
         	ThingMLConsole.getInstance().printDebug("Creating folder javascript in "+ thingmlgen_folder.getAbsolutePath() + "\n");
@@ -95,9 +95,9 @@ public class ThingMLCompileJsKevoree implements IObjectActionDelegate {
         for ( Configuration cfg :  toCompile ) {
             compiler.setOutputDirectory(platform_folder);
             Context ctx = new Context(compiler);
-            compiler.getBuildCompiler().generate(cfg, ctx);
+            compiler.getCfgBuildCompiler().generateBuildScript(cfg, ctx);
             compiler.compileConnector("kevoree-js", cfg);
-            ctx.dump();
+            ctx.writeGeneratedCodeToFiles();
         }
 	}
 

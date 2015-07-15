@@ -33,7 +33,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        CCompilerContext context = (CCompilerContext)ctx;
+        CCompilerContext context = (CCompilerContext) ctx;
 
         Thing thing = context.getConcreteThing();
 
@@ -43,7 +43,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
             builder.append(context.print_debug_message("-> " + thing.sender_name(self.getPort, self.getMessage)) + "\n"
         }
         */
-        
+
         builder.append(context.getSenderName(thing, action.getPort(), action.getMessage()));
 
         builder.append("(" + context.getInstanceVarName());
@@ -57,8 +57,8 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
 
-        CCompilerContext context = (CCompilerContext)ctx;
-        
+        CCompilerContext context = (CCompilerContext) ctx;
+
         builder.append(context.getCName(action.getFunction(), context.getConcreteThing()));
 
         builder.append("(_instance");
@@ -68,57 +68,56 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
         }
         builder.append(");\n");
     }
-    
+
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
-        CCompilerContext context = (CCompilerContext)ctx;
+        CCompilerContext context = (CCompilerContext) ctx;
         String propertyName = action.getProperty().getName();
-      
+
         if (action.getProperty() instanceof Property) {
             propertyName = context.getInstanceVarName() + "->" + action.getProperty().qname("_") + "_var";
         }
-                
+
 
         builder.append(propertyName);
-     
+
         for (Expression idx : action.getIndex()) {
-          builder.append("[");
-          this.generate(idx, builder, context);
-          builder.append("]");
-      }
-      builder.append(" = ");
-      this.generate(action.getExpression(), builder, context);
-      builder.append(";\n");
-  
+            builder.append("[");
+            this.generate(idx, builder, context);
+            builder.append("]");
+        }
+        builder.append(" = ");
+        this.generate(action.getExpression(), builder, context);
+        builder.append(";\n");
+
     }
 
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
 
-        CCompilerContext context = (CCompilerContext)ctx;
+        CCompilerContext context = (CCompilerContext) ctx;
 
         String propertyName = context.getCType(action.getType()) + " " + action.getName();
+        builder.append(";");
         builder.append(propertyName);
         if (action.getCardinality() != null) {//array declaration
             StringBuilder tempBuilder = new StringBuilder();
             generate(action.getCardinality(), tempBuilder, context);
             builder.append("[" + tempBuilder.toString() + "];\n");
 
-            if (action.getInit() != null && action.getInit() instanceof  PropertyReference) {//we want to assign the array, we have to copy all values of the target array
-                PropertyReference pr  = (PropertyReference)action.getInit();
+            if (action.getInit() != null && action.getInit() instanceof PropertyReference) {//we want to assign the array, we have to copy all values of the target array
+                PropertyReference pr = (PropertyReference) action.getInit();
                 if (pr.getProperty().getCardinality() != null) {
                     //the target is indeed an array
-                    builder.append("int i = 0;\n");
+                    builder.append("int i;");
                     builder.append("for(i = 0; i < sizeof(" + action.getName() + ") / sizeof(" + context.getCType(action.getType()) + "); i++) {\n");
                     builder.append(action.getName() + "[i] = ");
                     String propertyName2 = "";
                     if (pr.getProperty() instanceof Parameter) {
                         propertyName2 = pr.getProperty().getName();
-                    }
-                    else if (pr.getProperty() instanceof Property) {
+                    } else if (pr.getProperty() instanceof Property) {
                         propertyName2 = context.getInstanceVarName() + "->" + pr.getProperty().qname("_") + "_var";
-                    }
-                    else if (pr.getProperty() instanceof LocalVariable) {
+                    } else if (pr.getProperty() instanceof LocalVariable) {
                         propertyName2 = pr.getProperty().getName();
                     }
 
@@ -150,8 +149,8 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        if(expression.getProperty() instanceof Parameter || expression.getProperty() instanceof LocalVariable) {
-           builder.append(expression.getProperty().getName());
+        if (expression.getProperty() instanceof Parameter || expression.getProperty() instanceof LocalVariable) {
+            builder.append(expression.getProperty().getName());
         } else if (expression.getProperty() instanceof Property) {
             builder.append("_instance->" + expression.getProperty().qname("_") + "_var");
         }
@@ -159,7 +158,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
 
     private String c_name(ThingMLElement t) {
-            return ((ThingMLElement)t.eContainer()).getName().toUpperCase() + "_" + t.getName().toUpperCase();
+        return ((ThingMLElement) t.eContainer()).getName().toUpperCase() + "_" + t.getName().toUpperCase();
     }
 
     @Override
@@ -170,8 +169,8 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
 
-        CCompilerContext context = (CCompilerContext)ctx;
-        
+        CCompilerContext context = (CCompilerContext) ctx;
+
         builder.append(context.getCName(expression.getFunction(), context.getConcreteThing()));
 
         builder.append("(_instance");

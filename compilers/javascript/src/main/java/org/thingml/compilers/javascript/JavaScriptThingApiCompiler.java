@@ -15,7 +15,10 @@
  */
 package org.thingml.compilers.javascript;
 
-import org.sintef.thingml.*;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.Parameter;
+import org.sintef.thingml.Port;
+import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
@@ -36,13 +39,11 @@ public class JavaScriptThingApiCompiler extends ThingApiCompiler {
             //Lifecycle
             builder.append("//Public API for lifecycle management\n");
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._stop = function() {\n");
-            builder.append("this." + thing.allStateMachines().get(0).qname("_") + ".beginExit(this._initial_" + thing.allStateMachines().get(0).qname("_") + " );\n");
-            //It seems the very root onEntry is not called
+            builder.append("this.ready = false;\n");
             ctx.addMarker("useThis");
             if (thing.allStateMachines().get(0).getExit() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(thing.allStateMachines().get(0).getExit(), builder, ctx);
             ctx.removerMarker("useThis");
-            //exit the rest
             builder.append("};\n\n");
 
             //Communication
@@ -51,10 +52,10 @@ public class JavaScriptThingApiCompiler extends ThingApiCompiler {
             ctx.addMarker("useThis");
             ctx.addContextAnnotation("thisRef", "this.");
             //execute onEntry of the root state machine
-            if (thing.allStateMachines().get(0).getEntry() != null)
-                ctx.getCompiler().getThingActionCompiler().generate(thing.allStateMachines().get(0).getEntry(), builder, ctx);
+            /*if (thing.allStateMachines().get(0).getEntry() != null)
+                ctx.getCompiler().getThingActionCompiler().generate(thing.allStateMachines().get(0).getEntry(), builder, ctx);*///Work around not needed anymore
             builder.append("this." + thing.allStateMachines().get(0).getName() + "_instance = new StateJS.StateMachineInstance(\"" + thing.allStateMachines().get(0).getName() + "_instance" + "\");\n");
-            builder.append("StateJS.initialise( this." + thing.allStateMachines().get(0).qname("_") + ", this." +  thing.allStateMachines().get(0).getName() + "_instance" + " );\n");
+            builder.append("StateJS.initialise( this." + thing.allStateMachines().get(0).qname("_") + ", this." + thing.allStateMachines().get(0).getName() + "_instance" + " );\n");
 
             builder.append("var msg = this.getQueue().shift();\n");
             builder.append("while(msg !== undefined) {\n");
@@ -116,7 +117,7 @@ public class JavaScriptThingApiCompiler extends ThingApiCompiler {
             builder.append("for (var _i = 0; _i < arrayLength; _i++) {\n");
             builder.append(m.getName() + "On" + p.getName() + "Listeners[_i](");
             int i = 0;
-            for(Parameter pa : m.getParameters()) {
+            for (Parameter pa : m.getParameters()) {
                 if (i > 0) {
                     builder.append(", ");
                 }

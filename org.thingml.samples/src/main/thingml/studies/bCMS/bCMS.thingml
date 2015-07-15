@@ -8,6 +8,9 @@ configuration bCMS {
     instance psc_gui : PSC_GUI    
     instance psc : PSC  
     
+    instance fsc_mock : FSC_Mock
+    instance psc_mock : PSC_Mock
+    
     connector fsc_gui.out => fsc.feedback
     connector fsc.control => fsc_gui.control
     connector fsc.internOUT => fsc.internIN

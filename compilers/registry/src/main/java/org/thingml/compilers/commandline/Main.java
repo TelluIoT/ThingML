@@ -21,9 +21,9 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
-import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 
 import java.io.File;
 
@@ -33,11 +33,10 @@ import java.io.File;
 public class Main {
 
 
-
     public static void main(String[] args) {
         ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
 
-        if (args.length < 2 || args.length > 3 || (args.length > 0 && args[0].equals("-help")))  {
+        if (args.length < 2 || args.length > 3 || (args.length > 0 && args[0].equals("-help"))) {
             System.out.println("ARGUMENTS: <compiler> <source> (<output dir>)");
             System.out.println(" | <compiler>   : ");
             for (ThingMLCompiler c : registry.getCompilerPrototypes()) {
@@ -48,6 +47,11 @@ public class Main {
             System.out.println("Bye.");
             return;
         }
+
+        System.out.print("Running " + args[0] + " " + args[1]);
+        if (args.length == 3)
+            System.out.print(" " + args[2]);
+        System.out.println();
 
         ThingMLCompiler compiler = registry.createCompilerInstanceByName(args[0].trim());
 
@@ -70,13 +74,15 @@ public class Main {
         }
         if (args.length == 3) {
             File o = new File(args[2]);
+            if (!o.exists()) {
+                new File(args[2]).mkdirs();
+            }
             if (!o.exists() || !o.isDirectory() || !o.canWrite()) {
                 System.out.println("ERROR: Cannot find or write in output dir " + o.getAbsolutePath() + ".");
                 return;
             }
             outdir = o;
-        }
-        else {
+        } else {
             outdir = new File(System.getProperty("user.dir"));
         }
 
@@ -98,7 +104,7 @@ public class Main {
                 return;
             }
 
-            ThingMLModel input_model =  (ThingMLModel) model.getContents().get(0);
+            ThingMLModel input_model = (ThingMLModel) model.getContents().get(0);
 
             if (input_model.allConfigurations().isEmpty()) {
                 System.out.println("ERROR: The input model does not contain any configuration to be compiled.");
@@ -108,6 +114,7 @@ public class Main {
             compiler.setOutputDirectory(outdir);
 
             for (Configuration cfg : input_model.allConfigurations()) {
+                if (cfg.isFragment()) continue; // ignore fragments
                 System.out.println("Generating code for configuration: " + cfg.getName());
                 compiler.compile(cfg);
             }
