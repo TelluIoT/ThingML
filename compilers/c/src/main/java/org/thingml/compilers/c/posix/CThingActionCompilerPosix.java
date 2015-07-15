@@ -29,14 +29,16 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
-        builder.append("fprintf(stderr, " + b.toString() + "\n);\n");
+        builder.append("fprintf(stderr, " + b.toString() + ");\n");
+        builder.append("fprintf(stderr,\"\\n\");\n");
     }
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
-        builder.append("fprintf(stdout, " + b.toString() + "\n<);\n");
+        builder.append("fprintf(stdout, " + b.toString() + ");\n");
+        builder.append("fprintf(stdout,\"\\n\");\n");
     }
 
 }

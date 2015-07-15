@@ -30,7 +30,7 @@ public class CThingActionCompilerArduino extends CThingActionCompiler {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
 
-        builder.append("// PRINT ERROR: " + b.toString() + "\n");
+        builder.append("// PRINT ERROR: " + b.toString());
     }
 
     @Override
@@ -38,9 +38,10 @@ public class CThingActionCompilerArduino extends CThingActionCompiler {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
         if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
-            builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next() + ".print(" + b.toString() + "\n);\n");
+            builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next() + ".print(" + b.toString() + ");\n");
+            builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next() + ".print(\"\\n\");\n");
         } else {
-            builder.append("// PRINT: " + b.toString() + "\n");
+            builder.append("// PRINT: " + b.toString());
         }
     }
 
