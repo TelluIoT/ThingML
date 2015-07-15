@@ -82,8 +82,8 @@ thing Sample includes CepMsgs,  SampleMsgs{
     
     stream mergeMessagesWithValues do
         from rcvPort?m5 | rcvPort?m6
-        select a : #0, b: #1, c: #2
-        action sendPort!cep4()
+        select a : #0, b: complexTransforming(#1), c: (#2 * 2) + 5
+        action sendPort!cep4(a,b,c)
     end
     
     /*stream joinMessages do
