@@ -142,9 +142,10 @@ The options for the compiler are self-explainatory. First is the ID of the compi
 
 A set of automatic tests can be run under Linux. Make sure you have Python installed as well as all the necessary dependencies to execute the generate code:
 
+- easyprocess, a Python module (`sudo pip install easyprocess`)
 - Java and Maven properly installed and configured to test the generated Java code
 - Node and NPM for JS code
-- gcc for C code (might need `sudo pip install easyprocess`)
+- gcc for C code
 - Ino for Arduino code: `sudo apt-get install arduino picocom && sudo pip install ino`
 
 In `org.thing.tests` edit `configuration.py` to select which compiler you want to test:
