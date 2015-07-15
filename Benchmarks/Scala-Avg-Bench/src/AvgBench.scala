@@ -17,77 +17,109 @@ import java.nio.file.{Files, Paths}
 
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
+
 /**
  * @author ludovic
  */
 object AvgBench {
   def process(sourceFile : String, destFile : String) {
-    var builder : StringBuilder = new StringBuilder
-    builder ++= "TIME; %CPU; %MEM\n"
 
-    val sumCPU : ListBuffer[Int] = new ListBuffer[Int]
-    val sumMem : ListBuffer[Float] = new ListBuffer[Float]
+    var builder : StringBuilder = new StringBuilder
+    builder ++= "TIME; %CPU; %MEM; #PID\n"
+
+    var mapSum : Map[Int, Tuple3[Int,Float,Int]] = Map() // [Time, [CPU, MEM, nbPID] ]
+
+
 
     val itLines : Iterator[String] = Source.fromFile(sourceFile).getLines()
     itLines.next() //ignore column titles
 
+
     var lineSplit : Array[String] = itLines.next().split(";")
     var currentPID : String = lineSplit(0)
     var previousPID : String = lineSplit(0)
+    var index : Int = 0
 
     while(itLines.hasNext && currentPID == previousPID) {
-      sumCPU += lineSplit(1).trim().toInt
-      sumMem += lineSplit(2).trim().toFloat
+      mapSum += (index -> (lineSplit(1).trim.toInt,lineSplit(2).trim.toFloat,1))
+
       lineSplit = itLines.next().split(";")
       previousPID = currentPID
       currentPID = lineSplit(0)
+
+      index = index + 1
     }
 
-    sumCPU(0) = sumCPU.head + lineSplit(1).trim().toInt
-    sumMem(0) = sumMem.head + lineSplit(2).trim.toFloat
+    var cpu = mapSum(0)._1 + lineSplit(1).trim().toInt
+    var mem = mapSum(0)._2 + lineSplit(2).trim().toFloat
+    mapSum += (0 -> (cpu,mem,2))
     previousPID = currentPID
-    var index : Int = 0
+
+    index = 0
     var nbPID : Int = 2
+
+    var indexList = 0
+    val bmin = 3400
+    val bmax = 4000
+    val pas = 10
+    var histogram : ListBuffer[Int] = ListBuffer()
+
+    var ii = 0
+    for(ii <- 0 until (bmax - bmin) / pas) {
+      histogram += 0
+    }
+
+
 
     itLines.foreach {
       lines =>
         lineSplit = lines.split(";")
         currentPID = lineSplit(0)
 
-        if(currentPID == previousPID) {
+
+        if (currentPID == previousPID) {
           index = index + 1
         } else {
+         /* println(index + " " + bmin + " " + pas)
+          println((index - bmin) / pas)*/
+          indexList = (index - bmin) / pas
+          histogram(indexList) = histogram(indexList) + 1
+
           index = 0
           nbPID = nbPID + 1
         }
 
-        if(index < sumCPU.size) {
-          sumCPU(index) = sumCPU(index) + lineSplit(1).trim().toInt
-          sumMem(index) = sumMem(index) + lineSplit(2).trim().toFloat
+        if (index < mapSum.size) {
+          cpu = mapSum(index)._1 + lineSplit(1).trim().toInt
+          mem = mapSum(index)._2 + lineSplit(2).trim().toFloat
+          mapSum += (index -> (cpu,mem,mapSum(index)._3 + 1))
+        } else {
+          cpu = lineSplit(1).trim().toInt
+          mem = lineSplit(2).trim().toFloat
+          mapSum += (index -> (cpu,mem,1))
         }
 
         previousPID = currentPID
     }
 
-    index = 1
-    sumCPU.zip(sumMem.toList).foreach {
-      case (sum, mem) =>
-        builder ++= index + ";" + ( sum / nbPID) + ";" + ( mem / nbPID).toString.replace('.',',') + "\n"
-        index = index + 1
+    mapSum.foreach {
+      case(i,tuple) =>
+        builder ++= (i + 1) + ";" + ( tuple._1 / tuple._3) + ";" + ( tuple._2 / tuple._3).toString.replace('.',',') + ";" + tuple._3 + "\n"
     }
+
+    println(histogram.mkString(";"))
 
     Files.write(Paths.get(destFile),builder.mkString.getBytes)
     println("Done")
   }
-  def main(args: Array[String]) {
 
+  def main(args: Array[String]) {
     if(args.length != 2) {
       Console.err.println("Arguments : <sourceFile> <destFile>")
       Console.err.println("WARNING: <destFile> contents will be deleted")
     } else {
       process(args(0),args(1))
     }
-
   }
 
 }
