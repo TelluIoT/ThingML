@@ -20,12 +20,12 @@ OPTIONS {
 	// Generate the standalone version first and then the eclipse version.
 	
 	// 1. FOR STANDALONE
-	srcGenFolder = "src/main/java-gen-standalone";
-	generateUIPlugin = "false";
-	removeEclipseDependentCode = "true";
+	//srcGenFolder = "src/main/java-gen-standalone";
+	//generateUIPlugin = "false";
+	//removeEclipseDependentCode = "true";
 	
 	// 2. FOR ECLIPSE Comment the lines bellow
-	//srcGenFolder = "src/main/java-gen";
+	srcGenFolder = "src/main/java-gen";
 	
 	// IMPORTANT: In the generated eclipse plugins it is required to change the Vendor to SINTEF and the Version from "1.0.0" to "0.x.0.qualifier"
 }

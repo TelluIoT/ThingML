@@ -1,64 +1,85 @@
 datatype Integer
-    @js_type "short"
     @java_type "int";
-
-thing fragment Demo1Msgs {
-    message m1(v1 : Integer, v2 : Integer);
-    message m2(val1 : Integer, val2 : Integer);
-    message m3();
-    message m4();
+    
+thing fragment Message {
+    message m1(v1 : Integer, v2 : Integer, v3 : Integer);  
+    message cep(v1 : Integer, v2 : Integer, v3 : Integer, v4 : Integer);  
+    
+    message go();
 }
 
-thing Demo1 includes Demo1Msgs{
-    required port receiveService {
-        receives m1, m2, m3, m4
+thing Sender includes Message {
+    provided port service {
+        sends m1    
     }
     
-    provided port sendService {
-        sends m1, m2, m3, m4
-    }
-    
-    function toto () : Integer do
-        return 56
-    end 
-    
-    function toto2 (x : Integer, y:Integer, z : Integer, w : Integer ) : Integer do
-        return x + y + z + w
-    end 
-    
-    /*stream test do
-        from e : receiveService?m1
-        select a : e.v1, b : e.v2
-        action sendService!m2(a,b)
-    end*/
-    
-       
-    statechart Demo1 init S1 {
-        state S1 {
-            on entry do
-                print "Entry S1"
-                sendService!m1(5,7)
-                /*sendService!m2(2,5)
-                sendService!m3()
-                sendService!m4()*/
+    statechart Sender init Init {
+        state Init {
+            on entry do 
+                print "Sender :: Init"
+                service!m1(1,2,3)
             end
-             
-            internal
-            event e : receiveService?m1
-            action print "YouYou " +  e.v1 + "; " + e.v2 + #1            
-            /*internal
-            event e : receiveService?m2
-            action print "YouYou cep2" 
             
-            internal
-            event e : receiveService?cep3
-            action print "YouYou cep3"  */  
+            transition -> Bye              
+        }    
+        
+        state Bye {
+            on entry print "Sender :: Bye"    
         }
-    }
-    
+    }    
 }
 
-configuration demo1Cfg {
-    instance demo : Demo1
-    connector demo.receiveService => demo.sendService    
+thing Stream includes Message {
+    required port service {
+        receives m1 
+        sends cep   
+    }
+    
+    function f(x : Integer, y : Integer, z : Integer) : Integer do
+        return x + y + z
+    end
+    
+    stream simpleFw do
+        from e : service?m1
+        select a : e.v1, b : e.v2, c : (5 + 1) / (1 * e.v3), d : f(e.v1,e.v2,e.v3)
+        action service!cep(a,b,c,d)
+    end
+    
+    statechart Stream init Init {
+        state Init{
+            /*internal
+            event service?m1 
+            action service!cep()*/  
+        }    
+    }
+}
+
+thing Receiver includes Message {
+    
+    provided port service {
+        receives cep    
+    }
+      
+    statechart Receiver init Idle {
+        state Idle {
+            on entry print "Receiver :: Idle"
+            
+            transition -> Bye
+            event evt : service?cep  
+            action print evt.v1 + "; " + evt.v2 + "; " + evt.v3 + "; " + evt.v4
+        } 
+        
+        state Bye {
+            on entry print "Receiver :: Bye"    
+        }   
+    }  
+}
+
+configuration testCfg {
+    instance r : Receiver
+    instance s : Sender
+    instance st : Stream
+    
+    connector st.service => s.service
+    connector st.service => r.service
 }

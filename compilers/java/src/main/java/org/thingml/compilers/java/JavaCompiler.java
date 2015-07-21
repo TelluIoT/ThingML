@@ -18,7 +18,6 @@ package org.thingml.compilers.java;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.CepCompiler;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
@@ -41,7 +40,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     }
 
     public JavaCompiler() {
-        super(new JavaThingActionCompiler(), new JavaThingApiCompiler(), new JavaCfgMainGenerator(), new JavaCfgBuildCompiler(), new JavaThingImplCompiler(), new CepCompiler());
+        super(new JavaThingActionCompiler(), new JavaThingApiCompiler(), new JavaCfgMainGenerator(), new JavaCfgBuildCompiler(), new JavaThingImplCompiler(), new JavaCepCompiler());
     }
 
     @Override

@@ -43,7 +43,7 @@ public class JSCepCompiler extends CepCompiler {
         } else if (stream instanceof JoinedStream) {
             generateStream((JoinedStream)stream,builder,ctx);
         } else {
-            throw new UnsupportedOperationException("This stream (" + stream.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML");
+            throw new UnsupportedOperationException("This stream (" + stream.getClass().getName() + ") is unknown... Please update your cep compilers as a new stream might have been introduced in ThingML");
         }
 
     }

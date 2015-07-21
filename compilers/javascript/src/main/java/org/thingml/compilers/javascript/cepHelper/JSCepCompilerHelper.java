@@ -18,7 +18,6 @@ package org.thingml.compilers.javascript.cepHelper;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,17 +46,7 @@ public class JSCepCompilerHelper {
         builder.append(".subscribe(\n\t" +
                 "function(" + nameParam + ") {\n");
 
-       List<StreamExpression> newParameters = new ArrayList<>();
-       for (StreamExpression se : stream.getSelection()) {
-           builder.append("\t\tvar " + se.getName() + " = ");
-           actionCompiler.generate(se.getExpression(),builder,ctx);
-           builder.append(";\n");
-           newParameters.add(JSCepCompilerHelper.generateStreamExpression(se.getName()));
-       }
-       builder.append(";\n");
-       builder.append("\t\t\t");
-
-       JSCepCompilerHelper.generateOutPut(stream, builder, ctx, newParameters);
+       actionCompiler.generate(stream.getOutput(),builder,ctx);
 
        builder.append("\t});\n");
     }

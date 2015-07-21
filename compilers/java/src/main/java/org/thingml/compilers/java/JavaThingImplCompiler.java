@@ -34,7 +34,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         pack += ".messages";
 
         final StringBuilder builder = ctx.getNewBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(m.getName()) + "MessageType.java");
-        JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, hasAPI, false);
+        JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, hasAPI, false, false);
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "MessageType extends EventType {\n");
         builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType() {name = \"" + m.getName() + "\";}\n\n");
         builder.append("public Event instantiate(final Port port");
@@ -118,8 +118,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         final StringBuilder builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(thing.getName()) + ".java");
         boolean hasMessages = thing.allMessages().size() > 0;
-
-        JavaHelper.generateHeader(pack, pack, builder, ctx, false, hasAPI(thing), hasMessages);
+        boolean hasStream = thing.getStreams().size() > 0;
+        JavaHelper.generateHeader(pack, pack, builder, ctx, false, hasAPI(thing), hasMessages,hasStream);
 
         builder.append("\n/**\n");
         builder.append(" * Definition for type : " + thing.getName() + "\n");
@@ -328,12 +328,29 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             pi++;
         }
 
+        /** MODIFICATION **/
+        builder.append("createCepStreams();");
+        /**END **/
+
         builder.append("//Init state machine\n");
         for (StateMachine b : thing.allStateMachines()) {
             builder.append("behavior = build" + b.qname("_") + "();\n");
         }
         builder.append("return this;\n");
         builder.append("}\n\n");
+
+        /** MODIFICATION **/
+        builder.append("@Override\n" +
+                       "protected void createCepStreams() {\n");
+        for(Stream stream : thing.getStreams()) {
+            if(stream instanceof SimpleStream) {
+                ctx.getCompiler().getCepCompiler().generateStream(stream,builder,ctx);
+            } else {
+                throw new UnsupportedOperationException("Not yet implemented");
+            }
+        }
+        builder.append("}");
+        /** END **/
 
         for (Function f : thing.allFunctions()) {
             generateFunction(f, builder, ctx);

@@ -144,7 +144,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             }
             i++;
         }
-        builder.append(")\n");
+        builder.append(")");
     }
 
     @Override

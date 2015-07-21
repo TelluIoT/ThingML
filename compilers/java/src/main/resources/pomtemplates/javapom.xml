@@ -70,6 +70,7 @@
             <version>${thingml.version}</version>
         </dependency>-->
         <!--DEP-->
+        <!--DEP RX-->
     </dependencies>
 
 
@@ -106,6 +107,21 @@
                     <!--<compilerArguments>-->
                     <!--<profile>--><!--COMPACT_PROFILE--><!--</profile>-->
                     <!--</compilerArguments>--><!--For Java8 only-->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.thingml.generated.Main</mainClass>
                 </configuration>
             </plugin>
 

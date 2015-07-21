@@ -1,1 +1,0 @@
-{"name":"sampleCfg","version":"1.0.0","description":"sampleCfg configuration generated from ThingML","main":"main.js","private":true,"dependencies":{"state.js":"^5.3.4","rx":"^2.4.3","events":"^1.0.2"},"devDependencies":{},"scripts":{}}

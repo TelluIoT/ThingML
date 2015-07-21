@@ -256,7 +256,7 @@ public class ThingActionCompiler {
     // CEP Action
     public void generate(StreamOutput streamOutput, StringBuilder builder, Context ctx) {
         SendAction sendAction = ThingmlFactory.eINSTANCE.createSendAction();
-        sendAction.setMessage(streamOutput.getMessage()); //fixme we loose message after
+        sendAction.setMessage(streamOutput.getMessage());
         sendAction.setPort(streamOutput.getPort());
         for(StreamExpression se : streamOutput.getParameters()) {
             sendAction.getParameters().add(se.getExpression());

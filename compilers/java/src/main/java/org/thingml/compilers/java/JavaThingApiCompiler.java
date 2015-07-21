@@ -30,7 +30,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         if (pack == null) pack = "org.thingml.generated";
         //final String src = "src/main/java/" + pack.replaceAll(".", "/");
 
-        JavaHelper.generateHeader(pack + ".api", pack, builder, ctx, false, false, false);
+        JavaHelper.generateHeader(pack + ".api", pack, builder, ctx, false, false, false,false);
         String raw_type = "Object";
         if (!e.annotation("java_type").isEmpty()) raw_type = e.annotation("java_type").toArray()[0].toString();
 

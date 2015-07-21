@@ -17,6 +17,7 @@ package org.thingml.compilers.java;
 
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 
@@ -24,12 +25,33 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by bmori on 17.12.2014.
  */
 public class JavaCfgBuildCompiler extends CfgBuildCompiler {
+
+    /** MODIFICATION **/
+    private String addReactiveXDep(Configuration cfg) {
+        boolean oneThingHasStream = false;
+
+        Iterator<Thing> it = cfg.allThings().iterator();
+        while(it.hasNext() || !oneThingHasStream) {
+            Thing t = it.next();
+            oneThingHasStream = oneThingHasStream || (t.getStreams().size() > 0);
+        }
+        if(oneThingHasStream) {
+            return "<dependency>\n" +
+                    "\t\t<groupId>io.reactivex</groupId>\n" +
+                    "\t\t<artifactId>rxjava</artifactId>\n" +
+                    "\t\t<version>1.0.8</version>\n" +
+                    "\t</dependency>";
+        } else {
+            return "";
+        }
+    }
 
     @Override
     public void generateBuildScript(Configuration cfg, Context ctx) {
@@ -53,6 +75,9 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
             for (String dep : cfg.allMavenDep()) {
                 pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep);
             }
+
+            pom = pom.replace("<!--DEP RX-->", addReactiveXDep(cfg));
+
             PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/pom.xml")));
             w.println(pom);
             w.close();
