@@ -16,6 +16,7 @@
 package org.thingml.compilers.thing.common;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.utils.CharacterEscaper;
@@ -115,7 +116,8 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
         builder.append("return ");
-        generate(action.getExp(), builder, ctx);
+        Function parent = ThingMLHelpers.findContainingFunction(action);
+        cast(parent.getType(), false, action.getExp(), builder, ctx);
         builder.append(";\n");
     }
 
