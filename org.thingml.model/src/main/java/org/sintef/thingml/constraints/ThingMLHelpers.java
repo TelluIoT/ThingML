@@ -28,17 +28,14 @@
  */
 package org.sintef.thingml.constraints;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.sintef.thingml.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.swing.tree.VariableHeightLayoutCache;
-
-import org.eclipse.emf.ecore.EObject;
-
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
 
 
 public class ThingMLHelpers {

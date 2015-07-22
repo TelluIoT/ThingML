@@ -118,7 +118,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
-        builder.append("ce." + ctx.protectKeyword(expression.getParamRef().getName()));
+//        builder.append("ce." + ctx.protectKeyword(expression.getParamRef().getName()));
+        builder.append( ctx.protectKeyword(expression.getMsgRef().getMessage().getName()) + "." + ctx.protectKeyword(expression.getParamRef().getName()));
     }
 
     @Override
@@ -132,6 +133,11 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
         builder.append(ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + ((ThingMLElement) expression.getLiteral().eContainer()).getName().toUpperCase() + "_" + expression.getLiteral().getName().toUpperCase());
+    }
+
+    @Override
+    public void generate(StreamParamReference expression, StringBuilder builder, Context ctx) {
+        builder.append("param" + expression.getIndexParam());
     }
 
     @Override
@@ -157,7 +163,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
-    protected void cast(Type type, boolean isArray, Expression exp, StringBuilder builder, Context ctx) {
+    public void cast(Type type, boolean isArray, Expression exp, StringBuilder builder, Context ctx) {
 
         if (!(type instanceof Enumeration)) {
             if (!isArray)

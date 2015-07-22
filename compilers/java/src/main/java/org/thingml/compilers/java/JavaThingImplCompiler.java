@@ -340,16 +340,16 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n\n");
 
         /** MODIFICATION **/
-        builder.append("@Override\n" +
-                       "protected void createCepStreams() {\n");
-        for(Stream stream : thing.getStreams()) {
-            if(stream instanceof SimpleStream) {
-                ctx.getCompiler().getCepCompiler().generateStream(stream,builder,ctx);
-            } else {
-                throw new UnsupportedOperationException("Not yet implemented");
+        if(thing.getStreams().size() > 0) {
+            builder.append("@Override\n" +
+                    "protected void createCepStreams() {\n" +
+                    "PublishSubject<Event> subject;");
+
+            for (Stream stream : thing.getStreams()) {
+                ctx.getCompiler().getCepCompiler().generateStream(stream, builder, ctx);
             }
+            builder.append("}");
         }
-        builder.append("}");
         /** END **/
 
         for (Function f : thing.allFunctions()) {
@@ -519,9 +519,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append("@Override\n");
                     builder.append("public boolean doCheck(final Event e) {\n");
                     if (e != null) {
-                        builder.append("final " + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message ce = (" + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message) e;\n");
+                        builder.append("final " + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message " + r.getMessage().getName() + " = (" + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message) e;\n");
                     } else {
-                        builder.append("final NullEvent ce = (NullEvent) e;\n");
                     }
                     builder.append("return ");
                     ctx.getCompiler().getThingActionCompiler().generate(i.getGuard(), builder, ctx);
@@ -533,9 +532,9 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append("@Override\n");
                     builder.append("public void doExecute(final Event e) {\n");
                     if (e != null) {
-                        builder.append("final " + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message ce = (" + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message) e;\n");
+                        builder.append("final " + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message " + r.getMessage().getName() + " = (" + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message) e;\n");
                     } else {
-                        builder.append("final NullEvent ce = (NullEvent) e;\n");
+                        builder.append("final NullEvent " + r.getMessage().getName() + " = (NullEvent) e;\n");
                     }
                     ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
                     builder.append("}\n\n");

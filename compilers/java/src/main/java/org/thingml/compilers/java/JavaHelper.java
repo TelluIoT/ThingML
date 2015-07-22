@@ -84,7 +84,10 @@ public class JavaHelper {
 
         if(hasStream) {
             builder.append("import rx.functions.Action1;\n" +
-                    "import rx.subjects.PublishSubject;");
+                    "import rx.subjects.PublishSubject;" +
+                    "import rx.functions.Func1;\n" +
+                    "import rx.functions.Func2;" +
+                    "import java.util.concurrent.TimeUnit;");
         }
 
         builder.append("import java.util.*;\n");

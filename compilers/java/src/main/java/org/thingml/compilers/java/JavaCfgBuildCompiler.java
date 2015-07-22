@@ -38,7 +38,7 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
         boolean oneThingHasStream = false;
 
         Iterator<Thing> it = cfg.allThings().iterator();
-        while(it.hasNext() || !oneThingHasStream) {
+        while(it.hasNext() && !oneThingHasStream) {
             Thing t = it.next();
             oneThingHasStream = oneThingHasStream || (t.getStreams().size() > 0);
         }
@@ -52,6 +52,7 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
             return "";
         }
     }
+    /** END **/
 
     @Override
     public void generateBuildScript(Configuration cfg, Context ctx) {

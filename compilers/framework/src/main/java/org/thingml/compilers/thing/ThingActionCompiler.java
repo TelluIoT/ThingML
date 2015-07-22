@@ -17,6 +17,7 @@ package org.thingml.compilers.thing;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.ThingMLCopyExpression;
 
 public class ThingActionCompiler {
 
@@ -259,8 +260,9 @@ public class ThingActionCompiler {
         sendAction.setMessage(streamOutput.getMessage());
         sendAction.setPort(streamOutput.getPort());
         for(StreamExpression se : streamOutput.getParameters()) {
-            sendAction.getParameters().add(se.getExpression());
+            sendAction.getParameters().add(ThingMLCopyExpression.copy(se.getExpression()));
+
         }
-        generate(sendAction,builder,ctx);
+        generate(sendAction, builder, ctx);
     }
 }

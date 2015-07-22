@@ -71,10 +71,10 @@ public class JSCepCompiler extends CepCompiler {
 
         String message1Name = stream.getInputs().get(1).getMessage().getName(),
                 message2Name = stream.getInputs().get(0).getMessage().getName();
-        String nameSTream1 = stream.qname("_") + "_" + message1Name, //currently : join is between two streams
-                nameSTream2 = stream.qname("_") + "_" + message2Name;
+        String nameStream1 = stream.qname("_") + "_" + message1Name, //currently : join is between two streams
+                nameStream2 = stream.qname("_") + "_" + message2Name;
 
-        builder.append("var " + stream.qname("_") + " = " + nameSTream1 + ".join(" + nameSTream2 + ",wait1,wait1,\n" +
+        builder.append("var " + stream.qname("_") + " = " + nameStream1 + ".join(" + nameStream2 + ",wait1,wait1,\n" +
                 "\tfunction(" + message1Name + "," + message2Name +") {\n" );//+
 
         List<StreamExpression> newParameters = new ArrayList<>();
