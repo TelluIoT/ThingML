@@ -1,0 +1,36 @@
+import "Sender.thingml"
+
+thing fragment StreamCepMsgs {
+    message cep_joinMessage(p1 : Double, p2 : Double, p3 : Double, p4 : Double, p5 : Double);
+    
+    message cep_endBench();
+}
+
+thing StreamWithCep includes StreamCepMsgs, SenderMsgs {
+    provided port senderService {
+        receives joinMessage1, joinMessage2, endBench
+    }
+    
+    required port cepService {
+        sends cep_joinMessage, cep_endBench
+    }
+        
+    stream joinStream do
+        from evt1 : senderService?joinMessage1 & evt2 : senderService?joinMessage2
+        select a : evt1.p1 + evt2.p1, b : evt1.p2 + evt2.p2, c : evt1.p3 + evt2.p3,
+                d : evt1.p4 + evt2.p4, e : evt1.p5 + evt2.p5
+        action cepService!cep_joinMessage(a,b,c,d,e)
+                
+    end
+    
+    stream forwardEnd do
+        from senderService?endBench
+        action cepService!cep_endBench()
+    end
+    
+    statechart Stream init Init {
+       state Init{}    
+    }
+}
+
+

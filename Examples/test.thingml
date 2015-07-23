@@ -9,7 +9,7 @@ thing fragment Message {
 }
 
 thing Sender includes Message {
-    provided port service {
+    required port senderSrv {
         sends m1    
     }
     
@@ -17,7 +17,7 @@ thing Sender includes Message {
         state Init {
             on entry do 
                 print "Sender :: Init"
-                service!m1(1,2,3)
+                senderSrv!m1(1,2,3)
             end
             
             transition -> Bye              
@@ -29,8 +29,8 @@ thing Sender includes Message {
     }    
 }
 
-thing Stream includes Message {
-    required port service {
+/*thing Stream includes Message {
+    required port streamSrv {
         receives m1 
         sends cep   
     }
@@ -40,24 +40,24 @@ thing Stream includes Message {
     end
     
     stream simpleFw do
-        from e : service?m1
+        from e : streamSrv?m1
         select a : e.v1, b : e.v2, c : (5 + 1) / (1 * e.v3), d : f(e.v1,e.v2,e.v3)
-        action service!cep(a,b,c,d)
+        action streamSrv!cep(a,b,c,d)
     end
     
     statechart Stream init Init {
         state Init{
-            /*internal
-            event service?m1 
-            action service!cep()*/  
+            //internal
+            //event service?m1 
+            //action service!cep()  
         }    
     }
-}
+}*/
 
 thing Receiver includes Message {
     
-    provided port service {
-        receives cep    
+    provided port receiverSrv {
+        receives cep, m1    
     }
       
     statechart Receiver init Idle {
@@ -65,8 +65,8 @@ thing Receiver includes Message {
             on entry print "Receiver :: Idle"
             
             transition -> Bye
-            event evt : service?cep  
-            action print evt.v1 + "; " + evt.v2 + "; " + evt.v3 + "; " + evt.v4
+            event evt : receiverSrv?m1  
+            action print evt.v1 + "; " + evt.v2 + "; " + evt.v3 + "; " //+ evt.v4
         } 
         
         state Bye {
@@ -78,8 +78,10 @@ thing Receiver includes Message {
 configuration testCfg {
     instance r : Receiver
     instance s : Sender
-    instance st : Stream
     
-    connector st.service => s.service
-    connector st.service => r.service
+    connector s.senderSrv => r.receiverSrv
+    //instance st : Stream
+    
+    //connector st.streamSrv => s.senderSrv
+    //connector st.streamSrv => r.receiverSrv
 }

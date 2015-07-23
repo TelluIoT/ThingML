@@ -1,0 +1,25 @@
+import "BenchMsgs.thingml"
+
+thing Sender includes BenchMsgs {
+    required port senderSrv {
+        receives tick
+        sends forwardMessage, forwardMessageWithParams, forwardWithModif
+    }
+    
+    statechart Sender init Idle {
+        state Idle {
+            transition -> Send
+            event senderSrv?tick    
+        }
+        
+        state  Send {
+            on entry do
+                senderSrv!forwardMessage()
+                senderSrv!forwardMessageWithParams(1,2,3,4,5)
+                senderSrv!forwardWithModif(1,2,3,4,5)
+            end 
+            
+            transition -> Idle   
+        }   
+    }
+}

@@ -1,0 +1,25 @@
+thing fragment Message {
+    message command();
+    message command2();
+    message m1(); 
+}
+
+thing Server includes Message {
+    provided port service {
+        receives command, command2
+        sends m1    
+    }
+    
+    stream joinStream do
+        from service?command & service?command2
+        action service!m1()
+    end
+    
+    statechart Server init Idle {
+        state Idle {
+            /*internal
+            event service?command
+            action service!m1()*/    
+        }    
+    }    
+}

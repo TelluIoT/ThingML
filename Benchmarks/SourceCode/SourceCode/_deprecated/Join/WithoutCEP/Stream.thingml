@@ -1,0 +1,106 @@
+import "Sender.thingml"
+
+thing fragment StreamCepMsgs {
+    message c_joinMessage(p1 : Double, p2 : Double, p3 : Double, p4 : Double, p5 : Double);
+    
+    message c_endBench();
+}
+
+thing StreamWithCep includes StreamCepMsgs, SenderMsgs {
+    provided port senderService {
+        receives joinMessage1, joinMessage2, endBench
+    }
+    
+    required port cepService {
+        sends c_joinMessage, c_endBench
+    }
+        
+    /*stream joinStream do
+        from evt1 : senderService?joinMessage1 & evt2 : senderService?joinMessage2
+        select a : evt1.p1 + evt2.p1, b : evt1.p2 + evt2.p2, c : evt1.p3 + evt2.p3,
+                d : evt1.p4 + evt2.p4, e : evt1.p5 + evt2.p5
+        action cepService!cep_joinMessage(a,b,c,d,e)
+                
+    end
+    
+    stream forwardEnd do
+        from senderService?endBench
+        action cepService!cep_endBench()
+    end*/
+    
+    function join1() do
+        'var now = Date.now();
+        
+        /*console.log("J1 : ");
+        console.log(listJoinMessage1.length);
+        console.log(listJoinMessage2.length);*/
+        
+        for(m1 in listJoinMessage1) {
+             if(now - listJoinMessage1[m1].time > 100) {
+                 listJoinMessage1.splice(m1,1);   
+             }
+        }
+                  
+         for(m2 in listJoinMessage2) {
+             if(now - listJoinMessage2[m2].time > 100) {
+                 listJoinMessage2.splice(m2,1);   
+             } else {'
+                cepService!c_joinMessage(2,4,6,8,10)
+             '}
+         }'
+  
+       
+    end
+    
+    function join2() do
+        'var now = Date.now();
+        
+        /*console.log("J2 : ");
+        console.log(listJoinMessage1.length);
+        console.log(listJoinMessage2.length);*/
+        
+        for(m2 in listJoinMessage2) {
+             if(now - listJoinMessage2[m2].time > 100) {
+                 listJoinMessage2.splice(m2,1);   
+             }
+        }
+                  
+         for(m1 in listJoinMessage1) {
+             if(now - listJoinMessage1[m1].time > 100) {
+                 listJoinMessage1.splice(m1,1);   
+             } else {'
+                cepService!c_joinMessage(2,4,6,8,10)
+             '}
+         }'
+    end
+        
+    statechart Stream init Init {
+        on entry do
+             'this.listJoinMessage1 = [];
+              this.listJoinMessage2 = [];'
+        end
+        
+       state Init{
+           internal
+           event e : senderService?joinMessage1
+           action do
+                'listJoinMessage1.push({time:Date.now(), p1:1, p2:2, p3:3, p4:4, p5:5});'
+                join1()
+           end
+           
+           internal
+           event e : senderService?joinMessage2
+           action do
+                'listJoinMessage2.push({time:Date.now(), p1:1, p2:2, p3:3, p4:4, p5:5});'
+                join2()
+           end
+           
+            //forwardEnd
+            internal
+            event senderService?endBench
+            action cepService!c_endBench()
+       }    
+    }
+}
+
+

@@ -1,0 +1,9 @@
+import "server.thingml"
+import "receiver.thingml"
+
+configuration serverCfg {
+    instance c : Server
+    instance r : Receiver
+    
+    connector r.service => c.service    
+}

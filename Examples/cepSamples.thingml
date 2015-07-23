@@ -1,20 +1,19 @@
 /*
 Expected result : 
-> npm install
-> node main.js
 Init
 cep message receive.
 cep2 message receive with values (8;24).
 cep2 message receive with values (21;25).
 cep3 message receive.
 cep3 message receive.
-cep4 message receive with values (1;2;3).
-cep4 message receive with values (4;5;6).
+cep4 message receive with values (1;3;11).
+cep4 message receive with values (4;6;17).
 cep5 message receive with values (10;40;90).
 */
 
 datatype Integer
-    @js_type "short";
+    @js_type "short"
+    @java_type "int";
     
 thing fragment CepMsgs {
     //Cep messages for "simple" streams
@@ -46,11 +45,11 @@ thing fragment SampleMsgs {
 }
 
 thing Sample includes CepMsgs,  SampleMsgs{
-    provided port sendPort {
+    required port sendPort {
         sends m1, m2, m3, m4, m5, m6, m7, m8, cep1, cep2, cep3, cep4, cep5
     }
     
-    required port rcvPort {
+    provided port rcvPort {
         receives m1, m2, m3, m4, m5, m6, m7, m8, cep1, cep2, cep3, cep4, cep5
     }
     
@@ -137,5 +136,5 @@ thing Sample includes CepMsgs,  SampleMsgs{
 
 configuration sampleCfg {
     instance sample : Sample
-    connector sample.rcvPort => sample.sendPort    
+    connector sample.sendPort => sample.rcvPort    
 }

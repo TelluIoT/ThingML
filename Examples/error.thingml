@@ -1,0 +1,23 @@
+datatype Integer
+    @java_type "short";
+
+thing fragment Message {
+    message m1();
+}
+
+thing Thing includes Message {
+       
+    function test(x : Integer) : Integer do
+        return x + 1
+    end
+    
+    statechart Statechart init Init {
+        state Init {
+            on entry print test(5)   
+        }    
+    }
+}
+
+configuration errorCfg {
+    instance t : Thing  
+}

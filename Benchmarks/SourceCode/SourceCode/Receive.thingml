@@ -1,0 +1,16 @@
+import "BenchMsgs.thingml"
+
+thing Receiver includes StreamMsgs{
+    provided port receiverSrv {
+        receives cep_forwardMessage, cep_forwardMessageWithParams, cep_forwardWithModif
+    }
+    
+    statechart Receiver init BlackHole {
+        state BlackHole {
+            internal 
+            event cService?c_forwardMessage
+            event cService?c_forwardMessageWithParams
+            event cService?c_forwardWithModif
+        }       
+    }    
+}
