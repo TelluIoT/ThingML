@@ -51,6 +51,7 @@ import org.sintef.thingml.Expression;
 import org.sintef.thingml.ExpressionGroup;
 import org.sintef.thingml.ExternExpression;
 import org.sintef.thingml.ExternStatement;
+import org.sintef.thingml.Filter;
 import org.sintef.thingml.Function;
 import org.sintef.thingml.FunctionCall;
 import org.sintef.thingml.FunctionCallExpression;
@@ -61,12 +62,12 @@ import org.sintef.thingml.Instance;
 import org.sintef.thingml.InstanceRef;
 import org.sintef.thingml.IntegerLiteral;
 import org.sintef.thingml.InternalTransition;
-import org.sintef.thingml.JoinedStream;
+import org.sintef.thingml.JoinSources;
 import org.sintef.thingml.Literal;
 import org.sintef.thingml.LocalVariable;
 import org.sintef.thingml.LoopAction;
 import org.sintef.thingml.LowerExpression;
-import org.sintef.thingml.MergedStream;
+import org.sintef.thingml.MergeSources;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.MinusExpression;
 import org.sintef.thingml.ModExpression;
@@ -88,7 +89,9 @@ import org.sintef.thingml.Region;
 import org.sintef.thingml.RequiredPort;
 import org.sintef.thingml.ReturnAction;
 import org.sintef.thingml.SendAction;
-import org.sintef.thingml.SimpleStream;
+import org.sintef.thingml.SimpleSource;
+import org.sintef.thingml.Source;
+import org.sintef.thingml.SourceComposition;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
@@ -109,6 +112,7 @@ import org.sintef.thingml.UnaryExpression;
 import org.sintef.thingml.UnaryMinus;
 import org.sintef.thingml.Variable;
 import org.sintef.thingml.VariableAssignment;
+import org.sintef.thingml.ViewSource;
 
 /**
  * <!-- begin-user-doc -->
@@ -682,6 +686,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass streamParamReferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass streamOutputEClass = null;
 
 	/**
@@ -689,28 +700,49 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass simpleStreamEClass = null;
+	private EClass sourceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass mergedStreamEClass = null;
+	private EClass sourceCompositionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass joinedStreamEClass = null;
+	private EClass joinSourcesEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass streamParamReferenceEClass = null;
+	private EClass mergeSourcesEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass simpleSourceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass viewSourceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass filterEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -2443,7 +2475,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getStream_Inputs() {
+	public EReference getStream_Selection() {
 		return (EReference)streamEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -2453,6 +2485,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	public EReference getStream_Output() {
+		return (EReference)streamEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getStream_Input() {
 		return (EReference)streamEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -2472,6 +2513,24 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EReference getStreamExpression_Expression() {
 		return (EReference)streamExpressionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getStreamParamReference() {
+		return streamParamReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getStreamParamReference_IndexParam() {
+		return (EAttribute)streamParamReferenceEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2515,8 +2574,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getSimpleStream() {
-		return simpleStreamEClass;
+	public EClass getSource() {
+		return sourceEClass;
 	}
 
 	/**
@@ -2524,8 +2583,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getMergedStream() {
-		return mergedStreamEClass;
+	public EClass getSourceComposition() {
+		return sourceCompositionEClass;
 	}
 
 	/**
@@ -2533,8 +2592,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getJoinedStream() {
-		return joinedStreamEClass;
+	public EReference getSourceComposition_Sources() {
+		return (EReference)sourceCompositionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2542,8 +2601,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getStreamParamReference() {
-		return streamParamReferenceEClass;
+	public EClass getJoinSources() {
+		return joinSourcesEClass;
 	}
 
 	/**
@@ -2551,8 +2610,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getStreamParamReference_IndexParam() {
-		return (EAttribute)streamParamReferenceEClass.getEStructuralFeatures().get(0);
+	public EClass getMergeSources() {
+		return mergeSourcesEClass;
 	}
 
 	/**
@@ -2560,8 +2619,44 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getStream_Selection() {
-		return (EReference)streamEClass.getEStructuralFeatures().get(1);
+	public EClass getSimpleSource() {
+		return simpleSourceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSimpleSource_Message() {
+		return (EReference)simpleSourceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getViewSource() {
+		return viewSourceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getViewSource_SourceViewed() {
+		return (EReference)viewSourceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getFilter() {
+		return filterEClass;
 	}
 
 	/**
@@ -2855,26 +2950,37 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEAttribute(localVariableEClass, LOCAL_VARIABLE__CHANGEABLE);
 
 		streamEClass = createEClass(STREAM);
-		createEReference(streamEClass, STREAM__INPUTS);
 		createEReference(streamEClass, STREAM__SELECTION);
 		createEReference(streamEClass, STREAM__OUTPUT);
+		createEReference(streamEClass, STREAM__INPUT);
 
 		streamExpressionEClass = createEClass(STREAM_EXPRESSION);
 		createEReference(streamExpressionEClass, STREAM_EXPRESSION__EXPRESSION);
+
+		streamParamReferenceEClass = createEClass(STREAM_PARAM_REFERENCE);
+		createEAttribute(streamParamReferenceEClass, STREAM_PARAM_REFERENCE__INDEX_PARAM);
 
 		streamOutputEClass = createEClass(STREAM_OUTPUT);
 		createEReference(streamOutputEClass, STREAM_OUTPUT__PARAMETERS);
 		createEReference(streamOutputEClass, STREAM_OUTPUT__MESSAGE);
 		createEReference(streamOutputEClass, STREAM_OUTPUT__PORT);
 
-		simpleStreamEClass = createEClass(SIMPLE_STREAM);
+		sourceEClass = createEClass(SOURCE);
 
-		mergedStreamEClass = createEClass(MERGED_STREAM);
+		sourceCompositionEClass = createEClass(SOURCE_COMPOSITION);
+		createEReference(sourceCompositionEClass, SOURCE_COMPOSITION__SOURCES);
 
-		joinedStreamEClass = createEClass(JOINED_STREAM);
+		joinSourcesEClass = createEClass(JOIN_SOURCES);
 
-		streamParamReferenceEClass = createEClass(STREAM_PARAM_REFERENCE);
-		createEAttribute(streamParamReferenceEClass, STREAM_PARAM_REFERENCE__INDEX_PARAM);
+		mergeSourcesEClass = createEClass(MERGE_SOURCES);
+
+		simpleSourceEClass = createEClass(SIMPLE_SOURCE);
+		createEReference(simpleSourceEClass, SIMPLE_SOURCE__MESSAGE);
+
+		viewSourceEClass = createEClass(VIEW_SOURCE);
+		createEReference(viewSourceEClass, VIEW_SOURCE__SOURCE_VIEWED);
+
+		filterEClass = createEClass(FILTER);
 	}
 
 	/**
@@ -2984,10 +3090,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		localVariableEClass.getESuperTypes().add(this.getAction());
 		streamEClass.getESuperTypes().add(this.getThingMLElement());
 		streamExpressionEClass.getESuperTypes().add(this.getThingMLElement());
-		simpleStreamEClass.getESuperTypes().add(this.getStream());
-		mergedStreamEClass.getESuperTypes().add(this.getStream());
-		joinedStreamEClass.getESuperTypes().add(this.getStream());
 		streamParamReferenceEClass.getESuperTypes().add(this.getExpression());
+		sourceCompositionEClass.getESuperTypes().add(this.getSource());
+		joinSourcesEClass.getESuperTypes().add(this.getSourceComposition());
+		mergeSourcesEClass.getESuperTypes().add(this.getSourceComposition());
+		simpleSourceEClass.getESuperTypes().add(this.getSource());
+		viewSourceEClass.getESuperTypes().add(this.getSource());
+		filterEClass.getESuperTypes().add(this.getViewSource());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(thingMLModelEClass, ThingMLModel.class, "ThingMLModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3252,27 +3361,38 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getLocalVariable_Init(), this.getExpression(), null, "init", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getLocalVariable_Changeable(), ecorePackage.getEBoolean(), "changeable", "true", 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(streamEClass, Stream.class, "Stream", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getStream_Inputs(), this.getReceiveMessage(), null, "inputs", null, 1, -1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(streamEClass, Stream.class, "Stream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getStream_Selection(), this.getStreamExpression(), null, "selection", null, 0, -1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStream_Output(), this.getStreamOutput(), null, "output", null, 1, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getStream_Input(), this.getSource(), null, "input", null, 1, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(streamExpressionEClass, StreamExpression.class, "StreamExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getStreamExpression_Expression(), this.getExpression(), null, "expression", null, 1, 1, StreamExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getStreamExpression_Expression(), this.getExpression(), null, "expression", null, 1, 1, StreamExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(streamParamReferenceEClass, StreamParamReference.class, "StreamParamReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStreamParamReference_IndexParam(), ecorePackage.getEInt(), "indexParam", "0", 1, 1, StreamParamReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(streamOutputEClass, StreamOutput.class, "StreamOutput", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getStreamOutput_Parameters(), this.getStreamExpression(), null, "parameters", null, 0, -1, StreamOutput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStreamOutput_Message(), this.getMessage(), null, "message", null, 1, 1, StreamOutput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStreamOutput_Port(), this.getPort(), null, "port", null, 1, 1, StreamOutput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(simpleStreamEClass, SimpleStream.class, "SimpleStream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(sourceEClass, Source.class, "Source", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(mergedStreamEClass, MergedStream.class, "MergedStream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(sourceCompositionEClass, SourceComposition.class, "SourceComposition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSourceComposition_Sources(), this.getSource(), null, "sources", null, 2, -1, SourceComposition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(joinedStreamEClass, JoinedStream.class, "JoinedStream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(joinSourcesEClass, JoinSources.class, "JoinSources", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(streamParamReferenceEClass, StreamParamReference.class, "StreamParamReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getStreamParamReference_IndexParam(), ecorePackage.getEInt(), "indexParam", null, 1, 1, StreamParamReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(mergeSourcesEClass, MergeSources.class, "MergeSources", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(simpleSourceEClass, SimpleSource.class, "SimpleSource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSimpleSource_Message(), this.getReceiveMessage(), null, "message", null, 1, 1, SimpleSource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(viewSourceEClass, ViewSource.class, "ViewSource", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getViewSource_SourceViewed(), this.getSource(), null, "sourceViewed", null, 1, 1, ViewSource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(filterEClass, Filter.class, "Filter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

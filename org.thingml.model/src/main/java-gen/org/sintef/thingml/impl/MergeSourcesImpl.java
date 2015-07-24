@@ -15,18 +15,40 @@
  */
 /**
  */
-package org.sintef.thingml;
+package org.sintef.thingml.impl;
 
+import org.eclipse.emf.ecore.EClass;
+
+import org.sintef.thingml.MergeSources;
+import org.sintef.thingml.ThingmlPackage;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Joined Stream</b></em>'.
+ * An implementation of the model object '<em><b>Merge Sources</b></em>'.
  * <!-- end-user-doc -->
+ * <p>
+ * </p>
  *
- *
- * @see org.sintef.thingml.ThingmlPackage#getJoinedStream()
- * @model
  * @generated
  */
-public interface JoinedStream extends Stream {
-} // JoinedStream
+public class MergeSourcesImpl extends SourceCompositionImpl implements MergeSources {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected MergeSourcesImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return ThingmlPackage.Literals.MERGE_SOURCES;
+	}
+
+} //MergeSourcesImpl

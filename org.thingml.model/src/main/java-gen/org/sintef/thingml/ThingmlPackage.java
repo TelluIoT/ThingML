@@ -3794,22 +3794,13 @@ public interface ThingmlPackage extends EPackage {
 	int STREAM__NAME = THING_ML_ELEMENT__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Inputs</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STREAM__INPUTS = THING_ML_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
 	 * The feature id for the '<em><b>Selection</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STREAM__SELECTION = THING_ML_ELEMENT_FEATURE_COUNT + 1;
+	int STREAM__SELECTION = THING_ML_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Output</b></em>' containment reference.
@@ -3818,7 +3809,16 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STREAM__OUTPUT = THING_ML_ELEMENT_FEATURE_COUNT + 2;
+	int STREAM__OUTPUT = THING_ML_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Input</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM__INPUT = THING_ML_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Stream</em>' class.
@@ -3828,7 +3828,6 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int STREAM_FEATURE_COUNT = THING_ML_ELEMENT_FEATURE_COUNT + 3;
-
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamExpressionImpl <em>Stream Expression</em>}' class.
@@ -3868,6 +3867,34 @@ public interface ThingmlPackage extends EPackage {
 	int STREAM_EXPRESSION_FEATURE_COUNT = THING_ML_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamParamReferenceImpl <em>Stream Param Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.StreamParamReferenceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamParamReference()
+	 * @generated
+	 */
+	int STREAM_PARAM_REFERENCE = 80;
+
+	/**
+	 * The feature id for the '<em><b>Index Param</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_PARAM_REFERENCE__INDEX_PARAM = EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Stream Param Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_PARAM_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamOutputImpl <em>Stream Output</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3875,7 +3902,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamOutput()
 	 * @generated
 	 */
-	int STREAM_OUTPUT = 80;
+	int STREAM_OUTPUT = 81;
 
 	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' reference list.
@@ -3913,200 +3940,192 @@ public interface ThingmlPackage extends EPackage {
 	 */
 	int STREAM_OUTPUT_FEATURE_COUNT = 3;
 
-
 	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.SimpleStreamImpl <em>Simple Stream</em>}' class.
+	 * The meta object id for the '{@link org.sintef.thingml.impl.SourceImpl <em>Source</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.SimpleStreamImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleStream()
+	 * @see org.sintef.thingml.impl.SourceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSource()
 	 * @generated
 	 */
-	int SIMPLE_STREAM = 81;
+	int SOURCE = 82;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SIMPLE_STREAM__NAME = STREAM__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Inputs</b></em>' containment reference list.
+	 * The number of structural features of the '<em>Source</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_STREAM__INPUTS = STREAM__INPUTS;
+	int SOURCE_FEATURE_COUNT = 0;
 
 	/**
-	 * The feature id for the '<em><b>Selection</b></em>' containment reference list.
+	 * The meta object id for the '{@link org.sintef.thingml.impl.SourceCompositionImpl <em>Source Composition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.SourceCompositionImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSourceComposition()
+	 * @generated
+	 */
+	int SOURCE_COMPOSITION = 83;
+
+	/**
+	 * The feature id for the '<em><b>Sources</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_STREAM__SELECTION = STREAM__SELECTION;
+	int SOURCE_COMPOSITION__SOURCES = SOURCE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Output</b></em>' containment reference.
+	 * The number of structural features of the '<em>Source Composition</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_STREAM__OUTPUT = STREAM__OUTPUT;
+	int SOURCE_COMPOSITION_FEATURE_COUNT = SOURCE_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of structural features of the '<em>Simple Stream</em>' class.
+	 * The meta object id for the '{@link org.sintef.thingml.impl.JoinSourcesImpl <em>Join Sources</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.JoinSourcesImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getJoinSources()
+	 * @generated
+	 */
+	int JOIN_SOURCES = 84;
+
+	/**
+	 * The feature id for the '<em><b>Sources</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_STREAM_FEATURE_COUNT = STREAM_FEATURE_COUNT + 0;
+	int JOIN_SOURCES__SOURCES = SOURCE_COMPOSITION__SOURCES;
 
 	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.MergedStreamImpl <em>Merged Stream</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.MergedStreamImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMergedStream()
-	 * @generated
-	 */
-	int MERGED_STREAM = 82;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * The number of structural features of the '<em>Join Sources</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MERGED_STREAM__NAME = STREAM__NAME;
+	int JOIN_SOURCES_FEATURE_COUNT = SOURCE_COMPOSITION_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Inputs</b></em>' containment reference list.
+	 * The meta object id for the '{@link org.sintef.thingml.impl.MergeSourcesImpl <em>Merge Sources</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.MergeSourcesImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMergeSources()
+	 * @generated
+	 */
+	int MERGE_SOURCES = 85;
+
+	/**
+	 * The feature id for the '<em><b>Sources</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MERGED_STREAM__INPUTS = STREAM__INPUTS;
+	int MERGE_SOURCES__SOURCES = SOURCE_COMPOSITION__SOURCES;
 
 	/**
-	 * The feature id for the '<em><b>Selection</b></em>' containment reference list.
+	 * The number of structural features of the '<em>Merge Sources</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MERGED_STREAM__SELECTION = STREAM__SELECTION;
+	int MERGE_SOURCES_FEATURE_COUNT = SOURCE_COMPOSITION_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Output</b></em>' containment reference.
+	 * The meta object id for the '{@link org.sintef.thingml.impl.SimpleSourceImpl <em>Simple Source</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.SimpleSourceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleSource()
+	 * @generated
+	 */
+	int SIMPLE_SOURCE = 86;
+
+	/**
+	 * The feature id for the '<em><b>Message</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MERGED_STREAM__OUTPUT = STREAM__OUTPUT;
+	int SIMPLE_SOURCE__MESSAGE = SOURCE_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Merged Stream</em>' class.
+	 * The number of structural features of the '<em>Simple Source</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MERGED_STREAM_FEATURE_COUNT = STREAM_FEATURE_COUNT + 0;
+	int SIMPLE_SOURCE_FEATURE_COUNT = SOURCE_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.JoinedStreamImpl <em>Joined Stream</em>}' class.
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ViewSourceImpl <em>View Source</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.JoinedStreamImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getJoinedStream()
+	 * @see org.sintef.thingml.impl.ViewSourceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getViewSource()
 	 * @generated
 	 */
-	int JOINED_STREAM = 83;
+	int VIEW_SOURCE = 87;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JOINED_STREAM__NAME = STREAM__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Inputs</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Source Viewed</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JOINED_STREAM__INPUTS = STREAM__INPUTS;
+	int VIEW_SOURCE__SOURCE_VIEWED = SOURCE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Selection</b></em>' containment reference list.
+	 * The number of structural features of the '<em>View Source</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JOINED_STREAM__SELECTION = STREAM__SELECTION;
+	int VIEW_SOURCE_FEATURE_COUNT = SOURCE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Output</b></em>' containment reference.
+	 * The meta object id for the '{@link org.sintef.thingml.impl.FilterImpl <em>Filter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.FilterImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getFilter()
+	 * @generated
+	 */
+	int FILTER = 88;
+
+	/**
+	 * The feature id for the '<em><b>Source Viewed</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JOINED_STREAM__OUTPUT = STREAM__OUTPUT;
+	int FILTER__SOURCE_VIEWED = VIEW_SOURCE__SOURCE_VIEWED;
 
 	/**
-	 * The number of structural features of the '<em>Joined Stream</em>' class.
+	 * The number of structural features of the '<em>Filter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JOINED_STREAM_FEATURE_COUNT = STREAM_FEATURE_COUNT + 0;
-
-
-	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamParamReferenceImpl <em>Stream Param Reference</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.StreamParamReferenceImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamParamReference()
-	 * @generated
-	 */
-	int STREAM_PARAM_REFERENCE = 84;
-
-	/**
-	 * The feature id for the '<em><b>Index Param</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STREAM_PARAM_REFERENCE__INDEX_PARAM = EXPRESSION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Stream Param Reference</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STREAM_PARAM_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+	int FILTER_FEATURE_COUNT = VIEW_SOURCE_FEATURE_COUNT + 0;
 
 
 	/**
@@ -6066,15 +6085,15 @@ public interface ThingmlPackage extends EPackage {
 	EClass getStream();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Stream#getInputs <em>Inputs</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Stream#getSelection <em>Selection</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Inputs</em>'.
-	 * @see org.sintef.thingml.Stream#getInputs()
+	 * @return the meta object for the containment reference list '<em>Selection</em>'.
+	 * @see org.sintef.thingml.Stream#getSelection()
 	 * @see #getStream()
 	 * @generated
 	 */
-	EReference getStream_Inputs();
+	EReference getStream_Selection();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Stream#getOutput <em>Output</em>}'.
@@ -6086,6 +6105,17 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getStream_Output();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Stream#getInput <em>Input</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Input</em>'.
+	 * @see org.sintef.thingml.Stream#getInput()
+	 * @see #getStream()
+	 * @generated
+	 */
+	EReference getStream_Input();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.StreamExpression <em>Stream Expression</em>}'.
@@ -6107,6 +6137,27 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getStreamExpression_Expression();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.StreamParamReference <em>Stream Param Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Stream Param Reference</em>'.
+	 * @see org.sintef.thingml.StreamParamReference
+	 * @generated
+	 */
+	EClass getStreamParamReference();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.StreamParamReference#getIndexParam <em>Index Param</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Index Param</em>'.
+	 * @see org.sintef.thingml.StreamParamReference#getIndexParam()
+	 * @see #getStreamParamReference()
+	 * @generated
+	 */
+	EAttribute getStreamParamReference_IndexParam();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.StreamOutput <em>Stream Output</em>}'.
@@ -6152,66 +6203,107 @@ public interface ThingmlPackage extends EPackage {
 	EReference getStreamOutput_Port();
 
 	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.SimpleStream <em>Simple Stream</em>}'.
+	 * Returns the meta object for class '{@link org.sintef.thingml.Source <em>Source</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Simple Stream</em>'.
-	 * @see org.sintef.thingml.SimpleStream
+	 * @return the meta object for class '<em>Source</em>'.
+	 * @see org.sintef.thingml.Source
 	 * @generated
 	 */
-	EClass getSimpleStream();
+	EClass getSource();
 
 	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.MergedStream <em>Merged Stream</em>}'.
+	 * Returns the meta object for class '{@link org.sintef.thingml.SourceComposition <em>Source Composition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Merged Stream</em>'.
-	 * @see org.sintef.thingml.MergedStream
+	 * @return the meta object for class '<em>Source Composition</em>'.
+	 * @see org.sintef.thingml.SourceComposition
 	 * @generated
 	 */
-	EClass getMergedStream();
+	EClass getSourceComposition();
 
 	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.JoinedStream <em>Joined Stream</em>}'.
+	 * Returns the meta object for the reference list '{@link org.sintef.thingml.SourceComposition#getSources <em>Sources</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Joined Stream</em>'.
-	 * @see org.sintef.thingml.JoinedStream
+	 * @return the meta object for the reference list '<em>Sources</em>'.
+	 * @see org.sintef.thingml.SourceComposition#getSources()
+	 * @see #getSourceComposition()
 	 * @generated
 	 */
-	EClass getJoinedStream();
+	EReference getSourceComposition_Sources();
 
 	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.StreamParamReference <em>Stream Param Reference</em>}'.
+	 * Returns the meta object for class '{@link org.sintef.thingml.JoinSources <em>Join Sources</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Stream Param Reference</em>'.
-	 * @see org.sintef.thingml.StreamParamReference
+	 * @return the meta object for class '<em>Join Sources</em>'.
+	 * @see org.sintef.thingml.JoinSources
 	 * @generated
 	 */
-	EClass getStreamParamReference();
+	EClass getJoinSources();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.sintef.thingml.StreamParamReference#getIndexParam <em>Index Param</em>}'.
+	 * Returns the meta object for class '{@link org.sintef.thingml.MergeSources <em>Merge Sources</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Index Param</em>'.
-	 * @see org.sintef.thingml.StreamParamReference#getIndexParam()
-	 * @see #getStreamParamReference()
+	 * @return the meta object for class '<em>Merge Sources</em>'.
+	 * @see org.sintef.thingml.MergeSources
 	 * @generated
 	 */
-	EAttribute getStreamParamReference_IndexParam();
+	EClass getMergeSources();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Stream#getSelection <em>Selection</em>}'.
+	 * Returns the meta object for class '{@link org.sintef.thingml.SimpleSource <em>Simple Source</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Selection</em>'.
-	 * @see org.sintef.thingml.Stream#getSelection()
-	 * @see #getStream()
+	 * @return the meta object for class '<em>Simple Source</em>'.
+	 * @see org.sintef.thingml.SimpleSource
 	 * @generated
 	 */
-	EReference getStream_Selection();
+	EClass getSimpleSource();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.SimpleSource#getMessage <em>Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Message</em>'.
+	 * @see org.sintef.thingml.SimpleSource#getMessage()
+	 * @see #getSimpleSource()
+	 * @generated
+	 */
+	EReference getSimpleSource_Message();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.ViewSource <em>View Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>View Source</em>'.
+	 * @see org.sintef.thingml.ViewSource
+	 * @generated
+	 */
+	EClass getViewSource();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.ViewSource#getSourceViewed <em>Source Viewed</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Source Viewed</em>'.
+	 * @see org.sintef.thingml.ViewSource#getSourceViewed()
+	 * @see #getViewSource()
+	 * @generated
+	 */
+	EReference getViewSource_SourceViewed();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.Filter <em>Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Filter</em>'.
+	 * @see org.sintef.thingml.Filter
+	 * @generated
+	 */
+	EClass getFilter();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -7874,12 +7966,12 @@ public interface ThingmlPackage extends EPackage {
 		EClass STREAM = eINSTANCE.getStream();
 
 		/**
-		 * The meta object literal for the '<em><b>Inputs</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Selection</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference STREAM__INPUTS = eINSTANCE.getStream_Inputs();
+		EReference STREAM__SELECTION = eINSTANCE.getStream_Selection();
 
 		/**
 		 * The meta object literal for the '<em><b>Output</b></em>' containment reference feature.
@@ -7888,6 +7980,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference STREAM__OUTPUT = eINSTANCE.getStream_Output();
+
+		/**
+		 * The meta object literal for the '<em><b>Input</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM__INPUT = eINSTANCE.getStream_Input();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.StreamExpressionImpl <em>Stream Expression</em>}' class.
@@ -7906,6 +8006,24 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference STREAM_EXPRESSION__EXPRESSION = eINSTANCE.getStreamExpression_Expression();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.StreamParamReferenceImpl <em>Stream Param Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.StreamParamReferenceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamParamReference()
+		 * @generated
+		 */
+		EClass STREAM_PARAM_REFERENCE = eINSTANCE.getStreamParamReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Index Param</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STREAM_PARAM_REFERENCE__INDEX_PARAM = eINSTANCE.getStreamParamReference_IndexParam();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.StreamOutputImpl <em>Stream Output</em>}' class.
@@ -7942,60 +8060,98 @@ public interface ThingmlPackage extends EPackage {
 		EReference STREAM_OUTPUT__PORT = eINSTANCE.getStreamOutput_Port();
 
 		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.SimpleStreamImpl <em>Simple Stream</em>}' class.
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.SourceImpl <em>Source</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.SimpleStreamImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleStream()
+		 * @see org.sintef.thingml.impl.SourceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSource()
 		 * @generated
 		 */
-		EClass SIMPLE_STREAM = eINSTANCE.getSimpleStream();
+		EClass SOURCE = eINSTANCE.getSource();
 
 		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.MergedStreamImpl <em>Merged Stream</em>}' class.
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.SourceCompositionImpl <em>Source Composition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.MergedStreamImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMergedStream()
+		 * @see org.sintef.thingml.impl.SourceCompositionImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSourceComposition()
 		 * @generated
 		 */
-		EClass MERGED_STREAM = eINSTANCE.getMergedStream();
+		EClass SOURCE_COMPOSITION = eINSTANCE.getSourceComposition();
 
 		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.JoinedStreamImpl <em>Joined Stream</em>}' class.
+		 * The meta object literal for the '<em><b>Sources</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.JoinedStreamImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getJoinedStream()
 		 * @generated
 		 */
-		EClass JOINED_STREAM = eINSTANCE.getJoinedStream();
+		EReference SOURCE_COMPOSITION__SOURCES = eINSTANCE.getSourceComposition_Sources();
 
 		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.StreamParamReferenceImpl <em>Stream Param Reference</em>}' class.
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.JoinSourcesImpl <em>Join Sources</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.StreamParamReferenceImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamParamReference()
+		 * @see org.sintef.thingml.impl.JoinSourcesImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getJoinSources()
 		 * @generated
 		 */
-		EClass STREAM_PARAM_REFERENCE = eINSTANCE.getStreamParamReference();
+		EClass JOIN_SOURCES = eINSTANCE.getJoinSources();
 
 		/**
-		 * The meta object literal for the '<em><b>Index Param</b></em>' attribute feature.
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.MergeSourcesImpl <em>Merge Sources</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.MergeSourcesImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMergeSources()
 		 * @generated
 		 */
-		EAttribute STREAM_PARAM_REFERENCE__INDEX_PARAM = eINSTANCE.getStreamParamReference_IndexParam();
+		EClass MERGE_SOURCES = eINSTANCE.getMergeSources();
 
 		/**
-		 * The meta object literal for the '<em><b>Selection</b></em>' containment reference list feature.
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.SimpleSourceImpl <em>Simple Source</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.SimpleSourceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleSource()
+		 * @generated
+		 */
+		EClass SIMPLE_SOURCE = eINSTANCE.getSimpleSource();
+
+		/**
+		 * The meta object literal for the '<em><b>Message</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference STREAM__SELECTION = eINSTANCE.getStream_Selection();
+		EReference SIMPLE_SOURCE__MESSAGE = eINSTANCE.getSimpleSource_Message();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ViewSourceImpl <em>View Source</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ViewSourceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getViewSource()
+		 * @generated
+		 */
+		EClass VIEW_SOURCE = eINSTANCE.getViewSource();
+
+		/**
+		 * The meta object literal for the '<em><b>Source Viewed</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference VIEW_SOURCE__SOURCE_VIEWED = eINSTANCE.getViewSource_SourceViewed();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.FilterImpl <em>Filter</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.FilterImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getFilter()
+		 * @generated
+		 */
+		EClass FILTER = eINSTANCE.getFilter();
 
 	}
 

@@ -20,12 +20,12 @@ OPTIONS {
 	// Generate the standalone version first and then the eclipse version.
 	
 	// 1. FOR STANDALONE
-	//srcGenFolder = "src/main/java-gen-standalone";
-	//generateUIPlugin = "false";
-	//removeEclipseDependentCode = "true";
+	srcGenFolder = "src/main/java-gen-standalone";
+	generateUIPlugin = "false";
+	removeEclipseDependentCode = "true";
 	
 	// 2. FOR ECLIPSE Comment the lines bellow
-	srcGenFolder = "src/main/java-gen";
+	//srcGenFolder = "src/main/java-gen";
 	
 	// IMPORTANT: In the generated eclipse plugins it is required to change the Vendor to SINTEF and the Version from "1.0.0" to "0.x.0.qualifier"
 }
@@ -143,11 +143,6 @@ TOKENSTYLES{
 	"import" COLOR #444444, BOLD;
 	"set" COLOR #444444, BOLD;
 	
-	// CEP
-	"stream" COLOR #444444, BOLD;
-	"input" COLOR #A22000, BOLD;
-	"output" COLOR #A22000, BOLD;
-	
 	"(" COLOR #444444, BOLD;
 	")" COLOR #444444, BOLD;
 	"{" COLOR #444444, BOLD;
@@ -159,7 +154,6 @@ TOKENSTYLES{
 	"?" COLOR #444444, BOLD;
 	"." COLOR #444444, BOLD;
 	":" COLOR #444444, BOLD;
-	"#" COLOR #444444, BOLD;
 	
 }
 
@@ -186,7 +180,6 @@ RULES {
 	
 	Parameter::= name[]  ":"  type[] ( "[" cardinality "]")?;
 	
-	
 	PrimitiveType::= "datatype" #1 name[] (annotations)* ";" ;
 	
 	Enumeration::= "enumeration" #1 name[] (annotations)* !0 "{" (literals)* "}" ;
@@ -211,29 +204,7 @@ RULES {
 	
 	PropertyAssign ::= "set" #1 property[] ("[" index "]")* #1 "=" #1 init ; 
 	
-	// *******************************
-	// * CEP
-	// *******************************
-	StreamExpression ::= name[] ":" expression;
-	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
-	
-	SimpleStream ::= "stream" #1 name[] #1 "do"
-					 !1 "from" #1 inputs
-					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
-					 !1 "action" #1 output
-					 "end";
 
-	MergedStream ::= "stream" #1 name[] #1 "do"
-					 !1 "from" #1 inputs (#1 "|" #1 inputs)*
-					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
-					 !1 "action" #1 output
-					 "end";
-					 
-	JoinedStream ::= "stream" #1 name[] #1 "do"
-					 !1 "from" #1 inputs (#1 "&" #1 inputs)*
-					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
-					 !1 "action" #1 output
-					 "end";
 	// *******************************
 	// * Configurations and Instances
 	// *******************************
@@ -276,6 +247,25 @@ RULES {
 	
 	FunctionCallStatement ::= function[] "(" (parameters ("," #1 parameters)* )? ")";
 	
+	// *******************************
+	// * CEP
+	// *******************************
+	StreamExpression ::= name[] ":" expression;
+	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
+	
+	SimpleSource ::= "from" message;
+	
+	Filter ::= sourceViewed[] "::filter()";
+	
+	JoinSources ::= "[" #1 sources[] #1 "&" #1 sources[] #1 "]";
+	MergeSources ::= "[" #1 sources[] #1 "|" #1 sources[] #1 "]";
+	
+	Stream ::= "stream" #1 name[] #1 "do"
+					 !1 "from" #1 input
+					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
+					 !1 "action" #1 output
+					 "end";
+	
 	// *********************
 	// * The Expressions
 	// *********************
@@ -317,12 +307,12 @@ RULES {
 	@Operator(type="unary_prefix", weight="7", superclass="Expression")	
 	NotExpression ::= "not" #1 term;
 	
-	@Operator(type="primitive", weight="9", superclass="Expression")
-	EventReference ::= msgRef[] "." paramRef[];	
-	
 	//CEP
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	StreamParamReference ::= "#" indexParam[INTEGER_LITERAL];
+	
+	@Operator(type="primitive", weight="9", superclass="Expression")
+	EventReference ::= msgRef[] "." paramRef[];	
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	ExpressionGroup ::= "(" exp ")";

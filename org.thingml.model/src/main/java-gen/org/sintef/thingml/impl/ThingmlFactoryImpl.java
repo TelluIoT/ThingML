@@ -131,12 +131,14 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.FUNCTION_CALL_STATEMENT: return createFunctionCallStatement();
 			case ThingmlPackage.FUNCTION_CALL_EXPRESSION: return createFunctionCallExpression();
 			case ThingmlPackage.LOCAL_VARIABLE: return createLocalVariable();
+			case ThingmlPackage.STREAM: return createStream();
 			case ThingmlPackage.STREAM_EXPRESSION: return createStreamExpression();
-			case ThingmlPackage.STREAM_OUTPUT: return createStreamOutput();
-			case ThingmlPackage.SIMPLE_STREAM: return createSimpleStream();
-			case ThingmlPackage.MERGED_STREAM: return createMergedStream();
-			case ThingmlPackage.JOINED_STREAM: return createJoinedStream();
 			case ThingmlPackage.STREAM_PARAM_REFERENCE: return createStreamParamReference();
+			case ThingmlPackage.STREAM_OUTPUT: return createStreamOutput();
+			case ThingmlPackage.JOIN_SOURCES: return createJoinSources();
+			case ThingmlPackage.MERGE_SOURCES: return createMergeSources();
+			case ThingmlPackage.SIMPLE_SOURCE: return createSimpleSource();
+			case ThingmlPackage.FILTER: return createFilter();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -767,9 +769,29 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Stream createStream() {
+		StreamImpl stream = new StreamImpl();
+		return stream;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public StreamExpression createStreamExpression() {
 		StreamExpressionImpl streamExpression = new StreamExpressionImpl();
 		return streamExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StreamParamReference createStreamParamReference() {
+		StreamParamReferenceImpl streamParamReference = new StreamParamReferenceImpl();
+		return streamParamReference;
 	}
 
 	/**
@@ -787,9 +809,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SimpleStream createSimpleStream() {
-		SimpleStreamImpl simpleStream = new SimpleStreamImpl();
-		return simpleStream;
+	public JoinSources createJoinSources() {
+		JoinSourcesImpl joinSources = new JoinSourcesImpl();
+		return joinSources;
 	}
 
 	/**
@@ -797,9 +819,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MergedStream createMergedStream() {
-		MergedStreamImpl mergedStream = new MergedStreamImpl();
-		return mergedStream;
+	public MergeSources createMergeSources() {
+		MergeSourcesImpl mergeSources = new MergeSourcesImpl();
+		return mergeSources;
 	}
 
 	/**
@@ -807,9 +829,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public JoinedStream createJoinedStream() {
-		JoinedStreamImpl joinedStream = new JoinedStreamImpl();
-		return joinedStream;
+	public SimpleSource createSimpleSource() {
+		SimpleSourceImpl simpleSource = new SimpleSourceImpl();
+		return simpleSource;
 	}
 
 	/**
@@ -817,9 +839,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public StreamParamReference createStreamParamReference() {
-		StreamParamReferenceImpl streamParamReference = new StreamParamReferenceImpl();
-		return streamParamReference;
+	public Filter createFilter() {
+		FilterImpl filter = new FilterImpl();
+		return filter;
 	}
 
 	/**

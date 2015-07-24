@@ -28,14 +28,17 @@
  */
 package org.sintef.thingml.constraints;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.swing.tree.VariableHeightLayoutCache;
+
+import org.eclipse.emf.ecore.EObject;
+
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.sintef.thingml.*;
 
 
 public class ThingMLHelpers {
@@ -168,19 +171,6 @@ public class ThingMLHelpers {
 			if (container != null) {
 				return findContainingHandler(container);
 			} 
-			else {
-				return null;
-			}
-		}
-	}
-
-	public static Stream findContainingStream(EObject object) {
-		if (object instanceof Stream) return (Stream)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingStream(container);
-			}
 			else {
 				return null;
 			}
@@ -772,20 +762,7 @@ public class ThingMLHelpers {
 	public static ArrayList<Event> findEvents(EventReference er, String name, boolean fuzzy) {
 		ArrayList<Event> result = new ArrayList<Event>();
 		Handler h = findContainingHandler(er);
-		//if (h == null || h.getEvent().size() > 1) return result;
-		/** MODIFICATION **/
-		if(h == null) {
-			Stream s = findContainingStream(er);
-			if(s == null) return result;
-			for(ReceiveMessage rm : s.getInputs()) {
-				if(rm.getName().startsWith(name)) {
-					if(fuzzy) result.add(rm);
-					else if(rm.getName().equals(name)) result.add(rm);
-				}
-			}
-		}
-		else if(h.getEvent().size() > 1) return result;
-        /** END **/
+		if (h == null || h.getEvent().size() > 1) return result;
 		else {
 			Event evt = h.getEvent().get(0);
 			if (evt instanceof ReceiveMessage && evt.getName().startsWith(name)) {
@@ -796,44 +773,5 @@ public class ThingMLHelpers {
 		return result;
 	}
 
-
-    /** MODIFICATION **/
-    public static List<StreamExpression> findStreamExpression(StreamOutput so, String identifier, boolean fuzzy) {
-        List<StreamExpression> result = new ArrayList<>();
-        Stream stream = (Stream) so.eContainer();
-
-        for(StreamExpression streamExpression : stream.getSelection()) {
-            if(streamExpression.getName().startsWith(identifier)) {
-                if (fuzzy) result.add(streamExpression);
-                else if(streamExpression.getName().equals(identifier)) result.add(streamExpression);
-            }
-        }
-        return result;
-    }
-
-	public static String getEventName(Stream s, ReceiveMessage rm) {
-		if(s instanceof SimpleStream) {
-			return getEventName((SimpleStream)s,rm);
-		} else if(s instanceof MergedStream) {
-			return getEventName((MergedStream)s,rm);
-		} else if(s instanceof JoinedStream) {
-			return getEventName((JoinedStream)s,rm);
-		} else {
-			throw new UnsupportedOperationException("This stream (" + s.getClass().getName() + ") is unknown... Please update the ThingMLHelpers as a new kind of stream might have been introduced in ThingML");
-		}
-	}
-
-	public static String getEventName(SimpleStream s, ReceiveMessage rm) {
-		return s.qname("_") + "_" + rm.getPort().getName() + "_" + rm.getMessage().getName();
-	}
-
-	public static String getEventName(MergedStream s, ReceiveMessage rm) {
-		return s.qname("_");
-	}
-
-	public static String getEventName(JoinedStream s, ReceiveMessage rm) {
-		return s.qname("_") + "_" + rm.getPort().getName() + "_" + rm.getMessage().getName();
-	}
-
-    /** END **/
+	
 }

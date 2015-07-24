@@ -27,32 +27,32 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.sintef.thingml.Stream#getInputs <em>Inputs</em>}</li>
  *   <li>{@link org.sintef.thingml.Stream#getSelection <em>Selection</em>}</li>
  *   <li>{@link org.sintef.thingml.Stream#getOutput <em>Output</em>}</li>
+ *   <li>{@link org.sintef.thingml.Stream#getInput <em>Input</em>}</li>
  * </ul>
  * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getStream()
- * @model abstract="true"
+ * @model
  * @generated
  */
 public interface Stream extends ThingMLElement {
 	/**
-	 * Returns the value of the '<em><b>Inputs</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.ReceiveMessage}.
+	 * Returns the value of the '<em><b>Selection</b></em>' containment reference list.
+	 * The list contents are of type {@link org.sintef.thingml.StreamExpression}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Inputs</em>' containment reference list isn't clear,
+	 * If the meaning of the '<em>Selection</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Inputs</em>' containment reference list.
-	 * @see org.sintef.thingml.ThingmlPackage#getStream_Inputs()
-	 * @model containment="true" required="true"
+	 * @return the value of the '<em>Selection</em>' containment reference list.
+	 * @see org.sintef.thingml.ThingmlPackage#getStream_Selection()
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList<ReceiveMessage> getInputs();
+	EList<StreamExpression> getSelection();
 
 	/**
 	 * Returns the value of the '<em><b>Output</b></em>' containment reference.
@@ -81,19 +81,29 @@ public interface Stream extends ThingMLElement {
 	void setOutput(StreamOutput value);
 
 	/**
-	 * Returns the value of the '<em><b>Selection</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.StreamExpression}.
+	 * Returns the value of the '<em><b>Input</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Selection</em>' containment reference list isn't clear,
+	 * If the meaning of the '<em>Input</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Selection</em>' containment reference list.
-	 * @see org.sintef.thingml.ThingmlPackage#getStream_Selection()
-	 * @model containment="true"
+	 * @return the value of the '<em>Input</em>' containment reference.
+	 * @see #setInput(Source)
+	 * @see org.sintef.thingml.ThingmlPackage#getStream_Input()
+	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	EList<StreamExpression> getSelection();
+	Source getInput();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.Stream#getInput <em>Input</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Input</em>' containment reference.
+	 * @see #getInput()
+	 * @generated
+	 */
+	void setInput(Source value);
 
 } // Stream

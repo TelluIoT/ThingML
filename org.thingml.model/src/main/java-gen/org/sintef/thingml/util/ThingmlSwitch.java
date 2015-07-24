@@ -709,40 +709,67 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.STREAM_PARAM_REFERENCE: {
+				StreamParamReference streamParamReference = (StreamParamReference)theEObject;
+				T result = caseStreamParamReference(streamParamReference);
+				if (result == null) result = caseExpression(streamParamReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ThingmlPackage.STREAM_OUTPUT: {
 				StreamOutput streamOutput = (StreamOutput)theEObject;
 				T result = caseStreamOutput(streamOutput);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.SIMPLE_STREAM: {
-				SimpleStream simpleStream = (SimpleStream)theEObject;
-				T result = caseSimpleStream(simpleStream);
-				if (result == null) result = caseStream(simpleStream);
-				if (result == null) result = caseThingMLElement(simpleStream);
+			case ThingmlPackage.SOURCE: {
+				Source source = (Source)theEObject;
+				T result = caseSource(source);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.MERGED_STREAM: {
-				MergedStream mergedStream = (MergedStream)theEObject;
-				T result = caseMergedStream(mergedStream);
-				if (result == null) result = caseStream(mergedStream);
-				if (result == null) result = caseThingMLElement(mergedStream);
+			case ThingmlPackage.SOURCE_COMPOSITION: {
+				SourceComposition sourceComposition = (SourceComposition)theEObject;
+				T result = caseSourceComposition(sourceComposition);
+				if (result == null) result = caseSource(sourceComposition);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.JOINED_STREAM: {
-				JoinedStream joinedStream = (JoinedStream)theEObject;
-				T result = caseJoinedStream(joinedStream);
-				if (result == null) result = caseStream(joinedStream);
-				if (result == null) result = caseThingMLElement(joinedStream);
+			case ThingmlPackage.JOIN_SOURCES: {
+				JoinSources joinSources = (JoinSources)theEObject;
+				T result = caseJoinSources(joinSources);
+				if (result == null) result = caseSourceComposition(joinSources);
+				if (result == null) result = caseSource(joinSources);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.STREAM_PARAM_REFERENCE: {
-				StreamParamReference streamParamReference = (StreamParamReference)theEObject;
-				T result = caseStreamParamReference(streamParamReference);
-				if (result == null) result = caseExpression(streamParamReference);
+			case ThingmlPackage.MERGE_SOURCES: {
+				MergeSources mergeSources = (MergeSources)theEObject;
+				T result = caseMergeSources(mergeSources);
+				if (result == null) result = caseSourceComposition(mergeSources);
+				if (result == null) result = caseSource(mergeSources);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.SIMPLE_SOURCE: {
+				SimpleSource simpleSource = (SimpleSource)theEObject;
+				T result = caseSimpleSource(simpleSource);
+				if (result == null) result = caseSource(simpleSource);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.VIEW_SOURCE: {
+				ViewSource viewSource = (ViewSource)theEObject;
+				T result = caseViewSource(viewSource);
+				if (result == null) result = caseSource(viewSource);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.FILTER: {
+				Filter filter = (Filter)theEObject;
+				T result = caseFilter(filter);
+				if (result == null) result = caseViewSource(filter);
+				if (result == null) result = caseSource(filter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1951,6 +1978,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Stream Param Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Stream Param Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStreamParamReference(StreamParamReference object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Stream Output</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1966,62 +2008,107 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Simple Stream</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Source</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Simple Stream</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Source</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSimpleStream(SimpleStream object) {
+	public T caseSource(Source object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Merged Stream</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Source Composition</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Merged Stream</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Source Composition</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseMergedStream(MergedStream object) {
+	public T caseSourceComposition(SourceComposition object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Joined Stream</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Join Sources</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Joined Stream</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Join Sources</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJoinedStream(JoinedStream object) {
+	public T caseJoinSources(JoinSources object) {
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Stream Param Reference</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Merge Sources</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Stream Param Reference</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Merge Sources</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseStreamParamReference(StreamParamReference object) {
+	public T caseMergeSources(MergeSources object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Simple Source</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Simple Source</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSimpleSource(SimpleSource object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>View Source</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>View Source</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseViewSource(ViewSource object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Filter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFilter(Filter object) {
 		return null;
 	}
 

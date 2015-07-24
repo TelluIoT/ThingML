@@ -15,18 +15,40 @@
  */
 /**
  */
-package org.sintef.thingml;
+package org.sintef.thingml.impl;
 
+import org.eclipse.emf.ecore.EClass;
+
+import org.sintef.thingml.Filter;
+import org.sintef.thingml.ThingmlPackage;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Merged Stream</b></em>'.
+ * An implementation of the model object '<em><b>Filter</b></em>'.
  * <!-- end-user-doc -->
+ * <p>
+ * </p>
  *
- *
- * @see org.sintef.thingml.ThingmlPackage#getMergedStream()
- * @model
  * @generated
  */
-public interface MergedStream extends Stream {
-} // MergedStream
+public class FilterImpl extends ViewSourceImpl implements Filter {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected FilterImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return ThingmlPackage.Literals.FILTER;
+	}
+
+} //FilterImpl

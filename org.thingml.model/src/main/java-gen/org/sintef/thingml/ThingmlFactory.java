@@ -593,6 +593,15 @@ public interface ThingmlFactory extends EFactory {
 	LocalVariable createLocalVariable();
 
 	/**
+	 * Returns a new object of class '<em>Stream</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Stream</em>'.
+	 * @generated
+	 */
+	Stream createStream();
+
+	/**
 	 * Returns a new object of class '<em>Stream Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -600,6 +609,15 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	StreamExpression createStreamExpression();
+
+	/**
+	 * Returns a new object of class '<em>Stream Param Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Stream Param Reference</em>'.
+	 * @generated
+	 */
+	StreamParamReference createStreamParamReference();
 
 	/**
 	 * Returns a new object of class '<em>Stream Output</em>'.
@@ -611,40 +629,40 @@ public interface ThingmlFactory extends EFactory {
 	StreamOutput createStreamOutput();
 
 	/**
-	 * Returns a new object of class '<em>Simple Stream</em>'.
+	 * Returns a new object of class '<em>Join Sources</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Simple Stream</em>'.
+	 * @return a new object of class '<em>Join Sources</em>'.
 	 * @generated
 	 */
-	SimpleStream createSimpleStream();
+	JoinSources createJoinSources();
 
 	/**
-	 * Returns a new object of class '<em>Merged Stream</em>'.
+	 * Returns a new object of class '<em>Merge Sources</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Merged Stream</em>'.
+	 * @return a new object of class '<em>Merge Sources</em>'.
 	 * @generated
 	 */
-	MergedStream createMergedStream();
+	MergeSources createMergeSources();
 
 	/**
-	 * Returns a new object of class '<em>Joined Stream</em>'.
+	 * Returns a new object of class '<em>Simple Source</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Joined Stream</em>'.
+	 * @return a new object of class '<em>Simple Source</em>'.
 	 * @generated
 	 */
-	JoinedStream createJoinedStream();
+	SimpleSource createSimpleSource();
 
 	/**
-	 * Returns a new object of class '<em>Stream Param Reference</em>'.
+	 * Returns a new object of class '<em>Filter</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Stream Param Reference</em>'.
+	 * @return a new object of class '<em>Filter</em>'.
 	 * @generated
 	 */
-	StreamParamReference createStreamParamReference();
+	Filter createFilter();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -401,24 +401,40 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createStreamExpressionAdapter();
 			}
 			@Override
+			public Adapter caseStreamParamReference(StreamParamReference object) {
+				return createStreamParamReferenceAdapter();
+			}
+			@Override
 			public Adapter caseStreamOutput(StreamOutput object) {
 				return createStreamOutputAdapter();
 			}
 			@Override
-			public Adapter caseSimpleStream(SimpleStream object) {
-				return createSimpleStreamAdapter();
+			public Adapter caseSource(Source object) {
+				return createSourceAdapter();
 			}
 			@Override
-			public Adapter caseMergedStream(MergedStream object) {
-				return createMergedStreamAdapter();
+			public Adapter caseSourceComposition(SourceComposition object) {
+				return createSourceCompositionAdapter();
 			}
 			@Override
-			public Adapter caseJoinedStream(JoinedStream object) {
-				return createJoinedStreamAdapter();
+			public Adapter caseJoinSources(JoinSources object) {
+				return createJoinSourcesAdapter();
 			}
 			@Override
-			public Adapter caseStreamParamReference(StreamParamReference object) {
-				return createStreamParamReferenceAdapter();
+			public Adapter caseMergeSources(MergeSources object) {
+				return createMergeSourcesAdapter();
+			}
+			@Override
+			public Adapter caseSimpleSource(SimpleSource object) {
+				return createSimpleSourceAdapter();
+			}
+			@Override
+			public Adapter caseViewSource(ViewSource object) {
+				return createViewSourceAdapter();
+			}
+			@Override
+			public Adapter caseFilter(Filter object) {
+				return createFilterAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -1561,6 +1577,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamParamReference <em>Stream Param Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.StreamParamReference
+	 * @generated
+	 */
+	public Adapter createStreamParamReferenceAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamOutput <em>Stream Output</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1575,58 +1605,100 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SimpleStream <em>Simple Stream</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Source <em>Source</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.SimpleStream
+	 * @see org.sintef.thingml.Source
 	 * @generated
 	 */
-	public Adapter createSimpleStreamAdapter() {
+	public Adapter createSourceAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.MergedStream <em>Merged Stream</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SourceComposition <em>Source Composition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.MergedStream
+	 * @see org.sintef.thingml.SourceComposition
 	 * @generated
 	 */
-	public Adapter createMergedStreamAdapter() {
+	public Adapter createSourceCompositionAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.JoinedStream <em>Joined Stream</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.JoinSources <em>Join Sources</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.JoinedStream
+	 * @see org.sintef.thingml.JoinSources
 	 * @generated
 	 */
-	public Adapter createJoinedStreamAdapter() {
+	public Adapter createJoinSourcesAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamParamReference <em>Stream Param Reference</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.MergeSources <em>Merge Sources</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.StreamParamReference
+	 * @see org.sintef.thingml.MergeSources
 	 * @generated
 	 */
-	public Adapter createStreamParamReferenceAdapter() {
+	public Adapter createMergeSourcesAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SimpleSource <em>Simple Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.SimpleSource
+	 * @generated
+	 */
+	public Adapter createSimpleSourceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ViewSource <em>View Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ViewSource
+	 * @generated
+	 */
+	public Adapter createViewSourceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Filter <em>Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Filter
+	 * @generated
+	 */
+	public Adapter createFilterAdapter() {
 		return null;
 	}
 

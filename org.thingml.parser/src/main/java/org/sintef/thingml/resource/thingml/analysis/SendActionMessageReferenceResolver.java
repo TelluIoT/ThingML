@@ -41,6 +41,7 @@ public class SendActionMessageReferenceResolver implements org.sintef.thingml.re
 
 		Port p = container.getPort();
 		for (Message m : p.getSends()) {
+			//if (m.getName() == null) break; //TODO: REMOVE THIS
 			if (m.getName().startsWith(identifier)) {
 				if (resolveFuzzy) result.addMapping(m.getName(), m);
 				else if (m.getName().equals(identifier))

@@ -19,25 +19,25 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.sintef.thingml.JoinedStream;
+import org.sintef.thingml.JoinSources;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Joined Stream</b></em>'.
+ * An implementation of the model object '<em><b>Join Sources</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-public class JoinedStreamImpl extends StreamImpl implements JoinedStream {
+public class JoinSourcesImpl extends SourceCompositionImpl implements JoinSources {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected JoinedStreamImpl() {
+	protected JoinSourcesImpl() {
 		super();
 	}
 
@@ -48,7 +48,7 @@ public class JoinedStreamImpl extends StreamImpl implements JoinedStream {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ThingmlPackage.Literals.JOINED_STREAM;
+		return ThingmlPackage.Literals.JOIN_SOURCES;
 	}
 
-} //JoinedStreamImpl
+} //JoinSourcesImpl

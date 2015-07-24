@@ -44,10 +44,10 @@ public class EventReferenceMsgRefReferenceResolver implements org.sintef.thingml
 	
 	public void resolve(String identifier, org.sintef.thingml.EventReference container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.ReceiveMessage> result) {
 		// get the transition object
-
+		
 		ArrayList<Event> evts = ThingMLHelpers.findEvents(container, identifier, resolveFuzzy);
 		
-		 for (Event rm : evts) {
+		for (Event rm : evts) {
 			if (rm instanceof ReceiveMessage) {
 				result.addMapping(rm.getName(), (ReceiveMessage)rm);
 			}

@@ -242,23 +242,33 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//LocalVariable/changeable"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Stream">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/inputs"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/selection"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/output"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/input"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//StreamExpression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//StreamExpression/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//StreamParamReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//StreamParamReference/indexParam"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//StreamOutput">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StreamOutput/parameters"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StreamOutput/message"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StreamOutput/port"/>
     </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//SimpleStream"/>
-    <genClasses ecoreClass="thingml.ecore#//MergedStream"/>
-    <genClasses ecoreClass="thingml.ecore#//JoinedStream"/>
-    <genClasses ecoreClass="thingml.ecore#//StreamParamReference">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//StreamParamReference/indexParam"/>
+    <genClasses image="false" ecoreClass="thingml.ecore#//Source"/>
+    <genClasses image="false" ecoreClass="thingml.ecore#//SourceComposition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//SourceComposition/sources"/>
     </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//JoinSources"/>
+    <genClasses ecoreClass="thingml.ecore#//MergeSources"/>
+    <genClasses ecoreClass="thingml.ecore#//SimpleSource">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//SimpleSource/message"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="thingml.ecore#//ViewSource">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ViewSource/sourceViewed"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//Filter"/>
   </genPackages>
 </genmodel:GenModel>

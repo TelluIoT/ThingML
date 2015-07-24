@@ -32,9 +32,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.sintef.thingml.Action;
-import org.sintef.thingml.ReceiveMessage;
-import org.sintef.thingml.SendAction;
+import org.sintef.thingml.Source;
 import org.sintef.thingml.Stream;
 import org.sintef.thingml.StreamExpression;
 import org.sintef.thingml.StreamOutput;
@@ -47,25 +45,15 @@ import org.sintef.thingml.ThingmlPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.StreamImpl#getInputs <em>Inputs</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#getSelection <em>Selection</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#getOutput <em>Output</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.StreamImpl#getInput <em>Input</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public abstract class StreamImpl extends ThingMLElementImpl implements Stream {
-	/**
-	 * The cached value of the '{@link #getInputs() <em>Inputs</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getInputs()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ReceiveMessage> inputs;
-
+public class StreamImpl extends ThingMLElementImpl implements Stream {
 	/**
 	 * The cached value of the '{@link #getSelection() <em>Selection</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -85,6 +73,16 @@ public abstract class StreamImpl extends ThingMLElementImpl implements Stream {
 	 * @ordered
 	 */
 	protected StreamOutput output;
+
+	/**
+	 * The cached value of the '{@link #getInput() <em>Input</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getInput()
+	 * @generated
+	 * @ordered
+	 */
+	protected Source input;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -110,11 +108,11 @@ public abstract class StreamImpl extends ThingMLElementImpl implements Stream {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<ReceiveMessage> getInputs() {
-		if (inputs == null) {
-			inputs = new EObjectContainmentEList<ReceiveMessage>(ReceiveMessage.class, this, ThingmlPackage.STREAM__INPUTS);
+	public EList<StreamExpression> getSelection() {
+		if (selection == null) {
+			selection = new EObjectContainmentEList<StreamExpression>(StreamExpression.class, this, ThingmlPackage.STREAM__SELECTION);
 		}
-		return inputs;
+		return selection;
 	}
 
 	/**
@@ -165,11 +163,42 @@ public abstract class StreamImpl extends ThingMLElementImpl implements Stream {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<StreamExpression> getSelection() {
-		if (selection == null) {
-			selection = new EObjectContainmentEList<StreamExpression>(StreamExpression.class, this, ThingmlPackage.STREAM__SELECTION);
+	public Source getInput() {
+		return input;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetInput(Source newInput, NotificationChain msgs) {
+		Source oldInput = input;
+		input = newInput;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.STREAM__INPUT, oldInput, newInput);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
-		return selection;
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setInput(Source newInput) {
+		if (newInput != input) {
+			NotificationChain msgs = null;
+			if (input != null)
+				msgs = ((InternalEObject)input).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.STREAM__INPUT, null, msgs);
+			if (newInput != null)
+				msgs = ((InternalEObject)newInput).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.STREAM__INPUT, null, msgs);
+			msgs = basicSetInput(newInput, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.STREAM__INPUT, newInput, newInput));
 	}
 
 	/**
@@ -180,12 +209,12 @@ public abstract class StreamImpl extends ThingMLElementImpl implements Stream {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ThingmlPackage.STREAM__INPUTS:
-				return ((InternalEList<?>)getInputs()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.STREAM__SELECTION:
 				return ((InternalEList<?>)getSelection()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.STREAM__OUTPUT:
 				return basicSetOutput(null, msgs);
+			case ThingmlPackage.STREAM__INPUT:
+				return basicSetInput(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -198,12 +227,12 @@ public abstract class StreamImpl extends ThingMLElementImpl implements Stream {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.STREAM__INPUTS:
-				return getInputs();
 			case ThingmlPackage.STREAM__SELECTION:
 				return getSelection();
 			case ThingmlPackage.STREAM__OUTPUT:
 				return getOutput();
+			case ThingmlPackage.STREAM__INPUT:
+				return getInput();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -217,16 +246,15 @@ public abstract class StreamImpl extends ThingMLElementImpl implements Stream {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.STREAM__INPUTS:
-				getInputs().clear();
-				getInputs().addAll((Collection<? extends ReceiveMessage>)newValue);
-				return;
 			case ThingmlPackage.STREAM__SELECTION:
 				getSelection().clear();
 				getSelection().addAll((Collection<? extends StreamExpression>)newValue);
 				return;
 			case ThingmlPackage.STREAM__OUTPUT:
 				setOutput((StreamOutput)newValue);
+				return;
+			case ThingmlPackage.STREAM__INPUT:
+				setInput((Source)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -240,14 +268,14 @@ public abstract class StreamImpl extends ThingMLElementImpl implements Stream {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.STREAM__INPUTS:
-				getInputs().clear();
-				return;
 			case ThingmlPackage.STREAM__SELECTION:
 				getSelection().clear();
 				return;
 			case ThingmlPackage.STREAM__OUTPUT:
 				setOutput((StreamOutput)null);
+				return;
+			case ThingmlPackage.STREAM__INPUT:
+				setInput((Source)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -261,12 +289,12 @@ public abstract class StreamImpl extends ThingMLElementImpl implements Stream {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.STREAM__INPUTS:
-				return inputs != null && !inputs.isEmpty();
 			case ThingmlPackage.STREAM__SELECTION:
 				return selection != null && !selection.isEmpty();
 			case ThingmlPackage.STREAM__OUTPUT:
 				return output != null;
+			case ThingmlPackage.STREAM__INPUT:
+				return input != null;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -37,6 +37,7 @@ package org.sintef.thingml;
 public interface StreamParamReference extends Expression {
 	/**
 	 * Returns the value of the '<em><b>Index Param</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Index Param</em>' attribute isn't clear,
@@ -46,7 +47,7 @@ public interface StreamParamReference extends Expression {
 	 * @return the value of the '<em>Index Param</em>' attribute.
 	 * @see #setIndexParam(int)
 	 * @see org.sintef.thingml.ThingmlPackage#getStreamParamReference_IndexParam()
-	 * @model required="true"
+	 * @model default="0" required="true"
 	 * @generated
 	 */
 	int getIndexParam();

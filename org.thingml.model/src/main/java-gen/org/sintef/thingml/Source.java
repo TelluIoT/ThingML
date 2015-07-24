@@ -15,40 +15,19 @@
  */
 /**
  */
-package org.sintef.thingml.impl;
+package org.sintef.thingml;
 
-import org.eclipse.emf.ecore.EClass;
-
-import org.sintef.thingml.SimpleStream;
-import org.sintef.thingml.ThingmlPackage;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Simple Stream</b></em>'.
+ * A representation of the model object '<em><b>Source</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
+ *
+ * @see org.sintef.thingml.ThingmlPackage#getSource()
+ * @model abstract="true"
  * @generated
  */
-public class SimpleStreamImpl extends StreamImpl implements SimpleStream {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected SimpleStreamImpl() {
-		super();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EClass eStaticClass() {
-		return ThingmlPackage.Literals.SIMPLE_STREAM;
-	}
-
-} //SimpleStreamImpl
+public interface Source extends EObject {
+} // Source

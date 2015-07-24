@@ -15,25 +15,12 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-
 public class StreamOutputMessageReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.StreamOutput, org.sintef.thingml.Message> {
 	
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.StreamOutput, org.sintef.thingml.Message> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.StreamOutput, org.sintef.thingml.Message>();
 	
 	public void resolve(String identifier, org.sintef.thingml.StreamOutput container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Message> result) {
-//		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
-		Port p = container.getPort();
-		for (Message m : p.getSends()) {
-			//if (m.getName() == null) break; //TODO: REMOVE THIS
-			if (m.getName().startsWith(identifier)) {
-				if (resolveFuzzy) result.addMapping(m.getName(), m);
-				else if (m.getName().equals(identifier))
-					result.addMapping(m.getName(), m);
-			}
-		}
-		if(!result.wasResolved()) result.setErrorMessage("Cannot resolve message " + identifier);
+		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
 	}
 	
 	public String deResolve(org.sintef.thingml.Message element, org.sintef.thingml.StreamOutput container, org.eclipse.emf.ecore.EReference reference) {

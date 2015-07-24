@@ -15,20 +15,12 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-
 public class StreamOutputPortReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.StreamOutput, org.sintef.thingml.Port> {
 	
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.StreamOutput, org.sintef.thingml.Port> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.StreamOutput, org.sintef.thingml.Port>();
 	
 	public void resolve(String identifier, org.sintef.thingml.StreamOutput container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Port> result) {
-//		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
-		Thing t = ThingMLHelpers.findContainingThing(container);
-		for (Port p : ThingMLHelpers.findPort(t, identifier, resolveFuzzy))
-			result.addMapping(p.getName(), p);
-		if(!result.wasResolved()) result.setErrorMessage("Cannot resolve port " + identifier);
+		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
 	}
 	
 	public String deResolve(org.sintef.thingml.Port element, org.sintef.thingml.StreamOutput container, org.eclipse.emf.ecore.EReference reference) {

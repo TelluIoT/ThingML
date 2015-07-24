@@ -331,17 +331,21 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="changeable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Stream" abstract="true" eSuperTypes="#//ThingMLElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="inputs" lowerBound="1"
-        upperBound="-1" eType="#//ReceiveMessage" containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Stream" eSuperTypes="#//ThingMLElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="selection" upperBound="-1"
         eType="#//StreamExpression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="output" lowerBound="1"
         eType="#//StreamOutput" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="input" lowerBound="1" eType="#//Source"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StreamExpression" eSuperTypes="#//ThingMLElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression" unique="false"
-        lowerBound="1" eType="#//Expression" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expression" lowerBound="1"
+        eType="#//Expression" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StreamParamReference" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexParam" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="0"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StreamOutput">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
@@ -350,11 +354,20 @@
         eType="#//Message"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" lowerBound="1" eType="#//Port"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SimpleStream" eSuperTypes="#//Stream"/>
-  <eClassifiers xsi:type="ecore:EClass" name="MergedStream" eSuperTypes="#//Stream"/>
-  <eClassifiers xsi:type="ecore:EClass" name="JoinedStream" eSuperTypes="#//Stream"/>
-  <eClassifiers xsi:type="ecore:EClass" name="StreamParamReference" eSuperTypes="#//Expression">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexParam" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SourceComposition" abstract="true" eSuperTypes="#//Source">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sources" lowerBound="2"
+        upperBound="-1" eType="#//Source"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JoinSources" eSuperTypes="#//SourceComposition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MergeSources" eSuperTypes="#//SourceComposition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SimpleSource" eSuperTypes="#//Source">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="message" lowerBound="1"
+        eType="#//ReceiveMessage" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ViewSource" abstract="true" eSuperTypes="#//Source">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceViewed" lowerBound="1"
+        eType="#//Source"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Filter" eSuperTypes="#//ViewSource"/>
 </ecore:EPackage>
