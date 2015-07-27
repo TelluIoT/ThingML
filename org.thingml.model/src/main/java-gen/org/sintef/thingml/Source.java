@@ -18,7 +18,6 @@
 package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -36,7 +35,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface Source extends EObject {
+public interface Source extends ThingMLElement {
 
 	/**
 	 * Returns the value of the '<em><b>Operators</b></em>' containment reference list.

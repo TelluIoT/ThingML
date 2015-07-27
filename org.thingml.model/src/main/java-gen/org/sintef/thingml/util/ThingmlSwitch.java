@@ -725,6 +725,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 			case ThingmlPackage.SOURCE: {
 				Source source = (Source)theEObject;
 				T result = caseSource(source);
+				if (result == null) result = caseThingMLElement(source);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -732,6 +733,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				SourceComposition sourceComposition = (SourceComposition)theEObject;
 				T result = caseSourceComposition(sourceComposition);
 				if (result == null) result = caseSource(sourceComposition);
+				if (result == null) result = caseThingMLElement(sourceComposition);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -740,6 +742,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				T result = caseJoinSources(joinSources);
 				if (result == null) result = caseSourceComposition(joinSources);
 				if (result == null) result = caseSource(joinSources);
+				if (result == null) result = caseThingMLElement(joinSources);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -748,6 +751,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				T result = caseMergeSources(mergeSources);
 				if (result == null) result = caseSourceComposition(mergeSources);
 				if (result == null) result = caseSource(mergeSources);
+				if (result == null) result = caseThingMLElement(mergeSources);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -755,6 +759,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				SimpleSource simpleSource = (SimpleSource)theEObject;
 				T result = caseSimpleSource(simpleSource);
 				if (result == null) result = caseSource(simpleSource);
+				if (result == null) result = caseThingMLElement(simpleSource);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

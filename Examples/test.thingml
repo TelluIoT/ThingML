@@ -91,7 +91,6 @@ thing Sample includes CepMsgs,  SampleMsgs{
         action sendPort!cep5(a,b,c)
     end
     
-    
     statechart Sample init Init {
         state Init {
             on entry do

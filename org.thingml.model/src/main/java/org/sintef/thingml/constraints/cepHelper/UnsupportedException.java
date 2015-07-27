@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.java.cepHelper;
+package org.sintef.thingml.constraints.cepHelper;
 
 /**
  * @author ludovic
  */
-public class JavaCepCompilerHelper {
+public class UnsupportedException extends UnsupportedOperationException {
+    public UnsupportedException(String nameClass, String type, String compiler) {
+        super("The " + type + " (" + nameClass + ") is unknown..." +
+                " Please update your " + compiler + " as a new element might have been introduced in ThingML");
+    }
 
-
-
-
+    public static UnsupportedException sourceException(String className) {
+        return new UnsupportedException(className,"stream source","source compiler helper");
+    }
 }

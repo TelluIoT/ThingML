@@ -17,19 +17,19 @@
  */
 package org.sintef.thingml.impl;
 
-import java.util.Collection;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.sintef.thingml.Source;
+import org.sintef.thingml.Stream;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.ViewSource;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+
+import java.util.Collection;
 
 /**
  * <!-- begin-user-doc -->
@@ -44,7 +44,7 @@ import org.sintef.thingml.ViewSource;
  *
  * @generated
  */
-public abstract class SourceImpl extends EObjectImpl implements Source {
+public abstract class SourceImpl extends ThingMLElementImpl implements Source {
 	/**
 	 * The cached value of the '{@link #getOperators() <em>Operators</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -160,4 +160,9 @@ public abstract class SourceImpl extends EObjectImpl implements Source {
 		return super.eIsSet(featureID);
 	}
 
+	@Override
+	public String qname(String separator) {
+		Stream stream = ThingMLHelpers.findContainingStream(this);
+		return stream.getName();
+	}
 } //SourceImpl

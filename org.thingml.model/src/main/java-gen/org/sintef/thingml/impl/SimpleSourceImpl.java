@@ -18,16 +18,15 @@
 package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.sintef.thingml.ReceiveMessage;
 import org.sintef.thingml.SimpleSource;
+import org.sintef.thingml.Stream;
 import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 
 /**
  * <!-- begin-user-doc -->
@@ -187,4 +186,15 @@ public class SimpleSourceImpl extends SourceImpl implements SimpleSource {
 		return super.eIsSet(featureID);
 	}
 
+	@Override
+	public String qname(String separator) {
+		if(separator == null) {
+			separator = "_";
+		}
+
+		Stream stream = ThingMLHelpers.findContainingStream(this);
+		return stream.getName() + separator + this.getMessage().getPort().getName() +
+				separator + this.getMessage().getMessage().getName();
+
+	}
 } //SimpleSourceImpl

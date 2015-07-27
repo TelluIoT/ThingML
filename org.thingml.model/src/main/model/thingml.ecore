@@ -354,7 +354,7 @@
         eType="#//Message"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" lowerBound="1" eType="#//Port"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true" eSuperTypes="#//ThingMLElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
         eType="#//ViewSource" containment="true"/>
   </eClassifiers>

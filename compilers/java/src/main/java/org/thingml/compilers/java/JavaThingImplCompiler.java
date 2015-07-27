@@ -341,9 +341,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         /** MODIFICATION **/
         if(thing.getStreams().size() > 0) {
-            builder.append("@Override\n" +
-                    "protected void createCepStreams() {\n" +
-                    "PublishSubject<Event> subject;");
+            builder.append("@Override\n")
+                   .append("protected void createCepStreams() {\n");
 
             for (Stream stream : thing.getStreams()) {
                 ctx.getCompiler().getCepCompiler().generateStream(stream, builder, ctx);

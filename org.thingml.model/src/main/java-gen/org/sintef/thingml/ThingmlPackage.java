@@ -3951,13 +3951,22 @@ public interface ThingmlPackage extends EPackage {
 	int SOURCE = 82;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE__NAME = THING_ML_ELEMENT__NAME;
+
+	/**
 	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE__OPERATORS = 0;
+	int SOURCE__OPERATORS = THING_ML_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Source</em>' class.
@@ -3966,7 +3975,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_FEATURE_COUNT = 1;
+	int SOURCE_FEATURE_COUNT = THING_ML_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.SourceCompositionImpl <em>Source Composition</em>}' class.
@@ -3977,6 +3986,15 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	int SOURCE_COMPOSITION = 83;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_COMPOSITION__NAME = SOURCE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
@@ -4016,6 +4034,15 @@ public interface ThingmlPackage extends EPackage {
 	int JOIN_SOURCES = 84;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JOIN_SOURCES__NAME = SOURCE_COMPOSITION__NAME;
+
+	/**
 	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4053,6 +4080,15 @@ public interface ThingmlPackage extends EPackage {
 	int MERGE_SOURCES = 85;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MERGE_SOURCES__NAME = SOURCE_COMPOSITION__NAME;
+
+	/**
 	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4088,6 +4124,15 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	int SIMPLE_SOURCE = 86;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_SOURCE__NAME = SOURCE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.

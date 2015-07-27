@@ -3091,6 +3091,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		streamEClass.getESuperTypes().add(this.getThingMLElement());
 		streamExpressionEClass.getESuperTypes().add(this.getThingMLElement());
 		streamParamReferenceEClass.getESuperTypes().add(this.getExpression());
+		sourceEClass.getESuperTypes().add(this.getThingMLElement());
 		sourceCompositionEClass.getESuperTypes().add(this.getSource());
 		joinSourcesEClass.getESuperTypes().add(this.getSourceComposition());
 		mergeSourcesEClass.getESuperTypes().add(this.getSourceComposition());
