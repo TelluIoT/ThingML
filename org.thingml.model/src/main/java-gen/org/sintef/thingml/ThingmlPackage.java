@@ -3951,13 +3951,22 @@ public interface ThingmlPackage extends EPackage {
 	int SOURCE = 82;
 
 	/**
+	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE__OPERATORS = 0;
+
+	/**
 	 * The number of structural features of the '<em>Source</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_FEATURE_COUNT = 0;
+	int SOURCE_FEATURE_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.SourceCompositionImpl <em>Source Composition</em>}' class.
@@ -3970,7 +3979,16 @@ public interface ThingmlPackage extends EPackage {
 	int SOURCE_COMPOSITION = 83;
 
 	/**
-	 * The feature id for the '<em><b>Sources</b></em>' reference list.
+	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_COMPOSITION__OPERATORS = SOURCE__OPERATORS;
+
+	/**
+	 * The feature id for the '<em><b>Sources</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -3998,7 +4016,16 @@ public interface ThingmlPackage extends EPackage {
 	int JOIN_SOURCES = 84;
 
 	/**
-	 * The feature id for the '<em><b>Sources</b></em>' reference list.
+	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JOIN_SOURCES__OPERATORS = SOURCE_COMPOSITION__OPERATORS;
+
+	/**
+	 * The feature id for the '<em><b>Sources</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -4026,7 +4053,16 @@ public interface ThingmlPackage extends EPackage {
 	int MERGE_SOURCES = 85;
 
 	/**
-	 * The feature id for the '<em><b>Sources</b></em>' reference list.
+	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MERGE_SOURCES__OPERATORS = SOURCE_COMPOSITION__OPERATORS;
+
+	/**
+	 * The feature id for the '<em><b>Sources</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -4052,6 +4088,15 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	int SIMPLE_SOURCE = 86;
+
+	/**
+	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_SOURCE__OPERATORS = SOURCE__OPERATORS;
 
 	/**
 	 * The feature id for the '<em><b>Message</b></em>' containment reference.
@@ -4082,22 +4127,13 @@ public interface ThingmlPackage extends EPackage {
 	int VIEW_SOURCE = 87;
 
 	/**
-	 * The feature id for the '<em><b>Source Viewed</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW_SOURCE__SOURCE_VIEWED = SOURCE_FEATURE_COUNT + 0;
-
-	/**
 	 * The number of structural features of the '<em>View Source</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW_SOURCE_FEATURE_COUNT = SOURCE_FEATURE_COUNT + 1;
+	int VIEW_SOURCE_FEATURE_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.FilterImpl <em>Filter</em>}' class.
@@ -4108,15 +4144,6 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	int FILTER = 88;
-
-	/**
-	 * The feature id for the '<em><b>Source Viewed</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FILTER__SOURCE_VIEWED = VIEW_SOURCE__SOURCE_VIEWED;
 
 	/**
 	 * The number of structural features of the '<em>Filter</em>' class.
@@ -6213,6 +6240,17 @@ public interface ThingmlPackage extends EPackage {
 	EClass getSource();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Source#getOperators <em>Operators</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Operators</em>'.
+	 * @see org.sintef.thingml.Source#getOperators()
+	 * @see #getSource()
+	 * @generated
+	 */
+	EReference getSource_Operators();
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.SourceComposition <em>Source Composition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6223,10 +6261,10 @@ public interface ThingmlPackage extends EPackage {
 	EClass getSourceComposition();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.sintef.thingml.SourceComposition#getSources <em>Sources</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.SourceComposition#getSources <em>Sources</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Sources</em>'.
+	 * @return the meta object for the containment reference list '<em>Sources</em>'.
 	 * @see org.sintef.thingml.SourceComposition#getSources()
 	 * @see #getSourceComposition()
 	 * @generated
@@ -6283,17 +6321,6 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getViewSource();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.ViewSource#getSourceViewed <em>Source Viewed</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Source Viewed</em>'.
-	 * @see org.sintef.thingml.ViewSource#getSourceViewed()
-	 * @see #getViewSource()
-	 * @generated
-	 */
-	EReference getViewSource_SourceViewed();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Filter <em>Filter</em>}'.
@@ -8070,6 +8097,14 @@ public interface ThingmlPackage extends EPackage {
 		EClass SOURCE = eINSTANCE.getSource();
 
 		/**
+		 * The meta object literal for the '<em><b>Operators</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SOURCE__OPERATORS = eINSTANCE.getSource_Operators();
+
+		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.SourceCompositionImpl <em>Source Composition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -8080,7 +8115,7 @@ public interface ThingmlPackage extends EPackage {
 		EClass SOURCE_COMPOSITION = eINSTANCE.getSourceComposition();
 
 		/**
-		 * The meta object literal for the '<em><b>Sources</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Sources</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -8134,14 +8169,6 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EClass VIEW_SOURCE = eINSTANCE.getViewSource();
-
-		/**
-		 * The meta object literal for the '<em><b>Source Viewed</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference VIEW_SOURCE__SOURCE_VIEWED = eINSTANCE.getViewSource_SourceViewed();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.FilterImpl <em>Filter</em>}' class.

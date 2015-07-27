@@ -261,7 +261,6 @@ public class ThingActionCompiler {
         sendAction.setPort(streamOutput.getPort());
         for(StreamExpression se : streamOutput.getParameters()) {
             sendAction.getParameters().add(ThingMLCopyExpression.copy(se.getExpression()));
-
         }
         generate(sendAction, builder, ctx);
     }

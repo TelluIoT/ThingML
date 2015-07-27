@@ -45,7 +45,7 @@ import org.sintef.thingml.ThingmlPackage;
  */
 public abstract class SourceCompositionImpl extends SourceImpl implements SourceComposition {
 	/**
-	 * The cached value of the '{@link #getSources() <em>Sources</em>}' reference list.
+	 * The cached value of the '{@link #getSources() <em>Sources</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getSources()
@@ -80,9 +80,23 @@ public abstract class SourceCompositionImpl extends SourceImpl implements Source
 	 */
 	public EList<Source> getSources() {
 		if (sources == null) {
-			sources = new EObjectResolvingEList<Source>(Source.class, this, ThingmlPackage.SOURCE_COMPOSITION__SOURCES);
+			sources = new EObjectContainmentEList<Source>(Source.class, this, ThingmlPackage.SOURCE_COMPOSITION__SOURCES);
 		}
 		return sources;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ThingmlPackage.SOURCE_COMPOSITION__SOURCES:
+				return ((InternalEList<?>)getSources()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

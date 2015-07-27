@@ -2583,6 +2583,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getSource_Operators() {
+		return (EReference)sourceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getSourceComposition() {
 		return sourceCompositionEClass;
 	}
@@ -2639,15 +2648,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EClass getViewSource() {
 		return viewSourceEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getViewSource_SourceViewed() {
-		return (EReference)viewSourceEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2966,6 +2966,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(streamOutputEClass, STREAM_OUTPUT__PORT);
 
 		sourceEClass = createEClass(SOURCE);
+		createEReference(sourceEClass, SOURCE__OPERATORS);
 
 		sourceCompositionEClass = createEClass(SOURCE_COMPOSITION);
 		createEReference(sourceCompositionEClass, SOURCE_COMPOSITION__SOURCES);
@@ -2978,7 +2979,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(simpleSourceEClass, SIMPLE_SOURCE__MESSAGE);
 
 		viewSourceEClass = createEClass(VIEW_SOURCE);
-		createEReference(viewSourceEClass, VIEW_SOURCE__SOURCE_VIEWED);
 
 		filterEClass = createEClass(FILTER);
 	}
@@ -3095,7 +3095,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		joinSourcesEClass.getESuperTypes().add(this.getSourceComposition());
 		mergeSourcesEClass.getESuperTypes().add(this.getSourceComposition());
 		simpleSourceEClass.getESuperTypes().add(this.getSource());
-		viewSourceEClass.getESuperTypes().add(this.getSource());
 		filterEClass.getESuperTypes().add(this.getViewSource());
 
 		// Initialize classes and features; add operations and parameters
@@ -3378,9 +3377,10 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getStreamOutput_Port(), this.getPort(), null, "port", null, 1, 1, StreamOutput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(sourceEClass, Source.class, "Source", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSource_Operators(), this.getViewSource(), null, "operators", null, 0, -1, Source.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(sourceCompositionEClass, SourceComposition.class, "SourceComposition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getSourceComposition_Sources(), this.getSource(), null, "sources", null, 2, -1, SourceComposition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSourceComposition_Sources(), this.getSource(), null, "sources", null, 2, -1, SourceComposition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(joinSourcesEClass, JoinSources.class, "JoinSources", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -3390,7 +3390,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getSimpleSource_Message(), this.getReceiveMessage(), null, "message", null, 1, 1, SimpleSource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(viewSourceEClass, ViewSource.class, "ViewSource", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getViewSource_SourceViewed(), this.getSource(), null, "sourceViewed", null, 1, 1, ViewSource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(filterEClass, Filter.class, "Filter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

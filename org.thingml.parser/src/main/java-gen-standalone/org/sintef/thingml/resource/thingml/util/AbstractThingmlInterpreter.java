@@ -583,6 +583,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
+		if (object instanceof org.sintef.thingml.Source) {
+			result = interprete_org_sintef_thingml_Source((org.sintef.thingml.Source) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		if (object instanceof org.sintef.thingml.Filter) {
 			result = interprete_org_sintef_thingml_Filter((org.sintef.thingml.Filter) object, context);
 		}
@@ -591,12 +597,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.ViewSource) {
 			result = interprete_org_sintef_thingml_ViewSource((org.sintef.thingml.ViewSource) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
-		if (object instanceof org.sintef.thingml.Source) {
-			result = interprete_org_sintef_thingml_Source((org.sintef.thingml.Source) object, context);
 		}
 		if (result != null) {
 			return result;

@@ -28,17 +28,14 @@
  */
 package org.sintef.thingml.constraints;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.sintef.thingml.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.swing.tree.VariableHeightLayoutCache;
-
-import org.eclipse.emf.ecore.EObject;
-
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
 
 
 public class ThingMLHelpers {
@@ -761,7 +758,10 @@ public class ThingMLHelpers {
 	
 	public static ArrayList<Event> findEvents(EventReference er, String name, boolean fuzzy) {
 		ArrayList<Event> result = new ArrayList<Event>();
-		Handler h = findContainingHandler(er);
+
+		/** MODIFICATION **/
+		/** OLD **/
+		/*Handler h = findContainingHandler(er);
 		if (h == null || h.getEvent().size() > 1) return result;
 		else {
 			Event evt = h.getEvent().get(0);
@@ -769,9 +769,64 @@ public class ThingMLHelpers {
 				if (fuzzy) result.add(evt);
 				else if (evt.getName().equals(name)) result.add(evt);
 			}
+		}*/
+		/** NEW **/
+		Handler h = findContainingHandler(er);
+		if(h == null) {
+			Stream s = findContainingStream(er);
+			if(s == null) {
+				return null;
+			}
+			for(ReceiveMessage rm : allReceiveMessages(s.getInput())) {
+				if(rm.getName().startsWith(name)) {
+					if(fuzzy)  {
+						result.add(rm);
+					} else if(rm.getName().equals(name)) {
+						result.add(rm);
+					}
+				}
+			}
+		} else if(h.getEvent().size() > 1) {
+			return result;
+		} else {
+			Event evt = h.getEvent().get(0);
+			if (evt instanceof ReceiveMessage && evt.getName().startsWith(name)) {
+				if (fuzzy) result.add(evt);
+				else if (evt.getName().equals(name)) result.add(evt);
+			}
 		}
+
+		/** END **/
+
+
 		return result;
 	}
 
-	
+	public static List<ReceiveMessage> allReceiveMessages(Source input) {
+		List<ReceiveMessage> result = new ArrayList<>();
+		getAllReceiveMessages(input,result);
+		return result;
+	}
+
+	private static void getAllReceiveMessages(Source input, List<ReceiveMessage> result) {
+		if(input instanceof SimpleSource) {
+			result.add(((SimpleSource)input).getMessage());
+		} else if (input instanceof SourceComposition) {
+			SourceComposition composition = (SourceComposition) input;
+			for(Source s : composition.getSources()) {
+				getAllReceiveMessages(s,result);
+			}
+		}
+	}
+
+	/** MODIFICATION **/
+	public static Stream findContainingStream(EObject eObject) {
+		while(!(eObject instanceof Stream)){
+			eObject = eObject.eContainer();
+		}
+		return (Stream) eObject;
+	}
+	/** END **/
+
+
 }

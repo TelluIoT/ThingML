@@ -16,7 +16,6 @@
 package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
@@ -136,17 +135,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         generateListeners(thing, builder, ctx);
 
         /** MODIFICATION **/
-        builder.append("//CEP dispatch functions\n");
-        builder.append("this.cepDispatch = function (message) {\n");
 
-        for(Stream s : thing.getStreams()) {
-            for (ReceiveMessage rm : s.getInputs()) {
-                builder.append("if(message[0] === \"" + rm.getPort().getName() + "\" && message[1] === \"" + rm.getMessage().getName() + "\") {\n" +
-                        "\tthis.eventEmitterForStream.emit('" + ThingMLHelpers.getEventName(s, rm) + "',message);\n" +
-                        "}\n");
-            }
-        }
-        builder.append("}\n");
         /** END **/
 
         builder.append("//ThingML-defined functions\n");

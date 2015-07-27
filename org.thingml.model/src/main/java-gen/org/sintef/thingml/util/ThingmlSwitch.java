@@ -761,7 +761,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 			case ThingmlPackage.VIEW_SOURCE: {
 				ViewSource viewSource = (ViewSource)theEObject;
 				T result = caseViewSource(viewSource);
-				if (result == null) result = caseSource(viewSource);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -769,7 +768,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				Filter filter = (Filter)theEObject;
 				T result = caseFilter(filter);
 				if (result == null) result = caseViewSource(filter);
-				if (result == null) result = caseSource(filter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

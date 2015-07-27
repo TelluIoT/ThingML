@@ -354,10 +354,13 @@
         eType="#//Message"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" lowerBound="1" eType="#//Port"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
+        eType="#//ViewSource" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SourceComposition" abstract="true" eSuperTypes="#//Source">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sources" lowerBound="2"
-        upperBound="-1" eType="#//Source"/>
+        upperBound="-1" eType="#//Source" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JoinSources" eSuperTypes="#//SourceComposition"/>
   <eClassifiers xsi:type="ecore:EClass" name="MergeSources" eSuperTypes="#//SourceComposition"/>
@@ -365,9 +368,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="message" lowerBound="1"
         eType="#//ReceiveMessage" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ViewSource" abstract="true" eSuperTypes="#//Source">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceViewed" lowerBound="1"
-        eType="#//Source"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ViewSource" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Filter" eSuperTypes="#//ViewSource"/>
 </ecore:EPackage>

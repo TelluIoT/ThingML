@@ -253,12 +253,12 @@ RULES {
 	StreamExpression ::= name[] ":" expression;
 	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
 	
-	SimpleSource ::= "from" message;
+	SimpleSource ::= message ("::" operators)*;
 	
-	Filter ::= sourceViewed[] "::filter()";
+	Filter ::= "filter";
 	
-	JoinSources ::= "[" #1 sources[] #1 "&" #1 sources[] #1 "]";
-	MergeSources ::= "[" #1 sources[] #1 "|" #1 sources[] #1 "]";
+	JoinSources ::= "[" #1 sources #1 "&" #1 sources #1 "]" ("::" operators)* ;
+	MergeSources ::= "[" #1 sources #1 "|" #1 sources #1 "]" ("::" operators)*;
 	
 	Stream ::= "stream" #1 name[] #1 "do"
 					 !1 "from" #1 input

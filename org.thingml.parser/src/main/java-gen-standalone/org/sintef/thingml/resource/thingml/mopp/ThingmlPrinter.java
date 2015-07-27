@@ -6404,14 +6404,18 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		// the number of elements stored in each structural feature. For lists this is the
 		// list size. For non-multiple features it is either 1 (if the feature is set) or
 		// 0 (if the feature is null).
-		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(1);
+		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(2);
 		Object temp;
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SIMPLE_SOURCE__OPERATORS));
+		printCountingMap.put("operators", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
 		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SIMPLE_SOURCE__MESSAGE));
 		printCountingMap.put("message", temp == null ? 0 : 1);
 		// print collected hidden tokens
 		int count;
-		// DEFINITION PART BEGINS (CsString)
-		out.print("from");
+		boolean iterate = true;
+		java.io.StringWriter sWriter = null;
+		java.io.PrintWriter out1 = null;
+		java.util.Map<String, Integer> printCountingMap1 = null;
 		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("message");
 		if (count > 0) {
@@ -6420,6 +6424,46 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 			}
 			printCountingMap.put("message", count - 1);
+		}
+		// DEFINITION PART BEGINS (CompoundDefinition)
+		iterate = true;
+		while (iterate) {
+			sWriter = new java.io.StringWriter();
+			out1 = new java.io.PrintWriter(sWriter);
+			printCountingMap1 = new java.util.LinkedHashMap<String, Integer>(printCountingMap);
+			print_org_sintef_thingml_SimpleSource_0(element, localtab, out1, printCountingMap1);
+			if (printCountingMap.equals(printCountingMap1)) {
+				iterate = false;
+				out1.close();
+			} else {
+				out1.flush();
+				out1.close();
+				out.print(sWriter.toString());
+				printCountingMap.putAll(printCountingMap1);
+			}
+		}
+	}
+	
+	public void print_org_sintef_thingml_SimpleSource_0(org.sintef.thingml.SimpleSource element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
+		String localtab = outertab;
+		int count;
+		// DEFINITION PART BEGINS (CsString)
+		out.print("::");
+		// DEFINITION PART BEGINS (Containment)
+		count = printCountingMap.get("operators");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SIMPLE_SOURCE__OPERATORS));
+			java.util.List<?> list = (java.util.List<?>) o;
+			int index = list.size() - count;
+			if (index >= 0) {
+				o = list.get(index);
+			} else {
+				o = null;
+			}
+			if (o != null) {
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
+			}
+			printCountingMap.put("operators", count - 1);
 		}
 	}
 	
@@ -6430,45 +6474,36 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		// the number of elements stored in each structural feature. For lists this is the
 		// list size. For non-multiple features it is either 1 (if the feature is set) or
 		// 0 (if the feature is null).
-		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(1);
-		Object temp;
-		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FILTER__SOURCE_VIEWED));
-		printCountingMap.put("sourceViewed", temp == null ? 0 : 1);
 		// print collected hidden tokens
-		int count;
-		// DEFINITION PART BEGINS (PlaceholderUsingDefaultToken)
-		count = printCountingMap.get("sourceViewed");
-		if (count > 0) {
-			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FILTER__SOURCE_VIEWED));
-			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getViewSourceSourceViewedReferenceResolver().deResolve((org.sintef.thingml.Source) o, element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FILTER__SOURCE_VIEWED)), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FILTER__SOURCE_VIEWED), element));
-			}
-			printCountingMap.put("sourceViewed", count - 1);
-		}
 		// DEFINITION PART BEGINS (CsString)
-		out.print("::filter()");
+		out.print("filter");
 	}
 	
 	
 	public void print_org_sintef_thingml_JoinSources(org.sintef.thingml.JoinSources element, String outertab, java.io.PrintWriter out) {
+		String localtab = outertab;
 		// The printCountingMap contains a mapping from feature names to the number of
 		// remaining elements that still need to be printed. The map is initialized with
 		// the number of elements stored in each structural feature. For lists this is the
 		// list size. For non-multiple features it is either 1 (if the feature is set) or
 		// 0 (if the feature is null).
-		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(1);
+		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(2);
 		Object temp;
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.JOIN_SOURCES__OPERATORS));
+		printCountingMap.put("operators", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
 		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.JOIN_SOURCES__SOURCES));
 		printCountingMap.put("sources", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
 		// print collected hidden tokens
 		int count;
+		boolean iterate = true;
+		java.io.StringWriter sWriter = null;
+		java.io.PrintWriter out1 = null;
+		java.util.Map<String, Integer> printCountingMap1 = null;
 		// DEFINITION PART BEGINS (CsString)
 		out.print("[");
 		// DEFINITION PART BEGINS (WhiteSpaces)
 		out.print(" ");
-		// DEFINITION PART BEGINS (PlaceholderUsingDefaultToken)
+		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("sources");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.JOIN_SOURCES__SOURCES));
@@ -6480,9 +6515,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 				o = null;
 			}
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getSourceCompositionSourcesReferenceResolver().deResolve((org.sintef.thingml.Source) o, element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.JOIN_SOURCES__SOURCES)), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.JOIN_SOURCES__SOURCES), element));
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 			}
 			printCountingMap.put("sources", count - 1);
 		}
@@ -6492,7 +6525,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		out.print("&");
 		// DEFINITION PART BEGINS (WhiteSpaces)
 		out.print(" ");
-		// DEFINITION PART BEGINS (PlaceholderUsingDefaultToken)
+		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("sources");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.JOIN_SOURCES__SOURCES));
@@ -6504,9 +6537,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 				o = null;
 			}
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getSourceCompositionSourcesReferenceResolver().deResolve((org.sintef.thingml.Source) o, element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.JOIN_SOURCES__SOURCES)), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.JOIN_SOURCES__SOURCES), element));
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 			}
 			printCountingMap.put("sources", count - 1);
 		}
@@ -6514,26 +6545,73 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		out.print(" ");
 		// DEFINITION PART BEGINS (CsString)
 		out.print("]");
+		// DEFINITION PART BEGINS (CompoundDefinition)
+		iterate = true;
+		while (iterate) {
+			sWriter = new java.io.StringWriter();
+			out1 = new java.io.PrintWriter(sWriter);
+			printCountingMap1 = new java.util.LinkedHashMap<String, Integer>(printCountingMap);
+			print_org_sintef_thingml_JoinSources_0(element, localtab, out1, printCountingMap1);
+			if (printCountingMap.equals(printCountingMap1)) {
+				iterate = false;
+				out1.close();
+			} else {
+				out1.flush();
+				out1.close();
+				out.print(sWriter.toString());
+				printCountingMap.putAll(printCountingMap1);
+			}
+		}
+	}
+	
+	public void print_org_sintef_thingml_JoinSources_0(org.sintef.thingml.JoinSources element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
+		String localtab = outertab;
+		int count;
+		// DEFINITION PART BEGINS (CsString)
+		out.print("::");
+		// DEFINITION PART BEGINS (Containment)
+		count = printCountingMap.get("operators");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.JOIN_SOURCES__OPERATORS));
+			java.util.List<?> list = (java.util.List<?>) o;
+			int index = list.size() - count;
+			if (index >= 0) {
+				o = list.get(index);
+			} else {
+				o = null;
+			}
+			if (o != null) {
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
+			}
+			printCountingMap.put("operators", count - 1);
+		}
 	}
 	
 	
 	public void print_org_sintef_thingml_MergeSources(org.sintef.thingml.MergeSources element, String outertab, java.io.PrintWriter out) {
+		String localtab = outertab;
 		// The printCountingMap contains a mapping from feature names to the number of
 		// remaining elements that still need to be printed. The map is initialized with
 		// the number of elements stored in each structural feature. For lists this is the
 		// list size. For non-multiple features it is either 1 (if the feature is set) or
 		// 0 (if the feature is null).
-		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(1);
+		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(2);
 		Object temp;
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.MERGE_SOURCES__OPERATORS));
+		printCountingMap.put("operators", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
 		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.MERGE_SOURCES__SOURCES));
 		printCountingMap.put("sources", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
 		// print collected hidden tokens
 		int count;
+		boolean iterate = true;
+		java.io.StringWriter sWriter = null;
+		java.io.PrintWriter out1 = null;
+		java.util.Map<String, Integer> printCountingMap1 = null;
 		// DEFINITION PART BEGINS (CsString)
 		out.print("[");
 		// DEFINITION PART BEGINS (WhiteSpaces)
 		out.print(" ");
-		// DEFINITION PART BEGINS (PlaceholderUsingDefaultToken)
+		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("sources");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.MERGE_SOURCES__SOURCES));
@@ -6545,9 +6623,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 				o = null;
 			}
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getSourceCompositionSourcesReferenceResolver().deResolve((org.sintef.thingml.Source) o, element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.MERGE_SOURCES__SOURCES)), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.MERGE_SOURCES__SOURCES), element));
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 			}
 			printCountingMap.put("sources", count - 1);
 		}
@@ -6557,7 +6633,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		out.print("|");
 		// DEFINITION PART BEGINS (WhiteSpaces)
 		out.print(" ");
-		// DEFINITION PART BEGINS (PlaceholderUsingDefaultToken)
+		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("sources");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.MERGE_SOURCES__SOURCES));
@@ -6569,9 +6645,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 				o = null;
 			}
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getSourceCompositionSourcesReferenceResolver().deResolve((org.sintef.thingml.Source) o, element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.MERGE_SOURCES__SOURCES)), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.MERGE_SOURCES__SOURCES), element));
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 			}
 			printCountingMap.put("sources", count - 1);
 		}
@@ -6579,6 +6653,46 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		out.print(" ");
 		// DEFINITION PART BEGINS (CsString)
 		out.print("]");
+		// DEFINITION PART BEGINS (CompoundDefinition)
+		iterate = true;
+		while (iterate) {
+			sWriter = new java.io.StringWriter();
+			out1 = new java.io.PrintWriter(sWriter);
+			printCountingMap1 = new java.util.LinkedHashMap<String, Integer>(printCountingMap);
+			print_org_sintef_thingml_MergeSources_0(element, localtab, out1, printCountingMap1);
+			if (printCountingMap.equals(printCountingMap1)) {
+				iterate = false;
+				out1.close();
+			} else {
+				out1.flush();
+				out1.close();
+				out.print(sWriter.toString());
+				printCountingMap.putAll(printCountingMap1);
+			}
+		}
+	}
+	
+	public void print_org_sintef_thingml_MergeSources_0(org.sintef.thingml.MergeSources element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
+		String localtab = outertab;
+		int count;
+		// DEFINITION PART BEGINS (CsString)
+		out.print("::");
+		// DEFINITION PART BEGINS (Containment)
+		count = printCountingMap.get("operators");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.MERGE_SOURCES__OPERATORS));
+			java.util.List<?> list = (java.util.List<?>) o;
+			int index = list.size() - count;
+			if (index >= 0) {
+				o = list.get(index);
+			} else {
+				o = null;
+			}
+			if (o != null) {
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
+			}
+			printCountingMap.put("operators", count - 1);
+		}
 	}
 	
 	

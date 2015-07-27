@@ -17,48 +17,19 @@
  */
 package org.sintef.thingml;
 
+import org.eclipse.emf.ecore.EObject;
+
 
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>View Source</b></em>'.
  * <!-- end-user-doc -->
  *
- * <p>
- * The following features are supported:
- * <ul>
- *   <li>{@link org.sintef.thingml.ViewSource#getSourceViewed <em>Source Viewed</em>}</li>
- * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getViewSource()
  * @model abstract="true"
  * @generated
  */
-public interface ViewSource extends Source {
-	/**
-	 * Returns the value of the '<em><b>Source Viewed</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Source Viewed</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Source Viewed</em>' reference.
-	 * @see #setSourceViewed(Source)
-	 * @see org.sintef.thingml.ThingmlPackage#getViewSource_SourceViewed()
-	 * @model required="true"
-	 * @generated
-	 */
-	Source getSourceViewed();
-
-	/**
-	 * Sets the value of the '{@link org.sintef.thingml.ViewSource#getSourceViewed <em>Source Viewed</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Source Viewed</em>' reference.
-	 * @see #getSourceViewed()
-	 * @generated
-	 */
-	void setSourceViewed(Source value);
+public interface ViewSource extends EObject {
 
 } // ViewSource

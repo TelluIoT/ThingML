@@ -39,7 +39,7 @@ import org.eclipse.emf.common.util.EList;
 public interface SourceComposition extends Source {
 
 	/**
-	 * Returns the value of the '<em><b>Sources</b></em>' reference list.
+	 * Returns the value of the '<em><b>Sources</b></em>' containment reference list.
 	 * The list contents are of type {@link org.sintef.thingml.Source}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -47,9 +47,9 @@ public interface SourceComposition extends Source {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Sources</em>' reference list.
+	 * @return the value of the '<em>Sources</em>' containment reference list.
 	 * @see org.sintef.thingml.ThingmlPackage#getSourceComposition_Sources()
-	 * @model lower="2"
+	 * @model containment="true" lower="2"
 	 * @generated
 	 */
 	EList<Source> getSources();

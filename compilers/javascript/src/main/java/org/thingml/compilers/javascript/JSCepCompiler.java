@@ -15,15 +15,10 @@
  */
 package org.thingml.compilers.javascript;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.Stream;
 import org.thingml.compilers.CepCompiler;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.cepHelper.JSActionCompilerCepAlternative;
-import org.thingml.compilers.javascript.cepHelper.JSCepCompilerHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author ludovic
@@ -36,74 +31,11 @@ public class JSCepCompiler extends CepCompiler {
     }
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
-       if(stream instanceof SimpleStream) {
-           generateStream((SimpleStream)stream,builder,ctx);
-        } else if(stream instanceof MergedStream) {
-           generateStream((MergedStream) stream, builder, ctx);
-        } else if (stream instanceof JoinedStream) {
-            generateStream((JoinedStream)stream,builder,ctx);
-        } else {
-            throw new UnsupportedOperationException("This stream (" + stream.getClass().getName() + ") is unknown... Please update your cep compilers as a new stream might have been introduced in ThingML");
-        }
+
 
     }
 
-    public void generateStream(SimpleStream stream, StringBuilder builder, Context ctx) {
-        String eventName = ThingMLHelpers.getEventName(stream, stream.getInputs().get(0));
-        String nameParam = stream.getInputs().get(0).getMessage().getName();
-        JSCepCompilerHelper.generateSimpleMergedStream(stream, builder, ctx, eventName, nameParam, actionCompiler);
-    }
 
-    public void generateStream(MergedStream stream, StringBuilder builder, Context ctx) {
-        String eventName = ThingMLHelpers.getEventName(stream, null);
-        String nameParam = "x";
-        JSCepCompilerHelper.generateSimpleMergedStream(stream, builder, ctx, eventName, nameParam, actionCompiler);
-    }
-
-    public void generateStream(JoinedStream stream, StringBuilder builder, Context ctx) {
-        builder.append("\n");
-        builder.append("function wait1() { return Rx.Observable.timer(50); }\n");
-
-        for (ReceiveMessage rm : stream.getInputs()) {
-            builder.append("var " + stream.qname("_") + "_" + rm.getMessage().getName() + " = Rx.Observable.fromEvent(this.eventEmitterForStream" + ", '" + ThingMLHelpers.getEventName(stream, rm) + "');\n");
-        }
-
-
-        String message1Name = stream.getInputs().get(1).getMessage().getName(),
-                message2Name = stream.getInputs().get(0).getMessage().getName();
-        String nameStream1 = stream.qname("_") + "_" + message1Name, //currently : join is between two streams
-                nameStream2 = stream.qname("_") + "_" + message2Name;
-
-        builder.append("var " + stream.qname("_") + " = " + nameStream1 + ".join(" + nameStream2 + ",wait1,wait1,\n" +
-                "\tfunction(" + message1Name + "," + message2Name +") {\n" );//+
-
-        List<StreamExpression> newParameters = new ArrayList<>();
-        String returnString = "{ ";
-        int i = 0;
-        for (StreamExpression se : stream.getSelection()) {
-
-            builder.append("\t\tvar " + se.getName() + " = ");
-            actionCompiler.generate(se.getExpression(),builder,ctx);
-            builder.append(";\n");
-            if(i>0) {
-                returnString += ", ";
-            }
-            returnString += "'" + i + "'" + " : " + se.getName();
-
-            newParameters.add(JSCepCompilerHelper.generateStreamExpression("x[" + i + "]"));
-
-            i++;
-        }
-
-        returnString += " };";
-        builder.append("\t\treturn " + returnString + "\n");
-        builder.append("\t}).subscribe(\n\t" +
-                "\t\tfunction(x) {\n");
-        builder.append("\t\t\t");
-        JSCepCompilerHelper.generateOutPut(stream, builder, ctx, newParameters);
-
-        builder.append("\t});\n");
-    }
 
 
 }
