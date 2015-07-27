@@ -1,6 +1,6 @@
 import "thingml.thingml"
 
-thing TestSelfMessage3 includes Test 
+thing TestSelfMessageB3 includes Test 
 @test "ttt # IJJJ"
 @conf "connector test.in => test.out"
 {
