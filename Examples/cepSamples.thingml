@@ -75,18 +75,18 @@ thing Sample includes CepMsgs,  SampleMsgs{
     end
     
     stream mergedSimpleMessages do
-        from rcvPort?m3 | rcvPort?m4
+        from [ rcvPort?m3 | rcvPort?m4 ]
         action sendPort!cep3()
     end
     
     stream mergeMessagesWithValues do
-        from rcvPort?m5 | rcvPort?m6
+        from [ rcvPort?m5 | rcvPort?m6 ]
         select a : #0, b: complexTransforming(#1), c: (#2 * 2) + 5
         action sendPort!cep4(a,b,c)
     end
     
     stream joinMessages do
-        from e1 : rcvPort?m7 & e2 : rcvPort?m8
+        from [ e1 : rcvPort?m7 & e2 : rcvPort?m8 ]
         select a : e1.a * e2.v1, b : e1.b * e2.v2, c : e1.c * e2.v3
         action sendPort!cep5(a,b,c)
     end

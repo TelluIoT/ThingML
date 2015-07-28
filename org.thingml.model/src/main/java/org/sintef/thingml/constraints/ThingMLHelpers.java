@@ -826,6 +826,20 @@ public class ThingMLHelpers {
 		}
 		return (Stream) eObject;
 	}
+
+	public static List<SimpleSource> allSimpleSources(Source input) {
+		List<SimpleSource> result = new ArrayList<>();
+		if(input instanceof SimpleSource) {
+			result.add((SimpleSource)input);
+		} else if(input instanceof SourceComposition) {
+			SourceComposition composition = (SourceComposition) input;
+			for(Source s : composition.getSources()) {
+				result.addAll(allSimpleSources(s));
+			}
+		}
+		return result;
+	}
+
 	/** END **/
 
 

@@ -15,15 +15,11 @@
  */
 package org.thingml.compilers.java;
 
-import org.sintef.thingml.JoinSources;
-import org.sintef.thingml.MergeSources;
-import org.sintef.thingml.SimpleSource;
-import org.sintef.thingml.Stream;
+import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.CepCompiler;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.java.cepHelper.JavaGenerateSourceDeclaration;
-import org.thingml.compilers.java.cepHelper.JavaGenerateSubscription;
 
 /**
  * @author ludovic
@@ -33,29 +29,128 @@ public class JavaCepCompiler extends CepCompiler {
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         JavaGenerateSourceDeclaration.generate(stream,stream.getInput(),builder,ctx);
         if(stream.getInput() instanceof SimpleSource) {
-            generateSimpleStream(stream, builder, ctx);
+            generateSimpleStreamSubscription(stream,builder,ctx);
         } else if(stream.getInput() instanceof MergeSources) {
-            generateMergedStream(stream, builder, ctx);
+            generateMergeStreamSubscription(stream, builder, ctx);
         } else if(stream.getInput() instanceof JoinSources) {
-            generateJoinedStream(stream, builder, ctx);
+            generateJoinStreamSubscription(stream, builder, ctx);
         } else {
             throw UnsupportedException.sourceException(stream.getClass().getName());
         }
     }
 
-    private void generateJoinedStream(Stream stream, StringBuilder builder, Context ctx) {
-//        JavaGenerateSourceDeclaration.generate(stream,(JoinSources)stream.getInput(),builder,ctx);
-        JavaGenerateSubscription.generateJoineStreamSubscription(stream,builder,ctx);
+    public static void generateSimpleStreamSubscription(Stream stream, StringBuilder builder, Context context) {
+        SimpleSource source = (SimpleSource) stream.getInput();
 
+        builder.append(source.qname("_") + ".subscribe(new Action1<Event>() {\n")
+                .append("@Override\n")
+                .append("public void call(Event event) {\n");
+
+        Message message = source.getMessage().getMessage();
+
+        if(message.getParameters().size() > 0) {
+            String messageName = context.firstToUpper(message.getName());
+            builder.append("final ")
+                    .append(messageName)
+                    .append("MessageType.")
+                    .append(messageName)
+                    .append("Message " + message.getName() +" = (")
+                    .append(messageName)
+                    .append("MessageType.")
+                    .append(messageName)
+                    .append("Message) event;\n");
+        }
+        context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
+        builder.append("}\n" +
+                "});");
     }
 
-    private void generateMergedStream(Stream stream, StringBuilder builder, Context ctx) {
-//        JavaGenerateSourceDeclaration.generate(stream, (SourceComposition) stream.getInput(), builder, ctx);
-        JavaGenerateSubscription.generateMergeStreamSubscription(stream,builder,ctx);
+    public static void generateMergeStreamSubscription(Stream stream, StringBuilder builder, Context context) {
+        String obsName = stream.qname("_");
+
+        builder.append(obsName + ".subscribe(new Action1<Event>() {\n")
+                .append("@Override\n")
+                .append("public void call(Event event) {\n");
+
+        int i = 0;
+
+        //Param declaration
+        for(Parameter p : stream.getOutput().getMessage().getParameters()) {
+            if (!(p.getType() instanceof Enumeration)) {
+                if (!(p.getCardinality() != null))
+                    builder.append(p.getType().annotation("java_type").toArray()[0] + " ");
+                else
+                    builder.append(p.getType().annotation("java_type").toArray()[0] + "[] ");
+            }
+            builder.append("param" + i + " = 0;\n");
+            i++;
+        }
+
+        //param initialization
+        MergeSources source = (MergeSources) stream.getInput();
+        boolean firstElementDone = false;
+        for(Source simpleSource : source.getSources()) {
+            SimpleSource sSource = (SimpleSource) simpleSource;
+            Message message = sSource.getMessage().getMessage();
+            String messageName = context.firstToUpper(message.getName());
+            String messageType = messageName + "MessageType." + messageName + "Message";
+            if (firstElementDone) {
+                builder.append("else ");
+            } else {
+                firstElementDone = true;
+            }
+            builder.append("if(event instanceof " + messageType + ") {\n")
+                    .append("final ")
+                    .append(messageName)
+                    .append("MessageType.")
+                    .append(messageName)
+                    .append("Message " + message.getName() + " = (")
+                    .append(messageName)
+                    .append("MessageType.")
+                    .append(messageName)
+                    .append("Message) event;\n");
+
+            for (i = 0; i < stream.getOutput().getMessage().getParameters().size(); i++) {
+                builder.append("param" + i + " = " + message.getName() + "." + message.getParameters().get(i).getName() + ";\n");
+            }
+
+            builder.append("}\n");
+        }
+
+        context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
+        builder.append("}\n" +
+                "});");
     }
 
-    private void generateSimpleStream(Stream stream, StringBuilder builder, Context ctx) {
-//        JavaGenerateSourceDeclaration.generate(stream, (SimpleSource) stream.getInput(), builder, ctx);
-        JavaGenerateSubscription.generateSimpleStreamSubscription(stream,builder,ctx);
+    public static void generateJoinStreamSubscription(Stream stream, StringBuilder builder, Context context) {
+        Message outPut = stream.getOutput().getMessage();
+        String outPutName = outPut.getName();
+        String outPutType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
+
+        builder.append(stream.qname("_") + ".subscribe(new Action1<" + outPutType + ">() {\n")
+                .append("@Override\n")
+                .append("public void call(" + outPutType + " " + outPutName + ") {\n");
+
+        StreamOutput newOutput = ThingmlFactory.eINSTANCE.createStreamOutput();
+        newOutput.setMessage(stream.getOutput().getMessage());
+        newOutput.setPort(stream.getOutput().getPort());
+
+        ReceiveMessage rm = ThingmlFactory.eINSTANCE.createReceiveMessage();
+        rm.setMessage(stream.getOutput().getMessage());
+        rm.setPort(stream.getOutput().getPort());
+
+        for(Parameter p : stream.getOutput().getMessage().getParameters()) {
+            EventReference eRef = ThingmlFactory.eINSTANCE.createEventReference();
+            eRef.setMsgRef(rm);
+            eRef.setParamRef(p);
+            StreamExpression se = ThingmlFactory.eINSTANCE.createStreamExpression();
+            se.setExpression(eRef);
+            newOutput.getParameters().add(se);
+        }
+
+        context.getCompiler().getThingActionCompiler().generate(newOutput, builder, context);
+
+        builder.append("}\n")
+                .append("});\n");
     }
 }

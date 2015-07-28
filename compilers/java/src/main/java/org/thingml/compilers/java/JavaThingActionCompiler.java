@@ -118,7 +118,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
-//        builder.append("ce." + ctx.protectKeyword(expression.getParamRef().getName()));
         builder.append( ctx.protectKeyword(expression.getMsgRef().getMessage().getName()) + "." + ctx.protectKeyword(expression.getParamRef().getName()));
     }
 
