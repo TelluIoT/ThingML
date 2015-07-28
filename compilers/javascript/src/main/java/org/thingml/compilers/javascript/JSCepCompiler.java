@@ -45,7 +45,6 @@ public class JSCepCompiler extends CepCompiler {
     public static void generateSimpleMergeStreamSubscription(Stream stream, StringBuilder builder, Context context, String paramName) {
         builder.append(stream.getInput().qname("_") + ".subscribe(\n")
                 .append("function( " + paramName + ") { \n");
-//        actionCompiler.generate(stream.getOutput(),builder,context);
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(),builder,context);
         builder.append("\t});\n");
     }

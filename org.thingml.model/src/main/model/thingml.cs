@@ -258,7 +258,7 @@ RULES {
 	Filter ::= "filter";
 	
 	JoinSources ::= "[" #1 sources #1 "&" #1 sources #1 "]" ("::" operators)* ;
-	MergeSources ::= "[" #1 sources #1 "|" #1 sources #1 "]" ("::" operators)*;
+	MergeSources ::= "[" #1 sources #1 ("|" #1 sources #1)+ "]" ("::" operators)*;
 	
 	Stream ::= "stream" #1 name[] #1 "do"
 					 !1 "from" #1 input

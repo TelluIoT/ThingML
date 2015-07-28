@@ -50,11 +50,23 @@ public class JavaGenerateSourceDeclaration {
 
     public static void generate(Stream stream, MergeSources source, StringBuilder builder, Context context) {
         //currently, all the SourceComposition element have 2 sources
-        Source s1 = source.getSources().get(0);
-        Source s2 = source.getSources().get(1);
-        generate(stream,s1,builder,context);
-        generate(stream, s2, builder, context);
-        builder.append("rx.Observable " + stream.qname("_") + " = " + s1.qname("_") + ".mergeWith(" + s2.qname("_") + ");\n");
+        /*Source s1 = source.getSources().get(0);
+        Source s2 = source.getSources().get(1);*/
+        /*generate(stream,s1,builder,context);
+        generate(stream, s2, builder, context);*/
+//        builder.append("rx.Observable " + stream.qname("_") + " = " + s1.qname("_") + ".mergeWith(" + s2.qname("_") + ");\n");
+        String mergeParams = "";
+        boolean firstParamDone = false;
+        for(Source s : source.getSources()) {
+            JavaGenerateSourceDeclaration.generate(stream,s,builder,context);
+            if(firstParamDone) {
+                mergeParams += ", ";
+            } else {
+                firstParamDone = true;
+            }
+            mergeParams += s.qname("_");
+        }
+        builder.append("rx.Observable " + stream.qname("_") + " = rx.Observable.merge(" + mergeParams + ");\n");
     }
 
     public static void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {

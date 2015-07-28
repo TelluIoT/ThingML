@@ -43,19 +43,18 @@ public class JSGenerateSourceDeclaration {
     }
 
     public static void generate(Stream stream, MergeSources source, StringBuilder builder, Context context) {
-        StringBuilder mergeParams = new StringBuilder();
-        mergeParams.append("(");
+        String mergeParams = "";
         boolean firstParamDone = false;
         for(Source s : source.getSources()) {
             JSGenerateSourceDeclaration.generate(stream,s,builder,context);
             if(firstParamDone) {
-                mergeParams.append(", ");
+                mergeParams += ", ";
             } else {
                 firstParamDone = true;
             }
-            mergeParams.append(s.qname("_"));
+            mergeParams += s.qname("_");
         }
-        builder.append("var " + source.qname("_") + " = Rx.Observable.merge" + mergeParams + ");\n");
+        builder.append("var " + source.qname("_") + " = Rx.Observable.merge(" + mergeParams + ");\n");
     }
 
     public static void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
@@ -88,7 +87,6 @@ public class JSGenerateSourceDeclaration {
                 firstParamDone = true;
             }
             builder.append("'" + index + "' : ");
-//            actionCompiler.generate(se.getExpression(), builder, context);
             context.getCompiler().getThingActionCompiler().generate(se.getExpression(),builder,context);
             index ++;
         }
