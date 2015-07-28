@@ -1,0 +1,82 @@
+import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
+    
+thing fragment CepMsgs 
+{
+    message cep1();
+    message cep2(val1 : Integer, val2 : Integer, val3 : Integer);
+}
+
+thing fragment SampleMsgs {
+    // Messages receive by "simple" streams
+    message m1();
+    message m2();
+    message m3();
+
+    message m4(x : Integer, y : Integer, z : Integer);
+    message m5(value1 : Integer, value2 : Integer, value3 : Integer);
+    message m6(a : Integer, b : Integer, c : Integer);
+    message m7(v1 : Integer, v2 : Integer, v3 : Integer);
+}
+
+thing TestMergeStreams includes CepMsgs,  SampleMsgs, Test
+@test " # 1112345"
+@conf "connector test.rcvPort => test.sendPort"
+{
+    provided port sendPort {
+        sends m1, m2, m3, m4, m5, m6, m7, cep1, cep2
+    }
+    
+    required port rcvPort {
+        receives m1, m2, m3, m4, m5, m6, m7, cep1, cep2
+    }
+    
+    function complexTransforming(value : Integer) : Integer do
+        return value + 1
+    end
+    
+
+    stream mergedSimpleMessages do
+        from [ rcvPort?m1 | rcvPort?m2 | rcvPort?m3 ]
+        action sendPort!cep1()
+    end
+    
+    stream mergeMessagesWithValues do
+        from [ rcvPort?m4 | rcvPort?m5 | rcvPort?m6 | rcvPort?m7 ]
+        select a : #0, b: complexTransforming(#1), c: (#2 * 2) + 5
+        action sendPort!cep2(a,b,c)
+    end
+    
+   statechart Sample init Init {
+        state Init {
+            on entry do
+                print "Init"
+                sendPort!m1()
+                sendPort!m2()
+                sendPort!m3()
+
+                sendPort!m4(1,2,3)
+                sendPort!m5(4,5,6)
+                sendPort!m6(7,8,9)
+                sendPort!m7(10,11,12)
+            end
+            
+            internal
+            event rcvPort?cep1
+            action do 
+                print "cep1 message receive."
+                harnessOut!testOut('\'1\'')
+            end
+             
+            internal 
+            event e : rcvPort?cep2
+            action do
+                print "cep2 message receive with values (" + e.val1 + ";" + e.val2 + e.val3 + ")."
+                if(e.val1 == 1 and e.val2 == 3 and e.val3 == 11) harnessOut!testOut('\'2\'')
+                if(e.val1 == 4 and e.val2 == 6 and e.val3 == 17) harnessOut!testOut('\'3\'')
+                if(e.val1 == 7 and e.val2 == 9 and e.val3 == 23) harnessOut!testOut('\'4\'')
+                if(e.val1 == 10 and e.val2 == 12 and e.val3 == 29) harnessOut!testOut('\'5\'')
+            end
+        }    
+    }
+    
+}
