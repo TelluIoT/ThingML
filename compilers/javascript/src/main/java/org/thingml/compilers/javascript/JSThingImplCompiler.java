@@ -294,19 +294,20 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
             builder.append("})\n\n");
         } else {
-            builder.append(".effect(function (message) {\n");
+//            builder.append(".effect(function (message) {\n");
             //builder.append("var json = JSON.parse(message);\n");
-            int i = 2;
-            for (Parameter pa : m.getParameters()) {
-                builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
-                i++;
-            }
+            builder.append(".effect(function (" + m.getName() + ") {\n");
+//            int i = 2;
+//            for (Parameter pa : m.getParameters()) {
+//                builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
+//                i++;
+//            }
             ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
             builder.append("})");
         }
     }
 
-    protected void generateMessageParam(Message msg, StringBuilder builder) {
+    /*protected void generateMessageParam(Message msg, StringBuilder builder) {
         if (msg != null) {
             int i = 2;
             for (Parameter pa : msg.getParameters()) {
@@ -314,14 +315,14 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 i++;
             }
         }
-    }
+    }*/
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (t.getEvent().size() == 0) {
             builder.append(t.getSource().qname("_") + ".to(" + t.getTarget().qname("_") + ")");
             if (t.getGuard() != null) {
                 builder.append(".when(function (message) {");
-                generateMessageParam(msg, builder);
+//                generateMessageParam(msg, builder);
                 builder.append(" return ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
                 builder.append(";})");
@@ -329,9 +330,11 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         } else {
             builder.append(t.getSource().qname("_") + ".to(" + t.getTarget().qname("_") + ")");
-            builder.append(".when(function (message) {");
-            generateMessageParam(msg, builder);
-            builder.append("return message[0] === \"" + p.getName() + "\" && message[1] === \"" + msg.getName() + "\"");
+//            builder.append(".when(function (message) {");
+            builder.append(".when(function (" + msg.getName() + ") {");
+//            generateMessageParam(msg, builder);
+//            builder.append("return message[0] === \"" + p.getName() + "\" && message[1] === \"" + msg.getName() + "\"");
+            builder.append("return " + msg.getName() + "[0] === \"" + p.getName() + "\" && " + msg.getName() + "[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
@@ -354,9 +357,11 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         } else {
             builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
-            builder.append(".when(function (message) {");
-            generateMessageParam(msg, builder);
-            builder.append("return message[0] === \"" + p.getName() + "\" && message[1] === \"" + msg.getName() + "\"");
+//            builder.append(".when(function (message) {");
+            builder.append(".when(function (" + msg.getName() + ") {");
+//            generateMessageParam(msg, builder);
+//            builder.append("return message[0] === \"" + p.getName() + "\" && message[1] === \"" + msg.getName() + "\"");
+            builder.append("return " + msg.getName() + "[0] === \"" + p.getName() + "\" && " + msg.getName() +"[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
