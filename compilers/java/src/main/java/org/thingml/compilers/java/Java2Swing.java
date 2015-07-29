@@ -134,11 +134,9 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         }
 
         template = template.replace("$NAME$", ctx.firstToUpper(t.getName()));
-        template = template.replace("$PORT_NUMBER$", new Integer(t.allPorts().size()).toString());
 
         StringBuilder tempBuilder = new StringBuilder();
 
-        int i = 0;
         for (Port p : t.allPorts()) {
             tempBuilder.append("final List<EventType> in_" + p.getName() + " = new ArrayList<EventType>();\n");
             tempBuilder.append("final List<EventType> out_" + p.getName() + " = new ArrayList<EventType>();\n");
@@ -153,8 +151,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                 tempBuilder.append("PortType.PROVIDED");
             else
                 tempBuilder.append("PortType.REQUIRED");
-            tempBuilder.append(", \"" + p.getName() + "\", in_" + p.getName() + ", out_" + p.getName() + ", " + i + ");\n");
-            i++;
+            tempBuilder.append(", \"" + p.getName() + "\", in_" + p.getName() + ", out_" + p.getName() + ", this);\n");
         }
         template = template.replace("$PORT_DECL$", tempBuilder.toString());
 
@@ -315,7 +312,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
             for (Message msg : entry.getValue()) {
                 tempBuilder.append("else if ( ae.getSource() == getSend" + msg.getName() + "_via_" + port.getName() + "()) {\n");
                 tempBuilder.append("try{\n");
-                tempBuilder.append("send(" + msg.getName() + "Type.instantiate(port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName());
+                tempBuilder.append("port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName() + ".send(" + msg.getName() + "Type.instantiate(port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName());
                 for (Parameter p : msg.getParameters()) {
                     tempBuilder.append(", ");
                     if (p.getCardinality() == null) {
@@ -333,7 +330,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                         builder.append("getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText().getBytes()");
                     }
                 }
-                tempBuilder.append("), port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName() + ");\n");
+                tempBuilder.append("));\n");
 
                 tempBuilder.append("for(I" + ctx.firstToUpper(t.getName()) + "_" + port.getName() + "Client l : " + port.getName() + "_listeners)\n");
                 tempBuilder.append("l." + msg.getName() + "_from_" + port.getName() + "(");
