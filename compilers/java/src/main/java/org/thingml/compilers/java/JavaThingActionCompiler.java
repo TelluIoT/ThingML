@@ -103,14 +103,14 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-        builder.append("System.err.println(");
+        builder.append("System.err.print(");
         generate(action.getMsg(), builder, ctx);
         builder.append(");\n");
     }
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-        builder.append("System.out.println(");
+        builder.append("System.out.print(");
         generate(action.getMsg(), builder, ctx);
         builder.append(");\n");
     }

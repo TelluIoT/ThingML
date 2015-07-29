@@ -30,7 +30,6 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
         builder.append("fprintf(stderr, " + b.toString() + ");\n");
-        builder.append("fprintf(stderr,\"\\n\");\n");
     }
 
     @Override
@@ -38,7 +37,6 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
         builder.append("fprintf(stdout, " + b.toString() + ");\n");
-        builder.append("fprintf(stdout,\"\\n\");\n");
     }
 
 }
