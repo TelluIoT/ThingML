@@ -96,4 +96,33 @@
 	<extension-point id="org.sintef.thingml.resource.thingml.additional_extension_parser" name="Additional Extension Parser" schema="schema/additional_extension_parser.exsd">
 	</extension-point>
 	
+	<extension point="org.eclipse.debug.core.breakpoints">
+		<breakpoint class="org.sintef.thingml.resource.thingml.debug.ThingmlLineBreakpoint" id="org.sintef.thingml.resource.thingml.debug.breakpoint" markerType="org.sintef.thingml.resource.thingml.debug.lineBreakpoint.marker" name="thingml Breakpoint">
+		</breakpoint>
+	</extension>
+	
+	<extension id="org.sintef.thingml.resource.thingml.debug.lineBreakpoint.marker" point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.debug.core.lineBreakpointMarker">
+		</super>
+		<super type="org.eclipse.core.resources.textmarker">
+		</super>
+		<persistent value="true">
+		</persistent>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType id="org.sintef.thingml.resource.thingml.ui.launchConfigurationType" delegate="org.sintef.thingml.resource.thingml.launch.ThingmlLaunchConfigurationDelegate" modes="run,debug" name="thingml Application" sourceLocatorId="org.sintef.thingml.resource.thingml.ui.sourceLocator" sourcePathComputerId="org.sintef.thingml.resource.thingml.ui.sourcePathComputer" delegateName="thingml Launch Tooling" delegateDescription="This will run or debug .thingml files.">
+		</launchConfigurationType>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.sourcePathComputers">
+		<sourcePathComputer class="org.sintef.thingml.resource.thingml.debug.ThingmlSourcePathComputerDelegate" id="org.sintef.thingml.resource.thingml.ui.sourcePathComputer">
+		</sourcePathComputer>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.sourceLocators">
+		<sourceLocator id="org.sintef.thingml.resource.thingml.ui.sourceLocator" class="org.sintef.thingml.resource.thingml.debug.ThingmlSourceLocator" name="thingml Source Locator">
+		</sourceLocator>
+	</extension>
+	
 </plugin>

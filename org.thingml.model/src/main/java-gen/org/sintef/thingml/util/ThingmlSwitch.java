@@ -776,6 +776,34 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.OPERATOR: {
+				Operator operator = (Operator)theEObject;
+				T result = caseOperator(operator);
+				if (result == null) result = caseTypedElement(operator);
+				if (result == null) result = caseThingMLElement(operator);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.MESSAGE_PARAMETER: {
+				MessageParameter messageParameter = (MessageParameter)theEObject;
+				T result = caseMessageParameter(messageParameter);
+				if (result == null) result = caseThingMLElement(messageParameter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.MESSAGE_REFERENCE: {
+				MessageReference messageReference = (MessageReference)theEObject;
+				T result = caseMessageReference(messageReference);
+				if (result == null) result = caseExpression(messageReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.OPERATOR_CALL: {
+				OperatorCall operatorCall = (OperatorCall)theEObject;
+				T result = caseOperatorCall(operatorCall);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -2112,6 +2140,66 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseFilter(Filter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Operator</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Operator</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseOperator(Operator object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Message Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Message Parameter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMessageParameter(MessageParameter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Message Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Message Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMessageReference(MessageReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Operator Call</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Operator Call</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseOperatorCall(OperatorCall object) {
 		return null;
 	}
 

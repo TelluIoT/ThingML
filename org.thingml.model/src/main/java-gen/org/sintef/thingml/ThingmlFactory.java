@@ -665,6 +665,42 @@ public interface ThingmlFactory extends EFactory {
 	Filter createFilter();
 
 	/**
+	 * Returns a new object of class '<em>Operator</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Operator</em>'.
+	 * @generated
+	 */
+	Operator createOperator();
+
+	/**
+	 * Returns a new object of class '<em>Message Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Message Parameter</em>'.
+	 * @generated
+	 */
+	MessageParameter createMessageParameter();
+
+	/**
+	 * Returns a new object of class '<em>Message Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Message Reference</em>'.
+	 * @generated
+	 */
+	MessageReference createMessageReference();
+
+	/**
+	 * Returns a new object of class '<em>Operator Call</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Operator Call</em>'.
+	 * @generated
+	 */
+	OperatorCall createOperatorCall();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -20,12 +20,12 @@ OPTIONS {
 	// Generate the standalone version first and then the eclipse version.
 	
 	// 1. FOR STANDALONE
-	srcGenFolder = "src/main/java-gen-standalone";
-	generateUIPlugin = "false";
-	removeEclipseDependentCode = "true";
+	//srcGenFolder = "src/main/java-gen-standalone";
+	//generateUIPlugin = "false";
+	//removeEclipseDependentCode = "true";
 	
 	// 2. FOR ECLIPSE Comment the lines bellow
-	//srcGenFolder = "src/main/java-gen";
+	srcGenFolder = "src/main/java-gen";
 	
 	// IMPORTANT: In the generated eclipse plugins it is required to change the Vendor to SINTEF and the Version from "1.0.0" to "0.x.0.qualifier"
 }
@@ -129,6 +129,7 @@ TOKENSTYLES{
 	"not" COLOR #444444, BOLD;
 	"and" COLOR #444444, BOLD;
 	"or" COLOR #444444, BOLD;
+	"operator" COLOR #444444, BOLD;
 	
 	// Configurations and Instances
 	"configuration" COLOR #007F55, BOLD;
@@ -166,7 +167,7 @@ RULES {
 	
 	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( "[" cardinality "]")? )? #1 body ;
 	
-	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour | streams)* !0 "}" ;
+	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour | streams | operators)* !0 "}" ;
 	
 	RequiredPort ::= !1 (optional[T_OPTIONAL])? "required" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 
@@ -250,12 +251,17 @@ RULES {
 	// *******************************
 	// * CEP
 	// *******************************
+	Operator ::= "operator" #1 name[] "(" (parameters ("," #1 parameters)*)? ")" ":" #1 type[] #1 body;
+	MessageParameter ::= name[] ":" msgRef[];
+	
+	OperatorCall ::= operatorRef[] "(" (parameters[] ("," #1 parameters[])*)? ")";
+	
 	StreamExpression ::= name[] ":" expression;
 	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
 	
 	SimpleSource ::= message ("::" operators)*;
 	
-	Filter ::= "filter";
+	Filter ::= "filter(" filterOp")";
 	
 	JoinSources ::= "[" #1 sources #1 "&" #1 sources #1 "]" ("::" operators)* ;
 	MergeSources ::= "[" #1 sources #1 ("|" #1 sources #1)+ "]" ("::" operators)*;
@@ -313,6 +319,9 @@ RULES {
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	EventReference ::= msgRef[] "." paramRef[];	
+	
+	@Operator(type="primitive", weight="9", superclass="Expression")
+	MessageReference ::= msgReference[] "->" paramRef[];
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	ExpressionGroup ::= "(" exp ")";

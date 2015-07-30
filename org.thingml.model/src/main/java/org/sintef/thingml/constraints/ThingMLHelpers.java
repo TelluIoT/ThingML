@@ -821,7 +821,7 @@ public class ThingMLHelpers {
 
 	/** MODIFICATION **/
 	public static Stream findContainingStream(EObject eObject) {
-		while(!(eObject instanceof Stream)){
+		while(!(eObject instanceof Stream) && eObject != null ){
 			eObject = eObject.eContainer();
 		}
 		return (Stream) eObject;
@@ -837,6 +837,26 @@ public class ThingMLHelpers {
 				result.addAll(allSimpleSources(s));
 			}
 		}
+		return result;
+	}
+
+	public static Operator findContainingOperator(EObject eObject) {
+		while(!(eObject instanceof Operator) && eObject != null) {
+			eObject = eObject.eContainer();
+		}
+		return (Operator) eObject;
+	}
+
+	public static List<ReceiveMessage> findInputs(OperatorCall operatorCall) {
+		List<ReceiveMessage> result = new ArrayList<>();
+		Stream parent = findContainingStream(operatorCall);
+		if(parent != null) {
+			List<SimpleSource> simpleSources = allSimpleSources(parent.getInput());
+			for(SimpleSource ss : simpleSources) {
+				result.add(ss.getMessage());
+			}
+		}
+
 		return result;
 	}
 

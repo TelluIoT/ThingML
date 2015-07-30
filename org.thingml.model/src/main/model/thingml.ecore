@@ -37,6 +37,8 @@
         eType="#//Function" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="streams" upperBound="-1"
         eType="#//Stream" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
+        eType="#//Operator" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//Variable"/>
   <eClassifiers xsi:type="ecore:EClass" name="Variable" abstract="true" eSuperTypes="#//TypedElement #//AnnotatedElement"/>
@@ -369,5 +371,30 @@
         eType="#//ReceiveMessage" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ViewSource" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Filter" eSuperTypes="#//ViewSource"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Filter" eSuperTypes="#//ViewSource">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="filterOp" lowerBound="1"
+        eType="#//OperatorCall" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Operator" eSuperTypes="#//TypedElement #//ThingMLElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
+        eType="#//MessageParameter" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//ActionBlock"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MessageParameter" eSuperTypes="#//ThingMLElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="msgRef" lowerBound="1"
+        eType="#//Message"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MessageReference" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="msgReference" lowerBound="1"
+        eType="#//MessageParameter"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="paramRef" lowerBound="1"
+        eType="#//Parameter"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OperatorCall">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operatorRef" lowerBound="1"
+        eType="#//Operator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
+        eType="#//ReceiveMessage"/>
+  </eClassifiers>
 </ecore:EPackage>

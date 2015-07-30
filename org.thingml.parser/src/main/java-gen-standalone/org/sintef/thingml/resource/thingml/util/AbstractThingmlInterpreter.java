@@ -169,6 +169,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
+		if (object instanceof org.sintef.thingml.ParallelRegion) {
+			result = interprete_org_sintef_thingml_ParallelRegion((org.sintef.thingml.ParallelRegion) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		if (object instanceof org.sintef.thingml.Region) {
 			result = interprete_org_sintef_thingml_Region((org.sintef.thingml.Region) object, context);
 		}
@@ -199,12 +205,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.ParallelRegion) {
-			result = interprete_org_sintef_thingml_ParallelRegion((org.sintef.thingml.ParallelRegion) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
 		if (object instanceof org.sintef.thingml.AnnotatedElement) {
 			result = interprete_org_sintef_thingml_AnnotatedElement((org.sintef.thingml.AnnotatedElement) object, context);
 		}
@@ -229,6 +229,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
+		if (object instanceof org.sintef.thingml.VariableAssignment) {
+			result = interprete_org_sintef_thingml_VariableAssignment((org.sintef.thingml.VariableAssignment) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		if (object instanceof org.sintef.thingml.Action) {
 			result = interprete_org_sintef_thingml_Action((org.sintef.thingml.Action) object, context);
 		}
@@ -241,14 +247,44 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.Expression) {
-			result = interprete_org_sintef_thingml_Expression((org.sintef.thingml.Expression) object, context);
+		if (object instanceof org.sintef.thingml.EventReference) {
+			result = interprete_org_sintef_thingml_EventReference((org.sintef.thingml.EventReference) object, context);
 		}
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.VariableAssignment) {
-			result = interprete_org_sintef_thingml_VariableAssignment((org.sintef.thingml.VariableAssignment) object, context);
+		if (object instanceof org.sintef.thingml.EnumLiteralRef) {
+			result = interprete_org_sintef_thingml_EnumLiteralRef((org.sintef.thingml.EnumLiteralRef) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.IntegerLiteral) {
+			result = interprete_org_sintef_thingml_IntegerLiteral((org.sintef.thingml.IntegerLiteral) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.StringLiteral) {
+			result = interprete_org_sintef_thingml_StringLiteral((org.sintef.thingml.StringLiteral) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.Literal) {
+			result = interprete_org_sintef_thingml_Literal((org.sintef.thingml.Literal) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.UnaryMinus) {
+			result = interprete_org_sintef_thingml_UnaryMinus((org.sintef.thingml.UnaryMinus) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.Expression) {
+			result = interprete_org_sintef_thingml_Expression((org.sintef.thingml.Expression) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -289,32 +325,8 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.EventReference) {
-			result = interprete_org_sintef_thingml_EventReference((org.sintef.thingml.EventReference) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
-		if (object instanceof org.sintef.thingml.EnumLiteralRef) {
-			result = interprete_org_sintef_thingml_EnumLiteralRef((org.sintef.thingml.EnumLiteralRef) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
-		if (object instanceof org.sintef.thingml.IntegerLiteral) {
-			result = interprete_org_sintef_thingml_IntegerLiteral((org.sintef.thingml.IntegerLiteral) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
 		if (object instanceof org.sintef.thingml.BooleanLiteral) {
 			result = interprete_org_sintef_thingml_BooleanLiteral((org.sintef.thingml.BooleanLiteral) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
-		if (object instanceof org.sintef.thingml.StringLiteral) {
-			result = interprete_org_sintef_thingml_StringLiteral((org.sintef.thingml.StringLiteral) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -325,20 +337,8 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.Literal) {
-			result = interprete_org_sintef_thingml_Literal((org.sintef.thingml.Literal) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
 		if (object instanceof org.sintef.thingml.NotExpression) {
 			result = interprete_org_sintef_thingml_NotExpression((org.sintef.thingml.NotExpression) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
-		if (object instanceof org.sintef.thingml.UnaryMinus) {
-			result = interprete_org_sintef_thingml_UnaryMinus((org.sintef.thingml.UnaryMinus) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -597,6 +597,30 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.ViewSource) {
 			result = interprete_org_sintef_thingml_ViewSource((org.sintef.thingml.ViewSource) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.Operator) {
+			result = interprete_org_sintef_thingml_Operator((org.sintef.thingml.Operator) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.MessageParameter) {
+			result = interprete_org_sintef_thingml_MessageParameter((org.sintef.thingml.MessageParameter) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.MessageReference) {
+			result = interprete_org_sintef_thingml_MessageReference((org.sintef.thingml.MessageReference) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.OperatorCall) {
+			result = interprete_org_sintef_thingml_OperatorCall((org.sintef.thingml.OperatorCall) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -957,6 +981,22 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	}
 	
 	public ResultType interprete_org_sintef_thingml_Filter(org.sintef.thingml.Filter filter, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_Operator(org.sintef.thingml.Operator operator, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_MessageParameter(org.sintef.thingml.MessageParameter messageParameter, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_MessageReference(org.sintef.thingml.MessageReference messageReference, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_OperatorCall(org.sintef.thingml.OperatorCall operatorCall, ContextType context) {
 		return null;
 	}
 	

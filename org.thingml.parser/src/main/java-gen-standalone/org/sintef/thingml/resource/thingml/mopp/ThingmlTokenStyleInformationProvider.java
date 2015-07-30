@@ -176,6 +176,9 @@ public class ThingmlTokenStyleInformationProvider {
 		if ("or".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x44, 0x44, 0x44}, null, true, false, false, false);
 		}
+		if ("operator".equals(tokenName)) {
+			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x44, 0x44, 0x44}, null, true, false, false, false);
+		}
 		if ("configuration".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x00, 0x7F, 0x55}, null, true, false, false, false);
 		}
@@ -234,9 +237,6 @@ public class ThingmlTokenStyleInformationProvider {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x44, 0x44, 0x44}, null, true, false, false, false);
 		}
 		if ("else".equals(tokenName)) {
-			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x80, 0x00, 0x55}, null, true, false, false, false);
-		}
-		if ("filter".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x80, 0x00, 0x55}, null, true, false, false, false);
 		}
 		if ("stream".equals(tokenName)) {

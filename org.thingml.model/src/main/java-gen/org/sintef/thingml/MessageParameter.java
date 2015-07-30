@@ -20,45 +20,45 @@ package org.sintef.thingml;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Filter</b></em>'.
+ * A representation of the model object '<em><b>Message Parameter</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.sintef.thingml.Filter#getFilterOp <em>Filter Op</em>}</li>
+ *   <li>{@link org.sintef.thingml.MessageParameter#getMsgRef <em>Msg Ref</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.sintef.thingml.ThingmlPackage#getFilter()
+ * @see org.sintef.thingml.ThingmlPackage#getMessageParameter()
  * @model
  * @generated
  */
-public interface Filter extends ViewSource {
-
+public interface MessageParameter extends ThingMLElement {
 	/**
-	 * Returns the value of the '<em><b>Filter Op</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Msg Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Filter Op</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Msg Ref</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Filter Op</em>' containment reference.
-	 * @see #setFilterOp(OperatorCall)
-	 * @see org.sintef.thingml.ThingmlPackage#getFilter_FilterOp()
-	 * @model containment="true" required="true"
+	 * @return the value of the '<em>Msg Ref</em>' reference.
+	 * @see #setMsgRef(Message)
+	 * @see org.sintef.thingml.ThingmlPackage#getMessageParameter_MsgRef()
+	 * @model required="true"
 	 * @generated
 	 */
-	OperatorCall getFilterOp();
+	Message getMsgRef();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Filter#getFilterOp <em>Filter Op</em>}' containment reference.
+	 * Sets the value of the '{@link org.sintef.thingml.MessageParameter#getMsgRef <em>Msg Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Filter Op</em>' containment reference.
-	 * @see #getFilterOp()
+	 * @param value the new value of the '<em>Msg Ref</em>' reference.
+	 * @see #getMsgRef()
 	 * @generated
 	 */
-	void setFilterOp(OperatorCall value);
-} // Filter
+	void setMsgRef(Message value);
+
+} // MessageParameter

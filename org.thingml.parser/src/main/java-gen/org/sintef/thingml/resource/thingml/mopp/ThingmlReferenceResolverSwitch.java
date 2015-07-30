@@ -43,11 +43,16 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 	protected org.sintef.thingml.resource.thingml.analysis.SendActionMessageReferenceResolver sendActionMessageReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.SendActionMessageReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.VariableAssignmentPropertyReferenceResolver variableAssignmentPropertyReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.VariableAssignmentPropertyReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.FunctionCallFunctionReferenceResolver functionCallFunctionReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.FunctionCallFunctionReferenceResolver();
+	protected org.sintef.thingml.resource.thingml.analysis.MessageParameterMsgRefReferenceResolver messageParameterMsgRefReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.MessageParameterMsgRefReferenceResolver();
+	protected org.sintef.thingml.resource.thingml.analysis.OperatorCallOperatorRefReferenceResolver operatorCallOperatorRefReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.OperatorCallOperatorRefReferenceResolver();
+	protected org.sintef.thingml.resource.thingml.analysis.OperatorCallParametersReferenceResolver operatorCallParametersReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.OperatorCallParametersReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.StreamOutputPortReferenceResolver streamOutputPortReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.StreamOutputPortReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.StreamOutputMessageReferenceResolver streamOutputMessageReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.StreamOutputMessageReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.StreamOutputParametersReferenceResolver streamOutputParametersReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.StreamOutputParametersReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.EventReferenceMsgRefReferenceResolver eventReferenceMsgRefReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.EventReferenceMsgRefReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.EventReferenceParamRefReferenceResolver eventReferenceParamRefReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.EventReferenceParamRefReferenceResolver();
+	protected org.sintef.thingml.resource.thingml.analysis.MessageReferenceMsgReferenceReferenceResolver messageReferenceMsgReferenceReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.MessageReferenceMsgReferenceReferenceResolver();
+	protected org.sintef.thingml.resource.thingml.analysis.MessageReferenceParamRefReferenceResolver messageReferenceParamRefReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.MessageReferenceParamRefReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.PropertyReferencePropertyReferenceResolver propertyReferencePropertyReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.PropertyReferencePropertyReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.EnumLiteralRefEnumReferenceResolver enumLiteralRefEnumReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.EnumLiteralRefEnumReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.EnumLiteralRefLiteralReferenceResolver enumLiteralRefLiteralReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.EnumLiteralRefLiteralReferenceResolver();
@@ -136,6 +141,18 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCall_Function(), functionCallFunctionReferenceResolver);
 	}
 	
+	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.MessageParameter, org.sintef.thingml.Message> getMessageParameterMsgRefReferenceResolver() {
+		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMessageParameter_MsgRef(), messageParameterMsgRefReferenceResolver);
+	}
+	
+	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.OperatorCall, org.sintef.thingml.Operator> getOperatorCallOperatorRefReferenceResolver() {
+		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOperatorCall_OperatorRef(), operatorCallOperatorRefReferenceResolver);
+	}
+	
+	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.OperatorCall, org.sintef.thingml.ReceiveMessage> getOperatorCallParametersReferenceResolver() {
+		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOperatorCall_Parameters(), operatorCallParametersReferenceResolver);
+	}
+	
 	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.StreamOutput, org.sintef.thingml.Port> getStreamOutputPortReferenceResolver() {
 		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStreamOutput_Port(), streamOutputPortReferenceResolver);
 	}
@@ -154,6 +171,14 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 	
 	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.EventReference, org.sintef.thingml.Parameter> getEventReferenceParamRefReferenceResolver() {
 		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEventReference_ParamRef(), eventReferenceParamRefReferenceResolver);
+	}
+	
+	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.MessageReference, org.sintef.thingml.MessageParameter> getMessageReferenceMsgReferenceReferenceResolver() {
+		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMessageReference_MsgReference(), messageReferenceMsgReferenceReferenceResolver);
+	}
+	
+	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.MessageReference, org.sintef.thingml.Parameter> getMessageReferenceParamRefReferenceResolver() {
+		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMessageReference_ParamRef(), messageReferenceParamRefReferenceResolver);
 	}
 	
 	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.PropertyReference, org.sintef.thingml.Variable> getPropertyReferencePropertyReferenceResolver() {
@@ -194,11 +219,16 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		sendActionMessageReferenceResolver.setOptions(options);
 		variableAssignmentPropertyReferenceResolver.setOptions(options);
 		functionCallFunctionReferenceResolver.setOptions(options);
+		messageParameterMsgRefReferenceResolver.setOptions(options);
+		operatorCallOperatorRefReferenceResolver.setOptions(options);
+		operatorCallParametersReferenceResolver.setOptions(options);
 		streamOutputPortReferenceResolver.setOptions(options);
 		streamOutputMessageReferenceResolver.setOptions(options);
 		streamOutputParametersReferenceResolver.setOptions(options);
 		eventReferenceMsgRefReferenceResolver.setOptions(options);
 		eventReferenceParamRefReferenceResolver.setOptions(options);
+		messageReferenceMsgReferenceReferenceResolver.setOptions(options);
+		messageReferenceParamRefReferenceResolver.setOptions(options);
 		propertyReferencePropertyReferenceResolver.setOptions(options);
 		enumLiteralRefEnumReferenceResolver.setOptions(options);
 		enumLiteralRefLiteralReferenceResolver.setOptions(options);
@@ -376,6 +406,30 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 				functionCallFunctionReferenceResolver.resolve(identifier, (org.sintef.thingml.FunctionCall) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
 			}
 		}
+		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getMessageParameter().isInstance(container)) {
+			ThingmlFuzzyResolveResult<org.sintef.thingml.Message> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.Message>(result);
+			String referenceName = reference.getName();
+			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
+			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("msgRef")) {
+				messageParameterMsgRefReferenceResolver.resolve(identifier, (org.sintef.thingml.MessageParameter) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
+			}
+		}
+		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getOperatorCall().isInstance(container)) {
+			ThingmlFuzzyResolveResult<org.sintef.thingml.Operator> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.Operator>(result);
+			String referenceName = reference.getName();
+			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
+			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("operatorRef")) {
+				operatorCallOperatorRefReferenceResolver.resolve(identifier, (org.sintef.thingml.OperatorCall) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
+			}
+		}
+		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getOperatorCall().isInstance(container)) {
+			ThingmlFuzzyResolveResult<org.sintef.thingml.ReceiveMessage> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.ReceiveMessage>(result);
+			String referenceName = reference.getName();
+			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
+			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("parameters")) {
+				operatorCallParametersReferenceResolver.resolve(identifier, (org.sintef.thingml.OperatorCall) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
+			}
+		}
 		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getStreamOutput().isInstance(container)) {
 			ThingmlFuzzyResolveResult<org.sintef.thingml.Port> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.Port>(result);
 			String referenceName = reference.getName();
@@ -414,6 +468,22 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
 			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("paramRef")) {
 				eventReferenceParamRefReferenceResolver.resolve(identifier, (org.sintef.thingml.EventReference) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
+			}
+		}
+		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getMessageReference().isInstance(container)) {
+			ThingmlFuzzyResolveResult<org.sintef.thingml.MessageParameter> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.MessageParameter>(result);
+			String referenceName = reference.getName();
+			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
+			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("msgReference")) {
+				messageReferenceMsgReferenceReferenceResolver.resolve(identifier, (org.sintef.thingml.MessageReference) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
+			}
+		}
+		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getMessageReference().isInstance(container)) {
+			ThingmlFuzzyResolveResult<org.sintef.thingml.Parameter> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.Parameter>(result);
+			String referenceName = reference.getName();
+			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
+			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("paramRef")) {
+				messageReferenceParamRefReferenceResolver.resolve(identifier, (org.sintef.thingml.MessageReference) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
 			}
 		}
 		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getPropertyReference().isInstance(container)) {
@@ -506,6 +576,15 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCall_Function()) {
 			return getResolverChain(reference, functionCallFunctionReferenceResolver);
 		}
+		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getMessageParameter_MsgRef()) {
+			return getResolverChain(reference, messageParameterMsgRefReferenceResolver);
+		}
+		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getOperatorCall_OperatorRef()) {
+			return getResolverChain(reference, operatorCallOperatorRefReferenceResolver);
+		}
+		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getOperatorCall_Parameters()) {
+			return getResolverChain(reference, operatorCallParametersReferenceResolver);
+		}
 		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getStreamOutput_Port()) {
 			return getResolverChain(reference, streamOutputPortReferenceResolver);
 		}
@@ -520,6 +599,12 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		}
 		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getEventReference_ParamRef()) {
 			return getResolverChain(reference, eventReferenceParamRefReferenceResolver);
+		}
+		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getMessageReference_MsgReference()) {
+			return getResolverChain(reference, messageReferenceMsgReferenceReferenceResolver);
+		}
+		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getMessageReference_ParamRef()) {
+			return getResolverChain(reference, messageReferenceParamRefReferenceResolver);
 		}
 		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getPropertyReference_Property()) {
 			return getResolverChain(reference, propertyReferencePropertyReferenceResolver);

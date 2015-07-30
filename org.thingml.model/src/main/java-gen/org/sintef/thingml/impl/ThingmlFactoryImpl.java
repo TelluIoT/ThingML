@@ -139,6 +139,10 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.MERGE_SOURCES: return createMergeSources();
 			case ThingmlPackage.SIMPLE_SOURCE: return createSimpleSource();
 			case ThingmlPackage.FILTER: return createFilter();
+			case ThingmlPackage.OPERATOR: return createOperator();
+			case ThingmlPackage.MESSAGE_PARAMETER: return createMessageParameter();
+			case ThingmlPackage.MESSAGE_REFERENCE: return createMessageReference();
+			case ThingmlPackage.OPERATOR_CALL: return createOperatorCall();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -842,6 +846,46 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public Filter createFilter() {
 		FilterImpl filter = new FilterImpl();
 		return filter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Operator createOperator() {
+		OperatorImpl operator = new OperatorImpl();
+		return operator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MessageParameter createMessageParameter() {
+		MessageParameterImpl messageParameter = new MessageParameterImpl();
+		return messageParameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MessageReference createMessageReference() {
+		MessageReferenceImpl messageReference = new MessageReferenceImpl();
+		return messageReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public OperatorCall createOperatorCall() {
+		OperatorCallImpl operatorCall = new OperatorCallImpl();
+		return operatorCall;
 	}
 
 	/**

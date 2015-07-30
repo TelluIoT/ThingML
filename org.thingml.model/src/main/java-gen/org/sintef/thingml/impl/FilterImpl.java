@@ -17,9 +17,14 @@
  */
 package org.sintef.thingml.impl;
 
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.sintef.thingml.Filter;
+import org.sintef.thingml.OperatorCall;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
@@ -27,11 +32,25 @@ import org.sintef.thingml.ThingmlPackage;
  * An implementation of the model object '<em><b>Filter</b></em>'.
  * <!-- end-user-doc -->
  * <p>
+ * The following features are implemented:
+ * <ul>
+ *   <li>{@link org.sintef.thingml.impl.FilterImpl#getFilterOp <em>Filter Op</em>}</li>
+ * </ul>
  * </p>
  *
  * @generated
  */
 public class FilterImpl extends ViewSourceImpl implements Filter {
+	/**
+	 * The cached value of the '{@link #getFilterOp() <em>Filter Op</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFilterOp()
+	 * @generated
+	 * @ordered
+	 */
+	protected OperatorCall filterOp;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -49,6 +68,121 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	@Override
 	protected EClass eStaticClass() {
 		return ThingmlPackage.Literals.FILTER;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public OperatorCall getFilterOp() {
+		return filterOp;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetFilterOp(OperatorCall newFilterOp, NotificationChain msgs) {
+		OperatorCall oldFilterOp = filterOp;
+		filterOp = newFilterOp;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.FILTER__FILTER_OP, oldFilterOp, newFilterOp);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setFilterOp(OperatorCall newFilterOp) {
+		if (newFilterOp != filterOp) {
+			NotificationChain msgs = null;
+			if (filterOp != null)
+				msgs = ((InternalEObject)filterOp).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.FILTER__FILTER_OP, null, msgs);
+			if (newFilterOp != null)
+				msgs = ((InternalEObject)newFilterOp).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.FILTER__FILTER_OP, null, msgs);
+			msgs = basicSetFilterOp(newFilterOp, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.FILTER__FILTER_OP, newFilterOp, newFilterOp));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ThingmlPackage.FILTER__FILTER_OP:
+				return basicSetFilterOp(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case ThingmlPackage.FILTER__FILTER_OP:
+				return getFilterOp();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case ThingmlPackage.FILTER__FILTER_OP:
+				setFilterOp((OperatorCall)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case ThingmlPackage.FILTER__FILTER_OP:
+				setFilterOp((OperatorCall)null);
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case ThingmlPackage.FILTER__FILTER_OP:
+				return filterOp != null;
+		}
+		return super.eIsSet(featureID);
 	}
 
 } //FilterImpl
