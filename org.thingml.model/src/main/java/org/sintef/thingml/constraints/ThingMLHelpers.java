@@ -28,17 +28,13 @@
  */
 package org.sintef.thingml.constraints;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.tree.VariableHeightLayoutCache;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class ThingMLHelpers {
@@ -46,135 +42,52 @@ public class ThingMLHelpers {
 	/* ***********************************************************
 	 * Resolution of containers
 	 * ***********************************************************/
+
+	public static <C> C findContainer(EObject eObject, Class<C> cClass) {
+		while (eObject !=null && !cClass.isAssignableFrom(eObject.getClass())) {
+			eObject = eObject.eContainer();
+		}
+		return (C) eObject;
+	}
 	
 	public static ThingMLModel findContainingModel(EObject object) {
-		if (object instanceof ThingMLModel) return (ThingMLModel)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingModel(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object, ThingMLModel.class);
 	}
 	
 	public static Function findContainingFunction(EObject object) {
-		if (object instanceof Function) return (Function)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingFunction(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,Function.class);
 	}
 	
 	public static ThingMLElement findContainingElement(EObject object) {
-		if (object instanceof ThingMLElement) return (ThingMLElement)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingElement(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,ThingMLElement.class);
 	}
 	
 	public static ActionBlock findContainingActionBlock(EObject object) {
-		if (object instanceof ActionBlock) return (ActionBlock)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingActionBlock(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,ActionBlock.class);
 	}
 	
 	public static Thing findContainingThing(EObject object) {
-		if (object instanceof Thing) return (Thing)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingThing(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,Thing.class);
 	}
 	
 	public static Instance findContainingInstance(EObject object) {
-		if (object instanceof Instance) return (Instance)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingInstance(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,Instance.class);
 	}
 	
 	public static Configuration findContainingConfiguration(EObject object) {
-		if (object instanceof Configuration) return (Configuration)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingConfiguration(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,Configuration.class);
 	}
 	
 	public static State findContainingState(EObject object) {
-		if (object instanceof State) return (State)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingState(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,State.class);
 	}
 	
 	public static Region findContainingRegion(EObject object) {
-		if (object instanceof Region) return (Region)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingRegion(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,Region.class);
 	}
 	
 	public static Handler findContainingHandler(EObject object) {
-		if (object instanceof Handler) return (Handler)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingHandler(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,Handler.class);
 	}
 	
 	/* ***********************************************************
