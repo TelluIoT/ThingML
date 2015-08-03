@@ -13,29 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c.sintefboard;
+package org.thingml.compilers.cpp.sintefboard;
 
-import org.thingml.compilers.c.posix.*;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
+import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.compilers.c.CThingImplCompiler;
-import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.posix.CCompilerContextPosix;
+import org.thingml.compilers.c.posix.CThingActionCompilerPosix;
+import org.thingml.compilers.c.posix.PosixCCfgBuildCompiler;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
 import java.io.File;
 
 /**
- * Created by steffend on 26.06.15.
+ * Created by ffl on 25.11.14.
  */
 public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
     public SintefboardCompiler() {
-        super(new CThingActionCompilerPosix(), new CThingApiCompiler(), new CCfgMainGenerator(), new PosixCCfgBuildCompiler(), new CThingImplCompiler());
+        super(new CThingActionCompilerSintefboard(), new CThingApiCompilerSintefboard(), new CCfgMainGenerator(), new CfgBuildCompiler(), new CThingImplCompilerSintefboard());
     }
 
     @Override
@@ -50,17 +52,17 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public String getName() {
-        return "C/C++ for Cypress PSOC3";
+        return "Sintefboard C++ for PSOC3";
     }
 
     public String getDescription() {
-        return "Copy og Posix C => Will be: Generates C/C++ code for Cypress PSCO3 environments (GCC compiler).";
+        return "Generates C++ based in code for Arduino.";
     }
 
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
 
-        CCompilerContext ctx = new CCompilerContextPosix(this);
+        CCompilerContext ctx = new CCompilerContextSintefboard(this);
         
         ctx.setCurrentConfiguration(cfg);
         ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
@@ -78,9 +80,6 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
         // GENERATE A MODULE FOR THE CONFIGURATION (+ its dependencies)
         getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
-
-        // GENERATE A MAKEFILE
-        getCfgBuildCompiler().generateBuildScript(cfg, ctx);
 
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();

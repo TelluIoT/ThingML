@@ -1,50 +1,81 @@
-/*****************************************************
- *      THIS IS A GENERATED FILE. DO NOT EDIT.
- *
- *  Generated from ThingML (http://www.thingml.org)
- *****************************************************/
+/*********************************
+ * Methods - ThingMlRuntime_class
+ *********************************/
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
-#include <math.h>
-#include <signal.h>
-#include <pthread.h>
+ThingMlRuntime_class::ThingMlRuntime_class() { 
 
-#include "runtime.h"
-
-
-/*FIFO*/
-
-/******************************************
- * Synchronization for thread safe access
- ******************************************/
-
-pthread_mutex_t fifo_mut;
-pthread_cond_t fifo_cond;
-
-void fifo_lock() {
-  pthread_mutex_lock (&fifo_mut);
+	fifo_head = 0;
+	fifo_tail = 0;
+	
+	instances_count = 0;
 }
-void fifo_unlock() {
-  pthread_mutex_unlock (&fifo_mut);	  
+
+/*********************************
+ * Implementation - Instance IDs and lookup 
+ *********************************/
+
+
+void * ThingMlRuntime_class::instance_by_id(uint16_t id) {
+  return instances[id];
 }
-void fifo_wait() {
-  pthread_cond_wait (&fifo_cond, &fifo_mut);
-}
-void fifo_unlock_and_notify() {
-  pthread_mutex_unlock (&fifo_mut);
-  pthread_cond_signal (&fifo_cond);
+
+uint16_t ThingMlRuntime_class::add_instance(void * instance_struct) {
+  instances[instances_count] = instance_struct;
+  return instances_count++;
 }
 
 
 /******************************************
- * Initialization
+ * Implementation - Simple byte FIFO
  ******************************************/
 
-void init_runtime() {
-  pthread_mutex_init (&fifo_mut, NULL);
-  pthread_cond_init (&fifo_cond, NULL);
+// Returns the number of byte currently in the fifo
+int ThingMlRuntime_class::fifo_byte_length() {
+  if (fifo_tail >= fifo_head)
+    return fifo_tail - fifo_head;
+  return fifo_tail + FIFO_SIZE - fifo_head;
 }
+
+// Returns the number of bytes currently available in the fifo
+int ThingMlRuntime_class::fifo_byte_available() {
+  return FIFO_SIZE - 1 - fifo_byte_length();
+}
+
+// Returns true if the fifo is empty
+int ThingMlRuntime_class::fifo_empty() {
+  return fifo_head == fifo_tail;
+}
+
+// Return true if the fifo is full
+int ThingMlRuntime_class::fifo_full() {
+  return fifo_head == ((fifo_tail + 1) % FIFO_SIZE);
+}
+
+// Enqueue 1 byte in the fifo if there is space
+// returns 1 for sucess and 0 if the fifo was full
+int ThingMlRuntime_class::fifo_enqueue(byte b) {
+  int new_tail = (fifo_tail + 1) % FIFO_SIZE;
+  if (new_tail == fifo_head) return 0; // the fifo is full
+  fifo[fifo_tail] = b;
+  fifo_tail = new_tail;
+  return 1;
+}
+
+// Enqueue 1 byte in the fifo without checking for available space
+// The caller should have checked that there is enough space
+int ThingMlRuntime_class::_fifo_enqueue(byte b) {
+  fifo[fifo_tail] = b;
+  fifo_tail = (fifo_tail + 1) % FIFO_SIZE;
+}
+
+// Dequeue 1 byte in the fifo.
+// The caller should check that the fifo is not empty
+byte ThingMlRuntime_class::fifo_dequeue() {
+  if (!fifo_empty()) {
+    byte result = fifo[fifo_head];
+    fifo_head = (fifo_head + 1) % FIFO_SIZE;
+    return result;
+  }
+  return 0;
+}
+

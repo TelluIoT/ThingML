@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c.sintefboard;
+package org.thingml.compilers.cpp.sintefboard;
 
-import org.thingml.compilers.c.posix.*;
 import org.sintef.thingml.ErrorAction;
 import org.sintef.thingml.PrintAction;
 import org.thingml.compilers.Context;
@@ -30,14 +29,14 @@ public class CThingActionCompilerSintefboard extends CThingActionCompiler {
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
-        builder.append("fprintf(stdout, " + b.toString() + ");\n");
+        builder.append("printf(" + b.toString() + ");\n");
     }
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
-        builder.append("fprintf(stderr, " + b.toString() + ");\n");
+        builder.append("printf(" + b.toString() + ");\n");
     }
 
 }

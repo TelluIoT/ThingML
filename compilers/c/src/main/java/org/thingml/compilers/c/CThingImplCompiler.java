@@ -32,6 +32,15 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     public void generateImplementation(Thing thing, Context ctx) {
         generateCImpl(thing, (CCompilerContext)ctx);
     }
+    
+    public boolean isGeneratingCpp() {
+        return false;
+    }
+
+    public String getCppNameScope() {
+        return "";
+    }
+
 
     protected void generateCImpl(Thing thing, CCompilerContext ctx) {
 
@@ -50,7 +59,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         //builder.append("extern \"C\" {\n");
         //builder.append("#endif\n");
 
-        generatePrivatePrototypes(thing, builder, ctx);
+        if (!isGeneratingCpp()) { // Private prototypes will be generated as part of header for C++
+            generatePrivateCPrototypes(thing, builder, ctx);
+        }
 
         //builder.append("#ifdef __cplusplus\n");
         //builder.append("}\n");
@@ -86,6 +97,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generatePrototypeforThingDirect(Function func, StringBuilder builder, CCompilerContext ctx, Thing thing) {
+        //TODO sdalgard - Check if C++ rework is needed
 
         if (func.hasAnnotation("c_prototype")) {
             // generateMainAndInit the given prototype. Any parameters are ignored.
@@ -114,6 +126,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateCGlobalAnnotation(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+        //TODO sdalgard - Check if C++ rework is needed
         if (thing.hasAnnotation("c_global")) {
             builder.append("\n// BEGIN: Code from the c_global annotation " + thing.getName());
             for (String code : thing.annotation("c_global")) {
@@ -124,7 +137,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
-    protected void generatePrivatePrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+    protected void generatePrivateCPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+        // NB sdalgard - This function is duplicated in generatePrivateCppPrototypes in class CThingApiCompiler
         // Exit actions
         if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             StateMachine sm = thing.allStateMachines().get(0);
@@ -245,7 +259,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         StateMachine sm = thing.allStateMachines().get(0); // There has to be one and only one state machine here
 
-        builder.append("void " + sm.qname("_") + "_OnEntry(int state, ");
+        builder.append("void " + getCppNameScope() + sm.qname("_") + "_OnEntry(int state, ");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
 
         builder.append("switch(state) {\n");
@@ -287,7 +301,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         StateMachine sm = thing.allStateMachines().get(0); // There has to be one and only one state machine here
 
-        builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
+        builder.append("void " + getCppNameScope() + sm.qname("_") + "_OnExit(int state, ");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
         builder.append("switch(state) {\n");
 
@@ -328,7 +342,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         for(Port port : handlers.keySet()) {
             for(Message msg : handlers.get(port).keySet() ) {
-                builder.append("void " + ctx.getHandlerName(thing, port, msg));
+                builder.append("void " + getCppNameScope() + ctx.getHandlerName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append(" {\n");
 
@@ -352,7 +366,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         // Add handler for empty transitions if needed
         if (sm.hasEmptyHandlers()) {
-            builder.append("void " + ctx.getEmptyHandlerName(thing));
+            builder.append("void " + getCppNameScope() + ctx.getEmptyHandlerName(thing));
             ctx.appendFormalParametersEmptyHandler(thing, builder);
             builder.append(" {\n");
 
@@ -534,26 +548,34 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
 
     protected void generatePrivateMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        for(Port port : thing.allPorts()) {
+       // NB sdalgard - The variable function pointer is duplicated in generatePrivateCppMessageSendingOperations in class CThingApiCompiler
+       for(Port port : thing.allPorts()) {
             for (Message msg : port.getSends()) {
-                // Variable for the function pointer
-                builder.append("void (*" + ctx.getSenderName(thing, port, msg) + "_listener)");
-                ctx.appendFormalTypeSignature(thing, builder, msg);
-                builder.append("= 0x0;\n");
+                if (!isGeneratingCpp()) { // Private prototypes will be generated as part of header for C++
+                    // Variable for the function pointer
+                    builder.append("void (*" + ctx.getSenderName(thing, port, msg) + "_listener)");
+                    ctx.appendFormalTypeSignature(thing, builder, msg);
+                    builder.append("= 0x0;\n");
+                }
 
-                builder.append("void register_" + ctx.getSenderName(thing, port, msg) + "_listener(");
-                builder.append("void (*_listener)");
+                builder.append("void " + getCppNameScope() + "register_" + ctx.getSenderName(thing, port, msg) + "_listener(");
+                builder.append("void (" + getCppNameScope() + "*_listener)");
                 ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append("){\n");
                 builder.append("" + ctx.getSenderName(thing, port, msg) + "_listener = _listener;\n");
                 builder.append("}\n");
 
                 // Operation which calls on the function pointer if it is not NULL
-                builder.append("void " + ctx.getSenderName(thing, port, msg));
+                builder.append("void " + getCppNameScope() + ctx.getSenderName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append("{\n");
                 // if (timer_receive_timeout_listener != 0) timer_receive_timeout_listener(timer_id);
-                builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) " + ctx.getSenderName(thing, port, msg) + "_listener");
+                
+                if (!isGeneratingCpp()) {
+                    builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) " + ctx.getSenderName(thing, port, msg) + "_listener");
+                } else {
+                    builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) (this->*" + ctx.getSenderName(thing, port, msg) + "_listener)");
+                }
                 ctx.appendActualParameters(thing, builder, msg, null);
                 builder.append(";\n}\n");
             }

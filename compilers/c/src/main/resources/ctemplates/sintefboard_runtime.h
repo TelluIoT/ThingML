@@ -1,40 +1,29 @@
-/*****************************************************
- *      THIS IS A GENERATED FILE. DO NOT EDIT.
- *
- *  Generated from ThingML (http://www.thingml.org)
- *****************************************************/
+#define MAX_INSTANCES 32
+#define FIFO_SIZE 256
 
-#ifndef RUNTIME_H_
-#define RUNTIME_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <stdint.h>
-
-typedef unsigned char byte;
-
-/* Queuing of pointers (size is different depending of the platform)*/
-
-#define PTR_MAX_SIZE 8  // Code generator should adjust this
-
-typedef union {
-   uint8_t buffer[PTR_MAX_SIZE];
-   void* pointer;
-} ptr_union_t;
-
-/*
-void _fifo_enqueue_ptr(void * ptr);
-void * _fifo_dequeue_ptr();
-static_assert(sizeof(void*) <= PTR_MAX_SIZE*sizeof(uint8_t));
-*/
+class ThingMlRuntime_class {
+private:
 
 
-/* Adds and instance to the runtime and returns its id */
-uint16_t add_instance(void * instance_struct);
-/* Returns the instance with id */
-void * instance_by_id(uint16_t id);
+/******************************************
+ * Simple byte FIFO implementation  
+ ******************************************/
+
+byte fifo[FIFO_SIZE];
+int fifo_head;
+int fifo_tail;
+
+
+/*********************************
+ * Instance IDs and lookup  
+ *********************************/
+
+void * instances[MAX_INSTANCES];
+uint16_t instances_count;
+
+public:
+
+ThingMlRuntime_class(); 
 
 /* Returns the number of byte currently in the fifo */
 int fifo_byte_length();
@@ -54,16 +43,10 @@ int _fifo_enqueue(byte b);
    The caller should check that the fifo is not empty */
 byte fifo_dequeue();
 
-// Synchronization for thread safe FIFO access
-void fifo_lock();
-void fifo_unlock();
-void fifo_wait();
-void fifo_unlock_and_notify();
+/* Adds and instance to the runtime and returns its id */
+uint16_t add_instance(void * instance_struct);
+/* Returns the instance with id */
+void * instance_by_id(uint16_t id);
 
-void init_runtime();
+};
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /*RUNTIME_H_*/
