@@ -15,69 +15,126 @@ datatype Integer
     @js_type "short"
     @java_type "int";
     
-thing fragment TestGuardMsgs {
-    message m1(x : Integer);    
-}
+thing fragment CepMsgs {
+    //Cep messages for "simple" streams
+    message cep1();
+    message cep2(val1 : Integer, val2 : Integer);
     
-
-thing TestGuardAutoTransition includes TestGuardMsgs {
-
-  function f() : Boolean do
-    return true
-  end
-  
-  provided port send {
-      sends m1
-      }
-      
-      required port recv {
-          receives m1
-          }
-
-	statechart TestGuardAutoTransition init I {
-		state I {
-			//on entry harnessOut!testOut('\'I\'')
-            on entry do
-                print "I"
-                send!m1(1)
-                
-                
-                //send!m1(2)
-            end			
-
-			transition -> J
-            guard f()
-			//action harnessOut!testOut('\'J\'')
-						
-			transition -> K
-			event m : recv?m1
-			guard m.x == '\'t\''
-		}
-		state J {
-			on entry do
-                print "J"
-                send!m1(3)
-            end
-			
-			transition -> K
-			event m : recv?m1
-			guard m.x == 3
-		}
-		state K {
-			on entry do
-                print "K"
-                send!m1(4)
-            end
-			
-			internal
-			event m : recv?m1
-			guard m.x == 4
-		}
-	}
+    //CEP messages for merged streams
+    message cep3();
+    message cep4(a : Integer, b : Integer, c : Integer);
+    
+    //CEP messages for joined streams
+    message cep5(a : Integer, b : Integer, c : Integer);
 }
 
+thing fragment SampleMsgs {
+    // Messages receive by "simple" streams
+    message m1();
+    message m2(v1 : Integer, v2 : Integer);  
+    
+    //Messages receive by merged streams
+    message m3();  
+    message m4();
+    message m5(x : Integer, y : Integer, z : Integer);  
+    message m6(value1 : Integer, value2 : Integer, value3 : Integer);
+    
+    // Messages receive by joined streams
+    message m7(a : Integer, b : Integer, c : Integer);  
+    message m8(v1 : Integer, v2 : Integer, v3 : Integer);
+}
+
+thing Sample includes CepMsgs,  SampleMsgs{
+    required port sendPort {
+        sends m1, m2, m3, m4, m5, m6, m7, m8, cep1, cep2, cep3, cep4, cep5
+    }
+    
+    provided port rcvPort {
+        receives m1, m2, m3, m4, m5, m6, m7, m8, cep1, cep2, cep3, cep4, cep5
+    }
+    
+    function complexTransforming(value : Integer) : Integer do
+        return value + 1
+    end
+    
+    stream forwardSimpleMessage do
+        from rcvPort?m1
+        action sendPort!cep1()
+    end
+    
+    stream forwardMessageWithParams do
+        from evt : [ rcvPort?m2 ]
+        select a : evt.v1, b : evt.v2
+        action sendPort!cep2(a,b)
+    end
+    
+    stream transformingMessageValue do
+        from evt : [ rcvPort?m2 ]
+        select a : (evt.v1 * 2) + 5, b : complexTransforming(evt.v2)
+        action sendPort!cep2(a,b)
+    end
+    
+    stream mergedSimpleMessages do
+        from [ rcvPort?m3 | rcvPort?m4 -> cep3()]
+        action sendPort!cep3()
+    end
+    
+    stream mergeMessagesWithValues do
+        from [ rcvPort?m5 | rcvPort?m6 -> cep4(#0,complexTransforming(#1),(#2 * 2) + 5)]
+        select a : #0 +1, b: #1 + 1, c: #2 + 1
+        action sendPort!cep4(a,b,c)
+    end
+    
+    stream joinMessages do
+        from [ e1 : rcvPort?m7 & e2 : rcvPort?m8 -> cep5(e1.a * e2.v1,e1.b * e2.v2,e1.c * e2.v3)]
+        select a : #0 + 1, b : #1 + 1 , c :#2 + 1 
+        action sendPort!cep5(a,b,c)
+    end
+    
+    
+    statechart Sample init Init {
+        state Init {
+            on entry do
+                print "Init"
+                sendPort!m1()
+                sendPort!m2(8,24)
+                
+                sendPort!m3()
+                sendPort!m4()
+                
+                sendPort!m5(1,2,3)
+                sendPort!m6(4,5,6)
+                
+                sendPort!m7(1,2,3)
+                sendPort!m8(10,20,30)
+            end
+            
+            internal
+            event rcvPort?cep1
+            action print "cep message receive." 
+                        
+            internal 
+            event e : rcvPort?cep2
+            action print "cep2 message receive with values (" + e.val1 + ";" + e.val2 +")."
+            
+            internal
+            event rcvPort?cep3
+            action print "cep3 message receive."
+            
+            internal
+            event e : rcvPort?cep4
+            action print "cep4 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ")."
+            
+            internal
+            event e : rcvPort?cep5
+            action print "cep5 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ")."
+            
+        }    
+    }
+    
+}
 
 configuration sampleCfg {
-    instance t : TestGuardAutoTransition
-    connector t.recv => t.send    
+    instance sample : Sample
+    connector sample.sendPort => sample.rcvPort    
 }

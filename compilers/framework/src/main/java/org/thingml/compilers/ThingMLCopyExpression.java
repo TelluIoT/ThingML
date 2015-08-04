@@ -29,10 +29,9 @@ public class ThingMLCopyExpression {
             return copy((BinaryExpression) expression);
         } else if(expression instanceof UnaryExpression) {
             return copy((UnaryExpression)expression);
-        }//fixme
-        /*else if (expression instanceof EventReference) {
-            return copy((EventReference) expression);
-        }*/ else if (expression instanceof ExpressionGroup) {
+        }else if (expression instanceof Reference) {
+            return copy((Reference) expression);
+        } else if (expression instanceof ExpressionGroup) {
             return copy((ExpressionGroup) expression);
         } else if (expression instanceof PropertyReference) {
             return copy((PropertyReference) expression);
@@ -77,13 +76,12 @@ public class ThingMLCopyExpression {
         return unaryExpression;
     }
 
-    //fixme
-    /*public static EventReference copy(EventReference expression) {
-        EventReference eventReference = ThingmlFactory.eINSTANCE.createEventReference();
-        eventReference.setMsgRef(expression.getMsgRef());
-        eventReference.setParamRef(expression.getParamRef());
-        return eventReference;
-    }*/
+    public static Reference copy(Reference expression) {
+        Reference reference = ThingmlFactory.eINSTANCE.createReference();
+        reference.setParameter(expression.getParameter());
+        reference.setReference(expression.getReference());
+        return reference;
+    }
 
     public static ExpressionGroup copy(ExpressionGroup expression) {
         ExpressionGroup expressionGroup = ThingmlFactory.eINSTANCE.createExpressionGroup();

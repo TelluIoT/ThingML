@@ -78,8 +78,8 @@ public class JavaGenerateSourceDeclaration {
                 "}\n" +
                 "};\n");
 
-        SimpleSource simpleSource1 = (SimpleSource) ((SourceComposition)stream.getInput()).getSources().get(0),
-                simpleSource2 = (SimpleSource) ((SourceComposition)stream.getInput()).getSources().get(1);
+        SimpleSource simpleSource1 = (SimpleSource) sources.getSources().get(0),
+                simpleSource2 = (SimpleSource) sources.getSources().get(1);
         String message1Name = simpleSource1.getMessage().getMessage().getName(),
                 message2Name = simpleSource2.getMessage().getMessage().getName();
         String eventMessage1 = context.firstToUpper(message1Name) + "MessageType." + context.firstToUpper(message1Name) + "Message";
@@ -90,24 +90,46 @@ public class JavaGenerateSourceDeclaration {
         String outPutType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
 
         generate(stream,simpleSource1,builder,context);
-        generate(stream,simpleSource2,builder,context);
+        generate(stream, simpleSource2, builder, context);
         builder.append("rx.Observable " + stream.qname("_") + " = " + simpleSource1.qname("_"))
                 .append(".join(" + simpleSource2.qname("_") + ",wait,wait,\n")
                 .append("new Func2<" + eventMessage1 + ", " + eventMessage2 + ", " + outPutType +">(){\n")
                 .append("@Override\n")
-                .append("public " + outPutType + " call(" + eventMessage1 + " " +message1Name + ", " + eventMessage2 + " " + message2Name + ") {\n")
-                .append("return (" + outPutType + ") " + outPutName + "Type.instantiate("+ stream.getOutput().getPort().getName() + "_port");
+                .append("public " + outPutType + " call(" + eventMessage1 + " " + message1Name + ", " + eventMessage2 + " " + message2Name + ") {\n");
 
-        Iterator<StreamExpression> itStreamExpression = stream.getSelection().iterator();
+        JavaThingActionCompiler javaCmpl = ((JavaThingActionCompiler) context.getCompiler().getThingActionCompiler());
+        builder.append("return (" + outPutType + ") " + outPutName + "Type.instantiate("+ stream.getOutput().getPort().getName() + "_port");
+
+        Iterator<Expression> itRules = sources.getRules().iterator();
+        Iterator<Parameter> itParamsResultMsgs = sources.getResultMessage().getParameters().iterator();
+        int i = 0;
+        while(itRules.hasNext() && itParamsResultMsgs.hasNext()) {
+            builder.append(", ");
+
+            Parameter parameter = itParamsResultMsgs.next();
+            Expression rule = itRules.next();
+            /*if (!(parameter.getType() instanceof Enumeration)) {
+                if (!(parameter.getCardinality() != null))
+                    builder.append(parameter.getType().annotation("java_type").toArray()[0] + " ");
+                else
+                    builder.append(parameter.getType().annotation("java_type").toArray()[0] + "[] ");
+            }*/
+
+            //builder.append(" param" + i + " = ");
+            javaCmpl.cast(parameter.getType(),parameter.getCardinality() != null, rule, builder, context);
+            i++;
+        }
+
+
+//        builder.append("return (" + outPutType + ") " + outPutName + "Type.instantiate("+ stream.getOutput().getPort().getName() + "_port");
+        /*Iterator<StreamExpression> itStreamExpression = stream.getSelection().iterator();
         Iterator<Parameter> itParameter = stream.getOutput().getMessage().getParameters().iterator();
-
         while(itStreamExpression.hasNext() && itParameter.hasNext()) {
             Parameter fp = itParameter.next();
             StreamExpression se = itStreamExpression.next();
             builder.append(", ");
-            ((JavaThingActionCompiler) context.getCompiler().getThingActionCompiler()).cast(fp.getType(),
-                    fp.getCardinality() != null, se.getExpression(), builder, context);
-        }
+            javaCmpl.cast(fp.getType(), fp.getCardinality() != null, se.getExpression(), builder, context);
+        }*/
 
         builder.append(");\n");
 

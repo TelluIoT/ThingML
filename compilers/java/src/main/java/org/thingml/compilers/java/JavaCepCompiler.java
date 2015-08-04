@@ -117,6 +117,14 @@ public class JavaCepCompiler extends CepCompiler {
             builder.append("}\n");
         }
 
+        i = 0;
+        for(Expression exp : source.getRules()) {
+            builder.append("param" + i + " = ");
+            context.getCompiler().getThingActionCompiler().generate(exp,builder,context);
+            builder.append(";\n");
+            i++;
+        }
+
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
         builder.append("}\n" +
                 "});");
@@ -131,7 +139,7 @@ public class JavaCepCompiler extends CepCompiler {
                 .append("@Override\n")
                 .append("public void call(" + outPutType + " " + outPutName + ") {\n");
 
-        StreamOutput newOutput = ThingmlFactory.eINSTANCE.createStreamOutput();
+      StreamOutput newOutput = ThingmlFactory.eINSTANCE.createStreamOutput();
         newOutput.setMessage(stream.getOutput().getMessage());
         newOutput.setPort(stream.getOutput().getPort());
 
@@ -139,17 +147,26 @@ public class JavaCepCompiler extends CepCompiler {
         rm.setMessage(stream.getOutput().getMessage());
         rm.setPort(stream.getOutput().getPort());
 
-        //fixme
         /*for(Parameter p : stream.getOutput().getMessage().getParameters()) {
-            EventReference eRef = ThingmlFactory.eINSTANCE.createEventReference();
-            eRef.setMsgRef(rm);
-            eRef.setParamRef(p);
+            Reference eRef = ThingmlFactory.eINSTANCE.createReference();
+            eRef.setParameter(p);
+            eRef.setReference(rm);
             StreamExpression se = ThingmlFactory.eINSTANCE.createStreamExpression();
             se.setExpression(eRef);
             newOutput.getParameters().add(se);
         }*/
 
-        context.getCompiler().getThingActionCompiler().generate(newOutput, builder, context);
+        /*JavaThingActionCompiler javaCmpl = ((JavaThingActionCompiler) context.getCompiler().getThingActionCompiler());
+        Iterator<StreamExpression> itStreamExpression = stream.getSelection().iterator();
+        Iterator<Parameter> itParameter = stream.getOutput().getMessage().getParameters().iterator();
+        while(itStreamExpression.hasNext() && itParameter.hasNext()) {
+            Parameter fp = itParameter.next();
+            StreamExpression se = itStreamExpression.next();
+            builder.append(", ");
+            javaCmpl.cast(fp.getType(), fp.getCardinality() != null, se.getExpression(), builder, context);
+        }*/
+
+        context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
 
         builder.append("}\n")
                 .append("});\n");

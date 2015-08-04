@@ -16,6 +16,7 @@
 package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
@@ -35,6 +36,26 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             for (Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
                     cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
+                    break;
+                }
+                j++;
+            }
+            i++;
+        }
+        builder.append(");\n");
+    }
+
+    @Override
+    public void generate(StreamOutput streamOutput, StringBuilder builder, Context ctx) {
+        builder.append("send" + ctx.firstToUpper(streamOutput.getMessage().getName()) + "_via_" + streamOutput.getPort().getName() + "(");
+        int i = 0;
+        for (StreamExpression p : streamOutput.getParameters()) {
+            if (i > 0)
+                builder.append(", ");
+            int j = 0;
+            for (Parameter fp : streamOutput.getMessage().getParameters()) {
+                if (i == j) {//parameter p corresponds to formal parameter fp
+                    cast(fp.getType(), fp.getCardinality() != null, p.getExpression(), builder, ctx);
                     break;
                 }
                 j++;
@@ -115,12 +136,24 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         builder.append(");\n");
     }
 
+    @Override
+    public void generate(Reference expression, StringBuilder builder, Context ctx) {
+//        builder.append( ctx.protectKeyword(expression.getMsgRef().getMessage().getName()) + "." + ctx.protectKeyword(expression.getParamRef().getName()));
+       if(expression.getReference() instanceof ReceiveMessage) {
+           ReceiveMessage rm = (ReceiveMessage) expression.getReference();
+           builder.append(ctx.protectKeyword(rm.getMessage().getName()) + "." + ctx.protectKeyword(expression.getParameter().getName()));
+       } else if(expression.getReference() instanceof Source) {
+           Source source = (Source) expression.getReference();
+           if(source instanceof SimpleSource) {
+               ReceiveMessage rm = ((SimpleSource) source).getMessage();
+               builder.append(ctx.protectKeyword(rm.getMessage().getName()) + "." + ctx.protectKeyword(expression.getParameter().getName()));
+           } else if(source instanceof SourceComposition) {
 
-    //fixme
-    /*@Override
-    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
-        builder.append( ctx.protectKeyword(expression.getMsgRef().getMessage().getName()) + "." + ctx.protectKeyword(expression.getParamRef().getName()));
-    }*/
+           } else {
+               throw new UnsupportedOperationException("Something is missing in the JavaThingActionCompiler to compile a reference to a stream source");
+           }
+       }
+    }
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
@@ -137,7 +170,21 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(StreamParamReference expression, StringBuilder builder, Context ctx) {
-        builder.append("param" + expression.getIndexParam());
+        Stream stream = ThingMLHelpers.findContainingStream(expression);
+        Source source = stream.getInput();
+        Message message;
+        if (source instanceof SimpleSource) {
+            message = ((SimpleSource) source).getMessage().getMessage();
+            builder.append(message.getName() + "." + message.getParameters().get(expression.getIndexParam()).getName());
+        } else if (source instanceof JoinSources) {
+            message = ((JoinSources) source).getResultMessage();
+            builder.append(message.getName() + "." + message.getParameters().get(expression.getIndexParam()).getName());
+        } else if (source instanceof MergeSources) {
+            builder.append("param" + expression.getIndexParam());
+        } else {
+            throw new UnsupportedOperationException("An input source has been added (" + source.getClass().getName() + ") to ThingML but the compiler did not updates." +
+                    "Please update JavaThingActionCompiler.generate for StreamParamReference expression .");
+        }
     }
 
     @Override

@@ -219,11 +219,11 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         builder.append(")");
     }
 
-    //fixme
-   /* @Override
-    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
-        builder.append(expression.getMsgRef().getName() + "." + expression.getParamRef().getName());
-    }*/
+   @Override
+    public void generate(Reference expression, StringBuilder builder, Context ctx) {
+       ThingMLElement thingMLElement = (ThingMLElement) expression.getReference();
+        builder.append(thingMLElement.getName() + "." + expression.getParameter().getName());
+    }
 
     @Override
     public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {

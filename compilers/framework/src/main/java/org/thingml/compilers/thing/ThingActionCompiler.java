@@ -133,10 +133,9 @@ public class ThingActionCompiler {
             generate((UnaryMinus) expression, builder, ctx);
         } else if (expression instanceof NotExpression) {
             generate((NotExpression) expression, builder, ctx);
-        } //fixme
-        /*else if (expression instanceof EventReference) {
-            generate((EventReference) expression, builder, ctx);
-        }*/ else if (expression instanceof ExpressionGroup) {
+        } else if (expression instanceof Reference) {
+            generate((Reference) expression, builder, ctx);
+        } else if (expression instanceof ExpressionGroup) {
             generate((ExpressionGroup) expression, builder, ctx);
         } else if (expression instanceof PropertyReference) {
             generate((PropertyReference) expression, builder, ctx);
@@ -211,10 +210,10 @@ public class ThingActionCompiler {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
-    //fixme
-    /*public void generate(EventReference expression, StringBuilder builder, Context ctx) {
+
+    public void generate(Reference expression, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
-    }*/
+    }
 
     public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));

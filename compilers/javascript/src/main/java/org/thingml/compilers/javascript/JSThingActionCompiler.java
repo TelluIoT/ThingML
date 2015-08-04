@@ -102,18 +102,18 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     }
 
 
-    //fixme
-   /* @Override
-    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
+    @Override
+    public void generate(Reference expression, StringBuilder builder, Context ctx) {
 //        builder.append("v_" + ctx.protectKeyword(expression.getParamRef().getName()));
-        List<Parameter> parameters = expression.getMsgRef().getMessage().getParameters();
+       /* List<Parameter> parameters = expression.getMsgRef().getMessage().getParameters();
         for(int i = 0; i<parameters.size();i++) {
             if(parameters.get(i).getName().equals(expression.getParamRef().getName())) {
                 builder.append(expression.getMsgRef().getMessage().getName() + "[" + (i + 2) + "]");
                 break;
             }
-        }
-    }*/
+        }*/
+        throw new UnsupportedOperationException("Not yet re-implemted");
+    }
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
