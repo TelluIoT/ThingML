@@ -89,7 +89,7 @@ object CPPGenerator {
     case exp: ModExpression => ModExpressionCGenerator(exp)
     case exp: UnaryMinus => UnaryMinusCGenerator(exp)
     case exp: NotExpression => NotExpressionCGenerator(exp)
-    case exp: EventReference => EventReferenceCGenerator(exp)
+//    case exp: EventReference => EventReferenceCGenerator(exp)
     case exp: ExpressionGroup => ExpressionGroupCGenerator(exp)
     case exp: PropertyReference => PropertyReferenceCGenerator(exp)
     case exp: IntegerLiteral => IntegerLiteralCGenerator(exp)
@@ -2093,11 +2093,11 @@ case class NotExpressionCGenerator(override val self: NotExpression) extends Exp
   }
 }
 
-case class EventReferenceCGenerator(override val self: EventReference) extends ExpressionCGenerator(self) {
+/*case class EventReferenceCGenerator(override val self: EventReference) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder.append(self.getParamRef.getName)
   }
-}
+}*/
 
 case class ExpressionGroupCGenerator(override val self: ExpressionGroup) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {

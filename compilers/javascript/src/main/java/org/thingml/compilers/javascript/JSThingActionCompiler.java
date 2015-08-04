@@ -19,8 +19,6 @@ import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
-import java.util.List;
-
 /**
  * Created by bmori on 01.12.2014.
  */
@@ -104,7 +102,8 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     }
 
 
-    @Override
+    //fixme
+   /* @Override
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
 //        builder.append("v_" + ctx.protectKeyword(expression.getParamRef().getName()));
         List<Parameter> parameters = expression.getMsgRef().getMessage().getParameters();
@@ -114,7 +113,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                 break;
             }
         }
-    }
+    }*/
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {

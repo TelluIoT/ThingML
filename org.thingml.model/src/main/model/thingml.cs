@@ -251,20 +251,20 @@ RULES {
 	// *******************************
 	// * CEP
 	// *******************************
-	Operator ::= "operator" #1 name[] "(" (parameters ("," #1 parameters)*)? ")" ":" #1 type[] #1 body;
+	SglMsgParamOperator ::= "operator" #1 name[] "(" parameter ")" ":" #1 type[] #1 body;
 	MessageParameter ::= name[] ":" msgRef[];
 	
-	OperatorCall ::= operatorRef[] "(" (parameters[] ("," #1 parameters[])*)? ")";
+	SglMsgParamOperatorCall ::= operatorRef[] "(" parameter[] ")";
 	
 	StreamExpression ::= name[] ":" expression;
 	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
 	
-	SimpleSource ::= message ("::" operators)*;
+	SimpleSource ::= ( (name[] ":" "[" message "]") | message) ("::" operators)*;
 	
 	Filter ::= "filter(" filterOp")";
 	
-	JoinSources ::= "[" #1 sources #1 "&" #1 sources #1 "]" ("::" operators)* ;
-	MergeSources ::= "[" #1 sources #1 ("|" #1 sources #1)+ "]" ("::" operators)*;
+	JoinSources ::= (name[])? "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;
+	MergeSources ::= (name[])? "[" #1 sources #1 ("|" #1 sources #1)+ "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)*;
 	
 	Stream ::= "stream" #1 name[] #1 "do"
 					 !1 "from" #1 input
@@ -318,10 +318,7 @@ RULES {
 	StreamParamReference ::= "#" indexParam[INTEGER_LITERAL];
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
-	EventReference ::= msgRef[] "." paramRef[];	
-	
-	@Operator(type="primitive", weight="9", superclass="Expression")
-	MessageReference ::= msgReference[] "->" paramRef[];
+	Reference ::= reference[] "." parameter[];	
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	ExpressionGroup ::= "(" exp ")";

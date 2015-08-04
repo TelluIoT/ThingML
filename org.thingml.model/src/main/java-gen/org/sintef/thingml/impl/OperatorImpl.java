@@ -47,14 +47,13 @@ import org.sintef.thingml.ThingmlPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.OperatorImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.OperatorImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.OperatorImpl#getBody <em>Body</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class OperatorImpl extends TypedElementImpl implements Operator {
+public abstract class OperatorImpl extends TypedElementImpl implements Operator {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -74,16 +73,6 @@ public class OperatorImpl extends TypedElementImpl implements Operator {
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getParameters()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<MessageParameter> parameters;
 
 	/**
 	 * The cached value of the '{@link #getBody() <em>Body</em>}' containment reference.
@@ -140,18 +129,6 @@ public class OperatorImpl extends TypedElementImpl implements Operator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<MessageParameter> getParameters() {
-		if (parameters == null) {
-			parameters = new EObjectContainmentEList<MessageParameter>(MessageParameter.class, this, ThingmlPackage.OPERATOR__PARAMETERS);
-		}
-		return parameters;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public ActionBlock getBody() {
 		return body;
 	}
@@ -198,8 +175,6 @@ public class OperatorImpl extends TypedElementImpl implements Operator {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ThingmlPackage.OPERATOR__PARAMETERS:
-				return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.OPERATOR__BODY:
 				return basicSetBody(null, msgs);
 		}
@@ -216,8 +191,6 @@ public class OperatorImpl extends TypedElementImpl implements Operator {
 		switch (featureID) {
 			case ThingmlPackage.OPERATOR__NAME:
 				return getName();
-			case ThingmlPackage.OPERATOR__PARAMETERS:
-				return getParameters();
 			case ThingmlPackage.OPERATOR__BODY:
 				return getBody();
 		}
@@ -235,10 +208,6 @@ public class OperatorImpl extends TypedElementImpl implements Operator {
 		switch (featureID) {
 			case ThingmlPackage.OPERATOR__NAME:
 				setName((String)newValue);
-				return;
-			case ThingmlPackage.OPERATOR__PARAMETERS:
-				getParameters().clear();
-				getParameters().addAll((Collection<? extends MessageParameter>)newValue);
 				return;
 			case ThingmlPackage.OPERATOR__BODY:
 				setBody((ActionBlock)newValue);
@@ -258,9 +227,6 @@ public class OperatorImpl extends TypedElementImpl implements Operator {
 			case ThingmlPackage.OPERATOR__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case ThingmlPackage.OPERATOR__PARAMETERS:
-				getParameters().clear();
-				return;
 			case ThingmlPackage.OPERATOR__BODY:
 				setBody((ActionBlock)null);
 				return;
@@ -278,8 +244,6 @@ public class OperatorImpl extends TypedElementImpl implements Operator {
 		switch (featureID) {
 			case ThingmlPackage.OPERATOR__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case ThingmlPackage.OPERATOR__PARAMETERS:
-				return parameters != null && !parameters.isEmpty();
 			case ThingmlPackage.OPERATOR__BODY:
 				return body != null;
 		}

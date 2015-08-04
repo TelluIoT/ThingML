@@ -95,7 +95,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.DICTIONARY: return createDictionary();
 			case ThingmlPackage.REQUIRED_PORT: return createRequiredPort();
 			case ThingmlPackage.PROVIDED_PORT: return createProvidedPort();
-			case ThingmlPackage.EVENT_REFERENCE: return createEventReference();
 			case ThingmlPackage.ENUM_LITERAL_REF: return createEnumLiteralRef();
 			case ThingmlPackage.INTEGER_LITERAL: return createIntegerLiteral();
 			case ThingmlPackage.BOOLEAN_LITERAL: return createBooleanLiteral();
@@ -139,10 +138,10 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.MERGE_SOURCES: return createMergeSources();
 			case ThingmlPackage.SIMPLE_SOURCE: return createSimpleSource();
 			case ThingmlPackage.FILTER: return createFilter();
-			case ThingmlPackage.OPERATOR: return createOperator();
 			case ThingmlPackage.MESSAGE_PARAMETER: return createMessageParameter();
-			case ThingmlPackage.MESSAGE_REFERENCE: return createMessageReference();
-			case ThingmlPackage.OPERATOR_CALL: return createOperatorCall();
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL: return createSglMsgParamOperatorCall();
+			case ThingmlPackage.REFERENCE: return createReference();
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR: return createSglMsgParamOperator();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -406,16 +405,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public ProvidedPort createProvidedPort() {
 		ProvidedPortImpl providedPort = new ProvidedPortImpl();
 		return providedPort;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EventReference createEventReference() {
-		EventReferenceImpl eventReference = new EventReferenceImpl();
-		return eventReference;
 	}
 
 	/**
@@ -853,16 +842,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Operator createOperator() {
-		OperatorImpl operator = new OperatorImpl();
-		return operator;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public MessageParameter createMessageParameter() {
 		MessageParameterImpl messageParameter = new MessageParameterImpl();
 		return messageParameter;
@@ -873,9 +852,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public MessageReference createMessageReference() {
-		MessageReferenceImpl messageReference = new MessageReferenceImpl();
-		return messageReference;
+	public SglMsgParamOperatorCall createSglMsgParamOperatorCall() {
+		SglMsgParamOperatorCallImpl sglMsgParamOperatorCall = new SglMsgParamOperatorCallImpl();
+		return sglMsgParamOperatorCall;
 	}
 
 	/**
@@ -883,9 +862,19 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public OperatorCall createOperatorCall() {
-		OperatorCallImpl operatorCall = new OperatorCallImpl();
-		return operatorCall;
+	public Reference createReference() {
+		ReferenceImpl reference = new ReferenceImpl();
+		return reference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SglMsgParamOperator createSglMsgParamOperator() {
+		SglMsgParamOperatorImpl sglMsgParamOperator = new SglMsgParamOperatorImpl();
+		return sglMsgParamOperator;
 	}
 
 	/**

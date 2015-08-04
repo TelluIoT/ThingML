@@ -27,32 +27,15 @@ import org.eclipse.emf.common.util.EList;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.sintef.thingml.Operator#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.Operator#getBody <em>Body</em>}</li>
  * </ul>
  * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getOperator()
- * @model
+ * @model abstract="true"
  * @generated
  */
 public interface Operator extends TypedElement, ThingMLElement {
-	/**
-	 * Returns the value of the '<em><b>Parameters</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.MessageParameter}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Parameters</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Parameters</em>' containment reference list.
-	 * @see org.sintef.thingml.ThingmlPackage#getOperator_Parameters()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<MessageParameter> getParameters();
-
 	/**
 	 * Returns the value of the '<em><b>Body</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

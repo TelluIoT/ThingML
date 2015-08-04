@@ -34,7 +34,7 @@ package org.sintef.thingml;
  * @model
  * @generated
  */
-public interface MessageParameter extends ThingMLElement {
+public interface MessageParameter extends ThingMLElement, ReferencedElmt {
 	/**
 	 * Returns the value of the '<em><b>Msg Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->

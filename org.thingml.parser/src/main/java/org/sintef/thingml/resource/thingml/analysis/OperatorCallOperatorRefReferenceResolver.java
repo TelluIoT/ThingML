@@ -15,12 +15,23 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
+import org.sintef.thingml.Operator;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+
 public class OperatorCallOperatorRefReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.OperatorCall, org.sintef.thingml.Operator> {
 	
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.OperatorCall, org.sintef.thingml.Operator> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.OperatorCall, org.sintef.thingml.Operator>();
 	
 	public void resolve(String identifier, org.sintef.thingml.OperatorCall container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Operator> result) {
-		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
+		Thing thing = ThingMLHelpers.findContainingThing(container);
+		for(Operator operator : thing.allOperators()) {
+			if(resolveFuzzy && operator.getName().startsWith(identifier)) {
+				result.addMapping(operator.getName(),operator);
+			} else if(!resolveFuzzy && operator.getName().equals(identifier)) {
+				result.addMapping(operator.getName(),operator );
+			}
+		}
 	}
 	
 	public String deResolve(org.sintef.thingml.Operator element, org.sintef.thingml.OperatorCall container, org.eclipse.emf.ecore.EReference reference) {

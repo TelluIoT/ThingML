@@ -43,135 +43,52 @@ public class ThingMLHelpers {
 	/* ***********************************************************
 	 * Resolution of containers
 	 * ***********************************************************/
-	
+
+	public static <C> C findContainer(EObject eObject, Class<C> cClass) {
+		while (eObject !=null && !cClass.isAssignableFrom(eObject.getClass())) {
+			eObject = eObject.eContainer();
+		}
+		return (C) eObject;
+	}
+
 	public static ThingMLModel findContainingModel(EObject object) {
-		if (object instanceof ThingMLModel) return (ThingMLModel)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingModel(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object, ThingMLModel.class);
 	}
-	
+
 	public static Function findContainingFunction(EObject object) {
-		if (object instanceof Function) return (Function)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingFunction(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,Function.class);
 	}
-	
+
 	public static ThingMLElement findContainingElement(EObject object) {
-		if (object instanceof ThingMLElement) return (ThingMLElement)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingElement(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,ThingMLElement.class);
 	}
-	
+
 	public static ActionBlock findContainingActionBlock(EObject object) {
-		if (object instanceof ActionBlock) return (ActionBlock)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingActionBlock(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,ActionBlock.class);
 	}
-	
+
 	public static Thing findContainingThing(EObject object) {
-		if (object instanceof Thing) return (Thing)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingThing(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,Thing.class);
 	}
-	
+
 	public static Instance findContainingInstance(EObject object) {
-		if (object instanceof Instance) return (Instance)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingInstance(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,Instance.class);
 	}
-	
+
 	public static Configuration findContainingConfiguration(EObject object) {
-		if (object instanceof Configuration) return (Configuration)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingConfiguration(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,Configuration.class);
 	}
-	
+
 	public static State findContainingState(EObject object) {
-		if (object instanceof State) return (State)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingState(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,State.class);
 	}
-	
+
 	public static Region findContainingRegion(EObject object) {
-		if (object instanceof Region) return (Region)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingRegion(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,Region.class);
 	}
-	
+
 	public static Handler findContainingHandler(EObject object) {
-		if (object instanceof Handler) return (Handler)object;
-		else {
-			EObject container = object.eContainer();
-			if (container != null) {
-				return findContainingHandler(container);
-			} 
-			else {
-				return null;
-			}
-		}
+		return findContainer(object,Handler.class);
 	}
 	
 	/* ***********************************************************
@@ -387,6 +304,16 @@ public class ThingMLHelpers {
 		}
 		return result;
 	}
+
+	/** MODIFICATION **/
+	public static List<Operator> allOperators(Thing thing) {
+		ArrayList<Operator> result = new ArrayList<Operator>();
+		for (Thing t : allThingFragments(thing)) {
+			result.addAll(t.getOperators());
+		}
+		return result;
+	}
+	/** END **/
 	
 	public static ArrayList<Message> allMessages(Thing thing) {
 		ArrayList<Message> result = new ArrayList<Message>();
@@ -755,13 +682,13 @@ public class ThingMLHelpers {
 	/* ***********************************************************
 	 * Resolution for Specific Actions / Expressions
 	 * ***********************************************************/
-	
-	public static ArrayList<Event> findEvents(EventReference er, String name, boolean fuzzy) {
+
+	/*public static ArrayList<Event> findEvents(EventReference er, String name, boolean fuzzy) {
 		ArrayList<Event> result = new ArrayList<Event>();
 
-		/** MODIFICATION **/
-		/** OLD **/
-		/*Handler h = findContainingHandler(er);
+		*//** MODIFICATION **//*
+		*//** OLD **//*
+		*//*Handler h = findContainingHandler(er);
 		if (h == null || h.getEvent().size() > 1) return result;
 		else {
 			Event evt = h.getEvent().get(0);
@@ -769,8 +696,8 @@ public class ThingMLHelpers {
 				if (fuzzy) result.add(evt);
 				else if (evt.getName().equals(name)) result.add(evt);
 			}
-		}*/
-		/** NEW **/
+		}*//*
+		*//** NEW **//*
 		Handler h = findContainingHandler(er);
 		if(h == null) {
 			Stream s = findContainingStream(er);
@@ -796,11 +723,11 @@ public class ThingMLHelpers {
 			}
 		}
 
-		/** END **/
+		*//** END **//*
 
 
 		return result;
-	}
+	}*/
 
 	public static List<ReceiveMessage> allReceiveMessages(Source input) {
 		List<ReceiveMessage> result = new ArrayList<>();
@@ -821,10 +748,7 @@ public class ThingMLHelpers {
 
 	/** MODIFICATION **/
 	public static Stream findContainingStream(EObject eObject) {
-		while(!(eObject instanceof Stream) && eObject != null ){
-			eObject = eObject.eContainer();
-		}
-		return (Stream) eObject;
+		return findContainer(eObject,Stream.class);
 	}
 
 	public static List<SimpleSource> allSimpleSources(Source input) {
@@ -841,10 +765,7 @@ public class ThingMLHelpers {
 	}
 
 	public static Operator findContainingOperator(EObject eObject) {
-		while(!(eObject instanceof Operator) && eObject != null) {
-			eObject = eObject.eContainer();
-		}
-		return (Operator) eObject;
+		return findContainer(eObject,Operator.class);
 	}
 
 	public static List<ReceiveMessage> findInputs(OperatorCall operatorCall) {
@@ -858,6 +779,15 @@ public class ThingMLHelpers {
 		}
 
 		return result;
+	}
+
+	public static ThingMLElement findReferenceContainer(Reference container) {
+		EObject parent = container.eContainer();
+
+		while (parent !=null && !(parent instanceof Handler || parent instanceof SglMsgParamOperator || parent instanceof StreamExpression || parent instanceof SourceComposition)) {
+			parent = parent.eContainer();
+		}
+		return (ThingMLElement) parent;
 	}
 
 	/** END **/

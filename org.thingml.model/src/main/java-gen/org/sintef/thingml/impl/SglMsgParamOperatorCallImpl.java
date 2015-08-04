@@ -31,26 +31,27 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
-import org.sintef.thingml.Operator;
-import org.sintef.thingml.OperatorCall;
 import org.sintef.thingml.ReceiveMessage;
+import org.sintef.thingml.SglMsgParamOperator;
+import org.sintef.thingml.SglMsgParamOperatorCall;
+import org.sintef.thingml.Source;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Operator Call</b></em>'.
+ * An implementation of the model object '<em><b>Sgl Msg Param Operator Call</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.OperatorCallImpl#getOperatorRef <em>Operator Ref</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.OperatorCallImpl#getParameters <em>Parameters</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.SglMsgParamOperatorCallImpl#getOperatorRef <em>Operator Ref</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.SglMsgParamOperatorCallImpl#getParameter <em>Parameter</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class OperatorCallImpl extends EObjectImpl implements OperatorCall {
+public class SglMsgParamOperatorCallImpl extends EObjectImpl implements SglMsgParamOperatorCall {
 	/**
 	 * The cached value of the '{@link #getOperatorRef() <em>Operator Ref</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -59,24 +60,24 @@ public class OperatorCallImpl extends EObjectImpl implements OperatorCall {
 	 * @generated
 	 * @ordered
 	 */
-	protected Operator operatorRef;
+	protected SglMsgParamOperator operatorRef;
 
 	/**
-	 * The cached value of the '{@link #getParameters() <em>Parameters</em>}' reference list.
+	 * The cached value of the '{@link #getParameter() <em>Parameter</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getParameters()
+	 * @see #getParameter()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ReceiveMessage> parameters;
+	protected Source parameter;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected OperatorCallImpl() {
+	protected SglMsgParamOperatorCallImpl() {
 		super();
 	}
 
@@ -87,7 +88,7 @@ public class OperatorCallImpl extends EObjectImpl implements OperatorCall {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ThingmlPackage.Literals.OPERATOR_CALL;
+		return ThingmlPackage.Literals.SGL_MSG_PARAM_OPERATOR_CALL;
 	}
 
 	/**
@@ -95,13 +96,13 @@ public class OperatorCallImpl extends EObjectImpl implements OperatorCall {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Operator getOperatorRef() {
+	public SglMsgParamOperator getOperatorRef() {
 		if (operatorRef != null && operatorRef.eIsProxy()) {
 			InternalEObject oldOperatorRef = (InternalEObject)operatorRef;
-			operatorRef = (Operator)eResolveProxy(oldOperatorRef);
+			operatorRef = (SglMsgParamOperator)eResolveProxy(oldOperatorRef);
 			if (operatorRef != oldOperatorRef) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.OPERATOR_CALL__OPERATOR_REF, oldOperatorRef, operatorRef));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL__OPERATOR_REF, oldOperatorRef, operatorRef));
 			}
 		}
 		return operatorRef;
@@ -112,7 +113,7 @@ public class OperatorCallImpl extends EObjectImpl implements OperatorCall {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Operator basicGetOperatorRef() {
+	public SglMsgParamOperator basicGetOperatorRef() {
 		return operatorRef;
 	}
 
@@ -121,11 +122,11 @@ public class OperatorCallImpl extends EObjectImpl implements OperatorCall {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setOperatorRef(Operator newOperatorRef) {
-		Operator oldOperatorRef = operatorRef;
+	public void setOperatorRef(SglMsgParamOperator newOperatorRef) {
+		SglMsgParamOperator oldOperatorRef = operatorRef;
 		operatorRef = newOperatorRef;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.OPERATOR_CALL__OPERATOR_REF, oldOperatorRef, operatorRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL__OPERATOR_REF, oldOperatorRef, operatorRef));
 	}
 
 	/**
@@ -133,11 +134,37 @@ public class OperatorCallImpl extends EObjectImpl implements OperatorCall {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<ReceiveMessage> getParameters() {
-		if (parameters == null) {
-			parameters = new EObjectResolvingEList<ReceiveMessage>(ReceiveMessage.class, this, ThingmlPackage.OPERATOR_CALL__PARAMETERS);
+	public Source getParameter() {
+		if (parameter != null && parameter.eIsProxy()) {
+			InternalEObject oldParameter = (InternalEObject)parameter;
+			parameter = (Source)eResolveProxy(oldParameter);
+			if (parameter != oldParameter) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL__PARAMETER, oldParameter, parameter));
+			}
 		}
-		return parameters;
+		return parameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Source basicGetParameter() {
+		return parameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setParameter(Source newParameter) {
+		Source oldParameter = parameter;
+		parameter = newParameter;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL__PARAMETER, oldParameter, parameter));
 	}
 
 	/**
@@ -148,11 +175,12 @@ public class OperatorCallImpl extends EObjectImpl implements OperatorCall {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.OPERATOR_CALL__OPERATOR_REF:
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL__OPERATOR_REF:
 				if (resolve) return getOperatorRef();
 				return basicGetOperatorRef();
-			case ThingmlPackage.OPERATOR_CALL__PARAMETERS:
-				return getParameters();
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL__PARAMETER:
+				if (resolve) return getParameter();
+				return basicGetParameter();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -166,12 +194,11 @@ public class OperatorCallImpl extends EObjectImpl implements OperatorCall {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.OPERATOR_CALL__OPERATOR_REF:
-				setOperatorRef((Operator)newValue);
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL__OPERATOR_REF:
+				setOperatorRef((SglMsgParamOperator)newValue);
 				return;
-			case ThingmlPackage.OPERATOR_CALL__PARAMETERS:
-				getParameters().clear();
-				getParameters().addAll((Collection<? extends ReceiveMessage>)newValue);
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL__PARAMETER:
+				setParameter((Source)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -185,11 +212,11 @@ public class OperatorCallImpl extends EObjectImpl implements OperatorCall {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.OPERATOR_CALL__OPERATOR_REF:
-				setOperatorRef((Operator)null);
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL__OPERATOR_REF:
+				setOperatorRef((SglMsgParamOperator)null);
 				return;
-			case ThingmlPackage.OPERATOR_CALL__PARAMETERS:
-				getParameters().clear();
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL__PARAMETER:
+				setParameter((Source)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -203,12 +230,12 @@ public class OperatorCallImpl extends EObjectImpl implements OperatorCall {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.OPERATOR_CALL__OPERATOR_REF:
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL__OPERATOR_REF:
 				return operatorRef != null;
-			case ThingmlPackage.OPERATOR_CALL__PARAMETERS:
-				return parameters != null && !parameters.isEmpty();
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL__PARAMETER:
+				return parameter != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //OperatorCallImpl
+} //SglMsgParamOperatorCallImpl

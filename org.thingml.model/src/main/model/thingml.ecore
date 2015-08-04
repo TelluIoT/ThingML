@@ -161,7 +161,7 @@
         eType="#//Expression" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Event" abstract="true" eSuperTypes="#//ThingMLElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ReceiveMessage" eSuperTypes="#//Event">
+  <eClassifiers xsi:type="ecore:EClass" name="ReceiveMessage" eSuperTypes="#//Event #//ReferencedElmt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="message" lowerBound="1"
         eType="#//Message"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" lowerBound="1" eType="#//Port"/>
@@ -182,12 +182,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="optional" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProvidedPort" eSuperTypes="#//Port"/>
-  <eClassifiers xsi:type="ecore:EClass" name="EventReference" eSuperTypes="#//Expression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="msgRef" lowerBound="1"
-        eType="#//ReceiveMessage"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="paramRef" lowerBound="1"
-        eType="#//Parameter"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Literal" abstract="true" eSuperTypes="#//Expression"/>
   <eClassifiers xsi:type="ecore:EClass" name="EnumLiteralRef" eSuperTypes="#//Literal">
     <eStructuralFeatures xsi:type="ecore:EReference" name="enum" lowerBound="1" eType="#//Enumeration"/>
@@ -356,13 +350,17 @@
         eType="#//Message"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" lowerBound="1" eType="#//Port"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true" eSuperTypes="#//ThingMLElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true" eSuperTypes="#//ThingMLElement #//ReferencedElmt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
         eType="#//ViewSource" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SourceComposition" abstract="true" eSuperTypes="#//Source">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sources" lowerBound="2"
         upperBound="-1" eType="#//Source" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resultMessage" lowerBound="1"
+        eType="#//Message"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rules" upperBound="-1"
+        eType="#//Expression" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JoinSources" eSuperTypes="#//SourceComposition"/>
   <eClassifiers xsi:type="ecore:EClass" name="MergeSources" eSuperTypes="#//SourceComposition"/>
@@ -373,28 +371,31 @@
   <eClassifiers xsi:type="ecore:EClass" name="ViewSource" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Filter" eSuperTypes="#//ViewSource">
     <eStructuralFeatures xsi:type="ecore:EReference" name="filterOp" lowerBound="1"
-        eType="#//OperatorCall" containment="true"/>
+        eType="#//SglMsgParamOperatorCall" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Operator" eSuperTypes="#//TypedElement #//ThingMLElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
-        eType="#//MessageParameter" containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Operator" abstract="true" eSuperTypes="#//TypedElement #//ThingMLElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//ActionBlock"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MessageParameter" eSuperTypes="#//ThingMLElement">
+  <eClassifiers xsi:type="ecore:EClass" name="MessageParameter" eSuperTypes="#//ThingMLElement #//ReferencedElmt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="msgRef" lowerBound="1"
         eType="#//Message"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MessageReference" eSuperTypes="#//Expression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="msgReference" lowerBound="1"
-        eType="#//MessageParameter"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="paramRef" lowerBound="1"
-        eType="#//Parameter"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="OperatorCall">
+  <eClassifiers xsi:type="ecore:EClass" name="SglMsgParamOperatorCall">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operatorRef" lowerBound="1"
-        eType="#//Operator"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
-        eType="#//ReceiveMessage"/>
+        eType="#//SglMsgParamOperator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" lowerBound="1"
+        eType="#//Source"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Reference" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" lowerBound="1"
+        eType="#//Parameter"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" lowerBound="1"
+        eType="#//ReferencedElmt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReferencedElmt" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SglMsgParamOperator" eSuperTypes="#//Operator">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" lowerBound="1"
+        eType="#//MessageParameter" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

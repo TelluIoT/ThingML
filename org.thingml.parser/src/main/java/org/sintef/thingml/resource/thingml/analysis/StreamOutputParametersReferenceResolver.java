@@ -15,12 +15,23 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
+import org.sintef.thingml.Stream;
+import org.sintef.thingml.StreamExpression;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+
 public class StreamOutputParametersReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.StreamOutput, org.sintef.thingml.StreamExpression> {
 	
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.StreamOutput, org.sintef.thingml.StreamExpression> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.StreamOutput, org.sintef.thingml.StreamExpression>();
 	
 	public void resolve(String identifier, org.sintef.thingml.StreamOutput container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.StreamExpression> result) {
-		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
+		Stream stream = ThingMLHelpers.findContainingStream(container);
+		for(StreamExpression streamExpression : stream.getSelection()) {
+			if(resolveFuzzy && streamExpression.getName().startsWith(identifier)) {
+				result.addMapping(streamExpression.getName(),streamExpression);
+			} else if(!resolveFuzzy && streamExpression.getName().equals(identifier)) {
+				result.addMapping(streamExpression.getName(),streamExpression);
+			}
+		}
 	}
 	
 	public String deResolve(org.sintef.thingml.StreamExpression element, org.sintef.thingml.StreamOutput container, org.eclipse.emf.ecore.EReference reference) {

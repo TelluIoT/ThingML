@@ -139,14 +139,15 @@ public class JavaCepCompiler extends CepCompiler {
         rm.setMessage(stream.getOutput().getMessage());
         rm.setPort(stream.getOutput().getPort());
 
-        for(Parameter p : stream.getOutput().getMessage().getParameters()) {
+        //fixme
+        /*for(Parameter p : stream.getOutput().getMessage().getParameters()) {
             EventReference eRef = ThingmlFactory.eINSTANCE.createEventReference();
             eRef.setMsgRef(rm);
             eRef.setParamRef(p);
             StreamExpression se = ThingmlFactory.eINSTANCE.createStreamExpression();
             se.setExpression(eRef);
             newOutput.getParameters().add(se);
-        }
+        }*/
 
         context.getCompiler().getThingActionCompiler().generate(newOutput, builder, context);
 

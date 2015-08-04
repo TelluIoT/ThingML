@@ -264,6 +264,13 @@ public interface Thing extends Type {
      * @return
      * @generated NOT
      */
+    List<Operator> allOperators();
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
     List<Port> allPorts();
 
     /**

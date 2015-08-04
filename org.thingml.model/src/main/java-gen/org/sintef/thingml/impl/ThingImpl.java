@@ -25,6 +25,16 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.sintef.thingml.Function;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.Operator;
+import org.sintef.thingml.Port;
+import org.sintef.thingml.Property;
+import org.sintef.thingml.PropertyAssign;
+import org.sintef.thingml.StateMachine;
+import org.sintef.thingml.Stream;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 
@@ -609,7 +619,12 @@ public class ThingImpl extends TypeImpl implements Thing {
         return ThingMLHelpers.allFunctions(this);
     }
 
-    /**
+	@Override
+	public List<Operator> allOperators() {
+		return ThingMLHelpers.allOperators(this);
+	}
+
+	/**
      *
      * @return
      * @generated NOT

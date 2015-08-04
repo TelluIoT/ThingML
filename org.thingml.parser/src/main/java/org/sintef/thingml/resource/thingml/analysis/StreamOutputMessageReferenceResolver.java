@@ -15,12 +15,23 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
+import org.sintef.thingml.Message;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+
 public class StreamOutputMessageReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.StreamOutput, org.sintef.thingml.Message> {
 	
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.StreamOutput, org.sintef.thingml.Message> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.StreamOutput, org.sintef.thingml.Message>();
 	
 	public void resolve(String identifier, org.sintef.thingml.StreamOutput container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Message> result) {
-		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
+		Thing thing = ThingMLHelpers.findContainingThing(container);
+		for(Message message : thing.allMessages()) {
+			if(resolveFuzzy && message.getName().startsWith(identifier)) {
+				result.addMapping(message.getName(),message);
+			} else if(!resolveFuzzy && message.getName().equals(identifier)) {
+				result.addMapping(message.getName(),message);
+			}
+		}
 	}
 	
 	public String deResolve(org.sintef.thingml.Message element, org.sintef.thingml.StreamOutput container, org.eclipse.emf.ecore.EReference reference) {

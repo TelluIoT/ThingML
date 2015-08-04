@@ -35,7 +35,7 @@ import org.eclipse.emf.common.util.EList;
  * @model abstract="true"
  * @generated
  */
-public interface Source extends ThingMLElement {
+public interface Source extends ThingMLElement, ReferencedElmt {
 
 	/**
 	 * Returns the value of the '<em><b>Operators</b></em>' containment reference list.

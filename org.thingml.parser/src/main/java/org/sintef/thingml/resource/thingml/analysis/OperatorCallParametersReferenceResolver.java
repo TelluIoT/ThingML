@@ -25,8 +25,6 @@ public class OperatorCallParametersReferenceResolver implements org.sintef.thing
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.OperatorCall, org.sintef.thingml.ReceiveMessage> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.OperatorCall, org.sintef.thingml.ReceiveMessage>();
 	
 	public void resolve(String identifier, org.sintef.thingml.OperatorCall container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.ReceiveMessage> result) {
-//		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
-
 		List<ReceiveMessage> eventSources = ThingMLHelpers.findInputs(container);
 		for(ReceiveMessage r : eventSources) {
 			if(r.getName() != null) {

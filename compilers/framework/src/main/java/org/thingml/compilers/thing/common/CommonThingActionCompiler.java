@@ -226,10 +226,11 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append(")");
     }
 
-    @Override
+    //fixme
+   /* @Override
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
         builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
-    }
+    }*/
 
     @Override
     public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {

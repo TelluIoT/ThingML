@@ -229,10 +229,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createProvidedPortAdapter();
 			}
 			@Override
-			public Adapter caseEventReference(EventReference object) {
-				return createEventReferenceAdapter();
-			}
-			@Override
 			public Adapter caseLiteral(Literal object) {
 				return createLiteralAdapter();
 			}
@@ -445,12 +441,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createMessageParameterAdapter();
 			}
 			@Override
-			public Adapter caseMessageReference(MessageReference object) {
-				return createMessageReferenceAdapter();
+			public Adapter caseSglMsgParamOperatorCall(SglMsgParamOperatorCall object) {
+				return createSglMsgParamOperatorCallAdapter();
 			}
 			@Override
-			public Adapter caseOperatorCall(OperatorCall object) {
-				return createOperatorCallAdapter();
+			public Adapter caseReference(Reference object) {
+				return createReferenceAdapter();
+			}
+			@Override
+			public Adapter caseReferencedElmt(ReferencedElmt object) {
+				return createReferencedElmtAdapter();
+			}
+			@Override
+			public Adapter caseSglMsgParamOperator(SglMsgParamOperator object) {
+				return createSglMsgParamOperatorAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -987,20 +991,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createProvidedPortAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.EventReference <em>Event Reference</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.EventReference
-	 * @generated
-	 */
-	public Adapter createEventReferenceAdapter() {
 		return null;
 	}
 
@@ -1747,30 +1737,58 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.MessageReference <em>Message Reference</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SglMsgParamOperatorCall <em>Sgl Msg Param Operator Call</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.MessageReference
+	 * @see org.sintef.thingml.SglMsgParamOperatorCall
 	 * @generated
 	 */
-	public Adapter createMessageReferenceAdapter() {
+	public Adapter createSglMsgParamOperatorCallAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.OperatorCall <em>Operator Call</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Reference <em>Reference</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.OperatorCall
+	 * @see org.sintef.thingml.Reference
 	 * @generated
 	 */
-	public Adapter createOperatorCallAdapter() {
+	public Adapter createReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ReferencedElmt <em>Referenced Elmt</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ReferencedElmt
+	 * @generated
+	 */
+	public Adapter createReferencedElmtAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SglMsgParamOperator <em>Sgl Msg Param Operator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.SglMsgParamOperator
+	 * @generated
+	 */
+	public Adapter createSglMsgParamOperatorAdapter() {
 		return null;
 	}
 

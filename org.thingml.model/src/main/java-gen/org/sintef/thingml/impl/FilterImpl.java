@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.sintef.thingml.Filter;
 import org.sintef.thingml.OperatorCall;
+import org.sintef.thingml.SglMsgParamOperatorCall;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
@@ -49,7 +50,7 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	 * @generated
 	 * @ordered
 	 */
-	protected OperatorCall filterOp;
+	protected SglMsgParamOperatorCall filterOp;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -75,7 +76,7 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public OperatorCall getFilterOp() {
+	public SglMsgParamOperatorCall getFilterOp() {
 		return filterOp;
 	}
 
@@ -84,8 +85,8 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetFilterOp(OperatorCall newFilterOp, NotificationChain msgs) {
-		OperatorCall oldFilterOp = filterOp;
+	public NotificationChain basicSetFilterOp(SglMsgParamOperatorCall newFilterOp, NotificationChain msgs) {
+		SglMsgParamOperatorCall oldFilterOp = filterOp;
 		filterOp = newFilterOp;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.FILTER__FILTER_OP, oldFilterOp, newFilterOp);
@@ -99,7 +100,7 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setFilterOp(OperatorCall newFilterOp) {
+	public void setFilterOp(SglMsgParamOperatorCall newFilterOp) {
 		if (newFilterOp != filterOp) {
 			NotificationChain msgs = null;
 			if (filterOp != null)
@@ -150,7 +151,7 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ThingmlPackage.FILTER__FILTER_OP:
-				setFilterOp((OperatorCall)newValue);
+				setFilterOp((SglMsgParamOperatorCall)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -165,7 +166,7 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ThingmlPackage.FILTER__FILTER_OP:
-				setFilterOp((OperatorCall)null);
+				setFilterOp((SglMsgParamOperatorCall)null);
 				return;
 		}
 		super.eUnset(featureID);

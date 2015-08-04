@@ -33,7 +33,7 @@ package org.sintef.thingml;
  * @model
  * @generated
  */
-public interface ReceiveMessage extends Event {
+public interface ReceiveMessage extends Event, ReferencedElmt {
 	/**
 	 * Returns the value of the '<em><b>Message</b></em>' reference.
 	 * <!-- begin-user-doc -->

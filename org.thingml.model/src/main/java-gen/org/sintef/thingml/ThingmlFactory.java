@@ -269,15 +269,6 @@ public interface ThingmlFactory extends EFactory {
 	ProvidedPort createProvidedPort();
 
 	/**
-	 * Returns a new object of class '<em>Event Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Event Reference</em>'.
-	 * @generated
-	 */
-	EventReference createEventReference();
-
-	/**
 	 * Returns a new object of class '<em>Enum Literal Ref</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -665,15 +656,6 @@ public interface ThingmlFactory extends EFactory {
 	Filter createFilter();
 
 	/**
-	 * Returns a new object of class '<em>Operator</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Operator</em>'.
-	 * @generated
-	 */
-	Operator createOperator();
-
-	/**
 	 * Returns a new object of class '<em>Message Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -683,22 +665,31 @@ public interface ThingmlFactory extends EFactory {
 	MessageParameter createMessageParameter();
 
 	/**
-	 * Returns a new object of class '<em>Message Reference</em>'.
+	 * Returns a new object of class '<em>Sgl Msg Param Operator Call</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Message Reference</em>'.
+	 * @return a new object of class '<em>Sgl Msg Param Operator Call</em>'.
 	 * @generated
 	 */
-	MessageReference createMessageReference();
+	SglMsgParamOperatorCall createSglMsgParamOperatorCall();
 
 	/**
-	 * Returns a new object of class '<em>Operator Call</em>'.
+	 * Returns a new object of class '<em>Reference</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Operator Call</em>'.
+	 * @return a new object of class '<em>Reference</em>'.
 	 * @generated
 	 */
-	OperatorCall createOperatorCall();
+	Reference createReference();
+
+	/**
+	 * Returns a new object of class '<em>Sgl Msg Param Operator</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Sgl Msg Param Operator</em>'.
+	 * @generated
+	 */
+	SglMsgParamOperator createSglMsgParamOperator();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ */
 package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -22,52 +24,52 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.sintef.thingml.EventReference;
 import org.sintef.thingml.Parameter;
-import org.sintef.thingml.ReceiveMessage;
+import org.sintef.thingml.Reference;
+import org.sintef.thingml.ReferencedElmt;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Event Reference</b></em>'.
+ * An implementation of the model object '<em><b>Reference</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.EventReferenceImpl#getMsgRef <em>Msg Ref</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.EventReferenceImpl#getParamRef <em>Param Ref</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ReferenceImpl#getParameter <em>Parameter</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ReferenceImpl#getReference <em>Reference</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class EventReferenceImpl extends ExpressionImpl implements EventReference {
+public class ReferenceImpl extends ExpressionImpl implements Reference {
 	/**
-	 * The cached value of the '{@link #getMsgRef() <em>Msg Ref</em>}' reference.
+	 * The cached value of the '{@link #getParameter() <em>Parameter</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getMsgRef()
+	 * @see #getParameter()
 	 * @generated
 	 * @ordered
 	 */
-	protected ReceiveMessage msgRef;
+	protected Parameter parameter;
 
 	/**
-	 * The cached value of the '{@link #getParamRef() <em>Param Ref</em>}' reference.
+	 * The cached value of the '{@link #getReference() <em>Reference</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getParamRef()
+	 * @see #getReference()
 	 * @generated
 	 * @ordered
 	 */
-	protected Parameter paramRef;
+	protected ReferencedElmt reference;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected EventReferenceImpl() {
+	protected ReferenceImpl() {
 		super();
 	}
 
@@ -78,7 +80,7 @@ public class EventReferenceImpl extends ExpressionImpl implements EventReference
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ThingmlPackage.Literals.EVENT_REFERENCE;
+		return ThingmlPackage.Literals.REFERENCE;
 	}
 
 	/**
@@ -86,16 +88,16 @@ public class EventReferenceImpl extends ExpressionImpl implements EventReference
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ReceiveMessage getMsgRef() {
-		if (msgRef != null && msgRef.eIsProxy()) {
-			InternalEObject oldMsgRef = (InternalEObject)msgRef;
-			msgRef = (ReceiveMessage)eResolveProxy(oldMsgRef);
-			if (msgRef != oldMsgRef) {
+	public Parameter getParameter() {
+		if (parameter != null && parameter.eIsProxy()) {
+			InternalEObject oldParameter = (InternalEObject)parameter;
+			parameter = (Parameter)eResolveProxy(oldParameter);
+			if (parameter != oldParameter) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.EVENT_REFERENCE__MSG_REF, oldMsgRef, msgRef));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.REFERENCE__PARAMETER, oldParameter, parameter));
 			}
 		}
-		return msgRef;
+		return parameter;
 	}
 
 	/**
@@ -103,8 +105,8 @@ public class EventReferenceImpl extends ExpressionImpl implements EventReference
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ReceiveMessage basicGetMsgRef() {
-		return msgRef;
+	public Parameter basicGetParameter() {
+		return parameter;
 	}
 
 	/**
@@ -112,11 +114,11 @@ public class EventReferenceImpl extends ExpressionImpl implements EventReference
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setMsgRef(ReceiveMessage newMsgRef) {
-		ReceiveMessage oldMsgRef = msgRef;
-		msgRef = newMsgRef;
+	public void setParameter(Parameter newParameter) {
+		Parameter oldParameter = parameter;
+		parameter = newParameter;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.EVENT_REFERENCE__MSG_REF, oldMsgRef, msgRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.REFERENCE__PARAMETER, oldParameter, parameter));
 	}
 
 	/**
@@ -124,16 +126,16 @@ public class EventReferenceImpl extends ExpressionImpl implements EventReference
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Parameter getParamRef() {
-		if (paramRef != null && paramRef.eIsProxy()) {
-			InternalEObject oldParamRef = (InternalEObject)paramRef;
-			paramRef = (Parameter)eResolveProxy(oldParamRef);
-			if (paramRef != oldParamRef) {
+	public ReferencedElmt getReference() {
+		if (reference != null && reference.eIsProxy()) {
+			InternalEObject oldReference = (InternalEObject)reference;
+			reference = (ReferencedElmt)eResolveProxy(oldReference);
+			if (reference != oldReference) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.EVENT_REFERENCE__PARAM_REF, oldParamRef, paramRef));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.REFERENCE__REFERENCE, oldReference, reference));
 			}
 		}
-		return paramRef;
+		return reference;
 	}
 
 	/**
@@ -141,8 +143,8 @@ public class EventReferenceImpl extends ExpressionImpl implements EventReference
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Parameter basicGetParamRef() {
-		return paramRef;
+	public ReferencedElmt basicGetReference() {
+		return reference;
 	}
 
 	/**
@@ -150,11 +152,11 @@ public class EventReferenceImpl extends ExpressionImpl implements EventReference
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setParamRef(Parameter newParamRef) {
-		Parameter oldParamRef = paramRef;
-		paramRef = newParamRef;
+	public void setReference(ReferencedElmt newReference) {
+		ReferencedElmt oldReference = reference;
+		reference = newReference;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.EVENT_REFERENCE__PARAM_REF, oldParamRef, paramRef));
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.REFERENCE__REFERENCE, oldReference, reference));
 	}
 
 	/**
@@ -165,12 +167,12 @@ public class EventReferenceImpl extends ExpressionImpl implements EventReference
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.EVENT_REFERENCE__MSG_REF:
-				if (resolve) return getMsgRef();
-				return basicGetMsgRef();
-			case ThingmlPackage.EVENT_REFERENCE__PARAM_REF:
-				if (resolve) return getParamRef();
-				return basicGetParamRef();
+			case ThingmlPackage.REFERENCE__PARAMETER:
+				if (resolve) return getParameter();
+				return basicGetParameter();
+			case ThingmlPackage.REFERENCE__REFERENCE:
+				if (resolve) return getReference();
+				return basicGetReference();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -183,11 +185,11 @@ public class EventReferenceImpl extends ExpressionImpl implements EventReference
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.EVENT_REFERENCE__MSG_REF:
-				setMsgRef((ReceiveMessage)newValue);
+			case ThingmlPackage.REFERENCE__PARAMETER:
+				setParameter((Parameter)newValue);
 				return;
-			case ThingmlPackage.EVENT_REFERENCE__PARAM_REF:
-				setParamRef((Parameter)newValue);
+			case ThingmlPackage.REFERENCE__REFERENCE:
+				setReference((ReferencedElmt)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -201,11 +203,11 @@ public class EventReferenceImpl extends ExpressionImpl implements EventReference
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.EVENT_REFERENCE__MSG_REF:
-				setMsgRef((ReceiveMessage)null);
+			case ThingmlPackage.REFERENCE__PARAMETER:
+				setParameter((Parameter)null);
 				return;
-			case ThingmlPackage.EVENT_REFERENCE__PARAM_REF:
-				setParamRef((Parameter)null);
+			case ThingmlPackage.REFERENCE__REFERENCE:
+				setReference((ReferencedElmt)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -219,12 +221,12 @@ public class EventReferenceImpl extends ExpressionImpl implements EventReference
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.EVENT_REFERENCE__MSG_REF:
-				return msgRef != null;
-			case ThingmlPackage.EVENT_REFERENCE__PARAM_REF:
-				return paramRef != null;
+			case ThingmlPackage.REFERENCE__PARAMETER:
+				return parameter != null;
+			case ThingmlPackage.REFERENCE__REFERENCE:
+				return reference != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //EventReferenceImpl
+} //ReferenceImpl
