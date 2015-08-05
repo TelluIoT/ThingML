@@ -49,12 +49,6 @@ public class JavaGenerateSourceDeclaration {
     }
 
     public static void generate(Stream stream, MergeSources source, StringBuilder builder, Context context) {
-        //currently, all the SourceComposition element have 2 sources
-        /*Source s1 = source.getSources().get(0);
-        Source s2 = source.getSources().get(1);*/
-        /*generate(stream,s1,builder,context);
-        generate(stream, s2, builder, context);*/
-//        builder.append("rx.Observable " + stream.qname("_") + " = " + s1.qname("_") + ".mergeWith(" + s2.qname("_") + ");\n");
         String mergeParams = "";
         boolean firstParamDone = false;
         for(Source s : source.getSources()) {
@@ -132,11 +126,8 @@ public class JavaGenerateSourceDeclaration {
         }
 
         builder.append("return (" + resultType + ") " + resultName + "Type.instantiate("+ stream.getOutput().getPort().getName() + "_port");
-        //Param declaration
-        i = 0;
-        for(Parameter p : stream.getOutput().getMessage().getParameters()) {
+        for(i = 0; i<stream.getOutput().getMessage().getParameters().size(); i++) {
             builder.append(",param" + i);
-            i++;
         }
         builder.append(");\n")
                 .append("}\n")
@@ -182,28 +173,10 @@ public class JavaGenerateSourceDeclaration {
 
             Parameter parameter = itParamsResultMsgs.next();
             Expression rule = itRules.next();
-            /*if (!(parameter.getType() instanceof Enumeration)) {
-                if (!(parameter.getCardinality() != null))
-                    builder.append(parameter.getType().annotation("java_type").toArray()[0] + " ");
-                else
-                    builder.append(parameter.getType().annotation("java_type").toArray()[0] + "[] ");
-            }*/
-
-            //builder.append(" param" + i + " = ");
             javaCmpl.cast(parameter.getType(),parameter.getCardinality() != null, rule, builder, context);
             i++;
         }
 
-
-//        builder.append("return (" + outPutType + ") " + outPutName + "Type.instantiate("+ stream.getOutput().getPort().getName() + "_port");
-        /*Iterator<StreamExpression> itStreamExpression = stream.getSelection().iterator();
-        Iterator<Parameter> itParameter = stream.getOutput().getMessage().getParameters().iterator();
-        while(itStreamExpression.hasNext() && itParameter.hasNext()) {
-            Parameter fp = itParameter.next();
-            StreamExpression se = itStreamExpression.next();
-            builder.append(", ");
-            javaCmpl.cast(fp.getType(), fp.getCardinality() != null, se.getExpression(), builder, context);
-        }*/
 
         builder.append(");\n");
 

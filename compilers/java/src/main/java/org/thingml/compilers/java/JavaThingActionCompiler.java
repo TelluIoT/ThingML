@@ -52,16 +52,13 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         for (StreamExpression p : streamOutput.getParameters()) {
             if (i > 0)
                 builder.append(", ");
-            int j = 0;
-            for (Parameter fp : streamOutput.getMessage().getParameters()) {
-                if (i == j) {//parameter p corresponds to formal parameter fp
-                    cast(fp.getType(), fp.getCardinality() != null, p.getExpression(), builder, ctx);
-                    break;
-                }
-                j++;
+            if(i < streamOutput.getMessage().getParameters().size()) {
+                Parameter fp = streamOutput.getMessage().getParameters().get(i);
+                cast(fp.getType(), fp.getCardinality() != null, p.getExpression(), builder, ctx);
             }
             i++;
         }
+
         builder.append(");\n");
     }
 
@@ -195,8 +192,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
                 builder.append(message.getName() + "." + message.getParameters().get(expression.getIndexParam()).getName());
             }
 
-
-//            builder.append("param" + expression.getIndexParam());
         } else {
             throw new UnsupportedOperationException("An input source has been added (" + source.getClass().getName() + ") to ThingML but the compiler did not updates." +
                     "Please update JavaThingActionCompiler.generate for StreamParamReference expression .");

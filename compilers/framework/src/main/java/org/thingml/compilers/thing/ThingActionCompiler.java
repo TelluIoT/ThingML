@@ -17,7 +17,6 @@ package org.thingml.compilers.thing;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ThingMLCopyExpression;
 
 public class ThingActionCompiler {
 
@@ -257,12 +256,6 @@ public class ThingActionCompiler {
 
     // CEP Action
     public void generate(StreamOutput streamOutput, StringBuilder builder, Context ctx) {
-        SendAction sendAction = ThingmlFactory.eINSTANCE.createSendAction();
-        sendAction.setMessage(streamOutput.getMessage());
-        sendAction.setPort(streamOutput.getPort());
-        for(StreamExpression se : streamOutput.getParameters()) {
-            sendAction.getParameters().add(ThingMLCopyExpression.copy(se.getExpression()));
-        }
-        generate(sendAction, builder, ctx);
+        throw (new UnsupportedOperationException("This CEP action (" + streamOutput.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 }

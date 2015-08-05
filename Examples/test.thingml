@@ -57,40 +57,39 @@ thing Sample includes CepMsgs,  SampleMsgs{
         return value + 1
     end
     
-    /*stream forwardSimpleMessage do
+    stream forwardSimpleMessage do
         from rcvPort?m1
         action sendPort!cep1()
     end
     
     stream forwardMessageWithParams do
-        from evt : [ rcvPort?m2 ]
+        from evt : [rcvPort?m2]
         select a : evt.v1, b : evt.v2
         action sendPort!cep2(a,b)
     end
     
     stream transformingMessageValue do
-        from evt : [ rcvPort?m2 ]
+        from evt : [rcvPort?m2]
         select a : (evt.v1 * 2) + 5, b : complexTransforming(evt.v2)
         action sendPort!cep2(a,b)
-    end*/
+    end
     
     stream mergedSimpleMessages do
         from [ rcvPort?m3 | rcvPort?m4 -> cep3()]
-        //select a : 5 + 5
         action sendPort!cep3()
     end
     
     stream mergeMessagesWithValues do
-        from [ rcvPort?m5 | rcvPort?m6 -> cep4(#0,complexTransforming(#1),(#2 * 2) + 5)]
-        select a : #0 +1, b: #1 + 1, c: #2 + 1
+        from [ rcvPort?m5 | rcvPort?m6 -> cep4(#0,complexTransforming(#1), (#2 * 2) + 5)]
+        select a : #0, b: #1, c: #2
         action sendPort!cep4(a,b,c)
     end
     
-    /*stream joinMessages do
+    stream joinMessages do
         from [ e1 : rcvPort?m7 & e2 : rcvPort?m8 -> cep5(e1.a * e2.v1,e1.b * e2.v2,e1.c * e2.v3)]
-        select a : #0 + 1, b : #1 + 1 , c :#2 + 1 
+        select a : #0, b : #1, c : #2
         action sendPort!cep5(a,b,c)
-    end*/
+    end
     
     
     statechart Sample init Init {
