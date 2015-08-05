@@ -17,7 +17,7 @@ thing TestHistoryStatesWithStream includes Test, TestMsgs
     }
     
     stream testStream do
-        from m : harnessIn?testIn
+        from m : [ harnessIn?testIn ]
         select c : m.c
         action cepSend!cepMsg(c)
     end

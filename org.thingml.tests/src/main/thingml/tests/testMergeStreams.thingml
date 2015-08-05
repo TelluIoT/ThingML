@@ -1,9 +1,12 @@
 import "../../../../../org.thingml.samples/src/main/thingml/thingml.thingml"
     
+datatype JInt
+    @java_type "int";
+    
 thing fragment CepMsgs 
 {
     message cep1();
-    message cep2(val1 : Integer, val2 : Integer, val3 : Integer);
+    message cep2(val1 : JInt, val2 : JInt, val3 : JInt);
 }
 
 thing fragment SampleMsgs {
@@ -12,10 +15,10 @@ thing fragment SampleMsgs {
     message m2();
     message m3();
 
-    message m4(x : Integer, y : Integer, z : Integer);
-    message m5(value1 : Integer, value2 : Integer, value3 : Integer);
-    message m6(a : Integer, b : Integer, c : Integer);
-    message m7(v1 : Integer, v2 : Integer, v3 : Integer);
+    message m4(x : JInt, y : JInt, z : JInt);
+    message m5(value1 : JInt, value2 : JInt, value3 : JInt);
+    message m6(a : JInt, b : JInt, c : JInt);
+    message m7(v1 : JInt, v2 : JInt, v3 : JInt);
 }
 
 thing TestMergeStreams includes CepMsgs,  SampleMsgs, Test
@@ -30,19 +33,19 @@ thing TestMergeStreams includes CepMsgs,  SampleMsgs, Test
         receives m1, m2, m3, m4, m5, m6, m7, cep1, cep2
     }
     
-    function complexTransforming(value : Integer) : Integer do
+    function complexTransforming(value : JInt) : JInt do
         return value + 1
     end
     
 
     stream mergedSimpleMessages do
-        from [ rcvPort?m1 | rcvPort?m2 | rcvPort?m3 ]
+        from [ rcvPort?m1 | rcvPort?m2 | rcvPort?m3 -> cep1()]
         action sendPort!cep1()
     end
     
     stream mergeMessagesWithValues do
-        from [ rcvPort?m4 | rcvPort?m5 | rcvPort?m6 | rcvPort?m7 ]
-        select a : #0, b: complexTransforming(#1), c: (#2 * 2) + 5
+        from [ rcvPort?m4 | rcvPort?m5 | rcvPort?m6 | rcvPort?m7 -> cep2(#0,complexTransforming(#1),(#2 * 2))]
+        select a : #0, b: complexTransforming(#1) - 1, c: #2 + 5
         action sendPort!cep2(a,b,c)
     end
     
