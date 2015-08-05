@@ -27,7 +27,7 @@ import org.thingml.compilers.java.cepHelper.JavaGenerateSourceDeclaration;
 public class JavaCepCompiler extends CepCompiler {
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
-        JavaGenerateSourceDeclaration.generate(stream,stream.getInput(),builder,ctx);
+        JavaGenerateSourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
         if(stream.getInput() instanceof SimpleSource) {
             generateSimpleStreamSubscription(stream,builder,ctx);
         } else if(stream.getInput() instanceof MergeSources) {
@@ -66,13 +66,12 @@ public class JavaCepCompiler extends CepCompiler {
     }
 
     public static void generateMergeStreamSubscription(Stream stream, StringBuilder builder, Context context) {
-        String obsName = stream.qname("_");
+//        String obsName = stream.qname("_");
 
-        builder.append(obsName + ".subscribe(new Action1<Event>() {\n")
+        /*builder.append(obsName + ".subscribe(new Action1<Event>() {\n")
                 .append("@Override\n")
-                .append("public void call(Event event) {\n");
-
-        int i = 0;
+                .append("public void call(Event event) {\n");*/
+       /* int i = 0;
 
         //Param declaration
         for(Parameter p : stream.getOutput().getMessage().getParameters()) {
@@ -119,15 +118,38 @@ public class JavaCepCompiler extends CepCompiler {
 
         i = 0;
         for(Expression exp : source.getRules()) {
-            builder.append("param" + i + " = ");
-            context.getCompiler().getThingActionCompiler().generate(exp,builder,context);
-            builder.append(";\n");
+            if(!(exp instanceof StreamParamReference)) {
+                builder.append("param" + i + " = ");
+                context.getCompiler().getThingActionCompiler().generate(exp, builder, context);
+                builder.append(";\n");
+            }
             i++;
         }
 
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
         builder.append("}\n" +
-                "});");
+                "});");*/
+
+        Message outPut = stream.getOutput().getMessage();
+        String outPutName = outPut.getName();
+        String outPutType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
+
+        builder.append(stream.qname("_") + ".subscribe(new Action1<" + outPutType + ">() {\n")
+                .append("@Override\n")
+                .append("public void call(" + outPutType + " " + outPutName + ") {\n");
+
+        StreamOutput newOutput = ThingmlFactory.eINSTANCE.createStreamOutput();
+        newOutput.setMessage(stream.getOutput().getMessage());
+        newOutput.setPort(stream.getOutput().getPort());
+
+        ReceiveMessage rm = ThingmlFactory.eINSTANCE.createReceiveMessage();
+        rm.setMessage(stream.getOutput().getMessage());
+        rm.setPort(stream.getOutput().getPort());
+
+        context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
+
+        builder.append("}\n")
+                .append("});\n");
     }
 
     public static void generateJoinStreamSubscription(Stream stream, StringBuilder builder, Context context) {

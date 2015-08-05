@@ -66,7 +66,81 @@ public class JavaGenerateSourceDeclaration {
             }
             mergeParams += s.qname("_");
         }
-        builder.append("rx.Observable " + stream.qname("_") + " = rx.Observable.merge(" + mergeParams + ");\n");
+
+        Message result = source.getResultMessage();
+        String resultName = result.getName();
+        String resultType = context.firstToUpper(resultName) + "MessageType." + context.firstToUpper(resultName) + "Message";
+
+        builder.append("rx.Observable " + stream.qname("_") + " = rx.Observable.merge(" + mergeParams + ").map(new Func1<Event," + resultType + ">() {\n")
+                .append("@Override\n")
+                .append("public " + resultType + " call(Event event) {\n");
+
+        int i = 0;
+
+        //Param declaration
+        for(Parameter p : stream.getOutput().getMessage().getParameters()) {
+            if (!(p.getType() instanceof Enumeration)) {
+                if (!(p.getCardinality() != null))
+                    builder.append(p.getType().annotation("java_type").toArray()[0] + " ");
+                else
+                    builder.append(p.getType().annotation("java_type").toArray()[0] + "[] ");
+            }
+            builder.append("param" + i + " = 0;\n");
+            i++;
+        }
+
+        //param initialization
+        if(stream.getOutput().getParameters().size() > 0) {
+            boolean firstElementDone = false;
+            for (Source simpleSource : source.getSources()) {
+                SimpleSource sSource = (SimpleSource) simpleSource;
+                Message message = sSource.getMessage().getMessage();
+                String messageName = context.firstToUpper(message.getName());
+                String messageType = messageName + "MessageType." + messageName + "Message";
+                if (firstElementDone) {
+                    builder.append("else ");
+                } else {
+                    firstElementDone = true;
+                }
+                builder.append("if(event instanceof " + messageType + ") {\n")
+                        .append("final ")
+                        .append(messageName)
+                        .append("MessageType.")
+                        .append(messageName)
+                        .append("Message " + message.getName() + " = (")
+                        .append(messageName)
+                        .append("MessageType.")
+                        .append(messageName)
+                        .append("Message) event;\n");
+
+                for (i = 0; i < stream.getOutput().getMessage().getParameters().size(); i++) {
+                    builder.append("param" + i + " = " + message.getName() + "." + message.getParameters().get(i).getName() + ";\n");
+                }
+
+                builder.append("}\n");
+            }
+        }
+
+        i = 0;
+        for(Expression exp : source.getRules()) {
+            if(!(exp instanceof StreamParamReference)) {
+                builder.append("param" + i + " = ");
+                context.getCompiler().getThingActionCompiler().generate(exp, builder, context);
+                builder.append(";\n");
+            }
+            i++;
+        }
+
+        builder.append("return (" + resultType + ") " + resultName + "Type.instantiate("+ stream.getOutput().getPort().getName() + "_port");
+        //Param declaration
+        i = 0;
+        for(Parameter p : stream.getOutput().getMessage().getParameters()) {
+            builder.append(",param" + i);
+            i++;
+        }
+        builder.append(");\n")
+                .append("}\n")
+                .append("});");
     }
 
     public static void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {

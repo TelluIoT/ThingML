@@ -790,6 +790,16 @@ public class ThingMLHelpers {
 		return (ThingMLElement) parent;
 	}
 
+	public static Expression findRootExpressions(Expression expression) {
+		Expression result = expression;
+		EObject parent = expression.eContainer();
+		while(parent != null && parent instanceof Expression) {
+			result = (Expression) parent;
+			parent = parent.eContainer();
+		}
+		return result;
+	}
+
 	/** END **/
 
 

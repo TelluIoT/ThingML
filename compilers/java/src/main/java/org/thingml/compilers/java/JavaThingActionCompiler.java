@@ -180,7 +180,23 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             message = ((JoinSources) source).getResultMessage();
             builder.append(message.getName() + "." + message.getParameters().get(expression.getIndexParam()).getName());
         } else if (source instanceof MergeSources) {
-            builder.append("param" + expression.getIndexParam());
+            boolean ok = false;
+            Expression rootExp = ThingMLHelpers.findRootExpressions(expression);
+            for(Expression exp : ((MergeSources) source).getRules()) {
+                if(rootExp == exp) {
+                    builder.append("param" + expression.getIndexParam());
+                    ok = true;
+                    break;
+                }
+            }
+
+            if(!ok) {
+                message = ((MergeSources) source).getResultMessage();
+                builder.append(message.getName() + "." + message.getParameters().get(expression.getIndexParam()).getName());
+            }
+
+
+//            builder.append("param" + expression.getIndexParam());
         } else {
             throw new UnsupportedOperationException("An input source has been added (" + source.getClass().getName() + ") to ThingML but the compiler did not updates." +
                     "Please update JavaThingActionCompiler.generate for StreamParamReference expression .");
