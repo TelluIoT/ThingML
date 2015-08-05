@@ -37,7 +37,7 @@ import java.io.File;
 public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
     public SintefboardCompiler() {
-        super(new CThingActionCompilerSintefboard(), new CThingApiCompilerSintefboard(), new CCfgMainGenerator(), new CfgBuildCompiler(), new CThingImplCompilerSintefboard());
+        super(new CThingActionCompilerSintefboard(), new CThingApiCompilerSintefboard(), new CCfgMainGeneratorSintefboard(), new CfgBuildCompiler(), new CThingImplCompilerSintefboard());
     }
 
     @Override

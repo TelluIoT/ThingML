@@ -44,6 +44,15 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateCImpl(Thing thing, CCompilerContext ctx) {
 
+        if (isGeneratingCpp()) {
+            // GENERATE C++ INIT CODE FOR THING
+            String cppinittemplate = ctx.getThingImplInitTemplate();
+            StringBuilder builder = new StringBuilder();
+            generateCppMessageSendingInit(thing, builder, ctx);
+            cppinittemplate = cppinittemplate.replace("/*CODE*/", builder.toString());
+            ctx.getBuilder(thing.getName() + "_init.c").append(cppinittemplate);
+        }
+        
         StringBuilder builder = new StringBuilder();
 
         builder.append("/*****************************************************************************\n");
@@ -143,9 +152,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             StateMachine sm = thing.allStateMachines().get(0);
             builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
+            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n"); // sdalgard moved inside if-statement
         }
 
-        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
         // Message Sending
         for(Port port : thing.getPorts()) {
@@ -578,6 +587,18 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 }
                 ctx.appendActualParameters(thing, builder, msg, null);
                 builder.append(";\n}\n");
+            }
+        }
+        builder.append("\n");
+    }
+
+    protected void generateCppMessageSendingInit(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+       // NB sdalgard - This function is derivated from generatePrivateMessageSendingOperations
+        
+        
+       for(Port port : thing.allPorts()) {
+            for (Message msg : port.getSends()) {
+                builder.append("" + ctx.getSenderName(thing, port, msg) + "_listener = 0x0;\n");
             }
         }
         builder.append("\n");

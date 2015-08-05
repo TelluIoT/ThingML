@@ -176,9 +176,18 @@ public class CThingApiCompiler extends ThingApiCompiler {
         if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             StateMachine sm = thing.allStateMachines().get(0);
             builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
+            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
+            
+            // Add handler for empty transitions if needed - Added by sdalgard
+            if (sm.hasEmptyHandlers()) {
+                builder.append("void " + ctx.getEmptyHandlerName(thing));
+                ctx.appendFormalParametersEmptyHandler(thing, builder);
+                builder.append(";\n");
+            }
+            
+            
         }
 
-        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
         // Message Sending
         for(Port port : thing.getPorts()) {
@@ -196,6 +205,9 @@ public class CThingApiCompiler extends ThingApiCompiler {
         //        builder.append(";\n");
         //    }
         //}
+        
+        
+        
     }
 
     

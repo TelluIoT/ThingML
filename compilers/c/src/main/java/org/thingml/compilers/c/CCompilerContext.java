@@ -30,6 +30,10 @@ public abstract class CCompilerContext extends Context {
         super(c);
     }
 
+    public String getCfgMainHeaderTemplate() {
+        return getTemplateByID("ctemplates/" + getCompiler().getID() + "_main_header.h");
+    }
+
     public String getCfgMainTemplate() {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_main.c");
     }
@@ -40,6 +44,10 @@ public abstract class CCompilerContext extends Context {
 
     public String getThingImplTemplate() {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thing_impl.c");
+    }
+
+    public String getThingImplInitTemplate() {
+        return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thing_impl_init.c");
     }
 
     public String getRuntimeHeaderTemplate() {
