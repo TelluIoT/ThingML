@@ -6738,7 +6738,9 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		// print collected hidden tokens
 		int count;
 		// DEFINITION PART BEGINS (CsString)
-		out.print("filter(");
+		out.print("filter");
+		// DEFINITION PART BEGINS (CsString)
+		out.print("(");
 		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("filterOp");
 		if (count > 0) {

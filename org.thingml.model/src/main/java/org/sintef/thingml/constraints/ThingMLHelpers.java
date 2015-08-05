@@ -800,6 +800,13 @@ public class ThingMLHelpers {
 		return result;
 	}
 
+	public static TypedElement findContainingFuncOp(EObject eObject) {
+		while(eObject != null && !(eObject instanceof Function || eObject instanceof Operator)) {
+			eObject = eObject.eContainer();
+		}
+		return (TypedElement) eObject;
+	}
+
 	/** END **/
 
 

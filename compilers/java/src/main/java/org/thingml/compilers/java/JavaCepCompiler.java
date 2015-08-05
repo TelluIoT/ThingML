@@ -31,7 +31,7 @@ public class JavaCepCompiler extends CepCompiler {
         if(stream.getInput() instanceof SimpleSource) {
             SimpleSource source = (SimpleSource) stream.getInput();
             Message outPut = source.getMessage().getMessage();
-            generateSubscription(stream, builder, ctx, outPut, source.qname("_"));
+            generateSubscription(stream, builder, ctx, outPut, source.qname("_") + "_observable");
         } else if(stream.getInput() instanceof SourceComposition) {
             Message outPut = stream.getOutput().getMessage();
             generateSubscription(stream, builder, ctx, outPut, stream.qname("_"));

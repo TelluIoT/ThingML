@@ -179,6 +179,9 @@ public class ThingmlTokenStyleInformationProvider {
 		if ("operator".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x44, 0x44, 0x44}, null, true, false, false, false);
 		}
+		if ("filter".equals(tokenName)) {
+			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0xA2, 0x20, 0x00}, null, true, false, false, false);
+		}
 		if ("configuration".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x00, 0x7F, 0x55}, null, true, false, false, false);
 		}

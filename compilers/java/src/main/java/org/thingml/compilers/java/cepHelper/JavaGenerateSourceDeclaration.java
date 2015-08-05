@@ -29,7 +29,7 @@ public class JavaGenerateSourceDeclaration {
 
     public static void generate(Stream stream, Source source, StringBuilder builder, Context context) {
         if(source instanceof SimpleSource) {
-            generate(stream,(SimpleSource) source, builder,context);
+            generate(stream, (SimpleSource) source, builder, context);
         } else if(source instanceof MergeSources) {
             generate(stream,(MergeSources)source,builder,context);
         } else if(source instanceof JoinSources) {
@@ -46,6 +46,14 @@ public class JavaGenerateSourceDeclaration {
                 .append(source.getMessage().getPort().getName() + "_port),")
                 .append(source.qname("_") + ");\n");
 
+       builder.append("rx.Observable " + source.qname("_") + "_observable" + " = " + source.qname("_") + ".asObservable()");
+        for(ViewSource view : source.getOperators()) {
+            if(view instanceof Filter) {
+                Filter filter = (Filter) view;
+                builder.append(".filter(" + filter.getFilterOp().getOperatorRef().getName() + "())");
+            }
+        }
+        builder.append(";\n");
     }
 
     public static void generate(Stream stream, MergeSources source, StringBuilder builder, Context context) {
@@ -58,7 +66,7 @@ public class JavaGenerateSourceDeclaration {
             } else {
                 firstParamDone = true;
             }
-            mergeParams += s.qname("_");
+            mergeParams += s.qname("_") + "_observable";
         }
 
         Message result = source.getResultMessage();
@@ -132,6 +140,8 @@ public class JavaGenerateSourceDeclaration {
         builder.append(");\n")
                 .append("}\n")
                 .append("});");
+
+        generateOperatorCalls(stream,source,builder);
     }
 
     public static void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
@@ -156,8 +166,8 @@ public class JavaGenerateSourceDeclaration {
 
         generate(stream,simpleSource1,builder,context);
         generate(stream, simpleSource2, builder, context);
-        builder.append("rx.Observable " + stream.qname("_") + " = " + simpleSource1.qname("_"))
-                .append(".join(" + simpleSource2.qname("_") + ",wait,wait,\n")
+        builder.append("rx.Observable " + stream.qname("_") + " = " + simpleSource1.qname("_") + "_observable" )
+                .append(".join(" + simpleSource2.qname("_") + "_observable" + ",wait,wait,\n")
                 .append("new Func2<" + eventMessage1 + ", " + eventMessage2 + ", " + outPutType +">(){\n")
                 .append("@Override\n")
                 .append("public " + outPutType + " call(" + eventMessage1 + " " + message1Name + ", " + eventMessage2 + " " + message2Name + ") {\n");
@@ -167,14 +177,11 @@ public class JavaGenerateSourceDeclaration {
 
         Iterator<Expression> itRules = sources.getRules().iterator();
         Iterator<Parameter> itParamsResultMsgs = sources.getResultMessage().getParameters().iterator();
-        int i = 0;
         while(itRules.hasNext() && itParamsResultMsgs.hasNext()) {
             builder.append(", ");
-
             Parameter parameter = itParamsResultMsgs.next();
             Expression rule = itRules.next();
             javaCmpl.cast(parameter.getType(),parameter.getCardinality() != null, rule, builder, context);
-            i++;
         }
 
 
@@ -183,5 +190,20 @@ public class JavaGenerateSourceDeclaration {
         builder.append("}\n")
                 .append("}\n")
                 .append(");\n");
+
+        generateOperatorCalls(stream, sources, builder);
+    }
+
+    private static void generateOperatorCalls(Stream stream, SourceComposition sources, StringBuilder builder) {
+        if(sources.getOperators().size() > 0) {
+            builder.append(stream.qname("_") + " = " + stream.qname("_"));
+            for (ViewSource view : sources.getOperators()) {
+                if (view instanceof Filter) {
+                    Filter filter = (Filter) view;
+                    builder.append(".filter(" + filter.getFilterOp().getOperatorRef().getName() + "())");
+                }
+            }
+            builder.append(";\n");
+        }
     }
 }

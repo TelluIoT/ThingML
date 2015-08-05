@@ -130,6 +130,7 @@ TOKENSTYLES{
 	"and" COLOR #444444, BOLD;
 	"or" COLOR #444444, BOLD;
 	"operator" COLOR #444444, BOLD;
+	"filter" COLOR #A22000, BOLD;
 	
 	// Configurations and Instances
 	"configuration" COLOR #007F55, BOLD;
@@ -253,18 +254,17 @@ RULES {
 	// *******************************
 	SglMsgParamOperator ::= "operator" #1 name[] "(" parameter ")" ":" #1 type[] #1 body;
 	MessageParameter ::= name[] ":" msgRef[];
-	
+
 	SglMsgParamOperatorCall ::= operatorRef[] "(" parameter[] ")";
 	
 	StreamExpression ::= name[] ":" expression;
 	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
 	
-	SimpleSource ::= ( (name[] ":" "[" message "]") | message) ("::" operators)*;
+	Filter ::= "filter" "(" filterOp ")";
 	
-	Filter ::= "filter(" filterOp")";
-	
-	JoinSources ::= (name[])? "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;
-	MergeSources ::= (name[])? "[" #1 sources #1 ("|" #1 sources #1)+ "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)*;
+	SimpleSource ::= ( (name[] ":" "[" message "]") | message) ("::" operators)*;	
+	JoinSources ::= (name[] ":" )? "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;
+	MergeSources ::= (name[] ":" )? "[" #1 sources #1 ("|" #1 sources #1)+ "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)*;
 	
 	Stream ::= "stream" #1 name[] #1 "do"
 					 !1 "from" #1 input

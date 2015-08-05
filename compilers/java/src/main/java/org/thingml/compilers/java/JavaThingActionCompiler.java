@@ -135,7 +135,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-//        builder.append( ctx.protectKeyword(expression.getMsgRef().getMessage().getName()) + "." + ctx.protectKeyword(expression.getParamRef().getName()));
        if(expression.getReference() instanceof ReceiveMessage) {
            ReceiveMessage rm = (ReceiveMessage) expression.getReference();
            builder.append(ctx.protectKeyword(rm.getMessage().getName()) + "." + ctx.protectKeyword(expression.getParameter().getName()));
@@ -144,11 +143,12 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
            if(source instanceof SimpleSource) {
                ReceiveMessage rm = ((SimpleSource) source).getMessage();
                builder.append(ctx.protectKeyword(rm.getMessage().getName()) + "." + ctx.protectKeyword(expression.getParameter().getName()));
-           } else if(source instanceof SourceComposition) {
-
            } else {
                throw new UnsupportedOperationException("Something is missing in the JavaThingActionCompiler to compile a reference to a stream source");
            }
+       } else if(expression.getReference() instanceof MessageParameter) {
+           MessageParameter mp = (MessageParameter) expression.getReference();
+           builder.append(ctx.protectKeyword(mp.getName()) + "." + ctx.protectKeyword(expression.getParameter().getName()));
        }
     }
 

@@ -116,8 +116,8 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
         builder.append("return ");
-//        generate(action.getExp(), builder, ctx);
-        Function parent = ThingMLHelpers.findContainingFunction(action);
+//        Function parent = ThingMLHelpers.findContainingFunction(action);
+        TypedElement parent = ThingMLHelpers.findContainingFuncOp(action);
         cast(parent.getType(),false,action.getExp(),builder,ctx);
         builder.append(";\n");
     }
