@@ -457,6 +457,14 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createSglMsgParamOperatorAdapter();
 			}
 			@Override
+			public Adapter caseLengthWindow(LengthWindow object) {
+				return createLengthWindowAdapter();
+			}
+			@Override
+			public Adapter caseTimeWindow(TimeWindow object) {
+				return createTimeWindowAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -1789,6 +1797,34 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createSglMsgParamOperatorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.LengthWindow <em>Length Window</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.LengthWindow
+	 * @generated
+	 */
+	public Adapter createLengthWindowAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.TimeWindow <em>Time Window</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.TimeWindow
+	 * @generated
+	 */
+	public Adapter createTimeWindowAdapter() {
 		return null;
 	}
 

@@ -63,31 +63,31 @@ thing Sample includes CepMsgs,  SampleMsgs{
     end
     
     stream forwardMessageWithParams do
-        from evt : rcvPort?m2
+        from evt : [rcvPort?m2]
         select a : evt.v1, b : evt.v2
         action sendPort!cep2(a,b)
     end
     
     stream transformingMessageValue do
-        from evt : rcvPort?m2
+        from evt : [rcvPort?m2]
         select a : (evt.v1 * 2) + 5, b : complexTransforming(evt.v2)
         action sendPort!cep2(a,b)
     end
     
     stream mergedSimpleMessages do
-        from [ rcvPort?m3 | rcvPort?m4 ]
+        from [ rcvPort?m3 | rcvPort?m4 -> cep3()]
         action sendPort!cep3()
     end
     
     stream mergeMessagesWithValues do
-        from [ rcvPort?m5 | rcvPort?m6 ]
-        select a : #0, b: complexTransforming(#1), c: (#2 * 2) + 5
+        from [ rcvPort?m5 | rcvPort?m6 -> cep4(#0, complexTransforming(#1), (#2 * 2) + 5)]
+        select a : #0, b: #1, c: #2
         action sendPort!cep4(a,b,c)
     end
     
     stream joinMessages do
-        from [ e1 : rcvPort?m7 & e2 : rcvPort?m8 ]
-        select a : e1.a * e2.v1, b : e1.b * e2.v2, c : e1.c * e2.v3
+        from [ e1 : rcvPort?m7 & e2 : rcvPort?m8 -> cep5(e1.a * e2.v1, e1.b * e2.v2, e1.c * e2.v3)]
+        select a : #0, b : #1, c : #2
         action sendPort!cep5(a,b,c)
     end
     

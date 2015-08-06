@@ -18,6 +18,7 @@ package org.thingml.compilers.java.cepHelper;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
+import org.thingml.compilers.java.JavaCepCompiler;
 import org.thingml.compilers.java.JavaThingActionCompiler;
 
 import java.util.Iterator;
@@ -48,10 +49,8 @@ public class JavaGenerateSourceDeclaration {
 
        builder.append("rx.Observable " + source.qname("_") + "_observable" + " = " + source.qname("_") + ".asObservable()");
         for(ViewSource view : source.getOperators()) {
-            if(view instanceof Filter) {
-                Filter filter = (Filter) view;
-                builder.append(".filter(" + filter.getFilterOp().getOperatorRef().getName() + "())");
-            }
+            ((JavaCepCompiler)context.getCompiler().getCepCompiler())
+                    .getJavaCepViewCompiler().generate(view,builder,context);
         }
         builder.append(";\n");
     }
@@ -141,7 +140,7 @@ public class JavaGenerateSourceDeclaration {
                 .append("}\n")
                 .append("});");
 
-        generateOperatorCalls(stream,source,builder);
+        generateOperatorCalls(stream,source,builder,context);
     }
 
     public static void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
@@ -191,17 +190,16 @@ public class JavaGenerateSourceDeclaration {
                 .append("}\n")
                 .append(");\n");
 
-        generateOperatorCalls(stream, sources, builder);
+        generateOperatorCalls(stream, sources, builder,context);
     }
 
-    private static void generateOperatorCalls(Stream stream, SourceComposition sources, StringBuilder builder) {
+    private static void generateOperatorCalls(Stream stream, SourceComposition sources, StringBuilder builder, Context context) {
+
+        JavaCepViewCompiler javaCmpl = ((JavaCepCompiler) context.getCompiler().getCepCompiler()).getJavaCepViewCompiler();
         if(sources.getOperators().size() > 0) {
             builder.append(stream.qname("_") + " = " + stream.qname("_"));
             for (ViewSource view : sources.getOperators()) {
-                if (view instanceof Filter) {
-                    Filter filter = (Filter) view;
-                    builder.append(".filter(" + filter.getFilterOp().getOperatorRef().getName() + "())");
-                }
+               javaCmpl.generate(view,builder,context);
             }
             builder.append(";\n");
         }

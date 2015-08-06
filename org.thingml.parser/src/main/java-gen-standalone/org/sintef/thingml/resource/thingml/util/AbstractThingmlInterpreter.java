@@ -631,6 +631,18 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
+		if (object instanceof org.sintef.thingml.LengthWindow) {
+			result = interprete_org_sintef_thingml_LengthWindow((org.sintef.thingml.LengthWindow) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.TimeWindow) {
+			result = interprete_org_sintef_thingml_TimeWindow((org.sintef.thingml.TimeWindow) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		return result;
 	}
 	
@@ -1007,6 +1019,14 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	}
 	
 	public ResultType interprete_org_sintef_thingml_SglMsgParamOperator(org.sintef.thingml.SglMsgParamOperator sglMsgParamOperator, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_LengthWindow(org.sintef.thingml.LengthWindow lengthWindow, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_TimeWindow(org.sintef.thingml.TimeWindow timeWindow, ContextType context) {
 		return null;
 	}
 	

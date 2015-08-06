@@ -19,8 +19,6 @@ import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 
-import java.util.Iterator;
-
 /**
  * @author ludovic
  */
@@ -46,7 +44,7 @@ public class JSGenerateSourceDeclaration {
         String mergeParams = "";
         boolean firstParamDone = false;
         for(Source s : source.getSources()) {
-            JSGenerateSourceDeclaration.generate(stream,s,builder,context);
+            generate(stream,s,builder,context);
             if(firstParamDone) {
                 mergeParams += ", ";
             } else {
@@ -54,7 +52,20 @@ public class JSGenerateSourceDeclaration {
             }
             mergeParams += s.qname("_");
         }
-        builder.append("var " + source.qname("_") + " = Rx.Observable.merge(" + mergeParams + ");\n");
+        builder.append("var " + source.qname("_") + " = Rx.Observable.merge(" + mergeParams + ").map(\n")
+                .append("function(x) {\n")
+                .append("return {");
+        int i = 2;
+        for(Expression exp: source.getRules()) {
+            if(i>2) {
+                builder.append(", ");
+            }
+            builder.append("'"+ i +"' : ");
+            context.getCompiler().getThingActionCompiler().generate(exp, builder, context);
+            i++;
+        }
+        builder.append("};\n")
+                .append("});\n");
     }
 
     public static void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
@@ -75,20 +86,16 @@ public class JSGenerateSourceDeclaration {
                 .append("\tfunction(" + message1Name + "," + message2Name +") {\n");
 
         builder.append("\t\treturn { ");
-        boolean firstParamDone = false;
 
-        Iterator<StreamExpression> itStreamExpression = stream.getSelection().iterator();
+
         int index = 2;
-        while(itStreamExpression.hasNext()) {
-            StreamExpression se = itStreamExpression.next();
-            if(firstParamDone) {
+        for(Expression exp: sources.getRules()) {
+            if(index>2) {
                 builder.append(", ");
-            } else {
-                firstParamDone = true;
             }
-            builder.append("'" + index + "' : ");
-            context.getCompiler().getThingActionCompiler().generate(se.getExpression(),builder,context);
-            index ++;
+            builder.append("'"+ index +"' : ");
+            context.getCompiler().getThingActionCompiler().generate(exp, builder, context);
+            index++;
         }
 
         builder.append("};\n");

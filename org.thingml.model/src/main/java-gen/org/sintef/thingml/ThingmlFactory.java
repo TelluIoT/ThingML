@@ -692,6 +692,24 @@ public interface ThingmlFactory extends EFactory {
 	SglMsgParamOperator createSglMsgParamOperator();
 
 	/**
+	 * Returns a new object of class '<em>Length Window</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Length Window</em>'.
+	 * @generated
+	 */
+	LengthWindow createLengthWindow();
+
+	/**
+	 * Returns a new object of class '<em>Time Window</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Time Window</em>'.
+	 * @generated
+	 */
+	TimeWindow createTimeWindow();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

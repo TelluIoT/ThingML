@@ -56,84 +56,36 @@ thing Sample includes CepMsgs,  SampleMsgs{
         receives m1, m2, m3, m4, m5, m6, m7, m8, cep1, cep2, cep3, cep4, cep5
     }
     
-    function complexTransforming(value : Integer) : Integer do
-        return value + 1
-    end
-    
-    operator filterFwMsgs(msg2 : m2) : Bool do
-        print msg2.v1 + ";" + msg2.v1
-        //just to add some actions...
-        var aVar : Integer = 0
-        return (msg2.v1 % 2) == 0
-    end
-    
-     operator filterM5Msgs(msg5 : m5) : Bool do
-        return msg5.x == 1
-     end
-     
-     operator filterM6Msgs(msg6 : m6) : Bool do
-        return msg6.value1 == 4
-     end
-     
-     operator filterCep4(cep4 : cep4) : Bool do
-        return cep4.a % 2 == 0
-     end
-     
-     operator filterCep5A(cep5 : cep5) : Bool do
-        return cep5.a % 2 == 0
-     end
-     
-     operator filterCep5B(cep5 : cep5) : Bool do
-        return cep5.b % 2 == 0
-     end
-     
-     operator filterCep5C(cep5 : cep5) : Bool do
-        return cep5.c % 2 == 1
-     end
-    
-    stream forwardSimpleMessage do
-        from rcvPort?m1
+    stream winLength do
+        from rcvPort?m1::lengthWindow(5)
         action sendPort!cep1()
     end
-    
-    stream forwardMessageWithParams do
-        from evt : [rcvPort?m2]::filter(filterFwMsgs(evt))
-        select a : evt.v1, b : evt.v2
-        action sendPort!cep2(a,b)
-    end
-    
-    stream transformingMessageValue do
-        from evt : [rcvPort?m2]
-        select a : (evt.v1 * 2) + 5, b : complexTransforming(evt.v2)
-        action sendPort!cep2(a,b)
-    end
-    
-    stream mergedSimpleMessages do
-        from [ rcvPort?m3 | rcvPort?m4 -> cep3()]
-        action sendPort!cep3()
-    end
-    
-    stream mergeMessagesWithValues do
-        from m [ e1 : [rcvPort?m5]::filter(filterM5Msgs(e1)) | e2 : [rcvPort?m6]::filter(filterM6Msgs(e2)) -> cep4(#0,complexTransforming(#1), (#2 * 2) + 5)]
-                ::filter(filterCep4(m))
-        select a : #0, b: #1, c: #2
-        action sendPort!cep4(a,b,c)
-    end
-    
-    stream joinMessages do
-        from jo [ e1 : rcvPort?m7 & e2 : rcvPort?m8 -> cep5(e1.a * e2.v1,e1.b * e2.v2,e1.c * e2.v3) ]
-            ::filter(filterCep5A(jo))::filter(filterCep5B(jo))::filter(filterCep5C(jo))
-        select a : #0, b : #1, c : #2
-        action sendPort!cep5(a,b,c)
-    end
-    
-    
+        
     statechart Sample init Init {
         state Init {
             on entry do
                 print "Init"
                 sendPort!m1()
-                sendPort!m2(7,24)
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                sendPort!m1()
+                /*sendPort!m2(7,24)
                 
                 sendPort!m3()
                 sendPort!m4()
@@ -142,7 +94,7 @@ thing Sample includes CepMsgs,  SampleMsgs{
                 sendPort!m6(4,5,6)
                 
                 sendPort!m7(1,2,3)
-                sendPort!m8(10,20,30)
+                sendPort!m8(10,20,30)*/
             end
             
             internal
@@ -173,4 +125,4 @@ thing Sample includes CepMsgs,  SampleMsgs{
 configuration sampleCfg {
     instance sample : Sample
     connector sample.sendPort => sample.rcvPort    
-}
+}  

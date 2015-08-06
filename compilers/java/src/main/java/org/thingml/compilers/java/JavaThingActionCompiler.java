@@ -178,6 +178,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             builder.append(message.getName() + "." + message.getParameters().get(expression.getIndexParam()).getName());
         } else if (source instanceof MergeSources) {
             boolean ok = false;
+            //if the expression is in the rule
             Expression rootExp = ThingMLHelpers.findRootExpressions(expression);
             for(Expression exp : ((MergeSources) source).getRules()) {
                 if(rootExp == exp) {
@@ -187,6 +188,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
                 }
             }
 
+            //if the expression is in the "select" part
             if(!ok) {
                 message = ((MergeSources) source).getResultMessage();
                 builder.append(message.getName() + "." + message.getParameters().get(expression.getIndexParam()).getName());

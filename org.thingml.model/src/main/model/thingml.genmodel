@@ -289,5 +289,12 @@
     <genClasses ecoreClass="thingml.ecore#//SglMsgParamOperator">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//SglMsgParamOperator/parameter"/>
     </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//LengthWindow">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//LengthWindow/nbEvents"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//TimeWindow">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//TimeWindow/step"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//TimeWindow/size"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -4487,6 +4487,73 @@ public interface ThingmlPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.LengthWindowImpl <em>Length Window</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.LengthWindowImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthWindow()
+	 * @generated
+	 */
+	int LENGTH_WINDOW = 94;
+
+	/**
+	 * The feature id for the '<em><b>Nb Events</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LENGTH_WINDOW__NB_EVENTS = VIEW_SOURCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Length Window</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LENGTH_WINDOW_FEATURE_COUNT = VIEW_SOURCE_FEATURE_COUNT + 1;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.TimeWindowImpl <em>Time Window</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.TimeWindowImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getTimeWindow()
+	 * @generated
+	 */
+	int TIME_WINDOW = 95;
+
+	/**
+	 * The feature id for the '<em><b>Step</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TIME_WINDOW__STEP = VIEW_SOURCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Size</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TIME_WINDOW__SIZE = VIEW_SOURCE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Time Window</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TIME_WINDOW_FEATURE_COUNT = VIEW_SOURCE_FEATURE_COUNT + 2;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.ThingMLModel <em>Thing ML Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6813,6 +6880,59 @@ public interface ThingmlPackage extends EPackage {
 	EReference getSglMsgParamOperator_Parameter();
 
 	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.LengthWindow <em>Length Window</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Length Window</em>'.
+	 * @see org.sintef.thingml.LengthWindow
+	 * @generated
+	 */
+	EClass getLengthWindow();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.LengthWindow#getNbEvents <em>Nb Events</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Nb Events</em>'.
+	 * @see org.sintef.thingml.LengthWindow#getNbEvents()
+	 * @see #getLengthWindow()
+	 * @generated
+	 */
+	EAttribute getLengthWindow_NbEvents();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.TimeWindow <em>Time Window</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Time Window</em>'.
+	 * @see org.sintef.thingml.TimeWindow
+	 * @generated
+	 */
+	EClass getTimeWindow();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.TimeWindow#getStep <em>Step</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Step</em>'.
+	 * @see org.sintef.thingml.TimeWindow#getStep()
+	 * @see #getTimeWindow()
+	 * @generated
+	 */
+	EAttribute getTimeWindow_Step();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.TimeWindow#getSize <em>Size</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Size</em>'.
+	 * @see org.sintef.thingml.TimeWindow#getSize()
+	 * @see #getTimeWindow()
+	 * @generated
+	 */
+	EAttribute getTimeWindow_Size();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8781,6 +8901,50 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference SGL_MSG_PARAM_OPERATOR__PARAMETER = eINSTANCE.getSglMsgParamOperator_Parameter();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.LengthWindowImpl <em>Length Window</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.LengthWindowImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthWindow()
+		 * @generated
+		 */
+		EClass LENGTH_WINDOW = eINSTANCE.getLengthWindow();
+
+		/**
+		 * The meta object literal for the '<em><b>Nb Events</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LENGTH_WINDOW__NB_EVENTS = eINSTANCE.getLengthWindow_NbEvents();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.TimeWindowImpl <em>Time Window</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.TimeWindowImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getTimeWindow()
+		 * @generated
+		 */
+		EClass TIME_WINDOW = eINSTANCE.getTimeWindow();
+
+		/**
+		 * The meta object literal for the '<em><b>Step</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TIME_WINDOW__STEP = eINSTANCE.getTimeWindow_Step();
+
+		/**
+		 * The meta object literal for the '<em><b>Size</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TIME_WINDOW__SIZE = eINSTANCE.getTimeWindow_Size();
 
 	}
 

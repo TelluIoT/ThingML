@@ -19,12 +19,19 @@ import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.CepCompiler;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.java.cepHelper.JavaCepViewCompiler;
 import org.thingml.compilers.java.cepHelper.JavaGenerateSourceDeclaration;
 
 /**
  * @author ludovic
  */
 public class JavaCepCompiler extends CepCompiler {
+    private JavaCepViewCompiler javaCepViewCompiler = new JavaCepViewCompiler();
+
+    public JavaCepViewCompiler getJavaCepViewCompiler() {
+        return javaCepViewCompiler;
+    }
+
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         JavaGenerateSourceDeclaration.generate(stream, stream.getInput(), builder, ctx);

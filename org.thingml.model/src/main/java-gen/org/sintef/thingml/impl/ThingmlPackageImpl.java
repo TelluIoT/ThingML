@@ -62,6 +62,7 @@ import org.sintef.thingml.InstanceRef;
 import org.sintef.thingml.IntegerLiteral;
 import org.sintef.thingml.InternalTransition;
 import org.sintef.thingml.JoinSources;
+import org.sintef.thingml.LengthWindow;
 import org.sintef.thingml.Literal;
 import org.sintef.thingml.LocalVariable;
 import org.sintef.thingml.LoopAction;
@@ -110,6 +111,7 @@ import org.sintef.thingml.ThingMLElement;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.ThingmlFactory;
 import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.TimeWindow;
 import org.sintef.thingml.TimesExpression;
 import org.sintef.thingml.Transition;
 import org.sintef.thingml.Type;
@@ -784,6 +786,20 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass sglMsgParamOperatorEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass lengthWindowEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass timeWindowEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -2831,6 +2847,51 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getLengthWindow() {
+		return lengthWindowEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLengthWindow_NbEvents() {
+		return (EAttribute)lengthWindowEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getTimeWindow() {
+		return timeWindowEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTimeWindow_Step() {
+		return (EAttribute)timeWindowEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTimeWindow_Size() {
+		return (EAttribute)timeWindowEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ThingmlFactory getThingmlFactory() {
 		return (ThingmlFactory)getEFactoryInstance();
 	}
@@ -3167,6 +3228,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		sglMsgParamOperatorEClass = createEClass(SGL_MSG_PARAM_OPERATOR);
 		createEReference(sglMsgParamOperatorEClass, SGL_MSG_PARAM_OPERATOR__PARAMETER);
+
+		lengthWindowEClass = createEClass(LENGTH_WINDOW);
+		createEAttribute(lengthWindowEClass, LENGTH_WINDOW__NB_EVENTS);
+
+		timeWindowEClass = createEClass(TIME_WINDOW);
+		createEAttribute(timeWindowEClass, TIME_WINDOW__STEP);
+		createEAttribute(timeWindowEClass, TIME_WINDOW__SIZE);
 	}
 
 	/**
@@ -3290,6 +3358,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		messageParameterEClass.getESuperTypes().add(this.getReferencedElmt());
 		referenceEClass.getESuperTypes().add(this.getExpression());
 		sglMsgParamOperatorEClass.getESuperTypes().add(this.getOperator());
+		lengthWindowEClass.getESuperTypes().add(this.getViewSource());
+		timeWindowEClass.getESuperTypes().add(this.getViewSource());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(thingMLModelEClass, ThingMLModel.class, "ThingMLModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3605,6 +3675,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		initEClass(sglMsgParamOperatorEClass, SglMsgParamOperator.class, "SglMsgParamOperator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSglMsgParamOperator_Parameter(), this.getMessageParameter(), null, "parameter", null, 1, 1, SglMsgParamOperator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(lengthWindowEClass, LengthWindow.class, "LengthWindow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getLengthWindow_NbEvents(), ecorePackage.getEInt(), "nbEvents", "1", 1, 1, LengthWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(timeWindowEClass, TimeWindow.class, "TimeWindow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTimeWindow_Step(), ecorePackage.getEInt(), "step", null, 1, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getTimeWindow_Size(), ecorePackage.getEInt(), "size", null, 1, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

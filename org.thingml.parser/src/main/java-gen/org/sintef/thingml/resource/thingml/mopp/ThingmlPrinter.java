@@ -225,12 +225,20 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 			print_org_sintef_thingml_StreamOutput((org.sintef.thingml.StreamOutput) element, globaltab, out);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.SimpleSource) {
-			print_org_sintef_thingml_SimpleSource((org.sintef.thingml.SimpleSource) element, globaltab, out);
-			return;
-		}
 		if (element instanceof org.sintef.thingml.Filter) {
 			print_org_sintef_thingml_Filter((org.sintef.thingml.Filter) element, globaltab, out);
+			return;
+		}
+		if (element instanceof org.sintef.thingml.LengthWindow) {
+			print_org_sintef_thingml_LengthWindow((org.sintef.thingml.LengthWindow) element, globaltab, out);
+			return;
+		}
+		if (element instanceof org.sintef.thingml.TimeWindow) {
+			print_org_sintef_thingml_TimeWindow((org.sintef.thingml.TimeWindow) element, globaltab, out);
+			return;
+		}
+		if (element instanceof org.sintef.thingml.SimpleSource) {
+			print_org_sintef_thingml_SimpleSource((org.sintef.thingml.SimpleSource) element, globaltab, out);
 			return;
 		}
 		if (element instanceof org.sintef.thingml.JoinSources) {
@@ -6597,6 +6605,116 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	}
 	
 	
+	public void print_org_sintef_thingml_Filter(org.sintef.thingml.Filter element, String outertab, java.io.PrintWriter out) {
+		String localtab = outertab;
+		// The printCountingMap contains a mapping from feature names to the number of
+		// remaining elements that still need to be printed. The map is initialized with
+		// the number of elements stored in each structural feature. For lists this is the
+		// list size. For non-multiple features it is either 1 (if the feature is set) or
+		// 0 (if the feature is null).
+		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(1);
+		Object temp;
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FILTER__FILTER_OP));
+		printCountingMap.put("filterOp", temp == null ? 0 : 1);
+		// print collected hidden tokens
+		int count;
+		// DEFINITION PART BEGINS (CsString)
+		out.print("filter");
+		// DEFINITION PART BEGINS (CsString)
+		out.print("(");
+		// DEFINITION PART BEGINS (Containment)
+		count = printCountingMap.get("filterOp");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FILTER__FILTER_OP));
+			if (o != null) {
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
+			}
+			printCountingMap.put("filterOp", count - 1);
+		}
+		// DEFINITION PART BEGINS (CsString)
+		out.print(")");
+	}
+	
+	
+	public void print_org_sintef_thingml_LengthWindow(org.sintef.thingml.LengthWindow element, String outertab, java.io.PrintWriter out) {
+		// The printCountingMap contains a mapping from feature names to the number of
+		// remaining elements that still need to be printed. The map is initialized with
+		// the number of elements stored in each structural feature. For lists this is the
+		// list size. For non-multiple features it is either 1 (if the feature is set) or
+		// 0 (if the feature is null).
+		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(1);
+		Object temp;
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LENGTH_WINDOW__NB_EVENTS));
+		printCountingMap.put("nbEvents", temp == null ? 0 : 1);
+		// print collected hidden tokens
+		int count;
+		// DEFINITION PART BEGINS (CsString)
+		out.print("lengthWindow");
+		// DEFINITION PART BEGINS (CsString)
+		out.print("(");
+		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		count = printCountingMap.get("nbEvents");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LENGTH_WINDOW__NB_EVENTS));
+			if (o != null) {
+				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("INTEGER_LITERAL");
+				resolver.setOptions(getOptions());
+				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LENGTH_WINDOW__NB_EVENTS), element));
+			}
+			printCountingMap.put("nbEvents", count - 1);
+		}
+		// DEFINITION PART BEGINS (CsString)
+		out.print(")");
+	}
+	
+	
+	public void print_org_sintef_thingml_TimeWindow(org.sintef.thingml.TimeWindow element, String outertab, java.io.PrintWriter out) {
+		// The printCountingMap contains a mapping from feature names to the number of
+		// remaining elements that still need to be printed. The map is initialized with
+		// the number of elements stored in each structural feature. For lists this is the
+		// list size. For non-multiple features it is either 1 (if the feature is set) or
+		// 0 (if the feature is null).
+		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(2);
+		Object temp;
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__STEP));
+		printCountingMap.put("step", temp == null ? 0 : 1);
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__SIZE));
+		printCountingMap.put("size", temp == null ? 0 : 1);
+		// print collected hidden tokens
+		int count;
+		// DEFINITION PART BEGINS (CsString)
+		out.print("timeWindow");
+		// DEFINITION PART BEGINS (CsString)
+		out.print("(");
+		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		count = printCountingMap.get("step");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__STEP));
+			if (o != null) {
+				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("INTEGER_LITERAL");
+				resolver.setOptions(getOptions());
+				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__STEP), element));
+			}
+			printCountingMap.put("step", count - 1);
+		}
+		// DEFINITION PART BEGINS (CsString)
+		out.print(",");
+		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		count = printCountingMap.get("size");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__SIZE));
+			if (o != null) {
+				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("INTEGER_LITERAL");
+				resolver.setOptions(getOptions());
+				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__SIZE), element));
+			}
+			printCountingMap.put("size", count - 1);
+		}
+		// DEFINITION PART BEGINS (CsString)
+		out.print(")");
+	}
+	
+	
 	public void print_org_sintef_thingml_SimpleSource(org.sintef.thingml.SimpleSource element, String outertab, java.io.PrintWriter out) {
 		String localtab = outertab;
 		// The printCountingMap contains a mapping from feature names to the number of
@@ -6721,37 +6839,6 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 			}
 			printCountingMap.put("operators", count - 1);
 		}
-	}
-	
-	
-	public void print_org_sintef_thingml_Filter(org.sintef.thingml.Filter element, String outertab, java.io.PrintWriter out) {
-		String localtab = outertab;
-		// The printCountingMap contains a mapping from feature names to the number of
-		// remaining elements that still need to be printed. The map is initialized with
-		// the number of elements stored in each structural feature. For lists this is the
-		// list size. For non-multiple features it is either 1 (if the feature is set) or
-		// 0 (if the feature is null).
-		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(1);
-		Object temp;
-		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FILTER__FILTER_OP));
-		printCountingMap.put("filterOp", temp == null ? 0 : 1);
-		// print collected hidden tokens
-		int count;
-		// DEFINITION PART BEGINS (CsString)
-		out.print("filter");
-		// DEFINITION PART BEGINS (CsString)
-		out.print("(");
-		// DEFINITION PART BEGINS (Containment)
-		count = printCountingMap.get("filterOp");
-		if (count > 0) {
-			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FILTER__FILTER_OP));
-			if (o != null) {
-				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
-			}
-			printCountingMap.put("filterOp", count - 1);
-		}
-		// DEFINITION PART BEGINS (CsString)
-		out.print(")");
 	}
 	
 	
@@ -6901,6 +6988,8 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 			}
 			printCountingMap.put("name", count - 1);
 		}
+		// DEFINITION PART BEGINS (CsString)
+		out.print(":");
 	}
 	
 	public void print_org_sintef_thingml_JoinSources_1(org.sintef.thingml.JoinSources element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
@@ -7134,6 +7223,8 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 			}
 			printCountingMap.put("name", count - 1);
 		}
+		// DEFINITION PART BEGINS (CsString)
+		out.print(":");
 	}
 	
 	public void print_org_sintef_thingml_MergeSources_1(org.sintef.thingml.MergeSources element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {

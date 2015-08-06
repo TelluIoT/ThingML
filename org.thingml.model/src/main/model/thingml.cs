@@ -261,7 +261,9 @@ RULES {
 	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
 	
 	Filter ::= "filter" "(" filterOp ")";
-	
+	LengthWindow ::= "lengthWindow" "(" nbEvents[INTEGER_LITERAL] ")";
+	TimeWindow ::= "timeWindow" "(" step[INTEGER_LITERAL] "," size[INTEGER_LITERAL] ")";
+		
 	SimpleSource ::= ( (name[] ":" "[" message "]") | message) ("::" operators)*;	
 	JoinSources ::= (name[] ":" )? "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;
 	MergeSources ::= (name[] ":" )? "[" #1 sources #1 ("|" #1 sources #1)+ "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)*;

@@ -16,8 +16,11 @@
 package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
+
+import java.util.List;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -26,7 +29,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        builder.append("setImmediate(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()));
+        /*builder.append("setImmediate(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()));
         int i = 0;
         for (Expression p : action.getParameters()) {
             int j = 0;
@@ -39,6 +42,22 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                 j++;
             }
             i++;
+        }
+        builder.append(");\n");*/
+        builder.append("setImmediate(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()));
+        for (Expression p : action.getParameters()) {
+            builder.append(", ");
+            generate(p, builder, ctx);
+        }
+        builder.append(");\n");
+    }
+
+    @Override
+    public void generate(StreamOutput streamOutput, StringBuilder builder, Context ctx) {
+        builder.append("setImmediate(send" + ctx.firstToUpper(streamOutput.getMessage().getName()) + "On" + ctx.firstToUpper(streamOutput.getPort().getName()));
+        for (StreamExpression se : streamOutput.getParameters()) {
+            builder.append(", ");
+            generate(se.getExpression(),builder,ctx);
         }
         builder.append(");\n");
     }
@@ -104,15 +123,31 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-//        builder.append("v_" + ctx.protectKeyword(expression.getParamRef().getName()));
-       /* List<Parameter> parameters = expression.getMsgRef().getMessage().getParameters();
-        for(int i = 0; i<parameters.size();i++) {
-            if(parameters.get(i).getName().equals(expression.getParamRef().getName())) {
-                builder.append(expression.getMsgRef().getMessage().getName() + "[" + (i + 2) + "]");
+        if(expression.getReference() instanceof ReceiveMessage) {
+            ReceiveMessage rm = (ReceiveMessage) expression.getReference();
+            generateRecvMsgRef(rm,expression,builder);
+        } else if(expression.getReference() instanceof Source) {
+            Source source = (Source) expression.getReference();
+            if(source instanceof SimpleSource) {
+                ReceiveMessage rm = ((SimpleSource) source).getMessage();
+                generateRecvMsgRef(rm,expression,builder);
+            } else {
+                throw new UnsupportedOperationException("Something is missing in the JSThingActionCompiler to compile a reference to a stream source");
+            }
+        } else {
+            throw new UnsupportedException("reference",expression.getReference().getClass().getName(),
+                    "JSThingActionCompiler");
+        }
+    }
+
+    private void generateRecvMsgRef(ReceiveMessage rm, Reference expression,StringBuilder builder) {
+        List<Parameter> parameters = rm.getMessage().getParameters();
+        for(int i=0;i<parameters.size();i++) {
+            if(parameters.get(i).getName().equals(expression.getParameter().getName())) {
+                builder.append(rm.getMessage().getName() + "[" + (i + 2) + "]");
                 break;
             }
-        }*/
-        throw new UnsupportedOperationException("Not yet re-implemted");
+        }
     }
 
     @Override

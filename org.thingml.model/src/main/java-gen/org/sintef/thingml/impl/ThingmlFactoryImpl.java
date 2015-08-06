@@ -142,6 +142,8 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL: return createSglMsgParamOperatorCall();
 			case ThingmlPackage.REFERENCE: return createReference();
 			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR: return createSglMsgParamOperator();
+			case ThingmlPackage.LENGTH_WINDOW: return createLengthWindow();
+			case ThingmlPackage.TIME_WINDOW: return createTimeWindow();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -875,6 +877,26 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public SglMsgParamOperator createSglMsgParamOperator() {
 		SglMsgParamOperatorImpl sglMsgParamOperator = new SglMsgParamOperatorImpl();
 		return sglMsgParamOperator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LengthWindow createLengthWindow() {
+		LengthWindowImpl lengthWindow = new LengthWindowImpl();
+		return lengthWindow;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TimeWindow createTimeWindow() {
+		TimeWindowImpl timeWindow = new TimeWindowImpl();
+		return timeWindow;
 	}
 
 	/**
