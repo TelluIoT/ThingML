@@ -347,13 +347,14 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
             builder.append("})\n\n");
         } else {
-            builder.append(".effect(function (" + m.getName() + ") {\n");
+//            builder.append(".effect(function (message) {\n");
             //builder.append("var json = JSON.parse(message);\n");
-            int i = 2;
-            /*for (Parameter pa : m.getParameters()) {
-                builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
-                i++;
-            }*/
+            builder.append(".effect(function (" + m.getName() + ") {\n");
+//            int i = 2;
+//            for (Parameter pa : m.getParameters()) {
+//                builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
+//                i++;
+//            }
             ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
             builder.append("})");
         }

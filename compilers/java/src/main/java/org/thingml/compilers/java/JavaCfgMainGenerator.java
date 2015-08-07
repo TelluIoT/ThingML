@@ -116,11 +116,14 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("//Connectors\n");
         for (Connector c : cfg.allConnectors()) {
-            builder.append("new Connector(");
-            builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port(), ");
-            builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port(), ");
-            builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ", ");
-            builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ");\n");
+            if(c.getProvided().getSends().size() > 0 && c.getRequired().getReceives().size() > 0) {
+                builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port().addListener(");
+                builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port());\n");
+            }
+            if(c.getProvided().getReceives().size() > 0 && c.getRequired().getSends().size() > 0) {
+                builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port().addListener(");
+                builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port());\n");
+            }
         }
     }
 

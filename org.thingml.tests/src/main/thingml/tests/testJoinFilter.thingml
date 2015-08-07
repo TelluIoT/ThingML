@@ -1,0 +1,69 @@
+import "thingml.thingml"
+
+thing fragment TestMsgs {
+    message m1();
+    message m2();
+
+    message res();
+}
+
+thing TestJoinFilter includes Test, TestMsgs
+@test " # f"
+@conf "connector test.recv => test.send"
+{
+    provided port send {
+        sends m1, m2, res
+    }
+
+    required port recv {
+        receives m1, m2, res
+    }
+
+    operator m1NotPassed(m : m1) : Boolean do
+        return 'false'
+    end
+
+    operator m2Passed(m : m2) : Boolean do
+        return 'true'
+    end
+
+    operator joinPassed(r : res) : Boolean do
+        return 'true'
+    end
+
+    operator joinNotPassed(r : res) : Boolean do
+        return 'false'
+    end
+
+    stream filteredJoin1 do
+        from m : [ e1 : [recv?m1]::filter(m1NotPassed(e1)) & e2 : [recv?m2]::filter(m2Passed(e2)) -> res()]
+        action send!res()
+    end
+    
+    stream filteredJoin2 do
+        from m : [ recv?m1 & e2 : [recv?m2]::filter(m2Passed(e2)) -> res()]::filter(joinPassed(m))
+        action send!res()
+    end
+
+    stream filteredJoin3 do
+        from m : [ recv?m1 & e2 : [recv?m2]::filter(m2Passed(e2)) -> res()]::filter(joinNotPassed(m))
+        action send!res()
+    end
+
+
+
+    statechart testSimpleFilter init Init {
+        state Init {
+            on entry do
+                send!m1()
+                send!m2()
+            end
+
+            internal
+            event recv?res
+            action harnessOut!testOut('\'f\'')
+        }
+    }
+
+
+}

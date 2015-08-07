@@ -45,7 +45,7 @@ public class ThingMLHelpers {
 	 * ***********************************************************/
 
 	public static <C> C findContainer(EObject eObject, Class<C> cClass) {
-		while (eObject !=null && !cClass.isAssignableFrom(eObject.getClass())) {
+		while (eObject != null && !cClass.isAssignableFrom(eObject.getClass())) {
 			eObject = eObject.eContainer();
 		}
 		return (C) eObject;

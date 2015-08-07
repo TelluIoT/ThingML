@@ -1,0 +1,22 @@
+import "../thingml.thingml"
+
+datatype CString
+@c_type "const char*";
+
+
+thing fragment MQTTClientMsg {
+
+	message reconnect();
+	message connect();
+	message disconnect();
+	message subscribe(topic : CString);
+	message unsubscibe(topic : CString);
+	message publish(topic : CString, msg : String);
+	
+	message subscribed();
+	message unsubscribed();
+	message connected();
+	message disconnected();
+	message published();
+	message message_received(topic : CString, msg : String);
+}

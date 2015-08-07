@@ -74,7 +74,7 @@ public class JSGenerateSourceDeclaration {
 
     public static void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
         builder.append("\n");
-        builder.append("function wait1() { return Rx.Observable.timer(50); }\n");
+        builder.append("function wait_" + sources.qname("_") + "() { return Rx.Observable.timer(50); }\n");
 
         SimpleSource simpleSource1 = (SimpleSource) sources.getSources().get(0),
                 simpleSource2 = (SimpleSource) sources.getSources().get(1);
@@ -86,7 +86,7 @@ public class JSGenerateSourceDeclaration {
         generate(stream, simpleSource1, builder, context);
         generate(stream, simpleSource2, builder, context);
         builder.append("var " + sources.qname("_") + " = " + simpleSource1.qname("_") + ".join(" + simpleSource2.qname("_"))
-                .append(",wait1,wait1,\n")
+                .append(",wait_" + sources.qname("_") + ",wait_" + sources.qname("_") + ",\n")
                 .append("\tfunction(" + message1Name + "," + message2Name + ") {\n");
 
         builder.append("\t\treturn { ");

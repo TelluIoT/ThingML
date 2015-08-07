@@ -11,7 +11,7 @@ private JButton clearButton;
 private StyledDocument doc;
 
 public $NAME$Mock(String name){
-        super(name,$PORT_NUMBER$);
+        super(name);
         $PORT_DECL$
         initGUI(name);
         }

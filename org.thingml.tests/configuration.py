@@ -30,4 +30,4 @@ testLanguages.append("Java")
 #If useBlacklist is False, runs all tests present in whitelist
 useBlacklist=True
 blacklist=("tester","datatypes","thingml")
-whitelist=("testStreams")
+whitelist=("testSimpleFilter","testMergeFilter", "testJoinFilter")

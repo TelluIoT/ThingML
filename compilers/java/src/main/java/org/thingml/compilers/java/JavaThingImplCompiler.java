@@ -206,11 +206,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("){\n");
 
                 builder.append("//ThingML send\n");
-                builder.append("send(" + m.getName() + "Type.instantiate(" + p.getName() + "_port");
+                builder.append(p.getName() + "_port.send(" + m.getName() + "Type.instantiate(" + p.getName() + "_port");
                 for (Parameter pa : m.getParameters()) {
                     builder.append(", " + ctx.protectKeyword(ctx.getVariableName(pa)));
                 }
-                builder.append("), " + p.getName() + "_port);\n");
+                builder.append("));\n");
 
                 if (!p.isDefined("public", "false")) {
                     builder.append("//send to other clients\n");
@@ -253,7 +253,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         builder.append("//Empty Constructor\n");
-        builder.append("public " + ctx.firstToUpper(thing.getName()) + "() {\nsuper(" + thing.allPorts().size() + ");\n");
+        builder.append("public " + ctx.firstToUpper(thing.getName()) + "() {\nsuper();\n");
         for (Property p : thing.allPropertiesInDepth()) {
             Expression e = thing.initExpression(p);
             if (e != null) {
@@ -285,7 +285,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 }
             }
             builder.append(") {\n");
-            builder.append("super(" + thing.allPorts().size() + ");\n");
+            builder.append("super();\n");
             for (Property p : thing.allPropertiesInDepth()) {
                 if (!p.isChangeable()) {
                     builder.append("this." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
@@ -300,7 +300,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p));
         }
         builder.append(") {\n");
-        builder.append("super(name, " + thing.allPorts().size() + ");\n");
+        builder.append("super(name);\n");
         for (Property p : thing.allPropertiesInDepth()) {
             builder.append("this." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
         }
@@ -328,7 +328,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("public Component buildBehavior() {\n");
 
         builder.append("//Init ports\n");
-        int pi = 0;
         for (Port p : thing.allPorts()) {
             builder.append("final List<EventType> inEvents_" + p.getName() + " = new ArrayList<EventType>();\n");
             builder.append("final List<EventType> outEvents_" + p.getName() + " = new ArrayList<EventType>();\n");
@@ -343,8 +342,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("PortType.PROVIDED");
             else
                 builder.append("PortType.REQUIRED");
-            builder.append(", \"" + p.getName() + "\", inEvents_" + p.getName() + ", outEvents_" + p.getName() + ", " + pi + ");\n");
-            pi++;
+            builder.append(", \"" + p.getName() + "\", inEvents_" + p.getName() + ", outEvents_" + p.getName() + ", this);\n");
         }
 
         /** MODIFICATION **/

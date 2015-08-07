@@ -145,7 +145,7 @@ public class JavaGenerateSourceDeclaration {
 
     public static void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
         builder.append("\n");
-        builder.append("Func1 wait = new Func1() {\n" +
+        builder.append("Func1 wait_" + stream.qname("_") + " = new Func1() {\n" +
                 "@Override\n" +
                 "public Object call(Object o) {\n" +
                 "return rx.Observable.timer(50, TimeUnit.MILLISECONDS);\n" +
@@ -165,8 +165,8 @@ public class JavaGenerateSourceDeclaration {
 
         generate(stream,simpleSource1,builder,context);
         generate(stream, simpleSource2, builder, context);
-        builder.append("rx.Observable " + stream.qname("_") + " = " + simpleSource1.qname("_") + "_observable" )
-                .append(".join(" + simpleSource2.qname("_") + "_observable" + ",wait,wait,\n")
+        builder.append("rx.Observable " + stream.qname("_") + " = " + simpleSource1.qname("_") + "_observable")
+                .append(".join(" + simpleSource2.qname("_") + "_observable" + ",wait_" + stream.qname("_") + ",wait_" + stream.qname("_") + ",\n")
                 .append("new Func2<" + eventMessage1 + ", " + eventMessage2 + ", " + outPutType +">(){\n")
                 .append("@Override\n")
                 .append("public " + outPutType + " call(" + eventMessage1 + " " + message1Name + ", " + eventMessage2 + " " + message2Name + ") {\n");

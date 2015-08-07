@@ -16,7 +16,8 @@ datatype Integer
     @java_type "int";
     
 datatype Bool
-    @js_type "bool";
+    @js_type "bool"
+    @java_type "boolean";
     
 thing fragment CepMsgs {
     //Cep messages for "simple" streams
@@ -110,7 +111,7 @@ thing Sample includes CepMsgs,  SampleMsgs{
     statechart Sample init Init {
         state Init {
             on entry do
-                print "Init"
+                print "Init\n"
                 sendPort!m1()
                 sendPort!m2(8,24)
                 
@@ -126,23 +127,23 @@ thing Sample includes CepMsgs,  SampleMsgs{
             
             internal
             event rcvPort?cep1
-            action print "cep message receive." 
+            action print "cep message receive.\n" 
                         
             internal 
             event e : rcvPort?cep2
-            action print "cep2 message receive with values (" + e.val1 + ";" + e.val2 +")."
+            action print "cep2 message receive with values (" + e.val1 + ";" + e.val2 +").\n"
             
             internal
             event rcvPort?cep3
-            action print "cep3 message receive."
+            action print "cep3 message receive.\n"
             
             internal
             event e : rcvPort?cep4
-            action print "cep4 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ")."
+            action print "cep4 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ").\n"
             
             internal
             event e : rcvPort?cep5
-            action print "cep5 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ")."
+            action print "cep5 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ").\n"
             
         }    
     }
