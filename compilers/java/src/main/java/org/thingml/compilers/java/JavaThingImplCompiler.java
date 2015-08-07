@@ -122,7 +122,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     .append("return new Func1<" + paramMsgType + ",Boolean>() {\n")
                     .append("@Override\n")
                     .append("public Boolean call(" + paramMsgType + " " + sglMsgParamOperator.getParameter().getName() +") {\n");
-            ctx.getCompiler().getThingActionCompiler().generate(op.getBody(), builder, ctx);
+            ctx.getCompiler().getThingActionCompiler().generate(sglMsgParamOperator.getBody(), builder, ctx);
             builder.append("}\n")
                     .append("};\n")
                     .append("}\n");

@@ -19,12 +19,19 @@ import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.CepCompiler;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.javascript.cepHelper.JSCepViewCompiler;
 import org.thingml.compilers.javascript.cepHelper.JSGenerateSourceDeclaration;
 
 /**
  * @author ludovic
  */
 public class JSCepCompiler extends CepCompiler {
+    private JSCepViewCompiler jsCepViewCompiler = new JSCepViewCompiler();
+
+    public JSCepViewCompiler getJsCepViewCompiler() {
+        return jsCepViewCompiler;
+    }
+
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         JSGenerateSourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
@@ -39,8 +46,6 @@ public class JSCepCompiler extends CepCompiler {
         }
 
     }
-
-
 
     public static void generateSimpleMergeStreamSubscription(Stream stream, StringBuilder builder, Context context, String paramName) {
         builder.append(stream.getInput().qname("_") + ".subscribe(\n")

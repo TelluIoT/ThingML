@@ -16,7 +16,7 @@ datatype Integer
     @java_type "int";
     
 datatype Bool
-    @java_type "boolean";
+    @js_type "bool";
     
 thing fragment CepMsgs {
     //Cep messages for "simple" streams
@@ -56,36 +56,63 @@ thing Sample includes CepMsgs,  SampleMsgs{
         receives m1, m2, m3, m4, m5, m6, m7, m8, cep1, cep2, cep3, cep4, cep5
     }
     
-    stream winLength do
-        from rcvPort?m1::lengthWindow(5)
+    function complexTransforming(value : Integer) : Integer do
+        return value + 1
+    end
+    
+    operator fwM2(msg2 : m2) : Bool do
+        return msg2.v1 % 2 == 0
+    end
+    
+    operator mergeM5(m5 : m5) : Bool do
+        return m5.x == 2
+    end
+    
+     operator mergeCep4(cep : cep5) : Bool do
+        return cep.a / 2 == 2
+    end
+    
+    stream forwardSimpleMessage do
+        from rcvPort?m1
         action sendPort!cep1()
     end
-        
+    
+    stream forwardMessageWithParams do
+        from evt : [rcvPort?m2]::filter(fwM2(evt))
+        select a : evt.v1, b : evt.v2
+        action sendPort!cep2(a,b)
+    end
+    
+    stream transformingMessageValue do
+        from evt : [rcvPort?m2]
+        select a : (evt.v1 * 2) + 5, b : complexTransforming(evt.v2)
+        action sendPort!cep2(a,b)
+    end
+    
+    stream mergedSimpleMessages do
+        from [ rcvPort?m3 | rcvPort?m4 -> cep3()]
+        action sendPort!cep3()
+    end
+    
+    stream mergeMessagesWithValues do
+        from mm: [ e1 : [rcvPort?m5]::filter(mergeM5(e1)) | rcvPort?m6 -> cep4(#0, complexTransforming(#1), (#2 * 2) + 5)]
+        select a : #0, b: #1, c: #2
+        action sendPort!cep4(a,b,c)
+    end
+    
+    stream joinMessages do
+        from [ e1 : rcvPort?m7 & e2 : rcvPort?m8 -> cep5(e1.a * e2.v1, e1.b * e2.v2, e1.c * e2.v3)]::filter(mergeCep4(mm))
+        select a : #0, b : #1, c : #2
+        action sendPort!cep5(a,b,c)
+    end
+    
+    
     statechart Sample init Init {
         state Init {
             on entry do
                 print "Init"
                 sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                sendPort!m1()
-                /*sendPort!m2(7,24)
+                sendPort!m2(8,24)
                 
                 sendPort!m3()
                 sendPort!m4()
@@ -94,7 +121,7 @@ thing Sample includes CepMsgs,  SampleMsgs{
                 sendPort!m6(4,5,6)
                 
                 sendPort!m7(1,2,3)
-                sendPort!m8(10,20,30)*/
+                sendPort!m8(10,20,30)
             end
             
             internal
@@ -125,4 +152,4 @@ thing Sample includes CepMsgs,  SampleMsgs{
 configuration sampleCfg {
     instance sample : Sample
     connector sample.sendPort => sample.rcvPort    
-}  
+}

@@ -134,6 +134,16 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             } else {
                 throw new UnsupportedOperationException("Something is missing in the JSThingActionCompiler to compile a reference to a stream source");
             }
+        } else if(expression.getReference() instanceof MessageParameter) {
+            MessageParameter mp = (MessageParameter) expression.getReference();
+            Message message = mp.getMsgRef();
+            List<Parameter> parameters = message.getParameters();
+            for(int i=0;i<parameters.size();i++) {
+                if(parameters.get(i).getName().equals(expression.getParameter().getName())) {
+                    builder.append(mp.getName() + "[" + (i + 2) + "]");
+                    break;
+                }
+            }
         } else {
             throw new UnsupportedException("reference",expression.getReference().getClass().getName(),
                     "JSThingActionCompiler");
