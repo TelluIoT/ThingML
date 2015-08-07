@@ -24,3 +24,4 @@ org.thingml.cep.benchmark/tmp/
 Benchmarks/Scala-Avg-Bench/out/
 node_modules
 .workspace
+runtime-EclipseApplication
