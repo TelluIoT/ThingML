@@ -53,13 +53,13 @@ public interface ThingmlFactory extends EFactory {
 	Function createFunction();
 
 	/**
-	 * Returns a new object of class '<em>Message</em>'.
+	 * Returns a new object of class '<em>Simple Message</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Message</em>'.
+	 * @return a new object of class '<em>Simple Message</em>'.
 	 * @generated
 	 */
-	Message createMessage();
+	SimpleMessage createSimpleMessage();
 
 	/**
 	 * Returns a new object of class '<em>Thing</em>'.
@@ -708,6 +708,24 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	TimeWindow createTimeWindow();
+
+	/**
+	 * Returns a new object of class '<em>Message Array</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Message Array</em>'.
+	 * @generated
+	 */
+	MessageArray createMessageArray();
+
+	/**
+	 * Returns a new object of class '<em>Message Creation Param</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Message Creation Param</em>'.
+	 * @generated
+	 */
+	MessageCreationParam createMessageCreationParam();
 
 	/**
 	 * Returns the package supported by this factory.

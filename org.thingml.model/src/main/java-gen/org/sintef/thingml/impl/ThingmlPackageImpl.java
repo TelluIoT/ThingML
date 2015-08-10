@@ -69,6 +69,8 @@ import org.sintef.thingml.LoopAction;
 import org.sintef.thingml.LowerExpression;
 import org.sintef.thingml.MergeSources;
 import org.sintef.thingml.Message;
+import org.sintef.thingml.MessageArray;
+import org.sintef.thingml.MessageCreationParam;
 import org.sintef.thingml.MessageParameter;
 import org.sintef.thingml.MinusExpression;
 import org.sintef.thingml.ModExpression;
@@ -96,6 +98,7 @@ import org.sintef.thingml.ReturnAction;
 import org.sintef.thingml.SendAction;
 import org.sintef.thingml.SglMsgParamOperator;
 import org.sintef.thingml.SglMsgParamOperatorCall;
+import org.sintef.thingml.SimpleMessage;
 import org.sintef.thingml.SimpleSource;
 import org.sintef.thingml.Source;
 import org.sintef.thingml.SourceComposition;
@@ -148,7 +151,21 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass simpleMessageEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass messageEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass messageCreationParamEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -802,6 +819,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	private EClass timeWindowEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass messageArrayEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -930,6 +954,24 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getSimpleMessage() {
+		return simpleMessageEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSimpleMessage_Parameters() {
+		return (EReference)simpleMessageEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getMessage() {
 		return messageEClass;
 	}
@@ -939,8 +981,26 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMessage_Parameters() {
-		return (EReference)messageEClass.getEStructuralFeatures().get(0);
+	public EClass getMessageCreationParam() {
+		return messageCreationParamEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMessageCreationParam_MsgType() {
+		return (EReference)messageCreationParamEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMessageCreationParam_Parameters() {
+		return (EReference)messageCreationParamEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2892,6 +2952,24 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getMessageArray() {
+		return messageArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMessageArray_MessageType() {
+		return (EReference)messageArrayEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ThingmlFactory getThingmlFactory() {
 		return (ThingmlFactory)getEFactoryInstance();
 	}
@@ -2924,8 +3002,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(functionEClass, FUNCTION__PARAMETERS);
 		createEReference(functionEClass, FUNCTION__BODY);
 
-		messageEClass = createEClass(MESSAGE);
-		createEReference(messageEClass, MESSAGE__PARAMETERS);
+		simpleMessageEClass = createEClass(SIMPLE_MESSAGE);
+		createEReference(simpleMessageEClass, SIMPLE_MESSAGE__PARAMETERS);
 
 		thingEClass = createEClass(THING);
 		createEReference(thingEClass, THING__PROPERTIES);
@@ -3235,6 +3313,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		timeWindowEClass = createEClass(TIME_WINDOW);
 		createEAttribute(timeWindowEClass, TIME_WINDOW__STEP);
 		createEAttribute(timeWindowEClass, TIME_WINDOW__SIZE);
+
+		messageArrayEClass = createEClass(MESSAGE_ARRAY);
+		createEReference(messageArrayEClass, MESSAGE_ARRAY__MESSAGE_TYPE);
+
+		messageEClass = createEClass(MESSAGE);
+
+		messageCreationParamEClass = createEClass(MESSAGE_CREATION_PARAM);
+		createEReference(messageCreationParamEClass, MESSAGE_CREATION_PARAM__MSG_TYPE);
+		createEReference(messageCreationParamEClass, MESSAGE_CREATION_PARAM__PARAMETERS);
 	}
 
 	/**
@@ -3267,7 +3354,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		// Add supertypes to classes
 		functionEClass.getESuperTypes().add(this.getAnnotatedElement());
 		functionEClass.getESuperTypes().add(this.getTypedElement());
-		messageEClass.getESuperTypes().add(this.getAnnotatedElement());
+		simpleMessageEClass.getESuperTypes().add(this.getMessage());
 		thingEClass.getESuperTypes().add(this.getType());
 		parameterEClass.getESuperTypes().add(this.getVariable());
 		variableEClass.getESuperTypes().add(this.getTypedElement());
@@ -3360,6 +3447,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		sglMsgParamOperatorEClass.getESuperTypes().add(this.getOperator());
 		lengthWindowEClass.getESuperTypes().add(this.getViewSource());
 		timeWindowEClass.getESuperTypes().add(this.getViewSource());
+		messageArrayEClass.getESuperTypes().add(this.getMessage());
+		messageEClass.getESuperTypes().add(this.getAnnotatedElement());
+		messageCreationParamEClass.getESuperTypes().add(this.getExpression());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(thingMLModelEClass, ThingMLModel.class, "ThingMLModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3371,8 +3461,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getFunction_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunction_Body(), this.getAction(), null, "body", null, 1, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(messageEClass, Message.class, "Message", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMessage_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(simpleMessageEClass, SimpleMessage.class, "SimpleMessage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSimpleMessage_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, SimpleMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(thingEClass, Thing.class, "Thing", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getThing_Properties(), this.getProperty(), null, "properties", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3682,6 +3772,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(timeWindowEClass, TimeWindow.class, "TimeWindow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTimeWindow_Step(), ecorePackage.getEInt(), "step", null, 1, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTimeWindow_Size(), ecorePackage.getEInt(), "size", null, 1, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(messageArrayEClass, MessageArray.class, "MessageArray", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getMessageArray_MessageType(), this.getSimpleMessage(), null, "messageType", null, 1, 1, MessageArray.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(messageEClass, Message.class, "Message", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(messageCreationParamEClass, MessageCreationParam.class, "MessageCreationParam", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getMessageCreationParam_MsgType(), this.getSimpleMessage(), null, "msgType", null, 1, 1, MessageCreationParam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMessageCreationParam_Parameters(), this.getExpression(), null, "parameters", null, 0, -1, MessageCreationParam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
