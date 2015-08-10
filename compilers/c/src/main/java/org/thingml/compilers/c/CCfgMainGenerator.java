@@ -130,6 +130,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("\n");
         generateMessageForwarders(cfg, builder, ctx);
         builder.append("\n");
+        builder.append("//external Message enqueue\n");
+        generateExternalMessageEnqueue(cfg, builder, ctx);
+        builder.append("\n");
 
         generateCfgInitializationCode(cfg, builder, ctx);
 
@@ -208,6 +211,121 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ctx.clearConcreteThing();
     }
 
+        
+    protected int generateSerialization(CCompilerContext ctx, Message m, StringBuilder builder, int HandlerCode) {
+       
+        builder.append("byte forward_buf[" + (ctx.getMessageSerializationSize(m) - 2) + "];\n");
+
+        builder.append("forward_buf[0] = (" + HandlerCode + " >> 8) & 0xFF;\n");
+        builder.append("forward_buf[1] =  " + HandlerCode + " & 0xFF;\n\n");
+
+
+        int j = 2;
+
+        for (Parameter pt : m.getParameters()) {
+            builder.append("\n// parameter " + pt.getName() + "\n");
+            int i = ctx.getCByteSize(pt.getType(), 0);
+            String v = pt.getName();
+            if (ctx.isPointer(pt.getType())) {
+                // This should not happen and should be checked before.
+                throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
+            } else {
+                //builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
+
+
+                builder.append("union u_" + v + "_t {\n");
+                builder.append(ctx.getCType(pt.getType()) + " p;\n");
+                builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
+                builder.append("} u_" + v + ";\n");
+                builder.append("u_" + v + ".p = " + v + ";\n");
+
+                while (i > 0) {
+                    i = i - 1;
+                    //if (i == 0) 
+                    //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
+                    builder.append("forward_buf[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
+                    j++;
+                }
+            }
+        }
+        
+        if(j == 2) {
+            return j;
+        } else {
+            return j-1;
+        }
+    }
+    
+    protected void  generateExternalMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        boolean isThereNetworkListener = false;
+        
+        for(Instance in : cfg.allInstances()) { 
+            if(in.hasAnnotation("c_external_threaded_listener") || in.hasAnnotation("c_external_listener")) {
+                isThereNetworkListener = true;
+                break;
+            }
+        }
+        
+        if(isThereNetworkListener) {
+            builder.append("void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id) {\n");
+
+            builder.append("if ((msgSize >= 2) && (msg != NULL)) {\n");
+
+            builder.append("uint8_t msgSizeOK = 0;\n");
+            builder.append("switch(msg[0] * 256 + msg[1]) {\n");
+
+            for (Thing t : cfg.allThings()) {
+                for (Port p : t.allPorts()) {
+                    if (p.isDefined("sync_send", "true")) continue; // do not generateMainAndInit for synchronous ports
+
+                    ctx.setConcreteThing(t);
+                    Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
+
+                    for (Message m : allMessageDispatch.keySet()) {
+                    builder.append("case ");
+                    builder.append(m.getCode());
+                    builder.append(":\n");
+                    builder.append("if(msgSize == ");
+                    builder.append(ctx.getMessageSerializationSize(m) - 2);
+                    builder.append(") {\n");
+                    builder.append("msgSizeOK = 1;");
+                    builder.append("}\n");
+                    builder.append("break;\n");
+
+                    }
+                }
+            }
+            builder.append("}\n\n");
+
+
+            builder.append("if(msgSizeOK == 1) {\n");
+
+            if (ctx.sync_fifo()) {
+                builder.append("fifo_lock();\n");
+            }
+
+            builder.append("if ( fifo_byte_available() > (msgSize + 2) ) {\n");
+            builder.append("	uint8_t i;\n");
+            builder.append("	for (i = 0; i < 2; i++) {\n");
+            builder.append("		_fifo_enqueue(msg[i]);\n");
+            builder.append("	}\n");
+            builder.append("	_fifo_enqueue((listener_id >> 8) & 0xFF);\n");
+            builder.append("	_fifo_enqueue(listener_id & 0xFF);\n");
+            builder.append("	for (i = 2; i < msgSize; i++) {\n");
+            builder.append("		_fifo_enqueue(msg[i]);\n");
+            builder.append("	}\n");
+            builder.append("}\n");
+
+            if (ctx.sync_fifo()) {
+                builder.append("fifo_unlock_and_notify();\n");
+            }
+
+            builder.append("}\n");
+            builder.append("}\n");
+            builder.append("}\n");
+        }
+    }
+    
     protected void generateMessageForwarders(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         for (Connector co : cfg.getConnectors()) {
             if (co.hasAnnotation("c_external_send")) {
@@ -227,45 +345,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append("void forward_" + ctx.getSenderName(t, p, m));
                         ctx.appendFormalParameters(t, builder, m);
                         builder.append("{\n");
-                        builder.append("byte forward_buf[" + (ctx.getMessageSerializationSize(m) - 2) + "];");
-
-                        builder.append("forward_buf[0] = (" + ctx.getHandlerCode(cfg, t, p, m) + " >> 8) & 0xFF;\n");
-                        builder.append("forward_buf[1] =  " + ctx.getHandlerCode(cfg, t, p, m) + " & 0xFF;\n\n");
-
-                        builder.append("// ID of the source instance\n");
-                        //builder.append("forward_buf[0] =  (_instance->id >> 8) & 0xFF;\n");
-                        //builder.append("forward_buf[1] =  _instance->id & 0xFF;\n");
-
-                        int j = 2;
-
-                        for (Parameter pt : m.getParameters()) {
-                            builder.append("\n// parameter " + pt.getName() + "\n");
-                            int i = ctx.getCByteSize(pt.getType(), 0);
-                            String v = pt.getName();
-                            if (ctx.isPointer(pt.getType())) {
-                                // This should not happen and should be checked before.
-                                throw new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
-                            } else {
-                                //builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
-
-
-                                builder.append("union u_" + v + "_t {\n");
-                                builder.append(ctx.getCType(pt.getType()) + " p;\n");
-                                builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
-                                builder.append("} u_" + v + ";\n");
-                                builder.append("u_" + v + ".p = " + v + ";\n");
-
-                                while (i > 0) {
-                                    i = i - 1;
-                                    //if (i == 0) 
-                                    //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
-                                    builder.append("forward_buf[" + j + "] =  u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
-                                    j++;
-                                }
-                            }
-                        }
+                        
+                        generateSerialization(ctx, m, builder, ctx.getHandlerCode(cfg, t, p, m));
+                        
                         builder.append("\n//Forwarding with specified function \n");
-                        builder.append(co.annotation("c_external_send").iterator().next() + "(forward_buf, " + ctx.getMessageSerializationSize(m) + ");\n");
+                        builder.append(co.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
                         builder.append("}\n\n");
                     }
                 }
@@ -540,7 +624,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append(sm.qname("_") + "_OnEntry(" + ctx.getStateID(sm) + ", &" + ctx.getInstanceVarName(inst) + ");\n");
         }
     }
-
+    
     protected void generateInitializationNetworkCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
         //Only one initialization per hardware connection
@@ -556,6 +640,17 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
             for (String set_listener_idFunction : in.annotation("c_external_set_listener_id")) {
                 builder.append(set_listener_idFunction + "(" + in.getName() + "_var.id);\n");
+            }
+            for (String threaded_listener_function : in.annotation("c_external_threaded_listener")) {
+                builder.append("pthread_t thread_");
+                builder.append(in.getName());
+                builder.append(";\n");
+                
+                builder.append("pthread_create( &thread_");
+                builder.append(in.getName());
+                builder.append(", NULL, ");
+                builder.append(threaded_listener_function);
+                builder.append(", NULL);\n");          
             }
         }
         builder.append("\n\n// End Network Initilization \n\n");
