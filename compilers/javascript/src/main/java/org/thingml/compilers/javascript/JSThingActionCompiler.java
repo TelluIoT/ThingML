@@ -28,19 +28,10 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        builder.append("setImmediate(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()));
-        int i = 0;
+      builder.append("setImmediate(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()));
         for (Expression p : action.getParameters()) {
-            int j = 0;
-            for (Parameter fp : action.getMessage().getParameters()) {
-                if (i == j) {//parameter p corresponds to formal parameter fp
-                    builder.append(", ");
-                    generate(p, builder, ctx);
-                    break;
-                }
-                j++;
-            }
-            i++;
+            builder.append(", ");
+            generate(p, builder, ctx);
         }
         builder.append(");\n");
     }
@@ -51,19 +42,14 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             builder.append("this.");
         builder.append(action.getFunction().getName() + "(");
 
-        int i = 0;
+        boolean firstDone = false;
         for (Expression p : action.getParameters()) {
-            if (i > 0)
+            if(firstDone) {
                 builder.append(", ");
-            int j = 0;
-            for (Parameter fp : action.getFunction().getParameters()) {
-                if (i == j) {//parameter p corresponds to formal parameter fp
-                    generate(p, builder, ctx);
-                    break;
-                }
-                j++;
+            } else {
+                firstDone = true;
             }
-            i++;
+            generate(p, builder, ctx);
         }
         builder.append(");\n");
     }
@@ -98,15 +84,14 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-        builder.append("process.stdout.write(");
+        builder.append("process.stdout.write(String(");
         generate(action.getMsg(), builder, ctx);
-        builder.append(");\n");
+        builder.append("));\n");
     }
 
 
     @Override
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
-//        builder.append("v_" + ctx.protectKeyword(expression.getParamRef().getName()));
         List<Parameter> parameters = expression.getMsgRef().getMessage().getParameters();
         for(int i = 0; i<parameters.size();i++) {
             if(parameters.get(i).getName().equals(expression.getParamRef().getName())) {
@@ -136,19 +121,14 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
         builder.append(expression.getFunction().getName() + "(");
 
-        int i = 0;
+        boolean firstDone = false;
         for (Expression p : expression.getParameters()) {
-            if (i > 0)
+            if(firstDone) {
                 builder.append(", ");
-            int j = 0;
-            for (Parameter fp : expression.getFunction().getParameters()) {
-                if (i == j) {//parameter p corresponds to formal parameter fp
-                    generate(p, builder, ctx);
-                    break;
-                }
-                j++;
+            } else {
+                firstDone = true;
             }
-            i++;
+            generate(p, builder, ctx);
         }
         builder.append(")\n");
     }
