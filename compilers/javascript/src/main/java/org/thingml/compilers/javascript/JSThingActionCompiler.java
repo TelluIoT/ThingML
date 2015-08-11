@@ -119,7 +119,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             Message message = mp.getMsgRef();
             List<Parameter> parameters = message.getParameters();
             for(int i=0;i<parameters.size();i++) {
-                if(parameters.get(i).getName().equals(expression.getParameter().getName())) {
+                if(parameters.get(i).getName().equals(expression.getParameter().getParameterRef().getName())) {
                     builder.append(mp.getName() + "[" + (i + 2) + "]");
                     break;
                 }
@@ -133,7 +133,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     private void generateRecvMsgRef(ReceiveMessage rm, Reference expression,StringBuilder builder) {
         List<Parameter> parameters = rm.getMessage().getParameters();
         for(int i=0;i<parameters.size();i++) {
-            if(parameters.get(i).getName().equals(expression.getParameter().getName())) {
+            if(parameters.get(i).getName().equals(expression.getParameter().getParameterRef().getName())) {
                 builder.append(rm.getMessage().getName() + "[" + (i + 2) + "]");
                 break;
             }

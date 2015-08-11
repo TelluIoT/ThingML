@@ -274,6 +274,9 @@ RULES {
 					 !1 "action" #1 output
 					 "end";
 	
+	SimpleParamRef ::= parameterRef[];
+	ArrayParamRef ::= parameterRef[] "[]";				 
+	
 	// *********************
 	// * The Expressions
 	// *********************
@@ -320,7 +323,7 @@ RULES {
 	StreamParamReference ::= "#" indexParam[INTEGER_LITERAL];
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
-	Reference ::= reference[] "." parameter[];	
+	Reference ::= reference[] "." parameter;	
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	ExpressionGroup ::= "(" exp ")";

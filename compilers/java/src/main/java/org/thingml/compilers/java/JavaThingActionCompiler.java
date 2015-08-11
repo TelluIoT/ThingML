@@ -52,7 +52,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         for (StreamExpression p : streamOutput.getParameters()) {
             if (i > 0)
                 builder.append(", ");
-            if(i < streamOutput.getMessage().getParameters().size()) {
+            if (i < streamOutput.getMessage().getParameters().size()) {
                 Parameter fp = streamOutput.getMessage().getParameters().get(i);
                 cast(fp.getType(), fp.getCardinality() != null, p.getExpression(), builder, ctx);
             }
@@ -135,21 +135,30 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-       if(expression.getReference() instanceof ReceiveMessage) {
-           ReceiveMessage rm = (ReceiveMessage) expression.getReference();
-           builder.append(ctx.protectKeyword(rm.getMessage().getName()) + "." + ctx.protectKeyword(expression.getParameter().getName()));
-       } else if(expression.getReference() instanceof Source) {
-           Source source = (Source) expression.getReference();
-           if(source instanceof SimpleSource) {
-               ReceiveMessage rm = ((SimpleSource) source).getMessage();
-               builder.append(ctx.protectKeyword(rm.getMessage().getName()) + "." + ctx.protectKeyword(expression.getParameter().getName()));
-           } else {
-               throw new UnsupportedOperationException("Something is missing in the JavaThingActionCompiler to compile a reference to a stream source");
-           }
-       } else if(expression.getReference() instanceof MessageParameter) {
-           MessageParameter mp = (MessageParameter) expression.getReference();
-           builder.append(ctx.protectKeyword(mp.getName()) + "." + ctx.protectKeyword(expression.getParameter().getName()));
-       }
+        String messageName = "";
+        if (expression.getReference() instanceof ReceiveMessage) {
+            ReceiveMessage rm = (ReceiveMessage) expression.getReference();
+            messageName = rm.getMessage().getName();
+        } else if (expression.getReference() instanceof Source) {
+            Source source = (Source) expression.getReference();
+            if (source instanceof SimpleSource) {
+                ReceiveMessage rm = ((SimpleSource) source).getMessage();
+                messageName = rm.getMessage().getName();
+//                builder.append(ctx.protectKeyword(rm.getMessage().getName()) + "." + ctx.protectKeyword(expression.getParameter().getParameterRef().getName()));
+            } else {
+                throw new UnsupportedOperationException("Something is missing in the JavaThingActionCompiler to compile a reference to a stream source");
+            }
+        } else if (expression.getReference() instanceof MessageParameter) {
+            MessageParameter mp = (MessageParameter) expression.getReference();
+            messageName = mp.getName();
+//            builder.append(ctx.protectKeyword(mp.getName()) + "." + ctx.protectKeyword(expression.getParameter().getParameterRef().getName()));
+        }
+
+        if (expression.getParameter() instanceof SimpleParamRef) {
+            builder.append(ctx.protectKeyword(messageName) + "." + ctx.protectKeyword(expression.getParameter().getParameterRef().getName()));
+        } else if(expression.getParameter() instanceof ArrayParamRef){
+            builder.append(ctx.protectKeyword(messageName) + ctx.protectKeyword(expression.getParameter().getParameterRef().getName()));
+        }
     }
 
     @Override
@@ -180,8 +189,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             boolean ok = false;
             //if the expression is in the rule
             Expression rootExp = ThingMLHelpers.findRootExpressions(expression);
-            for(Expression exp : ((MergeSources) source).getRules()) {
-                if(rootExp == exp) {
+            for (Expression exp : ((MergeSources) source).getRules()) {
+                if (rootExp == exp) {
                     builder.append("param" + expression.getIndexParam());
                     ok = true;
                     break;
@@ -189,7 +198,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             }
 
             //if the expression is in the "select" part
-            if(!ok) {
+            if (!ok) {
                 message = ((MergeSources) source).getResultMessage();
                 builder.append(message.getName() + "." + message.getParameters().get(expression.getIndexParam()).getName());
             }

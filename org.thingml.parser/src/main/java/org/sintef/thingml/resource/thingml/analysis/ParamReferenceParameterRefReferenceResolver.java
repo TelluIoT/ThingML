@@ -16,17 +16,19 @@
 package org.sintef.thingml.resource.thingml.analysis;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 
-public class ReferenceParameterReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.Reference, org.sintef.thingml.Parameter> {
+public class ParamReferenceParameterRefReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.ParamReference, org.sintef.thingml.Parameter> {
 	
-	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Reference, org.sintef.thingml.Parameter> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Reference, org.sintef.thingml.Parameter>();
+	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.ParamReference, org.sintef.thingml.Parameter> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.ParamReference, org.sintef.thingml.Parameter>();
 	
-	public void resolve(String identifier, org.sintef.thingml.Reference container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Parameter> result) {
-		ReferencedElmt elmt = container.getReference();
+	public void resolve(String identifier, org.sintef.thingml.ParamReference container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Parameter> result) {
+		Reference parent = ThingMLHelpers.findContainer(container,Reference.class);
+		ReferencedElmt elmt = parent.getReference();
 
 		Message message = null;
 		if(elmt instanceof ReceiveMessage) {
-			message = ((ReceiveMessage)elmt).getMessage();
+			message = ((ReceiveMessage) elmt).getMessage();
 		} else if(elmt instanceof MessageParameter) {
 			message = ((MessageParameter)elmt).getMsgRef();
 		} else if(elmt instanceof SimpleSource) {
@@ -52,10 +54,9 @@ public class ReferenceParameterReferenceResolver implements org.sintef.thingml.r
 			}
 		}
 
-
 	}
 	
-	public String deResolve(org.sintef.thingml.Parameter element, org.sintef.thingml.Reference container, org.eclipse.emf.ecore.EReference reference) {
+	public String deResolve(org.sintef.thingml.Parameter element, org.sintef.thingml.ParamReference container, org.eclipse.emf.ecore.EReference reference) {
 		return delegate.deResolve(element, container, reference);
 	}
 	

@@ -27,6 +27,7 @@ import org.sintef.thingml.ActionBlock;
 import org.sintef.thingml.AndExpression;
 import org.sintef.thingml.AnnotatedElement;
 import org.sintef.thingml.ArrayIndex;
+import org.sintef.thingml.ArrayParamRef;
 import org.sintef.thingml.BinaryExpression;
 import org.sintef.thingml.BooleanLiteral;
 import org.sintef.thingml.CompositeState;
@@ -77,6 +78,7 @@ import org.sintef.thingml.Operator;
 import org.sintef.thingml.OperatorCall;
 import org.sintef.thingml.OrExpression;
 import org.sintef.thingml.ParallelRegion;
+import org.sintef.thingml.ParamReference;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.PlusExpression;
@@ -96,6 +98,7 @@ import org.sintef.thingml.ReturnAction;
 import org.sintef.thingml.SendAction;
 import org.sintef.thingml.SglMsgParamOperator;
 import org.sintef.thingml.SglMsgParamOperatorCall;
+import org.sintef.thingml.SimpleParamRef;
 import org.sintef.thingml.SimpleSource;
 import org.sintef.thingml.Source;
 import org.sintef.thingml.SourceComposition;
@@ -800,6 +803,27 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass timeWindowEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass paramReferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass simpleParamRefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass arrayParamRefEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -2803,7 +2827,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	public EReference getReference_Parameter() {
-		return (EReference)referenceEClass.getEStructuralFeatures().get(0);
+		return (EReference)referenceEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2812,7 +2836,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	public EReference getReference_Reference() {
-		return (EReference)referenceEClass.getEStructuralFeatures().get(1);
+		return (EReference)referenceEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2885,6 +2909,42 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EAttribute getTimeWindow_Size() {
 		return (EAttribute)timeWindowEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getParamReference() {
+		return paramReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getParamReference_ParameterRef() {
+		return (EReference)paramReferenceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getSimpleParamRef() {
+		return simpleParamRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getArrayParamRef() {
+		return arrayParamRefEClass;
 	}
 
 	/**
@@ -3221,8 +3281,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(sglMsgParamOperatorCallEClass, SGL_MSG_PARAM_OPERATOR_CALL__PARAMETER);
 
 		referenceEClass = createEClass(REFERENCE);
-		createEReference(referenceEClass, REFERENCE__PARAMETER);
 		createEReference(referenceEClass, REFERENCE__REFERENCE);
+		createEReference(referenceEClass, REFERENCE__PARAMETER);
 
 		referencedElmtEClass = createEClass(REFERENCED_ELMT);
 
@@ -3235,6 +3295,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		timeWindowEClass = createEClass(TIME_WINDOW);
 		createEAttribute(timeWindowEClass, TIME_WINDOW__STEP);
 		createEAttribute(timeWindowEClass, TIME_WINDOW__SIZE);
+
+		paramReferenceEClass = createEClass(PARAM_REFERENCE);
+		createEReference(paramReferenceEClass, PARAM_REFERENCE__PARAMETER_REF);
+
+		simpleParamRefEClass = createEClass(SIMPLE_PARAM_REF);
+
+		arrayParamRefEClass = createEClass(ARRAY_PARAM_REF);
 	}
 
 	/**
@@ -3360,6 +3427,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		sglMsgParamOperatorEClass.getESuperTypes().add(this.getOperator());
 		lengthWindowEClass.getESuperTypes().add(this.getViewSource());
 		timeWindowEClass.getESuperTypes().add(this.getViewSource());
+		simpleParamRefEClass.getESuperTypes().add(this.getParamReference());
+		arrayParamRefEClass.getESuperTypes().add(this.getParamReference());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(thingMLModelEClass, ThingMLModel.class, "ThingMLModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3668,8 +3737,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getSglMsgParamOperatorCall_Parameter(), this.getSource(), null, "parameter", null, 1, 1, SglMsgParamOperatorCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(referenceEClass, Reference.class, "Reference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getReference_Parameter(), this.getParameter(), null, "parameter", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getReference_Reference(), this.getReferencedElmt(), null, "reference", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReference_Parameter(), this.getParamReference(), null, "parameter", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(referencedElmtEClass, ReferencedElmt.class, "ReferencedElmt", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -3682,6 +3751,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(timeWindowEClass, TimeWindow.class, "TimeWindow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTimeWindow_Step(), ecorePackage.getEInt(), "step", null, 1, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTimeWindow_Size(), ecorePackage.getEInt(), "size", null, 1, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(paramReferenceEClass, ParamReference.class, "ParamReference", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getParamReference_ParameterRef(), this.getParameter(), null, "parameterRef", null, 1, 1, ParamReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(simpleParamRefEClass, SimpleParamRef.class, "SimpleParamRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(arrayParamRefEClass, ArrayParamRef.class, "ArrayParamRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

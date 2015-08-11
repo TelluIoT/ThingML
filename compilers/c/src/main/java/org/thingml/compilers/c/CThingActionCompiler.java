@@ -144,7 +144,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
    @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-        builder.append(expression.getParameter().getName());
+        builder.append(expression.getParameter().getParameterRef().getName());
     }
 
     @Override

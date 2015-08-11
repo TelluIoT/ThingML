@@ -26,8 +26,8 @@ package org.sintef.thingml;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.sintef.thingml.Reference#getParameter <em>Parameter</em>}</li>
  *   <li>{@link org.sintef.thingml.Reference#getReference <em>Reference</em>}</li>
+ *   <li>{@link org.sintef.thingml.Reference#getParameter <em>Parameter</em>}</li>
  * </ul>
  * </p>
  *
@@ -37,30 +37,30 @@ package org.sintef.thingml;
  */
 public interface Reference extends Expression {
 	/**
-	 * Returns the value of the '<em><b>Parameter</b></em>' reference.
+	 * Returns the value of the '<em><b>Parameter</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Parameter</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Parameter</em>' reference.
-	 * @see #setParameter(Parameter)
+	 * @return the value of the '<em>Parameter</em>' containment reference.
+	 * @see #setParameter(ParamReference)
 	 * @see org.sintef.thingml.ThingmlPackage#getReference_Parameter()
-	 * @model required="true"
+	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	Parameter getParameter();
+	ParamReference getParameter();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Reference#getParameter <em>Parameter</em>}' reference.
+	 * Sets the value of the '{@link org.sintef.thingml.Reference#getParameter <em>Parameter</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Parameter</em>' reference.
+	 * @param value the new value of the '<em>Parameter</em>' containment reference.
 	 * @see #getParameter()
 	 * @generated
 	 */
-	void setParameter(Parameter value);
+	void setParameter(ParamReference value);
 
 	/**
 	 * Returns the value of the '<em><b>Reference</b></em>' reference.

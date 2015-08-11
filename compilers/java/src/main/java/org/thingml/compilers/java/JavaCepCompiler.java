@@ -22,6 +22,8 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.java.cepHelper.JavaCepViewCompiler;
 import org.thingml.compilers.java.cepHelper.JavaGenerateSourceDeclaration;
 
+import java.util.List;
+
 /**
  * @author ludovic
  */
@@ -49,15 +51,33 @@ public class JavaCepCompiler extends CepCompiler {
 
    private static void generateSubscription(Stream stream, StringBuilder builder, Context context, Message outPut, String name) {
         String outPutName = outPut.getName();
-        String outPutType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
+        String messageType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
+        String outPutType = messageType;
 
-        builder.append(name + ".subscribe(new Action1<" + outPutType + ">() {\n")
+        String toList = "";
+        List<ViewSource> operators = stream.getInput().getOperators();
+        if (operators.get(operators.size() - 1) instanceof LengthWindow) {
+            toList = ".toList()";
+            outPutType = "List<" + outPutType + ">";
+        }
+
+        builder.append(name + toList + ".subscribe(new Action1<" + outPutType + ">() {\n")
                 .append("@Override\n")
                 .append("public void call(" + outPutType + " " + outPutName + ") {\n");
-
+        if(!toList.equals("")) {
+            builder.append("int i = 0;\n");
+           for(Parameter parameter : outPut.getParameters()) {
+               builder.append("int[] " + outPutName + parameter.getName() + " = new int[" + outPutName + ".size()];\n")
+                       .append("i = 0;\n")
+                       .append("for(" + messageType + " " + outPutName + "_msg : " + outPutName + ") {\n")
+                       .append(outPutName + parameter.getName() + "[i] = " + outPutName + "_msg.v1;\n")
+                       .append("i++;\n")
+                       .append("}");
+           }
+        }
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
 
-        builder.append("}\n")
+       builder.append("}\n")
                 .append("});\n");
     }
 

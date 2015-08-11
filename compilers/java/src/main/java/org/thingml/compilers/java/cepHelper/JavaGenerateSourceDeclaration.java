@@ -16,8 +16,8 @@
 package org.thingml.compilers.java.cepHelper;
 
 import org.sintef.thingml.*;
-import org.thingml.compilers.Context;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
+import org.thingml.compilers.Context;
 import org.thingml.compilers.java.JavaCepCompiler;
 import org.thingml.compilers.java.JavaThingActionCompiler;
 

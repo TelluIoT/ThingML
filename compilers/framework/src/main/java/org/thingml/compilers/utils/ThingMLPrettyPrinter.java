@@ -222,7 +222,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
    @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
        ThingMLElement thingMLElement = (ThingMLElement) expression.getReference();
-        builder.append(thingMLElement.getName() + "." + expression.getParameter().getName());
+        builder.append(thingMLElement.getName() + "." + expression.getParameter().getParameterRef().getName());
     }
 
     @Override

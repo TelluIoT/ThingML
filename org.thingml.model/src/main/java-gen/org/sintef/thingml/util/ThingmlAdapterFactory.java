@@ -465,6 +465,18 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createTimeWindowAdapter();
 			}
 			@Override
+			public Adapter caseParamReference(ParamReference object) {
+				return createParamReferenceAdapter();
+			}
+			@Override
+			public Adapter caseSimpleParamRef(SimpleParamRef object) {
+				return createSimpleParamRefAdapter();
+			}
+			@Override
+			public Adapter caseArrayParamRef(ArrayParamRef object) {
+				return createArrayParamRefAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -1825,6 +1837,48 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTimeWindowAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ParamReference <em>Param Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ParamReference
+	 * @generated
+	 */
+	public Adapter createParamReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SimpleParamRef <em>Simple Param Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.SimpleParamRef
+	 * @generated
+	 */
+	public Adapter createSimpleParamRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ArrayParamRef <em>Array Param Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ArrayParamRef
+	 * @generated
+	 */
+	public Adapter createArrayParamRefAdapter() {
 		return null;
 	}
 

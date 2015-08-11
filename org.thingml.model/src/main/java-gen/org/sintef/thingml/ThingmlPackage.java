@@ -4375,22 +4375,22 @@ public interface ThingmlPackage extends EPackage {
 	int REFERENCE = 91;
 
 	/**
-	 * The feature id for the '<em><b>Parameter</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REFERENCE__PARAMETER = EXPRESSION_FEATURE_COUNT + 0;
-
-	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REFERENCE__REFERENCE = EXPRESSION_FEATURE_COUNT + 1;
+	int REFERENCE__REFERENCE = EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Parameter</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE__PARAMETER = EXPRESSION_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Reference</em>' class.
@@ -4551,6 +4551,92 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int TIME_WINDOW_FEATURE_COUNT = VIEW_SOURCE_FEATURE_COUNT + 2;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ParamReferenceImpl <em>Param Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ParamReferenceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getParamReference()
+	 * @generated
+	 */
+	int PARAM_REFERENCE = 96;
+
+	/**
+	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAM_REFERENCE__PARAMETER_REF = 0;
+
+	/**
+	 * The number of structural features of the '<em>Param Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAM_REFERENCE_FEATURE_COUNT = 1;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.SimpleParamRefImpl <em>Simple Param Ref</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.SimpleParamRefImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleParamRef()
+	 * @generated
+	 */
+	int SIMPLE_PARAM_REF = 97;
+
+	/**
+	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_PARAM_REF__PARAMETER_REF = PARAM_REFERENCE__PARAMETER_REF;
+
+	/**
+	 * The number of structural features of the '<em>Simple Param Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_PARAM_REF_FEATURE_COUNT = PARAM_REFERENCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ArrayParamRefImpl <em>Array Param Ref</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ArrayParamRefImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getArrayParamRef()
+	 * @generated
+	 */
+	int ARRAY_PARAM_REF = 98;
+
+	/**
+	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ARRAY_PARAM_REF__PARAMETER_REF = PARAM_REFERENCE__PARAMETER_REF;
+
+	/**
+	 * The number of structural features of the '<em>Array Param Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ARRAY_PARAM_REF_FEATURE_COUNT = PARAM_REFERENCE_FEATURE_COUNT + 0;
 
 
 	/**
@@ -6827,10 +6913,10 @@ public interface ThingmlPackage extends EPackage {
 	EClass getReference();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.Reference#getParameter <em>Parameter</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Reference#getParameter <em>Parameter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Parameter</em>'.
+	 * @return the meta object for the containment reference '<em>Parameter</em>'.
 	 * @see org.sintef.thingml.Reference#getParameter()
 	 * @see #getReference()
 	 * @generated
@@ -6931,6 +7017,47 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTimeWindow_Size();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.ParamReference <em>Param Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Param Reference</em>'.
+	 * @see org.sintef.thingml.ParamReference
+	 * @generated
+	 */
+	EClass getParamReference();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.ParamReference#getParameterRef <em>Parameter Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Parameter Ref</em>'.
+	 * @see org.sintef.thingml.ParamReference#getParameterRef()
+	 * @see #getParamReference()
+	 * @generated
+	 */
+	EReference getParamReference_ParameterRef();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.SimpleParamRef <em>Simple Param Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Simple Param Ref</em>'.
+	 * @see org.sintef.thingml.SimpleParamRef
+	 * @generated
+	 */
+	EClass getSimpleParamRef();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.ArrayParamRef <em>Array Param Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Array Param Ref</em>'.
+	 * @see org.sintef.thingml.ArrayParamRef
+	 * @generated
+	 */
+	EClass getArrayParamRef();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -8859,7 +8986,7 @@ public interface ThingmlPackage extends EPackage {
 		EClass REFERENCE = eINSTANCE.getReference();
 
 		/**
-		 * The meta object literal for the '<em><b>Parameter</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Parameter</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -8945,6 +9072,44 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TIME_WINDOW__SIZE = eINSTANCE.getTimeWindow_Size();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ParamReferenceImpl <em>Param Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ParamReferenceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getParamReference()
+		 * @generated
+		 */
+		EClass PARAM_REFERENCE = eINSTANCE.getParamReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Parameter Ref</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PARAM_REFERENCE__PARAMETER_REF = eINSTANCE.getParamReference_ParameterRef();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.SimpleParamRefImpl <em>Simple Param Ref</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.SimpleParamRefImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleParamRef()
+		 * @generated
+		 */
+		EClass SIMPLE_PARAM_REF = eINSTANCE.getSimpleParamRef();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ArrayParamRefImpl <em>Array Param Ref</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ArrayParamRefImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getArrayParamRef()
+		 * @generated
+		 */
+		EClass ARRAY_PARAM_REF = eINSTANCE.getArrayParamRef();
 
 	}
 
