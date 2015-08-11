@@ -89,8 +89,8 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createFunctionAdapter();
 			}
 			@Override
-			public Adapter caseSimpleMessage(SimpleMessage object) {
-				return createSimpleMessageAdapter();
+			public Adapter caseMessage(Message object) {
+				return createMessageAdapter();
 			}
 			@Override
 			public Adapter caseThing(Thing object) {
@@ -465,18 +465,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createTimeWindowAdapter();
 			}
 			@Override
-			public Adapter caseMessageArray(MessageArray object) {
-				return createMessageArrayAdapter();
-			}
-			@Override
-			public Adapter caseMessage(Message object) {
-				return createMessageAdapter();
-			}
-			@Override
-			public Adapter caseMessageCreationParam(MessageCreationParam object) {
-				return createMessageCreationParamAdapter();
-			}
-			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -525,20 +513,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SimpleMessage <em>Simple Message</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.SimpleMessage
-	 * @generated
-	 */
-	public Adapter createSimpleMessageAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Message <em>Message</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -549,20 +523,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createMessageAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.MessageCreationParam <em>Message Creation Param</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.MessageCreationParam
-	 * @generated
-	 */
-	public Adapter createMessageCreationParamAdapter() {
 		return null;
 	}
 
@@ -1865,20 +1825,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTimeWindowAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.MessageArray <em>Message Array</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.MessageArray
-	 * @generated
-	 */
-	public Adapter createMessageArrayAdapter() {
 		return null;
 	}
 

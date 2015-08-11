@@ -260,7 +260,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMessage()
 	 * @generated
 	 */
-	int MESSAGE = 97;
+	int MESSAGE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -281,59 +281,22 @@ public interface ThingmlPackage extends EPackage {
 	int MESSAGE__ANNOTATIONS = ANNOTATED_ELEMENT__ANNOTATIONS;
 
 	/**
-	 * The number of structural features of the '<em>Message</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.SimpleMessageImpl <em>Simple Message</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.SimpleMessageImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleMessage()
-	 * @generated
-	 */
-	int SIMPLE_MESSAGE = 2;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SIMPLE_MESSAGE__NAME = MESSAGE__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SIMPLE_MESSAGE__ANNOTATIONS = MESSAGE__ANNOTATIONS;
-
-	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_MESSAGE__PARAMETERS = MESSAGE_FEATURE_COUNT + 0;
+	int MESSAGE__PARAMETERS = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Simple Message</em>' class.
+	 * The number of structural features of the '<em>Message</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SIMPLE_MESSAGE_FEATURE_COUNT = MESSAGE_FEATURE_COUNT + 1;
+	int MESSAGE_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.TypeImpl <em>Type</em>}' class.
@@ -4591,90 +4554,6 @@ public interface ThingmlPackage extends EPackage {
 
 
 	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.MessageArrayImpl <em>Message Array</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.MessageArrayImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMessageArray()
-	 * @generated
-	 */
-	int MESSAGE_ARRAY = 96;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_ARRAY__NAME = MESSAGE__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_ARRAY__ANNOTATIONS = MESSAGE__ANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Message Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_ARRAY__MESSAGE_TYPE = MESSAGE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Message Array</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_ARRAY_FEATURE_COUNT = MESSAGE_FEATURE_COUNT + 1;
-
-	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.MessageCreationParamImpl <em>Message Creation Param</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.MessageCreationParamImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMessageCreationParam()
-	 * @generated
-	 */
-	int MESSAGE_CREATION_PARAM = 98;
-
-	/**
-	 * The feature id for the '<em><b>Msg Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_CREATION_PARAM__MSG_TYPE = EXPRESSION_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_CREATION_PARAM__PARAMETERS = EXPRESSION_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Message Creation Param</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MESSAGE_CREATION_PARAM_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
-
-
-	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.ThingMLModel <em>Thing ML Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4750,27 +4629,6 @@ public interface ThingmlPackage extends EPackage {
 	EReference getFunction_Body();
 
 	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.SimpleMessage <em>Simple Message</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Simple Message</em>'.
-	 * @see org.sintef.thingml.SimpleMessage
-	 * @generated
-	 */
-	EClass getSimpleMessage();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.SimpleMessage#getParameters <em>Parameters</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Parameters</em>'.
-	 * @see org.sintef.thingml.SimpleMessage#getParameters()
-	 * @see #getSimpleMessage()
-	 * @generated
-	 */
-	EReference getSimpleMessage_Parameters();
-
-	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Message <em>Message</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4781,36 +4639,15 @@ public interface ThingmlPackage extends EPackage {
 	EClass getMessage();
 
 	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.MessageCreationParam <em>Message Creation Param</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Message Creation Param</em>'.
-	 * @see org.sintef.thingml.MessageCreationParam
-	 * @generated
-	 */
-	EClass getMessageCreationParam();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.MessageCreationParam#getMsgType <em>Msg Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Msg Type</em>'.
-	 * @see org.sintef.thingml.MessageCreationParam#getMsgType()
-	 * @see #getMessageCreationParam()
-	 * @generated
-	 */
-	EReference getMessageCreationParam_MsgType();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.MessageCreationParam#getParameters <em>Parameters</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Message#getParameters <em>Parameters</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Parameters</em>'.
-	 * @see org.sintef.thingml.MessageCreationParam#getParameters()
-	 * @see #getMessageCreationParam()
+	 * @see org.sintef.thingml.Message#getParameters()
+	 * @see #getMessage()
 	 * @generated
 	 */
-	EReference getMessageCreationParam_Parameters();
+	EReference getMessage_Parameters();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Thing <em>Thing</em>}'.
@@ -7096,27 +6933,6 @@ public interface ThingmlPackage extends EPackage {
 	EAttribute getTimeWindow_Size();
 
 	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.MessageArray <em>Message Array</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Message Array</em>'.
-	 * @see org.sintef.thingml.MessageArray
-	 * @generated
-	 */
-	EClass getMessageArray();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.MessageArray#getMessageType <em>Message Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Message Type</em>'.
-	 * @see org.sintef.thingml.MessageArray#getMessageType()
-	 * @see #getMessageArray()
-	 * @generated
-	 */
-	EReference getMessageArray_MessageType();
-
-	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7199,24 +7015,6 @@ public interface ThingmlPackage extends EPackage {
 		EReference FUNCTION__BODY = eINSTANCE.getFunction_Body();
 
 		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.SimpleMessageImpl <em>Simple Message</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.SimpleMessageImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleMessage()
-		 * @generated
-		 */
-		EClass SIMPLE_MESSAGE = eINSTANCE.getSimpleMessage();
-
-		/**
-		 * The meta object literal for the '<em><b>Parameters</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference SIMPLE_MESSAGE__PARAMETERS = eINSTANCE.getSimpleMessage_Parameters();
-
-		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.MessageImpl <em>Message</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -7227,30 +7025,12 @@ public interface ThingmlPackage extends EPackage {
 		EClass MESSAGE = eINSTANCE.getMessage();
 
 		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.MessageCreationParamImpl <em>Message Creation Param</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.MessageCreationParamImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMessageCreationParam()
-		 * @generated
-		 */
-		EClass MESSAGE_CREATION_PARAM = eINSTANCE.getMessageCreationParam();
-
-		/**
-		 * The meta object literal for the '<em><b>Msg Type</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference MESSAGE_CREATION_PARAM__MSG_TYPE = eINSTANCE.getMessageCreationParam_MsgType();
-
-		/**
 		 * The meta object literal for the '<em><b>Parameters</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference MESSAGE_CREATION_PARAM__PARAMETERS = eINSTANCE.getMessageCreationParam_Parameters();
+		EReference MESSAGE__PARAMETERS = eINSTANCE.getMessage_Parameters();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ThingImpl <em>Thing</em>}' class.
@@ -9165,24 +8945,6 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TIME_WINDOW__SIZE = eINSTANCE.getTimeWindow_Size();
-
-		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.MessageArrayImpl <em>Message Array</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.MessageArrayImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMessageArray()
-		 * @generated
-		 */
-		EClass MESSAGE_ARRAY = eINSTANCE.getMessageArray();
-
-		/**
-		 * The meta object literal for the '<em><b>Message Type</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference MESSAGE_ARRAY__MESSAGE_TYPE = eINSTANCE.getMessageArray_MessageType();
 
 	}
 

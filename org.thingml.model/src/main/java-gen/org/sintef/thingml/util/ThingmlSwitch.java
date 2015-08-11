@@ -94,12 +94,11 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.SIMPLE_MESSAGE: {
-				SimpleMessage simpleMessage = (SimpleMessage)theEObject;
-				T result = caseSimpleMessage(simpleMessage);
-				if (result == null) result = caseMessage(simpleMessage);
-				if (result == null) result = caseAnnotatedElement(simpleMessage);
-				if (result == null) result = caseThingMLElement(simpleMessage);
+			case ThingmlPackage.MESSAGE: {
+				Message message = (Message)theEObject;
+				T result = caseMessage(message);
+				if (result == null) result = caseAnnotatedElement(message);
+				if (result == null) result = caseThingMLElement(message);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -834,30 +833,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.MESSAGE_ARRAY: {
-				MessageArray messageArray = (MessageArray)theEObject;
-				T result = caseMessageArray(messageArray);
-				if (result == null) result = caseMessage(messageArray);
-				if (result == null) result = caseAnnotatedElement(messageArray);
-				if (result == null) result = caseThingMLElement(messageArray);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ThingmlPackage.MESSAGE: {
-				Message message = (Message)theEObject;
-				T result = caseMessage(message);
-				if (result == null) result = caseAnnotatedElement(message);
-				if (result == null) result = caseThingMLElement(message);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ThingmlPackage.MESSAGE_CREATION_PARAM: {
-				MessageCreationParam messageCreationParam = (MessageCreationParam)theEObject;
-				T result = caseMessageCreationParam(messageCreationParam);
-				if (result == null) result = caseExpression(messageCreationParam);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -893,21 +868,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Simple Message</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Simple Message</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseSimpleMessage(SimpleMessage object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Message</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -919,21 +879,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseMessage(Message object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Message Creation Param</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Message Creation Param</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseMessageCreationParam(MessageCreationParam object) {
 		return null;
 	}
 
@@ -2329,21 +2274,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTimeWindow(TimeWindow object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Message Array</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Message Array</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseMessageArray(MessageArray object) {
 		return null;
 	}
 

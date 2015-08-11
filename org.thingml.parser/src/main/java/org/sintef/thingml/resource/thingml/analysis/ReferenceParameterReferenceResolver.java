@@ -39,15 +39,11 @@ public class ReferenceParameterReferenceResolver implements org.sintef.thingml.r
 		}
 
 		if(message != null) {
-			if (message instanceof SimpleMessage) {
-				for (Parameter parameter : ((SimpleMessage)message).getParameters()) {
-					if (resolveFuzzy
-							&& parameter.getName().startsWith(identifier)) {
-						result.addMapping(parameter.getName(), parameter);
-					} else if (!resolveFuzzy
-							&& parameter.getName().equals(identifier)) {
-						result.addMapping(parameter.getName(), parameter);
-					}
+			for(Parameter parameter : message.getParameters()) {
+				if(resolveFuzzy && parameter.getName().startsWith(identifier)) {
+					result.addMapping(parameter.getName(),parameter);
+				} else if(!resolveFuzzy && parameter.getName().equals(identifier)) {
+					result.addMapping(parameter.getName(),parameter);
 				}
 			}
 

@@ -15,8 +15,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Function/parameters"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Function/body"/>
     </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//SimpleMessage">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//SimpleMessage/parameters"/>
+    <genClasses ecoreClass="thingml.ecore#//Message">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Message/parameters"/>
     </genClasses>
     <genClasses image="false" ecoreClass="thingml.ecore#//Thing">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/properties"/>
@@ -295,14 +295,6 @@
     <genClasses ecoreClass="thingml.ecore#//TimeWindow">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//TimeWindow/step"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//TimeWindow/size"/>
-    </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//MessageArray">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//MessageArray/messageType"/>
-    </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//Message"/>
-    <genClasses ecoreClass="thingml.ecore#//MessageCreationParam">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//MessageCreationParam/msgType"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//MessageCreationParam/parameters"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

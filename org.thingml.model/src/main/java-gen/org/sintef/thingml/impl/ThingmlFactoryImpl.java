@@ -71,7 +71,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 		switch (eClass.getClassifierID()) {
 			case ThingmlPackage.THING_ML_MODEL: return createThingMLModel();
 			case ThingmlPackage.FUNCTION: return createFunction();
-			case ThingmlPackage.SIMPLE_MESSAGE: return createSimpleMessage();
+			case ThingmlPackage.MESSAGE: return createMessage();
 			case ThingmlPackage.THING: return createThing();
 			case ThingmlPackage.PARAMETER: return createParameter();
 			case ThingmlPackage.PROPERTY: return createProperty();
@@ -144,8 +144,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR: return createSglMsgParamOperator();
 			case ThingmlPackage.LENGTH_WINDOW: return createLengthWindow();
 			case ThingmlPackage.TIME_WINDOW: return createTimeWindow();
-			case ThingmlPackage.MESSAGE_ARRAY: return createMessageArray();
-			case ThingmlPackage.MESSAGE_CREATION_PARAM: return createMessageCreationParam();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -176,9 +174,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SimpleMessage createSimpleMessage() {
-		SimpleMessageImpl simpleMessage = new SimpleMessageImpl();
-		return simpleMessage;
+	public Message createMessage() {
+		MessageImpl message = new MessageImpl();
+		return message;
 	}
 
 	/**
@@ -899,26 +897,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public TimeWindow createTimeWindow() {
 		TimeWindowImpl timeWindow = new TimeWindowImpl();
 		return timeWindow;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public MessageArray createMessageArray() {
-		MessageArrayImpl messageArray = new MessageArrayImpl();
-		return messageArray;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public MessageCreationParam createMessageCreationParam() {
-		MessageCreationParamImpl messageCreationParam = new MessageCreationParamImpl();
-		return messageCreationParam;
 	}
 
 	/**

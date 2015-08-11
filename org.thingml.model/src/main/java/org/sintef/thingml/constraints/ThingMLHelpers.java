@@ -158,16 +158,13 @@ public class ThingMLHelpers {
                     if (EcoreUtil.equals(p.getType(), t))
                         result.add(t);
                 }
-				for (Message m : thing.allMessages()) {
-					if (m instanceof SimpleMessage) {
-						SimpleMessage splMsg = (SimpleMessage) m;
-						for (Parameter p : splMsg.getParameters()) {
-							if (EcoreUtil.equals(p.getType(), t)) {
-								result.add(t);
-							}
-						}
-					}
-				}
+                for(Message m : thing.allMessages()) {
+                    for(Parameter p : m.getParameters()) {
+                        if (EcoreUtil.equals(p.getType(), t)) {
+                            result.add(t);
+                        }
+                    }
+                }
             }
         }
         return result;
@@ -183,15 +180,11 @@ public class ThingMLHelpers {
                         result.add(t);
                 }
                 for(Message m : thing.allMessages()) {
-                	if(m instanceof SimpleMessage) {
-                		SimpleMessage splMsg = (SimpleMessage) m;
-                		for(Parameter p : splMsg.getParameters()) {
-                            if (EcoreUtil.equals(p.getType(), t)) {
-                                result.add(t);
-                            }
+                    for(Parameter p : m.getParameters()) {
+                        if (EcoreUtil.equals(p.getType(), t)) {
+                            result.add(t);
                         }
-                	}
-                    
+                    }
                 }
             }
         }

@@ -164,9 +164,7 @@ RULES {
 	
 	ThingMLModel::= ( !0 "import" #1 imports[STRING_LITERAL] )* ( !0 (types | configs) )* ;
 		
-	//Message ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ";"  ;
-	SimpleMessage ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ";"  ;
-	MessageArray ::= "message[]" #1 name[] "=" messageType[] "[]" (annotations)* ";"; 
+	Message ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ";"  ;
 	
 	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( "[" cardinality "]")? )? #1 body ;
 	
@@ -230,7 +228,7 @@ RULES {
 	// *********************
 	
 	SendAction::= port[] "!" message[] "(" (parameters ("," #1 parameters)* )? ")";
-		
+	
 	VariableAssignment ::= property[] #1 ("[" index "]")* "=" #1 expression ; 
 	
 	ActionBlock::= "do" ( !1 actions  )* !0 "end"  ;
@@ -320,9 +318,6 @@ RULES {
 	//CEP
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	StreamParamReference ::= "#" indexParam[INTEGER_LITERAL];
-	
-	@Operator(type="primitive", weight="9", superclass="Expression")
-	MessageCreationParam ::= msgType[] "(" ( parameters ("," parameters)* )? ")";
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	Reference ::= reference[] "." parameter[];	
