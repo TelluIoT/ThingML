@@ -135,12 +135,66 @@ public abstract class CCompilerContext extends Context {
     public String getHandlerName(Thing thing, Port p, Message m) {
         return thing.qname("_") + "_handle_" + p.getName() + "_" + m.getName();
     }
-
-    protected Hashtable<Thing, Hashtable<Port, Hashtable<Message, Integer>>> handlerCodes = new Hashtable<Thing, Hashtable<Port, Hashtable<Message, Integer>>>();
+    
+    public int numberInstancesAndPort(Configuration cfg) {
+        int result = 0;
+        for(Instance i : cfg.allInstances()) {
+            result++;
+            for(Port p : i.getType().allPorts()) {
+                result++;
+            }
+        }
+        return result;
+    }
+    //protected Hashtable<Thing, Hashtable<Port, Hashtable<Message, Integer>>> handlerCodes = new Hashtable<Thing, Hashtable<Port, Hashtable<Message, Integer>>>();
+    protected Hashtable<Message, Integer> handlerCodes = new Hashtable<Message, Integer>();
     protected int handlerCodeCpt = 1;
 
-    public int getHandlerCode(Configuration cfg, Thing t, Port p, Message m) {
+    
+    public int getHandlerCode(Configuration cfg, Message m) {
+        Integer result = handlerCodes.get(m);
+        if (result == null) {
+            if (m.hasAnnotation("code")) {
+                result = Integer.parseInt(m.annotation("code").iterator().next());
+                if (result == null) {
+                    System.err.println("Warning: @code must contain an Integer for message:" + m.getName());
+                }
+            } else {
+                boolean codeIsFree = false;
 
+                while (!codeIsFree && (handlerCodeCpt < 65535)) {
+                    codeIsFree = true;
+                    for (Thing th : cfg.allThings()) {
+                        for (Port po : th.allPorts()) {
+                            for (Message me : po.getReceives()) {
+                                if (me.hasAnnotation("code")) {
+                                    if (Integer.parseInt(me.annotation("code").iterator().next()) == handlerCodeCpt) {
+                                        codeIsFree = false;
+                                        handlerCodeCpt += 1;
+                                    }
+                                }
+                            }
+                            for (Message me : po.getSends()) {
+                                if (me.hasAnnotation("code")) {
+                                    if (Integer.parseInt(me.annotation("code").iterator().next()) == handlerCodeCpt) {
+                                        codeIsFree = false;
+                                        handlerCodeCpt += 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                result = handlerCodeCpt;
+                handlerCodeCpt += 1;
+                if (result == null) {
+                    System.err.println("Warning: no code could be found for message:" + m.getName());
+                }
+            }
+
+            handlerCodes.put(m, result);
+        }
+        /*
         Hashtable<Port, Hashtable<Message, Integer>> handler_codes = handlerCodes.get(t);
         if (handler_codes == null) {
             handler_codes = new Hashtable<Port, Hashtable<Message, Integer>>();
@@ -195,6 +249,7 @@ public abstract class CCompilerContext extends Context {
 
             table.put(m, result);
         }
+        */
         return result;
     }
 
@@ -224,6 +279,18 @@ public abstract class CCompilerContext extends Context {
 
 
     // FUNCTIONS FOR MESSAGES and PARAMETERS
+
+    public void appendFormalParametersForDispatcher(StringBuilder builder, Message m) {
+        builder.append("(");
+        builder.append("uint16_t sender");
+        for (Parameter p : m.getParameters()) {
+            builder.append(", ");
+            builder.append(getCType(p.getType()));
+            if (p.getCardinality() != null) builder.append("*");
+            builder.append(" " + p.getName());
+        }
+        builder.append(")");
+    }
 
     public void appendFormalParameters(Thing thing, StringBuilder builder, Message m) {
         builder.append("(");

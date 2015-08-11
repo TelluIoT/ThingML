@@ -86,6 +86,14 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
         builder.append("// Variables for the ID of the instance\n");
         builder.append("int id;\n");
+        
+        builder.append("// Variables for the ID of the ports of the instance\n");
+        for (Port p : thing.allPorts()) {
+            builder.append("uint16_t id_");
+            builder.append(p.getName());
+            builder.append(";\n");
+        }
+        
         // Variables for each region to store its current state
         builder.append("// Variables for the current instance state\n");
 

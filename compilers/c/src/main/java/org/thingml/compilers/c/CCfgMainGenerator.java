@@ -21,8 +21,13 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
 import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by ffl on 29.05.15.
@@ -99,8 +104,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         String fifotemplate = ctx.getTemplateByID("ctemplates/fifo.c");
         fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + ctx.fifoSize());
-        fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + cfg.allInstances().size());
-
+        //fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + cfg.allInstances().size());
+        fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + ctx.numberInstancesAndPort(cfg));
+        
         rtemplate = rtemplate.replace("/*FIFO*/", fifotemplate);
         ctx.getBuilder(ctx.getPrefix() + "runtime.c").append(rtemplate);
     }
@@ -122,10 +128,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("\n");
 
         generateMessageEnqueue(cfg, builder, ctx);
+        //builder.append("\n");
+        //generateMessageDispatchers(cfg, builder, ctx);
         builder.append("\n");
-        generateMessageDispatchers(cfg, builder, ctx);
+        generateMessageDispatchersNew(cfg, builder, ctx);
+        //builder.append("\n");
+        //generateMessageProcessQueue(cfg, builder, ctx);
         builder.append("\n");
-        generateMessageProcessQueue(cfg, builder, ctx);
+        generateMessageProcessQueueNew(cfg, builder, ctx);
 
         builder.append("\n");
         generateMessageForwarders(cfg, builder, ctx);
@@ -179,13 +189,21 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                     builder.append("if ( fifo_byte_available() > " + ctx.getMessageSerializationSize(m) + " ) {\n\n");
 
-                    builder.append("_fifo_enqueue( (" + ctx.getHandlerCode(cfg, t, p, m) + " >> 8) & 0xFF );\n");
-                    builder.append("_fifo_enqueue( " + ctx.getHandlerCode(cfg, t, p, m) + " & 0xFF );\n\n");
+                    builder.append("_fifo_enqueue( (" + ctx.getHandlerCode(cfg, m) + " >> 8) & 0xFF );\n");
+                    builder.append("_fifo_enqueue( " + ctx.getHandlerCode(cfg, m) + " & 0xFF );\n\n");
 
+                    builder.append("// ID of the source port of the instance\n");
+                    builder.append("_fifo_enqueue( (_instance->id_");
+                    builder.append(p.getName() + " >> 8) & 0xFF );\n");
+                    builder.append("_fifo_enqueue( _instance->id_");
+                    builder.append(p.getName() + " & 0xFF );\n");
+                    
+                    /*
                     builder.append("// ID of the source instance\n");
                     builder.append("_fifo_enqueue( (_instance->id >> 8) & 0xFF );\n");
                     builder.append("_fifo_enqueue( _instance->id & 0xFF );\n");
-
+                    */
+                    
                     for (Parameter pt : m.getParameters()) {
                         builder.append("\n// parameter " + pt.getName() + "\n");
                         ctx.bytesToSerialize(pt.getType(), builder, ctx, pt.getName());
@@ -346,7 +364,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         ctx.appendFormalParameters(t, builder, m);
                         builder.append("{\n");
                         
-                        generateSerialization(ctx, m, builder, ctx.getHandlerCode(cfg, t, p, m));
+                        generateSerialization(ctx, m, builder, ctx.getHandlerCode(cfg, m));
                         
                         builder.append("\n//Forwarding with specified function \n");
                         builder.append(co.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
@@ -357,6 +375,93 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
     }
 
+    protected void generateMessageDispatchersNew(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        
+        for (Message m : cfg.allMessages()) {
+            
+            //Map<Message, Map<Map.Entry<Instance, Port>, Set<Map.Entry<Instance, Port>>>> bagOfBones;
+            //bagOfBones = new HashMap<Message, Map<Map.Entry<Instance, Port>, Set<Map.Entry<Instance, Port>>>>();
+            
+            Map<Map.Entry<Instance, Port>, Set<Map.Entry<Instance, Port>>> SenderList;
+            Map.Entry<Instance, Port> Sender, Receiver;
+            Set<Map.Entry<Instance, Port>> ReceiverList;
+            
+            // Init
+            SenderList = new HashMap<Map.Entry<Instance, Port>, Set<Map.Entry<Instance, Port>>>();
+            
+            for(Connector co : cfg.allConnectors()) {
+                if(co.getProvided().getSends().contains(m)) {
+                    
+                    Sender = new HashMap.SimpleEntry<Instance, Port>(co.getSrv().getInstance(),co.getProvided());
+                    if(SenderList.containsKey(Sender)) {
+                        ReceiverList = SenderList.get(Sender);
+                    } else {
+                        ReceiverList = new HashSet<Map.Entry<Instance, Port>>();
+                        SenderList.put(Sender, ReceiverList);
+                    }
+                    Receiver = new HashMap.SimpleEntry<Instance, Port>(co.getCli().getInstance(),co.getRequired());
+                    if(!ReceiverList.contains(Receiver)) {
+                        ReceiverList.add(Receiver);
+                    }
+                }
+                if(co.getRequired().getSends().contains(m)) {
+                    
+                    Sender = new HashMap.SimpleEntry<Instance, Port>(co.getCli().getInstance(),co.getRequired());
+                    if(SenderList.containsKey(Sender)) {
+                        ReceiverList = SenderList.get(Sender);
+                    } else {
+                        ReceiverList = new HashSet<Map.Entry<Instance, Port>>();
+                        SenderList.put(Sender, ReceiverList);
+                    }
+                    Receiver = new HashMap.SimpleEntry<Instance, Port>(co.getSrv().getInstance(),co.getProvided());
+                    if(!ReceiverList.contains(Receiver)) {
+                        ReceiverList.add(Receiver);
+                    }
+                }
+            }
+            
+            if(!SenderList.isEmpty()) {
+                builder.append("\n//New dispatcher for messages\n");
+                builder.append("void dispatch_" + m.getName());
+                ctx.appendFormalParametersForDispatcher(builder, m);
+                builder.append(" {\n");
+
+                //builder.append("switch(sender) {\n");
+
+                for(Map.Entry<Instance, Port> mySender : SenderList.keySet()) {
+                    builder.append("if (sender ==");
+                    builder.append(" " + mySender.getKey().getName() + "_var");
+                    builder.append(".id_" + mySender.getValue().getName() + ") {\n");
+                    
+                    for(Map.Entry<Instance, Port> myReceiver : SenderList.get(mySender)) {
+                        /*builder.append(myReceiver.getKey().getType().getName() + "_handle_");
+                        builder.append(myReceiver.getValue().getName() + "_");
+                        builder.append(m.getName() + "(&");
+                        builder.append(myReceiver.getKey().getName() + "_var");
+                        ctx.appendFormalParameters(myReceiver.getKey().getType(), builder, m);
+                        builder.append(");\n");*/
+                        if (myReceiver.getKey().getType().allStateMachines().size() == 0)
+                            continue; // there is no state machine
+                        StateMachine sm = myReceiver.getKey().getType().allStateMachines().get(0);
+                        if (sm.canHandle(myReceiver.getValue(), m)) {
+                            builder.append(ctx.getHandlerName(myReceiver.getKey().getType(), myReceiver.getValue(), m));
+                            ctx.appendActualParameters(myReceiver.getKey().getType(), builder, m, "&" + ctx.getInstanceVarName(myReceiver.getKey()));
+                            builder.append(";\n");
+                        }
+                    }
+                    builder.append("\n}\n");
+                }
+
+                builder.append("\n}\n\n");
+            }
+        }
+        
+        //for(Message m : cfg.allMessageDispatch(null, null))
+        //ctx.appendFormalParametersForDispatcher(t, builder, m);
+        
+        
+    }
+    
     protected void generateMessageDispatchers(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         for (Thing t : cfg.allThings()) {
             for (Port p : t.allPorts()) {
@@ -392,6 +497,107 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
         ctx.clearConcreteThing();
+    }
+
+    protected void generateMessageProcessQueueNew(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        builder.append("void processMessageQueue() {\n");
+        if (ctx.sync_fifo()) {
+            builder.append("fifo_lock();\n");
+            builder.append("while (fifo_empty()) fifo_wait();\n");
+        } else {
+            builder.append("if (fifo_empty()) return; // return if there is nothing to do\n\n");
+        }
+
+        int max_msg_size = 4; // at least the code and the source instance id (2 bytes + 2 bytes)
+
+        // Generate dequeue code only for non syncronized ports
+        for (Thing t : cfg.allThings()) {
+            for (Port p : t.allPorts()) {
+                if (p.isDefined("sync_send", "true")) continue; // do not generateMainAndInit for synchronous ports
+
+                ctx.setConcreteThing(t);
+                Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
+
+                for (Message m : allMessageDispatch.keySet()) {
+                    int size = ctx.getMessageSerializationSize(m);
+                    if (size > max_msg_size) max_msg_size = size;
+                }
+            }
+        }
+        ctx.clearConcreteThing();
+
+        //builder.append("uint8_t param_buf[" + (max_msg_size - 2) + "];\n");
+
+        // Allocate a buffer to store the message bytes.
+        // Size of the buffer is "size-2" because we have already read 2 bytes
+        builder.append("byte mbuf[" + (max_msg_size - 2) + "];\n");
+        builder.append("uint8_t mbufi = 0;\n\n");
+
+        builder.append("// Read the code of the next port/message in the queue\n");
+        builder.append("uint16_t code = fifo_dequeue() << 8;\n\n");
+        builder.append("code += fifo_dequeue();\n\n");
+
+        builder.append("// Switch to call the appropriate handler\n");
+        builder.append("switch(code) {\n");
+
+        for (Message m : cfg.allMessages()) {
+
+            builder.append("case " + ctx.getHandlerCode(cfg, m) + ":\n");
+
+            builder.append("while (mbufi < " + (ctx.getMessageSerializationSize(m) - 2) + ") mbuf[mbufi++] = fifo_dequeue();\n");
+            // Fill the buffer
+
+            //DEBUG
+            // builder.append("Serial.println(\"FW MSG "+m.getName+"\");\n"
+
+            if (ctx.sync_fifo()) builder.append("fifo_unlock();\n");
+
+            // Begin Horrible deserialization trick
+            int idx_bis = 2;
+
+            for (Parameter pt : m.getParameters()) {
+                builder.append("union u_" + m.getName() + "_" + pt.getName() + "_t {\n");
+                builder.append(ctx.getCType(pt.getType()) + " p;\n");
+                builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
+                builder.append("} u_" + m.getName() + "_" + pt.getName() + ";\n");
+
+
+                for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
+
+                    builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                    builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
+
+                    //builder.append("param_buf[" + (idx_bis + ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                    //builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
+                }
+
+
+                //builder.append(ctx.getCType(pt.getType()) + " * p_" + m.getName() + "_" + pt.getName() +";\n");
+                //builder.append("p_" + m.getName() + "_" + pt.getName() +" = (" + ctx.getCType(pt.getType()) + " *) &(param_buf[" + idx_bis + "]);\n");
+
+
+                idx_bis = idx_bis + ctx.getCByteSize(pt.getType(), 0);
+            }
+            // End Horrible deserialization trick
+
+            builder.append("dispatch_" + m.getName() + "(");
+            builder.append("(mbuf[0] << 8) + mbuf[1] /* instance port*/");
+
+            int idx = 2;
+
+            for (Parameter pt : m.getParameters()) {
+                //builder.append(",\n" + ctx.deserializeFromByte(pt.getType(), "mbuf", idx, ctx) + " /* " + pt.getName() + " */ ");
+                builder.append(",\n u_" + m.getName() + "_" + pt.getName() + ".p /* " + pt.getName() + " */ ");
+                idx = idx + ctx.getCByteSize(pt.getType(), 0);
+            }
+
+            builder.append(");\n");
+
+            builder.append("break;\n");
+        }
+        ctx.clearConcreteThing();
+        builder.append("}\n");
+        builder.append("}\n");
     }
 
     protected void generateMessageProcessQueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
@@ -444,7 +650,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                 for (Message m : allMessageDispatch.keySet()) {
 
-                    builder.append("case " + ctx.getHandlerCode(cfg, t, p, m) + ":\n");
+                    builder.append("case " + ctx.getHandlerCode(cfg, m) + ":\n");
 
                     builder.append("while (mbufi < " + (ctx.getMessageSerializationSize(m) - 2) + ") mbuf[mbufi++] = fifo_dequeue();\n");
                     // Fill the buffer
@@ -579,9 +785,16 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     public void generateInstanceInitCode(Instance inst, Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Init the ID, state variables and properties for instance " + inst.getName() + "\n");
-        // Register the instance and set its ID
+        
+// Register the instance and set its ID and its port ID
         builder.append(ctx.getInstanceVarName(inst) + ".id = ");
         builder.append("add_instance( (void*) &" + ctx.getInstanceVarName(inst) + ");\n");
+        for(Port p : inst.getType().allPorts()) {
+            builder.append(ctx.getInstanceVarName(inst) + ".id_");
+            builder.append(p.getName() + " = ");
+            builder.append("add_instance( (void*) &" + ctx.getInstanceVarName(inst) + ");\n");
+        }
+        
 
         // init state variables:
         if (inst.getType().allStateMachines().size() > 0) { // There is a state machine
