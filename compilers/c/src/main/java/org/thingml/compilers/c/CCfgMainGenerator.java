@@ -85,6 +85,13 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         // GENERATE THE TYPEDEFS HEADER
         String typedefs_template = ctx.getCommonHeaderTemplate();
         StringBuilder b = new StringBuilder();
+        b.append("//Port message handler structure\n"
+                + "typedef struct Msg_Handler {\n" +
+        "	int nb_msg;\n" +
+        "	uint16_t * msg;\n" +
+        "	void ** msg_handler;\n" +
+	"	void * instance;\n" +
+        "};\n\n");
         generateTypedefs(cfg, b, ctx);
         typedefs_template = typedefs_template.replace("/*TYPEDEFS*/", b.toString());
         ctx.getBuilder(ctx.getPrefix() + "thingml_typedefs.h").append(typedefs_template);
@@ -119,19 +126,46 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append(" * Definitions for configuration : " + cfg.getName() + "\n");
         builder.append(" *****************************************************************************/\n\n");
 
+        int nbMaxConnexion = cfg.allConnectors().size()*2;
+        if(cfg.hasAnnotation("c_dyn_connectors")) {
+            nbMaxConnexion = Integer.parseInt(cfg.annotation("c_dyn_connectors").iterator().next());
+        }
+        
+        builder.append("//Declaration of connexion array\n");
+        builder.append("#define NB_MAX_CONNEXION " + nbMaxConnexion + "\n");
+        builder.append("struct Msg_Handler * " + cfg.getName() + "_receivers[NB_MAX_CONNEXION];\n\n");
+        
+        
         builder.append("//Declaration of instance variables\n");
 
         for (Instance inst : cfg.allInstances()) {
+            builder.append("//Instance " + inst.getName() + "\n");
             builder.append(ctx.getInstanceVarDecl(inst) + "\n");
+            
+            for(Port p : inst.getType().allPorts()) {
+                if(!p.getReceives().isEmpty()) {
+                    builder.append("struct Msg_Handler " + inst.getName()
+                            + "_" + p.getName() + "_handlers;\n");
+                    builder.append("uint16_t " + inst.getName()
+                            + "_" + p.getName() + "_msgs[" + p.getReceives().size() + "];\n");
+                    builder.append("void * " + inst.getName()
+                            + "_" + p.getName() + "_handlers_tab[" + p.getReceives().size() + "];\n\n");
+                    
+                }
+            }
         }
 
         builder.append("\n");
+        
+        
 
         generateMessageEnqueue(cfg, builder, ctx);
         //builder.append("\n");
         //generateMessageDispatchers(cfg, builder, ctx);
+        //builder.append("\n");
+        //generateMessageDispatchersNew(cfg, builder, ctx);
         builder.append("\n");
-        generateMessageDispatchersNew(cfg, builder, ctx);
+        generateMessageDispatchersDynamic(cfg, builder, ctx);
         //builder.append("\n");
         //generateMessageProcessQueue(cfg, builder, ctx);
         builder.append("\n");
@@ -374,6 +408,107 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
     }
+    
+    protected void generateMessageDispatchersDynamic(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        
+        Map<Message, Set<Map.Entry<Instance, Port>>> messageSenders = new HashMap<Message, Set<Map.Entry<Instance, Port>>>();
+        Set<Map.Entry<Instance, Port>> senders;
+        Map.Entry<Instance, Port> sender;
+        
+        for (Message m : cfg.allMessages()) {
+            senders = new HashSet<Map.Entry<Instance, Port>>();
+            for(Instance inst : cfg.allInstances()) {
+                for(Port p : inst.getType().allPorts()) {
+                    if(p.getSends().contains(m)) {
+                        senders.add(new HashMap.SimpleEntry<Instance, Port>(inst, p));
+                    }
+                }
+            }
+            if(!senders.isEmpty()) {
+                messageSenders.put(m, senders);
+            }
+        }
+        
+        for(Message m : messageSenders.keySet()) {
+            boolean found = false;
+            for(Thing t : cfg.allThings()) {
+                for(Port p : t.allPorts()) {
+                    if(p.getReceives().contains(m)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if(found) {break;}
+            }
+            if(found) {
+                builder.append("\n//Dynamic dispatcher for message " + m.getName() + "\n");
+                builder.append("void dispatch_" + m.getName());
+                ctx.appendFormalParametersForDispatcher(builder, m);
+                builder.append(" {\n");
+                
+                
+                builder.append("void executor_dispatch_" + m.getName());
+                builder.append("(struct Msg_Handler ** head, struct Msg_Handler ** tail)");
+                builder.append(" {\n");
+                
+                builder.append("struct Msg_Handler ** cur = head;\n" +
+                "while (cur != NULL) {\n" +
+                "   void (*handler)(void *");
+                
+                for (Parameter p : m.getParameters()) {
+                    builder.append(", ");
+                    builder.append(ctx.getCType(p.getType()));
+                    builder.append(" ");
+                    builder.append(p.getName());
+                }
+                
+                builder.append(") = NULL;\n" +
+                "   int i;\n" +
+                "   for(i = 0; i < (**cur).nb_msg; i++) {\n" +
+                "       if((**cur).msg[i] == ");
+                builder.append(ctx.getHandlerCode(cfg, m));
+                builder.append(") {\n" +
+                "           handler = (void *) (**cur).msg_handler[i];\n" +
+                "           break;\n" +
+                "       }\n" +
+                "   }\n" +
+                "   if(handler != NULL)\n" +
+                "       handler((**cur).instance");
+                
+                for (Parameter p : m.getParameters()) {
+                    builder.append(", ");
+                    builder.append(p.getName());
+                }
+                
+                builder.append(");\n" +
+                "   if(cur == tail){\n" +
+                "       cur = NULL;}\n" +
+                "   else {\n" +
+                "   cur++;}\n" + 
+                "}\n");
+                
+                builder.append("}\n");
+                
+                for(Map.Entry<Instance, Port> s : messageSenders.get(m)) {
+                    builder.append("if (sender ==");
+                    builder.append(" " + ctx.getInstanceVarName(s.getKey()));
+                    builder.append(".id_" + s.getValue().getName() + ") {\n");
+                    
+                    builder.append("executor_dispatch_" + m.getName());
+                    builder.append("(");
+                    builder.append(ctx.getInstanceVarName(s.getKey()) + ".");
+                    builder.append(s.getValue().getName() + "_receiver_list_head,");
+                    builder.append(ctx.getInstanceVarName(s.getKey()) + ".");
+                    builder.append(s.getValue().getName() + "_receiver_list_tail");
+                    builder.append(");");
+                    
+                    builder.append("}\n");
+                }
+                builder.append("}\n");
+            }
+        }
+        
+    }
 
     protected void generateMessageDispatchersNew(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         
@@ -539,8 +674,21 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("// Switch to call the appropriate handler\n");
         builder.append("switch(code) {\n");
+        
+        Set<Message> messageSent = new HashSet<Message>();
+        
+        for(Thing t : cfg.allThings()) {
+            for(Port p : t.allPorts()) {
+                for(Message m : p.getSends()) {
+                    messageSent.add(m);
+                }
+            }
+        }
 
-        for (Message m : cfg.allMessages()) {
+        for (Message m : messageSent) {
+        //for (Message m : cfg.allMessages()) {
+            
+            
 
             builder.append("case " + ctx.getHandlerCode(cfg, m) + ":\n");
 
@@ -767,12 +915,13 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("\n");
         //builder.append("// Initialize instance variables and states\n"
         // Generate code to initialize variable for instances
-
+        
+        int nbConnectorSoFar = 0;
         for (Instance inst : cfg.allInstances()) {
-            generateInstanceInitCode(inst, cfg, builder, ctx);
+            nbConnectorSoFar = generateInstanceInitCode(inst, cfg, builder, ctx, nbConnectorSoFar);  
         }
-
-
+        
+        
         //Initialize network connections if needed
         generateInitializationNetworkCode(cfg, builder, ctx);
 
@@ -783,7 +932,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("}\n");
     }
 
-    public void generateInstanceInitCode(Instance inst, Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    public int generateInstanceInitCode(Instance inst, Configuration cfg, StringBuilder builder, CCompilerContext ctx, int nbConnectorSoFar) {
         builder.append("// Init the ID, state variables and properties for instance " + inst.getName() + "\n");
         
 // Register the instance and set its ID and its port ID
@@ -793,6 +942,65 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append(ctx.getInstanceVarName(inst) + ".id_");
             builder.append(p.getName() + " = ");
             builder.append("add_instance( (void*) &" + ctx.getInstanceVarName(inst) + ");\n");
+            
+            int i = 0;
+            for(Message m : p.getReceives()) {
+                //myCfg_t2_p1_
+                //builder.append(cfg.getName() + "_" + inst.getName() + "_" + p.getName() + "_msgs[");
+                builder.append(inst.getName() + "_" + p.getName() + "_msgs[");
+                builder.append(i + "] = " + ctx.getHandlerCode(cfg, m) + ";\n");
+                //builder.append(cfg.getName() + "_" + inst.getName() + "_" + p.getName() + "_handlers_tab[");
+                builder.append(inst.getName() + "_" + p.getName() + "_handlers_tab[");
+                builder.append(i + "] = &" + inst.getType().getName() + "_handle_" + p.getName()
+                        + "_" + m.getName()
+                        + ";\n");
+                i++;
+                
+            }
+            if(i!= 0) {
+                builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
+                builder.append("nb_msg = " + i + ";\n");
+                builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
+                builder.append("msg = &" + inst.getName() 
+                        + "_" + p.getName() + "_msgs;\n");
+                builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
+                builder.append("msg_handler = &" + inst.getName() 
+                        + "_" + p.getName() + "_handlers_tab;\n");
+                builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
+                builder.append("instance = &" + ctx.getInstanceVarName(inst) + ";\n");
+                
+                builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_handlers = &");
+                builder.append(inst.getName() + "_" + p.getName() + "_handlers;\n");
+            }
+            
+            int head = nbConnectorSoFar;
+                
+            for(Connector co : cfg.allConnectors()) {
+                
+                if((co.getSrv().getInstance().getName().compareTo(inst.getName()) == 0) 
+                        && (co.getProvided().getName().compareTo(p.getName()) == 0) 
+                        && (!co.getRequired().getReceives().isEmpty())) {
+                    builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
+                    builder.append(co.getCli().getInstance().getName()
+                            + "_" + co.getRequired().getName() + "_handlers;\n");
+                    nbConnectorSoFar++;
+                }
+                if((co.getCli().getInstance().getName().compareTo(inst.getName()) == 0) 
+                        && (co.getRequired() == p) 
+                        && (!co.getProvided().getReceives().isEmpty())) {
+                    builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
+                    builder.append(co.getSrv().getInstance().getName()
+                            + "_" + co.getProvided().getName() + "_handlers;\n");
+                    nbConnectorSoFar++;
+                }
+            }
+                
+            if(head != nbConnectorSoFar) {
+                builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_head = &");
+                builder.append(cfg.getName() + "_receivers[" + head + "];\n");
+                builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_tail = &");
+                builder.append(cfg.getName() + "_receivers[" + (nbConnectorSoFar - 1) + "];\n");
+            }
         }
         
 
@@ -829,6 +1037,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
 
         builder.append("\n");
+        
+        return nbConnectorSoFar;
     }
 
     public void generateInstanceOnEntryCode(Instance inst, StringBuilder builder, CCompilerContext ctx) {
