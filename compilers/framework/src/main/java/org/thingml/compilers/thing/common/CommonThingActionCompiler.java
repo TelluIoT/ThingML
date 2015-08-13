@@ -17,6 +17,7 @@ package org.thingml.compilers.thing.common;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.utils.CharacterEscaper;
@@ -230,7 +231,36 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
    @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-        builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
+//        builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
+       String messageName = "";
+       Message message = null;
+       if (expression.getReference() instanceof ReceiveMessage) {
+           ReceiveMessage rm = (ReceiveMessage) expression.getReference();
+           message = rm.getMessage();
+           messageName = message.getName();
+       } else if (expression.getReference() instanceof Source) {
+           Source source = (Source) expression.getReference();
+           if (source instanceof SimpleSource) {
+               ReceiveMessage rm = ((SimpleSource) source).getMessage();
+               message = rm.getMessage();
+               messageName = message.getName();
+           } else if (source instanceof SourceComposition){
+               message = ((SourceComposition) source).getResultMessage();
+               messageName = message.getName();
+           } else {
+               throw new UnsupportedException(source.getClass().getName(),"stream input","JavaThingActionCompiler");
+           }
+       } else if (expression.getReference() instanceof MessageParameter) {
+           MessageParameter mp = (MessageParameter) expression.getReference();
+           messageName = mp.getName();
+           message = mp.getMsgRef();
+       }
+       generateReference(message,messageName, expression, builder, ctx);
+
+    }
+
+    protected void generateReference(Message message,String messageName, Reference reference, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This part of reference compiler (CommonThingActionCompiler) is platform specific and should be redefined."));
     }
 
     @Override

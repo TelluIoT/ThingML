@@ -22,6 +22,8 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.cepHelper.JSCepViewCompiler;
 import org.thingml.compilers.javascript.cepHelper.JSGenerateSourceDeclaration;
 
+import java.util.List;
+
 /**
  * @author ludovic
  */
@@ -38,18 +40,31 @@ public class JSCepCompiler extends CepCompiler {
         if(stream.getInput() instanceof SimpleSource) {
             SimpleSource simpleSource = (SimpleSource) stream.getInput();
             String paramName = simpleSource.getMessage().getMessage().getName();
-            generateSimpleMergeStreamSubscription(stream, builder, ctx, paramName);
+            generateSubscription(stream, builder, ctx, paramName,simpleSource.getMessage().getMessage());
         } else if(stream.getInput() instanceof SourceComposition) {
-            generateSimpleMergeStreamSubscription(stream, builder, ctx, "x");
+            generateSubscription(stream, builder, ctx, "x",((SourceComposition) stream.getInput()).getResultMessage());
         } else {
             throw UnsupportedException.sourceException(stream.getClass().getName());
         }
 
     }
 
-    public static void generateSimpleMergeStreamSubscription(Stream stream, StringBuilder builder, Context context, String paramName) {
+    public static void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
         builder.append(stream.getInput().qname("_") + ".subscribe(\n")
                 .append("function( " + paramName + ") { \n");
+
+        List<ViewSource> operators = stream.getInput().getOperators();
+        if(operators.size() > 0) {
+            for(Parameter parameter : outPut.getParameters()) {
+                builder.append("var " + outPut.getName() + parameter.getName() + " = [];\n")
+                        .append("for(var i = 0; i< " + paramName + ".length; i++) {\n")
+                        .append(outPut.getName() + parameter.getName() + "[i] = ")
+                        .append(paramName + "[i][" + JSHelper.getCorrectParamIndex(outPut,parameter) + "];\n")
+                        .append("}");
+            }
+        }
+
+
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
         builder.append("\t});\n");
     }

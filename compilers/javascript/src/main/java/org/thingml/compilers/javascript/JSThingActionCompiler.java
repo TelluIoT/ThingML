@@ -20,8 +20,6 @@ import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
-import java.util.List;
-
 /**
  * Created by bmori on 01.12.2014.
  */
@@ -101,43 +99,52 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     }
 
 
-    @Override
+    /*@Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
+        Message message;
         if(expression.getReference() instanceof ReceiveMessage) {
             ReceiveMessage rm = (ReceiveMessage) expression.getReference();
-            generateRecvMsgRef(rm,expression,builder);
+            message = rm.getMessage();
         } else if(expression.getReference() instanceof Source) {
             Source source = (Source) expression.getReference();
             if(source instanceof SimpleSource) {
                 ReceiveMessage rm = ((SimpleSource) source).getMessage();
-                generateRecvMsgRef(rm,expression,builder);
+                message = rm.getMessage();
+            } else if (source instanceof SourceComposition){
+                message = ((SourceComposition) source).getResultMessage();
             } else {
-                throw new UnsupportedOperationException("Something is missing in the JSThingActionCompiler to compile a reference to a stream source");
+                throw new UnsupportedException(source.getClass().getName(),"stream input","JavaThingActionCompiler");
             }
         } else if(expression.getReference() instanceof MessageParameter) {
             MessageParameter mp = (MessageParameter) expression.getReference();
-            Message message = mp.getMsgRef();
-            List<Parameter> parameters = message.getParameters();
-            for(int i=0;i<parameters.size();i++) {
-                if(parameters.get(i).getName().equals(expression.getParameter().getParameterRef().getName())) {
-                    builder.append(mp.getName() + "[" + (i + 2) + "]");
-                    break;
-                }
-            }
+            message = mp.getMsgRef();
         } else {
-            throw new UnsupportedException("reference",expression.getReference().getClass().getName(),
+            throw new UnsupportedException(expression.getReference().getClass().getName(),"reference",
                     "JSThingActionCompiler");
         }
-    }
 
-    private void generateRecvMsgRef(ReceiveMessage rm, Reference expression,StringBuilder builder) {
-        List<Parameter> parameters = rm.getMessage().getParameters();
-        for(int i=0;i<parameters.size();i++) {
-            if(parameters.get(i).getName().equals(expression.getParameter().getParameterRef().getName())) {
-                builder.append(rm.getMessage().getName() + "[" + (i + 2) + "]");
-                break;
-            }
+        String paramResult;
+        if(expression.getParameter() instanceof SimpleParamRef) {
+            paramResult =  "[" + JSHelper.getCorrectParamIndex(message,expression.getParameter().getParameterRef()) + "]";
+        } else if(expression.getParameter() instanceof ArrayParamRef) {
+            paramResult = expression.getParameter().getParameterRef().getName();
+        } else {
+            throw new UnsupportedException(expression.getParameter().getClass().getName(),"reference parameter","JSThingActionCompiler");
         }
+        builder.append(message.getName() + paramResult);
+    }*/
+
+    @Override
+    protected void generateReference(Message message,String messageName, Reference reference, StringBuilder builder, Context ctx) {
+        String paramResult;
+        if(reference.getParameter() instanceof SimpleParamRef) {
+            paramResult =  "[" + JSHelper.getCorrectParamIndex(message,reference.getParameter().getParameterRef()) + "]";
+        } else if(reference.getParameter() instanceof ArrayParamRef) {
+            paramResult = reference.getParameter().getParameterRef().getName();
+        } else {
+            throw new UnsupportedException(reference.getParameter().getClass().getName(),"reference parameter","JSThingActionCompiler");
+        }
+        builder.append(messageName + paramResult);
     }
 
     @Override

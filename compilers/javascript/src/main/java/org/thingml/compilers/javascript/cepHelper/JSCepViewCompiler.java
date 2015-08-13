@@ -44,10 +44,10 @@ public class JSCepViewCompiler {
     }
 
     public void generate(TimeWindow timeWindow, StringBuilder builder, Context context) {
-        builder.append(".windowWithTime(" + timeWindow.getSize() + "," + timeWindow.getStep() + ")");
+        builder.append(".bufferWithTime(" + timeWindow.getSize() + "," + timeWindow.getStep() + ")");
     }
 
     public void generate(LengthWindow lengthWindow, StringBuilder builder, Context context) {
-        builder.append(".windowWithCount(" + lengthWindow.getNbEvents() + ")");
+        builder.append(".bufferWithCount(" + lengthWindow.getNbEvents() + ")");
     }
 }

@@ -17,7 +17,6 @@ package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
@@ -139,9 +138,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         builder.append(");\n");
     }
 
-    @Override
+   /* @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-        String messageName = "";
+        *//*String messageName = "";
         if (expression.getReference() instanceof ReceiveMessage) {
             ReceiveMessage rm = (ReceiveMessage) expression.getReference();
             messageName = rm.getMessage().getName();
@@ -158,13 +157,23 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         } else if (expression.getReference() instanceof MessageParameter) {
             MessageParameter mp = (MessageParameter) expression.getReference();
             messageName = mp.getName();
-        }
+        }*//*
 
+//        generateReference(expression, builder, ctx);
+    }*/
+
+    @Override
+    protected void generateReference(Message message,String messageName,Reference expression, StringBuilder builder, Context ctx) {
+        String paramResult = "";
         if (expression.getParameter() instanceof SimpleParamRef) {
-            builder.append(ctx.protectKeyword(messageName) + "." + ctx.protectKeyword(expression.getParameter().getParameterRef().getName()));
-        } else if(expression.getParameter() instanceof ArrayParamRef){
-            builder.append(ctx.protectKeyword(messageName) + ctx.protectKeyword(expression.getParameter().getParameterRef().getName()));
-        }
+//            builder.append(ctx.protectKeyword(messageName) + "." + ctx.protectKeyword(expression.getParameter().getParameterRef().getName()));
+            paramResult = ".";//expression.getParameter().getClass().getName(),"reference parameter","JSThingActionCompiler"
+        } /*else if(expression.getParameter() instanceof ArrayParamRef){
+//            builder.append(ctx.protectKeyword(messageName) + ctx.protectKeyword(expression.getParameter().getParameterRef().getName()));
+        } else {
+            throw new UnsupportedException(expression.getParameter().getClass().getName(),"reference parameter","JavaThingActionCompiler");
+        }*/
+        builder.append(ctx.protectKeyword(messageName) + paramResult + ctx.protectKeyword(expression.getParameter().getParameterRef().getName()));
     }
 
     @Override

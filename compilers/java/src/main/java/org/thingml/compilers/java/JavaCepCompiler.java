@@ -68,7 +68,7 @@ public class JavaCepCompiler extends CepCompiler {
                 .append("@Override\n")
                 .append("public void call(" + outPutType + " " + outPutName + ") {\n");
         if(lastOpIsWindow) {
-            builder.append("int i = 0;\n");
+            builder.append("int i;\n");
             for(Parameter parameter : outPut.getParameters()) {
                builder.append("int[] " + outPutName + parameter.getName() + " = new int[" + outPutName + ".size()];\n")
                        .append("i = 0;\n")
