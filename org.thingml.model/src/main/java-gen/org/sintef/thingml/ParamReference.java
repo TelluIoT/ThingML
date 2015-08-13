@@ -35,7 +35,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface ParamReference extends EObject {
+public interface ParamReference extends ElmtProperty {
 	/**
 	 * Returns the value of the '<em><b>Parameter Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->

@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ */
 package org.sintef.thingml;
 
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Parameter</b></em>'.
+ * A representation of the model object '<em><b>Length Array</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see org.sintef.thingml.ThingmlPackage#getParameter()
+ * @see org.sintef.thingml.ThingmlPackage#getLengthArray()
  * @model
  * @generated
  */
-public interface Parameter extends Variable, ReferencedElmt {
-} // Parameter
+public interface LengthArray extends PredifinedProperty {
+} // LengthArray

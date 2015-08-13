@@ -13,18 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sintef.thingml;
+/**
+ */
+package org.sintef.thingml.impl;
 
+import org.eclipse.emf.ecore.EClass;
+
+import org.sintef.thingml.LengthArray;
+import org.sintef.thingml.ThingmlPackage;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Parameter</b></em>'.
+ * An implementation of the model object '<em><b>Length Array</b></em>'.
  * <!-- end-user-doc -->
+ * <p>
+ * </p>
  *
- *
- * @see org.sintef.thingml.ThingmlPackage#getParameter()
- * @model
  * @generated
  */
-public interface Parameter extends Variable, ReferencedElmt {
-} // Parameter
+public class LengthArrayImpl extends PredifinedPropertyImpl implements LengthArray {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected LengthArrayImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return ThingmlPackage.Literals.LENGTH_ARRAY;
+	}
+
+} //LengthArrayImpl

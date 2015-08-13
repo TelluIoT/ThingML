@@ -277,7 +277,8 @@ RULES {
 					 "end";
 	
 	SimpleParamRef ::= parameterRef[];
-	ArrayParamRef ::= parameterRef[] "[]";				 
+	ArrayParamRef ::= parameterRef[] "[]";		
+	LengthArray ::= "length";	 
 	
 	// *********************
 	// * The Expressions

@@ -42,7 +42,7 @@ import org.sintef.thingml.ThingmlPackage;
  *
  * @generated
  */
-public abstract class ParamReferenceImpl extends EObjectImpl implements ParamReference {
+public abstract class ParamReferenceImpl extends ElmtPropertyImpl implements ParamReference {
 	/**
 	 * The cached value of the '{@link #getParameterRef() <em>Parameter Ref</em>}' reference.
 	 * <!-- begin-user-doc -->

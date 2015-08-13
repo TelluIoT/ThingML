@@ -261,6 +261,10 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 			print_org_sintef_thingml_ArrayParamRef((org.sintef.thingml.ArrayParamRef) element, globaltab, out);
 			return;
 		}
+		if (element instanceof org.sintef.thingml.LengthArray) {
+			print_org_sintef_thingml_LengthArray((org.sintef.thingml.LengthArray) element, globaltab, out);
+			return;
+		}
 		if (element instanceof org.sintef.thingml.OrExpression) {
 			print_org_sintef_thingml_OrExpression((org.sintef.thingml.OrExpression) element, globaltab, out);
 			return;
@@ -7819,6 +7823,18 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		}
 		// DEFINITION PART BEGINS (CsString)
 		out.print("[]");
+	}
+	
+	
+	public void print_org_sintef_thingml_LengthArray(org.sintef.thingml.LengthArray element, String outertab, java.io.PrintWriter out) {
+		// The printCountingMap contains a mapping from feature names to the number of
+		// remaining elements that still need to be printed. The map is initialized with
+		// the number of elements stored in each structural feature. For lists this is the
+		// list size. For non-multiple features it is either 1 (if the feature is set) or
+		// 0 (if the feature is null).
+		// print collected hidden tokens
+		// DEFINITION PART BEGINS (CsString)
+		out.print("length");
 	}
 	
 	

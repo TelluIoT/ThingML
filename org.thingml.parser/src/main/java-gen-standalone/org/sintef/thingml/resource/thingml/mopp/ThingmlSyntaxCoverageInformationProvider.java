@@ -70,6 +70,7 @@ public class ThingmlSyntaxCoverageInformationProvider {
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getStream(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getSimpleParamRef(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayParamRef(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getLengthArray(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(),

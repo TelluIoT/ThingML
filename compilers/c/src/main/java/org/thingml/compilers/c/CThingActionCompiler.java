@@ -16,6 +16,7 @@
 package org.thingml.compilers.c;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
@@ -144,7 +145,22 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
    @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-        builder.append(expression.getParameter().getParameterRef().getName());
+       if(expression.getParameter() instanceof ParamReference) {
+           ParamReference paramReference = (ParamReference) expression.getParameter();
+           builder.append(paramReference.getParameterRef().getName());
+       } else if(expression.getParameter() instanceof PredifinedProperty) {
+           Parameter parameter = (Parameter) expression.getReference();
+           if(parameter.isIsArray()) {
+               builder.append(parameter.getName() + "[");
+               ctx.getCompiler().getThingActionCompiler().generate(parameter.getCardinality(), builder,ctx);
+               builder.append("]");
+           } else {
+               throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
+           }
+       } else {
+           throw new UnsupportedException(expression.getParameter().getClass().getName(),"parameter","CThingActionCompiler");
+       }
+
     }
 
     @Override

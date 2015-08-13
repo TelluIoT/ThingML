@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.sintef.thingml.ElmtProperty;
 import org.sintef.thingml.ParamReference;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Reference;
@@ -64,7 +65,7 @@ public class ReferenceImpl extends ExpressionImpl implements Reference {
 	 * @generated
 	 * @ordered
 	 */
-	protected ParamReference parameter;
+	protected ElmtProperty parameter;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -90,7 +91,7 @@ public class ReferenceImpl extends ExpressionImpl implements Reference {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ParamReference getParameter() {
+	public ElmtProperty getParameter() {
 		return parameter;
 	}
 
@@ -99,8 +100,8 @@ public class ReferenceImpl extends ExpressionImpl implements Reference {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetParameter(ParamReference newParameter, NotificationChain msgs) {
-		ParamReference oldParameter = parameter;
+	public NotificationChain basicSetParameter(ElmtProperty newParameter, NotificationChain msgs) {
+		ElmtProperty oldParameter = parameter;
 		parameter = newParameter;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.REFERENCE__PARAMETER, oldParameter, newParameter);
@@ -114,7 +115,7 @@ public class ReferenceImpl extends ExpressionImpl implements Reference {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setParameter(ParamReference newParameter) {
+	public void setParameter(ElmtProperty newParameter) {
 		if (newParameter != parameter) {
 			NotificationChain msgs = null;
 			if (parameter != null)
@@ -209,7 +210,7 @@ public class ReferenceImpl extends ExpressionImpl implements Reference {
 				setReference((ReferencedElmt)newValue);
 				return;
 			case ThingmlPackage.REFERENCE__PARAMETER:
-				setParameter((ParamReference)newValue);
+				setParameter((ElmtProperty)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -227,7 +228,7 @@ public class ReferenceImpl extends ExpressionImpl implements Reference {
 				setReference((ReferencedElmt)null);
 				return;
 			case ThingmlPackage.REFERENCE__PARAMETER:
-				setParameter((ParamReference)null);
+				setParameter((ElmtProperty)null);
 				return;
 		}
 		super.eUnset(featureID);

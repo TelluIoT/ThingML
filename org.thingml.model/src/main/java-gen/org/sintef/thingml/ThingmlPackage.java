@@ -4635,6 +4635,25 @@ public interface ThingmlPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ElmtPropertyImpl <em>Elmt Property</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ElmtPropertyImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getElmtProperty()
+	 * @generated
+	 */
+	int ELMT_PROPERTY = 99;
+
+	/**
+	 * The number of structural features of the '<em>Elmt Property</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELMT_PROPERTY_FEATURE_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ParamReferenceImpl <em>Param Reference</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4651,7 +4670,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAM_REFERENCE__PARAMETER_REF = 0;
+	int PARAM_REFERENCE__PARAMETER_REF = ELMT_PROPERTY_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Param Reference</em>' class.
@@ -4660,7 +4679,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAM_REFERENCE_FEATURE_COUNT = 1;
+	int PARAM_REFERENCE_FEATURE_COUNT = ELMT_PROPERTY_FEATURE_COUNT + 1;
 
 
 	/**
@@ -4718,6 +4737,45 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int ARRAY_PARAM_REF_FEATURE_COUNT = PARAM_REFERENCE_FEATURE_COUNT + 0;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.PredifinedPropertyImpl <em>Predifined Property</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.PredifinedPropertyImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPredifinedProperty()
+	 * @generated
+	 */
+	int PREDIFINED_PROPERTY = 100;
+
+	/**
+	 * The number of structural features of the '<em>Predifined Property</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PREDIFINED_PROPERTY_FEATURE_COUNT = ELMT_PROPERTY_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.LengthArrayImpl <em>Length Array</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.LengthArrayImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthArray()
+	 * @generated
+	 */
+	int LENGTH_ARRAY = 101;
+
+	/**
+	 * The number of structural features of the '<em>Length Array</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LENGTH_ARRAY_FEATURE_COUNT = PREDIFINED_PROPERTY_FEATURE_COUNT + 0;
 
 
 	/**
@@ -7152,6 +7210,36 @@ public interface ThingmlPackage extends EPackage {
 	EClass getArrayParamRef();
 
 	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.ElmtProperty <em>Elmt Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Elmt Property</em>'.
+	 * @see org.sintef.thingml.ElmtProperty
+	 * @generated
+	 */
+	EClass getElmtProperty();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.PredifinedProperty <em>Predifined Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Predifined Property</em>'.
+	 * @see org.sintef.thingml.PredifinedProperty
+	 * @generated
+	 */
+	EClass getPredifinedProperty();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.LengthArray <em>Length Array</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Length Array</em>'.
+	 * @see org.sintef.thingml.LengthArray
+	 * @generated
+	 */
+	EClass getLengthArray();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9210,6 +9298,36 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ARRAY_PARAM_REF = eINSTANCE.getArrayParamRef();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ElmtPropertyImpl <em>Elmt Property</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ElmtPropertyImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getElmtProperty()
+		 * @generated
+		 */
+		EClass ELMT_PROPERTY = eINSTANCE.getElmtProperty();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.PredifinedPropertyImpl <em>Predifined Property</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.PredifinedPropertyImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPredifinedProperty()
+		 * @generated
+		 */
+		EClass PREDIFINED_PROPERTY = eINSTANCE.getPredifinedProperty();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.LengthArrayImpl <em>Length Array</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.LengthArrayImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthArray()
+		 * @generated
+		 */
+		EClass LENGTH_ARRAY = eINSTANCE.getLengthArray();
 
 	}
 

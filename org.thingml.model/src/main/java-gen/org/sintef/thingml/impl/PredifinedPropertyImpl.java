@@ -13,18 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sintef.thingml;
+/**
+ */
+package org.sintef.thingml.impl;
 
+import org.eclipse.emf.ecore.EClass;
+
+import org.sintef.thingml.PredifinedProperty;
+import org.sintef.thingml.ThingmlPackage;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Parameter</b></em>'.
+ * An implementation of the model object '<em><b>Predifined Property</b></em>'.
  * <!-- end-user-doc -->
+ * <p>
+ * </p>
  *
- *
- * @see org.sintef.thingml.ThingmlPackage#getParameter()
- * @model
  * @generated
  */
-public interface Parameter extends Variable, ReferencedElmt {
-} // Parameter
+public abstract class PredifinedPropertyImpl extends ElmtPropertyImpl implements PredifinedProperty {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected PredifinedPropertyImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return ThingmlPackage.Literals.PREDIFINED_PROPERTY;
+	}
+
+} //PredifinedPropertyImpl

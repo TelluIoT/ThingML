@@ -231,7 +231,6 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
    @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-//        builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
        String messageName = "";
        Message message = null;
        if (expression.getReference() instanceof ReceiveMessage) {
@@ -254,9 +253,23 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
            MessageParameter mp = (MessageParameter) expression.getReference();
            messageName = mp.getName();
            message = mp.getMsgRef();
+       } else if(expression.getReference() instanceof Parameter) {
+           Parameter parameter = (Parameter) expression.getReference();
+           if(parameter.isIsArray()) {
+                generateReferenceArray(parameter.getName(),builder);
+               return;
+           } else {
+               throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
+           }
+       } else {
+           throw new UnsupportedException(expression.getParameter().getClass().getName(),"parameter","CommonThingActionCompiler");
        }
-       generateReference(message,messageName, expression, builder, ctx);
+       generateReference(message, messageName, expression, builder, ctx);
 
+    }
+
+    protected void generateReferenceArray(String name, StringBuilder builder) {
+        builder.append(name + ".length;\n");
     }
 
     protected void generateReference(Message message,String messageName, Reference reference, StringBuilder builder, Context ctx) {

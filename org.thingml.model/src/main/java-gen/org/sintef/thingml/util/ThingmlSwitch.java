@@ -115,6 +115,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				Parameter parameter = (Parameter)theEObject;
 				T result = caseParameter(parameter);
 				if (result == null) result = caseVariable(parameter);
+				if (result == null) result = caseReferencedElmt(parameter);
 				if (result == null) result = caseTypedElement(parameter);
 				if (result == null) result = caseAnnotatedElement(parameter);
 				if (result == null) result = caseThingMLElement(parameter);
@@ -836,6 +837,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 			case ThingmlPackage.PARAM_REFERENCE: {
 				ParamReference paramReference = (ParamReference)theEObject;
 				T result = caseParamReference(paramReference);
+				if (result == null) result = caseElmtProperty(paramReference);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -843,6 +845,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				SimpleParamRef simpleParamRef = (SimpleParamRef)theEObject;
 				T result = caseSimpleParamRef(simpleParamRef);
 				if (result == null) result = caseParamReference(simpleParamRef);
+				if (result == null) result = caseElmtProperty(simpleParamRef);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -850,6 +853,28 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				ArrayParamRef arrayParamRef = (ArrayParamRef)theEObject;
 				T result = caseArrayParamRef(arrayParamRef);
 				if (result == null) result = caseParamReference(arrayParamRef);
+				if (result == null) result = caseElmtProperty(arrayParamRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.ELMT_PROPERTY: {
+				ElmtProperty elmtProperty = (ElmtProperty)theEObject;
+				T result = caseElmtProperty(elmtProperty);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.PREDIFINED_PROPERTY: {
+				PredifinedProperty predifinedProperty = (PredifinedProperty)theEObject;
+				T result = casePredifinedProperty(predifinedProperty);
+				if (result == null) result = caseElmtProperty(predifinedProperty);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.LENGTH_ARRAY: {
+				LengthArray lengthArray = (LengthArray)theEObject;
+				T result = caseLengthArray(lengthArray);
+				if (result == null) result = casePredifinedProperty(lengthArray);
+				if (result == null) result = caseElmtProperty(lengthArray);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -2339,6 +2364,51 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseArrayParamRef(ArrayParamRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Elmt Property</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Elmt Property</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseElmtProperty(ElmtProperty object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Predifined Property</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Predifined Property</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePredifinedProperty(PredifinedProperty object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Length Array</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Length Array</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLengthArray(LengthArray object) {
 		return null;
 	}
 

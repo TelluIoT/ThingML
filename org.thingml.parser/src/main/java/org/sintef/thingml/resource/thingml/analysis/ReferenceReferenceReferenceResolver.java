@@ -80,8 +80,16 @@ public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.r
 				result.setErrorMessage("Cannot resolve receive message " + identifier + " in the sources of " + stream.getName());
 			}
 
-		} else {
-			result.setErrorMessage("The reference is not a good parent!");
+		} else if(parent instanceof Function) { //we reference a parameter in a function
+			for(Parameter parameter : ((Function) parent).getParameters()) {
+				if(resolveFuzzy && parameter.getName().startsWith(identifier)) {
+					result.addMapping(parameter.getName(),parameter);
+				} else if(!resolveFuzzy && parameter.getName().equals(identifier)) {
+					result.addMapping(parameter.getName(),parameter);
+				}
+			}
+		}else {
+			result.setErrorMessage("The reference has not a good parent! " + parent.getClass().getName());
 		}
 	}
 	

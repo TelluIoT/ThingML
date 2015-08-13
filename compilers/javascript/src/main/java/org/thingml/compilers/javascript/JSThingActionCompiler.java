@@ -98,49 +98,14 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         builder.append("));\n");
     }
 
-
-    /*@Override
-    public void generate(Reference expression, StringBuilder builder, Context ctx) {
-        Message message;
-        if(expression.getReference() instanceof ReceiveMessage) {
-            ReceiveMessage rm = (ReceiveMessage) expression.getReference();
-            message = rm.getMessage();
-        } else if(expression.getReference() instanceof Source) {
-            Source source = (Source) expression.getReference();
-            if(source instanceof SimpleSource) {
-                ReceiveMessage rm = ((SimpleSource) source).getMessage();
-                message = rm.getMessage();
-            } else if (source instanceof SourceComposition){
-                message = ((SourceComposition) source).getResultMessage();
-            } else {
-                throw new UnsupportedException(source.getClass().getName(),"stream input","JavaThingActionCompiler");
-            }
-        } else if(expression.getReference() instanceof MessageParameter) {
-            MessageParameter mp = (MessageParameter) expression.getReference();
-            message = mp.getMsgRef();
-        } else {
-            throw new UnsupportedException(expression.getReference().getClass().getName(),"reference",
-                    "JSThingActionCompiler");
-        }
-
-        String paramResult;
-        if(expression.getParameter() instanceof SimpleParamRef) {
-            paramResult =  "[" + JSHelper.getCorrectParamIndex(message,expression.getParameter().getParameterRef()) + "]";
-        } else if(expression.getParameter() instanceof ArrayParamRef) {
-            paramResult = expression.getParameter().getParameterRef().getName();
-        } else {
-            throw new UnsupportedException(expression.getParameter().getClass().getName(),"reference parameter","JSThingActionCompiler");
-        }
-        builder.append(message.getName() + paramResult);
-    }*/
-
     @Override
     protected void generateReference(Message message,String messageName, Reference reference, StringBuilder builder, Context ctx) {
+        ParamReference paramReference = (ParamReference) reference.getParameter(); //this method is called only when the reference parameter is a ParamReference
         String paramResult;
         if(reference.getParameter() instanceof SimpleParamRef) {
-            paramResult =  "[" + JSHelper.getCorrectParamIndex(message,reference.getParameter().getParameterRef()) + "]";
+            paramResult =  "[" + JSHelper.getCorrectParamIndex(message,paramReference.getParameterRef()) + "]";
         } else if(reference.getParameter() instanceof ArrayParamRef) {
-            paramResult = reference.getParameter().getParameterRef().getName();
+            paramResult = paramReference.getParameterRef().getName();
         } else {
             throw new UnsupportedException(reference.getParameter().getClass().getName(),"reference parameter","JSThingActionCompiler");
         }

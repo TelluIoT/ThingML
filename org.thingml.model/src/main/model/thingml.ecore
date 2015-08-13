@@ -40,7 +40,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
         eType="#//Operator" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//Variable"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//Variable #//ReferencedElmt"/>
   <eClassifiers xsi:type="ecore:EClass" name="Variable" abstract="true" eSuperTypes="#//TypedElement #//AnnotatedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="ThingMLElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -393,7 +393,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="reference" lowerBound="1"
         eType="#//ReferencedElmt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" lowerBound="1"
-        eType="#//ParamReference" containment="true"/>
+        eType="#//ElmtProperty" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReferencedElmt" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="SglMsgParamOperator" eSuperTypes="#//Operator">
@@ -408,10 +408,14 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="step" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ParamReference" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="ParamReference" abstract="true" eSuperTypes="#//ElmtProperty">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameterRef" lowerBound="1"
         eType="#//Parameter"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SimpleParamRef" eSuperTypes="#//ParamReference"/>
   <eClassifiers xsi:type="ecore:EClass" name="ArrayParamRef" eSuperTypes="#//ParamReference"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ElmtProperty" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PredifinedProperty" abstract="true"
+      eSuperTypes="#//ElmtProperty"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LengthArray" eSuperTypes="#//PredifinedProperty"/>
 </ecore:EPackage>

@@ -16,6 +16,7 @@
 package org.thingml.compilers.utils;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 
@@ -222,7 +223,14 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
    @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
        ThingMLElement thingMLElement = (ThingMLElement) expression.getReference();
-        builder.append(thingMLElement.getName() + "." + expression.getParameter().getParameterRef().getName());
+       if(expression.getParameter() instanceof ParamReference) {
+           ParamReference paramReference = (ParamReference) expression.getParameter();
+           builder.append(thingMLElement.getName() + "." + paramReference.getParameterRef().getName());
+       } else if(expression.getParameter() instanceof ParamReference) {
+           throw new UnsupportedOperationException("Not yet implemented.");
+       } else {
+           throw new UnsupportedException(expression.getParameter().getClass().getName(),"element property","ThingMLPrettyPrinter");
+       }
     }
 
     @Override

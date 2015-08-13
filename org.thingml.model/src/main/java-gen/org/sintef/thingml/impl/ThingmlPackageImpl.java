@@ -41,6 +41,7 @@ import org.sintef.thingml.Dictionary;
 import org.sintef.thingml.DictionaryReference;
 import org.sintef.thingml.DivExpression;
 import org.sintef.thingml.DoubleLiteral;
+import org.sintef.thingml.ElmtProperty;
 import org.sintef.thingml.EnumLiteralRef;
 import org.sintef.thingml.Enumeration;
 import org.sintef.thingml.EnumerationLiteral;
@@ -63,6 +64,7 @@ import org.sintef.thingml.InstanceRef;
 import org.sintef.thingml.IntegerLiteral;
 import org.sintef.thingml.InternalTransition;
 import org.sintef.thingml.JoinSources;
+import org.sintef.thingml.LengthArray;
 import org.sintef.thingml.LengthWindow;
 import org.sintef.thingml.Literal;
 import org.sintef.thingml.LocalVariable;
@@ -83,6 +85,7 @@ import org.sintef.thingml.Parameter;
 import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.PlusExpression;
 import org.sintef.thingml.Port;
+import org.sintef.thingml.PredifinedProperty;
 import org.sintef.thingml.PrimitiveType;
 import org.sintef.thingml.PrintAction;
 import org.sintef.thingml.Property;
@@ -824,6 +827,27 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass arrayParamRefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass elmtPropertyEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass predifinedPropertyEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass lengthArrayEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -2961,6 +2985,33 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getElmtProperty() {
+		return elmtPropertyEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getPredifinedProperty() {
+		return predifinedPropertyEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getLengthArray() {
+		return lengthArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ThingmlFactory getThingmlFactory() {
 		return (ThingmlFactory)getEFactoryInstance();
 	}
@@ -3312,6 +3363,12 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		simpleParamRefEClass = createEClass(SIMPLE_PARAM_REF);
 
 		arrayParamRefEClass = createEClass(ARRAY_PARAM_REF);
+
+		elmtPropertyEClass = createEClass(ELMT_PROPERTY);
+
+		predifinedPropertyEClass = createEClass(PREDIFINED_PROPERTY);
+
+		lengthArrayEClass = createEClass(LENGTH_ARRAY);
 	}
 
 	/**
@@ -3347,6 +3404,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		messageEClass.getESuperTypes().add(this.getAnnotatedElement());
 		thingEClass.getESuperTypes().add(this.getType());
 		parameterEClass.getESuperTypes().add(this.getVariable());
+		parameterEClass.getESuperTypes().add(this.getReferencedElmt());
 		variableEClass.getESuperTypes().add(this.getTypedElement());
 		variableEClass.getESuperTypes().add(this.getAnnotatedElement());
 		typeEClass.getESuperTypes().add(this.getAnnotatedElement());
@@ -3437,8 +3495,11 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		sglMsgParamOperatorEClass.getESuperTypes().add(this.getOperator());
 		lengthWindowEClass.getESuperTypes().add(this.getViewSource());
 		timeWindowEClass.getESuperTypes().add(this.getViewSource());
+		paramReferenceEClass.getESuperTypes().add(this.getElmtProperty());
 		simpleParamRefEClass.getESuperTypes().add(this.getParamReference());
 		arrayParamRefEClass.getESuperTypes().add(this.getParamReference());
+		predifinedPropertyEClass.getESuperTypes().add(this.getElmtProperty());
+		lengthArrayEClass.getESuperTypes().add(this.getPredifinedProperty());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(thingMLModelEClass, ThingMLModel.class, "ThingMLModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3749,7 +3810,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		initEClass(referenceEClass, Reference.class, "Reference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getReference_Reference(), this.getReferencedElmt(), null, "reference", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getReference_Parameter(), this.getParamReference(), null, "parameter", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getReference_Parameter(), this.getElmtProperty(), null, "parameter", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(referencedElmtEClass, ReferencedElmt.class, "ReferencedElmt", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -3769,6 +3830,12 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(simpleParamRefEClass, SimpleParamRef.class, "SimpleParamRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(arrayParamRefEClass, ArrayParamRef.class, "ArrayParamRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(elmtPropertyEClass, ElmtProperty.class, "ElmtProperty", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(predifinedPropertyEClass, PredifinedProperty.class, "PredifinedProperty", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(lengthArrayEClass, LengthArray.class, "LengthArray", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

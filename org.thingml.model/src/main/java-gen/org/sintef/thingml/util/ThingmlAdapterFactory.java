@@ -477,6 +477,18 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createArrayParamRefAdapter();
 			}
 			@Override
+			public Adapter caseElmtProperty(ElmtProperty object) {
+				return createElmtPropertyAdapter();
+			}
+			@Override
+			public Adapter casePredifinedProperty(PredifinedProperty object) {
+				return createPredifinedPropertyAdapter();
+			}
+			@Override
+			public Adapter caseLengthArray(LengthArray object) {
+				return createLengthArrayAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -1879,6 +1891,48 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createArrayParamRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ElmtProperty <em>Elmt Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ElmtProperty
+	 * @generated
+	 */
+	public Adapter createElmtPropertyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.PredifinedProperty <em>Predifined Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.PredifinedProperty
+	 * @generated
+	 */
+	public Adapter createPredifinedPropertyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.LengthArray <em>Length Array</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.LengthArray
+	 * @generated
+	 */
+	public Adapter createLengthArrayAdapter() {
 		return null;
 	}
 

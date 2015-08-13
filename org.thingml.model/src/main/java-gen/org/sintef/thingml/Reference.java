@@ -45,12 +45,12 @@ public interface Reference extends Expression {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Parameter</em>' containment reference.
-	 * @see #setParameter(ParamReference)
+	 * @see #setParameter(ElmtProperty)
 	 * @see org.sintef.thingml.ThingmlPackage#getReference_Parameter()
 	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	ParamReference getParameter();
+	ElmtProperty getParameter();
 
 	/**
 	 * Sets the value of the '{@link org.sintef.thingml.Reference#getParameter <em>Parameter</em>}' containment reference.
@@ -60,7 +60,7 @@ public interface Reference extends Expression {
 	 * @see #getParameter()
 	 * @generated
 	 */
-	void setParameter(ParamReference value);
+	void setParameter(ElmtProperty value);
 
 	/**
 	 * Returns the value of the '<em><b>Reference</b></em>' reference.

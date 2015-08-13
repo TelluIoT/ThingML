@@ -784,7 +784,8 @@ public class ThingMLHelpers {
 	public static ThingMLElement findReferenceContainer(Reference container) {
 		EObject parent = container.eContainer();
 
-		while (parent !=null && !(parent instanceof Handler || parent instanceof SglMsgParamOperator || parent instanceof StreamExpression || parent instanceof SourceComposition)) {
+		while (parent !=null && !(parent instanceof Handler || parent instanceof SglMsgParamOperator ||
+				parent instanceof StreamExpression || parent instanceof SourceComposition || parent instanceof Function)) {
 			parent = parent.eContainer();
 		}
 		return (ThingMLElement) parent;

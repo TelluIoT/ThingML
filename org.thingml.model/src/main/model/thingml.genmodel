@@ -302,5 +302,8 @@
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//SimpleParamRef"/>
     <genClasses ecoreClass="thingml.ecore#//ArrayParamRef"/>
+    <genClasses image="false" ecoreClass="thingml.ecore#//ElmtProperty"/>
+    <genClasses image="false" ecoreClass="thingml.ecore#//PredifinedProperty"/>
+    <genClasses ecoreClass="thingml.ecore#//LengthArray"/>
   </genPackages>
 </genmodel:GenModel>

@@ -146,6 +146,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.TIME_WINDOW: return createTimeWindow();
 			case ThingmlPackage.SIMPLE_PARAM_REF: return createSimpleParamRef();
 			case ThingmlPackage.ARRAY_PARAM_REF: return createArrayParamRef();
+			case ThingmlPackage.LENGTH_ARRAY: return createLengthArray();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -919,6 +920,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public ArrayParamRef createArrayParamRef() {
 		ArrayParamRefImpl arrayParamRef = new ArrayParamRefImpl();
 		return arrayParamRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LengthArray createLengthArray() {
+		LengthArrayImpl lengthArray = new LengthArrayImpl();
+		return lengthArray;
 	}
 
 	/**
