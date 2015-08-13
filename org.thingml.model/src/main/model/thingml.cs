@@ -54,6 +54,8 @@ TOKENS{
 		DEFINE WHITESPACE $(' '|'\t'|'\f')$;
 		DEFINE LINEBREAKS $('\r\n'|'\r'|'\n')$;
 		
+		DEFINE T_ARRAY $'[]'$;
+		
 		//DEFINE MULTIPLICITY $(('0'..'9')+) '\.' '\.' ( ('*') | (('1'..'9')+) )$;
 		//DEFINE MULTIPLICITY $( ('*') | (('1'..'9')+) )$;
 		
@@ -166,7 +168,7 @@ RULES {
 		
 	Message ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ";"  ;
 	
-	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( "[" cardinality "]")? )? #1 body ;
+	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( ("[" cardinality "]") | (isArray[T_ARRAY]))? )? #1 body ;
 	
 	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour | streams | operators)* !0 "}" ;
 	
@@ -174,13 +176,13 @@ RULES {
 
 	ProvidedPort ::= !1  "provided" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 	
-	Property::= !1 (changeable[T_READONLY])? "property" #1 name[] #1 ":" #1 type[]  ( "[" cardinality "]")? (#1 "=" #1 init)?  (annotations)*;
+	Property::= !1 (changeable[T_READONLY])? "property" #1 name[] #1 ":" #1 type[]  ( ("[" cardinality "]") | (isArray[T_ARRAY]) )? (#1 "=" #1 init)?  (annotations)*;
 	
 	//("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?
 	
 //	Dictionary::= !1 (changeable[T_READONLY])? "dictionary" #1 name[]  ":"  indexType[] "->" type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?(annotations)*;
 	
-	Parameter::= name[]  ":"  type[] ( "[" cardinality "]")?;
+	Parameter::= name[]  ":"  type[] ( ("[" cardinality "]") | (isArray[T_ARRAY]))?;
 	
 	PrimitiveType::= "datatype" #1 name[] (annotations)* ";" ;
 	
@@ -233,7 +235,7 @@ RULES {
 	
 	ActionBlock::= "do" ( !1 actions  )* !0 "end"  ;
 	
-	LocalVariable::= !1 (changeable[T_READONLY])? "var" #1 name[] #1 ":" #1 type[] ( "[" cardinality "]")? (#1 "=" #1 init)?  (annotations)*;
+	LocalVariable::= !1 (changeable[T_READONLY])? "var" #1 name[] #1 ":" #1 type[] ( ("[" cardinality "]") | (isArray[T_ARRAY]) )? (#1 "=" #1 init)?  (annotations)*;
 	
 	ExternStatement::= statement[STRING_EXT] ("&" segments)*;
 	
@@ -252,7 +254,7 @@ RULES {
 	// *******************************
 	// * CEP
 	// *******************************
-	SglMsgParamOperator ::= "operator" #1 name[] "(" parameter ")" ":" #1 type[] #1 body;
+	SglMsgParamOperator ::= "operator" #1 name[] "(" parameter ")" ":" #1 type[] ( ("[" cardinality "]") | (isArray[T_ARRAY]) )? #1 body;
 	MessageParameter ::= name[] ":" msgRef[];
 
 	SglMsgParamOperatorCall ::= operatorRef[] "(" parameter[] ")";

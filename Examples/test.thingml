@@ -13,7 +13,9 @@ cep5 message receive with values (10;40;90).
 
 datatype Integer
     @js_type "short"
-    @java_type "int";
+    @java_type "int"
+    @c_type "int"
+    @c_byte_size "2";
     
 datatype Bool
     @js_type "bool"
@@ -51,7 +53,7 @@ thing fragment SampleMsgs {
 thing Sample includes CepMsgs,  SampleMsgs{
     required port sendPort {
         sends m1, m2, m3, m4, m5, m6, m7, m8, cep1, cep2, cep3, cep4, cep5
-    }
+     }
     
     provided port rcvPort {
         receives m1, m2, m3, m4, m5, m6, m7, m8, cep1, cep2, cep3, cep4, cep5
@@ -61,7 +63,7 @@ thing Sample includes CepMsgs,  SampleMsgs{
         return value + 1
     end
     
-    /*operator fwM2(msg2 : m2) : Bool do
+    operator fwM2(msg2 : m2) : Bool do
         return msg2.v1 % 2 == 0
     end
     
@@ -73,7 +75,7 @@ thing Sample includes CepMsgs,  SampleMsgs{
         return cep.a / 2 == 2
     end
     
-    stream forwardSimpleMessage do
+    /*stream forwardSimpleMessage do
         from rcvPort?m1
         action sendPort!cep1()
     end
@@ -93,28 +95,34 @@ thing Sample includes CepMsgs,  SampleMsgs{
     stream mergedSimpleMessages do
         from [ rcvPort?m3 | rcvPort?m4 -> cep3()]
         action sendPort!cep3()
-    end
+    end*/
     
     stream mergeMessagesWithValues do
-        from mm: [ e1 : [rcvPort?m5]::filter(mergeM5(e1)) | rcvPort?m6 -> cep4(#0, complexTransforming(#1), (#2 * 2) + 5)]
-        select a : #0, b: #1, c: #2
+        from mm: [ e1 : [rcvPort?m5]::filter(mergeM5(e1)) | rcvPort?m6 -> cep4(#0, complexTransforming(#1), (#2 * 2) + 5)]::lengthWindow(2)
+        select a : avg_a(mm.a[]), b: avg_a(mm.b[]), c: avg_a(mm.c[])
         action sendPort!cep4(a,b,c)
     end
     
     stream joinMessages do
-        from [ e1 : rcvPort?m7 & e2 : rcvPort?m8 -> cep5(e1.a * e2.v1, e1.b * e2.v2, e1.c * e2.v3)]::filter(mergeCep4(mm))
-        select a : #0, b : #1, c : #2
+        from mm : [ e1 : rcvPort?m7 & e2 : rcvPort?m8 -> cep5(e1.a * e2.v1, e1.b * e2.v2, e1.c * e2.v3)]::filter(mergeCep4(mm))::lengthWindow(2)
+        select a : avg_a(mm.a[]), b: avg_a(mm.b[]), c: avg_a(mm.c[])
         action sendPort!cep5(a,b,c)
-    end*/
+    end
     
-    function avg_a(values : Integer[6]) : Integer do
-        return values[4]
+    function avg_a(values : Integer[]) : Integer do
+        var i :Integer = 0
+        var avg : Integer = 0
+        while (i < 2) do
+            avg = avg + values[i]
+            i = i + 1
+        end
+        return avg / 2
     end
     
     stream testAvg do
-        from t : [rcvPort?m2]::lengthWindow(6)
-        select a : avg_a(t.v1[])
-        action sendPort!cep2(a,a)
+        from t : [rcvPort?m2]::lengthWindow(2)
+        select a : avg_a(t.v1[]), b : avg_a(t.v2[])
+        action sendPort!cep2(a,b)
     end
     
     
@@ -124,20 +132,35 @@ thing Sample includes CepMsgs,  SampleMsgs{
                 print "Init\n"
                 //sendPort!m1()
                 sendPort!m2(8,24)
-                
+                sendPort!m2(8,24)
+                sendPort!m2(8,24)
+                sendPort!m2(8,24)
+                                
                 /*sendPort!m3()
-                sendPort!m4()
+                sendPort!m4()*/
                 
-                sendPort!m5(1,2,3)
+                sendPort!m5(2,2,3)
+                sendPort!m6(4,5,6)
+                sendPort!m5(2,2,3)
+                sendPort!m6(4,5,6)
+                sendPort!m5(2,2,3)
+                sendPort!m6(4,5,6)
+                sendPort!m5(2,2,3)
+                sendPort!m6(4,5,6)
+                sendPort!m5(2,2,3)
                 sendPort!m6(4,5,6)
                 
-                sendPort!m7(1,2,3)
-                sendPort!m8(10,20,30)*/
+                sendPort!m7(4,2,3)
+                sendPort!m8(1,20,30)
+                sendPort!m7(4,2,3)
+                sendPort!m8(1,20,30)
+                sendPort!m7(4,2,3)
+                sendPort!m8(1,20,30)
             end
             
-            /*internal
+            internal
             event rcvPort?cep1
-            action print "cep message receive.\n" 
+            action print "cep message receive.\n"
                         
             internal 
             event e : rcvPort?cep2
@@ -153,7 +176,7 @@ thing Sample includes CepMsgs,  SampleMsgs{
             
             internal
             event e : rcvPort?cep5
-            action print "cep5 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ").\n"*/
+            action print "cep5 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ").\n"
             
         }    
     }

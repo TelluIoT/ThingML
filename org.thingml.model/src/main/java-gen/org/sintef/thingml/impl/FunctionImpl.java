@@ -47,6 +47,7 @@ import org.sintef.thingml.TypedElement;
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getType <em>Type</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getCardinality <em>Cardinality</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.FunctionImpl#isIsArray <em>Is Array</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getBody <em>Body</em>}</li>
  * </ul>
@@ -74,6 +75,26 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 	 * @ordered
 	 */
 	protected Expression cardinality;
+
+	/**
+	 * The default value of the '{@link #isIsArray() <em>Is Array</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isIsArray()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean IS_ARRAY_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isIsArray() <em>Is Array</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isIsArray()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean isArray = IS_ARRAY_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference list.
@@ -200,6 +221,27 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isIsArray() {
+		return isArray;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setIsArray(boolean newIsArray) {
+		boolean oldIsArray = isArray;
+		isArray = newIsArray;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.FUNCTION__IS_ARRAY, oldIsArray, isArray));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<Parameter> getParameters() {
 		if (parameters == null) {
 			parameters = new EObjectContainmentEList<Parameter>(Parameter.class, this, ThingmlPackage.FUNCTION__PARAMETERS);
@@ -281,6 +323,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 				return basicGetType();
 			case ThingmlPackage.FUNCTION__CARDINALITY:
 				return getCardinality();
+			case ThingmlPackage.FUNCTION__IS_ARRAY:
+				return isIsArray();
 			case ThingmlPackage.FUNCTION__PARAMETERS:
 				return getParameters();
 			case ThingmlPackage.FUNCTION__BODY:
@@ -303,6 +347,9 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 				return;
 			case ThingmlPackage.FUNCTION__CARDINALITY:
 				setCardinality((Expression)newValue);
+				return;
+			case ThingmlPackage.FUNCTION__IS_ARRAY:
+				setIsArray((Boolean)newValue);
 				return;
 			case ThingmlPackage.FUNCTION__PARAMETERS:
 				getParameters().clear();
@@ -329,6 +376,9 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 			case ThingmlPackage.FUNCTION__CARDINALITY:
 				setCardinality((Expression)null);
 				return;
+			case ThingmlPackage.FUNCTION__IS_ARRAY:
+				setIsArray(IS_ARRAY_EDEFAULT);
+				return;
 			case ThingmlPackage.FUNCTION__PARAMETERS:
 				getParameters().clear();
 				return;
@@ -351,6 +401,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 				return type != null;
 			case ThingmlPackage.FUNCTION__CARDINALITY:
 				return cardinality != null;
+			case ThingmlPackage.FUNCTION__IS_ARRAY:
+				return isArray != IS_ARRAY_EDEFAULT;
 			case ThingmlPackage.FUNCTION__PARAMETERS:
 				return parameters != null && !parameters.isEmpty();
 			case ThingmlPackage.FUNCTION__BODY:
@@ -370,6 +422,7 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 			switch (derivedFeatureID) {
 				case ThingmlPackage.FUNCTION__TYPE: return ThingmlPackage.TYPED_ELEMENT__TYPE;
 				case ThingmlPackage.FUNCTION__CARDINALITY: return ThingmlPackage.TYPED_ELEMENT__CARDINALITY;
+				case ThingmlPackage.FUNCTION__IS_ARRAY: return ThingmlPackage.TYPED_ELEMENT__IS_ARRAY;
 				default: return -1;
 			}
 		}
@@ -387,10 +440,27 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 			switch (baseFeatureID) {
 				case ThingmlPackage.TYPED_ELEMENT__TYPE: return ThingmlPackage.FUNCTION__TYPE;
 				case ThingmlPackage.TYPED_ELEMENT__CARDINALITY: return ThingmlPackage.FUNCTION__CARDINALITY;
+				case ThingmlPackage.TYPED_ELEMENT__IS_ARRAY: return ThingmlPackage.FUNCTION__IS_ARRAY;
 				default: return -1;
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (isArray: ");
+		result.append(isArray);
+		result.append(')');
+		return result.toString();
 	}
 
 } //FunctionImpl

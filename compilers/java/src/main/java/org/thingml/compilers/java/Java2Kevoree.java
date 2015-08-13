@@ -221,7 +221,8 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                         ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
                         builder.append("\")");
                     }
-                    builder.append("\nprivate " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + i.getName() + "_" + ctx.getVariableName(p));
+                    builder.append("\nprivate " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + i.getName() + "_" + ctx.getVariableName(p));
+//                    builder.append("\nprivate " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + i.getName() + "_" + ctx.getVariableName(p));
                     if (e != null) {
                         builder.append(" = ");
                         ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
@@ -233,7 +234,8 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
             builder.append("//Getters and Setters for non readonly/final attributes\n");
             for (Property p : i.getType().allPropertiesInDepth()) {
                 if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
-                    builder.append("public " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " get" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + i.getName() + "_" + ctx.getVariableName(p) + ";\n}\n\n");
+                    builder.append("public " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " get" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + i.getName() + "_" + ctx.getVariableName(p) + ";\n}\n\n");
+//                    builder.append("public " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " get" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + i.getName() + "_" + ctx.getVariableName(p) + ";\n}\n\n");
                     builder.append("public void set" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p) + "){\n");
                     builder.append("this." + i.getName() + "_" + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
                     builder.append("this." + ctx.getInstanceName(i) + ".set" + i.getType().getName() + "_" + p.getName() + "__var(" + ctx.getVariableName(p) + ");\n");
@@ -267,7 +269,8 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                         for (Parameter pa : m.getParameters()) {
                             if (id > 0)
                                 builder.append(", ");
-                            builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                            builder.append(JavaHelper.getJavaType(pa.getType(), pa.isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+//                            builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
                             id++;
                         }
                         builder.append(") {\n");

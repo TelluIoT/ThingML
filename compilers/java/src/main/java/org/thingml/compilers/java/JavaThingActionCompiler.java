@@ -17,6 +17,7 @@ package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
@@ -35,7 +36,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             int j = 0;
             for (Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
+                    cast(fp.getType(), fp.isIsArray(), p, builder, ctx);
+//                    cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
                     break;
                 }
                 j++;
@@ -54,7 +56,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
                 builder.append(", ");
             if (i < streamOutput.getMessage().getParameters().size()) {
                 Parameter fp = streamOutput.getMessage().getParameters().get(i);
-                cast(fp.getType(), fp.getCardinality() != null, p.getExpression(), builder, ctx);
+                cast(fp.getType(), fp.isIsArray(), p.getExpression(), builder, ctx);
+//                cast(fp.getType(), fp.getCardinality() != null, p.getExpression(), builder, ctx);
             }
             i++;
         }
@@ -72,7 +75,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             int j = 0;
             for (Parameter fp : action.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
+                    cast(fp.getType(), fp.isIsArray(), p, builder, ctx);
+//                    cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
                     break;
                 }
                 j++;
@@ -89,7 +93,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         }
 
         //Define the type of the variable
-        builder.append(JavaHelper.getJavaType(action.getType(), action.getCardinality() != null, ctx));
+        builder.append(JavaHelper.getJavaType(action.getType(), action.isIsArray(), ctx));
+//        builder.append(JavaHelper.getJavaType(action.getType(), action.getCardinality() != null, ctx));
         builder.append(" ");
 
         builder.append(ctx.getVariableName(action));
@@ -97,7 +102,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         //Define the initial value for that variable
         if (action.getInit() != null) {
             builder.append(" = ");
-            cast(action.getType(), action.getCardinality() != null, action.getInit(), builder, ctx);
+            cast(action.getType(), action.isIsArray(), action.getInit(), builder, ctx);
+//            cast(action.getType(), action.getCardinality() != null, action.getInit(), builder, ctx);
             builder.append(";\n");
         } else {
             if (!action.isChangeable()) {
@@ -144,14 +150,14 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             if (source instanceof SimpleSource) {
                 ReceiveMessage rm = ((SimpleSource) source).getMessage();
                 messageName = rm.getMessage().getName();
-//                builder.append(ctx.protectKeyword(rm.getMessage().getName()) + "." + ctx.protectKeyword(expression.getParameter().getParameterRef().getName()));
+            } else if (source instanceof SourceComposition){
+                messageName = ((SourceComposition) source).getResultMessage().getName();
             } else {
-                throw new UnsupportedOperationException("Something is missing in the JavaThingActionCompiler to compile a reference to a stream source");
+                throw new UnsupportedException(source.getClass().getName(),"stream input","JavaThingActionCompiler");
             }
         } else if (expression.getReference() instanceof MessageParameter) {
             MessageParameter mp = (MessageParameter) expression.getReference();
             messageName = mp.getName();
-//            builder.append(ctx.protectKeyword(mp.getName()) + "." + ctx.protectKeyword(expression.getParameter().getParameterRef().getName()));
         }
 
         if (expression.getParameter() instanceof SimpleParamRef) {
@@ -221,7 +227,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             int j = 0;
             for (Parameter fp : expression.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
+                    cast(fp.getType(), fp.isIsArray(), p, builder, ctx);
+//                    cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
                     break;
                 }
                 j++;

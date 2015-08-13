@@ -180,7 +180,8 @@ public class JavaGenerateSourceDeclaration {
             builder.append(", ");
             Parameter parameter = itParamsResultMsgs.next();
             Expression rule = itRules.next();
-            javaCmpl.cast(parameter.getType(),parameter.getCardinality() != null, rule, builder, context);
+            javaCmpl.cast(parameter.getType(),parameter.isIsArray(), rule, builder, context);
+//            javaCmpl.cast(parameter.getType(),parameter.getCardinality() != null, rule, builder, context);
         }
 
 

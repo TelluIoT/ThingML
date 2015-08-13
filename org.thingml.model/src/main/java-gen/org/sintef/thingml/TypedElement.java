@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.sintef.thingml.TypedElement#getType <em>Type</em>}</li>
  *   <li>{@link org.sintef.thingml.TypedElement#getCardinality <em>Cardinality</em>}</li>
+ *   <li>{@link org.sintef.thingml.TypedElement#isIsArray <em>Is Array</em>}</li>
  * </ul>
  * </p>
  *
@@ -86,5 +87,32 @@ public interface TypedElement extends EObject {
 	 * @generated
 	 */
 	void setCardinality(Expression value);
+
+	/**
+	 * Returns the value of the '<em><b>Is Array</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Is Array</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Is Array</em>' attribute.
+	 * @see #setIsArray(boolean)
+	 * @see org.sintef.thingml.ThingmlPackage#getTypedElement_IsArray()
+	 * @model default="false" required="true"
+	 * @generated
+	 */
+	boolean isIsArray();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.TypedElement#isIsArray <em>Is Array</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Is Array</em>' attribute.
+	 * @see #isIsArray()
+	 * @generated
+	 */
+	void setIsArray(boolean value);
 
 } // TypedElement

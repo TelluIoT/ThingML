@@ -39,6 +39,7 @@
     <genClasses image="false" ecoreClass="thingml.ecore#//TypedElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//TypedElement/type"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//TypedElement/cardinality"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//TypedElement/isArray"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Property">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Property/init"/>

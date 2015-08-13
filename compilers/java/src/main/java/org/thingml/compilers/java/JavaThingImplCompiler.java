@@ -39,7 +39,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType() {name = \"" + m.getName() + "\";}\n\n");
         builder.append("public Event instantiate(final Port port");
         for (Parameter p : m.getParameters()) {
-            builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.protectKeyword(p.getName()));
+            builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.protectKeyword(p.getName()));
+//            builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.protectKeyword(p.getName()));
         }
         builder.append(") { return new " + ctx.firstToUpper(m.getName()) + "Message(this, port");
         for (Parameter p : m.getParameters()) {
@@ -50,19 +51,22 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "Message extends Event implements java.io.Serializable {\n\n");
 
         for (Parameter p : m.getParameters()) {
-            builder.append("public final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.protectKeyword(p.getName()) + ";\n");
+            builder.append("public final " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.protectKeyword(p.getName()) + ";\n");
+//            builder.append("public final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.protectKeyword(p.getName()) + ";\n");
         }
 
         builder.append("@Override\npublic String toString(){\n");
         builder.append("return \"" + ctx.firstToUpper(m.getName()) + " \"");
         for (Parameter p : m.getParameters()) {
-            builder.append(" + \"" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + ": \" + " + ctx.protectKeyword(p.getName()));
+            builder.append(" + \"" + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + ": \" + " + ctx.protectKeyword(p.getName()));
+//            builder.append(" + \"" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + ": \" + " + ctx.protectKeyword(p.getName()));
         }
         builder.append(";}\n\n");
 
         builder.append("protected " + ctx.firstToUpper(m.getName()) + "Message(EventType type, Port port");
         for (Parameter p : m.getParameters()) {
-            builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.protectKeyword(p.getName()));
+            builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.protectKeyword(p.getName()));
+//            builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.protectKeyword(p.getName()));
         }
         builder.append(") {\n");
         builder.append("super(type, port);\n");
@@ -101,7 +105,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             } else {
                 builder.append("private ");
             }
-            final String returnType = JavaHelper.getJavaType(f.getType(), f.getCardinality() != null, ctx);
+            final String returnType = JavaHelper.getJavaType(f.getType(), f.isIsArray(), ctx);
+//            final String returnType = JavaHelper.getJavaType(f.getType(), f.getCardinality() != null, ctx);
             builder.append(returnType + " " + f.getName() + "(");
             JavaHelper.generateParameter(f, builder, ctx);
             builder.append(") {\n");
@@ -237,7 +242,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             if (!p.isChangeable()) {
                 builder.append("final ");
             }
-            builder.append(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p) + ";\n");
+            builder.append(JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p) + ";\n");
+//            builder.append(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p) + ";\n");
         }
 
         builder.append("//Ports\n");
@@ -280,7 +286,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 if (!p.isChangeable()) {
                     if (i > 0)
                         builder.append(", ");
-                    builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p));
+                    builder.append("final " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p));
+//                    builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p));
                     i++;
                 }
             }
@@ -297,7 +304,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("//Constructor (all attributes)\n");
         builder.append("public " + ctx.firstToUpper(thing.getName()) + "(String name");
         for (Property p : thing.allPropertiesInDepth()) {
-            builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p));
+            builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p));
+//            builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p));
         }
         builder.append(") {\n");
         builder.append("super(name);\n");
@@ -308,9 +316,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("//Getters and Setters for non readonly/final attributes\n");
         for (Property p : thing.allPropertiesInDepth()) {
-            builder.append("public " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " get" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p) + ";\n}\n\n");
+            builder.append("public " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " get" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p) + ";\n}\n\n");
+//            builder.append("public " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " get" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p) + ";\n}\n\n");
             if (p.isChangeable()) {
-                builder.append("public void set" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n}\n\n");
+                builder.append("public void set" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n}\n\n");
+//                builder.append("public void set" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n}\n\n");
             }
         }
 

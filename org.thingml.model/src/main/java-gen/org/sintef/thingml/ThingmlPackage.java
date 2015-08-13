@@ -226,13 +226,22 @@ public interface ThingmlPackage extends EPackage {
 	int FUNCTION__CARDINALITY = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION__IS_ARRAY = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION__PARAMETERS = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
+	int FUNCTION__PARAMETERS = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -241,7 +250,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION__BODY = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
+	int FUNCTION__BODY = ANNOTATED_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Function</em>' class.
@@ -250,7 +259,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 4;
+	int FUNCTION_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.MessageImpl <em>Message</em>}' class.
@@ -491,13 +500,22 @@ public interface ThingmlPackage extends EPackage {
 	int TYPED_ELEMENT__CARDINALITY = 1;
 
 	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPED_ELEMENT__IS_ARRAY = 2;
+
+	/**
 	 * The number of structural features of the '<em>Typed Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPED_ELEMENT_FEATURE_COUNT = 2;
+	int TYPED_ELEMENT_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.VariableImpl <em>Variable</em>}' class.
@@ -526,6 +544,15 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int VARIABLE__CARDINALITY = TYPED_ELEMENT__CARDINALITY;
+
+	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE__IS_ARRAY = TYPED_ELEMENT__IS_ARRAY;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -583,6 +610,15 @@ public interface ThingmlPackage extends EPackage {
 	int PARAMETER__CARDINALITY = VARIABLE__CARDINALITY;
 
 	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETER__IS_ARRAY = VARIABLE__IS_ARRAY;
+
+	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -636,6 +672,15 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY__CARDINALITY = VARIABLE__CARDINALITY;
+
+	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY__IS_ARRAY = VARIABLE__IS_ARRAY;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1946,6 +1991,15 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int DICTIONARY__CARDINALITY = PROPERTY__CARDINALITY;
+
+	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DICTIONARY__IS_ARRAY = PROPERTY__IS_ARRAY;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3701,6 +3755,15 @@ public interface ThingmlPackage extends EPackage {
 	int LOCAL_VARIABLE__CARDINALITY = VARIABLE__CARDINALITY;
 
 	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOCAL_VARIABLE__IS_ARRAY = VARIABLE__IS_ARRAY;
+
+	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4264,6 +4327,15 @@ public interface ThingmlPackage extends EPackage {
 	int OPERATOR__CARDINALITY = TYPED_ELEMENT__CARDINALITY;
 
 	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATOR__IS_ARRAY = TYPED_ELEMENT__IS_ARRAY;
+
+	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4448,6 +4520,15 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int SGL_MSG_PARAM_OPERATOR__CARDINALITY = OPERATOR__CARDINALITY;
+
+	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SGL_MSG_PARAM_OPERATOR__IS_ARRAY = OPERATOR__IS_ARRAY;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4937,6 +5018,17 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTypedElement_Cardinality();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.TypedElement#isIsArray <em>Is Array</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Is Array</em>'.
+	 * @see org.sintef.thingml.TypedElement#isIsArray()
+	 * @see #getTypedElement()
+	 * @generated
+	 */
+	EAttribute getTypedElement_IsArray();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Property <em>Property</em>}'.
@@ -7322,6 +7414,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TYPED_ELEMENT__CARDINALITY = eINSTANCE.getTypedElement_Cardinality();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Array</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TYPED_ELEMENT__IS_ARRAY = eINSTANCE.getTypedElement_IsArray();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.PropertyImpl <em>Property</em>}' class.

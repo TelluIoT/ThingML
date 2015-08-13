@@ -43,10 +43,10 @@ public class JavaCepViewCompiler {
     }
 
     public void generate(TimeWindow timeWindow, StringBuilder builder, Context context) {
-        builder.append(".window(" + timeWindow.getSize() + "," + timeWindow.getStep() + ",TimeUnit.MILLISECONDS)");
+        builder.append(".buffer(" + timeWindow.getSize() + "," + timeWindow.getStep() + ",TimeUnit.MILLISECONDS)");
     }
 
     public void generate(LengthWindow lengthWindow, StringBuilder builder, Context context) {
-        builder.append(".window(" + lengthWindow.getNbEvents() + ")");
+        builder.append(".buffer(" + lengthWindow.getNbEvents() + ")");
     }
 }

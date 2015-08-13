@@ -46,6 +46,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
                 cast(action.getProperty().getType(), false, action.getExpression(), builder, ctx);
                 //generateMainAndInit(action.getExpression(), builder, ctx);
                 builder.append(";\n");
+
             }
         } else {//simple variable or we re-affect the whole array
             if (action.getProperty().eContainer() instanceof Thing && !(action.getProperty().isDefined("private", "true"))) {
@@ -53,7 +54,8 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
             }
             builder.append(action.getProperty().qname("_") + "_var");
             builder.append(" = ");
-            cast(action.getProperty().getType(), action.getProperty().getCardinality() != null, action.getExpression(), builder, ctx);
+//            cast(action.getProperty().getType(), action.getProperty().getCardinality() != null, action.getExpression(), builder, ctx);
+            cast(action.getProperty().getType(), action.getProperty().isIsArray(), action.getExpression(), builder, ctx);
             //generateMainAndInit(action.getExpression(), builder, ctx);
             builder.append(";\n");
         }

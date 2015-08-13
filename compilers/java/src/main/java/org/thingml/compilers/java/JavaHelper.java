@@ -98,7 +98,8 @@ public class JavaHelper {
         for (Parameter pa : m.getParameters()) {
             if (i > 0)
                 builder.append(", ");
-            builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+            builder.append(JavaHelper.getJavaType(pa.getType(), pa.isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+//            builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
             i++;
         }
     }
@@ -108,7 +109,8 @@ public class JavaHelper {
         for (Parameter pa : m.getParameters()) {
             if (i > 0)
                 builder.append(", ");
-            builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+            builder.append(JavaHelper.getJavaType(pa.getType(), pa.isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+//            builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
             i++;
         }
     }
