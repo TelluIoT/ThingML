@@ -459,7 +459,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     builder.append(", ");
                     builder.append(ctx.getCType(p.getType()));
                     builder.append(" ");
-                    builder.append(p.getName());
+                    builder.append("param_" + p.getName());
                 }
                 
                 builder.append(") = NULL;\n" +
@@ -476,7 +476,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 "       handler((**cur).instance");
                 
                 for (Parameter p : m.getParameters()) {
-                    builder.append(", ");
+                    builder.append(", param_");
                     builder.append(p.getName());
                 }
                 
@@ -950,10 +950,29 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(inst.getName() + "_" + p.getName() + "_msgs[");
                 builder.append(i + "] = " + ctx.getHandlerCode(cfg, m) + ";\n");
                 //builder.append(cfg.getName() + "_" + inst.getName() + "_" + p.getName() + "_handlers_tab[");
-                builder.append(inst.getName() + "_" + p.getName() + "_handlers_tab[");
-                builder.append(i + "] = &" + inst.getType().getName() + "_handle_" + p.getName()
-                        + "_" + m.getName()
-                        + ";\n");
+                builder.append(inst.getName() + "_" + p.getName() + "_handlers_tab[");//TODO Only when the handler exist
+                //i.e. when the event is taken into account in the sm
+                
+                if(inst.getType().allStateMachines() != null) {
+                    if(inst.getType().allStateMachines().get(0).allMessageHandlers() != null) {
+                        if(inst.getType().allStateMachines().get(0).allMessageHandlers().get(p) != null) {
+                            if(inst.getType().allStateMachines().get(0).allMessageHandlers().get(p).containsKey(m)) {
+                                builder.append(i + "] = &" + inst.getType().getName() + "_handle_" + p.getName()
+                                        + "_" + m.getName()
+                                        + ";\n");
+                            } else {
+                                builder.append(i + "] = NULL;\n");
+                            }
+                        } else {
+                            builder.append(i + "] = NULL;\n");
+                        }
+                    } else {
+                        builder.append(i + "] = NULL;\n");
+                    }
+                } else {
+                    builder.append(i + "] = NULL;\n");
+                }
+                
                 i++;
                 
             }
@@ -1048,6 +1067,25 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
     }
     
+    public void generateDebuggTraceCfg(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    
+        builder.append("//configuration " + cfg.getName() + " {\n");
+        for (Instance inst : cfg.allInstances()) {
+            builder.append("//instance  " + inst.getName() + " : " + inst.getType().getName() + "\n");
+        }
+        builder.append("//\n");
+        for (Connector co : cfg.allConnectors()) {
+            builder.append("//connector  " + co.getCli().getInstance().getName() + ".");
+            builder.append(co.getRequired().getName() + " =>");
+            builder.append(co.getSrv().getInstance().getName() + ".");
+            builder.append(co.getProvided().getName() + "\n");
+        }
+        
+        
+        
+         builder.append("//}\n");
+    }
+    
     protected void generateInitializationNetworkCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
         //Only one initialization per hardware connection
@@ -1077,8 +1115,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
         builder.append("\n\n// End Network Initilization \n\n");
-
-
+        
+        //generateDebuggTraceCfg(cfg, builder, ctx);
     }
 
     protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {

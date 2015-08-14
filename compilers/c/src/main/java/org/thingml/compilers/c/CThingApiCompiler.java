@@ -154,6 +154,14 @@ public class CThingApiCompiler extends ThingApiCompiler {
             builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
             // Message Handlers
+            /*for (Port port : thing.allPorts()) {
+                for (Message msg : port.getReceives()) {
+                    builder.append("void " + ctx.getHandlerName(thing, port, msg));
+                    ctx.appendFormalParameters(thing, builder, msg);
+                    builder.append(";\n");
+                }
+            }*/
+            // Message Handlers
             Map<Port, Map<Message, List<Handler>>> handlers = sm.allMessageHandlers();
             for (Port port : handlers.keySet()) {
                 for (Message msg : handlers.get(port).keySet()) {

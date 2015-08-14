@@ -287,7 +287,7 @@ public abstract class CCompilerContext extends Context {
             builder.append(", ");
             builder.append(getCType(p.getType()));
             if (p.getCardinality() != null) builder.append("*");
-            builder.append(" " + p.getName());
+            builder.append(" param_" + p.getName());
         }
         builder.append(")");
     }

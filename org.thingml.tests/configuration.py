@@ -30,4 +30,5 @@ testLanguages.append("Linux")
 #If useBlacklist is False, runs all tests present in whitelist
 useBlacklist=True
 blacklist=("tester","datatypes","thingml")
-whitelist=("testArrays", "testNaming", "testVariables", "testArrays3")
+#whitelist=("testArrays", "testNaming", "testInit", "testArrays3")
+whitelist=("testInit")
