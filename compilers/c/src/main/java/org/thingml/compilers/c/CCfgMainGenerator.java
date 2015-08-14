@@ -936,8 +936,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("// Init the ID, state variables and properties for instance " + inst.getName() + "\n");
         
 // Register the instance and set its ID and its port ID
-        builder.append(ctx.getInstanceVarName(inst) + ".id = ");
-        builder.append("add_instance( (void*) &" + ctx.getInstanceVarName(inst) + ");\n");
+        //builder.append(ctx.getInstanceVarName(inst) + ".id = ");
+        //builder.append("add_instance( (void*) &" + ctx.getInstanceVarName(inst) + ");\n");
         for(Port p : inst.getType().allPorts()) {
             builder.append(ctx.getInstanceVarName(inst) + ".id_");
             builder.append(p.getName() + " = ");
@@ -1019,6 +1019,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(cfg.getName() + "_receivers[" + head + "];\n");
                 builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_tail = &");
                 builder.append(cfg.getName() + "_receivers[" + (nbConnectorSoFar - 1) + "];\n");
+            } else {
+                if(!p.getSends().isEmpty()) {
+                    //Case where the port could sends messages but isn't connected
+                    builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_head = ");
+                    builder.append("NULL;\n");
+                    builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_tail = &");
+                    builder.append(cfg.getName() + "_receivers[" + head + "];\n");
+                    }
             }
         }
         

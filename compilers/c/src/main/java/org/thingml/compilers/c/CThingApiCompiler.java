@@ -84,8 +84,8 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("// Definition of the instance stuct:\n");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " {\n");
 
-        builder.append("// Variables for the ID of the instance\n");
-        builder.append("int id;\n");
+        //builder.append("// Variables for the ID of the instance\n");
+        //builder.append("int id;\n");
         
         builder.append("// Variables for the ID of the ports of the instance\n");
         for (Port p : thing.allPorts()) {
