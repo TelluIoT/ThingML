@@ -1,3 +1,16 @@
+//Required installation to run this example:
+//0) paho mqtt (https://github.com/eclipse/paho.mqtt.c) and thingml paho mqtt adoptation(https://github.com/SINTEF-9012/thingml-paho.mqtt.c) are required to run this example
+//1) follow paho instructions to install paho mqtt
+//2) Clone https://github.com/SINTEF-9012/thingml-paho.mqtt.c
+//3) Navigate to thingml-paho.mqtt.c
+//4) Run: make && make install
+//5) install the udev library, make sure that pthread is also installed
+
+//NOTE:
+//make sure that the dynamic linker is set to look up /usr/local/lib
+//for more details see http://lonesysadmin.net/2013/02/22/error-while-loading-shared-libraries-cannot-open-shared-object-file/
+
+
 import "../../../thingml.thingml"
 import "../../mqtt_client.thingml"
 
@@ -123,6 +136,7 @@ thing MQTTClientPSM includes MQTTClientMsg
     	'MQTTAsync_destroy(&'& client &');'
     	'nullset_thingml_mqtt_context('& context &');'
     	'create_mqtt_client(&'& client &', '& serverURI &', '& clientId &', '& context &');'
+    	''& context &'->thing_instance = _instance;'
     	''& context &'->fn_onconn_callback = connection_callback;'
 		''& context &'->fn_connlost_callback = connection_lost_callback;'
 		''& context &'->fn_onconnfail_callback = connection_fail_callback;'

@@ -24,10 +24,16 @@ thing MQTTClientPIM includes MQTTClientMsg, ClockMsgs {
     	state Init {
     	
     		internal event mqttport?connected
-    		action syncmqttport!subscribe(topic)
+    		action do 
+    			print "subscribing to a topic... \n"
+    			syncmqttport!subscribe(topic)
+    		end
     		
     		transition -> Start
     		event mqttport?subscribed
+    		action do
+    			print "successfully subscribed to the topic, start messaging ...\n"
+    		end
     	}
     	
     	state Start {
