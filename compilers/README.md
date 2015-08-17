@@ -69,7 +69,7 @@ The figure above presents the 8 extension points of the ThingML code generation 
 
 The registry project is a very a small project which simply provides a place to register all different compilers. The registry project has dependencies to all code generator modules and a simple API to list and instantiate the compilers. All the menus listing the compilers in the standalone editor as well as in eclipse are generated based on the content of the registry. That means that as soon as your code generator is registered in the Registry, it will appear and be available in all the ThingML tools.
 
-To add your compiler to the registry edit class ``org.thingml.compilers.registry.ThingMLCompilerRegistry``.
+> To add your compiler to the registry edit class ``org.thingml.compilers.registry.ThingMLCompilerRegistry``.
 
 The registry project also provides a simple command line interface to call the code generators. See the section "Using the compilers from command line" below for information on how to use it.
 
