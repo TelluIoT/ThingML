@@ -20,8 +20,8 @@ thing MQTTClientPSM includes MQTTClientMsg
 #include \"MQTTAsync.h\"
 "
 {
-	property client : MQTTAsync = ' NULL;'
-	property context : ThingMLMQTTContext = 'malloc(sizeof(ThingMLMQTTContext));'
+	property client : MQTTAsync = 'NULL'
+	property context : ThingMLMQTTContext = '(ThingMLMQTTContext*) malloc(sizeof(ThingMLMQTTContext))'
 	property serverURI : CString
 	property clientId : CString
 	property qos : Integer
@@ -29,8 +29,13 @@ thing MQTTClientPSM includes MQTTClientMsg
 	message lostconnection();
 	
 	provided port mqttport {
-		receives connect, reconnect, subscribe, publish, disconnect
-		sends subscribed, message_received, connected, unsubscribed, disconnected, published
+		receives connect, reconnect, disconnect
+		sends subscribed, connected, unsubscribed, disconnected, published
+	}
+	
+	provided port syncmqttport @sync_send "true" {
+		receives subscribe, unsubscribe, publish
+		sends message_received
 	}
 	
 
@@ -153,10 +158,10 @@ thing MQTTClientPSM includes MQTTClientMsg
 				create_and_connect_client()
 			end
 			
-			internal event e : mqttport?subscribe
+			internal event e : syncmqttport?subscribe
 			action subscribe_topic(e.topic)
 			
-			internal event e : mqttport?publish
+			internal event e : syncmqttport?publish
 			action publish_message(e.topic, e.msg)
 			
 			transition->Finalize
