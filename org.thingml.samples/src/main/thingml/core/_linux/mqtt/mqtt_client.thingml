@@ -60,7 +60,7 @@ thing MQTTClientPSM includes MQTTClientMsg
 		'va_start(valist, _instance);'
 		'reason = va_arg(valist, char*);'
 		'va_end(valist);'
-		'printf("connection lost callback is lost, reason %c...\n", reason);'
+		'printf("connection lost callback is lost, reason %c...\n", *reason);'
 		//connect_client()
 	end
 	
