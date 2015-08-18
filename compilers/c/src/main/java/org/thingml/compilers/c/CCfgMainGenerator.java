@@ -24,6 +24,7 @@ import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -415,17 +416,27 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         Set<Map.Entry<Instance, Port>> senders;
         Map.Entry<Instance, Port> sender;
         
+        Map<Message, Set<Map.Entry<Thing, Port>>> syncDispatchList = new HashMap<Message, Set<Map.Entry<Thing, Port>>>();;
+        Set<Map.Entry<Thing, Port>> syncSenders;
+        
         for (Message m : cfg.allMessages()) {
             senders = new HashSet<Map.Entry<Instance, Port>>();
+            syncSenders = new HashSet<Map.Entry<Thing, Port>>();
             for(Instance inst : cfg.allInstances()) {
                 for(Port p : inst.getType().allPorts()) {
                     if(p.getSends().contains(m)) {
                         senders.add(new HashMap.SimpleEntry<Instance, Port>(inst, p));
+                        if(p.hasAnnotation("sync_send")) {
+                            syncSenders.add(new HashMap.SimpleEntry<Thing, Port>(inst.getType(), p));
+                        }
                     }
                 }
             }
             if(!senders.isEmpty()) {
                 messageSenders.put(m, senders);
+            }
+            if(!syncSenders.isEmpty()) {
+                syncDispatchList.put(m, syncSenders);
             }
         }
         
@@ -506,8 +517,25 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
                 builder.append("}\n");
             }
+            
         }
         
+        
+        for(Message m : syncDispatchList.keySet()) {
+            for(Map.Entry<Thing, Port> sysncSender : syncDispatchList.get(m)) {
+                builder.append("void sync_dispatch_" + ctx.getSenderName(sysncSender.getKey(), sysncSender.getValue(), m));
+                ctx.appendFormalParameters(sysncSender.getKey(), builder, m);
+                builder.append("{\n");
+                builder.append("dispatch_" + m.getName());
+                builder.append("(_instance->id_" + sysncSender.getKey().getName());
+                
+                for (Parameter p : m.getParameters()) {
+                    builder.append(", ");
+                    builder.append(p.getName());
+                }
+                builder.append(");\n}\n");
+            }
+        }
     }
 
     protected void generateMessageDispatchersNew(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
@@ -893,7 +921,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                         if (port.isDefined("sync_send", "true")) {
                             // This is for static call of dispatches
-                            builder.append("dispatch_" + ctx.getSenderName(t, port, msg) + ");\n");
+                            //builder.append("dispatch_" + ctx.getSenderName(t, port, msg) + ");\n");
+                            builder.append("sync_dispatch_" + ctx.getSenderName(t, port, msg) + ");\n");
                         } else {
                             // This is to enqueue the message and let the scheduler forward it
                             builder.append("enqueue_" + ctx.getSenderName(t, port, msg) + ");\n");
@@ -998,15 +1027,18 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 
                 if((co.getSrv().getInstance().getName().compareTo(inst.getName()) == 0) 
                         && (co.getProvided().getName().compareTo(p.getName()) == 0) 
-                        && (!co.getRequired().getReceives().isEmpty())) {
+                        && (!co.getProvided().getSends().isEmpty())) {
+                    //    && (!co.getRequired().getReceives().isEmpty())) {
                     builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
                     builder.append(co.getCli().getInstance().getName()
                             + "_" + co.getRequired().getName() + "_handlers;\n");
                     nbConnectorSoFar++;
                 }
                 if((co.getCli().getInstance().getName().compareTo(inst.getName()) == 0) 
-                        && (co.getRequired() == p) 
-                        && (!co.getProvided().getReceives().isEmpty())) {
+                        && (co.getRequired().getName().compareTo(p.getName()) == 0) 
+                    //    && (co.getRequired() == p) 
+                        && (!co.getRequired().getSends().isEmpty())) {
+                    //    && (!co.getProvided().getReceives().isEmpty())) {
                     builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
                     builder.append(co.getSrv().getInstance().getName()
                             + "_" + co.getProvided().getName() + "_handlers;\n");
