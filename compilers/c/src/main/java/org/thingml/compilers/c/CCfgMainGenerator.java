@@ -527,7 +527,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 ctx.appendFormalParameters(sysncSender.getKey(), builder, m);
                 builder.append("{\n");
                 builder.append("dispatch_" + m.getName());
-                builder.append("(_instance->id_" + sysncSender.getKey().getName());
+                builder.append("(_instance->id_" + sysncSender.getValue().getName());
                 
                 for (Parameter p : m.getParameters()) {
                     builder.append(", ");
