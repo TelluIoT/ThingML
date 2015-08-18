@@ -55,7 +55,7 @@ thing MQTTClientPSM includes MQTTClientMsg
 	
     function connection_callback()
     @c_prototype "void connection_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"
     do
     	'printf("connection callback is called...\n");'
     	mqttport!connected()
@@ -63,7 +63,7 @@ thing MQTTClientPSM includes MQTTClientMsg
 	
 	function connection_fail_callback()
 	@c_prototype "void connection_fail_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"
 	do
 		'printf("connection fail callback is called...\n");'
 		//connect_client()
@@ -71,7 +71,7 @@ thing MQTTClientPSM includes MQTTClientMsg
 	
 	function connection_lost_callback()
 	@c_prototype "void connection_lost_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"
 	do
 		'char* reason;'
 		'va_list valist;'
@@ -84,7 +84,7 @@ thing MQTTClientPSM includes MQTTClientMsg
 	
 	function message_arrived_callback()
 	@c_prototype "void message_arrived_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"
     do
     	'char* message;'
 		'char* topic;'
@@ -103,7 +103,7 @@ thing MQTTClientPSM includes MQTTClientMsg
     
     function subscribe_callback()
 	@c_prototype "void subscribe_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"    
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"    
     do
     	'printf("subscribe callback is called\n");'
     	mqttport!subscribed()
@@ -111,7 +111,7 @@ thing MQTTClientPSM includes MQTTClientMsg
     
     function subscribe_fail_callback()
 	@c_prototype "void subscribe_fail_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"    
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"    
     do
 		'int reason;'
 		'va_list valist;'
@@ -125,7 +125,7 @@ thing MQTTClientPSM includes MQTTClientMsg
 
     function message_published_callback()
 	@c_prototype "void message_published_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"    
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"    
     do
     	'printf("message published callback is called with the reason\n");'
     	mqttport!published()
