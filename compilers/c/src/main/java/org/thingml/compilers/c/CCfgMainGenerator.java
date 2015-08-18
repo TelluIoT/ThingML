@@ -522,18 +522,31 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         
         
         for(Message m : syncDispatchList.keySet()) {
-            for(Map.Entry<Thing, Port> sysncSender : syncDispatchList.get(m)) {
-                builder.append("void sync_dispatch_" + ctx.getSenderName(sysncSender.getKey(), sysncSender.getValue(), m));
-                ctx.appendFormalParameters(sysncSender.getKey(), builder, m);
-                builder.append("{\n");
-                builder.append("dispatch_" + m.getName());
-                builder.append("(_instance->id_" + sysncSender.getValue().getName());
-                
-                for (Parameter p : m.getParameters()) {
-                    builder.append(", ");
-                    builder.append(p.getName());
+            boolean found = false;
+            for(Thing t : cfg.allThings()) {
+                for(Port p : t.allPorts()) {
+                    if(p.getReceives().contains(m)) {
+                        found = true;
+                        break;
+                    }
                 }
-                builder.append(");\n}\n");
+                if(found) {break;}
+            }
+            
+            if(found) {
+                for(Map.Entry<Thing, Port> sysncSender : syncDispatchList.get(m)) {
+                    builder.append("void sync_dispatch_" + ctx.getSenderName(sysncSender.getKey(), sysncSender.getValue(), m));
+                    ctx.appendFormalParameters(sysncSender.getKey(), builder, m);
+                    builder.append("{\n");
+                    builder.append("dispatch_" + m.getName());
+                    builder.append("(_instance->id_" + sysncSender.getValue().getName());
+
+                    for (Parameter p : m.getParameters()) {
+                        builder.append(", ");
+                        builder.append(p.getName());
+                    }
+                    builder.append(");\n}\n");
+                }
             }
         }
     }
@@ -707,8 +720,16 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         
         for(Thing t : cfg.allThings()) {
             for(Port p : t.allPorts()) {
+                if (p.isDefined("sync_send", "true")) continue;
                 for(Message m : p.getSends()) {
-                    messageSent.add(m);
+                    for(Thing t2 : cfg.allThings()) {
+                        for(Port p2 : t2.allPorts()) {
+                            if(p2.isDefined("sync_send", "true")) continue;
+                            if(p2.getReceives().contains(m)) {
+                                messageSent.add(m);
+                            }
+                        }
+                    }
                 }
             }
         }
