@@ -12,10 +12,10 @@ thing fragment JSONParserMsg {
 	message decode_string(json_str : CString, key : CString);
 	message value_string(value : CString);
 	
-	message decode_integer(json_str : CString, key : Integer);
+	message decode_integer(json_str : CString, key : CString);
 	message value_integer(value : Integer);
 	
-	message decode_double(json_str : CString, key : Integer);
+	message decode_double(json_str : CString, key : CString);
 	message value_double(value : Double);
 	
 	message error_decode();

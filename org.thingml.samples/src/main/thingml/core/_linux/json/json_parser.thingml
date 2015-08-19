@@ -65,11 +65,23 @@ thing JSONParserPSM includes JSONParserMsg
 		return 'str_value'
 	end
 	
+	function decodeInteger(json_value : CSONValue) : Integer
+	do
+		'uint8_t value_int = cson_value_get_integer('& json_value &');'
+		return 'value_int'
+	end
+	
+	function decodeDouble(json_value : CSONValue) : Double
+	do
+		'double value_double = cson_value_get_double('& json_value &');'
+		return 'value_double'
+	end
+	
 	function testJSONStringCSONValue(json_str : CString, key : CString, cson_root_value : CSONValuePTP) : CSONValue
 	do
 		var cson_val : CSONValue = 'NULL'
 		var cson_obj : CSONObject = testJSON(json_str, cson_root_value)
-		if(not cson_obj == 'NULL') do
+		if(not(cson_obj == 'NULL')) do
 			cson_val  = testJSONValue(cson_obj, key)
 		end
 		return cson_val
@@ -80,9 +92,19 @@ thing JSONParserPSM includes JSONParserMsg
 		sends value_boolean, error_decode
 	}
 	
-	provided port stringparser @sync_send "true" {
+	provided port strparser @sync_send "true" {
 		receives decode_string
 		sends value_string, error_decode
+	}
+	
+	provided port intparser @sync_send "true" {
+		receives decode_integer
+		sends value_integer, error_decode
+	}
+	
+	provided port doubleparser @sync_send "true" {
+		receives decode_double
+		sends value_double, error_decode
 	}
 	
 	statechart Behavior init Start {
@@ -94,7 +116,7 @@ thing JSONParserPSM includes JSONParserMsg
 				var cson_root_value : CSONValue = 'NULL'
 				var cson_val : CSONValue = testJSONStringCSONValue(e.json_str, e.key, '&'& cson_root_value &'')
 				
-				if(not cson_val == 'NULL') do
+				if(not(cson_val == 'NULL')) do
 					var parsed_result : Boolean = decodeBoolean(cson_val)
 					boolparser!value_boolean(parsed_result)
 				end
@@ -105,9 +127,52 @@ thing JSONParserPSM includes JSONParserMsg
 				cleanupJSON('&'& cson_root_value &'')
 			end
 		
-			internal event e : stringparser?decode_string
+			internal event e : strparser?decode_string
 			action do
-				//
+				var cson_root_value : CSONValue = 'NULL'
+				var cson_val : CSONValue = testJSONStringCSONValue(e.json_str, e.key, '&'& cson_root_value &'')
+				
+				if(not(cson_val == 'NULL')) do
+					var parsed_result : CString = decodeString(cson_val)
+					strparser!value_string(parsed_result)
+				end
+				if(cson_val == 'NULL') do
+					strparser!error_decode()
+				end
+				
+				cleanupJSON('&'& cson_root_value &'')
+			end
+			
+			internal event e : intparser?decode_integer
+			action do
+				var cson_root_value : CSONValue = 'NULL'
+				var cson_val : CSONValue = testJSONStringCSONValue(e.json_str, e.key, '&'& cson_root_value &'')
+				
+				if(not(cson_val == 'NULL')) do
+					var parsed_result : Integer = decodeInteger(cson_val)
+					intparser!value_integer(parsed_result)
+				end
+				if(cson_val == 'NULL') do
+					intparser!error_decode()
+				end
+				
+				cleanupJSON('&'& cson_root_value &'')
+			end
+			
+			internal event e : doubleparser?decode_double
+			action do
+				var cson_root_value : CSONValue = 'NULL'
+				var cson_val : CSONValue = testJSONStringCSONValue(e.json_str, e.key, '&'& cson_root_value &'')
+				
+				if(not(cson_val == 'NULL')) do
+					var parsed_result : Double = decodeDouble(cson_val)
+					doubleparser!value_double(parsed_result)
+				end
+				if(cson_val == 'NULL') do
+					doubleparser!error_decode()
+				end
+				
+				cleanupJSON('&'& cson_root_value &'')
 			end
 		}
 	}
