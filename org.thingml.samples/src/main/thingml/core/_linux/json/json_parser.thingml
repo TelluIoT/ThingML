@@ -1,0 +1,102 @@
+import "../../../thingml.thingml"
+import "../../json_parser.thingml"
+
+
+datatype CSONObject
+	@c_type "cson_object*";
+	
+datatype CSONValue
+	@c_type "cson_value*";
+	
+datatype CSONValuePTP
+	@c_type "cson_value**";
+
+thing JSONParserPSM includes JSONParserMsg
+@c_header "
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include \"cson/cson.h\"
+"
+{
+
+	function testJSON(json_str: CString, cson_root : CSONValuePTP) : CSONObject
+	do
+		var object : CSONObject = 'NULL'
+		'cson_parse_opt opt = cson_parse_opt_empty;'
+		'cson_parse_info inf = cson_parse_info_empty;'
+		'int rc = cson_parse_string('& cson_root &', '& json_str &', strlen('& json_str &'), &opt, &inf);'
+
+		'if (rc != 0) {'
+			'printf("Error code %d (%s)!\n", rc, cson_rc_string(rc));'
+			return object
+		'}'
+
+		''& object &' = cson_value_get_object(*'& cson_root &');'
+		'if('& object &' == NULL) printf("root is not an object\n");'
+		
+		return object
+	end
+	
+	function cleanupJSON(cson_root : CSONValuePTP)
+	do
+		'cson_value_free(*'& cson_root &');'
+	end
+	
+	function testJSONValue(json_obj : CSONObject, key : CString) : CSONValue
+	do
+		var value : CSONValue = 'NULL'
+		'' & value &'= cson_object_get_sub2('& json_obj &', '& key &');'
+		'if (' & value &' == NULL)'
+			'printf("cannot extract value\n");'
+		return value
+	end
+	
+	function decodeBoolean(json_value : CSONValue) : Boolean
+	do
+		'char bool_value = cson_value_get_bool('& json_value &');'
+		return 'bool_value' 
+	end
+	
+	provided port boolparser @sync_send "true" {
+		receives decode_boolean
+		sends value_boolean, error_decode
+	}
+	
+	
+	statechart Behavior init Start {
+	
+		state Start {
+		
+			internal event e : boolparser?decode_boolean
+			action do
+				var cson_root_value : CSONValue = 'NULL'
+				var cson_obj : CSONObject = testJSON(e.json_str, '&'& cson_root_value &'')
+				var cson_val : CSONValue = 'NULL'
+				var parsed_result : Boolean = false
+				var error_result : Boolean = false
+				if(cson_obj == 'NULL') error_result = true
+				
+				if (not error_result) do
+					cson_val  = testJSONValue(cson_obj, e.key)
+					if(cson_val == 'NULL') do 
+						error_result = true
+					end
+					if(not error_result) do
+						parsed_result = decodeBoolean(cson_val)
+					end
+				end
+				
+				if(error_result) do
+					boolparser!error_decode()
+				end
+				if(not error_result) do
+					boolparser!value_boolean(parsed_result)
+				end
+				cleanupJSON('&'& cson_root_value &'')
+			end
+			
+		}
+	}
+}
