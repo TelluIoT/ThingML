@@ -1,0 +1,57 @@
+import "json/json_parser.thingml"
+import "clock.thingml"
+
+
+thing JSONParserPIM includes JSONParserMsg, ClockMsgs {
+
+	property json_str : CString = '"{\"uuid\": \"00a02b93-25d4-4e35-b134-3028a1993c32\", \"command\": {\"default\": {\"value\": \"true\", \"bvalue\": false}}}"'
+	property boolean_key : CString = '".command.default.bvalue"'
+
+	required port boolparser @sync_send "true" {
+		sends decode_boolean
+		receives value_boolean, error_decode
+	}
+	
+	required port signal {
+		receives clock_tick
+	}
+	
+	statechart Behavior init Start {
+	
+		state Start {
+			
+			internal event signal?clock_tick
+			action boolparser!decode_boolean(json_str, boolean_key)
+			
+			internal event boolparser?error_decode
+			action print "failed to parse json, and exract a specified value \n"
+			
+			internal event e : boolparser?value_boolean
+			action do
+				if(e.value) print "extracted value - true \n"
+				if(not e.value) print "extracted value - false \n" 
+			end
+		}
+	}
+	
+	
+}
+
+configuration JSONParserExample
+  @output_folder "/home/tmp/"
+  @debug "true"
+  @debug_fifo "true"
+  @debug_message_send ".*"
+  @debug_message_receive ".*"
+  @add_c_libraries "cson"
+{
+
+	instance jsonparserpim : JSONParserPIM
+	instance jsonparserpsm : JSONParserPSM
+	
+	instance clock : ClockLinux
+		set clock.period = 5000
+	
+	connector jsonparserpim.boolparser => jsonparserpsm.boolparser
+	connector jsonparserpim.signal => clock.signal
+}
