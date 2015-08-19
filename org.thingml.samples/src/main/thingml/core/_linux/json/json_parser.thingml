@@ -59,11 +59,31 @@ thing JSONParserPSM includes JSONParserMsg
 		return 'bool_value' 
 	end
 	
+	function decodeString(json_value : CSONValue) : CString
+	do
+		'char const * str_value = cson_value_get_cstr('& json_value &');'
+		return 'str_value'
+	end
+	
+	function testJSONStringCSONValue(json_str : CString, key : CString, cson_root_value : CSONValuePTP) : CSONValue
+	do
+		var cson_val : CSONValue = 'NULL'
+		var cson_obj : CSONObject = testJSON(json_str, cson_root_value)
+		if(not cson_obj == 'NULL') do
+			cson_val  = testJSONValue(cson_obj, key)
+		end
+		return cson_val
+	end
+	
 	provided port boolparser @sync_send "true" {
 		receives decode_boolean
 		sends value_boolean, error_decode
 	}
 	
+	provided port stringparser @sync_send "true" {
+		receives decode_string
+		sends value_string, error_decode
+	}
 	
 	statechart Behavior init Start {
 	
@@ -72,31 +92,23 @@ thing JSONParserPSM includes JSONParserMsg
 			internal event e : boolparser?decode_boolean
 			action do
 				var cson_root_value : CSONValue = 'NULL'
-				var cson_obj : CSONObject = testJSON(e.json_str, '&'& cson_root_value &'')
-				var cson_val : CSONValue = 'NULL'
-				var parsed_result : Boolean = false
-				var error_result : Boolean = false
-				if(cson_obj == 'NULL') error_result = true
+				var cson_val : CSONValue = testJSONStringCSONValue(e.json_str, e.key, '&'& cson_root_value &'')
 				
-				if (not error_result) do
-					cson_val  = testJSONValue(cson_obj, e.key)
-					if(cson_val == 'NULL') do 
-						error_result = true
-					end
-					if(not error_result) do
-						parsed_result = decodeBoolean(cson_val)
-					end
-				end
-				
-				if(error_result) do
-					boolparser!error_decode()
-				end
-				if(not error_result) do
+				if(not cson_val == 'NULL') do
+					var parsed_result : Boolean = decodeBoolean(cson_val)
 					boolparser!value_boolean(parsed_result)
 				end
+				if(cson_val == 'NULL') do
+					boolparser!error_decode()
+				end
+				
 				cleanupJSON('&'& cson_root_value &'')
 			end
-			
+		
+			internal event e : stringparser?decode_string
+			action do
+				//
+			end
 		}
 	}
 }
