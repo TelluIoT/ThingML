@@ -74,6 +74,18 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("this." + ctx.protectKeyword(p.getName()) + " = " + ctx.protectKeyword(p.getName()) + ";\n");
         }
         builder.append("}\n");
+
+
+        builder.append("@Override\n");
+        builder.append("public Event clone() {\n");
+        builder.append("return instantiate(getPort()");
+        for (Parameter p : m.getParameters()) {
+            builder.append(", this." + ctx.protectKeyword(p.getName()));
+        }
+        builder.append(");\n");
+        builder.append("}");
+
+
         builder.append("}\n\n");
 
         builder.append("}\n\n");

@@ -31,3 +31,4 @@ testLanguages.append("Java")
 useBlacklist=False
 blacklist=("tester","datatypes","thingml")
 whitelist=("testMultiServerPingTest")
+

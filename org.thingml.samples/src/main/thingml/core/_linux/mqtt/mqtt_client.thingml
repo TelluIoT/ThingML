@@ -1,3 +1,16 @@
+//Required installation to run this example:
+//0) paho mqtt (https://github.com/eclipse/paho.mqtt.c) and thingml paho mqtt adoptation(https://github.com/SINTEF-9012/thingml-paho.mqtt.c) are required to run this example
+//1) follow paho instructions to install paho mqtt
+//2) Clone https://github.com/SINTEF-9012/thingml-paho.mqtt.c
+//3) Navigate to thingml-paho.mqtt.c
+//4) Run: make && make install
+//5) install the udev library, make sure that pthread is also installed
+
+//NOTE:
+//make sure that the dynamic linker is set to look up /usr/local/lib
+//for more details see http://lonesysadmin.net/2013/02/22/error-while-loading-shared-libraries-cannot-open-shared-object-file/
+
+
 import "../../../thingml.thingml"
 import "../../mqtt_client.thingml"
 
@@ -20,8 +33,8 @@ thing MQTTClientPSM includes MQTTClientMsg
 #include \"MQTTAsync.h\"
 "
 {
-	property client : MQTTAsync = ' NULL;'
-	property context : ThingMLMQTTContext = 'malloc(sizeof(ThingMLMQTTContext));'
+	property client : MQTTAsync = 'NULL'
+	property context : ThingMLMQTTContext = '(ThingMLMQTTContext*) malloc(sizeof(ThingMLMQTTContext))'
 	property serverURI : CString
 	property clientId : CString
 	property qos : Integer
@@ -29,15 +42,20 @@ thing MQTTClientPSM includes MQTTClientMsg
 	message lostconnection();
 	
 	provided port mqttport {
-		receives connect, reconnect, subscribe, publish, disconnect
-		sends subscribed, message_received, connected, unsubscribed, disconnected, published
+		receives connect, reconnect, disconnect
+		sends subscribed, connected, unsubscribed, disconnected, published
+	}
+	
+	provided port syncmqttport @sync_send "true" {
+		receives subscribe, unsubscribe, publish
+		sends message_received
 	}
 	
 
 	
     function connection_callback()
     @c_prototype "void connection_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"
     do
     	'printf("connection callback is called...\n");'
     	mqttport!connected()
@@ -45,7 +63,7 @@ thing MQTTClientPSM includes MQTTClientMsg
 	
 	function connection_fail_callback()
 	@c_prototype "void connection_fail_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"
 	do
 		'printf("connection fail callback is called...\n");'
 		//connect_client()
@@ -53,20 +71,20 @@ thing MQTTClientPSM includes MQTTClientMsg
 	
 	function connection_lost_callback()
 	@c_prototype "void connection_lost_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"
 	do
 		'char* reason;'
 		'va_list valist;'
 		'va_start(valist, _instance);'
 		'reason = va_arg(valist, char*);'
 		'va_end(valist);'
-		'printf("connection lost callback is lost, reason %c...\n", reason);'
+		'printf("connection lost callback is lost, reason %c...\n", *reason);'
 		//connect_client()
 	end
 	
 	function message_arrived_callback()
 	@c_prototype "void message_arrived_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"
     do
     	'char* message;'
 		'char* topic;'
@@ -85,7 +103,7 @@ thing MQTTClientPSM includes MQTTClientMsg
     
     function subscribe_callback()
 	@c_prototype "void subscribe_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"    
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"    
     do
     	'printf("subscribe callback is called\n");'
     	mqttport!subscribed()
@@ -93,7 +111,7 @@ thing MQTTClientPSM includes MQTTClientMsg
     
     function subscribe_fail_callback()
 	@c_prototype "void subscribe_fail_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"    
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"    
     do
 		'int reason;'
 		'va_list valist;'
@@ -107,7 +125,7 @@ thing MQTTClientPSM includes MQTTClientMsg
 
     function message_published_callback()
 	@c_prototype "void message_published_callback(void *_instance, ...)"
-    @c_instance_var_name "(MQTTClientPSM_Instance *) _instance"    
+    @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"    
     do
     	'printf("message published callback is called with the reason\n");'
     	mqttport!published()
@@ -118,6 +136,7 @@ thing MQTTClientPSM includes MQTTClientMsg
     	'MQTTAsync_destroy(&'& client &');'
     	'nullset_thingml_mqtt_context('& context &');'
     	'create_mqtt_client(&'& client &', '& serverURI &', '& clientId &', '& context &');'
+    	''& context &'->thing_instance = _instance;'
     	''& context &'->fn_onconn_callback = connection_callback;'
 		''& context &'->fn_connlost_callback = connection_lost_callback;'
 		''& context &'->fn_onconnfail_callback = connection_fail_callback;'
@@ -153,10 +172,10 @@ thing MQTTClientPSM includes MQTTClientMsg
 				create_and_connect_client()
 			end
 			
-			internal event e : mqttport?subscribe
+			internal event e : syncmqttport?subscribe
 			action subscribe_topic(e.topic)
 			
-			internal event e : mqttport?publish
+			internal event e : syncmqttport?publish
 			action publish_message(e.topic, e.msg)
 			
 			transition->Finalize

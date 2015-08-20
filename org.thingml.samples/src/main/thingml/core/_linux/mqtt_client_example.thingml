@@ -7,8 +7,12 @@ thing MQTTClientPIM includes MQTTClientMsg, ClockMsgs {
 	property msg : String = "hello world!"
 	
 	required port mqttport {
-		sends publish, subscribe
-		receives connected, published, message_received, subscribed
+		receives connected, published, subscribed
+	}
+	
+	required port syncmqttport @sync_send "true" {
+		sends publish, subscribe, unsubscribe
+		receives message_received
 	}
 	
 	required port signal {
@@ -20,18 +24,24 @@ thing MQTTClientPIM includes MQTTClientMsg, ClockMsgs {
     	state Init {
     	
     		internal event mqttport?connected
-    		action mqttport!subscribe(topic)
+    		action do 
+    			print "subscribing to a topic... \n"
+    			syncmqttport!subscribe(topic)
+    		end
     		
     		transition -> Start
     		event mqttport?subscribed
+    		action do
+    			print "successfully subscribed to the topic, start messaging ...\n"
+    		end
     	}
     	
     	state Start {
     		
     		internal event signal?clock_tick
-    		action mqttport!publish(topic, msg)
+    		action syncmqttport!publish(topic, msg)
     		
-    		internal event mqttport?message_received
+    		internal event syncmqttport?message_received
     		action do
     			print "new message recieved... \n"
     		end
@@ -47,7 +57,7 @@ configuration MQTTClientExample
   @debug_fifo "true"
   @debug_message_send ".*"
   @debug_message_receive ".*"
-  @add_c_libraries "lpaho-mqtt3a ltmlmqtt"
+  @add_c_libraries "paho-mqtt3a tmlmqtt"
 {
 	instance mqttclpsm : MQTTClientPSM
 		set mqttclpsm.serverURI = "tcp://m2m.eclipse.org:1883"
@@ -60,5 +70,6 @@ configuration MQTTClientExample
     	set clock.period = 5000
     	
     connector mqttclpim.mqttport => mqttclpsm.mqttport
+    connector mqttclpim.syncmqttport => mqttclpsm.syncmqttport
     connector mqttclpim.signal => clock.signal
 }
