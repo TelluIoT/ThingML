@@ -18,11 +18,28 @@ package org.sintef.thingml.resource.thingml.analysis;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 
+import java.util.List;
+
 public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.Reference, org.sintef.thingml.ReferencedElmt> {
 	
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Reference, org.sintef.thingml.ReferencedElmt> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Reference, org.sintef.thingml.ReferencedElmt>();
 	
 	public void resolve(String identifier, org.sintef.thingml.Reference container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.ReferencedElmt> result) {
+		Action parentAction = ThingMLHelpers.findContainer(container,Action.class);
+		if(parentAction != null) {
+			List<Variable> variables = ThingMLHelpers.allVisibleVariables(parentAction);
+			for(Variable v : variables) {
+				if(resolveFuzzy && v.getName().startsWith(identifier)) {
+					result.addMapping(v.getName(),v);
+				} else if(!resolveFuzzy && v.getName().equals(identifier)) {
+					result.addMapping(v.getName(),v);
+				}
+			}
+			if(result.wasResolved()) {
+				return;
+			}
+		}
+
 		ThingMLElement parent = ThingMLHelpers.findReferenceContainer(container);
 
 		if(parent instanceof Handler) { //we reference an event in a handler
@@ -80,16 +97,8 @@ public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.r
 				result.setErrorMessage("Cannot resolve receive message " + identifier + " in the sources of " + stream.getName());
 			}
 
-		} else if(parent instanceof Function) { //we reference a parameter in a function
-			for(Parameter parameter : ((Function) parent).getParameters()) {
-				if(resolveFuzzy && parameter.getName().startsWith(identifier)) {
-					result.addMapping(parameter.getName(),parameter);
-				} else if(!resolveFuzzy && parameter.getName().equals(identifier)) {
-					result.addMapping(parameter.getName(),parameter);
-				}
-			}
-		}else {
-			result.setErrorMessage("The reference has not a good parent! " + parent.getClass().getName());
+		} else {
+			result.setErrorMessage("The reference has not a good parent! ");
 		}
 	}
 	

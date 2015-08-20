@@ -403,6 +403,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="LengthWindow" eSuperTypes="#//ViewSource">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nbEvents" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="step" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TimeWindow" eSuperTypes="#//ViewSource">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="step" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>

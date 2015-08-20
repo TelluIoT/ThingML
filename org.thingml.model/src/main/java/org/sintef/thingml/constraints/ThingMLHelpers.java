@@ -785,7 +785,7 @@ public class ThingMLHelpers {
 		EObject parent = container.eContainer();
 
 		while (parent !=null && !(parent instanceof Handler || parent instanceof SglMsgParamOperator ||
-				parent instanceof StreamExpression || parent instanceof SourceComposition || parent instanceof Function)) {
+				parent instanceof StreamExpression || parent instanceof SourceComposition)) {
 			parent = parent.eContainer();
 		}
 		return (ThingMLElement) parent;

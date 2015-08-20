@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.sintef.thingml.AnnotatedElement;
 import org.sintef.thingml.PlatformAnnotation;
+import org.sintef.thingml.ReferencedElmt;
 import org.sintef.thingml.ThingMLElement;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Variable;
@@ -236,6 +237,11 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 				default: return -1;
 			}
 		}
+		if (baseClass == ReferencedElmt.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -255,6 +261,11 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 		if (baseClass == AnnotatedElement.class) {
 			switch (baseFeatureID) {
 				case ThingmlPackage.ANNOTATED_ELEMENT__ANNOTATIONS: return ThingmlPackage.VARIABLE__ANNOTATIONS;
+				default: return -1;
+			}
+		}
+		if (baseClass == ReferencedElmt.class) {
+			switch (baseFeatureID) {
 				default: return -1;
 			}
 		}

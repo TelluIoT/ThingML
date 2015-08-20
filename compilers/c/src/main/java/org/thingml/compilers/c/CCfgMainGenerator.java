@@ -43,6 +43,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ctemplate = ctemplate.replace("/*NAME*/", cfg.getName());
         StringBuilder builder = new StringBuilder();
 
+
         String c_global = "";
         for (String s : cfg.annotation("c_global")) c_global += s + "\n";
         ctemplate = ctemplate.replace("/*C_GLOBALS*/", c_global);

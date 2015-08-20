@@ -1070,6 +1070,11 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 		if (element == null) {
 			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 			startIncompleteElement(element);
+			// initialize boolean attribute
+			{
+				Object value = false;
+				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+			}
 		}
 		collectHiddenTokens(element);
 		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_0, null, true);
@@ -1089,6 +1094,11 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 			if (element == null) {
 				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 				startIncompleteElement(element);
+				// initialize boolean attribute
+				{
+					Object value = false;
+					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+				}
 			}
 			if (a1 != null) {
 				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -1120,6 +1130,11 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 		if (element == null) {
 			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 			startIncompleteElement(element);
+			// initialize boolean attribute
+			{
+				Object value = false;
+				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+			}
 		}
 		collectHiddenTokens(element);
 		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_3, null, true);
@@ -1141,6 +1156,11 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+						}
 					}
 					if (a3_0 != null) {
 						if (a3_0 != null) {
@@ -1166,6 +1186,11 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 						if (element == null) {
 							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 							startIncompleteElement(element);
+							// initialize boolean attribute
+							{
+								Object value = false;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+							}
 						}
 						collectHiddenTokens(element);
 						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_4_0_0_1_0_0_0, null, true);
@@ -1184,6 +1209,11 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 							if (element == null) {
 								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 								startIncompleteElement(element);
+								// initialize boolean attribute
+								{
+									Object value = false;
+									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+								}
 							}
 							if (a5_0 != null) {
 								if (a5_0 != null) {
@@ -1222,6 +1252,11 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 		if (element == null) {
 			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 			startIncompleteElement(element);
+			// initialize boolean attribute
+			{
+				Object value = false;
+				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+			}
 		}
 		collectHiddenTokens(element);
 		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_5, null, true);
@@ -1255,6 +1290,11 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+						}
 					}
 					if (a7_0 != null) {
 						if (a7_0 != null) {
@@ -1312,6 +1352,11 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 				if (element == null) {
 					element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 					startIncompleteElement(element);
+					// initialize boolean attribute
+					{
+						Object value = false;
+						element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+					}
 				}
 				collectHiddenTokens(element);
 				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_1, null, true);
@@ -1331,6 +1376,11 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+						}
 					}
 					if (a9 != null) {
 						org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -1378,15 +1428,42 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 			(
 				(
 					(
-						a10 = '[' {
-							if (element == null) {
-								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
-								startIncompleteElement(element);
+						(
+							a10 = T_ARRAY							
+							{
+								if (terminateParsing) {
+									throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+								}
+								if (element == null) {
+									element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
+									startIncompleteElement(element);
+									// initialize boolean attribute
+									{
+										Object value = false;
+										element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+									}
+								}
+								if (a10 != null) {
+									org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+									tokenResolver.setOptions(getOptions());
+									org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
+									tokenResolver.resolve(a10.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), result);
+									Object resolvedObject = result.getResolvedToken();
+									if (resolvedObject == null) {
+										addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a10).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a10).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a10).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a10).getStopIndex());
+									}
+									java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
+									if (resolved != null) {
+										Object value = resolved;
+										element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+										completedElement(value, false);
+									}
+									collectHiddenTokens(element);
+									retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_0_0_0_0_0, resolved, true);
+									copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a10, element);
+								}
 							}
-							collectHiddenTokens(element);
-							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_0_0_0_0_0, null, true);
-							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a10, element);
-						}
+						)
 						{
 							// expected elements (follow set)
 							addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[131]);
@@ -1411,6 +1488,11 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 								if (element == null) {
 									element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 									startIncompleteElement(element);
+									// initialize boolean attribute
+									{
+										Object value = false;
+										element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+									}
 								}
 								if (a11_0 != null) {
 									if (a11_0 != null) {
@@ -1433,6 +1515,11 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 							if (element == null) {
 								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 								startIncompleteElement(element);
+								// initialize boolean attribute
+								{
+									Object value = false;
+									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+								}
 							}
 							collectHiddenTokens(element);
 							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_0_0_0_0_2, null, true);
@@ -1474,35 +1561,26 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 					
 					|					(
 						(
-							a13 = T_ARRAY							
-							{
-								if (terminateParsing) {
-									throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
-								}
-								if (element == null) {
-									element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
-									startIncompleteElement(element);
-								}
-								if (a13 != null) {
-									org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-									tokenResolver.setOptions(getOptions());
-									org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
-									tokenResolver.resolve(a13.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), result);
-									Object resolvedObject = result.getResolvedToken();
-									if (resolvedObject == null) {
-										addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a13).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a13).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a13).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a13).getStopIndex());
-									}
-									java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
-									if (resolved != null) {
-										Object value = resolved;
-										element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
-										completedElement(value, false);
+							(
+								a13 = '[]' {
+									if (element == null) {
+										element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
+										startIncompleteElement(element);
+										// initialize boolean attribute
+										{
+											Object value = false;
+											element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+										}
 									}
 									collectHiddenTokens(element);
-									retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_1_0_0_0_0, resolved, true);
-									copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a13, element);
+									retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_1_0_0_0_0, true, true);
+									copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a13, element);
+									// set value of boolean attribute
+									Object value = true;
+									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+									completedElement(value, false);
 								}
-							}
+							)
 						)
 						{
 							// expected elements (follow set)
@@ -1574,23 +1652,28 @@ parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element =
 	}
 	
 	(
-		a14_0 = parse_org_sintef_thingml_Action		{
+		a16_0 = parse_org_sintef_thingml_Action		{
 			if (terminateParsing) {
 				throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
 			}
 			if (element == null) {
 				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
 				startIncompleteElement(element);
+				// initialize boolean attribute
+				{
+					Object value = false;
+					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+				}
 			}
-			if (a14_0 != null) {
-				if (a14_0 != null) {
-					Object value = a14_0;
+			if (a16_0 != null) {
+				if (a16_0 != null) {
+					Object value = a16_0;
 					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__BODY), value);
 					completedElement(value, true);
 				}
 				collectHiddenTokens(element);
-				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_9, a14_0, true);
-				copyLocalizationInfos(a14_0, element);
+				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_9, a16_0, true);
+				copyLocalizationInfos(a16_0, element);
 			}
 		}
 	)
@@ -3137,6 +3220,11 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+						}
 					}
 					if (a0 != null) {
 						org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_READONLY");
@@ -3175,6 +3263,11 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 		if (element == null) {
 			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
 			startIncompleteElement(element);
+			// initialize boolean attribute
+			{
+				Object value = false;
+				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+			}
 		}
 		collectHiddenTokens(element);
 		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_2, null, true);
@@ -3194,6 +3287,11 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 			if (element == null) {
 				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
 				startIncompleteElement(element);
+				// initialize boolean attribute
+				{
+					Object value = false;
+					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+				}
 			}
 			if (a2 != null) {
 				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -3225,6 +3323,11 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 		if (element == null) {
 			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
 			startIncompleteElement(element);
+			// initialize boolean attribute
+			{
+				Object value = false;
+				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+			}
 		}
 		collectHiddenTokens(element);
 		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_6, null, true);
@@ -3244,6 +3347,11 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 			if (element == null) {
 				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
 				startIncompleteElement(element);
+				// initialize boolean attribute
+				{
+					Object value = false;
+					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+				}
 			}
 			if (a4 != null) {
 				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -3307,15 +3415,42 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 	(
 		(
 			(
-				a5 = '[' {
-					if (element == null) {
-						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
-						startIncompleteElement(element);
+				(
+					a5 = T_ARRAY					
+					{
+						if (terminateParsing) {
+							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+						}
+						if (element == null) {
+							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
+							startIncompleteElement(element);
+							// initialize boolean attribute
+							{
+								Object value = false;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+							}
+						}
+						if (a5 != null) {
+							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+							tokenResolver.setOptions(getOptions());
+							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
+							tokenResolver.resolve(a5.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), result);
+							Object resolvedObject = result.getResolvedToken();
+							if (resolvedObject == null) {
+								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a5).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a5).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a5).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a5).getStopIndex());
+							}
+							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
+							if (resolved != null) {
+								Object value = resolved;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+								completedElement(value, false);
+							}
+							collectHiddenTokens(element);
+							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_0_0_0_0_0, resolved, true);
+							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a5, element);
+						}
 					}
-					collectHiddenTokens(element);
-					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_0_0_0_0_0, null, true);
-					copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a5, element);
-				}
+				)
 				{
 					// expected elements (follow set)
 					addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getProperty(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[521]);
@@ -3340,6 +3475,11 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 						if (element == null) {
 							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
 							startIncompleteElement(element);
+							// initialize boolean attribute
+							{
+								Object value = false;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+							}
 						}
 						if (a6_0 != null) {
 							if (a6_0 != null) {
@@ -3362,6 +3502,11 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+						}
 					}
 					collectHiddenTokens(element);
 					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_0_0_0_0_2, null, true);
@@ -3435,35 +3580,26 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 			
 			|			(
 				(
-					a8 = T_ARRAY					
-					{
-						if (terminateParsing) {
-							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
-						}
-						if (element == null) {
-							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
-							startIncompleteElement(element);
-						}
-						if (a8 != null) {
-							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-							tokenResolver.setOptions(getOptions());
-							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
-							tokenResolver.resolve(a8.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), result);
-							Object resolvedObject = result.getResolvedToken();
-							if (resolvedObject == null) {
-								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a8).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a8).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a8).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a8).getStopIndex());
-							}
-							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
-							if (resolved != null) {
-								Object value = resolved;
-								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
-								completedElement(value, false);
+					(
+						a8 = '[]' {
+							if (element == null) {
+								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
+								startIncompleteElement(element);
+								// initialize boolean attribute
+								{
+									Object value = false;
+									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+								}
 							}
 							collectHiddenTokens(element);
-							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_1_0_0_0_0, resolved, true);
-							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a8, element);
+							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_1_0_0_0_0, true, true);
+							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a8, element);
+							// set value of boolean attribute
+							Object value = true;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+							completedElement(value, false);
 						}
-					}
+					)
 				)
 				{
 					// expected elements (follow set)
@@ -3566,14 +3702,19 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 	
 	(
 		(
-			a9 = '=' {
+			a11 = '=' {
 				if (element == null) {
 					element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
 					startIncompleteElement(element);
+					// initialize boolean attribute
+					{
+						Object value = false;
+						element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+					}
 				}
 				collectHiddenTokens(element);
 				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_10_0_0_1, null, true);
-				copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a9, element);
+				copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a11, element);
 			}
 			{
 				// expected elements (follow set)
@@ -3592,23 +3733,28 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 			}
 			
 			(
-				a10_0 = parse_org_sintef_thingml_Expression				{
+				a12_0 = parse_org_sintef_thingml_Expression				{
 					if (terminateParsing) {
 						throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
 					}
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+						}
 					}
-					if (a10_0 != null) {
-						if (a10_0 != null) {
-							Object value = a10_0;
+					if (a12_0 != null) {
+						if (a12_0 != null) {
+							Object value = a12_0;
 							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__INIT), value);
 							completedElement(value, true);
 						}
 						collectHiddenTokens(element);
-						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_10_0_0_3, a10_0, true);
-						copyLocalizationInfos(a10_0, element);
+						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_10_0_0_3, a12_0, true);
+						copyLocalizationInfos(a12_0, element);
 					}
 				}
 			)
@@ -3679,23 +3825,28 @@ parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element =
 	(
 		(
 			(
-				a11_0 = parse_org_sintef_thingml_PlatformAnnotation				{
+				a13_0 = parse_org_sintef_thingml_PlatformAnnotation				{
 					if (terminateParsing) {
 						throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
 					}
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+						}
 					}
-					if (a11_0 != null) {
-						if (a11_0 != null) {
-							Object value = a11_0;
+					if (a13_0 != null) {
+						if (a13_0 != null) {
+							Object value = a13_0;
 							addObjectToList(element, org.sintef.thingml.ThingmlPackage.PROPERTY__ANNOTATIONS, value);
 							completedElement(value, true);
 						}
 						collectHiddenTokens(element);
-						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_11_0_0_0, a11_0, true);
-						copyLocalizationInfos(a11_0, element);
+						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_11_0_0_0, a13_0, true);
+						copyLocalizationInfos(a13_0, element);
 					}
 				}
 			)
@@ -3778,6 +3929,11 @@ parse_org_sintef_thingml_Parameter returns [org.sintef.thingml.Parameter element
 			if (element == null) {
 				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
 				startIncompleteElement(element);
+				// initialize boolean attribute
+				{
+					Object value = false;
+					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+				}
 			}
 			if (a0 != null) {
 				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -3809,6 +3965,11 @@ parse_org_sintef_thingml_Parameter returns [org.sintef.thingml.Parameter element
 		if (element == null) {
 			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
 			startIncompleteElement(element);
+			// initialize boolean attribute
+			{
+				Object value = false;
+				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+			}
 		}
 		collectHiddenTokens(element);
 		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_1, null, true);
@@ -3828,6 +3989,11 @@ parse_org_sintef_thingml_Parameter returns [org.sintef.thingml.Parameter element
 			if (element == null) {
 				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
 				startIncompleteElement(element);
+				// initialize boolean attribute
+				{
+					Object value = false;
+					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+				}
 			}
 			if (a2 != null) {
 				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -3867,15 +4033,42 @@ parse_org_sintef_thingml_Parameter returns [org.sintef.thingml.Parameter element
 	(
 		(
 			(
-				a3 = '[' {
-					if (element == null) {
-						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
-						startIncompleteElement(element);
+				(
+					a3 = T_ARRAY					
+					{
+						if (terminateParsing) {
+							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+						}
+						if (element == null) {
+							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
+							startIncompleteElement(element);
+							// initialize boolean attribute
+							{
+								Object value = false;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+							}
+						}
+						if (a3 != null) {
+							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+							tokenResolver.setOptions(getOptions());
+							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
+							tokenResolver.resolve(a3.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), result);
+							Object resolvedObject = result.getResolvedToken();
+							if (resolvedObject == null) {
+								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a3).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a3).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a3).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a3).getStopIndex());
+							}
+							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
+							if (resolved != null) {
+								Object value = resolved;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+								completedElement(value, false);
+							}
+							collectHiddenTokens(element);
+							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_0_0_0_0_0, resolved, true);
+							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a3, element);
+						}
 					}
-					collectHiddenTokens(element);
-					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_0_0_0_0_0, null, true);
-					copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a3, element);
-				}
+				)
 				{
 					// expected elements (follow set)
 					addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getParameter(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[802]);
@@ -3900,6 +4093,11 @@ parse_org_sintef_thingml_Parameter returns [org.sintef.thingml.Parameter element
 						if (element == null) {
 							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
 							startIncompleteElement(element);
+							// initialize boolean attribute
+							{
+								Object value = false;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+							}
 						}
 						if (a4_0 != null) {
 							if (a4_0 != null) {
@@ -3922,6 +4120,11 @@ parse_org_sintef_thingml_Parameter returns [org.sintef.thingml.Parameter element
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+						}
 					}
 					collectHiddenTokens(element);
 					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_0_0_0_0_2, null, true);
@@ -3947,35 +4150,26 @@ parse_org_sintef_thingml_Parameter returns [org.sintef.thingml.Parameter element
 			
 			|			(
 				(
-					a6 = T_ARRAY					
-					{
-						if (terminateParsing) {
-							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
-						}
-						if (element == null) {
-							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
-							startIncompleteElement(element);
-						}
-						if (a6 != null) {
-							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-							tokenResolver.setOptions(getOptions());
-							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
-							tokenResolver.resolve(a6.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), result);
-							Object resolvedObject = result.getResolvedToken();
-							if (resolvedObject == null) {
-								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a6).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a6).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a6).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a6).getStopIndex());
-							}
-							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
-							if (resolved != null) {
-								Object value = resolved;
-								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
-								completedElement(value, false);
+					(
+						a6 = '[]' {
+							if (element == null) {
+								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
+								startIncompleteElement(element);
+								// initialize boolean attribute
+								{
+									Object value = false;
+									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+								}
 							}
 							collectHiddenTokens(element);
-							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_1_0_0_0_0, resolved, true);
-							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a6, element);
+							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_1_0_0_0_0, true, true);
+							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a6, element);
+							// set value of boolean attribute
+							Object value = true;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+							completedElement(value, false);
 						}
-					}
+					)
 				)
 				{
 					// expected elements (follow set)
@@ -9742,6 +9936,11 @@ parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+						}
 					}
 					if (a0 != null) {
 						org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_READONLY");
@@ -9780,6 +9979,11 @@ parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable
 		if (element == null) {
 			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
 			startIncompleteElement(element);
+			// initialize boolean attribute
+			{
+				Object value = false;
+				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+			}
 		}
 		collectHiddenTokens(element);
 		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_2, null, true);
@@ -9799,6 +10003,11 @@ parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable
 			if (element == null) {
 				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
 				startIncompleteElement(element);
+				// initialize boolean attribute
+				{
+					Object value = false;
+					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+				}
 			}
 			if (a2 != null) {
 				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -9830,6 +10039,11 @@ parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable
 		if (element == null) {
 			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
 			startIncompleteElement(element);
+			// initialize boolean attribute
+			{
+				Object value = false;
+				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+			}
 		}
 		collectHiddenTokens(element);
 		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_6, null, true);
@@ -9849,6 +10063,11 @@ parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable
 			if (element == null) {
 				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
 				startIncompleteElement(element);
+				// initialize boolean attribute
+				{
+					Object value = false;
+					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+				}
 			}
 			if (a4 != null) {
 				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -9925,15 +10144,42 @@ parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable
 	(
 		(
 			(
-				a5 = '[' {
-					if (element == null) {
-						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
-						startIncompleteElement(element);
+				(
+					a5 = T_ARRAY					
+					{
+						if (terminateParsing) {
+							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+						}
+						if (element == null) {
+							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
+							startIncompleteElement(element);
+							// initialize boolean attribute
+							{
+								Object value = false;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+							}
+						}
+						if (a5 != null) {
+							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+							tokenResolver.setOptions(getOptions());
+							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
+							tokenResolver.resolve(a5.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), result);
+							Object resolvedObject = result.getResolvedToken();
+							if (resolvedObject == null) {
+								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a5).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a5).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a5).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a5).getStopIndex());
+							}
+							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
+							if (resolved != null) {
+								Object value = resolved;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+								completedElement(value, false);
+							}
+							collectHiddenTokens(element);
+							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_0_0_0_0_0, resolved, true);
+							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a5, element);
+						}
 					}
-					collectHiddenTokens(element);
-					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_0_0_0_0_0, null, true);
-					copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a5, element);
-				}
+				)
 				{
 					// expected elements (follow set)
 					addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLocalVariable(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2195]);
@@ -9958,6 +10204,11 @@ parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable
 						if (element == null) {
 							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
 							startIncompleteElement(element);
+							// initialize boolean attribute
+							{
+								Object value = false;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+							}
 						}
 						if (a6_0 != null) {
 							if (a6_0 != null) {
@@ -9980,6 +10231,11 @@ parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+						}
 					}
 					collectHiddenTokens(element);
 					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_0_0_0_0_2, null, true);
@@ -10079,35 +10335,26 @@ parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable
 			
 			|			(
 				(
-					a8 = T_ARRAY					
-					{
-						if (terminateParsing) {
-							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
-						}
-						if (element == null) {
-							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
-							startIncompleteElement(element);
-						}
-						if (a8 != null) {
-							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-							tokenResolver.setOptions(getOptions());
-							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
-							tokenResolver.resolve(a8.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), result);
-							Object resolvedObject = result.getResolvedToken();
-							if (resolvedObject == null) {
-								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a8).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a8).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a8).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a8).getStopIndex());
-							}
-							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
-							if (resolved != null) {
-								Object value = resolved;
-								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
-								completedElement(value, false);
+					(
+						a8 = '[]' {
+							if (element == null) {
+								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
+								startIncompleteElement(element);
+								// initialize boolean attribute
+								{
+									Object value = false;
+									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+								}
 							}
 							collectHiddenTokens(element);
-							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_1_0_0_0_0, resolved, true);
-							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a8, element);
+							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_1_0_0_0_0, true, true);
+							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a8, element);
+							// set value of boolean attribute
+							Object value = true;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+							completedElement(value, false);
 						}
-					}
+					)
 				)
 				{
 					// expected elements (follow set)
@@ -10249,14 +10496,19 @@ parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable
 	
 	(
 		(
-			a9 = '=' {
+			a11 = '=' {
 				if (element == null) {
 					element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
 					startIncompleteElement(element);
+					// initialize boolean attribute
+					{
+						Object value = false;
+						element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+					}
 				}
 				collectHiddenTokens(element);
 				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_10_0_0_1, null, true);
-				copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a9, element);
+				copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a11, element);
 			}
 			{
 				// expected elements (follow set)
@@ -10275,23 +10527,28 @@ parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable
 			}
 			
 			(
-				a10_0 = parse_org_sintef_thingml_Expression				{
+				a12_0 = parse_org_sintef_thingml_Expression				{
 					if (terminateParsing) {
 						throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
 					}
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+						}
 					}
-					if (a10_0 != null) {
-						if (a10_0 != null) {
-							Object value = a10_0;
+					if (a12_0 != null) {
+						if (a12_0 != null) {
+							Object value = a12_0;
 							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__INIT), value);
 							completedElement(value, true);
 						}
 						collectHiddenTokens(element);
-						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_10_0_0_3, a10_0, true);
-						copyLocalizationInfos(a10_0, element);
+						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_10_0_0_3, a12_0, true);
+						copyLocalizationInfos(a12_0, element);
 					}
 				}
 			)
@@ -10388,23 +10645,28 @@ parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable
 	(
 		(
 			(
-				a11_0 = parse_org_sintef_thingml_PlatformAnnotation				{
+				a13_0 = parse_org_sintef_thingml_PlatformAnnotation				{
 					if (terminateParsing) {
 						throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
 					}
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+						}
 					}
-					if (a11_0 != null) {
-						if (a11_0 != null) {
-							Object value = a11_0;
+					if (a13_0 != null) {
+						if (a13_0 != null) {
+							Object value = a13_0;
 							addObjectToList(element, org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__ANNOTATIONS, value);
 							completedElement(value, true);
 						}
 						collectHiddenTokens(element);
-						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_11_0_0_0, a11_0, true);
-						copyLocalizationInfos(a11_0, element);
+						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_11_0_0_0, a13_0, true);
+						copyLocalizationInfos(a13_0, element);
 					}
 				}
 			)
@@ -11690,6 +11952,11 @@ parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgP
 		if (element == null) {
 			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
 			startIncompleteElement(element);
+			// initialize boolean attribute
+			{
+				Object value = false;
+				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+			}
 		}
 		collectHiddenTokens(element);
 		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_0, null, true);
@@ -11709,6 +11976,11 @@ parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgP
 			if (element == null) {
 				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
 				startIncompleteElement(element);
+				// initialize boolean attribute
+				{
+					Object value = false;
+					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+				}
 			}
 			if (a1 != null) {
 				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -11740,6 +12012,11 @@ parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgP
 		if (element == null) {
 			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
 			startIncompleteElement(element);
+			// initialize boolean attribute
+			{
+				Object value = false;
+				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+			}
 		}
 		collectHiddenTokens(element);
 		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_3, null, true);
@@ -11758,6 +12035,11 @@ parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgP
 			if (element == null) {
 				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
 				startIncompleteElement(element);
+				// initialize boolean attribute
+				{
+					Object value = false;
+					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+				}
 			}
 			if (a3_0 != null) {
 				if (a3_0 != null) {
@@ -11780,6 +12062,11 @@ parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgP
 		if (element == null) {
 			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
 			startIncompleteElement(element);
+			// initialize boolean attribute
+			{
+				Object value = false;
+				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+			}
 		}
 		collectHiddenTokens(element);
 		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_5, null, true);
@@ -11794,6 +12081,11 @@ parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgP
 		if (element == null) {
 			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
 			startIncompleteElement(element);
+			// initialize boolean attribute
+			{
+				Object value = false;
+				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+			}
 		}
 		collectHiddenTokens(element);
 		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_6, null, true);
@@ -11813,6 +12105,11 @@ parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgP
 			if (element == null) {
 				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
 				startIncompleteElement(element);
+				// initialize boolean attribute
+				{
+					Object value = false;
+					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+				}
 			}
 			if (a6 != null) {
 				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -11849,15 +12146,42 @@ parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgP
 	(
 		(
 			(
-				a7 = '[' {
-					if (element == null) {
-						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
-						startIncompleteElement(element);
+				(
+					a7 = T_ARRAY					
+					{
+						if (terminateParsing) {
+							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+						}
+						if (element == null) {
+							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
+							startIncompleteElement(element);
+							// initialize boolean attribute
+							{
+								Object value = false;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+							}
+						}
+						if (a7 != null) {
+							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+							tokenResolver.setOptions(getOptions());
+							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
+							tokenResolver.resolve(a7.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), result);
+							Object resolvedObject = result.getResolvedToken();
+							if (resolvedObject == null) {
+								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a7).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a7).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a7).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a7).getStopIndex());
+							}
+							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
+							if (resolved != null) {
+								Object value = resolved;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+								completedElement(value, false);
+							}
+							collectHiddenTokens(element);
+							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_0_0_0_0_0, resolved, true);
+							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a7, element);
+						}
 					}
-					collectHiddenTokens(element);
-					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_0_0_0_0_0, null, true);
-					copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a7, element);
-				}
+				)
 				{
 					// expected elements (follow set)
 					addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getSglMsgParamOperator(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3171]);
@@ -11882,6 +12206,11 @@ parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgP
 						if (element == null) {
 							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
 							startIncompleteElement(element);
+							// initialize boolean attribute
+							{
+								Object value = false;
+								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+							}
 						}
 						if (a8_0 != null) {
 							if (a8_0 != null) {
@@ -11904,6 +12233,11 @@ parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgP
 					if (element == null) {
 						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
 						startIncompleteElement(element);
+						// initialize boolean attribute
+						{
+							Object value = false;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+						}
 					}
 					collectHiddenTokens(element);
 					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_0_0_0_0_2, null, true);
@@ -11923,35 +12257,26 @@ parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgP
 			
 			|			(
 				(
-					a10 = T_ARRAY					
-					{
-						if (terminateParsing) {
-							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
-						}
-						if (element == null) {
-							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
-							startIncompleteElement(element);
-						}
-						if (a10 != null) {
-							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-							tokenResolver.setOptions(getOptions());
-							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
-							tokenResolver.resolve(a10.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), result);
-							Object resolvedObject = result.getResolvedToken();
-							if (resolvedObject == null) {
-								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a10).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a10).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a10).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a10).getStopIndex());
-							}
-							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
-							if (resolved != null) {
-								Object value = resolved;
-								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
-								completedElement(value, false);
+					(
+						a10 = '[]' {
+							if (element == null) {
+								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
+								startIncompleteElement(element);
+								// initialize boolean attribute
+								{
+									Object value = false;
+									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+								}
 							}
 							collectHiddenTokens(element);
-							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_1_0_0_0_0, resolved, true);
-							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a10, element);
+							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_1_0_0_0_0, true, true);
+							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a10, element);
+							// set value of boolean attribute
+							Object value = true;
+							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+							completedElement(value, false);
 						}
-					}
+					)
 				)
 				{
 					// expected elements (follow set)
@@ -11972,23 +12297,28 @@ parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgP
 	}
 	
 	(
-		a11_0 = parse_org_sintef_thingml_ActionBlock		{
+		a13_0 = parse_org_sintef_thingml_ActionBlock		{
 			if (terminateParsing) {
 				throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
 			}
 			if (element == null) {
 				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
 				startIncompleteElement(element);
+				// initialize boolean attribute
+				{
+					Object value = false;
+					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+				}
 			}
-			if (a11_0 != null) {
-				if (a11_0 != null) {
-					Object value = a11_0;
+			if (a13_0 != null) {
+				if (a13_0 != null) {
+					Object value = a13_0;
 					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__BODY), value);
 					completedElement(value, true);
 				}
 				collectHiddenTokens(element);
-				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_11, a11_0, true);
-				copyLocalizationInfos(a11_0, element);
+				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_11, a13_0, true);
+				copyLocalizationInfos(a13_0, element);
 			}
 		}
 	)
@@ -15680,7 +16010,7 @@ if (resolvedObject == null) {
 addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a0).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a0).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a0).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a0).getStopIndex());
 }
 String resolved = (String) resolvedObject;
-org.sintef.thingml.ReferencedElmt proxy = org.sintef.thingml.ThingmlFactory.eINSTANCE.createReceiveMessage();
+org.sintef.thingml.ReferencedElmt proxy = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
 collectHiddenTokens(element);
 registerContextDependentProxy(new org.sintef.thingml.resource.thingml.mopp.ThingmlContextDependentURIFragmentFactory<org.sintef.thingml.Reference, org.sintef.thingml.ReferencedElmt>(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getReferenceReferenceReferenceResolver()), element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.REFERENCE__REFERENCE), resolved, proxy);
 if (proxy != null) {
@@ -17150,7 +17480,7 @@ LINEBREAKS:
 { _channel = 99; }
 ;
 T_ARRAY:
-'[]';
+'[';
 TEXT:
 (('A'..'Z' | 'a'..'z' | '0'..'9' | '_' )+)
 ;

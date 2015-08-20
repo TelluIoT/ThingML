@@ -26,5 +26,5 @@ package org.sintef.thingml;
  * @model abstract="true"
  * @generated
  */
-public interface Variable extends TypedElement, AnnotatedElement {
+public interface Variable extends TypedElement, AnnotatedElement, ReferencedElmt {
 } // Variable

@@ -32,7 +32,7 @@ package org.sintef.thingml;
  * @model
  * @generated
  */
-public interface PropertyReference extends Expression {
+public interface PropertyReference extends Expression, ReferencedElmt {
 	/**
 	 * Returns the value of the '<em><b>Property</b></em>' reference.
 	 * <!-- begin-user-doc -->

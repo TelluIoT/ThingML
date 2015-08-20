@@ -73,8 +73,8 @@ public class ThingmlFollowSetProvider {
 		TERMINALS[40] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_35_0_0_0);
 		TERMINALS[41] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_36_0_0_0);
 		TERMINALS[42] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_3);
-		TERMINALS[43] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_0_0_0_0_0);
-		TERMINALS[44] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_1_0_0_0_0);
+		TERMINALS[43] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_0_0_0_0_0);
+		TERMINALS[44] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedBooleanTerminal(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_1_0_0_0_0);
 		TERMINALS[45] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_62_0_0_0);
 		TERMINALS[46] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_63_0_0_0);
 		TERMINALS[47] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_64_0_0_0);
@@ -122,8 +122,8 @@ public class ThingmlFollowSetProvider {
 		TERMINALS[89] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_4);
 		TERMINALS[90] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_6);
 		TERMINALS[91] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_8);
-		TERMINALS[92] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_0_0_0_0_0);
-		TERMINALS[93] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_1_0_0_0_0);
+		TERMINALS[92] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_0_0_0_0_0);
+		TERMINALS[93] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedBooleanTerminal(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_1_0_0_0_0);
 		TERMINALS[94] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_10_0_0_1);
 		TERMINALS[95] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_12_0_0_12_0_0_1);
 		TERMINALS[96] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_12_0_0_13_0_0_1);
@@ -142,8 +142,8 @@ public class ThingmlFollowSetProvider {
 		TERMINALS[109] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_0_0_0_0_2);
 		TERMINALS[110] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_1);
 		TERMINALS[111] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_2);
-		TERMINALS[112] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_0_0_0_0_0);
-		TERMINALS[113] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_1_0_0_0_0);
+		TERMINALS[112] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_0_0_0_0_0);
+		TERMINALS[113] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedBooleanTerminal(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_1_0_0_0_0);
 		TERMINALS[114] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_0_0_0_0_2);
 		TERMINALS[115] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_8_0_0_2);
 		TERMINALS[116] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_8_0_0_4);
@@ -243,8 +243,8 @@ public class ThingmlFollowSetProvider {
 		TERMINALS[210] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_4);
 		TERMINALS[211] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_6);
 		TERMINALS[212] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_8);
-		TERMINALS[213] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_0_0_0_0_0);
-		TERMINALS[214] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_1_0_0_0_0);
+		TERMINALS[213] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_0_0_0_0_0);
+		TERMINALS[214] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedBooleanTerminal(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_1_0_0_0_0);
 		TERMINALS[215] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_10_0_0_1);
 		TERMINALS[216] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_0_0_0_0_2);
 		TERMINALS[217] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_30_0_0_1_0_0_0);
@@ -261,8 +261,8 @@ public class ThingmlFollowSetProvider {
 		TERMINALS[228] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_5);
 		TERMINALS[229] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_6);
 		TERMINALS[230] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_8);
-		TERMINALS[231] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_0_0_0_0_0);
-		TERMINALS[232] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_1_0_0_0_0);
+		TERMINALS[231] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_0_0_0_0_0);
+		TERMINALS[232] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedBooleanTerminal(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_1_0_0_0_0);
 		TERMINALS[233] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_0_0_0_0_2);
 		TERMINALS[234] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedCsString(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_38_0_0_1);
 		TERMINALS[235] = new org.sintef.thingml.resource.thingml.mopp.ThingmlExpectedStructuralFeature(org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_38_0_0_2);

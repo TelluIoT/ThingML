@@ -46,8 +46,8 @@ public class ThingmlBracketInformationProvider {
 	public java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlBracketPair> getBracketPairs() {
 		java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlBracketPair> result = new java.util.ArrayList<org.sintef.thingml.resource.thingml.IThingmlBracketPair>();
 		result.add(new BracketPair("(", ")", true));
-		result.add(new BracketPair("[", "]", true));
 		result.add(new BracketPair("{", "}", true));
+		result.add(new BracketPair("[", "]", true));
 		return result;
 	}
 	

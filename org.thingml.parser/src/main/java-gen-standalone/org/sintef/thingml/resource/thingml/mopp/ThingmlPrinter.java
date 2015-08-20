@@ -955,7 +955,8 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		String localtab = outertab;
 		int alt = -1;
 		alt = 0;
-		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"cardinality"		));
+		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"isArray"		,
+		"cardinality"		));
 		int tempMatchCount;
 		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"isArray"		));
 		if (tempMatchCount > matches) {
@@ -976,8 +977,17 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	public void print_org_sintef_thingml_Function_2_0_0(org.sintef.thingml.Function element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
 		String localtab = outertab;
 		int count;
-		// DEFINITION PART BEGINS (CsString)
-		out.print("[");
+		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		count = printCountingMap.get("isArray");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY));
+			if (o != null) {
+				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+				resolver.setOptions(getOptions());
+				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), element));
+			}
+			printCountingMap.put("isArray", count - 1);
+		}
 		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("cardinality");
 		if (count > 0) {
@@ -993,14 +1003,11 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	
 	public void print_org_sintef_thingml_Function_2_0_1(org.sintef.thingml.Function element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
 		int count;
-		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		// DEFINITION PART BEGINS (BooleanTerminal)
 		count = printCountingMap.get("isArray");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY));
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), element));
 			}
 			printCountingMap.put("isArray", count - 1);
 		}
@@ -2161,7 +2168,8 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		String localtab = outertab;
 		int alt = -1;
 		alt = 0;
-		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"cardinality"		));
+		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"isArray"		,
+		"cardinality"		));
 		int tempMatchCount;
 		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"isArray"		));
 		if (tempMatchCount > matches) {
@@ -2182,8 +2190,17 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	public void print_org_sintef_thingml_Property_1_0(org.sintef.thingml.Property element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
 		String localtab = outertab;
 		int count;
-		// DEFINITION PART BEGINS (CsString)
-		out.print("[");
+		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		count = printCountingMap.get("isArray");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY));
+			if (o != null) {
+				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+				resolver.setOptions(getOptions());
+				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), element));
+			}
+			printCountingMap.put("isArray", count - 1);
+		}
 		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("cardinality");
 		if (count > 0) {
@@ -2199,14 +2216,11 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	
 	public void print_org_sintef_thingml_Property_1_1(org.sintef.thingml.Property element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
 		int count;
-		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		// DEFINITION PART BEGINS (BooleanTerminal)
 		count = printCountingMap.get("isArray");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY));
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), element));
 			}
 			printCountingMap.put("isArray", count - 1);
 		}
@@ -2321,7 +2335,8 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		String localtab = outertab;
 		int alt = -1;
 		alt = 0;
-		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"cardinality"		));
+		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"isArray"		,
+		"cardinality"		));
 		int tempMatchCount;
 		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"isArray"		));
 		if (tempMatchCount > matches) {
@@ -2342,8 +2357,17 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	public void print_org_sintef_thingml_Parameter_0_0(org.sintef.thingml.Parameter element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
 		String localtab = outertab;
 		int count;
-		// DEFINITION PART BEGINS (CsString)
-		out.print("[");
+		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		count = printCountingMap.get("isArray");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY));
+			if (o != null) {
+				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+				resolver.setOptions(getOptions());
+				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), element));
+			}
+			printCountingMap.put("isArray", count - 1);
+		}
 		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("cardinality");
 		if (count > 0) {
@@ -2359,14 +2383,11 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	
 	public void print_org_sintef_thingml_Parameter_0_1(org.sintef.thingml.Parameter element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
 		int count;
-		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		// DEFINITION PART BEGINS (BooleanTerminal)
 		count = printCountingMap.get("isArray");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY));
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), element));
 			}
 			printCountingMap.put("isArray", count - 1);
 		}
@@ -5922,7 +5943,8 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		String localtab = outertab;
 		int alt = -1;
 		alt = 0;
-		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"cardinality"		));
+		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"isArray"		,
+		"cardinality"		));
 		int tempMatchCount;
 		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"isArray"		));
 		if (tempMatchCount > matches) {
@@ -5943,8 +5965,17 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	public void print_org_sintef_thingml_LocalVariable_1_0(org.sintef.thingml.LocalVariable element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
 		String localtab = outertab;
 		int count;
-		// DEFINITION PART BEGINS (CsString)
-		out.print("[");
+		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		count = printCountingMap.get("isArray");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY));
+			if (o != null) {
+				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+				resolver.setOptions(getOptions());
+				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), element));
+			}
+			printCountingMap.put("isArray", count - 1);
+		}
 		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("cardinality");
 		if (count > 0) {
@@ -5960,14 +5991,11 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	
 	public void print_org_sintef_thingml_LocalVariable_1_1(org.sintef.thingml.LocalVariable element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
 		int count;
-		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		// DEFINITION PART BEGINS (BooleanTerminal)
 		count = printCountingMap.get("isArray");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY));
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), element));
 			}
 			printCountingMap.put("isArray", count - 1);
 		}
@@ -6536,7 +6564,8 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		String localtab = outertab;
 		int alt = -1;
 		alt = 0;
-		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"cardinality"		));
+		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"isArray"		,
+		"cardinality"		));
 		int tempMatchCount;
 		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"isArray"		));
 		if (tempMatchCount > matches) {
@@ -6557,8 +6586,17 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	public void print_org_sintef_thingml_SglMsgParamOperator_0_0(org.sintef.thingml.SglMsgParamOperator element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
 		String localtab = outertab;
 		int count;
-		// DEFINITION PART BEGINS (CsString)
-		out.print("[");
+		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		count = printCountingMap.get("isArray");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY));
+			if (o != null) {
+				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+				resolver.setOptions(getOptions());
+				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), element));
+			}
+			printCountingMap.put("isArray", count - 1);
+		}
 		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("cardinality");
 		if (count > 0) {
@@ -6574,14 +6612,11 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	
 	public void print_org_sintef_thingml_SglMsgParamOperator_0_1(org.sintef.thingml.SglMsgParamOperator element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
 		int count;
-		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		// DEFINITION PART BEGINS (BooleanTerminal)
 		count = printCountingMap.get("isArray");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY));
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), element));
 			}
 			printCountingMap.put("isArray", count - 1);
 		}

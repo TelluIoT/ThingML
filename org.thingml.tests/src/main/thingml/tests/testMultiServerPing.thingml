@@ -19,9 +19,13 @@ thing PingServer includes PingMsg {
     statechart PingServer init Idle {
     
         state Idle {
+            on entry print "PingServer::" + num + "::Idle::entry\n"
             internal event p : pp?ping
             guard p.num == num
-            action pp!pong(num)    
+            action do
+                pp!pong(num)
+                print "PingServer::" + num +"\n"
+            end
         }    
     } 
 }
@@ -53,28 +57,35 @@ thing TestMultiServerPing includes Test, PingMsg
 			action do
                 	harnessOut!testOut('\'P\'')
                 	ppclient!ping(0)
-                end
+                    print "TestMultiServerPing::Ping::0\n"
+            end
+            
 			transition -> Pong
 			event m : harnessIn?testIn
 			guard m.c == '\'1\''
 			action do
                 	harnessOut!testOut('\'P\'')
                 	ppclient!ping(1)
-                end
+                    print "TestMultiServerPing::Ping::1\n"
+            end
+                
             transition -> Pong
 			event m : harnessIn?testIn
 			guard m.c == '\'2\''
 			action do
                 	harnessOut!testOut('\'P\'')
                 	ppclient!ping(2)
-            	end
+                    print "TestMultiServerPing::Ping::2\n"
+            end
+            
             transition -> Pong
 			event m : harnessIn?testIn
 			guard m.c == '\'3\''
 			action do
                 	harnessOut!testOut('\'P\'')
                 	ppclient!ping(3)
-            	end
+                    print "TestMultiServerPing::Ping::3\n"
+            end
 		}
 
 		state Pong {
@@ -83,10 +94,12 @@ thing TestMultiServerPing includes Test, PingMsg
 			event p : ppclient?pong
 			guard p.num == 1
 			action harnessOut!testOut('\'1\'')
+
 			transition -> Ping
 			event p : ppclient?pong
 			guard p.num == 2
 			action harnessOut!testOut('\'2\'')
+
             transition -> Ping
 			event p : ppclient?pong
 			guard p.num == 3

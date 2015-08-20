@@ -23,6 +23,9 @@ public class ThingmlTokenStyleInformationProvider {
 		if ("TEXT".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x22, 0x22, 0x22}, null, false, false, false, false);
 		}
+		if ("T_ARRAY".equals(tokenName)) {
+			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x22, 0x22, 0x22}, null, true, false, false, false);
+		}
 		if ("SL_COMMENT".equals(tokenName)) {
 			return new org.sintef.thingml.resource.thingml.mopp.ThingmlTokenStyle(new int[] {0x66, 0x66, 0x66}, null, false, false, false, false);
 		}

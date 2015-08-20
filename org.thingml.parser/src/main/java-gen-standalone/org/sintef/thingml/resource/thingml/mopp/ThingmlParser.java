@@ -28,7 +28,7 @@ import java.util.HashMap;
 @SuppressWarnings({"all", "warnings", "unchecked"})
 public class ThingmlParser extends ThingmlANTLRParserBase {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "ANNOTATION", "BOOLEAN_LITERAL", "INTEGER_LITERAL", "LINEBREAKS", "ML_COMMENT", "SL_COMMENT", "STRING_EXT", "STRING_LITERAL", "TEXT", "T_ARRAY", "T_ASPECT", "T_HISTORY", "T_OPTIONAL", "T_READONLY", "WHITESPACE", "'!'", "'#'", "'&'", "'('", "')'", "'*'", "'+'", "','", "'-'", "'->'", "'.'", "'/'", "':'", "'::'", "';'", "'<'", "'='", "'=='", "'=>'", "'>'", "'?'", "'['", "'\\u0025'", "']'", "'action'", "'after'", "'and'", "'before'", "'composite'", "'configuration'", "'connector'", "'datatype'", "'do'", "'else'", "'end'", "'entry'", "'enumeration'", "'error'", "'event'", "'exit'", "'filter'", "'from'", "'function'", "'group'", "'guard'", "'if'", "'import'", "'includes'", "'init'", "'instance'", "'internal'", "'keeps'", "'length'", "'lengthWindow'", "'message'", "'not'", "'on'", "'operator'", "'or'", "'port'", "'print'", "'property'", "'provided'", "'receives'", "'region'", "'required'", "'return'", "'select'", "'sends'", "'set'", "'state'", "'statechart'", "'stream'", "'thing'", "'timeWindow'", "'transition'", "'var'", "'while'", "'{'", "'|'", "'}'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "ANNOTATION", "BOOLEAN_LITERAL", "INTEGER_LITERAL", "LINEBREAKS", "ML_COMMENT", "SL_COMMENT", "STRING_EXT", "STRING_LITERAL", "TEXT", "T_ARRAY", "T_ASPECT", "T_HISTORY", "T_OPTIONAL", "T_READONLY", "WHITESPACE", "'!'", "'#'", "'&'", "'('", "')'", "'*'", "'+'", "','", "'-'", "'->'", "'.'", "'/'", "':'", "'::'", "';'", "'<'", "'='", "'=='", "'=>'", "'>'", "'?'", "'[]'", "'\\u0025'", "']'", "'action'", "'after'", "'and'", "'before'", "'composite'", "'configuration'", "'connector'", "'datatype'", "'do'", "'else'", "'end'", "'entry'", "'enumeration'", "'error'", "'event'", "'exit'", "'filter'", "'from'", "'function'", "'group'", "'guard'", "'if'", "'import'", "'includes'", "'init'", "'instance'", "'internal'", "'keeps'", "'length'", "'lengthWindow'", "'message'", "'not'", "'on'", "'operator'", "'or'", "'port'", "'print'", "'property'", "'provided'", "'receives'", "'region'", "'required'", "'return'", "'select'", "'sends'", "'set'", "'state'", "'statechart'", "'stream'", "'thing'", "'timeWindow'", "'transition'", "'var'", "'while'", "'{'", "'|'", "'}'"
     };
 
     public static final int EOF=-1;
@@ -1550,7 +1550,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Function"
-    // Thingml.g:1065:1: parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element = null] : a0= 'function' (a1= TEXT ) a2= '(' ( ( (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )* ) )? a6= ')' ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a8= ':' (a9= TEXT ) ( ( (a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( (a13= T_ARRAY ) ) ) )? ) )? (a14_0= parse_org_sintef_thingml_Action ) ;
+    // Thingml.g:1065:1: parse_org_sintef_thingml_Function returns [org.sintef.thingml.Function element = null] : a0= 'function' (a1= TEXT ) a2= '(' ( ( (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )* ) )? a6= ')' ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a8= ':' (a9= TEXT ) ( ( ( (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( ( (a13= '[]' ) ) ) ) )? ) )? (a16_0= parse_org_sintef_thingml_Action ) ;
     public final org.sintef.thingml.Function parse_org_sintef_thingml_Function() throws RecognitionException {
         org.sintef.thingml.Function element =  null;
 
@@ -1574,7 +1574,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
         org.sintef.thingml.Expression a11_0 =null;
 
-        org.sintef.thingml.Action a14_0 =null;
+        org.sintef.thingml.Action a16_0 =null;
 
 
 
@@ -1582,8 +1582,8 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 4) ) { return element; }
 
-            // Thingml.g:1068:2: (a0= 'function' (a1= TEXT ) a2= '(' ( ( (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )* ) )? a6= ')' ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a8= ':' (a9= TEXT ) ( ( (a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( (a13= T_ARRAY ) ) ) )? ) )? (a14_0= parse_org_sintef_thingml_Action ) )
-            // Thingml.g:1069:2: a0= 'function' (a1= TEXT ) a2= '(' ( ( (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )* ) )? a6= ')' ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a8= ':' (a9= TEXT ) ( ( (a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( (a13= T_ARRAY ) ) ) )? ) )? (a14_0= parse_org_sintef_thingml_Action )
+            // Thingml.g:1068:2: (a0= 'function' (a1= TEXT ) a2= '(' ( ( (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )* ) )? a6= ')' ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a8= ':' (a9= TEXT ) ( ( ( (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( ( (a13= '[]' ) ) ) ) )? ) )? (a16_0= parse_org_sintef_thingml_Action ) )
+            // Thingml.g:1069:2: a0= 'function' (a1= TEXT ) a2= '(' ( ( (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )* ) )? a6= ')' ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a8= ':' (a9= TEXT ) ( ( ( (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( ( (a13= '[]' ) ) ) ) )? ) )? (a16_0= parse_org_sintef_thingml_Action )
             {
             a0=(Token)match(input,61,FOLLOW_61_in_parse_org_sintef_thingml_Function658); if (state.failed) return element;
 
@@ -1591,6 +1591,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		if (element == null) {
             			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
             			startIncompleteElement(element);
+            			// initialize boolean attribute
+            			{
+            				Object value = false;
+            				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+            			}
             		}
             		collectHiddenTokens(element);
             		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_0, null, true);
@@ -1602,8 +1607,8 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[62]);
             	}
 
-            // Thingml.g:1083:2: (a1= TEXT )
-            // Thingml.g:1084:3: a1= TEXT
+            // Thingml.g:1088:2: (a1= TEXT )
+            // Thingml.g:1089:3: a1= TEXT
             {
             a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Function676); if (state.failed) return element;
 
@@ -1614,6 +1619,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             			if (element == null) {
             				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
             				startIncompleteElement(element);
+            				// initialize boolean attribute
+            				{
+            					Object value = false;
+            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+            				}
             			}
             			if (a1 != null) {
             				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -1650,6 +1660,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		if (element == null) {
             			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
             			startIncompleteElement(element);
+            			// initialize boolean attribute
+            			{
+            				Object value = false;
+            				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+            			}
             		}
             		collectHiddenTokens(element);
             		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_3, null, true);
@@ -1662,7 +1677,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[65]);
             	}
 
-            // Thingml.g:1134:2: ( ( (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )* ) )?
+            // Thingml.g:1149:2: ( ( (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )* ) )?
             int alt8=2;
             int LA8_0 = input.LA(1);
 
@@ -1671,13 +1686,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt8) {
                 case 1 :
-                    // Thingml.g:1135:3: ( (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )* )
+                    // Thingml.g:1150:3: ( (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )* )
                     {
-                    // Thingml.g:1135:3: ( (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )* )
-                    // Thingml.g:1136:4: (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )*
+                    // Thingml.g:1150:3: ( (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )* )
+                    // Thingml.g:1151:4: (a3_0= parse_org_sintef_thingml_Parameter ) ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )*
                     {
-                    // Thingml.g:1136:4: (a3_0= parse_org_sintef_thingml_Parameter )
-                    // Thingml.g:1137:5: a3_0= parse_org_sintef_thingml_Parameter
+                    // Thingml.g:1151:4: (a3_0= parse_org_sintef_thingml_Parameter )
+                    // Thingml.g:1152:5: a3_0= parse_org_sintef_thingml_Parameter
                     {
                     pushFollow(FOLLOW_parse_org_sintef_thingml_Parameter_in_parse_org_sintef_thingml_Function726);
                     a3_0=parse_org_sintef_thingml_Parameter();
@@ -1692,6 +1707,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     					if (element == null) {
                     						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
                     						startIncompleteElement(element);
+                    						// initialize boolean attribute
+                    						{
+                    							Object value = false;
+                    							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+                    						}
                     					}
                     					if (a3_0 != null) {
                     						if (a3_0 != null) {
@@ -1714,7 +1734,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[67]);
                     			}
 
-                    // Thingml.g:1163:4: ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )*
+                    // Thingml.g:1183:4: ( (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) ) )*
                     loop7:
                     do {
                         int alt7=2;
@@ -1727,10 +1747,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt7) {
                     	case 1 :
-                    	    // Thingml.g:1164:5: (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) )
+                    	    // Thingml.g:1184:5: (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) )
                     	    {
-                    	    // Thingml.g:1164:5: (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) )
-                    	    // Thingml.g:1165:6: a4= ',' (a5_0= parse_org_sintef_thingml_Parameter )
+                    	    // Thingml.g:1184:5: (a4= ',' (a5_0= parse_org_sintef_thingml_Parameter ) )
+                    	    // Thingml.g:1185:6: a4= ',' (a5_0= parse_org_sintef_thingml_Parameter )
                     	    {
                     	    a4=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_Function767); if (state.failed) return element;
 
@@ -1738,6 +1758,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    						if (element == null) {
                     	    							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
                     	    							startIncompleteElement(element);
+                    	    							// initialize boolean attribute
+                    	    							{
+                    	    								Object value = false;
+                    	    								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+                    	    							}
                     	    						}
                     	    						collectHiddenTokens(element);
                     	    						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_4_0_0_1_0_0_0, null, true);
@@ -1749,8 +1774,8 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[68]);
                     	    					}
 
-                    	    // Thingml.g:1179:6: (a5_0= parse_org_sintef_thingml_Parameter )
-                    	    // Thingml.g:1180:7: a5_0= parse_org_sintef_thingml_Parameter
+                    	    // Thingml.g:1204:6: (a5_0= parse_org_sintef_thingml_Parameter )
+                    	    // Thingml.g:1205:7: a5_0= parse_org_sintef_thingml_Parameter
                     	    {
                     	    pushFollow(FOLLOW_parse_org_sintef_thingml_Parameter_in_parse_org_sintef_thingml_Function801);
                     	    a5_0=parse_org_sintef_thingml_Parameter();
@@ -1765,6 +1790,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    							if (element == null) {
                     	    								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
                     	    								startIncompleteElement(element);
+                    	    								// initialize boolean attribute
+                    	    								{
+                    	    									Object value = false;
+                    	    									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+                    	    								}
                     	    							}
                     	    							if (a5_0 != null) {
                     	    								if (a5_0 != null) {
@@ -1825,6 +1855,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		if (element == null) {
             			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
             			startIncompleteElement(element);
+            			// initialize boolean attribute
+            			{
+            				Object value = false;
+            				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+            			}
             		}
             		collectHiddenTokens(element);
             		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_5, null, true);
@@ -1849,7 +1884,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[87]);
             	}
 
-            // Thingml.g:1248:2: ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:1283:2: ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop9:
             do {
                 int alt9=2;
@@ -1862,13 +1897,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt9) {
             	case 1 :
-            	    // Thingml.g:1249:3: ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:1284:3: ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:1249:3: ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:1250:4: (a7_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:1284:3: ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:1285:4: (a7_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:1250:4: (a7_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:1251:5: a7_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:1285:4: (a7_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:1286:5: a7_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
             	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Function904);
             	    a7_0=parse_org_sintef_thingml_PlatformAnnotation();
@@ -1883,6 +1918,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    					if (element == null) {
             	    						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
             	    						startIncompleteElement(element);
+            	    						// initialize boolean attribute
+            	    						{
+            	    							Object value = false;
+            	    							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+            	    						}
             	    					}
             	    					if (a7_0 != null) {
             	    						if (a7_0 != null) {
@@ -1947,7 +1987,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[115]);
             	}
 
-            // Thingml.g:1309:2: ( (a8= ':' (a9= TEXT ) ( ( (a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( (a13= T_ARRAY ) ) ) )? ) )?
+            // Thingml.g:1349:2: ( (a8= ':' (a9= TEXT ) ( ( ( (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( ( (a13= '[]' ) ) ) ) )? ) )?
             int alt12=2;
             int LA12_0 = input.LA(1);
 
@@ -1956,10 +1996,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt12) {
                 case 1 :
-                    // Thingml.g:1310:3: (a8= ':' (a9= TEXT ) ( ( (a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( (a13= T_ARRAY ) ) ) )? )
+                    // Thingml.g:1350:3: (a8= ':' (a9= TEXT ) ( ( ( (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( ( (a13= '[]' ) ) ) ) )? )
                     {
-                    // Thingml.g:1310:3: (a8= ':' (a9= TEXT ) ( ( (a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( (a13= T_ARRAY ) ) ) )? )
-                    // Thingml.g:1311:4: a8= ':' (a9= TEXT ) ( ( (a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( (a13= T_ARRAY ) ) ) )?
+                    // Thingml.g:1350:3: (a8= ':' (a9= TEXT ) ( ( ( (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( ( (a13= '[]' ) ) ) ) )? )
+                    // Thingml.g:1351:4: a8= ':' (a9= TEXT ) ( ( ( (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( ( (a13= '[]' ) ) ) ) )?
                     {
                     a8=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_Function954); if (state.failed) return element;
 
@@ -1967,6 +2007,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				if (element == null) {
                     					element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
                     					startIncompleteElement(element);
+                    					// initialize boolean attribute
+                    					{
+                    						Object value = false;
+                    						element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+                    					}
                     				}
                     				collectHiddenTokens(element);
                     				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_1, null, true);
@@ -1978,8 +2023,8 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[116]);
                     			}
 
-                    // Thingml.g:1325:4: (a9= TEXT )
-                    // Thingml.g:1326:5: a9= TEXT
+                    // Thingml.g:1370:4: (a9= TEXT )
+                    // Thingml.g:1371:5: a9= TEXT
                     {
                     a9=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Function980); if (state.failed) return element;
 
@@ -1990,6 +2035,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     					if (element == null) {
                     						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
                     						startIncompleteElement(element);
+                    						// initialize boolean attribute
+                    						{
+                    							Object value = false;
+                    							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+                    						}
                     					}
                     					if (a9 != null) {
                     						org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -2037,7 +2087,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[130]);
                     			}
 
-                    // Thingml.g:1378:4: ( ( (a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( (a13= T_ARRAY ) ) ) )?
+                    // Thingml.g:1428:4: ( ( ( (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( ( (a13= '[]' ) ) ) ) )?
                     int alt11=2;
                     int LA11_0 = input.LA(1);
 
@@ -2046,16 +2096,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     switch (alt11) {
                         case 1 :
-                            // Thingml.g:1379:5: ( (a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( (a13= T_ARRAY ) ) )
+                            // Thingml.g:1429:5: ( ( (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( ( (a13= '[]' ) ) ) )
                             {
-                            // Thingml.g:1379:5: ( (a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( (a13= T_ARRAY ) ) )
+                            // Thingml.g:1429:5: ( ( (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' ) | ( ( (a13= '[]' ) ) ) )
                             int alt10=2;
                             int LA10_0 = input.LA(1);
 
-                            if ( (LA10_0==40) ) {
+                            if ( (LA10_0==T_ARRAY) ) {
                                 alt10=1;
                             }
-                            else if ( (LA10_0==T_ARRAY) ) {
+                            else if ( (LA10_0==40) ) {
                                 alt10=2;
                             }
                             else {
@@ -2068,22 +2118,52 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             }
                             switch (alt10) {
                                 case 1 :
-                                    // Thingml.g:1380:6: (a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' )
+                                    // Thingml.g:1430:6: ( (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' )
                                     {
-                                    // Thingml.g:1380:6: (a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' )
-                                    // Thingml.g:1381:7: a10= '[' (a11_0= parse_org_sintef_thingml_Expression ) a12= ']'
+                                    // Thingml.g:1430:6: ( (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']' )
+                                    // Thingml.g:1431:7: (a10= T_ARRAY ) (a11_0= parse_org_sintef_thingml_Expression ) a12= ']'
                                     {
-                                    a10=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_Function1034); if (state.failed) return element;
+                                    // Thingml.g:1431:7: (a10= T_ARRAY )
+                                    // Thingml.g:1432:8: a10= T_ARRAY
+                                    {
+                                    a10=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_Function1043); if (state.failed) return element;
 
                                     if ( state.backtracking==0 ) {
-                                    							if (element == null) {
-                                    								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
-                                    								startIncompleteElement(element);
+                                    								if (terminateParsing) {
+                                    									throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+                                    								}
+                                    								if (element == null) {
+                                    									element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
+                                    									startIncompleteElement(element);
+                                    									// initialize boolean attribute
+                                    									{
+                                    										Object value = false;
+                                    										element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+                                    									}
+                                    								}
+                                    								if (a10 != null) {
+                                    									org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+                                    									tokenResolver.setOptions(getOptions());
+                                    									org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
+                                    									tokenResolver.resolve(a10.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), result);
+                                    									Object resolvedObject = result.getResolvedToken();
+                                    									if (resolvedObject == null) {
+                                    										addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a10).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a10).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a10).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a10).getStopIndex());
+                                    									}
+                                    									java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
+                                    									if (resolved != null) {
+                                    										Object value = resolved;
+                                    										element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+                                    										completedElement(value, false);
+                                    									}
+                                    									collectHiddenTokens(element);
+                                    									retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_0_0_0_0_0, resolved, true);
+                                    									copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a10, element);
+                                    								}
                                     							}
-                                    							collectHiddenTokens(element);
-                                    							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_0_0_0_0_0, null, true);
-                                    							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a10, element);
-                                    						}
+
+                                    }
+
 
                                     if ( state.backtracking==0 ) {
                                     							// expected elements (follow set)
@@ -2101,10 +2181,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                                     							addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[142]);
                                     						}
 
-                                    // Thingml.g:1406:7: (a11_0= parse_org_sintef_thingml_Expression )
-                                    // Thingml.g:1407:8: a11_0= parse_org_sintef_thingml_Expression
+                                    // Thingml.g:1483:7: (a11_0= parse_org_sintef_thingml_Expression )
+                                    // Thingml.g:1484:8: a11_0= parse_org_sintef_thingml_Expression
                                     {
-                                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Function1072);
+                                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Function1103);
                                     a11_0=parse_org_sintef_thingml_Expression();
 
                                     state._fsp--;
@@ -2117,6 +2197,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                                     								if (element == null) {
                                     									element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
                                     									startIncompleteElement(element);
+                                    									// initialize boolean attribute
+                                    									{
+                                    										Object value = false;
+                                    										element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+                                    									}
                                     								}
                                     								if (a11_0 != null) {
                                     									if (a11_0 != null) {
@@ -2138,12 +2223,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                                     							addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[143]);
                                     						}
 
-                                    a12=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_Function1115); if (state.failed) return element;
+                                    a12=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_Function1146); if (state.failed) return element;
 
                                     if ( state.backtracking==0 ) {
                                     							if (element == null) {
                                     								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
                                     								startIncompleteElement(element);
+                                    								// initialize boolean attribute
+                                    								{
+                                    									Object value = false;
+                                    									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+                                    								}
                                     							}
                                     							collectHiddenTokens(element);
                                     							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_0_0_0_0_2, null, true);
@@ -2188,44 +2278,40 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                                     }
                                     break;
                                 case 2 :
-                                    // Thingml.g:1475:12: ( (a13= T_ARRAY ) )
+                                    // Thingml.g:1562:12: ( ( (a13= '[]' ) ) )
                                     {
-                                    // Thingml.g:1475:12: ( (a13= T_ARRAY ) )
-                                    // Thingml.g:1476:7: (a13= T_ARRAY )
+                                    // Thingml.g:1562:12: ( ( (a13= '[]' ) ) )
+                                    // Thingml.g:1563:7: ( (a13= '[]' ) )
                                     {
-                                    // Thingml.g:1476:7: (a13= T_ARRAY )
-                                    // Thingml.g:1477:8: a13= T_ARRAY
+                                    // Thingml.g:1563:7: ( (a13= '[]' ) )
+                                    // Thingml.g:1564:8: (a13= '[]' )
                                     {
-                                    a13=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_Function1192); if (state.failed) return element;
+                                    // Thingml.g:1564:8: (a13= '[]' )
+                                    // Thingml.g:1565:9: a13= '[]'
+                                    {
+                                    a13=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_Function1233); if (state.failed) return element;
 
                                     if ( state.backtracking==0 ) {
-                                    								if (terminateParsing) {
-                                    									throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
-                                    								}
-                                    								if (element == null) {
-                                    									element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
-                                    									startIncompleteElement(element);
-                                    								}
-                                    								if (a13 != null) {
-                                    									org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-                                    									tokenResolver.setOptions(getOptions());
-                                    									org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
-                                    									tokenResolver.resolve(a13.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), result);
-                                    									Object resolvedObject = result.getResolvedToken();
-                                    									if (resolvedObject == null) {
-                                    										addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a13).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a13).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a13).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a13).getStopIndex());
-                                    									}
-                                    									java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
-                                    									if (resolved != null) {
-                                    										Object value = resolved;
-                                    										element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
-                                    										completedElement(value, false);
+                                    									if (element == null) {
+                                    										element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
+                                    										startIncompleteElement(element);
+                                    										// initialize boolean attribute
+                                    										{
+                                    											Object value = false;
+                                    											element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+                                    										}
                                     									}
                                     									collectHiddenTokens(element);
-                                    									retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_1_0_0_0_0, resolved, true);
-                                    									copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a13, element);
+                                    									retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_7_0_0_4_0_1_0_0_0_0, true, true);
+                                    									copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a13, element);
+                                    									// set value of boolean attribute
+                                    									Object value = true;
+                                    									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+                                    									completedElement(value, false);
                                     								}
-                                    							}
+
+                                    }
+
 
                                     }
 
@@ -2318,11 +2404,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[215]);
             	}
 
-            // Thingml.g:1576:2: (a14_0= parse_org_sintef_thingml_Action )
-            // Thingml.g:1577:3: a14_0= parse_org_sintef_thingml_Action
+            // Thingml.g:1654:2: (a16_0= parse_org_sintef_thingml_Action )
+            // Thingml.g:1655:3: a16_0= parse_org_sintef_thingml_Action
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Function1302);
-            a14_0=parse_org_sintef_thingml_Action();
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Function1338);
+            a16_0=parse_org_sintef_thingml_Action();
 
             state._fsp--;
             if (state.failed) return element;
@@ -2334,16 +2420,21 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             			if (element == null) {
             				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createFunction();
             				startIncompleteElement(element);
+            				// initialize boolean attribute
+            				{
+            					Object value = false;
+            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__IS_ARRAY), value);
+            				}
             			}
-            			if (a14_0 != null) {
-            				if (a14_0 != null) {
-            					Object value = a14_0;
+            			if (a16_0 != null) {
+            				if (a16_0 != null) {
+            					Object value = a16_0;
             					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.FUNCTION__BODY), value);
             					completedElement(value, true);
             				}
             				collectHiddenTokens(element);
-            				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_9, a14_0, true);
-            				copyLocalizationInfos(a14_0, element);
+            				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_2_0_0_9, a16_0, true);
+            				copyLocalizationInfos(a16_0, element);
             			}
             		}
 
@@ -2386,7 +2477,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Thing"
-    // Thingml.g:1615:1: parse_org_sintef_thingml_Thing returns [org.sintef.thingml.Thing element = null] : a0= 'thing' ( ( (a1= T_ASPECT ) ) )? (a2= TEXT ) ( (a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )? ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a8= '{' ( ( (a9_0= parse_org_sintef_thingml_Message ) | (a10_0= parse_org_sintef_thingml_Function ) | (a11_0= parse_org_sintef_thingml_Property ) | (a12_0= parse_org_sintef_thingml_PropertyAssign ) | (a13_0= parse_org_sintef_thingml_Port ) | (a14_0= parse_org_sintef_thingml_StateMachine ) | (a15_0= parse_org_sintef_thingml_Stream ) | (a16_0= parse_org_sintef_thingml_Operator ) ) )* a17= '}' ;
+    // Thingml.g:1698:1: parse_org_sintef_thingml_Thing returns [org.sintef.thingml.Thing element = null] : a0= 'thing' ( ( (a1= T_ASPECT ) ) )? (a2= TEXT ) ( (a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )? ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a8= '{' ( ( (a9_0= parse_org_sintef_thingml_Message ) | (a10_0= parse_org_sintef_thingml_Function ) | (a11_0= parse_org_sintef_thingml_Property ) | (a12_0= parse_org_sintef_thingml_PropertyAssign ) | (a13_0= parse_org_sintef_thingml_Port ) | (a14_0= parse_org_sintef_thingml_StateMachine ) | (a15_0= parse_org_sintef_thingml_Stream ) | (a16_0= parse_org_sintef_thingml_Operator ) ) )* a17= '}' ;
     public final org.sintef.thingml.Thing parse_org_sintef_thingml_Thing() throws RecognitionException {
         org.sintef.thingml.Thing element =  null;
 
@@ -2425,10 +2516,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 5) ) { return element; }
 
-            // Thingml.g:1618:2: (a0= 'thing' ( ( (a1= T_ASPECT ) ) )? (a2= TEXT ) ( (a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )? ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a8= '{' ( ( (a9_0= parse_org_sintef_thingml_Message ) | (a10_0= parse_org_sintef_thingml_Function ) | (a11_0= parse_org_sintef_thingml_Property ) | (a12_0= parse_org_sintef_thingml_PropertyAssign ) | (a13_0= parse_org_sintef_thingml_Port ) | (a14_0= parse_org_sintef_thingml_StateMachine ) | (a15_0= parse_org_sintef_thingml_Stream ) | (a16_0= parse_org_sintef_thingml_Operator ) ) )* a17= '}' )
-            // Thingml.g:1619:2: a0= 'thing' ( ( (a1= T_ASPECT ) ) )? (a2= TEXT ) ( (a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )? ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a8= '{' ( ( (a9_0= parse_org_sintef_thingml_Message ) | (a10_0= parse_org_sintef_thingml_Function ) | (a11_0= parse_org_sintef_thingml_Property ) | (a12_0= parse_org_sintef_thingml_PropertyAssign ) | (a13_0= parse_org_sintef_thingml_Port ) | (a14_0= parse_org_sintef_thingml_StateMachine ) | (a15_0= parse_org_sintef_thingml_Stream ) | (a16_0= parse_org_sintef_thingml_Operator ) ) )* a17= '}'
+            // Thingml.g:1701:2: (a0= 'thing' ( ( (a1= T_ASPECT ) ) )? (a2= TEXT ) ( (a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )? ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a8= '{' ( ( (a9_0= parse_org_sintef_thingml_Message ) | (a10_0= parse_org_sintef_thingml_Function ) | (a11_0= parse_org_sintef_thingml_Property ) | (a12_0= parse_org_sintef_thingml_PropertyAssign ) | (a13_0= parse_org_sintef_thingml_Port ) | (a14_0= parse_org_sintef_thingml_StateMachine ) | (a15_0= parse_org_sintef_thingml_Stream ) | (a16_0= parse_org_sintef_thingml_Operator ) ) )* a17= '}' )
+            // Thingml.g:1702:2: a0= 'thing' ( ( (a1= T_ASPECT ) ) )? (a2= TEXT ) ( (a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )? ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a8= '{' ( ( (a9_0= parse_org_sintef_thingml_Message ) | (a10_0= parse_org_sintef_thingml_Function ) | (a11_0= parse_org_sintef_thingml_Property ) | (a12_0= parse_org_sintef_thingml_PropertyAssign ) | (a13_0= parse_org_sintef_thingml_Port ) | (a14_0= parse_org_sintef_thingml_StateMachine ) | (a15_0= parse_org_sintef_thingml_Stream ) | (a16_0= parse_org_sintef_thingml_Operator ) ) )* a17= '}'
             {
-            a0=(Token)match(input,92,FOLLOW_92_in_parse_org_sintef_thingml_Thing1335); if (state.failed) return element;
+            a0=(Token)match(input,92,FOLLOW_92_in_parse_org_sintef_thingml_Thing1371); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -2446,7 +2537,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[229]);
             	}
 
-            // Thingml.g:1634:2: ( ( (a1= T_ASPECT ) ) )?
+            // Thingml.g:1717:2: ( ( (a1= T_ASPECT ) ) )?
             int alt13=2;
             int LA13_0 = input.LA(1);
 
@@ -2455,15 +2546,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt13) {
                 case 1 :
-                    // Thingml.g:1635:3: ( (a1= T_ASPECT ) )
+                    // Thingml.g:1718:3: ( (a1= T_ASPECT ) )
                     {
-                    // Thingml.g:1635:3: ( (a1= T_ASPECT ) )
-                    // Thingml.g:1636:4: (a1= T_ASPECT )
+                    // Thingml.g:1718:3: ( (a1= T_ASPECT ) )
+                    // Thingml.g:1719:4: (a1= T_ASPECT )
                     {
-                    // Thingml.g:1636:4: (a1= T_ASPECT )
-                    // Thingml.g:1637:5: a1= T_ASPECT
+                    // Thingml.g:1719:4: (a1= T_ASPECT )
+                    // Thingml.g:1720:5: a1= T_ASPECT
                     {
-                    a1=(Token)match(input,T_ASPECT,FOLLOW_T_ASPECT_in_parse_org_sintef_thingml_Thing1364); if (state.failed) return element;
+                    a1=(Token)match(input,T_ASPECT,FOLLOW_T_ASPECT_in_parse_org_sintef_thingml_Thing1400); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -2516,10 +2607,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[231]);
             	}
 
-            // Thingml.g:1679:2: (a2= TEXT )
-            // Thingml.g:1680:3: a2= TEXT
+            // Thingml.g:1762:2: (a2= TEXT )
+            // Thingml.g:1763:3: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Thing1414); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Thing1450); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -2560,7 +2651,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[234]);
             	}
 
-            // Thingml.g:1717:2: ( (a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )?
+            // Thingml.g:1800:2: ( (a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )?
             int alt15=2;
             int LA15_0 = input.LA(1);
 
@@ -2569,12 +2660,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt15) {
                 case 1 :
-                    // Thingml.g:1718:3: (a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* )
+                    // Thingml.g:1801:3: (a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* )
                     {
-                    // Thingml.g:1718:3: (a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* )
-                    // Thingml.g:1719:4: a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )*
+                    // Thingml.g:1801:3: (a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* )
+                    // Thingml.g:1802:4: a3= 'includes' (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )*
                     {
-                    a3=(Token)match(input,66,FOLLOW_66_in_parse_org_sintef_thingml_Thing1444); if (state.failed) return element;
+                    a3=(Token)match(input,66,FOLLOW_66_in_parse_org_sintef_thingml_Thing1480); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -2591,10 +2682,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[235]);
                     			}
 
-                    // Thingml.g:1733:4: (a4= TEXT )
-                    // Thingml.g:1734:5: a4= TEXT
+                    // Thingml.g:1816:4: (a4= TEXT )
+                    // Thingml.g:1817:5: a4= TEXT
                     {
-                    a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Thing1470); if (state.failed) return element;
+                    a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Thing1506); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -2639,7 +2730,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[238]);
                     			}
 
-                    // Thingml.g:1775:4: ( (a5= ',' (a6= TEXT ) ) )*
+                    // Thingml.g:1858:4: ( (a5= ',' (a6= TEXT ) ) )*
                     loop14:
                     do {
                         int alt14=2;
@@ -2652,12 +2743,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt14) {
                     	case 1 :
-                    	    // Thingml.g:1776:5: (a5= ',' (a6= TEXT ) )
+                    	    // Thingml.g:1859:5: (a5= ',' (a6= TEXT ) )
                     	    {
-                    	    // Thingml.g:1776:5: (a5= ',' (a6= TEXT ) )
-                    	    // Thingml.g:1777:6: a5= ',' (a6= TEXT )
+                    	    // Thingml.g:1859:5: (a5= ',' (a6= TEXT ) )
+                    	    // Thingml.g:1860:6: a5= ',' (a6= TEXT )
                     	    {
-                    	    a5=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_Thing1516); if (state.failed) return element;
+                    	    a5=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_Thing1552); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    						if (element == null) {
@@ -2674,10 +2765,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    						addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[239]);
                     	    					}
 
-                    	    // Thingml.g:1791:6: (a6= TEXT )
-                    	    // Thingml.g:1792:7: a6= TEXT
+                    	    // Thingml.g:1874:6: (a6= TEXT )
+                    	    // Thingml.g:1875:7: a6= TEXT
                     	    {
-                    	    a6=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Thing1550); if (state.failed) return element;
+                    	    a6=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Thing1586); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    							if (terminateParsing) {
@@ -2756,7 +2847,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[247]);
             	}
 
-            // Thingml.g:1850:2: ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:1933:2: ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop16:
             do {
                 int alt16=2;
@@ -2769,15 +2860,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt16) {
             	case 1 :
-            	    // Thingml.g:1851:3: ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:1934:3: ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:1851:3: ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:1852:4: (a7_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:1934:3: ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:1935:4: (a7_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:1852:4: (a7_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:1853:5: a7_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:1935:4: (a7_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:1936:5: a7_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Thing1646);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Thing1682);
             	    a7_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -2830,7 +2921,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[251]);
             	}
 
-            a8=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_Thing1687); if (state.failed) return element;
+            a8=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_Thing1723); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -2858,7 +2949,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[263]);
             	}
 
-            // Thingml.g:1912:2: ( ( (a9_0= parse_org_sintef_thingml_Message ) | (a10_0= parse_org_sintef_thingml_Function ) | (a11_0= parse_org_sintef_thingml_Property ) | (a12_0= parse_org_sintef_thingml_PropertyAssign ) | (a13_0= parse_org_sintef_thingml_Port ) | (a14_0= parse_org_sintef_thingml_StateMachine ) | (a15_0= parse_org_sintef_thingml_Stream ) | (a16_0= parse_org_sintef_thingml_Operator ) ) )*
+            // Thingml.g:1995:2: ( ( (a9_0= parse_org_sintef_thingml_Message ) | (a10_0= parse_org_sintef_thingml_Function ) | (a11_0= parse_org_sintef_thingml_Property ) | (a12_0= parse_org_sintef_thingml_PropertyAssign ) | (a13_0= parse_org_sintef_thingml_Port ) | (a14_0= parse_org_sintef_thingml_StateMachine ) | (a15_0= parse_org_sintef_thingml_Stream ) | (a16_0= parse_org_sintef_thingml_Operator ) ) )*
             loop18:
             do {
                 int alt18=2;
@@ -2871,9 +2962,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt18) {
             	case 1 :
-            	    // Thingml.g:1913:3: ( (a9_0= parse_org_sintef_thingml_Message ) | (a10_0= parse_org_sintef_thingml_Function ) | (a11_0= parse_org_sintef_thingml_Property ) | (a12_0= parse_org_sintef_thingml_PropertyAssign ) | (a13_0= parse_org_sintef_thingml_Port ) | (a14_0= parse_org_sintef_thingml_StateMachine ) | (a15_0= parse_org_sintef_thingml_Stream ) | (a16_0= parse_org_sintef_thingml_Operator ) )
+            	    // Thingml.g:1996:3: ( (a9_0= parse_org_sintef_thingml_Message ) | (a10_0= parse_org_sintef_thingml_Function ) | (a11_0= parse_org_sintef_thingml_Property ) | (a12_0= parse_org_sintef_thingml_PropertyAssign ) | (a13_0= parse_org_sintef_thingml_Port ) | (a14_0= parse_org_sintef_thingml_StateMachine ) | (a15_0= parse_org_sintef_thingml_Stream ) | (a16_0= parse_org_sintef_thingml_Operator ) )
             	    {
-            	    // Thingml.g:1913:3: ( (a9_0= parse_org_sintef_thingml_Message ) | (a10_0= parse_org_sintef_thingml_Function ) | (a11_0= parse_org_sintef_thingml_Property ) | (a12_0= parse_org_sintef_thingml_PropertyAssign ) | (a13_0= parse_org_sintef_thingml_Port ) | (a14_0= parse_org_sintef_thingml_StateMachine ) | (a15_0= parse_org_sintef_thingml_Stream ) | (a16_0= parse_org_sintef_thingml_Operator ) )
+            	    // Thingml.g:1996:3: ( (a9_0= parse_org_sintef_thingml_Message ) | (a10_0= parse_org_sintef_thingml_Function ) | (a11_0= parse_org_sintef_thingml_Property ) | (a12_0= parse_org_sintef_thingml_PropertyAssign ) | (a13_0= parse_org_sintef_thingml_Port ) | (a14_0= parse_org_sintef_thingml_StateMachine ) | (a15_0= parse_org_sintef_thingml_Stream ) | (a16_0= parse_org_sintef_thingml_Operator ) )
             	    int alt17=8;
             	    switch ( input.LA(1) ) {
             	    case 73:
@@ -2930,12 +3021,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             	    switch (alt17) {
             	        case 1 :
-            	            // Thingml.g:1914:4: (a9_0= parse_org_sintef_thingml_Message )
+            	            // Thingml.g:1997:4: (a9_0= parse_org_sintef_thingml_Message )
             	            {
-            	            // Thingml.g:1914:4: (a9_0= parse_org_sintef_thingml_Message )
-            	            // Thingml.g:1915:5: a9_0= parse_org_sintef_thingml_Message
+            	            // Thingml.g:1997:4: (a9_0= parse_org_sintef_thingml_Message )
+            	            // Thingml.g:1998:5: a9_0= parse_org_sintef_thingml_Message
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Message_in_parse_org_sintef_thingml_Thing1716);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Message_in_parse_org_sintef_thingml_Thing1752);
             	            a9_0=parse_org_sintef_thingml_Message();
 
             	            state._fsp--;
@@ -2983,12 +3074,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 2 :
-            	            // Thingml.g:1952:8: (a10_0= parse_org_sintef_thingml_Function )
+            	            // Thingml.g:2035:8: (a10_0= parse_org_sintef_thingml_Function )
             	            {
-            	            // Thingml.g:1952:8: (a10_0= parse_org_sintef_thingml_Function )
-            	            // Thingml.g:1953:5: a10_0= parse_org_sintef_thingml_Function
+            	            // Thingml.g:2035:8: (a10_0= parse_org_sintef_thingml_Function )
+            	            // Thingml.g:2036:5: a10_0= parse_org_sintef_thingml_Function
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Function_in_parse_org_sintef_thingml_Thing1758);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Function_in_parse_org_sintef_thingml_Thing1794);
             	            a10_0=parse_org_sintef_thingml_Function();
 
             	            state._fsp--;
@@ -3036,12 +3127,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 3 :
-            	            // Thingml.g:1990:8: (a11_0= parse_org_sintef_thingml_Property )
+            	            // Thingml.g:2073:8: (a11_0= parse_org_sintef_thingml_Property )
             	            {
-            	            // Thingml.g:1990:8: (a11_0= parse_org_sintef_thingml_Property )
-            	            // Thingml.g:1991:5: a11_0= parse_org_sintef_thingml_Property
+            	            // Thingml.g:2073:8: (a11_0= parse_org_sintef_thingml_Property )
+            	            // Thingml.g:2074:5: a11_0= parse_org_sintef_thingml_Property
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_Thing1800);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_Thing1836);
             	            a11_0=parse_org_sintef_thingml_Property();
 
             	            state._fsp--;
@@ -3089,12 +3180,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 4 :
-            	            // Thingml.g:2028:8: (a12_0= parse_org_sintef_thingml_PropertyAssign )
+            	            // Thingml.g:2111:8: (a12_0= parse_org_sintef_thingml_PropertyAssign )
             	            {
-            	            // Thingml.g:2028:8: (a12_0= parse_org_sintef_thingml_PropertyAssign )
-            	            // Thingml.g:2029:5: a12_0= parse_org_sintef_thingml_PropertyAssign
+            	            // Thingml.g:2111:8: (a12_0= parse_org_sintef_thingml_PropertyAssign )
+            	            // Thingml.g:2112:5: a12_0= parse_org_sintef_thingml_PropertyAssign
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_PropertyAssign_in_parse_org_sintef_thingml_Thing1842);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_PropertyAssign_in_parse_org_sintef_thingml_Thing1878);
             	            a12_0=parse_org_sintef_thingml_PropertyAssign();
 
             	            state._fsp--;
@@ -3142,12 +3233,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 5 :
-            	            // Thingml.g:2066:8: (a13_0= parse_org_sintef_thingml_Port )
+            	            // Thingml.g:2149:8: (a13_0= parse_org_sintef_thingml_Port )
             	            {
-            	            // Thingml.g:2066:8: (a13_0= parse_org_sintef_thingml_Port )
-            	            // Thingml.g:2067:5: a13_0= parse_org_sintef_thingml_Port
+            	            // Thingml.g:2149:8: (a13_0= parse_org_sintef_thingml_Port )
+            	            // Thingml.g:2150:5: a13_0= parse_org_sintef_thingml_Port
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Port_in_parse_org_sintef_thingml_Thing1884);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Port_in_parse_org_sintef_thingml_Thing1920);
             	            a13_0=parse_org_sintef_thingml_Port();
 
             	            state._fsp--;
@@ -3195,12 +3286,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 6 :
-            	            // Thingml.g:2104:8: (a14_0= parse_org_sintef_thingml_StateMachine )
+            	            // Thingml.g:2187:8: (a14_0= parse_org_sintef_thingml_StateMachine )
             	            {
-            	            // Thingml.g:2104:8: (a14_0= parse_org_sintef_thingml_StateMachine )
-            	            // Thingml.g:2105:5: a14_0= parse_org_sintef_thingml_StateMachine
+            	            // Thingml.g:2187:8: (a14_0= parse_org_sintef_thingml_StateMachine )
+            	            // Thingml.g:2188:5: a14_0= parse_org_sintef_thingml_StateMachine
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_StateMachine_in_parse_org_sintef_thingml_Thing1926);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_StateMachine_in_parse_org_sintef_thingml_Thing1962);
             	            a14_0=parse_org_sintef_thingml_StateMachine();
 
             	            state._fsp--;
@@ -3248,12 +3339,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 7 :
-            	            // Thingml.g:2142:8: (a15_0= parse_org_sintef_thingml_Stream )
+            	            // Thingml.g:2225:8: (a15_0= parse_org_sintef_thingml_Stream )
             	            {
-            	            // Thingml.g:2142:8: (a15_0= parse_org_sintef_thingml_Stream )
-            	            // Thingml.g:2143:5: a15_0= parse_org_sintef_thingml_Stream
+            	            // Thingml.g:2225:8: (a15_0= parse_org_sintef_thingml_Stream )
+            	            // Thingml.g:2226:5: a15_0= parse_org_sintef_thingml_Stream
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Stream_in_parse_org_sintef_thingml_Thing1968);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Stream_in_parse_org_sintef_thingml_Thing2004);
             	            a15_0=parse_org_sintef_thingml_Stream();
 
             	            state._fsp--;
@@ -3301,12 +3392,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 8 :
-            	            // Thingml.g:2180:8: (a16_0= parse_org_sintef_thingml_Operator )
+            	            // Thingml.g:2263:8: (a16_0= parse_org_sintef_thingml_Operator )
             	            {
-            	            // Thingml.g:2180:8: (a16_0= parse_org_sintef_thingml_Operator )
-            	            // Thingml.g:2181:5: a16_0= parse_org_sintef_thingml_Operator
+            	            // Thingml.g:2263:8: (a16_0= parse_org_sintef_thingml_Operator )
+            	            // Thingml.g:2264:5: a16_0= parse_org_sintef_thingml_Operator
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Operator_in_parse_org_sintef_thingml_Thing2010);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Operator_in_parse_org_sintef_thingml_Thing2046);
             	            a16_0=parse_org_sintef_thingml_Operator();
 
             	            state._fsp--;
@@ -3382,7 +3473,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[371]);
             	}
 
-            a17=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_Thing2051); if (state.failed) return element;
+            a17=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_Thing2087); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -3422,7 +3513,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_RequiredPort"
-    // Thingml.g:2254:1: parse_org_sintef_thingml_RequiredPort returns [org.sintef.thingml.RequiredPort element = null] : ( ( (a0= T_OPTIONAL ) ) )? a1= 'required' a2= 'port' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a5= '{' ( (a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )* |a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )* ) )* a14= '}' ;
+    // Thingml.g:2337:1: parse_org_sintef_thingml_RequiredPort returns [org.sintef.thingml.RequiredPort element = null] : ( ( (a0= T_OPTIONAL ) ) )? a1= 'required' a2= 'port' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a5= '{' ( (a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )* |a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )* ) )* a14= '}' ;
     public final org.sintef.thingml.RequiredPort parse_org_sintef_thingml_RequiredPort() throws RecognitionException {
         org.sintef.thingml.RequiredPort element =  null;
 
@@ -3450,10 +3541,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 6) ) { return element; }
 
-            // Thingml.g:2257:2: ( ( ( (a0= T_OPTIONAL ) ) )? a1= 'required' a2= 'port' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a5= '{' ( (a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )* |a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )* ) )* a14= '}' )
-            // Thingml.g:2258:2: ( ( (a0= T_OPTIONAL ) ) )? a1= 'required' a2= 'port' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a5= '{' ( (a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )* |a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )* ) )* a14= '}'
+            // Thingml.g:2340:2: ( ( ( (a0= T_OPTIONAL ) ) )? a1= 'required' a2= 'port' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a5= '{' ( (a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )* |a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )* ) )* a14= '}' )
+            // Thingml.g:2341:2: ( ( (a0= T_OPTIONAL ) ) )? a1= 'required' a2= 'port' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a5= '{' ( (a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )* |a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )* ) )* a14= '}'
             {
-            // Thingml.g:2258:2: ( ( (a0= T_OPTIONAL ) ) )?
+            // Thingml.g:2341:2: ( ( (a0= T_OPTIONAL ) ) )?
             int alt19=2;
             int LA19_0 = input.LA(1);
 
@@ -3462,15 +3553,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt19) {
                 case 1 :
-                    // Thingml.g:2259:3: ( (a0= T_OPTIONAL ) )
+                    // Thingml.g:2342:3: ( (a0= T_OPTIONAL ) )
                     {
-                    // Thingml.g:2259:3: ( (a0= T_OPTIONAL ) )
-                    // Thingml.g:2260:4: (a0= T_OPTIONAL )
+                    // Thingml.g:2342:3: ( (a0= T_OPTIONAL ) )
+                    // Thingml.g:2343:4: (a0= T_OPTIONAL )
                     {
-                    // Thingml.g:2260:4: (a0= T_OPTIONAL )
-                    // Thingml.g:2261:5: a0= T_OPTIONAL
+                    // Thingml.g:2343:4: (a0= T_OPTIONAL )
+                    // Thingml.g:2344:5: a0= T_OPTIONAL
                     {
-                    a0=(Token)match(input,T_OPTIONAL,FOLLOW_T_OPTIONAL_in_parse_org_sintef_thingml_RequiredPort2095); if (state.failed) return element;
+                    a0=(Token)match(input,T_OPTIONAL,FOLLOW_T_OPTIONAL_in_parse_org_sintef_thingml_RequiredPort2131); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -3523,7 +3614,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[377]);
             	}
 
-            a1=(Token)match(input,84,FOLLOW_84_in_parse_org_sintef_thingml_RequiredPort2141); if (state.failed) return element;
+            a1=(Token)match(input,84,FOLLOW_84_in_parse_org_sintef_thingml_RequiredPort2177); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -3540,7 +3631,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[378]);
             	}
 
-            a2=(Token)match(input,78,FOLLOW_78_in_parse_org_sintef_thingml_RequiredPort2155); if (state.failed) return element;
+            a2=(Token)match(input,78,FOLLOW_78_in_parse_org_sintef_thingml_RequiredPort2191); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -3557,10 +3648,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[379]);
             	}
 
-            // Thingml.g:2331:2: (a3= TEXT )
-            // Thingml.g:2332:3: a3= TEXT
+            // Thingml.g:2414:2: (a3= TEXT )
+            // Thingml.g:2415:3: a3= TEXT
             {
-            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2173); if (state.failed) return element;
+            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2209); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -3600,7 +3691,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[381]);
             	}
 
-            // Thingml.g:2368:2: ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:2451:2: ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop20:
             do {
                 int alt20=2;
@@ -3613,15 +3704,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt20) {
             	case 1 :
-            	    // Thingml.g:2369:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:2452:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:2369:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:2370:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:2452:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:2453:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:2370:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:2371:5: a4_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:2453:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:2454:5: a4_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_RequiredPort2209);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_RequiredPort2245);
             	    a4_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -3674,7 +3765,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[385]);
             	}
 
-            a5=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_RequiredPort2250); if (state.failed) return element;
+            a5=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_RequiredPort2286); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -3693,7 +3784,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[388]);
             	}
 
-            // Thingml.g:2421:2: ( (a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )* |a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )* ) )*
+            // Thingml.g:2504:2: ( (a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )* |a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )* ) )*
             loop24:
             do {
                 int alt24=2;
@@ -3706,9 +3797,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt24) {
             	case 1 :
-            	    // Thingml.g:2422:3: (a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )* |a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )* )
+            	    // Thingml.g:2505:3: (a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )* |a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )* )
             	    {
-            	    // Thingml.g:2422:3: (a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )* |a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )* )
+            	    // Thingml.g:2505:3: (a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )* |a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )* )
             	    int alt23=2;
             	    int LA23_0 = input.LA(1);
 
@@ -3728,9 +3819,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    }
             	    switch (alt23) {
             	        case 1 :
-            	            // Thingml.g:2423:4: a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )*
+            	            // Thingml.g:2506:4: a6= 'receives' (a7= TEXT ) ( (a8= ',' (a9= TEXT ) ) )*
             	            {
-            	            a6=(Token)match(input,82,FOLLOW_82_in_parse_org_sintef_thingml_RequiredPort2273); if (state.failed) return element;
+            	            a6=(Token)match(input,82,FOLLOW_82_in_parse_org_sintef_thingml_RequiredPort2309); if (state.failed) return element;
 
             	            if ( state.backtracking==0 ) {
             	            				if (element == null) {
@@ -3747,10 +3838,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[389]);
             	            			}
 
-            	            // Thingml.g:2437:4: (a7= TEXT )
-            	            // Thingml.g:2438:5: a7= TEXT
+            	            // Thingml.g:2520:4: (a7= TEXT )
+            	            // Thingml.g:2521:5: a7= TEXT
             	            {
-            	            a7=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2299); if (state.failed) return element;
+            	            a7=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2335); if (state.failed) return element;
 
             	            if ( state.backtracking==0 ) {
             	            					if (terminateParsing) {
@@ -3796,7 +3887,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[393]);
             	            			}
 
-            	            // Thingml.g:2480:4: ( (a8= ',' (a9= TEXT ) ) )*
+            	            // Thingml.g:2563:4: ( (a8= ',' (a9= TEXT ) ) )*
             	            loop21:
             	            do {
             	                int alt21=2;
@@ -3809,12 +3900,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             	                switch (alt21) {
             	            	case 1 :
-            	            	    // Thingml.g:2481:5: (a8= ',' (a9= TEXT ) )
+            	            	    // Thingml.g:2564:5: (a8= ',' (a9= TEXT ) )
             	            	    {
-            	            	    // Thingml.g:2481:5: (a8= ',' (a9= TEXT ) )
-            	            	    // Thingml.g:2482:6: a8= ',' (a9= TEXT )
+            	            	    // Thingml.g:2564:5: (a8= ',' (a9= TEXT ) )
+            	            	    // Thingml.g:2565:6: a8= ',' (a9= TEXT )
             	            	    {
-            	            	    a8=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_RequiredPort2345); if (state.failed) return element;
+            	            	    a8=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_RequiredPort2381); if (state.failed) return element;
 
             	            	    if ( state.backtracking==0 ) {
             	            	    						if (element == null) {
@@ -3831,10 +3922,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            	    						addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[394]);
             	            	    					}
 
-            	            	    // Thingml.g:2496:6: (a9= TEXT )
-            	            	    // Thingml.g:2497:7: a9= TEXT
+            	            	    // Thingml.g:2579:6: (a9= TEXT )
+            	            	    // Thingml.g:2580:7: a9= TEXT
             	            	    {
-            	            	    a9=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2379); if (state.failed) return element;
+            	            	    a9=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2415); if (state.failed) return element;
 
             	            	    if ( state.backtracking==0 ) {
             	            	    							if (terminateParsing) {
@@ -3903,9 +3994,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 2 :
-            	            // Thingml.g:2550:8: a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )*
+            	            // Thingml.g:2633:8: a10= 'sends' (a11= TEXT ) ( (a12= ',' (a13= TEXT ) ) )*
             	            {
-            	            a10=(Token)match(input,87,FOLLOW_87_in_parse_org_sintef_thingml_RequiredPort2455); if (state.failed) return element;
+            	            a10=(Token)match(input,87,FOLLOW_87_in_parse_org_sintef_thingml_RequiredPort2491); if (state.failed) return element;
 
             	            if ( state.backtracking==0 ) {
             	            				if (element == null) {
@@ -3922,10 +4013,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[403]);
             	            			}
 
-            	            // Thingml.g:2564:4: (a11= TEXT )
-            	            // Thingml.g:2565:5: a11= TEXT
+            	            // Thingml.g:2647:4: (a11= TEXT )
+            	            // Thingml.g:2648:5: a11= TEXT
             	            {
-            	            a11=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2481); if (state.failed) return element;
+            	            a11=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2517); if (state.failed) return element;
 
             	            if ( state.backtracking==0 ) {
             	            					if (terminateParsing) {
@@ -3971,7 +4062,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[407]);
             	            			}
 
-            	            // Thingml.g:2607:4: ( (a12= ',' (a13= TEXT ) ) )*
+            	            // Thingml.g:2690:4: ( (a12= ',' (a13= TEXT ) ) )*
             	            loop22:
             	            do {
             	                int alt22=2;
@@ -3984,12 +4075,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             	                switch (alt22) {
             	            	case 1 :
-            	            	    // Thingml.g:2608:5: (a12= ',' (a13= TEXT ) )
+            	            	    // Thingml.g:2691:5: (a12= ',' (a13= TEXT ) )
             	            	    {
-            	            	    // Thingml.g:2608:5: (a12= ',' (a13= TEXT ) )
-            	            	    // Thingml.g:2609:6: a12= ',' (a13= TEXT )
+            	            	    // Thingml.g:2691:5: (a12= ',' (a13= TEXT ) )
+            	            	    // Thingml.g:2692:6: a12= ',' (a13= TEXT )
             	            	    {
-            	            	    a12=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_RequiredPort2527); if (state.failed) return element;
+            	            	    a12=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_RequiredPort2563); if (state.failed) return element;
 
             	            	    if ( state.backtracking==0 ) {
             	            	    						if (element == null) {
@@ -4006,10 +4097,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            	    						addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[408]);
             	            	    					}
 
-            	            	    // Thingml.g:2623:6: (a13= TEXT )
-            	            	    // Thingml.g:2624:7: a13= TEXT
+            	            	    // Thingml.g:2706:6: (a13= TEXT )
+            	            	    // Thingml.g:2707:7: a13= TEXT
             	            	    {
-            	            	    a13=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2561); if (state.failed) return element;
+            	            	    a13=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2597); if (state.failed) return element;
 
             	            	    if ( state.backtracking==0 ) {
             	            	    							if (terminateParsing) {
@@ -4097,7 +4188,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[419]);
             	}
 
-            a14=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_RequiredPort2642); if (state.failed) return element;
+            a14=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_RequiredPort2678); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -4145,7 +4236,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ProvidedPort"
-    // Thingml.g:2712:1: parse_org_sintef_thingml_ProvidedPort returns [org.sintef.thingml.ProvidedPort element = null] : a0= 'provided' a1= 'port' (a2= TEXT ) ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a4= '{' ( (a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )* |a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )* ) )* a13= '}' ;
+    // Thingml.g:2795:1: parse_org_sintef_thingml_ProvidedPort returns [org.sintef.thingml.ProvidedPort element = null] : a0= 'provided' a1= 'port' (a2= TEXT ) ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a4= '{' ( (a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )* |a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )* ) )* a13= '}' ;
     public final org.sintef.thingml.ProvidedPort parse_org_sintef_thingml_ProvidedPort() throws RecognitionException {
         org.sintef.thingml.ProvidedPort element =  null;
 
@@ -4172,10 +4263,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 7) ) { return element; }
 
-            // Thingml.g:2715:2: (a0= 'provided' a1= 'port' (a2= TEXT ) ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a4= '{' ( (a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )* |a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )* ) )* a13= '}' )
-            // Thingml.g:2716:2: a0= 'provided' a1= 'port' (a2= TEXT ) ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a4= '{' ( (a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )* |a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )* ) )* a13= '}'
+            // Thingml.g:2798:2: (a0= 'provided' a1= 'port' (a2= TEXT ) ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a4= '{' ( (a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )* |a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )* ) )* a13= '}' )
+            // Thingml.g:2799:2: a0= 'provided' a1= 'port' (a2= TEXT ) ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a4= '{' ( (a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )* |a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )* ) )* a13= '}'
             {
-            a0=(Token)match(input,81,FOLLOW_81_in_parse_org_sintef_thingml_ProvidedPort2671); if (state.failed) return element;
+            a0=(Token)match(input,81,FOLLOW_81_in_parse_org_sintef_thingml_ProvidedPort2707); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -4192,7 +4283,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[432]);
             	}
 
-            a1=(Token)match(input,78,FOLLOW_78_in_parse_org_sintef_thingml_ProvidedPort2685); if (state.failed) return element;
+            a1=(Token)match(input,78,FOLLOW_78_in_parse_org_sintef_thingml_ProvidedPort2721); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -4209,10 +4300,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[433]);
             	}
 
-            // Thingml.g:2744:2: (a2= TEXT )
-            // Thingml.g:2745:3: a2= TEXT
+            // Thingml.g:2827:2: (a2= TEXT )
+            // Thingml.g:2828:3: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort2703); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort2739); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -4252,7 +4343,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[435]);
             	}
 
-            // Thingml.g:2781:2: ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:2864:2: ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop25:
             do {
                 int alt25=2;
@@ -4265,15 +4356,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt25) {
             	case 1 :
-            	    // Thingml.g:2782:3: ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:2865:3: ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:2782:3: ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:2783:4: (a3_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:2865:3: ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:2866:4: (a3_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:2783:4: (a3_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:2784:5: a3_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:2866:4: (a3_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:2867:5: a3_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_ProvidedPort2739);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_ProvidedPort2775);
             	    a3_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -4326,7 +4417,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[439]);
             	}
 
-            a4=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_ProvidedPort2780); if (state.failed) return element;
+            a4=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_ProvidedPort2816); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -4345,7 +4436,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[442]);
             	}
 
-            // Thingml.g:2834:2: ( (a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )* |a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )* ) )*
+            // Thingml.g:2917:2: ( (a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )* |a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )* ) )*
             loop29:
             do {
                 int alt29=2;
@@ -4358,9 +4449,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt29) {
             	case 1 :
-            	    // Thingml.g:2835:3: (a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )* |a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )* )
+            	    // Thingml.g:2918:3: (a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )* |a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )* )
             	    {
-            	    // Thingml.g:2835:3: (a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )* |a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )* )
+            	    // Thingml.g:2918:3: (a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )* |a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )* )
             	    int alt28=2;
             	    int LA28_0 = input.LA(1);
 
@@ -4380,9 +4471,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    }
             	    switch (alt28) {
             	        case 1 :
-            	            // Thingml.g:2836:4: a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )*
+            	            // Thingml.g:2919:4: a5= 'receives' (a6= TEXT ) ( (a7= ',' (a8= TEXT ) ) )*
             	            {
-            	            a5=(Token)match(input,82,FOLLOW_82_in_parse_org_sintef_thingml_ProvidedPort2803); if (state.failed) return element;
+            	            a5=(Token)match(input,82,FOLLOW_82_in_parse_org_sintef_thingml_ProvidedPort2839); if (state.failed) return element;
 
             	            if ( state.backtracking==0 ) {
             	            				if (element == null) {
@@ -4399,10 +4490,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[443]);
             	            			}
 
-            	            // Thingml.g:2850:4: (a6= TEXT )
-            	            // Thingml.g:2851:5: a6= TEXT
+            	            // Thingml.g:2933:4: (a6= TEXT )
+            	            // Thingml.g:2934:5: a6= TEXT
             	            {
-            	            a6=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort2829); if (state.failed) return element;
+            	            a6=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort2865); if (state.failed) return element;
 
             	            if ( state.backtracking==0 ) {
             	            					if (terminateParsing) {
@@ -4448,7 +4539,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[447]);
             	            			}
 
-            	            // Thingml.g:2893:4: ( (a7= ',' (a8= TEXT ) ) )*
+            	            // Thingml.g:2976:4: ( (a7= ',' (a8= TEXT ) ) )*
             	            loop26:
             	            do {
             	                int alt26=2;
@@ -4461,12 +4552,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             	                switch (alt26) {
             	            	case 1 :
-            	            	    // Thingml.g:2894:5: (a7= ',' (a8= TEXT ) )
+            	            	    // Thingml.g:2977:5: (a7= ',' (a8= TEXT ) )
             	            	    {
-            	            	    // Thingml.g:2894:5: (a7= ',' (a8= TEXT ) )
-            	            	    // Thingml.g:2895:6: a7= ',' (a8= TEXT )
+            	            	    // Thingml.g:2977:5: (a7= ',' (a8= TEXT ) )
+            	            	    // Thingml.g:2978:6: a7= ',' (a8= TEXT )
             	            	    {
-            	            	    a7=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_ProvidedPort2875); if (state.failed) return element;
+            	            	    a7=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_ProvidedPort2911); if (state.failed) return element;
 
             	            	    if ( state.backtracking==0 ) {
             	            	    						if (element == null) {
@@ -4483,10 +4574,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            	    						addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[448]);
             	            	    					}
 
-            	            	    // Thingml.g:2909:6: (a8= TEXT )
-            	            	    // Thingml.g:2910:7: a8= TEXT
+            	            	    // Thingml.g:2992:6: (a8= TEXT )
+            	            	    // Thingml.g:2993:7: a8= TEXT
             	            	    {
-            	            	    a8=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort2909); if (state.failed) return element;
+            	            	    a8=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort2945); if (state.failed) return element;
 
             	            	    if ( state.backtracking==0 ) {
             	            	    							if (terminateParsing) {
@@ -4555,9 +4646,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 2 :
-            	            // Thingml.g:2963:8: a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )*
+            	            // Thingml.g:3046:8: a9= 'sends' (a10= TEXT ) ( (a11= ',' (a12= TEXT ) ) )*
             	            {
-            	            a9=(Token)match(input,87,FOLLOW_87_in_parse_org_sintef_thingml_ProvidedPort2985); if (state.failed) return element;
+            	            a9=(Token)match(input,87,FOLLOW_87_in_parse_org_sintef_thingml_ProvidedPort3021); if (state.failed) return element;
 
             	            if ( state.backtracking==0 ) {
             	            				if (element == null) {
@@ -4574,10 +4665,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[457]);
             	            			}
 
-            	            // Thingml.g:2977:4: (a10= TEXT )
-            	            // Thingml.g:2978:5: a10= TEXT
+            	            // Thingml.g:3060:4: (a10= TEXT )
+            	            // Thingml.g:3061:5: a10= TEXT
             	            {
-            	            a10=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort3011); if (state.failed) return element;
+            	            a10=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort3047); if (state.failed) return element;
 
             	            if ( state.backtracking==0 ) {
             	            					if (terminateParsing) {
@@ -4623,7 +4714,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[461]);
             	            			}
 
-            	            // Thingml.g:3020:4: ( (a11= ',' (a12= TEXT ) ) )*
+            	            // Thingml.g:3103:4: ( (a11= ',' (a12= TEXT ) ) )*
             	            loop27:
             	            do {
             	                int alt27=2;
@@ -4636,12 +4727,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             	                switch (alt27) {
             	            	case 1 :
-            	            	    // Thingml.g:3021:5: (a11= ',' (a12= TEXT ) )
+            	            	    // Thingml.g:3104:5: (a11= ',' (a12= TEXT ) )
             	            	    {
-            	            	    // Thingml.g:3021:5: (a11= ',' (a12= TEXT ) )
-            	            	    // Thingml.g:3022:6: a11= ',' (a12= TEXT )
+            	            	    // Thingml.g:3104:5: (a11= ',' (a12= TEXT ) )
+            	            	    // Thingml.g:3105:6: a11= ',' (a12= TEXT )
             	            	    {
-            	            	    a11=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_ProvidedPort3057); if (state.failed) return element;
+            	            	    a11=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_ProvidedPort3093); if (state.failed) return element;
 
             	            	    if ( state.backtracking==0 ) {
             	            	    						if (element == null) {
@@ -4658,10 +4749,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            	    						addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[462]);
             	            	    					}
 
-            	            	    // Thingml.g:3036:6: (a12= TEXT )
-            	            	    // Thingml.g:3037:7: a12= TEXT
+            	            	    // Thingml.g:3119:6: (a12= TEXT )
+            	            	    // Thingml.g:3120:7: a12= TEXT
             	            	    {
-            	            	    a12=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort3091); if (state.failed) return element;
+            	            	    a12=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort3127); if (state.failed) return element;
 
             	            	    if ( state.backtracking==0 ) {
             	            	    							if (terminateParsing) {
@@ -4749,7 +4840,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[473]);
             	}
 
-            a13=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_ProvidedPort3172); if (state.failed) return element;
+            a13=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_ProvidedPort3208); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -4797,7 +4888,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Property"
-    // Thingml.g:3125:1: parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element = null] : ( ( (a0= T_READONLY ) ) )? a1= 'property' (a2= TEXT ) a3= ':' (a4= TEXT ) ( ( (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( (a8= T_ARRAY ) ) ) )? ( (a9= '=' (a10_0= parse_org_sintef_thingml_Expression ) ) )? ( ( (a11_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ;
+    // Thingml.g:3208:1: parse_org_sintef_thingml_Property returns [org.sintef.thingml.Property element = null] : ( ( (a0= T_READONLY ) ) )? a1= 'property' (a2= TEXT ) a3= ':' (a4= TEXT ) ( ( ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( ( (a8= '[]' ) ) ) ) )? ( (a11= '=' (a12_0= parse_org_sintef_thingml_Expression ) ) )? ( ( (a13_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ;
     public final org.sintef.thingml.Property parse_org_sintef_thingml_Property() throws RecognitionException {
         org.sintef.thingml.Property element =  null;
 
@@ -4811,12 +4902,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         Token a5=null;
         Token a7=null;
         Token a8=null;
-        Token a9=null;
+        Token a11=null;
         org.sintef.thingml.Expression a6_0 =null;
 
-        org.sintef.thingml.Expression a10_0 =null;
+        org.sintef.thingml.Expression a12_0 =null;
 
-        org.sintef.thingml.PlatformAnnotation a11_0 =null;
+        org.sintef.thingml.PlatformAnnotation a13_0 =null;
 
 
 
@@ -4824,10 +4915,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 8) ) { return element; }
 
-            // Thingml.g:3128:2: ( ( ( (a0= T_READONLY ) ) )? a1= 'property' (a2= TEXT ) a3= ':' (a4= TEXT ) ( ( (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( (a8= T_ARRAY ) ) ) )? ( (a9= '=' (a10_0= parse_org_sintef_thingml_Expression ) ) )? ( ( (a11_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* )
-            // Thingml.g:3129:2: ( ( (a0= T_READONLY ) ) )? a1= 'property' (a2= TEXT ) a3= ':' (a4= TEXT ) ( ( (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( (a8= T_ARRAY ) ) ) )? ( (a9= '=' (a10_0= parse_org_sintef_thingml_Expression ) ) )? ( ( (a11_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:3211:2: ( ( ( (a0= T_READONLY ) ) )? a1= 'property' (a2= TEXT ) a3= ':' (a4= TEXT ) ( ( ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( ( (a8= '[]' ) ) ) ) )? ( (a11= '=' (a12_0= parse_org_sintef_thingml_Expression ) ) )? ( ( (a13_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* )
+            // Thingml.g:3212:2: ( ( (a0= T_READONLY ) ) )? a1= 'property' (a2= TEXT ) a3= ':' (a4= TEXT ) ( ( ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( ( (a8= '[]' ) ) ) ) )? ( (a11= '=' (a12_0= parse_org_sintef_thingml_Expression ) ) )? ( ( (a13_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             {
-            // Thingml.g:3129:2: ( ( (a0= T_READONLY ) ) )?
+            // Thingml.g:3212:2: ( ( (a0= T_READONLY ) ) )?
             int alt30=2;
             int LA30_0 = input.LA(1);
 
@@ -4836,15 +4927,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt30) {
                 case 1 :
-                    // Thingml.g:3130:3: ( (a0= T_READONLY ) )
+                    // Thingml.g:3213:3: ( (a0= T_READONLY ) )
                     {
-                    // Thingml.g:3130:3: ( (a0= T_READONLY ) )
-                    // Thingml.g:3131:4: (a0= T_READONLY )
+                    // Thingml.g:3213:3: ( (a0= T_READONLY ) )
+                    // Thingml.g:3214:4: (a0= T_READONLY )
                     {
-                    // Thingml.g:3131:4: (a0= T_READONLY )
-                    // Thingml.g:3132:5: a0= T_READONLY
+                    // Thingml.g:3214:4: (a0= T_READONLY )
+                    // Thingml.g:3215:5: a0= T_READONLY
                     {
-                    a0=(Token)match(input,T_READONLY,FOLLOW_T_READONLY_in_parse_org_sintef_thingml_Property3216); if (state.failed) return element;
+                    a0=(Token)match(input,T_READONLY,FOLLOW_T_READONLY_in_parse_org_sintef_thingml_Property3252); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -4853,6 +4944,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     					if (element == null) {
                     						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
                     						startIncompleteElement(element);
+                    						// initialize boolean attribute
+                    						{
+                    							Object value = false;
+                    							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+                    						}
                     					}
                     					if (a0 != null) {
                     						org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_READONLY");
@@ -4897,12 +4993,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[487]);
             	}
 
-            a1=(Token)match(input,80,FOLLOW_80_in_parse_org_sintef_thingml_Property3262); if (state.failed) return element;
+            a1=(Token)match(input,80,FOLLOW_80_in_parse_org_sintef_thingml_Property3298); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
             			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
             			startIncompleteElement(element);
+            			// initialize boolean attribute
+            			{
+            				Object value = false;
+            				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+            			}
             		}
             		collectHiddenTokens(element);
             		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_2, null, true);
@@ -4914,10 +5015,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[488]);
             	}
 
-            // Thingml.g:3188:2: (a2= TEXT )
-            // Thingml.g:3189:3: a2= TEXT
+            // Thingml.g:3281:2: (a2= TEXT )
+            // Thingml.g:3282:3: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Property3280); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Property3316); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -4926,6 +5027,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             			if (element == null) {
             				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
             				startIncompleteElement(element);
+            				// initialize boolean attribute
+            				{
+            					Object value = false;
+            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+            				}
             			}
             			if (a2 != null) {
             				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -4956,12 +5062,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[489]);
             	}
 
-            a3=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_Property3301); if (state.failed) return element;
+            a3=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_Property3337); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
             			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
             			startIncompleteElement(element);
+            			// initialize boolean attribute
+            			{
+            				Object value = false;
+            				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+            			}
             		}
             		collectHiddenTokens(element);
             		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_6, null, true);
@@ -4973,10 +5084,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[490]);
             	}
 
-            // Thingml.g:3238:2: (a4= TEXT )
-            // Thingml.g:3239:3: a4= TEXT
+            // Thingml.g:3341:2: (a4= TEXT )
+            // Thingml.g:3342:3: a4= TEXT
             {
-            a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Property3319); if (state.failed) return element;
+            a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Property3355); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -4985,6 +5096,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             			if (element == null) {
             				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
             				startIncompleteElement(element);
+            				// initialize boolean attribute
+            				{
+            					Object value = false;
+            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+            				}
             			}
             			if (a4 != null) {
             				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -5048,7 +5164,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[520]);
             	}
 
-            // Thingml.g:3307:2: ( ( (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( (a8= T_ARRAY ) ) ) )?
+            // Thingml.g:3415:2: ( ( ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( ( (a8= '[]' ) ) ) ) )?
             int alt32=2;
             int LA32_0 = input.LA(1);
 
@@ -5057,16 +5173,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt32) {
                 case 1 :
-                    // Thingml.g:3308:3: ( (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( (a8= T_ARRAY ) ) )
+                    // Thingml.g:3416:3: ( ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( ( (a8= '[]' ) ) ) )
                     {
-                    // Thingml.g:3308:3: ( (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( (a8= T_ARRAY ) ) )
+                    // Thingml.g:3416:3: ( ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( ( (a8= '[]' ) ) ) )
                     int alt31=2;
                     int LA31_0 = input.LA(1);
 
-                    if ( (LA31_0==40) ) {
+                    if ( (LA31_0==T_ARRAY) ) {
                         alt31=1;
                     }
-                    else if ( (LA31_0==T_ARRAY) ) {
+                    else if ( (LA31_0==40) ) {
                         alt31=2;
                     }
                     else {
@@ -5079,22 +5195,52 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     switch (alt31) {
                         case 1 :
-                            // Thingml.g:3309:4: (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' )
+                            // Thingml.g:3417:4: ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' )
                             {
-                            // Thingml.g:3309:4: (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' )
-                            // Thingml.g:3310:5: a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']'
+                            // Thingml.g:3417:4: ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' )
+                            // Thingml.g:3418:5: (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']'
                             {
-                            a5=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_Property3355); if (state.failed) return element;
+                            // Thingml.g:3418:5: (a5= T_ARRAY )
+                            // Thingml.g:3419:6: a5= T_ARRAY
+                            {
+                            a5=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_Property3398); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
-                            					if (element == null) {
-                            						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
-                            						startIncompleteElement(element);
+                            						if (terminateParsing) {
+                            							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+                            						}
+                            						if (element == null) {
+                            							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
+                            							startIncompleteElement(element);
+                            							// initialize boolean attribute
+                            							{
+                            								Object value = false;
+                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+                            							}
+                            						}
+                            						if (a5 != null) {
+                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+                            							tokenResolver.setOptions(getOptions());
+                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
+                            							tokenResolver.resolve(a5.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), result);
+                            							Object resolvedObject = result.getResolvedToken();
+                            							if (resolvedObject == null) {
+                            								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a5).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a5).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a5).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a5).getStopIndex());
+                            							}
+                            							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
+                            							if (resolved != null) {
+                            								Object value = resolved;
+                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+                            								completedElement(value, false);
+                            							}
+                            							collectHiddenTokens(element);
+                            							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_0_0_0_0_0, resolved, true);
+                            							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a5, element);
+                            						}
                             					}
-                            					collectHiddenTokens(element);
-                            					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_0_0_0_0_0, null, true);
-                            					copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a5, element);
-                            				}
+
+                            }
+
 
                             if ( state.backtracking==0 ) {
                             					// expected elements (follow set)
@@ -5112,10 +5258,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             					addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getProperty(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[532]);
                             				}
 
-                            // Thingml.g:3335:5: (a6_0= parse_org_sintef_thingml_Expression )
-                            // Thingml.g:3336:6: a6_0= parse_org_sintef_thingml_Expression
+                            // Thingml.g:3470:5: (a6_0= parse_org_sintef_thingml_Expression )
+                            // Thingml.g:3471:6: a6_0= parse_org_sintef_thingml_Expression
                             {
-                            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Property3385);
+                            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Property3444);
                             a6_0=parse_org_sintef_thingml_Expression();
 
                             state._fsp--;
@@ -5128,6 +5274,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             						if (element == null) {
                             							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
                             							startIncompleteElement(element);
+                            							// initialize boolean attribute
+                            							{
+                            								Object value = false;
+                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+                            							}
                             						}
                             						if (a6_0 != null) {
                             							if (a6_0 != null) {
@@ -5149,12 +5300,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             					addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[533]);
                             				}
 
-                            a7=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_Property3418); if (state.failed) return element;
+                            a7=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_Property3477); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             					if (element == null) {
                             						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
                             						startIncompleteElement(element);
+                            						// initialize boolean attribute
+                            						{
+                            							Object value = false;
+                            							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+                            						}
                             					}
                             					collectHiddenTokens(element);
                             					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_0_0_0_0_2, null, true);
@@ -5231,44 +5387,40 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             }
                             break;
                         case 2 :
-                            // Thingml.g:3436:8: ( (a8= T_ARRAY ) )
+                            // Thingml.g:3581:8: ( ( (a8= '[]' ) ) )
                             {
-                            // Thingml.g:3436:8: ( (a8= T_ARRAY ) )
-                            // Thingml.g:3437:5: (a8= T_ARRAY )
+                            // Thingml.g:3581:8: ( ( (a8= '[]' ) ) )
+                            // Thingml.g:3582:5: ( (a8= '[]' ) )
                             {
-                            // Thingml.g:3437:5: (a8= T_ARRAY )
-                            // Thingml.g:3438:6: a8= T_ARRAY
+                            // Thingml.g:3582:5: ( (a8= '[]' ) )
+                            // Thingml.g:3583:6: (a8= '[]' )
                             {
-                            a8=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_Property3475); if (state.failed) return element;
+                            // Thingml.g:3583:6: (a8= '[]' )
+                            // Thingml.g:3584:7: a8= '[]'
+                            {
+                            a8=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_Property3542); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
-                            						if (terminateParsing) {
-                            							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
-                            						}
-                            						if (element == null) {
-                            							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
-                            							startIncompleteElement(element);
-                            						}
-                            						if (a8 != null) {
-                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-                            							tokenResolver.setOptions(getOptions());
-                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
-                            							tokenResolver.resolve(a8.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), result);
-                            							Object resolvedObject = result.getResolvedToken();
-                            							if (resolvedObject == null) {
-                            								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a8).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a8).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a8).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a8).getStopIndex());
-                            							}
-                            							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
-                            							if (resolved != null) {
-                            								Object value = resolved;
-                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
-                            								completedElement(value, false);
+                            							if (element == null) {
+                            								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
+                            								startIncompleteElement(element);
+                            								// initialize boolean attribute
+                            								{
+                            									Object value = false;
+                            									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+                            								}
                             							}
                             							collectHiddenTokens(element);
-                            							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_1_0_0_0_0, resolved, true);
-                            							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a8, element);
+                            							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_9_0_1_0_0_0_0, true, true);
+                            							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a8, element);
+                            							// set value of boolean attribute
+                            							Object value = true;
+                            							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+                            							completedElement(value, false);
                             						}
-                            					}
+
+                            }
+
 
                             }
 
@@ -5384,7 +5536,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[673]);
             	}
 
-            // Thingml.g:3567:2: ( (a9= '=' (a10_0= parse_org_sintef_thingml_Expression ) ) )?
+            // Thingml.g:3703:2: ( (a11= '=' (a12_0= parse_org_sintef_thingml_Expression ) ) )?
             int alt33=2;
             int LA33_0 = input.LA(1);
 
@@ -5393,21 +5545,26 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt33) {
                 case 1 :
-                    // Thingml.g:3568:3: (a9= '=' (a10_0= parse_org_sintef_thingml_Expression ) )
+                    // Thingml.g:3704:3: (a11= '=' (a12_0= parse_org_sintef_thingml_Expression ) )
                     {
-                    // Thingml.g:3568:3: (a9= '=' (a10_0= parse_org_sintef_thingml_Expression ) )
-                    // Thingml.g:3569:4: a9= '=' (a10_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:3704:3: (a11= '=' (a12_0= parse_org_sintef_thingml_Expression ) )
+                    // Thingml.g:3705:4: a11= '=' (a12_0= parse_org_sintef_thingml_Expression )
                     {
-                    a9=(Token)match(input,35,FOLLOW_35_in_parse_org_sintef_thingml_Property3549); if (state.failed) return element;
+                    a11=(Token)match(input,35,FOLLOW_35_in_parse_org_sintef_thingml_Property3613); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
                     					element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
                     					startIncompleteElement(element);
+                    					// initialize boolean attribute
+                    					{
+                    						Object value = false;
+                    						element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+                    					}
                     				}
                     				collectHiddenTokens(element);
                     				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_10_0_0_1, null, true);
-                    				copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a9, element);
+                    				copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a11, element);
                     			}
 
                     if ( state.backtracking==0 ) {
@@ -5426,11 +5583,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getProperty(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[685]);
                     			}
 
-                    // Thingml.g:3594:4: (a10_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:3595:5: a10_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:3735:4: (a12_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:3736:5: a12_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Property3575);
-                    a10_0=parse_org_sintef_thingml_Expression();
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Property3639);
+                    a12_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
                     if (state.failed) return element;
@@ -5442,16 +5599,21 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     					if (element == null) {
                     						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
                     						startIncompleteElement(element);
+                    						// initialize boolean attribute
+                    						{
+                    							Object value = false;
+                    							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+                    						}
                     					}
-                    					if (a10_0 != null) {
-                    						if (a10_0 != null) {
-                    							Object value = a10_0;
+                    					if (a12_0 != null) {
+                    						if (a12_0 != null) {
+                    							Object value = a12_0;
                     							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__INIT), value);
                     							completedElement(value, true);
                     						}
                     						collectHiddenTokens(element);
-                    						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_10_0_0_3, a10_0, true);
-                    						copyLocalizationInfos(a10_0, element);
+                    						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_10_0_0_3, a12_0, true);
+                    						copyLocalizationInfos(a12_0, element);
                     					}
                     				}
 
@@ -5529,7 +5691,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[739]);
             	}
 
-            // Thingml.g:3679:2: ( ( (a11_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:3825:2: ( ( (a13_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop34:
             do {
                 int alt34=2;
@@ -5542,16 +5704,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt34) {
             	case 1 :
-            	    // Thingml.g:3680:3: ( (a11_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:3826:3: ( (a13_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:3680:3: ( (a11_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:3681:4: (a11_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:3826:3: ( (a13_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:3827:4: (a13_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:3681:4: (a11_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:3682:5: a11_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:3827:4: (a13_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:3828:5: a13_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Property3631);
-            	    a11_0=parse_org_sintef_thingml_PlatformAnnotation();
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Property3695);
+            	    a13_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
             	    if (state.failed) return element;
@@ -5563,16 +5725,21 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    					if (element == null) {
             	    						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createProperty();
             	    						startIncompleteElement(element);
+            	    						// initialize boolean attribute
+            	    						{
+            	    							Object value = false;
+            	    							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROPERTY__IS_ARRAY), value);
+            	    						}
             	    					}
-            	    					if (a11_0 != null) {
-            	    						if (a11_0 != null) {
-            	    							Object value = a11_0;
+            	    					if (a13_0 != null) {
+            	    						if (a13_0 != null) {
+            	    							Object value = a13_0;
             	    							addObjectToList(element, org.sintef.thingml.ThingmlPackage.PROPERTY__ANNOTATIONS, value);
             	    							completedElement(value, true);
             	    						}
             	    						collectHiddenTokens(element);
-            	    						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_11_0_0_0, a11_0, true);
-            	    						copyLocalizationInfos(a11_0, element);
+            	    						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_6_0_0_11_0_0_0, a13_0, true);
+            	    						copyLocalizationInfos(a13_0, element);
             	    					}
             	    				}
 
@@ -5673,7 +5840,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Parameter"
-    // Thingml.g:3768:1: parse_org_sintef_thingml_Parameter returns [org.sintef.thingml.Parameter element = null] : (a0= TEXT ) a1= ':' (a2= TEXT ) ( ( (a3= '[' (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' ) | ( (a6= T_ARRAY ) ) ) )? ;
+    // Thingml.g:3919:1: parse_org_sintef_thingml_Parameter returns [org.sintef.thingml.Parameter element = null] : (a0= TEXT ) a1= ':' (a2= TEXT ) ( ( ( (a3= T_ARRAY ) (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' ) | ( ( (a6= '[]' ) ) ) ) )? ;
     public final org.sintef.thingml.Parameter parse_org_sintef_thingml_Parameter() throws RecognitionException {
         org.sintef.thingml.Parameter element =  null;
 
@@ -5693,13 +5860,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 9) ) { return element; }
 
-            // Thingml.g:3771:2: ( (a0= TEXT ) a1= ':' (a2= TEXT ) ( ( (a3= '[' (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' ) | ( (a6= T_ARRAY ) ) ) )? )
-            // Thingml.g:3772:2: (a0= TEXT ) a1= ':' (a2= TEXT ) ( ( (a3= '[' (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' ) | ( (a6= T_ARRAY ) ) ) )?
+            // Thingml.g:3922:2: ( (a0= TEXT ) a1= ':' (a2= TEXT ) ( ( ( (a3= T_ARRAY ) (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' ) | ( ( (a6= '[]' ) ) ) ) )? )
+            // Thingml.g:3923:2: (a0= TEXT ) a1= ':' (a2= TEXT ) ( ( ( (a3= T_ARRAY ) (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' ) | ( ( (a6= '[]' ) ) ) ) )?
             {
-            // Thingml.g:3772:2: (a0= TEXT )
-            // Thingml.g:3773:3: a0= TEXT
+            // Thingml.g:3923:2: (a0= TEXT )
+            // Thingml.g:3924:3: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Parameter3691); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Parameter3755); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -5708,6 +5875,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             			if (element == null) {
             				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
             				startIncompleteElement(element);
+            				// initialize boolean attribute
+            				{
+            					Object value = false;
+            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+            				}
             			}
             			if (a0 != null) {
             				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -5738,12 +5910,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[794]);
             	}
 
-            a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_Parameter3712); if (state.failed) return element;
+            a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_Parameter3776); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
             			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
             			startIncompleteElement(element);
+            			// initialize boolean attribute
+            			{
+            				Object value = false;
+            				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+            			}
             		}
             		collectHiddenTokens(element);
             		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_1, null, true);
@@ -5755,10 +5932,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[795]);
             	}
 
-            // Thingml.g:3822:2: (a2= TEXT )
-            // Thingml.g:3823:3: a2= TEXT
+            // Thingml.g:3983:2: (a2= TEXT )
+            // Thingml.g:3984:3: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Parameter3730); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Parameter3794); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -5767,6 +5944,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             			if (element == null) {
             				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
             				startIncompleteElement(element);
+            				// initialize boolean attribute
+            				{
+            					Object value = false;
+            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+            				}
             			}
             			if (a2 != null) {
             				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -5806,7 +5988,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[801]);
             	}
 
-            // Thingml.g:3867:2: ( ( (a3= '[' (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' ) | ( (a6= T_ARRAY ) ) ) )?
+            // Thingml.g:4033:2: ( ( ( (a3= T_ARRAY ) (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' ) | ( ( (a6= '[]' ) ) ) ) )?
             int alt36=2;
             int LA36_0 = input.LA(1);
 
@@ -5815,16 +5997,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt36) {
                 case 1 :
-                    // Thingml.g:3868:3: ( (a3= '[' (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' ) | ( (a6= T_ARRAY ) ) )
+                    // Thingml.g:4034:3: ( ( (a3= T_ARRAY ) (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' ) | ( ( (a6= '[]' ) ) ) )
                     {
-                    // Thingml.g:3868:3: ( (a3= '[' (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' ) | ( (a6= T_ARRAY ) ) )
+                    // Thingml.g:4034:3: ( ( (a3= T_ARRAY ) (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' ) | ( ( (a6= '[]' ) ) ) )
                     int alt35=2;
                     int LA35_0 = input.LA(1);
 
-                    if ( (LA35_0==40) ) {
+                    if ( (LA35_0==T_ARRAY) ) {
                         alt35=1;
                     }
-                    else if ( (LA35_0==T_ARRAY) ) {
+                    else if ( (LA35_0==40) ) {
                         alt35=2;
                     }
                     else {
@@ -5837,22 +6019,52 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     switch (alt35) {
                         case 1 :
-                            // Thingml.g:3869:4: (a3= '[' (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' )
+                            // Thingml.g:4035:4: ( (a3= T_ARRAY ) (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' )
                             {
-                            // Thingml.g:3869:4: (a3= '[' (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' )
-                            // Thingml.g:3870:5: a3= '[' (a4_0= parse_org_sintef_thingml_Expression ) a5= ']'
+                            // Thingml.g:4035:4: ( (a3= T_ARRAY ) (a4_0= parse_org_sintef_thingml_Expression ) a5= ']' )
+                            // Thingml.g:4036:5: (a3= T_ARRAY ) (a4_0= parse_org_sintef_thingml_Expression ) a5= ']'
                             {
-                            a3=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_Parameter3766); if (state.failed) return element;
+                            // Thingml.g:4036:5: (a3= T_ARRAY )
+                            // Thingml.g:4037:6: a3= T_ARRAY
+                            {
+                            a3=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_Parameter3837); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
-                            					if (element == null) {
-                            						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
-                            						startIncompleteElement(element);
+                            						if (terminateParsing) {
+                            							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+                            						}
+                            						if (element == null) {
+                            							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
+                            							startIncompleteElement(element);
+                            							// initialize boolean attribute
+                            							{
+                            								Object value = false;
+                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+                            							}
+                            						}
+                            						if (a3 != null) {
+                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+                            							tokenResolver.setOptions(getOptions());
+                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
+                            							tokenResolver.resolve(a3.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), result);
+                            							Object resolvedObject = result.getResolvedToken();
+                            							if (resolvedObject == null) {
+                            								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a3).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a3).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a3).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a3).getStopIndex());
+                            							}
+                            							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
+                            							if (resolved != null) {
+                            								Object value = resolved;
+                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+                            								completedElement(value, false);
+                            							}
+                            							collectHiddenTokens(element);
+                            							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_0_0_0_0_0, resolved, true);
+                            							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a3, element);
+                            						}
                             					}
-                            					collectHiddenTokens(element);
-                            					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_0_0_0_0_0, null, true);
-                            					copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a3, element);
-                            				}
+
+                            }
+
 
                             if ( state.backtracking==0 ) {
                             					// expected elements (follow set)
@@ -5870,10 +6082,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             					addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getParameter(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[813]);
                             				}
 
-                            // Thingml.g:3895:5: (a4_0= parse_org_sintef_thingml_Expression )
-                            // Thingml.g:3896:6: a4_0= parse_org_sintef_thingml_Expression
+                            // Thingml.g:4088:5: (a4_0= parse_org_sintef_thingml_Expression )
+                            // Thingml.g:4089:6: a4_0= parse_org_sintef_thingml_Expression
                             {
-                            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Parameter3796);
+                            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Parameter3883);
                             a4_0=parse_org_sintef_thingml_Expression();
 
                             state._fsp--;
@@ -5886,6 +6098,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             						if (element == null) {
                             							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
                             							startIncompleteElement(element);
+                            							// initialize boolean attribute
+                            							{
+                            								Object value = false;
+                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+                            							}
                             						}
                             						if (a4_0 != null) {
                             							if (a4_0 != null) {
@@ -5907,12 +6124,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             					addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[814]);
                             				}
 
-                            a5=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_Parameter3829); if (state.failed) return element;
+                            a5=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_Parameter3916); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             					if (element == null) {
                             						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
                             						startIncompleteElement(element);
+                            						// initialize boolean attribute
+                            						{
+                            							Object value = false;
+                            							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+                            						}
                             					}
                             					collectHiddenTokens(element);
                             					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_0_0_0_0_2, null, true);
@@ -5941,44 +6163,40 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             }
                             break;
                         case 2 :
-                            // Thingml.g:3948:8: ( (a6= T_ARRAY ) )
+                            // Thingml.g:4151:8: ( ( (a6= '[]' ) ) )
                             {
-                            // Thingml.g:3948:8: ( (a6= T_ARRAY ) )
-                            // Thingml.g:3949:5: (a6= T_ARRAY )
+                            // Thingml.g:4151:8: ( ( (a6= '[]' ) ) )
+                            // Thingml.g:4152:5: ( (a6= '[]' ) )
                             {
-                            // Thingml.g:3949:5: (a6= T_ARRAY )
-                            // Thingml.g:3950:6: a6= T_ARRAY
+                            // Thingml.g:4152:5: ( (a6= '[]' ) )
+                            // Thingml.g:4153:6: (a6= '[]' )
                             {
-                            a6=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_Parameter3886); if (state.failed) return element;
+                            // Thingml.g:4153:6: (a6= '[]' )
+                            // Thingml.g:4154:7: a6= '[]'
+                            {
+                            a6=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_Parameter3981); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
-                            						if (terminateParsing) {
-                            							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
-                            						}
-                            						if (element == null) {
-                            							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
-                            							startIncompleteElement(element);
-                            						}
-                            						if (a6 != null) {
-                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-                            							tokenResolver.setOptions(getOptions());
-                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
-                            							tokenResolver.resolve(a6.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), result);
-                            							Object resolvedObject = result.getResolvedToken();
-                            							if (resolvedObject == null) {
-                            								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a6).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a6).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a6).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a6).getStopIndex());
-                            							}
-                            							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
-                            							if (resolved != null) {
-                            								Object value = resolved;
-                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
-                            								completedElement(value, false);
+                            							if (element == null) {
+                            								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
+                            								startIncompleteElement(element);
+                            								// initialize boolean attribute
+                            								{
+                            									Object value = false;
+                            									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+                            								}
                             							}
                             							collectHiddenTokens(element);
-                            							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_1_0_0_0_0, resolved, true);
-                            							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a6, element);
+                            							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_7_0_0_3_0_1_0_0_0_0, true, true);
+                            							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a6, element);
+                            							// set value of boolean attribute
+                            							Object value = true;
+                            							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PARAMETER__IS_ARRAY), value);
+                            							completedElement(value, false);
                             						}
-                            					}
+
+                            }
+
 
                             }
 
@@ -6042,7 +6260,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_PrimitiveType"
-    // Thingml.g:4009:1: parse_org_sintef_thingml_PrimitiveType returns [org.sintef.thingml.PrimitiveType element = null] : a0= 'datatype' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= ';' ;
+    // Thingml.g:4203:1: parse_org_sintef_thingml_PrimitiveType returns [org.sintef.thingml.PrimitiveType element = null] : a0= 'datatype' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= ';' ;
     public final org.sintef.thingml.PrimitiveType parse_org_sintef_thingml_PrimitiveType() throws RecognitionException {
         org.sintef.thingml.PrimitiveType element =  null;
 
@@ -6059,10 +6277,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 10) ) { return element; }
 
-            // Thingml.g:4012:2: (a0= 'datatype' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= ';' )
-            // Thingml.g:4013:2: a0= 'datatype' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= ';'
+            // Thingml.g:4206:2: (a0= 'datatype' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= ';' )
+            // Thingml.g:4207:2: a0= 'datatype' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= ';'
             {
-            a0=(Token)match(input,50,FOLLOW_50_in_parse_org_sintef_thingml_PrimitiveType3966); if (state.failed) return element;
+            a0=(Token)match(input,50,FOLLOW_50_in_parse_org_sintef_thingml_PrimitiveType4058); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -6079,10 +6297,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[835]);
             	}
 
-            // Thingml.g:4027:2: (a1= TEXT )
-            // Thingml.g:4028:3: a1= TEXT
+            // Thingml.g:4221:2: (a1= TEXT )
+            // Thingml.g:4222:3: a1= TEXT
             {
-            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_PrimitiveType3984); if (state.failed) return element;
+            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_PrimitiveType4076); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -6122,7 +6340,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[837]);
             	}
 
-            // Thingml.g:4064:2: ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:4258:2: ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop37:
             do {
                 int alt37=2;
@@ -6135,15 +6353,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt37) {
             	case 1 :
-            	    // Thingml.g:4065:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:4259:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:4065:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:4066:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:4259:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:4260:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:4066:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:4067:5: a2_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:4260:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:4261:5: a2_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_PrimitiveType4020);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_PrimitiveType4112);
             	    a2_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -6196,7 +6414,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[841]);
             	}
 
-            a3=(Token)match(input,33,FOLLOW_33_in_parse_org_sintef_thingml_PrimitiveType4061); if (state.failed) return element;
+            a3=(Token)match(input,33,FOLLOW_33_in_parse_org_sintef_thingml_PrimitiveType4153); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -6236,7 +6454,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Enumeration"
-    // Thingml.g:4120:1: parse_org_sintef_thingml_Enumeration returns [org.sintef.thingml.Enumeration element = null] : a0= 'enumeration' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= '{' ( ( (a4_0= parse_org_sintef_thingml_EnumerationLiteral ) ) )* a5= '}' ;
+    // Thingml.g:4314:1: parse_org_sintef_thingml_Enumeration returns [org.sintef.thingml.Enumeration element = null] : a0= 'enumeration' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= '{' ( ( (a4_0= parse_org_sintef_thingml_EnumerationLiteral ) ) )* a5= '}' ;
     public final org.sintef.thingml.Enumeration parse_org_sintef_thingml_Enumeration() throws RecognitionException {
         org.sintef.thingml.Enumeration element =  null;
 
@@ -6256,10 +6474,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 11) ) { return element; }
 
-            // Thingml.g:4123:2: (a0= 'enumeration' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= '{' ( ( (a4_0= parse_org_sintef_thingml_EnumerationLiteral ) ) )* a5= '}' )
-            // Thingml.g:4124:2: a0= 'enumeration' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= '{' ( ( (a4_0= parse_org_sintef_thingml_EnumerationLiteral ) ) )* a5= '}'
+            // Thingml.g:4317:2: (a0= 'enumeration' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= '{' ( ( (a4_0= parse_org_sintef_thingml_EnumerationLiteral ) ) )* a5= '}' )
+            // Thingml.g:4318:2: a0= 'enumeration' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= '{' ( ( (a4_0= parse_org_sintef_thingml_EnumerationLiteral ) ) )* a5= '}'
             {
-            a0=(Token)match(input,55,FOLLOW_55_in_parse_org_sintef_thingml_Enumeration4090); if (state.failed) return element;
+            a0=(Token)match(input,55,FOLLOW_55_in_parse_org_sintef_thingml_Enumeration4182); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -6276,10 +6494,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[846]);
             	}
 
-            // Thingml.g:4138:2: (a1= TEXT )
-            // Thingml.g:4139:3: a1= TEXT
+            // Thingml.g:4332:2: (a1= TEXT )
+            // Thingml.g:4333:3: a1= TEXT
             {
-            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Enumeration4108); if (state.failed) return element;
+            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Enumeration4200); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -6319,7 +6537,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[848]);
             	}
 
-            // Thingml.g:4175:2: ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:4369:2: ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop38:
             do {
                 int alt38=2;
@@ -6332,15 +6550,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt38) {
             	case 1 :
-            	    // Thingml.g:4176:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:4370:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:4176:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:4177:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:4370:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:4371:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:4177:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:4178:5: a2_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:4371:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:4372:5: a2_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Enumeration4144);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Enumeration4236);
             	    a2_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -6393,7 +6611,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[852]);
             	}
 
-            a3=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_Enumeration4185); if (state.failed) return element;
+            a3=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_Enumeration4277); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -6411,7 +6629,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[854]);
             	}
 
-            // Thingml.g:4227:2: ( ( (a4_0= parse_org_sintef_thingml_EnumerationLiteral ) ) )*
+            // Thingml.g:4421:2: ( ( (a4_0= parse_org_sintef_thingml_EnumerationLiteral ) ) )*
             loop39:
             do {
                 int alt39=2;
@@ -6424,15 +6642,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt39) {
             	case 1 :
-            	    // Thingml.g:4228:3: ( (a4_0= parse_org_sintef_thingml_EnumerationLiteral ) )
+            	    // Thingml.g:4422:3: ( (a4_0= parse_org_sintef_thingml_EnumerationLiteral ) )
             	    {
-            	    // Thingml.g:4228:3: ( (a4_0= parse_org_sintef_thingml_EnumerationLiteral ) )
-            	    // Thingml.g:4229:4: (a4_0= parse_org_sintef_thingml_EnumerationLiteral )
+            	    // Thingml.g:4422:3: ( (a4_0= parse_org_sintef_thingml_EnumerationLiteral ) )
+            	    // Thingml.g:4423:4: (a4_0= parse_org_sintef_thingml_EnumerationLiteral )
             	    {
-            	    // Thingml.g:4229:4: (a4_0= parse_org_sintef_thingml_EnumerationLiteral )
-            	    // Thingml.g:4230:5: a4_0= parse_org_sintef_thingml_EnumerationLiteral
+            	    // Thingml.g:4423:4: (a4_0= parse_org_sintef_thingml_EnumerationLiteral )
+            	    // Thingml.g:4424:5: a4_0= parse_org_sintef_thingml_EnumerationLiteral
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_EnumerationLiteral_in_parse_org_sintef_thingml_Enumeration4214);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_EnumerationLiteral_in_parse_org_sintef_thingml_Enumeration4306);
             	    a4_0=parse_org_sintef_thingml_EnumerationLiteral();
 
             	    state._fsp--;
@@ -6485,7 +6703,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[858]);
             	}
 
-            a5=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_Enumeration4255); if (state.failed) return element;
+            a5=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_Enumeration4347); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -6525,7 +6743,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_EnumerationLiteral"
-    // Thingml.g:4283:1: parse_org_sintef_thingml_EnumerationLiteral returns [org.sintef.thingml.EnumerationLiteral element = null] : (a0= TEXT ) ( ( (a1_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ;
+    // Thingml.g:4477:1: parse_org_sintef_thingml_EnumerationLiteral returns [org.sintef.thingml.EnumerationLiteral element = null] : (a0= TEXT ) ( ( (a1_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ;
     public final org.sintef.thingml.EnumerationLiteral parse_org_sintef_thingml_EnumerationLiteral() throws RecognitionException {
         org.sintef.thingml.EnumerationLiteral element =  null;
 
@@ -6540,13 +6758,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 12) ) { return element; }
 
-            // Thingml.g:4286:2: ( (a0= TEXT ) ( ( (a1_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* )
-            // Thingml.g:4287:2: (a0= TEXT ) ( ( (a1_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:4480:2: ( (a0= TEXT ) ( ( (a1_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* )
+            // Thingml.g:4481:2: (a0= TEXT ) ( ( (a1_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             {
-            // Thingml.g:4287:2: (a0= TEXT )
-            // Thingml.g:4288:3: a0= TEXT
+            // Thingml.g:4481:2: (a0= TEXT )
+            // Thingml.g:4482:3: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumerationLiteral4288); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumerationLiteral4380); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -6587,7 +6805,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[865]);
             	}
 
-            // Thingml.g:4325:2: ( ( (a1_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:4519:2: ( ( (a1_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop40:
             do {
                 int alt40=2;
@@ -6600,15 +6818,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt40) {
             	case 1 :
-            	    // Thingml.g:4326:3: ( (a1_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:4520:3: ( (a1_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:4326:3: ( (a1_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:4327:4: (a1_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:4520:3: ( (a1_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:4521:4: (a1_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:4327:4: (a1_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:4328:5: a1_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:4521:4: (a1_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:4522:5: a1_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_EnumerationLiteral4324);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_EnumerationLiteral4416);
             	    a1_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -6683,7 +6901,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_PlatformAnnotation"
-    // Thingml.g:4366:1: parse_org_sintef_thingml_PlatformAnnotation returns [org.sintef.thingml.PlatformAnnotation element = null] : (a0= ANNOTATION ) (a1= STRING_LITERAL ) ;
+    // Thingml.g:4560:1: parse_org_sintef_thingml_PlatformAnnotation returns [org.sintef.thingml.PlatformAnnotation element = null] : (a0= ANNOTATION ) (a1= STRING_LITERAL ) ;
     public final org.sintef.thingml.PlatformAnnotation parse_org_sintef_thingml_PlatformAnnotation() throws RecognitionException {
         org.sintef.thingml.PlatformAnnotation element =  null;
 
@@ -6697,13 +6915,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 13) ) { return element; }
 
-            // Thingml.g:4369:2: ( (a0= ANNOTATION ) (a1= STRING_LITERAL ) )
-            // Thingml.g:4370:2: (a0= ANNOTATION ) (a1= STRING_LITERAL )
+            // Thingml.g:4563:2: ( (a0= ANNOTATION ) (a1= STRING_LITERAL ) )
+            // Thingml.g:4564:2: (a0= ANNOTATION ) (a1= STRING_LITERAL )
             {
-            // Thingml.g:4370:2: (a0= ANNOTATION )
-            // Thingml.g:4371:3: a0= ANNOTATION
+            // Thingml.g:4564:2: (a0= ANNOTATION )
+            // Thingml.g:4565:3: a0= ANNOTATION
             {
-            a0=(Token)match(input,ANNOTATION,FOLLOW_ANNOTATION_in_parse_org_sintef_thingml_PlatformAnnotation4384); if (state.failed) return element;
+            a0=(Token)match(input,ANNOTATION,FOLLOW_ANNOTATION_in_parse_org_sintef_thingml_PlatformAnnotation4476); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -6742,10 +6960,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[872]);
             	}
 
-            // Thingml.g:4406:2: (a1= STRING_LITERAL )
-            // Thingml.g:4407:3: a1= STRING_LITERAL
+            // Thingml.g:4600:2: (a1= STRING_LITERAL )
+            // Thingml.g:4601:3: a1= STRING_LITERAL
             {
-            a1=(Token)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_parse_org_sintef_thingml_PlatformAnnotation4409); if (state.failed) return element;
+            a1=(Token)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_parse_org_sintef_thingml_PlatformAnnotation4501); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -6852,7 +7070,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_StateMachine"
-    // Thingml.g:4492:1: parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine element = null] : a0= 'statechart' ( ( (a1= TEXT ) ) )? a2= 'init' (a3= TEXT ) ( (a4= 'keeps' (a5= T_HISTORY ) ) )? ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a7= '{' ( ( (a8_0= parse_org_sintef_thingml_Property ) ) )* ( (a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action ) ) )? ( (a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action ) ) )? ( ( ( (a15_0= parse_org_sintef_thingml_State ) ) | (a16_0= parse_org_sintef_thingml_InternalTransition ) ) )* ( ( (a17_0= parse_org_sintef_thingml_ParallelRegion ) ) )* a18= '}' ;
+    // Thingml.g:4686:1: parse_org_sintef_thingml_StateMachine returns [org.sintef.thingml.StateMachine element = null] : a0= 'statechart' ( ( (a1= TEXT ) ) )? a2= 'init' (a3= TEXT ) ( (a4= 'keeps' (a5= T_HISTORY ) ) )? ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a7= '{' ( ( (a8_0= parse_org_sintef_thingml_Property ) ) )* ( (a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action ) ) )? ( (a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action ) ) )? ( ( ( (a15_0= parse_org_sintef_thingml_State ) ) | (a16_0= parse_org_sintef_thingml_InternalTransition ) ) )* ( ( (a17_0= parse_org_sintef_thingml_ParallelRegion ) ) )* a18= '}' ;
     public final org.sintef.thingml.StateMachine parse_org_sintef_thingml_StateMachine() throws RecognitionException {
         org.sintef.thingml.StateMachine element =  null;
 
@@ -6890,10 +7108,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 14) ) { return element; }
 
-            // Thingml.g:4495:2: (a0= 'statechart' ( ( (a1= TEXT ) ) )? a2= 'init' (a3= TEXT ) ( (a4= 'keeps' (a5= T_HISTORY ) ) )? ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a7= '{' ( ( (a8_0= parse_org_sintef_thingml_Property ) ) )* ( (a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action ) ) )? ( (a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action ) ) )? ( ( ( (a15_0= parse_org_sintef_thingml_State ) ) | (a16_0= parse_org_sintef_thingml_InternalTransition ) ) )* ( ( (a17_0= parse_org_sintef_thingml_ParallelRegion ) ) )* a18= '}' )
-            // Thingml.g:4496:2: a0= 'statechart' ( ( (a1= TEXT ) ) )? a2= 'init' (a3= TEXT ) ( (a4= 'keeps' (a5= T_HISTORY ) ) )? ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a7= '{' ( ( (a8_0= parse_org_sintef_thingml_Property ) ) )* ( (a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action ) ) )? ( (a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action ) ) )? ( ( ( (a15_0= parse_org_sintef_thingml_State ) ) | (a16_0= parse_org_sintef_thingml_InternalTransition ) ) )* ( ( (a17_0= parse_org_sintef_thingml_ParallelRegion ) ) )* a18= '}'
+            // Thingml.g:4689:2: (a0= 'statechart' ( ( (a1= TEXT ) ) )? a2= 'init' (a3= TEXT ) ( (a4= 'keeps' (a5= T_HISTORY ) ) )? ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a7= '{' ( ( (a8_0= parse_org_sintef_thingml_Property ) ) )* ( (a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action ) ) )? ( (a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action ) ) )? ( ( ( (a15_0= parse_org_sintef_thingml_State ) ) | (a16_0= parse_org_sintef_thingml_InternalTransition ) ) )* ( ( (a17_0= parse_org_sintef_thingml_ParallelRegion ) ) )* a18= '}' )
+            // Thingml.g:4690:2: a0= 'statechart' ( ( (a1= TEXT ) ) )? a2= 'init' (a3= TEXT ) ( (a4= 'keeps' (a5= T_HISTORY ) ) )? ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a7= '{' ( ( (a8_0= parse_org_sintef_thingml_Property ) ) )* ( (a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action ) ) )? ( (a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action ) ) )? ( ( ( (a15_0= parse_org_sintef_thingml_State ) ) | (a16_0= parse_org_sintef_thingml_InternalTransition ) ) )* ( ( (a17_0= parse_org_sintef_thingml_ParallelRegion ) ) )* a18= '}'
             {
-            a0=(Token)match(input,90,FOLLOW_90_in_parse_org_sintef_thingml_StateMachine4445); if (state.failed) return element;
+            a0=(Token)match(input,90,FOLLOW_90_in_parse_org_sintef_thingml_StateMachine4537); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -6911,7 +7129,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[923]);
             	}
 
-            // Thingml.g:4511:2: ( ( (a1= TEXT ) ) )?
+            // Thingml.g:4705:2: ( ( (a1= TEXT ) ) )?
             int alt41=2;
             int LA41_0 = input.LA(1);
 
@@ -6920,15 +7138,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt41) {
                 case 1 :
-                    // Thingml.g:4512:3: ( (a1= TEXT ) )
+                    // Thingml.g:4706:3: ( (a1= TEXT ) )
                     {
-                    // Thingml.g:4512:3: ( (a1= TEXT ) )
-                    // Thingml.g:4513:4: (a1= TEXT )
+                    // Thingml.g:4706:3: ( (a1= TEXT ) )
+                    // Thingml.g:4707:4: (a1= TEXT )
                     {
-                    // Thingml.g:4513:4: (a1= TEXT )
-                    // Thingml.g:4514:5: a1= TEXT
+                    // Thingml.g:4707:4: (a1= TEXT )
+                    // Thingml.g:4708:5: a1= TEXT
                     {
-                    a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StateMachine4474); if (state.failed) return element;
+                    a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StateMachine4566); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -6981,7 +7199,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[925]);
             	}
 
-            a2=(Token)match(input,67,FOLLOW_67_in_parse_org_sintef_thingml_StateMachine4520); if (state.failed) return element;
+            a2=(Token)match(input,67,FOLLOW_67_in_parse_org_sintef_thingml_StateMachine4612); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -6998,10 +7216,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[926]);
             	}
 
-            // Thingml.g:4570:2: (a3= TEXT )
-            // Thingml.g:4571:3: a3= TEXT
+            // Thingml.g:4764:2: (a3= TEXT )
+            // Thingml.g:4765:3: a3= TEXT
             {
-            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StateMachine4538); if (state.failed) return element;
+            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StateMachine4630); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -7046,7 +7264,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[929]);
             	}
 
-            // Thingml.g:4612:2: ( (a4= 'keeps' (a5= T_HISTORY ) ) )?
+            // Thingml.g:4806:2: ( (a4= 'keeps' (a5= T_HISTORY ) ) )?
             int alt42=2;
             int LA42_0 = input.LA(1);
 
@@ -7055,12 +7273,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt42) {
                 case 1 :
-                    // Thingml.g:4613:3: (a4= 'keeps' (a5= T_HISTORY ) )
+                    // Thingml.g:4807:3: (a4= 'keeps' (a5= T_HISTORY ) )
                     {
-                    // Thingml.g:4613:3: (a4= 'keeps' (a5= T_HISTORY ) )
-                    // Thingml.g:4614:4: a4= 'keeps' (a5= T_HISTORY )
+                    // Thingml.g:4807:3: (a4= 'keeps' (a5= T_HISTORY ) )
+                    // Thingml.g:4808:4: a4= 'keeps' (a5= T_HISTORY )
                     {
-                    a4=(Token)match(input,70,FOLLOW_70_in_parse_org_sintef_thingml_StateMachine4568); if (state.failed) return element;
+                    a4=(Token)match(input,70,FOLLOW_70_in_parse_org_sintef_thingml_StateMachine4660); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -7077,10 +7295,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[930]);
                     			}
 
-                    // Thingml.g:4628:4: (a5= T_HISTORY )
-                    // Thingml.g:4629:5: a5= T_HISTORY
+                    // Thingml.g:4822:4: (a5= T_HISTORY )
+                    // Thingml.g:4823:5: a5= T_HISTORY
                     {
-                    a5=(Token)match(input,T_HISTORY,FOLLOW_T_HISTORY_in_parse_org_sintef_thingml_StateMachine4594); if (state.failed) return element;
+                    a5=(Token)match(input,T_HISTORY,FOLLOW_T_HISTORY_in_parse_org_sintef_thingml_StateMachine4686); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -7135,7 +7353,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[934]);
             	}
 
-            // Thingml.g:4673:2: ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:4867:2: ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop43:
             do {
                 int alt43=2;
@@ -7148,15 +7366,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt43) {
             	case 1 :
-            	    // Thingml.g:4674:3: ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:4868:3: ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:4674:3: ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:4675:4: (a6_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:4868:3: ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:4869:4: (a6_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:4675:4: (a6_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:4676:5: a6_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:4869:4: (a6_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:4870:5: a6_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_StateMachine4655);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_StateMachine4747);
             	    a6_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -7209,7 +7427,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[938]);
             	}
 
-            a7=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_StateMachine4696); if (state.failed) return element;
+            a7=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_StateMachine4788); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -7235,7 +7453,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[948]);
             	}
 
-            // Thingml.g:4733:2: ( ( (a8_0= parse_org_sintef_thingml_Property ) ) )*
+            // Thingml.g:4927:2: ( ( (a8_0= parse_org_sintef_thingml_Property ) ) )*
             loop44:
             do {
                 int alt44=2;
@@ -7248,15 +7466,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt44) {
             	case 1 :
-            	    // Thingml.g:4734:3: ( (a8_0= parse_org_sintef_thingml_Property ) )
+            	    // Thingml.g:4928:3: ( (a8_0= parse_org_sintef_thingml_Property ) )
             	    {
-            	    // Thingml.g:4734:3: ( (a8_0= parse_org_sintef_thingml_Property ) )
-            	    // Thingml.g:4735:4: (a8_0= parse_org_sintef_thingml_Property )
+            	    // Thingml.g:4928:3: ( (a8_0= parse_org_sintef_thingml_Property ) )
+            	    // Thingml.g:4929:4: (a8_0= parse_org_sintef_thingml_Property )
             	    {
-            	    // Thingml.g:4735:4: (a8_0= parse_org_sintef_thingml_Property )
-            	    // Thingml.g:4736:5: a8_0= parse_org_sintef_thingml_Property
+            	    // Thingml.g:4929:4: (a8_0= parse_org_sintef_thingml_Property )
+            	    // Thingml.g:4930:5: a8_0= parse_org_sintef_thingml_Property
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_StateMachine4725);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_StateMachine4817);
             	    a8_0=parse_org_sintef_thingml_Property();
 
             	    state._fsp--;
@@ -7325,7 +7543,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[968]);
             	}
 
-            // Thingml.g:4786:2: ( (a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action ) ) )?
+            // Thingml.g:4980:2: ( (a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action ) ) )?
             int alt45=2;
             int LA45_0 = input.LA(1);
 
@@ -7338,12 +7556,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt45) {
                 case 1 :
-                    // Thingml.g:4787:3: (a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:4981:3: (a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action ) )
                     {
-                    // Thingml.g:4787:3: (a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action ) )
-                    // Thingml.g:4788:4: a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:4981:3: (a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:4982:4: a9= 'on' a10= 'entry' (a11_0= parse_org_sintef_thingml_Action )
                     {
-                    a9=(Token)match(input,75,FOLLOW_75_in_parse_org_sintef_thingml_StateMachine4775); if (state.failed) return element;
+                    a9=(Token)match(input,75,FOLLOW_75_in_parse_org_sintef_thingml_StateMachine4867); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -7360,7 +7578,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[969]);
                     			}
 
-                    a10=(Token)match(input,54,FOLLOW_54_in_parse_org_sintef_thingml_StateMachine4795); if (state.failed) return element;
+                    a10=(Token)match(input,54,FOLLOW_54_in_parse_org_sintef_thingml_StateMachine4887); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -7388,10 +7606,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[981]);
                     			}
 
-                    // Thingml.g:4827:4: (a11_0= parse_org_sintef_thingml_Action )
-                    // Thingml.g:4828:5: a11_0= parse_org_sintef_thingml_Action
+                    // Thingml.g:5021:4: (a11_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:5022:5: a11_0= parse_org_sintef_thingml_Action
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_StateMachine4821);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_StateMachine4913);
                     a11_0=parse_org_sintef_thingml_Action();
 
                     state._fsp--;
@@ -7451,7 +7669,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[995]);
             	}
 
-            // Thingml.g:4872:2: ( (a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action ) ) )?
+            // Thingml.g:5066:2: ( (a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action ) ) )?
             int alt46=2;
             int LA46_0 = input.LA(1);
 
@@ -7460,12 +7678,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt46) {
                 case 1 :
-                    // Thingml.g:4873:3: (a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:5067:3: (a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action ) )
                     {
-                    // Thingml.g:4873:3: (a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action ) )
-                    // Thingml.g:4874:4: a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:5067:3: (a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:5068:4: a12= 'on' a13= 'exit' (a14_0= parse_org_sintef_thingml_Action )
                     {
-                    a12=(Token)match(input,75,FOLLOW_75_in_parse_org_sintef_thingml_StateMachine4871); if (state.failed) return element;
+                    a12=(Token)match(input,75,FOLLOW_75_in_parse_org_sintef_thingml_StateMachine4963); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -7482,7 +7700,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[996]);
                     			}
 
-                    a13=(Token)match(input,58,FOLLOW_58_in_parse_org_sintef_thingml_StateMachine4891); if (state.failed) return element;
+                    a13=(Token)match(input,58,FOLLOW_58_in_parse_org_sintef_thingml_StateMachine4983); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -7510,10 +7728,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStateMachine(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1008]);
                     			}
 
-                    // Thingml.g:4913:4: (a14_0= parse_org_sintef_thingml_Action )
-                    // Thingml.g:4914:5: a14_0= parse_org_sintef_thingml_Action
+                    // Thingml.g:5107:4: (a14_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:5108:5: a14_0= parse_org_sintef_thingml_Action
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_StateMachine4917);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_StateMachine5009);
                     a14_0=parse_org_sintef_thingml_Action();
 
                     state._fsp--;
@@ -7571,7 +7789,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1020]);
             	}
 
-            // Thingml.g:4956:2: ( ( ( (a15_0= parse_org_sintef_thingml_State ) ) | (a16_0= parse_org_sintef_thingml_InternalTransition ) ) )*
+            // Thingml.g:5150:2: ( ( ( (a15_0= parse_org_sintef_thingml_State ) ) | (a16_0= parse_org_sintef_thingml_InternalTransition ) ) )*
             loop48:
             do {
                 int alt48=2;
@@ -7584,9 +7802,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt48) {
             	case 1 :
-            	    // Thingml.g:4957:3: ( ( (a15_0= parse_org_sintef_thingml_State ) ) | (a16_0= parse_org_sintef_thingml_InternalTransition ) )
+            	    // Thingml.g:5151:3: ( ( (a15_0= parse_org_sintef_thingml_State ) ) | (a16_0= parse_org_sintef_thingml_InternalTransition ) )
             	    {
-            	    // Thingml.g:4957:3: ( ( (a15_0= parse_org_sintef_thingml_State ) ) | (a16_0= parse_org_sintef_thingml_InternalTransition ) )
+            	    // Thingml.g:5151:3: ( ( (a15_0= parse_org_sintef_thingml_State ) ) | (a16_0= parse_org_sintef_thingml_InternalTransition ) )
             	    int alt47=2;
             	    int LA47_0 = input.LA(1);
 
@@ -7606,15 +7824,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    }
             	    switch (alt47) {
             	        case 1 :
-            	            // Thingml.g:4958:4: ( (a15_0= parse_org_sintef_thingml_State ) )
+            	            // Thingml.g:5152:4: ( (a15_0= parse_org_sintef_thingml_State ) )
             	            {
-            	            // Thingml.g:4958:4: ( (a15_0= parse_org_sintef_thingml_State ) )
-            	            // Thingml.g:4959:5: (a15_0= parse_org_sintef_thingml_State )
+            	            // Thingml.g:5152:4: ( (a15_0= parse_org_sintef_thingml_State ) )
+            	            // Thingml.g:5153:5: (a15_0= parse_org_sintef_thingml_State )
             	            {
-            	            // Thingml.g:4959:5: (a15_0= parse_org_sintef_thingml_State )
-            	            // Thingml.g:4960:6: a15_0= parse_org_sintef_thingml_State
+            	            // Thingml.g:5153:5: (a15_0= parse_org_sintef_thingml_State )
+            	            // Thingml.g:5154:6: a15_0= parse_org_sintef_thingml_State
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_State_in_parse_org_sintef_thingml_StateMachine4980);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_State_in_parse_org_sintef_thingml_StateMachine5072);
             	            a15_0=parse_org_sintef_thingml_State();
 
             	            state._fsp--;
@@ -7669,12 +7887,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 2 :
-            	            // Thingml.g:5002:8: (a16_0= parse_org_sintef_thingml_InternalTransition )
+            	            // Thingml.g:5196:8: (a16_0= parse_org_sintef_thingml_InternalTransition )
             	            {
-            	            // Thingml.g:5002:8: (a16_0= parse_org_sintef_thingml_InternalTransition )
-            	            // Thingml.g:5003:5: a16_0= parse_org_sintef_thingml_InternalTransition
+            	            // Thingml.g:5196:8: (a16_0= parse_org_sintef_thingml_InternalTransition )
+            	            // Thingml.g:5197:5: a16_0= parse_org_sintef_thingml_InternalTransition
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_InternalTransition_in_parse_org_sintef_thingml_StateMachine5040);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_InternalTransition_in_parse_org_sintef_thingml_StateMachine5132);
             	            a16_0=parse_org_sintef_thingml_InternalTransition();
 
             	            state._fsp--;
@@ -7738,7 +7956,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1044]);
             	}
 
-            // Thingml.g:5045:2: ( ( (a17_0= parse_org_sintef_thingml_ParallelRegion ) ) )*
+            // Thingml.g:5239:2: ( ( (a17_0= parse_org_sintef_thingml_ParallelRegion ) ) )*
             loop49:
             do {
                 int alt49=2;
@@ -7751,15 +7969,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt49) {
             	case 1 :
-            	    // Thingml.g:5046:3: ( (a17_0= parse_org_sintef_thingml_ParallelRegion ) )
+            	    // Thingml.g:5240:3: ( (a17_0= parse_org_sintef_thingml_ParallelRegion ) )
             	    {
-            	    // Thingml.g:5046:3: ( (a17_0= parse_org_sintef_thingml_ParallelRegion ) )
-            	    // Thingml.g:5047:4: (a17_0= parse_org_sintef_thingml_ParallelRegion )
+            	    // Thingml.g:5240:3: ( (a17_0= parse_org_sintef_thingml_ParallelRegion ) )
+            	    // Thingml.g:5241:4: (a17_0= parse_org_sintef_thingml_ParallelRegion )
             	    {
-            	    // Thingml.g:5047:4: (a17_0= parse_org_sintef_thingml_ParallelRegion )
-            	    // Thingml.g:5048:5: a17_0= parse_org_sintef_thingml_ParallelRegion
+            	    // Thingml.g:5241:4: (a17_0= parse_org_sintef_thingml_ParallelRegion )
+            	    // Thingml.g:5242:5: a17_0= parse_org_sintef_thingml_ParallelRegion
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_ParallelRegion_in_parse_org_sintef_thingml_StateMachine5096);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_ParallelRegion_in_parse_org_sintef_thingml_StateMachine5188);
             	    a17_0=parse_org_sintef_thingml_ParallelRegion();
 
             	    state._fsp--;
@@ -7812,7 +8030,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1048]);
             	}
 
-            a18=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_StateMachine5137); if (state.failed) return element;
+            a18=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_StateMachine5229); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -7868,7 +8086,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_State"
-    // Thingml.g:5117:1: parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null] : (a0= 'state' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= '{' ( ( (a4_0= parse_org_sintef_thingml_Property ) ) )* ( (a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action ) ) )? ( (a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action ) ) )? ( ( (a11_0= parse_org_sintef_thingml_Transition ) | (a12_0= parse_org_sintef_thingml_InternalTransition ) ) )* a13= '}' |c0= parse_org_sintef_thingml_StateMachine |c1= parse_org_sintef_thingml_CompositeState );
+    // Thingml.g:5311:1: parse_org_sintef_thingml_State returns [org.sintef.thingml.State element = null] : (a0= 'state' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= '{' ( ( (a4_0= parse_org_sintef_thingml_Property ) ) )* ( (a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action ) ) )? ( (a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action ) ) )? ( ( (a11_0= parse_org_sintef_thingml_Transition ) | (a12_0= parse_org_sintef_thingml_InternalTransition ) ) )* a13= '}' |c0= parse_org_sintef_thingml_StateMachine |c1= parse_org_sintef_thingml_CompositeState );
     public final org.sintef.thingml.State parse_org_sintef_thingml_State() throws RecognitionException {
         org.sintef.thingml.State element =  null;
 
@@ -7904,7 +8122,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 15) ) { return element; }
 
-            // Thingml.g:5120:2: (a0= 'state' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= '{' ( ( (a4_0= parse_org_sintef_thingml_Property ) ) )* ( (a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action ) ) )? ( (a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action ) ) )? ( ( (a11_0= parse_org_sintef_thingml_Transition ) | (a12_0= parse_org_sintef_thingml_InternalTransition ) ) )* a13= '}' |c0= parse_org_sintef_thingml_StateMachine |c1= parse_org_sintef_thingml_CompositeState )
+            // Thingml.g:5314:2: (a0= 'state' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= '{' ( ( (a4_0= parse_org_sintef_thingml_Property ) ) )* ( (a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action ) ) )? ( (a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action ) ) )? ( ( (a11_0= parse_org_sintef_thingml_Transition ) | (a12_0= parse_org_sintef_thingml_InternalTransition ) ) )* a13= '}' |c0= parse_org_sintef_thingml_StateMachine |c1= parse_org_sintef_thingml_CompositeState )
             int alt56=3;
             switch ( input.LA(1) ) {
             case 89:
@@ -7948,9 +8166,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt56) {
                 case 1 :
-                    // Thingml.g:5121:2: a0= 'state' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= '{' ( ( (a4_0= parse_org_sintef_thingml_Property ) ) )* ( (a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action ) ) )? ( (a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action ) ) )? ( ( (a11_0= parse_org_sintef_thingml_Transition ) | (a12_0= parse_org_sintef_thingml_InternalTransition ) ) )* a13= '}'
+                    // Thingml.g:5315:2: a0= 'state' (a1= TEXT ) ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a3= '{' ( ( (a4_0= parse_org_sintef_thingml_Property ) ) )* ( (a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action ) ) )? ( (a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action ) ) )? ( ( (a11_0= parse_org_sintef_thingml_Transition ) | (a12_0= parse_org_sintef_thingml_InternalTransition ) ) )* a13= '}'
                     {
-                    a0=(Token)match(input,89,FOLLOW_89_in_parse_org_sintef_thingml_State5166); if (state.failed) return element;
+                    a0=(Token)match(input,89,FOLLOW_89_in_parse_org_sintef_thingml_State5258); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     		if (element == null) {
@@ -7967,10 +8185,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1069]);
                     	}
 
-                    // Thingml.g:5135:2: (a1= TEXT )
-                    // Thingml.g:5136:3: a1= TEXT
+                    // Thingml.g:5329:2: (a1= TEXT )
+                    // Thingml.g:5330:3: a1= TEXT
                     {
-                    a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_State5184); if (state.failed) return element;
+                    a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_State5276); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     			if (terminateParsing) {
@@ -8010,7 +8228,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1071]);
                     	}
 
-                    // Thingml.g:5172:2: ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+                    // Thingml.g:5366:2: ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
                     loop50:
                     do {
                         int alt50=2;
@@ -8023,15 +8241,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt50) {
                     	case 1 :
-                    	    // Thingml.g:5173:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+                    	    // Thingml.g:5367:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
                     	    {
-                    	    // Thingml.g:5173:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-                    	    // Thingml.g:5174:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
+                    	    // Thingml.g:5367:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+                    	    // Thingml.g:5368:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
                     	    {
-                    	    // Thingml.g:5174:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
-                    	    // Thingml.g:5175:5: a2_0= parse_org_sintef_thingml_PlatformAnnotation
+                    	    // Thingml.g:5368:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
+                    	    // Thingml.g:5369:5: a2_0= parse_org_sintef_thingml_PlatformAnnotation
                     	    {
-                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_State5220);
+                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_State5312);
                     	    a2_0=parse_org_sintef_thingml_PlatformAnnotation();
 
                     	    state._fsp--;
@@ -8084,7 +8302,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1075]);
                     	}
 
-                    a3=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_State5261); if (state.failed) return element;
+                    a3=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_State5353); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     		if (element == null) {
@@ -8107,7 +8325,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1082]);
                     	}
 
-                    // Thingml.g:5229:2: ( ( (a4_0= parse_org_sintef_thingml_Property ) ) )*
+                    // Thingml.g:5423:2: ( ( (a4_0= parse_org_sintef_thingml_Property ) ) )*
                     loop51:
                     do {
                         int alt51=2;
@@ -8120,15 +8338,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt51) {
                     	case 1 :
-                    	    // Thingml.g:5230:3: ( (a4_0= parse_org_sintef_thingml_Property ) )
+                    	    // Thingml.g:5424:3: ( (a4_0= parse_org_sintef_thingml_Property ) )
                     	    {
-                    	    // Thingml.g:5230:3: ( (a4_0= parse_org_sintef_thingml_Property ) )
-                    	    // Thingml.g:5231:4: (a4_0= parse_org_sintef_thingml_Property )
+                    	    // Thingml.g:5424:3: ( (a4_0= parse_org_sintef_thingml_Property ) )
+                    	    // Thingml.g:5425:4: (a4_0= parse_org_sintef_thingml_Property )
                     	    {
-                    	    // Thingml.g:5231:4: (a4_0= parse_org_sintef_thingml_Property )
-                    	    // Thingml.g:5232:5: a4_0= parse_org_sintef_thingml_Property
+                    	    // Thingml.g:5425:4: (a4_0= parse_org_sintef_thingml_Property )
+                    	    // Thingml.g:5426:5: a4_0= parse_org_sintef_thingml_Property
                     	    {
-                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_State5290);
+                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_State5382);
                     	    a4_0=parse_org_sintef_thingml_Property();
 
                     	    state._fsp--;
@@ -8191,7 +8409,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1096]);
                     	}
 
-                    // Thingml.g:5276:2: ( (a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action ) ) )?
+                    // Thingml.g:5470:2: ( (a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action ) ) )?
                     int alt52=2;
                     int LA52_0 = input.LA(1);
 
@@ -8204,12 +8422,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     switch (alt52) {
                         case 1 :
-                            // Thingml.g:5277:3: (a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action ) )
+                            // Thingml.g:5471:3: (a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action ) )
                             {
-                            // Thingml.g:5277:3: (a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action ) )
-                            // Thingml.g:5278:4: a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action )
+                            // Thingml.g:5471:3: (a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action ) )
+                            // Thingml.g:5472:4: a5= 'on' a6= 'entry' (a7_0= parse_org_sintef_thingml_Action )
                             {
-                            a5=(Token)match(input,75,FOLLOW_75_in_parse_org_sintef_thingml_State5340); if (state.failed) return element;
+                            a5=(Token)match(input,75,FOLLOW_75_in_parse_org_sintef_thingml_State5432); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             				if (element == null) {
@@ -8226,7 +8444,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1097]);
                             			}
 
-                            a6=(Token)match(input,54,FOLLOW_54_in_parse_org_sintef_thingml_State5360); if (state.failed) return element;
+                            a6=(Token)match(input,54,FOLLOW_54_in_parse_org_sintef_thingml_State5452); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             				if (element == null) {
@@ -8254,10 +8472,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1109]);
                             			}
 
-                            // Thingml.g:5317:4: (a7_0= parse_org_sintef_thingml_Action )
-                            // Thingml.g:5318:5: a7_0= parse_org_sintef_thingml_Action
+                            // Thingml.g:5511:4: (a7_0= parse_org_sintef_thingml_Action )
+                            // Thingml.g:5512:5: a7_0= parse_org_sintef_thingml_Action
                             {
-                            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_State5386);
+                            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_State5478);
                             a7_0=parse_org_sintef_thingml_Action();
 
                             state._fsp--;
@@ -8311,7 +8529,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1117]);
                     	}
 
-                    // Thingml.g:5356:2: ( (a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action ) ) )?
+                    // Thingml.g:5550:2: ( (a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action ) ) )?
                     int alt53=2;
                     int LA53_0 = input.LA(1);
 
@@ -8320,12 +8538,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     switch (alt53) {
                         case 1 :
-                            // Thingml.g:5357:3: (a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action ) )
+                            // Thingml.g:5551:3: (a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action ) )
                             {
-                            // Thingml.g:5357:3: (a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action ) )
-                            // Thingml.g:5358:4: a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action )
+                            // Thingml.g:5551:3: (a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action ) )
+                            // Thingml.g:5552:4: a8= 'on' a9= 'exit' (a10_0= parse_org_sintef_thingml_Action )
                             {
-                            a8=(Token)match(input,75,FOLLOW_75_in_parse_org_sintef_thingml_State5436); if (state.failed) return element;
+                            a8=(Token)match(input,75,FOLLOW_75_in_parse_org_sintef_thingml_State5528); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             				if (element == null) {
@@ -8342,7 +8560,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1118]);
                             			}
 
-                            a9=(Token)match(input,58,FOLLOW_58_in_parse_org_sintef_thingml_State5456); if (state.failed) return element;
+                            a9=(Token)match(input,58,FOLLOW_58_in_parse_org_sintef_thingml_State5548); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             				if (element == null) {
@@ -8370,10 +8588,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1130]);
                             			}
 
-                            // Thingml.g:5397:4: (a10_0= parse_org_sintef_thingml_Action )
-                            // Thingml.g:5398:5: a10_0= parse_org_sintef_thingml_Action
+                            // Thingml.g:5591:4: (a10_0= parse_org_sintef_thingml_Action )
+                            // Thingml.g:5592:5: a10_0= parse_org_sintef_thingml_Action
                             {
-                            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_State5482);
+                            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_State5574);
                             a10_0=parse_org_sintef_thingml_Action();
 
                             state._fsp--;
@@ -8425,7 +8643,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1136]);
                     	}
 
-                    // Thingml.g:5434:2: ( ( (a11_0= parse_org_sintef_thingml_Transition ) | (a12_0= parse_org_sintef_thingml_InternalTransition ) ) )*
+                    // Thingml.g:5628:2: ( ( (a11_0= parse_org_sintef_thingml_Transition ) | (a12_0= parse_org_sintef_thingml_InternalTransition ) ) )*
                     loop55:
                     do {
                         int alt55=2;
@@ -8438,9 +8656,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt55) {
                     	case 1 :
-                    	    // Thingml.g:5435:3: ( (a11_0= parse_org_sintef_thingml_Transition ) | (a12_0= parse_org_sintef_thingml_InternalTransition ) )
+                    	    // Thingml.g:5629:3: ( (a11_0= parse_org_sintef_thingml_Transition ) | (a12_0= parse_org_sintef_thingml_InternalTransition ) )
                     	    {
-                    	    // Thingml.g:5435:3: ( (a11_0= parse_org_sintef_thingml_Transition ) | (a12_0= parse_org_sintef_thingml_InternalTransition ) )
+                    	    // Thingml.g:5629:3: ( (a11_0= parse_org_sintef_thingml_Transition ) | (a12_0= parse_org_sintef_thingml_InternalTransition ) )
                     	    int alt54=2;
                     	    int LA54_0 = input.LA(1);
 
@@ -8460,12 +8678,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    }
                     	    switch (alt54) {
                     	        case 1 :
-                    	            // Thingml.g:5436:4: (a11_0= parse_org_sintef_thingml_Transition )
+                    	            // Thingml.g:5630:4: (a11_0= parse_org_sintef_thingml_Transition )
                     	            {
-                    	            // Thingml.g:5436:4: (a11_0= parse_org_sintef_thingml_Transition )
-                    	            // Thingml.g:5437:5: a11_0= parse_org_sintef_thingml_Transition
+                    	            // Thingml.g:5630:4: (a11_0= parse_org_sintef_thingml_Transition )
+                    	            // Thingml.g:5631:5: a11_0= parse_org_sintef_thingml_Transition
                     	            {
-                    	            pushFollow(FOLLOW_parse_org_sintef_thingml_Transition_in_parse_org_sintef_thingml_State5538);
+                    	            pushFollow(FOLLOW_parse_org_sintef_thingml_Transition_in_parse_org_sintef_thingml_State5630);
                     	            a11_0=parse_org_sintef_thingml_Transition();
 
                     	            state._fsp--;
@@ -8504,12 +8722,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	            }
                     	            break;
                     	        case 2 :
-                    	            // Thingml.g:5465:8: (a12_0= parse_org_sintef_thingml_InternalTransition )
+                    	            // Thingml.g:5659:8: (a12_0= parse_org_sintef_thingml_InternalTransition )
                     	            {
-                    	            // Thingml.g:5465:8: (a12_0= parse_org_sintef_thingml_InternalTransition )
-                    	            // Thingml.g:5466:5: a12_0= parse_org_sintef_thingml_InternalTransition
+                    	            // Thingml.g:5659:8: (a12_0= parse_org_sintef_thingml_InternalTransition )
+                    	            // Thingml.g:5660:5: a12_0= parse_org_sintef_thingml_InternalTransition
                     	            {
-                    	            pushFollow(FOLLOW_parse_org_sintef_thingml_InternalTransition_in_parse_org_sintef_thingml_State5580);
+                    	            pushFollow(FOLLOW_parse_org_sintef_thingml_InternalTransition_in_parse_org_sintef_thingml_State5672);
                     	            a12_0=parse_org_sintef_thingml_InternalTransition();
 
                     	            state._fsp--;
@@ -8567,7 +8785,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1145]);
                     	}
 
-                    a13=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_State5621); if (state.failed) return element;
+                    a13=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_State5713); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     		if (element == null) {
@@ -8595,9 +8813,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:5526:2: c0= parse_org_sintef_thingml_StateMachine
+                    // Thingml.g:5720:2: c0= parse_org_sintef_thingml_StateMachine
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_StateMachine_in_parse_org_sintef_thingml_State5640);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_StateMachine_in_parse_org_sintef_thingml_State5732);
                     c0=parse_org_sintef_thingml_StateMachine();
 
                     state._fsp--;
@@ -8608,9 +8826,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 3 :
-                    // Thingml.g:5527:4: c1= parse_org_sintef_thingml_CompositeState
+                    // Thingml.g:5721:4: c1= parse_org_sintef_thingml_CompositeState
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_CompositeState_in_parse_org_sintef_thingml_State5650);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_CompositeState_in_parse_org_sintef_thingml_State5742);
                     c1=parse_org_sintef_thingml_CompositeState();
 
                     state._fsp--;
@@ -8640,7 +8858,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_CompositeState"
-    // Thingml.g:5531:1: parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeState element = null] : (a0= 'composite' a1= 'state' (a2= TEXT ) a3= 'init' (a4= TEXT ) ( (a5= 'keeps' (a6= T_HISTORY ) ) )? ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a8= '{' ( ( (a9_0= parse_org_sintef_thingml_Property ) ) )* ( (a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action ) ) )? ( (a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action ) ) )? ( ( (a16_0= parse_org_sintef_thingml_Transition ) | (a17_0= parse_org_sintef_thingml_InternalTransition ) | ( (a18_0= parse_org_sintef_thingml_State ) ) ) )* ( ( (a19_0= parse_org_sintef_thingml_ParallelRegion ) ) )* a20= '}' |c0= parse_org_sintef_thingml_StateMachine );
+    // Thingml.g:5725:1: parse_org_sintef_thingml_CompositeState returns [org.sintef.thingml.CompositeState element = null] : (a0= 'composite' a1= 'state' (a2= TEXT ) a3= 'init' (a4= TEXT ) ( (a5= 'keeps' (a6= T_HISTORY ) ) )? ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a8= '{' ( ( (a9_0= parse_org_sintef_thingml_Property ) ) )* ( (a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action ) ) )? ( (a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action ) ) )? ( ( (a16_0= parse_org_sintef_thingml_Transition ) | (a17_0= parse_org_sintef_thingml_InternalTransition ) | ( (a18_0= parse_org_sintef_thingml_State ) ) ) )* ( ( (a19_0= parse_org_sintef_thingml_ParallelRegion ) ) )* a20= '}' |c0= parse_org_sintef_thingml_StateMachine );
     public final org.sintef.thingml.CompositeState parse_org_sintef_thingml_CompositeState() throws RecognitionException {
         org.sintef.thingml.CompositeState element =  null;
 
@@ -8683,7 +8901,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 16) ) { return element; }
 
-            // Thingml.g:5534:2: (a0= 'composite' a1= 'state' (a2= TEXT ) a3= 'init' (a4= TEXT ) ( (a5= 'keeps' (a6= T_HISTORY ) ) )? ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a8= '{' ( ( (a9_0= parse_org_sintef_thingml_Property ) ) )* ( (a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action ) ) )? ( (a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action ) ) )? ( ( (a16_0= parse_org_sintef_thingml_Transition ) | (a17_0= parse_org_sintef_thingml_InternalTransition ) | ( (a18_0= parse_org_sintef_thingml_State ) ) ) )* ( ( (a19_0= parse_org_sintef_thingml_ParallelRegion ) ) )* a20= '}' |c0= parse_org_sintef_thingml_StateMachine )
+            // Thingml.g:5728:2: (a0= 'composite' a1= 'state' (a2= TEXT ) a3= 'init' (a4= TEXT ) ( (a5= 'keeps' (a6= T_HISTORY ) ) )? ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a8= '{' ( ( (a9_0= parse_org_sintef_thingml_Property ) ) )* ( (a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action ) ) )? ( (a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action ) ) )? ( ( (a16_0= parse_org_sintef_thingml_Transition ) | (a17_0= parse_org_sintef_thingml_InternalTransition ) | ( (a18_0= parse_org_sintef_thingml_State ) ) ) )* ( ( (a19_0= parse_org_sintef_thingml_ParallelRegion ) ) )* a20= '}' |c0= parse_org_sintef_thingml_StateMachine )
             int alt65=2;
             int LA65_0 = input.LA(1);
 
@@ -8703,9 +8921,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt65) {
                 case 1 :
-                    // Thingml.g:5535:2: a0= 'composite' a1= 'state' (a2= TEXT ) a3= 'init' (a4= TEXT ) ( (a5= 'keeps' (a6= T_HISTORY ) ) )? ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a8= '{' ( ( (a9_0= parse_org_sintef_thingml_Property ) ) )* ( (a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action ) ) )? ( (a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action ) ) )? ( ( (a16_0= parse_org_sintef_thingml_Transition ) | (a17_0= parse_org_sintef_thingml_InternalTransition ) | ( (a18_0= parse_org_sintef_thingml_State ) ) ) )* ( ( (a19_0= parse_org_sintef_thingml_ParallelRegion ) ) )* a20= '}'
+                    // Thingml.g:5729:2: a0= 'composite' a1= 'state' (a2= TEXT ) a3= 'init' (a4= TEXT ) ( (a5= 'keeps' (a6= T_HISTORY ) ) )? ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a8= '{' ( ( (a9_0= parse_org_sintef_thingml_Property ) ) )* ( (a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action ) ) )? ( (a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action ) ) )? ( ( (a16_0= parse_org_sintef_thingml_Transition ) | (a17_0= parse_org_sintef_thingml_InternalTransition ) | ( (a18_0= parse_org_sintef_thingml_State ) ) ) )* ( ( (a19_0= parse_org_sintef_thingml_ParallelRegion ) ) )* a20= '}'
                     {
-                    a0=(Token)match(input,47,FOLLOW_47_in_parse_org_sintef_thingml_CompositeState5675); if (state.failed) return element;
+                    a0=(Token)match(input,47,FOLLOW_47_in_parse_org_sintef_thingml_CompositeState5767); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     		if (element == null) {
@@ -8722,7 +8940,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1155]);
                     	}
 
-                    a1=(Token)match(input,89,FOLLOW_89_in_parse_org_sintef_thingml_CompositeState5689); if (state.failed) return element;
+                    a1=(Token)match(input,89,FOLLOW_89_in_parse_org_sintef_thingml_CompositeState5781); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     		if (element == null) {
@@ -8739,10 +8957,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1156]);
                     	}
 
-                    // Thingml.g:5563:2: (a2= TEXT )
-                    // Thingml.g:5564:3: a2= TEXT
+                    // Thingml.g:5757:2: (a2= TEXT )
+                    // Thingml.g:5758:3: a2= TEXT
                     {
-                    a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_CompositeState5707); if (state.failed) return element;
+                    a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_CompositeState5799); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     			if (terminateParsing) {
@@ -8781,7 +8999,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1157]);
                     	}
 
-                    a3=(Token)match(input,67,FOLLOW_67_in_parse_org_sintef_thingml_CompositeState5728); if (state.failed) return element;
+                    a3=(Token)match(input,67,FOLLOW_67_in_parse_org_sintef_thingml_CompositeState5820); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     		if (element == null) {
@@ -8798,10 +9016,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1158]);
                     	}
 
-                    // Thingml.g:5613:2: (a4= TEXT )
-                    // Thingml.g:5614:3: a4= TEXT
+                    // Thingml.g:5807:2: (a4= TEXT )
+                    // Thingml.g:5808:3: a4= TEXT
                     {
-                    a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_CompositeState5746); if (state.failed) return element;
+                    a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_CompositeState5838); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     			if (terminateParsing) {
@@ -8846,7 +9064,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1161]);
                     	}
 
-                    // Thingml.g:5655:2: ( (a5= 'keeps' (a6= T_HISTORY ) ) )?
+                    // Thingml.g:5849:2: ( (a5= 'keeps' (a6= T_HISTORY ) ) )?
                     int alt57=2;
                     int LA57_0 = input.LA(1);
 
@@ -8855,12 +9073,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     switch (alt57) {
                         case 1 :
-                            // Thingml.g:5656:3: (a5= 'keeps' (a6= T_HISTORY ) )
+                            // Thingml.g:5850:3: (a5= 'keeps' (a6= T_HISTORY ) )
                             {
-                            // Thingml.g:5656:3: (a5= 'keeps' (a6= T_HISTORY ) )
-                            // Thingml.g:5657:4: a5= 'keeps' (a6= T_HISTORY )
+                            // Thingml.g:5850:3: (a5= 'keeps' (a6= T_HISTORY ) )
+                            // Thingml.g:5851:4: a5= 'keeps' (a6= T_HISTORY )
                             {
-                            a5=(Token)match(input,70,FOLLOW_70_in_parse_org_sintef_thingml_CompositeState5776); if (state.failed) return element;
+                            a5=(Token)match(input,70,FOLLOW_70_in_parse_org_sintef_thingml_CompositeState5868); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             				if (element == null) {
@@ -8877,10 +9095,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1162]);
                             			}
 
-                            // Thingml.g:5671:4: (a6= T_HISTORY )
-                            // Thingml.g:5672:5: a6= T_HISTORY
+                            // Thingml.g:5865:4: (a6= T_HISTORY )
+                            // Thingml.g:5866:5: a6= T_HISTORY
                             {
-                            a6=(Token)match(input,T_HISTORY,FOLLOW_T_HISTORY_in_parse_org_sintef_thingml_CompositeState5802); if (state.failed) return element;
+                            a6=(Token)match(input,T_HISTORY,FOLLOW_T_HISTORY_in_parse_org_sintef_thingml_CompositeState5894); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             					if (terminateParsing) {
@@ -8935,7 +9153,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1166]);
                     	}
 
-                    // Thingml.g:5716:2: ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+                    // Thingml.g:5910:2: ( ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
                     loop58:
                     do {
                         int alt58=2;
@@ -8948,15 +9166,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt58) {
                     	case 1 :
-                    	    // Thingml.g:5717:3: ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+                    	    // Thingml.g:5911:3: ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) )
                     	    {
-                    	    // Thingml.g:5717:3: ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-                    	    // Thingml.g:5718:4: (a7_0= parse_org_sintef_thingml_PlatformAnnotation )
+                    	    // Thingml.g:5911:3: ( (a7_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+                    	    // Thingml.g:5912:4: (a7_0= parse_org_sintef_thingml_PlatformAnnotation )
                     	    {
-                    	    // Thingml.g:5718:4: (a7_0= parse_org_sintef_thingml_PlatformAnnotation )
-                    	    // Thingml.g:5719:5: a7_0= parse_org_sintef_thingml_PlatformAnnotation
+                    	    // Thingml.g:5912:4: (a7_0= parse_org_sintef_thingml_PlatformAnnotation )
+                    	    // Thingml.g:5913:5: a7_0= parse_org_sintef_thingml_PlatformAnnotation
                     	    {
-                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_CompositeState5863);
+                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_CompositeState5955);
                     	    a7_0=parse_org_sintef_thingml_PlatformAnnotation();
 
                     	    state._fsp--;
@@ -9009,7 +9227,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1170]);
                     	}
 
-                    a8=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_CompositeState5904); if (state.failed) return element;
+                    a8=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_CompositeState5996); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     		if (element == null) {
@@ -9036,7 +9254,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1181]);
                     	}
 
-                    // Thingml.g:5777:2: ( ( (a9_0= parse_org_sintef_thingml_Property ) ) )*
+                    // Thingml.g:5971:2: ( ( (a9_0= parse_org_sintef_thingml_Property ) ) )*
                     loop59:
                     do {
                         int alt59=2;
@@ -9049,15 +9267,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt59) {
                     	case 1 :
-                    	    // Thingml.g:5778:3: ( (a9_0= parse_org_sintef_thingml_Property ) )
+                    	    // Thingml.g:5972:3: ( (a9_0= parse_org_sintef_thingml_Property ) )
                     	    {
-                    	    // Thingml.g:5778:3: ( (a9_0= parse_org_sintef_thingml_Property ) )
-                    	    // Thingml.g:5779:4: (a9_0= parse_org_sintef_thingml_Property )
+                    	    // Thingml.g:5972:3: ( (a9_0= parse_org_sintef_thingml_Property ) )
+                    	    // Thingml.g:5973:4: (a9_0= parse_org_sintef_thingml_Property )
                     	    {
-                    	    // Thingml.g:5779:4: (a9_0= parse_org_sintef_thingml_Property )
-                    	    // Thingml.g:5780:5: a9_0= parse_org_sintef_thingml_Property
+                    	    // Thingml.g:5973:4: (a9_0= parse_org_sintef_thingml_Property )
+                    	    // Thingml.g:5974:5: a9_0= parse_org_sintef_thingml_Property
                     	    {
-                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_CompositeState5933);
+                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_CompositeState6025);
                     	    a9_0=parse_org_sintef_thingml_Property();
 
                     	    state._fsp--;
@@ -9128,7 +9346,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1203]);
                     	}
 
-                    // Thingml.g:5832:2: ( (a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action ) ) )?
+                    // Thingml.g:6026:2: ( (a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action ) ) )?
                     int alt60=2;
                     int LA60_0 = input.LA(1);
 
@@ -9141,12 +9359,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     switch (alt60) {
                         case 1 :
-                            // Thingml.g:5833:3: (a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action ) )
+                            // Thingml.g:6027:3: (a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action ) )
                             {
-                            // Thingml.g:5833:3: (a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action ) )
-                            // Thingml.g:5834:4: a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action )
+                            // Thingml.g:6027:3: (a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action ) )
+                            // Thingml.g:6028:4: a10= 'on' a11= 'entry' (a12_0= parse_org_sintef_thingml_Action )
                             {
-                            a10=(Token)match(input,75,FOLLOW_75_in_parse_org_sintef_thingml_CompositeState5983); if (state.failed) return element;
+                            a10=(Token)match(input,75,FOLLOW_75_in_parse_org_sintef_thingml_CompositeState6075); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             				if (element == null) {
@@ -9163,7 +9381,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1204]);
                             			}
 
-                            a11=(Token)match(input,54,FOLLOW_54_in_parse_org_sintef_thingml_CompositeState6003); if (state.failed) return element;
+                            a11=(Token)match(input,54,FOLLOW_54_in_parse_org_sintef_thingml_CompositeState6095); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             				if (element == null) {
@@ -9191,10 +9409,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1216]);
                             			}
 
-                            // Thingml.g:5873:4: (a12_0= parse_org_sintef_thingml_Action )
-                            // Thingml.g:5874:5: a12_0= parse_org_sintef_thingml_Action
+                            // Thingml.g:6067:4: (a12_0= parse_org_sintef_thingml_Action )
+                            // Thingml.g:6068:5: a12_0= parse_org_sintef_thingml_Action
                             {
-                            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_CompositeState6029);
+                            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_CompositeState6121);
                             a12_0=parse_org_sintef_thingml_Action();
 
                             state._fsp--;
@@ -9256,7 +9474,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1232]);
                     	}
 
-                    // Thingml.g:5920:2: ( (a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action ) ) )?
+                    // Thingml.g:6114:2: ( (a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action ) ) )?
                     int alt61=2;
                     int LA61_0 = input.LA(1);
 
@@ -9265,12 +9483,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     switch (alt61) {
                         case 1 :
-                            // Thingml.g:5921:3: (a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action ) )
+                            // Thingml.g:6115:3: (a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action ) )
                             {
-                            // Thingml.g:5921:3: (a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action ) )
-                            // Thingml.g:5922:4: a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action )
+                            // Thingml.g:6115:3: (a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action ) )
+                            // Thingml.g:6116:4: a13= 'on' a14= 'exit' (a15_0= parse_org_sintef_thingml_Action )
                             {
-                            a13=(Token)match(input,75,FOLLOW_75_in_parse_org_sintef_thingml_CompositeState6079); if (state.failed) return element;
+                            a13=(Token)match(input,75,FOLLOW_75_in_parse_org_sintef_thingml_CompositeState6171); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             				if (element == null) {
@@ -9287,7 +9505,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1233]);
                             			}
 
-                            a14=(Token)match(input,58,FOLLOW_58_in_parse_org_sintef_thingml_CompositeState6099); if (state.failed) return element;
+                            a14=(Token)match(input,58,FOLLOW_58_in_parse_org_sintef_thingml_CompositeState6191); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             				if (element == null) {
@@ -9315,10 +9533,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getCompositeState(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1245]);
                             			}
 
-                            // Thingml.g:5961:4: (a15_0= parse_org_sintef_thingml_Action )
-                            // Thingml.g:5962:5: a15_0= parse_org_sintef_thingml_Action
+                            // Thingml.g:6155:4: (a15_0= parse_org_sintef_thingml_Action )
+                            // Thingml.g:6156:5: a15_0= parse_org_sintef_thingml_Action
                             {
-                            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_CompositeState6125);
+                            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_CompositeState6217);
                             a15_0=parse_org_sintef_thingml_Action();
 
                             state._fsp--;
@@ -9378,7 +9596,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1259]);
                     	}
 
-                    // Thingml.g:6006:2: ( ( (a16_0= parse_org_sintef_thingml_Transition ) | (a17_0= parse_org_sintef_thingml_InternalTransition ) | ( (a18_0= parse_org_sintef_thingml_State ) ) ) )*
+                    // Thingml.g:6200:2: ( ( (a16_0= parse_org_sintef_thingml_Transition ) | (a17_0= parse_org_sintef_thingml_InternalTransition ) | ( (a18_0= parse_org_sintef_thingml_State ) ) ) )*
                     loop63:
                     do {
                         int alt63=2;
@@ -9391,9 +9609,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt63) {
                     	case 1 :
-                    	    // Thingml.g:6007:3: ( (a16_0= parse_org_sintef_thingml_Transition ) | (a17_0= parse_org_sintef_thingml_InternalTransition ) | ( (a18_0= parse_org_sintef_thingml_State ) ) )
+                    	    // Thingml.g:6201:3: ( (a16_0= parse_org_sintef_thingml_Transition ) | (a17_0= parse_org_sintef_thingml_InternalTransition ) | ( (a18_0= parse_org_sintef_thingml_State ) ) )
                     	    {
-                    	    // Thingml.g:6007:3: ( (a16_0= parse_org_sintef_thingml_Transition ) | (a17_0= parse_org_sintef_thingml_InternalTransition ) | ( (a18_0= parse_org_sintef_thingml_State ) ) )
+                    	    // Thingml.g:6201:3: ( (a16_0= parse_org_sintef_thingml_Transition ) | (a17_0= parse_org_sintef_thingml_InternalTransition ) | ( (a18_0= parse_org_sintef_thingml_State ) ) )
                     	    int alt62=3;
                     	    switch ( input.LA(1) ) {
                     	    case 94:
@@ -9424,12 +9642,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                     	    switch (alt62) {
                     	        case 1 :
-                    	            // Thingml.g:6008:4: (a16_0= parse_org_sintef_thingml_Transition )
+                    	            // Thingml.g:6202:4: (a16_0= parse_org_sintef_thingml_Transition )
                     	            {
-                    	            // Thingml.g:6008:4: (a16_0= parse_org_sintef_thingml_Transition )
-                    	            // Thingml.g:6009:5: a16_0= parse_org_sintef_thingml_Transition
+                    	            // Thingml.g:6202:4: (a16_0= parse_org_sintef_thingml_Transition )
+                    	            // Thingml.g:6203:5: a16_0= parse_org_sintef_thingml_Transition
                     	            {
-                    	            pushFollow(FOLLOW_parse_org_sintef_thingml_Transition_in_parse_org_sintef_thingml_CompositeState6181);
+                    	            pushFollow(FOLLOW_parse_org_sintef_thingml_Transition_in_parse_org_sintef_thingml_CompositeState6273);
                     	            a16_0=parse_org_sintef_thingml_Transition();
 
                     	            state._fsp--;
@@ -9472,12 +9690,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	            }
                     	            break;
                     	        case 2 :
-                    	            // Thingml.g:6041:8: (a17_0= parse_org_sintef_thingml_InternalTransition )
+                    	            // Thingml.g:6235:8: (a17_0= parse_org_sintef_thingml_InternalTransition )
                     	            {
-                    	            // Thingml.g:6041:8: (a17_0= parse_org_sintef_thingml_InternalTransition )
-                    	            // Thingml.g:6042:5: a17_0= parse_org_sintef_thingml_InternalTransition
+                    	            // Thingml.g:6235:8: (a17_0= parse_org_sintef_thingml_InternalTransition )
+                    	            // Thingml.g:6236:5: a17_0= parse_org_sintef_thingml_InternalTransition
                     	            {
-                    	            pushFollow(FOLLOW_parse_org_sintef_thingml_InternalTransition_in_parse_org_sintef_thingml_CompositeState6223);
+                    	            pushFollow(FOLLOW_parse_org_sintef_thingml_InternalTransition_in_parse_org_sintef_thingml_CompositeState6315);
                     	            a17_0=parse_org_sintef_thingml_InternalTransition();
 
                     	            state._fsp--;
@@ -9520,15 +9738,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	            }
                     	            break;
                     	        case 3 :
-                    	            // Thingml.g:6074:8: ( (a18_0= parse_org_sintef_thingml_State ) )
+                    	            // Thingml.g:6268:8: ( (a18_0= parse_org_sintef_thingml_State ) )
                     	            {
-                    	            // Thingml.g:6074:8: ( (a18_0= parse_org_sintef_thingml_State ) )
-                    	            // Thingml.g:6075:5: (a18_0= parse_org_sintef_thingml_State )
+                    	            // Thingml.g:6268:8: ( (a18_0= parse_org_sintef_thingml_State ) )
+                    	            // Thingml.g:6269:5: (a18_0= parse_org_sintef_thingml_State )
                     	            {
-                    	            // Thingml.g:6075:5: (a18_0= parse_org_sintef_thingml_State )
-                    	            // Thingml.g:6076:6: a18_0= parse_org_sintef_thingml_State
+                    	            // Thingml.g:6269:5: (a18_0= parse_org_sintef_thingml_State )
+                    	            // Thingml.g:6270:6: a18_0= parse_org_sintef_thingml_State
                     	            {
-                    	            pushFollow(FOLLOW_parse_org_sintef_thingml_State_in_parse_org_sintef_thingml_CompositeState6272);
+                    	            pushFollow(FOLLOW_parse_org_sintef_thingml_State_in_parse_org_sintef_thingml_CompositeState6364);
                     	            a18_0=parse_org_sintef_thingml_State();
 
                     	            state._fsp--;
@@ -9608,7 +9826,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1294]);
                     	}
 
-                    // Thingml.g:6132:2: ( ( (a19_0= parse_org_sintef_thingml_ParallelRegion ) ) )*
+                    // Thingml.g:6326:2: ( ( (a19_0= parse_org_sintef_thingml_ParallelRegion ) ) )*
                     loop64:
                     do {
                         int alt64=2;
@@ -9621,15 +9839,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt64) {
                     	case 1 :
-                    	    // Thingml.g:6133:3: ( (a19_0= parse_org_sintef_thingml_ParallelRegion ) )
+                    	    // Thingml.g:6327:3: ( (a19_0= parse_org_sintef_thingml_ParallelRegion ) )
                     	    {
-                    	    // Thingml.g:6133:3: ( (a19_0= parse_org_sintef_thingml_ParallelRegion ) )
-                    	    // Thingml.g:6134:4: (a19_0= parse_org_sintef_thingml_ParallelRegion )
+                    	    // Thingml.g:6327:3: ( (a19_0= parse_org_sintef_thingml_ParallelRegion ) )
+                    	    // Thingml.g:6328:4: (a19_0= parse_org_sintef_thingml_ParallelRegion )
                     	    {
-                    	    // Thingml.g:6134:4: (a19_0= parse_org_sintef_thingml_ParallelRegion )
-                    	    // Thingml.g:6135:5: a19_0= parse_org_sintef_thingml_ParallelRegion
+                    	    // Thingml.g:6328:4: (a19_0= parse_org_sintef_thingml_ParallelRegion )
+                    	    // Thingml.g:6329:5: a19_0= parse_org_sintef_thingml_ParallelRegion
                     	    {
-                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_ParallelRegion_in_parse_org_sintef_thingml_CompositeState6346);
+                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_ParallelRegion_in_parse_org_sintef_thingml_CompositeState6438);
                     	    a19_0=parse_org_sintef_thingml_ParallelRegion();
 
                     	    state._fsp--;
@@ -9682,7 +9900,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1298]);
                     	}
 
-                    a20=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_CompositeState6387); if (state.failed) return element;
+                    a20=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_CompositeState6479); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     		if (element == null) {
@@ -9710,9 +9928,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:6193:2: c0= parse_org_sintef_thingml_StateMachine
+                    // Thingml.g:6387:2: c0= parse_org_sintef_thingml_StateMachine
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_StateMachine_in_parse_org_sintef_thingml_CompositeState6406);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_StateMachine_in_parse_org_sintef_thingml_CompositeState6498);
                     c0=parse_org_sintef_thingml_StateMachine();
 
                     state._fsp--;
@@ -9742,7 +9960,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ParallelRegion"
-    // Thingml.g:6197:1: parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegion element = null] : a0= 'region' (a1= TEXT ) a2= 'init' (a3= TEXT ) ( (a4= 'keeps' (a5= T_HISTORY ) ) )? ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a7= '{' ( ( (a8_0= parse_org_sintef_thingml_State ) ) )* a9= '}' ;
+    // Thingml.g:6391:1: parse_org_sintef_thingml_ParallelRegion returns [org.sintef.thingml.ParallelRegion element = null] : a0= 'region' (a1= TEXT ) a2= 'init' (a3= TEXT ) ( (a4= 'keeps' (a5= T_HISTORY ) ) )? ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a7= '{' ( ( (a8_0= parse_org_sintef_thingml_State ) ) )* a9= '}' ;
     public final org.sintef.thingml.ParallelRegion parse_org_sintef_thingml_ParallelRegion() throws RecognitionException {
         org.sintef.thingml.ParallelRegion element =  null;
 
@@ -9766,10 +9984,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 17) ) { return element; }
 
-            // Thingml.g:6200:2: (a0= 'region' (a1= TEXT ) a2= 'init' (a3= TEXT ) ( (a4= 'keeps' (a5= T_HISTORY ) ) )? ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a7= '{' ( ( (a8_0= parse_org_sintef_thingml_State ) ) )* a9= '}' )
-            // Thingml.g:6201:2: a0= 'region' (a1= TEXT ) a2= 'init' (a3= TEXT ) ( (a4= 'keeps' (a5= T_HISTORY ) ) )? ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a7= '{' ( ( (a8_0= parse_org_sintef_thingml_State ) ) )* a9= '}'
+            // Thingml.g:6394:2: (a0= 'region' (a1= TEXT ) a2= 'init' (a3= TEXT ) ( (a4= 'keeps' (a5= T_HISTORY ) ) )? ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a7= '{' ( ( (a8_0= parse_org_sintef_thingml_State ) ) )* a9= '}' )
+            // Thingml.g:6395:2: a0= 'region' (a1= TEXT ) a2= 'init' (a3= TEXT ) ( (a4= 'keeps' (a5= T_HISTORY ) ) )? ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a7= '{' ( ( (a8_0= parse_org_sintef_thingml_State ) ) )* a9= '}'
             {
-            a0=(Token)match(input,83,FOLLOW_83_in_parse_org_sintef_thingml_ParallelRegion6431); if (state.failed) return element;
+            a0=(Token)match(input,83,FOLLOW_83_in_parse_org_sintef_thingml_ParallelRegion6523); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -9786,10 +10004,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1308]);
             	}
 
-            // Thingml.g:6215:2: (a1= TEXT )
-            // Thingml.g:6216:3: a1= TEXT
+            // Thingml.g:6409:2: (a1= TEXT )
+            // Thingml.g:6410:3: a1= TEXT
             {
-            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ParallelRegion6449); if (state.failed) return element;
+            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ParallelRegion6541); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -9828,7 +10046,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1309]);
             	}
 
-            a2=(Token)match(input,67,FOLLOW_67_in_parse_org_sintef_thingml_ParallelRegion6470); if (state.failed) return element;
+            a2=(Token)match(input,67,FOLLOW_67_in_parse_org_sintef_thingml_ParallelRegion6562); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -9845,10 +10063,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1310]);
             	}
 
-            // Thingml.g:6265:2: (a3= TEXT )
-            // Thingml.g:6266:3: a3= TEXT
+            // Thingml.g:6459:2: (a3= TEXT )
+            // Thingml.g:6460:3: a3= TEXT
             {
-            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ParallelRegion6488); if (state.failed) return element;
+            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ParallelRegion6580); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -9893,7 +10111,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1313]);
             	}
 
-            // Thingml.g:6307:2: ( (a4= 'keeps' (a5= T_HISTORY ) ) )?
+            // Thingml.g:6501:2: ( (a4= 'keeps' (a5= T_HISTORY ) ) )?
             int alt66=2;
             int LA66_0 = input.LA(1);
 
@@ -9902,12 +10120,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt66) {
                 case 1 :
-                    // Thingml.g:6308:3: (a4= 'keeps' (a5= T_HISTORY ) )
+                    // Thingml.g:6502:3: (a4= 'keeps' (a5= T_HISTORY ) )
                     {
-                    // Thingml.g:6308:3: (a4= 'keeps' (a5= T_HISTORY ) )
-                    // Thingml.g:6309:4: a4= 'keeps' (a5= T_HISTORY )
+                    // Thingml.g:6502:3: (a4= 'keeps' (a5= T_HISTORY ) )
+                    // Thingml.g:6503:4: a4= 'keeps' (a5= T_HISTORY )
                     {
-                    a4=(Token)match(input,70,FOLLOW_70_in_parse_org_sintef_thingml_ParallelRegion6518); if (state.failed) return element;
+                    a4=(Token)match(input,70,FOLLOW_70_in_parse_org_sintef_thingml_ParallelRegion6610); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -9924,10 +10142,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1314]);
                     			}
 
-                    // Thingml.g:6323:4: (a5= T_HISTORY )
-                    // Thingml.g:6324:5: a5= T_HISTORY
+                    // Thingml.g:6517:4: (a5= T_HISTORY )
+                    // Thingml.g:6518:5: a5= T_HISTORY
                     {
-                    a5=(Token)match(input,T_HISTORY,FOLLOW_T_HISTORY_in_parse_org_sintef_thingml_ParallelRegion6544); if (state.failed) return element;
+                    a5=(Token)match(input,T_HISTORY,FOLLOW_T_HISTORY_in_parse_org_sintef_thingml_ParallelRegion6636); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -9982,7 +10200,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1318]);
             	}
 
-            // Thingml.g:6368:2: ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:6562:2: ( ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop67:
             do {
                 int alt67=2;
@@ -9995,15 +10213,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt67) {
             	case 1 :
-            	    // Thingml.g:6369:3: ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:6563:3: ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:6369:3: ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:6370:4: (a6_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:6563:3: ( (a6_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:6564:4: (a6_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:6370:4: (a6_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:6371:5: a6_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:6564:4: (a6_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:6565:5: a6_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_ParallelRegion6605);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_ParallelRegion6697);
             	    a6_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -10056,7 +10274,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1322]);
             	}
 
-            a7=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_ParallelRegion6646); if (state.failed) return element;
+            a7=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_ParallelRegion6738); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -10076,7 +10294,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1326]);
             	}
 
-            // Thingml.g:6422:2: ( ( (a8_0= parse_org_sintef_thingml_State ) ) )*
+            // Thingml.g:6616:2: ( ( (a8_0= parse_org_sintef_thingml_State ) ) )*
             loop68:
             do {
                 int alt68=2;
@@ -10089,15 +10307,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt68) {
             	case 1 :
-            	    // Thingml.g:6423:3: ( (a8_0= parse_org_sintef_thingml_State ) )
+            	    // Thingml.g:6617:3: ( (a8_0= parse_org_sintef_thingml_State ) )
             	    {
-            	    // Thingml.g:6423:3: ( (a8_0= parse_org_sintef_thingml_State ) )
-            	    // Thingml.g:6424:4: (a8_0= parse_org_sintef_thingml_State )
+            	    // Thingml.g:6617:3: ( (a8_0= parse_org_sintef_thingml_State ) )
+            	    // Thingml.g:6618:4: (a8_0= parse_org_sintef_thingml_State )
             	    {
-            	    // Thingml.g:6424:4: (a8_0= parse_org_sintef_thingml_State )
-            	    // Thingml.g:6425:5: a8_0= parse_org_sintef_thingml_State
+            	    // Thingml.g:6618:4: (a8_0= parse_org_sintef_thingml_State )
+            	    // Thingml.g:6619:5: a8_0= parse_org_sintef_thingml_State
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_State_in_parse_org_sintef_thingml_ParallelRegion6675);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_State_in_parse_org_sintef_thingml_ParallelRegion6767);
             	    a8_0=parse_org_sintef_thingml_State();
 
             	    state._fsp--;
@@ -10154,7 +10372,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1334]);
             	}
 
-            a9=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_ParallelRegion6716); if (state.failed) return element;
+            a9=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_ParallelRegion6808); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -10193,7 +10411,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Transition"
-    // Thingml.g:6481:1: parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition element = null] : a0= 'transition' ( ( (a1= TEXT ) ) )? a2= '->' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a5= 'event' (a6_0= parse_org_sintef_thingml_Event ) ) )* ( (a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression ) ) )? ( (a9= 'action' (a10_0= parse_org_sintef_thingml_Action ) ) )? ( (a11= 'before' (a12_0= parse_org_sintef_thingml_Action ) ) )? ( (a13= 'after' (a14_0= parse_org_sintef_thingml_Action ) ) )? ;
+    // Thingml.g:6675:1: parse_org_sintef_thingml_Transition returns [org.sintef.thingml.Transition element = null] : a0= 'transition' ( ( (a1= TEXT ) ) )? a2= '->' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a5= 'event' (a6_0= parse_org_sintef_thingml_Event ) ) )* ( (a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression ) ) )? ( (a9= 'action' (a10_0= parse_org_sintef_thingml_Action ) ) )? ( (a11= 'before' (a12_0= parse_org_sintef_thingml_Action ) ) )? ( (a13= 'after' (a14_0= parse_org_sintef_thingml_Action ) ) )? ;
     public final org.sintef.thingml.Transition parse_org_sintef_thingml_Transition() throws RecognitionException {
         org.sintef.thingml.Transition element =  null;
 
@@ -10226,10 +10444,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 18) ) { return element; }
 
-            // Thingml.g:6484:2: (a0= 'transition' ( ( (a1= TEXT ) ) )? a2= '->' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a5= 'event' (a6_0= parse_org_sintef_thingml_Event ) ) )* ( (a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression ) ) )? ( (a9= 'action' (a10_0= parse_org_sintef_thingml_Action ) ) )? ( (a11= 'before' (a12_0= parse_org_sintef_thingml_Action ) ) )? ( (a13= 'after' (a14_0= parse_org_sintef_thingml_Action ) ) )? )
-            // Thingml.g:6485:2: a0= 'transition' ( ( (a1= TEXT ) ) )? a2= '->' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a5= 'event' (a6_0= parse_org_sintef_thingml_Event ) ) )* ( (a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression ) ) )? ( (a9= 'action' (a10_0= parse_org_sintef_thingml_Action ) ) )? ( (a11= 'before' (a12_0= parse_org_sintef_thingml_Action ) ) )? ( (a13= 'after' (a14_0= parse_org_sintef_thingml_Action ) ) )?
+            // Thingml.g:6678:2: (a0= 'transition' ( ( (a1= TEXT ) ) )? a2= '->' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a5= 'event' (a6_0= parse_org_sintef_thingml_Event ) ) )* ( (a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression ) ) )? ( (a9= 'action' (a10_0= parse_org_sintef_thingml_Action ) ) )? ( (a11= 'before' (a12_0= parse_org_sintef_thingml_Action ) ) )? ( (a13= 'after' (a14_0= parse_org_sintef_thingml_Action ) ) )? )
+            // Thingml.g:6679:2: a0= 'transition' ( ( (a1= TEXT ) ) )? a2= '->' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a5= 'event' (a6_0= parse_org_sintef_thingml_Event ) ) )* ( (a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression ) ) )? ( (a9= 'action' (a10_0= parse_org_sintef_thingml_Action ) ) )? ( (a11= 'before' (a12_0= parse_org_sintef_thingml_Action ) ) )? ( (a13= 'after' (a14_0= parse_org_sintef_thingml_Action ) ) )?
             {
-            a0=(Token)match(input,94,FOLLOW_94_in_parse_org_sintef_thingml_Transition6745); if (state.failed) return element;
+            a0=(Token)match(input,94,FOLLOW_94_in_parse_org_sintef_thingml_Transition6837); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -10247,7 +10465,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1339]);
             	}
 
-            // Thingml.g:6500:2: ( ( (a1= TEXT ) ) )?
+            // Thingml.g:6694:2: ( ( (a1= TEXT ) ) )?
             int alt69=2;
             int LA69_0 = input.LA(1);
 
@@ -10256,15 +10474,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt69) {
                 case 1 :
-                    // Thingml.g:6501:3: ( (a1= TEXT ) )
+                    // Thingml.g:6695:3: ( (a1= TEXT ) )
                     {
-                    // Thingml.g:6501:3: ( (a1= TEXT ) )
-                    // Thingml.g:6502:4: (a1= TEXT )
+                    // Thingml.g:6695:3: ( (a1= TEXT ) )
+                    // Thingml.g:6696:4: (a1= TEXT )
                     {
-                    // Thingml.g:6502:4: (a1= TEXT )
-                    // Thingml.g:6503:5: a1= TEXT
+                    // Thingml.g:6696:4: (a1= TEXT )
+                    // Thingml.g:6697:5: a1= TEXT
                     {
-                    a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Transition6774); if (state.failed) return element;
+                    a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Transition6866); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -10317,7 +10535,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1341]);
             	}
 
-            a2=(Token)match(input,28,FOLLOW_28_in_parse_org_sintef_thingml_Transition6820); if (state.failed) return element;
+            a2=(Token)match(input,28,FOLLOW_28_in_parse_org_sintef_thingml_Transition6912); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -10334,10 +10552,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1342]);
             	}
 
-            // Thingml.g:6559:2: (a3= TEXT )
-            // Thingml.g:6560:3: a3= TEXT
+            // Thingml.g:6753:2: (a3= TEXT )
+            // Thingml.g:6754:3: a3= TEXT
             {
-            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Transition6838); if (state.failed) return element;
+            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Transition6930); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -10393,7 +10611,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1356]);
             	}
 
-            // Thingml.g:6612:2: ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:6806:2: ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop70:
             do {
                 int alt70=2;
@@ -10406,15 +10624,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt70) {
             	case 1 :
-            	    // Thingml.g:6613:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:6807:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:6613:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:6614:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:6807:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:6808:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:6614:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:6615:5: a4_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:6808:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:6809:5: a4_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Transition6874);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Transition6966);
             	    a4_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -10491,7 +10709,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1384]);
             	}
 
-            // Thingml.g:6673:2: ( (a5= 'event' (a6_0= parse_org_sintef_thingml_Event ) ) )*
+            // Thingml.g:6867:2: ( (a5= 'event' (a6_0= parse_org_sintef_thingml_Event ) ) )*
             loop71:
             do {
                 int alt71=2;
@@ -10504,12 +10722,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt71) {
             	case 1 :
-            	    // Thingml.g:6674:3: (a5= 'event' (a6_0= parse_org_sintef_thingml_Event ) )
+            	    // Thingml.g:6868:3: (a5= 'event' (a6_0= parse_org_sintef_thingml_Event ) )
             	    {
-            	    // Thingml.g:6674:3: (a5= 'event' (a6_0= parse_org_sintef_thingml_Event ) )
-            	    // Thingml.g:6675:4: a5= 'event' (a6_0= parse_org_sintef_thingml_Event )
+            	    // Thingml.g:6868:3: (a5= 'event' (a6_0= parse_org_sintef_thingml_Event ) )
+            	    // Thingml.g:6869:4: a5= 'event' (a6_0= parse_org_sintef_thingml_Event )
             	    {
-            	    a5=(Token)match(input,57,FOLLOW_57_in_parse_org_sintef_thingml_Transition6924); if (state.failed) return element;
+            	    a5=(Token)match(input,57,FOLLOW_57_in_parse_org_sintef_thingml_Transition7016); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -10527,10 +10745,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTransition(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1386]);
             	    			}
 
-            	    // Thingml.g:6690:4: (a6_0= parse_org_sintef_thingml_Event )
-            	    // Thingml.g:6691:5: a6_0= parse_org_sintef_thingml_Event
+            	    // Thingml.g:6884:4: (a6_0= parse_org_sintef_thingml_Event )
+            	    // Thingml.g:6885:5: a6_0= parse_org_sintef_thingml_Event
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Event_in_parse_org_sintef_thingml_Transition6950);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Event_in_parse_org_sintef_thingml_Transition7042);
             	    a6_0=parse_org_sintef_thingml_Event();
 
             	    state._fsp--;
@@ -10605,7 +10823,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1412]);
             	}
 
-            // Thingml.g:6747:2: ( (a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression ) ) )?
+            // Thingml.g:6941:2: ( (a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression ) ) )?
             int alt72=2;
             int LA72_0 = input.LA(1);
 
@@ -10614,12 +10832,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt72) {
                 case 1 :
-                    // Thingml.g:6748:3: (a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression ) )
+                    // Thingml.g:6942:3: (a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression ) )
                     {
-                    // Thingml.g:6748:3: (a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression ) )
-                    // Thingml.g:6749:4: a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:6942:3: (a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression ) )
+                    // Thingml.g:6943:4: a7= 'guard' (a8_0= parse_org_sintef_thingml_Expression )
                     {
-                    a7=(Token)match(input,63,FOLLOW_63_in_parse_org_sintef_thingml_Transition7000); if (state.failed) return element;
+                    a7=(Token)match(input,63,FOLLOW_63_in_parse_org_sintef_thingml_Transition7092); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -10647,10 +10865,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTransition(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1424]);
                     			}
 
-                    // Thingml.g:6774:4: (a8_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:6775:5: a8_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:6968:4: (a8_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:6969:5: a8_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Transition7026);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Transition7118);
                     a8_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
@@ -10718,7 +10936,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1446]);
             	}
 
-            // Thingml.g:6827:2: ( (a9= 'action' (a10_0= parse_org_sintef_thingml_Action ) ) )?
+            // Thingml.g:7021:2: ( (a9= 'action' (a10_0= parse_org_sintef_thingml_Action ) ) )?
             int alt73=2;
             int LA73_0 = input.LA(1);
 
@@ -10727,12 +10945,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt73) {
                 case 1 :
-                    // Thingml.g:6828:3: (a9= 'action' (a10_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:7022:3: (a9= 'action' (a10_0= parse_org_sintef_thingml_Action ) )
                     {
-                    // Thingml.g:6828:3: (a9= 'action' (a10_0= parse_org_sintef_thingml_Action ) )
-                    // Thingml.g:6829:4: a9= 'action' (a10_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:7022:3: (a9= 'action' (a10_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:7023:4: a9= 'action' (a10_0= parse_org_sintef_thingml_Action )
                     {
-                    a9=(Token)match(input,43,FOLLOW_43_in_parse_org_sintef_thingml_Transition7076); if (state.failed) return element;
+                    a9=(Token)match(input,43,FOLLOW_43_in_parse_org_sintef_thingml_Transition7168); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -10760,10 +10978,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTransition(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1458]);
                     			}
 
-                    // Thingml.g:6854:4: (a10_0= parse_org_sintef_thingml_Action )
-                    // Thingml.g:6855:5: a10_0= parse_org_sintef_thingml_Action
+                    // Thingml.g:7048:4: (a10_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:7049:5: a10_0= parse_org_sintef_thingml_Action
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Transition7102);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Transition7194);
                     a10_0=parse_org_sintef_thingml_Action();
 
                     state._fsp--;
@@ -10829,7 +11047,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1478]);
             	}
 
-            // Thingml.g:6905:2: ( (a11= 'before' (a12_0= parse_org_sintef_thingml_Action ) ) )?
+            // Thingml.g:7099:2: ( (a11= 'before' (a12_0= parse_org_sintef_thingml_Action ) ) )?
             int alt74=2;
             int LA74_0 = input.LA(1);
 
@@ -10838,12 +11056,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt74) {
                 case 1 :
-                    // Thingml.g:6906:3: (a11= 'before' (a12_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:7100:3: (a11= 'before' (a12_0= parse_org_sintef_thingml_Action ) )
                     {
-                    // Thingml.g:6906:3: (a11= 'before' (a12_0= parse_org_sintef_thingml_Action ) )
-                    // Thingml.g:6907:4: a11= 'before' (a12_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:7100:3: (a11= 'before' (a12_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:7101:4: a11= 'before' (a12_0= parse_org_sintef_thingml_Action )
                     {
-                    a11=(Token)match(input,46,FOLLOW_46_in_parse_org_sintef_thingml_Transition7152); if (state.failed) return element;
+                    a11=(Token)match(input,46,FOLLOW_46_in_parse_org_sintef_thingml_Transition7244); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -10871,10 +11089,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTransition(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1490]);
                     			}
 
-                    // Thingml.g:6932:4: (a12_0= parse_org_sintef_thingml_Action )
-                    // Thingml.g:6933:5: a12_0= parse_org_sintef_thingml_Action
+                    // Thingml.g:7126:4: (a12_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:7127:5: a12_0= parse_org_sintef_thingml_Action
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Transition7178);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Transition7270);
                     a12_0=parse_org_sintef_thingml_Action();
 
                     state._fsp--;
@@ -10938,7 +11156,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1508]);
             	}
 
-            // Thingml.g:6981:2: ( (a13= 'after' (a14_0= parse_org_sintef_thingml_Action ) ) )?
+            // Thingml.g:7175:2: ( (a13= 'after' (a14_0= parse_org_sintef_thingml_Action ) ) )?
             int alt75=2;
             int LA75_0 = input.LA(1);
 
@@ -10947,12 +11165,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt75) {
                 case 1 :
-                    // Thingml.g:6982:3: (a13= 'after' (a14_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:7176:3: (a13= 'after' (a14_0= parse_org_sintef_thingml_Action ) )
                     {
-                    // Thingml.g:6982:3: (a13= 'after' (a14_0= parse_org_sintef_thingml_Action ) )
-                    // Thingml.g:6983:4: a13= 'after' (a14_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:7176:3: (a13= 'after' (a14_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:7177:4: a13= 'after' (a14_0= parse_org_sintef_thingml_Action )
                     {
-                    a13=(Token)match(input,44,FOLLOW_44_in_parse_org_sintef_thingml_Transition7228); if (state.failed) return element;
+                    a13=(Token)match(input,44,FOLLOW_44_in_parse_org_sintef_thingml_Transition7320); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -10980,10 +11198,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTransition(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1520]);
                     			}
 
-                    // Thingml.g:7008:4: (a14_0= parse_org_sintef_thingml_Action )
-                    // Thingml.g:7009:5: a14_0= parse_org_sintef_thingml_Action
+                    // Thingml.g:7202:4: (a14_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:7203:5: a14_0= parse_org_sintef_thingml_Action
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Transition7254);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Transition7346);
                     a14_0=parse_org_sintef_thingml_Action();
 
                     state._fsp--;
@@ -11065,7 +11283,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_InternalTransition"
-    // Thingml.g:7057:1: parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.InternalTransition element = null] : a0= 'internal' ( ( (a1= TEXT ) ) )? ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a3= 'event' (a4_0= parse_org_sintef_thingml_Event ) ) )* ( (a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression ) ) )? ( (a7= 'action' (a8_0= parse_org_sintef_thingml_Action ) ) )? ;
+    // Thingml.g:7251:1: parse_org_sintef_thingml_InternalTransition returns [org.sintef.thingml.InternalTransition element = null] : a0= 'internal' ( ( (a1= TEXT ) ) )? ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a3= 'event' (a4_0= parse_org_sintef_thingml_Event ) ) )* ( (a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression ) ) )? ( (a7= 'action' (a8_0= parse_org_sintef_thingml_Action ) ) )? ;
     public final org.sintef.thingml.InternalTransition parse_org_sintef_thingml_InternalTransition() throws RecognitionException {
         org.sintef.thingml.InternalTransition element =  null;
 
@@ -11090,10 +11308,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 19) ) { return element; }
 
-            // Thingml.g:7060:2: (a0= 'internal' ( ( (a1= TEXT ) ) )? ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a3= 'event' (a4_0= parse_org_sintef_thingml_Event ) ) )* ( (a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression ) ) )? ( (a7= 'action' (a8_0= parse_org_sintef_thingml_Action ) ) )? )
-            // Thingml.g:7061:2: a0= 'internal' ( ( (a1= TEXT ) ) )? ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a3= 'event' (a4_0= parse_org_sintef_thingml_Event ) ) )* ( (a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression ) ) )? ( (a7= 'action' (a8_0= parse_org_sintef_thingml_Action ) ) )?
+            // Thingml.g:7254:2: (a0= 'internal' ( ( (a1= TEXT ) ) )? ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a3= 'event' (a4_0= parse_org_sintef_thingml_Event ) ) )* ( (a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression ) ) )? ( (a7= 'action' (a8_0= parse_org_sintef_thingml_Action ) ) )? )
+            // Thingml.g:7255:2: a0= 'internal' ( ( (a1= TEXT ) ) )? ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ( (a3= 'event' (a4_0= parse_org_sintef_thingml_Event ) ) )* ( (a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression ) ) )? ( (a7= 'action' (a8_0= parse_org_sintef_thingml_Action ) ) )?
             {
-            a0=(Token)match(input,69,FOLLOW_69_in_parse_org_sintef_thingml_InternalTransition7310); if (state.failed) return element;
+            a0=(Token)match(input,69,FOLLOW_69_in_parse_org_sintef_thingml_InternalTransition7402); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -11123,7 +11341,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1550]);
             	}
 
-            // Thingml.g:7088:2: ( ( (a1= TEXT ) ) )?
+            // Thingml.g:7282:2: ( ( (a1= TEXT ) ) )?
             int alt76=2;
             int LA76_0 = input.LA(1);
 
@@ -11132,15 +11350,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt76) {
                 case 1 :
-                    // Thingml.g:7089:3: ( (a1= TEXT ) )
+                    // Thingml.g:7283:3: ( (a1= TEXT ) )
                     {
-                    // Thingml.g:7089:3: ( (a1= TEXT ) )
-                    // Thingml.g:7090:4: (a1= TEXT )
+                    // Thingml.g:7283:3: ( (a1= TEXT ) )
+                    // Thingml.g:7284:4: (a1= TEXT )
                     {
-                    // Thingml.g:7090:4: (a1= TEXT )
-                    // Thingml.g:7091:5: a1= TEXT
+                    // Thingml.g:7284:4: (a1= TEXT )
+                    // Thingml.g:7285:5: a1= TEXT
                     {
-                    a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_InternalTransition7339); if (state.failed) return element;
+                    a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_InternalTransition7431); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -11217,7 +11435,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1576]);
             	}
 
-            // Thingml.g:7157:2: ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:7351:2: ( ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop77:
             do {
                 int alt77=2;
@@ -11230,15 +11448,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt77) {
             	case 1 :
-            	    // Thingml.g:7158:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:7352:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:7158:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:7159:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:7352:3: ( (a2_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:7353:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:7159:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:7160:5: a2_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:7353:4: (a2_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:7354:5: a2_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_InternalTransition7400);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_InternalTransition7492);
             	    a2_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -11313,7 +11531,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1602]);
             	}
 
-            // Thingml.g:7216:2: ( (a3= 'event' (a4_0= parse_org_sintef_thingml_Event ) ) )*
+            // Thingml.g:7410:2: ( (a3= 'event' (a4_0= parse_org_sintef_thingml_Event ) ) )*
             loop78:
             do {
                 int alt78=2;
@@ -11326,12 +11544,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt78) {
             	case 1 :
-            	    // Thingml.g:7217:3: (a3= 'event' (a4_0= parse_org_sintef_thingml_Event ) )
+            	    // Thingml.g:7411:3: (a3= 'event' (a4_0= parse_org_sintef_thingml_Event ) )
             	    {
-            	    // Thingml.g:7217:3: (a3= 'event' (a4_0= parse_org_sintef_thingml_Event ) )
-            	    // Thingml.g:7218:4: a3= 'event' (a4_0= parse_org_sintef_thingml_Event )
+            	    // Thingml.g:7411:3: (a3= 'event' (a4_0= parse_org_sintef_thingml_Event ) )
+            	    // Thingml.g:7412:4: a3= 'event' (a4_0= parse_org_sintef_thingml_Event )
             	    {
-            	    a3=(Token)match(input,57,FOLLOW_57_in_parse_org_sintef_thingml_InternalTransition7450); if (state.failed) return element;
+            	    a3=(Token)match(input,57,FOLLOW_57_in_parse_org_sintef_thingml_InternalTransition7542); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -11349,10 +11567,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getInternalTransition(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1604]);
             	    			}
 
-            	    // Thingml.g:7233:4: (a4_0= parse_org_sintef_thingml_Event )
-            	    // Thingml.g:7234:5: a4_0= parse_org_sintef_thingml_Event
+            	    // Thingml.g:7427:4: (a4_0= parse_org_sintef_thingml_Event )
+            	    // Thingml.g:7428:5: a4_0= parse_org_sintef_thingml_Event
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Event_in_parse_org_sintef_thingml_InternalTransition7476);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Event_in_parse_org_sintef_thingml_InternalTransition7568);
             	    a4_0=parse_org_sintef_thingml_Event();
 
             	    state._fsp--;
@@ -11425,7 +11643,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1628]);
             	}
 
-            // Thingml.g:7288:2: ( (a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression ) ) )?
+            // Thingml.g:7482:2: ( (a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression ) ) )?
             int alt79=2;
             int LA79_0 = input.LA(1);
 
@@ -11434,12 +11652,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt79) {
                 case 1 :
-                    // Thingml.g:7289:3: (a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression ) )
+                    // Thingml.g:7483:3: (a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression ) )
                     {
-                    // Thingml.g:7289:3: (a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression ) )
-                    // Thingml.g:7290:4: a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:7483:3: (a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression ) )
+                    // Thingml.g:7484:4: a5= 'guard' (a6_0= parse_org_sintef_thingml_Expression )
                     {
-                    a5=(Token)match(input,63,FOLLOW_63_in_parse_org_sintef_thingml_InternalTransition7526); if (state.failed) return element;
+                    a5=(Token)match(input,63,FOLLOW_63_in_parse_org_sintef_thingml_InternalTransition7618); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -11467,10 +11685,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getInternalTransition(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1640]);
                     			}
 
-                    // Thingml.g:7315:4: (a6_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:7316:5: a6_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:7509:4: (a6_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:7510:5: a6_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_InternalTransition7552);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_InternalTransition7644);
                     a6_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
@@ -11536,7 +11754,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1660]);
             	}
 
-            // Thingml.g:7366:2: ( (a7= 'action' (a8_0= parse_org_sintef_thingml_Action ) ) )?
+            // Thingml.g:7560:2: ( (a7= 'action' (a8_0= parse_org_sintef_thingml_Action ) ) )?
             int alt80=2;
             int LA80_0 = input.LA(1);
 
@@ -11545,12 +11763,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt80) {
                 case 1 :
-                    // Thingml.g:7367:3: (a7= 'action' (a8_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:7561:3: (a7= 'action' (a8_0= parse_org_sintef_thingml_Action ) )
                     {
-                    // Thingml.g:7367:3: (a7= 'action' (a8_0= parse_org_sintef_thingml_Action ) )
-                    // Thingml.g:7368:4: a7= 'action' (a8_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:7561:3: (a7= 'action' (a8_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:7562:4: a7= 'action' (a8_0= parse_org_sintef_thingml_Action )
                     {
-                    a7=(Token)match(input,43,FOLLOW_43_in_parse_org_sintef_thingml_InternalTransition7602); if (state.failed) return element;
+                    a7=(Token)match(input,43,FOLLOW_43_in_parse_org_sintef_thingml_InternalTransition7694); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -11578,10 +11796,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getInternalTransition(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1672]);
                     			}
 
-                    // Thingml.g:7393:4: (a8_0= parse_org_sintef_thingml_Action )
-                    // Thingml.g:7394:5: a8_0= parse_org_sintef_thingml_Action
+                    // Thingml.g:7587:4: (a8_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:7588:5: a8_0= parse_org_sintef_thingml_Action
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_InternalTransition7628);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_InternalTransition7720);
                     a8_0=parse_org_sintef_thingml_Action();
 
                     state._fsp--;
@@ -11665,7 +11883,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ReceiveMessage"
-    // Thingml.g:7444:1: parse_org_sintef_thingml_ReceiveMessage returns [org.sintef.thingml.ReceiveMessage element = null] : ( ( (a0= TEXT ) a1= ':' ) )? (a2= TEXT ) a3= '?' (a4= TEXT ) ;
+    // Thingml.g:7638:1: parse_org_sintef_thingml_ReceiveMessage returns [org.sintef.thingml.ReceiveMessage element = null] : ( ( (a0= TEXT ) a1= ':' ) )? (a2= TEXT ) a3= '?' (a4= TEXT ) ;
     public final org.sintef.thingml.ReceiveMessage parse_org_sintef_thingml_ReceiveMessage() throws RecognitionException {
         org.sintef.thingml.ReceiveMessage element =  null;
 
@@ -11682,10 +11900,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 20) ) { return element; }
 
-            // Thingml.g:7447:2: ( ( ( (a0= TEXT ) a1= ':' ) )? (a2= TEXT ) a3= '?' (a4= TEXT ) )
-            // Thingml.g:7448:2: ( ( (a0= TEXT ) a1= ':' ) )? (a2= TEXT ) a3= '?' (a4= TEXT )
+            // Thingml.g:7641:2: ( ( ( (a0= TEXT ) a1= ':' ) )? (a2= TEXT ) a3= '?' (a4= TEXT ) )
+            // Thingml.g:7642:2: ( ( (a0= TEXT ) a1= ':' ) )? (a2= TEXT ) a3= '?' (a4= TEXT )
             {
-            // Thingml.g:7448:2: ( ( (a0= TEXT ) a1= ':' ) )?
+            // Thingml.g:7642:2: ( ( (a0= TEXT ) a1= ':' ) )?
             int alt81=2;
             int LA81_0 = input.LA(1);
 
@@ -11698,15 +11916,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt81) {
                 case 1 :
-                    // Thingml.g:7449:3: ( (a0= TEXT ) a1= ':' )
+                    // Thingml.g:7643:3: ( (a0= TEXT ) a1= ':' )
                     {
-                    // Thingml.g:7449:3: ( (a0= TEXT ) a1= ':' )
-                    // Thingml.g:7450:4: (a0= TEXT ) a1= ':'
+                    // Thingml.g:7643:3: ( (a0= TEXT ) a1= ':' )
+                    // Thingml.g:7644:4: (a0= TEXT ) a1= ':'
                     {
-                    // Thingml.g:7450:4: (a0= TEXT )
-                    // Thingml.g:7451:5: a0= TEXT
+                    // Thingml.g:7644:4: (a0= TEXT )
+                    // Thingml.g:7645:5: a0= TEXT
                     {
-                    a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ReceiveMessage7699); if (state.failed) return element;
+                    a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ReceiveMessage7791); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -11745,7 +11963,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1691]);
                     			}
 
-                    a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_ReceiveMessage7732); if (state.failed) return element;
+                    a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_ReceiveMessage7824); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -11776,10 +11994,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1693]);
             	}
 
-            // Thingml.g:7507:2: (a2= TEXT )
-            // Thingml.g:7508:3: a2= TEXT
+            // Thingml.g:7701:2: (a2= TEXT )
+            // Thingml.g:7702:3: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ReceiveMessage7769); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ReceiveMessage7861); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -11822,7 +12040,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1694]);
             	}
 
-            a3=(Token)match(input,39,FOLLOW_39_in_parse_org_sintef_thingml_ReceiveMessage7790); if (state.failed) return element;
+            a3=(Token)match(input,39,FOLLOW_39_in_parse_org_sintef_thingml_ReceiveMessage7882); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -11839,10 +12057,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1695]);
             	}
 
-            // Thingml.g:7561:2: (a4= TEXT )
-            // Thingml.g:7562:3: a4= TEXT
+            // Thingml.g:7755:2: (a4= TEXT )
+            // Thingml.g:7756:3: a4= TEXT
             {
-            a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ReceiveMessage7808); if (state.failed) return element;
+            a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ReceiveMessage7900); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -11922,7 +12140,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_PropertyAssign"
-    // Thingml.g:7620:1: parse_org_sintef_thingml_PropertyAssign returns [org.sintef.thingml.PropertyAssign element = null] : a0= 'set' (a1= TEXT ) ( (a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']' ) )* a5= '=' (a6_0= parse_org_sintef_thingml_Expression ) ;
+    // Thingml.g:7814:1: parse_org_sintef_thingml_PropertyAssign returns [org.sintef.thingml.PropertyAssign element = null] : a0= 'set' (a1= TEXT ) ( (a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']' ) )* a5= '=' (a6_0= parse_org_sintef_thingml_Expression ) ;
     public final org.sintef.thingml.PropertyAssign parse_org_sintef_thingml_PropertyAssign() throws RecognitionException {
         org.sintef.thingml.PropertyAssign element =  null;
 
@@ -11943,10 +12161,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 21) ) { return element; }
 
-            // Thingml.g:7623:2: (a0= 'set' (a1= TEXT ) ( (a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']' ) )* a5= '=' (a6_0= parse_org_sintef_thingml_Expression ) )
-            // Thingml.g:7624:2: a0= 'set' (a1= TEXT ) ( (a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']' ) )* a5= '=' (a6_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:7817:2: (a0= 'set' (a1= TEXT ) ( (a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']' ) )* a5= '=' (a6_0= parse_org_sintef_thingml_Expression ) )
+            // Thingml.g:7818:2: a0= 'set' (a1= TEXT ) ( (a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']' ) )* a5= '=' (a6_0= parse_org_sintef_thingml_Expression )
             {
-            a0=(Token)match(input,88,FOLLOW_88_in_parse_org_sintef_thingml_PropertyAssign7844); if (state.failed) return element;
+            a0=(Token)match(input,88,FOLLOW_88_in_parse_org_sintef_thingml_PropertyAssign7936); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -11963,10 +12181,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1714]);
             	}
 
-            // Thingml.g:7638:2: (a1= TEXT )
-            // Thingml.g:7639:3: a1= TEXT
+            // Thingml.g:7832:2: (a1= TEXT )
+            // Thingml.g:7833:3: a1= TEXT
             {
-            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_PropertyAssign7862); if (state.failed) return element;
+            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_PropertyAssign7954); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -12010,25 +12228,25 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1716]);
             	}
 
-            // Thingml.g:7679:2: ( (a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']' ) )*
+            // Thingml.g:7873:2: ( (a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']' ) )*
             loop82:
             do {
                 int alt82=2;
                 int LA82_0 = input.LA(1);
 
-                if ( (LA82_0==40) ) {
+                if ( (LA82_0==T_ARRAY) ) {
                     alt82=1;
                 }
 
 
                 switch (alt82) {
             	case 1 :
-            	    // Thingml.g:7680:3: (a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']' )
+            	    // Thingml.g:7874:3: (a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']' )
             	    {
-            	    // Thingml.g:7680:3: (a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']' )
-            	    // Thingml.g:7681:4: a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']'
+            	    // Thingml.g:7874:3: (a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']' )
+            	    // Thingml.g:7875:4: a2= '[' (a3_0= parse_org_sintef_thingml_Expression ) a4= ']'
             	    {
-            	    a2=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_PropertyAssign7892); if (state.failed) return element;
+            	    a2=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_PropertyAssign7984); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -12056,10 +12274,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPropertyAssign(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1728]);
             	    			}
 
-            	    // Thingml.g:7706:4: (a3_0= parse_org_sintef_thingml_Expression )
-            	    // Thingml.g:7707:5: a3_0= parse_org_sintef_thingml_Expression
+            	    // Thingml.g:7900:4: (a3_0= parse_org_sintef_thingml_Expression )
+            	    // Thingml.g:7901:5: a3_0= parse_org_sintef_thingml_Expression
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PropertyAssign7918);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PropertyAssign8010);
             	    a3_0=parse_org_sintef_thingml_Expression();
 
             	    state._fsp--;
@@ -12093,7 +12311,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1729]);
             	    			}
 
-            	    a4=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_PropertyAssign7946); if (state.failed) return element;
+            	    a4=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_PropertyAssign8038); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -12129,7 +12347,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1733]);
             	}
 
-            a5=(Token)match(input,35,FOLLOW_35_in_parse_org_sintef_thingml_PropertyAssign7979); if (state.failed) return element;
+            a5=(Token)match(input,35,FOLLOW_35_in_parse_org_sintef_thingml_PropertyAssign8071); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -12157,10 +12375,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPropertyAssign(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1745]);
             	}
 
-            // Thingml.g:7780:2: (a6_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:7781:3: a6_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:7974:2: (a6_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:7975:3: a6_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PropertyAssign7997);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PropertyAssign8089);
             a6_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -12225,7 +12443,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Configuration"
-    // Thingml.g:7819:1: parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration element = null] : a0= 'configuration' ( ( (a1= T_ASPECT ) ) )? (a2= TEXT ) ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a4= '{' ( ( (a5_0= parse_org_sintef_thingml_Instance ) | (a6_0= parse_org_sintef_thingml_Connector ) | (a7_0= parse_org_sintef_thingml_ConfigInclude ) | (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign ) ) )* a9= '}' ;
+    // Thingml.g:8013:1: parse_org_sintef_thingml_Configuration returns [org.sintef.thingml.Configuration element = null] : a0= 'configuration' ( ( (a1= T_ASPECT ) ) )? (a2= TEXT ) ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a4= '{' ( ( (a5_0= parse_org_sintef_thingml_Instance ) | (a6_0= parse_org_sintef_thingml_Connector ) | (a7_0= parse_org_sintef_thingml_ConfigInclude ) | (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign ) ) )* a9= '}' ;
     public final org.sintef.thingml.Configuration parse_org_sintef_thingml_Configuration() throws RecognitionException {
         org.sintef.thingml.Configuration element =  null;
 
@@ -12252,10 +12470,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 22) ) { return element; }
 
-            // Thingml.g:7822:2: (a0= 'configuration' ( ( (a1= T_ASPECT ) ) )? (a2= TEXT ) ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a4= '{' ( ( (a5_0= parse_org_sintef_thingml_Instance ) | (a6_0= parse_org_sintef_thingml_Connector ) | (a7_0= parse_org_sintef_thingml_ConfigInclude ) | (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign ) ) )* a9= '}' )
-            // Thingml.g:7823:2: a0= 'configuration' ( ( (a1= T_ASPECT ) ) )? (a2= TEXT ) ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a4= '{' ( ( (a5_0= parse_org_sintef_thingml_Instance ) | (a6_0= parse_org_sintef_thingml_Connector ) | (a7_0= parse_org_sintef_thingml_ConfigInclude ) | (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign ) ) )* a9= '}'
+            // Thingml.g:8016:2: (a0= 'configuration' ( ( (a1= T_ASPECT ) ) )? (a2= TEXT ) ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a4= '{' ( ( (a5_0= parse_org_sintef_thingml_Instance ) | (a6_0= parse_org_sintef_thingml_Connector ) | (a7_0= parse_org_sintef_thingml_ConfigInclude ) | (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign ) ) )* a9= '}' )
+            // Thingml.g:8017:2: a0= 'configuration' ( ( (a1= T_ASPECT ) ) )? (a2= TEXT ) ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* a4= '{' ( ( (a5_0= parse_org_sintef_thingml_Instance ) | (a6_0= parse_org_sintef_thingml_Connector ) | (a7_0= parse_org_sintef_thingml_ConfigInclude ) | (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign ) ) )* a9= '}'
             {
-            a0=(Token)match(input,48,FOLLOW_48_in_parse_org_sintef_thingml_Configuration8030); if (state.failed) return element;
+            a0=(Token)match(input,48,FOLLOW_48_in_parse_org_sintef_thingml_Configuration8122); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -12273,7 +12491,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1759]);
             	}
 
-            // Thingml.g:7838:2: ( ( (a1= T_ASPECT ) ) )?
+            // Thingml.g:8032:2: ( ( (a1= T_ASPECT ) ) )?
             int alt83=2;
             int LA83_0 = input.LA(1);
 
@@ -12282,15 +12500,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt83) {
                 case 1 :
-                    // Thingml.g:7839:3: ( (a1= T_ASPECT ) )
+                    // Thingml.g:8033:3: ( (a1= T_ASPECT ) )
                     {
-                    // Thingml.g:7839:3: ( (a1= T_ASPECT ) )
-                    // Thingml.g:7840:4: (a1= T_ASPECT )
+                    // Thingml.g:8033:3: ( (a1= T_ASPECT ) )
+                    // Thingml.g:8034:4: (a1= T_ASPECT )
                     {
-                    // Thingml.g:7840:4: (a1= T_ASPECT )
-                    // Thingml.g:7841:5: a1= T_ASPECT
+                    // Thingml.g:8034:4: (a1= T_ASPECT )
+                    // Thingml.g:8035:5: a1= T_ASPECT
                     {
-                    a1=(Token)match(input,T_ASPECT,FOLLOW_T_ASPECT_in_parse_org_sintef_thingml_Configuration8059); if (state.failed) return element;
+                    a1=(Token)match(input,T_ASPECT,FOLLOW_T_ASPECT_in_parse_org_sintef_thingml_Configuration8151); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -12343,10 +12561,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1761]);
             	}
 
-            // Thingml.g:7883:2: (a2= TEXT )
-            // Thingml.g:7884:3: a2= TEXT
+            // Thingml.g:8077:2: (a2= TEXT )
+            // Thingml.g:8078:3: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Configuration8109); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Configuration8201); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -12386,7 +12604,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1763]);
             	}
 
-            // Thingml.g:7920:2: ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:8114:2: ( ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop84:
             do {
                 int alt84=2;
@@ -12399,15 +12617,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt84) {
             	case 1 :
-            	    // Thingml.g:7921:3: ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:8115:3: ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:7921:3: ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:7922:4: (a3_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:8115:3: ( (a3_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:8116:4: (a3_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:7922:4: (a3_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:7923:5: a3_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:8116:4: (a3_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:8117:5: a3_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Configuration8145);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Configuration8237);
             	    a3_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -12460,7 +12678,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1767]);
             	}
 
-            a4=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_Configuration8186); if (state.failed) return element;
+            a4=(Token)match(input,97,FOLLOW_97_in_parse_org_sintef_thingml_Configuration8278); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -12481,7 +12699,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1772]);
             	}
 
-            // Thingml.g:7975:2: ( ( (a5_0= parse_org_sintef_thingml_Instance ) | (a6_0= parse_org_sintef_thingml_Connector ) | (a7_0= parse_org_sintef_thingml_ConfigInclude ) | (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign ) ) )*
+            // Thingml.g:8169:2: ( ( (a5_0= parse_org_sintef_thingml_Instance ) | (a6_0= parse_org_sintef_thingml_Connector ) | (a7_0= parse_org_sintef_thingml_ConfigInclude ) | (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign ) ) )*
             loop86:
             do {
                 int alt86=2;
@@ -12494,9 +12712,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt86) {
             	case 1 :
-            	    // Thingml.g:7976:3: ( (a5_0= parse_org_sintef_thingml_Instance ) | (a6_0= parse_org_sintef_thingml_Connector ) | (a7_0= parse_org_sintef_thingml_ConfigInclude ) | (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign ) )
+            	    // Thingml.g:8170:3: ( (a5_0= parse_org_sintef_thingml_Instance ) | (a6_0= parse_org_sintef_thingml_Connector ) | (a7_0= parse_org_sintef_thingml_ConfigInclude ) | (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign ) )
             	    {
-            	    // Thingml.g:7976:3: ( (a5_0= parse_org_sintef_thingml_Instance ) | (a6_0= parse_org_sintef_thingml_Connector ) | (a7_0= parse_org_sintef_thingml_ConfigInclude ) | (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign ) )
+            	    // Thingml.g:8170:3: ( (a5_0= parse_org_sintef_thingml_Instance ) | (a6_0= parse_org_sintef_thingml_Connector ) | (a7_0= parse_org_sintef_thingml_ConfigInclude ) | (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign ) )
             	    int alt85=4;
             	    switch ( input.LA(1) ) {
             	    case 68:
@@ -12530,12 +12748,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             	    switch (alt85) {
             	        case 1 :
-            	            // Thingml.g:7977:4: (a5_0= parse_org_sintef_thingml_Instance )
+            	            // Thingml.g:8171:4: (a5_0= parse_org_sintef_thingml_Instance )
             	            {
-            	            // Thingml.g:7977:4: (a5_0= parse_org_sintef_thingml_Instance )
-            	            // Thingml.g:7978:5: a5_0= parse_org_sintef_thingml_Instance
+            	            // Thingml.g:8171:4: (a5_0= parse_org_sintef_thingml_Instance )
+            	            // Thingml.g:8172:5: a5_0= parse_org_sintef_thingml_Instance
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Instance_in_parse_org_sintef_thingml_Configuration8215);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Instance_in_parse_org_sintef_thingml_Configuration8307);
             	            a5_0=parse_org_sintef_thingml_Instance();
 
             	            state._fsp--;
@@ -12576,12 +12794,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 2 :
-            	            // Thingml.g:8008:8: (a6_0= parse_org_sintef_thingml_Connector )
+            	            // Thingml.g:8202:8: (a6_0= parse_org_sintef_thingml_Connector )
             	            {
-            	            // Thingml.g:8008:8: (a6_0= parse_org_sintef_thingml_Connector )
-            	            // Thingml.g:8009:5: a6_0= parse_org_sintef_thingml_Connector
+            	            // Thingml.g:8202:8: (a6_0= parse_org_sintef_thingml_Connector )
+            	            // Thingml.g:8203:5: a6_0= parse_org_sintef_thingml_Connector
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Connector_in_parse_org_sintef_thingml_Configuration8257);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_Connector_in_parse_org_sintef_thingml_Configuration8349);
             	            a6_0=parse_org_sintef_thingml_Connector();
 
             	            state._fsp--;
@@ -12622,12 +12840,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 3 :
-            	            // Thingml.g:8039:8: (a7_0= parse_org_sintef_thingml_ConfigInclude )
+            	            // Thingml.g:8233:8: (a7_0= parse_org_sintef_thingml_ConfigInclude )
             	            {
-            	            // Thingml.g:8039:8: (a7_0= parse_org_sintef_thingml_ConfigInclude )
-            	            // Thingml.g:8040:5: a7_0= parse_org_sintef_thingml_ConfigInclude
+            	            // Thingml.g:8233:8: (a7_0= parse_org_sintef_thingml_ConfigInclude )
+            	            // Thingml.g:8234:5: a7_0= parse_org_sintef_thingml_ConfigInclude
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_ConfigInclude_in_parse_org_sintef_thingml_Configuration8299);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_ConfigInclude_in_parse_org_sintef_thingml_Configuration8391);
             	            a7_0=parse_org_sintef_thingml_ConfigInclude();
 
             	            state._fsp--;
@@ -12668,12 +12886,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	            }
             	            break;
             	        case 4 :
-            	            // Thingml.g:8070:8: (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign )
+            	            // Thingml.g:8264:8: (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign )
             	            {
-            	            // Thingml.g:8070:8: (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign )
-            	            // Thingml.g:8071:5: a8_0= parse_org_sintef_thingml_ConfigPropertyAssign
+            	            // Thingml.g:8264:8: (a8_0= parse_org_sintef_thingml_ConfigPropertyAssign )
+            	            // Thingml.g:8265:5: a8_0= parse_org_sintef_thingml_ConfigPropertyAssign
             	            {
-            	            pushFollow(FOLLOW_parse_org_sintef_thingml_ConfigPropertyAssign_in_parse_org_sintef_thingml_Configuration8341);
+            	            pushFollow(FOLLOW_parse_org_sintef_thingml_ConfigPropertyAssign_in_parse_org_sintef_thingml_Configuration8433);
             	            a8_0=parse_org_sintef_thingml_ConfigPropertyAssign();
 
             	            state._fsp--;
@@ -12735,7 +12953,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1797]);
             	}
 
-            a9=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_Configuration8382); if (state.failed) return element;
+            a9=(Token)match(input,99,FOLLOW_99_in_parse_org_sintef_thingml_Configuration8474); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -12775,7 +12993,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ConfigInclude"
-    // Thingml.g:8130:1: parse_org_sintef_thingml_ConfigInclude returns [org.sintef.thingml.ConfigInclude element = null] : a0= 'group' (a1= TEXT ) a2= ':' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ;
+    // Thingml.g:8324:1: parse_org_sintef_thingml_ConfigInclude returns [org.sintef.thingml.ConfigInclude element = null] : a0= 'group' (a1= TEXT ) a2= ':' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ;
     public final org.sintef.thingml.ConfigInclude parse_org_sintef_thingml_ConfigInclude() throws RecognitionException {
         org.sintef.thingml.ConfigInclude element =  null;
 
@@ -12793,10 +13011,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 23) ) { return element; }
 
-            // Thingml.g:8133:2: (a0= 'group' (a1= TEXT ) a2= ':' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* )
-            // Thingml.g:8134:2: a0= 'group' (a1= TEXT ) a2= ':' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:8327:2: (a0= 'group' (a1= TEXT ) a2= ':' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* )
+            // Thingml.g:8328:2: a0= 'group' (a1= TEXT ) a2= ':' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             {
-            a0=(Token)match(input,62,FOLLOW_62_in_parse_org_sintef_thingml_ConfigInclude8411); if (state.failed) return element;
+            a0=(Token)match(input,62,FOLLOW_62_in_parse_org_sintef_thingml_ConfigInclude8503); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -12813,10 +13031,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1802]);
             	}
 
-            // Thingml.g:8148:2: (a1= TEXT )
-            // Thingml.g:8149:3: a1= TEXT
+            // Thingml.g:8342:2: (a1= TEXT )
+            // Thingml.g:8343:3: a1= TEXT
             {
-            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ConfigInclude8429); if (state.failed) return element;
+            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ConfigInclude8521); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -12855,7 +13073,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1803]);
             	}
 
-            a2=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_ConfigInclude8450); if (state.failed) return element;
+            a2=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_ConfigInclude8542); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -12872,10 +13090,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1804]);
             	}
 
-            // Thingml.g:8198:2: (a3= TEXT )
-            // Thingml.g:8199:3: a3= TEXT
+            // Thingml.g:8392:2: (a3= TEXT )
+            // Thingml.g:8393:3: a3= TEXT
             {
-            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ConfigInclude8468); if (state.failed) return element;
+            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ConfigInclude8560); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -12923,7 +13141,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1810]);
             	}
 
-            // Thingml.g:8243:2: ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:8437:2: ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop87:
             do {
                 int alt87=2;
@@ -12936,15 +13154,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt87) {
             	case 1 :
-            	    // Thingml.g:8244:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:8438:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:8244:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:8245:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:8438:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:8439:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:8245:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:8246:5: a4_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:8439:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:8440:5: a4_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_ConfigInclude8504);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_ConfigInclude8596);
             	    a4_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -13025,7 +13243,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Instance"
-    // Thingml.g:8290:1: parse_org_sintef_thingml_Instance returns [org.sintef.thingml.Instance element = null] : a0= 'instance' ( ( (a1= TEXT ) ) )? a2= ':' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ;
+    // Thingml.g:8484:1: parse_org_sintef_thingml_Instance returns [org.sintef.thingml.Instance element = null] : a0= 'instance' ( ( (a1= TEXT ) ) )? a2= ':' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ;
     public final org.sintef.thingml.Instance parse_org_sintef_thingml_Instance() throws RecognitionException {
         org.sintef.thingml.Instance element =  null;
 
@@ -13043,10 +13261,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 24) ) { return element; }
 
-            // Thingml.g:8293:2: (a0= 'instance' ( ( (a1= TEXT ) ) )? a2= ':' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* )
-            // Thingml.g:8294:2: a0= 'instance' ( ( (a1= TEXT ) ) )? a2= ':' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:8487:2: (a0= 'instance' ( ( (a1= TEXT ) ) )? a2= ':' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* )
+            // Thingml.g:8488:2: a0= 'instance' ( ( (a1= TEXT ) ) )? a2= ':' (a3= TEXT ) ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             {
-            a0=(Token)match(input,68,FOLLOW_68_in_parse_org_sintef_thingml_Instance8560); if (state.failed) return element;
+            a0=(Token)match(input,68,FOLLOW_68_in_parse_org_sintef_thingml_Instance8652); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -13064,7 +13282,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1824]);
             	}
 
-            // Thingml.g:8309:2: ( ( (a1= TEXT ) ) )?
+            // Thingml.g:8503:2: ( ( (a1= TEXT ) ) )?
             int alt88=2;
             int LA88_0 = input.LA(1);
 
@@ -13073,15 +13291,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt88) {
                 case 1 :
-                    // Thingml.g:8310:3: ( (a1= TEXT ) )
+                    // Thingml.g:8504:3: ( (a1= TEXT ) )
                     {
-                    // Thingml.g:8310:3: ( (a1= TEXT ) )
-                    // Thingml.g:8311:4: (a1= TEXT )
+                    // Thingml.g:8504:3: ( (a1= TEXT ) )
+                    // Thingml.g:8505:4: (a1= TEXT )
                     {
-                    // Thingml.g:8311:4: (a1= TEXT )
-                    // Thingml.g:8312:5: a1= TEXT
+                    // Thingml.g:8505:4: (a1= TEXT )
+                    // Thingml.g:8506:5: a1= TEXT
                     {
-                    a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Instance8589); if (state.failed) return element;
+                    a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Instance8681); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -13134,7 +13352,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1826]);
             	}
 
-            a2=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_Instance8635); if (state.failed) return element;
+            a2=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_Instance8727); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -13151,10 +13369,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1827]);
             	}
 
-            // Thingml.g:8368:2: (a3= TEXT )
-            // Thingml.g:8369:3: a3= TEXT
+            // Thingml.g:8562:2: (a3= TEXT )
+            // Thingml.g:8563:3: a3= TEXT
             {
-            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Instance8653); if (state.failed) return element;
+            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Instance8745); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -13202,7 +13420,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1833]);
             	}
 
-            // Thingml.g:8413:2: ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:8607:2: ( ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop89:
             do {
                 int alt89=2;
@@ -13215,15 +13433,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt89) {
             	case 1 :
-            	    // Thingml.g:8414:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:8608:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:8414:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:8415:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:8608:3: ( (a4_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:8609:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:8415:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:8416:5: a4_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:8609:4: (a4_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:8610:5: a4_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Instance8689);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Instance8781);
             	    a4_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -13304,7 +13522,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Connector"
-    // Thingml.g:8460:1: parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element = null] : a0= 'connector' ( ( (a1= TEXT ) ) )? (a2_0= parse_org_sintef_thingml_InstanceRef ) a3= '.' (a4= TEXT ) a5= '=>' (a6_0= parse_org_sintef_thingml_InstanceRef ) a7= '.' (a8= TEXT ) ( ( (a9_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ;
+    // Thingml.g:8654:1: parse_org_sintef_thingml_Connector returns [org.sintef.thingml.Connector element = null] : a0= 'connector' ( ( (a1= TEXT ) ) )? (a2_0= parse_org_sintef_thingml_InstanceRef ) a3= '.' (a4= TEXT ) a5= '=>' (a6_0= parse_org_sintef_thingml_InstanceRef ) a7= '.' (a8= TEXT ) ( ( (a9_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ;
     public final org.sintef.thingml.Connector parse_org_sintef_thingml_Connector() throws RecognitionException {
         org.sintef.thingml.Connector element =  null;
 
@@ -13329,10 +13547,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 25) ) { return element; }
 
-            // Thingml.g:8463:2: (a0= 'connector' ( ( (a1= TEXT ) ) )? (a2_0= parse_org_sintef_thingml_InstanceRef ) a3= '.' (a4= TEXT ) a5= '=>' (a6_0= parse_org_sintef_thingml_InstanceRef ) a7= '.' (a8= TEXT ) ( ( (a9_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* )
-            // Thingml.g:8464:2: a0= 'connector' ( ( (a1= TEXT ) ) )? (a2_0= parse_org_sintef_thingml_InstanceRef ) a3= '.' (a4= TEXT ) a5= '=>' (a6_0= parse_org_sintef_thingml_InstanceRef ) a7= '.' (a8= TEXT ) ( ( (a9_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:8657:2: (a0= 'connector' ( ( (a1= TEXT ) ) )? (a2_0= parse_org_sintef_thingml_InstanceRef ) a3= '.' (a4= TEXT ) a5= '=>' (a6_0= parse_org_sintef_thingml_InstanceRef ) a7= '.' (a8= TEXT ) ( ( (a9_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* )
+            // Thingml.g:8658:2: a0= 'connector' ( ( (a1= TEXT ) ) )? (a2_0= parse_org_sintef_thingml_InstanceRef ) a3= '.' (a4= TEXT ) a5= '=>' (a6_0= parse_org_sintef_thingml_InstanceRef ) a7= '.' (a8= TEXT ) ( ( (a9_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             {
-            a0=(Token)match(input,49,FOLLOW_49_in_parse_org_sintef_thingml_Connector8745); if (state.failed) return element;
+            a0=(Token)match(input,49,FOLLOW_49_in_parse_org_sintef_thingml_Connector8837); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -13351,7 +13569,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConnector(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1848]);
             	}
 
-            // Thingml.g:8480:2: ( ( (a1= TEXT ) ) )?
+            // Thingml.g:8674:2: ( ( (a1= TEXT ) ) )?
             int alt90=2;
             int LA90_0 = input.LA(1);
 
@@ -13364,15 +13582,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt90) {
                 case 1 :
-                    // Thingml.g:8481:3: ( (a1= TEXT ) )
+                    // Thingml.g:8675:3: ( (a1= TEXT ) )
                     {
-                    // Thingml.g:8481:3: ( (a1= TEXT ) )
-                    // Thingml.g:8482:4: (a1= TEXT )
+                    // Thingml.g:8675:3: ( (a1= TEXT ) )
+                    // Thingml.g:8676:4: (a1= TEXT )
                     {
-                    // Thingml.g:8482:4: (a1= TEXT )
-                    // Thingml.g:8483:5: a1= TEXT
+                    // Thingml.g:8676:4: (a1= TEXT )
+                    // Thingml.g:8677:5: a1= TEXT
                     {
-                    a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Connector8774); if (state.failed) return element;
+                    a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Connector8866); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -13427,10 +13645,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConnector(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1852]);
             	}
 
-            // Thingml.g:8527:2: (a2_0= parse_org_sintef_thingml_InstanceRef )
-            // Thingml.g:8528:3: a2_0= parse_org_sintef_thingml_InstanceRef
+            // Thingml.g:8721:2: (a2_0= parse_org_sintef_thingml_InstanceRef )
+            // Thingml.g:8722:3: a2_0= parse_org_sintef_thingml_InstanceRef
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_InstanceRef_in_parse_org_sintef_thingml_Connector8824);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_InstanceRef_in_parse_org_sintef_thingml_Connector8916);
             a2_0=parse_org_sintef_thingml_InstanceRef();
 
             state._fsp--;
@@ -13464,7 +13682,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1853]);
             	}
 
-            a3=(Token)match(input,29,FOLLOW_29_in_parse_org_sintef_thingml_Connector8842); if (state.failed) return element;
+            a3=(Token)match(input,29,FOLLOW_29_in_parse_org_sintef_thingml_Connector8934); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -13481,10 +13699,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1854]);
             	}
 
-            // Thingml.g:8567:2: (a4= TEXT )
-            // Thingml.g:8568:3: a4= TEXT
+            // Thingml.g:8761:2: (a4= TEXT )
+            // Thingml.g:8762:3: a4= TEXT
             {
-            a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Connector8860); if (state.failed) return element;
+            a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Connector8952); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -13527,7 +13745,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1855]);
             	}
 
-            a5=(Token)match(input,37,FOLLOW_37_in_parse_org_sintef_thingml_Connector8881); if (state.failed) return element;
+            a5=(Token)match(input,37,FOLLOW_37_in_parse_org_sintef_thingml_Connector8973); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -13545,10 +13763,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConnector(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1857]);
             	}
 
-            // Thingml.g:8622:2: (a6_0= parse_org_sintef_thingml_InstanceRef )
-            // Thingml.g:8623:3: a6_0= parse_org_sintef_thingml_InstanceRef
+            // Thingml.g:8816:2: (a6_0= parse_org_sintef_thingml_InstanceRef )
+            // Thingml.g:8817:3: a6_0= parse_org_sintef_thingml_InstanceRef
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_InstanceRef_in_parse_org_sintef_thingml_Connector8899);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_InstanceRef_in_parse_org_sintef_thingml_Connector8991);
             a6_0=parse_org_sintef_thingml_InstanceRef();
 
             state._fsp--;
@@ -13582,7 +13800,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1858]);
             	}
 
-            a7=(Token)match(input,29,FOLLOW_29_in_parse_org_sintef_thingml_Connector8917); if (state.failed) return element;
+            a7=(Token)match(input,29,FOLLOW_29_in_parse_org_sintef_thingml_Connector9009); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -13599,10 +13817,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1859]);
             	}
 
-            // Thingml.g:8662:2: (a8= TEXT )
-            // Thingml.g:8663:3: a8= TEXT
+            // Thingml.g:8856:2: (a8= TEXT )
+            // Thingml.g:8857:3: a8= TEXT
             {
-            a8=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Connector8935); if (state.failed) return element;
+            a8=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Connector9027); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -13650,7 +13868,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1865]);
             	}
 
-            // Thingml.g:8707:2: ( ( (a9_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:8901:2: ( ( (a9_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop91:
             do {
                 int alt91=2;
@@ -13663,15 +13881,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt91) {
             	case 1 :
-            	    // Thingml.g:8708:3: ( (a9_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:8902:3: ( (a9_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:8708:3: ( (a9_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:8709:4: (a9_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:8902:3: ( (a9_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:8903:4: (a9_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:8709:4: (a9_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:8710:5: a9_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:8903:4: (a9_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:8904:5: a9_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Connector8971);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Connector9063);
             	    a9_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
@@ -13752,7 +13970,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ConfigPropertyAssign"
-    // Thingml.g:8754:1: parse_org_sintef_thingml_ConfigPropertyAssign returns [org.sintef.thingml.ConfigPropertyAssign element = null] : a0= 'set' (a1_0= parse_org_sintef_thingml_InstanceRef ) a2= '.' (a3= TEXT ) ( (a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']' ) )* a7= '=' (a8_0= parse_org_sintef_thingml_Expression ) ;
+    // Thingml.g:8948:1: parse_org_sintef_thingml_ConfigPropertyAssign returns [org.sintef.thingml.ConfigPropertyAssign element = null] : a0= 'set' (a1_0= parse_org_sintef_thingml_InstanceRef ) a2= '.' (a3= TEXT ) ( (a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']' ) )* a7= '=' (a8_0= parse_org_sintef_thingml_Expression ) ;
     public final org.sintef.thingml.ConfigPropertyAssign parse_org_sintef_thingml_ConfigPropertyAssign() throws RecognitionException {
         org.sintef.thingml.ConfigPropertyAssign element =  null;
 
@@ -13776,10 +13994,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 26) ) { return element; }
 
-            // Thingml.g:8757:2: (a0= 'set' (a1_0= parse_org_sintef_thingml_InstanceRef ) a2= '.' (a3= TEXT ) ( (a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']' ) )* a7= '=' (a8_0= parse_org_sintef_thingml_Expression ) )
-            // Thingml.g:8758:2: a0= 'set' (a1_0= parse_org_sintef_thingml_InstanceRef ) a2= '.' (a3= TEXT ) ( (a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']' ) )* a7= '=' (a8_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:8951:2: (a0= 'set' (a1_0= parse_org_sintef_thingml_InstanceRef ) a2= '.' (a3= TEXT ) ( (a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']' ) )* a7= '=' (a8_0= parse_org_sintef_thingml_Expression ) )
+            // Thingml.g:8952:2: a0= 'set' (a1_0= parse_org_sintef_thingml_InstanceRef ) a2= '.' (a3= TEXT ) ( (a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']' ) )* a7= '=' (a8_0= parse_org_sintef_thingml_Expression )
             {
-            a0=(Token)match(input,88,FOLLOW_88_in_parse_org_sintef_thingml_ConfigPropertyAssign9027); if (state.failed) return element;
+            a0=(Token)match(input,88,FOLLOW_88_in_parse_org_sintef_thingml_ConfigPropertyAssign9119); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -13797,10 +14015,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConfigPropertyAssign(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1879]);
             	}
 
-            // Thingml.g:8773:2: (a1_0= parse_org_sintef_thingml_InstanceRef )
-            // Thingml.g:8774:3: a1_0= parse_org_sintef_thingml_InstanceRef
+            // Thingml.g:8967:2: (a1_0= parse_org_sintef_thingml_InstanceRef )
+            // Thingml.g:8968:3: a1_0= parse_org_sintef_thingml_InstanceRef
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_InstanceRef_in_parse_org_sintef_thingml_ConfigPropertyAssign9045);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_InstanceRef_in_parse_org_sintef_thingml_ConfigPropertyAssign9137);
             a1_0=parse_org_sintef_thingml_InstanceRef();
 
             state._fsp--;
@@ -13834,7 +14052,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1880]);
             	}
 
-            a2=(Token)match(input,29,FOLLOW_29_in_parse_org_sintef_thingml_ConfigPropertyAssign9063); if (state.failed) return element;
+            a2=(Token)match(input,29,FOLLOW_29_in_parse_org_sintef_thingml_ConfigPropertyAssign9155); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -13851,10 +14069,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1881]);
             	}
 
-            // Thingml.g:8813:2: (a3= TEXT )
-            // Thingml.g:8814:3: a3= TEXT
+            // Thingml.g:9007:2: (a3= TEXT )
+            // Thingml.g:9008:3: a3= TEXT
             {
-            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ConfigPropertyAssign9081); if (state.failed) return element;
+            a3=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ConfigPropertyAssign9173); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -13898,25 +14116,25 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1883]);
             	}
 
-            // Thingml.g:8854:2: ( (a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']' ) )*
+            // Thingml.g:9048:2: ( (a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']' ) )*
             loop92:
             do {
                 int alt92=2;
                 int LA92_0 = input.LA(1);
 
-                if ( (LA92_0==40) ) {
+                if ( (LA92_0==T_ARRAY) ) {
                     alt92=1;
                 }
 
 
                 switch (alt92) {
             	case 1 :
-            	    // Thingml.g:8855:3: (a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']' )
+            	    // Thingml.g:9049:3: (a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']' )
             	    {
-            	    // Thingml.g:8855:3: (a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']' )
-            	    // Thingml.g:8856:4: a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']'
+            	    // Thingml.g:9049:3: (a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']' )
+            	    // Thingml.g:9050:4: a4= '[' (a5_0= parse_org_sintef_thingml_Expression ) a6= ']'
             	    {
-            	    a4=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_ConfigPropertyAssign9111); if (state.failed) return element;
+            	    a4=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_ConfigPropertyAssign9203); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -13944,10 +14162,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConfigPropertyAssign(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1895]);
             	    			}
 
-            	    // Thingml.g:8881:4: (a5_0= parse_org_sintef_thingml_Expression )
-            	    // Thingml.g:8882:5: a5_0= parse_org_sintef_thingml_Expression
+            	    // Thingml.g:9075:4: (a5_0= parse_org_sintef_thingml_Expression )
+            	    // Thingml.g:9076:5: a5_0= parse_org_sintef_thingml_Expression
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConfigPropertyAssign9137);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConfigPropertyAssign9229);
             	    a5_0=parse_org_sintef_thingml_Expression();
 
             	    state._fsp--;
@@ -13981,7 +14199,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1896]);
             	    			}
 
-            	    a6=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_ConfigPropertyAssign9165); if (state.failed) return element;
+            	    a6=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_ConfigPropertyAssign9257); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -14017,7 +14235,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1900]);
             	}
 
-            a7=(Token)match(input,35,FOLLOW_35_in_parse_org_sintef_thingml_ConfigPropertyAssign9198); if (state.failed) return element;
+            a7=(Token)match(input,35,FOLLOW_35_in_parse_org_sintef_thingml_ConfigPropertyAssign9290); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -14045,10 +14263,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConfigPropertyAssign(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1912]);
             	}
 
-            // Thingml.g:8955:2: (a8_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:8956:3: a8_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:9149:2: (a8_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:9150:3: a8_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConfigPropertyAssign9216);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConfigPropertyAssign9308);
             a8_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -14106,7 +14324,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_InstanceRef"
-    // Thingml.g:8987:1: parse_org_sintef_thingml_InstanceRef returns [org.sintef.thingml.InstanceRef element = null] : ( ( (a0= TEXT ) a1= '.' ) )* (a2= TEXT ) ;
+    // Thingml.g:9181:1: parse_org_sintef_thingml_InstanceRef returns [org.sintef.thingml.InstanceRef element = null] : ( ( (a0= TEXT ) a1= '.' ) )* (a2= TEXT ) ;
     public final org.sintef.thingml.InstanceRef parse_org_sintef_thingml_InstanceRef() throws RecognitionException {
         org.sintef.thingml.InstanceRef element =  null;
 
@@ -14121,10 +14339,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 27) ) { return element; }
 
-            // Thingml.g:8990:2: ( ( ( (a0= TEXT ) a1= '.' ) )* (a2= TEXT ) )
-            // Thingml.g:8991:2: ( ( (a0= TEXT ) a1= '.' ) )* (a2= TEXT )
+            // Thingml.g:9184:2: ( ( ( (a0= TEXT ) a1= '.' ) )* (a2= TEXT ) )
+            // Thingml.g:9185:2: ( ( (a0= TEXT ) a1= '.' ) )* (a2= TEXT )
             {
-            // Thingml.g:8991:2: ( ( (a0= TEXT ) a1= '.' ) )*
+            // Thingml.g:9185:2: ( ( (a0= TEXT ) a1= '.' ) )*
             loop93:
             do {
                 int alt93=2;
@@ -14155,15 +14373,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt93) {
             	case 1 :
-            	    // Thingml.g:8992:3: ( (a0= TEXT ) a1= '.' )
+            	    // Thingml.g:9186:3: ( (a0= TEXT ) a1= '.' )
             	    {
-            	    // Thingml.g:8992:3: ( (a0= TEXT ) a1= '.' )
-            	    // Thingml.g:8993:4: (a0= TEXT ) a1= '.'
+            	    // Thingml.g:9186:3: ( (a0= TEXT ) a1= '.' )
+            	    // Thingml.g:9187:4: (a0= TEXT ) a1= '.'
             	    {
-            	    // Thingml.g:8993:4: (a0= TEXT )
-            	    // Thingml.g:8994:5: a0= TEXT
+            	    // Thingml.g:9187:4: (a0= TEXT )
+            	    // Thingml.g:9188:5: a0= TEXT
             	    {
-            	    a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_InstanceRef9264); if (state.failed) return element;
+            	    a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_InstanceRef9356); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    					if (terminateParsing) {
@@ -14206,7 +14424,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1918]);
             	    			}
 
-            	    a1=(Token)match(input,29,FOLLOW_29_in_parse_org_sintef_thingml_InstanceRef9297); if (state.failed) return element;
+            	    a1=(Token)match(input,29,FOLLOW_29_in_parse_org_sintef_thingml_InstanceRef9389); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -14242,10 +14460,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1922]);
             	}
 
-            // Thingml.g:9056:2: (a2= TEXT )
-            // Thingml.g:9057:3: a2= TEXT
+            // Thingml.g:9250:2: (a2= TEXT )
+            // Thingml.g:9251:3: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_InstanceRef9334); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_InstanceRef9426); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -14309,7 +14527,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_SendAction"
-    // Thingml.g:9099:1: parse_org_sintef_thingml_SendAction returns [org.sintef.thingml.SendAction element = null] : (a0= TEXT ) a1= '!' (a2= TEXT ) a3= '(' ( ( (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a7= ')' ;
+    // Thingml.g:9293:1: parse_org_sintef_thingml_SendAction returns [org.sintef.thingml.SendAction element = null] : (a0= TEXT ) a1= '!' (a2= TEXT ) a3= '(' ( ( (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a7= ')' ;
     public final org.sintef.thingml.SendAction parse_org_sintef_thingml_SendAction() throws RecognitionException {
         org.sintef.thingml.SendAction element =  null;
 
@@ -14331,13 +14549,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 28) ) { return element; }
 
-            // Thingml.g:9102:2: ( (a0= TEXT ) a1= '!' (a2= TEXT ) a3= '(' ( ( (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a7= ')' )
-            // Thingml.g:9103:2: (a0= TEXT ) a1= '!' (a2= TEXT ) a3= '(' ( ( (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a7= ')'
+            // Thingml.g:9296:2: ( (a0= TEXT ) a1= '!' (a2= TEXT ) a3= '(' ( ( (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a7= ')' )
+            // Thingml.g:9297:2: (a0= TEXT ) a1= '!' (a2= TEXT ) a3= '(' ( ( (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a7= ')'
             {
-            // Thingml.g:9103:2: (a0= TEXT )
-            // Thingml.g:9104:3: a0= TEXT
+            // Thingml.g:9297:2: (a0= TEXT )
+            // Thingml.g:9298:3: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SendAction9374); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SendAction9466); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -14380,7 +14598,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1925]);
             	}
 
-            a1=(Token)match(input,19,FOLLOW_19_in_parse_org_sintef_thingml_SendAction9395); if (state.failed) return element;
+            a1=(Token)match(input,19,FOLLOW_19_in_parse_org_sintef_thingml_SendAction9487); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -14397,10 +14615,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1926]);
             	}
 
-            // Thingml.g:9157:2: (a2= TEXT )
-            // Thingml.g:9158:3: a2= TEXT
+            // Thingml.g:9351:2: (a2= TEXT )
+            // Thingml.g:9352:3: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SendAction9413); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SendAction9505); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -14443,7 +14661,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1927]);
             	}
 
-            a3=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_SendAction9434); if (state.failed) return element;
+            a3=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_SendAction9526); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -14472,7 +14690,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1940]);
             	}
 
-            // Thingml.g:9223:2: ( ( (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
+            // Thingml.g:9417:2: ( ( (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
             int alt95=2;
             int LA95_0 = input.LA(1);
 
@@ -14481,15 +14699,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt95) {
                 case 1 :
-                    // Thingml.g:9224:3: ( (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:9418:3: ( (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )* )
                     {
-                    // Thingml.g:9224:3: ( (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )* )
-                    // Thingml.g:9225:4: (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )*
+                    // Thingml.g:9418:3: ( (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:9419:4: (a4_0= parse_org_sintef_thingml_Expression ) ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )*
                     {
-                    // Thingml.g:9225:4: (a4_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:9226:5: a4_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:9419:4: (a4_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:9420:5: a4_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_SendAction9463);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_SendAction9555);
                     a4_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
@@ -14524,7 +14742,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1942]);
                     			}
 
-                    // Thingml.g:9252:4: ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )*
+                    // Thingml.g:9446:4: ( (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) ) )*
                     loop94:
                     do {
                         int alt94=2;
@@ -14537,12 +14755,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt94) {
                     	case 1 :
-                    	    // Thingml.g:9253:5: (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:9447:5: (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) )
                     	    {
-                    	    // Thingml.g:9253:5: (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) )
-                    	    // Thingml.g:9254:6: a5= ',' (a6_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:9447:5: (a5= ',' (a6_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:9448:6: a5= ',' (a6_0= parse_org_sintef_thingml_Expression )
                     	    {
-                    	    a5=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_SendAction9504); if (state.failed) return element;
+                    	    a5=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_SendAction9596); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    						if (element == null) {
@@ -14570,10 +14788,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getSendAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1954]);
                     	    					}
 
-                    	    // Thingml.g:9279:6: (a6_0= parse_org_sintef_thingml_Expression )
-                    	    // Thingml.g:9280:7: a6_0= parse_org_sintef_thingml_Expression
+                    	    // Thingml.g:9473:6: (a6_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:9474:7: a6_0= parse_org_sintef_thingml_Expression
                     	    {
-                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_SendAction9538);
+                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_SendAction9630);
                     	    a6_0=parse_org_sintef_thingml_Expression();
 
                     	    state._fsp--;
@@ -14640,7 +14858,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[1959]);
             	}
 
-            a7=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_SendAction9612); if (state.failed) return element;
+            a7=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_SendAction9704); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -14715,7 +14933,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_VariableAssignment"
-    // Thingml.g:9375:1: parse_org_sintef_thingml_VariableAssignment returns [org.sintef.thingml.VariableAssignment element = null] : (a0= TEXT ) ( (a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']' ) )* a4= '=' (a5_0= parse_org_sintef_thingml_Expression ) ;
+    // Thingml.g:9569:1: parse_org_sintef_thingml_VariableAssignment returns [org.sintef.thingml.VariableAssignment element = null] : (a0= TEXT ) ( (a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']' ) )* a4= '=' (a5_0= parse_org_sintef_thingml_Expression ) ;
     public final org.sintef.thingml.VariableAssignment parse_org_sintef_thingml_VariableAssignment() throws RecognitionException {
         org.sintef.thingml.VariableAssignment element =  null;
 
@@ -14735,13 +14953,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 29) ) { return element; }
 
-            // Thingml.g:9378:2: ( (a0= TEXT ) ( (a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']' ) )* a4= '=' (a5_0= parse_org_sintef_thingml_Expression ) )
-            // Thingml.g:9379:2: (a0= TEXT ) ( (a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']' ) )* a4= '=' (a5_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:9572:2: ( (a0= TEXT ) ( (a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']' ) )* a4= '=' (a5_0= parse_org_sintef_thingml_Expression ) )
+            // Thingml.g:9573:2: (a0= TEXT ) ( (a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']' ) )* a4= '=' (a5_0= parse_org_sintef_thingml_Expression )
             {
-            // Thingml.g:9379:2: (a0= TEXT )
-            // Thingml.g:9380:3: a0= TEXT
+            // Thingml.g:9573:2: (a0= TEXT )
+            // Thingml.g:9574:3: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_VariableAssignment9645); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_VariableAssignment9737); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -14785,25 +15003,25 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2000]);
             	}
 
-            // Thingml.g:9420:2: ( (a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']' ) )*
+            // Thingml.g:9614:2: ( (a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']' ) )*
             loop96:
             do {
                 int alt96=2;
                 int LA96_0 = input.LA(1);
 
-                if ( (LA96_0==40) ) {
+                if ( (LA96_0==T_ARRAY) ) {
                     alt96=1;
                 }
 
 
                 switch (alt96) {
             	case 1 :
-            	    // Thingml.g:9421:3: (a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']' )
+            	    // Thingml.g:9615:3: (a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']' )
             	    {
-            	    // Thingml.g:9421:3: (a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']' )
-            	    // Thingml.g:9422:4: a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']'
+            	    // Thingml.g:9615:3: (a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']' )
+            	    // Thingml.g:9616:4: a1= '[' (a2_0= parse_org_sintef_thingml_Expression ) a3= ']'
             	    {
-            	    a1=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_VariableAssignment9675); if (state.failed) return element;
+            	    a1=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_VariableAssignment9767); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -14831,10 +15049,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getVariableAssignment(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2012]);
             	    			}
 
-            	    // Thingml.g:9447:4: (a2_0= parse_org_sintef_thingml_Expression )
-            	    // Thingml.g:9448:5: a2_0= parse_org_sintef_thingml_Expression
+            	    // Thingml.g:9641:4: (a2_0= parse_org_sintef_thingml_Expression )
+            	    // Thingml.g:9642:5: a2_0= parse_org_sintef_thingml_Expression
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_VariableAssignment9701);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_VariableAssignment9793);
             	    a2_0=parse_org_sintef_thingml_Expression();
 
             	    state._fsp--;
@@ -14868,7 +15086,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2013]);
             	    			}
 
-            	    a3=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_VariableAssignment9729); if (state.failed) return element;
+            	    a3=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_VariableAssignment9821); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -14904,7 +15122,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2017]);
             	}
 
-            a4=(Token)match(input,35,FOLLOW_35_in_parse_org_sintef_thingml_VariableAssignment9762); if (state.failed) return element;
+            a4=(Token)match(input,35,FOLLOW_35_in_parse_org_sintef_thingml_VariableAssignment9854); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -14932,10 +15150,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getVariableAssignment(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2029]);
             	}
 
-            // Thingml.g:9521:2: (a5_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:9522:3: a5_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:9715:2: (a5_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:9716:3: a5_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_VariableAssignment9780);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_VariableAssignment9872);
             a5_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -15027,7 +15245,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ActionBlock"
-    // Thingml.g:9587:1: parse_org_sintef_thingml_ActionBlock returns [org.sintef.thingml.ActionBlock element = null] : a0= 'do' ( ( (a1_0= parse_org_sintef_thingml_Action ) ) )* a2= 'end' ;
+    // Thingml.g:9781:1: parse_org_sintef_thingml_ActionBlock returns [org.sintef.thingml.ActionBlock element = null] : a0= 'do' ( ( (a1_0= parse_org_sintef_thingml_Action ) ) )* a2= 'end' ;
     public final org.sintef.thingml.ActionBlock parse_org_sintef_thingml_ActionBlock() throws RecognitionException {
         org.sintef.thingml.ActionBlock element =  null;
 
@@ -15043,10 +15261,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 30) ) { return element; }
 
-            // Thingml.g:9590:2: (a0= 'do' ( ( (a1_0= parse_org_sintef_thingml_Action ) ) )* a2= 'end' )
-            // Thingml.g:9591:2: a0= 'do' ( ( (a1_0= parse_org_sintef_thingml_Action ) ) )* a2= 'end'
+            // Thingml.g:9784:2: (a0= 'do' ( ( (a1_0= parse_org_sintef_thingml_Action ) ) )* a2= 'end' )
+            // Thingml.g:9785:2: a0= 'do' ( ( (a1_0= parse_org_sintef_thingml_Action ) ) )* a2= 'end'
             {
-            a0=(Token)match(input,51,FOLLOW_51_in_parse_org_sintef_thingml_ActionBlock9813); if (state.failed) return element;
+            a0=(Token)match(input,51,FOLLOW_51_in_parse_org_sintef_thingml_ActionBlock9905); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -15075,7 +15293,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2081]);
             	}
 
-            // Thingml.g:9617:2: ( ( (a1_0= parse_org_sintef_thingml_Action ) ) )*
+            // Thingml.g:9811:2: ( ( (a1_0= parse_org_sintef_thingml_Action ) ) )*
             loop97:
             do {
                 int alt97=2;
@@ -15088,15 +15306,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt97) {
             	case 1 :
-            	    // Thingml.g:9618:3: ( (a1_0= parse_org_sintef_thingml_Action ) )
+            	    // Thingml.g:9812:3: ( (a1_0= parse_org_sintef_thingml_Action ) )
             	    {
-            	    // Thingml.g:9618:3: ( (a1_0= parse_org_sintef_thingml_Action ) )
-            	    // Thingml.g:9619:4: (a1_0= parse_org_sintef_thingml_Action )
+            	    // Thingml.g:9812:3: ( (a1_0= parse_org_sintef_thingml_Action ) )
+            	    // Thingml.g:9813:4: (a1_0= parse_org_sintef_thingml_Action )
             	    {
-            	    // Thingml.g:9619:4: (a1_0= parse_org_sintef_thingml_Action )
-            	    // Thingml.g:9620:5: a1_0= parse_org_sintef_thingml_Action
+            	    // Thingml.g:9813:4: (a1_0= parse_org_sintef_thingml_Action )
+            	    // Thingml.g:9814:5: a1_0= parse_org_sintef_thingml_Action
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ActionBlock9842);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ActionBlock9934);
             	    a1_0=parse_org_sintef_thingml_Action();
 
             	    state._fsp--;
@@ -15171,7 +15389,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2107]);
             	}
 
-            a2=(Token)match(input,53,FOLLOW_53_in_parse_org_sintef_thingml_ActionBlock9883); if (state.failed) return element;
+            a2=(Token)match(input,53,FOLLOW_53_in_parse_org_sintef_thingml_ActionBlock9975); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -15246,7 +15464,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_LocalVariable"
-    // Thingml.g:9730:1: parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable element = null] : ( ( (a0= T_READONLY ) ) )? a1= 'var' (a2= TEXT ) a3= ':' (a4= TEXT ) ( ( (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( (a8= T_ARRAY ) ) ) )? ( (a9= '=' (a10_0= parse_org_sintef_thingml_Expression ) ) )? ( ( (a11_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ;
+    // Thingml.g:9924:1: parse_org_sintef_thingml_LocalVariable returns [org.sintef.thingml.LocalVariable element = null] : ( ( (a0= T_READONLY ) ) )? a1= 'var' (a2= TEXT ) a3= ':' (a4= TEXT ) ( ( ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( ( (a8= '[]' ) ) ) ) )? ( (a11= '=' (a12_0= parse_org_sintef_thingml_Expression ) ) )? ( ( (a13_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* ;
     public final org.sintef.thingml.LocalVariable parse_org_sintef_thingml_LocalVariable() throws RecognitionException {
         org.sintef.thingml.LocalVariable element =  null;
 
@@ -15260,12 +15478,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         Token a5=null;
         Token a7=null;
         Token a8=null;
-        Token a9=null;
+        Token a11=null;
         org.sintef.thingml.Expression a6_0 =null;
 
-        org.sintef.thingml.Expression a10_0 =null;
+        org.sintef.thingml.Expression a12_0 =null;
 
-        org.sintef.thingml.PlatformAnnotation a11_0 =null;
+        org.sintef.thingml.PlatformAnnotation a13_0 =null;
 
 
 
@@ -15273,10 +15491,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 31) ) { return element; }
 
-            // Thingml.g:9733:2: ( ( ( (a0= T_READONLY ) ) )? a1= 'var' (a2= TEXT ) a3= ':' (a4= TEXT ) ( ( (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( (a8= T_ARRAY ) ) ) )? ( (a9= '=' (a10_0= parse_org_sintef_thingml_Expression ) ) )? ( ( (a11_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* )
-            // Thingml.g:9734:2: ( ( (a0= T_READONLY ) ) )? a1= 'var' (a2= TEXT ) a3= ':' (a4= TEXT ) ( ( (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( (a8= T_ARRAY ) ) ) )? ( (a9= '=' (a10_0= parse_org_sintef_thingml_Expression ) ) )? ( ( (a11_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:9927:2: ( ( ( (a0= T_READONLY ) ) )? a1= 'var' (a2= TEXT ) a3= ':' (a4= TEXT ) ( ( ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( ( (a8= '[]' ) ) ) ) )? ( (a11= '=' (a12_0= parse_org_sintef_thingml_Expression ) ) )? ( ( (a13_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )* )
+            // Thingml.g:9928:2: ( ( (a0= T_READONLY ) ) )? a1= 'var' (a2= TEXT ) a3= ':' (a4= TEXT ) ( ( ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( ( (a8= '[]' ) ) ) ) )? ( (a11= '=' (a12_0= parse_org_sintef_thingml_Expression ) ) )? ( ( (a13_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             {
-            // Thingml.g:9734:2: ( ( (a0= T_READONLY ) ) )?
+            // Thingml.g:9928:2: ( ( (a0= T_READONLY ) ) )?
             int alt98=2;
             int LA98_0 = input.LA(1);
 
@@ -15285,15 +15503,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt98) {
                 case 1 :
-                    // Thingml.g:9735:3: ( (a0= T_READONLY ) )
+                    // Thingml.g:9929:3: ( (a0= T_READONLY ) )
                     {
-                    // Thingml.g:9735:3: ( (a0= T_READONLY ) )
-                    // Thingml.g:9736:4: (a0= T_READONLY )
+                    // Thingml.g:9929:3: ( (a0= T_READONLY ) )
+                    // Thingml.g:9930:4: (a0= T_READONLY )
                     {
-                    // Thingml.g:9736:4: (a0= T_READONLY )
-                    // Thingml.g:9737:5: a0= T_READONLY
+                    // Thingml.g:9930:4: (a0= T_READONLY )
+                    // Thingml.g:9931:5: a0= T_READONLY
                     {
-                    a0=(Token)match(input,T_READONLY,FOLLOW_T_READONLY_in_parse_org_sintef_thingml_LocalVariable9927); if (state.failed) return element;
+                    a0=(Token)match(input,T_READONLY,FOLLOW_T_READONLY_in_parse_org_sintef_thingml_LocalVariable10019); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -15302,6 +15520,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     					if (element == null) {
                     						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
                     						startIncompleteElement(element);
+                    						// initialize boolean attribute
+                    						{
+                    							Object value = false;
+                    							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+                    						}
                     					}
                     					if (a0 != null) {
                     						org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_READONLY");
@@ -15346,12 +15569,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2148]);
             	}
 
-            a1=(Token)match(input,95,FOLLOW_95_in_parse_org_sintef_thingml_LocalVariable9973); if (state.failed) return element;
+            a1=(Token)match(input,95,FOLLOW_95_in_parse_org_sintef_thingml_LocalVariable10065); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
             			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
             			startIncompleteElement(element);
+            			// initialize boolean attribute
+            			{
+            				Object value = false;
+            				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+            			}
             		}
             		collectHiddenTokens(element);
             		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_2, null, true);
@@ -15363,10 +15591,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2149]);
             	}
 
-            // Thingml.g:9793:2: (a2= TEXT )
-            // Thingml.g:9794:3: a2= TEXT
+            // Thingml.g:9997:2: (a2= TEXT )
+            // Thingml.g:9998:3: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_LocalVariable9991); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_LocalVariable10083); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -15375,6 +15603,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             			if (element == null) {
             				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
             				startIncompleteElement(element);
+            				// initialize boolean attribute
+            				{
+            					Object value = false;
+            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+            				}
             			}
             			if (a2 != null) {
             				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -15405,12 +15638,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2150]);
             	}
 
-            a3=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_LocalVariable10012); if (state.failed) return element;
+            a3=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_LocalVariable10104); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
             			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
             			startIncompleteElement(element);
+            			// initialize boolean attribute
+            			{
+            				Object value = false;
+            				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+            			}
             		}
             		collectHiddenTokens(element);
             		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_6, null, true);
@@ -15422,10 +15660,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2151]);
             	}
 
-            // Thingml.g:9843:2: (a4= TEXT )
-            // Thingml.g:9844:3: a4= TEXT
+            // Thingml.g:10057:2: (a4= TEXT )
+            // Thingml.g:10058:3: a4= TEXT
             {
-            a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_LocalVariable10030); if (state.failed) return element;
+            a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_LocalVariable10122); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -15434,6 +15672,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             			if (element == null) {
             				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
             				startIncompleteElement(element);
+            				// initialize boolean attribute
+            				{
+            					Object value = false;
+            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+            				}
             			}
             			if (a4 != null) {
             				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -15510,7 +15753,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2194]);
             	}
 
-            // Thingml.g:9925:2: ( ( (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( (a8= T_ARRAY ) ) ) )?
+            // Thingml.g:10144:2: ( ( ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( ( (a8= '[]' ) ) ) ) )?
             int alt100=2;
             int LA100_0 = input.LA(1);
 
@@ -15519,16 +15762,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt100) {
                 case 1 :
-                    // Thingml.g:9926:3: ( (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( (a8= T_ARRAY ) ) )
+                    // Thingml.g:10145:3: ( ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( ( (a8= '[]' ) ) ) )
                     {
-                    // Thingml.g:9926:3: ( (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( (a8= T_ARRAY ) ) )
+                    // Thingml.g:10145:3: ( ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' ) | ( ( (a8= '[]' ) ) ) )
                     int alt99=2;
                     int LA99_0 = input.LA(1);
 
-                    if ( (LA99_0==40) ) {
+                    if ( (LA99_0==T_ARRAY) ) {
                         alt99=1;
                     }
-                    else if ( (LA99_0==T_ARRAY) ) {
+                    else if ( (LA99_0==40) ) {
                         alt99=2;
                     }
                     else {
@@ -15541,22 +15784,52 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     switch (alt99) {
                         case 1 :
-                            // Thingml.g:9927:4: (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' )
+                            // Thingml.g:10146:4: ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' )
                             {
-                            // Thingml.g:9927:4: (a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' )
-                            // Thingml.g:9928:5: a5= '[' (a6_0= parse_org_sintef_thingml_Expression ) a7= ']'
+                            // Thingml.g:10146:4: ( (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']' )
+                            // Thingml.g:10147:5: (a5= T_ARRAY ) (a6_0= parse_org_sintef_thingml_Expression ) a7= ']'
                             {
-                            a5=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_LocalVariable10066); if (state.failed) return element;
+                            // Thingml.g:10147:5: (a5= T_ARRAY )
+                            // Thingml.g:10148:6: a5= T_ARRAY
+                            {
+                            a5=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_LocalVariable10165); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
-                            					if (element == null) {
-                            						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
-                            						startIncompleteElement(element);
+                            						if (terminateParsing) {
+                            							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+                            						}
+                            						if (element == null) {
+                            							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
+                            							startIncompleteElement(element);
+                            							// initialize boolean attribute
+                            							{
+                            								Object value = false;
+                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+                            							}
+                            						}
+                            						if (a5 != null) {
+                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+                            							tokenResolver.setOptions(getOptions());
+                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
+                            							tokenResolver.resolve(a5.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), result);
+                            							Object resolvedObject = result.getResolvedToken();
+                            							if (resolvedObject == null) {
+                            								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a5).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a5).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a5).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a5).getStopIndex());
+                            							}
+                            							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
+                            							if (resolved != null) {
+                            								Object value = resolved;
+                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+                            								completedElement(value, false);
+                            							}
+                            							collectHiddenTokens(element);
+                            							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_0_0_0_0_0, resolved, true);
+                            							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a5, element);
+                            						}
                             					}
-                            					collectHiddenTokens(element);
-                            					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_0_0_0_0_0, null, true);
-                            					copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a5, element);
-                            				}
+
+                            }
+
 
                             if ( state.backtracking==0 ) {
                             					// expected elements (follow set)
@@ -15574,10 +15847,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             					addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLocalVariable(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2206]);
                             				}
 
-                            // Thingml.g:9953:5: (a6_0= parse_org_sintef_thingml_Expression )
-                            // Thingml.g:9954:6: a6_0= parse_org_sintef_thingml_Expression
+                            // Thingml.g:10199:5: (a6_0= parse_org_sintef_thingml_Expression )
+                            // Thingml.g:10200:6: a6_0= parse_org_sintef_thingml_Expression
                             {
-                            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LocalVariable10096);
+                            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LocalVariable10211);
                             a6_0=parse_org_sintef_thingml_Expression();
 
                             state._fsp--;
@@ -15590,6 +15863,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             						if (element == null) {
                             							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
                             							startIncompleteElement(element);
+                            							// initialize boolean attribute
+                            							{
+                            								Object value = false;
+                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+                            							}
                             						}
                             						if (a6_0 != null) {
                             							if (a6_0 != null) {
@@ -15611,12 +15889,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             					addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2207]);
                             				}
 
-                            a7=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_LocalVariable10129); if (state.failed) return element;
+                            a7=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_LocalVariable10244); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             					if (element == null) {
                             						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
                             						startIncompleteElement(element);
+                            						// initialize boolean attribute
+                            						{
+                            							Object value = false;
+                            							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+                            						}
                             					}
                             					collectHiddenTokens(element);
                             					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_0_0_0_0_2, null, true);
@@ -15719,44 +16002,40 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             }
                             break;
                         case 2 :
-                            // Thingml.g:10080:8: ( (a8= T_ARRAY ) )
+                            // Thingml.g:10336:8: ( ( (a8= '[]' ) ) )
                             {
-                            // Thingml.g:10080:8: ( (a8= T_ARRAY ) )
-                            // Thingml.g:10081:5: (a8= T_ARRAY )
+                            // Thingml.g:10336:8: ( ( (a8= '[]' ) ) )
+                            // Thingml.g:10337:5: ( (a8= '[]' ) )
                             {
-                            // Thingml.g:10081:5: (a8= T_ARRAY )
-                            // Thingml.g:10082:6: a8= T_ARRAY
+                            // Thingml.g:10337:5: ( (a8= '[]' ) )
+                            // Thingml.g:10338:6: (a8= '[]' )
                             {
-                            a8=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_LocalVariable10186); if (state.failed) return element;
+                            // Thingml.g:10338:6: (a8= '[]' )
+                            // Thingml.g:10339:7: a8= '[]'
+                            {
+                            a8=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_LocalVariable10309); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
-                            						if (terminateParsing) {
-                            							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
-                            						}
-                            						if (element == null) {
-                            							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
-                            							startIncompleteElement(element);
-                            						}
-                            						if (a8 != null) {
-                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-                            							tokenResolver.setOptions(getOptions());
-                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
-                            							tokenResolver.resolve(a8.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), result);
-                            							Object resolvedObject = result.getResolvedToken();
-                            							if (resolvedObject == null) {
-                            								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a8).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a8).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a8).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a8).getStopIndex());
-                            							}
-                            							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
-                            							if (resolved != null) {
-                            								Object value = resolved;
-                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
-                            								completedElement(value, false);
+                            							if (element == null) {
+                            								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
+                            								startIncompleteElement(element);
+                            								// initialize boolean attribute
+                            								{
+                            									Object value = false;
+                            									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+                            								}
                             							}
                             							collectHiddenTokens(element);
-                            							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_1_0_0_0_0, resolved, true);
-                            							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a8, element);
+                            							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_9_0_1_0_0_0_0, true, true);
+                            							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a8, element);
+                            							// set value of boolean attribute
+                            							Object value = true;
+                            							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+                            							completedElement(value, false);
                             						}
-                            					}
+
+                            }
+
 
                             }
 
@@ -15911,7 +16190,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2412]);
             	}
 
-            // Thingml.g:10250:2: ( (a9= '=' (a10_0= parse_org_sintef_thingml_Expression ) ) )?
+            // Thingml.g:10497:2: ( (a11= '=' (a12_0= parse_org_sintef_thingml_Expression ) ) )?
             int alt101=2;
             int LA101_0 = input.LA(1);
 
@@ -15920,21 +16199,26 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt101) {
                 case 1 :
-                    // Thingml.g:10251:3: (a9= '=' (a10_0= parse_org_sintef_thingml_Expression ) )
+                    // Thingml.g:10498:3: (a11= '=' (a12_0= parse_org_sintef_thingml_Expression ) )
                     {
-                    // Thingml.g:10251:3: (a9= '=' (a10_0= parse_org_sintef_thingml_Expression ) )
-                    // Thingml.g:10252:4: a9= '=' (a10_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:10498:3: (a11= '=' (a12_0= parse_org_sintef_thingml_Expression ) )
+                    // Thingml.g:10499:4: a11= '=' (a12_0= parse_org_sintef_thingml_Expression )
                     {
-                    a9=(Token)match(input,35,FOLLOW_35_in_parse_org_sintef_thingml_LocalVariable10260); if (state.failed) return element;
+                    a11=(Token)match(input,35,FOLLOW_35_in_parse_org_sintef_thingml_LocalVariable10380); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
                     					element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
                     					startIncompleteElement(element);
+                    					// initialize boolean attribute
+                    					{
+                    						Object value = false;
+                    						element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+                    					}
                     				}
                     				collectHiddenTokens(element);
                     				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_10_0_0_1, null, true);
-                    				copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a9, element);
+                    				copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a11, element);
                     			}
 
                     if ( state.backtracking==0 ) {
@@ -15953,11 +16237,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLocalVariable(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2424]);
                     			}
 
-                    // Thingml.g:10277:4: (a10_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:10278:5: a10_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:10529:4: (a12_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:10530:5: a12_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LocalVariable10286);
-                    a10_0=parse_org_sintef_thingml_Expression();
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LocalVariable10406);
+                    a12_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
                     if (state.failed) return element;
@@ -15969,16 +16253,21 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     					if (element == null) {
                     						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
                     						startIncompleteElement(element);
+                    						// initialize boolean attribute
+                    						{
+                    							Object value = false;
+                    							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+                    						}
                     					}
-                    					if (a10_0 != null) {
-                    						if (a10_0 != null) {
-                    							Object value = a10_0;
+                    					if (a12_0 != null) {
+                    						if (a12_0 != null) {
+                    							Object value = a12_0;
                     							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__INIT), value);
                     							completedElement(value, true);
                     						}
                     						collectHiddenTokens(element);
-                    						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_10_0_0_3, a10_0, true);
-                    						copyLocalizationInfos(a10_0, element);
+                    						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_10_0_0_3, a12_0, true);
+                    						copyLocalizationInfos(a12_0, element);
                     					}
                     				}
 
@@ -16082,7 +16371,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2504]);
             	}
 
-            // Thingml.g:10388:2: ( ( (a11_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
+            // Thingml.g:10645:2: ( ( (a13_0= parse_org_sintef_thingml_PlatformAnnotation ) ) )*
             loop102:
             do {
                 int alt102=2;
@@ -16095,16 +16384,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt102) {
             	case 1 :
-            	    // Thingml.g:10389:3: ( (a11_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:10646:3: ( (a13_0= parse_org_sintef_thingml_PlatformAnnotation ) )
             	    {
-            	    // Thingml.g:10389:3: ( (a11_0= parse_org_sintef_thingml_PlatformAnnotation ) )
-            	    // Thingml.g:10390:4: (a11_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:10646:3: ( (a13_0= parse_org_sintef_thingml_PlatformAnnotation ) )
+            	    // Thingml.g:10647:4: (a13_0= parse_org_sintef_thingml_PlatformAnnotation )
             	    {
-            	    // Thingml.g:10390:4: (a11_0= parse_org_sintef_thingml_PlatformAnnotation )
-            	    // Thingml.g:10391:5: a11_0= parse_org_sintef_thingml_PlatformAnnotation
+            	    // Thingml.g:10647:4: (a13_0= parse_org_sintef_thingml_PlatformAnnotation )
+            	    // Thingml.g:10648:5: a13_0= parse_org_sintef_thingml_PlatformAnnotation
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_LocalVariable10342);
-            	    a11_0=parse_org_sintef_thingml_PlatformAnnotation();
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_LocalVariable10462);
+            	    a13_0=parse_org_sintef_thingml_PlatformAnnotation();
 
             	    state._fsp--;
             	    if (state.failed) return element;
@@ -16116,16 +16405,21 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    					if (element == null) {
             	    						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createLocalVariable();
             	    						startIncompleteElement(element);
+            	    						// initialize boolean attribute
+            	    						{
+            	    							Object value = false;
+            	    							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__IS_ARRAY), value);
+            	    						}
             	    					}
-            	    					if (a11_0 != null) {
-            	    						if (a11_0 != null) {
-            	    							Object value = a11_0;
+            	    					if (a13_0 != null) {
+            	    						if (a13_0 != null) {
+            	    							Object value = a13_0;
             	    							addObjectToList(element, org.sintef.thingml.ThingmlPackage.LOCAL_VARIABLE__ANNOTATIONS, value);
             	    							completedElement(value, true);
             	    						}
             	    						collectHiddenTokens(element);
-            	    						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_11_0_0_0, a11_0, true);
-            	    						copyLocalizationInfos(a11_0, element);
+            	    						retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_29_0_0_11_0_0_0, a13_0, true);
+            	    						copyLocalizationInfos(a13_0, element);
             	    					}
             	    				}
 
@@ -16252,7 +16546,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ExternStatement"
-    // Thingml.g:10503:1: parse_org_sintef_thingml_ExternStatement returns [org.sintef.thingml.ExternStatement element = null] : (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )* ;
+    // Thingml.g:10765:1: parse_org_sintef_thingml_ExternStatement returns [org.sintef.thingml.ExternStatement element = null] : (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )* ;
     public final org.sintef.thingml.ExternStatement parse_org_sintef_thingml_ExternStatement() throws RecognitionException {
         org.sintef.thingml.ExternStatement element =  null;
 
@@ -16268,13 +16562,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 32) ) { return element; }
 
-            // Thingml.g:10506:2: ( (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )* )
-            // Thingml.g:10507:2: (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )*
+            // Thingml.g:10768:2: ( (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )* )
+            // Thingml.g:10769:2: (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )*
             {
-            // Thingml.g:10507:2: (a0= STRING_EXT )
-            // Thingml.g:10508:3: a0= STRING_EXT
+            // Thingml.g:10769:2: (a0= STRING_EXT )
+            // Thingml.g:10770:3: a0= STRING_EXT
             {
-            a0=(Token)match(input,STRING_EXT,FOLLOW_STRING_EXT_in_parse_org_sintef_thingml_ExternStatement10402); if (state.failed) return element;
+            a0=(Token)match(input,STRING_EXT,FOLLOW_STRING_EXT_in_parse_org_sintef_thingml_ExternStatement10522); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -16352,7 +16646,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2624]);
             	}
 
-            // Thingml.g:10582:2: ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )*
+            // Thingml.g:10844:2: ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )*
             loop103:
             do {
                 int alt103=2;
@@ -16365,12 +16659,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt103) {
             	case 1 :
-            	    // Thingml.g:10583:3: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
+            	    // Thingml.g:10845:3: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
             	    {
-            	    // Thingml.g:10583:3: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
-            	    // Thingml.g:10584:4: a1= '&' (a2_0= parse_org_sintef_thingml_Expression )
+            	    // Thingml.g:10845:3: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
+            	    // Thingml.g:10846:4: a1= '&' (a2_0= parse_org_sintef_thingml_Expression )
             	    {
-            	    a1=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_ExternStatement10432); if (state.failed) return element;
+            	    a1=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_ExternStatement10552); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -16398,10 +16692,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2636]);
             	    			}
 
-            	    // Thingml.g:10609:4: (a2_0= parse_org_sintef_thingml_Expression )
-            	    // Thingml.g:10610:5: a2_0= parse_org_sintef_thingml_Expression
+            	    // Thingml.g:10871:4: (a2_0= parse_org_sintef_thingml_Expression )
+            	    // Thingml.g:10872:5: a2_0= parse_org_sintef_thingml_Expression
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExternStatement10458);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExternStatement10578);
             	    a2_0=parse_org_sintef_thingml_Expression();
 
             	    state._fsp--;
@@ -16550,7 +16844,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ConditionalAction"
-    // Thingml.g:10722:1: parse_org_sintef_thingml_ConditionalAction returns [org.sintef.thingml.ConditionalAction element = null] : a0= 'if' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )? ;
+    // Thingml.g:10984:1: parse_org_sintef_thingml_ConditionalAction returns [org.sintef.thingml.ConditionalAction element = null] : a0= 'if' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )? ;
     public final org.sintef.thingml.ConditionalAction parse_org_sintef_thingml_ConditionalAction() throws RecognitionException {
         org.sintef.thingml.ConditionalAction element =  null;
 
@@ -16572,10 +16866,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 33) ) { return element; }
 
-            // Thingml.g:10725:2: (a0= 'if' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )? )
-            // Thingml.g:10726:2: a0= 'if' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )?
+            // Thingml.g:10987:2: (a0= 'if' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )? )
+            // Thingml.g:10988:2: a0= 'if' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )?
             {
-            a0=(Token)match(input,64,FOLLOW_64_in_parse_org_sintef_thingml_ConditionalAction10514); if (state.failed) return element;
+            a0=(Token)match(input,64,FOLLOW_64_in_parse_org_sintef_thingml_ConditionalAction10634); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -16592,7 +16886,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2717]);
             	}
 
-            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_ConditionalAction10528); if (state.failed) return element;
+            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_ConditionalAction10648); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -16620,10 +16914,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2729]);
             	}
 
-            // Thingml.g:10765:2: (a2_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:10766:3: a2_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:11027:2: (a2_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:11028:3: a2_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConditionalAction10546);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConditionalAction10666);
             a2_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -16657,7 +16951,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2730]);
             	}
 
-            a3=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_ConditionalAction10564); if (state.failed) return element;
+            a3=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_ConditionalAction10684); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -16685,10 +16979,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2742]);
             	}
 
-            // Thingml.g:10816:2: (a4_0= parse_org_sintef_thingml_Action )
-            // Thingml.g:10817:3: a4_0= parse_org_sintef_thingml_Action
+            // Thingml.g:11078:2: (a4_0= parse_org_sintef_thingml_Action )
+            // Thingml.g:11079:3: a4_0= parse_org_sintef_thingml_Action
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10582);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10702);
             a4_0=parse_org_sintef_thingml_Action();
 
             state._fsp--;
@@ -16760,7 +17054,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2781]);
             	}
 
-            // Thingml.g:10880:2: ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )?
+            // Thingml.g:11142:2: ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )?
             int alt104=2;
             int LA104_0 = input.LA(1);
 
@@ -16773,12 +17067,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt104) {
                 case 1 :
-                    // Thingml.g:10881:3: (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:11143:3: (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
                     {
-                    // Thingml.g:10881:3: (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
-                    // Thingml.g:10882:4: a5= 'else' (a6_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:11143:3: (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
+                    // Thingml.g:11144:4: a5= 'else' (a6_0= parse_org_sintef_thingml_Action )
                     {
-                    a5=(Token)match(input,52,FOLLOW_52_in_parse_org_sintef_thingml_ConditionalAction10609); if (state.failed) return element;
+                    a5=(Token)match(input,52,FOLLOW_52_in_parse_org_sintef_thingml_ConditionalAction10729); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -16806,10 +17100,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getConditionalAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2793]);
                     			}
 
-                    // Thingml.g:10907:4: (a6_0= parse_org_sintef_thingml_Action )
-                    // Thingml.g:10908:5: a6_0= parse_org_sintef_thingml_Action
+                    // Thingml.g:11169:4: (a6_0= parse_org_sintef_thingml_Action )
+                    // Thingml.g:11170:5: a6_0= parse_org_sintef_thingml_Action
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10635);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10755);
                     a6_0=parse_org_sintef_thingml_Action();
 
                     state._fsp--;
@@ -16953,7 +17247,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_LoopAction"
-    // Thingml.g:11018:1: parse_org_sintef_thingml_LoopAction returns [org.sintef.thingml.LoopAction element = null] : a0= 'while' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ;
+    // Thingml.g:11280:1: parse_org_sintef_thingml_LoopAction returns [org.sintef.thingml.LoopAction element = null] : a0= 'while' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) ;
     public final org.sintef.thingml.LoopAction parse_org_sintef_thingml_LoopAction() throws RecognitionException {
         org.sintef.thingml.LoopAction element =  null;
 
@@ -16972,10 +17266,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 34) ) { return element; }
 
-            // Thingml.g:11021:2: (a0= 'while' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) )
-            // Thingml.g:11022:2: a0= 'while' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action )
+            // Thingml.g:11283:2: (a0= 'while' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action ) )
+            // Thingml.g:11284:2: a0= 'while' a1= '(' (a2_0= parse_org_sintef_thingml_Expression ) a3= ')' (a4_0= parse_org_sintef_thingml_Action )
             {
-            a0=(Token)match(input,96,FOLLOW_96_in_parse_org_sintef_thingml_LoopAction10691); if (state.failed) return element;
+            a0=(Token)match(input,96,FOLLOW_96_in_parse_org_sintef_thingml_LoopAction10811); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -16992,7 +17286,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2872]);
             	}
 
-            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_LoopAction10705); if (state.failed) return element;
+            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_LoopAction10825); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -17020,10 +17314,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2884]);
             	}
 
-            // Thingml.g:11061:2: (a2_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:11062:3: a2_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:11323:2: (a2_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:11324:3: a2_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LoopAction10723);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LoopAction10843);
             a2_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -17057,7 +17351,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2885]);
             	}
 
-            a3=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_LoopAction10741); if (state.failed) return element;
+            a3=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_LoopAction10861); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -17085,10 +17379,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLoopAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2897]);
             	}
 
-            // Thingml.g:11112:2: (a4_0= parse_org_sintef_thingml_Action )
-            // Thingml.g:11113:3: a4_0= parse_org_sintef_thingml_Action
+            // Thingml.g:11374:2: (a4_0= parse_org_sintef_thingml_Action )
+            // Thingml.g:11375:3: a4_0= parse_org_sintef_thingml_Action
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_LoopAction10759);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_LoopAction10879);
             a4_0=parse_org_sintef_thingml_Action();
 
             state._fsp--;
@@ -17180,7 +17474,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_PrintAction"
-    // Thingml.g:11178:1: parse_org_sintef_thingml_PrintAction returns [org.sintef.thingml.PrintAction element = null] : a0= 'print' (a1_0= parse_org_sintef_thingml_Expression ) ;
+    // Thingml.g:11440:1: parse_org_sintef_thingml_PrintAction returns [org.sintef.thingml.PrintAction element = null] : a0= 'print' (a1_0= parse_org_sintef_thingml_Expression ) ;
     public final org.sintef.thingml.PrintAction parse_org_sintef_thingml_PrintAction() throws RecognitionException {
         org.sintef.thingml.PrintAction element =  null;
 
@@ -17195,10 +17489,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 35) ) { return element; }
 
-            // Thingml.g:11181:2: (a0= 'print' (a1_0= parse_org_sintef_thingml_Expression ) )
-            // Thingml.g:11182:2: a0= 'print' (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:11443:2: (a0= 'print' (a1_0= parse_org_sintef_thingml_Expression ) )
+            // Thingml.g:11444:2: a0= 'print' (a1_0= parse_org_sintef_thingml_Expression )
             {
-            a0=(Token)match(input,79,FOLLOW_79_in_parse_org_sintef_thingml_PrintAction10792); if (state.failed) return element;
+            a0=(Token)match(input,79,FOLLOW_79_in_parse_org_sintef_thingml_PrintAction10912); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -17226,10 +17520,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrintAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2948]);
             	}
 
-            // Thingml.g:11207:2: (a1_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:11208:3: a1_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:11469:2: (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:11470:3: a1_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PrintAction10810);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PrintAction10930);
             a1_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -17321,7 +17615,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ErrorAction"
-    // Thingml.g:11273:1: parse_org_sintef_thingml_ErrorAction returns [org.sintef.thingml.ErrorAction element = null] : a0= 'error' (a1_0= parse_org_sintef_thingml_Expression ) ;
+    // Thingml.g:11535:1: parse_org_sintef_thingml_ErrorAction returns [org.sintef.thingml.ErrorAction element = null] : a0= 'error' (a1_0= parse_org_sintef_thingml_Expression ) ;
     public final org.sintef.thingml.ErrorAction parse_org_sintef_thingml_ErrorAction() throws RecognitionException {
         org.sintef.thingml.ErrorAction element =  null;
 
@@ -17336,10 +17630,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 36) ) { return element; }
 
-            // Thingml.g:11276:2: (a0= 'error' (a1_0= parse_org_sintef_thingml_Expression ) )
-            // Thingml.g:11277:2: a0= 'error' (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:11538:2: (a0= 'error' (a1_0= parse_org_sintef_thingml_Expression ) )
+            // Thingml.g:11539:2: a0= 'error' (a1_0= parse_org_sintef_thingml_Expression )
             {
-            a0=(Token)match(input,56,FOLLOW_56_in_parse_org_sintef_thingml_ErrorAction10843); if (state.failed) return element;
+            a0=(Token)match(input,56,FOLLOW_56_in_parse_org_sintef_thingml_ErrorAction10963); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -17367,10 +17661,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getErrorAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[2999]);
             	}
 
-            // Thingml.g:11302:2: (a1_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:11303:3: a1_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:11564:2: (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:11565:3: a1_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ErrorAction10861);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ErrorAction10981);
             a1_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -17462,7 +17756,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ReturnAction"
-    // Thingml.g:11368:1: parse_org_sintef_thingml_ReturnAction returns [org.sintef.thingml.ReturnAction element = null] : a0= 'return' (a1_0= parse_org_sintef_thingml_Expression ) ;
+    // Thingml.g:11630:1: parse_org_sintef_thingml_ReturnAction returns [org.sintef.thingml.ReturnAction element = null] : a0= 'return' (a1_0= parse_org_sintef_thingml_Expression ) ;
     public final org.sintef.thingml.ReturnAction parse_org_sintef_thingml_ReturnAction() throws RecognitionException {
         org.sintef.thingml.ReturnAction element =  null;
 
@@ -17477,10 +17771,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 37) ) { return element; }
 
-            // Thingml.g:11371:2: (a0= 'return' (a1_0= parse_org_sintef_thingml_Expression ) )
-            // Thingml.g:11372:2: a0= 'return' (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:11633:2: (a0= 'return' (a1_0= parse_org_sintef_thingml_Expression ) )
+            // Thingml.g:11634:2: a0= 'return' (a1_0= parse_org_sintef_thingml_Expression )
             {
-            a0=(Token)match(input,85,FOLLOW_85_in_parse_org_sintef_thingml_ReturnAction10894); if (state.failed) return element;
+            a0=(Token)match(input,85,FOLLOW_85_in_parse_org_sintef_thingml_ReturnAction11014); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -17508,10 +17802,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReturnAction(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3050]);
             	}
 
-            // Thingml.g:11397:2: (a1_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:11398:3: a1_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:11659:2: (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:11660:3: a1_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ReturnAction10912);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ReturnAction11032);
             a1_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -17603,7 +17897,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_FunctionCallStatement"
-    // Thingml.g:11463:1: parse_org_sintef_thingml_FunctionCallStatement returns [org.sintef.thingml.FunctionCallStatement element = null] : (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' ;
+    // Thingml.g:11725:1: parse_org_sintef_thingml_FunctionCallStatement returns [org.sintef.thingml.FunctionCallStatement element = null] : (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' ;
     public final org.sintef.thingml.FunctionCallStatement parse_org_sintef_thingml_FunctionCallStatement() throws RecognitionException {
         org.sintef.thingml.FunctionCallStatement element =  null;
 
@@ -17623,13 +17917,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 38) ) { return element; }
 
-            // Thingml.g:11466:2: ( (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' )
-            // Thingml.g:11467:2: (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')'
+            // Thingml.g:11728:2: ( (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' )
+            // Thingml.g:11729:2: (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')'
             {
-            // Thingml.g:11467:2: (a0= TEXT )
-            // Thingml.g:11468:3: a0= TEXT
+            // Thingml.g:11729:2: (a0= TEXT )
+            // Thingml.g:11730:3: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallStatement10949); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallStatement11069); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -17672,7 +17966,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3090]);
             	}
 
-            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_FunctionCallStatement10970); if (state.failed) return element;
+            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_FunctionCallStatement11090); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -17701,7 +17995,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3103]);
             	}
 
-            // Thingml.g:11533:2: ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
+            // Thingml.g:11795:2: ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
             int alt106=2;
             int LA106_0 = input.LA(1);
 
@@ -17710,15 +18004,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt106) {
                 case 1 :
-                    // Thingml.g:11534:3: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:11796:3: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
                     {
-                    // Thingml.g:11534:3: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
-                    // Thingml.g:11535:4: (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
+                    // Thingml.g:11796:3: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:11797:4: (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
                     {
-                    // Thingml.g:11535:4: (a2_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:11536:5: a2_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:11797:4: (a2_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:11798:5: a2_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement10999);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement11119);
                     a2_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
@@ -17753,7 +18047,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3105]);
                     			}
 
-                    // Thingml.g:11562:4: ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
+                    // Thingml.g:11824:4: ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
                     loop105:
                     do {
                         int alt105=2;
@@ -17766,12 +18060,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt105) {
                     	case 1 :
-                    	    // Thingml.g:11563:5: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:11825:5: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
                     	    {
-                    	    // Thingml.g:11563:5: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
-                    	    // Thingml.g:11564:6: a3= ',' (a4_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:11825:5: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:11826:6: a3= ',' (a4_0= parse_org_sintef_thingml_Expression )
                     	    {
-                    	    a3=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_FunctionCallStatement11040); if (state.failed) return element;
+                    	    a3=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_FunctionCallStatement11160); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    						if (element == null) {
@@ -17799,10 +18093,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallStatement(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3117]);
                     	    					}
 
-                    	    // Thingml.g:11589:6: (a4_0= parse_org_sintef_thingml_Expression )
-                    	    // Thingml.g:11590:7: a4_0= parse_org_sintef_thingml_Expression
+                    	    // Thingml.g:11851:6: (a4_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:11852:7: a4_0= parse_org_sintef_thingml_Expression
                     	    {
-                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement11074);
+                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement11194);
                     	    a4_0=parse_org_sintef_thingml_Expression();
 
                     	    state._fsp--;
@@ -17869,7 +18163,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3122]);
             	}
 
-            a5=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_FunctionCallStatement11148); if (state.failed) return element;
+            a5=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_FunctionCallStatement11268); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -17944,7 +18238,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_SglMsgParamOperator"
-    // Thingml.g:11685:1: parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgParamOperator element = null] : a0= 'operator' (a1= TEXT ) a2= '(' (a3_0= parse_org_sintef_thingml_MessageParameter ) a4= ')' a5= ':' (a6= TEXT ) ( ( (a7= '[' (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' ) | ( (a10= T_ARRAY ) ) ) )? (a11_0= parse_org_sintef_thingml_ActionBlock ) ;
+    // Thingml.g:11947:1: parse_org_sintef_thingml_SglMsgParamOperator returns [org.sintef.thingml.SglMsgParamOperator element = null] : a0= 'operator' (a1= TEXT ) a2= '(' (a3_0= parse_org_sintef_thingml_MessageParameter ) a4= ')' a5= ':' (a6= TEXT ) ( ( ( (a7= T_ARRAY ) (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' ) | ( ( (a10= '[]' ) ) ) ) )? (a13_0= parse_org_sintef_thingml_ActionBlock ) ;
     public final org.sintef.thingml.SglMsgParamOperator parse_org_sintef_thingml_SglMsgParamOperator() throws RecognitionException {
         org.sintef.thingml.SglMsgParamOperator element =  null;
 
@@ -17963,7 +18257,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
         org.sintef.thingml.Expression a8_0 =null;
 
-        org.sintef.thingml.ActionBlock a11_0 =null;
+        org.sintef.thingml.ActionBlock a13_0 =null;
 
 
 
@@ -17971,15 +18265,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 39) ) { return element; }
 
-            // Thingml.g:11688:2: (a0= 'operator' (a1= TEXT ) a2= '(' (a3_0= parse_org_sintef_thingml_MessageParameter ) a4= ')' a5= ':' (a6= TEXT ) ( ( (a7= '[' (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' ) | ( (a10= T_ARRAY ) ) ) )? (a11_0= parse_org_sintef_thingml_ActionBlock ) )
-            // Thingml.g:11689:2: a0= 'operator' (a1= TEXT ) a2= '(' (a3_0= parse_org_sintef_thingml_MessageParameter ) a4= ')' a5= ':' (a6= TEXT ) ( ( (a7= '[' (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' ) | ( (a10= T_ARRAY ) ) ) )? (a11_0= parse_org_sintef_thingml_ActionBlock )
+            // Thingml.g:11950:2: (a0= 'operator' (a1= TEXT ) a2= '(' (a3_0= parse_org_sintef_thingml_MessageParameter ) a4= ')' a5= ':' (a6= TEXT ) ( ( ( (a7= T_ARRAY ) (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' ) | ( ( (a10= '[]' ) ) ) ) )? (a13_0= parse_org_sintef_thingml_ActionBlock ) )
+            // Thingml.g:11951:2: a0= 'operator' (a1= TEXT ) a2= '(' (a3_0= parse_org_sintef_thingml_MessageParameter ) a4= ')' a5= ':' (a6= TEXT ) ( ( ( (a7= T_ARRAY ) (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' ) | ( ( (a10= '[]' ) ) ) ) )? (a13_0= parse_org_sintef_thingml_ActionBlock )
             {
-            a0=(Token)match(input,76,FOLLOW_76_in_parse_org_sintef_thingml_SglMsgParamOperator11177); if (state.failed) return element;
+            a0=(Token)match(input,76,FOLLOW_76_in_parse_org_sintef_thingml_SglMsgParamOperator11297); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
             			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
             			startIncompleteElement(element);
+            			// initialize boolean attribute
+            			{
+            				Object value = false;
+            				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+            			}
             		}
             		collectHiddenTokens(element);
             		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_0, null, true);
@@ -17991,10 +18290,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3162]);
             	}
 
-            // Thingml.g:11703:2: (a1= TEXT )
-            // Thingml.g:11704:3: a1= TEXT
+            // Thingml.g:11970:2: (a1= TEXT )
+            // Thingml.g:11971:3: a1= TEXT
             {
-            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperator11195); if (state.failed) return element;
+            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperator11315); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -18003,6 +18302,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             			if (element == null) {
             				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
             				startIncompleteElement(element);
+            				// initialize boolean attribute
+            				{
+            					Object value = false;
+            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+            				}
             			}
             			if (a1 != null) {
             				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -18033,12 +18337,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3163]);
             	}
 
-            a2=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_SglMsgParamOperator11216); if (state.failed) return element;
+            a2=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_SglMsgParamOperator11336); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
             			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
             			startIncompleteElement(element);
+            			// initialize boolean attribute
+            			{
+            				Object value = false;
+            				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+            			}
             		}
             		collectHiddenTokens(element);
             		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_3, null, true);
@@ -18050,10 +18359,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getSglMsgParamOperator(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3164]);
             	}
 
-            // Thingml.g:11753:2: (a3_0= parse_org_sintef_thingml_MessageParameter )
-            // Thingml.g:11754:3: a3_0= parse_org_sintef_thingml_MessageParameter
+            // Thingml.g:12030:2: (a3_0= parse_org_sintef_thingml_MessageParameter )
+            // Thingml.g:12031:3: a3_0= parse_org_sintef_thingml_MessageParameter
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_MessageParameter_in_parse_org_sintef_thingml_SglMsgParamOperator11234);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_MessageParameter_in_parse_org_sintef_thingml_SglMsgParamOperator11354);
             a3_0=parse_org_sintef_thingml_MessageParameter();
 
             state._fsp--;
@@ -18066,6 +18375,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             			if (element == null) {
             				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
             				startIncompleteElement(element);
+            				// initialize boolean attribute
+            				{
+            					Object value = false;
+            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+            				}
             			}
             			if (a3_0 != null) {
             				if (a3_0 != null) {
@@ -18087,12 +18401,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3165]);
             	}
 
-            a4=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_SglMsgParamOperator11252); if (state.failed) return element;
+            a4=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_SglMsgParamOperator11372); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
             			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
             			startIncompleteElement(element);
+            			// initialize boolean attribute
+            			{
+            				Object value = false;
+            				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+            			}
             		}
             		collectHiddenTokens(element);
             		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_5, null, true);
@@ -18104,12 +18423,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3166]);
             	}
 
-            a5=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_SglMsgParamOperator11266); if (state.failed) return element;
+            a5=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_SglMsgParamOperator11386); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
             			element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
             			startIncompleteElement(element);
+            			// initialize boolean attribute
+            			{
+            				Object value = false;
+            				element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+            			}
             		}
             		collectHiddenTokens(element);
             		retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_6, null, true);
@@ -18121,10 +18445,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3167]);
             	}
 
-            // Thingml.g:11807:2: (a6= TEXT )
-            // Thingml.g:11808:3: a6= TEXT
+            // Thingml.g:12099:2: (a6= TEXT )
+            // Thingml.g:12100:3: a6= TEXT
             {
-            a6=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperator11284); if (state.failed) return element;
+            a6=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperator11404); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -18133,6 +18457,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             			if (element == null) {
             				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
             				startIncompleteElement(element);
+            				// initialize boolean attribute
+            				{
+            					Object value = false;
+            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+            				}
             			}
             			if (a6 != null) {
             				org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("TEXT");
@@ -18169,7 +18498,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getSglMsgParamOperator(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3170]);
             	}
 
-            // Thingml.g:11849:2: ( ( (a7= '[' (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' ) | ( (a10= T_ARRAY ) ) ) )?
+            // Thingml.g:12146:2: ( ( ( (a7= T_ARRAY ) (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' ) | ( ( (a10= '[]' ) ) ) ) )?
             int alt108=2;
             int LA108_0 = input.LA(1);
 
@@ -18178,16 +18507,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt108) {
                 case 1 :
-                    // Thingml.g:11850:3: ( (a7= '[' (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' ) | ( (a10= T_ARRAY ) ) )
+                    // Thingml.g:12147:3: ( ( (a7= T_ARRAY ) (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' ) | ( ( (a10= '[]' ) ) ) )
                     {
-                    // Thingml.g:11850:3: ( (a7= '[' (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' ) | ( (a10= T_ARRAY ) ) )
+                    // Thingml.g:12147:3: ( ( (a7= T_ARRAY ) (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' ) | ( ( (a10= '[]' ) ) ) )
                     int alt107=2;
                     int LA107_0 = input.LA(1);
 
-                    if ( (LA107_0==40) ) {
+                    if ( (LA107_0==T_ARRAY) ) {
                         alt107=1;
                     }
-                    else if ( (LA107_0==T_ARRAY) ) {
+                    else if ( (LA107_0==40) ) {
                         alt107=2;
                     }
                     else {
@@ -18200,22 +18529,52 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     switch (alt107) {
                         case 1 :
-                            // Thingml.g:11851:4: (a7= '[' (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' )
+                            // Thingml.g:12148:4: ( (a7= T_ARRAY ) (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' )
                             {
-                            // Thingml.g:11851:4: (a7= '[' (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' )
-                            // Thingml.g:11852:5: a7= '[' (a8_0= parse_org_sintef_thingml_Expression ) a9= ']'
+                            // Thingml.g:12148:4: ( (a7= T_ARRAY ) (a8_0= parse_org_sintef_thingml_Expression ) a9= ']' )
+                            // Thingml.g:12149:5: (a7= T_ARRAY ) (a8_0= parse_org_sintef_thingml_Expression ) a9= ']'
                             {
-                            a7=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_SglMsgParamOperator11320); if (state.failed) return element;
+                            // Thingml.g:12149:5: (a7= T_ARRAY )
+                            // Thingml.g:12150:6: a7= T_ARRAY
+                            {
+                            a7=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_SglMsgParamOperator11447); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
-                            					if (element == null) {
-                            						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
-                            						startIncompleteElement(element);
+                            						if (terminateParsing) {
+                            							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
+                            						}
+                            						if (element == null) {
+                            							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
+                            							startIncompleteElement(element);
+                            							// initialize boolean attribute
+                            							{
+                            								Object value = false;
+                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+                            							}
+                            						}
+                            						if (a7 != null) {
+                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
+                            							tokenResolver.setOptions(getOptions());
+                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
+                            							tokenResolver.resolve(a7.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), result);
+                            							Object resolvedObject = result.getResolvedToken();
+                            							if (resolvedObject == null) {
+                            								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a7).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a7).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a7).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a7).getStopIndex());
+                            							}
+                            							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
+                            							if (resolved != null) {
+                            								Object value = resolved;
+                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+                            								completedElement(value, false);
+                            							}
+                            							collectHiddenTokens(element);
+                            							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_0_0_0_0_0, resolved, true);
+                            							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a7, element);
+                            						}
                             					}
-                            					collectHiddenTokens(element);
-                            					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_0_0_0_0_0, null, true);
-                            					copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a7, element);
-                            				}
+
+                            }
+
 
                             if ( state.backtracking==0 ) {
                             					// expected elements (follow set)
@@ -18233,10 +18592,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             					addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getSglMsgParamOperator(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3182]);
                             				}
 
-                            // Thingml.g:11877:5: (a8_0= parse_org_sintef_thingml_Expression )
-                            // Thingml.g:11878:6: a8_0= parse_org_sintef_thingml_Expression
+                            // Thingml.g:12201:5: (a8_0= parse_org_sintef_thingml_Expression )
+                            // Thingml.g:12202:6: a8_0= parse_org_sintef_thingml_Expression
                             {
-                            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_SglMsgParamOperator11350);
+                            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_SglMsgParamOperator11493);
                             a8_0=parse_org_sintef_thingml_Expression();
 
                             state._fsp--;
@@ -18249,6 +18608,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             						if (element == null) {
                             							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
                             							startIncompleteElement(element);
+                            							// initialize boolean attribute
+                            							{
+                            								Object value = false;
+                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+                            							}
                             						}
                             						if (a8_0 != null) {
                             							if (a8_0 != null) {
@@ -18270,12 +18634,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             					addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3183]);
                             				}
 
-                            a9=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_SglMsgParamOperator11383); if (state.failed) return element;
+                            a9=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_SglMsgParamOperator11526); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
                             					if (element == null) {
                             						element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
                             						startIncompleteElement(element);
+                            						// initialize boolean attribute
+                            						{
+                            							Object value = false;
+                            							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+                            						}
                             					}
                             					collectHiddenTokens(element);
                             					retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_0_0_0_0_2, null, true);
@@ -18298,44 +18667,40 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             }
                             break;
                         case 2 :
-                            // Thingml.g:11924:8: ( (a10= T_ARRAY ) )
+                            // Thingml.g:12258:8: ( ( (a10= '[]' ) ) )
                             {
-                            // Thingml.g:11924:8: ( (a10= T_ARRAY ) )
-                            // Thingml.g:11925:5: (a10= T_ARRAY )
+                            // Thingml.g:12258:8: ( ( (a10= '[]' ) ) )
+                            // Thingml.g:12259:5: ( (a10= '[]' ) )
                             {
-                            // Thingml.g:11925:5: (a10= T_ARRAY )
-                            // Thingml.g:11926:6: a10= T_ARRAY
+                            // Thingml.g:12259:5: ( (a10= '[]' ) )
+                            // Thingml.g:12260:6: (a10= '[]' )
                             {
-                            a10=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_SglMsgParamOperator11440); if (state.failed) return element;
+                            // Thingml.g:12260:6: (a10= '[]' )
+                            // Thingml.g:12261:7: a10= '[]'
+                            {
+                            a10=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_SglMsgParamOperator11591); if (state.failed) return element;
 
                             if ( state.backtracking==0 ) {
-                            						if (terminateParsing) {
-                            							throw new org.sintef.thingml.resource.thingml.mopp.ThingmlTerminateParsingException();
-                            						}
-                            						if (element == null) {
-                            							element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
-                            							startIncompleteElement(element);
-                            						}
-                            						if (a10 != null) {
-                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolver tokenResolver = tokenResolverFactory.createTokenResolver("T_ARRAY");
-                            							tokenResolver.setOptions(getOptions());
-                            							org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result = getFreshTokenResolveResult();
-                            							tokenResolver.resolve(a10.getText(), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), result);
-                            							Object resolvedObject = result.getResolvedToken();
-                            							if (resolvedObject == null) {
-                            								addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a10).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a10).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a10).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a10).getStopIndex());
-                            							}
-                            							java.lang.Boolean resolved = (java.lang.Boolean) resolvedObject;
-                            							if (resolved != null) {
-                            								Object value = resolved;
-                            								element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
-                            								completedElement(value, false);
+                            							if (element == null) {
+                            								element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
+                            								startIncompleteElement(element);
+                            								// initialize boolean attribute
+                            								{
+                            									Object value = false;
+                            									element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+                            								}
                             							}
                             							collectHiddenTokens(element);
-                            							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_1_0_0_0_0, resolved, true);
-                            							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken) a10, element);
+                            							retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_9_0_1_0_0_0_0, true, true);
+                            							copyLocalizationInfos((org.antlr.runtime3_4_0.CommonToken)a10, element);
+                            							// set value of boolean attribute
+                            							Object value = true;
+                            							element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+                            							completedElement(value, false);
                             						}
-                            					}
+
+                            }
+
 
                             }
 
@@ -18370,11 +18735,11 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getSglMsgParamOperator(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3188]);
             	}
 
-            // Thingml.g:11974:2: (a11_0= parse_org_sintef_thingml_ActionBlock )
-            // Thingml.g:11975:3: a11_0= parse_org_sintef_thingml_ActionBlock
+            // Thingml.g:12299:2: (a13_0= parse_org_sintef_thingml_ActionBlock )
+            // Thingml.g:12300:3: a13_0= parse_org_sintef_thingml_ActionBlock
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_ActionBlock_in_parse_org_sintef_thingml_SglMsgParamOperator11509);
-            a11_0=parse_org_sintef_thingml_ActionBlock();
+            pushFollow(FOLLOW_parse_org_sintef_thingml_ActionBlock_in_parse_org_sintef_thingml_SglMsgParamOperator11657);
+            a13_0=parse_org_sintef_thingml_ActionBlock();
 
             state._fsp--;
             if (state.failed) return element;
@@ -18386,16 +18751,21 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             			if (element == null) {
             				element = org.sintef.thingml.ThingmlFactory.eINSTANCE.createSglMsgParamOperator();
             				startIncompleteElement(element);
+            				// initialize boolean attribute
+            				{
+            					Object value = false;
+            					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__IS_ARRAY), value);
+            				}
             			}
-            			if (a11_0 != null) {
-            				if (a11_0 != null) {
-            					Object value = a11_0;
+            			if (a13_0 != null) {
+            				if (a13_0 != null) {
+            					Object value = a13_0;
             					element.eSet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.SGL_MSG_PARAM_OPERATOR__BODY), value);
             					completedElement(value, true);
             				}
             				collectHiddenTokens(element);
-            				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_11, a11_0, true);
-            				copyLocalizationInfos(a11_0, element);
+            				retrieveLayoutInformation(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_37_0_0_11, a13_0, true);
+            				copyLocalizationInfos(a13_0, element);
             			}
             		}
 
@@ -18438,7 +18808,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_MessageParameter"
-    // Thingml.g:12013:1: parse_org_sintef_thingml_MessageParameter returns [org.sintef.thingml.MessageParameter element = null] : (a0= TEXT ) a1= ':' (a2= TEXT ) ;
+    // Thingml.g:12343:1: parse_org_sintef_thingml_MessageParameter returns [org.sintef.thingml.MessageParameter element = null] : (a0= TEXT ) a1= ':' (a2= TEXT ) ;
     public final org.sintef.thingml.MessageParameter parse_org_sintef_thingml_MessageParameter() throws RecognitionException {
         org.sintef.thingml.MessageParameter element =  null;
 
@@ -18453,13 +18823,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 40) ) { return element; }
 
-            // Thingml.g:12016:2: ( (a0= TEXT ) a1= ':' (a2= TEXT ) )
-            // Thingml.g:12017:2: (a0= TEXT ) a1= ':' (a2= TEXT )
+            // Thingml.g:12346:2: ( (a0= TEXT ) a1= ':' (a2= TEXT ) )
+            // Thingml.g:12347:2: (a0= TEXT ) a1= ':' (a2= TEXT )
             {
-            // Thingml.g:12017:2: (a0= TEXT )
-            // Thingml.g:12018:3: a0= TEXT
+            // Thingml.g:12347:2: (a0= TEXT )
+            // Thingml.g:12348:3: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_MessageParameter11546); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_MessageParameter11694); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -18498,7 +18868,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3201]);
             	}
 
-            a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_MessageParameter11567); if (state.failed) return element;
+            a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_MessageParameter11715); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -18515,10 +18885,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3202]);
             	}
 
-            // Thingml.g:12067:2: (a2= TEXT )
-            // Thingml.g:12068:3: a2= TEXT
+            // Thingml.g:12397:2: (a2= TEXT )
+            // Thingml.g:12398:3: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_MessageParameter11585); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_MessageParameter11733); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -18581,7 +18951,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_SglMsgParamOperatorCall"
-    // Thingml.g:12109:1: parse_org_sintef_thingml_SglMsgParamOperatorCall returns [org.sintef.thingml.SglMsgParamOperatorCall element = null] : (a0= TEXT ) a1= '(' (a2= TEXT ) a3= ')' ;
+    // Thingml.g:12439:1: parse_org_sintef_thingml_SglMsgParamOperatorCall returns [org.sintef.thingml.SglMsgParamOperatorCall element = null] : (a0= TEXT ) a1= '(' (a2= TEXT ) a3= ')' ;
     public final org.sintef.thingml.SglMsgParamOperatorCall parse_org_sintef_thingml_SglMsgParamOperatorCall() throws RecognitionException {
         org.sintef.thingml.SglMsgParamOperatorCall element =  null;
 
@@ -18597,13 +18967,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 41) ) { return element; }
 
-            // Thingml.g:12112:2: ( (a0= TEXT ) a1= '(' (a2= TEXT ) a3= ')' )
-            // Thingml.g:12113:2: (a0= TEXT ) a1= '(' (a2= TEXT ) a3= ')'
+            // Thingml.g:12442:2: ( (a0= TEXT ) a1= '(' (a2= TEXT ) a3= ')' )
+            // Thingml.g:12443:2: (a0= TEXT ) a1= '(' (a2= TEXT ) a3= ')'
             {
-            // Thingml.g:12113:2: (a0= TEXT )
-            // Thingml.g:12114:3: a0= TEXT
+            // Thingml.g:12443:2: (a0= TEXT )
+            // Thingml.g:12444:3: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11625); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11773); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -18646,7 +19016,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3204]);
             	}
 
-            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11646); if (state.failed) return element;
+            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11794); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -18663,10 +19033,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3205]);
             	}
 
-            // Thingml.g:12167:2: (a2= TEXT )
-            // Thingml.g:12168:3: a2= TEXT
+            // Thingml.g:12497:2: (a2= TEXT )
+            // Thingml.g:12498:3: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11664); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11812); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -18709,7 +19079,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3206]);
             	}
 
-            a3=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11685); if (state.failed) return element;
+            a3=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11833); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -18746,7 +19116,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_StreamExpression"
-    // Thingml.g:12223:1: parse_org_sintef_thingml_StreamExpression returns [org.sintef.thingml.StreamExpression element = null] : (a0= TEXT ) a1= ':' (a2_0= parse_org_sintef_thingml_Expression ) ;
+    // Thingml.g:12553:1: parse_org_sintef_thingml_StreamExpression returns [org.sintef.thingml.StreamExpression element = null] : (a0= TEXT ) a1= ':' (a2_0= parse_org_sintef_thingml_Expression ) ;
     public final org.sintef.thingml.StreamExpression parse_org_sintef_thingml_StreamExpression() throws RecognitionException {
         org.sintef.thingml.StreamExpression element =  null;
 
@@ -18762,13 +19132,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 42) ) { return element; }
 
-            // Thingml.g:12226:2: ( (a0= TEXT ) a1= ':' (a2_0= parse_org_sintef_thingml_Expression ) )
-            // Thingml.g:12227:2: (a0= TEXT ) a1= ':' (a2_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:12556:2: ( (a0= TEXT ) a1= ':' (a2_0= parse_org_sintef_thingml_Expression ) )
+            // Thingml.g:12557:2: (a0= TEXT ) a1= ':' (a2_0= parse_org_sintef_thingml_Expression )
             {
-            // Thingml.g:12227:2: (a0= TEXT )
-            // Thingml.g:12228:3: a0= TEXT
+            // Thingml.g:12557:2: (a0= TEXT )
+            // Thingml.g:12558:3: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamExpression11718); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamExpression11866); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -18807,7 +19177,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3208]);
             	}
 
-            a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_StreamExpression11739); if (state.failed) return element;
+            a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_StreamExpression11887); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -18835,10 +19205,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStreamExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3220]);
             	}
 
-            // Thingml.g:12288:2: (a2_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:12289:3: a2_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:12618:2: (a2_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:12619:3: a2_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_StreamExpression11757);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_StreamExpression11905);
             a2_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -18893,7 +19263,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_StreamOutput"
-    // Thingml.g:12317:1: parse_org_sintef_thingml_StreamOutput returns [org.sintef.thingml.StreamOutput element = null] : (a0= TEXT ) a1= '!' (a2= TEXT ) a3= '(' ( ( (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )? a7= ')' ;
+    // Thingml.g:12647:1: parse_org_sintef_thingml_StreamOutput returns [org.sintef.thingml.StreamOutput element = null] : (a0= TEXT ) a1= '!' (a2= TEXT ) a3= '(' ( ( (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )? a7= ')' ;
     public final org.sintef.thingml.StreamOutput parse_org_sintef_thingml_StreamOutput() throws RecognitionException {
         org.sintef.thingml.StreamOutput element =  null;
 
@@ -18913,13 +19283,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 43) ) { return element; }
 
-            // Thingml.g:12320:2: ( (a0= TEXT ) a1= '!' (a2= TEXT ) a3= '(' ( ( (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )? a7= ')' )
-            // Thingml.g:12321:2: (a0= TEXT ) a1= '!' (a2= TEXT ) a3= '(' ( ( (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )? a7= ')'
+            // Thingml.g:12650:2: ( (a0= TEXT ) a1= '!' (a2= TEXT ) a3= '(' ( ( (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )? a7= ')' )
+            // Thingml.g:12651:2: (a0= TEXT ) a1= '!' (a2= TEXT ) a3= '(' ( ( (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )? a7= ')'
             {
-            // Thingml.g:12321:2: (a0= TEXT )
-            // Thingml.g:12322:3: a0= TEXT
+            // Thingml.g:12651:2: (a0= TEXT )
+            // Thingml.g:12652:3: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput11794); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput11942); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -18962,7 +19332,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3223]);
             	}
 
-            a1=(Token)match(input,19,FOLLOW_19_in_parse_org_sintef_thingml_StreamOutput11815); if (state.failed) return element;
+            a1=(Token)match(input,19,FOLLOW_19_in_parse_org_sintef_thingml_StreamOutput11963); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -18979,10 +19349,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3224]);
             	}
 
-            // Thingml.g:12375:2: (a2= TEXT )
-            // Thingml.g:12376:3: a2= TEXT
+            // Thingml.g:12705:2: (a2= TEXT )
+            // Thingml.g:12706:3: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput11833); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput11981); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -19025,7 +19395,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3225]);
             	}
 
-            a3=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_StreamOutput11854); if (state.failed) return element;
+            a3=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_StreamOutput12002); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -19043,7 +19413,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3227]);
             	}
 
-            // Thingml.g:12430:2: ( ( (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )?
+            // Thingml.g:12760:2: ( ( (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* ) )?
             int alt110=2;
             int LA110_0 = input.LA(1);
 
@@ -19052,15 +19422,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt110) {
                 case 1 :
-                    // Thingml.g:12431:3: ( (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* )
+                    // Thingml.g:12761:3: ( (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* )
                     {
-                    // Thingml.g:12431:3: ( (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* )
-                    // Thingml.g:12432:4: (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )*
+                    // Thingml.g:12761:3: ( (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )* )
+                    // Thingml.g:12762:4: (a4= TEXT ) ( (a5= ',' (a6= TEXT ) ) )*
                     {
-                    // Thingml.g:12432:4: (a4= TEXT )
-                    // Thingml.g:12433:5: a4= TEXT
+                    // Thingml.g:12762:4: (a4= TEXT )
+                    // Thingml.g:12763:5: a4= TEXT
                     {
-                    a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput11883); if (state.failed) return element;
+                    a4=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput12031); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -19104,7 +19474,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3229]);
                     			}
 
-                    // Thingml.g:12473:4: ( (a5= ',' (a6= TEXT ) ) )*
+                    // Thingml.g:12803:4: ( (a5= ',' (a6= TEXT ) ) )*
                     loop109:
                     do {
                         int alt109=2;
@@ -19117,12 +19487,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt109) {
                     	case 1 :
-                    	    // Thingml.g:12474:5: (a5= ',' (a6= TEXT ) )
+                    	    // Thingml.g:12804:5: (a5= ',' (a6= TEXT ) )
                     	    {
-                    	    // Thingml.g:12474:5: (a5= ',' (a6= TEXT ) )
-                    	    // Thingml.g:12475:6: a5= ',' (a6= TEXT )
+                    	    // Thingml.g:12804:5: (a5= ',' (a6= TEXT ) )
+                    	    // Thingml.g:12805:6: a5= ',' (a6= TEXT )
                     	    {
-                    	    a5=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_StreamOutput11929); if (state.failed) return element;
+                    	    a5=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_StreamOutput12077); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    						if (element == null) {
@@ -19139,10 +19509,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    						addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3230]);
                     	    					}
 
-                    	    // Thingml.g:12489:6: (a6= TEXT )
-                    	    // Thingml.g:12490:7: a6= TEXT
+                    	    // Thingml.g:12819:6: (a6= TEXT )
+                    	    // Thingml.g:12820:7: a6= TEXT
                     	    {
-                    	    a6=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput11963); if (state.failed) return element;
+                    	    a6=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput12111); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    							if (terminateParsing) {
@@ -19218,7 +19588,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3235]);
             	}
 
-            a7=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_StreamOutput12044); if (state.failed) return element;
+            a7=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_StreamOutput12192); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -19255,7 +19625,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Filter"
-    // Thingml.g:12561:1: parse_org_sintef_thingml_Filter returns [org.sintef.thingml.Filter element = null] : a0= 'filter' a1= '(' (a2_0= parse_org_sintef_thingml_SglMsgParamOperatorCall ) a3= ')' ;
+    // Thingml.g:12891:1: parse_org_sintef_thingml_Filter returns [org.sintef.thingml.Filter element = null] : a0= 'filter' a1= '(' (a2_0= parse_org_sintef_thingml_SglMsgParamOperatorCall ) a3= ')' ;
     public final org.sintef.thingml.Filter parse_org_sintef_thingml_Filter() throws RecognitionException {
         org.sintef.thingml.Filter element =  null;
 
@@ -19272,10 +19642,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 44) ) { return element; }
 
-            // Thingml.g:12564:2: (a0= 'filter' a1= '(' (a2_0= parse_org_sintef_thingml_SglMsgParamOperatorCall ) a3= ')' )
-            // Thingml.g:12565:2: a0= 'filter' a1= '(' (a2_0= parse_org_sintef_thingml_SglMsgParamOperatorCall ) a3= ')'
+            // Thingml.g:12894:2: (a0= 'filter' a1= '(' (a2_0= parse_org_sintef_thingml_SglMsgParamOperatorCall ) a3= ')' )
+            // Thingml.g:12895:2: a0= 'filter' a1= '(' (a2_0= parse_org_sintef_thingml_SglMsgParamOperatorCall ) a3= ')'
             {
-            a0=(Token)match(input,59,FOLLOW_59_in_parse_org_sintef_thingml_Filter12073); if (state.failed) return element;
+            a0=(Token)match(input,59,FOLLOW_59_in_parse_org_sintef_thingml_Filter12221); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -19292,7 +19662,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3237]);
             	}
 
-            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_Filter12087); if (state.failed) return element;
+            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_Filter12235); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -19309,10 +19679,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFilter(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3238]);
             	}
 
-            // Thingml.g:12593:2: (a2_0= parse_org_sintef_thingml_SglMsgParamOperatorCall )
-            // Thingml.g:12594:3: a2_0= parse_org_sintef_thingml_SglMsgParamOperatorCall
+            // Thingml.g:12923:2: (a2_0= parse_org_sintef_thingml_SglMsgParamOperatorCall )
+            // Thingml.g:12924:3: a2_0= parse_org_sintef_thingml_SglMsgParamOperatorCall
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_SglMsgParamOperatorCall_in_parse_org_sintef_thingml_Filter12105);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_SglMsgParamOperatorCall_in_parse_org_sintef_thingml_Filter12253);
             a2_0=parse_org_sintef_thingml_SglMsgParamOperatorCall();
 
             state._fsp--;
@@ -19346,7 +19716,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3239]);
             	}
 
-            a3=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_Filter12123); if (state.failed) return element;
+            a3=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_Filter12271); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -19387,7 +19757,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_LengthWindow"
-    // Thingml.g:12639:1: parse_org_sintef_thingml_LengthWindow returns [org.sintef.thingml.LengthWindow element = null] : a0= 'lengthWindow' a1= '(' (a2= INTEGER_LITERAL ) a3= ')' ;
+    // Thingml.g:12969:1: parse_org_sintef_thingml_LengthWindow returns [org.sintef.thingml.LengthWindow element = null] : a0= 'lengthWindow' a1= '(' (a2= INTEGER_LITERAL ) a3= ')' ;
     public final org.sintef.thingml.LengthWindow parse_org_sintef_thingml_LengthWindow() throws RecognitionException {
         org.sintef.thingml.LengthWindow element =  null;
 
@@ -19403,10 +19773,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 45) ) { return element; }
 
-            // Thingml.g:12642:2: (a0= 'lengthWindow' a1= '(' (a2= INTEGER_LITERAL ) a3= ')' )
-            // Thingml.g:12643:2: a0= 'lengthWindow' a1= '(' (a2= INTEGER_LITERAL ) a3= ')'
+            // Thingml.g:12972:2: (a0= 'lengthWindow' a1= '(' (a2= INTEGER_LITERAL ) a3= ')' )
+            // Thingml.g:12973:2: a0= 'lengthWindow' a1= '(' (a2= INTEGER_LITERAL ) a3= ')'
             {
-            a0=(Token)match(input,72,FOLLOW_72_in_parse_org_sintef_thingml_LengthWindow12152); if (state.failed) return element;
+            a0=(Token)match(input,72,FOLLOW_72_in_parse_org_sintef_thingml_LengthWindow12300); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -19423,7 +19793,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3245]);
             	}
 
-            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_LengthWindow12166); if (state.failed) return element;
+            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_LengthWindow12314); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -19440,10 +19810,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3246]);
             	}
 
-            // Thingml.g:12671:2: (a2= INTEGER_LITERAL )
-            // Thingml.g:12672:3: a2= INTEGER_LITERAL
+            // Thingml.g:13001:2: (a2= INTEGER_LITERAL )
+            // Thingml.g:13002:3: a2= INTEGER_LITERAL
             {
-            a2=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_LengthWindow12184); if (state.failed) return element;
+            a2=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_LengthWindow12332); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -19482,7 +19852,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3247]);
             	}
 
-            a3=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_LengthWindow12205); if (state.failed) return element;
+            a3=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_LengthWindow12353); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -19523,7 +19893,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_TimeWindow"
-    // Thingml.g:12727:1: parse_org_sintef_thingml_TimeWindow returns [org.sintef.thingml.TimeWindow element = null] : a0= 'timeWindow' a1= '(' (a2= INTEGER_LITERAL ) a3= ',' (a4= INTEGER_LITERAL ) a5= ')' ;
+    // Thingml.g:13057:1: parse_org_sintef_thingml_TimeWindow returns [org.sintef.thingml.TimeWindow element = null] : a0= 'timeWindow' a1= '(' (a2= INTEGER_LITERAL ) a3= ',' (a4= INTEGER_LITERAL ) a5= ')' ;
     public final org.sintef.thingml.TimeWindow parse_org_sintef_thingml_TimeWindow() throws RecognitionException {
         org.sintef.thingml.TimeWindow element =  null;
 
@@ -19541,10 +19911,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 46) ) { return element; }
 
-            // Thingml.g:12730:2: (a0= 'timeWindow' a1= '(' (a2= INTEGER_LITERAL ) a3= ',' (a4= INTEGER_LITERAL ) a5= ')' )
-            // Thingml.g:12731:2: a0= 'timeWindow' a1= '(' (a2= INTEGER_LITERAL ) a3= ',' (a4= INTEGER_LITERAL ) a5= ')'
+            // Thingml.g:13060:2: (a0= 'timeWindow' a1= '(' (a2= INTEGER_LITERAL ) a3= ',' (a4= INTEGER_LITERAL ) a5= ')' )
+            // Thingml.g:13061:2: a0= 'timeWindow' a1= '(' (a2= INTEGER_LITERAL ) a3= ',' (a4= INTEGER_LITERAL ) a5= ')'
             {
-            a0=(Token)match(input,93,FOLLOW_93_in_parse_org_sintef_thingml_TimeWindow12234); if (state.failed) return element;
+            a0=(Token)match(input,93,FOLLOW_93_in_parse_org_sintef_thingml_TimeWindow12382); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -19561,7 +19931,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3253]);
             	}
 
-            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_TimeWindow12248); if (state.failed) return element;
+            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_TimeWindow12396); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -19578,10 +19948,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3254]);
             	}
 
-            // Thingml.g:12759:2: (a2= INTEGER_LITERAL )
-            // Thingml.g:12760:3: a2= INTEGER_LITERAL
+            // Thingml.g:13089:2: (a2= INTEGER_LITERAL )
+            // Thingml.g:13090:3: a2= INTEGER_LITERAL
             {
-            a2=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_TimeWindow12266); if (state.failed) return element;
+            a2=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_TimeWindow12414); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -19620,7 +19990,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3255]);
             	}
 
-            a3=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_TimeWindow12287); if (state.failed) return element;
+            a3=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_TimeWindow12435); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -19637,10 +20007,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3256]);
             	}
 
-            // Thingml.g:12809:2: (a4= INTEGER_LITERAL )
-            // Thingml.g:12810:3: a4= INTEGER_LITERAL
+            // Thingml.g:13139:2: (a4= INTEGER_LITERAL )
+            // Thingml.g:13140:3: a4= INTEGER_LITERAL
             {
-            a4=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_TimeWindow12305); if (state.failed) return element;
+            a4=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_TimeWindow12453); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -19679,7 +20049,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3257]);
             	}
 
-            a5=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_TimeWindow12326); if (state.failed) return element;
+            a5=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_TimeWindow12474); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -19720,7 +20090,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_SimpleSource"
-    // Thingml.g:12865:1: parse_org_sintef_thingml_SimpleSource returns [org.sintef.thingml.SimpleSource element = null] : ( ( (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']' ) | (a5_0= parse_org_sintef_thingml_ReceiveMessage ) ) ( (a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource ) ) )* ;
+    // Thingml.g:13195:1: parse_org_sintef_thingml_SimpleSource returns [org.sintef.thingml.SimpleSource element = null] : ( ( (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']' ) | (a5_0= parse_org_sintef_thingml_ReceiveMessage ) ) ( (a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource ) ) )* ;
     public final org.sintef.thingml.SimpleSource parse_org_sintef_thingml_SimpleSource() throws RecognitionException {
         org.sintef.thingml.SimpleSource element =  null;
 
@@ -19743,10 +20113,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 47) ) { return element; }
 
-            // Thingml.g:12868:2: ( ( ( (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']' ) | (a5_0= parse_org_sintef_thingml_ReceiveMessage ) ) ( (a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource ) ) )* )
-            // Thingml.g:12869:2: ( ( (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']' ) | (a5_0= parse_org_sintef_thingml_ReceiveMessage ) ) ( (a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource ) ) )*
+            // Thingml.g:13198:2: ( ( ( (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']' ) | (a5_0= parse_org_sintef_thingml_ReceiveMessage ) ) ( (a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource ) ) )* )
+            // Thingml.g:13199:2: ( ( (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']' ) | (a5_0= parse_org_sintef_thingml_ReceiveMessage ) ) ( (a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource ) ) )*
             {
-            // Thingml.g:12869:2: ( ( (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']' ) | (a5_0= parse_org_sintef_thingml_ReceiveMessage ) )
+            // Thingml.g:13199:2: ( ( (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']' ) | (a5_0= parse_org_sintef_thingml_ReceiveMessage ) )
             int alt111=2;
             int LA111_0 = input.LA(1);
 
@@ -19756,7 +20126,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                 if ( (LA111_1==31) ) {
                     int LA111_2 = input.LA(3);
 
-                    if ( (LA111_2==40) ) {
+                    if ( (LA111_2==T_ARRAY) ) {
                         alt111=1;
                     }
                     else if ( (LA111_2==TEXT) ) {
@@ -19793,15 +20163,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt111) {
                 case 1 :
-                    // Thingml.g:12870:3: ( (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']' )
+                    // Thingml.g:13200:3: ( (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']' )
                     {
-                    // Thingml.g:12870:3: ( (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']' )
-                    // Thingml.g:12871:4: (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']'
+                    // Thingml.g:13200:3: ( (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']' )
+                    // Thingml.g:13201:4: (a0= TEXT ) a1= ':' a2= '[' (a3_0= parse_org_sintef_thingml_ReceiveMessage ) a4= ']'
                     {
-                    // Thingml.g:12871:4: (a0= TEXT )
-                    // Thingml.g:12872:5: a0= TEXT
+                    // Thingml.g:13201:4: (a0= TEXT )
+                    // Thingml.g:13202:5: a0= TEXT
                     {
-                    a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SimpleSource12370); if (state.failed) return element;
+                    a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SimpleSource12518); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -19840,7 +20210,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3263]);
                     			}
 
-                    a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_SimpleSource12403); if (state.failed) return element;
+                    a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_SimpleSource12551); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -19857,7 +20227,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3264]);
                     			}
 
-                    a2=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_SimpleSource12423); if (state.failed) return element;
+                    a2=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_SimpleSource12571); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -19875,10 +20245,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getSimpleSource(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3266]);
                     			}
 
-                    // Thingml.g:12936:4: (a3_0= parse_org_sintef_thingml_ReceiveMessage )
-                    // Thingml.g:12937:5: a3_0= parse_org_sintef_thingml_ReceiveMessage
+                    // Thingml.g:13266:4: (a3_0= parse_org_sintef_thingml_ReceiveMessage )
+                    // Thingml.g:13267:5: a3_0= parse_org_sintef_thingml_ReceiveMessage
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_SimpleSource12449);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_SimpleSource12597);
                     a3_0=parse_org_sintef_thingml_ReceiveMessage();
 
                     state._fsp--;
@@ -19912,7 +20282,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3267]);
                     			}
 
-                    a4=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_SimpleSource12477); if (state.failed) return element;
+                    a4=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_SimpleSource12625); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -19948,12 +20318,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:12991:6: (a5_0= parse_org_sintef_thingml_ReceiveMessage )
+                    // Thingml.g:13321:6: (a5_0= parse_org_sintef_thingml_ReceiveMessage )
                     {
-                    // Thingml.g:12991:6: (a5_0= parse_org_sintef_thingml_ReceiveMessage )
-                    // Thingml.g:12992:4: a5_0= parse_org_sintef_thingml_ReceiveMessage
+                    // Thingml.g:13321:6: (a5_0= parse_org_sintef_thingml_ReceiveMessage )
+                    // Thingml.g:13322:4: a5_0= parse_org_sintef_thingml_ReceiveMessage
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_SimpleSource12518);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_SimpleSource12666);
                     a5_0=parse_org_sintef_thingml_ReceiveMessage();
 
                     state._fsp--;
@@ -20006,7 +20376,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3287]);
             	}
 
-            // Thingml.g:13031:2: ( (a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource ) ) )*
+            // Thingml.g:13361:2: ( (a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource ) ) )*
             loop112:
             do {
                 int alt112=2;
@@ -20019,12 +20389,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt112) {
             	case 1 :
-            	    // Thingml.g:13032:3: (a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource ) )
+            	    // Thingml.g:13362:3: (a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource ) )
             	    {
-            	    // Thingml.g:13032:3: (a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource ) )
-            	    // Thingml.g:13033:4: a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource )
+            	    // Thingml.g:13362:3: (a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource ) )
+            	    // Thingml.g:13363:4: a6= '::' (a7_0= parse_org_sintef_thingml_ViewSource )
             	    {
-            	    a6=(Token)match(input,32,FOLLOW_32_in_parse_org_sintef_thingml_SimpleSource12557); if (state.failed) return element;
+            	    a6=(Token)match(input,32,FOLLOW_32_in_parse_org_sintef_thingml_SimpleSource12705); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -20043,10 +20413,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getSimpleSource(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3290]);
             	    			}
 
-            	    // Thingml.g:13049:4: (a7_0= parse_org_sintef_thingml_ViewSource )
-            	    // Thingml.g:13050:5: a7_0= parse_org_sintef_thingml_ViewSource
+            	    // Thingml.g:13379:4: (a7_0= parse_org_sintef_thingml_ViewSource )
+            	    // Thingml.g:13380:5: a7_0= parse_org_sintef_thingml_ViewSource
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_ViewSource_in_parse_org_sintef_thingml_SimpleSource12583);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_ViewSource_in_parse_org_sintef_thingml_SimpleSource12731);
             	    a7_0=parse_org_sintef_thingml_ViewSource();
 
             	    state._fsp--;
@@ -20125,7 +20495,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_JoinSources"
-    // Thingml.g:13092:1: parse_org_sintef_thingml_JoinSources returns [org.sintef.thingml.JoinSources element = null] : ( ( (a0= TEXT ) a1= ':' ) )? a2= '[' (a3_0= parse_org_sintef_thingml_Source ) a4= '&' (a5_0= parse_org_sintef_thingml_Source ) a6= '->' (a7= TEXT ) a8= '(' ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a12= ')' a13= ']' ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )* ;
+    // Thingml.g:13422:1: parse_org_sintef_thingml_JoinSources returns [org.sintef.thingml.JoinSources element = null] : ( ( (a0= TEXT ) a1= ':' ) )? a2= '[' (a3_0= parse_org_sintef_thingml_Source ) a4= '&' (a5_0= parse_org_sintef_thingml_Source ) a6= '->' (a7= TEXT ) a8= '(' ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a12= ')' a13= ']' ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )* ;
     public final org.sintef.thingml.JoinSources parse_org_sintef_thingml_JoinSources() throws RecognitionException {
         org.sintef.thingml.JoinSources element =  null;
 
@@ -20158,10 +20528,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 48) ) { return element; }
 
-            // Thingml.g:13095:2: ( ( ( (a0= TEXT ) a1= ':' ) )? a2= '[' (a3_0= parse_org_sintef_thingml_Source ) a4= '&' (a5_0= parse_org_sintef_thingml_Source ) a6= '->' (a7= TEXT ) a8= '(' ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a12= ')' a13= ']' ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )* )
-            // Thingml.g:13096:2: ( ( (a0= TEXT ) a1= ':' ) )? a2= '[' (a3_0= parse_org_sintef_thingml_Source ) a4= '&' (a5_0= parse_org_sintef_thingml_Source ) a6= '->' (a7= TEXT ) a8= '(' ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a12= ')' a13= ']' ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )*
+            // Thingml.g:13425:2: ( ( ( (a0= TEXT ) a1= ':' ) )? a2= '[' (a3_0= parse_org_sintef_thingml_Source ) a4= '&' (a5_0= parse_org_sintef_thingml_Source ) a6= '->' (a7= TEXT ) a8= '(' ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a12= ')' a13= ']' ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )* )
+            // Thingml.g:13426:2: ( ( (a0= TEXT ) a1= ':' ) )? a2= '[' (a3_0= parse_org_sintef_thingml_Source ) a4= '&' (a5_0= parse_org_sintef_thingml_Source ) a6= '->' (a7= TEXT ) a8= '(' ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a12= ')' a13= ']' ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )*
             {
-            // Thingml.g:13096:2: ( ( (a0= TEXT ) a1= ':' ) )?
+            // Thingml.g:13426:2: ( ( (a0= TEXT ) a1= ':' ) )?
             int alt113=2;
             int LA113_0 = input.LA(1);
 
@@ -20170,15 +20540,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt113) {
                 case 1 :
-                    // Thingml.g:13097:3: ( (a0= TEXT ) a1= ':' )
+                    // Thingml.g:13427:3: ( (a0= TEXT ) a1= ':' )
                     {
-                    // Thingml.g:13097:3: ( (a0= TEXT ) a1= ':' )
-                    // Thingml.g:13098:4: (a0= TEXT ) a1= ':'
+                    // Thingml.g:13427:3: ( (a0= TEXT ) a1= ':' )
+                    // Thingml.g:13428:4: (a0= TEXT ) a1= ':'
                     {
-                    // Thingml.g:13098:4: (a0= TEXT )
-                    // Thingml.g:13099:5: a0= TEXT
+                    // Thingml.g:13428:4: (a0= TEXT )
+                    // Thingml.g:13429:5: a0= TEXT
                     {
-                    a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_JoinSources12654); if (state.failed) return element;
+                    a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_JoinSources12802); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -20217,7 +20587,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3301]);
                     			}
 
-                    a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_JoinSources12687); if (state.failed) return element;
+                    a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_JoinSources12835); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -20248,7 +20618,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3303]);
             	}
 
-            a2=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_JoinSources12720); if (state.failed) return element;
+            a2=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_JoinSources12868); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -20271,10 +20641,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getJoinSources(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3310]);
             	}
 
-            // Thingml.g:13175:2: (a3_0= parse_org_sintef_thingml_Source )
-            // Thingml.g:13176:3: a3_0= parse_org_sintef_thingml_Source
+            // Thingml.g:13505:2: (a3_0= parse_org_sintef_thingml_Source )
+            // Thingml.g:13506:3: a3_0= parse_org_sintef_thingml_Source
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_JoinSources12738);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_JoinSources12886);
             a3_0=parse_org_sintef_thingml_Source();
 
             state._fsp--;
@@ -20308,7 +20678,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3311]);
             	}
 
-            a4=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_JoinSources12756); if (state.failed) return element;
+            a4=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_JoinSources12904); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -20331,10 +20701,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getJoinSources(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3318]);
             	}
 
-            // Thingml.g:13221:2: (a5_0= parse_org_sintef_thingml_Source )
-            // Thingml.g:13222:3: a5_0= parse_org_sintef_thingml_Source
+            // Thingml.g:13551:2: (a5_0= parse_org_sintef_thingml_Source )
+            // Thingml.g:13552:3: a5_0= parse_org_sintef_thingml_Source
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_JoinSources12774);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_JoinSources12922);
             a5_0=parse_org_sintef_thingml_Source();
 
             state._fsp--;
@@ -20368,7 +20738,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3319]);
             	}
 
-            a6=(Token)match(input,28,FOLLOW_28_in_parse_org_sintef_thingml_JoinSources12792); if (state.failed) return element;
+            a6=(Token)match(input,28,FOLLOW_28_in_parse_org_sintef_thingml_JoinSources12940); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -20385,10 +20755,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3320]);
             	}
 
-            // Thingml.g:13261:2: (a7= TEXT )
-            // Thingml.g:13262:3: a7= TEXT
+            // Thingml.g:13591:2: (a7= TEXT )
+            // Thingml.g:13592:3: a7= TEXT
             {
-            a7=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_JoinSources12810); if (state.failed) return element;
+            a7=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_JoinSources12958); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -20431,7 +20801,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3321]);
             	}
 
-            a8=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_JoinSources12831); if (state.failed) return element;
+            a8=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_JoinSources12979); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -20460,7 +20830,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3334]);
             	}
 
-            // Thingml.g:13327:2: ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
+            // Thingml.g:13657:2: ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
             int alt115=2;
             int LA115_0 = input.LA(1);
 
@@ -20469,15 +20839,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt115) {
                 case 1 :
-                    // Thingml.g:13328:3: ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:13658:3: ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* )
                     {
-                    // Thingml.g:13328:3: ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* )
-                    // Thingml.g:13329:4: (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )*
+                    // Thingml.g:13658:3: ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:13659:4: (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )*
                     {
-                    // Thingml.g:13329:4: (a9_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:13330:5: a9_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:13659:4: (a9_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:13660:5: a9_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_JoinSources12860);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_JoinSources13008);
                     a9_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
@@ -20512,7 +20882,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3336]);
                     			}
 
-                    // Thingml.g:13356:4: ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )*
+                    // Thingml.g:13686:4: ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )*
                     loop114:
                     do {
                         int alt114=2;
@@ -20525,12 +20895,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt114) {
                     	case 1 :
-                    	    // Thingml.g:13357:5: (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:13687:5: (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) )
                     	    {
-                    	    // Thingml.g:13357:5: (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) )
-                    	    // Thingml.g:13358:6: a10= ',' (a11_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:13687:5: (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:13688:6: a10= ',' (a11_0= parse_org_sintef_thingml_Expression )
                     	    {
-                    	    a10=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_JoinSources12901); if (state.failed) return element;
+                    	    a10=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_JoinSources13049); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    						if (element == null) {
@@ -20558,10 +20928,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getJoinSources(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3348]);
                     	    					}
 
-                    	    // Thingml.g:13383:6: (a11_0= parse_org_sintef_thingml_Expression )
-                    	    // Thingml.g:13384:7: a11_0= parse_org_sintef_thingml_Expression
+                    	    // Thingml.g:13713:6: (a11_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:13714:7: a11_0= parse_org_sintef_thingml_Expression
                     	    {
-                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_JoinSources12935);
+                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_JoinSources13083);
                     	    a11_0=parse_org_sintef_thingml_Expression();
 
                     	    state._fsp--;
@@ -20628,7 +20998,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3353]);
             	}
 
-            a12=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_JoinSources13009); if (state.failed) return element;
+            a12=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_JoinSources13157); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -20645,7 +21015,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3354]);
             	}
 
-            a13=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_JoinSources13023); if (state.failed) return element;
+            a13=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_JoinSources13171); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -20666,7 +21036,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3359]);
             	}
 
-            // Thingml.g:13457:2: ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )*
+            // Thingml.g:13787:2: ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )*
             loop116:
             do {
                 int alt116=2;
@@ -20679,12 +21049,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt116) {
             	case 1 :
-            	    // Thingml.g:13458:3: (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) )
+            	    // Thingml.g:13788:3: (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) )
             	    {
-            	    // Thingml.g:13458:3: (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) )
-            	    // Thingml.g:13459:4: a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource )
+            	    // Thingml.g:13788:3: (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) )
+            	    // Thingml.g:13789:4: a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource )
             	    {
-            	    a14=(Token)match(input,32,FOLLOW_32_in_parse_org_sintef_thingml_JoinSources13046); if (state.failed) return element;
+            	    a14=(Token)match(input,32,FOLLOW_32_in_parse_org_sintef_thingml_JoinSources13194); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -20703,10 +21073,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getJoinSources(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3362]);
             	    			}
 
-            	    // Thingml.g:13475:4: (a15_0= parse_org_sintef_thingml_ViewSource )
-            	    // Thingml.g:13476:5: a15_0= parse_org_sintef_thingml_ViewSource
+            	    // Thingml.g:13805:4: (a15_0= parse_org_sintef_thingml_ViewSource )
+            	    // Thingml.g:13806:5: a15_0= parse_org_sintef_thingml_ViewSource
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_ViewSource_in_parse_org_sintef_thingml_JoinSources13072);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_ViewSource_in_parse_org_sintef_thingml_JoinSources13220);
             	    a15_0=parse_org_sintef_thingml_ViewSource();
 
             	    state._fsp--;
@@ -20785,7 +21155,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_MergeSources"
-    // Thingml.g:13518:1: parse_org_sintef_thingml_MergeSources returns [org.sintef.thingml.MergeSources element = null] : ( ( (a0= TEXT ) a1= ':' ) )? a2= '[' (a3_0= parse_org_sintef_thingml_Source ) ( (a4= '|' (a5_0= parse_org_sintef_thingml_Source ) ) )+ a6= '->' (a7= TEXT ) a8= '(' ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a12= ')' a13= ']' ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )* ;
+    // Thingml.g:13848:1: parse_org_sintef_thingml_MergeSources returns [org.sintef.thingml.MergeSources element = null] : ( ( (a0= TEXT ) a1= ':' ) )? a2= '[' (a3_0= parse_org_sintef_thingml_Source ) ( (a4= '|' (a5_0= parse_org_sintef_thingml_Source ) ) )+ a6= '->' (a7= TEXT ) a8= '(' ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a12= ')' a13= ']' ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )* ;
     public final org.sintef.thingml.MergeSources parse_org_sintef_thingml_MergeSources() throws RecognitionException {
         org.sintef.thingml.MergeSources element =  null;
 
@@ -20818,10 +21188,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 49) ) { return element; }
 
-            // Thingml.g:13521:2: ( ( ( (a0= TEXT ) a1= ':' ) )? a2= '[' (a3_0= parse_org_sintef_thingml_Source ) ( (a4= '|' (a5_0= parse_org_sintef_thingml_Source ) ) )+ a6= '->' (a7= TEXT ) a8= '(' ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a12= ')' a13= ']' ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )* )
-            // Thingml.g:13522:2: ( ( (a0= TEXT ) a1= ':' ) )? a2= '[' (a3_0= parse_org_sintef_thingml_Source ) ( (a4= '|' (a5_0= parse_org_sintef_thingml_Source ) ) )+ a6= '->' (a7= TEXT ) a8= '(' ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a12= ')' a13= ']' ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )*
+            // Thingml.g:13851:2: ( ( ( (a0= TEXT ) a1= ':' ) )? a2= '[' (a3_0= parse_org_sintef_thingml_Source ) ( (a4= '|' (a5_0= parse_org_sintef_thingml_Source ) ) )+ a6= '->' (a7= TEXT ) a8= '(' ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a12= ')' a13= ']' ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )* )
+            // Thingml.g:13852:2: ( ( (a0= TEXT ) a1= ':' ) )? a2= '[' (a3_0= parse_org_sintef_thingml_Source ) ( (a4= '|' (a5_0= parse_org_sintef_thingml_Source ) ) )+ a6= '->' (a7= TEXT ) a8= '(' ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a12= ')' a13= ']' ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )*
             {
-            // Thingml.g:13522:2: ( ( (a0= TEXT ) a1= ':' ) )?
+            // Thingml.g:13852:2: ( ( (a0= TEXT ) a1= ':' ) )?
             int alt117=2;
             int LA117_0 = input.LA(1);
 
@@ -20830,15 +21200,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt117) {
                 case 1 :
-                    // Thingml.g:13523:3: ( (a0= TEXT ) a1= ':' )
+                    // Thingml.g:13853:3: ( (a0= TEXT ) a1= ':' )
                     {
-                    // Thingml.g:13523:3: ( (a0= TEXT ) a1= ':' )
-                    // Thingml.g:13524:4: (a0= TEXT ) a1= ':'
+                    // Thingml.g:13853:3: ( (a0= TEXT ) a1= ':' )
+                    // Thingml.g:13854:4: (a0= TEXT ) a1= ':'
                     {
-                    // Thingml.g:13524:4: (a0= TEXT )
-                    // Thingml.g:13525:5: a0= TEXT
+                    // Thingml.g:13854:4: (a0= TEXT )
+                    // Thingml.g:13855:5: a0= TEXT
                     {
-                    a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_MergeSources13143); if (state.failed) return element;
+                    a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_MergeSources13291); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     					if (terminateParsing) {
@@ -20877,7 +21247,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3373]);
                     			}
 
-                    a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_MergeSources13176); if (state.failed) return element;
+                    a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_MergeSources13324); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -20908,7 +21278,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3375]);
             	}
 
-            a2=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_MergeSources13209); if (state.failed) return element;
+            a2=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_MergeSources13357); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -20931,10 +21301,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMergeSources(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3382]);
             	}
 
-            // Thingml.g:13601:2: (a3_0= parse_org_sintef_thingml_Source )
-            // Thingml.g:13602:3: a3_0= parse_org_sintef_thingml_Source
+            // Thingml.g:13931:2: (a3_0= parse_org_sintef_thingml_Source )
+            // Thingml.g:13932:3: a3_0= parse_org_sintef_thingml_Source
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_MergeSources13227);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_MergeSources13375);
             a3_0=parse_org_sintef_thingml_Source();
 
             state._fsp--;
@@ -20968,7 +21338,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3383]);
             	}
 
-            // Thingml.g:13627:2: ( (a4= '|' (a5_0= parse_org_sintef_thingml_Source ) ) )+
+            // Thingml.g:13957:2: ( (a4= '|' (a5_0= parse_org_sintef_thingml_Source ) ) )+
             int cnt118=0;
             loop118:
             do {
@@ -20982,12 +21352,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt118) {
             	case 1 :
-            	    // Thingml.g:13628:3: (a4= '|' (a5_0= parse_org_sintef_thingml_Source ) )
+            	    // Thingml.g:13958:3: (a4= '|' (a5_0= parse_org_sintef_thingml_Source ) )
             	    {
-            	    // Thingml.g:13628:3: (a4= '|' (a5_0= parse_org_sintef_thingml_Source ) )
-            	    // Thingml.g:13629:4: a4= '|' (a5_0= parse_org_sintef_thingml_Source )
+            	    // Thingml.g:13958:3: (a4= '|' (a5_0= parse_org_sintef_thingml_Source ) )
+            	    // Thingml.g:13959:4: a4= '|' (a5_0= parse_org_sintef_thingml_Source )
             	    {
-            	    a4=(Token)match(input,98,FOLLOW_98_in_parse_org_sintef_thingml_MergeSources13254); if (state.failed) return element;
+            	    a4=(Token)match(input,98,FOLLOW_98_in_parse_org_sintef_thingml_MergeSources13402); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -21010,10 +21380,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMergeSources(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3390]);
             	    			}
 
-            	    // Thingml.g:13649:4: (a5_0= parse_org_sintef_thingml_Source )
-            	    // Thingml.g:13650:5: a5_0= parse_org_sintef_thingml_Source
+            	    // Thingml.g:13979:4: (a5_0= parse_org_sintef_thingml_Source )
+            	    // Thingml.g:13980:5: a5_0= parse_org_sintef_thingml_Source
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_MergeSources13280);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_MergeSources13428);
             	    a5_0=parse_org_sintef_thingml_Source();
 
             	    state._fsp--;
@@ -21071,7 +21441,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3394]);
             	}
 
-            a6=(Token)match(input,28,FOLLOW_28_in_parse_org_sintef_thingml_MergeSources13321); if (state.failed) return element;
+            a6=(Token)match(input,28,FOLLOW_28_in_parse_org_sintef_thingml_MergeSources13469); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -21088,10 +21458,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3395]);
             	}
 
-            // Thingml.g:13698:2: (a7= TEXT )
-            // Thingml.g:13699:3: a7= TEXT
+            // Thingml.g:14028:2: (a7= TEXT )
+            // Thingml.g:14029:3: a7= TEXT
             {
-            a7=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_MergeSources13339); if (state.failed) return element;
+            a7=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_MergeSources13487); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -21134,7 +21504,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3396]);
             	}
 
-            a8=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_MergeSources13360); if (state.failed) return element;
+            a8=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_MergeSources13508); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -21163,7 +21533,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3409]);
             	}
 
-            // Thingml.g:13764:2: ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
+            // Thingml.g:14094:2: ( ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
             int alt120=2;
             int LA120_0 = input.LA(1);
 
@@ -21172,15 +21542,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt120) {
                 case 1 :
-                    // Thingml.g:13765:3: ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:14095:3: ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* )
                     {
-                    // Thingml.g:13765:3: ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* )
-                    // Thingml.g:13766:4: (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )*
+                    // Thingml.g:14095:3: ( (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:14096:4: (a9_0= parse_org_sintef_thingml_Expression ) ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )*
                     {
-                    // Thingml.g:13766:4: (a9_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:13767:5: a9_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:14096:4: (a9_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:14097:5: a9_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_MergeSources13389);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_MergeSources13537);
                     a9_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
@@ -21215,7 +21585,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3411]);
                     			}
 
-                    // Thingml.g:13793:4: ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )*
+                    // Thingml.g:14123:4: ( (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) ) )*
                     loop119:
                     do {
                         int alt119=2;
@@ -21228,12 +21598,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt119) {
                     	case 1 :
-                    	    // Thingml.g:13794:5: (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:14124:5: (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) )
                     	    {
-                    	    // Thingml.g:13794:5: (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) )
-                    	    // Thingml.g:13795:6: a10= ',' (a11_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:14124:5: (a10= ',' (a11_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:14125:6: a10= ',' (a11_0= parse_org_sintef_thingml_Expression )
                     	    {
-                    	    a10=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_MergeSources13430); if (state.failed) return element;
+                    	    a10=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_MergeSources13578); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    						if (element == null) {
@@ -21261,10 +21631,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    						addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMergeSources(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3423]);
                     	    					}
 
-                    	    // Thingml.g:13820:6: (a11_0= parse_org_sintef_thingml_Expression )
-                    	    // Thingml.g:13821:7: a11_0= parse_org_sintef_thingml_Expression
+                    	    // Thingml.g:14150:6: (a11_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:14151:7: a11_0= parse_org_sintef_thingml_Expression
                     	    {
-                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_MergeSources13464);
+                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_MergeSources13612);
                     	    a11_0=parse_org_sintef_thingml_Expression();
 
                     	    state._fsp--;
@@ -21331,7 +21701,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3428]);
             	}
 
-            a12=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_MergeSources13538); if (state.failed) return element;
+            a12=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_MergeSources13686); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -21348,7 +21718,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3429]);
             	}
 
-            a13=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_MergeSources13552); if (state.failed) return element;
+            a13=(Token)match(input,42,FOLLOW_42_in_parse_org_sintef_thingml_MergeSources13700); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -21369,7 +21739,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3434]);
             	}
 
-            // Thingml.g:13894:2: ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )*
+            // Thingml.g:14224:2: ( (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) ) )*
             loop121:
             do {
                 int alt121=2;
@@ -21382,12 +21752,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt121) {
             	case 1 :
-            	    // Thingml.g:13895:3: (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) )
+            	    // Thingml.g:14225:3: (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) )
             	    {
-            	    // Thingml.g:13895:3: (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) )
-            	    // Thingml.g:13896:4: a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource )
+            	    // Thingml.g:14225:3: (a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource ) )
+            	    // Thingml.g:14226:4: a14= '::' (a15_0= parse_org_sintef_thingml_ViewSource )
             	    {
-            	    a14=(Token)match(input,32,FOLLOW_32_in_parse_org_sintef_thingml_MergeSources13575); if (state.failed) return element;
+            	    a14=(Token)match(input,32,FOLLOW_32_in_parse_org_sintef_thingml_MergeSources13723); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    				if (element == null) {
@@ -21406,10 +21776,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    				addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMergeSources(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3437]);
             	    			}
 
-            	    // Thingml.g:13912:4: (a15_0= parse_org_sintef_thingml_ViewSource )
-            	    // Thingml.g:13913:5: a15_0= parse_org_sintef_thingml_ViewSource
+            	    // Thingml.g:14242:4: (a15_0= parse_org_sintef_thingml_ViewSource )
+            	    // Thingml.g:14243:5: a15_0= parse_org_sintef_thingml_ViewSource
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_ViewSource_in_parse_org_sintef_thingml_MergeSources13601);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_ViewSource_in_parse_org_sintef_thingml_MergeSources13749);
             	    a15_0=parse_org_sintef_thingml_ViewSource();
 
             	    state._fsp--;
@@ -21488,7 +21858,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Stream"
-    // Thingml.g:13955:1: parse_org_sintef_thingml_Stream returns [org.sintef.thingml.Stream element = null] : a0= 'stream' (a1= TEXT ) a2= 'do' a3= 'from' (a4_0= parse_org_sintef_thingml_Source ) ( (a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )? ) )? a9= 'action' (a10_0= parse_org_sintef_thingml_StreamOutput ) a11= 'end' ;
+    // Thingml.g:14285:1: parse_org_sintef_thingml_Stream returns [org.sintef.thingml.Stream element = null] : a0= 'stream' (a1= TEXT ) a2= 'do' a3= 'from' (a4_0= parse_org_sintef_thingml_Source ) ( (a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )? ) )? a9= 'action' (a10_0= parse_org_sintef_thingml_StreamOutput ) a11= 'end' ;
     public final org.sintef.thingml.Stream parse_org_sintef_thingml_Stream() throws RecognitionException {
         org.sintef.thingml.Stream element =  null;
 
@@ -21516,10 +21886,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 50) ) { return element; }
 
-            // Thingml.g:13958:2: (a0= 'stream' (a1= TEXT ) a2= 'do' a3= 'from' (a4_0= parse_org_sintef_thingml_Source ) ( (a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )? ) )? a9= 'action' (a10_0= parse_org_sintef_thingml_StreamOutput ) a11= 'end' )
-            // Thingml.g:13959:2: a0= 'stream' (a1= TEXT ) a2= 'do' a3= 'from' (a4_0= parse_org_sintef_thingml_Source ) ( (a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )? ) )? a9= 'action' (a10_0= parse_org_sintef_thingml_StreamOutput ) a11= 'end'
+            // Thingml.g:14288:2: (a0= 'stream' (a1= TEXT ) a2= 'do' a3= 'from' (a4_0= parse_org_sintef_thingml_Source ) ( (a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )? ) )? a9= 'action' (a10_0= parse_org_sintef_thingml_StreamOutput ) a11= 'end' )
+            // Thingml.g:14289:2: a0= 'stream' (a1= TEXT ) a2= 'do' a3= 'from' (a4_0= parse_org_sintef_thingml_Source ) ( (a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )? ) )? a9= 'action' (a10_0= parse_org_sintef_thingml_StreamOutput ) a11= 'end'
             {
-            a0=(Token)match(input,91,FOLLOW_91_in_parse_org_sintef_thingml_Stream13657); if (state.failed) return element;
+            a0=(Token)match(input,91,FOLLOW_91_in_parse_org_sintef_thingml_Stream13805); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -21536,10 +21906,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3448]);
             	}
 
-            // Thingml.g:13973:2: (a1= TEXT )
-            // Thingml.g:13974:3: a1= TEXT
+            // Thingml.g:14303:2: (a1= TEXT )
+            // Thingml.g:14304:3: a1= TEXT
             {
-            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Stream13675); if (state.failed) return element;
+            a1=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Stream13823); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -21578,7 +21948,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3449]);
             	}
 
-            a2=(Token)match(input,51,FOLLOW_51_in_parse_org_sintef_thingml_Stream13696); if (state.failed) return element;
+            a2=(Token)match(input,51,FOLLOW_51_in_parse_org_sintef_thingml_Stream13844); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -21595,7 +21965,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3450]);
             	}
 
-            a3=(Token)match(input,60,FOLLOW_60_in_parse_org_sintef_thingml_Stream13710); if (state.failed) return element;
+            a3=(Token)match(input,60,FOLLOW_60_in_parse_org_sintef_thingml_Stream13858); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -21618,10 +21988,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStream(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3457]);
             	}
 
-            // Thingml.g:14043:2: (a4_0= parse_org_sintef_thingml_Source )
-            // Thingml.g:14044:3: a4_0= parse_org_sintef_thingml_Source
+            // Thingml.g:14373:2: (a4_0= parse_org_sintef_thingml_Source )
+            // Thingml.g:14374:3: a4_0= parse_org_sintef_thingml_Source
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_Stream13728);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_Stream13876);
             a4_0=parse_org_sintef_thingml_Source();
 
             state._fsp--;
@@ -21656,7 +22026,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3459]);
             	}
 
-            // Thingml.g:14070:2: ( (a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )? ) )?
+            // Thingml.g:14400:2: ( (a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )? ) )?
             int alt124=2;
             int LA124_0 = input.LA(1);
 
@@ -21665,12 +22035,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt124) {
                 case 1 :
-                    // Thingml.g:14071:3: (a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )? )
+                    // Thingml.g:14401:3: (a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )? )
                     {
-                    // Thingml.g:14071:3: (a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )? )
-                    // Thingml.g:14072:4: a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )?
+                    // Thingml.g:14401:3: (a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )? )
+                    // Thingml.g:14402:4: a5= 'select' ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )?
                     {
-                    a5=(Token)match(input,86,FOLLOW_86_in_parse_org_sintef_thingml_Stream13755); if (state.failed) return element;
+                    a5=(Token)match(input,86,FOLLOW_86_in_parse_org_sintef_thingml_Stream13903); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     				if (element == null) {
@@ -21688,7 +22058,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     				addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3461]);
                     			}
 
-                    // Thingml.g:14087:4: ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )?
+                    // Thingml.g:14417:4: ( ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* ) )?
                     int alt123=2;
                     int LA123_0 = input.LA(1);
 
@@ -21697,15 +22067,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     switch (alt123) {
                         case 1 :
-                            // Thingml.g:14088:5: ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* )
+                            // Thingml.g:14418:5: ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* )
                             {
-                            // Thingml.g:14088:5: ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* )
-                            // Thingml.g:14089:6: (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )*
+                            // Thingml.g:14418:5: ( (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )* )
+                            // Thingml.g:14419:6: (a6_0= parse_org_sintef_thingml_StreamExpression ) ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )*
                             {
-                            // Thingml.g:14089:6: (a6_0= parse_org_sintef_thingml_StreamExpression )
-                            // Thingml.g:14090:7: a6_0= parse_org_sintef_thingml_StreamExpression
+                            // Thingml.g:14419:6: (a6_0= parse_org_sintef_thingml_StreamExpression )
+                            // Thingml.g:14420:7: a6_0= parse_org_sintef_thingml_StreamExpression
                             {
-                            pushFollow(FOLLOW_parse_org_sintef_thingml_StreamExpression_in_parse_org_sintef_thingml_Stream13796);
+                            pushFollow(FOLLOW_parse_org_sintef_thingml_StreamExpression_in_parse_org_sintef_thingml_Stream13944);
                             a6_0=parse_org_sintef_thingml_StreamExpression();
 
                             state._fsp--;
@@ -21740,7 +22110,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             						addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3463]);
                             					}
 
-                            // Thingml.g:14116:6: ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )*
+                            // Thingml.g:14446:6: ( (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) ) )*
                             loop122:
                             do {
                                 int alt122=2;
@@ -21753,12 +22123,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                                 switch (alt122) {
                             	case 1 :
-                            	    // Thingml.g:14117:7: (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) )
+                            	    // Thingml.g:14447:7: (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) )
                             	    {
-                            	    // Thingml.g:14117:7: (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) )
-                            	    // Thingml.g:14118:8: a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression )
+                            	    // Thingml.g:14447:7: (a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression ) )
+                            	    // Thingml.g:14448:8: a7= ',' (a8_0= parse_org_sintef_thingml_StreamExpression )
                             	    {
-                            	    a7=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_Stream13851); if (state.failed) return element;
+                            	    a7=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_Stream13999); if (state.failed) return element;
 
                             	    if ( state.backtracking==0 ) {
                             	    								if (element == null) {
@@ -21775,10 +22145,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                             	    								addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStream(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3464]);
                             	    							}
 
-                            	    // Thingml.g:14132:8: (a8_0= parse_org_sintef_thingml_StreamExpression )
-                            	    // Thingml.g:14133:9: a8_0= parse_org_sintef_thingml_StreamExpression
+                            	    // Thingml.g:14462:8: (a8_0= parse_org_sintef_thingml_StreamExpression )
+                            	    // Thingml.g:14463:9: a8_0= parse_org_sintef_thingml_StreamExpression
                             	    {
-                            	    pushFollow(FOLLOW_parse_org_sintef_thingml_StreamExpression_in_parse_org_sintef_thingml_Stream13893);
+                            	    pushFollow(FOLLOW_parse_org_sintef_thingml_StreamExpression_in_parse_org_sintef_thingml_Stream14041);
                             	    a8_0=parse_org_sintef_thingml_StreamExpression();
 
                             	    state._fsp--;
@@ -21859,7 +22229,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3470]);
             	}
 
-            a9=(Token)match(input,43,FOLLOW_43_in_parse_org_sintef_thingml_Stream14010); if (state.failed) return element;
+            a9=(Token)match(input,43,FOLLOW_43_in_parse_org_sintef_thingml_Stream14158); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -21876,10 +22246,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStream(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3471]);
             	}
 
-            // Thingml.g:14195:2: (a10_0= parse_org_sintef_thingml_StreamOutput )
-            // Thingml.g:14196:3: a10_0= parse_org_sintef_thingml_StreamOutput
+            // Thingml.g:14525:2: (a10_0= parse_org_sintef_thingml_StreamOutput )
+            // Thingml.g:14526:3: a10_0= parse_org_sintef_thingml_StreamOutput
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_StreamOutput_in_parse_org_sintef_thingml_Stream14028);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_StreamOutput_in_parse_org_sintef_thingml_Stream14176);
             a10_0=parse_org_sintef_thingml_StreamOutput();
 
             state._fsp--;
@@ -21913,7 +22283,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3472]);
             	}
 
-            a11=(Token)match(input,53,FOLLOW_53_in_parse_org_sintef_thingml_Stream14046); if (state.failed) return element;
+            a11=(Token)match(input,53,FOLLOW_53_in_parse_org_sintef_thingml_Stream14194); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -21961,7 +22331,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_SimpleParamRef"
-    // Thingml.g:14248:1: parse_org_sintef_thingml_SimpleParamRef returns [org.sintef.thingml.SimpleParamRef element = null] : (a0= TEXT ) ;
+    // Thingml.g:14578:1: parse_org_sintef_thingml_SimpleParamRef returns [org.sintef.thingml.SimpleParamRef element = null] : (a0= TEXT ) ;
     public final org.sintef.thingml.SimpleParamRef parse_org_sintef_thingml_SimpleParamRef() throws RecognitionException {
         org.sintef.thingml.SimpleParamRef element =  null;
 
@@ -21974,13 +22344,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 51) ) { return element; }
 
-            // Thingml.g:14251:2: ( (a0= TEXT ) )
-            // Thingml.g:14252:2: (a0= TEXT )
+            // Thingml.g:14581:2: ( (a0= TEXT ) )
+            // Thingml.g:14582:2: (a0= TEXT )
             {
-            // Thingml.g:14252:2: (a0= TEXT )
-            // Thingml.g:14253:3: a0= TEXT
+            // Thingml.g:14582:2: (a0= TEXT )
+            // Thingml.g:14583:3: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SimpleParamRef14079); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_SimpleParamRef14227); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -22103,7 +22473,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ArrayParamRef"
-    // Thingml.g:14354:1: parse_org_sintef_thingml_ArrayParamRef returns [org.sintef.thingml.ArrayParamRef element = null] : (a0= TEXT ) a1= '[]' ;
+    // Thingml.g:14684:1: parse_org_sintef_thingml_ArrayParamRef returns [org.sintef.thingml.ArrayParamRef element = null] : (a0= TEXT ) a1= '[]' ;
     public final org.sintef.thingml.ArrayParamRef parse_org_sintef_thingml_ArrayParamRef() throws RecognitionException {
         org.sintef.thingml.ArrayParamRef element =  null;
 
@@ -22117,13 +22487,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 52) ) { return element; }
 
-            // Thingml.g:14357:2: ( (a0= TEXT ) a1= '[]' )
-            // Thingml.g:14358:2: (a0= TEXT ) a1= '[]'
+            // Thingml.g:14687:2: ( (a0= TEXT ) a1= '[]' )
+            // Thingml.g:14688:2: (a0= TEXT ) a1= '[]'
             {
-            // Thingml.g:14358:2: (a0= TEXT )
-            // Thingml.g:14359:3: a0= TEXT
+            // Thingml.g:14688:2: (a0= TEXT )
+            // Thingml.g:14689:3: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ArrayParamRef14119); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_ArrayParamRef14267); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             			if (terminateParsing) {
@@ -22166,7 +22536,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             		addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3546]);
             	}
 
-            a1=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_ArrayParamRef14140); if (state.failed) return element;
+            a1=(Token)match(input,40,FOLLOW_40_in_parse_org_sintef_thingml_ArrayParamRef14288); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -22263,7 +22633,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_LengthArray"
-    // Thingml.g:14474:1: parse_org_sintef_thingml_LengthArray returns [org.sintef.thingml.LengthArray element = null] : a0= 'length' ;
+    // Thingml.g:14804:1: parse_org_sintef_thingml_LengthArray returns [org.sintef.thingml.LengthArray element = null] : a0= 'length' ;
     public final org.sintef.thingml.LengthArray parse_org_sintef_thingml_LengthArray() throws RecognitionException {
         org.sintef.thingml.LengthArray element =  null;
 
@@ -22276,10 +22646,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 53) ) { return element; }
 
-            // Thingml.g:14477:2: (a0= 'length' )
-            // Thingml.g:14478:2: a0= 'length'
+            // Thingml.g:14807:2: (a0= 'length' )
+            // Thingml.g:14808:2: a0= 'length'
             {
-            a0=(Token)match(input,71,FOLLOW_71_in_parse_org_sintef_thingml_LengthArray14169); if (state.failed) return element;
+            a0=(Token)match(input,71,FOLLOW_71_in_parse_org_sintef_thingml_LengthArray14317); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             		if (element == null) {
@@ -22376,7 +22746,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_1"
-    // Thingml.g:14554:1: parseop_Expression_level_1 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_2 ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |) ;
+    // Thingml.g:14884:1: parseop_Expression_level_1 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_2 ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_1() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -22393,16 +22763,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 54) ) { return element; }
 
-            // Thingml.g:14557:2: (leftArg= parseop_Expression_level_2 ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |) )
-            // Thingml.g:14558:2: leftArg= parseop_Expression_level_2 ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |)
+            // Thingml.g:14887:2: (leftArg= parseop_Expression_level_2 ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |) )
+            // Thingml.g:14888:2: leftArg= parseop_Expression_level_2 ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_114198);
+            pushFollow(FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_114346);
             leftArg=parseop_Expression_level_2();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:14558:39: ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |)
+            // Thingml.g:14888:39: ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ |)
             int alt126=2;
             int LA126_0 = input.LA(1);
 
@@ -22424,7 +22794,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 }
             }
-            else if ( (LA126_0==EOF||LA126_0==ANNOTATION||LA126_0==STRING_EXT||LA126_0==TEXT||(LA126_0 >= T_OPTIONAL && LA126_0 <= T_READONLY)||LA126_0==21||(LA126_0 >= 23 && LA126_0 <= 27)||LA126_0==30||LA126_0==34||LA126_0==36||LA126_0==38||(LA126_0 >= 40 && LA126_0 <= 47)||LA126_0==49||(LA126_0 >= 51 && LA126_0 <= 53)||LA126_0==56||(LA126_0 >= 61 && LA126_0 <= 62)||LA126_0==64||(LA126_0 >= 68 && LA126_0 <= 69)||LA126_0==73||(LA126_0 >= 75 && LA126_0 <= 76)||(LA126_0 >= 79 && LA126_0 <= 81)||(LA126_0 >= 83 && LA126_0 <= 85)||(LA126_0 >= 88 && LA126_0 <= 91)||(LA126_0 >= 94 && LA126_0 <= 96)||LA126_0==99) ) {
+            else if ( (LA126_0==EOF||LA126_0==ANNOTATION||LA126_0==STRING_EXT||(LA126_0 >= TEXT && LA126_0 <= T_ARRAY)||(LA126_0 >= T_OPTIONAL && LA126_0 <= T_READONLY)||LA126_0==21||(LA126_0 >= 23 && LA126_0 <= 27)||LA126_0==30||LA126_0==34||LA126_0==36||LA126_0==38||(LA126_0 >= 41 && LA126_0 <= 47)||LA126_0==49||(LA126_0 >= 51 && LA126_0 <= 53)||LA126_0==56||(LA126_0 >= 61 && LA126_0 <= 62)||LA126_0==64||(LA126_0 >= 68 && LA126_0 <= 69)||LA126_0==73||(LA126_0 >= 75 && LA126_0 <= 76)||(LA126_0 >= 79 && LA126_0 <= 81)||(LA126_0 >= 83 && LA126_0 <= 85)||(LA126_0 >= 88 && LA126_0 <= 91)||(LA126_0 >= 94 && LA126_0 <= 96)||LA126_0==99) ) {
                 alt126=2;
             }
             else {
@@ -22437,9 +22807,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt126) {
                 case 1 :
-                    // Thingml.g:14558:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
+                    // Thingml.g:14888:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
                     {
-                    // Thingml.g:14558:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
+                    // Thingml.g:14888:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
                     int cnt125=0;
                     loop125:
                     do {
@@ -22459,17 +22829,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt125) {
                     	case 1 :
-                    	    // Thingml.g:14559:3: () a0= 'or' rightArg= parseop_Expression_level_2
+                    	    // Thingml.g:14889:3: () a0= 'or' rightArg= parseop_Expression_level_2
                     	    {
-                    	    // Thingml.g:14559:3: ()
-                    	    // Thingml.g:14559:4: 
+                    	    // Thingml.g:14889:3: ()
+                    	    // Thingml.g:14889:4: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,77,FOLLOW_77_in_parseop_Expression_level_114218); if (state.failed) return element;
+                    	    a0=(Token)match(input,77,FOLLOW_77_in_parseop_Expression_level_114366); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    			if (element == null) {
@@ -22497,7 +22867,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    			addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getOrExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3680]);
                     	    		}
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_114235);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_114383);
                     	    rightArg=parseop_Expression_level_2();
 
                     	    state._fsp--;
@@ -22562,7 +22932,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:14625:21: 
+                    // Thingml.g:14955:21: 
                     {
                     if ( state.backtracking==0 ) { element = leftArg; }
 
@@ -22592,7 +22962,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_2"
-    // Thingml.g:14630:1: parseop_Expression_level_2 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_3 ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |) ;
+    // Thingml.g:14960:1: parseop_Expression_level_2 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_3 ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_2() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -22609,16 +22979,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 55) ) { return element; }
 
-            // Thingml.g:14633:9: (leftArg= parseop_Expression_level_3 ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |) )
-            // Thingml.g:14634:9: leftArg= parseop_Expression_level_3 ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |)
+            // Thingml.g:14963:9: (leftArg= parseop_Expression_level_3 ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |) )
+            // Thingml.g:14964:9: leftArg= parseop_Expression_level_3 ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_214281);
+            pushFollow(FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_214429);
             leftArg=parseop_Expression_level_3();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:14634:37: ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |)
+            // Thingml.g:14964:37: ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ |)
             int alt128=2;
             int LA128_0 = input.LA(1);
 
@@ -22640,7 +23010,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 }
             }
-            else if ( (LA128_0==EOF||LA128_0==ANNOTATION||LA128_0==STRING_EXT||LA128_0==TEXT||(LA128_0 >= T_OPTIONAL && LA128_0 <= T_READONLY)||LA128_0==21||(LA128_0 >= 23 && LA128_0 <= 27)||LA128_0==30||LA128_0==34||LA128_0==36||LA128_0==38||(LA128_0 >= 40 && LA128_0 <= 44)||(LA128_0 >= 46 && LA128_0 <= 47)||LA128_0==49||(LA128_0 >= 51 && LA128_0 <= 53)||LA128_0==56||(LA128_0 >= 61 && LA128_0 <= 62)||LA128_0==64||(LA128_0 >= 68 && LA128_0 <= 69)||LA128_0==73||(LA128_0 >= 75 && LA128_0 <= 77)||(LA128_0 >= 79 && LA128_0 <= 81)||(LA128_0 >= 83 && LA128_0 <= 85)||(LA128_0 >= 88 && LA128_0 <= 91)||(LA128_0 >= 94 && LA128_0 <= 96)||LA128_0==99) ) {
+            else if ( (LA128_0==EOF||LA128_0==ANNOTATION||LA128_0==STRING_EXT||(LA128_0 >= TEXT && LA128_0 <= T_ARRAY)||(LA128_0 >= T_OPTIONAL && LA128_0 <= T_READONLY)||LA128_0==21||(LA128_0 >= 23 && LA128_0 <= 27)||LA128_0==30||LA128_0==34||LA128_0==36||LA128_0==38||(LA128_0 >= 41 && LA128_0 <= 44)||(LA128_0 >= 46 && LA128_0 <= 47)||LA128_0==49||(LA128_0 >= 51 && LA128_0 <= 53)||LA128_0==56||(LA128_0 >= 61 && LA128_0 <= 62)||LA128_0==64||(LA128_0 >= 68 && LA128_0 <= 69)||LA128_0==73||(LA128_0 >= 75 && LA128_0 <= 77)||(LA128_0 >= 79 && LA128_0 <= 81)||(LA128_0 >= 83 && LA128_0 <= 85)||(LA128_0 >= 88 && LA128_0 <= 91)||(LA128_0 >= 94 && LA128_0 <= 96)||LA128_0==99) ) {
                 alt128=2;
             }
             else {
@@ -22653,9 +23023,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt128) {
                 case 1 :
-                    // Thingml.g:14634:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
+                    // Thingml.g:14964:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
                     {
-                    // Thingml.g:14634:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
+                    // Thingml.g:14964:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
                     int cnt127=0;
                     loop127:
                     do {
@@ -22675,17 +23045,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt127) {
                     	case 1 :
-                    	    // Thingml.g:14635:2: () a0= 'and' rightArg= parseop_Expression_level_3
+                    	    // Thingml.g:14965:2: () a0= 'and' rightArg= parseop_Expression_level_3
                     	    {
-                    	    // Thingml.g:14635:2: ()
-                    	    // Thingml.g:14635:3: 
+                    	    // Thingml.g:14965:2: ()
+                    	    // Thingml.g:14965:3: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,45,FOLLOW_45_in_parseop_Expression_level_214297); if (state.failed) return element;
+                    	    a0=(Token)match(input,45,FOLLOW_45_in_parseop_Expression_level_214445); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    		if (element == null) {
@@ -22713,7 +23083,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    		addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getAndExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3692]);
                     	    	}
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_214311);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_214459);
                     	    rightArg=parseop_Expression_level_3();
 
                     	    state._fsp--;
@@ -22778,7 +23148,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:14701:20: 
+                    // Thingml.g:15031:20: 
                     {
                     if ( state.backtracking==0 ) { element = leftArg; }
 
@@ -22808,7 +23178,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_3"
-    // Thingml.g:14706:1: parseop_Expression_level_3 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_4 ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |) ;
+    // Thingml.g:15036:1: parseop_Expression_level_3 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_4 ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_3() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -22825,16 +23195,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 56) ) { return element; }
 
-            // Thingml.g:14709:9: (leftArg= parseop_Expression_level_4 ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |) )
-            // Thingml.g:14710:9: leftArg= parseop_Expression_level_4 ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |)
+            // Thingml.g:15039:9: (leftArg= parseop_Expression_level_4 ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |) )
+            // Thingml.g:15040:9: leftArg= parseop_Expression_level_4 ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314352);
+            pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314500);
             leftArg=parseop_Expression_level_4();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:14710:37: ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |)
+            // Thingml.g:15040:37: ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ |)
             int alt130=2;
             switch ( input.LA(1) ) {
             case 34:
@@ -22901,6 +23271,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             case ANNOTATION:
             case STRING_EXT:
             case TEXT:
+            case T_ARRAY:
             case T_OPTIONAL:
             case T_READONLY:
             case 21:
@@ -22910,7 +23281,6 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             case 26:
             case 27:
             case 30:
-            case 40:
             case 41:
             case 42:
             case 43:
@@ -22961,9 +23331,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt130) {
                 case 1 :
-                    // Thingml.g:14710:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
+                    // Thingml.g:15040:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
                     {
-                    // Thingml.g:14710:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
+                    // Thingml.g:15040:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
                     int cnt129=0;
                     loop129:
                     do {
@@ -23007,17 +23377,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt129) {
                     	case 1 :
-                    	    // Thingml.g:14711:0: () a0= '<' rightArg= parseop_Expression_level_4
+                    	    // Thingml.g:15041:0: () a0= '<' rightArg= parseop_Expression_level_4
                     	    {
-                    	    // Thingml.g:14711:2: ()
-                    	    // Thingml.g:14711:2: 
+                    	    // Thingml.g:15041:2: ()
+                    	    // Thingml.g:15041:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,34,FOLLOW_34_in_parseop_Expression_level_314365); if (state.failed) return element;
+                    	    a0=(Token)match(input,34,FOLLOW_34_in_parseop_Expression_level_314513); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    	if (element == null) {
@@ -23045,7 +23415,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getLowerExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3704]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314376);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314524);
                     	    rightArg=parseop_Expression_level_4();
 
                     	    state._fsp--;
@@ -23096,17 +23466,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // Thingml.g:14778:0: () a0= '>' rightArg= parseop_Expression_level_4
+                    	    // Thingml.g:15108:0: () a0= '>' rightArg= parseop_Expression_level_4
                     	    {
-                    	    // Thingml.g:14778:2: ()
-                    	    // Thingml.g:14778:2: 
+                    	    // Thingml.g:15108:2: ()
+                    	    // Thingml.g:15108:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,38,FOLLOW_38_in_parseop_Expression_level_314394); if (state.failed) return element;
+                    	    a0=(Token)match(input,38,FOLLOW_38_in_parseop_Expression_level_314542); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    	if (element == null) {
@@ -23134,7 +23504,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getGreaterExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3716]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314405);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314553);
                     	    rightArg=parseop_Expression_level_4();
 
                     	    state._fsp--;
@@ -23185,17 +23555,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    }
                     	    break;
                     	case 3 :
-                    	    // Thingml.g:14845:0: () a0= '==' rightArg= parseop_Expression_level_4
+                    	    // Thingml.g:15175:0: () a0= '==' rightArg= parseop_Expression_level_4
                     	    {
-                    	    // Thingml.g:14845:2: ()
-                    	    // Thingml.g:14845:2: 
+                    	    // Thingml.g:15175:2: ()
+                    	    // Thingml.g:15175:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,36,FOLLOW_36_in_parseop_Expression_level_314423); if (state.failed) return element;
+                    	    a0=(Token)match(input,36,FOLLOW_36_in_parseop_Expression_level_314571); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    	if (element == null) {
@@ -23223,7 +23593,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    	addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getEqualsExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3728]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314434);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314582);
                     	    rightArg=parseop_Expression_level_4();
 
                     	    state._fsp--;
@@ -23288,7 +23658,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:14911:20: 
+                    // Thingml.g:15241:20: 
                     {
                     if ( state.backtracking==0 ) { element = leftArg; }
 
@@ -23318,7 +23688,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_4"
-    // Thingml.g:14916:1: parseop_Expression_level_4 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_5 ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |) ;
+    // Thingml.g:15246:1: parseop_Expression_level_4 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_5 ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_4() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -23335,16 +23705,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 57) ) { return element; }
 
-            // Thingml.g:14919:9: (leftArg= parseop_Expression_level_5 ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |) )
-            // Thingml.g:14920:9: leftArg= parseop_Expression_level_5 ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |)
+            // Thingml.g:15249:9: (leftArg= parseop_Expression_level_5 ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |) )
+            // Thingml.g:15250:9: leftArg= parseop_Expression_level_5 ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_414472);
+            pushFollow(FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_414620);
             leftArg=parseop_Expression_level_5();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:14920:37: ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |)
+            // Thingml.g:15250:37: ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ |)
             int alt132=2;
             switch ( input.LA(1) ) {
             case 25:
@@ -23391,6 +23761,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             case ANNOTATION:
             case STRING_EXT:
             case TEXT:
+            case T_ARRAY:
             case T_OPTIONAL:
             case T_READONLY:
             case 21:
@@ -23401,7 +23772,6 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             case 34:
             case 36:
             case 38:
-            case 40:
             case 41:
             case 42:
             case 43:
@@ -23452,9 +23822,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt132) {
                 case 1 :
-                    // Thingml.g:14920:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
+                    // Thingml.g:15250:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
                     {
-                    // Thingml.g:14920:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
+                    // Thingml.g:15250:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
                     int cnt131=0;
                     loop131:
                     do {
@@ -23483,17 +23853,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt131) {
                     	case 1 :
-                    	    // Thingml.g:14921:0: () a0= '+' rightArg= parseop_Expression_level_5
+                    	    // Thingml.g:15251:0: () a0= '+' rightArg= parseop_Expression_level_5
                     	    {
-                    	    // Thingml.g:14921:2: ()
-                    	    // Thingml.g:14921:2: 
+                    	    // Thingml.g:15251:2: ()
+                    	    // Thingml.g:15251:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,25,FOLLOW_25_in_parseop_Expression_level_414485); if (state.failed) return element;
+                    	    a0=(Token)match(input,25,FOLLOW_25_in_parseop_Expression_level_414633); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    if (element == null) {
@@ -23521,7 +23891,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3740]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_414496);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_414644);
                     	    rightArg=parseop_Expression_level_5();
 
                     	    state._fsp--;
@@ -23572,17 +23942,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // Thingml.g:14988:0: () a0= '-' rightArg= parseop_Expression_level_5
+                    	    // Thingml.g:15318:0: () a0= '-' rightArg= parseop_Expression_level_5
                     	    {
-                    	    // Thingml.g:14988:2: ()
-                    	    // Thingml.g:14988:2: 
+                    	    // Thingml.g:15318:2: ()
+                    	    // Thingml.g:15318:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,27,FOLLOW_27_in_parseop_Expression_level_414514); if (state.failed) return element;
+                    	    a0=(Token)match(input,27,FOLLOW_27_in_parseop_Expression_level_414662); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    if (element == null) {
@@ -23610,7 +23980,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getMinusExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3752]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_414525);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_414673);
                     	    rightArg=parseop_Expression_level_5();
 
                     	    state._fsp--;
@@ -23675,7 +24045,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:15054:20: 
+                    // Thingml.g:15384:20: 
                     {
                     if ( state.backtracking==0 ) { element = leftArg; }
 
@@ -23705,7 +24075,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_5"
-    // Thingml.g:15059:1: parseop_Expression_level_5 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_6 ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |) ;
+    // Thingml.g:15389:1: parseop_Expression_level_5 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_6 ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_5() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -23722,16 +24092,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 58) ) { return element; }
 
-            // Thingml.g:15062:9: (leftArg= parseop_Expression_level_6 ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |) )
-            // Thingml.g:15063:9: leftArg= parseop_Expression_level_6 ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |)
+            // Thingml.g:15392:9: (leftArg= parseop_Expression_level_6 ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |) )
+            // Thingml.g:15393:9: leftArg= parseop_Expression_level_6 ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_514563);
+            pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_514711);
             leftArg=parseop_Expression_level_6();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:15063:37: ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |)
+            // Thingml.g:15393:37: ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ |)
             int alt134=2;
             switch ( input.LA(1) ) {
             case 24:
@@ -23778,6 +24148,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             case ANNOTATION:
             case STRING_EXT:
             case TEXT:
+            case T_ARRAY:
             case T_OPTIONAL:
             case T_READONLY:
             case 21:
@@ -23788,7 +24159,6 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             case 34:
             case 36:
             case 38:
-            case 40:
             case 41:
             case 42:
             case 43:
@@ -23839,9 +24209,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt134) {
                 case 1 :
-                    // Thingml.g:15063:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
+                    // Thingml.g:15393:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
                     {
-                    // Thingml.g:15063:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
+                    // Thingml.g:15393:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
                     int cnt133=0;
                     loop133:
                     do {
@@ -23870,17 +24240,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt133) {
                     	case 1 :
-                    	    // Thingml.g:15064:0: () a0= '*' rightArg= parseop_Expression_level_6
+                    	    // Thingml.g:15394:0: () a0= '*' rightArg= parseop_Expression_level_6
                     	    {
-                    	    // Thingml.g:15064:2: ()
-                    	    // Thingml.g:15064:2: 
+                    	    // Thingml.g:15394:2: ()
+                    	    // Thingml.g:15394:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,24,FOLLOW_24_in_parseop_Expression_level_514576); if (state.failed) return element;
+                    	    a0=(Token)match(input,24,FOLLOW_24_in_parseop_Expression_level_514724); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    if (element == null) {
@@ -23908,7 +24278,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getTimesExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3764]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_514587);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_514735);
                     	    rightArg=parseop_Expression_level_6();
 
                     	    state._fsp--;
@@ -23959,17 +24329,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // Thingml.g:15131:0: () a0= '/' rightArg= parseop_Expression_level_6
+                    	    // Thingml.g:15461:0: () a0= '/' rightArg= parseop_Expression_level_6
                     	    {
-                    	    // Thingml.g:15131:2: ()
-                    	    // Thingml.g:15131:2: 
+                    	    // Thingml.g:15461:2: ()
+                    	    // Thingml.g:15461:2: 
                     	    {
                     	    }
 
 
                     	    if ( state.backtracking==0 ) { element = null; }
 
-                    	    a0=(Token)match(input,30,FOLLOW_30_in_parseop_Expression_level_514605); if (state.failed) return element;
+                    	    a0=(Token)match(input,30,FOLLOW_30_in_parseop_Expression_level_514753); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    if (element == null) {
@@ -23997,7 +24367,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getDivExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3776]);
                     	    }
 
-                    	    pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_514616);
+                    	    pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_514764);
                     	    rightArg=parseop_Expression_level_6();
 
                     	    state._fsp--;
@@ -24062,7 +24432,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:15197:20: 
+                    // Thingml.g:15527:20: 
                     {
                     if ( state.backtracking==0 ) { element = leftArg; }
 
@@ -24092,7 +24462,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_6"
-    // Thingml.g:15202:1: parseop_Expression_level_6 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_7 ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |) ;
+    // Thingml.g:15532:1: parseop_Expression_level_6 returns [org.sintef.thingml.Expression element = null] : leftArg= parseop_Expression_level_7 ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_6() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -24109,16 +24479,16 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 59) ) { return element; }
 
-            // Thingml.g:15205:9: (leftArg= parseop_Expression_level_7 ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |) )
-            // Thingml.g:15206:9: leftArg= parseop_Expression_level_7 ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |)
+            // Thingml.g:15535:9: (leftArg= parseop_Expression_level_7 ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |) )
+            // Thingml.g:15536:9: leftArg= parseop_Expression_level_7 ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_7_in_parseop_Expression_level_614654);
+            pushFollow(FOLLOW_parseop_Expression_level_7_in_parseop_Expression_level_614802);
             leftArg=parseop_Expression_level_7();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:15206:37: ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |)
+            // Thingml.g:15536:37: ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) |)
             int alt135=2;
             int LA135_0 = input.LA(1);
 
@@ -24140,7 +24510,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 }
             }
-            else if ( (LA135_0==EOF||LA135_0==ANNOTATION||LA135_0==STRING_EXT||LA135_0==TEXT||(LA135_0 >= T_OPTIONAL && LA135_0 <= T_READONLY)||LA135_0==21||(LA135_0 >= 23 && LA135_0 <= 27)||LA135_0==30||LA135_0==34||LA135_0==36||LA135_0==38||LA135_0==40||(LA135_0 >= 42 && LA135_0 <= 47)||LA135_0==49||(LA135_0 >= 51 && LA135_0 <= 53)||LA135_0==56||(LA135_0 >= 61 && LA135_0 <= 62)||LA135_0==64||(LA135_0 >= 68 && LA135_0 <= 69)||LA135_0==73||(LA135_0 >= 75 && LA135_0 <= 77)||(LA135_0 >= 79 && LA135_0 <= 81)||(LA135_0 >= 83 && LA135_0 <= 85)||(LA135_0 >= 88 && LA135_0 <= 91)||(LA135_0 >= 94 && LA135_0 <= 96)||LA135_0==99) ) {
+            else if ( (LA135_0==EOF||LA135_0==ANNOTATION||LA135_0==STRING_EXT||(LA135_0 >= TEXT && LA135_0 <= T_ARRAY)||(LA135_0 >= T_OPTIONAL && LA135_0 <= T_READONLY)||LA135_0==21||(LA135_0 >= 23 && LA135_0 <= 27)||LA135_0==30||LA135_0==34||LA135_0==36||LA135_0==38||(LA135_0 >= 42 && LA135_0 <= 47)||LA135_0==49||(LA135_0 >= 51 && LA135_0 <= 53)||LA135_0==56||(LA135_0 >= 61 && LA135_0 <= 62)||LA135_0==64||(LA135_0 >= 68 && LA135_0 <= 69)||LA135_0==73||(LA135_0 >= 75 && LA135_0 <= 77)||(LA135_0 >= 79 && LA135_0 <= 81)||(LA135_0 >= 83 && LA135_0 <= 85)||(LA135_0 >= 88 && LA135_0 <= 91)||(LA135_0 >= 94 && LA135_0 <= 96)||LA135_0==99) ) {
                 alt135=2;
             }
             else {
@@ -24153,12 +24523,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt135) {
                 case 1 :
-                    // Thingml.g:15206:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
+                    // Thingml.g:15536:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
                     {
-                    // Thingml.g:15206:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
-                    // Thingml.g:15207:4: a0= '\\u0025' rightArg= parseop_Expression_level_6
+                    // Thingml.g:15536:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
+                    // Thingml.g:15537:4: a0= '\\u0025' rightArg= parseop_Expression_level_6
                     {
-                    a0=(Token)match(input,41,FOLLOW_41_in_parseop_Expression_level_614662); if (state.failed) return element;
+                    a0=(Token)match(input,41,FOLLOW_41_in_parseop_Expression_level_614810); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     if (element == null) {
@@ -24186,7 +24556,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getModExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3788]);
                     }
 
-                    pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_614673);
+                    pushFollow(FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_614821);
                     rightArg=parseop_Expression_level_6();
 
                     state._fsp--;
@@ -24238,7 +24608,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:15270:19: 
+                    // Thingml.g:15600:19: 
                     {
                     if ( state.backtracking==0 ) { element = leftArg; }
 
@@ -24268,7 +24638,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_7"
-    // Thingml.g:15275:1: parseop_Expression_level_7 returns [org.sintef.thingml.Expression element = null] : (a0= '-' arg= parseop_Expression_level_8 |a0= 'not' arg= parseop_Expression_level_8 |arg= parseop_Expression_level_8 );
+    // Thingml.g:15605:1: parseop_Expression_level_7 returns [org.sintef.thingml.Expression element = null] : (a0= '-' arg= parseop_Expression_level_8 |a0= 'not' arg= parseop_Expression_level_8 |arg= parseop_Expression_level_8 );
     public final org.sintef.thingml.Expression parseop_Expression_level_7() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -24283,7 +24653,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 60) ) { return element; }
 
-            // Thingml.g:15278:0: (a0= '-' arg= parseop_Expression_level_8 |a0= 'not' arg= parseop_Expression_level_8 |arg= parseop_Expression_level_8 )
+            // Thingml.g:15608:0: (a0= '-' arg= parseop_Expression_level_8 |a0= 'not' arg= parseop_Expression_level_8 |arg= parseop_Expression_level_8 )
             int alt136=3;
             switch ( input.LA(1) ) {
             case 27:
@@ -24318,9 +24688,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt136) {
                 case 1 :
-                    // Thingml.g:15279:0: a0= '-' arg= parseop_Expression_level_8
+                    // Thingml.g:15609:0: a0= '-' arg= parseop_Expression_level_8
                     {
-                    a0=(Token)match(input,27,FOLLOW_27_in_parseop_Expression_level_714708); if (state.failed) return element;
+                    a0=(Token)match(input,27,FOLLOW_27_in_parseop_Expression_level_714856); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     if (element == null) {
@@ -24348,7 +24718,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getUnaryMinus(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3800]);
                     }
 
-                    pushFollow(FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_714719);
+                    pushFollow(FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_714867);
                     arg=parseop_Expression_level_8();
 
                     state._fsp--;
@@ -24377,9 +24747,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:15324:0: a0= 'not' arg= parseop_Expression_level_8
+                    // Thingml.g:15654:0: a0= 'not' arg= parseop_Expression_level_8
                     {
-                    a0=(Token)match(input,74,FOLLOW_74_in_parseop_Expression_level_714728); if (state.failed) return element;
+                    a0=(Token)match(input,74,FOLLOW_74_in_parseop_Expression_level_714876); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     if (element == null) {
@@ -24407,7 +24777,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getNotExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3812]);
                     }
 
-                    pushFollow(FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_714739);
+                    pushFollow(FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_714887);
                     arg=parseop_Expression_level_8();
 
                     state._fsp--;
@@ -24436,9 +24806,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 3 :
-                    // Thingml.g:15370:5: arg= parseop_Expression_level_8
+                    // Thingml.g:15700:5: arg= parseop_Expression_level_8
                     {
-                    pushFollow(FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_714749);
+                    pushFollow(FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_714897);
                     arg=parseop_Expression_level_8();
 
                     state._fsp--;
@@ -24468,7 +24838,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_8"
-    // Thingml.g:15373:1: parseop_Expression_level_8 returns [org.sintef.thingml.Expression element = null] : arg= parseop_Expression_level_9 (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |) ;
+    // Thingml.g:15703:1: parseop_Expression_level_8 returns [org.sintef.thingml.Expression element = null] : arg= parseop_Expression_level_9 (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |) ;
     public final org.sintef.thingml.Expression parseop_Expression_level_8() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -24486,20 +24856,20 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 61) ) { return element; }
 
-            // Thingml.g:15376:5: (arg= parseop_Expression_level_9 (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |) )
-            // Thingml.g:15377:5: arg= parseop_Expression_level_9 (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |)
+            // Thingml.g:15706:5: (arg= parseop_Expression_level_9 (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |) )
+            // Thingml.g:15707:5: arg= parseop_Expression_level_9 (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |)
             {
-            pushFollow(FOLLOW_parseop_Expression_level_9_in_parseop_Expression_level_814771);
+            pushFollow(FOLLOW_parseop_Expression_level_9_in_parseop_Expression_level_814919);
             arg=parseop_Expression_level_9();
 
             state._fsp--;
             if (state.failed) return element;
 
-            // Thingml.g:15377:33: (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |)
+            // Thingml.g:15707:33: (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' |)
             int alt137=2;
             int LA137_0 = input.LA(1);
 
-            if ( (LA137_0==40) ) {
+            if ( (LA137_0==T_ARRAY) ) {
                 int LA137_1 = input.LA(2);
 
                 if ( (synpred152_Thingml()) ) {
@@ -24530,9 +24900,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt137) {
                 case 1 :
-                    // Thingml.g:15378:0: a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']'
+                    // Thingml.g:15708:0: a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']'
                     {
-                    a0=(Token)match(input,40,FOLLOW_40_in_parseop_Expression_level_814778); if (state.failed) return element;
+                    a0=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_parseop_Expression_level_814926); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     if (element == null) {
@@ -24560,10 +24930,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getArrayIndex(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3824]);
                     }
 
-                    // Thingml.g:15403:6: (a1_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:15404:6: a1_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:15733:6: (a1_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:15734:6: a1_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parseop_Expression_level_814791);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parseop_Expression_level_814939);
                     a1_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
@@ -24597,7 +24967,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3825]);
                     }
 
-                    a2=(Token)match(input,42,FOLLOW_42_in_parseop_Expression_level_814803); if (state.failed) return element;
+                    a2=(Token)match(input,42,FOLLOW_42_in_parseop_Expression_level_814951); if (state.failed) return element;
 
                     if ( state.backtracking==0 ) {
                     if (element == null) {
@@ -24697,7 +25067,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:15523:15: 
+                    // Thingml.g:15853:15: 
                     {
                     if ( state.backtracking==0 ) { element = arg; }
 
@@ -24727,7 +25097,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parseop_Expression_level_9"
-    // Thingml.g:15527:1: parseop_Expression_level_9 returns [org.sintef.thingml.Expression element = null] : (c0= parse_org_sintef_thingml_StreamParamReference |c1= parse_org_sintef_thingml_Reference |c2= parse_org_sintef_thingml_ExpressionGroup |c3= parse_org_sintef_thingml_PropertyReference |c4= parse_org_sintef_thingml_IntegerLiteral |c5= parse_org_sintef_thingml_StringLiteral |c6= parse_org_sintef_thingml_BooleanLiteral |c7= parse_org_sintef_thingml_EnumLiteralRef |c8= parse_org_sintef_thingml_FunctionCallExpression |c9= parse_org_sintef_thingml_ExternExpression );
+    // Thingml.g:15857:1: parseop_Expression_level_9 returns [org.sintef.thingml.Expression element = null] : (c0= parse_org_sintef_thingml_StreamParamReference |c1= parse_org_sintef_thingml_Reference |c2= parse_org_sintef_thingml_ExpressionGroup |c3= parse_org_sintef_thingml_PropertyReference |c4= parse_org_sintef_thingml_IntegerLiteral |c5= parse_org_sintef_thingml_StringLiteral |c6= parse_org_sintef_thingml_BooleanLiteral |c7= parse_org_sintef_thingml_EnumLiteralRef |c8= parse_org_sintef_thingml_FunctionCallExpression |c9= parse_org_sintef_thingml_ExternExpression );
     public final org.sintef.thingml.Expression parseop_Expression_level_9() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -24759,7 +25129,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 62) ) { return element; }
 
-            // Thingml.g:15530:0: (c0= parse_org_sintef_thingml_StreamParamReference |c1= parse_org_sintef_thingml_Reference |c2= parse_org_sintef_thingml_ExpressionGroup |c3= parse_org_sintef_thingml_PropertyReference |c4= parse_org_sintef_thingml_IntegerLiteral |c5= parse_org_sintef_thingml_StringLiteral |c6= parse_org_sintef_thingml_BooleanLiteral |c7= parse_org_sintef_thingml_EnumLiteralRef |c8= parse_org_sintef_thingml_FunctionCallExpression |c9= parse_org_sintef_thingml_ExternExpression )
+            // Thingml.g:15860:0: (c0= parse_org_sintef_thingml_StreamParamReference |c1= parse_org_sintef_thingml_Reference |c2= parse_org_sintef_thingml_ExpressionGroup |c3= parse_org_sintef_thingml_PropertyReference |c4= parse_org_sintef_thingml_IntegerLiteral |c5= parse_org_sintef_thingml_StringLiteral |c6= parse_org_sintef_thingml_BooleanLiteral |c7= parse_org_sintef_thingml_EnumLiteralRef |c8= parse_org_sintef_thingml_FunctionCallExpression |c9= parse_org_sintef_thingml_ExternExpression )
             int alt138=10;
             switch ( input.LA(1) ) {
             case 20:
@@ -24779,6 +25149,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                 case ANNOTATION:
                 case STRING_EXT:
                 case TEXT:
+                case T_ARRAY:
                 case T_OPTIONAL:
                 case T_READONLY:
                 case 21:
@@ -24791,7 +25162,6 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                 case 34:
                 case 36:
                 case 38:
-                case 40:
                 case 41:
                 case 42:
                 case 43:
@@ -24888,9 +25258,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt138) {
                 case 1 :
-                    // Thingml.g:15531:0: c0= parse_org_sintef_thingml_StreamParamReference
+                    // Thingml.g:15861:0: c0= parse_org_sintef_thingml_StreamParamReference
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_StreamParamReference_in_parseop_Expression_level_914840);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_StreamParamReference_in_parseop_Expression_level_914988);
                     c0=parse_org_sintef_thingml_StreamParamReference();
 
                     state._fsp--;
@@ -24901,9 +25271,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:15532:2: c1= parse_org_sintef_thingml_Reference
+                    // Thingml.g:15862:2: c1= parse_org_sintef_thingml_Reference
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Reference_in_parseop_Expression_level_914848);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Reference_in_parseop_Expression_level_914996);
                     c1=parse_org_sintef_thingml_Reference();
 
                     state._fsp--;
@@ -24914,9 +25284,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 3 :
-                    // Thingml.g:15533:2: c2= parse_org_sintef_thingml_ExpressionGroup
+                    // Thingml.g:15863:2: c2= parse_org_sintef_thingml_ExpressionGroup
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ExpressionGroup_in_parseop_Expression_level_914856);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ExpressionGroup_in_parseop_Expression_level_915004);
                     c2=parse_org_sintef_thingml_ExpressionGroup();
 
                     state._fsp--;
@@ -24927,9 +25297,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 4 :
-                    // Thingml.g:15534:2: c3= parse_org_sintef_thingml_PropertyReference
+                    // Thingml.g:15864:2: c3= parse_org_sintef_thingml_PropertyReference
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_PropertyReference_in_parseop_Expression_level_914864);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_PropertyReference_in_parseop_Expression_level_915012);
                     c3=parse_org_sintef_thingml_PropertyReference();
 
                     state._fsp--;
@@ -24940,9 +25310,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 5 :
-                    // Thingml.g:15535:2: c4= parse_org_sintef_thingml_IntegerLiteral
+                    // Thingml.g:15865:2: c4= parse_org_sintef_thingml_IntegerLiteral
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_IntegerLiteral_in_parseop_Expression_level_914872);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_IntegerLiteral_in_parseop_Expression_level_915020);
                     c4=parse_org_sintef_thingml_IntegerLiteral();
 
                     state._fsp--;
@@ -24953,9 +25323,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 6 :
-                    // Thingml.g:15536:2: c5= parse_org_sintef_thingml_StringLiteral
+                    // Thingml.g:15866:2: c5= parse_org_sintef_thingml_StringLiteral
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_StringLiteral_in_parseop_Expression_level_914880);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_StringLiteral_in_parseop_Expression_level_915028);
                     c5=parse_org_sintef_thingml_StringLiteral();
 
                     state._fsp--;
@@ -24966,9 +25336,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 7 :
-                    // Thingml.g:15537:2: c6= parse_org_sintef_thingml_BooleanLiteral
+                    // Thingml.g:15867:2: c6= parse_org_sintef_thingml_BooleanLiteral
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_BooleanLiteral_in_parseop_Expression_level_914888);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_BooleanLiteral_in_parseop_Expression_level_915036);
                     c6=parse_org_sintef_thingml_BooleanLiteral();
 
                     state._fsp--;
@@ -24979,9 +25349,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 8 :
-                    // Thingml.g:15538:2: c7= parse_org_sintef_thingml_EnumLiteralRef
+                    // Thingml.g:15868:2: c7= parse_org_sintef_thingml_EnumLiteralRef
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_EnumLiteralRef_in_parseop_Expression_level_914896);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_EnumLiteralRef_in_parseop_Expression_level_915044);
                     c7=parse_org_sintef_thingml_EnumLiteralRef();
 
                     state._fsp--;
@@ -24992,9 +25362,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 9 :
-                    // Thingml.g:15539:2: c8= parse_org_sintef_thingml_FunctionCallExpression
+                    // Thingml.g:15869:2: c8= parse_org_sintef_thingml_FunctionCallExpression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_FunctionCallExpression_in_parseop_Expression_level_914904);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_FunctionCallExpression_in_parseop_Expression_level_915052);
                     c8=parse_org_sintef_thingml_FunctionCallExpression();
 
                     state._fsp--;
@@ -25005,9 +25375,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 10 :
-                    // Thingml.g:15540:2: c9= parse_org_sintef_thingml_ExternExpression
+                    // Thingml.g:15870:2: c9= parse_org_sintef_thingml_ExternExpression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ExternExpression_in_parseop_Expression_level_914912);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ExternExpression_in_parseop_Expression_level_915060);
                     c9=parse_org_sintef_thingml_ExternExpression();
 
                     state._fsp--;
@@ -25037,7 +25407,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_StreamParamReference"
-    // Thingml.g:15543:1: parse_org_sintef_thingml_StreamParamReference returns [org.sintef.thingml.StreamParamReference element = null] : a0= '#' (a1= INTEGER_LITERAL ) ;
+    // Thingml.g:15873:1: parse_org_sintef_thingml_StreamParamReference returns [org.sintef.thingml.StreamParamReference element = null] : a0= '#' (a1= INTEGER_LITERAL ) ;
     public final org.sintef.thingml.StreamParamReference parse_org_sintef_thingml_StreamParamReference() throws RecognitionException {
         org.sintef.thingml.StreamParamReference element =  null;
 
@@ -25051,10 +25421,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 63) ) { return element; }
 
-            // Thingml.g:15546:4: (a0= '#' (a1= INTEGER_LITERAL ) )
-            // Thingml.g:15547:4: a0= '#' (a1= INTEGER_LITERAL )
+            // Thingml.g:15876:4: (a0= '#' (a1= INTEGER_LITERAL ) )
+            // Thingml.g:15877:4: a0= '#' (a1= INTEGER_LITERAL )
             {
-            a0=(Token)match(input,20,FOLLOW_20_in_parse_org_sintef_thingml_StreamParamReference14934); if (state.failed) return element;
+            a0=(Token)match(input,20,FOLLOW_20_in_parse_org_sintef_thingml_StreamParamReference15082); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -25071,10 +25441,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3887]);
             }
 
-            // Thingml.g:15561:4: (a1= INTEGER_LITERAL )
-            // Thingml.g:15562:4: a1= INTEGER_LITERAL
+            // Thingml.g:15891:4: (a1= INTEGER_LITERAL )
+            // Thingml.g:15892:4: a1= INTEGER_LITERAL
             {
-            a1=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_StreamParamReference14947); if (state.failed) return element;
+            a1=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_StreamParamReference15095); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -25193,7 +25563,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Reference"
-    // Thingml.g:15659:1: parse_org_sintef_thingml_Reference returns [org.sintef.thingml.Reference element = null] : (a0= TEXT ) a1= '.' (a2_0= parse_org_sintef_thingml_ElmtProperty ) ;
+    // Thingml.g:15989:1: parse_org_sintef_thingml_Reference returns [org.sintef.thingml.Reference element = null] : (a0= TEXT ) a1= '.' (a2_0= parse_org_sintef_thingml_ElmtProperty ) ;
     public final org.sintef.thingml.Reference parse_org_sintef_thingml_Reference() throws RecognitionException {
         org.sintef.thingml.Reference element =  null;
 
@@ -25209,13 +25579,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 64) ) { return element; }
 
-            // Thingml.g:15662:4: ( (a0= TEXT ) a1= '.' (a2_0= parse_org_sintef_thingml_ElmtProperty ) )
-            // Thingml.g:15663:4: (a0= TEXT ) a1= '.' (a2_0= parse_org_sintef_thingml_ElmtProperty )
+            // Thingml.g:15992:4: ( (a0= TEXT ) a1= '.' (a2_0= parse_org_sintef_thingml_ElmtProperty ) )
+            // Thingml.g:15993:4: (a0= TEXT ) a1= '.' (a2_0= parse_org_sintef_thingml_ElmtProperty )
             {
-            // Thingml.g:15663:4: (a0= TEXT )
-            // Thingml.g:15664:4: a0= TEXT
+            // Thingml.g:15993:4: (a0= TEXT )
+            // Thingml.g:15994:4: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Reference14977); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_Reference15125); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -25235,7 +25605,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             addErrorToResource(result.getErrorMessage(), ((org.antlr.runtime3_4_0.CommonToken) a0).getLine(), ((org.antlr.runtime3_4_0.CommonToken) a0).getCharPositionInLine(), ((org.antlr.runtime3_4_0.CommonToken) a0).getStartIndex(), ((org.antlr.runtime3_4_0.CommonToken) a0).getStopIndex());
             }
             String resolved = (String) resolvedObject;
-            org.sintef.thingml.ReferencedElmt proxy = org.sintef.thingml.ThingmlFactory.eINSTANCE.createReceiveMessage();
+            org.sintef.thingml.ReferencedElmt proxy = org.sintef.thingml.ThingmlFactory.eINSTANCE.createParameter();
             collectHiddenTokens(element);
             registerContextDependentProxy(new org.sintef.thingml.resource.thingml.mopp.ThingmlContextDependentURIFragmentFactory<org.sintef.thingml.Reference, org.sintef.thingml.ReferencedElmt>(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getReferenceReferenceReferenceResolver()), element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.REFERENCE__REFERENCE), resolved, proxy);
             if (proxy != null) {
@@ -25258,7 +25628,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3949]);
             }
 
-            a1=(Token)match(input,29,FOLLOW_29_in_parse_org_sintef_thingml_Reference14990); if (state.failed) return element;
+            a1=(Token)match(input,29,FOLLOW_29_in_parse_org_sintef_thingml_Reference15138); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -25277,10 +25647,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getReference(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[3952]);
             }
 
-            // Thingml.g:15719:6: (a2_0= parse_org_sintef_thingml_ElmtProperty )
-            // Thingml.g:15720:6: a2_0= parse_org_sintef_thingml_ElmtProperty
+            // Thingml.g:16049:6: (a2_0= parse_org_sintef_thingml_ElmtProperty )
+            // Thingml.g:16050:6: a2_0= parse_org_sintef_thingml_ElmtProperty
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_ElmtProperty_in_parse_org_sintef_thingml_Reference15003);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_ElmtProperty_in_parse_org_sintef_thingml_Reference15151);
             a2_0=parse_org_sintef_thingml_ElmtProperty();
 
             state._fsp--;
@@ -25394,7 +25764,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ExpressionGroup"
-    // Thingml.g:15807:1: parse_org_sintef_thingml_ExpressionGroup returns [org.sintef.thingml.ExpressionGroup element = null] : a0= '(' (a1_0= parse_org_sintef_thingml_Expression ) a2= ')' ;
+    // Thingml.g:16137:1: parse_org_sintef_thingml_ExpressionGroup returns [org.sintef.thingml.ExpressionGroup element = null] : a0= '(' (a1_0= parse_org_sintef_thingml_Expression ) a2= ')' ;
     public final org.sintef.thingml.ExpressionGroup parse_org_sintef_thingml_ExpressionGroup() throws RecognitionException {
         org.sintef.thingml.ExpressionGroup element =  null;
 
@@ -25410,10 +25780,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 65) ) { return element; }
 
-            // Thingml.g:15810:4: (a0= '(' (a1_0= parse_org_sintef_thingml_Expression ) a2= ')' )
-            // Thingml.g:15811:4: a0= '(' (a1_0= parse_org_sintef_thingml_Expression ) a2= ')'
+            // Thingml.g:16140:4: (a0= '(' (a1_0= parse_org_sintef_thingml_Expression ) a2= ')' )
+            // Thingml.g:16141:4: a0= '(' (a1_0= parse_org_sintef_thingml_Expression ) a2= ')'
             {
-            a0=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_ExpressionGroup15030); if (state.failed) return element;
+            a0=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_ExpressionGroup15178); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -25441,10 +25811,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExpressionGroup(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[4025]);
             }
 
-            // Thingml.g:15836:6: (a1_0= parse_org_sintef_thingml_Expression )
-            // Thingml.g:15837:6: a1_0= parse_org_sintef_thingml_Expression
+            // Thingml.g:16166:6: (a1_0= parse_org_sintef_thingml_Expression )
+            // Thingml.g:16167:6: a1_0= parse_org_sintef_thingml_Expression
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExpressionGroup15043);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExpressionGroup15191);
             a1_0=parse_org_sintef_thingml_Expression();
 
             state._fsp--;
@@ -25478,7 +25848,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[4026]);
             }
 
-            a2=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_ExpressionGroup15055); if (state.failed) return element;
+            a2=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_ExpressionGroup15203); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -25575,7 +25945,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_PropertyReference"
-    // Thingml.g:15938:1: parse_org_sintef_thingml_PropertyReference returns [org.sintef.thingml.PropertyReference element = null] : (a0= TEXT ) ;
+    // Thingml.g:16268:1: parse_org_sintef_thingml_PropertyReference returns [org.sintef.thingml.PropertyReference element = null] : (a0= TEXT ) ;
     public final org.sintef.thingml.PropertyReference parse_org_sintef_thingml_PropertyReference() throws RecognitionException {
         org.sintef.thingml.PropertyReference element =  null;
 
@@ -25588,13 +25958,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 66) ) { return element; }
 
-            // Thingml.g:15941:4: ( (a0= TEXT ) )
-            // Thingml.g:15942:4: (a0= TEXT )
+            // Thingml.g:16271:4: ( (a0= TEXT ) )
+            // Thingml.g:16272:4: (a0= TEXT )
             {
-            // Thingml.g:15942:4: (a0= TEXT )
-            // Thingml.g:15943:4: a0= TEXT
+            // Thingml.g:16272:4: (a0= TEXT )
+            // Thingml.g:16273:4: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_PropertyReference15083); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_PropertyReference15231); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -25717,7 +26087,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_IntegerLiteral"
-    // Thingml.g:16044:1: parse_org_sintef_thingml_IntegerLiteral returns [org.sintef.thingml.IntegerLiteral element = null] : (a0= INTEGER_LITERAL ) ;
+    // Thingml.g:16374:1: parse_org_sintef_thingml_IntegerLiteral returns [org.sintef.thingml.IntegerLiteral element = null] : (a0= INTEGER_LITERAL ) ;
     public final org.sintef.thingml.IntegerLiteral parse_org_sintef_thingml_IntegerLiteral() throws RecognitionException {
         org.sintef.thingml.IntegerLiteral element =  null;
 
@@ -25730,13 +26100,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 67) ) { return element; }
 
-            // Thingml.g:16047:4: ( (a0= INTEGER_LITERAL ) )
-            // Thingml.g:16048:4: (a0= INTEGER_LITERAL )
+            // Thingml.g:16377:4: ( (a0= INTEGER_LITERAL ) )
+            // Thingml.g:16378:4: (a0= INTEGER_LITERAL )
             {
-            // Thingml.g:16048:4: (a0= INTEGER_LITERAL )
-            // Thingml.g:16049:4: a0= INTEGER_LITERAL
+            // Thingml.g:16378:4: (a0= INTEGER_LITERAL )
+            // Thingml.g:16379:4: a0= INTEGER_LITERAL
             {
-            a0=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_IntegerLiteral15113); if (state.failed) return element;
+            a0=(Token)match(input,INTEGER_LITERAL,FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_IntegerLiteral15261); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -25855,7 +26225,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_StringLiteral"
-    // Thingml.g:16146:1: parse_org_sintef_thingml_StringLiteral returns [org.sintef.thingml.StringLiteral element = null] : (a0= STRING_LITERAL ) ;
+    // Thingml.g:16476:1: parse_org_sintef_thingml_StringLiteral returns [org.sintef.thingml.StringLiteral element = null] : (a0= STRING_LITERAL ) ;
     public final org.sintef.thingml.StringLiteral parse_org_sintef_thingml_StringLiteral() throws RecognitionException {
         org.sintef.thingml.StringLiteral element =  null;
 
@@ -25868,13 +26238,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 68) ) { return element; }
 
-            // Thingml.g:16149:4: ( (a0= STRING_LITERAL ) )
-            // Thingml.g:16150:4: (a0= STRING_LITERAL )
+            // Thingml.g:16479:4: ( (a0= STRING_LITERAL ) )
+            // Thingml.g:16480:4: (a0= STRING_LITERAL )
             {
-            // Thingml.g:16150:4: (a0= STRING_LITERAL )
-            // Thingml.g:16151:4: a0= STRING_LITERAL
+            // Thingml.g:16480:4: (a0= STRING_LITERAL )
+            // Thingml.g:16481:4: a0= STRING_LITERAL
             {
-            a0=(Token)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_parse_org_sintef_thingml_StringLiteral15143); if (state.failed) return element;
+            a0=(Token)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_parse_org_sintef_thingml_StringLiteral15291); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -25993,7 +26363,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_BooleanLiteral"
-    // Thingml.g:16248:1: parse_org_sintef_thingml_BooleanLiteral returns [org.sintef.thingml.BooleanLiteral element = null] : (a0= BOOLEAN_LITERAL ) ;
+    // Thingml.g:16578:1: parse_org_sintef_thingml_BooleanLiteral returns [org.sintef.thingml.BooleanLiteral element = null] : (a0= BOOLEAN_LITERAL ) ;
     public final org.sintef.thingml.BooleanLiteral parse_org_sintef_thingml_BooleanLiteral() throws RecognitionException {
         org.sintef.thingml.BooleanLiteral element =  null;
 
@@ -26006,13 +26376,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 69) ) { return element; }
 
-            // Thingml.g:16251:4: ( (a0= BOOLEAN_LITERAL ) )
-            // Thingml.g:16252:4: (a0= BOOLEAN_LITERAL )
+            // Thingml.g:16581:4: ( (a0= BOOLEAN_LITERAL ) )
+            // Thingml.g:16582:4: (a0= BOOLEAN_LITERAL )
             {
-            // Thingml.g:16252:4: (a0= BOOLEAN_LITERAL )
-            // Thingml.g:16253:4: a0= BOOLEAN_LITERAL
+            // Thingml.g:16582:4: (a0= BOOLEAN_LITERAL )
+            // Thingml.g:16583:4: a0= BOOLEAN_LITERAL
             {
-            a0=(Token)match(input,BOOLEAN_LITERAL,FOLLOW_BOOLEAN_LITERAL_in_parse_org_sintef_thingml_BooleanLiteral15173); if (state.failed) return element;
+            a0=(Token)match(input,BOOLEAN_LITERAL,FOLLOW_BOOLEAN_LITERAL_in_parse_org_sintef_thingml_BooleanLiteral15321); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -26131,7 +26501,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_EnumLiteralRef"
-    // Thingml.g:16350:1: parse_org_sintef_thingml_EnumLiteralRef returns [org.sintef.thingml.EnumLiteralRef element = null] : (a0= TEXT ) a1= ':' (a2= TEXT ) ;
+    // Thingml.g:16680:1: parse_org_sintef_thingml_EnumLiteralRef returns [org.sintef.thingml.EnumLiteralRef element = null] : (a0= TEXT ) a1= ':' (a2= TEXT ) ;
     public final org.sintef.thingml.EnumLiteralRef parse_org_sintef_thingml_EnumLiteralRef() throws RecognitionException {
         org.sintef.thingml.EnumLiteralRef element =  null;
 
@@ -26146,13 +26516,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 70) ) { return element; }
 
-            // Thingml.g:16353:4: ( (a0= TEXT ) a1= ':' (a2= TEXT ) )
-            // Thingml.g:16354:4: (a0= TEXT ) a1= ':' (a2= TEXT )
+            // Thingml.g:16683:4: ( (a0= TEXT ) a1= ':' (a2= TEXT ) )
+            // Thingml.g:16684:4: (a0= TEXT ) a1= ':' (a2= TEXT )
             {
-            // Thingml.g:16354:4: (a0= TEXT )
-            // Thingml.g:16355:4: a0= TEXT
+            // Thingml.g:16684:4: (a0= TEXT )
+            // Thingml.g:16685:4: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef15203); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef15351); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -26195,7 +26565,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[4332]);
             }
 
-            a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_EnumLiteralRef15216); if (state.failed) return element;
+            a1=(Token)match(input,31,FOLLOW_31_in_parse_org_sintef_thingml_EnumLiteralRef15364); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -26212,10 +26582,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[4333]);
             }
 
-            // Thingml.g:16408:4: (a2= TEXT )
-            // Thingml.g:16409:4: a2= TEXT
+            // Thingml.g:16738:4: (a2= TEXT )
+            // Thingml.g:16739:4: a2= TEXT
             {
-            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef15229); if (state.failed) return element;
+            a2=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef15377); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -26338,7 +26708,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_FunctionCallExpression"
-    // Thingml.g:16510:1: parse_org_sintef_thingml_FunctionCallExpression returns [org.sintef.thingml.FunctionCallExpression element = null] : (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' ;
+    // Thingml.g:16840:1: parse_org_sintef_thingml_FunctionCallExpression returns [org.sintef.thingml.FunctionCallExpression element = null] : (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' ;
     public final org.sintef.thingml.FunctionCallExpression parse_org_sintef_thingml_FunctionCallExpression() throws RecognitionException {
         org.sintef.thingml.FunctionCallExpression element =  null;
 
@@ -26358,13 +26728,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 71) ) { return element; }
 
-            // Thingml.g:16513:4: ( (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' )
-            // Thingml.g:16514:4: (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')'
+            // Thingml.g:16843:4: ( (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')' )
+            // Thingml.g:16844:4: (a0= TEXT ) a1= '(' ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )? a5= ')'
             {
-            // Thingml.g:16514:4: (a0= TEXT )
-            // Thingml.g:16515:4: a0= TEXT
+            // Thingml.g:16844:4: (a0= TEXT )
+            // Thingml.g:16845:4: a0= TEXT
             {
-            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallExpression15259); if (state.failed) return element;
+            a0=(Token)match(input,TEXT,FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallExpression15407); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -26407,7 +26777,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[4395]);
             }
 
-            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_FunctionCallExpression15272); if (state.failed) return element;
+            a1=(Token)match(input,22,FOLLOW_22_in_parse_org_sintef_thingml_FunctionCallExpression15420); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -26436,7 +26806,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[4408]);
             }
 
-            // Thingml.g:16580:0: ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
+            // Thingml.g:16910:0: ( ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* ) )?
             int alt140=2;
             int LA140_0 = input.LA(1);
 
@@ -26445,15 +26815,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt140) {
                 case 1 :
-                    // Thingml.g:16581:0: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:16911:0: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
                     {
-                    // Thingml.g:16581:6: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
-                    // Thingml.g:16582:6: (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
+                    // Thingml.g:16911:6: ( (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )* )
+                    // Thingml.g:16912:6: (a2_0= parse_org_sintef_thingml_Expression ) ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
                     {
-                    // Thingml.g:16582:6: (a2_0= parse_org_sintef_thingml_Expression )
-                    // Thingml.g:16583:6: a2_0= parse_org_sintef_thingml_Expression
+                    // Thingml.g:16912:6: (a2_0= parse_org_sintef_thingml_Expression )
+                    // Thingml.g:16913:6: a2_0= parse_org_sintef_thingml_Expression
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression15289);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression15437);
                     a2_0=parse_org_sintef_thingml_Expression();
 
                     state._fsp--;
@@ -26488,7 +26858,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[4410]);
                     }
 
-                    // Thingml.g:16609:0: ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
+                    // Thingml.g:16939:0: ( (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) ) )*
                     loop139:
                     do {
                         int alt139=2;
@@ -26501,12 +26871,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                         switch (alt139) {
                     	case 1 :
-                    	    // Thingml.g:16610:0: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:16940:0: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
                     	    {
-                    	    // Thingml.g:16610:4: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
-                    	    // Thingml.g:16611:4: a3= ',' (a4_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:16940:4: (a3= ',' (a4_0= parse_org_sintef_thingml_Expression ) )
+                    	    // Thingml.g:16941:4: a3= ',' (a4_0= parse_org_sintef_thingml_Expression )
                     	    {
-                    	    a3=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_FunctionCallExpression15305); if (state.failed) return element;
+                    	    a3=(Token)match(input,26,FOLLOW_26_in_parse_org_sintef_thingml_FunctionCallExpression15453); if (state.failed) return element;
 
                     	    if ( state.backtracking==0 ) {
                     	    if (element == null) {
@@ -26534,10 +26904,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getFunctionCallExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[4422]);
                     	    }
 
-                    	    // Thingml.g:16636:6: (a4_0= parse_org_sintef_thingml_Expression )
-                    	    // Thingml.g:16637:6: a4_0= parse_org_sintef_thingml_Expression
+                    	    // Thingml.g:16966:6: (a4_0= parse_org_sintef_thingml_Expression )
+                    	    // Thingml.g:16967:6: a4_0= parse_org_sintef_thingml_Expression
                     	    {
-                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression15318);
+                    	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression15466);
                     	    a4_0=parse_org_sintef_thingml_Expression();
 
                     	    state._fsp--;
@@ -26604,7 +26974,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[4427]);
             }
 
-            a5=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_FunctionCallExpression15346); if (state.failed) return element;
+            a5=(Token)match(input,23,FOLLOW_23_in_parse_org_sintef_thingml_FunctionCallExpression15494); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (element == null) {
@@ -26701,7 +27071,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ExternExpression"
-    // Thingml.g:16754:1: parse_org_sintef_thingml_ExternExpression returns [org.sintef.thingml.ExternExpression element = null] : (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )* ;
+    // Thingml.g:17084:1: parse_org_sintef_thingml_ExternExpression returns [org.sintef.thingml.ExternExpression element = null] : (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )* ;
     public final org.sintef.thingml.ExternExpression parse_org_sintef_thingml_ExternExpression() throws RecognitionException {
         org.sintef.thingml.ExternExpression element =  null;
 
@@ -26717,13 +27087,13 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 72) ) { return element; }
 
-            // Thingml.g:16757:4: ( (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )* )
-            // Thingml.g:16758:4: (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )*
+            // Thingml.g:17087:4: ( (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )* )
+            // Thingml.g:17088:4: (a0= STRING_EXT ) ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )*
             {
-            // Thingml.g:16758:4: (a0= STRING_EXT )
-            // Thingml.g:16759:4: a0= STRING_EXT
+            // Thingml.g:17088:4: (a0= STRING_EXT )
+            // Thingml.g:17089:4: a0= STRING_EXT
             {
-            a0=(Token)match(input,STRING_EXT,FOLLOW_STRING_EXT_in_parse_org_sintef_thingml_ExternExpression15374); if (state.failed) return element;
+            a0=(Token)match(input,STRING_EXT,FOLLOW_STRING_EXT_in_parse_org_sintef_thingml_ExternExpression15522); if (state.failed) return element;
 
             if ( state.backtracking==0 ) {
             if (terminateParsing) {
@@ -26822,7 +27192,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             addExpectedElement(null, org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[4549]);
             }
 
-            // Thingml.g:16854:0: ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )*
+            // Thingml.g:17184:0: ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )*
             loop141:
             do {
                 int alt141=2;
@@ -26841,12 +27211,12 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 switch (alt141) {
             	case 1 :
-            	    // Thingml.g:16855:0: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
+            	    // Thingml.g:17185:0: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
             	    {
-            	    // Thingml.g:16855:4: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
-            	    // Thingml.g:16856:4: a1= '&' (a2_0= parse_org_sintef_thingml_Expression )
+            	    // Thingml.g:17185:4: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
+            	    // Thingml.g:17186:4: a1= '&' (a2_0= parse_org_sintef_thingml_Expression )
             	    {
-            	    a1=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_ExternExpression15391); if (state.failed) return element;
+            	    a1=(Token)match(input,21,FOLLOW_21_in_parse_org_sintef_thingml_ExternExpression15539); if (state.failed) return element;
 
             	    if ( state.backtracking==0 ) {
             	    if (element == null) {
@@ -26874,10 +27244,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             	    addExpectedElement(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternExpression(), org.sintef.thingml.resource.thingml.mopp.ThingmlExpectationConstants.EXPECTATIONS[4561]);
             	    }
 
-            	    // Thingml.g:16881:6: (a2_0= parse_org_sintef_thingml_Expression )
-            	    // Thingml.g:16882:6: a2_0= parse_org_sintef_thingml_Expression
+            	    // Thingml.g:17211:6: (a2_0= parse_org_sintef_thingml_Expression )
+            	    // Thingml.g:17212:6: a2_0= parse_org_sintef_thingml_Expression
             	    {
-            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExternExpression15404);
+            	    pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExternExpression15552);
             	    a2_0=parse_org_sintef_thingml_Expression();
 
             	    state._fsp--;
@@ -27068,7 +27438,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Type"
-    // Thingml.g:17036:1: parse_org_sintef_thingml_Type returns [org.sintef.thingml.Type element = null] : (c0= parse_org_sintef_thingml_Thing |c1= parse_org_sintef_thingml_PrimitiveType |c2= parse_org_sintef_thingml_Enumeration );
+    // Thingml.g:17366:1: parse_org_sintef_thingml_Type returns [org.sintef.thingml.Type element = null] : (c0= parse_org_sintef_thingml_Thing |c1= parse_org_sintef_thingml_PrimitiveType |c2= parse_org_sintef_thingml_Enumeration );
     public final org.sintef.thingml.Type parse_org_sintef_thingml_Type() throws RecognitionException {
         org.sintef.thingml.Type element =  null;
 
@@ -27084,7 +27454,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 73) ) { return element; }
 
-            // Thingml.g:17037:0: (c0= parse_org_sintef_thingml_Thing |c1= parse_org_sintef_thingml_PrimitiveType |c2= parse_org_sintef_thingml_Enumeration )
+            // Thingml.g:17367:0: (c0= parse_org_sintef_thingml_Thing |c1= parse_org_sintef_thingml_PrimitiveType |c2= parse_org_sintef_thingml_Enumeration )
             int alt142=3;
             switch ( input.LA(1) ) {
             case 92:
@@ -27113,9 +27483,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt142) {
                 case 1 :
-                    // Thingml.g:17038:0: c0= parse_org_sintef_thingml_Thing
+                    // Thingml.g:17368:0: c0= parse_org_sintef_thingml_Thing
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Thing_in_parse_org_sintef_thingml_Type15435);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Thing_in_parse_org_sintef_thingml_Type15583);
                     c0=parse_org_sintef_thingml_Thing();
 
                     state._fsp--;
@@ -27126,9 +27496,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:17039:2: c1= parse_org_sintef_thingml_PrimitiveType
+                    // Thingml.g:17369:2: c1= parse_org_sintef_thingml_PrimitiveType
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_PrimitiveType_in_parse_org_sintef_thingml_Type15443);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_PrimitiveType_in_parse_org_sintef_thingml_Type15591);
                     c1=parse_org_sintef_thingml_PrimitiveType();
 
                     state._fsp--;
@@ -27139,9 +27509,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 3 :
-                    // Thingml.g:17040:2: c2= parse_org_sintef_thingml_Enumeration
+                    // Thingml.g:17370:2: c2= parse_org_sintef_thingml_Enumeration
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Enumeration_in_parse_org_sintef_thingml_Type15451);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Enumeration_in_parse_org_sintef_thingml_Type15599);
                     c2=parse_org_sintef_thingml_Enumeration();
 
                     state._fsp--;
@@ -27171,7 +27541,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Expression"
-    // Thingml.g:17044:1: parse_org_sintef_thingml_Expression returns [org.sintef.thingml.Expression element = null] : c= parseop_Expression_level_1 ;
+    // Thingml.g:17374:1: parse_org_sintef_thingml_Expression returns [org.sintef.thingml.Expression element = null] : c= parseop_Expression_level_1 ;
     public final org.sintef.thingml.Expression parse_org_sintef_thingml_Expression() throws RecognitionException {
         org.sintef.thingml.Expression element =  null;
 
@@ -27183,10 +27553,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 74) ) { return element; }
 
-            // Thingml.g:17045:3: (c= parseop_Expression_level_1 )
-            // Thingml.g:17046:3: c= parseop_Expression_level_1
+            // Thingml.g:17375:3: (c= parseop_Expression_level_1 )
+            // Thingml.g:17376:3: c= parseop_Expression_level_1
             {
-            pushFollow(FOLLOW_parseop_Expression_level_1_in_parse_org_sintef_thingml_Expression15470);
+            pushFollow(FOLLOW_parseop_Expression_level_1_in_parse_org_sintef_thingml_Expression15618);
             c=parseop_Expression_level_1();
 
             state._fsp--;
@@ -27214,7 +27584,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Action"
-    // Thingml.g:17050:1: parse_org_sintef_thingml_Action returns [org.sintef.thingml.Action element = null] : (c0= parse_org_sintef_thingml_SendAction |c1= parse_org_sintef_thingml_VariableAssignment |c2= parse_org_sintef_thingml_ActionBlock |c3= parse_org_sintef_thingml_LocalVariable |c4= parse_org_sintef_thingml_ExternStatement |c5= parse_org_sintef_thingml_ConditionalAction |c6= parse_org_sintef_thingml_LoopAction |c7= parse_org_sintef_thingml_PrintAction |c8= parse_org_sintef_thingml_ErrorAction |c9= parse_org_sintef_thingml_ReturnAction |c10= parse_org_sintef_thingml_FunctionCallStatement );
+    // Thingml.g:17380:1: parse_org_sintef_thingml_Action returns [org.sintef.thingml.Action element = null] : (c0= parse_org_sintef_thingml_SendAction |c1= parse_org_sintef_thingml_VariableAssignment |c2= parse_org_sintef_thingml_ActionBlock |c3= parse_org_sintef_thingml_LocalVariable |c4= parse_org_sintef_thingml_ExternStatement |c5= parse_org_sintef_thingml_ConditionalAction |c6= parse_org_sintef_thingml_LoopAction |c7= parse_org_sintef_thingml_PrintAction |c8= parse_org_sintef_thingml_ErrorAction |c9= parse_org_sintef_thingml_ReturnAction |c10= parse_org_sintef_thingml_FunctionCallStatement );
     public final org.sintef.thingml.Action parse_org_sintef_thingml_Action() throws RecognitionException {
         org.sintef.thingml.Action element =  null;
 
@@ -27246,7 +27616,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 75) ) { return element; }
 
-            // Thingml.g:17051:0: (c0= parse_org_sintef_thingml_SendAction |c1= parse_org_sintef_thingml_VariableAssignment |c2= parse_org_sintef_thingml_ActionBlock |c3= parse_org_sintef_thingml_LocalVariable |c4= parse_org_sintef_thingml_ExternStatement |c5= parse_org_sintef_thingml_ConditionalAction |c6= parse_org_sintef_thingml_LoopAction |c7= parse_org_sintef_thingml_PrintAction |c8= parse_org_sintef_thingml_ErrorAction |c9= parse_org_sintef_thingml_ReturnAction |c10= parse_org_sintef_thingml_FunctionCallStatement )
+            // Thingml.g:17381:0: (c0= parse_org_sintef_thingml_SendAction |c1= parse_org_sintef_thingml_VariableAssignment |c2= parse_org_sintef_thingml_ActionBlock |c3= parse_org_sintef_thingml_LocalVariable |c4= parse_org_sintef_thingml_ExternStatement |c5= parse_org_sintef_thingml_ConditionalAction |c6= parse_org_sintef_thingml_LoopAction |c7= parse_org_sintef_thingml_PrintAction |c8= parse_org_sintef_thingml_ErrorAction |c9= parse_org_sintef_thingml_ReturnAction |c10= parse_org_sintef_thingml_FunctionCallStatement )
             int alt143=11;
             switch ( input.LA(1) ) {
             case TEXT:
@@ -27257,8 +27627,8 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     alt143=1;
                     }
                     break;
+                case T_ARRAY:
                 case 35:
-                case 40:
                     {
                     alt143=2;
                     }
@@ -27331,9 +27701,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt143) {
                 case 1 :
-                    // Thingml.g:17052:0: c0= parse_org_sintef_thingml_SendAction
+                    // Thingml.g:17382:0: c0= parse_org_sintef_thingml_SendAction
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_SendAction_in_parse_org_sintef_thingml_Action15489);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_SendAction_in_parse_org_sintef_thingml_Action15637);
                     c0=parse_org_sintef_thingml_SendAction();
 
                     state._fsp--;
@@ -27344,9 +27714,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:17053:2: c1= parse_org_sintef_thingml_VariableAssignment
+                    // Thingml.g:17383:2: c1= parse_org_sintef_thingml_VariableAssignment
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_VariableAssignment_in_parse_org_sintef_thingml_Action15497);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_VariableAssignment_in_parse_org_sintef_thingml_Action15645);
                     c1=parse_org_sintef_thingml_VariableAssignment();
 
                     state._fsp--;
@@ -27357,9 +27727,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 3 :
-                    // Thingml.g:17054:2: c2= parse_org_sintef_thingml_ActionBlock
+                    // Thingml.g:17384:2: c2= parse_org_sintef_thingml_ActionBlock
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ActionBlock_in_parse_org_sintef_thingml_Action15505);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ActionBlock_in_parse_org_sintef_thingml_Action15653);
                     c2=parse_org_sintef_thingml_ActionBlock();
 
                     state._fsp--;
@@ -27370,9 +27740,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 4 :
-                    // Thingml.g:17055:2: c3= parse_org_sintef_thingml_LocalVariable
+                    // Thingml.g:17385:2: c3= parse_org_sintef_thingml_LocalVariable
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_LocalVariable_in_parse_org_sintef_thingml_Action15513);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_LocalVariable_in_parse_org_sintef_thingml_Action15661);
                     c3=parse_org_sintef_thingml_LocalVariable();
 
                     state._fsp--;
@@ -27383,9 +27753,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 5 :
-                    // Thingml.g:17056:2: c4= parse_org_sintef_thingml_ExternStatement
+                    // Thingml.g:17386:2: c4= parse_org_sintef_thingml_ExternStatement
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ExternStatement_in_parse_org_sintef_thingml_Action15521);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ExternStatement_in_parse_org_sintef_thingml_Action15669);
                     c4=parse_org_sintef_thingml_ExternStatement();
 
                     state._fsp--;
@@ -27396,9 +27766,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 6 :
-                    // Thingml.g:17057:2: c5= parse_org_sintef_thingml_ConditionalAction
+                    // Thingml.g:17387:2: c5= parse_org_sintef_thingml_ConditionalAction
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ConditionalAction_in_parse_org_sintef_thingml_Action15529);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ConditionalAction_in_parse_org_sintef_thingml_Action15677);
                     c5=parse_org_sintef_thingml_ConditionalAction();
 
                     state._fsp--;
@@ -27409,9 +27779,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 7 :
-                    // Thingml.g:17058:2: c6= parse_org_sintef_thingml_LoopAction
+                    // Thingml.g:17388:2: c6= parse_org_sintef_thingml_LoopAction
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_LoopAction_in_parse_org_sintef_thingml_Action15537);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_LoopAction_in_parse_org_sintef_thingml_Action15685);
                     c6=parse_org_sintef_thingml_LoopAction();
 
                     state._fsp--;
@@ -27422,9 +27792,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 8 :
-                    // Thingml.g:17059:2: c7= parse_org_sintef_thingml_PrintAction
+                    // Thingml.g:17389:2: c7= parse_org_sintef_thingml_PrintAction
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_PrintAction_in_parse_org_sintef_thingml_Action15545);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_PrintAction_in_parse_org_sintef_thingml_Action15693);
                     c7=parse_org_sintef_thingml_PrintAction();
 
                     state._fsp--;
@@ -27435,9 +27805,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 9 :
-                    // Thingml.g:17060:2: c8= parse_org_sintef_thingml_ErrorAction
+                    // Thingml.g:17390:2: c8= parse_org_sintef_thingml_ErrorAction
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ErrorAction_in_parse_org_sintef_thingml_Action15553);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ErrorAction_in_parse_org_sintef_thingml_Action15701);
                     c8=parse_org_sintef_thingml_ErrorAction();
 
                     state._fsp--;
@@ -27448,9 +27818,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 10 :
-                    // Thingml.g:17061:2: c9= parse_org_sintef_thingml_ReturnAction
+                    // Thingml.g:17391:2: c9= parse_org_sintef_thingml_ReturnAction
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ReturnAction_in_parse_org_sintef_thingml_Action15561);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ReturnAction_in_parse_org_sintef_thingml_Action15709);
                     c9=parse_org_sintef_thingml_ReturnAction();
 
                     state._fsp--;
@@ -27461,9 +27831,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 11 :
-                    // Thingml.g:17062:2: c10= parse_org_sintef_thingml_FunctionCallStatement
+                    // Thingml.g:17392:2: c10= parse_org_sintef_thingml_FunctionCallStatement
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_FunctionCallStatement_in_parse_org_sintef_thingml_Action15569);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_FunctionCallStatement_in_parse_org_sintef_thingml_Action15717);
                     c10=parse_org_sintef_thingml_FunctionCallStatement();
 
                     state._fsp--;
@@ -27493,7 +27863,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Port"
-    // Thingml.g:17066:1: parse_org_sintef_thingml_Port returns [org.sintef.thingml.Port element = null] : (c0= parse_org_sintef_thingml_RequiredPort |c1= parse_org_sintef_thingml_ProvidedPort );
+    // Thingml.g:17396:1: parse_org_sintef_thingml_Port returns [org.sintef.thingml.Port element = null] : (c0= parse_org_sintef_thingml_RequiredPort |c1= parse_org_sintef_thingml_ProvidedPort );
     public final org.sintef.thingml.Port parse_org_sintef_thingml_Port() throws RecognitionException {
         org.sintef.thingml.Port element =  null;
 
@@ -27507,7 +27877,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 76) ) { return element; }
 
-            // Thingml.g:17067:0: (c0= parse_org_sintef_thingml_RequiredPort |c1= parse_org_sintef_thingml_ProvidedPort )
+            // Thingml.g:17397:0: (c0= parse_org_sintef_thingml_RequiredPort |c1= parse_org_sintef_thingml_ProvidedPort )
             int alt144=2;
             int LA144_0 = input.LA(1);
 
@@ -27527,9 +27897,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt144) {
                 case 1 :
-                    // Thingml.g:17068:0: c0= parse_org_sintef_thingml_RequiredPort
+                    // Thingml.g:17398:0: c0= parse_org_sintef_thingml_RequiredPort
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_RequiredPort_in_parse_org_sintef_thingml_Port15588);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_RequiredPort_in_parse_org_sintef_thingml_Port15736);
                     c0=parse_org_sintef_thingml_RequiredPort();
 
                     state._fsp--;
@@ -27540,9 +27910,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:17069:2: c1= parse_org_sintef_thingml_ProvidedPort
+                    // Thingml.g:17399:2: c1= parse_org_sintef_thingml_ProvidedPort
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ProvidedPort_in_parse_org_sintef_thingml_Port15596);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ProvidedPort_in_parse_org_sintef_thingml_Port15744);
                     c1=parse_org_sintef_thingml_ProvidedPort();
 
                     state._fsp--;
@@ -27572,7 +27942,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Operator"
-    // Thingml.g:17073:1: parse_org_sintef_thingml_Operator returns [org.sintef.thingml.Operator element = null] : c0= parse_org_sintef_thingml_SglMsgParamOperator ;
+    // Thingml.g:17403:1: parse_org_sintef_thingml_Operator returns [org.sintef.thingml.Operator element = null] : c0= parse_org_sintef_thingml_SglMsgParamOperator ;
     public final org.sintef.thingml.Operator parse_org_sintef_thingml_Operator() throws RecognitionException {
         org.sintef.thingml.Operator element =  null;
 
@@ -27584,10 +27954,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 77) ) { return element; }
 
-            // Thingml.g:17074:4: (c0= parse_org_sintef_thingml_SglMsgParamOperator )
-            // Thingml.g:17075:4: c0= parse_org_sintef_thingml_SglMsgParamOperator
+            // Thingml.g:17404:4: (c0= parse_org_sintef_thingml_SglMsgParamOperator )
+            // Thingml.g:17405:4: c0= parse_org_sintef_thingml_SglMsgParamOperator
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_SglMsgParamOperator_in_parse_org_sintef_thingml_Operator15615);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_SglMsgParamOperator_in_parse_org_sintef_thingml_Operator15763);
             c0=parse_org_sintef_thingml_SglMsgParamOperator();
 
             state._fsp--;
@@ -27615,7 +27985,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Event"
-    // Thingml.g:17079:1: parse_org_sintef_thingml_Event returns [org.sintef.thingml.Event element = null] : c0= parse_org_sintef_thingml_ReceiveMessage ;
+    // Thingml.g:17409:1: parse_org_sintef_thingml_Event returns [org.sintef.thingml.Event element = null] : c0= parse_org_sintef_thingml_ReceiveMessage ;
     public final org.sintef.thingml.Event parse_org_sintef_thingml_Event() throws RecognitionException {
         org.sintef.thingml.Event element =  null;
 
@@ -27627,10 +27997,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 78) ) { return element; }
 
-            // Thingml.g:17080:4: (c0= parse_org_sintef_thingml_ReceiveMessage )
-            // Thingml.g:17081:4: c0= parse_org_sintef_thingml_ReceiveMessage
+            // Thingml.g:17410:4: (c0= parse_org_sintef_thingml_ReceiveMessage )
+            // Thingml.g:17411:4: c0= parse_org_sintef_thingml_ReceiveMessage
             {
-            pushFollow(FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_Event15634);
+            pushFollow(FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_Event15782);
             c0=parse_org_sintef_thingml_ReceiveMessage();
 
             state._fsp--;
@@ -27658,7 +28028,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ViewSource"
-    // Thingml.g:17085:1: parse_org_sintef_thingml_ViewSource returns [org.sintef.thingml.ViewSource element = null] : (c0= parse_org_sintef_thingml_Filter |c1= parse_org_sintef_thingml_LengthWindow |c2= parse_org_sintef_thingml_TimeWindow );
+    // Thingml.g:17415:1: parse_org_sintef_thingml_ViewSource returns [org.sintef.thingml.ViewSource element = null] : (c0= parse_org_sintef_thingml_Filter |c1= parse_org_sintef_thingml_LengthWindow |c2= parse_org_sintef_thingml_TimeWindow );
     public final org.sintef.thingml.ViewSource parse_org_sintef_thingml_ViewSource() throws RecognitionException {
         org.sintef.thingml.ViewSource element =  null;
 
@@ -27674,7 +28044,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 79) ) { return element; }
 
-            // Thingml.g:17086:0: (c0= parse_org_sintef_thingml_Filter |c1= parse_org_sintef_thingml_LengthWindow |c2= parse_org_sintef_thingml_TimeWindow )
+            // Thingml.g:17416:0: (c0= parse_org_sintef_thingml_Filter |c1= parse_org_sintef_thingml_LengthWindow |c2= parse_org_sintef_thingml_TimeWindow )
             int alt145=3;
             switch ( input.LA(1) ) {
             case 59:
@@ -27703,9 +28073,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt145) {
                 case 1 :
-                    // Thingml.g:17087:0: c0= parse_org_sintef_thingml_Filter
+                    // Thingml.g:17417:0: c0= parse_org_sintef_thingml_Filter
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_Filter_in_parse_org_sintef_thingml_ViewSource15653);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_Filter_in_parse_org_sintef_thingml_ViewSource15801);
                     c0=parse_org_sintef_thingml_Filter();
 
                     state._fsp--;
@@ -27716,9 +28086,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:17088:2: c1= parse_org_sintef_thingml_LengthWindow
+                    // Thingml.g:17418:2: c1= parse_org_sintef_thingml_LengthWindow
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_LengthWindow_in_parse_org_sintef_thingml_ViewSource15661);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_LengthWindow_in_parse_org_sintef_thingml_ViewSource15809);
                     c1=parse_org_sintef_thingml_LengthWindow();
 
                     state._fsp--;
@@ -27729,9 +28099,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 3 :
-                    // Thingml.g:17089:2: c2= parse_org_sintef_thingml_TimeWindow
+                    // Thingml.g:17419:2: c2= parse_org_sintef_thingml_TimeWindow
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_TimeWindow_in_parse_org_sintef_thingml_ViewSource15669);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_TimeWindow_in_parse_org_sintef_thingml_ViewSource15817);
                     c2=parse_org_sintef_thingml_TimeWindow();
 
                     state._fsp--;
@@ -27761,7 +28131,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_Source"
-    // Thingml.g:17093:1: parse_org_sintef_thingml_Source returns [org.sintef.thingml.Source element = null] : (c0= parse_org_sintef_thingml_SimpleSource |c1= parse_org_sintef_thingml_JoinSources |c2= parse_org_sintef_thingml_MergeSources );
+    // Thingml.g:17423:1: parse_org_sintef_thingml_Source returns [org.sintef.thingml.Source element = null] : (c0= parse_org_sintef_thingml_SimpleSource |c1= parse_org_sintef_thingml_JoinSources |c2= parse_org_sintef_thingml_MergeSources );
     public final org.sintef.thingml.Source parse_org_sintef_thingml_Source() throws RecognitionException {
         org.sintef.thingml.Source element =  null;
 
@@ -27777,7 +28147,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 80) ) { return element; }
 
-            // Thingml.g:17094:0: (c0= parse_org_sintef_thingml_SimpleSource |c1= parse_org_sintef_thingml_JoinSources |c2= parse_org_sintef_thingml_MergeSources )
+            // Thingml.g:17424:0: (c0= parse_org_sintef_thingml_SimpleSource |c1= parse_org_sintef_thingml_JoinSources |c2= parse_org_sintef_thingml_MergeSources )
             int alt146=3;
             int LA146_0 = input.LA(1);
 
@@ -27802,7 +28172,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
                 }
             }
-            else if ( (LA146_0==40) ) {
+            else if ( (LA146_0==T_ARRAY) ) {
                 int LA146_2 = input.LA(2);
 
                 if ( (synpred181_Thingml()) ) {
@@ -27830,9 +28200,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt146) {
                 case 1 :
-                    // Thingml.g:17095:0: c0= parse_org_sintef_thingml_SimpleSource
+                    // Thingml.g:17425:0: c0= parse_org_sintef_thingml_SimpleSource
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_SimpleSource_in_parse_org_sintef_thingml_Source15688);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_SimpleSource_in_parse_org_sintef_thingml_Source15836);
                     c0=parse_org_sintef_thingml_SimpleSource();
 
                     state._fsp--;
@@ -27843,9 +28213,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:17096:2: c1= parse_org_sintef_thingml_JoinSources
+                    // Thingml.g:17426:2: c1= parse_org_sintef_thingml_JoinSources
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_JoinSources_in_parse_org_sintef_thingml_Source15696);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_JoinSources_in_parse_org_sintef_thingml_Source15844);
                     c1=parse_org_sintef_thingml_JoinSources();
 
                     state._fsp--;
@@ -27856,9 +28226,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 3 :
-                    // Thingml.g:17097:2: c2= parse_org_sintef_thingml_MergeSources
+                    // Thingml.g:17427:2: c2= parse_org_sintef_thingml_MergeSources
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_MergeSources_in_parse_org_sintef_thingml_Source15704);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_MergeSources_in_parse_org_sintef_thingml_Source15852);
                     c2=parse_org_sintef_thingml_MergeSources();
 
                     state._fsp--;
@@ -27888,7 +28258,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
 
     // $ANTLR start "parse_org_sintef_thingml_ElmtProperty"
-    // Thingml.g:17101:1: parse_org_sintef_thingml_ElmtProperty returns [org.sintef.thingml.ElmtProperty element = null] : (c0= parse_org_sintef_thingml_SimpleParamRef |c1= parse_org_sintef_thingml_ArrayParamRef |c2= parse_org_sintef_thingml_LengthArray );
+    // Thingml.g:17431:1: parse_org_sintef_thingml_ElmtProperty returns [org.sintef.thingml.ElmtProperty element = null] : (c0= parse_org_sintef_thingml_SimpleParamRef |c1= parse_org_sintef_thingml_ArrayParamRef |c2= parse_org_sintef_thingml_LengthArray );
     public final org.sintef.thingml.ElmtProperty parse_org_sintef_thingml_ElmtProperty() throws RecognitionException {
         org.sintef.thingml.ElmtProperty element =  null;
 
@@ -27904,17 +28274,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 81) ) { return element; }
 
-            // Thingml.g:17102:0: (c0= parse_org_sintef_thingml_SimpleParamRef |c1= parse_org_sintef_thingml_ArrayParamRef |c2= parse_org_sintef_thingml_LengthArray )
+            // Thingml.g:17432:0: (c0= parse_org_sintef_thingml_SimpleParamRef |c1= parse_org_sintef_thingml_ArrayParamRef |c2= parse_org_sintef_thingml_LengthArray )
             int alt147=3;
             int LA147_0 = input.LA(1);
 
             if ( (LA147_0==TEXT) ) {
                 int LA147_1 = input.LA(2);
 
-                if ( (LA147_1==EOF||LA147_1==ANNOTATION||LA147_1==STRING_EXT||LA147_1==TEXT||(LA147_1 >= T_OPTIONAL && LA147_1 <= T_READONLY)||LA147_1==21||(LA147_1 >= 23 && LA147_1 <= 27)||LA147_1==30||LA147_1==34||LA147_1==36||LA147_1==38||(LA147_1 >= 40 && LA147_1 <= 47)||LA147_1==49||(LA147_1 >= 51 && LA147_1 <= 53)||LA147_1==56||(LA147_1 >= 61 && LA147_1 <= 62)||LA147_1==64||(LA147_1 >= 68 && LA147_1 <= 69)||LA147_1==73||(LA147_1 >= 75 && LA147_1 <= 77)||(LA147_1 >= 79 && LA147_1 <= 81)||(LA147_1 >= 83 && LA147_1 <= 85)||(LA147_1 >= 88 && LA147_1 <= 91)||(LA147_1 >= 94 && LA147_1 <= 96)||LA147_1==99) ) {
+                if ( (LA147_1==EOF||LA147_1==ANNOTATION||LA147_1==STRING_EXT||(LA147_1 >= TEXT && LA147_1 <= T_ARRAY)||(LA147_1 >= T_OPTIONAL && LA147_1 <= T_READONLY)||LA147_1==21||(LA147_1 >= 23 && LA147_1 <= 27)||LA147_1==30||LA147_1==34||LA147_1==36||LA147_1==38||(LA147_1 >= 41 && LA147_1 <= 47)||LA147_1==49||(LA147_1 >= 51 && LA147_1 <= 53)||LA147_1==56||(LA147_1 >= 61 && LA147_1 <= 62)||LA147_1==64||(LA147_1 >= 68 && LA147_1 <= 69)||LA147_1==73||(LA147_1 >= 75 && LA147_1 <= 77)||(LA147_1 >= 79 && LA147_1 <= 81)||(LA147_1 >= 83 && LA147_1 <= 85)||(LA147_1 >= 88 && LA147_1 <= 91)||(LA147_1 >= 94 && LA147_1 <= 96)||LA147_1==99) ) {
                     alt147=1;
                 }
-                else if ( (LA147_1==T_ARRAY) ) {
+                else if ( (LA147_1==40) ) {
                     alt147=2;
                 }
                 else {
@@ -27939,9 +28309,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             }
             switch (alt147) {
                 case 1 :
-                    // Thingml.g:17103:0: c0= parse_org_sintef_thingml_SimpleParamRef
+                    // Thingml.g:17433:0: c0= parse_org_sintef_thingml_SimpleParamRef
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_SimpleParamRef_in_parse_org_sintef_thingml_ElmtProperty15723);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_SimpleParamRef_in_parse_org_sintef_thingml_ElmtProperty15871);
                     c0=parse_org_sintef_thingml_SimpleParamRef();
 
                     state._fsp--;
@@ -27952,9 +28322,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 2 :
-                    // Thingml.g:17104:2: c1= parse_org_sintef_thingml_ArrayParamRef
+                    // Thingml.g:17434:2: c1= parse_org_sintef_thingml_ArrayParamRef
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_ArrayParamRef_in_parse_org_sintef_thingml_ElmtProperty15731);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_ArrayParamRef_in_parse_org_sintef_thingml_ElmtProperty15879);
                     c1=parse_org_sintef_thingml_ArrayParamRef();
 
                     state._fsp--;
@@ -27965,9 +28335,9 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
                     }
                     break;
                 case 3 :
-                    // Thingml.g:17105:2: c2= parse_org_sintef_thingml_LengthArray
+                    // Thingml.g:17435:2: c2= parse_org_sintef_thingml_LengthArray
                     {
-                    pushFollow(FOLLOW_parse_org_sintef_thingml_LengthArray_in_parse_org_sintef_thingml_ElmtProperty15739);
+                    pushFollow(FOLLOW_parse_org_sintef_thingml_LengthArray_in_parse_org_sintef_thingml_ElmtProperty15887);
                     c2=parse_org_sintef_thingml_LengthArray();
 
                     state._fsp--;
@@ -27999,10 +28369,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.StateMachine c0 =null;
 
 
-        // Thingml.g:5526:2: (c0= parse_org_sintef_thingml_StateMachine )
-        // Thingml.g:5526:2: c0= parse_org_sintef_thingml_StateMachine
+        // Thingml.g:5720:2: (c0= parse_org_sintef_thingml_StateMachine )
+        // Thingml.g:5720:2: c0= parse_org_sintef_thingml_StateMachine
         {
-        pushFollow(FOLLOW_parse_org_sintef_thingml_StateMachine_in_synpred63_Thingml5640);
+        pushFollow(FOLLOW_parse_org_sintef_thingml_StateMachine_in_synpred63_Thingml5732);
         c0=parse_org_sintef_thingml_StateMachine();
 
         state._fsp--;
@@ -28019,18 +28389,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Action a6_0 =null;
 
 
-        // Thingml.g:10881:3: ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )
-        // Thingml.g:10881:3: (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
+        // Thingml.g:11143:3: ( (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) ) )
+        // Thingml.g:11143:3: (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
         {
-        // Thingml.g:10881:3: (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
-        // Thingml.g:10882:4: a5= 'else' (a6_0= parse_org_sintef_thingml_Action )
+        // Thingml.g:11143:3: (a5= 'else' (a6_0= parse_org_sintef_thingml_Action ) )
+        // Thingml.g:11144:4: a5= 'else' (a6_0= parse_org_sintef_thingml_Action )
         {
-        a5=(Token)match(input,52,FOLLOW_52_in_synpred114_Thingml10609); if (state.failed) return ;
+        a5=(Token)match(input,52,FOLLOW_52_in_synpred114_Thingml10729); if (state.failed) return ;
 
-        // Thingml.g:10907:4: (a6_0= parse_org_sintef_thingml_Action )
-        // Thingml.g:10908:5: a6_0= parse_org_sintef_thingml_Action
+        // Thingml.g:11169:4: (a6_0= parse_org_sintef_thingml_Action )
+        // Thingml.g:11170:5: a6_0= parse_org_sintef_thingml_Action
         {
-        pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_synpred114_Thingml10635);
+        pushFollow(FOLLOW_parse_org_sintef_thingml_Action_in_synpred114_Thingml10755);
         a6_0=parse_org_sintef_thingml_Action();
 
         state._fsp--;
@@ -28053,18 +28423,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:14559:3: ( () a0= 'or' rightArg= parseop_Expression_level_2 )
-        // Thingml.g:14559:3: () a0= 'or' rightArg= parseop_Expression_level_2
+        // Thingml.g:14889:3: ( () a0= 'or' rightArg= parseop_Expression_level_2 )
+        // Thingml.g:14889:3: () a0= 'or' rightArg= parseop_Expression_level_2
         {
-        // Thingml.g:14559:3: ()
-        // Thingml.g:14559:4: 
+        // Thingml.g:14889:3: ()
+        // Thingml.g:14889:4: 
         {
         }
 
 
-        a0=(Token)match(input,77,FOLLOW_77_in_synpred135_Thingml14218); if (state.failed) return ;
+        a0=(Token)match(input,77,FOLLOW_77_in_synpred135_Thingml14366); if (state.failed) return ;
 
-        pushFollow(FOLLOW_parseop_Expression_level_2_in_synpred135_Thingml14235);
+        pushFollow(FOLLOW_parseop_Expression_level_2_in_synpred135_Thingml14383);
         rightArg=parseop_Expression_level_2();
 
         state._fsp--;
@@ -28081,10 +28451,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:14558:40: ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ )
-        // Thingml.g:14558:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
+        // Thingml.g:14888:40: ( ( () a0= 'or' rightArg= parseop_Expression_level_2 )+ )
+        // Thingml.g:14888:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
         {
-        // Thingml.g:14558:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
+        // Thingml.g:14888:40: ( () a0= 'or' rightArg= parseop_Expression_level_2 )+
         int cnt194=0;
         loop194:
         do {
@@ -28098,17 +28468,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt194) {
         	case 1 :
-        	    // Thingml.g:14559:3: () a0= 'or' rightArg= parseop_Expression_level_2
+        	    // Thingml.g:14889:3: () a0= 'or' rightArg= parseop_Expression_level_2
         	    {
-        	    // Thingml.g:14559:3: ()
-        	    // Thingml.g:14559:4: 
+        	    // Thingml.g:14889:3: ()
+        	    // Thingml.g:14889:4: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,77,FOLLOW_77_in_synpred136_Thingml14218); if (state.failed) return ;
+        	    a0=(Token)match(input,77,FOLLOW_77_in_synpred136_Thingml14366); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_2_in_synpred136_Thingml14235);
+        	    pushFollow(FOLLOW_parseop_Expression_level_2_in_synpred136_Thingml14383);
         	    rightArg=parseop_Expression_level_2();
 
         	    state._fsp--;
@@ -28139,18 +28509,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:14635:2: ( () a0= 'and' rightArg= parseop_Expression_level_3 )
-        // Thingml.g:14635:2: () a0= 'and' rightArg= parseop_Expression_level_3
+        // Thingml.g:14965:2: ( () a0= 'and' rightArg= parseop_Expression_level_3 )
+        // Thingml.g:14965:2: () a0= 'and' rightArg= parseop_Expression_level_3
         {
-        // Thingml.g:14635:2: ()
-        // Thingml.g:14635:3: 
+        // Thingml.g:14965:2: ()
+        // Thingml.g:14965:3: 
         {
         }
 
 
-        a0=(Token)match(input,45,FOLLOW_45_in_synpred137_Thingml14297); if (state.failed) return ;
+        a0=(Token)match(input,45,FOLLOW_45_in_synpred137_Thingml14445); if (state.failed) return ;
 
-        pushFollow(FOLLOW_parseop_Expression_level_3_in_synpred137_Thingml14311);
+        pushFollow(FOLLOW_parseop_Expression_level_3_in_synpred137_Thingml14459);
         rightArg=parseop_Expression_level_3();
 
         state._fsp--;
@@ -28167,10 +28537,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:14634:38: ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ )
-        // Thingml.g:14634:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
+        // Thingml.g:14964:38: ( ( () a0= 'and' rightArg= parseop_Expression_level_3 )+ )
+        // Thingml.g:14964:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
         {
-        // Thingml.g:14634:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
+        // Thingml.g:14964:38: ( () a0= 'and' rightArg= parseop_Expression_level_3 )+
         int cnt195=0;
         loop195:
         do {
@@ -28184,17 +28554,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt195) {
         	case 1 :
-        	    // Thingml.g:14635:2: () a0= 'and' rightArg= parseop_Expression_level_3
+        	    // Thingml.g:14965:2: () a0= 'and' rightArg= parseop_Expression_level_3
         	    {
-        	    // Thingml.g:14635:2: ()
-        	    // Thingml.g:14635:3: 
+        	    // Thingml.g:14965:2: ()
+        	    // Thingml.g:14965:3: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,45,FOLLOW_45_in_synpred138_Thingml14297); if (state.failed) return ;
+        	    a0=(Token)match(input,45,FOLLOW_45_in_synpred138_Thingml14445); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_3_in_synpred138_Thingml14311);
+        	    pushFollow(FOLLOW_parseop_Expression_level_3_in_synpred138_Thingml14459);
         	    rightArg=parseop_Expression_level_3();
 
         	    state._fsp--;
@@ -28225,18 +28595,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:14711:2: ( () a0= '<' rightArg= parseop_Expression_level_4 )
-        // Thingml.g:14711:2: () a0= '<' rightArg= parseop_Expression_level_4
+        // Thingml.g:15041:2: ( () a0= '<' rightArg= parseop_Expression_level_4 )
+        // Thingml.g:15041:2: () a0= '<' rightArg= parseop_Expression_level_4
         {
-        // Thingml.g:14711:2: ()
-        // Thingml.g:14711:2: 
+        // Thingml.g:15041:2: ()
+        // Thingml.g:15041:2: 
         {
         }
 
 
-        a0=(Token)match(input,34,FOLLOW_34_in_synpred139_Thingml14365); if (state.failed) return ;
+        a0=(Token)match(input,34,FOLLOW_34_in_synpred139_Thingml14513); if (state.failed) return ;
 
-        pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred139_Thingml14376);
+        pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred139_Thingml14524);
         rightArg=parseop_Expression_level_4();
 
         state._fsp--;
@@ -28253,18 +28623,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:14778:2: ( () a0= '>' rightArg= parseop_Expression_level_4 )
-        // Thingml.g:14778:2: () a0= '>' rightArg= parseop_Expression_level_4
+        // Thingml.g:15108:2: ( () a0= '>' rightArg= parseop_Expression_level_4 )
+        // Thingml.g:15108:2: () a0= '>' rightArg= parseop_Expression_level_4
         {
-        // Thingml.g:14778:2: ()
-        // Thingml.g:14778:2: 
+        // Thingml.g:15108:2: ()
+        // Thingml.g:15108:2: 
         {
         }
 
 
-        a0=(Token)match(input,38,FOLLOW_38_in_synpred140_Thingml14394); if (state.failed) return ;
+        a0=(Token)match(input,38,FOLLOW_38_in_synpred140_Thingml14542); if (state.failed) return ;
 
-        pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred140_Thingml14405);
+        pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred140_Thingml14553);
         rightArg=parseop_Expression_level_4();
 
         state._fsp--;
@@ -28281,18 +28651,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:14845:2: ( () a0= '==' rightArg= parseop_Expression_level_4 )
-        // Thingml.g:14845:2: () a0= '==' rightArg= parseop_Expression_level_4
+        // Thingml.g:15175:2: ( () a0= '==' rightArg= parseop_Expression_level_4 )
+        // Thingml.g:15175:2: () a0= '==' rightArg= parseop_Expression_level_4
         {
-        // Thingml.g:14845:2: ()
-        // Thingml.g:14845:2: 
+        // Thingml.g:15175:2: ()
+        // Thingml.g:15175:2: 
         {
         }
 
 
-        a0=(Token)match(input,36,FOLLOW_36_in_synpred141_Thingml14423); if (state.failed) return ;
+        a0=(Token)match(input,36,FOLLOW_36_in_synpred141_Thingml14571); if (state.failed) return ;
 
-        pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred141_Thingml14434);
+        pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred141_Thingml14582);
         rightArg=parseop_Expression_level_4();
 
         state._fsp--;
@@ -28309,10 +28679,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:14710:38: ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ )
-        // Thingml.g:14710:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
+        // Thingml.g:15040:38: ( ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+ )
+        // Thingml.g:15040:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
         {
-        // Thingml.g:14710:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
+        // Thingml.g:15040:38: ( () a0= '<' rightArg= parseop_Expression_level_4 | () a0= '>' rightArg= parseop_Expression_level_4 | () a0= '==' rightArg= parseop_Expression_level_4 )+
         int cnt196=0;
         loop196:
         do {
@@ -28338,17 +28708,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt196) {
         	case 1 :
-        	    // Thingml.g:14711:0: () a0= '<' rightArg= parseop_Expression_level_4
+        	    // Thingml.g:15041:0: () a0= '<' rightArg= parseop_Expression_level_4
         	    {
-        	    // Thingml.g:14711:2: ()
-        	    // Thingml.g:14711:2: 
+        	    // Thingml.g:15041:2: ()
+        	    // Thingml.g:15041:2: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,34,FOLLOW_34_in_synpred142_Thingml14365); if (state.failed) return ;
+        	    a0=(Token)match(input,34,FOLLOW_34_in_synpred142_Thingml14513); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred142_Thingml14376);
+        	    pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred142_Thingml14524);
         	    rightArg=parseop_Expression_level_4();
 
         	    state._fsp--;
@@ -28357,17 +28727,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         	    }
         	    break;
         	case 2 :
-        	    // Thingml.g:14778:0: () a0= '>' rightArg= parseop_Expression_level_4
+        	    // Thingml.g:15108:0: () a0= '>' rightArg= parseop_Expression_level_4
         	    {
-        	    // Thingml.g:14778:2: ()
-        	    // Thingml.g:14778:2: 
+        	    // Thingml.g:15108:2: ()
+        	    // Thingml.g:15108:2: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,38,FOLLOW_38_in_synpred142_Thingml14394); if (state.failed) return ;
+        	    a0=(Token)match(input,38,FOLLOW_38_in_synpred142_Thingml14542); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred142_Thingml14405);
+        	    pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred142_Thingml14553);
         	    rightArg=parseop_Expression_level_4();
 
         	    state._fsp--;
@@ -28376,17 +28746,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         	    }
         	    break;
         	case 3 :
-        	    // Thingml.g:14845:0: () a0= '==' rightArg= parseop_Expression_level_4
+        	    // Thingml.g:15175:0: () a0= '==' rightArg= parseop_Expression_level_4
         	    {
-        	    // Thingml.g:14845:2: ()
-        	    // Thingml.g:14845:2: 
+        	    // Thingml.g:15175:2: ()
+        	    // Thingml.g:15175:2: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,36,FOLLOW_36_in_synpred142_Thingml14423); if (state.failed) return ;
+        	    a0=(Token)match(input,36,FOLLOW_36_in_synpred142_Thingml14571); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred142_Thingml14434);
+        	    pushFollow(FOLLOW_parseop_Expression_level_4_in_synpred142_Thingml14582);
         	    rightArg=parseop_Expression_level_4();
 
         	    state._fsp--;
@@ -28417,18 +28787,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:14921:2: ( () a0= '+' rightArg= parseop_Expression_level_5 )
-        // Thingml.g:14921:2: () a0= '+' rightArg= parseop_Expression_level_5
+        // Thingml.g:15251:2: ( () a0= '+' rightArg= parseop_Expression_level_5 )
+        // Thingml.g:15251:2: () a0= '+' rightArg= parseop_Expression_level_5
         {
-        // Thingml.g:14921:2: ()
-        // Thingml.g:14921:2: 
+        // Thingml.g:15251:2: ()
+        // Thingml.g:15251:2: 
         {
         }
 
 
-        a0=(Token)match(input,25,FOLLOW_25_in_synpred143_Thingml14485); if (state.failed) return ;
+        a0=(Token)match(input,25,FOLLOW_25_in_synpred143_Thingml14633); if (state.failed) return ;
 
-        pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred143_Thingml14496);
+        pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred143_Thingml14644);
         rightArg=parseop_Expression_level_5();
 
         state._fsp--;
@@ -28445,18 +28815,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:14988:2: ( () a0= '-' rightArg= parseop_Expression_level_5 )
-        // Thingml.g:14988:2: () a0= '-' rightArg= parseop_Expression_level_5
+        // Thingml.g:15318:2: ( () a0= '-' rightArg= parseop_Expression_level_5 )
+        // Thingml.g:15318:2: () a0= '-' rightArg= parseop_Expression_level_5
         {
-        // Thingml.g:14988:2: ()
-        // Thingml.g:14988:2: 
+        // Thingml.g:15318:2: ()
+        // Thingml.g:15318:2: 
         {
         }
 
 
-        a0=(Token)match(input,27,FOLLOW_27_in_synpred144_Thingml14514); if (state.failed) return ;
+        a0=(Token)match(input,27,FOLLOW_27_in_synpred144_Thingml14662); if (state.failed) return ;
 
-        pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred144_Thingml14525);
+        pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred144_Thingml14673);
         rightArg=parseop_Expression_level_5();
 
         state._fsp--;
@@ -28473,10 +28843,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:14920:38: ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ )
-        // Thingml.g:14920:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
+        // Thingml.g:15250:38: ( ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+ )
+        // Thingml.g:15250:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
         {
-        // Thingml.g:14920:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
+        // Thingml.g:15250:38: ( () a0= '+' rightArg= parseop_Expression_level_5 | () a0= '-' rightArg= parseop_Expression_level_5 )+
         int cnt197=0;
         loop197:
         do {
@@ -28493,17 +28863,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt197) {
         	case 1 :
-        	    // Thingml.g:14921:0: () a0= '+' rightArg= parseop_Expression_level_5
+        	    // Thingml.g:15251:0: () a0= '+' rightArg= parseop_Expression_level_5
         	    {
-        	    // Thingml.g:14921:2: ()
-        	    // Thingml.g:14921:2: 
+        	    // Thingml.g:15251:2: ()
+        	    // Thingml.g:15251:2: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,25,FOLLOW_25_in_synpred145_Thingml14485); if (state.failed) return ;
+        	    a0=(Token)match(input,25,FOLLOW_25_in_synpred145_Thingml14633); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred145_Thingml14496);
+        	    pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred145_Thingml14644);
         	    rightArg=parseop_Expression_level_5();
 
         	    state._fsp--;
@@ -28512,17 +28882,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         	    }
         	    break;
         	case 2 :
-        	    // Thingml.g:14988:0: () a0= '-' rightArg= parseop_Expression_level_5
+        	    // Thingml.g:15318:0: () a0= '-' rightArg= parseop_Expression_level_5
         	    {
-        	    // Thingml.g:14988:2: ()
-        	    // Thingml.g:14988:2: 
+        	    // Thingml.g:15318:2: ()
+        	    // Thingml.g:15318:2: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,27,FOLLOW_27_in_synpred145_Thingml14514); if (state.failed) return ;
+        	    a0=(Token)match(input,27,FOLLOW_27_in_synpred145_Thingml14662); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred145_Thingml14525);
+        	    pushFollow(FOLLOW_parseop_Expression_level_5_in_synpred145_Thingml14673);
         	    rightArg=parseop_Expression_level_5();
 
         	    state._fsp--;
@@ -28553,18 +28923,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:15064:2: ( () a0= '*' rightArg= parseop_Expression_level_6 )
-        // Thingml.g:15064:2: () a0= '*' rightArg= parseop_Expression_level_6
+        // Thingml.g:15394:2: ( () a0= '*' rightArg= parseop_Expression_level_6 )
+        // Thingml.g:15394:2: () a0= '*' rightArg= parseop_Expression_level_6
         {
-        // Thingml.g:15064:2: ()
-        // Thingml.g:15064:2: 
+        // Thingml.g:15394:2: ()
+        // Thingml.g:15394:2: 
         {
         }
 
 
-        a0=(Token)match(input,24,FOLLOW_24_in_synpred146_Thingml14576); if (state.failed) return ;
+        a0=(Token)match(input,24,FOLLOW_24_in_synpred146_Thingml14724); if (state.failed) return ;
 
-        pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred146_Thingml14587);
+        pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred146_Thingml14735);
         rightArg=parseop_Expression_level_6();
 
         state._fsp--;
@@ -28581,18 +28951,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:15131:2: ( () a0= '/' rightArg= parseop_Expression_level_6 )
-        // Thingml.g:15131:2: () a0= '/' rightArg= parseop_Expression_level_6
+        // Thingml.g:15461:2: ( () a0= '/' rightArg= parseop_Expression_level_6 )
+        // Thingml.g:15461:2: () a0= '/' rightArg= parseop_Expression_level_6
         {
-        // Thingml.g:15131:2: ()
-        // Thingml.g:15131:2: 
+        // Thingml.g:15461:2: ()
+        // Thingml.g:15461:2: 
         {
         }
 
 
-        a0=(Token)match(input,30,FOLLOW_30_in_synpred147_Thingml14605); if (state.failed) return ;
+        a0=(Token)match(input,30,FOLLOW_30_in_synpred147_Thingml14753); if (state.failed) return ;
 
-        pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred147_Thingml14616);
+        pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred147_Thingml14764);
         rightArg=parseop_Expression_level_6();
 
         state._fsp--;
@@ -28609,10 +28979,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:15063:38: ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ )
-        // Thingml.g:15063:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
+        // Thingml.g:15393:38: ( ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+ )
+        // Thingml.g:15393:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
         {
-        // Thingml.g:15063:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
+        // Thingml.g:15393:38: ( () a0= '*' rightArg= parseop_Expression_level_6 | () a0= '/' rightArg= parseop_Expression_level_6 )+
         int cnt198=0;
         loop198:
         do {
@@ -28629,17 +28999,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
 
             switch (alt198) {
         	case 1 :
-        	    // Thingml.g:15064:0: () a0= '*' rightArg= parseop_Expression_level_6
+        	    // Thingml.g:15394:0: () a0= '*' rightArg= parseop_Expression_level_6
         	    {
-        	    // Thingml.g:15064:2: ()
-        	    // Thingml.g:15064:2: 
+        	    // Thingml.g:15394:2: ()
+        	    // Thingml.g:15394:2: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,24,FOLLOW_24_in_synpred148_Thingml14576); if (state.failed) return ;
+        	    a0=(Token)match(input,24,FOLLOW_24_in_synpred148_Thingml14724); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred148_Thingml14587);
+        	    pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred148_Thingml14735);
         	    rightArg=parseop_Expression_level_6();
 
         	    state._fsp--;
@@ -28648,17 +29018,17 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         	    }
         	    break;
         	case 2 :
-        	    // Thingml.g:15131:0: () a0= '/' rightArg= parseop_Expression_level_6
+        	    // Thingml.g:15461:0: () a0= '/' rightArg= parseop_Expression_level_6
         	    {
-        	    // Thingml.g:15131:2: ()
-        	    // Thingml.g:15131:2: 
+        	    // Thingml.g:15461:2: ()
+        	    // Thingml.g:15461:2: 
         	    {
         	    }
 
 
-        	    a0=(Token)match(input,30,FOLLOW_30_in_synpred148_Thingml14605); if (state.failed) return ;
+        	    a0=(Token)match(input,30,FOLLOW_30_in_synpred148_Thingml14753); if (state.failed) return ;
 
-        	    pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred148_Thingml14616);
+        	    pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred148_Thingml14764);
         	    rightArg=parseop_Expression_level_6();
 
         	    state._fsp--;
@@ -28689,15 +29059,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression rightArg =null;
 
 
-        // Thingml.g:15206:38: ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) )
-        // Thingml.g:15206:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
+        // Thingml.g:15536:38: ( (a0= '\\u0025' rightArg= parseop_Expression_level_6 ) )
+        // Thingml.g:15536:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
         {
-        // Thingml.g:15206:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
-        // Thingml.g:15207:4: a0= '\\u0025' rightArg= parseop_Expression_level_6
+        // Thingml.g:15536:38: (a0= '\\u0025' rightArg= parseop_Expression_level_6 )
+        // Thingml.g:15537:4: a0= '\\u0025' rightArg= parseop_Expression_level_6
         {
-        a0=(Token)match(input,41,FOLLOW_41_in_synpred149_Thingml14662); if (state.failed) return ;
+        a0=(Token)match(input,41,FOLLOW_41_in_synpred149_Thingml14810); if (state.failed) return ;
 
-        pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred149_Thingml14673);
+        pushFollow(FOLLOW_parseop_Expression_level_6_in_synpred149_Thingml14821);
         rightArg=parseop_Expression_level_6();
 
         state._fsp--;
@@ -28718,15 +29088,15 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression a1_0 =null;
 
 
-        // Thingml.g:15378:4: (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' )
-        // Thingml.g:15378:4: a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']'
+        // Thingml.g:15708:4: (a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']' )
+        // Thingml.g:15708:4: a0= '[' (a1_0= parse_org_sintef_thingml_Expression ) a2= ']'
         {
-        a0=(Token)match(input,40,FOLLOW_40_in_synpred152_Thingml14778); if (state.failed) return ;
+        a0=(Token)match(input,T_ARRAY,FOLLOW_T_ARRAY_in_synpred152_Thingml14926); if (state.failed) return ;
 
-        // Thingml.g:15403:6: (a1_0= parse_org_sintef_thingml_Expression )
-        // Thingml.g:15404:6: a1_0= parse_org_sintef_thingml_Expression
+        // Thingml.g:15733:6: (a1_0= parse_org_sintef_thingml_Expression )
+        // Thingml.g:15734:6: a1_0= parse_org_sintef_thingml_Expression
         {
-        pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_synpred152_Thingml14791);
+        pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_synpred152_Thingml14939);
         a1_0=parse_org_sintef_thingml_Expression();
 
         state._fsp--;
@@ -28735,7 +29105,7 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         }
 
 
-        a2=(Token)match(input,42,FOLLOW_42_in_synpred152_Thingml14803); if (state.failed) return ;
+        a2=(Token)match(input,42,FOLLOW_42_in_synpred152_Thingml14951); if (state.failed) return ;
 
         }
 
@@ -28748,18 +29118,18 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.Expression a2_0 =null;
 
 
-        // Thingml.g:16855:4: ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )
-        // Thingml.g:16855:4: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
+        // Thingml.g:17185:4: ( (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) ) )
+        // Thingml.g:17185:4: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
         {
-        // Thingml.g:16855:4: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
-        // Thingml.g:16856:4: a1= '&' (a2_0= parse_org_sintef_thingml_Expression )
+        // Thingml.g:17185:4: (a1= '&' (a2_0= parse_org_sintef_thingml_Expression ) )
+        // Thingml.g:17186:4: a1= '&' (a2_0= parse_org_sintef_thingml_Expression )
         {
-        a1=(Token)match(input,21,FOLLOW_21_in_synpred164_Thingml15391); if (state.failed) return ;
+        a1=(Token)match(input,21,FOLLOW_21_in_synpred164_Thingml15539); if (state.failed) return ;
 
-        // Thingml.g:16881:6: (a2_0= parse_org_sintef_thingml_Expression )
-        // Thingml.g:16882:6: a2_0= parse_org_sintef_thingml_Expression
+        // Thingml.g:17211:6: (a2_0= parse_org_sintef_thingml_Expression )
+        // Thingml.g:17212:6: a2_0= parse_org_sintef_thingml_Expression
         {
-        pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_synpred164_Thingml15404);
+        pushFollow(FOLLOW_parse_org_sintef_thingml_Expression_in_synpred164_Thingml15552);
         a2_0=parse_org_sintef_thingml_Expression();
 
         state._fsp--;
@@ -28781,10 +29151,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.SimpleSource c0 =null;
 
 
-        // Thingml.g:17095:4: (c0= parse_org_sintef_thingml_SimpleSource )
-        // Thingml.g:17095:4: c0= parse_org_sintef_thingml_SimpleSource
+        // Thingml.g:17425:4: (c0= parse_org_sintef_thingml_SimpleSource )
+        // Thingml.g:17425:4: c0= parse_org_sintef_thingml_SimpleSource
         {
-        pushFollow(FOLLOW_parse_org_sintef_thingml_SimpleSource_in_synpred180_Thingml15688);
+        pushFollow(FOLLOW_parse_org_sintef_thingml_SimpleSource_in_synpred180_Thingml15836);
         c0=parse_org_sintef_thingml_SimpleSource();
 
         state._fsp--;
@@ -28800,10 +29170,10 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
         org.sintef.thingml.JoinSources c1 =null;
 
 
-        // Thingml.g:17096:2: (c1= parse_org_sintef_thingml_JoinSources )
-        // Thingml.g:17096:2: c1= parse_org_sintef_thingml_JoinSources
+        // Thingml.g:17426:2: (c1= parse_org_sintef_thingml_JoinSources )
+        // Thingml.g:17426:2: c1= parse_org_sintef_thingml_JoinSources
         {
-        pushFollow(FOLLOW_parse_org_sintef_thingml_JoinSources_in_synpred181_Thingml15696);
+        pushFollow(FOLLOW_parse_org_sintef_thingml_JoinSources_in_synpred181_Thingml15844);
         c1=parse_org_sintef_thingml_JoinSources();
 
         state._fsp--;
@@ -29139,536 +29509,536 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
     public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Function904 = new BitSet(new long[]{0x0108000080021410L,0x0000000180208001L});
     public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_Function954 = new BitSet(new long[]{0x0000000000001000L});
     public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Function980 = new BitSet(new long[]{0x0108010000023400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_Function1034 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Function1072 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_Function1115 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_Function1192 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Function1302 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_92_in_parse_org_sintef_thingml_Thing1335 = new BitSet(new long[]{0x0000000000005000L});
-    public static final BitSet FOLLOW_T_ASPECT_in_parse_org_sintef_thingml_Thing1364 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Thing1414 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000004L});
-    public static final BitSet FOLLOW_66_in_parse_org_sintef_thingml_Thing1444 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Thing1470 = new BitSet(new long[]{0x0000000004000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_Thing1516 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Thing1550 = new BitSet(new long[]{0x0000000004000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Thing1646 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_Thing1687 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Message_in_parse_org_sintef_thingml_Thing1716 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Function_in_parse_org_sintef_thingml_Thing1758 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_Thing1800 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PropertyAssign_in_parse_org_sintef_thingml_Thing1842 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Port_in_parse_org_sintef_thingml_Thing1884 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_StateMachine_in_parse_org_sintef_thingml_Thing1926 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Stream_in_parse_org_sintef_thingml_Thing1968 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Operator_in_parse_org_sintef_thingml_Thing2010 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
-    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_Thing2051 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_T_OPTIONAL_in_parse_org_sintef_thingml_RequiredPort2095 = new BitSet(new long[]{0x0000000000000000L,0x0000000000100000L});
-    public static final BitSet FOLLOW_84_in_parse_org_sintef_thingml_RequiredPort2141 = new BitSet(new long[]{0x0000000000000000L,0x0000000000004000L});
-    public static final BitSet FOLLOW_78_in_parse_org_sintef_thingml_RequiredPort2155 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2173 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_RequiredPort2209 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_RequiredPort2250 = new BitSet(new long[]{0x0000000000000000L,0x0000000800840000L});
-    public static final BitSet FOLLOW_82_in_parse_org_sintef_thingml_RequiredPort2273 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2299 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_RequiredPort2345 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2379 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
-    public static final BitSet FOLLOW_87_in_parse_org_sintef_thingml_RequiredPort2455 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2481 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_RequiredPort2527 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2561 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
-    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_RequiredPort2642 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_81_in_parse_org_sintef_thingml_ProvidedPort2671 = new BitSet(new long[]{0x0000000000000000L,0x0000000000004000L});
-    public static final BitSet FOLLOW_78_in_parse_org_sintef_thingml_ProvidedPort2685 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort2703 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_ProvidedPort2739 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_ProvidedPort2780 = new BitSet(new long[]{0x0000000000000000L,0x0000000800840000L});
-    public static final BitSet FOLLOW_82_in_parse_org_sintef_thingml_ProvidedPort2803 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort2829 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_ProvidedPort2875 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort2909 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
-    public static final BitSet FOLLOW_87_in_parse_org_sintef_thingml_ProvidedPort2985 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort3011 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_ProvidedPort3057 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort3091 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
-    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_ProvidedPort3172 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_T_READONLY_in_parse_org_sintef_thingml_Property3216 = new BitSet(new long[]{0x0000000000000000L,0x0000000000010000L});
-    public static final BitSet FOLLOW_80_in_parse_org_sintef_thingml_Property3262 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Property3280 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_Property3301 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Property3319 = new BitSet(new long[]{0x0000010800002012L});
-    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_Property3355 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Property3385 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_Property3418 = new BitSet(new long[]{0x0000000800000012L});
-    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_Property3475 = new BitSet(new long[]{0x0000000800000012L});
-    public static final BitSet FOLLOW_35_in_parse_org_sintef_thingml_Property3549 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Property3575 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Property3631 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Parameter3691 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_Parameter3712 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Parameter3730 = new BitSet(new long[]{0x0000010000002002L});
-    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_Parameter3766 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Parameter3796 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_Parameter3829 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_Parameter3886 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_50_in_parse_org_sintef_thingml_PrimitiveType3966 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_PrimitiveType3984 = new BitSet(new long[]{0x0000000200000010L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_PrimitiveType4020 = new BitSet(new long[]{0x0000000200000010L});
-    public static final BitSet FOLLOW_33_in_parse_org_sintef_thingml_PrimitiveType4061 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_55_in_parse_org_sintef_thingml_Enumeration4090 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Enumeration4108 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Enumeration4144 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_Enumeration4185 = new BitSet(new long[]{0x0000000000001000L,0x0000000800000000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_EnumerationLiteral_in_parse_org_sintef_thingml_Enumeration4214 = new BitSet(new long[]{0x0000000000001000L,0x0000000800000000L});
-    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_Enumeration4255 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumerationLiteral4288 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_EnumerationLiteral4324 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_ANNOTATION_in_parse_org_sintef_thingml_PlatformAnnotation4384 = new BitSet(new long[]{0x0000000000000800L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_parse_org_sintef_thingml_PlatformAnnotation4409 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_90_in_parse_org_sintef_thingml_StateMachine4445 = new BitSet(new long[]{0x0000000000001000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StateMachine4474 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_67_in_parse_org_sintef_thingml_StateMachine4520 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StateMachine4538 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000040L});
-    public static final BitSet FOLLOW_70_in_parse_org_sintef_thingml_StateMachine4568 = new BitSet(new long[]{0x0000000000008000L});
-    public static final BitSet FOLLOW_T_HISTORY_in_parse_org_sintef_thingml_StateMachine4594 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_StateMachine4655 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_StateMachine4696 = new BitSet(new long[]{0x0000800000020000L,0x0000000806090820L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_StateMachine4725 = new BitSet(new long[]{0x0000800000020000L,0x0000000806090820L});
-    public static final BitSet FOLLOW_75_in_parse_org_sintef_thingml_StateMachine4775 = new BitSet(new long[]{0x0040000000000000L});
-    public static final BitSet FOLLOW_54_in_parse_org_sintef_thingml_StateMachine4795 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_StateMachine4821 = new BitSet(new long[]{0x0000800000000000L,0x0000000806080820L});
-    public static final BitSet FOLLOW_75_in_parse_org_sintef_thingml_StateMachine4871 = new BitSet(new long[]{0x0400000000000000L});
-    public static final BitSet FOLLOW_58_in_parse_org_sintef_thingml_StateMachine4891 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_StateMachine4917 = new BitSet(new long[]{0x0000800000000000L,0x0000000806080020L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_State_in_parse_org_sintef_thingml_StateMachine4980 = new BitSet(new long[]{0x0000800000000000L,0x0000000806080020L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_InternalTransition_in_parse_org_sintef_thingml_StateMachine5040 = new BitSet(new long[]{0x0000800000000000L,0x0000000806080020L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ParallelRegion_in_parse_org_sintef_thingml_StateMachine5096 = new BitSet(new long[]{0x0000000000000000L,0x0000000800080000L});
-    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_StateMachine5137 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_89_in_parse_org_sintef_thingml_State5166 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_State5184 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_State5220 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_State5261 = new BitSet(new long[]{0x0000000000020000L,0x0000000840010820L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_State5290 = new BitSet(new long[]{0x0000000000020000L,0x0000000840010820L});
-    public static final BitSet FOLLOW_75_in_parse_org_sintef_thingml_State5340 = new BitSet(new long[]{0x0040000000000000L});
-    public static final BitSet FOLLOW_54_in_parse_org_sintef_thingml_State5360 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_State5386 = new BitSet(new long[]{0x0000000000000000L,0x0000000840000820L});
-    public static final BitSet FOLLOW_75_in_parse_org_sintef_thingml_State5436 = new BitSet(new long[]{0x0400000000000000L});
-    public static final BitSet FOLLOW_58_in_parse_org_sintef_thingml_State5456 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_State5482 = new BitSet(new long[]{0x0000000000000000L,0x0000000840000020L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Transition_in_parse_org_sintef_thingml_State5538 = new BitSet(new long[]{0x0000000000000000L,0x0000000840000020L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_InternalTransition_in_parse_org_sintef_thingml_State5580 = new BitSet(new long[]{0x0000000000000000L,0x0000000840000020L});
-    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_State5621 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_StateMachine_in_parse_org_sintef_thingml_State5640 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_CompositeState_in_parse_org_sintef_thingml_State5650 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_47_in_parse_org_sintef_thingml_CompositeState5675 = new BitSet(new long[]{0x0000000000000000L,0x0000000002000000L});
-    public static final BitSet FOLLOW_89_in_parse_org_sintef_thingml_CompositeState5689 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_CompositeState5707 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_67_in_parse_org_sintef_thingml_CompositeState5728 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_CompositeState5746 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000040L});
-    public static final BitSet FOLLOW_70_in_parse_org_sintef_thingml_CompositeState5776 = new BitSet(new long[]{0x0000000000008000L});
-    public static final BitSet FOLLOW_T_HISTORY_in_parse_org_sintef_thingml_CompositeState5802 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_CompositeState5863 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_CompositeState5904 = new BitSet(new long[]{0x0000800000020000L,0x0000000846090820L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_CompositeState5933 = new BitSet(new long[]{0x0000800000020000L,0x0000000846090820L});
-    public static final BitSet FOLLOW_75_in_parse_org_sintef_thingml_CompositeState5983 = new BitSet(new long[]{0x0040000000000000L});
-    public static final BitSet FOLLOW_54_in_parse_org_sintef_thingml_CompositeState6003 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_CompositeState6029 = new BitSet(new long[]{0x0000800000000000L,0x0000000846080820L});
-    public static final BitSet FOLLOW_75_in_parse_org_sintef_thingml_CompositeState6079 = new BitSet(new long[]{0x0400000000000000L});
-    public static final BitSet FOLLOW_58_in_parse_org_sintef_thingml_CompositeState6099 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_CompositeState6125 = new BitSet(new long[]{0x0000800000000000L,0x0000000846080020L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Transition_in_parse_org_sintef_thingml_CompositeState6181 = new BitSet(new long[]{0x0000800000000000L,0x0000000846080020L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_InternalTransition_in_parse_org_sintef_thingml_CompositeState6223 = new BitSet(new long[]{0x0000800000000000L,0x0000000846080020L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_State_in_parse_org_sintef_thingml_CompositeState6272 = new BitSet(new long[]{0x0000800000000000L,0x0000000846080020L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ParallelRegion_in_parse_org_sintef_thingml_CompositeState6346 = new BitSet(new long[]{0x0000000000000000L,0x0000000800080000L});
-    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_CompositeState6387 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_StateMachine_in_parse_org_sintef_thingml_CompositeState6406 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_83_in_parse_org_sintef_thingml_ParallelRegion6431 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ParallelRegion6449 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
-    public static final BitSet FOLLOW_67_in_parse_org_sintef_thingml_ParallelRegion6470 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ParallelRegion6488 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000040L});
-    public static final BitSet FOLLOW_70_in_parse_org_sintef_thingml_ParallelRegion6518 = new BitSet(new long[]{0x0000000000008000L});
-    public static final BitSet FOLLOW_T_HISTORY_in_parse_org_sintef_thingml_ParallelRegion6544 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_ParallelRegion6605 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_ParallelRegion6646 = new BitSet(new long[]{0x0000800000000000L,0x0000000806000000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_State_in_parse_org_sintef_thingml_ParallelRegion6675 = new BitSet(new long[]{0x0000800000000000L,0x0000000806000000L});
-    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_ParallelRegion6716 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_94_in_parse_org_sintef_thingml_Transition6745 = new BitSet(new long[]{0x0000000010001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Transition6774 = new BitSet(new long[]{0x0000000010000000L});
-    public static final BitSet FOLLOW_28_in_parse_org_sintef_thingml_Transition6820 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Transition6838 = new BitSet(new long[]{0x8200580000000012L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Transition6874 = new BitSet(new long[]{0x8200580000000012L});
-    public static final BitSet FOLLOW_57_in_parse_org_sintef_thingml_Transition6924 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Event_in_parse_org_sintef_thingml_Transition6950 = new BitSet(new long[]{0x8200580000000002L});
-    public static final BitSet FOLLOW_63_in_parse_org_sintef_thingml_Transition7000 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Transition7026 = new BitSet(new long[]{0x0000580000000002L});
-    public static final BitSet FOLLOW_43_in_parse_org_sintef_thingml_Transition7076 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Transition7102 = new BitSet(new long[]{0x0000500000000002L});
-    public static final BitSet FOLLOW_46_in_parse_org_sintef_thingml_Transition7152 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Transition7178 = new BitSet(new long[]{0x0000100000000002L});
-    public static final BitSet FOLLOW_44_in_parse_org_sintef_thingml_Transition7228 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Transition7254 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_69_in_parse_org_sintef_thingml_InternalTransition7310 = new BitSet(new long[]{0x8200080000001012L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_InternalTransition7339 = new BitSet(new long[]{0x8200080000000012L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_InternalTransition7400 = new BitSet(new long[]{0x8200080000000012L});
-    public static final BitSet FOLLOW_57_in_parse_org_sintef_thingml_InternalTransition7450 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Event_in_parse_org_sintef_thingml_InternalTransition7476 = new BitSet(new long[]{0x8200080000000002L});
-    public static final BitSet FOLLOW_63_in_parse_org_sintef_thingml_InternalTransition7526 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_InternalTransition7552 = new BitSet(new long[]{0x0000080000000002L});
-    public static final BitSet FOLLOW_43_in_parse_org_sintef_thingml_InternalTransition7602 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_InternalTransition7628 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ReceiveMessage7699 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_ReceiveMessage7732 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ReceiveMessage7769 = new BitSet(new long[]{0x0000008000000000L});
-    public static final BitSet FOLLOW_39_in_parse_org_sintef_thingml_ReceiveMessage7790 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ReceiveMessage7808 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_88_in_parse_org_sintef_thingml_PropertyAssign7844 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_PropertyAssign7862 = new BitSet(new long[]{0x0000010800000000L});
-    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_PropertyAssign7892 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PropertyAssign7918 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_PropertyAssign7946 = new BitSet(new long[]{0x0000010800000000L});
-    public static final BitSet FOLLOW_35_in_parse_org_sintef_thingml_PropertyAssign7979 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PropertyAssign7997 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_48_in_parse_org_sintef_thingml_Configuration8030 = new BitSet(new long[]{0x0000000000005000L});
-    public static final BitSet FOLLOW_T_ASPECT_in_parse_org_sintef_thingml_Configuration8059 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Configuration8109 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Configuration8145 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
-    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_Configuration8186 = new BitSet(new long[]{0x4002000000000000L,0x0000000801000010L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Instance_in_parse_org_sintef_thingml_Configuration8215 = new BitSet(new long[]{0x4002000000000000L,0x0000000801000010L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Connector_in_parse_org_sintef_thingml_Configuration8257 = new BitSet(new long[]{0x4002000000000000L,0x0000000801000010L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ConfigInclude_in_parse_org_sintef_thingml_Configuration8299 = new BitSet(new long[]{0x4002000000000000L,0x0000000801000010L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ConfigPropertyAssign_in_parse_org_sintef_thingml_Configuration8341 = new BitSet(new long[]{0x4002000000000000L,0x0000000801000010L});
-    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_Configuration8382 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_62_in_parse_org_sintef_thingml_ConfigInclude8411 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ConfigInclude8429 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_ConfigInclude8450 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ConfigInclude8468 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_ConfigInclude8504 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_68_in_parse_org_sintef_thingml_Instance8560 = new BitSet(new long[]{0x0000000080001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Instance8589 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_Instance8635 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Instance8653 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Instance8689 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_49_in_parse_org_sintef_thingml_Connector8745 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Connector8774 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_InstanceRef_in_parse_org_sintef_thingml_Connector8824 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_29_in_parse_org_sintef_thingml_Connector8842 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Connector8860 = new BitSet(new long[]{0x0000002000000000L});
-    public static final BitSet FOLLOW_37_in_parse_org_sintef_thingml_Connector8881 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_InstanceRef_in_parse_org_sintef_thingml_Connector8899 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_29_in_parse_org_sintef_thingml_Connector8917 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Connector8935 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Connector8971 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_88_in_parse_org_sintef_thingml_ConfigPropertyAssign9027 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_InstanceRef_in_parse_org_sintef_thingml_ConfigPropertyAssign9045 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_29_in_parse_org_sintef_thingml_ConfigPropertyAssign9063 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ConfigPropertyAssign9081 = new BitSet(new long[]{0x0000010800000000L});
-    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_ConfigPropertyAssign9111 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConfigPropertyAssign9137 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_ConfigPropertyAssign9165 = new BitSet(new long[]{0x0000010800000000L});
-    public static final BitSet FOLLOW_35_in_parse_org_sintef_thingml_ConfigPropertyAssign9198 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConfigPropertyAssign9216 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_InstanceRef9264 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_29_in_parse_org_sintef_thingml_InstanceRef9297 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_InstanceRef9334 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SendAction9374 = new BitSet(new long[]{0x0000000000080000L});
-    public static final BitSet FOLLOW_19_in_parse_org_sintef_thingml_SendAction9395 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SendAction9413 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_SendAction9434 = new BitSet(new long[]{0x0000000008D01C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_SendAction9463 = new BitSet(new long[]{0x0000000004800000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_SendAction9504 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_SendAction9538 = new BitSet(new long[]{0x0000000004800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_SendAction9612 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_VariableAssignment9645 = new BitSet(new long[]{0x0000010800000000L});
-    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_VariableAssignment9675 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_VariableAssignment9701 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_VariableAssignment9729 = new BitSet(new long[]{0x0000010800000000L});
-    public static final BitSet FOLLOW_35_in_parse_org_sintef_thingml_VariableAssignment9762 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_VariableAssignment9780 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_51_in_parse_org_sintef_thingml_ActionBlock9813 = new BitSet(new long[]{0x0128000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ActionBlock9842 = new BitSet(new long[]{0x0128000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_53_in_parse_org_sintef_thingml_ActionBlock9883 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_T_READONLY_in_parse_org_sintef_thingml_LocalVariable9927 = new BitSet(new long[]{0x0000000000000000L,0x0000000080000000L});
-    public static final BitSet FOLLOW_95_in_parse_org_sintef_thingml_LocalVariable9973 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_LocalVariable9991 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_LocalVariable10012 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_LocalVariable10030 = new BitSet(new long[]{0x0000010800002012L});
-    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_LocalVariable10066 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LocalVariable10096 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_LocalVariable10129 = new BitSet(new long[]{0x0000000800000012L});
-    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_LocalVariable10186 = new BitSet(new long[]{0x0000000800000012L});
-    public static final BitSet FOLLOW_35_in_parse_org_sintef_thingml_LocalVariable10260 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LocalVariable10286 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_LocalVariable10342 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_STRING_EXT_in_parse_org_sintef_thingml_ExternStatement10402 = new BitSet(new long[]{0x0000000000200002L});
-    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_ExternStatement10432 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExternStatement10458 = new BitSet(new long[]{0x0000000000200002L});
-    public static final BitSet FOLLOW_64_in_parse_org_sintef_thingml_ConditionalAction10514 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_ConditionalAction10528 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConditionalAction10546 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_ConditionalAction10564 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10582 = new BitSet(new long[]{0x0010000000000002L});
-    public static final BitSet FOLLOW_52_in_parse_org_sintef_thingml_ConditionalAction10609 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10635 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_96_in_parse_org_sintef_thingml_LoopAction10691 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_LoopAction10705 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LoopAction10723 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_LoopAction10741 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_LoopAction10759 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_79_in_parse_org_sintef_thingml_PrintAction10792 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PrintAction10810 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_56_in_parse_org_sintef_thingml_ErrorAction10843 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ErrorAction10861 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_85_in_parse_org_sintef_thingml_ReturnAction10894 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ReturnAction10912 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallStatement10949 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_FunctionCallStatement10970 = new BitSet(new long[]{0x0000000008D01C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement10999 = new BitSet(new long[]{0x0000000004800000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_FunctionCallStatement11040 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement11074 = new BitSet(new long[]{0x0000000004800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_FunctionCallStatement11148 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_76_in_parse_org_sintef_thingml_SglMsgParamOperator11177 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperator11195 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_SglMsgParamOperator11216 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_MessageParameter_in_parse_org_sintef_thingml_SglMsgParamOperator11234 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_SglMsgParamOperator11252 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_SglMsgParamOperator11266 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperator11284 = new BitSet(new long[]{0x0008010000002000L});
-    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_SglMsgParamOperator11320 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_SglMsgParamOperator11350 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_SglMsgParamOperator11383 = new BitSet(new long[]{0x0008000000000000L});
-    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_SglMsgParamOperator11440 = new BitSet(new long[]{0x0008000000000000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ActionBlock_in_parse_org_sintef_thingml_SglMsgParamOperator11509 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_MessageParameter11546 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_MessageParameter11567 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_MessageParameter11585 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11625 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11646 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11664 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11685 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamExpression11718 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_StreamExpression11739 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_StreamExpression11757 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput11794 = new BitSet(new long[]{0x0000000000080000L});
-    public static final BitSet FOLLOW_19_in_parse_org_sintef_thingml_StreamOutput11815 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput11833 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_StreamOutput11854 = new BitSet(new long[]{0x0000000000801000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput11883 = new BitSet(new long[]{0x0000000004800000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_StreamOutput11929 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput11963 = new BitSet(new long[]{0x0000000004800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_StreamOutput12044 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_59_in_parse_org_sintef_thingml_Filter12073 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_Filter12087 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_SglMsgParamOperatorCall_in_parse_org_sintef_thingml_Filter12105 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_Filter12123 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_72_in_parse_org_sintef_thingml_LengthWindow12152 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_LengthWindow12166 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_LengthWindow12184 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_LengthWindow12205 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_93_in_parse_org_sintef_thingml_TimeWindow12234 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_TimeWindow12248 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_TimeWindow12266 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_TimeWindow12287 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_TimeWindow12305 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_TimeWindow12326 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SimpleSource12370 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_SimpleSource12403 = new BitSet(new long[]{0x0000010000000000L});
-    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_SimpleSource12423 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_SimpleSource12449 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_SimpleSource12477 = new BitSet(new long[]{0x0000000100000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_SimpleSource12518 = new BitSet(new long[]{0x0000000100000002L});
-    public static final BitSet FOLLOW_32_in_parse_org_sintef_thingml_SimpleSource12557 = new BitSet(new long[]{0x0800000000000000L,0x0000000020000100L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ViewSource_in_parse_org_sintef_thingml_SimpleSource12583 = new BitSet(new long[]{0x0000000100000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_JoinSources12654 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_JoinSources12687 = new BitSet(new long[]{0x0000010000000000L});
-    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_JoinSources12720 = new BitSet(new long[]{0x0000010000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_JoinSources12738 = new BitSet(new long[]{0x0000000000200000L});
-    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_JoinSources12756 = new BitSet(new long[]{0x0000010000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_JoinSources12774 = new BitSet(new long[]{0x0000000010000000L});
-    public static final BitSet FOLLOW_28_in_parse_org_sintef_thingml_JoinSources12792 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_JoinSources12810 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_JoinSources12831 = new BitSet(new long[]{0x0000000008D01C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_JoinSources12860 = new BitSet(new long[]{0x0000000004800000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_JoinSources12901 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_JoinSources12935 = new BitSet(new long[]{0x0000000004800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_JoinSources13009 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_JoinSources13023 = new BitSet(new long[]{0x0000000100000002L});
-    public static final BitSet FOLLOW_32_in_parse_org_sintef_thingml_JoinSources13046 = new BitSet(new long[]{0x0800000000000000L,0x0000000020000100L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ViewSource_in_parse_org_sintef_thingml_JoinSources13072 = new BitSet(new long[]{0x0000000100000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_MergeSources13143 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_MergeSources13176 = new BitSet(new long[]{0x0000010000000000L});
-    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_MergeSources13209 = new BitSet(new long[]{0x0000010000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_MergeSources13227 = new BitSet(new long[]{0x0000000000000000L,0x0000000400000000L});
-    public static final BitSet FOLLOW_98_in_parse_org_sintef_thingml_MergeSources13254 = new BitSet(new long[]{0x0000010000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_MergeSources13280 = new BitSet(new long[]{0x0000000010000000L,0x0000000400000000L});
-    public static final BitSet FOLLOW_28_in_parse_org_sintef_thingml_MergeSources13321 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_MergeSources13339 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_MergeSources13360 = new BitSet(new long[]{0x0000000008D01C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_MergeSources13389 = new BitSet(new long[]{0x0000000004800000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_MergeSources13430 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_MergeSources13464 = new BitSet(new long[]{0x0000000004800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_MergeSources13538 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_MergeSources13552 = new BitSet(new long[]{0x0000000100000002L});
-    public static final BitSet FOLLOW_32_in_parse_org_sintef_thingml_MergeSources13575 = new BitSet(new long[]{0x0800000000000000L,0x0000000020000100L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ViewSource_in_parse_org_sintef_thingml_MergeSources13601 = new BitSet(new long[]{0x0000000100000002L});
-    public static final BitSet FOLLOW_91_in_parse_org_sintef_thingml_Stream13657 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Stream13675 = new BitSet(new long[]{0x0008000000000000L});
-    public static final BitSet FOLLOW_51_in_parse_org_sintef_thingml_Stream13696 = new BitSet(new long[]{0x1000000000000000L});
-    public static final BitSet FOLLOW_60_in_parse_org_sintef_thingml_Stream13710 = new BitSet(new long[]{0x0000010000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_Stream13728 = new BitSet(new long[]{0x0000080000000000L,0x0000000000400000L});
-    public static final BitSet FOLLOW_86_in_parse_org_sintef_thingml_Stream13755 = new BitSet(new long[]{0x0000080000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_StreamExpression_in_parse_org_sintef_thingml_Stream13796 = new BitSet(new long[]{0x0000080004000000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_Stream13851 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_StreamExpression_in_parse_org_sintef_thingml_Stream13893 = new BitSet(new long[]{0x0000080004000000L});
-    public static final BitSet FOLLOW_43_in_parse_org_sintef_thingml_Stream14010 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_StreamOutput_in_parse_org_sintef_thingml_Stream14028 = new BitSet(new long[]{0x0020000000000000L});
-    public static final BitSet FOLLOW_53_in_parse_org_sintef_thingml_Stream14046 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SimpleParamRef14079 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ArrayParamRef14119 = new BitSet(new long[]{0x0000000000002000L});
-    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_ArrayParamRef14140 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_71_in_parse_org_sintef_thingml_LengthArray14169 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_114198 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
-    public static final BitSet FOLLOW_77_in_parseop_Expression_level_114218 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_114235 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
-    public static final BitSet FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_214281 = new BitSet(new long[]{0x0000200000000002L});
-    public static final BitSet FOLLOW_45_in_parseop_Expression_level_214297 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_214311 = new BitSet(new long[]{0x0000200000000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314352 = new BitSet(new long[]{0x0000005400000002L});
-    public static final BitSet FOLLOW_34_in_parseop_Expression_level_314365 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314376 = new BitSet(new long[]{0x0000005400000002L});
-    public static final BitSet FOLLOW_38_in_parseop_Expression_level_314394 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314405 = new BitSet(new long[]{0x0000005400000002L});
-    public static final BitSet FOLLOW_36_in_parseop_Expression_level_314423 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314434 = new BitSet(new long[]{0x0000005400000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_414472 = new BitSet(new long[]{0x000000000A000002L});
-    public static final BitSet FOLLOW_25_in_parseop_Expression_level_414485 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_414496 = new BitSet(new long[]{0x000000000A000002L});
-    public static final BitSet FOLLOW_27_in_parseop_Expression_level_414514 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_414525 = new BitSet(new long[]{0x000000000A000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_514563 = new BitSet(new long[]{0x0000000041000002L});
-    public static final BitSet FOLLOW_24_in_parseop_Expression_level_514576 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_514587 = new BitSet(new long[]{0x0000000041000002L});
-    public static final BitSet FOLLOW_30_in_parseop_Expression_level_514605 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_514616 = new BitSet(new long[]{0x0000000041000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_7_in_parseop_Expression_level_614654 = new BitSet(new long[]{0x0000020000000002L});
-    public static final BitSet FOLLOW_41_in_parseop_Expression_level_614662 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_614673 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_27_in_parseop_Expression_level_714708 = new BitSet(new long[]{0x0000000000501C60L});
-    public static final BitSet FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_714719 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_74_in_parseop_Expression_level_714728 = new BitSet(new long[]{0x0000000000501C60L});
-    public static final BitSet FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_714739 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_714749 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_9_in_parseop_Expression_level_814771 = new BitSet(new long[]{0x0000010000000002L});
-    public static final BitSet FOLLOW_40_in_parseop_Expression_level_814778 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parseop_Expression_level_814791 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_parseop_Expression_level_814803 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_StreamParamReference_in_parseop_Expression_level_914840 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Reference_in_parseop_Expression_level_914848 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ExpressionGroup_in_parseop_Expression_level_914856 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PropertyReference_in_parseop_Expression_level_914864 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_IntegerLiteral_in_parseop_Expression_level_914872 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_StringLiteral_in_parseop_Expression_level_914880 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_BooleanLiteral_in_parseop_Expression_level_914888 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_EnumLiteralRef_in_parseop_Expression_level_914896 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_FunctionCallExpression_in_parseop_Expression_level_914904 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ExternExpression_in_parseop_Expression_level_914912 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_20_in_parse_org_sintef_thingml_StreamParamReference14934 = new BitSet(new long[]{0x0000000000000040L});
-    public static final BitSet FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_StreamParamReference14947 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Reference14977 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_29_in_parse_org_sintef_thingml_Reference14990 = new BitSet(new long[]{0x0000000000001000L,0x0000000000000080L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ElmtProperty_in_parse_org_sintef_thingml_Reference15003 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_ExpressionGroup15030 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExpressionGroup15043 = new BitSet(new long[]{0x0000000000800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_ExpressionGroup15055 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_PropertyReference15083 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_IntegerLiteral15113 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_LITERAL_in_parse_org_sintef_thingml_StringLiteral15143 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_BOOLEAN_LITERAL_in_parse_org_sintef_thingml_BooleanLiteral15173 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef15203 = new BitSet(new long[]{0x0000000080000000L});
-    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_EnumLiteralRef15216 = new BitSet(new long[]{0x0000000000001000L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef15229 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallExpression15259 = new BitSet(new long[]{0x0000000000400000L});
-    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_FunctionCallExpression15272 = new BitSet(new long[]{0x0000000008D01C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression15289 = new BitSet(new long[]{0x0000000004800000L});
-    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_FunctionCallExpression15305 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression15318 = new BitSet(new long[]{0x0000000004800000L});
-    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_FunctionCallExpression15346 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_STRING_EXT_in_parse_org_sintef_thingml_ExternExpression15374 = new BitSet(new long[]{0x0000000000200002L});
-    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_ExternExpression15391 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExternExpression15404 = new BitSet(new long[]{0x0000000000200002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Thing_in_parse_org_sintef_thingml_Type15435 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PrimitiveType_in_parse_org_sintef_thingml_Type15443 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Enumeration_in_parse_org_sintef_thingml_Type15451 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parseop_Expression_level_1_in_parse_org_sintef_thingml_Expression15470 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_SendAction_in_parse_org_sintef_thingml_Action15489 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_VariableAssignment_in_parse_org_sintef_thingml_Action15497 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ActionBlock_in_parse_org_sintef_thingml_Action15505 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_LocalVariable_in_parse_org_sintef_thingml_Action15513 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ExternStatement_in_parse_org_sintef_thingml_Action15521 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ConditionalAction_in_parse_org_sintef_thingml_Action15529 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_LoopAction_in_parse_org_sintef_thingml_Action15537 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_PrintAction_in_parse_org_sintef_thingml_Action15545 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ErrorAction_in_parse_org_sintef_thingml_Action15553 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ReturnAction_in_parse_org_sintef_thingml_Action15561 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_FunctionCallStatement_in_parse_org_sintef_thingml_Action15569 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_RequiredPort_in_parse_org_sintef_thingml_Port15588 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ProvidedPort_in_parse_org_sintef_thingml_Port15596 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_SglMsgParamOperator_in_parse_org_sintef_thingml_Operator15615 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_Event15634 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Filter_in_parse_org_sintef_thingml_ViewSource15653 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_LengthWindow_in_parse_org_sintef_thingml_ViewSource15661 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_TimeWindow_in_parse_org_sintef_thingml_ViewSource15669 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_SimpleSource_in_parse_org_sintef_thingml_Source15688 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_JoinSources_in_parse_org_sintef_thingml_Source15696 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_MergeSources_in_parse_org_sintef_thingml_Source15704 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_SimpleParamRef_in_parse_org_sintef_thingml_ElmtProperty15723 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_ArrayParamRef_in_parse_org_sintef_thingml_ElmtProperty15731 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_LengthArray_in_parse_org_sintef_thingml_ElmtProperty15739 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_StateMachine_in_synpred63_Thingml5640 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_52_in_synpred114_Thingml10609 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_synpred114_Thingml10635 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_77_in_synpred135_Thingml14218 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_2_in_synpred135_Thingml14235 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_77_in_synpred136_Thingml14218 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_2_in_synpred136_Thingml14235 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
-    public static final BitSet FOLLOW_45_in_synpred137_Thingml14297 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_3_in_synpred137_Thingml14311 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_45_in_synpred138_Thingml14297 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_3_in_synpred138_Thingml14311 = new BitSet(new long[]{0x0000200000000002L});
-    public static final BitSet FOLLOW_34_in_synpred139_Thingml14365 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred139_Thingml14376 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_38_in_synpred140_Thingml14394 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred140_Thingml14405 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_36_in_synpred141_Thingml14423 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred141_Thingml14434 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_34_in_synpred142_Thingml14365 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred142_Thingml14376 = new BitSet(new long[]{0x0000005400000002L});
-    public static final BitSet FOLLOW_38_in_synpred142_Thingml14394 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred142_Thingml14405 = new BitSet(new long[]{0x0000005400000002L});
-    public static final BitSet FOLLOW_36_in_synpred142_Thingml14423 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred142_Thingml14434 = new BitSet(new long[]{0x0000005400000002L});
-    public static final BitSet FOLLOW_25_in_synpred143_Thingml14485 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred143_Thingml14496 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_27_in_synpred144_Thingml14514 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred144_Thingml14525 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_25_in_synpred145_Thingml14485 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred145_Thingml14496 = new BitSet(new long[]{0x000000000A000002L});
-    public static final BitSet FOLLOW_27_in_synpred145_Thingml14514 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred145_Thingml14525 = new BitSet(new long[]{0x000000000A000002L});
-    public static final BitSet FOLLOW_24_in_synpred146_Thingml14576 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred146_Thingml14587 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_30_in_synpred147_Thingml14605 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred147_Thingml14616 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_24_in_synpred148_Thingml14576 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred148_Thingml14587 = new BitSet(new long[]{0x0000000041000002L});
-    public static final BitSet FOLLOW_30_in_synpred148_Thingml14605 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred148_Thingml14616 = new BitSet(new long[]{0x0000000041000002L});
-    public static final BitSet FOLLOW_41_in_synpred149_Thingml14662 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred149_Thingml14673 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_40_in_synpred152_Thingml14778 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_synpred152_Thingml14791 = new BitSet(new long[]{0x0000040000000000L});
-    public static final BitSet FOLLOW_42_in_synpred152_Thingml14803 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_21_in_synpred164_Thingml15391 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_synpred164_Thingml15404 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_SimpleSource_in_synpred180_Thingml15688 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_parse_org_sintef_thingml_JoinSources_in_synpred181_Thingml15696 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_Function1043 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Function1103 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_Function1146 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_Function1233 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Function1338 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_92_in_parse_org_sintef_thingml_Thing1371 = new BitSet(new long[]{0x0000000000005000L});
+    public static final BitSet FOLLOW_T_ASPECT_in_parse_org_sintef_thingml_Thing1400 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Thing1450 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000004L});
+    public static final BitSet FOLLOW_66_in_parse_org_sintef_thingml_Thing1480 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Thing1506 = new BitSet(new long[]{0x0000000004000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_Thing1552 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Thing1586 = new BitSet(new long[]{0x0000000004000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Thing1682 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_Thing1723 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Message_in_parse_org_sintef_thingml_Thing1752 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Function_in_parse_org_sintef_thingml_Thing1794 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_Thing1836 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PropertyAssign_in_parse_org_sintef_thingml_Thing1878 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Port_in_parse_org_sintef_thingml_Thing1920 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_StateMachine_in_parse_org_sintef_thingml_Thing1962 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Stream_in_parse_org_sintef_thingml_Thing2004 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Operator_in_parse_org_sintef_thingml_Thing2046 = new BitSet(new long[]{0x2000000000030000L,0x000000080D131200L});
+    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_Thing2087 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_T_OPTIONAL_in_parse_org_sintef_thingml_RequiredPort2131 = new BitSet(new long[]{0x0000000000000000L,0x0000000000100000L});
+    public static final BitSet FOLLOW_84_in_parse_org_sintef_thingml_RequiredPort2177 = new BitSet(new long[]{0x0000000000000000L,0x0000000000004000L});
+    public static final BitSet FOLLOW_78_in_parse_org_sintef_thingml_RequiredPort2191 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2209 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_RequiredPort2245 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_RequiredPort2286 = new BitSet(new long[]{0x0000000000000000L,0x0000000800840000L});
+    public static final BitSet FOLLOW_82_in_parse_org_sintef_thingml_RequiredPort2309 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2335 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_RequiredPort2381 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2415 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
+    public static final BitSet FOLLOW_87_in_parse_org_sintef_thingml_RequiredPort2491 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2517 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_RequiredPort2563 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_RequiredPort2597 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
+    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_RequiredPort2678 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_81_in_parse_org_sintef_thingml_ProvidedPort2707 = new BitSet(new long[]{0x0000000000000000L,0x0000000000004000L});
+    public static final BitSet FOLLOW_78_in_parse_org_sintef_thingml_ProvidedPort2721 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort2739 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_ProvidedPort2775 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_ProvidedPort2816 = new BitSet(new long[]{0x0000000000000000L,0x0000000800840000L});
+    public static final BitSet FOLLOW_82_in_parse_org_sintef_thingml_ProvidedPort2839 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort2865 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_ProvidedPort2911 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort2945 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
+    public static final BitSet FOLLOW_87_in_parse_org_sintef_thingml_ProvidedPort3021 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort3047 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_ProvidedPort3093 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ProvidedPort3127 = new BitSet(new long[]{0x0000000004000000L,0x0000000800840000L});
+    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_ProvidedPort3208 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_T_READONLY_in_parse_org_sintef_thingml_Property3252 = new BitSet(new long[]{0x0000000000000000L,0x0000000000010000L});
+    public static final BitSet FOLLOW_80_in_parse_org_sintef_thingml_Property3298 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Property3316 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_Property3337 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Property3355 = new BitSet(new long[]{0x0000010800002012L});
+    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_Property3398 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Property3444 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_Property3477 = new BitSet(new long[]{0x0000000800000012L});
+    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_Property3542 = new BitSet(new long[]{0x0000000800000012L});
+    public static final BitSet FOLLOW_35_in_parse_org_sintef_thingml_Property3613 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Property3639 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Property3695 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Parameter3755 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_Parameter3776 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Parameter3794 = new BitSet(new long[]{0x0000010000002002L});
+    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_Parameter3837 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Parameter3883 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_Parameter3916 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_Parameter3981 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_50_in_parse_org_sintef_thingml_PrimitiveType4058 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_PrimitiveType4076 = new BitSet(new long[]{0x0000000200000010L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_PrimitiveType4112 = new BitSet(new long[]{0x0000000200000010L});
+    public static final BitSet FOLLOW_33_in_parse_org_sintef_thingml_PrimitiveType4153 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_55_in_parse_org_sintef_thingml_Enumeration4182 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Enumeration4200 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Enumeration4236 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_Enumeration4277 = new BitSet(new long[]{0x0000000000001000L,0x0000000800000000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_EnumerationLiteral_in_parse_org_sintef_thingml_Enumeration4306 = new BitSet(new long[]{0x0000000000001000L,0x0000000800000000L});
+    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_Enumeration4347 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumerationLiteral4380 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_EnumerationLiteral4416 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_ANNOTATION_in_parse_org_sintef_thingml_PlatformAnnotation4476 = new BitSet(new long[]{0x0000000000000800L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_parse_org_sintef_thingml_PlatformAnnotation4501 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_90_in_parse_org_sintef_thingml_StateMachine4537 = new BitSet(new long[]{0x0000000000001000L,0x0000000000000008L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StateMachine4566 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
+    public static final BitSet FOLLOW_67_in_parse_org_sintef_thingml_StateMachine4612 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StateMachine4630 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000040L});
+    public static final BitSet FOLLOW_70_in_parse_org_sintef_thingml_StateMachine4660 = new BitSet(new long[]{0x0000000000008000L});
+    public static final BitSet FOLLOW_T_HISTORY_in_parse_org_sintef_thingml_StateMachine4686 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_StateMachine4747 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_StateMachine4788 = new BitSet(new long[]{0x0000800000020000L,0x0000000806090820L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_StateMachine4817 = new BitSet(new long[]{0x0000800000020000L,0x0000000806090820L});
+    public static final BitSet FOLLOW_75_in_parse_org_sintef_thingml_StateMachine4867 = new BitSet(new long[]{0x0040000000000000L});
+    public static final BitSet FOLLOW_54_in_parse_org_sintef_thingml_StateMachine4887 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_StateMachine4913 = new BitSet(new long[]{0x0000800000000000L,0x0000000806080820L});
+    public static final BitSet FOLLOW_75_in_parse_org_sintef_thingml_StateMachine4963 = new BitSet(new long[]{0x0400000000000000L});
+    public static final BitSet FOLLOW_58_in_parse_org_sintef_thingml_StateMachine4983 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_StateMachine5009 = new BitSet(new long[]{0x0000800000000000L,0x0000000806080020L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_State_in_parse_org_sintef_thingml_StateMachine5072 = new BitSet(new long[]{0x0000800000000000L,0x0000000806080020L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_InternalTransition_in_parse_org_sintef_thingml_StateMachine5132 = new BitSet(new long[]{0x0000800000000000L,0x0000000806080020L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ParallelRegion_in_parse_org_sintef_thingml_StateMachine5188 = new BitSet(new long[]{0x0000000000000000L,0x0000000800080000L});
+    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_StateMachine5229 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_89_in_parse_org_sintef_thingml_State5258 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_State5276 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_State5312 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_State5353 = new BitSet(new long[]{0x0000000000020000L,0x0000000840010820L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_State5382 = new BitSet(new long[]{0x0000000000020000L,0x0000000840010820L});
+    public static final BitSet FOLLOW_75_in_parse_org_sintef_thingml_State5432 = new BitSet(new long[]{0x0040000000000000L});
+    public static final BitSet FOLLOW_54_in_parse_org_sintef_thingml_State5452 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_State5478 = new BitSet(new long[]{0x0000000000000000L,0x0000000840000820L});
+    public static final BitSet FOLLOW_75_in_parse_org_sintef_thingml_State5528 = new BitSet(new long[]{0x0400000000000000L});
+    public static final BitSet FOLLOW_58_in_parse_org_sintef_thingml_State5548 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_State5574 = new BitSet(new long[]{0x0000000000000000L,0x0000000840000020L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Transition_in_parse_org_sintef_thingml_State5630 = new BitSet(new long[]{0x0000000000000000L,0x0000000840000020L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_InternalTransition_in_parse_org_sintef_thingml_State5672 = new BitSet(new long[]{0x0000000000000000L,0x0000000840000020L});
+    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_State5713 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_StateMachine_in_parse_org_sintef_thingml_State5732 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_CompositeState_in_parse_org_sintef_thingml_State5742 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_47_in_parse_org_sintef_thingml_CompositeState5767 = new BitSet(new long[]{0x0000000000000000L,0x0000000002000000L});
+    public static final BitSet FOLLOW_89_in_parse_org_sintef_thingml_CompositeState5781 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_CompositeState5799 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
+    public static final BitSet FOLLOW_67_in_parse_org_sintef_thingml_CompositeState5820 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_CompositeState5838 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000040L});
+    public static final BitSet FOLLOW_70_in_parse_org_sintef_thingml_CompositeState5868 = new BitSet(new long[]{0x0000000000008000L});
+    public static final BitSet FOLLOW_T_HISTORY_in_parse_org_sintef_thingml_CompositeState5894 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_CompositeState5955 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_CompositeState5996 = new BitSet(new long[]{0x0000800000020000L,0x0000000846090820L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Property_in_parse_org_sintef_thingml_CompositeState6025 = new BitSet(new long[]{0x0000800000020000L,0x0000000846090820L});
+    public static final BitSet FOLLOW_75_in_parse_org_sintef_thingml_CompositeState6075 = new BitSet(new long[]{0x0040000000000000L});
+    public static final BitSet FOLLOW_54_in_parse_org_sintef_thingml_CompositeState6095 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_CompositeState6121 = new BitSet(new long[]{0x0000800000000000L,0x0000000846080820L});
+    public static final BitSet FOLLOW_75_in_parse_org_sintef_thingml_CompositeState6171 = new BitSet(new long[]{0x0400000000000000L});
+    public static final BitSet FOLLOW_58_in_parse_org_sintef_thingml_CompositeState6191 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_CompositeState6217 = new BitSet(new long[]{0x0000800000000000L,0x0000000846080020L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Transition_in_parse_org_sintef_thingml_CompositeState6273 = new BitSet(new long[]{0x0000800000000000L,0x0000000846080020L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_InternalTransition_in_parse_org_sintef_thingml_CompositeState6315 = new BitSet(new long[]{0x0000800000000000L,0x0000000846080020L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_State_in_parse_org_sintef_thingml_CompositeState6364 = new BitSet(new long[]{0x0000800000000000L,0x0000000846080020L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ParallelRegion_in_parse_org_sintef_thingml_CompositeState6438 = new BitSet(new long[]{0x0000000000000000L,0x0000000800080000L});
+    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_CompositeState6479 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_StateMachine_in_parse_org_sintef_thingml_CompositeState6498 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_83_in_parse_org_sintef_thingml_ParallelRegion6523 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ParallelRegion6541 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
+    public static final BitSet FOLLOW_67_in_parse_org_sintef_thingml_ParallelRegion6562 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ParallelRegion6580 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000040L});
+    public static final BitSet FOLLOW_70_in_parse_org_sintef_thingml_ParallelRegion6610 = new BitSet(new long[]{0x0000000000008000L});
+    public static final BitSet FOLLOW_T_HISTORY_in_parse_org_sintef_thingml_ParallelRegion6636 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_ParallelRegion6697 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_ParallelRegion6738 = new BitSet(new long[]{0x0000800000000000L,0x0000000806000000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_State_in_parse_org_sintef_thingml_ParallelRegion6767 = new BitSet(new long[]{0x0000800000000000L,0x0000000806000000L});
+    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_ParallelRegion6808 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_94_in_parse_org_sintef_thingml_Transition6837 = new BitSet(new long[]{0x0000000010001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Transition6866 = new BitSet(new long[]{0x0000000010000000L});
+    public static final BitSet FOLLOW_28_in_parse_org_sintef_thingml_Transition6912 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Transition6930 = new BitSet(new long[]{0x8200580000000012L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Transition6966 = new BitSet(new long[]{0x8200580000000012L});
+    public static final BitSet FOLLOW_57_in_parse_org_sintef_thingml_Transition7016 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Event_in_parse_org_sintef_thingml_Transition7042 = new BitSet(new long[]{0x8200580000000002L});
+    public static final BitSet FOLLOW_63_in_parse_org_sintef_thingml_Transition7092 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_Transition7118 = new BitSet(new long[]{0x0000580000000002L});
+    public static final BitSet FOLLOW_43_in_parse_org_sintef_thingml_Transition7168 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Transition7194 = new BitSet(new long[]{0x0000500000000002L});
+    public static final BitSet FOLLOW_46_in_parse_org_sintef_thingml_Transition7244 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Transition7270 = new BitSet(new long[]{0x0000100000000002L});
+    public static final BitSet FOLLOW_44_in_parse_org_sintef_thingml_Transition7320 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_Transition7346 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_69_in_parse_org_sintef_thingml_InternalTransition7402 = new BitSet(new long[]{0x8200080000001012L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_InternalTransition7431 = new BitSet(new long[]{0x8200080000000012L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_InternalTransition7492 = new BitSet(new long[]{0x8200080000000012L});
+    public static final BitSet FOLLOW_57_in_parse_org_sintef_thingml_InternalTransition7542 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Event_in_parse_org_sintef_thingml_InternalTransition7568 = new BitSet(new long[]{0x8200080000000002L});
+    public static final BitSet FOLLOW_63_in_parse_org_sintef_thingml_InternalTransition7618 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_InternalTransition7644 = new BitSet(new long[]{0x0000080000000002L});
+    public static final BitSet FOLLOW_43_in_parse_org_sintef_thingml_InternalTransition7694 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_InternalTransition7720 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ReceiveMessage7791 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_ReceiveMessage7824 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ReceiveMessage7861 = new BitSet(new long[]{0x0000008000000000L});
+    public static final BitSet FOLLOW_39_in_parse_org_sintef_thingml_ReceiveMessage7882 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ReceiveMessage7900 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_88_in_parse_org_sintef_thingml_PropertyAssign7936 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_PropertyAssign7954 = new BitSet(new long[]{0x0000000800002000L});
+    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_PropertyAssign7984 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PropertyAssign8010 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_PropertyAssign8038 = new BitSet(new long[]{0x0000000800002000L});
+    public static final BitSet FOLLOW_35_in_parse_org_sintef_thingml_PropertyAssign8071 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PropertyAssign8089 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_48_in_parse_org_sintef_thingml_Configuration8122 = new BitSet(new long[]{0x0000000000005000L});
+    public static final BitSet FOLLOW_T_ASPECT_in_parse_org_sintef_thingml_Configuration8151 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Configuration8201 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Configuration8237 = new BitSet(new long[]{0x0000000000000010L,0x0000000200000000L});
+    public static final BitSet FOLLOW_97_in_parse_org_sintef_thingml_Configuration8278 = new BitSet(new long[]{0x4002000000000000L,0x0000000801000010L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Instance_in_parse_org_sintef_thingml_Configuration8307 = new BitSet(new long[]{0x4002000000000000L,0x0000000801000010L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Connector_in_parse_org_sintef_thingml_Configuration8349 = new BitSet(new long[]{0x4002000000000000L,0x0000000801000010L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ConfigInclude_in_parse_org_sintef_thingml_Configuration8391 = new BitSet(new long[]{0x4002000000000000L,0x0000000801000010L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ConfigPropertyAssign_in_parse_org_sintef_thingml_Configuration8433 = new BitSet(new long[]{0x4002000000000000L,0x0000000801000010L});
+    public static final BitSet FOLLOW_99_in_parse_org_sintef_thingml_Configuration8474 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_62_in_parse_org_sintef_thingml_ConfigInclude8503 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ConfigInclude8521 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_ConfigInclude8542 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ConfigInclude8560 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_ConfigInclude8596 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_68_in_parse_org_sintef_thingml_Instance8652 = new BitSet(new long[]{0x0000000080001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Instance8681 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_Instance8727 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Instance8745 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Instance8781 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_49_in_parse_org_sintef_thingml_Connector8837 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Connector8866 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_InstanceRef_in_parse_org_sintef_thingml_Connector8916 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_29_in_parse_org_sintef_thingml_Connector8934 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Connector8952 = new BitSet(new long[]{0x0000002000000000L});
+    public static final BitSet FOLLOW_37_in_parse_org_sintef_thingml_Connector8973 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_InstanceRef_in_parse_org_sintef_thingml_Connector8991 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_29_in_parse_org_sintef_thingml_Connector9009 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Connector9027 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_Connector9063 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_88_in_parse_org_sintef_thingml_ConfigPropertyAssign9119 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_InstanceRef_in_parse_org_sintef_thingml_ConfigPropertyAssign9137 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_29_in_parse_org_sintef_thingml_ConfigPropertyAssign9155 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ConfigPropertyAssign9173 = new BitSet(new long[]{0x0000000800002000L});
+    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_ConfigPropertyAssign9203 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConfigPropertyAssign9229 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_ConfigPropertyAssign9257 = new BitSet(new long[]{0x0000000800002000L});
+    public static final BitSet FOLLOW_35_in_parse_org_sintef_thingml_ConfigPropertyAssign9290 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConfigPropertyAssign9308 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_InstanceRef9356 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_29_in_parse_org_sintef_thingml_InstanceRef9389 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_InstanceRef9426 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SendAction9466 = new BitSet(new long[]{0x0000000000080000L});
+    public static final BitSet FOLLOW_19_in_parse_org_sintef_thingml_SendAction9487 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SendAction9505 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_SendAction9526 = new BitSet(new long[]{0x0000000008D01C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_SendAction9555 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_SendAction9596 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_SendAction9630 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_SendAction9704 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_VariableAssignment9737 = new BitSet(new long[]{0x0000000800002000L});
+    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_VariableAssignment9767 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_VariableAssignment9793 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_VariableAssignment9821 = new BitSet(new long[]{0x0000000800002000L});
+    public static final BitSet FOLLOW_35_in_parse_org_sintef_thingml_VariableAssignment9854 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_VariableAssignment9872 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_51_in_parse_org_sintef_thingml_ActionBlock9905 = new BitSet(new long[]{0x0128000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ActionBlock9934 = new BitSet(new long[]{0x0128000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_53_in_parse_org_sintef_thingml_ActionBlock9975 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_T_READONLY_in_parse_org_sintef_thingml_LocalVariable10019 = new BitSet(new long[]{0x0000000000000000L,0x0000000080000000L});
+    public static final BitSet FOLLOW_95_in_parse_org_sintef_thingml_LocalVariable10065 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_LocalVariable10083 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_LocalVariable10104 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_LocalVariable10122 = new BitSet(new long[]{0x0000010800002012L});
+    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_LocalVariable10165 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LocalVariable10211 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_LocalVariable10244 = new BitSet(new long[]{0x0000000800000012L});
+    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_LocalVariable10309 = new BitSet(new long[]{0x0000000800000012L});
+    public static final BitSet FOLLOW_35_in_parse_org_sintef_thingml_LocalVariable10380 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LocalVariable10406 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PlatformAnnotation_in_parse_org_sintef_thingml_LocalVariable10462 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_STRING_EXT_in_parse_org_sintef_thingml_ExternStatement10522 = new BitSet(new long[]{0x0000000000200002L});
+    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_ExternStatement10552 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExternStatement10578 = new BitSet(new long[]{0x0000000000200002L});
+    public static final BitSet FOLLOW_64_in_parse_org_sintef_thingml_ConditionalAction10634 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_ConditionalAction10648 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ConditionalAction10666 = new BitSet(new long[]{0x0000000000800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_ConditionalAction10684 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10702 = new BitSet(new long[]{0x0010000000000002L});
+    public static final BitSet FOLLOW_52_in_parse_org_sintef_thingml_ConditionalAction10729 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_ConditionalAction10755 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_96_in_parse_org_sintef_thingml_LoopAction10811 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_LoopAction10825 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_LoopAction10843 = new BitSet(new long[]{0x0000000000800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_LoopAction10861 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_parse_org_sintef_thingml_LoopAction10879 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_79_in_parse_org_sintef_thingml_PrintAction10912 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_PrintAction10930 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_56_in_parse_org_sintef_thingml_ErrorAction10963 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ErrorAction10981 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_85_in_parse_org_sintef_thingml_ReturnAction11014 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ReturnAction11032 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallStatement11069 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_FunctionCallStatement11090 = new BitSet(new long[]{0x0000000008D01C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement11119 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_FunctionCallStatement11160 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallStatement11194 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_FunctionCallStatement11268 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_76_in_parse_org_sintef_thingml_SglMsgParamOperator11297 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperator11315 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_SglMsgParamOperator11336 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_MessageParameter_in_parse_org_sintef_thingml_SglMsgParamOperator11354 = new BitSet(new long[]{0x0000000000800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_SglMsgParamOperator11372 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_SglMsgParamOperator11386 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperator11404 = new BitSet(new long[]{0x0008010000002000L});
+    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_SglMsgParamOperator11447 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_SglMsgParamOperator11493 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_SglMsgParamOperator11526 = new BitSet(new long[]{0x0008000000000000L});
+    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_SglMsgParamOperator11591 = new BitSet(new long[]{0x0008000000000000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ActionBlock_in_parse_org_sintef_thingml_SglMsgParamOperator11657 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_MessageParameter11694 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_MessageParameter11715 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_MessageParameter11733 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11773 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11794 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11812 = new BitSet(new long[]{0x0000000000800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_SglMsgParamOperatorCall11833 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamExpression11866 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_StreamExpression11887 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_StreamExpression11905 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput11942 = new BitSet(new long[]{0x0000000000080000L});
+    public static final BitSet FOLLOW_19_in_parse_org_sintef_thingml_StreamOutput11963 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput11981 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_StreamOutput12002 = new BitSet(new long[]{0x0000000000801000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput12031 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_StreamOutput12077 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_StreamOutput12111 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_StreamOutput12192 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_59_in_parse_org_sintef_thingml_Filter12221 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_Filter12235 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_SglMsgParamOperatorCall_in_parse_org_sintef_thingml_Filter12253 = new BitSet(new long[]{0x0000000000800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_Filter12271 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_72_in_parse_org_sintef_thingml_LengthWindow12300 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_LengthWindow12314 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_LengthWindow12332 = new BitSet(new long[]{0x0000000000800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_LengthWindow12353 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_93_in_parse_org_sintef_thingml_TimeWindow12382 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_TimeWindow12396 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_TimeWindow12414 = new BitSet(new long[]{0x0000000004000000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_TimeWindow12435 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_TimeWindow12453 = new BitSet(new long[]{0x0000000000800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_TimeWindow12474 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SimpleSource12518 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_SimpleSource12551 = new BitSet(new long[]{0x0000000000002000L});
+    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_SimpleSource12571 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_SimpleSource12597 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_SimpleSource12625 = new BitSet(new long[]{0x0000000100000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_SimpleSource12666 = new BitSet(new long[]{0x0000000100000002L});
+    public static final BitSet FOLLOW_32_in_parse_org_sintef_thingml_SimpleSource12705 = new BitSet(new long[]{0x0800000000000000L,0x0000000020000100L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ViewSource_in_parse_org_sintef_thingml_SimpleSource12731 = new BitSet(new long[]{0x0000000100000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_JoinSources12802 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_JoinSources12835 = new BitSet(new long[]{0x0000000000002000L});
+    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_JoinSources12868 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_JoinSources12886 = new BitSet(new long[]{0x0000000000200000L});
+    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_JoinSources12904 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_JoinSources12922 = new BitSet(new long[]{0x0000000010000000L});
+    public static final BitSet FOLLOW_28_in_parse_org_sintef_thingml_JoinSources12940 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_JoinSources12958 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_JoinSources12979 = new BitSet(new long[]{0x0000000008D01C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_JoinSources13008 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_JoinSources13049 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_JoinSources13083 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_JoinSources13157 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_JoinSources13171 = new BitSet(new long[]{0x0000000100000002L});
+    public static final BitSet FOLLOW_32_in_parse_org_sintef_thingml_JoinSources13194 = new BitSet(new long[]{0x0800000000000000L,0x0000000020000100L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ViewSource_in_parse_org_sintef_thingml_JoinSources13220 = new BitSet(new long[]{0x0000000100000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_MergeSources13291 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_MergeSources13324 = new BitSet(new long[]{0x0000000000002000L});
+    public static final BitSet FOLLOW_T_ARRAY_in_parse_org_sintef_thingml_MergeSources13357 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_MergeSources13375 = new BitSet(new long[]{0x0000000000000000L,0x0000000400000000L});
+    public static final BitSet FOLLOW_98_in_parse_org_sintef_thingml_MergeSources13402 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_MergeSources13428 = new BitSet(new long[]{0x0000000010000000L,0x0000000400000000L});
+    public static final BitSet FOLLOW_28_in_parse_org_sintef_thingml_MergeSources13469 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_MergeSources13487 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_MergeSources13508 = new BitSet(new long[]{0x0000000008D01C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_MergeSources13537 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_MergeSources13578 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_MergeSources13612 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_MergeSources13686 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_parse_org_sintef_thingml_MergeSources13700 = new BitSet(new long[]{0x0000000100000002L});
+    public static final BitSet FOLLOW_32_in_parse_org_sintef_thingml_MergeSources13723 = new BitSet(new long[]{0x0800000000000000L,0x0000000020000100L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ViewSource_in_parse_org_sintef_thingml_MergeSources13749 = new BitSet(new long[]{0x0000000100000002L});
+    public static final BitSet FOLLOW_91_in_parse_org_sintef_thingml_Stream13805 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Stream13823 = new BitSet(new long[]{0x0008000000000000L});
+    public static final BitSet FOLLOW_51_in_parse_org_sintef_thingml_Stream13844 = new BitSet(new long[]{0x1000000000000000L});
+    public static final BitSet FOLLOW_60_in_parse_org_sintef_thingml_Stream13858 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Source_in_parse_org_sintef_thingml_Stream13876 = new BitSet(new long[]{0x0000080000000000L,0x0000000000400000L});
+    public static final BitSet FOLLOW_86_in_parse_org_sintef_thingml_Stream13903 = new BitSet(new long[]{0x0000080000001000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_StreamExpression_in_parse_org_sintef_thingml_Stream13944 = new BitSet(new long[]{0x0000080004000000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_Stream13999 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_StreamExpression_in_parse_org_sintef_thingml_Stream14041 = new BitSet(new long[]{0x0000080004000000L});
+    public static final BitSet FOLLOW_43_in_parse_org_sintef_thingml_Stream14158 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_StreamOutput_in_parse_org_sintef_thingml_Stream14176 = new BitSet(new long[]{0x0020000000000000L});
+    public static final BitSet FOLLOW_53_in_parse_org_sintef_thingml_Stream14194 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_SimpleParamRef14227 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_ArrayParamRef14267 = new BitSet(new long[]{0x0000010000000000L});
+    public static final BitSet FOLLOW_40_in_parse_org_sintef_thingml_ArrayParamRef14288 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_71_in_parse_org_sintef_thingml_LengthArray14317 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_114346 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
+    public static final BitSet FOLLOW_77_in_parseop_Expression_level_114366 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_2_in_parseop_Expression_level_114383 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
+    public static final BitSet FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_214429 = new BitSet(new long[]{0x0000200000000002L});
+    public static final BitSet FOLLOW_45_in_parseop_Expression_level_214445 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_3_in_parseop_Expression_level_214459 = new BitSet(new long[]{0x0000200000000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314500 = new BitSet(new long[]{0x0000005400000002L});
+    public static final BitSet FOLLOW_34_in_parseop_Expression_level_314513 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314524 = new BitSet(new long[]{0x0000005400000002L});
+    public static final BitSet FOLLOW_38_in_parseop_Expression_level_314542 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314553 = new BitSet(new long[]{0x0000005400000002L});
+    public static final BitSet FOLLOW_36_in_parseop_Expression_level_314571 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_parseop_Expression_level_314582 = new BitSet(new long[]{0x0000005400000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_414620 = new BitSet(new long[]{0x000000000A000002L});
+    public static final BitSet FOLLOW_25_in_parseop_Expression_level_414633 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_414644 = new BitSet(new long[]{0x000000000A000002L});
+    public static final BitSet FOLLOW_27_in_parseop_Expression_level_414662 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_parseop_Expression_level_414673 = new BitSet(new long[]{0x000000000A000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_514711 = new BitSet(new long[]{0x0000000041000002L});
+    public static final BitSet FOLLOW_24_in_parseop_Expression_level_514724 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_514735 = new BitSet(new long[]{0x0000000041000002L});
+    public static final BitSet FOLLOW_30_in_parseop_Expression_level_514753 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_514764 = new BitSet(new long[]{0x0000000041000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_7_in_parseop_Expression_level_614802 = new BitSet(new long[]{0x0000020000000002L});
+    public static final BitSet FOLLOW_41_in_parseop_Expression_level_614810 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_parseop_Expression_level_614821 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_27_in_parseop_Expression_level_714856 = new BitSet(new long[]{0x0000000000501C60L});
+    public static final BitSet FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_714867 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_74_in_parseop_Expression_level_714876 = new BitSet(new long[]{0x0000000000501C60L});
+    public static final BitSet FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_714887 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_8_in_parseop_Expression_level_714897 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_9_in_parseop_Expression_level_814919 = new BitSet(new long[]{0x0000000000002002L});
+    public static final BitSet FOLLOW_T_ARRAY_in_parseop_Expression_level_814926 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parseop_Expression_level_814939 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_parseop_Expression_level_814951 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_StreamParamReference_in_parseop_Expression_level_914988 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Reference_in_parseop_Expression_level_914996 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ExpressionGroup_in_parseop_Expression_level_915004 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PropertyReference_in_parseop_Expression_level_915012 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_IntegerLiteral_in_parseop_Expression_level_915020 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_StringLiteral_in_parseop_Expression_level_915028 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_BooleanLiteral_in_parseop_Expression_level_915036 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_EnumLiteralRef_in_parseop_Expression_level_915044 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_FunctionCallExpression_in_parseop_Expression_level_915052 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ExternExpression_in_parseop_Expression_level_915060 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_20_in_parse_org_sintef_thingml_StreamParamReference15082 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_StreamParamReference15095 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_Reference15125 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_29_in_parse_org_sintef_thingml_Reference15138 = new BitSet(new long[]{0x0000000000001000L,0x0000000000000080L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ElmtProperty_in_parse_org_sintef_thingml_Reference15151 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_ExpressionGroup15178 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExpressionGroup15191 = new BitSet(new long[]{0x0000000000800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_ExpressionGroup15203 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_PropertyReference15231 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_INTEGER_LITERAL_in_parse_org_sintef_thingml_IntegerLiteral15261 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_LITERAL_in_parse_org_sintef_thingml_StringLiteral15291 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_BOOLEAN_LITERAL_in_parse_org_sintef_thingml_BooleanLiteral15321 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef15351 = new BitSet(new long[]{0x0000000080000000L});
+    public static final BitSet FOLLOW_31_in_parse_org_sintef_thingml_EnumLiteralRef15364 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_EnumLiteralRef15377 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TEXT_in_parse_org_sintef_thingml_FunctionCallExpression15407 = new BitSet(new long[]{0x0000000000400000L});
+    public static final BitSet FOLLOW_22_in_parse_org_sintef_thingml_FunctionCallExpression15420 = new BitSet(new long[]{0x0000000008D01C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression15437 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_26_in_parse_org_sintef_thingml_FunctionCallExpression15453 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_FunctionCallExpression15466 = new BitSet(new long[]{0x0000000004800000L});
+    public static final BitSet FOLLOW_23_in_parse_org_sintef_thingml_FunctionCallExpression15494 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_STRING_EXT_in_parse_org_sintef_thingml_ExternExpression15522 = new BitSet(new long[]{0x0000000000200002L});
+    public static final BitSet FOLLOW_21_in_parse_org_sintef_thingml_ExternExpression15539 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_parse_org_sintef_thingml_ExternExpression15552 = new BitSet(new long[]{0x0000000000200002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Thing_in_parse_org_sintef_thingml_Type15583 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PrimitiveType_in_parse_org_sintef_thingml_Type15591 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Enumeration_in_parse_org_sintef_thingml_Type15599 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parseop_Expression_level_1_in_parse_org_sintef_thingml_Expression15618 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_SendAction_in_parse_org_sintef_thingml_Action15637 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_VariableAssignment_in_parse_org_sintef_thingml_Action15645 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ActionBlock_in_parse_org_sintef_thingml_Action15653 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_LocalVariable_in_parse_org_sintef_thingml_Action15661 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ExternStatement_in_parse_org_sintef_thingml_Action15669 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ConditionalAction_in_parse_org_sintef_thingml_Action15677 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_LoopAction_in_parse_org_sintef_thingml_Action15685 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_PrintAction_in_parse_org_sintef_thingml_Action15693 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ErrorAction_in_parse_org_sintef_thingml_Action15701 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ReturnAction_in_parse_org_sintef_thingml_Action15709 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_FunctionCallStatement_in_parse_org_sintef_thingml_Action15717 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_RequiredPort_in_parse_org_sintef_thingml_Port15736 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ProvidedPort_in_parse_org_sintef_thingml_Port15744 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_SglMsgParamOperator_in_parse_org_sintef_thingml_Operator15763 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ReceiveMessage_in_parse_org_sintef_thingml_Event15782 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Filter_in_parse_org_sintef_thingml_ViewSource15801 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_LengthWindow_in_parse_org_sintef_thingml_ViewSource15809 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_TimeWindow_in_parse_org_sintef_thingml_ViewSource15817 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_SimpleSource_in_parse_org_sintef_thingml_Source15836 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_JoinSources_in_parse_org_sintef_thingml_Source15844 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_MergeSources_in_parse_org_sintef_thingml_Source15852 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_SimpleParamRef_in_parse_org_sintef_thingml_ElmtProperty15871 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_ArrayParamRef_in_parse_org_sintef_thingml_ElmtProperty15879 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_LengthArray_in_parse_org_sintef_thingml_ElmtProperty15887 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_StateMachine_in_synpred63_Thingml5732 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_52_in_synpred114_Thingml10729 = new BitSet(new long[]{0x0108000000021400L,0x0000000180208001L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Action_in_synpred114_Thingml10755 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_77_in_synpred135_Thingml14366 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_2_in_synpred135_Thingml14383 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_77_in_synpred136_Thingml14366 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_2_in_synpred136_Thingml14383 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
+    public static final BitSet FOLLOW_45_in_synpred137_Thingml14445 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_3_in_synpred137_Thingml14459 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_45_in_synpred138_Thingml14445 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_3_in_synpred138_Thingml14459 = new BitSet(new long[]{0x0000200000000002L});
+    public static final BitSet FOLLOW_34_in_synpred139_Thingml14513 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred139_Thingml14524 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_38_in_synpred140_Thingml14542 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred140_Thingml14553 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_36_in_synpred141_Thingml14571 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred141_Thingml14582 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_34_in_synpred142_Thingml14513 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred142_Thingml14524 = new BitSet(new long[]{0x0000005400000002L});
+    public static final BitSet FOLLOW_38_in_synpred142_Thingml14542 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred142_Thingml14553 = new BitSet(new long[]{0x0000005400000002L});
+    public static final BitSet FOLLOW_36_in_synpred142_Thingml14571 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_4_in_synpred142_Thingml14582 = new BitSet(new long[]{0x0000005400000002L});
+    public static final BitSet FOLLOW_25_in_synpred143_Thingml14633 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred143_Thingml14644 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_27_in_synpred144_Thingml14662 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred144_Thingml14673 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_25_in_synpred145_Thingml14633 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred145_Thingml14644 = new BitSet(new long[]{0x000000000A000002L});
+    public static final BitSet FOLLOW_27_in_synpred145_Thingml14662 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_5_in_synpred145_Thingml14673 = new BitSet(new long[]{0x000000000A000002L});
+    public static final BitSet FOLLOW_24_in_synpred146_Thingml14724 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred146_Thingml14735 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_30_in_synpred147_Thingml14753 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred147_Thingml14764 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_24_in_synpred148_Thingml14724 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred148_Thingml14735 = new BitSet(new long[]{0x0000000041000002L});
+    public static final BitSet FOLLOW_30_in_synpred148_Thingml14753 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred148_Thingml14764 = new BitSet(new long[]{0x0000000041000002L});
+    public static final BitSet FOLLOW_41_in_synpred149_Thingml14810 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parseop_Expression_level_6_in_synpred149_Thingml14821 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_T_ARRAY_in_synpred152_Thingml14926 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_synpred152_Thingml14939 = new BitSet(new long[]{0x0000040000000000L});
+    public static final BitSet FOLLOW_42_in_synpred152_Thingml14951 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_21_in_synpred164_Thingml15539 = new BitSet(new long[]{0x0000000008501C60L,0x0000000000000400L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_Expression_in_synpred164_Thingml15552 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_SimpleSource_in_synpred180_Thingml15836 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_parse_org_sintef_thingml_JoinSources_in_synpred181_Thingml15844 = new BitSet(new long[]{0x0000000000000002L});
 
 }

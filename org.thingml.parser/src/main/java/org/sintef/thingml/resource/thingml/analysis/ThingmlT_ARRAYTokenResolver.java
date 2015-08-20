@@ -30,7 +30,7 @@ public class ThingmlT_ARRAYTokenResolver implements org.sintef.thingml.resource.
 	public void resolve(String lexem, org.eclipse.emf.ecore.EStructuralFeature feature, org.sintef.thingml.resource.thingml.IThingmlTokenResolveResult result) {
 		// By default token resolving is delegated to the DefaultTokenResolver.
 		defaultTokenResolver.resolve(lexem, feature, result);
-		result.setResolvedToken(lexem.equals("[]"));
+		result.setResolvedToken(lexem.equals("["));
 	}
 	
 	public void setOptions(java.util.Map<?,?> options) {

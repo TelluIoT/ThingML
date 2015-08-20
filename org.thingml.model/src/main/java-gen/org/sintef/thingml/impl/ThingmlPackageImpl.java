@@ -3404,9 +3404,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		messageEClass.getESuperTypes().add(this.getAnnotatedElement());
 		thingEClass.getESuperTypes().add(this.getType());
 		parameterEClass.getESuperTypes().add(this.getVariable());
-		parameterEClass.getESuperTypes().add(this.getReferencedElmt());
 		variableEClass.getESuperTypes().add(this.getTypedElement());
 		variableEClass.getESuperTypes().add(this.getAnnotatedElement());
+		variableEClass.getESuperTypes().add(this.getReferencedElmt());
 		typeEClass.getESuperTypes().add(this.getAnnotatedElement());
 		propertyEClass.getESuperTypes().add(this.getVariable());
 		propertyAssignEClass.getESuperTypes().add(this.getAnnotatedElement());
@@ -3460,6 +3460,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		loopActionEClass.getESuperTypes().add(this.getControlStructure());
 		conditionalActionEClass.getESuperTypes().add(this.getControlStructure());
 		propertyReferenceEClass.getESuperTypes().add(this.getExpression());
+		propertyReferenceEClass.getESuperTypes().add(this.getReferencedElmt());
 		arrayIndexEClass.getESuperTypes().add(this.getExpression());
 		dictionaryReferenceEClass.getESuperTypes().add(this.getPropertyReference());
 		expressionGroupEClass.getESuperTypes().add(this.getExpression());

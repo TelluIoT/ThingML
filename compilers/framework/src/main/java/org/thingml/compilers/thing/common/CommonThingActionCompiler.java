@@ -253,7 +253,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
            MessageParameter mp = (MessageParameter) expression.getReference();
            messageName = mp.getName();
            message = mp.getMsgRef();
-       } else if(expression.getReference() instanceof Parameter) {
+       } /*else if(expression.getReference() instanceof Parameter) {
            Parameter parameter = (Parameter) expression.getReference();
            if(parameter.isIsArray()) {
                 generateReferenceArray(parameter.getName(),builder);
@@ -261,15 +261,23 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
            } else {
                throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
            }
-       } else {
-           throw new UnsupportedException(expression.getParameter().getClass().getName(),"parameter","CommonThingActionCompiler");
+       }*/ else if(expression.getReference() instanceof Variable) {
+           Variable var = (Variable) expression.getReference();
+           if(var.isIsArray()) {
+               generateReferenceArray(var,builder,ctx);
+               return;
+           } else {
+               throw new UnsupportedOperationException("The variable " + var.getName() + " must be an array.");
+           }
+       }else {
+           throw new UnsupportedException(expression.getReference().getClass().getName(),"reference","CommonThingActionCompiler");
        }
        generateReference(message, messageName, expression, builder, ctx);
 
     }
 
-    protected void generateReferenceArray(String name, StringBuilder builder) {
-        builder.append(name + ".length;\n");
+    protected void generateReferenceArray(Variable variable, StringBuilder builder, Context context) {
+        builder.append(context.getVariableName(variable) + ".length");
     }
 
     protected void generateReference(Message message,String messageName, Reference reference, StringBuilder builder, Context ctx) {

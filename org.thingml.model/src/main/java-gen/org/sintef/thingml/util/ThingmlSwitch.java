@@ -115,9 +115,9 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				Parameter parameter = (Parameter)theEObject;
 				T result = caseParameter(parameter);
 				if (result == null) result = caseVariable(parameter);
-				if (result == null) result = caseReferencedElmt(parameter);
 				if (result == null) result = caseTypedElement(parameter);
 				if (result == null) result = caseAnnotatedElement(parameter);
+				if (result == null) result = caseReferencedElmt(parameter);
 				if (result == null) result = caseThingMLElement(parameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -127,6 +127,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				T result = caseVariable(variable);
 				if (result == null) result = caseTypedElement(variable);
 				if (result == null) result = caseAnnotatedElement(variable);
+				if (result == null) result = caseReferencedElmt(variable);
 				if (result == null) result = caseThingMLElement(variable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -157,6 +158,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = caseVariable(property);
 				if (result == null) result = caseTypedElement(property);
 				if (result == null) result = caseAnnotatedElement(property);
+				if (result == null) result = caseReferencedElmt(property);
 				if (result == null) result = caseThingMLElement(property);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -351,6 +353,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = caseVariable(dictionary);
 				if (result == null) result = caseTypedElement(dictionary);
 				if (result == null) result = caseAnnotatedElement(dictionary);
+				if (result == null) result = caseReferencedElmt(dictionary);
 				if (result == null) result = caseThingMLElement(dictionary);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -565,6 +568,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				PropertyReference propertyReference = (PropertyReference)theEObject;
 				T result = casePropertyReference(propertyReference);
 				if (result == null) result = caseExpression(propertyReference);
+				if (result == null) result = caseReferencedElmt(propertyReference);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -580,6 +584,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				T result = caseDictionaryReference(dictionaryReference);
 				if (result == null) result = casePropertyReference(dictionaryReference);
 				if (result == null) result = caseExpression(dictionaryReference);
+				if (result == null) result = caseReferencedElmt(dictionaryReference);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -686,6 +691,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = caseAction(localVariable);
 				if (result == null) result = caseTypedElement(localVariable);
 				if (result == null) result = caseAnnotatedElement(localVariable);
+				if (result == null) result = caseReferencedElmt(localVariable);
 				if (result == null) result = caseThingMLElement(localVariable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;

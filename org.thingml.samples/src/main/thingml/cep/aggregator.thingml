@@ -1,0 +1,8 @@
+import "../datatypes.thingml"
+
+thing fragment MathAgg {
+    //Average
+    function avg(tab: Byte[]) : Integer do
+        
+    end    
+}
