@@ -39,11 +39,9 @@ thing MQTTClientPSM includes MQTTClientMsg
 	property clientId : CString
 	property qos : Integer
 	
-	message lostconnection();
-	
 	provided port mqttport {
 		receives connect, reconnect, disconnect
-		sends subscribed, connected, unsubscribed, disconnected, published
+		sends subscribed, connected, unsubscribed, disconnected, published, connection_failed, connection_lost, subscribe_failed
 	}
 	
 	provided port syncmqttport @sync_send "true" {
@@ -66,7 +64,7 @@ thing MQTTClientPSM includes MQTTClientMsg
     @c_instance_var_name "(struct MQTTClientPSM_Instance *) _instance"
 	do
 		'printf("connection fail callback is called...\n");'
-		//connect_client()
+		mqttport!connection_failed()
 	end
 	
 	function connection_lost_callback()
@@ -79,7 +77,7 @@ thing MQTTClientPSM includes MQTTClientMsg
 		'reason = va_arg(valist, char*);'
 		'va_end(valist);'
 		'printf("connection lost callback is lost, reason %c...\n", *reason);'
-		//connect_client()
+		mqttport!connection_lost()
 	end
 	
 	function message_arrived_callback()
@@ -97,6 +95,7 @@ thing MQTTClientPSM includes MQTTClientMsg
 		'va_end(valist);'
 	
 		'printf("message arrived callback is called: topic \'%s\' and payload \'%s\'\n", topic, message);'
+		syncmqttport!message_received('topic', 'message')
 		'free(message);'
 		'free(topic);'
     end
@@ -121,6 +120,7 @@ thing MQTTClientPSM includes MQTTClientMsg
 	
 		'va_end(valist);'
 		'printf("subscribe fail callback is called with the reason %d\n", reason);'
+		mqttport!subscribe_failed()
     end
 
     function message_published_callback()
