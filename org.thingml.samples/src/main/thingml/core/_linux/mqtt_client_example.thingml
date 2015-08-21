@@ -43,7 +43,7 @@ thing MQTTClientPIM includes MQTTClientMsg, ClockMsgs {
     		
     		internal event syncmqttport?message_received
     		action do
-    			print "new message recieved... \n"
+    			print "new message received... \n"
     		end
     	}
     	

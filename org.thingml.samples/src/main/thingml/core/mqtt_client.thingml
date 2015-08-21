@@ -12,6 +12,9 @@ thing fragment MQTTClientMsg {
 	message subscribe(topic : CString);
 	message unsubscribe(topic : CString);
 	message publish(topic : CString, msg : String);
+	message connection_failed();
+	message connection_lost();
+	message subscribe_failed();
 	
 	message subscribed();
 	message unsubscribed();
