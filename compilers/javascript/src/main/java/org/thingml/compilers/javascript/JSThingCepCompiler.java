@@ -17,26 +17,25 @@ package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
-import org.thingml.compilers.CepCompiler;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.javascript.cepHelper.JSCepViewCompiler;
-import org.thingml.compilers.javascript.cepHelper.JSGenerateSourceDeclaration;
+import org.thingml.compilers.thing.ThingCepCompiler;
+import org.thingml.compilers.thing.ThingCepSourceDeclaration;
+import org.thingml.compilers.thing.ThingCepViewCompiler;
 
 import java.util.List;
 
 /**
  * @author ludovic
  */
-public class JSCepCompiler extends CepCompiler {
-    private JSCepViewCompiler jsCepViewCompiler = new JSCepViewCompiler();
+public class JSThingCepCompiler extends ThingCepCompiler {
 
-    public JSCepViewCompiler getJsCepViewCompiler() {
-        return jsCepViewCompiler;
+    public JSThingCepCompiler(ThingCepViewCompiler cepViewCompiler, ThingCepSourceDeclaration sourceDeclaration) {
+        super(cepViewCompiler, sourceDeclaration);
     }
 
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
-        JSGenerateSourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
+        sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
         if(stream.getInput() instanceof SimpleSource) {
             SimpleSource simpleSource = (SimpleSource) stream.getInput();
             String paramName = simpleSource.getMessage().getMessage().getName();

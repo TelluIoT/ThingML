@@ -17,26 +17,25 @@ package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
-import org.thingml.compilers.CepCompiler;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.java.cepHelper.JavaCepViewCompiler;
-import org.thingml.compilers.java.cepHelper.JavaGenerateSourceDeclaration;
+import org.thingml.compilers.thing.ThingCepCompiler;
+import org.thingml.compilers.thing.ThingCepSourceDeclaration;
+import org.thingml.compilers.thing.ThingCepViewCompiler;
 
 import java.util.List;
 
 /**
  * @author ludovic
  */
-public class JavaCepCompiler extends CepCompiler {
-    private JavaCepViewCompiler javaCepViewCompiler = new JavaCepViewCompiler();
-
-    public JavaCepViewCompiler getJavaCepViewCompiler() {
-        return javaCepViewCompiler;
+public class JavaThingCepCompiler extends ThingCepCompiler {
+    public JavaThingCepCompiler(ThingCepViewCompiler cepViewCompiler, ThingCepSourceDeclaration sourceDeclaration) {
+        super(cepViewCompiler, sourceDeclaration);
     }
+
 
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
-        JavaGenerateSourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
+        sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
         if(stream.getInput() instanceof SimpleSource) {
             SimpleSource source = (SimpleSource) stream.getInput();
             Message outPut = source.getMessage().getMessage();

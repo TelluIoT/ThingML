@@ -16,7 +16,7 @@
 package org.thingml.compilers.utils;
 
 import org.sintef.thingml.Configuration;
-import org.thingml.compilers.CepCompiler;
+import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
@@ -32,7 +32,7 @@ import java.io.PrintStream;
  */
 public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
-    public OpaqueThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, CepCompiler cepCompiler) {
+    public OpaqueThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
     }
 

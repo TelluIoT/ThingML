@@ -16,33 +16,22 @@
 package org.thingml.compilers.javascript.cepHelper;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.javascript.JSCepCompiler;
+import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 
 /**
  * @author ludovic
  */
-public class JSGenerateSourceDeclaration {
+public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
 
-    public static void generate(Stream stream, Source source, StringBuilder builder, Context context) {
-        if (source instanceof SimpleSource) {
-            generate(stream, (SimpleSource) source, builder, context);
-        } else if (source instanceof MergeSources) {
-            generate(stream, (MergeSources) source, builder, context);
-        } else if (source instanceof JoinSources) {
-            generate(stream, (JoinSources) source, builder, context);
-        } else {
-            throw UnsupportedException.sourceException(source.getClass().getName());
-        }
-    }
-
-    public static void generate(Stream stream, SimpleSource source, StringBuilder builder, Context context) {
+    @Override
+    public void generate(Stream stream, SimpleSource source, StringBuilder builder, Context context) {
         builder.append("var " + source.qname("_") + " = Rx.Observable.fromEvent(this.eventEmitterForStream" + ", '" + source.qname("_") + "');\n");
-        generateOperatorCalls(stream, source, builder, context,source.qname("_"));
+        generateOperatorCalls(source.qname("_"), source, builder, context);
     }
 
-    public static void generate(Stream stream, MergeSources source, StringBuilder builder, Context context) {
+    @Override
+    public void generate(Stream stream, MergeSources source, StringBuilder builder, Context context) {
         String mergeParams = "";
         boolean firstParamDone = false;
         for (Source s : source.getSources()) {
@@ -69,10 +58,11 @@ public class JSGenerateSourceDeclaration {
         builder.append("};\n")
                 .append("});\n");
 
-        generateOperatorCalls(stream, source, builder, context,source.qname("_"));
+        generateOperatorCalls(source.qname("_"), source, builder, context);
     }
 
-    public static void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
+    @Override
+    public void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
         builder.append("\n");
         builder.append("function wait_" + sources.qname("_") + "() { return Rx.Observable.timer(50); }\n");
 
@@ -105,19 +95,7 @@ public class JSGenerateSourceDeclaration {
         builder.append("};\n");
         builder.append("\t});\n");
 
-        generateOperatorCalls(stream, sources, builder, context,sources.qname("_"));
-    }
-
-    private static void generateOperatorCalls(Stream stream, Source source, StringBuilder builder, Context context, String name) {
-
-        JSCepViewCompiler jsCmpl = ((JSCepCompiler) context.getCompiler().getCepCompiler()).getJsCepViewCompiler();
-        if (source.getOperators().size() > 0) {
-            builder.append(name + " = " + name);
-            for (ViewSource view : source.getOperators()) {
-                jsCmpl.generate(view, builder, context);
-            }
-            builder.append(";\n");
-        }
+        generateOperatorCalls(sources.qname("_"), sources, builder, context);
     }
 }
 

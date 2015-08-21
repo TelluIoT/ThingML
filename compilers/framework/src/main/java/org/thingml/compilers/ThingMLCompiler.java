@@ -19,9 +19,7 @@ import org.sintef.thingml.Configuration;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.thing.ThingActionCompiler;
-import org.thingml.compilers.thing.ThingApiCompiler;
-import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.compilers.thing.*;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import java.io.File;
 import java.io.OutputStream;
@@ -41,10 +39,8 @@ public abstract class ThingMLCompiler {
     private CfgMainGenerator mainCompiler;
     private CfgBuildCompiler cfgBuildCompiler;
     private ThingImplCompiler thingImplCompiler;
+    private ThingCepCompiler cepCompiler;
 
-    /*MODIFICATION*/
-    private CepCompiler cepCompiler;
-    /*END*/
 
     //we might need several connector compilers has different ports might use different connectors
     private Map<String, CfgExternalConnectorCompiler> connectorCompilers = new HashMap<String, CfgExternalConnectorCompiler>();
@@ -56,10 +52,10 @@ public abstract class ThingMLCompiler {
         this.cfgBuildCompiler = new CfgBuildCompiler();
         this.thingImplCompiler = new FSMBasedThingImplCompiler();
         connectorCompilers.put("default", new CfgExternalConnectorCompiler());
-        this.cepCompiler = new CepCompiler();
+        this.cepCompiler = new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration());
     }
 
-    public ThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler, CepCompiler cepCompiler) {
+    public ThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
         this.thingActionCompiler = thingActionCompiler;
         this.thingApiCompiler = thingApiCompiler;
         this.mainCompiler = mainCompiler;
@@ -123,7 +119,7 @@ public abstract class ThingMLCompiler {
         return thingImplCompiler;
     }
 
-    public CepCompiler getCepCompiler(){return cepCompiler;}
+    public ThingCepCompiler getCepCompiler(){return cepCompiler;}
 
     public void addConnectorCompilers(Map<String, CfgExternalConnectorCompiler> connectorCompilers) {
         this.connectorCompilers.putAll(connectorCompilers);

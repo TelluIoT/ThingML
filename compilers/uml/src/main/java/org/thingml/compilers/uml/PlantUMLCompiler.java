@@ -23,13 +23,11 @@ import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.CepCompiler;
+import org.thingml.compilers.thing.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.thing.ThingActionCompiler;
-import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.compilers.utils.ThingMLPrettyPrinter;
@@ -42,10 +40,12 @@ import java.nio.charset.Charset;
 public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     public PlantUMLCompiler() {
-        super(new ThingMLPrettyPrinter(), new ThingApiCompiler(), new PlantUMLCfgMainGenerator(), new CfgBuildCompiler(), new PlantUMLThingImplCompiler(), new CepCompiler());
+        super(new ThingMLPrettyPrinter(), new ThingApiCompiler(), new PlantUMLCfgMainGenerator(),
+                new CfgBuildCompiler(), new PlantUMLThingImplCompiler(),
+                new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
     }
 
-    public PlantUMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, CepCompiler cepCompiler) {
+    public PlantUMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
     }
 

@@ -16,50 +16,34 @@
 package org.thingml.compilers.java.cepHelper;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.java.JavaCepCompiler;
 import org.thingml.compilers.java.JavaThingActionCompiler;
+import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 
 import java.util.Iterator;
 
 /**
  * @author ludovic
  */
-public class JavaGenerateSourceDeclaration {
-
-    public static void generate(Stream stream, Source source, StringBuilder builder, Context context) {
-        if(source instanceof SimpleSource) {
-            generate(stream, (SimpleSource) source, builder, context);
-        } else if(source instanceof MergeSources) {
-            generate(stream,(MergeSources)source,builder,context);
-        } else if(source instanceof JoinSources) {
-            generate(stream,(JoinSources)source,builder,context);
-        } else {
-            throw UnsupportedException.sourceException(source.getClass().getName());
-        }
-    }
-
-    public static void generate(Stream stream, SimpleSource source, StringBuilder builder, Context context) {
+public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
+    @Override
+    public void generate(Stream stream, SimpleSource source, StringBuilder builder, Context context) {
         builder.append("PublishSubject " + source.qname("_") + " = PublishSubject.create();\n")
                 .append("cepDispatcher.addSubs(new NullEvent(")
                 .append(source.getMessage().getMessage().getName() + "Type,")
                 .append(source.getMessage().getPort().getName() + "_port),")
                 .append(source.qname("_") + ");\n");
 
-       builder.append("rx.Observable " + source.qname("_") + "_observable" + " = " + source.qname("_") + ".asObservable()");
-        for(ViewSource view : source.getOperators()) {
-            ((JavaCepCompiler)context.getCompiler().getCepCompiler())
-                    .getJavaCepViewCompiler().generate(view,builder,context);
-        }
-        builder.append(";\n");
+        builder.append("rx.Observable " + source.qname("_") + "_observable" + " = " + source.qname("_") + ".asObservable();\n");
+        generateOperatorCalls(source.qname("_") + "_observable", source, builder, context);
     }
 
-    public static void generate(Stream stream, MergeSources source, StringBuilder builder, Context context) {
+    @Override
+    public void generate(Stream stream, MergeSources source, StringBuilder builder, Context context) {
         String mergeParams = "";
         boolean firstParamDone = false;
         for(Source s : source.getSources()) {
-            JavaGenerateSourceDeclaration.generate(stream,s,builder,context);
+            generate(stream,s,builder,context);
             if(firstParamDone) {
                 mergeParams += ", ";
             } else {
@@ -132,7 +116,7 @@ public class JavaGenerateSourceDeclaration {
             i++;
         }
 
-        builder.append("return (" + resultType + ") " + resultName + "Type.instantiate("+ stream.getOutput().getPort().getName() + "_port");
+        builder.append("return (" + resultType + ") " + resultName + "Type.instantiate(" + stream.getOutput().getPort().getName() + "_port");
         for(i = 0; i<stream.getOutput().getMessage().getParameters().size(); i++) {
             builder.append(",param" + i);
         }
@@ -140,10 +124,11 @@ public class JavaGenerateSourceDeclaration {
                 .append("}\n")
                 .append("});");
 
-        generateOperatorCalls(stream,source,builder,context);
+        generateOperatorCalls(stream.qname("_"),source,builder,context);
     }
 
-    public static void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
+    @Override
+    public void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
         builder.append("\n");
         builder.append("Func1 wait_" + stream.qname("_") + " = new Func1() {\n" +
                 "@Override\n" +
@@ -181,7 +166,6 @@ public class JavaGenerateSourceDeclaration {
             Parameter parameter = itParamsResultMsgs.next();
             Expression rule = itRules.next();
             javaCmpl.cast(parameter.getType(),parameter.isIsArray(), rule, builder, context);
-//            javaCmpl.cast(parameter.getType(),parameter.getCardinality() != null, rule, builder, context);
         }
 
 
@@ -191,18 +175,6 @@ public class JavaGenerateSourceDeclaration {
                 .append("}\n")
                 .append(");\n");
 
-        generateOperatorCalls(stream, sources, builder,context);
-    }
-
-    private static void generateOperatorCalls(Stream stream, SourceComposition sources, StringBuilder builder, Context context) {
-
-        JavaCepViewCompiler javaCmpl = ((JavaCepCompiler) context.getCompiler().getCepCompiler()).getJavaCepViewCompiler();
-        if(sources.getOperators().size() > 0) {
-            builder.append(stream.qname("_") + " = " + stream.qname("_"));
-            for (ViewSource view : sources.getOperators()) {
-               javaCmpl.generate(view,builder,context);
-            }
-            builder.append(";\n");
-        }
+        generateOperatorCalls(stream.qname("_"), sources, builder,context);
     }
 }

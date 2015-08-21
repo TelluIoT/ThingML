@@ -17,7 +17,9 @@ package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.CepCompiler;
+import org.thingml.compilers.javascript.cepHelper.JSCepViewCompiler;
+import org.thingml.compilers.javascript.cepHelper.JSGenerateSourceDeclaration;
+import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
@@ -44,10 +46,12 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
     }
 
     public JavaScriptCompiler() {
-        super(new JSThingActionCompiler(), new JavaScriptThingApiCompiler(), new JSCfgMainGenerator(), new JSCfgBuildCompiler(), new JSThingImplCompiler(), new JSCepCompiler());
+        super(new JSThingActionCompiler(), new JavaScriptThingApiCompiler(), new JSCfgMainGenerator(),
+                new JSCfgBuildCompiler(), new JSThingImplCompiler(),
+                new JSThingCepCompiler(new JSCepViewCompiler(), new JSGenerateSourceDeclaration()));
     }
 
-    public JavaScriptCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, CepCompiler cepCompiler) {
+    public JavaScriptCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
     }
 

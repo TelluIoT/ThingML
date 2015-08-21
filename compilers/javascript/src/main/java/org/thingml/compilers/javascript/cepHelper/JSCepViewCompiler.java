@@ -18,35 +18,24 @@ package org.thingml.compilers.javascript.cepHelper;
 import org.sintef.thingml.Filter;
 import org.sintef.thingml.LengthWindow;
 import org.sintef.thingml.TimeWindow;
-import org.sintef.thingml.ViewSource;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.thing.ThingCepViewCompiler;
 
 /**
  * @author ludovic
  */
-public class JSCepViewCompiler {
-
-    public void generate(ViewSource view,StringBuilder builder, Context context) {
-        if(view instanceof Filter) {
-            generate((Filter)view,builder,context);
-        } else if(view instanceof TimeWindow) {
-            generate((TimeWindow)view,builder,context);
-        } else if(view instanceof LengthWindow) {
-            generate((LengthWindow)view,builder,context);
-        } else {
-            throw new UnsupportedOperationException("The view source (" + view.getClass().getName() + ")" +
-                    "is unknown in the Java compiler. Please update it as the ThingML model has been changed.");
-        }
-    }
-
+public class JSCepViewCompiler extends ThingCepViewCompiler{
+    @Override
     public void generate(Filter filter, StringBuilder builder, Context context) {
         builder.append(".filter(" + filter.getFilterOp().getOperatorRef().getName() + ")");
     }
 
+    @Override
     public void generate(TimeWindow timeWindow, StringBuilder builder, Context context) {
         builder.append(".bufferWithTime(" + timeWindow.getSize() + "," + timeWindow.getStep() + ")");
     }
 
+    @Override
     public void generate(LengthWindow lengthWindow, StringBuilder builder, Context context) {
         builder.append(".bufferWithCount(" + lengthWindow.getNbEvents() + ")");
     }

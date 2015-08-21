@@ -13,16 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers;
+package org.thingml.compilers.thing;
 
 import org.sintef.thingml.Stream;
+import org.thingml.compilers.Context;
 
 /**
  * @author ludovic
  */
-public class CepCompiler {
+public class ThingCepCompiler {
+    protected ThingCepViewCompiler cepViewCompiler;
+    protected ThingCepSourceDeclaration sourceDeclaration;
+
+    public ThingCepCompiler(ThingCepViewCompiler cepViewCompiler, ThingCepSourceDeclaration sourceDeclaration) {
+        this.cepViewCompiler = cepViewCompiler;
+        this.sourceDeclaration = sourceDeclaration;
+    }
 
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         throw(new UnsupportedOperationException("CEP libs are platform-specific."));
+    }
+
+    public ThingCepViewCompiler getCepViewCompiler() {
+        return cepViewCompiler;
     }
 }
