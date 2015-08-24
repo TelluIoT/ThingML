@@ -16,6 +16,7 @@
 package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
@@ -128,7 +129,38 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(StreamParamReference expression, StringBuilder builder, Context ctx) {
-        builder.append("x[" + (expression.getIndexParam() + 2 )+ "]");
+//        builder.append("x[" + (expression.getIndexParam() + 2 )+ "]");
+        Stream stream = ThingMLHelpers.findContainingStream(expression);
+        Source source = stream.getInput();
+        Message message;
+        if (source instanceof SimpleSource) {
+            message = ((SimpleSource) source).getMessage().getMessage();
+            builder.append(message.getName() + "[" + (expression.getIndexParam() + 2) + "]");
+        } else if (source instanceof JoinSources) {
+            message = ((JoinSources) source).getResultMessage();
+            builder.append(message.getName() + "[" + (expression.getIndexParam() + 2) + "]");
+        } else if (source instanceof MergeSources) {
+            boolean ok = false;
+            //if the expression is in the rule
+            Expression rootExp = ThingMLHelpers.findRootExpressions(expression);
+            for (Expression exp : ((MergeSources) source).getRules()) {
+                if (rootExp == exp) {
+                    builder.append("x[" + (expression.getIndexParam() + 2) + "]");
+                    ok = true;
+                    break;
+                }
+            }
+
+            //if the expression is in the "select" part
+            if (!ok) {
+                message = ((MergeSources) source).getResultMessage();
+                builder.append(message.getName() + "[" + (expression.getIndexParam() + 2) + "]");
+            }
+
+        } else {
+            throw new UnsupportedOperationException("An input source has been added (" + source.getClass().getName() + ") to ThingML but the compiler did not updates." +
+                    "Please update JavaThingActionCompiler.generate for StreamParamReference expression .");
+        }
     }
 
     @Override

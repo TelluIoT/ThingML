@@ -57,7 +57,8 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
         List<ViewSource> operators = stream.getInput().getOperators();
        boolean lastOpIsWindow = false;
        if(operators.size() > 0) {
-           lastOpIsWindow = operators.get(operators.size() - 1) instanceof LengthWindow;
+           ViewSource lastOp = operators.get(operators.size() - 1);
+           lastOpIsWindow =  lastOp instanceof LengthWindow || lastOp instanceof TimeWindow;
        }
         if (lastOpIsWindow) {
             outPutType = "List<" + outPutType + ">";
