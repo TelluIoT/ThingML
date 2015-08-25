@@ -23,7 +23,7 @@ public class ThingActionCompiler {
     public void generate(Object o, StringBuilder builder, Context ctx) {
         if (o instanceof Action) {
             generate((Action) o, builder, ctx);
-        } else if (o instanceof StreamOutput) { // MODIFICATION
+        } else if (o instanceof StreamOutput) {
             generate((StreamOutput) o, builder, ctx);
         } else if (o instanceof Expression) {
             generate((Expression) o, builder, ctx);

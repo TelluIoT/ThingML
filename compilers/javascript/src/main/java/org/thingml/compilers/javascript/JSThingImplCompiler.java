@@ -121,11 +121,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }//TODO: public/private properties?
 
-        /** MODIFICATION **/
         if(thing.getStreams().size() > 0) {
             builder.append("this.eventEmitterForStream = new EventEmitter();\n");
         }
-        /** END **/
 
         builder.append("//message queue\n");
         builder.append(const_() + "queue = [];\n");
@@ -135,7 +133,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         generateListeners(thing, builder, ctx);
 
-        /** MODIFICATION **/
         builder.append("//CEP dispatch functions\n");
         builder.append("this.cepDispatch = function (message) {\n");
 
@@ -148,7 +145,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
         builder.append("}\n");
-        /** END **/
 
         builder.append("//ThingML-defined functions\n");
         for (Function f : thing.allFunctions()) {   //FIXME: should be extracted
@@ -188,11 +184,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
 
-        /** MODIFICATION **/
         for(Operator operator: thing.allOperators()) {
             generateOperator(operator, builder, ctx);
         }
-        /** END **/
 
         builder.append("//Internal functions\n");
 
@@ -205,11 +199,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append("}\n");
 
-        /** MODIFICATION **/
         for(Stream stream : thing.getStreams()) {
             ctx.getCompiler().getCepCompiler().generateStream(stream,builder,ctx);
         }
-        /** END **/
 
         builder.append("}\n");
 
@@ -350,32 +342,16 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 //            builder.append(".effect(function (message) {\n");
             //builder.append("var json = JSON.parse(message);\n");
             builder.append(".effect(function (" + m.getName() + ") {\n");
-//            int i = 2;
-//            for (Parameter pa : m.getParameters()) {
-//                builder.append(" v_" + pa.getName() + " = " + "message[" + i + "];");
-//                i++;
-//            }
             ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
             builder.append("})");
         }
     }
-
-    /*protected void generateMessageParam(Message msg, StringBuilder builder) {
-        if (msg != null) {
-            int i = 2;
-            for (Parameter pa : msg.getParameters()) {
-//                builder.append(" vv_" + pa.getName() + " = " + "message[" + i + "];");
-                i++;
-            }
-        }
-    }*/
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (t.getEvent().size() == 0) {
             builder.append(t.getSource().qname("_") + ".to(" + t.getTarget().qname("_") + ")");
             if (t.getGuard() != null) {
                 builder.append(".when(function (message) {");
-//                generateMessageParam(msg, builder);
                 builder.append(" return ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
                 builder.append(";})");
@@ -383,9 +359,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         } else {
             builder.append(t.getSource().qname("_") + ".to(" + t.getTarget().qname("_") + ")");
-//            builder.append(".when(function (message) {");
             builder.append(".when(function (" + msg.getName() + ") {");
-//            generateMessageParam(msg, builder);
             builder.append("return " + msg.getName() + "[0] === \"" + p.getName() + "\" && " + msg.getName() + "[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
@@ -409,9 +383,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         } else {
             builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
-//            builder.append(".when(function (message) {");
             builder.append(".when(function (" + msg.getName() + ") {");
-//            generateMessageParam(msg, builder);
             builder.append("return " + msg.getName() + "[0] === \"" + p.getName() + "\" && " + msg.getName() +"[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");

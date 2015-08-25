@@ -36,7 +36,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             for (Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
                     cast(fp.getType(), fp.isIsArray(), p, builder, ctx);
-//                    cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
                     break;
                 }
                 j++;
@@ -56,7 +55,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             if (i < streamOutput.getMessage().getParameters().size()) {
                 Parameter fp = streamOutput.getMessage().getParameters().get(i);
                 cast(fp.getType(), fp.isIsArray(), p.getExpression(), builder, ctx);
-//                cast(fp.getType(), fp.getCardinality() != null, p.getExpression(), builder, ctx);
             }
             i++;
         }
@@ -75,7 +73,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             for (Parameter fp : action.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
                     cast(fp.getType(), fp.isIsArray(), p, builder, ctx);
-//                    cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
                     break;
                 }
                 j++;
@@ -93,7 +90,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
         //Define the type of the variable
         builder.append(JavaHelper.getJavaType(action.getType(), action.isIsArray(), ctx));
-//        builder.append(JavaHelper.getJavaType(action.getType(), action.getCardinality() != null, ctx));
         builder.append(" ");
 
         builder.append(ctx.getVariableName(action));
@@ -102,7 +98,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         if (action.getInit() != null) {
             builder.append(" = ");
             cast(action.getType(), action.isIsArray(), action.getInit(), builder, ctx);
-//            cast(action.getType(), action.getCardinality() != null, action.getInit(), builder, ctx);
             builder.append(";\n");
         } else {
             if (!action.isChangeable()) {
@@ -209,7 +204,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             for (Parameter fp : expression.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
                     cast(fp.getType(), fp.isIsArray(), p, builder, ctx);
-//                    cast(fp.getType(), fp.getCardinality() != null, p, builder, ctx);
                     break;
                 }
                 j++;

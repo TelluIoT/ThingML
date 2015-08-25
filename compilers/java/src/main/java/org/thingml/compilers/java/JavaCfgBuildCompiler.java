@@ -33,7 +33,6 @@ import java.util.List;
  */
 public class JavaCfgBuildCompiler extends CfgBuildCompiler {
 
-    /** MODIFICATION **/
     private String addReactiveXDep(Configuration cfg) {
         boolean oneThingHasStream = false;
 
@@ -52,7 +51,6 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
             return "";
         }
     }
-    /** END **/
 
     @Override
     public void generateBuildScript(Configuration cfg, Context ctx) {

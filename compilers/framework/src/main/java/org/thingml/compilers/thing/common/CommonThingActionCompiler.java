@@ -55,7 +55,6 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
             }
             builder.append(action.getProperty().qname("_") + "_var");
             builder.append(" = ");
-//            cast(action.getProperty().getType(), action.getProperty().getCardinality() != null, action.getExpression(), builder, ctx);
             cast(action.getProperty().getType(), action.getProperty().isIsArray(), action.getExpression(), builder, ctx);
             //generateMainAndInit(action.getExpression(), builder, ctx);
             builder.append(";\n");
@@ -119,7 +118,6 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
         builder.append("return ");
-//        Function parent = ThingMLHelpers.findContainingFunction(action);
         TypedElement parent = ThingMLHelpers.findContainingFuncOp(action);
         cast(parent.getType(),false,action.getExp(),builder,ctx);
         builder.append(";\n");
@@ -253,15 +251,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
            MessageParameter mp = (MessageParameter) expression.getReference();
            messageName = mp.getName();
            message = mp.getMsgRef();
-       } /*else if(expression.getReference() instanceof Parameter) {
-           Parameter parameter = (Parameter) expression.getReference();
-           if(parameter.isIsArray()) {
-                generateReferenceArray(parameter.getName(),builder);
-               return;
-           } else {
-               throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
-           }
-       }*/ else if(expression.getReference() instanceof Variable) {
+       } else if(expression.getReference() instanceof Variable) {
            Variable var = (Variable) expression.getReference();
            if(var.isIsArray()) {
                generateReferenceArray(var,builder,ctx);

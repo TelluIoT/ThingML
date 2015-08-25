@@ -70,9 +70,7 @@ public class JavaScriptThingApiCompiler extends ThingApiCompiler {
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function() {\n");
             builder.append("this.getQueue().push(arguments);\n");
-            /** MODIFICATION **/
             builder.append("this.cepDispatch(arguments);\n");
-            /** END **/
             builder.append("if (this.ready) {\n");
             builder.append("var msg = this.getQueue().shift();\n");
             builder.append("while(msg !== undefined) {\n");

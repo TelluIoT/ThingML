@@ -56,16 +56,13 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
             }
 
             for(Thing t : cfg.allThings()) {
-                /**MODIFICATION**/
                 if(t.getStreams().size() > 0) {
                     deps.asObject().add("rx","^2.5.3");
                     deps.asObject().add("events","^1.0.2");
                     break;
 
                 }
-                /** END **/
             }
-
 
             final File f = new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/package.json");
             f.setWritable(true);
