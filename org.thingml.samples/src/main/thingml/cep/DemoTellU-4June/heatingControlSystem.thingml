@@ -1,7 +1,21 @@
+/** Expected result:
+Temperature receive : 20
+A window is open...
+A window is open...
+System : the heating is on max
+System : at least one window is open
+System : at least one window is open
+Is someone in the room? : true
+System : at least one person is in the room
+**/
+
 datatype Integer
-    @js_type "short";
+    @js_type "short"
+    @java_type "int";
     
-datatype Boolean;
+datatype Boolean
+    @js_type "bool"
+    @java_type "boolean";
 
 thing fragment HeatingMsgs {
     message heatingValue(tempF : Integer);    
@@ -23,7 +37,7 @@ thing Heating includes HeatingMsgs {
     end
     
     stream transformTemp do
-        from evt : rcvService?heatingValue
+        from evt : [rcvService?heatingValue]
         select tempC : fahrenheitToCelsius(evt.tempF)
         action sendService!cHeatingV(tempC)
     end
@@ -35,7 +49,7 @@ thing Heating includes HeatingMsgs {
             internal
             event e : rcvService?cHeatingV
             action do 
-                print "Temperature receive : " + e.tempC
+                print "Temperature receive : " + e.tempC + "\n"
                 sendService!hNotification()
             end
         }    
@@ -61,7 +75,7 @@ thing WindowIsOpened includes WindowIsOpenMsgs {
     }
     
     stream aWindowIsOpen do
-        from rcvService?window1IsOpen | rcvService?window2IsOpen
+        from [ rcvService?window1IsOpen | rcvService?window2IsOpen -> aWindowIsOpen()]
         action sendService!aWindowIsOpen()
     end
     
@@ -75,7 +89,7 @@ thing WindowIsOpened includes WindowIsOpenMsgs {
             internal
             event rcvService?aWindowIsOpen
             action do
-                print "A window is open..."
+                print "A window is open...\n"
                 sendService!wNotification()
             end  
         }    
@@ -101,8 +115,8 @@ thing PersonIsPresent includes PersonIsPresentMsgs {
     }
     
     stream personIsPresent do
-        from h : rcvService?humidity & l : rcvService?light
-        select p : h.value > 10 and l.val > 20
+        from [h : rcvService?humidity & l : rcvService?light -> cPersonIsPresent(h.value > 10 and l.val > 20)]
+        select p : #0
         action sendService!cPersonIsPresent(p)
     end
     
@@ -117,7 +131,7 @@ thing PersonIsPresent includes PersonIsPresentMsgs {
             event e : rcvService?cPersonIsPresent
             action do
                 if(e.val) do
-                       print "Is someone in the room? : " + e.val
+                       print "Is someone in the room? : " + e.val + "\n"
                     sendService!pNotification()
                  end
             end
@@ -134,15 +148,15 @@ thing HeatingControlSystem includes HeatingMsgs, WindowIsOpenMsgs, PersonIsPrese
         state Idle {
             internal
             event rcvService?hNotification
-            action print "System : the heating is on max" 
+            action print "System : the heating is on max\n" 
             
             internal
             event rcvService?wNotification
-            action print "System : at least one window is open" 
+            action print "System : at least one window is open\n" 
             
             internal
             event rcvService?pNotification
-            action print "System : at least one person is in the room"   
+            action print "System : at least one person is in the room\n"   
         }    
     }
     

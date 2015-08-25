@@ -1,5 +1,10 @@
+/** Expected result:
+The heating is on its maximum capacity.
+Bye Bye
+**/
 datatype Integer
-    @js_type "short";
+    @js_type "short"
+    @java_type "int";
 
 thing fragment HeatingMsgs {
     message heatingOnMax();
@@ -29,11 +34,11 @@ thing Heating includes HeatingMsgs, HeatingCepMsgs {
             
             transition -> End
             event rcvService?cHeatingOnMax
-            action print "The heating is on its maximum capacity."
+            action print "The heating is on its maximum capacity.\n"
         }
         
         state End {
-            on entry print "Bye Bye"    
+            on entry print "Bye Bye\n"    
         }
     }
 }
