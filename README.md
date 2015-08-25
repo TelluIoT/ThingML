@@ -61,6 +61,20 @@ stream incorrect do
 end
 ```
 
-**ArrayParamRef:** An array parameter reference (eventRef.param[]) should be in a **select** clause.
+**ArrayParamRef:** An array parameter reference (eventRef.param[]) should be in a stream declaration, with a window operator. Thus, the following code is not correct:
+```
+message message1(param1 : Integer[]);
+
+operator fooOp(msg : message1) : Boolean do
+  print msg.param1[]
+  [...]
+end
+
+stream incorrect do
+  from e : [port?message1]
+  select a : e.param1[]
+  action sendPort!m2(a)
+end
+```
 
 > Visit [thingml.org](http://www.thingml.org) to find out more about ThingML !
