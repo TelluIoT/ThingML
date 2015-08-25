@@ -13,18 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sintef.thingml;
+/**
+ */
+package org.sintef.thingml.impl;
 
+import org.eclipse.emf.ecore.EClass;
+
+import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.WindowView;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Parameter</b></em>'.
+ * An implementation of the model object '<em><b>Window View</b></em>'.
  * <!-- end-user-doc -->
+ * <p>
+ * </p>
  *
- *
- * @see org.sintef.thingml.ThingmlPackage#getParameter()
- * @model
  * @generated
  */
-public interface Parameter extends Variable, ReferencedElmt {
-} // Parameter
+public abstract class WindowViewImpl extends ViewSourceImpl implements WindowView {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected WindowViewImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return ThingmlPackage.Literals.WINDOW_VIEW;
+	}
+
+} //WindowViewImpl

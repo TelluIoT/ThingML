@@ -34,12 +34,13 @@ import org.sintef.thingml.ThingmlPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.LengthWindowImpl#getNbEvents <em>Nb Events</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.LengthWindowImpl#getStep <em>Step</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class LengthWindowImpl extends ViewSourceImpl implements LengthWindow {
+public class LengthWindowImpl extends WindowViewImpl implements LengthWindow {
 	/**
 	 * The default value of the '{@link #getNbEvents() <em>Nb Events</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -59,6 +60,26 @@ public class LengthWindowImpl extends ViewSourceImpl implements LengthWindow {
 	 * @ordered
 	 */
 	protected int nbEvents = NB_EVENTS_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getStep() <em>Step</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStep()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int STEP_EDEFAULT = -1;
+
+	/**
+	 * The cached value of the '{@link #getStep() <em>Step</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStep()
+	 * @generated
+	 * @ordered
+	 */
+	protected int step = STEP_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -105,11 +126,34 @@ public class LengthWindowImpl extends ViewSourceImpl implements LengthWindow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public int getStep() {
+		return step;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setStep(int newStep) {
+		int oldStep = step;
+		step = newStep;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.LENGTH_WINDOW__STEP, oldStep, step));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ThingmlPackage.LENGTH_WINDOW__NB_EVENTS:
 				return getNbEvents();
+			case ThingmlPackage.LENGTH_WINDOW__STEP:
+				return getStep();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -124,6 +168,9 @@ public class LengthWindowImpl extends ViewSourceImpl implements LengthWindow {
 		switch (featureID) {
 			case ThingmlPackage.LENGTH_WINDOW__NB_EVENTS:
 				setNbEvents((Integer)newValue);
+				return;
+			case ThingmlPackage.LENGTH_WINDOW__STEP:
+				setStep((Integer)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -140,6 +187,9 @@ public class LengthWindowImpl extends ViewSourceImpl implements LengthWindow {
 			case ThingmlPackage.LENGTH_WINDOW__NB_EVENTS:
 				setNbEvents(NB_EVENTS_EDEFAULT);
 				return;
+			case ThingmlPackage.LENGTH_WINDOW__STEP:
+				setStep(STEP_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -154,6 +204,8 @@ public class LengthWindowImpl extends ViewSourceImpl implements LengthWindow {
 		switch (featureID) {
 			case ThingmlPackage.LENGTH_WINDOW__NB_EVENTS:
 				return nbEvents != NB_EVENTS_EDEFAULT;
+			case ThingmlPackage.LENGTH_WINDOW__STEP:
+				return step != STEP_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -170,6 +222,8 @@ public class LengthWindowImpl extends ViewSourceImpl implements LengthWindow {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (nbEvents: ");
 		result.append(nbEvents);
+		result.append(", step: ");
+		result.append(step);
 		result.append(')');
 		return result.toString();
 	}

@@ -40,7 +40,7 @@ import org.sintef.thingml.TimeWindow;
  *
  * @generated
  */
-public class TimeWindowImpl extends ViewSourceImpl implements TimeWindow {
+public class TimeWindowImpl extends WindowViewImpl implements TimeWindow {
 	/**
 	 * The default value of the '{@link #getStep() <em>Step</em>}' attribute.
 	 * <!-- begin-user-doc -->

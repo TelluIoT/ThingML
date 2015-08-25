@@ -27,6 +27,7 @@ package org.sintef.thingml;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.sintef.thingml.LengthWindow#getNbEvents <em>Nb Events</em>}</li>
+ *   <li>{@link org.sintef.thingml.LengthWindow#getStep <em>Step</em>}</li>
  * </ul>
  * </p>
  *
@@ -34,7 +35,7 @@ package org.sintef.thingml;
  * @model
  * @generated
  */
-public interface LengthWindow extends ViewSource {
+public interface LengthWindow extends WindowView {
 	/**
 	 * Returns the value of the '<em><b>Nb Events</b></em>' attribute.
 	 * The default value is <code>"1"</code>.
@@ -61,5 +62,32 @@ public interface LengthWindow extends ViewSource {
 	 * @generated
 	 */
 	void setNbEvents(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Step</b></em>' attribute.
+	 * The default value is <code>"-1"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Step</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Step</em>' attribute.
+	 * @see #setStep(int)
+	 * @see org.sintef.thingml.ThingmlPackage#getLengthWindow_Step()
+	 * @model default="-1" required="true"
+	 * @generated
+	 */
+	int getStep();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.LengthWindow#getStep <em>Step</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Step</em>' attribute.
+	 * @see #getStep()
+	 * @generated
+	 */
+	void setStep(int value);
 
 } // LengthWindow

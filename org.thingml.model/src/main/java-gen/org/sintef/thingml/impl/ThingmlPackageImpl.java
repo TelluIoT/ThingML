@@ -127,6 +127,7 @@ import org.sintef.thingml.UnaryMinus;
 import org.sintef.thingml.Variable;
 import org.sintef.thingml.VariableAssignment;
 import org.sintef.thingml.ViewSource;
+import org.sintef.thingml.WindowView;
 
 /**
  * <!-- begin-user-doc -->
@@ -848,6 +849,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass lengthArrayEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass windowViewEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -2922,6 +2930,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getLengthWindow_Step() {
+		return (EAttribute)lengthWindowEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTimeWindow() {
 		return timeWindowEClass;
 	}
@@ -3005,6 +3022,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EClass getLengthArray() {
 		return lengthArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getWindowView() {
+		return windowViewEClass;
 	}
 
 	/**
@@ -3352,6 +3378,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		lengthWindowEClass = createEClass(LENGTH_WINDOW);
 		createEAttribute(lengthWindowEClass, LENGTH_WINDOW__NB_EVENTS);
+		createEAttribute(lengthWindowEClass, LENGTH_WINDOW__STEP);
 
 		timeWindowEClass = createEClass(TIME_WINDOW);
 		createEAttribute(timeWindowEClass, TIME_WINDOW__STEP);
@@ -3369,6 +3396,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		predifinedPropertyEClass = createEClass(PREDIFINED_PROPERTY);
 
 		lengthArrayEClass = createEClass(LENGTH_ARRAY);
+
+		windowViewEClass = createEClass(WINDOW_VIEW);
 	}
 
 	/**
@@ -3404,6 +3433,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		messageEClass.getESuperTypes().add(this.getAnnotatedElement());
 		thingEClass.getESuperTypes().add(this.getType());
 		parameterEClass.getESuperTypes().add(this.getVariable());
+		parameterEClass.getESuperTypes().add(this.getReferencedElmt());
 		variableEClass.getESuperTypes().add(this.getTypedElement());
 		variableEClass.getESuperTypes().add(this.getAnnotatedElement());
 		variableEClass.getESuperTypes().add(this.getReferencedElmt());
@@ -3460,7 +3490,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		loopActionEClass.getESuperTypes().add(this.getControlStructure());
 		conditionalActionEClass.getESuperTypes().add(this.getControlStructure());
 		propertyReferenceEClass.getESuperTypes().add(this.getExpression());
-		propertyReferenceEClass.getESuperTypes().add(this.getReferencedElmt());
 		arrayIndexEClass.getESuperTypes().add(this.getExpression());
 		dictionaryReferenceEClass.getESuperTypes().add(this.getPropertyReference());
 		expressionGroupEClass.getESuperTypes().add(this.getExpression());
@@ -3494,13 +3523,14 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		messageParameterEClass.getESuperTypes().add(this.getReferencedElmt());
 		referenceEClass.getESuperTypes().add(this.getExpression());
 		sglMsgParamOperatorEClass.getESuperTypes().add(this.getOperator());
-		lengthWindowEClass.getESuperTypes().add(this.getViewSource());
-		timeWindowEClass.getESuperTypes().add(this.getViewSource());
+		lengthWindowEClass.getESuperTypes().add(this.getWindowView());
+		timeWindowEClass.getESuperTypes().add(this.getWindowView());
 		paramReferenceEClass.getESuperTypes().add(this.getElmtProperty());
 		simpleParamRefEClass.getESuperTypes().add(this.getParamReference());
 		arrayParamRefEClass.getESuperTypes().add(this.getParamReference());
 		predifinedPropertyEClass.getESuperTypes().add(this.getElmtProperty());
 		lengthArrayEClass.getESuperTypes().add(this.getPredifinedProperty());
+		windowViewEClass.getESuperTypes().add(this.getViewSource());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(thingMLModelEClass, ThingMLModel.class, "ThingMLModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3820,6 +3850,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		initEClass(lengthWindowEClass, LengthWindow.class, "LengthWindow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getLengthWindow_NbEvents(), ecorePackage.getEInt(), "nbEvents", "1", 1, 1, LengthWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLengthWindow_Step(), ecorePackage.getEInt(), "step", "-1", 1, 1, LengthWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(timeWindowEClass, TimeWindow.class, "TimeWindow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTimeWindow_Step(), ecorePackage.getEInt(), "step", null, 1, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3837,6 +3868,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(predifinedPropertyEClass, PredifinedProperty.class, "PredifinedProperty", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(lengthArrayEClass, LengthArray.class, "LengthArray", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(windowViewEClass, WindowView.class, "WindowView", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

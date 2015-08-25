@@ -568,7 +568,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				PropertyReference propertyReference = (PropertyReference)theEObject;
 				T result = casePropertyReference(propertyReference);
 				if (result == null) result = caseExpression(propertyReference);
-				if (result == null) result = caseReferencedElmt(propertyReference);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -584,7 +583,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				T result = caseDictionaryReference(dictionaryReference);
 				if (result == null) result = casePropertyReference(dictionaryReference);
 				if (result == null) result = caseExpression(dictionaryReference);
-				if (result == null) result = caseReferencedElmt(dictionaryReference);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -829,6 +827,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 			case ThingmlPackage.LENGTH_WINDOW: {
 				LengthWindow lengthWindow = (LengthWindow)theEObject;
 				T result = caseLengthWindow(lengthWindow);
+				if (result == null) result = caseWindowView(lengthWindow);
 				if (result == null) result = caseViewSource(lengthWindow);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -836,6 +835,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 			case ThingmlPackage.TIME_WINDOW: {
 				TimeWindow timeWindow = (TimeWindow)theEObject;
 				T result = caseTimeWindow(timeWindow);
+				if (result == null) result = caseWindowView(timeWindow);
 				if (result == null) result = caseViewSource(timeWindow);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -881,6 +881,13 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				T result = caseLengthArray(lengthArray);
 				if (result == null) result = casePredifinedProperty(lengthArray);
 				if (result == null) result = caseElmtProperty(lengthArray);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.WINDOW_VIEW: {
+				WindowView windowView = (WindowView)theEObject;
+				T result = caseWindowView(windowView);
+				if (result == null) result = caseViewSource(windowView);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -2415,6 +2422,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseLengthArray(LengthArray object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Window View</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Window View</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseWindowView(WindowView object) {
 		return null;
 	}
 

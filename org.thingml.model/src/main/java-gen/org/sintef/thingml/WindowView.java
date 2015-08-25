@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ */
 package org.sintef.thingml;
 
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Parameter</b></em>'.
+ * A representation of the model object '<em><b>Window View</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see org.sintef.thingml.ThingmlPackage#getParameter()
- * @model
+ * @see org.sintef.thingml.ThingmlPackage#getWindowView()
+ * @model abstract="true"
  * @generated
  */
-public interface Parameter extends Variable, ReferencedElmt {
-} // Parameter
+public interface WindowView extends ViewSource {
+} // WindowView

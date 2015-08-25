@@ -679,6 +679,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
+		if (object instanceof org.sintef.thingml.WindowView) {
+			result = interprete_org_sintef_thingml_WindowView((org.sintef.thingml.WindowView) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		return result;
 	}
 	
@@ -1087,6 +1093,10 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	}
 	
 	public ResultType interprete_org_sintef_thingml_LengthArray(org.sintef.thingml.LengthArray lengthArray, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_WindowView(org.sintef.thingml.WindowView windowView, ContextType context) {
 		return null;
 	}
 	

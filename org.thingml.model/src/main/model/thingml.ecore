@@ -41,7 +41,7 @@
         eType="#//Operator" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//Variable #//ReferencedElmt"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Variable" abstract="true" eSuperTypes="#//TypedElement #//AnnotatedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Variable" abstract="true" eSuperTypes="#//TypedElement #//AnnotatedElement #//ReferencedElmt"/>
   <eClassifiers xsi:type="ecore:EClass" name="ThingMLElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
@@ -400,13 +400,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" lowerBound="1"
         eType="#//MessageParameter" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LengthWindow" eSuperTypes="#//ViewSource">
+  <eClassifiers xsi:type="ecore:EClass" name="LengthWindow" eSuperTypes="#//WindowView">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nbEvents" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="step" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
-        defaultValueLiteral="1"/>
+        defaultValueLiteral="-1"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TimeWindow" eSuperTypes="#//ViewSource">
+  <eClassifiers xsi:type="ecore:EClass" name="TimeWindow" eSuperTypes="#//WindowView">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="step" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
@@ -420,4 +420,5 @@
   <eClassifiers xsi:type="ecore:EClass" name="PredifinedProperty" abstract="true"
       eSuperTypes="#//ElmtProperty"/>
   <eClassifiers xsi:type="ecore:EClass" name="LengthArray" eSuperTypes="#//PredifinedProperty"/>
+  <eClassifiers xsi:type="ecore:EClass" name="WindowView" abstract="true" eSuperTypes="#//ViewSource"/>
 </ecore:EPackage>

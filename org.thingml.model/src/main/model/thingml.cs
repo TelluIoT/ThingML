@@ -270,7 +270,7 @@ RULES {
 	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
 	
 	Filter ::= "filter" "(" filterOp ")";
-	LengthWindow ::= "lengthWindow" "(" nbEvents[INTEGER_LITERAL] ")";
+	LengthWindow ::= "lengthWindow" "(" nbEvents[INTEGER_LITERAL] ("," step[INTEGER_LITERAL])? ")";
 	TimeWindow ::= "timeWindow" "(" step[INTEGER_LITERAL] "," size[INTEGER_LITERAL] ")";
 		
 	SimpleSource ::= ( (name[] ":" "[" message "]") | message) ("::" operators)*;	

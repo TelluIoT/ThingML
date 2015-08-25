@@ -292,6 +292,7 @@
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//LengthWindow">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//LengthWindow/nbEvents"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//LengthWindow/step"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//TimeWindow">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//TimeWindow/step"/>
@@ -305,5 +306,6 @@
     <genClasses image="false" ecoreClass="thingml.ecore#//ElmtProperty"/>
     <genClasses image="false" ecoreClass="thingml.ecore#//PredifinedProperty"/>
     <genClasses ecoreClass="thingml.ecore#//LengthArray"/>
+    <genClasses image="false" ecoreClass="thingml.ecore#//WindowView"/>
   </genPackages>
 </genmodel:GenModel>

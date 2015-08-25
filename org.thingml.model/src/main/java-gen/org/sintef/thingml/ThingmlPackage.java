@@ -4568,6 +4568,25 @@ public interface ThingmlPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.WindowViewImpl <em>Window View</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.WindowViewImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getWindowView()
+	 * @generated
+	 */
+	int WINDOW_VIEW = 102;
+
+	/**
+	 * The number of structural features of the '<em>Window View</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WINDOW_VIEW_FEATURE_COUNT = VIEW_SOURCE_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.LengthWindowImpl <em>Length Window</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4584,7 +4603,16 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LENGTH_WINDOW__NB_EVENTS = VIEW_SOURCE_FEATURE_COUNT + 0;
+	int LENGTH_WINDOW__NB_EVENTS = WINDOW_VIEW_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Step</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LENGTH_WINDOW__STEP = WINDOW_VIEW_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Length Window</em>' class.
@@ -4593,7 +4621,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LENGTH_WINDOW_FEATURE_COUNT = VIEW_SOURCE_FEATURE_COUNT + 1;
+	int LENGTH_WINDOW_FEATURE_COUNT = WINDOW_VIEW_FEATURE_COUNT + 2;
 
 
 	/**
@@ -4613,7 +4641,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TIME_WINDOW__STEP = VIEW_SOURCE_FEATURE_COUNT + 0;
+	int TIME_WINDOW__STEP = WINDOW_VIEW_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Size</b></em>' attribute.
@@ -4622,7 +4650,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TIME_WINDOW__SIZE = VIEW_SOURCE_FEATURE_COUNT + 1;
+	int TIME_WINDOW__SIZE = WINDOW_VIEW_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Time Window</em>' class.
@@ -4631,7 +4659,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TIME_WINDOW_FEATURE_COUNT = VIEW_SOURCE_FEATURE_COUNT + 2;
+	int TIME_WINDOW_FEATURE_COUNT = WINDOW_VIEW_FEATURE_COUNT + 2;
 
 
 	/**
@@ -7137,6 +7165,17 @@ public interface ThingmlPackage extends EPackage {
 	EAttribute getLengthWindow_NbEvents();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.LengthWindow#getStep <em>Step</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Step</em>'.
+	 * @see org.sintef.thingml.LengthWindow#getStep()
+	 * @see #getLengthWindow()
+	 * @generated
+	 */
+	EAttribute getLengthWindow_Step();
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.TimeWindow <em>Time Window</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7238,6 +7277,16 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getLengthArray();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.WindowView <em>Window View</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Window View</em>'.
+	 * @see org.sintef.thingml.WindowView
+	 * @generated
+	 */
+	EClass getWindowView();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -9236,6 +9285,14 @@ public interface ThingmlPackage extends EPackage {
 		EAttribute LENGTH_WINDOW__NB_EVENTS = eINSTANCE.getLengthWindow_NbEvents();
 
 		/**
+		 * The meta object literal for the '<em><b>Step</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LENGTH_WINDOW__STEP = eINSTANCE.getLengthWindow_Step();
+
+		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.TimeWindowImpl <em>Time Window</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -9328,6 +9385,16 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EClass LENGTH_ARRAY = eINSTANCE.getLengthArray();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.WindowViewImpl <em>Window View</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.WindowViewImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getWindowView()
+		 * @generated
+		 */
+		EClass WINDOW_VIEW = eINSTANCE.getWindowView();
 
 	}
 

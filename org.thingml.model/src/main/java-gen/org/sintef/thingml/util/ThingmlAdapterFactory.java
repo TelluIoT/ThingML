@@ -489,6 +489,10 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createLengthArrayAdapter();
 			}
 			@Override
+			public Adapter caseWindowView(WindowView object) {
+				return createWindowViewAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -1933,6 +1937,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createLengthArrayAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.WindowView <em>Window View</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.WindowView
+	 * @generated
+	 */
+	public Adapter createWindowViewAdapter() {
 		return null;
 	}
 

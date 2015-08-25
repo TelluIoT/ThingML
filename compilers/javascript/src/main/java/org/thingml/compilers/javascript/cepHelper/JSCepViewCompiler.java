@@ -37,6 +37,10 @@ public class JSCepViewCompiler extends ThingCepViewCompiler{
 
     @Override
     public void generate(LengthWindow lengthWindow, StringBuilder builder, Context context) {
-        builder.append(".bufferWithCount(" + lengthWindow.getNbEvents() + ")");
+        builder.append(".bufferWithCount(" + lengthWindow.getNbEvents());
+        if(lengthWindow.getStep() != -1) {
+            builder.append(", " + lengthWindow.getStep());
+        }
+        builder.append( ")");
     }
 }
