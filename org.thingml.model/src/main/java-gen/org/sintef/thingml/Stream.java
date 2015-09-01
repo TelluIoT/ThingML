@@ -37,7 +37,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface Stream extends ThingMLElement {
+public interface Stream extends AnnotatedElement {
 	/**
 	 * Returns the value of the '<em><b>Selection</b></em>' containment reference list.
 	 * The list contents are of type {@link org.sintef.thingml.StreamExpression}.

@@ -53,7 +53,7 @@ import org.sintef.thingml.ThingmlPackage;
  *
  * @generated
  */
-public class StreamImpl extends ThingMLElementImpl implements Stream {
+public class StreamImpl extends AnnotatedElementImpl implements Stream {
 	/**
 	 * The cached value of the '{@link #getSelection() <em>Selection</em>}' containment reference list.
 	 * <!-- begin-user-doc -->

@@ -697,6 +697,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 			case ThingmlPackage.STREAM: {
 				Stream stream = (Stream)theEObject;
 				T result = caseStream(stream);
+				if (result == null) result = caseAnnotatedElement(stream);
 				if (result == null) result = caseThingMLElement(stream);
 				if (result == null) result = defaultCase(theEObject);
 				return result;

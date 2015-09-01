@@ -277,7 +277,7 @@ RULES {
 	JoinSources ::= (name[] ":" )? "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;
 	MergeSources ::= (name[] ":" )? "[" #1 sources #1 ("|" #1 sources #1)+ "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)*;
 	
-	Stream ::= "stream" #1 name[] #1 "do"
+	Stream ::= "stream" #1 name[] #1 (annotations)* "do"
 					 !1 "from" #1 input
 					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
 					 !1 "action" #1 output

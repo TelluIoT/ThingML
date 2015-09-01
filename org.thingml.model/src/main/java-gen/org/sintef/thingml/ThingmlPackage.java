@@ -3826,7 +3826,16 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STREAM__NAME = THING_ML_ELEMENT__NAME;
+	int STREAM__NAME = ANNOTATED_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM__ANNOTATIONS = ANNOTATED_ELEMENT__ANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Selection</b></em>' containment reference list.
@@ -3835,7 +3844,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STREAM__SELECTION = THING_ML_ELEMENT_FEATURE_COUNT + 0;
+	int STREAM__SELECTION = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Output</b></em>' containment reference.
@@ -3844,7 +3853,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STREAM__OUTPUT = THING_ML_ELEMENT_FEATURE_COUNT + 1;
+	int STREAM__OUTPUT = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Input</b></em>' containment reference.
@@ -3853,7 +3862,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STREAM__INPUT = THING_ML_ELEMENT_FEATURE_COUNT + 2;
+	int STREAM__INPUT = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Stream</em>' class.
@@ -3862,7 +3871,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STREAM_FEATURE_COUNT = THING_ML_ELEMENT_FEATURE_COUNT + 3;
+	int STREAM_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamExpressionImpl <em>Stream Expression</em>}' class.
