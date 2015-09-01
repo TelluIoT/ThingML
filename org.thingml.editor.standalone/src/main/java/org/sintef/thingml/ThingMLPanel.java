@@ -26,8 +26,6 @@ import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.compilers.*;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
-import org.thingml.cppgenerator.CPPGenerator;
-import org.thingml.thingmlgenerator.ThingMLGenerator;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -90,7 +88,7 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
 
             final ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
 
-            JMenu newCompilersMenu = new JMenu("Compile to [NEW]");
+            JMenu newCompilersMenu = new JMenu("Compile to");
             for (final String id : registry.getCompilerIds()) {
                 JMenuItem item = new JMenuItem(id);
                 ThingMLCompiler c = registry.createCompilerInstanceByName(id);
@@ -139,20 +137,19 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
             }
 
             //START TO BE REMOVED AFTER MIGRATION
-            JMenu compilersMenu = new JMenu("Compile to");
+            /*JMenu compilersMenu = new JMenu("Compile to");
             JMenu linuxMenu = new JMenu("Linux");
-            compilersMenu.add(linuxMenu);
+            compilersMenu.add(linuxMenu);*/
 
-            JMenuItem bCPP = new JMenuItem("C++");
-            //JMenuItem rosC = new JMenuItem("ROS Node");
+            /*JMenuItem bCPP = new JMenuItem("C++");
             JMenuItem bThingML = new JMenuItem("ThingML/Comm");
-            JMenuItem bThingML2 = new JMenuItem("ThingML/Comm2");
+            JMenuItem bThingML2 = new JMenuItem("ThingML/Comm2");*/
 
-            JFileChooser filechooser = new JFileChooser();
+            /*JFileChooser filechooser = new JFileChooser();
             filechooser.setDialogTitle("Select target directory");
-            filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);*/
 
-            bCPP.addActionListener(new ActionListener() {
+            /*bCPP.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Input file : " + targetFile);
                     if (targetFile == null) return;
@@ -163,22 +160,9 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                         ex.printStackTrace();
                     }
                 }
-            });
-
-            /*rosC.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Input file : " + targetFile);
-                    if (targetFile == null) return;
-                    try {
-                        ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
-                        CGenerator.compileToROSNodeAndMake(thingmlModel);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
             });*/
 
-            bThingML.addActionListener(new ActionListener() {
+            /*bThingML.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Input file : " + targetFile);
                     if (targetFile == null) return;
@@ -206,13 +190,12 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                         ex.printStackTrace();
                     }
                 }
-            });
+            });*/
 
-            linuxMenu.add(bCPP);
-            //linuxMenu.add(rosC);
+            /*linuxMenu.add(bCPP);
             compilersMenu.add(bThingML);
             compilersMenu.add(bThingML2);
-            menubar.add(compilersMenu);
+            menubar.add(compilersMenu);*/
             //END TO BE REMOVED AFTER MIGRATION
             menubar.add(newCompilersMenu);
 

@@ -41,7 +41,7 @@ public class DynamicCompilerMenu extends  CompoundContributionItem implements IW
 			}
 		}
 		
-		System.out.println("size = " + index);
+		//System.out.println("size = " + index);
 
 		IContributionItem[] list = new IContributionItem[index];
 		int i=0;
@@ -51,14 +51,14 @@ public class DynamicCompilerMenu extends  CompoundContributionItem implements IW
 			parms = new HashMap<String, String>();
 			parms.put("org.thingml.eclipse.ui.commandParameterCompilerName", c.getID());
 			list[i] =  new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "itemid_"+i, "thingml.compile", parms, null, null, null, c.getID(), null, c.getDescription(), CommandContributionItem.STYLE_PUSH, null, true));
-			System.out.println(c.getID() + " " + i);
+			//System.out.println(c.getID() + " " + i);
 			i++;
 			for (final Map.Entry<String, CfgExternalConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
 				parms = new HashMap<String, String>();
-				parms.put("org.thingml.eclipse.ui.commandParameterCompilerName", c.getID());
-				parms.put("org.thingml.eclipse.ui.commandParameterCompilerConnectorName", connectorCompiler.getKey());
-				list[i] =  new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "itemid_"+i, "thingml.compile", parms, null, null, null, connectorCompiler.getKey(), null, connectorCompiler.getKey(), CommandContributionItem.STYLE_PUSH, null, true));
-				System.out.println(connectorCompiler.getKey() + " " + i);
+				parms.put("org.thingml.eclipse.ui.commandParameterCompilerName", c.getID() + "/" + connectorCompiler.getKey());
+				//parms.put("org.thingml.eclipse.ui.commandParameterCompilerConnectorName", connectorCompiler.getKey());
+				list[i] =  new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "itemid_"+i, "thingml.compile", parms, null, null, null, c.getID() + "/" + connectorCompiler.getKey(), null, connectorCompiler.getKey(), CommandContributionItem.STYLE_PUSH, null, true));
+				//System.out.println(connectorCompiler.getKey() + " " + i);
 				i++;
 			}			
 		}

@@ -61,11 +61,6 @@
             <artifactId>org.thingml.editor.standalone</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--<dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>org.sintef.thingml.resource.thingml.ui</artifactId>
-            <version>${project.version}</version>
-        </dependency>-->
     </dependencies>
 
     <build>
