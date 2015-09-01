@@ -49,8 +49,8 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
     }
 
    private static void generateSubscription(Stream stream, StringBuilder builder, Context context, Message outPut, String name) {
-        String outPutName = outPut.getName();
-        String messageType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
+        final String outPutName = outPut.getName();
+        final String messageType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
         String outPutType = messageType;
 
 

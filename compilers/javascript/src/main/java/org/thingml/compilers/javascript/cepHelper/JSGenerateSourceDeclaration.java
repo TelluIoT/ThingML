@@ -64,7 +64,7 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
     @Override
     public void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
         builder.append("\n");
-        builder.append("function wait_" + sources.qname("_") + "() { return Rx.Observable.timer(50); }\n");
+        builder.append("function wait_" + sources.qname("_") + "() { return Rx.Observable.timer(250); }\n");
 
         SimpleSource simpleSource1 = (SimpleSource) sources.getSources().get(0),
                 simpleSource2 = (SimpleSource) sources.getSources().get(1);

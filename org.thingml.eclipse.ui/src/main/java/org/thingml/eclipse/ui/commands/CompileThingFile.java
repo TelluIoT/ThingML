@@ -15,12 +15,10 @@
  */
 package org.thingml.eclipse.ui.commands;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -29,7 +27,6 @@ import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
@@ -47,7 +44,6 @@ import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.eclipse.preferences.PreferenceConstants;
 import org.thingml.eclipse.ui.Activator;
 import org.thingml.eclipse.ui.ThingMLConsole;
-import org.thingml.eclipse.ui.popup.deprecated_actions.LoadModelUtil;
 
 public class CompileThingFile implements IHandler {
 

@@ -29,9 +29,8 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
     @Override
     public void generate(Stream stream, SimpleSource source, StringBuilder builder, Context context) {
         builder.append("PublishSubject " + source.qname("_") + " = PublishSubject.create();\n")
-                .append("cepDispatcher.addSubs(new NullEvent(")
+                .append("cepDispatcher.addSubs(")
                 .append(source.getMessage().getMessage().getName() + "Type,")
-                .append(source.getMessage().getPort().getName() + "_port),")
                 .append(source.qname("_") + ");\n");
 
         builder.append("rx.Observable " + source.qname("_") + "_observable" + " = " + source.qname("_") + ".asObservable();\n");
@@ -133,7 +132,7 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
         builder.append("Func1 wait_" + stream.qname("_") + " = new Func1() {\n" +
                 "@Override\n" +
                 "public Object call(Object o) {\n" +
-                "return rx.Observable.timer(50, TimeUnit.MILLISECONDS);\n" +
+                "return rx.Observable.timer(250, TimeUnit.MILLISECONDS);\n" +
                 "}\n" +
                 "};\n");
 
