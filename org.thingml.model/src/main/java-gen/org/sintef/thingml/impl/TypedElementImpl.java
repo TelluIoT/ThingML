@@ -73,7 +73,7 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean IS_ARRAY_EDEFAULT = false;
+	protected static final boolean IS_ARRAY_EDEFAULT = true;
 
 	/**
 	 * The cached value of the '{@link #isIsArray() <em>Is Array</em>}' attribute.

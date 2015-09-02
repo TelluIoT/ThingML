@@ -90,7 +90,7 @@ public interface TypedElement extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Is Array</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
+	 * The default value is <code>"true"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Is Array</em>' attribute isn't clear,
@@ -100,7 +100,7 @@ public interface TypedElement extends EObject {
 	 * @return the value of the '<em>Is Array</em>' attribute.
 	 * @see #setIsArray(boolean)
 	 * @see org.sintef.thingml.ThingmlPackage#getTypedElement_IsArray()
-	 * @model default="false" required="true"
+	 * @model default="true"
 	 * @generated
 	 */
 	boolean isIsArray();
