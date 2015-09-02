@@ -35,7 +35,7 @@ package org.sintef.thingml;
  * @model
  * @generated
  */
-public interface Connector extends AnnotatedElement {
+public interface Connector extends AbstractConnector {
 	/**
 	 * Returns the value of the '<em><b>Srv</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

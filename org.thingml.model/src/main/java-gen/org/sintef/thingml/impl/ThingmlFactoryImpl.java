@@ -124,6 +124,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.CONFIGURATION: return createConfiguration();
 			case ThingmlPackage.INSTANCE: return createInstance();
 			case ThingmlPackage.CONNECTOR: return createConnector();
+			case ThingmlPackage.EXTERNAL_CONNECTOR: return createExternalConnector();
 			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN: return createConfigPropertyAssign();
 			case ThingmlPackage.CONFIG_INCLUDE: return createConfigInclude();
 			case ThingmlPackage.INSTANCE_REF: return createInstanceRef();
@@ -700,6 +701,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public Connector createConnector() {
 		ConnectorImpl connector = new ConnectorImpl();
 		return connector;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ExternalConnector createExternalConnector() {
+		ExternalConnectorImpl externalConnector = new ExternalConnectorImpl();
+		return externalConnector;
 	}
 
 	/**

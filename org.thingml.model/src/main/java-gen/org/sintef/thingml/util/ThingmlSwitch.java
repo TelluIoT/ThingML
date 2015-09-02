@@ -633,8 +633,26 @@ public class ThingmlSwitch<T> extends Switch<T> {
 			case ThingmlPackage.CONNECTOR: {
 				Connector connector = (Connector)theEObject;
 				T result = caseConnector(connector);
+				if (result == null) result = caseAbstractConnector(connector);
 				if (result == null) result = caseAnnotatedElement(connector);
 				if (result == null) result = caseThingMLElement(connector);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.EXTERNAL_CONNECTOR: {
+				ExternalConnector externalConnector = (ExternalConnector)theEObject;
+				T result = caseExternalConnector(externalConnector);
+				if (result == null) result = caseAbstractConnector(externalConnector);
+				if (result == null) result = caseAnnotatedElement(externalConnector);
+				if (result == null) result = caseThingMLElement(externalConnector);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.ABSTRACT_CONNECTOR: {
+				AbstractConnector abstractConnector = (AbstractConnector)theEObject;
+				T result = caseAbstractConnector(abstractConnector);
+				if (result == null) result = caseAnnotatedElement(abstractConnector);
+				if (result == null) result = caseThingMLElement(abstractConnector);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1943,6 +1961,36 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseConnector(Connector object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>External Connector</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>External Connector</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExternalConnector(ExternalConnector object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Abstract Connector</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Abstract Connector</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAbstractConnector(AbstractConnector object) {
 		return null;
 	}
 

@@ -381,7 +381,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     }
     
     protected void generateMessageForwarders(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-        for (Connector co : cfg.getConnectors()) {
+        for (Connector co : cfg.getInternalConnectors()) {
             if (co.hasAnnotation("c_external_send")) {
                 Thing t = null;
                 Port p = null;

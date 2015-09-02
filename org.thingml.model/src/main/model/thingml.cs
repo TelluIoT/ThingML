@@ -147,6 +147,7 @@ TOKENSTYLES{
 	"connector" COLOR #007F55, BOLD;
 	"group" COLOR #007F55, BOLD;	
 	"=>" COLOR #007F55, BOLD;
+	"over" COLOR #006E54, BOLD;
 
 	// Special keywords
 	"T_ASPECT" COLOR #444444, BOLD;
@@ -227,6 +228,8 @@ RULES {
 	Instance ::= "instance" #1 (name[] #1)? ":" #1 type[] (annotations)*  ; // !0 (  assign )* !0
 	
 	Connector ::= "connector" #1 (name[] #1)? cli "." required[] "=>" srv "." provided[] (!0 annotations)*;
+	
+	ExternalConnector ::= "connector" #1 (name[] #1)? inst "." port[] "over" protocol[] (!0 annotations)*;	
 	
 	ConfigPropertyAssign ::= "set" instance "." property[] ("[" index "]")* #1 "=" #1 init;
 	

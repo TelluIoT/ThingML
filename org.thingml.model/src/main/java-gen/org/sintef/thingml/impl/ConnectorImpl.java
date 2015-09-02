@@ -45,7 +45,7 @@ import org.sintef.thingml.ThingmlPackage;
  *
  * @generated
  */
-public class ConnectorImpl extends AnnotatedElementImpl implements Connector {
+public class ConnectorImpl extends AbstractConnectorImpl implements Connector {
 	/**
 	 * The cached value of the '{@link #getSrv() <em>Srv</em>}' containment reference.
 	 * <!-- begin-user-doc -->

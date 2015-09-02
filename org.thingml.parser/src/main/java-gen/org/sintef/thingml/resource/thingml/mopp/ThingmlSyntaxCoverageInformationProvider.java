@@ -43,6 +43,7 @@ public class ThingmlSyntaxCoverageInformationProvider {
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getConfigInclude(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getInstance(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getConnector(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternalConnector(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getConfigPropertyAssign(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getInstanceRef(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getSendAction(),

@@ -20,22 +20,17 @@ import java.util.*;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-
+import org.sintef.thingml.AbstractConnector;
 import org.sintef.thingml.ConfigInclude;
 import org.sintef.thingml.ConfigPropertyAssign;
 import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Connector;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
@@ -76,7 +71,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 	 * @generated
 	 * @ordered
 	 */
-    protected EList<Connector> connectors;
+    protected EList<AbstractConnector> connectors;
 
     /**
 	 * The default value of the '{@link #isFragment() <em>Fragment</em>}' attribute.
@@ -154,9 +149,9 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EList<Connector> getConnectors() {
+    public EList<AbstractConnector> getConnectors() {
 		if (connectors == null) {
-			connectors = new EObjectContainmentEList<Connector>(Connector.class, this, ThingmlPackage.CONFIGURATION__CONNECTORS);
+			connectors = new EObjectContainmentEList<AbstractConnector>(AbstractConnector.class, this, ThingmlPackage.CONFIGURATION__CONNECTORS);
 		}
 		return connectors;
 	}
@@ -263,7 +258,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 				return;
 			case ThingmlPackage.CONFIGURATION__CONNECTORS:
 				getConnectors().clear();
-				getConnectors().addAll((Collection<? extends Connector>)newValue);
+				getConnectors().addAll((Collection<? extends AbstractConnector>)newValue);
 				return;
 			case ThingmlPackage.CONFIGURATION__FRAGMENT:
 				setFragment((Boolean)newValue);
@@ -379,7 +374,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 
         final Configuration copy = EcoreUtil.copy(this);
         final Map<String, Instance> instances = new HashMap<String, Instance>();
-        final List<Connector> connectors = new ArrayList<Connector>();
+        final List<AbstractConnector> connectors = new ArrayList<AbstractConnector>();
         final Map<String, ConfigPropertyAssign> assigns = new HashMap<String, ConfigPropertyAssign>();
         final String prefix = getName();
 
@@ -407,7 +402,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * @param prefix
      * @generated NOT
      */
-    private void _merge(Map<String, Instance> instances, List<Connector> connectors, Map<String, ConfigPropertyAssign> assigns, String prefix) {
+    private void _merge(Map<String, Instance> instances, List<AbstractConnector> connectors, Map<String, ConfigPropertyAssign> assigns, String prefix) {
         // Recursively deal with all groups first
         for(ConfigInclude g : getConfigs()) {
             ((ConfigurationImpl)g.getConfig())._merge(instances, connectors, assigns, prefix + "_" + g.getName());
@@ -442,7 +437,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         }
 
         // Add the connectors
-        for(Connector c : getConnectors()) {
+        for(Connector c : getInternalConnectors()) {
             Connector copy = EcoreUtil.copy(c);
             // look for the instances:
             Instance cli = instances.get(getInstanceMergedName(prefix, c.getCli()));
@@ -453,6 +448,17 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 
             copy.getSrv().getConfig().clear();
             copy.getSrv().setInstance(srv);
+
+            connectors.add(copy);
+        }
+        
+        for(ExternalConnector c : getExternalConnectors()) {
+            ExternalConnector copy = EcoreUtil.copy(c);
+            // look for the instances:
+            Instance cli = instances.get(getInstanceMergedName(prefix, c.getInst()));
+
+            copy.getInst().getConfig().clear();
+            copy.getInst().setInstance(cli);
 
             connectors.add(copy);
         }
@@ -534,7 +540,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
     public Set<Connector> allConnectors() {
         Set<Connector> result = new HashSet<Connector>();
         MergedConfigurationCache.clearCache();
-        result.addAll(merge().getConnectors());
+        result.addAll(merge().getInternalConnectors());
         return result;
     }
 
@@ -834,6 +840,36 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         return result;
     }
 
+    /**
+     * @generated NOT
+     * @return
+     */
+    public List<Connector> getInternalConnectors() {
+    	List<Connector> result = new ArrayList<Connector>();
+    	for(AbstractConnector c : getConnectors()) {
+    		if (c instanceof Connector) {
+    			result.add((Connector)c);
+    		}
+    	}
+    	
+    	return result;
+    }
+    
+    /**
+     * @generated NOT
+     * @return
+     */
+    public List<ExternalConnector> getExternalConnectors() {
+    	List<ExternalConnector> result = new ArrayList<ExternalConnector>();
+    	for(AbstractConnector c : getConnectors()) {
+    		if (c instanceof ExternalConnector) {
+    			result.add((ExternalConnector)c);
+    		}
+    	}
+    	
+    	return result;
+    }
+    
     /**
      * @generated NOT
      * @return

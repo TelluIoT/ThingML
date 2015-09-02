@@ -530,6 +530,15 @@ public interface ThingmlFactory extends EFactory {
 	Connector createConnector();
 
 	/**
+	 * Returns a new object of class '<em>External Connector</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>External Connector</em>'.
+	 * @generated
+	 */
+	ExternalConnector createExternalConnector();
+
+	/**
 	 * Returns a new object of class '<em>Config Property Assign</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

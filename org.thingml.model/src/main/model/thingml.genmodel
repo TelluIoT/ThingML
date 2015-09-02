@@ -216,6 +216,12 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Connector/required"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Connector/provided"/>
     </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//ExternalConnector">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ExternalConnector/inst"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ExternalConnector/port"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//ExternalConnector/protocol"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="thingml.ecore#//AbstractConnector"/>
     <genClasses ecoreClass="thingml.ecore#//ConfigPropertyAssign">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ConfigPropertyAssign/init"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ConfigPropertyAssign/property"/>
