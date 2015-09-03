@@ -33,7 +33,6 @@ public class JS2NodeRED extends CfgExternalConnectorCompiler {
         //Generate wrapper
 
         final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/" + cfg.getName() + "_nodered.js");
-        builder.append("var Connector = require('./Connector');\n");
 
         for (Thing t : cfg.allThings()) {
             builder.append("var " + t.getName() + " = require('./" + t.getName() + "');\n");
@@ -41,6 +40,7 @@ public class JS2NodeRED extends CfgExternalConnectorCompiler {
 
         builder.append("/**\n* Node-RED node for " + cfg.getName() + "\n*/\n");
         builder.append("module.exports = function(RED) {\n");
+        builder.append("\"use strict\";\n");
         builder.append("function " + ctx.firstToUpper(cfg.getName()) + "Node(config) {\n");
         builder.append("RED.nodes.createNode(this, config);\n");
         builder.append("var node = this;\n");
@@ -104,8 +104,8 @@ public class JS2NodeRED extends CfgExternalConnectorCompiler {
             }
         }
         builder.append("}\n");
-        builder.append("RED.nodes.registerType(\"" + cfg.getName() + "\", " + ctx.firstToUpper(cfg.getName()) + ")");
-        builder.append("};\n\n");
+        builder.append("RED.nodes.registerType(\"" + cfg.getName() + "\", " + ctx.firstToUpper(cfg.getName()) + ");\n");
+        builder.append("}\n");
 
     }
 

@@ -341,20 +341,20 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("//Init ports\n");
         for (Port p : thing.allPorts()) {
-            builder.append("final List<EventType> inEvents_" + p.getName() + " = new ArrayList<EventType>();\n");
+            /*builder.append("final List<EventType> inEvents_" + p.getName() + " = new ArrayList<EventType>();\n");
             builder.append("final List<EventType> outEvents_" + p.getName() + " = new ArrayList<EventType>();\n");
             for (Message r : p.getReceives()) {
                 builder.append("inEvents_" + p.getName() + ".add(" + r.getName() + "Type);\n");
             }
             for (Message s : p.getSends()) {
                 builder.append("outEvents_" + p.getName() + ".add(" + s.getName() + "Type);\n");
-            }
+            }*/
             builder.append(p.getName() + "_port = new Port(");
             if (p instanceof ProvidedPort)
                 builder.append("PortType.PROVIDED");
             else
                 builder.append("PortType.REQUIRED");
-            builder.append(", \"" + p.getName() + "\", inEvents_" + p.getName() + ", outEvents_" + p.getName() + ", this);\n");
+            builder.append(", \"" + p.getName() + "\", this);\n");
         }
 
         builder.append("createCepStreams();");

@@ -166,7 +166,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/main.js");
 
-        //builder.append("var Connector = require('./Connector');\n");
         for (Type ty : model.allUsedSimpleTypes()) {
             if (ty instanceof Enumeration) {
                 builder.append("var Enum = require('./enums');\n");
