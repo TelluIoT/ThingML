@@ -1,0 +1,18 @@
+import "../thingml.thingml"
+
+datatype CString
+@c_type "const char*";
+
+thing fragment COAPClientMsg {
+
+	//only get and observe methods are currently supported
+	message get();
+	message observe();
+	
+	message response(data : CString);
+	
+	message error_occured(code : Integer);
+	
+	message shutdown();
+	message initialize();
+}
