@@ -83,6 +83,6 @@ public interface AnnotatedElement extends ThingMLElement {
      * @return
      * @generated NOT
      */
-    Set<String> annotation(String name);
+    List<String> annotation(String name);
 
 } // AnnotatedElement

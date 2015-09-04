@@ -211,7 +211,7 @@ public class DictionaryImpl extends PropertyImpl implements Dictionary {
      * @generated NOT
      */
     @Override
-    public Set<String> annotation(String name) {
+    public List<String> annotation(String name) {
         return super.annotation(name);
     }
 
