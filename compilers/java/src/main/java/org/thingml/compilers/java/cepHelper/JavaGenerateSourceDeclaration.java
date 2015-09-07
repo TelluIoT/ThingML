@@ -17,6 +17,7 @@ package org.thingml.compilers.java.cepHelper;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.java.JavaHelper;
 import org.thingml.compilers.java.JavaThingActionCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 
@@ -69,7 +70,9 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
                 else
                     builder.append(p.getType().annotation("java_type").toArray()[0] + "[] ");
             }
-            builder.append("param" + i + " = 0;\n");
+            builder.append("param" + i + " = ");
+            builder.append(JavaHelper.getDefaultValue(p.getType()));
+            builder.append(";\n");
             i++;
         }
 
@@ -130,7 +133,7 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
     public void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
         String ttl = "250";
         if (stream.hasAnnotation("TTL"))
-            ttl = stream.annotation("TLL").toArray()[0].toString();
+            ttl = stream.annotation("TTL").get(0);
 
         builder.append("\n");
         builder.append("Func1 wait_" + stream.qname("_") + " = new Func1() {\n" +

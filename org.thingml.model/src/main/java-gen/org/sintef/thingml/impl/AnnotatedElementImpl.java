@@ -197,14 +197,12 @@ public abstract class AnnotatedElementImpl extends ThingMLElementImpl implements
      * @generated NOT
      */
     public boolean hasAnnotation(String name) {
-        PlatformAnnotation pa = null;
         for (PlatformAnnotation a : allAnnotations()) {
             if (a.getName().equals(name)) {
-                pa = a;
-                break;
+                return true;
             }
         }
-        return pa != null;
+        return false;
     }
 
     /**
@@ -213,14 +211,14 @@ public abstract class AnnotatedElementImpl extends ThingMLElementImpl implements
      * @return
      * @generated NOT
      */
-    public Set<String> annotation(String name) {
-        Set<String> result = new HashSet<String>();
-        for (PlatformAnnotation a : ((allAnnotations() == null) ? new ArrayList<PlatformAnnotation>() : allAnnotations())) {//TODO: investigate why allAnnotations sometimes returns null... (it should return an empty list)
-            if (a.getName().equals(name)) {
-                result.add(a.getValue());
-            }
-        }
-        return result;
-    }
+	public List<String> annotation(String name) {
+		List<String> result = new ArrayList<String>();
+		for (PlatformAnnotation a : getAnnotations()) {
+			if (a.getName().equals(name)) {
+				result.add(a.getValue());
+			}
+		}
+		return result;
+	}
 
 } //AnnotatedElementImpl

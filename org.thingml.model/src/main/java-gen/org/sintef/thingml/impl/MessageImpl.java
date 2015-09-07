@@ -16,6 +16,7 @@
 package org.sintef.thingml.impl;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -169,9 +170,9 @@ public class MessageImpl extends AnnotatedElementImpl implements Message {
      * @generated NOT
      */
     public int getCode() {
-        Set<String> codes = annotation("code");
+        List<String> codes = annotation("code");
         if (codes.size() == 1) {
-            return Integer.parseInt(codes.toArray()[0].toString());
+            return Integer.parseInt(codes.get(0));
         }
         else //no code or multiple codes
             return -1;
