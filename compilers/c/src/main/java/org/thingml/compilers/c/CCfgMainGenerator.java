@@ -37,11 +37,120 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         CCompilerContext c = (CCompilerContext) ctx;
+        generateNetworkLibs(cfg, c);
         generateCommonHeader(cfg, c);
         generateRuntimeModule(cfg, c);
         generateConfigurationImplementation(cfg, model, c);
     }
+    
+    public void generateNetworkLibs(Configuration cfg, CCompilerContext ctx) {
+        for(ExternalConnector eco : cfg.getExternalConnectors()) {
+            if(eco.getProtocol().startsWith("Serial")) {
+                String ctemplate = ctx.getNetworkLibSerialTemplate();
+                String htemplate = ctx.getNetworkLibSerialHeaderTemplate();
+                
+                String portName;
+                if(eco.hasAnnotation("port_name")) {
+                    portName = eco.annotation("port_name").iterator().next();
+                } else {
+                    portName = eco.getProtocol();
+                }
+                
+                
+                ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
+                htemplate = htemplate.replace("/*PORT_NAME*/", portName);
 
+                String startByte;
+                if(eco.hasAnnotation("serial_start_byte")) {
+                    startByte = eco.annotation("serial_start_byte").iterator().next();
+                } else {
+                    startByte = "18";
+                }
+                ctemplate = ctemplate.replace("/*START_BYTE*/", startByte);
+
+                String stopByte;
+                if(eco.hasAnnotation("serial_stop_byte")) {
+                    stopByte = eco.annotation("serial_stop_byte").iterator().next();
+                } else {
+                    stopByte = "19";
+                }
+                ctemplate = ctemplate.replace("/*STOP_BYTE*/", stopByte);
+
+                String escapeByte;
+                if(eco.hasAnnotation("serial_escape_byte")) {
+                    escapeByte = eco.annotation("serial_escape_byte").iterator().next();
+                } else {
+                    escapeByte = "125";
+                }
+                ctemplate = ctemplate.replace("/*ESCAPE_BYTE*/", escapeByte);
+                
+                Integer maxMsgSize = 0;
+                for(Message m : eco.getPort().getReceives()) {
+                    if(ctx.getMessageSerializationSize(m) > maxMsgSize) {
+                        maxMsgSize = ctx.getMessageSerializationSize(m);
+                    }
+                }
+                maxMsgSize = maxMsgSize - 2;
+                ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
+
+                String limitBytePerLoop;
+                if(eco.hasAnnotation("serial_limit_byte_per_loop")) {
+                    limitBytePerLoop = eco.annotation("serial_limit_byte_per_loop").iterator().next();
+                } else {
+                    Integer tmp = maxMsgSize*2;
+                    limitBytePerLoop = tmp.toString();
+                }
+                ctemplate = ctemplate.replace("/*LIMIT_BYTE_PER_LOOP*/", limitBytePerLoop);
+                
+                
+
+                String msgBufferSize;
+                if(eco.hasAnnotation("serial_msg_buffer_size")) {
+                    msgBufferSize = eco.annotation("serial_limit_byte_per_loop").iterator().next();
+                    Integer tmp = Integer.parseInt(msgBufferSize);
+                    if(tmp != null) {
+                        if(tmp < maxMsgSize) {
+                            System.err.println("Warning: @serial_limit_byte_per_loop should specify a size greater than the maximal size of a message.");
+                            msgBufferSize = maxMsgSize.toString();
+                        }
+                    }
+                } else {
+                    Integer tmp = maxMsgSize*2;
+                    msgBufferSize = tmp.toString();
+                }
+                ctemplate = ctemplate.replace("/*MSG_BUFFER_SIZE*/", msgBufferSize);
+                
+                //Connector Instanciation
+                StringBuilder eco_instance = new StringBuilder();
+                eco_instance.append("//Connector");
+                Port p = eco.getPort();
+                if(!p.getSends().isEmpty()) {
+                    eco_instance.append("// Pointer to receiver list\n");
+                    eco_instance.append("struct Msg_Handler ** ");
+                    eco_instance.append(p.getName());
+                    eco_instance.append("_receiver_list_head;\n");
+
+                    eco_instance.append("struct Msg_Handler ** ");
+                    eco_instance.append(p.getName());
+                    eco_instance.append("_receiver_list_tail;\n");
+                }
+
+
+                if(!p.getReceives().isEmpty()) {
+                    eco_instance.append("// Handler Array\n");
+                    eco_instance.append("struct Msg_Handler * ");
+                    eco_instance.append(p.getName());
+                    eco_instance.append("_handlers;\n");//[");
+                    //builder.append(p.getReceives().size() + "];");
+                }
+                ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
+                
+                ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
+                ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
+            }
+        }
+    }
+    
     protected void generateConfigurationImplementation(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {
 
         // GENERATE THE CONFIGURATION AND A MAIN
@@ -128,7 +237,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append(" * Definitions for configuration : " + cfg.getName() + "\n");
         builder.append(" *****************************************************************************/\n\n");
 
-        int nbMaxConnexion = cfg.allConnectors().size()*2;
+        int nbMaxConnexion = cfg.allConnectors().size()*2 + cfg.getExternalConnectors().size();
         if(cfg.hasAnnotation("c_dyn_connectors")) {
             nbMaxConnexion = Integer.parseInt(cfg.annotation("c_dyn_connectors").iterator().next());
         }
@@ -320,6 +429,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
         
+        if(!cfg.getExternalConnectors().isEmpty()) {
+                isThereNetworkListener = true;
+        }
+        
         if(isThereNetworkListener) {
             builder.append("void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id) {\n");
 
@@ -327,6 +440,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
             builder.append("uint8_t msgSizeOK = 0;\n");
             builder.append("switch(msg[0] * 256 + msg[1]) {\n");
+            
+            /*
 
             for (Thing t : cfg.allThings()) {
                 for (Port p : t.allPorts()) {
@@ -349,6 +464,22 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     }
                 }
             }
+            */
+            
+            for(ExternalConnector eco : cfg.getExternalConnectors()) {
+                for(Message m : eco.getPort().getReceives()) {
+                    builder.append("case ");
+                    builder.append(m.getCode());
+                    builder.append(":\n");
+                    builder.append("if(msgSize == ");
+                    builder.append(ctx.getMessageSerializationSize(m) - 2);
+                    builder.append(") {\n");
+                    builder.append("msgSizeOK = 1;");
+                    builder.append("}\n");
+                    builder.append("break;\n");
+                }
+            }
+            
             builder.append("}\n\n");
 
 
@@ -381,37 +512,32 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     }
     
     protected void generateMessageForwarders(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-        for (Connector co : cfg.getInternalConnectors()) {
+        
+        for (ExternalConnector co : cfg.getExternalConnectors()) {
             if (co.hasAnnotation("c_external_send")) {
-                Thing t = null;
-                Port p = null;
-                if (!co.getProvided().getOwner().hasAnnotation("remote")) {
-                    t = co.getProvided().getOwner();
-                    p = co.getProvided();
-                }
-                if (!co.getRequired().getOwner().hasAnnotation("remote")) {
-                    t = co.getRequired().getOwner();
-                    p = co.getRequired();
-                }
-                if (p != null) {
-                    for (Message m : p.getSends()) {
-                        builder.append("// Forwarding of messages " + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
-                        builder.append("void forward_" + ctx.getSenderName(t, p, m));
-                        ctx.appendFormalParameters(t, builder, m);
-                        builder.append("{\n");
-                        
-                        generateSerialization(ctx, m, builder, ctx.getHandlerCode(cfg, m));
-                        
-                        builder.append("\n//Forwarding with specified function \n");
-                        builder.append(co.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
-                        builder.append("}\n\n");
-                    }
+                Thing t = co.getInst().getInstance().getType();
+                Port p = co.getPort();
+                for (Message m : p.getSends()) {
+                    builder.append("// Forwarding of messages " + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                    builder.append("void forward_" + ctx.getSenderName(t, p, m));
+                    ctx.appendFormalParameters(t, builder, m);
+                    builder.append("{\n");
+
+                    generateSerialization(ctx, m, builder, ctx.getHandlerCode(cfg, m));
+
+                    builder.append("\n//Forwarding with specified function \n");
+                    builder.append(co.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                    builder.append("}\n\n");
+                
                 }
             }
         }
     }
     
     protected void generateMessageDispatchersDynamic(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        
+        Map<Message, Set<ExternalConnector>> messageExternalSenders = new HashMap<Message, Set<ExternalConnector>>();
+        Set<ExternalConnector> externalSenders;
         
         Map<Message, Set<Map.Entry<Instance, Port>>> messageSenders = new HashMap<Message, Set<Map.Entry<Instance, Port>>>();
         Set<Map.Entry<Instance, Port>> senders;
@@ -433,7 +559,18 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     }
                 }
             }
-            if(!senders.isEmpty()) {
+            
+            externalSenders = new HashSet<ExternalConnector>();
+            for(ExternalConnector eco : cfg.getExternalConnectors()) {
+                if(eco.getPort().getReceives().contains(m)) {
+                    externalSenders.add(eco);
+                }
+            }
+            if(!externalSenders.isEmpty()) {
+                messageExternalSenders.put(m, externalSenders);
+            }
+            
+            if(!senders.isEmpty() || !externalSenders.isEmpty()) {
                 messageSenders.put(m, senders);
             }
             if(!syncSenders.isEmpty()) {
@@ -441,10 +578,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
         
+        
         for(Message m : messageSenders.keySet()) {
             boolean found = false;
-            for(Thing t : cfg.allThings()) {
-                for(Port p : t.allPorts()) {
+            //for(Thing t : cfg.allThings()) {
+            for(Instance inst : cfg.allInstances()) {
+                for(Port p : inst.getType().allPorts()) {
                     if(p.getReceives().contains(m)) {
                         found = true;
                         break;
@@ -458,6 +597,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 ctx.appendFormalParametersForDispatcher(builder, m);
                 builder.append(" {\n");
                 
+                
+                if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                    builder.append("struct executor {\nstatic ");
+                }
                 
                 builder.append("void executor_dispatch_" + m.getName());
                 builder.append("(struct Msg_Handler ** head, struct Msg_Handler ** tail)");
@@ -480,7 +623,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 "       if((**cur).msg[i] == ");
                 builder.append(ctx.getHandlerCode(cfg, m));
                 builder.append(") {\n" +
-                "           handler = (void *) (**cur).msg_handler[i];\n" +
+                "           handler = (void (*) (void *)) (**cur).msg_handler[i];\n" +
                 "           break;\n" +
                 "       }\n" +
                 "   }\n" +
@@ -501,20 +644,57 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 
                 builder.append("}\n");
                 
-                for(Map.Entry<Instance, Port> s : messageSenders.get(m)) {
-                    builder.append("if (sender ==");
-                    builder.append(" " + ctx.getInstanceVarName(s.getKey()));
-                    builder.append(".id_" + s.getValue().getName() + ") {\n");
-                    
-                    builder.append("executor_dispatch_" + m.getName());
-                    builder.append("(");
-                    builder.append(ctx.getInstanceVarName(s.getKey()) + ".");
-                    builder.append(s.getValue().getName() + "_receiver_list_head,");
-                    builder.append(ctx.getInstanceVarName(s.getKey()) + ".");
-                    builder.append(s.getValue().getName() + "_receiver_list_tail");
-                    builder.append(");");
-                    
-                    builder.append("}\n");
+                if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                    builder.append("};\n");
+                }
+                
+                if(messageSenders.get(m) != null) {
+                    for(Map.Entry<Instance, Port> s : messageSenders.get(m)) {
+                        builder.append("if (sender ==");
+                        builder.append(" " + ctx.getInstanceVarName(s.getKey()));
+                        builder.append(".id_" + s.getValue().getName() + ") {\n");
+
+
+
+                        if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                            builder.append("executor::");
+                        }
+                        builder.append("executor_dispatch_" + m.getName());
+                        builder.append("(");
+                        builder.append(ctx.getInstanceVarName(s.getKey()) + ".");
+                        builder.append(s.getValue().getName() + "_receiver_list_head,");
+                        builder.append(ctx.getInstanceVarName(s.getKey()) + ".");
+                        builder.append(s.getValue().getName() + "_receiver_list_tail");
+                        builder.append(");");
+
+                        builder.append("}\n");
+                    }
+                }
+                
+                if(messageExternalSenders.containsKey(m)) {
+                    for(ExternalConnector eco : messageExternalSenders.get(m)) {
+                        String portName;
+                        if(eco.hasAnnotation("port_name")) {
+                            portName = eco.annotation("port_name").iterator().next();
+                        } else {
+                            portName = eco.getProtocol();
+                        }
+                        builder.append("if (sender ==");
+                        builder.append(" " + portName + "_instance.listener_id) {\n");
+
+                        if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                            builder.append("executor::");
+                        }
+                        builder.append("executor_dispatch_" + m.getName());
+                        builder.append("(");
+                        builder.append(portName + "_instance.");
+                        builder.append(eco.getPort().getName() + "_receiver_list_head,");
+                        builder.append(portName + "_instance.");
+                        builder.append(eco.getPort().getName() + "_receiver_list_tail");
+                        builder.append(");");
+
+                        builder.append("}\n");
+                    }
                 }
                 builder.append("}\n");
             }
@@ -734,6 +914,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
             }
         }
+        for(ExternalConnector eco : cfg.getExternalConnectors()) {
+            for(Message m : eco.getPort().getReceives()) {
+                messageSent.add(m);
+            }
+        }
 
         for (Message m : messageSent) {
         //for (Message m : cfg.allMessages()) {
@@ -915,6 +1100,15 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("void initialize_configuration_" + cfg.getName() + "() {\n");
         builder.append("// Initialize connectors\n");
 
+        for(ExternalConnector eco : cfg.getExternalConnectors()) {
+            Thing t = eco.getInst().getInstance().getType();
+            Port port = eco.getPort();
+            for(Message msg : eco.getPort().getSends()) {
+                builder.append("register_external_" + ctx.getSenderName(t, port, msg) + "_listener(");
+                builder.append("forward_" + ctx.getSenderName(t, port, msg) + ");\n");
+            }
+        }
+        
         for (Thing t : cfg.allThings()) {
             for (Port port : t.allPorts()) {
                 for (Message msg : port.getSends()) {
@@ -971,8 +1165,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         for (Instance inst : cfg.allInstances()) {
             nbConnectorSoFar = generateInstanceInitCode(inst, cfg, builder, ctx, nbConnectorSoFar);  
         }
-        
-        
+        for (ExternalConnector eco : cfg.getExternalConnectors()) {
+            nbConnectorSoFar = generateExternalConnectorInitCode(eco, cfg, builder, ctx, nbConnectorSoFar);
+        }
+                
         //Initialize network connections if needed
         generateInitializationNetworkCode(cfg, builder, ctx);
 
@@ -981,6 +1177,50 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
 
         builder.append("}\n");
+    }
+    
+    public int generateExternalConnectorInitCode(ExternalConnector eco, Configuration cfg, StringBuilder builder, CCompilerContext ctx, int nbConnectorSoFar) {
+        Port p = eco.getPort();
+        String portName;
+        if(eco.hasAnnotation("port_name")) {
+            portName = eco.annotation("port_name").iterator().next();
+        } else {
+            portName = eco.getProtocol();
+        }
+        
+        
+        builder.append("// Init the ID, state variables and properties for external connector " + eco.getName() + "\n");
+        builder.append(portName + "_instance.listener_id");
+        builder.append(" = ");
+        builder.append("add_instance( (void*) &" + portName + "_instance" + ");\n");
+
+        int head = nbConnectorSoFar;
+
+
+        if(!eco.getPort().getReceives().isEmpty()) {
+            //    && (!co.getRequired().getReceives().isEmpty())) {
+            builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
+            builder.append(cfg.getName() + "_" + eco.getInst().getInstance().getName()
+                    + "_" + eco.getPort().getName() + "_handlers;\n");
+            nbConnectorSoFar++;
+        }
+
+        if(head != nbConnectorSoFar) {
+            builder.append(portName + "_instance." + p.getName() + "_receiver_list_head = &");
+            builder.append(cfg.getName() + "_receivers[" + head + "];\n");
+            builder.append(portName + "_instance." + p.getName() + "_receiver_list_tail = &");
+            builder.append(cfg.getName() + "_receivers[" + (nbConnectorSoFar - 1) + "];\n");
+        } else {
+            if(!p.getSends().isEmpty()) {
+                //Case where the port could sends messages but isn't connected
+                builder.append(portName + "_instance." + p.getName() + "_receiver_list_head = ");
+                builder.append("NULL;\n");
+                builder.append(portName + "_instance." + p.getName() + "_receiver_list_tail = &");
+                builder.append(cfg.getName() + "_receivers[" + head + "];\n");
+                }
+        }
+        
+        return nbConnectorSoFar;
     }
 
     public int generateInstanceInitCode(Instance inst, Configuration cfg, StringBuilder builder, CCompilerContext ctx, int nbConnectorSoFar) {
@@ -1008,7 +1248,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     if(inst.getType().allStateMachines().get(0).allMessageHandlers() != null) {
                         if(inst.getType().allStateMachines().get(0).allMessageHandlers().get(p) != null) {
                             if(inst.getType().allStateMachines().get(0).allMessageHandlers().get(p).containsKey(m)) {
-                                builder.append(i + "] = &" + inst.getType().getName() + "_handle_" + p.getName()
+                                builder.append(i + "] = (void*) &" + inst.getType().getName() + "_handle_" + p.getName()
                                         + "_" + m.getName()
                                         + ";\n");
                             } else {
@@ -1031,10 +1271,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
                 builder.append("nb_msg = " + i + ";\n");
                 builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
-                builder.append("msg = &" + inst.getName() 
+                builder.append("msg = (uint16_t *) &" + inst.getName() 
                         + "_" + p.getName() + "_msgs;\n");
                 builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
-                builder.append("msg_handler = &" + inst.getName() 
+                builder.append("msg_handler = (void **) &" + inst.getName() 
                         + "_" + p.getName() + "_handlers_tab;\n");
                 builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
                 builder.append("instance = &" + ctx.getInstanceVarName(inst) + ";\n");
@@ -1156,21 +1396,27 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("\n");
         builder.append("// Network Initilization \n");
-        for (Instance in : ctx.getCurrentConfiguration().allInstances()) {
-            for (String initFunction : in.annotation("c_external_init")) {
+        for (ExternalConnector eco : cfg.getExternalConnectors()) {
+            for (String initFunction : eco.annotation("c_external_init")) {
                 builder.append(initFunction + ";\n");
-                builder.append("//" + in.getName() + ".id\n");
+                builder.append("//" + eco.getInst().getInstance().getName() + ":\n");
             }
-            for (String set_listener_idFunction : in.annotation("c_external_set_listener_id")) {
-                builder.append(set_listener_idFunction + "(" + in.getName() + "_var.id);\n");
+            for (String set_listener_idFunction : eco.annotation("c_external_set_listener_id")) {
+                builder.append(set_listener_idFunction + "(" + cfg.getName()+ "_" 
+                        + eco.getInst().getInstance().getName()
+                        + "_var.id_" + eco.getPort().getName() + ");\n");
             }
-            for (String threaded_listener_function : in.annotation("c_external_threaded_listener")) {
+            for (String threaded_listener_function : eco.annotation("c_external_threaded_listener")) {
                 builder.append("pthread_t thread_");
-                builder.append(in.getName());
+                builder.append(eco.getInst().getInstance().getName() + "_");
+                builder.append(eco.getPort().getName() + "_");
+                builder.append(eco.getProtocol());
                 builder.append(";\n");
                 
                 builder.append("pthread_create( &thread_");
-                builder.append(in.getName());
+                builder.append(eco.getInst().getInstance().getName() + "_");
+                builder.append(eco.getPort().getName() + "_");
+                builder.append(eco.getProtocol());
                 builder.append(", NULL, ");
                 builder.append(threaded_listener_function);
                 builder.append(", NULL);\n");          
@@ -1282,6 +1528,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(listenFunction + ";\n");
             }
         }
+        
+        for(ExternalConnector eco : cfg.getExternalConnectors()) {
+            
+            for (String listenFunction : eco.annotation("c_external_listen")) {
+                builder.append(listenFunction + ";\n");
+            }
+        }
+        
 
         // Call empty transition handler (if needed)
         for (Instance i : cfg.allInstances()) {

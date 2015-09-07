@@ -29,7 +29,15 @@ public abstract class CCompilerContext extends Context {
     public CCompilerContext(ThingMLCompiler c) {
         super(c);
     }
-
+    
+    public String getNetworkLibSerialTemplate() {
+        return getTemplateByID("ctemplates/network_lib/" + getCompiler().getID() + "/Serial/ArduinoSerialForward.c");
+    }
+    
+    public String getNetworkLibSerialHeaderTemplate() {
+        return getTemplateByID("ctemplates/network_lib/" + getCompiler().getID() + "/Serial/ArduinoSerialForward.h");
+    }
+    
     public String getCfgMainTemplate() {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_main.c");
     }
