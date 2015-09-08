@@ -30,11 +30,13 @@ int _fifo_enqueue(byte b);
 void fifo_lock();
 void fifo_unlock_and_notify();
 
-void /*PORT_NAME*/_setListenerID(uint16_t id) {
+void /*PORT_NAME*/_set_listener_id(uint16_t id) {
 	/*PORT_NAME*/_instance.listener_id = id;
 }
 
-int /*PORT_NAME*/_setup(char * device, uint32_t baudrate) {
+int /*PORT_NAME*/_setup() {
+        char * device = "/*PATH_TO_DEVICE*/";
+        uint32_t baudrate = /*BAUDRATE*/;
         /*TRACE_LEVEL_1*/printf("[PosixWSForward] Opening Serial device %s at %ibps...\n", device, baudrate);
 	int result;
 	struct termios port_settings;

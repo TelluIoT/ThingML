@@ -6,6 +6,7 @@
 #define /*PORT_NAME*/_LISTENER_STATE_ESCAPE 2
 #define /*PORT_NAME*/_LISTENER_STATE_ERROR 3
 
+
 #define /*PORT_NAME*/_START_BYTE /*START_BYTE*/
 #define /*PORT_NAME*/_STOP_BYTE /*STOP_BYTE*/
 #define /*PORT_NAME*/_ESCAPE_BYTE /*ESCAPE_BYTE*/
@@ -29,11 +30,11 @@ struct /*PORT_NAME*/_instance_type {
 int fifo_byte_available();
 int _fifo_enqueue(byte b);
 
-void /*PORT_NAME*/_setup(long bps) {
-	/*PORT_NAME*/.begin(bps);
+void /*PORT_NAME*/_setup() {
+	/*PORT_NAME*/.begin(/*BAUDRATE*/);
 }
 
-void /*PORT_NAME*/_setListenerID(uint16_t id) {
+void /*PORT_NAME*/_set_listener_id(uint16_t id) {
 	/*PORT_NAME*/_instance.listener_id = id;
 }
 
