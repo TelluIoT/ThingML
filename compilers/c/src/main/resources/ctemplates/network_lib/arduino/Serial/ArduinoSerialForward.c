@@ -49,7 +49,7 @@ void /*PORT_NAME*/_forwardMessage(byte * msg, uint8_t size) {
     }
     /*PORT_NAME*/.write(msg[i]);
   }
-  Serial.write(/*PORT_NAME*/_STOP_BYTE);
+  /*PORT_NAME*/.write(/*PORT_NAME*/_STOP_BYTE);
 }
 
 void /*PORT_NAME*/_read() {

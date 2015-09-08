@@ -4,51 +4,38 @@
 #include <termios.h> // POSIX terminal control definitions
 #include <time.h> // time calls
 
-#define TIMEOUT 10 // timeout waiting for messages from the serial device
-#define INPUT_BUFFER_SIZE 128 // for possible future optimizations
-#define MAX_MSG_LENGTH 16
+//#define /*PORT_NAME*/_TIMEOUT 10 // timeout waiting for messages from the serial device
+#define /*PORT_NAME*/_INPUT_BUFFER_SIZE /*MSG_BUFFER_SIZE*/ // for possible future optimizations
+#define /*PORT_NAME*/_MAX_MSG_LENGTH /*MAX_MSG_SIZE*/
+#define /*PORT_NAME*/_START_BYTE /*START_BYTE*/
+#define /*PORT_NAME*/_STOP_BYTE /*STOP_BYTE*/
+#define /*PORT_NAME*/_ESCAPE_BYTE /*ESCAPE_BYTE*/
 
-#define LISTENER_STATE_IDLE 0
-#define LISTENER_STATE_READING 1
-#define LISTENER_STATE_ESCAPE 2
-#define LISTENER_STATE_ERROR 3
-#define START_BYTE 18
-#define STOP_BYTE 19
-#define ESCAPE_BYTE 125
+#define /*PORT_NAME*/_LISTENER_STATE_IDLE 0
+#define /*PORT_NAME*/_LISTENER_STATE_READING 1
+#define /*PORT_NAME*/_LISTENER_STATE_ESCAPE 2
+#define /*PORT_NAME*/_LISTENER_STATE_ERROR 3
 
-uint16_t listener_id;
+int /*PORT_NAME*/_device_id;
 
-int device_id;
 
+struct /*PORT_NAME*/_instance_type {
+    uint16_t listener_id;
+    /*INSTANCE_INFORMATION*/
+};
+
+extern struct /*PORT_NAME*/_instance_type /*PORT_NAME*/_instance;
 
 int fifo_byte_available();
 int _fifo_enqueue(byte b);
 void fifo_lock();
 void fifo_unlock_and_notify();
 
-void setListenerID(uint16_t id) {
-	listener_id = id;
+void /*PORT_NAME*/_setListenerID(uint16_t id) {
+	/*PORT_NAME*/_instance.listener_id = id;
 }
 
-void enqueueMsg(byte * msg, uint8_t msgSize) {
-	fifo_lock();	
-	if ( fifo_byte_available() > (msgSize + 2) ) {
-		uint8_t i;
-		for (i = 0; i < 2; i++) {
-			_fifo_enqueue(msg[i]);
-		}
-		_fifo_enqueue((listener_id >> 8) & 0xFF);
-		_fifo_enqueue(listener_id & 0xFF);
-		for (i = 2; i < msgSize; i++) {
-			_fifo_enqueue(msg[i]);
-		}
-	} else {
-		//TRACE("ERROR FIFO OVERFLOW\n");
-	}
-	fifo_unlock_and_notify();
-}
-
-int open_serial(char * device, uint32_t baudrate) {
+int /*PORT_NAME*/_setup(char * device, uint32_t baudrate) {
 	int result;
 	struct termios port_settings;
 	printf("Opening Serial device at %s...\n", device);
@@ -112,7 +99,7 @@ int open_serial(char * device, uint32_t baudrate) {
 		sleep(1); // wait a bit
 	}
 
-	device_id = result;
+	/*PORT_NAME*/_device_id = result;
 	//return result;
 }
 	
@@ -122,7 +109,7 @@ int send_byte(int device, uint8_t byte) {
 	data[0] = byte;
 	n = write(device, data, 1);
 	
-	fprintf(stdout, "[lib] forwarding %i with result %i\n", data[0], n);
+	//fprintf(stdout, "[lib] forwarding %i with result %i\n", data[0], n);
 	if (n < 0) {
 		perror("Error writing to Serial device");
 		return -1;
@@ -130,25 +117,25 @@ int send_byte(int device, uint8_t byte) {
 	return 0;
 }
 
-void forwardMessageSerial(byte * msg, uint8_t size) {
-	send_byte(device_id, START_BYTE);
+void /*PORT_NAME*/_forwardMessage(byte * msg, uint8_t size) {
+	send_byte(/*PORT_NAME*/_device_id, /*PORT_NAME*/_START_BYTE);
 	uint8_t i;
 	for(i = 0; i < size; i++) {
-		if((msg[i] == START_BYTE) && (msg[i] == STOP_BYTE) && (msg[i] == ESCAPE_BYTE)) {
-	  		send_byte(device_id, ESCAPE_BYTE);
+		if((msg[i] == /*PORT_NAME*/_START_BYTE) && (msg[i] == /*PORT_NAME*/_STOP_BYTE) && (msg[i] == /*PORT_NAME*/_ESCAPE_BYTE)) {
+	  		send_byte(/*PORT_NAME*/_device_id, /*PORT_NAME*/_ESCAPE_BYTE);
 		}
-		send_byte(device_id, msg[i]);
+		send_byte(/*PORT_NAME*/_device_id, msg[i]);
 	}
-	send_byte(device_id, STOP_BYTE);
+	send_byte(/*PORT_NAME*/_device_id, /*PORT_NAME*/_STOP_BYTE);
 }
 	
-void start_receiver_process()
+void /*PORT_NAME*/_start_receiver_process()
 {
-	int device = device_id;
-	int serialListenerState = LISTENER_STATE_IDLE;
-	char serialBuffer[MAX_MSG_LENGTH];
+	int device = /*PORT_NAME*/_device_id;
+	int serialListenerState = /*PORT_NAME*/_LISTENER_STATE_IDLE;
+	char serialBuffer[/*PORT_NAME*/_MAX_MSG_LENGTH];
 	int serialMsgSize = 0;
-	char buffer[INPUT_BUFFER_SIZE]; // Data read from the ESUSMS device
+	char buffer[/*PORT_NAME*/_INPUT_BUFFER_SIZE]; // Data read from the ESUSMS device
 	int n; // used to store the results of select and read
 	int i; // loop index
 	while (1) {
@@ -166,7 +153,7 @@ void start_receiver_process()
 		}
 		else { // there is something to read
 			//printf("[receiver] rx?");
-			n = read(device, &buffer, INPUT_BUFFER_SIZE * sizeof(char));
+			n = read(device, &buffer, /*PORT_NAME*/_INPUT_BUFFER_SIZE * sizeof(char));
 			//printf(" n=<%i>\n", n);
 			if (n<0) {
 				perror("Error reading from Serial device");
@@ -181,25 +168,26 @@ void start_receiver_process()
 				for (i = 0; i<n; i++) {
 					
 					switch(serialListenerState) {
-						case LISTENER_STATE_IDLE:
-							if(buffer[i] == START_BYTE) {
-							  serialListenerState = LISTENER_STATE_READING;
+						case /*PORT_NAME*/_LISTENER_STATE_IDLE:
+							if(buffer[i] == /*PORT_NAME*/_START_BYTE) {
+							  serialListenerState = /*PORT_NAME*/_LISTENER_STATE_READING;
 							  serialMsgSize = 0;
 							}
 						break;
 
-						case LISTENER_STATE_READING:
-							if (serialMsgSize >= MAX_MSG_LENGTH) {
-							  serialListenerState = LISTENER_STATE_ERROR;
+						case /*PORT_NAME*/_LISTENER_STATE_READING:
+							if (serialMsgSize > /*PORT_NAME*/_MAX_MSG_LENGTH) {
+							  serialListenerState = /*PORT_NAME*/_LISTENER_STATE_ERROR;
 							} else {
-							  if(buffer[i] == STOP_BYTE) {
-								serialListenerState = LISTENER_STATE_IDLE;
+							  if(buffer[i] == /*PORT_NAME*/_STOP_BYTE) {
+								serialListenerState = /*PORT_NAME*/_LISTENER_STATE_IDLE;
 
 								//printMsg(serialBuffer, serialMsgSize);
-								enqueueMsg(serialBuffer, serialMsgSize);
+								//enqueueMsg(serialBuffer, serialMsgSize);
+                                                                externalMessageEnqueue(serialBuffer, serialMsgSize, /*PORT_NAME*/_instance.listener_id);
 
-							  } else if (buffer[i] == ESCAPE_BYTE) {
-								serialListenerState = LISTENER_STATE_ESCAPE;
+							  } else if (buffer[i] == /*PORT_NAME*/_ESCAPE_BYTE) {
+								serialListenerState = /*PORT_NAME*/_LISTENER_STATE_ESCAPE;
 							  } else {
 								serialBuffer[serialMsgSize] = buffer[i];
 								serialMsgSize++;
@@ -207,18 +195,18 @@ void start_receiver_process()
 							}
 						break;
 
-						case LISTENER_STATE_ESCAPE:
-							if (serialMsgSize >= MAX_MSG_LENGTH) {
-							  serialListenerState = LISTENER_STATE_ERROR;
+						case /*PORT_NAME*/_LISTENER_STATE_ESCAPE:
+							if (serialMsgSize > /*PORT_NAME*/_MAX_MSG_LENGTH) {
+							  serialListenerState = /*PORT_NAME*/_LISTENER_STATE_ERROR;
 							} else {
 							  serialBuffer[serialMsgSize] = buffer[i];
 							  serialMsgSize++;
-							  serialListenerState = LISTENER_STATE_READING;
+							  serialListenerState = /*PORT_NAME*/_LISTENER_STATE_READING;
 							}
 						break;
 
-						case LISTENER_STATE_ERROR:
-							serialListenerState = LISTENER_STATE_IDLE;
+						case /*PORT_NAME*/_LISTENER_STATE_ERROR:
+							serialListenerState = /*PORT_NAME*/_LISTENER_STATE_IDLE;
 							serialMsgSize = 0;
 						break;
 					}

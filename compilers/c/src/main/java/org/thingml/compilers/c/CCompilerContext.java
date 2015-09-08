@@ -31,11 +31,19 @@ public abstract class CCompilerContext extends Context {
     }
     
     public String getNetworkLibSerialTemplate() {
-        return getTemplateByID("ctemplates/network_lib/" + getCompiler().getID() + "/Serial/ArduinoSerialForward.c");
+        if(getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/network_lib/arduino/Serial/ArduinoSerialForward.c");
+        } else {
+            return getTemplateByID("ctemplates/network_lib/posix/PosixSerialForward.c");
+        }
     }
     
     public String getNetworkLibSerialHeaderTemplate() {
-        return getTemplateByID("ctemplates/network_lib/" + getCompiler().getID() + "/Serial/ArduinoSerialForward.h");
+        if(getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/network_lib/arduino/Serial/ArduinoSerialForward.h");
+        } else {
+            return getTemplateByID("ctemplates/network_lib/posix/PosixSerialForward.h");
+        }
     }
     
     public String getCfgMainTemplate() {

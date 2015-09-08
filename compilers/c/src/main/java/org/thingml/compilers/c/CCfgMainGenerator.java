@@ -45,108 +45,206 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     
     public void generateNetworkLibs(Configuration cfg, CCompilerContext ctx) {
         for(ExternalConnector eco : cfg.getExternalConnectors()) {
-            if(eco.getProtocol().startsWith("Serial")) {
-                String ctemplate = ctx.getNetworkLibSerialTemplate();
-                String htemplate = ctx.getNetworkLibSerialHeaderTemplate();
-                
-                String portName;
-                if(eco.hasAnnotation("port_name")) {
-                    portName = eco.annotation("port_name").iterator().next();
-                } else {
-                    portName = eco.getProtocol();
-                }
-                
-                
-                ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
-                htemplate = htemplate.replace("/*PORT_NAME*/", portName);
+            if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                if(eco.getProtocol().startsWith("Serial")) {
+                    String ctemplate = ctx.getNetworkLibSerialTemplate();
+                    String htemplate = ctx.getNetworkLibSerialHeaderTemplate();
 
-                String startByte;
-                if(eco.hasAnnotation("serial_start_byte")) {
-                    startByte = eco.annotation("serial_start_byte").iterator().next();
-                } else {
-                    startByte = "18";
-                }
-                ctemplate = ctemplate.replace("/*START_BYTE*/", startByte);
-
-                String stopByte;
-                if(eco.hasAnnotation("serial_stop_byte")) {
-                    stopByte = eco.annotation("serial_stop_byte").iterator().next();
-                } else {
-                    stopByte = "19";
-                }
-                ctemplate = ctemplate.replace("/*STOP_BYTE*/", stopByte);
-
-                String escapeByte;
-                if(eco.hasAnnotation("serial_escape_byte")) {
-                    escapeByte = eco.annotation("serial_escape_byte").iterator().next();
-                } else {
-                    escapeByte = "125";
-                }
-                ctemplate = ctemplate.replace("/*ESCAPE_BYTE*/", escapeByte);
-                
-                Integer maxMsgSize = 0;
-                for(Message m : eco.getPort().getReceives()) {
-                    if(ctx.getMessageSerializationSize(m) > maxMsgSize) {
-                        maxMsgSize = ctx.getMessageSerializationSize(m);
+                    String portName;
+                    if(eco.hasAnnotation("port_name")) {
+                        portName = eco.annotation("port_name").iterator().next();
+                    } else {
+                        portName = eco.getProtocol();
                     }
-                }
-                maxMsgSize = maxMsgSize - 2;
-                ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
 
-                String limitBytePerLoop;
-                if(eco.hasAnnotation("serial_limit_byte_per_loop")) {
-                    limitBytePerLoop = eco.annotation("serial_limit_byte_per_loop").iterator().next();
-                } else {
-                    Integer tmp = maxMsgSize*2;
-                    limitBytePerLoop = tmp.toString();
-                }
-                ctemplate = ctemplate.replace("/*LIMIT_BYTE_PER_LOOP*/", limitBytePerLoop);
-                
-                
 
-                String msgBufferSize;
-                if(eco.hasAnnotation("serial_msg_buffer_size")) {
-                    msgBufferSize = eco.annotation("serial_limit_byte_per_loop").iterator().next();
-                    Integer tmp = Integer.parseInt(msgBufferSize);
-                    if(tmp != null) {
-                        if(tmp < maxMsgSize) {
-                            System.err.println("Warning: @serial_limit_byte_per_loop should specify a size greater than the maximal size of a message.");
-                            msgBufferSize = maxMsgSize.toString();
+                    ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
+                    htemplate = htemplate.replace("/*PORT_NAME*/", portName);
+
+                    String startByte;
+                    if(eco.hasAnnotation("serial_start_byte")) {
+                        startByte = eco.annotation("serial_start_byte").iterator().next();
+                    } else {
+                        startByte = "18";
+                    }
+                    ctemplate = ctemplate.replace("/*START_BYTE*/", startByte);
+
+                    String stopByte;
+                    if(eco.hasAnnotation("serial_stop_byte")) {
+                        stopByte = eco.annotation("serial_stop_byte").iterator().next();
+                    } else {
+                        stopByte = "19";
+                    }
+                    ctemplate = ctemplate.replace("/*STOP_BYTE*/", stopByte);
+
+                    String escapeByte;
+                    if(eco.hasAnnotation("serial_escape_byte")) {
+                        escapeByte = eco.annotation("serial_escape_byte").iterator().next();
+                    } else {
+                        escapeByte = "125";
+                    }
+                    ctemplate = ctemplate.replace("/*ESCAPE_BYTE*/", escapeByte);
+
+                    Integer maxMsgSize = 0;
+                    for(Message m : eco.getPort().getReceives()) {
+                        if(ctx.getMessageSerializationSize(m) > maxMsgSize) {
+                            maxMsgSize = ctx.getMessageSerializationSize(m);
                         }
                     }
-                } else {
-                    Integer tmp = maxMsgSize*2;
-                    msgBufferSize = tmp.toString();
-                }
-                ctemplate = ctemplate.replace("/*MSG_BUFFER_SIZE*/", msgBufferSize);
-                
-                //Connector Instanciation
-                StringBuilder eco_instance = new StringBuilder();
-                eco_instance.append("//Connector");
-                Port p = eco.getPort();
-                if(!p.getSends().isEmpty()) {
-                    eco_instance.append("// Pointer to receiver list\n");
-                    eco_instance.append("struct Msg_Handler ** ");
-                    eco_instance.append(p.getName());
-                    eco_instance.append("_receiver_list_head;\n");
+                    maxMsgSize = maxMsgSize - 2;
+                    ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
 
-                    eco_instance.append("struct Msg_Handler ** ");
-                    eco_instance.append(p.getName());
-                    eco_instance.append("_receiver_list_tail;\n");
-                }
+                    String limitBytePerLoop;
+                    if(eco.hasAnnotation("serial_limit_byte_per_loop")) {
+                        limitBytePerLoop = eco.annotation("serial_limit_byte_per_loop").iterator().next();
+                    } else {
+                        Integer tmp = maxMsgSize*2;
+                        limitBytePerLoop = tmp.toString();
+                    }
+                    ctemplate = ctemplate.replace("/*LIMIT_BYTE_PER_LOOP*/", limitBytePerLoop);
 
 
-                if(!p.getReceives().isEmpty()) {
-                    eco_instance.append("// Handler Array\n");
-                    eco_instance.append("struct Msg_Handler * ");
-                    eco_instance.append(p.getName());
-                    eco_instance.append("_handlers;\n");//[");
-                    //builder.append(p.getReceives().size() + "];");
+
+                    String msgBufferSize;
+                    if(eco.hasAnnotation("serial_msg_buffer_size")) {
+                        msgBufferSize = eco.annotation("serial_limit_byte_per_loop").iterator().next();
+                        Integer tmp = Integer.parseInt(msgBufferSize);
+                        if(tmp != null) {
+                            if(tmp < maxMsgSize) {
+                                System.err.println("Warning: @serial_limit_byte_per_loop should specify a size greater than the maximal size of a message.");
+                                msgBufferSize = maxMsgSize.toString();
+                            }
+                        }
+                    } else {
+                        Integer tmp = maxMsgSize*2;
+                        msgBufferSize = tmp.toString();
+                    }
+                    ctemplate = ctemplate.replace("/*MSG_BUFFER_SIZE*/", msgBufferSize);
+
+                    //Connector Instanciation
+                    StringBuilder eco_instance = new StringBuilder();
+                    eco_instance.append("//Connector");
+                    Port p = eco.getPort();
+                    if(!p.getSends().isEmpty()) {
+                        eco_instance.append("// Pointer to receiver list\n");
+                        eco_instance.append("struct Msg_Handler ** ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_receiver_list_head;\n");
+
+                        eco_instance.append("struct Msg_Handler ** ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_receiver_list_tail;\n");
+                    }
+
+
+                    if(!p.getReceives().isEmpty()) {
+                        eco_instance.append("// Handler Array\n");
+                        eco_instance.append("struct Msg_Handler * ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_handlers;\n");//[");
+                        //builder.append(p.getReceives().size() + "];");
+                    }
+                    ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
+
+                    ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
+                    ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
                 }
-                ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
-                
-                ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
-                ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
+            }
+            if(ctx.getCompiler().getID().compareTo("posix") == 0) {
+                if(eco.getProtocol().startsWith("Serial")) {
+                    String ctemplate = ctx.getNetworkLibSerialTemplate();
+                    String htemplate = ctx.getNetworkLibSerialHeaderTemplate();
+
+                    String portName;
+                    if(eco.hasAnnotation("port_name")) {
+                        portName = eco.annotation("port_name").iterator().next();
+                    } else {
+                        portName = eco.getProtocol();
+                    }
+
+
+                    ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
+                    htemplate = htemplate.replace("/*PORT_NAME*/", portName);
+
+                    String startByte;
+                    if(eco.hasAnnotation("serial_start_byte")) {
+                        startByte = eco.annotation("serial_start_byte").iterator().next();
+                    } else {
+                        startByte = "18";
+                    }
+                    ctemplate = ctemplate.replace("/*START_BYTE*/", startByte);
+
+                    String stopByte;
+                    if(eco.hasAnnotation("serial_stop_byte")) {
+                        stopByte = eco.annotation("serial_stop_byte").iterator().next();
+                    } else {
+                        stopByte = "19";
+                    }
+                    ctemplate = ctemplate.replace("/*STOP_BYTE*/", stopByte);
+
+                    String escapeByte;
+                    if(eco.hasAnnotation("serial_escape_byte")) {
+                        escapeByte = eco.annotation("serial_escape_byte").iterator().next();
+                    } else {
+                        escapeByte = "125";
+                    }
+                    ctemplate = ctemplate.replace("/*ESCAPE_BYTE*/", escapeByte);
+
+                    Integer maxMsgSize = 0;
+                    for(Message m : eco.getPort().getReceives()) {
+                        if(ctx.getMessageSerializationSize(m) > maxMsgSize) {
+                            maxMsgSize = ctx.getMessageSerializationSize(m);
+                        }
+                    }
+                    maxMsgSize = maxMsgSize - 2;
+                    ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
+
+                    String msgBufferSize;
+                    if(eco.hasAnnotation("serial_msg_buffer_size")) {
+                        msgBufferSize = eco.annotation("serial_limit_byte_per_loop").iterator().next();
+                        Integer tmp = Integer.parseInt(msgBufferSize);
+                        if(tmp != null) {
+                            if(tmp < maxMsgSize) {
+                                System.err.println("Warning: @serial_limit_byte_per_loop should specify a size greater than the maximal size of a message.");
+                                msgBufferSize = maxMsgSize.toString();
+                            }
+                        }
+                    } else {
+                        Integer tmp = maxMsgSize*10;
+                        msgBufferSize = tmp.toString();
+                    }
+                    ctemplate = ctemplate.replace("/*MSG_BUFFER_SIZE*/", msgBufferSize);
+
+                    //Connector Instanciation
+                    StringBuilder eco_instance = new StringBuilder();
+                    eco_instance.append("//Connector");
+                    Port p = eco.getPort();
+                    if(!p.getSends().isEmpty()) {
+                        eco_instance.append("// Pointer to receiver list\n");
+                        eco_instance.append("struct Msg_Handler ** ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_receiver_list_head;\n");
+
+                        eco_instance.append("struct Msg_Handler ** ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_receiver_list_tail;\n");
+                    }
+
+
+                    if(!p.getReceives().isEmpty()) {
+                        eco_instance.append("// Handler Array\n");
+                        eco_instance.append("struct Msg_Handler * ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_handlers;\n");//[");
+                        //builder.append(p.getReceives().size() + "];");
+                    }
+                    ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
+                    htemplate = htemplate.replace("/*PATH_TO_C*/", eco.getInst().getInstance().getName() 
+                            + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c");
+                    
+                    ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
+                    ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
+                }
             }
         }
     }
@@ -313,6 +411,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         for (Thing t : cfg.allThings()) {
 
             builder.append("#include \"" + t.getName() + ".h\"\n");
+        }
+        for(ExternalConnector eco : cfg.getExternalConnectors()) {
+            builder.append("#include \"" + eco.getInst().getInstance().getName() 
+                    + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h\"\n");
         }
     }
 

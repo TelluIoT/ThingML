@@ -2,12 +2,13 @@
 
 #define PosixSerialForward_h
 
-#include "PosixSerialForward.c"
+#include "/*PATH_TO_C*/"/*PORT_NAME*/_instance;
 
+struct /*PORT_NAME*/_instance_type /*PORT_NAME*/_instance;
 
-void setListenerID(uint16_t id);
-int open_serial(char * device, uint32_t baudrate);
-void forwardMessageSerial(byte * msg, uint8_t size);
-void start_receiver_process();
+void /*PORT_NAME*/_setListenerID(uint16_t id);
+int /*PORT_NAME*/_setup(char * device, uint32_t baudrate);
+void /*PORT_NAME*/_forwardMessage(byte * msg, uint8_t size);
+void /*PORT_NAME*/_start_receiver_process();
 
 #endif
