@@ -15,28 +15,7 @@ typedef enum { false, true } bool;
 externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);
 
 uint16_t WSlistener_id;
-/*void _fifo_enqueue(uint8_t b) {
-	printf("[PosixWSForward] enqueue %i\n", b);
-}*/
 
-/*void enqueueMsgWS(uint8_t * msg, uint8_t msgSize) {
-	fifo_lock();	
-	if ( fifo_byte_available() > (msgSize + 2) ) {
-		uint8_t i;
-		for (i = 0; i < 2; i++) {
-			_fifo_enqueue(msg[i]);
-		}
-		_fifo_enqueue((WSlistener_id >> 8) & 0xFF);
-		_fifo_enqueue(WSlistener_id & 0xFF);
-		if(DEBUGG) {printf("[PosixWSForward] enqueue with id:%i\n", WSlistener_id);}
-		for (i = 2; i < msgSize; i++) {
-			_fifo_enqueue(msg[i]);
-		}
-	} else {
-		//TRACE("ERROR FIFO OVERFLOW\n");
-	}
-	fifo_unlock_and_notify();
-}*/
 
 
 #define NB_MAX_CLIENT 16
@@ -158,16 +137,7 @@ static int callback_ThingML_protocol(struct libwebsocket_context * this,
 				if(everythingisfine) {
 					int j;
 					externalMessageEnqueue(msg, (len / 3), WSlistener_id);
-					/*for(j = 0; j < (len / 3); j++) {
-						_fifo_enqueue(msg[j]);
-						if(DEBUGG) {printf("[PosixWSForward] enqueue %i\n", msg[j]);}
-						if(j == 1) {
-							_fifo_enqueue((uint8_t) ((listener_id >> 8) & 0xFF));
-							_fifo_enqueue((uint8_t) (listener_id  & 0xFF));
-							if(DEBUGG) {printf("[PosixWSForward] enqueue %i\n", (uint8_t) ((listener_id << 8) & 0xFF));}
-							if(DEBUGG) {printf("[PosixWSForward] enqueue %i\n", (uint8_t) (listener_id  & 0xFF));}
-						}
-					}*/
+					
 				} else {
 					if(DEBUGG) {printf("[PosixWSForward] incorrect message '%s'\n", (char *) in);}
 				}
@@ -175,16 +145,7 @@ static int callback_ThingML_protocol(struct libwebsocket_context * this,
 			
 			
 			
-/*			if(strcmp((const char *)in, "999") == 0) {
-				uint8_t tab[56];
-				uint8_t j;
-				for(j = 0; j < 56;j++){
-					tab[j] = j+199;
-					//fprintf(stderr, "[PosixWSForward] write '%03i'\n", (unsigned char) tab[j]);
-				}
-				broadcast_WS_message((unsigned char *) tab, 56);
-			}
-*/           
+          
             // send response
             // just notice that we have to tell where exactly our response starts. That's
             // why there's `buf[LWS_SEND_BUFFER_PRE_PADDING]` and how long it is.
@@ -302,9 +263,4 @@ void broadcast_WS_message(char * msg, int length) {
 		m = libwebsocket_write(clients[i], p, (length * 3 + 1), LWS_WRITE_TEXT);
 	}
 }
-/*
-int main(void) {
-	init_WS_server(9000);
-	run_WS_server();
-	return 0;
-}*/
+

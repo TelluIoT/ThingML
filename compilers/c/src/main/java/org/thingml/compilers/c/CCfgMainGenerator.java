@@ -229,8 +229,35 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         eco_instance.append(p.getName());
                         eco_instance.append("_receiver_list_tail;\n");
                     }
-
-
+/*TRACE_LEVEL_1*/
+                    
+                    Integer traceLevel;
+                    if(eco.hasAnnotation("serial_trace_level")) {
+                        traceLevel = Integer.parseInt(eco.annotation("serial_trace_level").iterator().next());
+                    } else {
+                        traceLevel = 1;
+                    }
+                    if(traceLevel == null) {
+                        traceLevel = 1;
+                    }
+                    
+                    if(traceLevel >= 3) {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "");
+                    } else {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "//");
+                    }
+                    if(traceLevel >= 2) {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "");
+                    } else {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "//");
+                    }
+                    if(traceLevel >= 1) {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "");
+                    } else {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "//");
+                    }
+                    
+                    
                     if(!p.getReceives().isEmpty()) {
                         eco_instance.append("// Handler Array\n");
                         eco_instance.append("struct Msg_Handler * ");
@@ -239,6 +266,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         //builder.append(p.getReceives().size() + "];");
                     }
                     ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
+                    
                     htemplate = htemplate.replace("/*PATH_TO_C*/", eco.getInst().getInstance().getName() 
                             + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c");
                     
