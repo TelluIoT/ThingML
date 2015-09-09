@@ -173,7 +173,7 @@ public class CompileThingFile implements IHandler {
 			
 			boolean result = compiler.compile(cfg, options);
 			if(subCompiler != null) {
-				compiler.compileConnector(subCompiler, cfg);
+				result = result && compiler.compileConnector(subCompiler, cfg);
 			}
 			
 			if (result) {
