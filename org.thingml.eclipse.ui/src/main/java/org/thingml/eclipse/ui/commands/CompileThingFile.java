@@ -66,6 +66,13 @@ public class CompileThingFile implements IHandler {
 		try {
 		// Fetch the compiler to be used
 		String compilerName = event.getParameter("org.thingml.eclipse.ui.commandParameterCompilerName").toString();
+		String subCompiler = null;
+		if (compilerName.contains("/")) {
+			subCompiler = compilerName.split("/")[1];
+			compilerName = compilerName.split("/")[0];
+		}
+			
+			
 		ThingMLCompiler compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
 		ThingMLConsole.getInstance().printDebug("Compiling with \"" + compiler.getName() + "\" (Platform: " + compiler.getID() + ")\n");
 		
@@ -165,6 +172,9 @@ public class CompileThingFile implements IHandler {
 			compiler.setMessageStream(ThingMLConsole.getInstance().getMessageSteam());
 			
 			boolean result = compiler.compile(cfg, options);
+			if(subCompiler != null) {
+				compiler.compileConnector(subCompiler, cfg);
+			}
 			
 			if (result) {
 				ThingMLConsole.getInstance().printDebug("Configuration " + cfg.getName() + " compiled successfully.\n");
