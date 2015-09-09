@@ -29,6 +29,7 @@ import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -298,16 +299,14 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable {
      * @return
      * @generated NOT
      */
-    public boolean hasAnnotation(String name) {
-        PlatformAnnotation pa = null;
-        for (PlatformAnnotation a : getAnnotations()) {
-            if (a.getName().equals(name)) {
-                pa = a;
-                break;
-            }
-        }
-        return pa != null;
-    }
+	public boolean hasAnnotation(String name) {
+		for (PlatformAnnotation a : allAnnotations()) {
+			if (a.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
     /**
      *
@@ -315,14 +314,15 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable {
      * @return
      * @generated NOT
      */
-    public Set<String> annotation(String name) {
-        Set<String> result = new HashSet<String>();
+    public List<String> annotation(String name) {
+        List<String> result = new ArrayList<String>();
         for (PlatformAnnotation a : getAnnotations()) {
             if (a.getName().equals(name)) {
                 result.add(a.getValue());
             }
         }
-        return result;    }
+        return result;
+	}
 
     //Derived properties
 

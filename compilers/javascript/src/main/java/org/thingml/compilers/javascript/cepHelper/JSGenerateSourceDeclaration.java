@@ -65,7 +65,7 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
     public void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
         String ttl = "250";
         if (stream.hasAnnotation("TTL"))
-            ttl = stream.annotation("TLL").toArray()[0].toString();
+            ttl = stream.annotation("TTL").get(0);
         builder.append("\n");
         builder.append("function wait_" + sources.qname("_") + "() { return Rx.Observable.timer(" + ttl + "); }\n");
 
