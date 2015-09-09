@@ -68,10 +68,10 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
             //Add ThingML dependencies
             String thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n";
             //TODO: will not work if more than one thingml dep. We should re-declare the whole <dependency>
-            for (String dep : cfg.allThingMLMavenDep()) {
+            for (String dep : JavaHelper.allThingMLMavenDep(cfg)) {
                 pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"));
             }
-            for (String dep : cfg.allMavenDep()) {
+            for (String dep : JavaHelper.allMavenDep(cfg)) {
                 pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep);
             }
 

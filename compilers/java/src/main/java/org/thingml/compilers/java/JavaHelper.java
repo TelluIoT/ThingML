@@ -18,6 +18,9 @@ package org.thingml.compilers.java;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by bmori on 09.12.2014.
  */
@@ -113,4 +116,35 @@ public class JavaHelper {
         }
     }
 
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public static Set<String> allThingMLMavenDep(Configuration cfg) {//FIXME: should be moved in a JavaHelper
+        Set<String> result = new HashSet<String>();
+        for(Thing t : cfg.allThings()) {
+            for(String dep : t.annotation("thingml_maven_dep")) {
+                String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
+                result.add(cleanDep);
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @generated NOT
+     */
+    public static Set<String> allMavenDep(Configuration cfg) {//FIXME: should be moved in a JavaHelper
+        Set<String> result = new HashSet<String>();
+        for(Thing t : cfg.allThings()) {
+            for(String dep : t.annotation("maven_dep")) {
+                String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
+                result.add(cleanDep);
+            }
+        }
+        return result;
+    }
 }

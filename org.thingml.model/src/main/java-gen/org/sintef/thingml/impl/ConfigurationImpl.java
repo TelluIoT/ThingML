@@ -616,38 +616,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 
     /**
      *
-     * @return
-     * @generated NOT
-     */
-    public Set<String> allThingMLMavenDep() {//FIXME: should be moved in a JavaHelper
-        Set<String> result = new HashSet<String>();
-        for(Thing t : allThings()) {
-            for(String dep : t.annotation("thingml_maven_dep")) {
-                String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
-                result.add(cleanDep);
-            }
-        }
-        return result;
-    }
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    public Set<String> allMavenDep() {//FIXME: should be moved in a JavaHelper
-        Set<String> result = new HashSet<String>();
-        for(Thing t : allThings()) {
-            for(String dep : t.annotation("maven_dep")) {
-                String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
-                result.add(cleanDep);
-            }
-        }
-        return result;
-    }
-
-    /**
-     *
      * @param i
      * @return
      * @generated NOT

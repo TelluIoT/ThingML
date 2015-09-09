@@ -185,20 +185,6 @@ public interface Configuration extends AnnotatedElement {
 
     /**
      *
-     * @return
-     * @generated NOT
-     */
-    Set<String> allThingMLMavenDep();//FIXME: should be moved in a JavaHelper
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    Set<String> allMavenDep();//FIXME: should be moved in a JavaHelper
-
-    /**
-     *
      * @param i
      * @return
      * @generated NOT
