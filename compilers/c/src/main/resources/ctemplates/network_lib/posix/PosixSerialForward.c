@@ -25,11 +25,6 @@ struct /*PORT_NAME*/_instance_type {
 
 extern struct /*PORT_NAME*/_instance_type /*PORT_NAME*/_instance;
 
-int fifo_byte_available();
-int _fifo_enqueue(byte b);
-void fifo_lock();
-void fifo_unlock_and_notify();
-
 void /*PORT_NAME*/_set_listener_id(uint16_t id) {
 	/*PORT_NAME*/_instance.listener_id = id;
 }

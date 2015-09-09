@@ -258,8 +258,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         eco_instance.append(p.getName());
                         eco_instance.append("_receiver_list_tail;\n");
                     }
-/*TRACE_LEVEL_1*/
-                    
                     Integer traceLevel;
                     if(eco.hasAnnotation("serial_trace_level")) {
                         traceLevel = Integer.parseInt(eco.annotation("serial_trace_level").iterator().next());
@@ -270,17 +268,17 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         traceLevel = 1;
                     }
                     
-                    if(traceLevel >= 3) {
+                    if(traceLevel.intValue() >= 3) {
                         ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "");
                     } else {
                         ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "//");
                     }
-                    if(traceLevel >= 2) {
+                    if(traceLevel.intValue() >= 2) {
                         ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "");
                     } else {
                         ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "//");
                     }
-                    if(traceLevel >= 1) {
+                    if(traceLevel.intValue() >= 1) {
                         ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "");
                     } else {
                         ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "//");
@@ -301,6 +299,182 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     
                     ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
                     ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
+                }
+                if(eco.getProtocol().startsWith("Websocket")) {
+                    String ctemplate = ctx.getNetworkLibWebsocketTemplate();
+                    String htemplate = ctx.getNetworkLibWebsocketHeaderTemplate();
+
+                    String portName;
+                    if(eco.hasAnnotation("port_name")) {
+                        portName = eco.annotation("port_name").iterator().next();
+                    } else {
+                        portName = eco.getProtocol();
+                    }
+
+                    eco.setName(portName);
+
+                    ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
+                    htemplate = htemplate.replace("/*PORT_NAME*/", portName);
+
+                    
+                    Integer portNumber;
+                    if(eco.hasAnnotation("websocket_port_number")) {
+                        portNumber = Integer.parseInt(eco.annotation("websocket_port_number").iterator().next());
+                    } else {
+                        portNumber = 9000;
+                    }
+                    ctemplate = ctemplate.replace("/*PORT_NUMBER*/", portNumber.toString());
+                    
+                    
+                    Integer nbClientMax;
+                    if(eco.hasAnnotation("websocket_nb_client_max")) {
+                        nbClientMax = Integer.parseInt(eco.annotation("websocket_nb_client_max").iterator().next());
+                    } else {
+                        nbClientMax = 16;
+                    }
+                    ctemplate = ctemplate.replace("/*NB_MAX_CLIENT*/", nbClientMax.toString());
+                    //Connector Instanciation
+                    StringBuilder eco_instance = new StringBuilder();
+                    eco_instance.append("//Connector");
+                    Port p = eco.getPort();
+                    if(!p.getSends().isEmpty()) {
+                        eco_instance.append("// Pointer to receiver list\n");
+                        eco_instance.append("struct Msg_Handler ** ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_receiver_list_head;\n");
+
+                        eco_instance.append("struct Msg_Handler ** ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_receiver_list_tail;\n");
+                    }
+                    if(!p.getReceives().isEmpty()) {
+                        eco_instance.append("// Handler Array\n");
+                        eco_instance.append("struct Msg_Handler * ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_handlers;\n");//[");
+                        //builder.append(p.getReceives().size() + "];");
+                    }
+                    ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
+                    
+                    htemplate = htemplate.replace("/*PATH_TO_C*/", eco.getInst().getInstance().getName() 
+                            + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c");
+                    
+                    //UNICAST vs BROADCAST
+                    String enableUnicast = null;
+                    boolean unicast = false;
+                    if(eco.hasAnnotation("websocket_enable_unicast")) {
+                        enableUnicast = eco.annotation("websocket_enable_unicast").iterator().next();
+                    }
+                    if(enableUnicast != null) {
+                        if(enableUnicast.compareTo("true") == 0) {
+                        unicast = true;
+                        }
+                    }
+                    
+                    if(unicast) {
+                        /*PARAM_CLIENT_ID*/
+                        ctemplate = ctemplate.replace("/*PARAM_CLIENT_ID*/", ", uint16_t clientID");
+                        htemplate = htemplate.replace("/*PARAM_CLIENT_ID*/", ", uint16_t clientID");
+                        /*NEW_CLIENT*/
+                        StringBuilder newClient = new StringBuilder();
+                        for(Message m: eco.getPort().getReceives()) {
+                            if(m.hasAnnotation("websocket_new_client")) {
+                                newClient.append("//Notify app with " + m.getName() + "\n");
+                                newClient.append("byte forward_buf[4];\n");
+                                newClient.append("forward_buf[0] = (" + ctx.getHandlerCode(cfg, m) + " >> 8) & 0xFF;\n");
+                                newClient.append("forward_buf[1] =  " + ctx.getHandlerCode(cfg, m) + " & 0xFF;\n\n");
+                                newClient.append("forward_buf[3] = (clientID >> 8) & 0xFF;\n");
+                                newClient.append("forward_buf[2] =  clientID & 0xFF;\n\n");
+                                newClient.append("externalMessageEnqueue(forward_buf, 4, " + portName + "_instance.listener_id);\n\n");
+                            }
+                        }
+                        ctemplate = ctemplate.replace("/*NEW_CLIENT*/", newClient);
+                        /*CLIENT_DECO*/
+                        StringBuilder clientDC = new StringBuilder();
+                        for(Message m: eco.getPort().getReceives()) {
+                            if(m.hasAnnotation("websocket_client_disconnected")) {
+                                clientDC.append("//Notify app with " + m.getName() + "\n");
+                                clientDC.append("byte forward_buf[4];\n");
+                                clientDC.append("forward_buf[0] = (" + ctx.getHandlerCode(cfg, m) + " >> 8) & 0xFF;\n");
+                                clientDC.append("forward_buf[1] =  " + ctx.getHandlerCode(cfg, m) + " & 0xFF;\n\n");
+                                clientDC.append("forward_buf[3] = (clientID >> 8) & 0xFF;\n");
+                                clientDC.append("forward_buf[2] =  clientID & 0xFF;\n\n");
+                                clientDC.append("externalMessageEnqueue(forward_buf, 4, " + portName + "_instance.listener_id);\n\n");
+                            }
+                        }
+                        ctemplate = ctemplate.replace("/*CLIENT_DECO*/", clientDC);
+                        /*SENDING_BROADCAST_OR_NOT*/
+                        StringBuilder WSSending = new StringBuilder();
+                        WSSending.append("if(clientID == 65535) {\n" +
+                            "for(i = 0; i < " + portName + "_nb_client; i++) {\n" +
+                            "if(" + portName + "_clients[i] != NULL) {\n" +
+                            "m = libwebsocket_write(" + portName + "_clients[i], p, (length * 3 + 1), LWS_WRITE_TEXT);\n" +
+                            "}\n" +
+                            "}\n" +
+                            "} else {\n" +
+                            "if(clientID < "+ nbClientMax + ") {\n" +
+                            "if(" + portName + "_clients[clientID] != NULL) {\n" +
+                            "m = libwebsocket_write(" + portName + "_clients[clientID], p, (length * 3 + 1), LWS_WRITE_TEXT);\n" +
+                            "} else {\n" +
+                            "/*TRACE_LEVEL_1*/printf(\"[PosixWSForward] client %i not found\\n\", clientID);" +
+                            "}\n" +
+                            "} else {\n" +
+                            "/*TRACE_LEVEL_1*/printf(\"[PosixWSForward] client %i not found\\n\", clientID);" +
+                            "}\n" +
+                            "}\n"
+                        );
+                        ctemplate = ctemplate.replace(" /*SENDING_BROADCAST_OR_NOT*/", WSSending);
+                    } else {
+                        /*PARAM_CLIENT_ID*/
+                        ctemplate = ctemplate.replace("/*PARAM_CLIENT_ID*/", "");
+                        htemplate = htemplate.replace("/*PARAM_CLIENT_ID*/", "");
+                        /*NEW_CLIENT*/
+                        ctemplate = ctemplate.replace("/*NEW_CLIENT*/", "");
+                        /*CLIENT_DECO*/
+                        ctemplate = ctemplate.replace("/*CLIENT_DECO*/", "");
+                        /*SENDING_BROADCAST_OR_NOT*/
+                        StringBuilder WSSending = new StringBuilder();
+                        WSSending.append("for(i = 0; i < " + portName + "_nb_client; i++) {\n" +
+                            "m = libwebsocket_write(" + portName + "_clients[i], p, (length * 3 + 1), LWS_WRITE_TEXT);\n" +
+                            "}\n");
+                        ctemplate = ctemplate.replace(" /*SENDING_BROADCAST_OR_NOT*/", WSSending);
+                        
+                    }
+                    
+                    Integer traceLevel;
+                    if(eco.hasAnnotation("websocket_trace_level")) {
+                        traceLevel = Integer.parseInt(eco.annotation("websocket_trace_level").iterator().next());
+                    } else {
+                        traceLevel = 1;
+                    }
+                    if(traceLevel == null) {
+                        traceLevel = 1;
+                    }
+                    //System.out.println("TRACE_LEVEL:"+traceLevel);
+                    
+                    if(traceLevel.intValue() >= 3) {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "");
+                        //System.out.println("/*TRACE_LEVEL_3*/");
+                    } else {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "//");
+                    }
+                    if(traceLevel.intValue() >= 2) {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "");
+                        //System.out.println("/*TRACE_LEVEL_2*/");
+                    } else {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "//");
+                    }
+                    if(traceLevel.intValue() >= 1) {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "");
+                        //System.out.println("/*TRACE_LEVEL_1*/");
+                    } else {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "//");
+                    }
+                    
+                    ctx.getBuilder("lws_config.h").append(ctx.getNetworkLibWebsocketDependancy());
+                    ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
+                    ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
+                    
                 }
             }
         }
@@ -534,7 +708,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     }
 
         
-    protected int generateSerialization(CCompilerContext ctx, Message m, StringBuilder builder, int HandlerCode) {
+    protected int generateSerializationForForwarder(CCompilerContext ctx, Message m, StringBuilder builder, int HandlerCode, Set<String> ignoreList) {
        
         builder.append("byte forward_buf[" + (ctx.getMessageSerializationSize(m) - 2) + "];\n");
 
@@ -553,20 +727,21 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
             } else {
                 //builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
+                if(!ignoreList.contains(pt.getName())) {
 
+                    builder.append("union u_" + v + "_t {\n");
+                    builder.append(ctx.getCType(pt.getType()) + " p;\n");
+                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
+                    builder.append("} u_" + v + ";\n");
+                    builder.append("u_" + v + ".p = " + v + ";\n");
 
-                builder.append("union u_" + v + "_t {\n");
-                builder.append(ctx.getCType(pt.getType()) + " p;\n");
-                builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
-                builder.append("} u_" + v + ";\n");
-                builder.append("u_" + v + ".p = " + v + ";\n");
-
-                while (i > 0) {
-                    i = i - 1;
-                    //if (i == 0) 
-                    //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
-                    builder.append("forward_buf[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
-                    j++;
+                    while (i > 0) {
+                        i = i - 1;
+                        //if (i == 0) 
+                        //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
+                        builder.append("forward_buf[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
+                        j++;
+                    }
                 }
             }
         }
@@ -630,19 +805,24 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
             }
             */
-            
+            Set<Message> externalMessages = new HashSet<Message>();
             for(ExternalConnector eco : cfg.getExternalConnectors()) {
                 for(Message m : eco.getPort().getReceives()) {
-                    builder.append("case ");
-                    builder.append(m.getCode());
-                    builder.append(":\n");
-                    builder.append("if(msgSize == ");
-                    builder.append(ctx.getMessageSerializationSize(m) - 2);
-                    builder.append(") {\n");
-                    builder.append("msgSizeOK = 1;");
-                    builder.append("}\n");
-                    builder.append("break;\n");
+                    if(!externalMessages.contains(m)) {
+                        externalMessages.add(m);
+                    }
                 }
+            }
+            for(Message m : externalMessages) {
+                builder.append("case ");
+                builder.append(ctx.getHandlerCode(cfg ,m));
+                builder.append(":\n");
+                builder.append("if(msgSize == ");
+                builder.append(ctx.getMessageSerializationSize(m) - 2);
+                builder.append(") {\n");
+                builder.append("msgSizeOK = 1;");
+                builder.append("}\n");
+                builder.append("break;\n");
             }
             
             builder.append("}\n\n");
@@ -682,17 +862,34 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             //if (eco.hasAnnotation("c_external_send")) {
             Thing t = eco.getInst().getInstance().getType();
             Port p = eco.getPort();
+            boolean additionalParam = eco.hasAnnotation("websocket_enable_unicast");
+            String param;
+            
             for (Message m : p.getSends()) {
+                Set<String> ignoreList = new HashSet<String>();
+                if(additionalParam) {
+                    if(m.hasAnnotation("websocket_client_id")) {
+                        param = m.annotation("websocket_client_id").iterator().next();
+                        ignoreList.add(param);
+                    } else {
+                        param = "-1";
+                    }
+                } else {param = "";}
+                
                 builder.append("// Forwarding of messages " + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
                 builder.append("void forward_" + ctx.getSenderName(t, p, m));
                 ctx.appendFormalParameters(t, builder, m);
                 builder.append("{\n");
-
-                generateSerialization(ctx, m, builder, ctx.getHandlerCode(cfg, m));
+                
+                int messageSize =  generateSerializationForForwarder(ctx, m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
 
                 builder.append("\n//Forwarding with specified function \n");
-                builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
-                //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                if(additionalParam) {
+                    builder.append(eco.getName() + "_forwardMessage(forward_buf, " + messageSize + ", " + param + ");\n");
+                } else {
+                    builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                }
+//builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
                 builder.append("}\n\n");
 
             }
@@ -1045,6 +1242,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     int size = ctx.getMessageSerializationSize(m);
                     if (size > max_msg_size) max_msg_size = size;
                 }
+            }
+        }
+        for(ExternalConnector eco : cfg.getExternalConnectors()) {
+            for(Message m: eco.getPort().getReceives()) {
+                int size = ctx.getMessageSerializationSize(m);
+                if (size > max_msg_size) max_msg_size = size;
             }
         }
         ctx.clearConcreteThing();

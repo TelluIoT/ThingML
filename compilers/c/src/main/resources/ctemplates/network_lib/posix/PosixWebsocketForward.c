@@ -1,6 +1,3 @@
-#define DEBUGG true
-
-
 #include <lws_config.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,58 +5,64 @@
 
 typedef enum { false, true } bool;
 
-//int fifo_byte_available();
-//int _fifo_enqueue(uint8_t b);
-//void fifo_lock();
-//void fifo_unlock_and_notify();
-externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);
-
-uint16_t WSlistener_id;
+//externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);
 
 
 
-#define NB_MAX_CLIENT 16
-struct libwebsocket * clients[NB_MAX_CLIENT];
-int nb_client;
+struct /*PORT_NAME*/_instance_type {
+    uint16_t listener_id;
+    /*INSTANCE_INFORMATION*/
+};
 
-void add_client(struct libwebsocket *wsi) {
-	int i = 0;
+extern struct /*PORT_NAME*/_instance_type /*PORT_NAME*/_instance;
+
+
+struct libwebsocket * /*PORT_NAME*/_clients[/*NB_MAX_CLIENT*/];
+int /*PORT_NAME*/_nb_client;
+
+struct lws_context_creation_info /*PORT_NAME*/_info;
+struct libwebsocket_context */*PORT_NAME*/_context;
+
+
+uint16_t add_client(struct libwebsocket *wsi) {
+	uint16_t i = 0;
 	bool done = false;
-	while ((!done) && (i < NB_MAX_CLIENT)) {
-		if(clients[i] == NULL) {
-			clients[i] = wsi;
+	while ((!done) && (i < /*NB_MAX_CLIENT*/)) {
+		if(/*PORT_NAME*/_clients[i] == NULL) {
+			/*PORT_NAME*/_clients[i] = wsi;
 			done = true;
 		}
 		i++;
 	}
 	if (!done) {
-		if(DEBUGG) {printf("[PosixWSForward] Client list overflow\n");}
+            /*TRACE_LEVEL_1*/printf("[PosixWSForward] Client list overflow\n");
+            return -1;
 	} else {
-		nb_client++;
+            /*PORT_NAME*/_nb_client++;
+            i=i-1;
+            return i;
 	}
 }
 
-void remove_client(struct libwebsocket *wsi) {
-	int i = 0;
+uint16_t remove_client(struct libwebsocket *wsi) {
+	uint16_t i = 0;
 	bool done = false;
-	while ((!done) && (i < NB_MAX_CLIENT)) {
-		if(clients[i] == wsi) {
-			clients[i] = NULL;
-			done = true;
-		}
-		i++;
+	while ((!done) && (i < /*NB_MAX_CLIENT*/)) {
+            if(/*PORT_NAME*/_clients[i] == wsi) {
+                /*PORT_NAME*/_clients[i] = NULL;
+                done = true;
+            }
+            i++;
 	}
 	if (!done) {
-		if(DEBUGG) {printf("[PosixWSForward] Client not found\n");}
+            /*TRACE_LEVEL_1*/printf("[PosixWSForward] Client not found\n");
+            return -1;
 	} else {
-		nb_client--;
+            /*PORT_NAME*/_nb_client--;
+            i=i-1;
+            return i;
 	}
 }
-
-struct lws_context_creation_info info;
-struct libwebsocket_context *context;
-
-bool broadcast = false;
 
 
 static int callback_http(struct libwebsocket_context * this,
@@ -77,73 +80,52 @@ static int callback_ThingML_protocol(struct libwebsocket_context * this,
 {
    
     switch (reason) {
-        case LWS_CALLBACK_ESTABLISHED: // just log message that someone is connecting
-            if(DEBUGG) {printf("[PosixWSForward] Connection established\n");}
-			add_client(wsi);
-			
-            break;
+        case LWS_CALLBACK_ESTABLISHED:{ // just log message that someone is connecting
+            uint16_t clientID = add_client(wsi);
+            /*TRACE_LEVEL_2*/printf("[PosixWSForward] New Client:%i\n", clientID);
+		/*NEW_CLIENT*/
+            break;}
 
-        case LWS_CALLBACK_RECEIVE: { // the funny part
-            // create a buffer to hold our response
-            // it has to have some pre and post padding. You don't need to care
-            // what comes there, libwebsockets will do everything for you. For more info see
-            // http://git.warmcat.com/cgi-bin/cgit/libwebsockets/tree/lib/libwebsockets.h#n597
-/*			unsigned char *buf = (unsigned char*) malloc(LWS_SEND_BUFFER_PRE_PADDING + len +
-                                                         LWS_SEND_BUFFER_POST_PADDING);
-           
-            int i;
-           
-            // pointer to `void *in` holds the incomming request
-            // we're just going to put it in reverse order and put it in `buf` with
-            // correct offset. `len` holds length of the request.
-            for (i=0; i < len; i++) {
-                buf[LWS_SEND_BUFFER_PRE_PADDING + (len - 1) - i ] = ((char *) in)[i];
+        case LWS_CALLBACK_RECEIVE: {
+            int len = strlen((char *) in);
+            /*TRACE_LEVEL_2*/printf("[PosixWSForward] l:%i\n", len);
+            if ((len % 3) == 0) {
+                    unsigned char msg[len % 3];
+                    unsigned char * p = in;
+
+                    int buf = 0;
+                    int index = 0;
+                    bool everythingisfine = true;
+                    while ((index < len) && everythingisfine) {
+                            if((*p - 48) < 10) {
+                                    buf = (*p - 48) + 10 * buf;
+                            } else {
+                                    everythingisfine = false;
+                            }
+                            if ((index % 3) == 2) {
+                                    if(buf < 256) {
+                                            msg[(index-2) / 3] =  (uint8_t) buf;
+                                    } else {
+                                            everythingisfine = false;
+                                    }
+                                    buf = 0;
+                            }
+                            index++;
+                            p++;
+                    }
+                    if(everythingisfine) {
+                            int j;
+                            externalMessageEnqueue(msg, (len / 3), /*PORT_NAME*/_instance.listener_id);
+                            /*TRACE_LEVEL_2*/printf("[PosixWSForward] Message received\n");
+
+                    } else {
+                            /*TRACE_LEVEL_1*/printf("[PosixWSForward] incorrect message '%s'\n", (char *) in);
+                    }
+            } else {
+                /*TRACE_LEVEL_1*/printf("[PosixWSForward] incorrect message '%s'\n", (char *) in);
             }
-           
-            // log what we recieved and what we're going to send as a response.
-            // that disco syntax `%.*s` is used to print just a part of our buffer
-            // http://stackoverflow.com/questions/5189071/print-part-of-char-array
-            if(DEBUGG) {printf("[PosixWSForward] received data: %s, replying: %.*s\n", (char *) in, (int) len,
-                 buf + LWS_SEND_BUFFER_PRE_PADDING);}
 
-*/
 
-			int len = strlen((char *) in);
-			if(DEBUGG) {printf("[PosixWSForward] l:%i\n", len);}
-			if ((len % 3) == 0) {
-				unsigned char msg[len % 3];
-				unsigned char * p = in;
-				
-				int buf = 0;
-				int index = 0;
-				bool everythingisfine = true;
-				while ((index < len) && everythingisfine) {
-					if((*p - 48) < 10) {
-						buf = (*p - 48) + 10 * buf;
-					} else {
-						everythingisfine = false;
-					}
-					if ((index % 3) == 2) {
-						if(buf < 256) {
-							msg[(index-2) / 3] =  (uint8_t) buf;
-						} else {
-							everythingisfine = false;
-						}
-						buf = 0;
-					}
-					index++;
-					p++;
-				}
-				if(everythingisfine) {
-					int j;
-					externalMessageEnqueue(msg, (len / 3), WSlistener_id);
-					
-				} else {
-					if(DEBUGG) {printf("[PosixWSForward] incorrect message '%s'\n", (char *) in);}
-				}
-			} else {if(DEBUGG) {printf("[PosixWSForward] incorrect message '%s'\n", (char *) in);}}
-			
-			
 			
           
             // send response
@@ -158,15 +140,17 @@ static int callback_ThingML_protocol(struct libwebsocket_context * this,
             break;
         }
 		
-		case LWS_CALLBACK_WSI_DESTROY: {
-			remove_client(wsi);
-			if(DEBUGG) {printf("[PosixWSForward] Wsi destroyed\n");}
-		}
+        case LWS_CALLBACK_WSI_DESTROY: {
+                uint16_t clientID = remove_client(wsi);
+		/*CLIENT_DECO*/
+                /*TRACE_LEVEL_1*/printf("[PosixWSForward] Wsi destroyed:%i\n", clientID);
+        }
 
-		case LWS_CALLBACK_CLOSED: {
-			remove_client(wsi);
-			if(DEBUGG) {printf("[PosixWSForward] Connexion closed\n");}
-		}
+        case LWS_CALLBACK_CLOSED: {
+                uint16_t clientID = remove_client(wsi);
+                /*TRACE_LEVEL_2*/printf("[PosixWSForward] Connexion with client closed:%i\n", clientID);
+		/*CLIENT_DECO*/
+        }
 
         default:
             break;
@@ -193,15 +177,14 @@ static struct libwebsocket_protocols protocols[] = {
     }
 };
 
-void setWSListenerID(uint16_t id) {
-	WSlistener_id = id;
-	if(DEBUGG) {printf("[PosixWSForward] Register listener ID: %i\n", WSlistener_id);}
+void /*PORT_NAME*/_set_listener_id(uint16_t id) {
+	/*PORT_NAME*/_instance.listener_id = id;
 }
 
-void init_WS_server(int port) {
-	memset(&info, 0, sizeof info);
+void /*PORT_NAME*/_setup() {
+    memset(&/*PORT_NAME*/_info, 0, sizeof /*PORT_NAME*/_info);
 
-	//int port = 9000;
+    int port = /*PORT_NUMBER*/;
     const char *interface = NULL;
     // we're not using ssl
     const char *cert_path = NULL;
@@ -209,40 +192,41 @@ void init_WS_server(int port) {
     // no special options
     int opts = 0;
    
-	info.port = port;
-	info.iface = interface;
-	info.protocols = protocols;
-	info.extensions = libwebsocket_get_internal_extensions();
-	info.ssl_cert_filepath = NULL;
-	info.ssl_private_key_filepath = NULL;
-	
-	info.gid = -1;
-	info.uid = -1;
-	info.options = opts;
+    /*PORT_NAME*/_info.port = port;
+    /*PORT_NAME*/_info.iface = interface;
+    /*PORT_NAME*/_info.protocols = protocols;
+    /*PORT_NAME*/_info.extensions = libwebsocket_get_internal_extensions();
+    /*PORT_NAME*/_info.ssl_cert_filepath = NULL;
+    /*PORT_NAME*/_info.ssl_private_key_filepath = NULL;
+
+    /*PORT_NAME*/_info.gid = -1;
+    /*PORT_NAME*/_info.uid = -1;
+    /*PORT_NAME*/_info.options = opts;
+    /*TRACE_LEVEL_1*/printf("[PosixWSForward] Init WS Server on port:%i\n", port);
 }
 
-void run_WS_server() {
+void /*PORT_NAME*/_start_receiver_process() {
 
-
-    // create libwebsocket context representing this server
-    context = libwebsocket_create_context(&info);
+    /*TRACE_LEVEL_1*/printf("[PosixWSForward] Start running WS Server\n");
+    // create libwebsocket /*PORT_NAME*/_context representing this server
+    /*PORT_NAME*/_context = libwebsocket_create_context(&/*PORT_NAME*/_info);
    
-    if (context == NULL) {
-        fprintf(stderr, "[PosixWSForward] libwebsocket init failed\n");
+    if (/*PORT_NAME*/_context == NULL) {
+        /*TRACE_LEVEL_1*/fprintf(stderr, "[PosixWSForward] libwebsocket init failed\n");
         return -1;
     }
 	
-    if(DEBUGG) {printf("[PosixWSForward] Starting server...\n");}
+    /*TRACE_LEVEL_1*/printf("[PosixWSForward] Starting server...\n");
 	
     // infinite loop, to end this server send SIGTERM. (CTRL+C)
     while (1) {
-        libwebsocket_service(context, 50);
-	}
+        libwebsocket_service(/*PORT_NAME*/_context, 50);
+    }
 	
-	libwebsocket_context_destroy(context);
+    libwebsocket_context_destroy(/*PORT_NAME*/_context);
 }
 
-void broadcast_WS_message(char * msg, int length) {
+void /*PORT_NAME*/_forwardMessage(char * msg, int length/*PARAM_CLIENT_ID*/) {
 	int n, m, i;
 	unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + (length * 3 + 1) +
 						  LWS_SEND_BUFFER_POST_PADDING];
@@ -258,9 +242,12 @@ void broadcast_WS_message(char * msg, int length) {
 	}
 	*q = '\0';
 	n++;
-	//printf("[PosixWSForward] Trying to send:\n%s \n", p);
-	for(i = 0; i < nb_client; i++) {
-		m = libwebsocket_write(clients[i], p, (length * 3 + 1), LWS_WRITE_TEXT);
-	}
+	/*TRACE_LEVEL_3*/printf("[PosixWSForward] Trying to send:\n%s \n", p);
+
+
+        /*SENDING_BROADCAST_OR_NOT*/
+	//for(i = 0; i < /*PORT_NAME*/_nb_client; i++) {
+	//	m = libwebsocket_write(/*PORT_NAME*/_clients[i], p, (length * 3 + 1), LWS_WRITE_TEXT);
+	//}
 }
 
