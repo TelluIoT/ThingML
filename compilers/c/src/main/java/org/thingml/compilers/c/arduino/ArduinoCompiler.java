@@ -29,6 +29,7 @@ import org.thingml.compilers.thing.ThingCepViewCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
 import java.io.File;
+import org.sintef.thingml.ExternalConnector;
 
 /**
  * Created by ffl on 25.11.14.
@@ -67,7 +68,8 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
 
         ctx.setCurrentConfiguration(cfg);
         ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
-
+        
+              
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : cfg.allThings()) {
             ctx.setConcreteThing(thing);

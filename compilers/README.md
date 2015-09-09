@@ -96,7 +96,7 @@ Deprescala stands for deprecated scala compiler. This project contains the previ
 
 Like the rest of the ThingML modules, the compilers are structures as Maven projects. All the source code is developed for Java source compliance 7 and compiled with Maven 3.
 
-> **We use compiler compliance Java 7 and NOT Java 8** This is not by accident or any kind denial of new technologies:-) Take contact is you want to argue. Also note that you can and should use a Java 8 JDK even if we use compiler compliance with Java 7.
+> **We use compiler compliance Java 7 and NOT Java 8** This is not by accident or any kind denial of new technologies:-) Take contact if you want to argue. Also note that you can and should use a Java 8 JDK even if we use compiler compliance with Java 7.
 
 From the command line run ``mvn clean install`` to rebuild the compilers.
 
