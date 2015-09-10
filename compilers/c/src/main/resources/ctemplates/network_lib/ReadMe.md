@@ -8,21 +8,32 @@
 * 3: Detailed byte per byte notifying
 
 ##Annotation
-* @port_name
+* @port_name default value: Protocol (Must be unique)
 
 ###Posix
 
 ####Serial
-* @serial_start_byte
-* @serial_stop_byte
-* @serial_escape_byte
-* @serial_msg_buffer_size
+#####Compulsory
+* @serial_path_to_device
+
+#####Optional
+* @serial_trace_level default value: 1
+* @serial_start_byte default value: 18
+* @serial_stop_byte default value: 19
+* @serial_escape_byte default value: 125
+* @serial_msg_buffer_size default value: 10 * Max message size
+* @serial_baudrate default value: 115200
+
+####Websocket
+* @websocket_port_number default value: 9000
+* @websocket_nb_client_max default: 16
 
 ###Arduino
 
 ####Serial
-* @serial_start_byte
-* @serial_stop_byte
-* @serial_escape_byte
-* @serial_limit_byte_per_loop
-* @serial_msg_buffer_size
+* @serial_start_byte default value: 18
+* @serial_stop_byte default value: 19
+* @serial_escape_byte default value: 125
+* @serial_limit_byte_per_loop default value: 2 * Max message size
+* @serial_msg_buffer_size default value: 2 * Max message size
+* @serial_baudrate default value: 9600
