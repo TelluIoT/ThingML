@@ -1,3 +1,13 @@
+//Required installation to run this example:
+//0) cson (https://github.com/SINTEF-9012/cson-purified) is required to run this example
+//1) Clone https://github.com/SINTEF-9012/cson-purified
+//2) Run: make && sudo make install
+
+//NOTE:
+//make sure that the dynamic linker is set to look up /usr/local/lib
+//for more details see http://lonesysadmin.net/2013/02/22/error-while-loading-shared-libraries-cannot-open-shared-object-file/
+
+
 import "../../../thingml.thingml"
 import "../../json_parser.thingml"
 
