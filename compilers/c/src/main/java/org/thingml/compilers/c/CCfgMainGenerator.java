@@ -974,8 +974,18 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
                 
                 builder.append("void executor_dispatch_" + m.getName());
-                builder.append("(struct Msg_Handler ** head, struct Msg_Handler ** tail)");
-                builder.append(" {\n");
+                builder.append("(struct Msg_Handler ** head, struct Msg_Handler ** tail");
+                
+                if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                    for (Parameter p : m.getParameters()) {
+                        builder.append(", ");
+                        builder.append(ctx.getCType(p.getType()));
+                        builder.append(" ");
+                        builder.append("param_" + p.getName());
+                    }
+                }
+                
+                builder.append(") {\n");
                 
                 builder.append("struct Msg_Handler ** cur = head;\n" +
                 "while (cur != NULL) {\n" +
@@ -994,7 +1004,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 "       if((**cur).msg[i] == ");
                 builder.append(ctx.getHandlerCode(cfg, m));
                 builder.append(") {\n" +
-                "           handler = (void (*) (void *)) (**cur).msg_handler[i];\n" +
+                "           handler = (void (*) (void *");
+                
+                for (Parameter p : m.getParameters()) {
+                    builder.append(", ");
+                    builder.append(ctx.getCType(p.getType()));
+                }
+                
+                builder.append(")) (**cur).msg_handler[i];\n" +
                 "           break;\n" +
                 "       }\n" +
                 "   }\n" +
@@ -1043,6 +1060,15 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append(s.getValue().getName() + "_receiver_list_head,");
                         builder.append(ctx.getInstanceVarName(s.getKey()) + ".");
                         builder.append(s.getValue().getName() + "_receiver_list_tail");
+                        
+                        
+                        if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                            for (Parameter p : m.getParameters()) {
+                                builder.append(", ");
+                                builder.append("param_" + p.getName());
+                            }
+                        }
+                        
                         builder.append(");");
 
                         builder.append("}\n");
