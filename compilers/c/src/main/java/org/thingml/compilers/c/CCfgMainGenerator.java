@@ -1658,8 +1658,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 
                 if((co.getSrv().getInstance().getName().compareTo(inst.getName()) == 0) 
                         && (co.getProvided().getName().compareTo(p.getName()) == 0) 
-                        && (!co.getProvided().getSends().isEmpty())) {
-                    //    && (!co.getRequired().getReceives().isEmpty())) {
+                        && (!co.getProvided().getSends().isEmpty()) 
+                        && (!co.getRequired().getReceives().isEmpty())) {
                     builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
                     builder.append(co.getCli().getInstance().getName()
                             + "_" + co.getRequired().getName() + "_handlers;\n");
@@ -1668,8 +1668,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 if((co.getCli().getInstance().getName().compareTo(inst.getName()) == 0) 
                         && (co.getRequired().getName().compareTo(p.getName()) == 0) 
                     //    && (co.getRequired() == p) 
-                        && (!co.getRequired().getSends().isEmpty())) {
-                    //    && (!co.getProvided().getReceives().isEmpty())) {
+                        && (!co.getRequired().getSends().isEmpty()) 
+                        && (!co.getProvided().getReceives().isEmpty())) {
                     builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
                     builder.append(co.getSrv().getInstance().getName()
                             + "_" + co.getProvided().getName() + "_handlers;\n");
