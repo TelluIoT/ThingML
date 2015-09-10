@@ -174,7 +174,6 @@ public abstract class CCompilerContext extends Context {
         }
         return result;
     }
-    //protected Hashtable<Thing, Hashtable<Port, Hashtable<Message, Integer>>> handlerCodes = new Hashtable<Thing, Hashtable<Port, Hashtable<Message, Integer>>>();
     protected Hashtable<Message, Integer> handlerCodes = new Hashtable<Message, Integer>();
     protected int handlerCodeCpt = 1;
 
@@ -222,62 +221,6 @@ public abstract class CCompilerContext extends Context {
 
             handlerCodes.put(m, result);
         }
-        /*
-        Hashtable<Port, Hashtable<Message, Integer>> handler_codes = handlerCodes.get(t);
-        if (handler_codes == null) {
-            handler_codes = new Hashtable<Port, Hashtable<Message, Integer>>();
-            handlerCodes.put(t, handler_codes);
-        }
-
-        Hashtable<Message, Integer> table = handler_codes.get(p);
-        if (table == null) {
-            table = new Hashtable<Message, Integer>();
-            handler_codes.put(p, table);
-        }
-
-        Integer result = table.get(m);
-        if (result == null) {
-            if (m.hasAnnotation("code")) {
-                result = Integer.parseInt(m.annotation("code").iterator().next());
-                if (result == null) {
-                    System.err.println("Warning: @code must contain an Integer for message:" + m.getName());
-                }
-            } else {
-                boolean codeIsFree = false;
-
-                while (!codeIsFree && (handlerCodeCpt < 65535)) {
-                    codeIsFree = true;
-                    for (Thing th : cfg.allThings()) {
-                        for (Port po : th.allPorts()) {
-                            for (Message me : po.getReceives()) {
-                                if (me.hasAnnotation("code")) {
-                                    if (Integer.parseInt(me.annotation("code").iterator().next()) == handlerCodeCpt) {
-                                        codeIsFree = false;
-                                        handlerCodeCpt += 1;
-                                    }
-                                }
-                            }
-                            for (Message me : po.getSends()) {
-                                if (me.hasAnnotation("code")) {
-                                    if (Integer.parseInt(me.annotation("code").iterator().next()) == handlerCodeCpt) {
-                                        codeIsFree = false;
-                                        handlerCodeCpt += 1;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                result = handlerCodeCpt;
-                handlerCodeCpt += 1;
-                if (result == null) {
-                    System.err.println("Warning: no code could be found for message:" + m.getName());
-                }
-            }
-
-            table.put(m, result);
-        }
-        */
         return result;
     }
 
@@ -304,7 +247,42 @@ public abstract class CCompilerContext extends Context {
     public String getCVarName(Variable v) {
         return v.qname("_") + "_var";
     }
-
+    
+    public String getTraceFunctionForString(Configuration cfg) {
+        if(getCompiler().getID().compareTo("arduino") == 0) {
+            if(cfg.hasAnnotation("arduino_stdout")) {
+                return cfg.annotation("arduino_stdout").iterator().next() + ".print(";
+            } else {
+                return "//";
+            }
+        } else {
+            return "printf(";
+        }
+    }
+    
+    public String getTraceFunctionForInt(Configuration cfg) {
+        if(getCompiler().getID().compareTo("arduino") == 0) {
+            if(cfg.hasAnnotation("arduino_stdout")) {
+                return cfg.annotation("arduino_stdout").iterator().next() + ".print(";
+            } else {
+                return "//";
+            }
+        } else {
+            return "printf(\"%i\", ";
+        }
+    }
+    
+    boolean traceLevelIsAbove(AnnotatedElement E, int level) {
+        Integer traceLevel = 0;
+        if(E.hasAnnotation("trace_level")) {
+            traceLevel = Integer.parseInt(E.annotation("trace_level").iterator().next());
+        }
+        if(traceLevel >= level) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     // FUNCTIONS FOR MESSAGES and PARAMETERS
 

@@ -259,8 +259,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         eco_instance.append("_receiver_list_tail;\n");
                     }
                     Integer traceLevel;
-                    if(eco.hasAnnotation("serial_trace_level")) {
-                        traceLevel = Integer.parseInt(eco.annotation("serial_trace_level").iterator().next());
+                    if(eco.hasAnnotation("trace_level")) {
+                        traceLevel = Integer.parseInt(eco.annotation("trace_level").iterator().next());
                     } else {
                         traceLevel = 1;
                     }
@@ -442,8 +442,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     }
                     
                     Integer traceLevel;
-                    if(eco.hasAnnotation("websocket_trace_level")) {
-                        traceLevel = Integer.parseInt(eco.annotation("websocket_trace_level").iterator().next());
+                    if(eco.hasAnnotation("trace_level")) {
+                        traceLevel = Integer.parseInt(eco.annotation("trace_level").iterator().next());
                     } else {
                         traceLevel = 1;
                     }
@@ -662,7 +662,15 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     builder.append("void enqueue_" + ctx.getSenderName(t, p, m));
                     ctx.appendFormalParameters(t, builder, m);
                     builder.append("{\n");
-
+                    
+                    if((ctx.traceLevelIsAbove(t, 2)) || (ctx.traceLevelIsAbove(p, 2))) {
+                        builder.append(ctx.getTraceFunctionForString(cfg));
+                        builder.append("\"[" + t.getName()
+                                + "] sending: " + p.getName()
+                                + "!" + m.getName()
+                                + "\\n\");\n");
+                    }
+                    
                     if (ctx.sync_fifo()) builder.append("fifo_lock();\n");
 
                     builder.append("if ( fifo_byte_available() > " + ctx.getMessageSerializationSize(m) + " ) {\n\n");
@@ -990,15 +998,22 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 "           break;\n" +
                 "       }\n" +
                 "   }\n" +
-                "   if(handler != NULL)\n" +
+                "   if(handler != NULL) {\n" +
                 "       handler((**cur).instance");
                 
                 for (Parameter p : m.getParameters()) {
                     builder.append(", param_");
                     builder.append(p.getName());
                 }
+                builder.append(");\n");
                 
-                builder.append(");\n" +
+                //DEBUG
+                if(ctx.traceLevelIsAbove(cfg, 3)) {
+                    builder.append(ctx.getTraceFunctionForString(cfg) + "\"[Dispatcher] Calling handler for " 
+                        + m.getName() + "\\n\");\n");
+                }
+                        
+                builder.append("}\n" +
                 "   if(cur == tail){\n" +
                 "       cur = NULL;}\n" +
                 "   else {\n" +
@@ -1300,7 +1315,18 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             // Fill the buffer
 
             //DEBUG
-            // builder.append("Serial.println(\"FW MSG "+m.getName+"\");\n"
+            if(ctx.traceLevelIsAbove(cfg, 2)) {
+                builder.append(ctx.getTraceFunctionForString(cfg) + "\"[PMQ] Dequeue " 
+                        + m.getName() + "\\n\");\n");
+            }
+            if(ctx.traceLevelIsAbove(cfg, 3)) {
+                builder.append(ctx.getTraceFunctionForString(cfg) + "\"[PMQ] Dequeue |\");\n");
+                for(int i = 0; i < (ctx.getMessageSerializationSize(m) - 2); i++) {
+                    builder.append(ctx.getTraceFunctionForInt(cfg) + "mbuf[" + i + "]" + ");\n");
+                    builder.append(ctx.getTraceFunctionForString(cfg) + "\"|\");\n");
+                }
+                builder.append(ctx.getTraceFunctionForString(cfg) + "\"\\n\");\n");
+            }
 
             if (ctx.sync_fifo()) builder.append("fifo_unlock();\n");
 
@@ -1595,7 +1621,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     public int generateInstanceInitCode(Instance inst, Configuration cfg, StringBuilder builder, CCompilerContext ctx, int nbConnectorSoFar) {
         builder.append("// Init the ID, state variables and properties for instance " + inst.getName() + "\n");
         
-// Register the instance and set its ID and its port ID
+        if(ctx.traceLevelIsAbove(cfg, 1)) {
+            builder.append(ctx.getTraceFunctionForString(cfg) + "\"Initialization of " + inst.getName() + "\\n\");\n");
+        }
+        
+        // Register the instance and set its ID and its port ID
         //builder.append(ctx.getInstanceVarName(inst) + ".id = ");
         //builder.append("add_instance( (void*) &" + ctx.getInstanceVarName(inst) + ");\n");
         for(Port p : inst.getType().allPorts()) {
@@ -1704,6 +1734,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         // Init simple properties
         for (Map.Entry<Property, Expression> init : cfg.initExpressionsForInstance(inst)) {
             if (init.getValue() != null && init.getKey().getCardinality() == null) {
+                if(ctx.traceLevelIsAbove(cfg, 3)) {
+                    builder.append(ctx.getTraceFunctionForString(cfg) + "\"" + inst.getName()
+                            + "." + ctx.getVariableName(init.getKey()) + "<-\");\n");
+                    builder.append(ctx.getTraceFunctionForString(cfg) + "\"TODO\\n\");\n");
+                }
+
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(init.getKey()) + " = ");
                 ctx.getCompiler().getThingActionCompiler().generate(init.getValue(), builder, ctx);
                 builder.append(";\n");

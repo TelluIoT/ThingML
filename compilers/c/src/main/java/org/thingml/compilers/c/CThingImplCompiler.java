@@ -273,6 +273,13 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         for (State s : sm.allContainedSimpleStates()) {
             builder.append("case " + ctx.getStateID(s) + ":\n");
+            if(ctx.traceLevelIsAbove(thing, 2)) {
+                if(ctx.getCompiler().getID().compareTo("posix") == 0) {
+                    builder.append("printf(\"[" + thing.getName()
+                            + "] Entering state: " + s.getName()
+                            + "\\n\");\n");
+                }
+            }
             if (s.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
             builder.append("break;\n");
         }
@@ -332,6 +339,15 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("void " + ctx.getHandlerName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append(" {\n");
+                
+                if((ctx.traceLevelIsAbove(thing, 2)) || (ctx.traceLevelIsAbove(port, 2))) {
+                    if(ctx.getCompiler().getID().compareTo("posix") == 0) {
+                        builder.append("printf(\"[" + thing.getName()
+                                + "] handling: " + port.getName()
+                                + "?" + msg.getName()
+                                + "\\n\");\n");
+                    }
+                }
 
                 //FIXME: Implement the message debug in the context
                 /*

@@ -7,17 +7,17 @@
 * 2: Messages are notified
 * 3: Detailed byte per byte notifying
 
-##Annotation
+##Annotation 
 * @port_name default value: Protocol (Must be unique)
 
 ###Posix
+* @trace_level default value: 1
 
 ####Serial
 #####Compulsory
 * @serial_path_to_device
 
 #####Optional
-* @serial_trace_level default value: 1
 * @serial_start_byte default value: 18
 * @serial_stop_byte default value: 19
 * @serial_escape_byte default value: 125
@@ -27,6 +27,10 @@
 ####Websocket
 * @websocket_port_number default value: 9000
 * @websocket_nb_client_max default: 16
+* @websocket_enable_unicast default: false
+* @websocket_receiver_id
+* @websocket_new_client
+* @websocket_client_disconnected
 
 ###Arduino
 
