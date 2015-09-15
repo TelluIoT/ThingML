@@ -35,7 +35,7 @@ uint16_t add_client(struct libwebsocket *wsi) {
 		i++;
 	}
 	if (!done) {
-            /*TRACE_LEVEL_1*/printf("[PosixWSForward] Client list overflow\n");
+            /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Client list overflow\n");
             return -1;
 	} else {
             /*PORT_NAME*/_nb_client++;
@@ -55,7 +55,7 @@ uint16_t remove_client(struct libwebsocket *wsi) {
             i++;
 	}
 	if (!done) {
-            /*TRACE_LEVEL_1*/printf("[PosixWSForward] Client not found\n");
+            /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Client not found\n");
             return -1;
 	} else {
             /*PORT_NAME*/_nb_client--;
@@ -82,13 +82,13 @@ static int callback_ThingML_protocol(struct libwebsocket_context * this,
     switch (reason) {
         case LWS_CALLBACK_ESTABLISHED:{ // just log message that someone is connecting
             uint16_t clientID = add_client(wsi);
-            /*TRACE_LEVEL_2*/printf("[PosixWSForward] New Client:%i\n", clientID);
+            /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] New Client:%i\n", clientID);
 		/*NEW_CLIENT*/
             break;}
 
         case LWS_CALLBACK_RECEIVE: {
             int len = strlen((char *) in);
-            /*TRACE_LEVEL_2*/printf("[PosixWSForward] l:%i\n", len);
+            /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] l:%i\n", len);
             if ((len % 3) == 0) {
                     unsigned char msg[len % 3];
                     unsigned char * p = in;
@@ -116,13 +116,13 @@ static int callback_ThingML_protocol(struct libwebsocket_context * this,
                     if(everythingisfine) {
                             int j;
                             externalMessageEnqueue(msg, (len / 3), /*PORT_NAME*/_instance.listener_id);
-                            /*TRACE_LEVEL_2*/printf("[PosixWSForward] Message received\n");
+                            /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] Message received\n");
 
                     } else {
-                            /*TRACE_LEVEL_1*/printf("[PosixWSForward] incorrect message '%s'\n", (char *) in);
+                            /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] incorrect message '%s'\n", (char *) in);
                     }
             } else {
-                /*TRACE_LEVEL_1*/printf("[PosixWSForward] incorrect message '%s'\n", (char *) in);
+                /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] incorrect message '%s'\n", (char *) in);
             }
 
 
@@ -143,12 +143,12 @@ static int callback_ThingML_protocol(struct libwebsocket_context * this,
         case LWS_CALLBACK_WSI_DESTROY: {
                 uint16_t clientID = remove_client(wsi);
 		/*CLIENT_DECO*/
-                /*TRACE_LEVEL_1*/printf("[PosixWSForward] Wsi destroyed:%i\n", clientID);
+                /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Wsi destroyed:%i\n", clientID);
         }
 
         case LWS_CALLBACK_CLOSED: {
                 uint16_t clientID = remove_client(wsi);
-                /*TRACE_LEVEL_2*/printf("[PosixWSForward] Connexion with client closed:%i\n", clientID);
+                /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] Connexion with client closed:%i\n", clientID);
 		/*CLIENT_DECO*/
         }
 
@@ -202,21 +202,21 @@ void /*PORT_NAME*/_setup() {
     /*PORT_NAME*/_info.gid = -1;
     /*PORT_NAME*/_info.uid = -1;
     /*PORT_NAME*/_info.options = opts;
-    /*TRACE_LEVEL_1*/printf("[PosixWSForward] Init WS Server on port:%i\n", port);
+    /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Init WS Server on port:%i\n", port);
 }
 
 void /*PORT_NAME*/_start_receiver_process() {
 
-    /*TRACE_LEVEL_1*/printf("[PosixWSForward] Start running WS Server\n");
+    /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Start running WS Server\n");
     // create libwebsocket /*PORT_NAME*/_context representing this server
     /*PORT_NAME*/_context = libwebsocket_create_context(&/*PORT_NAME*/_info);
    
     if (/*PORT_NAME*/_context == NULL) {
-        /*TRACE_LEVEL_1*/fprintf(stderr, "[PosixWSForward] libwebsocket init failed\n");
+        /*TRACE_LEVEL_1*/fprintf(stderr, "[/*PORT_NAME*/] libwebsocket init failed\n");
         return -1;
     }
 	
-    /*TRACE_LEVEL_1*/printf("[PosixWSForward] Starting server...\n");
+    /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Starting server...\n");
 	
     // infinite loop, to end this server send SIGTERM. (CTRL+C)
     while (1) {
@@ -242,7 +242,7 @@ void /*PORT_NAME*/_forwardMessage(char * msg, int length/*PARAM_CLIENT_ID*/) {
 	}
 	*q = '\0';
 	n++;
-	/*TRACE_LEVEL_3*/printf("[PosixWSForward] Trying to send:\n%s \n", p);
+	/*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] Trying to send:\n%s \n", p);
 
 
         /*SENDING_BROADCAST_OR_NOT*/

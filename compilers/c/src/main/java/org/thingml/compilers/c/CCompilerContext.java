@@ -54,6 +54,14 @@ public abstract class CCompilerContext extends Context {
         return getTemplateByID("ctemplates/network_lib/posix/PosixWebsocketForward.h");
     }
     
+    public String getNetworkLibMQTTTemplate() {
+        return getTemplateByID("ctemplates/network_lib/posix/PosixMQTTClient.c");
+    }
+    
+    public String getNetworkLibMQTTHeaderTemplate() {
+        return getTemplateByID("ctemplates/network_lib/posix/PosixMQTTClient.h");
+    }
+    
     public String getNetworkLibWebsocketDependancy() {
         return getTemplateByID("ctemplates/network_lib/posix/lws_config.h");
     }
@@ -167,10 +175,13 @@ public abstract class CCompilerContext extends Context {
     public int numberInstancesAndPort(Configuration cfg) {
         int result = 0;
         for(Instance i : cfg.allInstances()) {
-            result++;
+            //result++;
             for(Port p : i.getType().allPorts()) {
                 result++;
             }
+        }
+        for(ExternalConnector eco: cfg.getExternalConnectors()) {
+            result++;
         }
         return result;
     }

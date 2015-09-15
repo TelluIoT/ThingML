@@ -476,6 +476,136 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
                     
                 }
+                if(eco.getProtocol().startsWith("MQTT")) {
+                    String ctemplate = ctx.getNetworkLibMQTTTemplate();
+                    String htemplate = ctx.getNetworkLibMQTTHeaderTemplate();
+
+                    String portName;
+                    if(eco.hasAnnotation("port_name")) {
+                        portName = eco.annotation("port_name").iterator().next();
+                    } else {
+                        portName = eco.getProtocol();
+                    }
+                    eco.setName(portName);
+
+                    ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
+                    htemplate = htemplate.replace("/*PORT_NAME*/", portName);
+
+                    String hostAddr;
+                    if(eco.hasAnnotation("mqtt_broker_address")) {
+                        hostAddr = eco.annotation("mqtt_broker_address").iterator().next();
+                    } else {
+                        hostAddr = "localhost";
+                    }
+
+                    ctemplate = ctemplate.replace("/*HOST_ADDRESS*/", hostAddr);
+
+                    
+                    Integer portNumber;
+                    if(eco.hasAnnotation("mqtt_port_number")) {
+                        portNumber = Integer.parseInt(eco.annotation("mqtt_port_number").iterator().next());
+                    } else {
+                        portNumber = 1883;
+                    }
+                    ctemplate = ctemplate.replace("/*PORT_NUMBER*/", portNumber.toString());
+                    
+                    
+                    
+                    //Connector Instanciation
+                    StringBuilder eco_instance = new StringBuilder();
+                    eco_instance.append("//Connector");
+                    Port p = eco.getPort();
+                    if(!p.getReceives().isEmpty()) {
+                    //if(!p.getSends().isEmpty()) {
+                        eco_instance.append("// Pointer to receiver list\n");
+                        eco_instance.append("struct Msg_Handler ** ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_receiver_list_head;\n");
+
+                        eco_instance.append("struct Msg_Handler ** ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_receiver_list_tail;\n");
+                    }
+                    if(!p.getSends().isEmpty()) {
+                    //if(!p.getReceives().isEmpty()) {
+                        eco_instance.append("// Handler Array\n");
+                        eco_instance.append("struct Msg_Handler * ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_handlers;\n");//[");
+                        //builder.append(p.getReceives().size() + "];");
+                    }
+                    ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
+                    
+                    htemplate = htemplate.replace("/*PATH_TO_C*/", eco.getInst().getInstance().getName() 
+                            + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c");
+                    
+                    if(!eco.getPort().getReceives().isEmpty()) {
+                        List<String> topicList = eco.annotation("mqtt_topic");
+                        if(topicList.isEmpty()) {
+                            topicList.add("ThingML");
+                        }
+                        if(topicList.size() > 1) {
+                            ctemplate = ctemplate.replace("/*TOPIC_VAR*/", "static char **" 
+                                    + portName + "_topics[" + topicList.size() + "];\n"
+                                    + "static int /*PORT_NAME*/_topic_count = 0;"
+                            );
+                            ctemplate = ctemplate.replace("/*SUBSCRUBE_MULTI_OR_MONO*/", "for(i=0; i<"
+                                    + portName + "_topic_count; i++){\n"
+                                    + "mosquitto_subscribe("
+                                    + portName + "_mosq, NULL, "
+                                    + portName + "_topics[i], "
+                                    + portName + "_topic_qos);\n"
+                                    + "}\n");
+                            StringBuilder topicsInit = new StringBuilder();
+                            for(String topic : topicList) {
+                                topicsInit.append(portName + "_topics[i] = \"" + topic + "\";\n");
+                            }
+                            ctemplate = ctemplate.replace("/*MULTI_TOPIC_INIT*/", topicsInit);
+                        
+                        } else {
+                            ctemplate = ctemplate.replace("/*TOPIC_VAR*/", "static char *" 
+                                    + portName + "_topic = \"" + topicList.get(0) + "\";");
+                            ctemplate = ctemplate.replace("/*SUBSCRUBE_MULTI_OR_MONO*/", "mosquitto_subscribe("
+                                    + portName + "_mosq, NULL, "
+                                    + portName + "_topic, "
+                                    + portName + "_topic_qos);");
+                        }
+                    }
+                    
+                    Integer traceLevel;
+                    if(eco.hasAnnotation("trace_level")) {
+                        traceLevel = Integer.parseInt(eco.annotation("trace_level").iterator().next());
+                    } else {
+                        traceLevel = 1;
+                    }
+                    if(traceLevel == null) {
+                        traceLevel = 1;
+                    }
+                    //System.out.println("TRACE_LEVEL:"+traceLevel);
+                    
+                    if(traceLevel.intValue() >= 3) {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "");
+                        //System.out.println("/*TRACE_LEVEL_3*/");
+                    } else {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "//");
+                    }
+                    if(traceLevel.intValue() >= 2) {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "");
+                        //System.out.println("/*TRACE_LEVEL_2*/");
+                    } else {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "//");
+                    }
+                    if(traceLevel.intValue() >= 1) {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "");
+                        //System.out.println("/*TRACE_LEVEL_1*/");
+                    } else {
+                        ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "//");
+                    }
+                    
+                    ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
+                    ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
+                    
+                }
             }
         }
     }
@@ -789,30 +919,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append("uint8_t msgSizeOK = 0;\n");
             builder.append("switch(msg[0] * 256 + msg[1]) {\n");
             
-            /*
-
-            for (Thing t : cfg.allThings()) {
-                for (Port p : t.allPorts()) {
-                    if (p.isDefined("sync_send", "true")) continue; // do not generateMainAndInit for synchronous ports
-
-                    ctx.setConcreteThing(t);
-                    Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
-
-                    for (Message m : allMessageDispatch.keySet()) {
-                    builder.append("case ");
-                    builder.append(m.getCode());
-                    builder.append(":\n");
-                    builder.append("if(msgSize == ");
-                    builder.append(ctx.getMessageSerializationSize(m) - 2);
-                    builder.append(") {\n");
-                    builder.append("msgSizeOK = 1;");
-                    builder.append("}\n");
-                    builder.append("break;\n");
-
-                    }
-                }
-            }
-            */
             Set<Message> externalMessages = new HashSet<Message>();
             for(ExternalConnector eco : cfg.getExternalConnectors()) {
                 for(Message m : eco.getPort().getReceives()) {
@@ -831,6 +937,16 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append("msgSizeOK = 1;");
                 builder.append("}\n");
                 builder.append("break;\n");
+            }
+            
+            if(ctx.traceLevelIsAbove(cfg, 1)) {
+                builder.append("default:{\n");
+                builder.append(ctx.getTraceFunctionForString(cfg) + "\"");
+                builder.append("[External Enqueue] Unknown message ID:\");\n");
+                builder.append(ctx.getTraceFunctionForInt(cfg) + "(msg[0] * 256 + msg[1]));\n");
+                builder.append(ctx.getTraceFunctionForString(cfg) + "\"");
+                builder.append("\\n\");\n");
+                builder.append("break;}\n");
             }
             
             builder.append("}\n\n");
@@ -859,7 +975,26 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
 
             builder.append("}\n");
+            
+            if(ctx.traceLevelIsAbove(cfg, 1)) {
+                builder.append("else {");
+                builder.append(ctx.getTraceFunctionForString(cfg) + "\"");
+                builder.append("[External Enqueue] Malformed message (ID:\");\n");
+                builder.append(ctx.getTraceFunctionForInt(cfg) + "(msg[0] * 256 + msg[1]));\n");
+                builder.append(ctx.getTraceFunctionForString(cfg) + "\"");
+                builder.append(")\\n\");\n");
+                builder.append("}\n");
+            }
+            
             builder.append("}\n");
+            
+            if(ctx.traceLevelIsAbove(cfg, 1)) {
+                builder.append("else {");
+                builder.append(ctx.getTraceFunctionForString(cfg) + "\"");
+                builder.append("[External Enqueue] Unreadable message ID\\n\");\n");
+                builder.append("}\n");
+            }
+            
             builder.append("}\n");
         }
     }

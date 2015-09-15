@@ -41,9 +41,14 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         String compiler = "cc"; // default value
         if (cfg.hasAnnotation("c_compiler")) compiler = cfg.annotation("c_compiler").iterator().next();
         mtemplate = mtemplate.replace("/*CC*/", compiler);
-
-        if (ctx.enableDebug()) mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -DDEBUG");
-        else mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -O2 -w");
+        
+        String flags;
+        if (ctx.enableDebug()) flags = "CFLAGS = -DDEBUG";
+        else flags = "CFLAGS = -O2 -w";
+        for (String s : cfg.annotation("add_c_flags")) {
+            flags += " " + s;
+        }
+        mtemplate = mtemplate.replace("/*CFLAGS*/", flags);
 
         String srcs = "";
         String objs = "";
@@ -74,6 +79,12 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
             String[] strs = s.split(" ");
             for (int i = 0; i < strs.length; i++) {
                 libs += "-l " + strs[i].trim() + " ";
+            }
+        }
+        for (String s : cfg.annotation("add_c_libraries_rep")) {
+            String[] strs = s.split(" ");
+            for (int i = 0; i < strs.length; i++) {
+                libs += "-L " + strs[i].trim() + " ";
             }
         }
         libs = libs.trim();
