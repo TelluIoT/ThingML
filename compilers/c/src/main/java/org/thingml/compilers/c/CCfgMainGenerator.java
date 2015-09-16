@@ -547,7 +547,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         if(topicList.size() > 1) {
                             ctemplate = ctemplate.replace("/*TOPIC_VAR*/", "static char **" 
                                     + portName + "_topics[" + topicList.size() + "];\n"
-                                    + "static int /*PORT_NAME*/_topic_count = 0;"
+                                    + "static int " + portName + "_topic_count = " + topicList.size() + ";"
                             );
                             ctemplate = ctemplate.replace("/*SUBSCRUBE_MULTI_OR_MONO*/", "for(i=0; i<"
                                     + portName + "_topic_count; i++){\n"
@@ -557,11 +557,72 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                                     + portName + "_topic_qos);\n"
                                     + "}\n");
                             StringBuilder topicsInit = new StringBuilder();
+                            int j = 0;
                             for(String topic : topicList) {
-                                topicsInit.append(portName + "_topics[i] = \"" + topic + "\";\n");
+                                topicsInit.append(portName + "_topics[" + j + "] = \"" + topic + "\";\n");
+                                j++;
                             }
                             ctemplate = ctemplate.replace("/*MULTI_TOPIC_INIT*/", topicsInit);
-                        
+                            
+                            String publishSelection = null;
+                            boolean publishSelect = false;
+                            if(eco.hasAnnotation("mqtt_multi_topic_publish_selection")) {
+                                publishSelection = eco.annotation("mqtt_multi_topic_publish_selection").iterator().next();
+                            }
+                            if(publishSelection != null) {
+                                if(publishSelection.compareTo("true") == 0) {
+                                publishSelect = true;
+                                }
+                            }
+                            
+                            if(publishSelect) {
+                                ctemplate = ctemplate.replace("/*PUBLISH_MULTI_OR_MONO_DECLARATION*/", ", uint16_t topicID");
+                                htemplate = htemplate.replace("/*PUBLISH_MULTI_OR_MONO_DECLARATION*/", ", uint16_t topicID");
+                                
+                                ctemplate = ctemplate.replace("/*PUBLISH_MULTI_OR_MONO_CORE*/", ""
+                                        + "if(topicID == 65535) {"
+                                        + "int j;\n"
+                                        + "for(j = 0; j < "
+                                        + portName + "_topic_count; j++) {\n"
+                                        + "/*TRACE_LEVEL_3*/printf(\"["
+                                        + portName + "] publish:\\\"%s\\\" on topic: %s \\n\", p, "
+                                        + portName + "_topics[j]);\n"
+                                        + "mosquitto_publish(" + portName + "_mosq, "
+                                        + "&" + portName + "_mid_sent, "
+                                        + portName + "_topics[j], "
+                                        + "(length * 3 + 1), "
+                                        + "p, "
+                                        + portName + "_qos, "
+                                        + portName + "_retain);\n"
+                                        + "}\n} else {\n"
+                                        + "/*TRACE_LEVEL_3*/printf(\"["
+                                        + portName + "] publish:\\\"%s\\\" on topic: %s \\n\", p, "
+                                        + portName + "_topics[topicID]);\n"
+                                        + "mosquitto_publish(" + portName + "_mosq, "
+                                        + "&" + portName + "_mid_sent, "
+                                        + portName + "_topics[topicID], "
+                                        + "(length * 3 + 1), "
+                                        + "p, "
+                                        + portName + "_qos, "
+                                        + portName + "_retain);\n"
+                                        + "}\n");
+                            } else {
+                                ctemplate = ctemplate.replace("/*PUBLISH_MULTI_OR_MONO_CORE*/", ""
+                                        + "int j;\n"
+                                        + "for(j = 0; j < "
+                                        + portName + "_topic_count; j++) {\n"
+                                        + "/*TRACE_LEVEL_3*/printf(\"["
+                                        + portName + "] publish:\\\"%s\\\" on topic: %s \\n\", p, "
+                                        + portName + "_topics[j]);\n"
+                                        + "mosquitto_publish(" + portName + "_mosq, "
+                                        + "&" + portName + "_mid_sent, "
+                                        + portName + "_topics[j], "
+                                        + "(length * 3 + 1), "
+                                        + "p, "
+                                        + portName + "_qos, "
+                                        + portName + "_retain);\n"
+                                        + "}\n");
+                            }
                         } else {
                             ctemplate = ctemplate.replace("/*TOPIC_VAR*/", "static char *" 
                                     + portName + "_topic = \"" + topicList.get(0) + "\";");
@@ -569,6 +630,16 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                                     + portName + "_mosq, NULL, "
                                     + portName + "_topic, "
                                     + portName + "_topic_qos);");
+                            
+                            ctemplate = ctemplate.replace("/*PUBLISH_MULTI_OR_MONO_CORE*/", ""
+                                    + "/*TRACE_LEVEL_3*/printf(\"[" + portName + "] publish:\\\"%s\\\"\\n\", p);\n"
+                                    + "mosquitto_publish(" + portName + "_mosq, "
+                                    + "&" + portName + "_mid_sent, "
+                                    + portName + "_topic, "
+                                    + "(length * 3 + 1), "
+                                    + "p, "
+                                    + portName + "_qos, "
+                                    + portName + "_retain);\n");
                         }
                     }
                     
@@ -1005,7 +1076,18 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             //if (eco.hasAnnotation("c_external_send")) {
             Thing t = eco.getInst().getInstance().getType();
             Port p = eco.getPort();
-            boolean additionalParam = eco.hasAnnotation("websocket_enable_unicast");
+            
+            boolean additionalParam = false;
+            if(eco.hasAnnotation("websocket_enable_unicast")) {
+                if(eco.annotation("websocket_enable_unicast").iterator().next().compareTo("true") == 0) {
+                    additionalParam = true;
+                }
+            }
+            if(eco.hasAnnotation("mqtt_multi_topic_publish_selection")) {
+                if(eco.annotation("mqtt_multi_topic_publish_selection").iterator().next().compareTo("true") == 0) {
+                    additionalParam = true;
+                }
+            }
             String param;
             
             for (Message m : p.getSends()) {
@@ -1015,7 +1097,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         param = m.annotation("websocket_client_id").iterator().next();
                         ignoreList.add(param);
                     } else {
-                        param = "-1";
+                        if(m.hasAnnotation("mqtt_topic_id")) {
+                            param = m.annotation("mqtt_topic_id").iterator().next();
+                            ignoreList.add(param);
+                        } else {
+                            param = "-1";
+                        }
                     }
                 } else {param = "";}
                 

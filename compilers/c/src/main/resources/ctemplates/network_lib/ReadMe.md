@@ -32,6 +32,13 @@
 * @websocket_new_client
 * @websocket_client_disconnected
 
+####MQTT
+* @mqtt_broker_address default value: localhost
+* @mqtt_port_number default value: 1883
+* @mqtt_topic default value: ThingML
+* @mqtt_multi_topic_publish_selection deafault value: false
+* @mqtt_topic_id
+
 ###Arduino
 
 ####Serial

@@ -15,6 +15,6 @@ void /*PORT_NAME*/_setup();
 
 void /*PORT_NAME*/_start_receiver_process();
 
-void /*PORT_NAME*/_forwardMessage(uint8_t * msg, int size);
+void /*PORT_NAME*/_forwardMessage(uint8_t * msg, int size/*PUBLISH_MULTI_OR_MONO_DECLARATION*/);
 
 #endif
