@@ -21,7 +21,7 @@ import org.thingml.compilers.c.arduino.ArduinoCompiler;
 import org.thingml.compilers.c.posix.PosixCompiler;
 import org.thingml.compilers.java.JavaCompiler;
 import org.thingml.compilers.javascript.EspruinoCompiler;
-import org.thingml.compilers.javascript.JavaScriptCompiler;
+import org.thingml.compilers.javascript.JSCompiler;
 import org.thingml.compilers.uml.PlantUMLCompiler;
 
 import java.util.Collection;
@@ -42,7 +42,7 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new PosixCompiler());
             instance.addCompiler(new JavaCompiler());
             instance.addCompiler(new EspruinoCompiler());
-            instance.addCompiler(new JavaScriptCompiler());
+            instance.addCompiler(new JSCompiler());
             instance.addCompiler(new PlantUMLCompiler());
 
         }

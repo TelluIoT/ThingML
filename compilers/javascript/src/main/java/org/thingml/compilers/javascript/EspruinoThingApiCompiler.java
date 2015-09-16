@@ -18,7 +18,7 @@ package org.thingml.compilers.javascript;
 /**
  * Created by bmori on 09.12.2014.
  */
-public class EspruinoThingApiCompiler extends JavaScriptThingApiCompiler {
+public class EspruinoThingApiCompiler extends JSThingApiCompiler {
 
     @Override
     protected String const_() {

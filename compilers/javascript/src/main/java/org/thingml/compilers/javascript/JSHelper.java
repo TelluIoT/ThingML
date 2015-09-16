@@ -27,8 +27,8 @@ public class JSHelper {
 
     public static int getCorrectParamIndex(Message message, Parameter parameter) {
         List<Parameter> parameters = message.getParameters();
-        for(int i=0;i<parameters.size();i++) {
-            if(parameters.get(i).getName().equals(parameter.getName())) {
+        for (int i = 0; i < parameters.size(); i++) {
+            if (parameters.get(i).getName().equals(parameter.getName())) {
                 return i + 2;
             }
         }
