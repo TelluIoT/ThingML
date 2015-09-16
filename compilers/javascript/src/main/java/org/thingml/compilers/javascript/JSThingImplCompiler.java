@@ -110,6 +110,15 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         }//TODO: changeable properties?
         builder.append(") {\n\n");
 
+        builder.append("this.name = \"default\";\n");
+        builder.append("this.setName = function(n) {\n");
+        builder.append("this.name = n;\n");
+        builder.append("};\n");
+
+        builder.append("this.debug = false;\n");
+        builder.append("this.setDebug = function(b) {\n");
+        builder.append("this.debug = b;\n");
+        builder.append("};\n");
 
         builder.append("var _this;\n");
         builder.append("this.setThis = function(__this) {\n");
@@ -176,6 +185,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     j++;
                 }
                 builder.append(") {\n");
+                if(ctx.getCompiler().isDebugFunction()) {
+                    builder.append("if(_this.debug) console.log(colors.cyan(_this.name + \"(" + thing.getName() + "): executing function " + f.getName() + "...\"));\n");
+                }
                 ctx.getCompiler().getThingActionCompiler().generate(f.getBody(), builder, ctx);
                 builder.append("}\n\n");
 
@@ -285,7 +297,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         if (s.getEntry() != null || ctx.getCompiler().isDebugBehavior()) {
             builder.append(".entry(function () {\n");
             if (ctx.getCompiler().isDebugBehavior()) {
-                builder.append("console.log(colors.green(\"" + s.qualifiedName(":") + ".onEntry()\"));\n");
+                builder.append("if(_this.debug) console.log(colors.yellow(_this.name + \"(" + s.findContainingThing().getName() + "): enters " + s.qualifiedName(":") + "\"));\n");
             }
             if (s.getEntry() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
@@ -294,7 +306,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         if (s.getExit() != null || ctx.getCompiler().isDebugBehavior()) {
             builder.append(".exit(function () {\n");
             if (ctx.getCompiler().isDebugBehavior()) {
-                builder.append("console.log(colors.green(\"" + s.qualifiedName(":") + ".onExit()\"));\n");
+                builder.append("if(_this.debug) console.log(colors.yellow(_this.name + \"(" + s.findContainingThing().getName() + "): exits " + s.qualifiedName(":") + "\"));\n");
             }
             if (s.getExit() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
@@ -401,7 +413,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         if (t.getAction() != null) {
             String debugString = "";
             if (debug)
-                debugString = "console.log(colors.green(\"Message " + msg.getName() + " on port " + p.getName() + " triggered transition from " + t.getSource().getName() + " to " + t.getTarget().getName() + "\"));\n";
+                debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + t.findContainingThing().getName() + "): on " + p.getName() + "?" + msg.getName() + " from " + t.getSource().qualifiedName(":") + " to " + t.getTarget().qualifiedName(":") + "\"));\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         }
         builder.append(";\n");
@@ -431,7 +443,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         if (t.getAction() != null) {
             String debugString = "";
             if (debug)
-                debugString = "console.log(colors.green(\"Message " + msg.getName() + " on port " + p.getName() + " triggered internal transition on state " + ((State) t.eContainer()).getName() + "\"));\n";
+                debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + t.findContainingThing().getName() + "): on " + p.getName() + "?" + msg.getName() + " in state " + ((State) t.eContainer()).qualifiedName(":") + "\"));\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         }
         builder.append(";\n");

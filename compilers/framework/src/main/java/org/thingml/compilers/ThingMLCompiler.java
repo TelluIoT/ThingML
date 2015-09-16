@@ -41,11 +41,17 @@ public abstract class ThingMLCompiler {
 
     //Debug
     private boolean debugBehavior = false;
+    private boolean debugFunction = false;
     private Map<Port, List<Message>> debugMessages = new HashMap<Port, List<Message>>();
 
     public void setDebugBehavior(boolean b) {
         debugBehavior = b;
     }
+
+    public void setDebugFunction(boolean b) {
+        debugFunction = b;
+    }
+
 
     public void addDebugMessage(Port p, Message m) {
         List<Message> msg = debugMessages.get(p);
@@ -61,6 +67,11 @@ public abstract class ThingMLCompiler {
     public boolean isDebugBehavior() {
         return debugBehavior;
     }
+
+    public boolean isDebugFunction() {
+        return debugFunction;
+    }
+
 
     public Map<Port, List<Message>> getDebugMessages() {
         return Collections.unmodifiableMap(debugMessages);

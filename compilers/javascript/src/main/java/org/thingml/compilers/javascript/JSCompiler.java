@@ -88,6 +88,7 @@ public class JSCompiler extends OpaqueThingMLCompiler {
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
         //TO BE REMOVED        (Just to test debug mode)
         ctx.getCompiler().setDebugBehavior(true);
+        ctx.getCompiler().setDebugFunction(true);
         for(Thing th : t.allThings()) {
             for(Port p : th.allPorts()) {
                 for(Message m : p.getReceives()) {

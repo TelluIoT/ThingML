@@ -121,8 +121,12 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             builder.append(reference(i.getName(), useThis) + ".setThis(" + reference(i.getName(), useThis) + ");\n");
             if (useThis) {
                 builder.append("this." + i.getName() + ".build();\n");
+                builder.append("this." + i.getName() + ".setName(\"" + i.getName() + "\");\n");
+                builder.append("this." + i.getName() + ".setDebug(false);\n");
             } else {
                 builder.append(i.getName() + ".build();\n");
+                builder.append(i.getName() + ".setName(\"" + i.getName() + "\");\n");
+                builder.append(i.getName() + ".setDebug(false);\n");
             }
         }
 
