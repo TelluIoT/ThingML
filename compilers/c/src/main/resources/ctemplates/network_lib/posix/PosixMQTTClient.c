@@ -237,9 +237,8 @@ void /*PORT_NAME*/_forwardMessage(uint8_t * msg, int size/*PUBLISH_MULTI_OR_MONO
     *q = '\0';
     n++;
     n++;
-    /*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] publish:\"%s\"\n", p);
     
     /*PUBLISH_MULTI_OR_MONO_CORE*/
-    mosquitto_publish(/*PORT_NAME*/_mosq, &/*PORT_NAME*/_mid_sent, /*PORT_NAME*/_topic, (length * 3 + 1), p, /*PORT_NAME*/_qos, /*PORT_NAME*/_retain);
+    
 }
 
