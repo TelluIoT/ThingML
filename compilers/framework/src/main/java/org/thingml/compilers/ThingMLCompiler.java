@@ -100,7 +100,7 @@ public abstract class ThingMLCompiler {
     //FIXME: refactor code to avoid code duplication (should be possible to have one sub-method that we call twice with different params)
     public void processDebug(Configuration cfg) {
         final boolean debugCfg = cfg.isDefined("debug", "true");
-        List<Instance> debugInstances = new ArrayList<Instance>();
+        /*List<Instance> debugInstances = new ArrayList<Instance>();
         if (debugCfg) {//collect all instances not marked with @debug "false"
             for (Instance i : cfg.allInstances()) {
                 if (!i.isDefined("debug", "false")) {
@@ -113,16 +113,16 @@ public abstract class ThingMLCompiler {
                     debugInstances.add(i);
                 }
             }
-        }
+        }*/
 
         Set<Thing> debugThings = new HashSet<>();
-        for (Instance i : debugInstances) {
+        for (Instance i : cfg.allInstances()) {
             if (debugCfg) {
                 if (!i.isDefined("debug", "false")) {
                     debugThings.add(i.getType());
                 }
             } else {
-                if (i.isDefined("debug", "true")) {
+                if (i.isDefined("debug", "true") || i.getType().isDefined("debug", "true")) {
                     debugThings.add(i.getType());
                 }
             }
@@ -135,7 +135,7 @@ public abstract class ThingMLCompiler {
             Map<Port, List<Message>> debugMessages = new HashMap<>();
 
             if (debugThings.contains(thing)) {
-                if (thing.isDefined("debug", "true")) {//collect everything not marked with @debug "false"
+                if (!thing.isDefined("debug", "false")) {//collect everything not marked with @debug "false"
                     debugBehavior = !thing.getBehaviour().get(0).isDefined("debug", "false");
                     for (Function f : thing.allFunctions()) {
                         if (!f.isDefined("debug", "false")) {
