@@ -36,13 +36,13 @@ public class JSThingCepCompiler extends ThingCepCompiler {
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
-        if(stream.getInput() instanceof SimpleSource) {
+        if (stream.getInput() instanceof SimpleSource) {
             SimpleSource simpleSource = (SimpleSource) stream.getInput();
             String paramName = simpleSource.getMessage().getMessage().getName();
-            generateSubscription(stream, builder, ctx, paramName,simpleSource.getMessage().getMessage());
-        } else if(stream.getInput() instanceof SourceComposition) {
+            generateSubscription(stream, builder, ctx, paramName, simpleSource.getMessage().getMessage());
+        } else if (stream.getInput() instanceof SourceComposition) {
             Message output = ((SourceComposition) stream.getInput()).getResultMessage();
-            generateSubscription(stream, builder, ctx, output.getName(),((SourceComposition) stream.getInput()).getResultMessage());
+            generateSubscription(stream, builder, ctx, output.getName(), ((SourceComposition) stream.getInput()).getResultMessage());
         } else {
             throw UnsupportedException.sourceException(stream.getClass().getName());
         }
@@ -54,10 +54,10 @@ public class JSThingCepCompiler extends ThingCepCompiler {
                 .append("function( " + paramName + ") { \n");
 
         List<ViewSource> operators = stream.getInput().getOperators();
-        if(operators.size() > 0) {
+        if (operators.size() > 0) {
             boolean lastOpIsWindow = false;
             ViewSource lastOp = operators.get(operators.size() - 1);
-            if(lastOp instanceof WindowView) {
+            if (lastOp instanceof WindowView) {
                 for (Parameter parameter : outPut.getParameters()) {
                     builder.append("var " + outPut.getName() + parameter.getName() + " = [];\n")
                             .append("for(var i = 0; i< " + paramName + ".length; i++) {\n")

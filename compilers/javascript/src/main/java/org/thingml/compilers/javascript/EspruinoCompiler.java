@@ -27,7 +27,7 @@ import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 /**
  * Created by ffl on 25.11.14.
  */
-public class EspruinoCompiler extends JavaScriptCompiler {
+public class EspruinoCompiler extends JSCompiler {
 
     public EspruinoCompiler() {
         super(new EspruinoThingActionCompiler(), new EspruinoThingApiCompiler(), new JSCfgMainGenerator(),

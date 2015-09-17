@@ -1,0 +1,50 @@
+import "../datatypes.thingml"
+
+
+thing fragment BLEMsgs
+{
+	message stateChange  (st : String);
+	message discover  (peripheral : String);
+	message scanStart  ();
+	message scanStop  ();
+	
+	
+	message startScanning ();
+	message stopScanning ();
+	message connect (peripheralId : String);
+	message disconnect (peripheralId : String);
+	message discoverServices (peripheralId : String);
+	
+		
+}
+
+thing fragment BLEClient includes BLEMsgs
+{   
+	required port BLE @sync_send "true"
+    {
+		sends connect, disconnect, startScanning, stopScanning, discoverServices
+		receives stateChange, discover, scanStart, scanStop
+	}
+}
+
+thing fragment BLEServer includes BLEMsgs
+{   
+	provided port BLE 
+    {
+		receives connect, disconnect, startScanning, stopScanning, discoverServices
+		sends stateChange, discover, scanStart, scanStop
+	}
+}
+
+thing fragment BLEServerInternal includes BLEMsgs
+{   
+	provided port BLEInternal 
+    {
+		sends stateChange, discover, scanStart, scanStop
+	}
+	
+	required port BLEInternalRec 
+    {
+		receives stateChange, discover, scanStart, scanStop
+	}
+}

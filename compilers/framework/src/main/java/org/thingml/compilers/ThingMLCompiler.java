@@ -15,7 +15,7 @@
  */
 package org.thingml.compilers;
 
-import org.sintef.thingml.Configuration;
+import org.sintef.thingml.*;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
@@ -23,9 +23,7 @@ import org.thingml.compilers.thing.*;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import java.io.File;
 import java.io.OutputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by ffl on 23.11.14.
@@ -41,6 +39,43 @@ public abstract class ThingMLCompiler {
     private ThingImplCompiler thingImplCompiler;
     private ThingCepCompiler cepCompiler;
 
+    //Debug
+    private boolean debugBehavior = false;
+    private boolean debugFunction = false;
+    private Map<Port, List<Message>> debugMessages = new HashMap<Port, List<Message>>();
+
+    public void setDebugBehavior(boolean b) {
+        debugBehavior = b;
+    }
+
+    public void setDebugFunction(boolean b) {
+        debugFunction = b;
+    }
+
+
+    public void addDebugMessage(Port p, Message m) {
+        List<Message> msg = debugMessages.get(p);
+        if (msg == null) {
+            msg = new ArrayList<Message>();
+            debugMessages.put(p, msg);
+        }
+        if (!msg.contains(m)) {
+            msg.add(m);
+        }
+    }
+
+    public boolean isDebugBehavior() {
+        return debugBehavior;
+    }
+
+    public boolean isDebugFunction() {
+        return debugFunction;
+    }
+
+
+    public Map<Port, List<Message>> getDebugMessages() {
+        return Collections.unmodifiableMap(debugMessages);
+    }
 
     //we might need several connector compilers has different ports might use different connectors
     private Map<String, CfgExternalConnectorCompiler> connectorCompilers = new HashMap<String, CfgExternalConnectorCompiler>();

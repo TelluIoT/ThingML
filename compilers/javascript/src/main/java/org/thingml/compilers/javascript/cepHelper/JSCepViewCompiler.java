@@ -24,7 +24,7 @@ import org.thingml.compilers.thing.ThingCepViewCompiler;
 /**
  * @author ludovic
  */
-public class JSCepViewCompiler extends ThingCepViewCompiler{
+public class JSCepViewCompiler extends ThingCepViewCompiler {
     @Override
     public void generate(Filter filter, StringBuilder builder, Context context) {
         builder.append(".filter(" + filter.getFilterOp().getOperatorRef().getName() + ")");
@@ -38,9 +38,9 @@ public class JSCepViewCompiler extends ThingCepViewCompiler{
     @Override
     public void generate(LengthWindow lengthWindow, StringBuilder builder, Context context) {
         builder.append(".bufferWithCount(" + lengthWindow.getNbEvents());
-        if(lengthWindow.getStep() != -1) {
+        if (lengthWindow.getStep() != -1) {
             builder.append(", " + lengthWindow.getStep());
         }
-        builder.append( ")");
+        builder.append(")");
     }
 }

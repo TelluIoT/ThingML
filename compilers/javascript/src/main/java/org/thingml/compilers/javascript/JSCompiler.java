@@ -17,18 +17,19 @@ package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.javascript.cepHelper.JSCepViewCompiler;
-import org.thingml.compilers.javascript.cepHelper.JSGenerateSourceDeclaration;
-import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.javascript.cepHelper.JSCepViewCompiler;
+import org.thingml.compilers.javascript.cepHelper.JSGenerateSourceDeclaration;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,7 @@ import java.util.Map;
 /**
  * Created by ffl on 25.11.14.
  */
-public class JavaScriptCompiler extends OpaqueThingMLCompiler {
+public class JSCompiler extends OpaqueThingMLCompiler {
 
     {
         Map<String, CfgExternalConnectorCompiler> connectorCompilerMap = new HashMap<String, CfgExternalConnectorCompiler>();
@@ -45,19 +46,19 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
         addConnectorCompilers(connectorCompilerMap);
     }
 
-    public JavaScriptCompiler() {
-        super(new JSThingActionCompiler(), new JavaScriptThingApiCompiler(), new JSCfgMainGenerator(),
+    public JSCompiler() {
+        super(new JSThingActionCompiler(), new JSThingApiCompiler(), new JSCfgMainGenerator(),
                 new JSCfgBuildCompiler(), new JSThingImplCompiler(),
                 new JSThingCepCompiler(new JSCepViewCompiler(), new JSGenerateSourceDeclaration()));
     }
 
-    public JavaScriptCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
+    public JSCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
     }
 
     @Override
     public ThingMLCompiler clone() {
-        return new JavaScriptCompiler();
+        return new JSCompiler();
     }
 
     @Override
@@ -85,9 +86,20 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
-        //ctx.getBuilder(t.getName() + File.separator + "state-factory.js").append(ctx.getTemplateByID("javascript/lib/state-factory.js"));
-        //ctx.getBuilder(t.getName() + File.separator + "Connector.js").append(ctx.getTemplateByID("javascript/lib/Connector.js"));
-
+        //TO BE REMOVED        (Just to test debug mode)
+        ctx.getCompiler().setDebugBehavior(true);
+        ctx.getCompiler().setDebugFunction(true);
+        for(Thing th : t.allThings()) {
+            for(Port p : th.allPorts()) {
+                for(Message m : p.getReceives()) {
+                    ctx.getCompiler().addDebugMessage(p, m);
+                }
+                for(Message m : p.getSends()) {
+                    ctx.getCompiler().addDebugMessage(p, m);
+                }
+            }
+        }
+        //END TO BE REMOVED
         for (Type ty : model.allUsedSimpleTypes()) {
             if (ty instanceof Enumeration) {
                 Enumeration e = (Enumeration) ty;
@@ -108,7 +120,6 @@ public class JavaScriptCompiler extends OpaqueThingMLCompiler {
         }
         for (Thing thing : t.allThings()) {
             ctx.getCompiler().getThingImplCompiler().generateImplementation(thing, ctx);
-            //ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
         }
         ctx.getCompiler().getMainCompiler().generateMainAndInit(t, model, ctx);
     }

@@ -41,7 +41,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         builder.append("setImmediate(send" + ctx.firstToUpper(streamOutput.getMessage().getName()) + "On" + ctx.firstToUpper(streamOutput.getPort().getName()));
         for (StreamExpression se : streamOutput.getParameters()) {
             builder.append(", ");
-            generate(se.getExpression(),builder,ctx);
+            generate(se.getExpression(), builder, ctx);
         }
         builder.append(");\n");
     }
@@ -54,7 +54,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
         boolean firstDone = false;
         for (Expression p : action.getParameters()) {
-            if(firstDone) {
+            if (firstDone) {
                 builder.append(", ");
             } else {
                 firstDone = true;
@@ -100,15 +100,15 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
-    protected void generateReference(Message message,String messageName, Reference reference, StringBuilder builder, Context ctx) {
+    protected void generateReference(Message message, String messageName, Reference reference, StringBuilder builder, Context ctx) {
         ParamReference paramReference = (ParamReference) reference.getParameter(); //this method is called only when the reference parameter is a ParamReference
         String paramResult;
-        if(reference.getParameter() instanceof SimpleParamRef) {
-            paramResult =  "[" + JSHelper.getCorrectParamIndex(message,paramReference.getParameterRef()) + "]";
-        } else if(reference.getParameter() instanceof ArrayParamRef) {
+        if (reference.getParameter() instanceof SimpleParamRef) {
+            paramResult = "[" + JSHelper.getCorrectParamIndex(message, paramReference.getParameterRef()) + "]";
+        } else if (reference.getParameter() instanceof ArrayParamRef) {
             paramResult = paramReference.getParameterRef().getName();
         } else {
-            throw new UnsupportedException(reference.getParameter().getClass().getName(),"reference parameter","JSThingActionCompiler");
+            throw new UnsupportedException(reference.getParameter().getClass().getName(), "reference parameter", "JSThingActionCompiler");
         }
         builder.append(messageName + paramResult);
     }
@@ -169,7 +169,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
         boolean firstDone = false;
         for (Expression p : expression.getParameters()) {
-            if(firstDone) {
+            if (firstDone) {
                 builder.append(", ");
             } else {
                 firstDone = true;

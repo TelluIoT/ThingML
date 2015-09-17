@@ -15,17 +15,14 @@
  */
 package org.thingml.compilers.javascript;
 
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
+import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
 /**
  * Created by bmori on 09.12.2014.
  */
-public class JavaScriptThingApiCompiler extends ThingApiCompiler {
+public class JSThingApiCompiler extends ThingApiCompiler {
 
     protected String const_() {
         return "const ";
@@ -97,6 +94,18 @@ public class JavaScriptThingApiCompiler extends ThingApiCompiler {
                         i++;
                     }
                     builder.append(") {\n");
+                    final boolean debug = ctx.getCompiler().getDebugMessages().get(p).contains(m);
+                    if (debug) {
+                        builder.append("if(this.debug) console.log(colors.green(\"thing " + thing.getName() + ": " + p.getName() + "?" + m.getName() + "(");
+                        i = 0;
+                        for (Parameter pa : m.getParameters()) {
+                            if (i > 0)
+                                builder.append(", ");
+                            builder.append("\" + " + ctx.protectKeyword(pa.getName()) + " + \"");
+                            i++;
+                        }
+                        builder.append(")\"));\n");
+                    }
                     builder.append("this._receive(\"" + p.getName() + "\", \"" + m.getName() + "\"");
                     for (Parameter pa : m.getParameters()) {
                         builder.append(", " + ctx.protectKeyword(pa.getName()));
@@ -109,9 +118,32 @@ public class JavaScriptThingApiCompiler extends ThingApiCompiler {
     }
 
     protected void callListeners(Port p, Message m, StringBuilder builder, Context ctx) {
+        boolean debug = false;
+        if (ctx.getCompiler().getDebugMessages().get(p) != null)
+            debug = ctx.getCompiler().getDebugMessages().get(p).contains(m);
+        if (debug) {
+            builder.append("if(_this.debug) console.log(colors.green(\"thing " + p.findContainingThing().getName() + ": " + p.getName() + "!" + m.getName() + "(");
+            int i = 0;
+            for (Parameter pa : m.getParameters()) {
+                if (i > 0)
+                    builder.append(", ");
+                builder.append("\" + ");
+                builder.append(ctx.protectKeyword(pa.getName()));
+                builder.append(" + \"");
+            }
+            builder.append(")\"));\n");
+        }
+
         if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
             builder.append("//notify listeners\n");
             builder.append(const_() + "arrayLength = " + m.getName() + "On" + p.getName() + "Listeners.length;\n");
+
+            if(debug) {
+                builder.append("if (arrayLength < 1) {\n");
+                builder.append("if(_this.debug) console.log(colors.red(\"Message lost, because no connector/listener is defined!\"));\n");
+                builder.append("}\n");
+            }
+
             builder.append("for (var _i = 0; _i < arrayLength; _i++) {\n");
             builder.append(m.getName() + "On" + p.getName() + "Listeners[_i](");
             int i = 0;
