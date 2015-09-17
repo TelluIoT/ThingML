@@ -50,6 +50,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
     }
 
     public static void generateInstances(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
+        final boolean debug = cfg.isDefined("debug", "true");
+
         for (Instance i : cfg.allInstances()) {
             for (Property a : cfg.allArrays(i)) {
                 builder.append("var " + i.getName() + "_" + a.getName() + "_array = [];\n");
@@ -71,11 +73,10 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             }
 
             if (useThis) {
-                builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(");
+                builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\"");
             } else {
-                builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(");
+                builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i .getName() + "\"");
             }
-            int id = 0;
 
             for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
                 for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
@@ -101,32 +102,29 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                                 result += getDefaultValue(p.getKey().getType());
                             }
                         }
-                        if (id > 0)
-                            builder.append(", ");
+                        builder.append(", ");
                         builder.append(result);
-                        id++;
                     }
                 }
                 for (Property a : cfg.allArrays(i)) {
                     if (prop.equals(a) && !(prop.isDefined("private", "true")) && prop.eContainer() instanceof Thing) {
                         System.out.println("Array " + prop);
-                        if (id > 0)
-                            builder.append(", ");
+                        builder.append(", ");
                         builder.append(i.getName() + "_" + a.getName() + "_array");
-                        id++;
                     }
                 }
+            }
+            if (debug || i.isDefined("debug", "true")) {
+                builder.append(", true");
+            } else {
+                builder.append(", false");
             }
             builder.append(");\n");
             builder.append(reference(i.getName(), useThis) + ".setThis(" + reference(i.getName(), useThis) + ");\n");
             if (useThis) {
                 builder.append("this." + i.getName() + ".build();\n");
-                builder.append("this." + i.getName() + ".setName(\"" + i.getName() + "\");\n");
-                builder.append("this." + i.getName() + ".setDebug(false);\n");
             } else {
                 builder.append(i.getName() + ".build();\n");
-                builder.append(i.getName() + ".setName(\"" + i.getName() + "\");\n");
-                builder.append(i.getName() + ".setDebug(false);\n");
             }
         }
 

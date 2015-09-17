@@ -18,6 +18,7 @@ package org.thingml.compilers.javascript;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.Map;
  */
 public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
-    boolean debug = false;
+    DebugProfile debugProfile;
 
     protected String const_() {
         return "const ";
@@ -58,7 +59,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     j++;
                 }
                 builder.append(") {\n");
-                ((JSThingApiCompiler) ctx.getCompiler().getThingApiCompiler()).callListeners(p, m, builder, ctx);
+                ((JSThingApiCompiler) ctx.getCompiler().getThingApiCompiler()).callListeners(p, m, builder, ctx, debugProfile);
                 builder.append("}\n\n");
             }
         }
@@ -66,28 +67,17 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
     @Override
     public void generateImplementation(Thing thing, Context ctx) {
+        debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
+
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/" + ctx.firstToUpper(thing.getName()) + ".js");
         if (ctx.getContextAnnotation("hasEnum") != null && ctx.getContextAnnotation("hasEnum").equals("true")) {
             builder.append("var Enum = require('./enums');\n");
         }
         builder.append("var StateJS = require('state.js');\n");
 
-
-        if (ctx.getCompiler().isDebugBehavior()) {
-            debug = true;
-        }
-        if (!debug) {
-            for (Port p : thing.allPorts()) {
-                if (ctx.getCompiler().getDebugMessages().containsKey(p)) {
-                    debug = true;
-                    break;
-                }
-            }
-        }
-        if (debug) {
+        if (debugProfile.isActive()) {
             builder.append("var colors = require('colors/safe');\n");
         }
-
 
         if (thing.getStreams().size() > 0) {
             builder.append("var Rx = require('rx'),\n" +
@@ -98,27 +88,17 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append(" * Definition for type : " + thing.getName() + "\n");
         builder.append(" **/\n");
 
-        builder.append("function " + ctx.firstToUpper(thing.getName()) + "(");
-        int i = 0;
+        builder.append("function " + ctx.firstToUpper(thing.getName()) + "(name");
         for (Property p : thing.allPropertiesInDepth()) {
             if (!p.isDefined("private", "true") && p.eContainer() instanceof Thing) {
-                if (i > 0)
-                    builder.append(", ");
+                builder.append(", ");
                 builder.append(p.qname("_") + "_var");
-                i++;
             }
         }//TODO: changeable properties?
-        builder.append(") {\n\n");
+        builder.append(", debug) {\n\n");
 
-        builder.append("this.name = \"default\";\n");
-        builder.append("this.setName = function(n) {\n");
-        builder.append("this.name = n;\n");
-        builder.append("};\n");
-
-        builder.append("this.debug = false;\n");
-        builder.append("this.setDebug = function(b) {\n");
-        builder.append("this.debug = b;\n");
-        builder.append("};\n");
+        builder.append("this.name = name;\n");
+        builder.append("this.debug = debug;\n");
 
         builder.append("var _this;\n");
         builder.append("this.setThis = function(__this) {\n");
@@ -185,7 +165,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     j++;
                 }
                 builder.append(") {\n");
-                if(ctx.getCompiler().isDebugFunction()) {
+                if(debugProfile.getDebugFunctions().contains(f)) {
                     builder.append("if(_this.debug) console.log(colors.cyan(_this.name + \"(" + thing.getName() + "): executing function " + f.getName() + "...\"));\n");
                 }
                 ctx.getCompiler().getThingActionCompiler().generate(f.getBody(), builder, ctx);
@@ -294,25 +274,25 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     private void generateActionsForState(State s, StringBuilder builder, Context ctx) {
-        if (s.getEntry() != null || ctx.getCompiler().isDebugBehavior()) {
+        if (s.getEntry() != null || debugProfile.isDebugBehavior()) {
             builder.append(".entry(function () {\n");
-            if (ctx.getCompiler().isDebugBehavior()) {
+            if (debugProfile.isDebugBehavior()) {
                 builder.append("if(_this.debug) console.log(colors.yellow(_this.name + \"(" + s.findContainingThing().getName() + "): enters " + s.qualifiedName(":") + "\"));\n");
             }
             if (s.getEntry() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
             builder.append("})");
         }
-        if (s.getExit() != null || ctx.getCompiler().isDebugBehavior()) {
+        if (s.getExit() != null || debugProfile.isDebugBehavior()) {
             builder.append(".exit(function () {\n");
-            if (ctx.getCompiler().isDebugBehavior()) {
+            if (debugProfile.isDebugBehavior()) {
                 builder.append("if(_this.debug) console.log(colors.yellow(_this.name + \"(" + s.findContainingThing().getName() + "): exits " + s.qualifiedName(":") + "\"));\n");
             }
             if (s.getExit() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
             builder.append("})");
         }
-        if (s.getEntry() != null || s.getExit() != null || ctx.getCompiler().isDebugBehavior()) {
+        if (s.getEntry() != null || s.getExit() != null || debugProfile.isDebugBehavior()) {
             builder.append("\n\n");
         }
     }
@@ -388,9 +368,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-        boolean debug = false;
-        if (ctx.getCompiler().getDebugMessages().get(p) != null)
-            debug = ctx.getCompiler().getDebugMessages().get(p).contains(msg);
         if (t.getEvent().size() == 0) {
             builder.append(t.getSource().qname("_") + ".to(" + t.getTarget().qname("_") + ")");
             if (t.getGuard() != null) {
@@ -412,7 +389,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         if (t.getAction() != null) {
             String debugString = "";
-            if (debug)
+            if (debugProfile.isDebugBehavior())
                 debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + t.findContainingThing().getName() + "): on " + p.getName() + "?" + msg.getName() + " from " + t.getSource().qualifiedName(":") + " to " + t.getTarget().qualifiedName(":") + "\"));\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         }
@@ -420,9 +397,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-        boolean debug = false;
-        if (ctx.getCompiler().getDebugMessages().get(p) != null)
-            debug = ctx.getCompiler().getDebugMessages().get(p).contains(msg);
         if (t.getEvent().size() == 0) {
             builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
             if (t.getGuard() != null) {
@@ -442,7 +416,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         if (t.getAction() != null) {
             String debugString = "";
-            if (debug)
+            if (debugProfile.isDebugBehavior())
                 debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + t.findContainingThing().getName() + "): on " + p.getName() + "?" + msg.getName() + " in state " + ((State) t.eContainer()).qualifiedName(":") + "\"));\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         }

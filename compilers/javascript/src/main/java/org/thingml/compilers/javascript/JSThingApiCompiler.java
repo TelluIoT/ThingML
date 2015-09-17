@@ -17,6 +17,7 @@ package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
 /**
@@ -82,6 +83,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
     }
 
     protected void generatePublicPort(Thing thing, StringBuilder builder, Context ctx) {
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
         for (Port p : thing.allPorts()) {
             if (p.getReceives().size() > 0) {
                 for (Message m : p.getReceives()) {
@@ -94,9 +96,9 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                         i++;
                     }
                     builder.append(") {\n");
-                    final boolean debug = ctx.getCompiler().getDebugMessages().get(p).contains(m);
+                    final boolean debug = (debugProfile != null) && debugProfile.getDebugMessages().get(p) != null && debugProfile.getDebugMessages().get(p).contains(m);
                     if (debug) {
-                        builder.append("if(this.debug) console.log(colors.green(\"thing " + thing.getName() + ": " + p.getName() + "?" + m.getName() + "(");
+                        builder.append("if(this.debug) console.log(colors.green(this.name + \" (" + thing.getName() + "): " + p.getName() + "?" + m.getName() + "(");
                         i = 0;
                         for (Parameter pa : m.getParameters()) {
                             if (i > 0)
@@ -117,12 +119,10 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         }
     }
 
-    protected void callListeners(Port p, Message m, StringBuilder builder, Context ctx) {
-        boolean debug = false;
-        if (ctx.getCompiler().getDebugMessages().get(p) != null)
-            debug = ctx.getCompiler().getDebugMessages().get(p).contains(m);
+    protected void callListeners(Port p, Message m, StringBuilder builder, Context ctx, DebugProfile debugProfile) {
+        final boolean debug = debugProfile.getDebugMessages().get(p) != null && debugProfile.getDebugMessages().get(p).contains(m);
         if (debug) {
-            builder.append("if(_this.debug) console.log(colors.green(\"thing " + p.findContainingThing().getName() + ": " + p.getName() + "!" + m.getName() + "(");
+            builder.append("if(_this.debug) console.log(colors.green(_this.name + \" (" + p.findContainingThing().getName() + ") : " + p.getName() + "!" + m.getName() + "(");
             int i = 0;
             for (Parameter pa : m.getParameters()) {
                 if (i > 0)
@@ -140,7 +140,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
             if(debug) {
                 builder.append("if (arrayLength < 1) {\n");
-                builder.append("if(_this.debug) console.log(colors.red(\"Message lost, because no connector/listener is defined!\"));\n");
+                builder.append("if(_this.debug) console.log(colors.red(_this.name + \" (" + p.findContainingThing().getName() + "): message lost, because no connector/listener is defined!\"));\n");
                 builder.append("}\n");
             }
 

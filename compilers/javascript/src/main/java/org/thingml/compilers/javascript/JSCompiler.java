@@ -86,20 +86,7 @@ public class JSCompiler extends OpaqueThingMLCompiler {
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
-        //TO BE REMOVED        (Just to test debug mode)
-        ctx.getCompiler().setDebugBehavior(true);
-        ctx.getCompiler().setDebugFunction(true);
-        for(Thing th : t.allThings()) {
-            for(Port p : th.allPorts()) {
-                for(Message m : p.getReceives()) {
-                    ctx.getCompiler().addDebugMessage(p, m);
-                }
-                for(Message m : p.getSends()) {
-                    ctx.getCompiler().addDebugMessage(p, m);
-                }
-            }
-        }
-        //END TO BE REMOVED
+        processDebug(t);
         for (Type ty : model.allUsedSimpleTypes()) {
             if (ty instanceof Enumeration) {
                 Enumeration e = (Enumeration) ty;

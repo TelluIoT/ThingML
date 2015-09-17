@@ -5,8 +5,9 @@ thing TimerJS includes Timer
 @pim "Timer"
 @platform "javascript"
 @javascript "node browser"
+@debug "true"
 {
-    function cancel() 
+    function cancel() @debug "false" 
     do
         'clearTimeout(this.timer);'
     end
@@ -38,8 +39,13 @@ thing TimerJS includes Timer
     }
 }
 
-configuration TestTimerJS {
-    instance timer : TimerJS
+/**
+* @debug "true" on configuration indicates we should traces all instances. 
+* To debug a given instance, put the annotation on the instance, and not on the configuration. 
+* Alternatively, keep the annotation on the configuration and put @debug "false" on the instances you do not want to debug
+*/
+configuration TestTimerJS @debug "true"{
+    instance timer : TimerJS 
     instance client : SimpleTimerClient
     connector client.timer => timer.timer    
 }

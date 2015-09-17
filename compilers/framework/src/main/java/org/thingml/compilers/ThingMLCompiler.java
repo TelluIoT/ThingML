@@ -21,6 +21,7 @@ import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.thing.*;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
+
 import java.io.File;
 import java.io.OutputStream;
 import java.util.*;
@@ -40,41 +41,10 @@ public abstract class ThingMLCompiler {
     private ThingCepCompiler cepCompiler;
 
     //Debug
-    private boolean debugBehavior = false;
-    private boolean debugFunction = false;
-    private Map<Port, List<Message>> debugMessages = new HashMap<Port, List<Message>>();
+    private Map<Thing, DebugProfile> debugProfiles = new HashMap<>();
 
-    public void setDebugBehavior(boolean b) {
-        debugBehavior = b;
-    }
-
-    public void setDebugFunction(boolean b) {
-        debugFunction = b;
-    }
-
-
-    public void addDebugMessage(Port p, Message m) {
-        List<Message> msg = debugMessages.get(p);
-        if (msg == null) {
-            msg = new ArrayList<Message>();
-            debugMessages.put(p, msg);
-        }
-        if (!msg.contains(m)) {
-            msg.add(m);
-        }
-    }
-
-    public boolean isDebugBehavior() {
-        return debugBehavior;
-    }
-
-    public boolean isDebugFunction() {
-        return debugFunction;
-    }
-
-
-    public Map<Port, List<Message>> getDebugMessages() {
-        return Collections.unmodifiableMap(debugMessages);
+    public Map<Thing, DebugProfile> getDebugProfiles() {
+        return debugProfiles;
     }
 
     //we might need several connector compilers has different ports might use different connectors
@@ -123,6 +93,107 @@ public abstract class ThingMLCompiler {
      */
     public abstract boolean compile(Configuration cfg, String... options);
 
+    /**
+     * Creates debug profiles
+     * @param cfg
+     */
+    //FIXME: refactor code to avoid code duplication (should be possible to have one sub-method that we call twice with different params)
+    public void processDebug(Configuration cfg) {
+        final boolean debugCfg = cfg.isDefined("debug", "true");
+        List<Instance> debugInstances = new ArrayList<Instance>();
+        if (debugCfg) {//collect all instances not marked with @debug "false"
+            for (Instance i : cfg.allInstances()) {
+                if (!i.isDefined("debug", "false")) {
+                    debugInstances.add(i);
+                }
+            }
+        } else { //collect all instances marked with @debug "true"
+            for (Instance i : cfg.allInstances()) {
+                if (i.isDefined("debug", "true")) {
+                    debugInstances.add(i);
+                }
+            }
+        }
+
+        Set<Thing> debugThings = new HashSet<>();
+        for (Instance i : debugInstances) {
+            if (debugCfg) {
+                if (!i.isDefined("debug", "false")) {
+                    debugThings.add(i.getType());
+                }
+            } else {
+                if (i.isDefined("debug", "true")) {
+                    debugThings.add(i.getType());
+                }
+            }
+        }
+
+        for (Thing thing : cfg.allThings()) {
+            boolean debugBehavior = false;
+            List<Function> debugFunctions = new ArrayList<Function>();
+            List<Property> debugProperties = new ArrayList<>();
+            Map<Port, List<Message>> debugMessages = new HashMap<>();
+
+            if (debugThings.contains(thing)) {
+                if (thing.isDefined("debug", "true")) {//collect everything not marked with @debug "false"
+                    debugBehavior = !thing.getBehaviour().get(0).isDefined("debug", "false");
+                    for (Function f : thing.allFunctions()) {
+                        if (!f.isDefined("debug", "false")) {
+                            debugFunctions.add(f);
+                        }
+                    }
+                    for (Property p : thing.allPropertiesInDepth()) {
+                        if (!p.isDefined("debug", "false")) {
+                            debugProperties.add(p);
+                        }
+                    }
+                    for (Port p : thing.allPorts()) {
+                        List<Message> msg = p.getReceives();
+                        msg.addAll(p.getSends());
+                        for (Message m : msg) {
+                            if ((!p.isDefined("debug", "false") && !m.isDefined("debug", "false")) || m.isDefined("debug", "true")) {//TODO: check the rules for debugging of messages/ports
+                                List<Message> l = debugMessages.get(p);
+                                if (l == null) {
+                                    l = new ArrayList<>();
+                                    debugMessages.put(p, l);
+                                }
+                                l.add(m);
+                            }
+                        }
+                    }
+                } else {//collect everything marked with @debug "true"
+                    debugBehavior = thing.getBehaviour().get(0).isDefined("debug", "true");
+                    for (Function f : thing.allFunctions()) {
+                        if (f.isDefined("debug", "true")) {
+                            debugFunctions.add(f);
+                        }
+                    }
+                    for (Property p : thing.allPropertiesInDepth()) {
+                        if (p.isDefined("debug", "true")) {
+                            debugProperties.add(p);
+                        }
+                    }
+                    for (Port p : thing.allPorts()) {
+                        List<Message> msg = p.getReceives();
+                        msg.addAll(p.getSends());
+                        for (Message m : msg) {
+                            if ((p.isDefined("debug", "true") && !m.isDefined("debug", "false")) || m.isDefined("debug", "true")) {//TODO: check the rules for debugging of messages/ports
+                                List<Message> l = debugMessages.get(p);
+                                if (l == null) {
+                                    l = new ArrayList<>();
+                                    debugMessages.put(p, l);
+                                }
+                                l.add(m);
+                            }
+                        }
+                    }
+                }
+            }
+            DebugProfile profile = new DebugProfile(thing, debugBehavior, debugFunctions, debugProperties, debugMessages);
+            debugProfiles.put(thing, profile);
+        }
+    }
+
     public boolean compileConnector(String connector, Configuration cfg, String... options) {
         ctx.setCurrentConfiguration(cfg);
         final CfgExternalConnectorCompiler cc = connectorCompilers.get(connector);
@@ -154,7 +225,9 @@ public abstract class ThingMLCompiler {
         return thingImplCompiler;
     }
 
-    public ThingCepCompiler getCepCompiler(){return cepCompiler;}
+    public ThingCepCompiler getCepCompiler() {
+        return cepCompiler;
+    }
 
     public void addConnectorCompilers(Map<String, CfgExternalConnectorCompiler> connectorCompilers) {
         this.connectorCompilers.putAll(connectorCompilers);

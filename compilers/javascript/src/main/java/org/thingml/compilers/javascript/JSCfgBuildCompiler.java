@@ -57,16 +57,11 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
             }
 
             boolean addCEPdeps = false;
-            boolean addDebugDeps = ctx.getCompiler().isDebugBehavior();
+            boolean addDebugDeps = !ctx.getCompiler().getDebugProfiles().isEmpty();
 
             for (Thing t : cfg.allThings()) {
                 if (t.getStreams().size() > 0) {
                     addCEPdeps = true;
-                }
-                for(Port p : t.allPorts()) {
-                    if(ctx.getCompiler().getDebugMessages().containsKey(p)) {
-                        addDebugDeps = true;
-                    }
                 }
             }
 
