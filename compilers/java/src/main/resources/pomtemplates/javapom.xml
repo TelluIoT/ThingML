@@ -42,6 +42,11 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
 
+        <repository>
+            <id>repo1-maven</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+
         <!--Additional repositories-->
         <!--REPO-->
 
@@ -54,6 +59,13 @@
             <groupId>org.thingml</groupId>
             <artifactId>org.thingml.jasm</artifactId>
             <version>${jasm.version}</version>
+        </dependency>
+
+        <!--FIXME: should be only here if debug-->
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>1.11</version>
         </dependency>
 
         <!--<dependency>

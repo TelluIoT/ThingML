@@ -17,6 +17,7 @@ package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import java.util.ArrayList;
@@ -144,6 +145,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
     @Override
     public void generateImplementation(Thing thing, Context ctx) {
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
+
         String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
 
@@ -179,6 +182,12 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append(" {\n\n");
 
+        builder.append("private boolean debug = false;\n");
+        builder.append("public boolean isDebug() {return debug;}\n");
+        builder.append("public void setDebug(boolean debug) {this.debug = debug;}\n");
+
+
+
         for (Port p : thing.allPorts()) {
             if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
                 builder.append("private Collection<I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client> " + p.getName() + "_clients = Collections.synchronizedCollection(new LinkedList<I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client>());\n");
@@ -193,7 +202,36 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
 
-        for (Port p : thing.allPorts()) {
+
+        if (!debugProfile.getDebugMessages().isEmpty()) {
+            builder.append("@Override\npublic void receive(Event event, final Port p){\n");
+            int i = 0;
+            for (Port p : thing.allPorts()) {
+                for (Message m : p.getReceives()) {
+                    if (debugProfile.getDebugMessages().containsKey(p) && debugProfile.getDebugMessages().get(p).contains(m)) {
+                        if (i > 0)
+                            builder.append("else ");
+                        builder.append("if(p.getName().equals(\"" + p.getName() + "\") && event.getType().getName().equals(\"" + m.getName() + "\")) {\n");
+                        builder.append("if(this.isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|green \" + this.getName() + \": " + p.getName() + "?" + m.getName() + "(");
+                        int j = 0;
+                        for (Parameter pa : m.getParameters()) {
+                            if (j > 0)
+                                builder.append(", ");
+                            builder.append("\" + ((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message) event)."  + ctx.protectKeyword(pa.getName()) + " + \"");
+                            j++;
+                        }
+                        builder.append(")|@\"));\n");
+                        builder.append("}\n");
+                        i++;
+                    }
+                }
+            }
+            builder.append("super.receive(event, p);\n");
+            builder.append("}\n\n");
+        }
+
+
+            for (Port p : thing.allPorts()) {
             if (!p.isDefined("public", "false")) {
                 for (Message m : p.getReceives()) {
                     builder.append("@Override\n");
@@ -216,6 +254,19 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("private void send" + ctx.firstToUpper(m.getName()) + "_via_" + p.getName() + "(");
                 JavaHelper.generateParameter(m, builder, ctx);
                 builder.append("){\n");
+
+                if (debugProfile.getDebugMessages().get(p) != null && debugProfile.getDebugMessages().get(p).contains(m)) {
+                    builder.append("if(this.isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|green \" + this.getName() + \": " + p.getName() + "!" + m.getName() + "(");
+                    int i = 0;
+                    for (Parameter pa : m.getParameters()) {
+                        if (i > 0)
+                            builder.append(", ");
+                        builder.append("\" + ");
+                        builder.append(ctx.protectKeyword(ctx.getVariableName(pa)));
+                        builder.append(" + \"");
+                    }
+                    builder.append(")|@\"));\n");
+                }
 
                 builder.append("//ThingML send\n");
                 builder.append(p.getName() + "_port.send(" + m.getName() + "Type.instantiate(" + p.getName() + "_port");
@@ -266,6 +317,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("//Empty Constructor\n");
         builder.append("public " + ctx.firstToUpper(thing.getName()) + "() {\nsuper();\n");
+        builder.append("org.fusesource.jansi.AnsiConsole.systemInstall();\n");//FIXME: only if debug
         for (Property p : thing.allPropertiesInDepth()) {
             Expression e = thing.initExpression(p);
             if (e != null) {
@@ -341,14 +393,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("//Init ports\n");
         for (Port p : thing.allPorts()) {
-            /*builder.append("final List<EventType> inEvents_" + p.getName() + " = new ArrayList<EventType>();\n");
-            builder.append("final List<EventType> outEvents_" + p.getName() + " = new ArrayList<EventType>();\n");
-            for (Message r : p.getReceives()) {
-                builder.append("inEvents_" + p.getName() + ".add(" + r.getName() + "Type);\n");
-            }
-            for (Message s : p.getSends()) {
-                builder.append("outEvents_" + p.getName() + ".add(" + s.getName() + "Type);\n");
-            }*/
             builder.append(p.getName() + "_port = new Port(");
             if (p instanceof ProvidedPort)
                 builder.append("PortType.PROVIDED");
@@ -431,20 +475,29 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         else
             builder.append("false");
         builder.append(")");
-        if (c.getEntry() != null || c.getExit() != null) {
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(c.findContainingThing());
+        if (c.getEntry() != null || c.getExit() != null || debugProfile.isDebugBehavior()) {
             builder.append("{\n");
-            if (c.getEntry() != null) {
+            if (c.getEntry() != null || debugProfile.isDebugBehavior()) {
                 builder.append("@Override\n");
                 builder.append("public void onEntry() {\n");
-                ctx.getCompiler().getThingActionCompiler().generate(c.getEntry(), builder, ctx);
+                if (debugProfile.isDebugBehavior()) {
+                    builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + this.getName() + \": enters " + c.qualifiedName(":") + "|@\"));\n");
+                }
+                if (c.getEntry() != null)
+                    ctx.getCompiler().getThingActionCompiler().generate(c.getEntry(), builder, ctx);
                 builder.append("super.onEntry();\n");
                 builder.append("}\n\n");
             }
-            if (c.getExit() != null) {
+            if (c.getExit() != null || debugProfile.isDebugBehavior()) {
                 builder.append("@Override\n");
                 builder.append("public void onExit() {\n");
                 builder.append("super.onExit();\n");
-                ctx.getCompiler().getThingActionCompiler().generate(c.getExit(), builder, ctx);
+                if (debugProfile.isDebugBehavior()) {
+                    builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + this.getName() + \": exits " + c.qualifiedName(":") + "|@\"));\n");
+                }
+                if (c.getExit() != null)
+                    ctx.getCompiler().getThingActionCompiler().generate(c.getExit(), builder, ctx);
                 builder.append("}\n\n");
             }
             builder.append("}\n");
@@ -454,19 +507,28 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
         builder.append("final AtomicState state_" + s.qname("_") + " = new AtomicState(\"" + s.getName() + "\")\n");
-        if (s.getEntry() != null || s.getExit() != null) {
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(s.findContainingThing());
+        if (s.getEntry() != null || s.getExit() != null || debugProfile.isDebugBehavior()) {
             builder.append("{\n");
-            if (s.getEntry() != null) {
+            if (s.getEntry() != null || debugProfile.isDebugBehavior()) {
                 builder.append("@Override\n");
                 builder.append("public void onEntry() {\n");
-                ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
+                if (debugProfile.isDebugBehavior()) {
+                    builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + this.getName() + \": enters " + s.qualifiedName(":") + "|@\"));\n");
+                }
+                if (s.getEntry() != null)
+                    ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
                 builder.append("}\n\n");
             }
 
-            if (s.getExit() != null) {
+            if (s.getExit() != null || debugProfile.isDebugBehavior()) {
                 builder.append("@Override\n");
                 builder.append("public void onExit() {\n");
-                ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
+                if (debugProfile.isDebugBehavior()) {
+                    builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + this.getName() + \": enters " + s.qualifiedName(":") + "|@\"));\n");
+                }
+                if (s.getExit() != null)
+                    ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
                 builder.append("}\n\n");
             }
             builder.append("}");
@@ -521,6 +583,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     private void buildTransitionsHelper(StringBuilder builder, Context ctx, State s, Handler i) {
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(s.findContainingThing());
         if (i.getEvent() != null && i.getEvent().size() > 0) {
             for (Event e : i.getEvent()) {
                 ReceiveMessage r = (ReceiveMessage) e;
@@ -556,15 +619,19 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append("}\n\n");
                 }
 
-                if (i.getAction() != null) {
+                if (i.getAction() != null || debugProfile.isDebugBehavior()) {
                     builder.append("@Override\n");
                     builder.append("public void doExecute(final Event e) {\n");
+                    if (debugProfile.isDebugBehavior()) {
+                        //TODO: trace transition
+                    }
                     if (e != null) {
                         builder.append("final " + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message " + r.getMessage().getName() + " = (" + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message) e;\n");
                     } else {
                         builder.append("final NullEvent " + r.getMessage().getName() + " = (NullEvent) e;\n");
                     }
-                    ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
+                    if (i.getAction() != null)
+                        ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
                     builder.append("}\n\n");
                 }
                 if (i.getGuard() != null || i.getAction() != null)
@@ -593,11 +660,15 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("}\n\n");
             }
 
-            if (i.getAction() != null) {
+            if (i.getAction() != null || debugProfile.isDebugBehavior()) {
                 builder.append("@Override\n");
                 builder.append("public void doExecute(final Event e) {\n");
+                if (debugProfile.isDebugBehavior()) {
+                    //TODO: trace transition
+                }
                 builder.append("final NullEvent ce = (NullEvent) e;\n");
-                ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
+                if (i.getAction() != null)
+                    ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
                 builder.append("}\n\n");
             }
             if (i.getGuard() != null || i.getAction() != null)

@@ -136,7 +136,7 @@ public abstract class ThingMLCompiler {
 
             if (debugThings.contains(thing)) {
                 if (!thing.isDefined("debug", "false")) {//collect everything not marked with @debug "false"
-                    debugBehavior = !thing.getBehaviour().get(0).isDefined("debug", "false");
+                    debugBehavior = !thing.getBehaviour().isEmpty() && !thing.getBehaviour().get(0).isDefined("debug", "false");
                     for (Function f : thing.allFunctions()) {
                         if (!f.isDefined("debug", "false")) {
                             debugFunctions.add(f);
@@ -162,7 +162,7 @@ public abstract class ThingMLCompiler {
                         }
                     }
                 } else {//collect everything marked with @debug "true"
-                    debugBehavior = thing.getBehaviour().get(0).isDefined("debug", "true");
+                    debugBehavior =  !thing.getBehaviour().isEmpty() && thing.getBehaviour().get(0).isDefined("debug", "true");
                     for (Function f : thing.allFunctions()) {
                         if (f.isDefined("debug", "true")) {
                             debugFunctions.add(f);

@@ -57,10 +57,9 @@ thing TimerJava includes Timer
     }
 }
 
-configuration TestTimerJava {
+configuration TestTimerJava @debug "true" {
     instance timer : TimerJava
-    instance client : TimerClientMock
-    /*instance client : SimpleTimerClient
-        set client.t1 = 500*/
+    instance client : SimpleTimerClient
+        set client.t1 = 500
     connector client.timer => timer.timer    
 }
