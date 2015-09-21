@@ -88,6 +88,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         else new File(tmpFolder).deleteOnExit();
         ctx.addContextAnnotation("package", pack);
         ctx.setCurrentConfiguration(cfg);
+        processDebug(cfg);
         for (Thing th : cfg.allThings()) {
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(th, ctx);
             ctx.getCompiler().getThingImplCompiler().generateImplementation(th, ctx);

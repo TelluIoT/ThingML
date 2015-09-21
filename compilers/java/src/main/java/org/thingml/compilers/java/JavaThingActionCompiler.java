@@ -26,6 +26,13 @@ import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
+    public void traceVariable(VariableAssignment action, StringBuilder builder, Context ctx) {
+        builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|magenta \" + getName() + \": property " + action.getProperty().getName() + " changed from \" + " + action.getProperty().qname("_") + "_var" + " + \" to \" + (");
+        ctx.getCompiler().getThingActionCompiler().generate(action.getExpression(), builder, ctx);
+        builder.append(") + \"|@\"));\n");
+    }
+
+    @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
         builder.append("send" + ctx.firstToUpper(action.getMessage().getName()) + "_via_" + action.getPort().getName() + "(");
         int i = 0;

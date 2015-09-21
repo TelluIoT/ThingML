@@ -9,7 +9,7 @@ thing fragment TimerMsgs {
 	// Start the Timer
 	message timer_start(delay : Integer);
 	// Cancel the Timer
-	message timer_cancel()@debug "false";
+	message timer_cancel()@debug "false"; 
 	// Notification that the timer has expired
 	message timer_timeout();
 }
@@ -38,7 +38,6 @@ thing TimerClientMock includes TimerClient
 {}
 
 thing SimpleTimerClient includes TimerClient 
-@debug "true"
 {
     property t1 : Long = 1000
     property t2 : Long = 5000

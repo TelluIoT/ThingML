@@ -9,21 +9,15 @@ thing TimerJava includes Timer
 @platform "java"
 {
     property timer : JThread
-
-    statechart SoftTimer init default {
-        state default {
-
-          internal start
-            event m : timer?timer_start
-            guard m.delay > 0
-            action do
+    
+    function start(delay : Integer) do
              /*if (not(timer == 'null')) do
                 '' & timer & '.interrupt();'
              end*/
              'Thread t = new Thread(){
                 public void run() {
 				try {
-					sleep(' & m.delay & ');'
+					sleep(' & delay & ');'
 					timer!timer_timeout()
 				'} catch (InterruptedException ex) {
                     System.err.println("WARNING: " + ex.getMessage() + ". If you did not explicitly cancelled the timer, then it is a bug.");                   
@@ -38,11 +32,9 @@ thing TimerJava includes Timer
               };'
              timer = 't' 
               '' & timer & '.start();'                
-            end
+    end
             
-          internal cancel
-            event m : timer?timer_cancel
-            action do
+    function cancel() do
               if (not(timer == 'null')) do
                 'try {'
                 '' & timer & '.interrupt();'
@@ -52,15 +44,26 @@ thing TimerJava includes Timer
                     ex.printStackTrace();
 				}'
               end
-            end
+    end
+
+    statechart SoftTimer init default {
+        state default {
+
+          internal start
+            event m : timer?timer_start
+            guard m.delay > 0
+            action start(m.delay)
+            
+          internal cancel
+            event m : timer?timer_cancel
+            action cancel()
         }
     }
 }
 
-configuration TestTimerJava {
+configuration TestTimerJava @debug "true" {
     instance timer : TimerJava
-    instance client : TimerClientMock
-    /*instance client : SimpleTimerClient
-        set client.t1 = 500*/
+    instance client : SimpleTimerClient
+        set client.t1 = 500
     connector client.timer => timer.timer    
 }

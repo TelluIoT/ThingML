@@ -73,7 +73,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                     }
                 }
 
-                builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + ") new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + ": " + i.getType().getName() + "\"");
+                builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + ") new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + " (" + i.getType().getName() + ")\"");
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
                 for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
                     for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
@@ -180,9 +180,18 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         builder.append("public static void main(String args[]) {\n");
         generateInstances(cfg, ctx, builder);
 
+        final boolean debug = cfg.isDefined("debug", "true");
+
+
         builder.append("//Starting Things\n");
         for (Instance i : cfg.allInstances()) {
+            if (debug || i.isDefined("debug", "true")) {
+                builder.append(ctx.getInstanceName(i) + ".setDebug(true);\n");
+            }
             builder.append(ctx.getInstanceName(i) + ".init();\n");
+            if (debug || i.isDefined("debug", "true")) {
+                builder.append("System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|cyan INIT: \" + " + ctx.getInstanceName(i) + " + \"|@\"));\n");
+            }
         }
         for (Instance i : cfg.allInstances()) {
             builder.append(ctx.getInstanceName(i) + ".start();\n");
