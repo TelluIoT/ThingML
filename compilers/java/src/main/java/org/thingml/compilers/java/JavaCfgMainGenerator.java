@@ -189,6 +189,9 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                 builder.append(ctx.getInstanceName(i) + ".setDebug(true);\n");
             }
             builder.append(ctx.getInstanceName(i) + ".init();\n");
+            if (debug || i.isDefined("debug", "true")) {
+                builder.append("System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|cyan INIT: \" + " + ctx.getInstanceName(i) + " + \"|@\"));\n");
+            }
         }
         for (Instance i : cfg.allInstances()) {
             builder.append(ctx.getInstanceName(i) + ".start();\n");

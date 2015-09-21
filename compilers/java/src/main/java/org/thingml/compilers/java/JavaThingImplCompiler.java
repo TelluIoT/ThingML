@@ -199,6 +199,15 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("public boolean isDebug() {return debug;}\n");
         builder.append("public void setDebug(boolean debug) {this.debug = debug;}\n");
 
+        builder.append("@Override\npublic String toString() {\n");
+        builder.append("String result = \"instance \" + getName() + \"\\n\";\n");
+        for(Property p : thing.allPropertiesInDepth()) {
+            builder.append("result += \"\\t" + p.getName() + " = \" + " + ctx.getVariableName(p)  + ";\n" );
+        }
+        builder.append("result += \"\";\n");
+        builder.append("return result;\n");
+        builder.append("}\n\n");
+
 
 
         for (Port p : thing.allPorts()) {
