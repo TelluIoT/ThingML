@@ -123,8 +123,14 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             builder.append(reference(i.getName(), useThis) + ".setThis(" + reference(i.getName(), useThis) + ");\n");
             if (useThis) {
                 builder.append("this." + i.getName() + ".build();\n");
+                if (debug || i.isDefined("debug", "true")) {
+                    builder.append("console.log(colors.cyan(\"INIT: \" + this." + i.getName() + "));\n");
+                }
             } else {
                 builder.append(i.getName() + ".build();\n");
+                if (debug || i.isDefined("debug", "true")) {
+                    builder.append("console.log(colors.cyan(\"INIT: \" + " + i.getName() + "));\n");
+                }
             }
         }
 
@@ -167,6 +173,21 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
     @Override
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/main.js");
+
+        boolean debug = false;
+        if (cfg.isDefined("debug", "true"));
+            debug = true;
+        if (!debug) {
+            for(Instance i : cfg.allInstances()) {
+                if (i.isDefined("debug", "true")) {
+                    debug = true;
+                    break;
+                }
+            }
+        }
+        if (debug) {
+            builder.append("var colors = require('colors/safe');\n");
+        }
 
         for (Type ty : model.allUsedSimpleTypes()) {
             if (ty instanceof Enumeration) {

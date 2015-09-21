@@ -166,7 +166,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 }
                 builder.append(") {\n");
                 if(debugProfile.getDebugFunctions().contains(f)) {
-                    builder.append("if(_this.debug) console.log(colors.cyan(_this.name + \"(" + thing.getName() + "): executing function " + f.getName() + "(");
+                    builder.append("if(_this.debug) console.log(colors.blue(_this.name + \"(" + thing.getName() + "): executing function " + f.getName() + "(");
                     int i = 0;
                     for (Parameter pa : f.getParameters()) {
                         if (i > 0)
@@ -209,6 +209,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("//Internal functions\n");
 
+
+
         generateSendMethods(thing, builder, ctx);
 
         builder.append("//State machine (states and regions)\n");
@@ -228,6 +230,15 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.getName = function() {\n");
         builder.append("return \"" + thing.getName() + "\";\n");
+        builder.append("};\n\n");
+
+        builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.toString = function() {\n");
+        builder.append("var result = \"instance \" + this.getName() + \"\\n\";\n");
+        for(Property p : thing.allPropertiesInDepth()) {
+            builder.append("result += \"\\t" + p.getName() + " = \" + this." + ctx.getVariableName(p)  + ";\n" );
+        }
+        builder.append("result += \"\";\n");
+        builder.append("return result;\n");
         builder.append("};\n\n");
 
         builder.append("module.exports = " + ctx.firstToUpper(thing.getName()) + ";\n");
