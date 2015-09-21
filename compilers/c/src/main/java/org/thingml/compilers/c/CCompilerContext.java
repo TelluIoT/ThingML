@@ -180,6 +180,7 @@ public abstract class CCompilerContext extends Context {
                 result++;
             }
         }
+        int i = result-1;
         for(ExternalConnector eco: cfg.getExternalConnectors()) {
             result++;
         }

@@ -2076,9 +2076,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(initFunction + ";\n");
                 builder.append("//" + eco.getInst().getInstance().getName() + ":\n");
             }*/
-            builder.append(eco.getName() + "_set_listener_id(" + cfg.getName()+ "_" 
+            /*builder.append(eco.getName() + "_set_listener_id(" + cfg.getName()+ "_" 
                         + eco.getInst().getInstance().getName()
-                        + "_var.id_" + eco.getPort().getName() + ");\n");
+                        + "_var.id_" + eco.getPort().getName() + ");\n");*/
             /*for (String set_listener_idFunction : eco.annotation("c_external_set_listener_id")) {
                 builder.append(set_listener_idFunction + "(" + cfg.getName()+ "_" 
                         + eco.getInst().getInstance().getName()
