@@ -35,8 +35,13 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append("//Platform-specific action (" + action.getClass().getName() + ") should be refined in a sub-compiler");
     }
 
+    public void traceVariable(VariableAssignment action, StringBuilder builder, Context ctx) {
+
+    }
+
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
+        traceVariable(action, builder, ctx);
         if (action.getProperty().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
             for (Expression i : action.getIndex()) {
                 builder.append(action.getProperty().qname("_") + "_var");

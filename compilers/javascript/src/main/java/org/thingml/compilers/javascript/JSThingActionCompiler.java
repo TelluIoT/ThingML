@@ -27,6 +27,13 @@ import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
+    public void traceVariable(VariableAssignment action, StringBuilder builder, Context ctx) {
+        builder.append("if(_this.debug) console.log(colors.magenta(_this.name + \"(" + action.getProperty().findContainingThing().getName() + "): property " + action.getProperty().getName() + " changed from \" + " + action.getProperty().qname("_") + "_var" + " + \" to \" + (");
+        ctx.getCompiler().getThingActionCompiler().generate(action.getExpression(), builder, ctx);
+        builder.append(")));\n");
+    }
+
+    @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
         builder.append("setImmediate(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()));
         for (Expression p : action.getParameters()) {
