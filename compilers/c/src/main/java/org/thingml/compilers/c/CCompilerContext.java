@@ -30,6 +30,10 @@ public abstract class CCompilerContext extends Context {
         super(c);
     }
     
+    public String getDynamicConnectorsTemplate() {
+        return getTemplateByID("ctemplates/dyn_connectors.c");
+    }
+    
     public String getNetworkLibSerialTemplate() {
         if(getCompiler().getID().compareTo("arduino") == 0) {
             return getTemplateByID("ctemplates/network_lib/arduino/Serial/ArduinoSerialForward.c");

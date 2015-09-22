@@ -725,6 +725,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         builder = new StringBuilder();
         generateCForConfiguration(cfg, builder, ctx);
+        
+        generateDynamicConnectors(cfg, builder, ctx);
+        
         ctemplate = ctemplate.replace("/*CONFIGURATION*/", builder.toString());
 
         StringBuilder initb = new StringBuilder();
@@ -1291,22 +1294,23 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append(".id_" + s.getValue().getName() + ") {\n");
 
 
-
+                        
                         if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
                             builder.append("executor::");
                         }
                         builder.append("executor_dispatch_" + m.getName());
                         builder.append("(");
+                        
                         builder.append(ctx.getInstanceVarName(s.getKey()) + ".");
-                        builder.append(s.getValue().getName() + "_receiver_list_head,");
+                        builder.append(s.getValue().getName() + "_receiver_list_head, ");
                         builder.append(ctx.getInstanceVarName(s.getKey()) + ".");
                         builder.append(s.getValue().getName() + "_receiver_list_tail");
                         
                         
                         if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
                             for (Parameter p : m.getParameters()) {
-                                builder.append(", ");
-                                builder.append("param_" + p.getName());
+                                builder.append(", param_");
+                                builder.append(p.getName());
                             }
                         }
                         
@@ -1336,6 +1340,15 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append(eco.getPort().getName() + "_receiver_list_head,");
                         builder.append(portName + "_instance.");
                         builder.append(eco.getPort().getName() + "_receiver_list_tail");
+                        
+                        if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                            for (Parameter p : m.getParameters()) {
+                                builder.append(", param_");
+                                builder.append(p.getName());
+                            }
+                        }
+                        
+                        
                         builder.append(");");
 
                         builder.append("}\n");
@@ -2138,7 +2151,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
-
+        
+        if(cfg.hasAnnotation("c_dyn_connectors_lib")) {
+            if(cfg.annotation("c_dyn_connectors_lib").iterator().next().compareToIgnoreCase("true") == 0) {
+                builder.append("" + cfg.getName() + "_init_dyn_co();\n");
+            }
+        }
         // Call the initialization function
         builder.append("initialize_configuration_" + cfg.getName() + "();\n");
 
@@ -2249,5 +2267,78 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     }
 
-
+    protected void generateDynamicConnectors(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        if(cfg.hasAnnotation("c_dyn_connectors_lib")) {
+            if(cfg.annotation("c_dyn_connectors_lib").iterator().next().compareToIgnoreCase("true") == 0) {
+                String dynCoLib = ctx.getDynamicConnectorsTemplate();
+                
+                String traceDynCo = "";
+                
+                for(Instance inst : cfg.allInstances()) {
+                    for(Port p : inst.getType().allPorts()) {
+                        traceDynCo += "printf(\"[" + p.getName();
+                        traceDynCo += "] %i";
+                        traceDynCo += "\\n\", " + ctx.getInstanceVarName(inst) +  ".id_" + p.getName() + ");\n";
+                    }
+                }
+                for(ExternalConnector eco : cfg.getExternalConnectors()) {
+                    traceDynCo += "printf(\"[" + eco.getPort().getName();
+                    traceDynCo += "] %i";
+                    traceDynCo += "\\n\", " + eco.getName() +  "_instance.listener_id);\n";
+                }
+                dynCoLib = dynCoLib.replace("/*COMMENT_ID_PORT*/", traceDynCo);
+                //Handlers
+                String initDynCo = "";
+                for(Instance inst : cfg.allInstances()) {
+                    for(Port p : inst.getType().allPorts()) {
+                        initDynCo += "/*CONFIGURATION*/_dyn_co_handlers[" + ctx.getInstanceVarName(inst); 
+                        initDynCo += ".id_" + p.getName() + "] = &";
+                        initDynCo += inst.getName() + "_" + p.getName() + "_handlers;\n";
+                    }
+                }
+                
+                for(ExternalConnector eco : cfg.getExternalConnectors()) {
+                    initDynCo += "/*CONFIGURATION*/_dyn_co_handlers[" + eco.getName(); 
+                    initDynCo += "_instance.listener_id] = NULL;\n";
+                }
+                
+                //rlisthead
+                for(Instance inst : cfg.allInstances()) {
+                    for(Port p : inst.getType().allPorts()) {
+                        initDynCo += "/*CONFIGURATION*/_dyn_co_rlist_head[" + ctx.getInstanceVarName(inst); 
+                        initDynCo += ".id_" + p.getName() + "] = &";
+                        initDynCo +=  ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_head;\n";
+                    }
+                }
+                
+                for(ExternalConnector eco : cfg.getExternalConnectors()) {
+                    initDynCo += "/*CONFIGURATION*/_dyn_co_rlist_head[" + eco.getName(); 
+                    initDynCo += "_instance.listener_id] = &" + eco.getName() + "_instance.";
+                    initDynCo += eco.getPort().getName() + "_receiver_list_head;\n";
+                }
+                
+                //rlisttail
+                for(Instance inst : cfg.allInstances()) {
+                    for(Port p : inst.getType().allPorts()) {
+                        initDynCo += "/*CONFIGURATION*/_dyn_co_rlist_tail[" + ctx.getInstanceVarName(inst); 
+                        initDynCo += ".id_" + p.getName() + "] = &";
+                        initDynCo +=  ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_tail;\n";
+                    }
+                }
+                
+                for(ExternalConnector eco : cfg.getExternalConnectors()) {
+                    initDynCo += "/*CONFIGURATION*/_dyn_co_rlist_tail[" + eco.getName(); 
+                    initDynCo += "_instance.listener_id] = &" + eco.getName()+ "_instance.";
+                    initDynCo += eco.getPort().getName() + "_receiver_list_tail;\n";
+                }
+                
+                dynCoLib = dynCoLib.replace("/*INIT_DYN_CO*/", initDynCo);
+                
+                dynCoLib = dynCoLib.replace("/*NB_INSTANCE_PORT*/", "" + ctx.numberInstancesAndPort(cfg));
+                dynCoLib = dynCoLib.replace("/*CONFIGURATION*/", cfg.getName());
+                
+                builder.append(dynCoLib);
+            }
+        }
+    }
 }
