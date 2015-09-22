@@ -1,0 +1,7 @@
+import "_Datatypes.thingml"
+
+thing fragment Msgs {
+	message tic() @code "15";
+	message sensorVal(Val : UInt16) @code "16";
+	message setLED(State : Boolean) @code "17";
+}

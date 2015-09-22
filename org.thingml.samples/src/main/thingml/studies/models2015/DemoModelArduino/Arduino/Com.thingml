@@ -1,0 +1,45 @@
+import "../lib/_sharedMsgs.thingml"
+
+configuration ComCfg {
+	instance myControlloer : Controller
+
+	connector myControlloer.Cmd over Serial
+}
+
+thing Controller includes Msgs {
+	property LEDPin : UInt8 = 8
+	property sensorPin : UInt8 = 0
+	property sensorValue : UInt16
+	
+	required port Cmd {
+		sends sensorVal
+		receives tic, setLED
+	}
+
+	statechart ControllerChart init Initialization {
+		state Initialization {
+			on entry do
+				'pinMode('&LEDPin&',OUTPUT);'
+			end
+		
+			transition -> Control
+		}
+
+		state Control {
+			
+			internal event Cmd?tic action  do
+				sensorValue = 'analogRead('&sensorPin&')'
+				Cmd!sensorVal(sensorValue)
+			end
+			
+			internal event e :Cmd?setLED action  do
+				if(e.State) do
+					'digitalWrite('&LEDPin&', HIGH);'
+				end
+				if(not(e.State)) do
+					'digitalWrite('&LEDPin&', LOW);'
+				end
+			end
+		}
+	}
+}

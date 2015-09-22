@@ -1,0 +1,45 @@
+import "../lib/_Posix.thingml"
+import "../lib/_sharedMsgs.thingml"
+
+configuration LinuxControllerCfg
+{
+	instance c : ClockLinux
+	set c.period = 100
+	instance app : LinuxController
+	
+	
+	connector app.clock => c.signal
+	connector app.Control over Serial
+	@serial_path_to_device "/dev/ttyACM0"
+	@trace_level "0"
+}
+
+thing LinuxController includes ClockMsgs, Msgs {
+
+	required port clock { receives clock_tick }
+	required port Control {
+		sends tic, setLED
+		receives sensorVal
+	}
+	
+	statechart 	LinuxClockTestAppImpl init Initialization {
+		state Initialization {
+			on entry do
+				print "[Linux] Initialization\n"
+			end
+			transition -> Running
+		}
+		state Running {
+			internal event clock?clock_tick action Control!tic()
+			internal event e : Control?sensorVal action do
+				'printf("[Arduino] sensor:%i\n", '&e.Val&');'
+				if(e.Val > 512) do
+					Control!setLED(true)
+				end
+				if(not(e.Val > 512)) do
+					Control!setLED(false)
+				end
+			end
+		}
+	}
+}

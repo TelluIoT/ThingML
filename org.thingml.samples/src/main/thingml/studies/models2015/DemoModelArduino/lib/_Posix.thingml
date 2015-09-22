@@ -1,0 +1,43 @@
+import "_Datatypes.thingml"
+
+thing fragment ClockMsgs {
+	message clock_tick();
+}
+
+thing fragment Clock includes ClockMsgs 
+{
+	readonly property period : Integer = 1000 // clock period in ms
+	
+	provided port signal {
+		sends clock_tick
+	}
+}
+
+thing ClockLinux includes Clock 
+@c_headers "#include <sys/time.h>"
+{
+
+	function sleep_ms(timeout_ms : Integer)
+	do
+		'struct timeval tv;
+        tv.tv_sec = '& timeout_ms &'/1000;
+        tv.tv_usec = ('& timeout_ms &'%1000) * 1000;
+        select(0, NULL, NULL, NULL, &tv);'
+	end
+	
+	function start_clock_process()
+	@fork_linux_thread "true"
+	do
+		while (1) do
+			sleep_ms(period)
+			signal!clock_tick()
+		end
+	end
+	
+	statechart ClockImpl init Ticking {
+		on entry start_clock_process()
+		state Ticking{}
+	}
+}
+
+
