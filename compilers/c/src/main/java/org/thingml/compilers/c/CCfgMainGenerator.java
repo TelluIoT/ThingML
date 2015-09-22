@@ -2131,6 +2131,15 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
         builder.append("\n\n// End Network Initilization \n\n");
         
+        
+
+        
+        if(cfg.hasAnnotation("c_dyn_connectors_lib")) {
+            if(cfg.annotation("c_dyn_connectors_lib").iterator().next().compareToIgnoreCase("true") == 0) {
+                builder.append("" + cfg.getName() + "_init_dyn_co();\n");
+            }
+        }
+        
         //generateDebuggTraceCfg(cfg, builder, ctx);
     }
 
@@ -2148,13 +2157,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
             if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
                 builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next() + ".begin(9600);\n");
-            }
-        }
-
-        
-        if(cfg.hasAnnotation("c_dyn_connectors_lib")) {
-            if(cfg.annotation("c_dyn_connectors_lib").iterator().next().compareToIgnoreCase("true") == 0) {
-                builder.append("" + cfg.getName() + "_init_dyn_co();\n");
             }
         }
         // Call the initialization function
