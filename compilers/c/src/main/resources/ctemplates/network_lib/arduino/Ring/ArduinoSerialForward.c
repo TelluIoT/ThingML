@@ -107,7 +107,7 @@ void forwardMessageSerial(byte * msg, uint8_t size) {
   
   Serial.write(START_BYTE);
   for(uint8_t i = 0; i < size; i++) {
-    if((msg[i] == START_BYTE) && (msg[i] == STOP_BYTE) && (msg[i] == ESCAPE_BYTE)) {
+    if((msg[i] == START_BYTE) || (msg[i] == STOP_BYTE) || (msg[i] == ESCAPE_BYTE)) {
       Serial.write(ESCAPE_BYTE);
     }
     Serial.write(msg[i]);
