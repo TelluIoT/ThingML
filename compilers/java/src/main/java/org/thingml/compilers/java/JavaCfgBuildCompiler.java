@@ -65,6 +65,11 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
             input.close();
             pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName());
 
+            String pack = ctx.getContextAnnotation("package");
+            if (pack == null) pack = "org.thingml.generated";
+            pom = pom.replace("<!--PACK-->", pack);
+
+
             //Add ThingML dependencies
             String thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n";
             //TODO: will not work if more than one thingml dep. We should re-declare the whole <dependency>
