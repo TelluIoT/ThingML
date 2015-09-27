@@ -44,8 +44,8 @@ void /*PORT_NAME*/_forwardMessage(byte * msg, uint8_t size) {
   /*PORT_NAME*/.write(/*PORT_NAME*/_START_BYTE);
   for(uint8_t i = 0; i < size; i++) {
     if((msg[i] == /*PORT_NAME*/_START_BYTE) 
-		&& (msg[i] == /*PORT_NAME*/_STOP_BYTE) 
-		&& (msg[i] == /*PORT_NAME*/_ESCAPE_BYTE)) {
+		|| (msg[i] == /*PORT_NAME*/_STOP_BYTE) 
+		|| (msg[i] == /*PORT_NAME*/_ESCAPE_BYTE)) {
       /*PORT_NAME*/.write(/*PORT_NAME*/_ESCAPE_BYTE);
     }
     /*PORT_NAME*/.write(msg[i]);

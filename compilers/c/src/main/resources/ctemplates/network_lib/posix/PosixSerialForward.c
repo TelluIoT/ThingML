@@ -121,7 +121,7 @@ void /*PORT_NAME*/_forwardMessage(byte * msg, uint8_t size) {
 	send_byte(/*PORT_NAME*/_device_id, /*PORT_NAME*/_START_BYTE);
 	uint8_t i;
 	for(i = 0; i < size; i++) {
-		if((msg[i] == /*PORT_NAME*/_START_BYTE) && (msg[i] == /*PORT_NAME*/_STOP_BYTE) && (msg[i] == /*PORT_NAME*/_ESCAPE_BYTE)) {
+		if((msg[i] == /*PORT_NAME*/_START_BYTE) || (msg[i] == /*PORT_NAME*/_STOP_BYTE) || (msg[i] == /*PORT_NAME*/_ESCAPE_BYTE)) {
 	  		send_byte(/*PORT_NAME*/_device_id, /*PORT_NAME*/_ESCAPE_BYTE);
 		}
 		send_byte(/*PORT_NAME*/_device_id, msg[i]);
