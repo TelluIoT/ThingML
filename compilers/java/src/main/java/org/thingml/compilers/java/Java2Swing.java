@@ -97,6 +97,10 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         }
         builder.append("{\n\n");
 
+        builder.append("private boolean debug = false;\n");
+        builder.append("public boolean isDebug() {return debug;}\n");
+        builder.append("public void setDebug(boolean debug) {this.debug = debug;}\n");
+
         for (Type ty : t.findContainingModel().allUsedSimpleTypes()) {
             if (ty instanceof Enumeration) {
                 Enumeration e = (Enumeration) ty;
