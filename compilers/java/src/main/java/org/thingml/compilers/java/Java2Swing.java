@@ -31,8 +31,11 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
 
     @Override
     public void generateExternalConnector(Configuration cfg, Context ctx, String... options) {
+        String pack = ctx.getContextAnnotation("package");
+        if (pack == null) pack = "org.thingml.generated";
+        pack = pack + ".gui";
         for (Instance i : cfg.allInstances()) {
-            compileType(i.getType(), ctx, "org.thingml.generated.gui");
+            compileType(i.getType(), ctx, pack);
         }
         ctx.writeGeneratedCodeToFiles();
     }
@@ -138,20 +141,20 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         StringBuilder tempBuilder = new StringBuilder();
 
         for (Port p : t.allPorts()) {
-            tempBuilder.append("final List<EventType> in_" + p.getName() + " = new ArrayList<EventType>();\n");
+            /*tempBuilder.append("final List<EventType> in_" + p.getName() + " = new ArrayList<EventType>();\n");
             tempBuilder.append("final List<EventType> out_" + p.getName() + " = new ArrayList<EventType>();\n");
             for (Message r : p.getReceives()) {
                 tempBuilder.append("in_" + p.getName() + ".add(" + r.getName() + "Type);\n");
             }
             for (Message s : p.getSends()) {
                 tempBuilder.append("out_" + p.getName() + ".add(" + s.getName() + "Type);\n");
-            }
+            }*/
             tempBuilder.append("port_" + ctx.firstToUpper(t.getName()) + "_" + p.getName() + " = new Port(");
             if (p instanceof ProvidedPort)
                 tempBuilder.append("PortType.PROVIDED");
             else
                 tempBuilder.append("PortType.REQUIRED");
-            tempBuilder.append(", \"" + p.getName() + "\", in_" + p.getName() + ", out_" + p.getName() + ", this);\n");
+            tempBuilder.append(", \"" + p.getName() + "\", this);\n");
         }
         template = template.replace("$PORT_DECL$", tempBuilder.toString());
 

@@ -343,9 +343,11 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
 
     @Override
     public void generateExternalConnector(Configuration cfg, Context ctx, String... options) {
-        String pack = "org.thingml.generated";
+        String pack = ctx.getContextAnnotation("package");
+        if (pack == null) pack = "org.thingml.generated";
+        /*String pack = "org.thingml.generated";
         if (options.length > 0 && options[0] != null)
-            pack = options[0];
+            pack = options[0];*/
         generateWrapper(ctx, cfg, pack);
         updatePOM(ctx, cfg);
         generateKevScript(ctx, cfg, pack);
