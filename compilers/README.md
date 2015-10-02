@@ -77,6 +77,8 @@ The registry project also provides a simple command line interface to call the c
 
 The c, java, javascript and uml sub-modules contain the actual implementation of the different code generator. This idea is not to make one module per code generator but one module per "target language" or family of "target platforms". Within each module there might be a set of variants of the code generators and new variants may be added by platform experts in order to support a new platform or a fit the requirements of a particular project.
 
+> The UML compiler required GraphViz to be installed on your machine, so that SVG and PNG images can be generated from the generated PlantUML specifications.
+
 In terms of dependencies the intended rule is that there should be NO DEPENDENCIES between the different compiler modules. Anything that is common and can be shared should be put in the framework modules. Make the effort of promoting things which are re-used in the framework and avoid duplicating code in separate modules.
 
 As an example, the c code generator implements 2 compilers: one for generating a C project for linux and one for generating C for Arduino. Those two code generators share more than 95% of the code but also have a number of differences which have been implemented. Check out packages ``org.thingml.compilers.c`` and sub-packages ``posix`` and ``arduino`` to see how the common parts were factored and differences separated. Note that one additional difference is that different templates are used to "combine" the generated code. Templates can be found in folder ``src/main/ressources/ctemplates``.
@@ -84,13 +86,6 @@ As an example, the c code generator implements 2 compilers: one for generating a
 > GETTING STARTED NOTE 1: Deciding on when to create a new module, how to structure the code generators, when to use templates, etc. are always trade-offs and typically requires several iterations to provide a good solution. Your inputs are welcome and refactorings are always welcome. On the other hand, do not overthink the design up front, there is a good chance it will not be optimal anyways. Make a first version and then refactor and improve it.
 
 > GETTING STARTED NOTE 2: A good way of starting is to fork the repository and make your modifications directly in the existing modules. That will give you time to iterate on it and make a pull request when you are reasonably happy with the solution you have implemented.
-
-### Deprescala
-
-Deprescala stands for deprecated scala compiler. This project contains the previous version of the ThingML compilers which were written in Scala. 90% of the functionality of these former compilers has been re-implemented in the new code generation framework. The last 10% will be re-introduced as we need them and the Deprescala project will be removed.
-
-> Take contact with us if you are interested to know and discuss why the new code generation framework was written in Java 7 and not in Scala. It is not by accident!
-
 
 ## Developing / Compiling the ThingML compilers
 
