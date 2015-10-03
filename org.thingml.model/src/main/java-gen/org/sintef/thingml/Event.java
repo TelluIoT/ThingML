@@ -26,5 +26,5 @@ package org.sintef.thingml;
  * @model abstract="true"
  * @generated
  */
-public interface Event extends ThingMLElement {
+public interface Event extends AnnotatedElement {
 } // Event

@@ -3527,7 +3527,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		externExpressionEClass.getESuperTypes().add(this.getExpression());
 		sendActionEClass.getESuperTypes().add(this.getAction());
 		variableAssignmentEClass.getESuperTypes().add(this.getAction());
-		eventEClass.getESuperTypes().add(this.getThingMLElement());
+		eventEClass.getESuperTypes().add(this.getAnnotatedElement());
 		receiveMessageEClass.getESuperTypes().add(this.getEvent());
 		receiveMessageEClass.getESuperTypes().add(this.getReferencedElmt());
 		dictionaryEClass.getESuperTypes().add(this.getProperty());

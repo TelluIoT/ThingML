@@ -333,6 +333,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 			case ThingmlPackage.EVENT: {
 				Event event = (Event)theEObject;
 				T result = caseEvent(event);
+				if (result == null) result = caseAnnotatedElement(event);
 				if (result == null) result = caseThingMLElement(event);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -342,6 +343,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				T result = caseReceiveMessage(receiveMessage);
 				if (result == null) result = caseEvent(receiveMessage);
 				if (result == null) result = caseReferencedElmt(receiveMessage);
+				if (result == null) result = caseAnnotatedElement(receiveMessage);
 				if (result == null) result = caseThingMLElement(receiveMessage);
 				if (result == null) result = defaultCase(theEObject);
 				return result;

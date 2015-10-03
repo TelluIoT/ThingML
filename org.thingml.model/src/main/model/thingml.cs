@@ -16,7 +16,7 @@ OPTIONS {
 	//
 	// The code should be generated *2 times*, once for eclipse and once for standalone
 	// The generated code shares all the code that is manually edited in (src/main/java) so there is no need to create the resolvers twice.
-	// Bellow are the different options to use.
+	// Below are the different options to use.
 	// Generate the standalone version first and then the eclipse version.
 	
 	// 1. FOR STANDALONE
@@ -212,7 +212,7 @@ RULES {
 
 	InternalTransition ::= !1 "internal" (#1 name[])? (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
 
-	ReceiveMessage ::= (name[] #1 ":" #1)? port[] "?" message[] ;
+	ReceiveMessage ::= (name[] (annotations)* #1 ":" #1)? port[] "?" message[] ;
 	
 	PropertyAssign ::= "set" #1 property[] ("[" index "]")* #1 "=" #1 init ; 
 	
