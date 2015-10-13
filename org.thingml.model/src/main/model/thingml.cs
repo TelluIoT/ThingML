@@ -212,7 +212,7 @@ RULES {
 
 	InternalTransition ::= !1 "internal" (#1 name[])? (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
 
-	ReceiveMessage ::= (name[] (annotations)* #1 ":" #1)? port[] "?" message[] ;
+	ReceiveMessage ::= (name[] #1 ":" #1)? port[] "?" message[] ;
 	
 	PropertyAssign ::= "set" #1 property[] ("[" index "]")* #1 "=" #1 init ; 
 	

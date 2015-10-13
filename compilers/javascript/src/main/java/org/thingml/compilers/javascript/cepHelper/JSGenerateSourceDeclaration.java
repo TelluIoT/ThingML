@@ -73,11 +73,11 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
 
         String ttl1 = ttl;
         String ttl2 = ttl;
-        if (simpleSource1.getMessage().hasAnnotation("TTL")) {
-            ttl1 = simpleSource1.getMessage().annotation("TTL").get(0);
+        if (stream.hasAnnotation("TTL1")) {
+            ttl1 = stream.annotation("TTL1").get(0);
         }
-        if (simpleSource2.getMessage().hasAnnotation("TTL")) {
-            ttl2 = simpleSource2.getMessage().annotation("TTL").get(0);
+        if (stream.hasAnnotation("TTL2")) {
+            ttl2 = stream.annotation("TTL2").get(0);
         }
 
         builder.append("function wait_" + sources.qname("_") + "_1" + "() { return Rx.Observable.timer(" + ttl1 + "); }\n");
