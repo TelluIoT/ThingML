@@ -27,6 +27,7 @@ OPTIONS {
 	// 2. FOR ECLIPSE Comment the lines bellow
 	srcGenFolder = "src/main/java-gen";
 	
+	
 	// IMPORTANT: In the generated eclipse plugins it is required to change the Vendor to SINTEF and the Version from "1.0.0" to "0.x.0.qualifier"
 }
 

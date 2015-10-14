@@ -4,7 +4,7 @@ Bundle-Name: ThingML :: Model
 Bundle-SymbolicName: org.sintef.thingml.model;singleton:=true
 Bundle-Version: 0.6.0.qualifier
 Bundle-ClassPath: .
-Bundle-Vendor: SINTEF-9012
+Bundle-Vendor: SINTEF
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.sintef.thingml,
