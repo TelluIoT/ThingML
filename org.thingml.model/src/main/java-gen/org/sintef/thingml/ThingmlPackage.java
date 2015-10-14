@@ -1907,16 +1907,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EVENT__NAME = ANNOTATED_ELEMENT__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EVENT__ANNOTATIONS = ANNOTATED_ELEMENT__ANNOTATIONS;
+	int EVENT__NAME = THING_ML_ELEMENT__NAME;
 
 	/**
 	 * The number of structural features of the '<em>Event</em>' class.
@@ -1925,7 +1916,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EVENT_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
+	int EVENT_FEATURE_COUNT = THING_ML_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ReceiveMessageImpl <em>Receive Message</em>}' class.
@@ -1945,15 +1936,6 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int RECEIVE_MESSAGE__NAME = EVENT__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RECEIVE_MESSAGE__ANNOTATIONS = EVENT__ANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Message</b></em>' reference.

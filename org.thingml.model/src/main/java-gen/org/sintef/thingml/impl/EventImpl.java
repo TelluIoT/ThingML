@@ -29,7 +29,7 @@ import org.sintef.thingml.ThingmlPackage;
  *
  * @generated
  */
-public abstract class EventImpl extends AnnotatedElementImpl implements Event {
+public abstract class EventImpl extends ThingMLElementImpl implements Event {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
