@@ -188,9 +188,7 @@ RULES {
 	Property::= !1 (changeable[T_READONLY])? "property" #1 name[] #1 ":" #1 type[]  ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? (#1 "=" #1 init)?  (annotations)*;
 	
 	//("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?
-	
-//	Dictionary::= !1 (changeable[T_READONLY])? "dictionary" #1 name[]  ":"  indexType[] "->" type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?(annotations)*;
-	
+		
 	Parameter::= name[]  ":"  type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))?;
 	
 	PrimitiveType::= "datatype" #1 name[] (annotations)* ";" ;

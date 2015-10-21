@@ -213,10 +213,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createReceiveMessageAdapter();
 			}
 			@Override
-			public Adapter caseDictionary(Dictionary object) {
-				return createDictionaryAdapter();
-			}
-			@Override
 			public Adapter casePort(Port object) {
 				return createPortAdapter();
 			}
@@ -327,10 +323,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseArrayIndex(ArrayIndex object) {
 				return createArrayIndexAdapter();
-			}
-			@Override
-			public Adapter caseDictionaryReference(DictionaryReference object) {
-				return createDictionaryReferenceAdapter();
 			}
 			@Override
 			public Adapter caseExpressionGroup(ExpressionGroup object) {
@@ -983,20 +975,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Dictionary <em>Dictionary</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.Dictionary
-	 * @generated
-	 */
-	public Adapter createDictionaryAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Port <em>Port</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1385,20 +1363,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createArrayIndexAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.DictionaryReference <em>Dictionary Reference</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.DictionaryReference
-	 * @generated
-	 */
-	public Adapter createDictionaryReferenceAdapter() {
 		return null;
 	}
 

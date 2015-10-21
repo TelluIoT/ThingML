@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.ui,
  org.sintef.thingml.resource.thingml,
  org.sintef.thingml.resource.thingml.ui,
  org.eclipse.ui.console
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/org.thingml.editor.standaloneApp-0.6.0-SNAPSHOT-jar-with-dependencies.jar
