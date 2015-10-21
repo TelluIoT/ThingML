@@ -12024,6 +12024,8 @@ public class ThingmlParser extends ThingmlANTLRParserBase {
             				String resolved = (String) resolvedObject;
             				org.sintef.thingml.Port proxy = org.sintef.thingml.ThingmlFactory.eINSTANCE.createRequiredPort();
             				collectHiddenTokens(element);
+
+            				System.out.println("DEBUG: \n\t" + element + "\n\t" + proxy + "\n\t" + element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.RECEIVE_MESSAGE__PORT));
             				registerContextDependentProxy(new org.sintef.thingml.resource.thingml.mopp.ThingmlContextDependentURIFragmentFactory<org.sintef.thingml.ReceiveMessage, org.sintef.thingml.Port>(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getReceiveMessagePortReferenceResolver()), element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.RECEIVE_MESSAGE__PORT), resolved, proxy);
             				if (proxy != null) {
             					Object value = proxy;
