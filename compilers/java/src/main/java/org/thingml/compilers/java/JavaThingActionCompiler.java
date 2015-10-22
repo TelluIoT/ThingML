@@ -17,8 +17,11 @@ package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
+
+import java.io.IOException;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -74,6 +77,15 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
+        if (action.getFunction().isDefined("fork_thread", "true") && action.getFunction().getType() != null) {
+            System.err.println("function " + action.getFunction().getName() + "cannot be called with @fork_thread, as its return type (" + action.getFunction().getType().getName() + ") is not void");
+            throw new UnsupportedOperationException("function " + action.getFunction().getName() + "cannot be called with @fork_thread, as its return type (" + action.getFunction().getType().getName() + ") is not void");
+        }
+
+        if (action.getFunction().isDefined("fork_thread", "true")) {
+            builder.append("new Thread(new Runnable(){public void run() {\n");
+        }
+
         builder.append(action.getFunction().getName() + "(");
         int i = 0;
         for (Expression p : action.getParameters()) {
@@ -90,6 +102,10 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             i++;
         }
         builder.append(");\n");
+
+        if (action.getFunction().isDefined("fork_thread", "true")) {
+            builder.append("}}).start();\n");
+        }
     }
 
     @Override
