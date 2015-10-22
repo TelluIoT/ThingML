@@ -26,10 +26,13 @@ import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
-    public void traceVariable(VariableAssignment action, StringBuilder builder, Context ctx) {
-        builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|magenta \" + getName() + \": property " + action.getProperty().getName() + " changed from \" + " + action.getProperty().qname("_") + "_var" + " + \" to \" + (");
-        ctx.getCompiler().getThingActionCompiler().generate(action.getExpression(), builder, ctx);
-        builder.append(") + \"|@\"));\n");
+    public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
+        builder.append(JavaHelper.getJavaType(action.getProperty().getType(), false, ctx) + " debug_" + action.getProperty().qname("_") + "_var = " + action.getProperty().qname("_") + "_var;\n");
+    }
+
+    @Override
+    public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
+        builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|magenta \" + getName() + \": property " + action.getProperty().getName() + " changed from \" + debug_" + action.getProperty().qname("_") + "_var" + " + \" to \" + " + action.getProperty().qname("_") + "_var" + " + \"|@\"));\n");
     }
 
     @Override
