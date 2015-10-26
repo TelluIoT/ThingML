@@ -60,8 +60,8 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         }
 
         // Add the module for the Configuration
-        srcs += cfg.getName() + ".c ";
-        objs += cfg.getName() + ".o ";
+        srcs += cfg.getName() + "_cfg.c ";
+        objs += cfg.getName() + "_cfg.o ";
 
         // Add any additional modules from the annotations
         for (String s : cfg.annotation("add_c_modules")) {

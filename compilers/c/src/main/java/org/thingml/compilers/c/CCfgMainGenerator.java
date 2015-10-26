@@ -759,7 +759,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         ctemplate = ctemplate.replace("/*INIT_CODE*/", initb.toString());
         ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString());
-        ctx.getBuilder(cfg.getName() + ".c").append(ctemplate);
+        ctx.getBuilder(cfg.getName() + "_cfg.c").append(ctemplate);
 
     }
 
