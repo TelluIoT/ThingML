@@ -34,6 +34,14 @@ public abstract class CCompilerContext extends Context {
         return getTemplateByID("ctemplates/dyn_connectors.c");
     }
     
+    public String getNetworkLibSerialRingTemplate() {
+        if(getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/network_lib/arduino/Ring/ArduinoSerialForward.c");
+        } else {
+            return getTemplateByID("ctemplates/network_lib/posix/PosixSerialForward.c");
+        }
+    }
+    
     public String getNetworkLibSerialTemplate() {
         if(getCompiler().getID().compareTo("arduino") == 0) {
             return getTemplateByID("ctemplates/network_lib/arduino/Serial/ArduinoSerialForward.c");
@@ -443,7 +451,7 @@ public abstract class CCompilerContext extends Context {
         return result;
     }
 
-    public void bytesToSerialize(Type t, StringBuilder builder, Context ctx, String variable) {
+    public void bytesToSerialize(Type t, StringBuilder builder, Context ctx, String variable, Parameter pt) {
         int i = getCByteSize(t, 0);
         String v = variable;
         if (isPointer(t)) {
@@ -452,7 +460,13 @@ public abstract class CCompilerContext extends Context {
         } else {
             //builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
 
-
+            if(pt.isIsArray()) {
+                builder.append("\n// cardinality: " + pt.getCardinality().toString() + ": ");
+                ctx.getCompiler().getThingActionCompiler().generate(pt.getCardinality(), builder, ctx);
+                builder.append("\n");
+                //TODO enqueue dequeue of array
+            }
+            
             builder.append("union u_" + v + "_t {\n");
             builder.append(getCType(t) + " p;\n");
             builder.append("byte bytebuffer[" + getCByteSize(t, 0) + "];\n");

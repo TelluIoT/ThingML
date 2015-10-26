@@ -1,206 +1,123 @@
 
-#define LISTENER_STATE_IDLE 0
-#define LISTENER_STATE_READING 1
-#define LISTENER_STATE_ESCAPE 2
-#define LISTENER_STATE_ERROR 3
-#define START_BYTE 18
-#define STOP_BYTE 19
-#define ESCAPE_BYTE 125
-#define SERIAL_BUFFER_SIZE 16
+/*SOFTWARE_SERIAL*/
 
-//#define DEBUGG_SERIAL
+#define /*PORT_NAME*/_LISTENER_STATE_IDLE 0
+#define /*PORT_NAME*/_LISTENER_STATE_READING 1
+#define /*PORT_NAME*/_LISTENER_STATE_ESCAPE 2
+#define /*PORT_NAME*/_LISTENER_STATE_ERROR 3
 
-#ifdef DEBUGG_SERIAL
-SoftwareSerial mySerial(9, 10);
-#define TRACE(s) (mySerial.print(s))
-#define TRACE_BIN(s) (mySerial.print(s, BIN))
-#define INIT_SWS (mySerial.begin(9600))
-#endif
 
-#ifndef DEBUGG_SERIAL
+#define /*PORT_NAME*/_START_BYTE /*START_BYTE*/
+#define /*PORT_NAME*/_STOP_BYTE /*STOP_BYTE*/
+#define /*PORT_NAME*/_ESCAPE_BYTE /*ESCAPE_BYTE*/
 
-#define TRACE(s) 
-#define TRACE_BIN(s)
-#define INIT_SWS
+#define /*PORT_NAME*/_LIMIT_BYTE_PER_LOOP /*LIMIT_BYTE_PER_LOOP*/
+#define /*PORT_NAME*/_MAX_MSG_SIZE /*MAX_MSG_SIZE*/
+#define /*PORT_NAME*/_MSG_BUFFER_SIZE /*MSG_BUFFER_SIZE*/
 
-#endif
+uint8_t /*PORT_NAME*/_max_ttl = /*TTL_MAX*/;
+byte /*PORT_NAME*/_serialBuffer[/*PORT_NAME*/_MSG_BUFFER_SIZE];
+uint8_t /*PORT_NAME*/_serialMsgSize = 0;
+byte /*PORT_NAME*/_incoming = 0;
+uint8_t /*PORT_NAME*/_serialListenerState = /*PORT_NAME*/_LISTENER_STATE_IDLE;
 
-/* ---- Software Serial Transfer --- */
-//SoftwareSerial mySerial(5, 6);
-/* ---- Software Serial Transfer --- */
 
-//byte serialBufferToSend[16];
-uint8_t serialMsgSizeToSend = 0;
-byte serialBuffer[SERIAL_BUFFER_SIZE];
-uint8_t serialMsgSize = 0;
-byte incoming = 0;
-uint8_t serialListenerState = LISTENER_STATE_IDLE;
-
-uint8_t ttl = 0;
-
+struct /*PORT_NAME*/_instance_type {
+    uint16_t listener_id;
+    /*INSTANCE_INFORMATION*/
+} /*PORT_NAME*/_instance;
 
 int fifo_byte_available();
 int _fifo_enqueue(byte b);
 
-void setupArduinoSerialForward(long bps, uint8_t ring_size) {
-	Serial.begin(bps);
-	ttl = ring_size-2;
-	INIT_SWS;
-	TRACE("[SerialLib] Init Serial at ");
-	TRACE(bps);
-	TRACE("\n");
+void set_max_ttl(uint8_t ttl) {
+    /*PORT_NAME*/_max_ttl = ttl;
 }
 
-void SWS_trace(char * s) {
-	TRACE(s);
+void /*PORT_NAME*/_setup() {
+	/*PORT_NAME*/.begin(/*BAUDRATE*/);
 }
 
-void SWS_trace(int s) {
-	TRACE(s);
+void /*PORT_NAME*/_set_listener_id(uint16_t id) {
+	/*PORT_NAME*/_instance.listener_id = id;
 }
+void /*PORT_NAME*/_forwardMessage_with_TTL(byte * msg, uint8_t size, uint8_t ttl) {
+  /*PORT_NAME*/.write(/*PORT_NAME*/_START_BYTE);
 
-void SWS_trace(uint8_t s) {
-	TRACE(s);
-}
 
-void SWS_trace(uint16_t s) {
-	TRACE(s);
-}
-
-void SWS_trace_BIN(uint8_t s) {
-	TRACE_BIN(s);
-}
-
-void forwardByteSerial(byte b) {
-	TRACE("[forward] ");
-	TRACE(b);
-	TRACE("\n");
-	
-	if((b == START_BYTE) || (b == STOP_BYTE) || (b == ESCAPE_BYTE)) {
-		Serial.write(ESCAPE_BYTE);
-	}
-	Serial.write(b);
-}
-
-void forwardByteSerial_TTL() {
-	TRACE("[forward] ");
-	TRACE("TTL");
-	TRACE("\n");
-	forwardByteSerial(ttl);
-}
-
-void forwardByteSerial_Start() {
-	TRACE("[forward] ");
-	TRACE("START_BYTE");
-	TRACE("\n");
-	Serial.write(START_BYTE);
-}
-
-void forwardByteSerial_Stop() {
-	TRACE("[forward] ");
-	TRACE("STOP_BYTE");
-	TRACE("\n");
-	Serial.write(STOP_BYTE);
-}
-
-void forwardMessageSerial(byte * msg, uint8_t size) {
-  
-  Serial.write(START_BYTE);
-  for(uint8_t i = 0; i < size; i++) {
-    if((msg[i] == START_BYTE) || (msg[i] == STOP_BYTE) || (msg[i] == ESCAPE_BYTE)) {
-      Serial.write(ESCAPE_BYTE);
+    if((ttl == /*PORT_NAME*/_START_BYTE) 
+		|| (ttl == /*PORT_NAME*/_STOP_BYTE) 
+		|| (ttl == /*PORT_NAME*/_ESCAPE_BYTE)) {
+      /*PORT_NAME*/.write(/*PORT_NAME*/_ESCAPE_BYTE);
     }
-    Serial.write(msg[i]);
-   TRACE("[sent] ");
-   TRACE(msg[i]);
-   TRACE("\n");
+    /*PORT_NAME*/.write(ttl);
+
+  for(uint8_t i = 0; i < size; i++) {
+    if((msg[i] == /*PORT_NAME*/_START_BYTE) 
+		|| (msg[i] == /*PORT_NAME*/_STOP_BYTE) 
+		|| (msg[i] == /*PORT_NAME*/_ESCAPE_BYTE)) {
+      /*PORT_NAME*/.write(/*PORT_NAME*/_ESCAPE_BYTE);
+    }
+    /*PORT_NAME*/.write(msg[i]);
   }
-  Serial.write(STOP_BYTE);
+  /*PORT_NAME*/.write(/*PORT_NAME*/_STOP_BYTE);
 }
 
-void printMsg(byte * msg, uint8_t msgSize) {
-  TRACE("[received] msg: ");
-  for (uint8_t i = 0; i < msgSize; i++) {
-    TRACE(msg[i]);
-  }
-  TRACE("\n");
+void /*PORT_NAME*/_forwardMessage(byte * msg, uint8_t size) {
+    /*PORT_NAME*/_forwardMessage_with_TTL(msg, size, /*PORT_NAME*/_max_ttl);
 }
 
-void enqueueMsg(byte * msg, uint8_t msgSize) {
-	// Forwarding if ttl > 0
-	if(msg[0] > 0) {
-		forwardByteSerial_Start();
-		forwardByteSerial(msg[0]-1);
-		for (uint8_t i = 1; i < msgSize; i++) {
-		    forwardByteSerial(msg[i]);
-		  }
-		forwardByteSerial_Stop();
-	}
-	
-	if ( fifo_byte_available() > msgSize ) {
-
-	  for (uint8_t i = 1; i < msgSize; i++) {
-	    _fifo_enqueue(msg[i]);
-	  }
-
-	} else {
-		TRACE("ERROR FIFO OVERFLOW (space < ");
-		TRACE(msgSize);
-		TRACE(")\n");
-	}
-}
-
-void readSerial() {
-  //if (Serial.available()) {
+void /*PORT_NAME*/_read() {
   byte limit = 0;
-  while ((Serial.available()) && (limit < 256)) {
+  while ((/*PORT_NAME*/.available()) && (limit < /*PORT_NAME*/_LIMIT_BYTE_PER_LOOP)) {
    limit++;
-   TRACE("[received] ");
-    incoming = Serial.read();
-   TRACE(incoming);
-   TRACE("\n");
+    /*PORT_NAME*/_incoming = /*PORT_NAME*/.read();
     
-    switch(serialListenerState) {
-      case LISTENER_STATE_IDLE:
-        if(incoming == START_BYTE) {
-          serialListenerState = LISTENER_STATE_READING;
-          serialMsgSize = 0;
+    switch(/*PORT_NAME*/_serialListenerState) {
+      case /*PORT_NAME*/_LISTENER_STATE_IDLE:
+        if(/*PORT_NAME*/_incoming == /*PORT_NAME*/_START_BYTE) {
+          /*PORT_NAME*/_serialListenerState = /*PORT_NAME*/_LISTENER_STATE_READING;
+          /*PORT_NAME*/_serialMsgSize = 0;
         }
       break;
       
-      case LISTENER_STATE_READING:
-        if (serialMsgSize >= 16) {
-          serialListenerState = LISTENER_STATE_ERROR;
+      case /*PORT_NAME*/_LISTENER_STATE_READING:
+        if (/*PORT_NAME*/_serialMsgSize > /*PORT_NAME*/_MAX_MSG_SIZE) {
+          /*PORT_NAME*/_serialListenerState = /*PORT_NAME*/_LISTENER_STATE_ERROR;
         } else {
-          if(incoming == STOP_BYTE) {
-            serialListenerState = LISTENER_STATE_IDLE;
+          if(/*PORT_NAME*/_incoming == /*PORT_NAME*/_STOP_BYTE) {
+            /*PORT_NAME*/_serialListenerState = /*PORT_NAME*/_LISTENER_STATE_IDLE;
+            if(/*PORT_NAME*/_serialBuffer[0] > 0) {
+                /*PORT_NAME*/_serialBuffer[0]--;
+            }
+            if(/*PORT_NAME*/_serialBuffer[0] > 0) {
+                /*PORT_NAME*/_forwardMessage_with_TTL(/*PORT_NAME*/_serialBuffer+1, /*PORT_NAME*/_serialMsgSize-1, /*PORT_NAME*/_serialBuffer[0]);
+            }
             
-            printMsg(serialBuffer, serialMsgSize);
-            enqueueMsg(serialBuffer, serialMsgSize);
+            externalMessageEnqueue(/*PORT_NAME*/_serialBuffer+1, /*PORT_NAME*/_serialMsgSize-1, /*PORT_NAME*/_instance.listener_id);
             
-          } else if (incoming == ESCAPE_BYTE) {
-            serialListenerState = LISTENER_STATE_ESCAPE;
+          } else if (/*PORT_NAME*/_incoming == /*PORT_NAME*/_ESCAPE_BYTE) {
+            /*PORT_NAME*/_serialListenerState = /*PORT_NAME*/_LISTENER_STATE_ESCAPE;
           } else {
-            serialBuffer[serialMsgSize] = incoming;
-            serialMsgSize++;
+            /*PORT_NAME*/_serialBuffer[/*PORT_NAME*/_serialMsgSize] = /*PORT_NAME*/_incoming;
+            /*PORT_NAME*/_serialMsgSize++;
           }
         }
       break;
       
-      case LISTENER_STATE_ESCAPE:
-        if (serialMsgSize >= SERIAL_BUFFER_SIZE) {
-          serialListenerState = LISTENER_STATE_ERROR;
+      case /*PORT_NAME*/_LISTENER_STATE_ESCAPE:
+        if (/*PORT_NAME*/_serialMsgSize >= /*PORT_NAME*/_MAX_MSG_SIZE) {
+          /*PORT_NAME*/_serialListenerState = /*PORT_NAME*/_LISTENER_STATE_ERROR;
         } else {
-          serialBuffer[serialMsgSize] = incoming;
-          serialMsgSize++;
-          serialListenerState = LISTENER_STATE_READING;
+          /*PORT_NAME*/_serialBuffer[/*PORT_NAME*/_serialMsgSize] = /*PORT_NAME*/_incoming;
+          /*PORT_NAME*/_serialMsgSize++;
+          /*PORT_NAME*/_serialListenerState = /*PORT_NAME*/_LISTENER_STATE_READING;
         }
       break;
       
-      case LISTENER_STATE_ERROR:
-       TRACE("[Error] Buffer overflow");
-        serialListenerState = LISTENER_STATE_IDLE;
-        serialMsgSize = 0;
+      case /*PORT_NAME*/_LISTENER_STATE_ERROR:
+        /*PORT_NAME*/_serialListenerState = /*PORT_NAME*/_LISTENER_STATE_IDLE;
+        /*PORT_NAME*/_serialMsgSize = 0;
       break;
     }
   }

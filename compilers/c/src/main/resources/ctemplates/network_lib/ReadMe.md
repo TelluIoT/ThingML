@@ -23,6 +23,8 @@
 * @serial_escape_byte default value: 125
 * @serial_msg_buffer_size default value: 10 * Max message size
 * @serial_baudrate default value: 115200
+* @serial_ring default value: false
+* @serial_ring_max_ttl default value: 1
 
 ####Websocket
 * @websocket_port_number default value: 9000

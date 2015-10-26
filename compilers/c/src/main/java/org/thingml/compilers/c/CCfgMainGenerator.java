@@ -47,9 +47,25 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         for(ExternalConnector eco : cfg.getExternalConnectors()) {
             if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
                 if(eco.getProtocol().startsWith("Serial")) {
+                    boolean ring = false;
                     String ctemplate = ctx.getNetworkLibSerialTemplate();
                     String htemplate = ctx.getNetworkLibSerialHeaderTemplate();
-
+                    if(eco.hasAnnotation("serial_ring")) {
+                        if(eco.annotation("serial_ring").iterator().next().compareToIgnoreCase("true") == 0) {
+                            ring = true;
+                            ctemplate = ctx.getNetworkLibSerialRingTemplate();
+                            htemplate = ctx.getNetworkLibSerialHeaderTemplate();
+                            
+                            Integer maxTTL;
+                            if(eco.hasAnnotation("serial_ring_max_ttl")) {
+                                maxTTL = Integer.parseInt(eco.annotation("serial_ring_max_ttl").iterator().next());
+                            } else {
+                                maxTTL = 1;
+                            }
+                            ctemplate = ctemplate.replace("/*TTL_MAX*/", maxTTL.toString());
+                        }
+                    }
+                    
                     String portName;
                     if(eco.hasAnnotation("port_name")) {
                         portName = eco.annotation("port_name").iterator().next();
@@ -102,8 +118,13 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         }
                     }
                     maxMsgSize = maxMsgSize - 2;
+                    
                     ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
 
+                    if(ring) {
+                        maxMsgSize++;
+                    }
+                    
                     String limitBytePerLoop;
                     if(eco.hasAnnotation("serial_limit_byte_per_loop")) {
                         limitBytePerLoop = eco.annotation("serial_limit_byte_per_loop").iterator().next();
@@ -915,7 +936,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     
                     for (Parameter pt : m.getParameters()) {
                         builder.append("\n// parameter " + pt.getName() + "\n");
-                        ctx.bytesToSerialize(pt.getType(), builder, ctx, pt.getName());
+                        ctx.bytesToSerialize(pt.getType(), builder, ctx, pt.getName(), pt);
                     }
                     builder.append("}\n");
 
@@ -1094,6 +1115,13 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     
     protected void generateMessageForwarders(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         
+        //Thing Port Message Forwarder
+        Map<Message, Map<Thing, Map<Port, Set<ExternalConnector>>>> tpm = new HashMap<Message, Map<Thing, Map<Port, Set<ExternalConnector>>>>();
+        Map<Thing, Map<Port, Set<ExternalConnector>>> tpeco;
+        Map<Port, Set<ExternalConnector>> peco;
+        Set<ExternalConnector> ecoSet;
+        //Instance Port Message Forwarders
+        
         for (ExternalConnector eco : cfg.getExternalConnectors()) {
             //if (eco.hasAnnotation("c_external_send")) {
             Thing t = eco.getInst().getInstance().getType();
@@ -1113,6 +1141,39 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             String param;
             
             for (Message m : p.getSends()) {
+                
+                // Thing Port Message Forwarder list filling
+                if(tpm.containsKey(m)) {
+                    tpeco = tpm.get(m);
+                    if(tpeco.containsKey(eco.getInst().getInstance().getType())) {
+                        peco = tpeco.get(eco.getInst().getInstance().getType());
+                        if(peco.containsKey(eco.getPort())) {
+                            ecoSet = peco.get(eco.getPort());
+                            ecoSet.add(eco);
+                        } else {
+                            ecoSet = new HashSet<ExternalConnector>();
+                            ecoSet.add(eco);
+                            peco.put(p, ecoSet);
+                        }
+                    } else {
+                        peco = new HashMap<Port, Set<ExternalConnector>>();
+                        ecoSet = new HashSet<ExternalConnector>();
+                        ecoSet.add(eco);
+                        peco.put(p, ecoSet);
+                        tpeco.put(t, peco);
+                    }
+                } else {
+                    tpeco = new HashMap<Thing, Map<Port, Set<ExternalConnector>>>();
+                    peco = new HashMap<Port, Set<ExternalConnector>>();
+                    ecoSet = new HashSet<ExternalConnector>();
+                    ecoSet.add(eco);
+                    peco.put(p, ecoSet);
+                    tpeco.put(t, peco);
+                    tpm.put(m, tpeco);
+                }
+                // Thing Port Message Forwarder list filling end
+                
+                
                 Set<String> ignoreList = new HashSet<String>();
                 if(additionalParam) {
                     if(m.hasAnnotation("websocket_client_id")) {
@@ -1128,8 +1189,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     }
                 } else {param = "";}
                 
-                builder.append("// Forwarding of messages " + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
-                builder.append("void forward_" + ctx.getSenderName(t, p, m));
+                builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                builder.append("void forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
                 ctx.appendFormalParameters(t, builder, m);
                 builder.append("{\n");
                 
@@ -1147,6 +1208,40 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
         
+        
+        //TPM forwarder
+        for(Message m : tpm.keySet()) {
+            tpeco = tpm.get(m);
+            for(Thing t: tpeco.keySet()) {
+                peco = tpeco.get(t);
+                for(Port p : peco.keySet()) {
+                    ecoSet = peco.get(p);
+                    if(!ecoSet.isEmpty()) {
+                        builder.append("void forward_" + ctx.getSenderName(t, p, m));
+                        ctx.appendFormalParameters(t, builder, m);
+                        builder.append("{\n");
+                        
+                        for(ExternalConnector eco : ecoSet) {
+                            builder.append("if(_instance->id_" + p.getName() + " ==");
+                            builder.append(" " + cfg.getName() + "_" + ctx.getInstanceVarName(eco.getInst().getInstance()));
+                            builder.append(".id_" + p.getName() + ") {\n");
+                            builder.append("forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
+                            builder.append("(_instance");
+                            
+                            for(Parameter param : m.getParameters()) {
+                                builder.append(", ");
+                                builder.append(param.getName());
+                            }
+                            
+                            builder.append(");\n");
+                            builder.append("}\n");
+                        }
+
+                        builder.append("}\n");
+                    }
+                }
+            }
+        }
     }
     
     protected void generateMessageDispatchersDynamic(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
