@@ -92,7 +92,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.SEND_ACTION: return createSendAction();
 			case ThingmlPackage.VARIABLE_ASSIGNMENT: return createVariableAssignment();
 			case ThingmlPackage.RECEIVE_MESSAGE: return createReceiveMessage();
-			case ThingmlPackage.DICTIONARY: return createDictionary();
 			case ThingmlPackage.REQUIRED_PORT: return createRequiredPort();
 			case ThingmlPackage.PROVIDED_PORT: return createProvidedPort();
 			case ThingmlPackage.ENUM_LITERAL_REF: return createEnumLiteralRef();
@@ -116,7 +115,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.CONDITIONAL_ACTION: return createConditionalAction();
 			case ThingmlPackage.PROPERTY_REFERENCE: return createPropertyReference();
 			case ThingmlPackage.ARRAY_INDEX: return createArrayIndex();
-			case ThingmlPackage.DICTIONARY_REFERENCE: return createDictionaryReference();
 			case ThingmlPackage.EXPRESSION_GROUP: return createExpressionGroup();
 			case ThingmlPackage.RETURN_ACTION: return createReturnAction();
 			case ThingmlPackage.PRINT_ACTION: return createPrintAction();
@@ -388,16 +386,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Dictionary createDictionary() {
-		DictionaryImpl dictionary = new DictionaryImpl();
-		return dictionary;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public RequiredPort createRequiredPort() {
 		RequiredPortImpl requiredPort = new RequiredPortImpl();
 		return requiredPort;
@@ -621,16 +609,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public ArrayIndex createArrayIndex() {
 		ArrayIndexImpl arrayIndex = new ArrayIndexImpl();
 		return arrayIndex;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DictionaryReference createDictionaryReference() {
-		DictionaryReferenceImpl dictionaryReference = new DictionaryReferenceImpl();
-		return dictionaryReference;
 	}
 
 	/**

@@ -128,7 +128,7 @@ public abstract class ThingMLElementImpl extends EObjectImpl implements ThingMLE
 				return;
 		}
 		super.eSet(featureID, newValue);
-	}
+	}		
 
 	/**
 	 * <!-- begin-user-doc -->

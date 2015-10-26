@@ -242,15 +242,6 @@ public interface ThingmlFactory extends EFactory {
 	ReceiveMessage createReceiveMessage();
 
 	/**
-	 * Returns a new object of class '<em>Dictionary</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Dictionary</em>'.
-	 * @generated
-	 */
-	Dictionary createDictionary();
-
-	/**
 	 * Returns a new object of class '<em>Required Port</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -456,15 +447,6 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	ArrayIndex createArrayIndex();
-
-	/**
-	 * Returns a new object of class '<em>Dictionary Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Dictionary Reference</em>'.
-	 * @generated
-	 */
-	DictionaryReference createDictionaryReference();
 
 	/**
 	 * Returns a new object of class '<em>Expression Group</em>'.

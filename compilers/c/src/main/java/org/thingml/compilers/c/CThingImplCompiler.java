@@ -165,7 +165,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateCFunction(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx) {
         // Test for any special function
-        if (func.isDefined("fork_linux_thread", "true")) {
+        if (func.isDefined("fork_linux_thread", "true") || func.isDefined("fork_thread", "true")) {
             generateCforThingLinuxThread(func, thing, builder, ctx);
         } else { // Use the default function generator
             generateCforThingDirect(func, thing, builder, ctx);

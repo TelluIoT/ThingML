@@ -67,10 +67,21 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
         if (stream.hasAnnotation("TTL"))
             ttl = stream.annotation("TTL").get(0);
         builder.append("\n");
-        builder.append("function wait_" + sources.qname("_") + "() { return Rx.Observable.timer(" + ttl + "); }\n");
 
         SimpleSource simpleSource1 = (SimpleSource) sources.getSources().get(0),
                 simpleSource2 = (SimpleSource) sources.getSources().get(1);
+
+        String ttl1 = ttl;
+        String ttl2 = ttl;
+        if (stream.hasAnnotation("TTL1")) {
+            ttl1 = stream.annotation("TTL1").get(0);
+        }
+        if (stream.hasAnnotation("TTL2")) {
+            ttl2 = stream.annotation("TTL2").get(0);
+        }
+
+        builder.append("function wait_" + sources.qname("_") + "_1" + "() { return Rx.Observable.timer(" + ttl1 + "); }\n");
+        builder.append("function wait_" + sources.qname("_") + "_2" + "() { return Rx.Observable.timer(" + ttl2 + "); }\n");
 
         String message1Name = simpleSource1.getMessage().getMessage().getName(),
                 message2Name = simpleSource2.getMessage().getMessage().getName();
@@ -79,7 +90,7 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
         generate(stream, simpleSource1, builder, context);
         generate(stream, simpleSource2, builder, context);
         builder.append("var " + sources.qname("_") + " = " + simpleSource1.qname("_") + ".join(" + simpleSource2.qname("_"))
-                .append(",wait_" + sources.qname("_") + ",wait_" + sources.qname("_") + ",\n")
+                .append(",wait_" + sources.qname("_") + "_1" + ",wait_" + sources.qname("_") + "_2" + ",\n")
                 .append("\tfunction(" + message1Name + "," + message2Name + ") {\n");
 
         builder.append("\t\treturn { ");

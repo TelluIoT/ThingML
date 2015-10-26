@@ -36,7 +36,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.T_STRING,
 				"");
         store.setDefault(PreferenceConstants.PACK_STRING,
-                "eu.heads");
+                "org.thingml.generated");
 	}
 
 }

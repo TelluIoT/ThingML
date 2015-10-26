@@ -168,10 +168,6 @@
         eType="#//Message"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" lowerBound="1" eType="#//Port"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Dictionary" eSuperTypes="#//Property">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="indexType" lowerBound="1"
-        eType="#//Type"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Port" abstract="true" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="owner" eType="#//Thing"
         eOpposite="#//Thing/ports"/>
@@ -246,10 +242,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="ArrayIndex" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="array" lowerBound="1" eType="#//Expression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="index" lowerBound="1" eType="#//Expression"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DictionaryReference" eSuperTypes="#//PropertyReference">
     <eStructuralFeatures xsi:type="ecore:EReference" name="index" lowerBound="1" eType="#//Expression"
         containment="true"/>
   </eClassifiers>

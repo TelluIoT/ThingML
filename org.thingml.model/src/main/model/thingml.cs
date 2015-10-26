@@ -16,7 +16,7 @@ OPTIONS {
 	//
 	// The code should be generated *2 times*, once for eclipse and once for standalone
 	// The generated code shares all the code that is manually edited in (src/main/java) so there is no need to create the resolvers twice.
-	// Bellow are the different options to use.
+	// Below are the different options to use.
 	// Generate the standalone version first and then the eclipse version.
 	
 	// 1. FOR STANDALONE
@@ -26,6 +26,7 @@ OPTIONS {
 	
 	// 2. FOR ECLIPSE Comment the lines bellow
 	srcGenFolder = "src/main/java-gen";
+	
 	
 	// IMPORTANT: In the generated eclipse plugins it is required to change the Vendor to SINTEF and the Version from "1.0.0" to "0.x.0.qualifier"
 }
@@ -187,9 +188,7 @@ RULES {
 	Property::= !1 (changeable[T_READONLY])? "property" #1 name[] #1 ":" #1 type[]  ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? (#1 "=" #1 init)?  (annotations)*;
 	
 	//("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?
-	
-//	Dictionary::= !1 (changeable[T_READONLY])? "dictionary" #1 name[]  ":"  indexType[] "->" type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?(annotations)*;
-	
+		
 	Parameter::= name[]  ":"  type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))?;
 	
 	PrimitiveType::= "datatype" #1 name[] (annotations)* ";" ;

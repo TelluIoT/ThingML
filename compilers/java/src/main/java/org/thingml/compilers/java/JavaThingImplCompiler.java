@@ -29,8 +29,8 @@ import java.util.List;
 public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
     public void generateMessages(Message m, Context ctx, boolean hasAPI) {
-        String pack = "org.thingml.generated";
-        if (ctx.getContextAnnotation("package") != null) pack = "org.thingml.generated";
+        String pack = ctx.getContextAnnotation("package");
+        if (pack == null) pack = "org.thingml.generated";
         String rootPack = pack;
         pack += ".messages";
 

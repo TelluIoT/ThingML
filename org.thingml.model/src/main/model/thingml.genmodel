@@ -121,9 +121,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ReceiveMessage/message"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ReceiveMessage/port"/>
     </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//Dictionary">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Dictionary/indexType"/>
-    </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Port">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference thingml.ecore#//Port/owner"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Port/receives"/>
@@ -183,9 +180,6 @@
     <genClasses ecoreClass="thingml.ecore#//ArrayIndex">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ArrayIndex/array"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ArrayIndex/index"/>
-    </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//DictionaryReference">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//DictionaryReference/index"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//ExpressionGroup">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ExpressionGroup/exp"/>

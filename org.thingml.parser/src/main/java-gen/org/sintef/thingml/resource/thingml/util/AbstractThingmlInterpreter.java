@@ -265,12 +265,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.Dictionary) {
-			result = interprete_org_sintef_thingml_Dictionary((org.sintef.thingml.Dictionary) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
 		if (object instanceof org.sintef.thingml.RequiredPort) {
 			result = interprete_org_sintef_thingml_RequiredPort((org.sintef.thingml.RequiredPort) object, context);
 		}
@@ -423,12 +417,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.ControlStructure) {
 			result = interprete_org_sintef_thingml_ControlStructure((org.sintef.thingml.ControlStructure) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
-		if (object instanceof org.sintef.thingml.DictionaryReference) {
-			result = interprete_org_sintef_thingml_DictionaryReference((org.sintef.thingml.DictionaryReference) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -601,12 +589,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.TimeWindow) {
-			result = interprete_org_sintef_thingml_TimeWindow((org.sintef.thingml.TimeWindow) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
 		if (object instanceof org.sintef.thingml.ViewSource) {
 			result = interprete_org_sintef_thingml_ViewSource((org.sintef.thingml.ViewSource) object, context);
 		}
@@ -651,6 +633,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.LengthWindow) {
 			result = interprete_org_sintef_thingml_LengthWindow((org.sintef.thingml.LengthWindow) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.TimeWindow) {
+			result = interprete_org_sintef_thingml_TimeWindow((org.sintef.thingml.TimeWindow) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -832,10 +820,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		return null;
 	}
 	
-	public ResultType interprete_org_sintef_thingml_Dictionary(org.sintef.thingml.Dictionary dictionary, ContextType context) {
-		return null;
-	}
-	
 	public ResultType interprete_org_sintef_thingml_Port(org.sintef.thingml.Port port, ContextType context) {
 		return null;
 	}
@@ -945,10 +929,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	}
 	
 	public ResultType interprete_org_sintef_thingml_ArrayIndex(org.sintef.thingml.ArrayIndex arrayIndex, ContextType context) {
-		return null;
-	}
-	
-	public ResultType interprete_org_sintef_thingml_DictionaryReference(org.sintef.thingml.DictionaryReference dictionaryReference, ContextType context) {
 		return null;
 	}
 	

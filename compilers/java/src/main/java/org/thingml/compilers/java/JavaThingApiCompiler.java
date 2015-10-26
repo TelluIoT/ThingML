@@ -66,8 +66,8 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
 
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
-        String pack = "org.thingml.generated";
-        if (ctx.getContextAnnotation("package") != null) pack = "org.thingml.generated";
+        String pack = ctx.getContextAnnotation("package");
+        if (pack == null) pack = "org.thingml.generated";
 
         final String src = "src/main/java/" + pack.replace(".", "/");
 

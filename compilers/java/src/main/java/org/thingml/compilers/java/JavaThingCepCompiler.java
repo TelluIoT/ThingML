@@ -48,8 +48,19 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
         }
     }
 
-   private static void generateSubscription(Stream stream, StringBuilder builder, Context context, Message outPut, String name) {
-        final String outPutName = outPut.getName();
+    //TODO: remove output param as we do not really it (and method is called with wrong args in case of Join/Merge....)
+   private void generateSubscription(Stream stream, StringBuilder builder, Context context, Message outPut, String name) {
+       String outPutName = stream.getName();
+       if (stream.getInput() instanceof JoinSources) {
+           outPutName = ((JoinSources)stream.getInput()).getResultMessage().getName();
+           outPut = ((JoinSources) stream.getInput()).getResultMessage();
+       }else if (stream.getInput() instanceof MergeSources) {
+           outPutName = ((MergeSources)stream.getInput()).getResultMessage().getName();
+           outPut = ((MergeSources) stream.getInput()).getResultMessage();
+       } else if (stream.getInput() instanceof SimpleSource) {
+           outPutName = ((SimpleSource)stream.getInput()).getMessage().getMessage().getName();
+           outPut = ((SimpleSource)stream.getInput()).getMessage().getMessage();
+       }
         final String messageType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
         String outPutType = messageType;
 

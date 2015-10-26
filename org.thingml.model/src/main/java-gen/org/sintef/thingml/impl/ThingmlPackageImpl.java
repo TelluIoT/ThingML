@@ -374,13 +374,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass dictionaryEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass portEClass = null;
 
 	/**
@@ -571,13 +564,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass arrayIndexEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass dictionaryReferenceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1767,24 +1753,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getDictionary() {
-		return dictionaryEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getDictionary_IndexType() {
-		return (EReference)dictionaryEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getPort() {
 		return portEClass;
 	}
@@ -2201,24 +2169,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EReference getArrayIndex_Index() {
 		return (EReference)arrayIndexEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getDictionaryReference() {
-		return dictionaryReferenceEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getDictionaryReference_Index() {
-		return (EReference)dictionaryReferenceEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -3247,9 +3197,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(receiveMessageEClass, RECEIVE_MESSAGE__MESSAGE);
 		createEReference(receiveMessageEClass, RECEIVE_MESSAGE__PORT);
 
-		dictionaryEClass = createEClass(DICTIONARY);
-		createEReference(dictionaryEClass, DICTIONARY__INDEX_TYPE);
-
 		portEClass = createEClass(PORT);
 		createEReference(portEClass, PORT__OWNER);
 		createEReference(portEClass, PORT__RECEIVES);
@@ -3324,9 +3271,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		arrayIndexEClass = createEClass(ARRAY_INDEX);
 		createEReference(arrayIndexEClass, ARRAY_INDEX__ARRAY);
 		createEReference(arrayIndexEClass, ARRAY_INDEX__INDEX);
-
-		dictionaryReferenceEClass = createEClass(DICTIONARY_REFERENCE);
-		createEReference(dictionaryReferenceEClass, DICTIONARY_REFERENCE__INDEX);
 
 		expressionGroupEClass = createEClass(EXPRESSION_GROUP);
 		createEReference(expressionGroupEClass, EXPRESSION_GROUP__EXP);
@@ -3530,7 +3474,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		eventEClass.getESuperTypes().add(this.getThingMLElement());
 		receiveMessageEClass.getESuperTypes().add(this.getEvent());
 		receiveMessageEClass.getESuperTypes().add(this.getReferencedElmt());
-		dictionaryEClass.getESuperTypes().add(this.getProperty());
 		portEClass.getESuperTypes().add(this.getAnnotatedElement());
 		requiredPortEClass.getESuperTypes().add(this.getPort());
 		providedPortEClass.getESuperTypes().add(this.getPort());
@@ -3559,7 +3502,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		conditionalActionEClass.getESuperTypes().add(this.getControlStructure());
 		propertyReferenceEClass.getESuperTypes().add(this.getExpression());
 		arrayIndexEClass.getESuperTypes().add(this.getExpression());
-		dictionaryReferenceEClass.getESuperTypes().add(this.getPropertyReference());
 		expressionGroupEClass.getESuperTypes().add(this.getExpression());
 		returnActionEClass.getESuperTypes().add(this.getAction());
 		printActionEClass.getESuperTypes().add(this.getAction());
@@ -3728,9 +3670,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getReceiveMessage_Message(), this.getMessage(), null, "message", null, 1, 1, ReceiveMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getReceiveMessage_Port(), this.getPort(), null, "port", null, 1, 1, ReceiveMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(dictionaryEClass, Dictionary.class, "Dictionary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDictionary_IndexType(), this.getType(), null, "indexType", null, 1, 1, Dictionary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		initEClass(portEClass, Port.class, "Port", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getPort_Owner(), this.getThing(), this.getThing_Ports(), "owner", null, 0, 1, Port.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPort_Receives(), this.getMessage(), null, "receives", null, 0, -1, Port.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3805,9 +3744,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(arrayIndexEClass, ArrayIndex.class, "ArrayIndex", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getArrayIndex_Array(), this.getExpression(), null, "array", null, 1, 1, ArrayIndex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getArrayIndex_Index(), this.getExpression(), null, "index", null, 1, 1, ArrayIndex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(dictionaryReferenceEClass, DictionaryReference.class, "DictionaryReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDictionaryReference_Index(), this.getExpression(), null, "index", null, 1, 1, DictionaryReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(expressionGroupEClass, ExpressionGroup.class, "ExpressionGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getExpressionGroup_Exp(), this.getExpression(), null, "exp", null, 1, 1, ExpressionGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

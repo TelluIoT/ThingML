@@ -135,29 +135,46 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
         if (stream.hasAnnotation("TTL"))
             ttl = stream.annotation("TTL").get(0);
 
-        builder.append("\n");
-        builder.append("Func1 wait_" + stream.qname("_") + " = new Func1() {\n" +
-                "@Override\n" +
-                "public Object call(Object o) {\n" +
-                "return rx.Observable.timer(" + ttl + ", TimeUnit.MILLISECONDS);\n" +
-                "}\n" +
-                "};\n");
+        String ttl1 = ttl;
+        String ttl2 = ttl;
 
         SimpleSource simpleSource1 = (SimpleSource) sources.getSources().get(0),
                 simpleSource2 = (SimpleSource) sources.getSources().get(1);
+        if (stream.hasAnnotation("TTL1")) {
+            ttl1 = stream.annotation("TTL1").get(0);
+        }
+        if (stream.hasAnnotation("TTL2")) {
+            ttl2 = stream.annotation("TTL2").get(0);
+        }
+
+        builder.append("\n");
+        builder.append("Func1 wait_" + stream.qname("_") + "_1 = new Func1() {\n" +
+                "@Override\n" +
+                "public Object call(Object o) {\n" +
+                "return rx.Observable.timer(" + ttl1 + ", TimeUnit.MILLISECONDS);\n" +
+                "}\n" +
+                "};\n");
+        builder.append("Func1 wait_" + stream.qname("_") + "_2 = new Func1() {\n" +
+                "@Override\n" +
+                "public Object call(Object o) {\n" +
+                "return rx.Observable.timer(" + ttl2 + ", TimeUnit.MILLISECONDS);\n" +
+                "}\n" +
+                "};\n");
+
+
         String message1Name = simpleSource1.getMessage().getMessage().getName(),
                 message2Name = simpleSource2.getMessage().getMessage().getName();
         String eventMessage1 = context.firstToUpper(message1Name) + "MessageType." + context.firstToUpper(message1Name) + "Message";
         String eventMessage2 = context.firstToUpper(message2Name) + "MessageType." + context.firstToUpper(message2Name) + "Message";
 
-        Message outPut = stream.getOutput().getMessage();
+        Message outPut = sources.getResultMessage();//stream.getOutput().getMessage();
         String outPutName = outPut.getName();
         String outPutType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
 
         generate(stream,simpleSource1,builder,context);
         generate(stream, simpleSource2, builder, context);
         builder.append("rx.Observable " + stream.qname("_") + " = " + simpleSource1.qname("_") + "_observable")
-                .append(".join(" + simpleSource2.qname("_") + "_observable" + ",wait_" + stream.qname("_") + ",wait_" + stream.qname("_") + ",\n")
+                .append(".join(" + simpleSource2.qname("_") + "_observable" + ",wait_" + stream.qname("_") + "_1, wait_" + stream.qname("_") + "_2,\n")
                 .append("new Func2<" + eventMessage1 + ", " + eventMessage2 + ", " + outPutType +">(){\n")
                 .append("@Override\n")
                 .append("public " + outPutType + " call(" + eventMessage1 + " " + message1Name + ", " + eventMessage2 + " " + message2Name + ") {\n");

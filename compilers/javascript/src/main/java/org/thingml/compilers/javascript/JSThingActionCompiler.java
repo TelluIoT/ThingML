@@ -27,10 +27,13 @@ import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
-    public void traceVariable(VariableAssignment action, StringBuilder builder, Context ctx) {
-        builder.append("if(_this.debug) console.log(colors.magenta(_this.name + \"(" + action.getProperty().findContainingThing().getName() + "): property " + action.getProperty().getName() + " changed from \" + " + action.getProperty().qname("_") + "_var" + " + \" to \" + (");
-        ctx.getCompiler().getThingActionCompiler().generate(action.getExpression(), builder, ctx);
-        builder.append(")));\n");
+    public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
+        builder.append("var debug_" + action.getProperty().qname("_") + "_var = _this." + action.getProperty().qname("_") + "_var;\n");
+    }
+
+    @Override
+    public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
+        builder.append("if(_this.debug) console.log(colors.magenta(_this.name + \"(" + action.getProperty().findContainingThing().getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + action.getProperty().qname("_") + "_var" + " + \" to \" + _this." + action.getProperty().qname("_") + "_var));\n");
     }
 
     @Override

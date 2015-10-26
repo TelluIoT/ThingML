@@ -346,18 +346,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.DICTIONARY: {
-				Dictionary dictionary = (Dictionary)theEObject;
-				T result = caseDictionary(dictionary);
-				if (result == null) result = caseProperty(dictionary);
-				if (result == null) result = caseVariable(dictionary);
-				if (result == null) result = caseTypedElement(dictionary);
-				if (result == null) result = caseAnnotatedElement(dictionary);
-				if (result == null) result = caseReferencedElmt(dictionary);
-				if (result == null) result = caseThingMLElement(dictionary);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ThingmlPackage.PORT: {
 				Port port = (Port)theEObject;
 				T result = casePort(port);
@@ -575,14 +563,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				ArrayIndex arrayIndex = (ArrayIndex)theEObject;
 				T result = caseArrayIndex(arrayIndex);
 				if (result == null) result = caseExpression(arrayIndex);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ThingmlPackage.DICTIONARY_REFERENCE: {
-				DictionaryReference dictionaryReference = (DictionaryReference)theEObject;
-				T result = caseDictionaryReference(dictionaryReference);
-				if (result == null) result = casePropertyReference(dictionaryReference);
-				if (result == null) result = caseExpression(dictionaryReference);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1410,21 +1390,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Dictionary</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Dictionary</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseDictionary(Dictionary object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Port</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1841,21 +1806,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseArrayIndex(ArrayIndex object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Dictionary Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Dictionary Reference</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseDictionaryReference(DictionaryReference object) {
 		return null;
 	}
 
