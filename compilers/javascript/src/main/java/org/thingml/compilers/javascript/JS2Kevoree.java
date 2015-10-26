@@ -132,6 +132,10 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         }
     }
 
+    private String getVariableName(Instance i, Property p, Context ctx) {
+        return "dic_" + i.getName() + "_" + ctx.getVariableName(p);
+    }
+
     private void generateWrapper(Context ctx, Configuration cfg) {
         //Generate wrapper
 
@@ -157,10 +161,34 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("var " + cfg.getName() + " = AbstractComponent.extend({\n");
         builder.append("toString: '" + cfg.getName() + "',\n");
 
-        //TODO: generateMainAndInit dictionnay for attributes
+        builder.append("//Attributes\n");
+        for (Instance i : cfg.allInstances()) {
+            for (Property p : i.getType().allPropertiesInDepth()) {
+                if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
+                    builder.append(getVariableName(i, p, ctx) + " : { \ndefaultValue: ");
+                    final Expression e = cfg.initExpressions(i, p).get(0);
+                    if (e != null) {
+                        ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
+                    } else {
+                        builder.append("null\n");
+                    }
+                    builder.append("},\n");
+                }
+            }
+        }
 
         builder.append("construct: function() {\n");
         JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
+        for (Instance i : cfg.allInstances()) {
+            for (Property p : i.getType().allPropertiesInDepth()) {
+                if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
+                    builder.append("this.dictionary.on('" + getVariableName(i, p, ctx) + "', function (oldValue, newValue) {\n");
+                    builder.append(getVariableName(i, p, ctx) + " = newValue;\n");
+                    builder.append(i.getName() + "." + ctx.getVariableName(p) + " = newValue;\n");
+                    builder.append("});\n");
+                }
+            }
+        }
         for (Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
             for (Port p : (List<Port>) e.getValue()) {
