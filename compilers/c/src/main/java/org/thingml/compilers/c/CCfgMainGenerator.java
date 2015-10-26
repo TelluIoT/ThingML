@@ -324,8 +324,30 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
                 }
                 if(eco.getProtocol().startsWith("Websocket")) {
-                    String ctemplate = ctx.getNetworkLibWebsocketTemplate();
-                    String htemplate = ctx.getNetworkLibWebsocketHeaderTemplate();
+                    
+                    String ctemplate;
+                    String htemplate;
+                    if(eco.hasAnnotation("websocket_client")) {
+                        if(eco.annotation("websocket_client").iterator().next().equalsIgnoreCase("true")) {
+                            ctemplate = ctx.getNetworkLibWebsocketClientTemplate();
+                            htemplate = ctx.getNetworkLibWebsocketClientHeaderTemplate();
+                             String serverAddress;
+                            if(eco.hasAnnotation("websocket_server_address")) {
+                                serverAddress = eco.annotation("websocket_server_address").iterator().next();
+                            } else {
+                                serverAddress = "127.0.0.0";
+                            }
+
+                            ctemplate = ctemplate.replace("/*ADDRESS*/", serverAddress);
+                            
+                        } else {
+                            ctemplate = ctx.getNetworkLibWebsocketTemplate();
+                            htemplate = ctx.getNetworkLibWebsocketHeaderTemplate();
+                        }
+                    } else {
+                        ctemplate = ctx.getNetworkLibWebsocketTemplate();
+                        htemplate = ctx.getNetworkLibWebsocketHeaderTemplate();
+                    }
 
                     String portName;
                     if(eco.hasAnnotation("port_name")) {
