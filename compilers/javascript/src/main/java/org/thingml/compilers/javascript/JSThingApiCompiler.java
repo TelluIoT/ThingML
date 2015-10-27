@@ -78,6 +78,14 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append("}\n");
             builder.append("};\n");
 
+            //function to register listeners on attributes
+            builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.onPropertyChange = function (property, callback) {\n");
+            builder.append("if (this.propertyListener[property] === undefined) {");
+            builder.append("this.propertyListener[property] = [];");
+            builder.append("}\n");
+            builder.append("this.propertyListener[property].push(callback);\n");
+            builder.append("};\n\n");
+
             generatePublicPort(thing, builder, ctx);
         }
     }
