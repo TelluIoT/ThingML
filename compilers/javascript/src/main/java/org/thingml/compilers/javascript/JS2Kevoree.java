@@ -186,7 +186,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
                     builder.append("if(" + i.getName() + "." + ctx.getVariableName(p) + " !== newValue) ");
                     builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
                     builder.append("});\n");
-                    builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', function(newValue) {if(this.dictionary.getValue('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== newValue) this.dictionary.setValue('" + i.getName() + "_" + ctx.getVariableName(p) + "', newValue);});\n");
+                    builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', function(newValue) {if(this.dictionary.getValue('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== newValue) this.dictionary.setValue('" + i.getName() + "_" + ctx.getVariableName(p) + "', newValue);}.bind(this));\n");
                 }
             }
         }
