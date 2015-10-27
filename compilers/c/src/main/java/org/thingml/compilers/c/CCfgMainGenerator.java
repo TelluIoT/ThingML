@@ -335,7 +335,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                             if(eco.hasAnnotation("websocket_server_address")) {
                                 serverAddress = eco.annotation("websocket_server_address").iterator().next();
                             } else {
-                                serverAddress = "127.0.0.0";
+                                serverAddress = "127.0.0.1";
                             }
 
                             ctemplate = ctemplate.replace("/*ADDRESS*/", serverAddress);
@@ -370,6 +370,22 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     }
                     ctemplate = ctemplate.replace("/*PORT_NUMBER*/", portNumber.toString());
                     
+                    
+                    //Connector ready
+                    
+                    StringBuilder connectorReady = new StringBuilder();
+                    for(Message m: eco.getPort().getReceives()) {
+                        if(m.hasAnnotation("websocket_connector_ready")) {
+                            connectorReady.append("//Notify app with " + m.getName() + "\n");
+                            connectorReady.append("byte forward_buf[2];\n");
+                            connectorReady.append("forward_buf[0] = (" + ctx.getHandlerCode(cfg, m) + " >> 8) & 0xFF;\n");
+                            connectorReady.append("forward_buf[1] =  " + ctx.getHandlerCode(cfg, m) + " & 0xFF;\n\n");
+                            connectorReady.append("externalMessageEnqueue(forward_buf, 2, " + portName + "_instance.listener_id);\n\n");
+                        }
+                    }
+                    ctemplate = ctemplate.replace("/*CONNEXION_ESTABLISHED*/", connectorReady);
+                    
+                    //End connector Ready
                     
                     Integer nbClientMax;
                     if(eco.hasAnnotation("websocket_nb_client_max")) {

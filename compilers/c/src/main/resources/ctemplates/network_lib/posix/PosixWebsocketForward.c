@@ -3,7 +3,10 @@
 #include <stdlib.h>
 #include <libwebsockets.h>
 
+#ifndef BOOL
+#define BOOL
 typedef enum { false, true } bool;
+#endif
 
 //externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);
 
@@ -65,7 +68,7 @@ uint16_t remove_client(struct libwebsocket *wsi) {
 }
 
 
-static int callback_http(struct libwebsocket_context * this,
+static int /*PORT_NAME*/_callback_http(struct libwebsocket_context * this,
                          struct libwebsocket *wsi,
                          enum libwebsocket_callback_reasons reason, void *user,
                          void *in, size_t len)
@@ -73,7 +76,7 @@ static int callback_http(struct libwebsocket_context * this,
     return 0;
 }
 
-static int callback_ThingML_protocol(struct libwebsocket_context * this,
+static int /*PORT_NAME*/_callback_ThingML_protocol(struct libwebsocket_context * this,
                                    struct libwebsocket *wsi,
                                    enum libwebsocket_callback_reasons reason,
                                    void *user, void *in, size_t len)
@@ -164,12 +167,12 @@ static struct libwebsocket_protocols protocols[] = {
     /* first protocol must always be HTTP handler */
     {
         "http-only",   // name
-        callback_http, // callback
+        /*PORT_NAME*/_callback_http, // callback
         0              // per_session_data_size
     },
     {
         "ThingML-protocol", // protocol name - very important!
-        callback_ThingML_protocol,   // callback
+        /*PORT_NAME*/_callback_ThingML_protocol,   // callback
         0                          // we don't use any per session data
     },
     {
@@ -183,7 +186,7 @@ void /*PORT_NAME*/_set_listener_id(uint16_t id) {
 
 void /*PORT_NAME*/_setup() {
     memset(&/*PORT_NAME*/_info, 0, sizeof /*PORT_NAME*/_info);
-
+    lws_set_log_level(2,NULL);
     int port = /*PORT_NUMBER*/;
     const char *interface = NULL;
     // we're not using ssl
