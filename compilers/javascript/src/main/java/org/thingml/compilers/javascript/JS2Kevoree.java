@@ -182,10 +182,11 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         for (Instance i : cfg.allInstances()) {
             for (Property p : i.getType().allPropertiesInDepth()) {
                 if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
-                    builder.append("this.dictionary.on('" + getVariableName(i, p, ctx) + "', function (oldValue, newValue) {\n");
-                    builder.append(getVariableName(i, p, ctx) + " = newValue;\n");
-                    builder.append(i.getName() + "." + ctx.getVariableName(p) + " = newValue;\n");
+                    builder.append("this.dictionary.on('" + getVariableName(i, p, ctx) + "', function (oldValue, newValue) {");
+                    builder.append("if(" + i.getName() + "." + ctx.getVariableName(p) + " !== newValue) ");
+                    builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
                     builder.append("});\n");
+                    builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', function(newValue) {if(this.dictionary.getValue('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== newValue) this.dictionary.setValue('" + i.getName() + "_" + ctx.getVariableName(p) + "', newValue);}.bind(this));\n");
                 }
             }
         }

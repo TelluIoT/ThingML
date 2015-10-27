@@ -33,6 +33,14 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
+        if (action.getProperty().eContainer() instanceof Thing) {//we can only listen to properties of a Thing, not all local variables, etc
+            builder.append("//notify listeners of that attribute\n");
+            builder.append("if (_this.propertyListener['" + action.getProperty().getName() + "'] !== undefined) {\n");
+            builder.append("const " + action.getProperty().getName() + "ListenersSize = _this.propertyListener['" + action.getProperty().getName() + "'].length;\n");
+            builder.append("for (var _i = 0; _i < " + action.getProperty().getName() + "ListenersSize; _i++) {\n");
+            builder.append("_this.propertyListener['" + action.getProperty().getName() + "'][_i](_this." + ctx.getVariableName(action.getProperty()) + ");\n");
+            builder.append("}\n}\n");
+        }
         builder.append("if(_this.debug) console.log(colors.magenta(_this.name + \"(" + action.getProperty().findContainingThing().getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + action.getProperty().qname("_") + "_var" + " + \" to \" + _this." + action.getProperty().qname("_") + "_var));\n");
     }
 

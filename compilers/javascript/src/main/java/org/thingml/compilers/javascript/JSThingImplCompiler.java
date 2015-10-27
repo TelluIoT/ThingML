@@ -36,6 +36,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateListeners(Thing thing, StringBuilder builder, Context ctx) {
+        builder.append("//callbacks for attributes\n");
+        builder.append("this.propertyListener = {};\n\n");
+
         builder.append("//callbacks for third-party listeners\n");
         for (Port p : thing.allPorts()) {
             for (Message m : p.getSends()) {
