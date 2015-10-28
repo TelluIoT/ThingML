@@ -15,11 +15,13 @@
  */
 package org.thingml.compilers.javascript;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -170,6 +172,23 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             return ref;
     }
 
+    //TODO: Move in a place where this can be used by other compilers (contains and containsAll on EObjects does not work (equal is broker in EMF!!!)
+    private boolean contains(List<Instance> list, Instance element) {
+        for(Instance e : list) {
+            if (EcoreUtil.equals(e, element))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean containsAll(List<Instance> thisList, List<Instance> thatList) {
+        for(Instance e : thatList) {
+            if (!contains(thisList, e))
+                return false;
+        }
+        return true;
+    }
+
     @Override
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/main.js");
@@ -202,8 +221,41 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
         generateInstances(cfg, builder, ctx, false);
 
+
+
+
+        builder.append("//Starting instances following client/server dependencies...\n");
+        List<Instance> instances = new ArrayList<Instance>();
+        for(Instance i : cfg.allInstances()) {
+            if (cfg.getServers(i).isEmpty()) {
+                instances.add(i);
+                System.out.println("adding " + i.getName() + " to instances");
+            }
+        }
+
+        List<Instance> all = new ArrayList<Instance>();
+        while (!instances.isEmpty()) {
+            System.out.println("instances : " + instances.size());
+            System.out.println("servers : " + all.size());
+            for(Instance i : instances) {
+                if (!contains(all, i) && i.getType().allStateMachines().size() > 0) {
+                        builder.append(i.getName() + "._init();\n");
+                }
+                System.out.println("adding " + i.getName() + " to all");
+                all.add(i);
+            }
+            instances.clear();
+            for(Instance i : cfg.allInstances()) {
+                if (!contains(all, i) && (cfg.getServers(i).isEmpty() || containsAll(all, cfg.getServers(i)))) {
+                    System.out.println("adding " + i.getName() + " to instances");
+                    instances.add(i);
+                }
+            }
+        }
+
+        builder.append("//Instances whose init order could not be determined...\n");
         for (Instance i : cfg.allInstances()) {
-            if (i.getType().allStateMachines().size() > 0) {
+            if (!contains(all, i) && i.getType().allStateMachines().size() > 0) {
                 builder.append(i.getName() + "._init();\n");
             }
         }
