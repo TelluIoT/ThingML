@@ -34,6 +34,10 @@
 * @websocket_new_client
 * @websocket_client_disconnected
 
+* @websocket_client default: false
+* @websocket_serveur_address default: 127.0.0.0
+* @websocket_connector_ready
+
 ####MQTT
 * @mqtt_broker_address default value: localhost
 * @mqtt_port_number default value: 1883

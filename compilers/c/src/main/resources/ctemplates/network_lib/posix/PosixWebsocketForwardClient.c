@@ -3,8 +3,10 @@
 #include <stdlib.h>
 #include <libwebsockets.h>
 
+#ifndef BOOL
+#define BOOL
 typedef enum { false, true } bool;
-
+#endif
 //externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);
 
 
@@ -27,7 +29,7 @@ bool /*PORT_NAME*/_is_open;
 
 
 
-static int callback_ThingML_protocol(struct libwebsocket_context * this,
+static int /*PORT_NAME*/_callback_ThingML_protocol(struct libwebsocket_context * this,
                                    struct libwebsocket *wsi,
                                    enum libwebsocket_callback_reasons reason,
                                    void *user, void *in, size_t len)
@@ -37,6 +39,7 @@ static int callback_ThingML_protocol(struct libwebsocket_context * this,
         
 	case LWS_CALLBACK_CLIENT_ESTABLISHED:
 		/*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] LWS_CALLBACK_CLIENT_ESTABLISHED\n");
+		/*PORT_NAME*/_is_open = true;
 		/*CONNEXION_ESTABLISHED*/
 		break;
 
@@ -103,7 +106,7 @@ static int callback_ThingML_protocol(struct libwebsocket_context * this,
 static struct libwebsocket_protocols /*PORT_NAME*/_protocols[] = {
     {
         "ThingML-protocol", // protocol name - very important!
-        callback_ThingML_protocol,   // callback
+        /*PORT_NAME*/_callback_ThingML_protocol,   // callback
         0                          // we don't use any per session data
     },
     {
@@ -118,7 +121,7 @@ void /*PORT_NAME*/_set_listener_id(uint16_t id) {
 void /*PORT_NAME*/_setup() {
 	/*PORT_NAME*/_is_open = false;
 
-
+        lws_set_log_level(2,NULL);
     
     
 	/*PORT_NAME*/_info.port = CONTEXT_PORT_NO_LISTEN;
@@ -158,8 +161,7 @@ void /*PORT_NAME*/_start_receiver_process() {
 		ret = 1;
 	}
 
-	fprintf(stderr, "Waiting for connect...\n");
-    /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Starting server...\n");
+    /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Starting Listener...\n");
 	
     // infinite loop, to end this server send SIGTERM. (CTRL+C)
     while (1) {
