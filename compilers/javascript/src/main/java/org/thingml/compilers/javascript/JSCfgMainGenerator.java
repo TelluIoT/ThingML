@@ -229,25 +229,20 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         for(Instance i : cfg.allInstances()) {
             if (cfg.getServers(i).isEmpty()) {
                 instances.add(i);
-                System.out.println("adding " + i.getName() + " to instances");
             }
         }
 
         List<Instance> all = new ArrayList<Instance>();
         while (!instances.isEmpty()) {
-            System.out.println("instances : " + instances.size());
-            System.out.println("servers : " + all.size());
             for(Instance i : instances) {
                 if (!contains(all, i) && i.getType().allStateMachines().size() > 0) {
                         builder.append(i.getName() + "._init();\n");
                 }
-                System.out.println("adding " + i.getName() + " to all");
                 all.add(i);
             }
             instances.clear();
             for(Instance i : cfg.allInstances()) {
                 if (!contains(all, i) && (cfg.getServers(i).isEmpty() || containsAll(all, cfg.getServers(i)))) {
-                    System.out.println("adding " + i.getName() + " to instances");
                     instances.add(i);
                 }
             }
