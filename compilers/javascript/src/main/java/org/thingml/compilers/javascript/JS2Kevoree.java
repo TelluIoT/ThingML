@@ -179,17 +179,6 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
         builder.append("construct: function() {\n");
         JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
-        for (Instance i : cfg.allInstances()) {
-            for (Property p : i.getType().allPropertiesInDepth()) {
-                if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
-                    builder.append("this.dictionary.on('" + getVariableName(i, p, ctx) + "', function (oldValue, newValue) {");
-                    builder.append("if(" + i.getName() + "." + ctx.getVariableName(p) + " !== newValue) ");
-                    builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
-                    builder.append("});\n");
-                    builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', function(newValue) {if(this.dictionary.getValue('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== newValue) this.dictionary.setValue('" + i.getName() + "_" + ctx.getVariableName(p) + "', newValue);}.bind(this));\n");
-                }
-            }
-        }
         for (Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
             for (Port p : (List<Port>) e.getValue()) {
@@ -202,6 +191,25 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
 
         builder.append("start: function (done) {\n");
+        for (Instance i : cfg.allInstances()) {
+            for (Property p : i.getType().allPropertiesInDepth()) {
+                if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
+                    //Update ThingML properties when Kevoree properties are updated
+                    builder.append("this.dictionary.on('" + i.getName() + "_" + ctx.getVariableName(p) + "', function (oldValue, newValue) {");
+                    builder.append("if(" + i.getName() + "." + ctx.getVariableName(p) + " !== newValue) { ");
+                    builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
+                    builder.append("}});\n");
+
+                    //Update Kevoree properties when ThingML properties are updated
+                    builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', function(newValue) {");
+                    builder.append("if(this.dictionary.getValue('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== newValue) {\n");
+                    builder.append("var instance = this.getModelEntity();\n");
+                    builder.append("var attrVal = instance.dictionary.findValuesById('" + i.getName() + "_" + ctx.getVariableName(p) + "');\n");
+                    builder.append("attrVal.value = '' + newValue;\n");
+                    builder.append("}});\n");
+                }
+            }
+        }
         for (Instance i : cfg.danglingPorts().keySet()) {
             builder.append("this." + i.getName() + "._init();\n");
         }
