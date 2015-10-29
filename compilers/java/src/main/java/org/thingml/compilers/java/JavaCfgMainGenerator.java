@@ -20,6 +20,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -181,9 +182,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         generateInstances(cfg, ctx, builder);
 
         final boolean debug = cfg.isDefined("debug", "true");
-
-
-        builder.append("//Starting Things\n");
+        builder.append("//Init instances (queues, etc)\n");
         for (Instance i : cfg.allInstances()) {
             if (debug || i.isDefined("debug", "true")) {
                 builder.append(ctx.getInstanceName(i) + ".setDebug(true);\n");
@@ -193,16 +192,66 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                 builder.append("System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|cyan INIT: \" + " + ctx.getInstanceName(i) + " + \"|@\"));\n");
             }
         }
+
+        builder.append("//Starting instances following client/server dependencies (servers first)\n");
+        List<Instance> instances = new ArrayList<Instance>();
+        for(Instance i : cfg.allInstances()) {
+            if (cfg.getServers(i).isEmpty()) {
+                instances.add(i);
+            }
+        }
+        List<Instance> all = new ArrayList<Instance>();
+        while (!instances.isEmpty()) {
+            for(Instance i : instances) {
+                if (!ctx.containsInstance(all, i)) {
+                    builder.append(ctx.getInstanceName(i) + ".start();\n");
+                }
+                all.add(i);
+            }
+            instances.clear();
+            for(Instance i : cfg.allInstances()) {
+                if (!ctx.containsInstance(all, i) && (cfg.getServers(i).isEmpty() || ctx.containsAllInstances(all, cfg.getServers(i)))) {
+                    instances.add(i);
+                }
+            }
+        }
+        builder.append("//Instances whose init order could not be determined...\n");
         for (Instance i : cfg.allInstances()) {
-            builder.append(ctx.getInstanceName(i) + ".start();\n");
+            if (!ctx.containsInstance(all, i)) {
+                builder.append(ctx.getInstanceName(i) + ".start();\n");
+            }
         }
 
-
+        builder.append("//Hook to stop instances following client/server dependencies (clients firsts)\n");
         builder.append("Runtime.getRuntime().addShutdownHook(new Thread() {\n");
         builder.append("public void run() {\n");
-        builder.append("System.out.println(\"Terminating ThingML app...\");");
+        builder.append("System.out.println(\"Terminating ThingML app...\");\n");
+        List<Instance> instancesToStop = new ArrayList<Instance>();
+        for(Instance i : cfg.allInstances()) {
+            if (cfg.getClients(i).isEmpty()) {
+                instancesToStop.add(i);
+            }
+        }
+        List<Instance> all2 = new ArrayList<Instance>();
+        while (!instancesToStop.isEmpty()) {
+            for(Instance i : instancesToStop) {
+                if (!ctx.containsInstance(all2, i)) {
+                    builder.append(ctx.getInstanceName(i) + ".stop();\n");
+                }
+                all2.add(i);
+            }
+            instancesToStop.clear();
+            for(Instance i : cfg.allInstances()) {
+                if (!ctx.containsInstance(all2, i) && (cfg.getClients(i).isEmpty() || ctx.containsAllInstances(all2, cfg.getClients(i)))) {
+                    instancesToStop.add(i);
+                }
+            }
+        }
+        builder.append("//Instances whose init order could not be determined (because of a cycle)...\n");
         for (Instance i : cfg.allInstances()) {
-            builder.append(ctx.getInstanceName(i) + ".stop();\n");
+            if (!ctx.containsInstance(all2, i)) {
+                builder.append(ctx.getInstanceName(i) + ".stop();\n");
+            }
         }
         builder.append("System.out.println(\"ThingML app terminated. RIP!\");");
         builder.append("}\n");

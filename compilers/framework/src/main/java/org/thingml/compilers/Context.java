@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Connector;
 import org.sintef.thingml.Instance;
@@ -23,16 +24,30 @@ import org.sintef.thingml.Variable;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Context {
 
     private ThingMLCompiler compiler;
     private Configuration currentConfiguration;
 
+
+    //Some Helpers to overcome bug in EMF related to broken equals
+    public boolean containsInstance(List<Instance> list, Instance element) {
+        for(Instance e : list) {
+            if (EcoreUtil.equals(e, element))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean containsAllInstances(List<Instance> thisList, List<Instance> thatList) {
+        for(Instance e : thatList) {
+            if (!containsInstance(thisList, e))
+                return false;
+        }
+        return true;
+    }
 
     public Context(ThingMLCompiler compiler) {
         this.compiler = compiler;

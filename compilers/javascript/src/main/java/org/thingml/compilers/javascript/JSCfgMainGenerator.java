@@ -15,7 +15,6 @@
  */
 package org.thingml.compilers.javascript;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgMainGenerator;
@@ -172,23 +171,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             return ref;
     }
 
-    //TODO: Move in a place where this can be used by other compilers (contains and containsAll on EObjects does not work (equal is broker in EMF!!!)
-    private boolean contains(List<Instance> list, Instance element) {
-        for(Instance e : list) {
-            if (EcoreUtil.equals(e, element))
-                return true;
-        }
-        return false;
-    }
-
-    private boolean containsAll(List<Instance> thisList, List<Instance> thatList) {
-        for(Instance e : thatList) {
-            if (!contains(thisList, e))
-                return false;
-        }
-        return true;
-    }
-
     @Override
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/main.js");
@@ -221,9 +203,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
         generateInstances(cfg, builder, ctx, false);
 
-
-
-
         builder.append("//Starting instances following client/server dependencies...\n");
         List<Instance> instances = new ArrayList<Instance>();
         for(Instance i : cfg.allInstances()) {
@@ -231,26 +210,24 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 instances.add(i);
             }
         }
-
         List<Instance> all = new ArrayList<Instance>();
         while (!instances.isEmpty()) {
             for(Instance i : instances) {
-                if (!contains(all, i) && i.getType().allStateMachines().size() > 0) {
+                if (!ctx.containsInstance(all, i) && i.getType().allStateMachines().size() > 0) {
                         builder.append(i.getName() + "._init();\n");
                 }
                 all.add(i);
             }
             instances.clear();
             for(Instance i : cfg.allInstances()) {
-                if (!contains(all, i) && (cfg.getServers(i).isEmpty() || containsAll(all, cfg.getServers(i)))) {
+                if (!ctx.containsInstance(all, i) && (cfg.getServers(i).isEmpty() || ctx.containsAllInstances(all, cfg.getServers(i)))) {
                     instances.add(i);
                 }
             }
         }
-
         builder.append("//Instances whose init order could not be determined...\n");
         for (Instance i : cfg.allInstances()) {
-            if (!contains(all, i) && i.getType().allStateMachines().size() > 0) {
+            if (!ctx.containsInstance(all, i) && i.getType().allStateMachines().size() > 0) {
                 builder.append(i.getName() + "._init();\n");
             }
         }
@@ -258,8 +235,30 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         builder.append("//terminate all things on SIGINT (e.g. CTRL+C)\n");
         builder.append("process.on('SIGINT', function() {\n");
         builder.append("console.log(\"Stopping components... CTRL+D to force shutdown\");\n");
+        List<Instance> instancesToStop = new ArrayList<Instance>();
+        for(Instance i : cfg.allInstances()) {
+            if (cfg.getClients(i).isEmpty() && i.getType().allStateMachines().size() > 0) {
+                instancesToStop.add(i);
+            }
+        }
+        List<Instance> all2 = new ArrayList<Instance>();
+        while (!instancesToStop.isEmpty()) {
+            for(Instance i : instancesToStop) {
+                if (!ctx.containsInstance(all2, i)) {
+                    builder.append(i.getName() + "._stop();\n");
+                }
+                all2.add(i);
+            }
+            instancesToStop.clear();
+            for(Instance i : cfg.allInstances()) {
+                if (!ctx.containsInstance(all2, i) && (cfg.getClients(i).isEmpty() || ctx.containsAllInstances(all2, cfg.getClients(i)))) {
+                    instancesToStop.add(i);
+                }
+            }
+        }
+        builder.append("//Instances whose init order could not be determined (because of a cycle)...\n");
         for (Instance i : cfg.allInstances()) {
-            if (i.getType().allStateMachines().size() > 0) {
+            if (!ctx.containsInstance(all2, i) && i.getType().allStateMachines().size() > 0) {
                 builder.append(i.getName() + "._stop();\n");
             }
         }
