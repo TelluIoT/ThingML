@@ -44,7 +44,7 @@ public class CCompilerContextArduino extends CCompilerContext {
 
         ArrayList<String> headers = new ArrayList<String>();
         ArrayList<String> modules = new ArrayList<String>();
-        String main = getCurrentConfiguration().getName() + ".c";
+        String main = getCurrentConfiguration().getName() + "_cfg.c";
 
         for (String filename : generatedCode.keySet()) {
             if (filename.endsWith(".h")) headers.add(filename);
