@@ -254,22 +254,22 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 		switch (featureID) {
 			case ThingmlPackage.CONFIGURATION__INSTANCES:
 				getInstances().clear();
-				getInstances().addAll((Collection<? extends Instance>)newValue);
+				getInstances().addAll((Collection<? extends Instance>) newValue);
 				return;
 			case ThingmlPackage.CONFIGURATION__CONNECTORS:
 				getConnectors().clear();
-				getConnectors().addAll((Collection<? extends AbstractConnector>)newValue);
+				getConnectors().addAll((Collection<? extends AbstractConnector>) newValue);
 				return;
 			case ThingmlPackage.CONFIGURATION__FRAGMENT:
 				setFragment((Boolean)newValue);
 				return;
 			case ThingmlPackage.CONFIGURATION__CONFIGS:
 				getConfigs().clear();
-				getConfigs().addAll((Collection<? extends ConfigInclude>)newValue);
+				getConfigs().addAll((Collection<? extends ConfigInclude>) newValue);
 				return;
 			case ThingmlPackage.CONFIGURATION__PROPASSIGNS:
 				getPropassigns().clear();
-				getPropassigns().addAll((Collection<? extends ConfigPropertyAssign>)newValue);
+				getPropassigns().addAll((Collection<? extends ConfigPropertyAssign>) newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -837,7 +837,35 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
     	
     	return result;
     }
-    
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    public List<Instance> getClients(Instance i) {
+        List<Instance> result = new ArrayList<Instance>();
+        for(Connector c : this.allConnectors()) {
+            if (EcoreUtil.equals(c.getSrv().getInstance(), i)) {
+                result.add(c.getCli().getInstance());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    public List<Instance> getServers(Instance i) {
+        List<Instance> result = new ArrayList<Instance>();
+        for(Connector c : this.allConnectors()) {
+            if (EcoreUtil.equals(c.getCli().getInstance(), i)) {
+                result.add(c.getSrv().getInstance());
+            }
+        }
+        return result;
+    }
+
     /**
      * @generated NOT
      * @return

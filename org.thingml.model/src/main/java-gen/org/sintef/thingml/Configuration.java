@@ -249,4 +249,18 @@ public interface Configuration extends AnnotatedElement {
      */
     List<ExternalConnector> getExternalConnectors();
 
+    /**
+     * Returns all thing instances ("clients") that dependents on instance i
+     * @generated NOT
+     * @return
+     */
+    List<Instance> getClients(Instance i);
+
+    /**
+     * Returns all thing instances i dependents on ("servers")
+     * @generated NOT
+     * @return
+     */
+    List<Instance> getServers(Instance i);
+
 } // Configuration
