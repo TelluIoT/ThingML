@@ -369,7 +369,10 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         // Add handler for empty transitions if needed
         if (sm.hasEmptyHandlers()) {
-            builder.append("void " + ctx.getEmptyHandlerName(thing));
+            
+            //New Empty Event Method
+            builder.append("int " + ctx.getEmptyHandlerName(thing));
+            //builder.append("void " + ctx.getEmptyHandlerName(thing));
             ctx.appendFormalParametersEmptyHandler(thing, builder);
             builder.append(" {\n");
 
@@ -380,6 +383,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 // it can only be an internal handler so the last param can be null (in theory)
                 generateEmptyHandlers(thing, sm, builder, null, sm, ctx);
             }
+            //New Empty Event Method
+            builder.append("return 0;\n");
+            
             builder.append("}\n");
         }
     }
@@ -421,6 +427,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + ctx.getStateID(et.getTarget()) + ", " + ctx.getInstanceVarName() + ");\n");
 
                 ctx.getCompiler().getThingActionCompiler().generate(et.getAfter(), builder, ctx);
+                
+                //New Empty Event Method
+                builder.append("return 1;\n");
             }
 
             builder.append("}\n");
