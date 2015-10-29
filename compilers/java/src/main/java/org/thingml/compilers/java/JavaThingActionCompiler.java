@@ -22,6 +22,8 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -30,12 +32,16 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
-        builder.append(JavaHelper.getJavaType(action.getProperty().getType(), false, ctx) + " debug_" + action.getProperty().qname("_") + "_var = " + action.getProperty().qname("_") + "_var;\n");
+        if ((action.getProperty().eContainer() instanceof Thing) && action.getProperty().getCardinality() == null) {//FIXME: support debugging of arrays (needs to copy array)
+            builder.append("debug_" + ctx.getVariableName(action.getProperty()) + " = " + ctx.getVariableName(action.getProperty()) + ";\n");
+        }
     }
 
     @Override
     public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
-        builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|magenta \" + getName() + \": property " + action.getProperty().getName() + " changed from \" + debug_" + action.getProperty().qname("_") + "_var" + " + \" to \" + " + action.getProperty().qname("_") + "_var" + " + \"|@\"));\n");
+        if ((action.getProperty().eContainer() instanceof Thing) && action.getProperty().getCardinality() == null) {//FIXME: see above
+            builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|magenta \" + getName() + \": property " + action.getProperty().getName() + " changed from \" + debug_" + ctx.getVariableName(action.getProperty()) + " + \" to \" + " + ctx.getVariableName(action.getProperty()) + " + \"|@\"));\n");
+        }
     }
 
     @Override

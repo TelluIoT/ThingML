@@ -36,7 +36,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         if (action.getProperty().eContainer() instanceof Thing) {//we can only listen to properties of a Thing, not all local variables, etc
             builder.append("//notify listeners of that attribute\n");
             builder.append("if (_this.propertyListener['" + action.getProperty().getName() + "'] !== undefined) {\n");
-            builder.append("const " + action.getProperty().getName() + "ListenersSize = _this.propertyListener['" + action.getProperty().getName() + "'].length;\n");
+            builder.append(action.getProperty().getName() + "ListenersSize = _this.propertyListener['" + action.getProperty().getName() + "'].length;\n");
             builder.append("for (var _i = 0; _i < " + action.getProperty().getName() + "ListenersSize; _i++) {\n");
             builder.append("_this.propertyListener['" + action.getProperty().getName() + "'][_i](_this." + ctx.getVariableName(action.getProperty()) + ");\n");
             builder.append("}\n}\n");

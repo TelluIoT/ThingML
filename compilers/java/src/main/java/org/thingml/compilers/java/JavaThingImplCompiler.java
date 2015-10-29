@@ -107,9 +107,9 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         return hasAPI;
     }
 
-    protected void generateFunction(Function f, StringBuilder builder, Context ctx) {
+    protected void generateFunction(Function f, Thing thing, StringBuilder builder, Context ctx) {
         if (!f.isDefined("abstract", "true")) {
-            DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(f.findContainingThing());
+            DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
             if (f.hasAnnotation("override") || f.hasAnnotation("implements")) {
                 builder.append("@Override\npublic ");
             } else {
@@ -119,7 +119,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(returnType + " " + f.getName() + "(");
             JavaHelper.generateParameter(f, builder, ctx);
             builder.append(") {\n");
-            if(debugProfile.getDebugFunctions().contains(f)) {
+            if(!(debugProfile==null) && debugProfile.getDebugFunctions().contains(f)) {
                 builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|blue \" + getName() + \": executing function " + f.getName() + "(");
                 int i = 0;
                 for (Parameter pa : f.getParameters()) {
@@ -325,6 +325,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p) + ";\n");
         }
 
+        for(Property p : thing.allPropertiesInDepth()/*debugProfile.getDebugProperties()*/) {//FIXME: we should only generate overhead for the properties we actually want to debug!
+            builder.append("private ");
+            builder.append(JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " debug_" + ctx.getVariableName(p) + ";\n");
+        }
+
         builder.append("//Ports\n");
         for (Port p : thing.allPorts()) {
             builder.append("private Port " + p.getName() + "_port;\n");
@@ -443,7 +448,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         for (Function f : thing.allFunctions()) {
-            generateFunction(f, builder, ctx);
+            generateFunction(f, thing, builder, ctx);
         }
 
         for(Operator op : thing.allOperators()) {
