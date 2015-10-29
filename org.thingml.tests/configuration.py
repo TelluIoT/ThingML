@@ -31,5 +31,5 @@ testLanguages.append("Linux")
 useBlacklist = True
 
 blacklist=["testMixStreamsAndEventTest", "testLengthSimpleSourceTest",  "testStreamsTest", "testSimpleFilterTest", "testJoinFilterTest", "testDeepCompositeStatesWithStreamTest", "testHistoryStatesWithStreamTest", "testMergeStreamsTest", "testMergeFilterTest"]
-whitelist=["testEmptyTransition", "testEmptyTransition2", "testEmptyTransition3"]
+whitelist=["testDisymetricalConnector"]
 
