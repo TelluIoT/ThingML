@@ -2387,18 +2387,26 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
         
 
+            
+        //New Empty Event Handler
+        builder.append("int emptyEventConsumed = 1;\n");
+        builder.append("while (emptyEventConsumed != 0) {\n");
+        builder.append("emptyEventConsumed = 0;\n");
+        
         // Call empty transition handler (if needed)
         for (Instance i : cfg.allInstances()) {
 
             if (i.getType().allStateMachines().size() > 0) { // There has to be only 1
                 StateMachine sm = i.getType().allStateMachines().get(0);
                 if (sm.hasEmptyHandlers()) {
+                    builder.append("emptyEventConsumed += ");
                     builder.append(ctx.getEmptyHandlerName(i.getType()) + "(&" + ctx.getInstanceVarName(i) + ");\n");
                 }
             }
 
 
         }
+        builder.append("}\n");
 
     }
 
