@@ -28,8 +28,8 @@ testLanguages.append("Linux")
 #Functional tests options
 #If useBlacklist is True, runs all tests not present in blacklist
 #If useBlacklist is False, runs all tests present in whitelist
-useBlacklist = True
+useBlacklist = False
 
 blacklist=["testMixStreamsAndEventTest", "testLengthSimpleSourceTest",  "testStreamsTest", "testSimpleFilterTest", "testJoinFilterTest", "testDeepCompositeStatesWithStreamTest", "testHistoryStatesWithStreamTest", "testMergeStreamsTest", "testMergeFilterTest"]
-whitelist=["testDisymetricalConnector"]
+whitelist=["testSerialization"]
 
