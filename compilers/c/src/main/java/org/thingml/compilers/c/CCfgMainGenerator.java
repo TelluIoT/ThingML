@@ -847,8 +847,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("/*****************************************************************************\n");
         builder.append(" * Definitions for configuration : " + cfg.getName() + "\n");
         builder.append(" *****************************************************************************/\n\n");
-
-        int nbMaxConnexion = cfg.allConnectors().size()*2 + cfg.getExternalConnectors().size();
+        
+        int nbInternalPort = 0;
+        for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+            nbInternalPort += entries.getValue().size();
+        }
+        
+        
+        int nbMaxConnexion = cfg.allConnectors().size()*2 + cfg.getExternalConnectors().size() + nbInternalPort;
         if(cfg.hasAnnotation("c_dyn_connectors")) {
             nbMaxConnexion = Integer.parseInt(cfg.annotation("c_dyn_connectors").iterator().next());
         }
@@ -939,6 +945,26 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                 ctx.setConcreteThing(t);
                 Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
+                
+                //Ugly
+                for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+                    if(entries.getKey().getType().getName().compareTo(t.getName()) == 0) {
+                        for(Port ip : entries.getValue()) {
+                            if(ip.getName().compareTo(p.getName()) == 0) {
+                                for(Message m: ip.getSends()) {
+                                    if(allMessageDispatch.keySet().contains(m)) {
+                                        
+                                    } else {
+                                        allMessageDispatch.put(m, null);
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                
                 for (Message m : allMessageDispatch.keySet()) {
                     builder.append("// Enqueue of messages " + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
                     builder.append("void enqueue_" + ctx.getSenderName(t, p, m));
@@ -1919,6 +1945,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         
         for (Thing t : cfg.allThings()) {
             for (Port port : t.allPorts()) {
+                
                 for (Message msg : port.getSends()) {
                     ctx.setConcreteThing(t);
 
@@ -1939,6 +1966,21 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                             break;
                         }
                     }
+                    
+                    for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+                        if (entries.getKey().getType().getName().compareTo(t.getName()) == 0) {
+                            //System.out.println("inst " + inst.getName() + " found");
+                            for(Port ip : entries.getValue()) {
+                                if (ip.getName().compareTo(port.getName()) == 0) {
+                                    if(port.getSends().contains(msg)) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
                     if (found) {
                         builder.append("register_" + ctx.getSenderName(t, port, msg) + "_listener(");
 
@@ -2038,6 +2080,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append(ctx.getTraceFunctionForString(cfg) + "\"Initialization of " + inst.getName() + "\\n\");\n");
         }
         
+        
+        
         // Register the instance and set its ID and its port ID
         //builder.append(ctx.getInstanceVarName(inst) + ".id = ");
         //builder.append("add_instance( (void*) &" + ctx.getInstanceVarName(inst) + ");\n");
@@ -2119,7 +2163,23 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     nbConnectorSoFar++;
                 }
             }
-                
+            
+            //Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet();
+            for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+                if (entries.getKey().getName().compareTo(inst.getName()) == 0) {
+                    //System.out.println("inst " + inst.getName() + " found");
+                    for(Port ip : entries.getValue()) {
+                        if (ip.getName().compareTo(p.getName()) == 0) {
+                            //System.out.println("port " + p.getName() + " found");
+                            builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
+                            builder.append(inst.getName()
+                                    + "_" + p.getName() + "_handlers;\n");
+                            nbConnectorSoFar++;
+                        }
+                    }
+                }
+            }
+            
             if(head != nbConnectorSoFar) {
                 builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_head = &");
                 builder.append(cfg.getName() + "_receivers[" + head + "];\n");

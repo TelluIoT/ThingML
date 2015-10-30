@@ -391,7 +391,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     public void generateEmptyHandlers(Thing thing, State s, StringBuilder builder, CompositeState cs, Region r, CCompilerContext ctx) {
-        
         boolean first = true;
         
         // Gather all the empty transitions
