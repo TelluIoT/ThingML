@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.java;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgMainGenerator;
@@ -112,6 +113,22 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                     }
                 }
                 builder.append(").buildBehavior();\n");
+            }
+        }
+
+        builder.append("//Connecting internal ports...\n");
+        for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+            Instance i = entries.getKey();
+            for(InternalPort p : entries.getValue()) {
+                for(Message rec : p.getReceives())  {
+                    for(Message send : p.getSends()) {
+                        if(EcoreUtil.equals(rec, send)) {
+                            builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port().addListener(");
+                            builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
+                            break;
+                        }
+                    }
+                }
             }
         }
 
