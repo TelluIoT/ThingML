@@ -64,6 +64,7 @@ import org.sintef.thingml.Handler;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.InstanceRef;
 import org.sintef.thingml.IntegerLiteral;
+import org.sintef.thingml.InternalPort;
 import org.sintef.thingml.InternalTransition;
 import org.sintef.thingml.JoinSources;
 import org.sintef.thingml.LengthArray;
@@ -389,6 +390,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass providedPortEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass internalPortEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1816,6 +1824,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getInternalPort() {
+		return internalPortEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getLiteral() {
 		return literalEClass;
 	}
@@ -3207,6 +3224,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		providedPortEClass = createEClass(PROVIDED_PORT);
 
+		internalPortEClass = createEClass(INTERNAL_PORT);
+
 		literalEClass = createEClass(LITERAL);
 
 		enumLiteralRefEClass = createEClass(ENUM_LITERAL_REF);
@@ -3477,6 +3496,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		portEClass.getESuperTypes().add(this.getAnnotatedElement());
 		requiredPortEClass.getESuperTypes().add(this.getPort());
 		providedPortEClass.getESuperTypes().add(this.getPort());
+		internalPortEClass.getESuperTypes().add(this.getPort());
 		literalEClass.getESuperTypes().add(this.getExpression());
 		enumLiteralRefEClass.getESuperTypes().add(this.getLiteral());
 		integerLiteralEClass.getESuperTypes().add(this.getLiteral());
@@ -3679,6 +3699,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEAttribute(getRequiredPort_Optional(), ecorePackage.getEBoolean(), "optional", null, 0, 1, RequiredPort.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(providedPortEClass, ProvidedPort.class, "ProvidedPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(internalPortEClass, InternalPort.class, "InternalPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(literalEClass, Literal.class, "Literal", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

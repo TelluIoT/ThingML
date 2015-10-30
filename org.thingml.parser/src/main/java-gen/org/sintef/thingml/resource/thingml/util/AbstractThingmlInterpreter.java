@@ -277,6 +277,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
+		if (object instanceof org.sintef.thingml.InternalPort) {
+			result = interprete_org_sintef_thingml_InternalPort((org.sintef.thingml.InternalPort) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		if (object instanceof org.sintef.thingml.Port) {
 			result = interprete_org_sintef_thingml_Port((org.sintef.thingml.Port) object, context);
 		}
@@ -829,6 +835,10 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	}
 	
 	public ResultType interprete_org_sintef_thingml_ProvidedPort(org.sintef.thingml.ProvidedPort providedPort, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_InternalPort(org.sintef.thingml.InternalPort internalPort, ContextType context) {
 		return null;
 	}
 	

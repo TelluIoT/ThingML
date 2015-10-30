@@ -254,22 +254,22 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 		switch (featureID) {
 			case ThingmlPackage.CONFIGURATION__INSTANCES:
 				getInstances().clear();
-				getInstances().addAll((Collection<? extends Instance>) newValue);
+				getInstances().addAll((Collection<? extends Instance>)newValue);
 				return;
 			case ThingmlPackage.CONFIGURATION__CONNECTORS:
 				getConnectors().clear();
-				getConnectors().addAll((Collection<? extends AbstractConnector>) newValue);
+				getConnectors().addAll((Collection<? extends AbstractConnector>)newValue);
 				return;
 			case ThingmlPackage.CONFIGURATION__FRAGMENT:
 				setFragment((Boolean)newValue);
 				return;
 			case ThingmlPackage.CONFIGURATION__CONFIGS:
 				getConfigs().clear();
-				getConfigs().addAll((Collection<? extends ConfigInclude>) newValue);
+				getConfigs().addAll((Collection<? extends ConfigInclude>)newValue);
 				return;
 			case ThingmlPackage.CONFIGURATION__PROPASSIGNS:
 				getPropassigns().clear();
-				getPropassigns().addAll((Collection<? extends ConfigPropertyAssign>) newValue);
+				getPropassigns().addAll((Collection<? extends ConfigPropertyAssign>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -887,6 +887,29 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
                 }
             }
             result.put(i, ports);
+        }
+        return result;
+    }
+
+
+    /**
+     * Returns all internal ports, for all instances
+     * @generated NOT
+     * @return
+     */
+    public Map<Instance, List<InternalPort>> allInternalPorts() {
+        Map<Instance, List<InternalPort>> result = new HashMap<Instance, List<InternalPort>>();
+        for(Instance i : allInstances()) {
+            List<InternalPort> iports = new ArrayList<InternalPort>();
+            for(Port p : i.getType().allPorts()) {
+                if (p instanceof InternalPort) {
+                    InternalPort iport = (InternalPort) p;
+                    iports.add(iport);
+                }
+            }
+            if(!iports.isEmpty()) {
+                result.put(i, iports);
+            }
         }
         return result;
     }

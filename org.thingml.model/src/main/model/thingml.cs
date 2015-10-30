@@ -185,6 +185,8 @@ RULES {
 
 	ProvidedPort ::= !1  "provided" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 	
+	InternalPort ::= !1  "internal" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
+	
 	Property::= !1 (changeable[T_READONLY])? "property" #1 name[] #1 ":" #1 type[]  ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? (#1 "=" #1 init)?  (annotations)*;
 	
 	//("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?

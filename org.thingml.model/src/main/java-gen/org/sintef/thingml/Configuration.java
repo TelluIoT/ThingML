@@ -17,11 +17,7 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <!-- begin-user-doc -->
@@ -262,5 +258,12 @@ public interface Configuration extends AnnotatedElement {
      * @return
      */
     List<Instance> getServers(Instance i);
+
+    /**
+     * Returns all internal ports, for all instances
+     * @generated NOT
+     * @return
+     */
+    Map<Instance, List<InternalPort>> allInternalPorts();
 
 } // Configuration

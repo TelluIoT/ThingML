@@ -156,7 +156,6 @@ public abstract class ThingmlANTLRParserBase extends org.antlr.runtime3_4_0.Pars
 	
 	protected <ContainerType extends org.eclipse.emf.ecore.EObject, ReferenceType extends org.eclipse.emf.ecore.EObject> void registerContextDependentProxy(final org.sintef.thingml.resource.thingml.mopp.ThingmlContextDependentURIFragmentFactory<ContainerType, ReferenceType> factory, final ContainerType container, final org.eclipse.emf.ecore.EReference reference, final String id, final org.eclipse.emf.ecore.EObject proxy) {
 		final int position;
-		System.out.println("DEBUG2: \n\t" + reference + "\n\t" + proxy);
 		if (reference.isMany()) {
 			position = ((java.util.List<?>) container.eGet(reference)).size();
 		} else {

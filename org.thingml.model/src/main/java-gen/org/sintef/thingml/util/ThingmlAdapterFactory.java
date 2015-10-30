@@ -225,6 +225,10 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createProvidedPortAdapter();
 			}
 			@Override
+			public Adapter caseInternalPort(InternalPort object) {
+				return createInternalPortAdapter();
+			}
+			@Override
 			public Adapter caseLiteral(Literal object) {
 				return createLiteralAdapter();
 			}
@@ -1013,6 +1017,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createProvidedPortAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.InternalPort <em>Internal Port</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.InternalPort
+	 * @generated
+	 */
+	public Adapter createInternalPortAdapter() {
 		return null;
 	}
 

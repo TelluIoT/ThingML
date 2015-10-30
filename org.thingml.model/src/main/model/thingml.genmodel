@@ -130,6 +130,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//RequiredPort/optional"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//ProvidedPort"/>
+    <genClasses ecoreClass="thingml.ecore#//InternalPort"/>
     <genClasses image="false" ecoreClass="thingml.ecore#//Literal"/>
     <genClasses ecoreClass="thingml.ecore#//EnumLiteralRef">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//EnumLiteralRef/enum"/>

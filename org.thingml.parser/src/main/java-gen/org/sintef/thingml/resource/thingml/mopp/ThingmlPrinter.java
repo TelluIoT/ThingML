@@ -85,6 +85,10 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 			print_org_sintef_thingml_ProvidedPort((org.sintef.thingml.ProvidedPort) element, globaltab, out);
 			return;
 		}
+		if (element instanceof org.sintef.thingml.InternalPort) {
+			print_org_sintef_thingml_InternalPort((org.sintef.thingml.InternalPort) element, globaltab, out);
+			return;
+		}
 		if (element instanceof org.sintef.thingml.Property) {
 			print_org_sintef_thingml_Property((org.sintef.thingml.Property) element, globaltab, out);
 			return;
@@ -2024,6 +2028,279 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
 				resolver.setOptions(getOptions());
 				out.print(resolver.deResolve(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getPortSendsReferenceResolver().deResolve((org.sintef.thingml.Message) o, element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROVIDED_PORT__SENDS)), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.PROVIDED_PORT__SENDS), element));
+			}
+			printCountingMap.put("sends", count - 1);
+		}
+	}
+	
+	
+	public void print_org_sintef_thingml_InternalPort(org.sintef.thingml.InternalPort element, String outertab, java.io.PrintWriter out) {
+		String localtab = outertab;
+		// The printCountingMap contains a mapping from feature names to the number of
+		// remaining elements that still need to be printed. The map is initialized with
+		// the number of elements stored in each structural feature. For lists this is the
+		// list size. For non-multiple features it is either 1 (if the feature is set) or
+		// 0 (if the feature is null).
+		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(5);
+		Object temp;
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__NAME));
+		printCountingMap.put("name", temp == null ? 0 : 1);
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__ANNOTATIONS));
+		printCountingMap.put("annotations", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__OWNER));
+		printCountingMap.put("owner", temp == null ? 0 : 1);
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__RECEIVES));
+		printCountingMap.put("receives", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__SENDS));
+		printCountingMap.put("sends", temp == null ? 0 : ((java.util.Collection<?>) temp).size());
+		// print collected hidden tokens
+		int count;
+		boolean iterate = true;
+		java.io.StringWriter sWriter = null;
+		java.io.PrintWriter out1 = null;
+		java.util.Map<String, Integer> printCountingMap1 = null;
+		// DEFINITION PART BEGINS (LineBreak)
+		localtab += "	";
+		out.println();
+		out.print(localtab);
+		// DEFINITION PART BEGINS (CsString)
+		out.print("internal");
+		// DEFINITION PART BEGINS (WhiteSpaces)
+		out.print(" ");
+		// DEFINITION PART BEGINS (CsString)
+		out.print("port");
+		// DEFINITION PART BEGINS (WhiteSpaces)
+		out.print(" ");
+		// DEFINITION PART BEGINS (PlaceholderUsingDefaultToken)
+		count = printCountingMap.get("name");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__NAME));
+			if (o != null) {
+				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
+				resolver.setOptions(getOptions());
+				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__NAME), element));
+			}
+			printCountingMap.put("name", count - 1);
+		}
+		// DEFINITION PART BEGINS (CompoundDefinition)
+		iterate = true;
+		while (iterate) {
+			sWriter = new java.io.StringWriter();
+			out1 = new java.io.PrintWriter(sWriter);
+			printCountingMap1 = new java.util.LinkedHashMap<String, Integer>(printCountingMap);
+			print_org_sintef_thingml_InternalPort_0(element, localtab, out1, printCountingMap1);
+			if (printCountingMap.equals(printCountingMap1)) {
+				iterate = false;
+				out1.close();
+			} else {
+				out1.flush();
+				out1.close();
+				out.print(sWriter.toString());
+				printCountingMap.putAll(printCountingMap1);
+			}
+		}
+		// DEFINITION PART BEGINS (LineBreak)
+		out.println();
+		out.print(localtab);
+		// DEFINITION PART BEGINS (CsString)
+		out.print("{");
+		// DEFINITION PART BEGINS (CompoundDefinition)
+		iterate = true;
+		while (iterate) {
+			sWriter = new java.io.StringWriter();
+			out1 = new java.io.PrintWriter(sWriter);
+			printCountingMap1 = new java.util.LinkedHashMap<String, Integer>(printCountingMap);
+			print_org_sintef_thingml_InternalPort_1(element, localtab, out1, printCountingMap1);
+			if (printCountingMap.equals(printCountingMap1)) {
+				iterate = false;
+				out1.close();
+			} else {
+				out1.flush();
+				out1.close();
+				out.print(sWriter.toString());
+				printCountingMap.putAll(printCountingMap1);
+			}
+		}
+		// DEFINITION PART BEGINS (LineBreak)
+		out.println();
+		out.print(localtab);
+		// DEFINITION PART BEGINS (CsString)
+		out.print("}");
+	}
+	
+	public void print_org_sintef_thingml_InternalPort_0(org.sintef.thingml.InternalPort element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
+		String localtab = outertab;
+		int count;
+		// DEFINITION PART BEGINS (Containment)
+		count = printCountingMap.get("annotations");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__ANNOTATIONS));
+			java.util.List<?> list = (java.util.List<?>) o;
+			int index = list.size() - count;
+			if (index >= 0) {
+				o = list.get(index);
+			} else {
+				o = null;
+			}
+			if (o != null) {
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
+			}
+			printCountingMap.put("annotations", count - 1);
+		}
+	}
+	
+	public void print_org_sintef_thingml_InternalPort_1(org.sintef.thingml.InternalPort element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
+		String localtab = outertab;
+		int count;
+		int alt = -1;
+		alt = 0;
+		int matches = 		matchCount(printCountingMap, java.util.Arrays.asList(		"receives"		));
+		int tempMatchCount;
+		tempMatchCount = 		matchCount(printCountingMap, java.util.Arrays.asList(		"sends"		));
+		if (tempMatchCount > matches) {
+			alt = 1;
+			matches = tempMatchCount;
+		}
+		switch(alt) {
+			case 1:			{
+				boolean iterate = true;
+				java.io.StringWriter sWriter = null;
+				java.io.PrintWriter out1 = null;
+				java.util.Map<String, Integer> printCountingMap1 = null;
+				// DEFINITION PART BEGINS (CsString)
+				out.print("sends");
+				// DEFINITION PART BEGINS (WhiteSpaces)
+				out.print(" ");
+				// DEFINITION PART BEGINS (PlaceholderUsingDefaultToken)
+				count = printCountingMap.get("sends");
+				if (count > 0) {
+					Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__SENDS));
+					java.util.List<?> list = (java.util.List<?>) o;
+					int index = list.size() - count;
+					if (index >= 0) {
+						o = list.get(index);
+					} else {
+						o = null;
+					}
+					if (o != null) {
+						org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
+						resolver.setOptions(getOptions());
+						out.print(resolver.deResolve(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getPortSendsReferenceResolver().deResolve((org.sintef.thingml.Message) o, element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__SENDS)), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__SENDS), element));
+					}
+					printCountingMap.put("sends", count - 1);
+				}
+				// DEFINITION PART BEGINS (CompoundDefinition)
+				iterate = true;
+				while (iterate) {
+					sWriter = new java.io.StringWriter();
+					out1 = new java.io.PrintWriter(sWriter);
+					printCountingMap1 = new java.util.LinkedHashMap<String, Integer>(printCountingMap);
+					print_org_sintef_thingml_InternalPort_1_1(element, localtab, out1, printCountingMap1);
+					if (printCountingMap.equals(printCountingMap1)) {
+						iterate = false;
+						out1.close();
+					} else {
+						out1.flush();
+						out1.close();
+						out.print(sWriter.toString());
+						printCountingMap.putAll(printCountingMap1);
+					}
+				}
+			}
+			break;
+			default:			boolean iterate = true;
+			java.io.StringWriter sWriter = null;
+			java.io.PrintWriter out1 = null;
+			java.util.Map<String, Integer> printCountingMap1 = null;
+			// DEFINITION PART BEGINS (CsString)
+			out.print("receives");
+			// DEFINITION PART BEGINS (WhiteSpaces)
+			out.print(" ");
+			// DEFINITION PART BEGINS (PlaceholderUsingDefaultToken)
+			count = printCountingMap.get("receives");
+			if (count > 0) {
+				Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__RECEIVES));
+				java.util.List<?> list = (java.util.List<?>) o;
+				int index = list.size() - count;
+				if (index >= 0) {
+					o = list.get(index);
+				} else {
+					o = null;
+				}
+				if (o != null) {
+					org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
+					resolver.setOptions(getOptions());
+					out.print(resolver.deResolve(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getPortReceivesReferenceResolver().deResolve((org.sintef.thingml.Message) o, element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__RECEIVES)), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__RECEIVES), element));
+				}
+				printCountingMap.put("receives", count - 1);
+			}
+			// DEFINITION PART BEGINS (CompoundDefinition)
+			iterate = true;
+			while (iterate) {
+				sWriter = new java.io.StringWriter();
+				out1 = new java.io.PrintWriter(sWriter);
+				printCountingMap1 = new java.util.LinkedHashMap<String, Integer>(printCountingMap);
+				print_org_sintef_thingml_InternalPort_1_0(element, localtab, out1, printCountingMap1);
+				if (printCountingMap.equals(printCountingMap1)) {
+					iterate = false;
+					out1.close();
+				} else {
+					out1.flush();
+					out1.close();
+					out.print(sWriter.toString());
+					printCountingMap.putAll(printCountingMap1);
+				}
+			}
+		}
+	}
+	
+	public void print_org_sintef_thingml_InternalPort_1_0(org.sintef.thingml.InternalPort element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
+		int count;
+		// DEFINITION PART BEGINS (CsString)
+		out.print(",");
+		// DEFINITION PART BEGINS (WhiteSpaces)
+		out.print(" ");
+		// DEFINITION PART BEGINS (PlaceholderUsingDefaultToken)
+		count = printCountingMap.get("receives");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__RECEIVES));
+			java.util.List<?> list = (java.util.List<?>) o;
+			int index = list.size() - count;
+			if (index >= 0) {
+				o = list.get(index);
+			} else {
+				o = null;
+			}
+			if (o != null) {
+				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
+				resolver.setOptions(getOptions());
+				out.print(resolver.deResolve(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getPortReceivesReferenceResolver().deResolve((org.sintef.thingml.Message) o, element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__RECEIVES)), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__RECEIVES), element));
+			}
+			printCountingMap.put("receives", count - 1);
+		}
+	}
+	
+	public void print_org_sintef_thingml_InternalPort_1_1(org.sintef.thingml.InternalPort element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
+		int count;
+		// DEFINITION PART BEGINS (CsString)
+		out.print(",");
+		// DEFINITION PART BEGINS (WhiteSpaces)
+		out.print(" ");
+		// DEFINITION PART BEGINS (PlaceholderUsingDefaultToken)
+		count = printCountingMap.get("sends");
+		if (count > 0) {
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__SENDS));
+			java.util.List<?> list = (java.util.List<?>) o;
+			int index = list.size() - count;
+			if (index >= 0) {
+				o = list.get(index);
+			} else {
+				o = null;
+			}
+			if (o != null) {
+				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
+				resolver.setOptions(getOptions());
+				out.print(resolver.deResolve(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getPortSendsReferenceResolver().deResolve((org.sintef.thingml.Message) o, element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__SENDS)), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INTERNAL_PORT__SENDS), element));
 			}
 			printCountingMap.put("sends", count - 1);
 		}

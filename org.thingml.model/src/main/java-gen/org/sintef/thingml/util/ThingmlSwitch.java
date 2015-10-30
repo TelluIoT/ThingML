@@ -372,6 +372,15 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.INTERNAL_PORT: {
+				InternalPort internalPort = (InternalPort)theEObject;
+				T result = caseInternalPort(internalPort);
+				if (result == null) result = casePort(internalPort);
+				if (result == null) result = caseAnnotatedElement(internalPort);
+				if (result == null) result = caseThingMLElement(internalPort);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ThingmlPackage.LITERAL: {
 				Literal literal = (Literal)theEObject;
 				T result = caseLiteral(literal);
@@ -1431,6 +1440,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseProvidedPort(ProvidedPort object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Internal Port</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Internal Port</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseInternalPort(InternalPort object) {
 		return null;
 	}
 

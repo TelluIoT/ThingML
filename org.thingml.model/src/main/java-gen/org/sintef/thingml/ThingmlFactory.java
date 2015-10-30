@@ -260,6 +260,15 @@ public interface ThingmlFactory extends EFactory {
 	ProvidedPort createProvidedPort();
 
 	/**
+	 * Returns a new object of class '<em>Internal Port</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Internal Port</em>'.
+	 * @generated
+	 */
+	InternalPort createInternalPort();
+
+	/**
 	 * Returns a new object of class '<em>Enum Literal Ref</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

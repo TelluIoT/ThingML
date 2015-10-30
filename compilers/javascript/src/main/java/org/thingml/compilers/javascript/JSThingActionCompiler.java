@@ -28,7 +28,9 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
-        builder.append("var debug_" + action.getProperty().qname("_") + "_var = _this." + action.getProperty().qname("_") + "_var;\n");
+        if (action.getProperty().eContainer() instanceof Thing) {
+            builder.append("debug_" + action.getProperty().qname("_") + "_var = _this." + action.getProperty().qname("_") + "_var;\n");
+        }
     }
 
     @Override
@@ -40,8 +42,8 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             builder.append("for (var _i = 0; _i < " + action.getProperty().getName() + "ListenersSize; _i++) {\n");
             builder.append("_this.propertyListener['" + action.getProperty().getName() + "'][_i](_this." + ctx.getVariableName(action.getProperty()) + ");\n");
             builder.append("}\n}\n");
+            builder.append("if(_this.debug) console.log(colors.magenta(_this.name + \"(" + action.getProperty().findContainingThing().getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + action.getProperty().qname("_") + "_var" + " + \" to \" + _this." + action.getProperty().qname("_") + "_var));\n");
         }
-        builder.append("if(_this.debug) console.log(colors.magenta(_this.name + \"(" + action.getProperty().findContainingThing().getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + action.getProperty().qname("_") + "_var" + " + \" to \" + _this." + action.getProperty().qname("_") + "_var));\n");
     }
 
     @Override

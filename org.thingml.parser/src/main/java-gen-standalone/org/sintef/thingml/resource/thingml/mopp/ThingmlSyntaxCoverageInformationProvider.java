@@ -25,6 +25,7 @@ public class ThingmlSyntaxCoverageInformationProvider {
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getThing(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getRequiredPort(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getProvidedPort(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getInternalPort(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getProperty(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getParameter(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrimitiveType(),

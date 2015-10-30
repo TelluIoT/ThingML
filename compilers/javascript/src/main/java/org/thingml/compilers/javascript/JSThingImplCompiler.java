@@ -128,6 +128,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
             } else {
                 builder.append("this." + p.qname("_") + "_var" + " = " + p.qname("_") + "_var" + ";\n");
+                builder.append("var debug_" + p.qname("_") + "_var" + " = " + p.qname("_") + "_var" + ";\n");
             }
         }//TODO: public/private properties?
 

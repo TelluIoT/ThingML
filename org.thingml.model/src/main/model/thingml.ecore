@@ -180,6 +180,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="optional" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProvidedPort" eSuperTypes="#//Port"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InternalPort" eSuperTypes="#//Port"/>
   <eClassifiers xsi:type="ecore:EClass" name="Literal" abstract="true" eSuperTypes="#//Expression"/>
   <eClassifiers xsi:type="ecore:EClass" name="EnumLiteralRef" eSuperTypes="#//Literal">
     <eStructuralFeatures xsi:type="ecore:EReference" name="enum" lowerBound="1" eType="#//Enumeration"/>

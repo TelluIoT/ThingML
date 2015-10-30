@@ -94,6 +94,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.RECEIVE_MESSAGE: return createReceiveMessage();
 			case ThingmlPackage.REQUIRED_PORT: return createRequiredPort();
 			case ThingmlPackage.PROVIDED_PORT: return createProvidedPort();
+			case ThingmlPackage.INTERNAL_PORT: return createInternalPort();
 			case ThingmlPackage.ENUM_LITERAL_REF: return createEnumLiteralRef();
 			case ThingmlPackage.INTEGER_LITERAL: return createIntegerLiteral();
 			case ThingmlPackage.BOOLEAN_LITERAL: return createBooleanLiteral();
@@ -399,6 +400,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public ProvidedPort createProvidedPort() {
 		ProvidedPortImpl providedPort = new ProvidedPortImpl();
 		return providedPort;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public InternalPort createInternalPort() {
+		InternalPortImpl internalPort = new InternalPortImpl();
+		return internalPort;
 	}
 
 	/**
