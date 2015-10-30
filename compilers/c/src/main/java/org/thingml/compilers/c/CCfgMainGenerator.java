@@ -2331,7 +2331,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
 
     protected void generatePollingCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-
+        
         ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
 
         // FIXME: Extract the arduino specific part bellow

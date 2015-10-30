@@ -391,8 +391,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     public void generateEmptyHandlers(Thing thing, State s, StringBuilder builder, CompositeState cs, Region r, CCompilerContext ctx) {
+        
         boolean first = true;
-
+        
         // Gather all the empty transitions
         ArrayList<Handler> transitions = new ArrayList<Handler>();
         for (Transition t : s.getOutgoing()) if (t.getEvent().isEmpty()) transitions.add(t);
