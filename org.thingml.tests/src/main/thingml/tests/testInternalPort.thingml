@@ -3,15 +3,15 @@ import "thingml.thingml"
 thing TestInternalPort includes Test 
 @test "t # EX"
 {
-    message int();
+    message intern();
     
     internal port intP {
-        sends int
-        receives int
+        sends intern
+        receives intern
     }
     
     function f() do
-        intP!int()
+        intP!intern()
     end
     
 	statechart TestInternalPort init I {
@@ -23,7 +23,7 @@ thing TestInternalPort includes Test
 			guard m.c == '\'t\'' 
             action f()
 			
-			internal event n : intP?int
+			internal event n : intP?intern
 			action harnessOut!testOut('\'X\'')
 		}
 	}
