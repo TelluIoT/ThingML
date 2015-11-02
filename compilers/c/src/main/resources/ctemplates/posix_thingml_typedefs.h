@@ -26,6 +26,11 @@ typedef signed short   int16;
 typedef unsigned long  uint32;
 typedef signed char    int8;
 
+#ifndef BOOL
+#define BOOL
+typedef enum { false, true } bool;
+#endif
+
 #ifdef __cplusplus
 }
 #endif

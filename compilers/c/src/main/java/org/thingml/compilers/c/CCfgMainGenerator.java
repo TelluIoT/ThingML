@@ -2196,6 +2196,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
         
+        
+        
 
         // init state variables:
         if (inst.getType().allStateMachines().size() > 0) { // There is a state machine
@@ -2236,6 +2238,21 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
 
         builder.append("\n");
+        
+        if(ctx.containsDebug(cfg, inst.getType())) {
+            if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
+                builder.append(ctx.getInstanceVarName(inst) + ".debug = true;\n");
+                builder.append(inst.getType().getName() + "_print_debug(&" + ctx.getInstanceVarName(inst) + ", \""
+                        + "[" + inst.getName() + "] Initialization\\n\");\n");
+            } else {
+                builder.append(ctx.getInstanceVarName(inst) + ".debug = false;\n");
+            }
+        }
+        
+        if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
+            builder.append(inst.getType().getName() + "_print_debug(&" + ctx.getInstanceVarName(inst) + ", \""
+                    + "[" + inst.getName() + "] Initialization\\n\");\n");
+        }
         
         return nbConnectorSoFar;
     }

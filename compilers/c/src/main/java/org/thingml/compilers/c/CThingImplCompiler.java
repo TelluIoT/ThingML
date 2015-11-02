@@ -56,6 +56,30 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         //builder.append("}\n");
         //builder.append("#endif\n");
         //builder.append("\n");
+        
+        if(ctx.containsDebug(ctx.getCurrentConfiguration(), thing)) {
+            builder.append("//Debug fonction\n");
+            builder.append("void " + thing.getName() + "_print_debug(");
+            builder.append("struct " + ctx.getInstanceStructName(thing) + " * _instance");
+            builder.append(", char * str) {\n");
+            
+            builder.append("if(_instance->debug) {\n");
+            
+            if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
+                    String stdout = ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next();
+                    builder.append(stdout + ".print(\"[" + thing.getName() + "]\");\n");
+                    builder.append(stdout + ".print(str);\n");
+                } else {
+                    builder.append("// PRINT: [" + thing.getName() + "] str");
+                }
+            } else {
+                builder.append("printf(\"[" + thing.getName() + "]%s\", str);\n");
+            }
+            
+            builder.append("}\n");
+            builder.append("}\n\n");
+        }
 
         generateCFunctions(thing, builder, ctx);
 
@@ -177,15 +201,24 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("// Definition of function " + func.getName() + "\n");
         generatePrototypeforThingDirect(func, builder, ctx, thing);
         builder.append(" {\n");
-
         if (func.hasAnnotation("c_instance_var_name")) {
             // generateMainAndInit the given prototype. Any parameters are ignored.
             String nname = func.annotation("c_instance_var_name").iterator().next();
             ctx.changeInstanceVarName(nname);
         }
-
+        
+        if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, func)) {
+            builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \"["
+                    + func.getName() + "] Start\\n\");\n");
+        }
+        
         ctx.getCompiler().getThingActionCompiler().generate(func.getBody(), builder, ctx);
 
+        if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, func)) {
+            builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \"["
+                    + func.getName() + "] End\\n\");\n");
+        }
+        
         ctx.clearInstanceVarName();
 
         builder.append("}\n");
@@ -273,12 +306,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         for (State s : sm.allContainedSimpleStates()) {
             builder.append("case " + ctx.getStateID(s) + ":\n");
-            if(ctx.traceLevelIsAbove(thing, 2)) {
-                if(ctx.getCompiler().getID().compareTo("posix") == 0) {
-                    builder.append("printf(\"[" + thing.getName()
-                            + "] Entering state: " + s.getName()
-                            + "\\n\");\n");
-                }
+            if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
+                builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \"["
+                        + s.getName() + "] Start\\n\");\n");
             }
             if (s.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
             builder.append("break;\n");
@@ -318,6 +348,12 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         for (State s : sm.allContainedSimpleStates()) { // just a leaf state: execute exit actions
             builder.append("case " + ctx.getStateID(s) + ":\n");
             if (s.getExit() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
+            
+            if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
+                builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \"["
+                        + s.getName() + "] End\\n\");\n");
+            }
+            
             builder.append("break;\n");
         }
 
@@ -340,13 +376,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append(" {\n");
                 
-                if((ctx.traceLevelIsAbove(thing, 2)) || (ctx.traceLevelIsAbove(port, 2))) {
-                    if(ctx.getCompiler().getID().compareTo("posix") == 0) {
-                        builder.append("printf(\"[" + thing.getName()
-                                + "] handling: " + port.getName()
-                                + "?" + msg.getName()
-                                + "\\n\");\n");
-                    }
+                if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, port, msg)) {
+                    builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \" Event "
+                            + port.getName() + "?" + msg.getName() + "\\n\");\n");
                 }
 
                 //FIXME: Implement the message debug in the context
@@ -591,6 +623,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append("{\n");
                 // if (timer_receive_timeout_listener != 0) timer_receive_timeout_listener(timer_id);
+                if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, port, msg)) {
+                    builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \" Event "
+                            + port.getName() + "!" + msg.getName() + "\\n\");\n");
+                }
+                
                 builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) " + ctx.getSenderName(thing, port, msg) + "_listener");
                 ctx.appendActualParameters(thing, builder, msg, null);
                 builder.append(";\n");

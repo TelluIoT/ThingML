@@ -88,6 +88,11 @@ public class CThingApiCompiler extends ThingApiCompiler {
         //builder.append("int id;\n");
         
         builder.append("// Variables for the ID of the ports of the instance\n");
+        
+        if(ctx.containsDebug(ctx.getCurrentConfiguration(), thing)) {
+            builder.append("bool debug;\n");
+        }
+        
         for (Port p : thing.allPorts()) {
             builder.append("uint16_t id_");
             builder.append(p.getName());

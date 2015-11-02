@@ -490,4 +490,156 @@ public abstract class CCompilerContext extends Context {
             }
         }
     }
+    
+    public boolean isToBeDebugged(Configuration cfg) {
+        if(cfg.hasAnnotation("debug")) {
+            if(cfg.annotation("debug").iterator().next().compareToIgnoreCase("true") == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean isToBeDebugged(Configuration cfg, Thing t) {
+        int lastLevel;
+        if(t.hasAnnotation("debug")) {
+            if(t.annotation("debug").iterator().next().compareToIgnoreCase("true") == 0) {
+                lastLevel = 1; //true
+            } else {
+                if(t.annotation("debug").iterator().next().compareToIgnoreCase("false") == 0) {
+                    lastLevel = 0; // false
+                } else {
+                    lastLevel = 2; // not defined
+                }
+            }
+        } else {
+            lastLevel = 2; // not defined
+        }
+        return ((isToBeDebugged(cfg) && (lastLevel != 0)) || (lastLevel == 1));
+    }
+    
+    public boolean isToBeDebugged(Configuration cfg, Instance inst) {
+        int lastLevel;
+        if(inst.hasAnnotation("debug")) {
+            if(inst.annotation("debug").iterator().next().compareToIgnoreCase("true") == 0) {
+                lastLevel = 1; //true
+            } else {
+                if(inst.annotation("debug").iterator().next().compareToIgnoreCase("false") == 0) {
+                    lastLevel = 0; // false
+                } else {
+                    lastLevel = 2; // not defined
+                }
+            }
+        } else {
+            lastLevel = 2; // not defined
+        }
+        return ((isToBeDebugged(cfg, inst.getType()) && (lastLevel != 0)) || (lastLevel == 1));
+    }
+    
+    public boolean isToBeDebugged(Configuration cfg, Thing t, Port p) {
+        int lastLevel;
+        if(p.hasAnnotation("debug")) {
+            if(p.annotation("debug").iterator().next().compareToIgnoreCase("true") == 0) {
+                lastLevel = 1; //true
+            } else {
+                if(p.annotation("debug").iterator().next().compareToIgnoreCase("false") == 0) {
+                    lastLevel = 0; // false
+                } else {
+                    lastLevel = 2; // not defined
+                }
+            }
+        } else {
+            lastLevel = 2; // not defined
+        }
+        return ((isToBeDebugged(cfg, t) && (lastLevel != 0)) || (lastLevel == 1));
+    }
+    
+    public boolean isToBeDebugged(Configuration cfg, Thing t, Port p, Message m) {
+        int lastLevel;
+        if(m.hasAnnotation("debug")) {
+            if(m.annotation("debug").iterator().next().compareToIgnoreCase("true") == 0) {
+                lastLevel = 1; //true
+            } else {
+                if(m.annotation("debug").iterator().next().compareToIgnoreCase("false") == 0) {
+                    lastLevel = 0; // false
+                } else {
+                    lastLevel = 2; // not defined
+                }
+            }
+        } else {
+            lastLevel = 2; // not defined
+        }
+        return ((isToBeDebugged(cfg, t, p) && (lastLevel != 0)) || (lastLevel == 1));
+    }
+    
+    public boolean isToBeDebugged(Configuration cfg, Thing t, State s) {
+        int lastLevel;
+        if(s.hasAnnotation("debug")) {
+            if(s.annotation("debug").iterator().next().compareToIgnoreCase("true") == 0) {
+                lastLevel = 1; //true
+            } else {
+                if(s.annotation("debug").iterator().next().compareToIgnoreCase("false") == 0) {
+                    lastLevel = 0; // false
+                } else {
+                    lastLevel = 2; // not defined
+                }
+            }
+        } else {
+            lastLevel = 2; // not defined
+        }
+        return ((isToBeDebugged(cfg, t) && (lastLevel != 0)) || (lastLevel == 1));
+    }
+    
+    public boolean isToBeDebugged(Configuration cfg, Thing t, Function f) {
+        int lastLevel;
+        if(f.hasAnnotation("debug")) {
+            if(f.annotation("debug").iterator().next().compareToIgnoreCase("true") == 0) {
+                lastLevel = 1; //true
+            } else {
+                if(f.annotation("debug").iterator().next().compareToIgnoreCase("false") == 0) {
+                    lastLevel = 0; // false
+                } else {
+                    lastLevel = 2; // not defined
+                }
+            }
+        } else {
+            lastLevel = 2; // not defined
+        }
+        return ((isToBeDebugged(cfg, t) && (lastLevel != 0)) || (lastLevel == 1));
+    }
+    
+    public boolean containsDebug(Configuration cfg, Thing t) {
+        boolean res = isToBeDebugged(cfg, t);
+        
+        for(Instance inst : cfg.allInstances()) {
+            if(inst.getType().getName().compareTo(t.getName()) == 0) {
+                res |= isToBeDebugged(cfg, inst);
+            }
+        }
+        
+        for(Function f : t.allFunctions()) {
+            res |= isToBeDebugged(cfg, t, f);
+        }
+        
+        for(Port p : t.allPorts()) {
+            res |= isToBeDebugged(cfg, t, p);
+            for(Message m : p.getReceives()) {
+                res |= isToBeDebugged(cfg, t, p, m);
+            }
+            for(Message m : p.getSends()) {
+                res |= isToBeDebugged(cfg, t, p, m);
+            }
+        }
+        
+        for(StateMachine sm: t.allStateMachines()) {
+            for(State s : sm.allStates()) {
+                res |= isToBeDebugged(cfg, t, s);
+            }
+        }
+        
+        return res;
+    }
 }
