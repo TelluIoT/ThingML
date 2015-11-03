@@ -20,6 +20,7 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.Context;
 
 import java.util.Hashtable;
+import java.util.Set;
 
 /**
  * Created by ffl on 01.06.15.
@@ -488,6 +489,51 @@ public abstract class CCompilerContext extends Context {
                 builder.append("_fifo_enqueue( u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
                 //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
             }
+        }
+    }
+    
+    public int generateSerializationForForwarder(Message m, StringBuilder builder, int HandlerCode, Set<String> ignoreList) {
+       
+        builder.append("byte forward_buf[" + (this.getMessageSerializationSize(m) - 2) + "];\n");
+
+        builder.append("forward_buf[0] = (" + HandlerCode + " >> 8) & 0xFF;\n");
+        builder.append("forward_buf[1] =  " + HandlerCode + " & 0xFF;\n\n");
+
+
+        int j = 2;
+
+        for (Parameter pt : m.getParameters()) {
+            builder.append("\n// parameter " + pt.getName() + "\n");
+            int i = this.getCByteSize(pt.getType(), 0);
+            String v = pt.getName();
+            if (this.isPointer(pt.getType())) {
+                // This should not happen and should be checked before.
+                throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
+            } else {
+                //builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
+                if(!ignoreList.contains(pt.getName())) {
+
+                    builder.append("union u_" + v + "_t {\n");
+                    builder.append(this.getCType(pt.getType()) + " p;\n");
+                    builder.append("byte bytebuffer[" + this.getCByteSize(pt.getType(), 0) + "];\n");
+                    builder.append("} u_" + v + ";\n");
+                    builder.append("u_" + v + ".p = " + v + ";\n");
+
+                    while (i > 0) {
+                        i = i - 1;
+                        //if (i == 0) 
+                        //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
+                        builder.append("forward_buf[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
+                        j++;
+                    }
+                }
+            }
+        }
+        
+        if(j == 2) {
+            return j;
+        } else {
+            return j-1;
         }
     }
     
