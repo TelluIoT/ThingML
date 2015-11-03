@@ -49,9 +49,16 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     
     public void generateNetworkLibs(Configuration cfg, CCompilerContext ctx) {
         PosixWS WSgen = new PosixWS(cfg, ctx);
+        ctx.addNetworkLibraryGenerator(WSgen);
+        
         PosixMQTT MQTTgen = new PosixMQTT(cfg, ctx);
+        ctx.addNetworkLibraryGenerator(MQTTgen);
+        
         PosixSerial pSerialgen = new PosixSerial(cfg, ctx);
+        ctx.addNetworkLibraryGenerator(pSerialgen);
+        
         ArduinoSerial aSerialgen = new ArduinoSerial(cfg, ctx);
+        ctx.addNetworkLibraryGenerator(aSerialgen);
         
         for(ExternalConnector eco : cfg.getExternalConnectors()) {
             if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
@@ -510,18 +517,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             Thing t = eco.getInst().getInstance().getType();
             Port p = eco.getPort();
             
-            boolean additionalParam = false;
-            if(eco.hasAnnotation("websocket_enable_unicast")) {
-                if(eco.annotation("websocket_enable_unicast").iterator().next().compareTo("true") == 0) {
-                    additionalParam = true;
-                }
-            }
-            if(eco.hasAnnotation("mqtt_multi_topic_publish_selection")) {
-                if(eco.annotation("mqtt_multi_topic_publish_selection").iterator().next().compareTo("true") == 0) {
-                    additionalParam = true;
-                }
-            }
-            String param;
             
             for (Message m : p.getSends()) {
                 
@@ -554,41 +549,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     tpeco.put(t, peco);
                     tpm.put(m, tpeco);
                 }
-                // Thing Port Message Forwarder list filling end
-                
-                
-                Set<String> ignoreList = new HashSet<String>();
-                if(additionalParam) {
-                    if(m.hasAnnotation("websocket_client_id")) {
-                        param = m.annotation("websocket_client_id").iterator().next();
-                        ignoreList.add(param);
-                    } else {
-                        if(m.hasAnnotation("mqtt_topic_id")) {
-                            param = m.annotation("mqtt_topic_id").iterator().next();
-                            ignoreList.add(param);
-                        } else {
-                            param = "-1";
-                        }
-                    }
-                } else {param = "";}
-                
-                builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
-                builder.append("void forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
-                ctx.appendFormalParameters(t, builder, m);
-                builder.append("{\n");
-                
-                int messageSize =  generateSerializationForForwarder(ctx, m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
-
-                builder.append("\n//Forwarding with specified function \n");
-                if(additionalParam) {
-                    builder.append(eco.getName() + "_forwardMessage(forward_buf, " + messageSize + ", " + param + ");\n");
-                } else {
-                    builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
-                }
-//builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
-                builder.append("}\n\n");
-
             }
+        }
+        
+        for(NetworkLibraryGenerator nlg : ctx.getNetworkLibraryGenerators()) {
+            nlg.generateMessageForwarders(builder);
         }
         
         

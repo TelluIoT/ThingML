@@ -24,6 +24,9 @@ import java.util.HashSet;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.Port;
+import org.sintef.thingml.Thing;
 import org.thingml.compilers.c.CCompilerContext;
 
 /**
@@ -70,5 +73,30 @@ public abstract class NetworkLibraryGenerator {
     /*
      * For each PORT_NAME::Thing::Port::Message
      */
-    public abstract void generateMessageForwarders(StringBuilder builder);
+    public void generateMessageForwarders(StringBuilder builder) {
+        
+        for (ExternalConnector eco : this.getExternalConnectors()) {
+            //if (eco.hasAnnotation("c_external_send")) {
+            Thing t = eco.getInst().getInstance().getType();
+            Port p = eco.getPort();
+            
+            for (Message m : p.getSends()) {
+                Set<String> ignoreList = new HashSet<String>();
+
+                builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                builder.append("void forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
+                ctx.appendFormalParameters(t, builder, m);
+                builder.append("{\n");
+
+                int messageSize =  ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
+
+                builder.append("\n//Forwarding with specified function \n");
+                builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                
+        //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                builder.append("}\n\n");
+            }
+                
+        }
+    }
 }

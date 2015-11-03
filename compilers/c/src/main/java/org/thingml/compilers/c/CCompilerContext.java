@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.c;
 
+import java.util.HashSet;
 import org.sintef.thingml.*;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.Context;
@@ -26,9 +27,12 @@ import java.util.Set;
  * Created by ffl on 01.06.15.
  */
 public abstract class CCompilerContext extends Context {
+    
+    private Set<NetworkLibraryGenerator> NetworkLibraryGenerators;
 
     public CCompilerContext(ThingMLCompiler c) {
         super(c);
+        NetworkLibraryGenerators = new HashSet<NetworkLibraryGenerator>();
     }
     
     public String getDynamicConnectorsTemplate() {
@@ -41,6 +45,14 @@ public abstract class CCompilerContext extends Context {
         } else {
             return getTemplateByID("ctemplates/network_lib/posix/PosixSerialForward.c");
         }
+    }
+    
+    public Set<NetworkLibraryGenerator> getNetworkLibraryGenerators() {
+        return NetworkLibraryGenerators;
+    }
+    
+    public void addNetworkLibraryGenerator(NetworkLibraryGenerator nlg) {
+        NetworkLibraryGenerators.add(nlg);
     }
     
     public String getNetworkLibSerialTemplate() {
