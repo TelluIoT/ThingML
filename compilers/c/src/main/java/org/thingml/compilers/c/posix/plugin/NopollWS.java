@@ -149,4 +149,50 @@ public class NopollWS extends NetworkLibraryGenerator {
 
         }
     }
+
+    @Override
+    public void generateMessageForwarders(StringBuilder builder) {
+        for (ExternalConnector eco : this.getExternalConnectors()) {
+            //if (eco.hasAnnotation("c_external_send")) {
+            Thing t = eco.getInst().getInstance().getType();
+            Port p = eco.getPort();
+            
+           
+            
+            for (Message m : p.getSends()) {
+                if(m.hasAnnotation("webosocket_client_connexion_reset")) {
+                    String portName;
+                    if(eco.hasAnnotation("port_name")) {
+                        portName = eco.annotation("port_name").iterator().next();
+                    } else {
+                        portName = eco.getProtocol();
+                    }
+                    
+
+                    builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                    builder.append("void forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
+                    ctx.appendFormalParameters(t, builder, m);
+                    builder.append("{\n");
+                    builder.append(portName + "_setup();\n");
+                    builder.append("}\n\n");
+                } else {
+                    Set<String> ignoreList = new HashSet<String>();
+
+                    builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                    builder.append("void forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
+                    ctx.appendFormalParameters(t, builder, m);
+                    builder.append("{\n");
+
+                    int messageSize =  ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
+
+                    builder.append("\n//Forwarding with specified function \n");
+                    builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+
+            //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                    builder.append("}\n\n");
+                }
+            }
+                
+        }
+    }
 }

@@ -527,7 +527,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             
             
             for (Message m : p.getSends()) {
-                
+                System.out.println("T: " + t.getName() + ", P: " + p.getName() + ", M: " + m.getName());
                 // Thing Port Message Forwarder list filling
                 if(tpm.containsKey(m)) {
                     tpeco = tpm.get(m);
@@ -1539,11 +1539,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             } else {
                 builder.append(ctx.getInstanceVarName(inst) + ".debug = false;\n");
             }
-        }
-        
-        if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
-            builder.append(inst.getType().getName() + "_print_debug(&" + ctx.getInstanceVarName(inst) + ", \""
-                    + "[" + inst.getName() + "] Initialization\\n\");\n");
         }
         
         return nbConnectorSoFar;
