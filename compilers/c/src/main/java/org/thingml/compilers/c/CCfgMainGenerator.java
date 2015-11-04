@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.thingml.compilers.c.arduino.plugin.ArduinoSerial;
+import org.thingml.compilers.c.posix.plugin.NopollWS;
 import org.thingml.compilers.c.posix.plugin.PosixMQTT;
 import org.thingml.compilers.c.posix.plugin.PosixSerial;
 import org.thingml.compilers.c.posix.plugin.PosixWS;
@@ -50,6 +51,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     public void generateNetworkLibs(Configuration cfg, CCompilerContext ctx) {
         PosixWS WSgen = new PosixWS(cfg, ctx);
         ctx.addNetworkLibraryGenerator(WSgen);
+        
+        NopollWS nopollWSgen = new NopollWS(cfg, ctx);
+        ctx.addNetworkLibraryGenerator(nopollWSgen);
         
         PosixMQTT MQTTgen = new PosixMQTT(cfg, ctx);
         ctx.addNetworkLibraryGenerator(MQTTgen);
@@ -73,6 +77,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 if(eco.getProtocol().startsWith("Websocket")) {
                   WSgen.addExternalCnnector(eco);
                 }
+                if(eco.getProtocol().startsWith("NopollWS")) {
+                  nopollWSgen.addExternalCnnector(eco);
+                }
                 if(eco.getProtocol().startsWith("MQTT")) {
                     MQTTgen.addExternalCnnector(eco);
                 }
@@ -80,6 +87,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
         
         WSgen.generateNetworkLibrary();
+        nopollWSgen.generateNetworkLibrary();
         MQTTgen.generateNetworkLibrary();
         pSerialgen.generateNetworkLibrary();
         aSerialgen.generateNetworkLibrary();

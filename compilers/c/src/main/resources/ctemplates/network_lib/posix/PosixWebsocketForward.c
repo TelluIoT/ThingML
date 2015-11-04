@@ -220,6 +220,8 @@ void /*PORT_NAME*/_start_receiver_process() {
     }
 	
     /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Starting server...\n");
+
+    /*LISTENER_READY*/
 	
     // infinite loop, to end this server send SIGTERM. (CTRL+C)
     while (1) {

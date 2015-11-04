@@ -111,6 +111,23 @@ public class PosixWS extends NetworkLibraryGenerator {
             ctemplate = ctemplate.replace("/*CONNEXION_ESTABLISHED*/", connectorReady);
 
             //End connector Ready
+            
+            //Server ready
+            StringBuilder listenerReady = new StringBuilder();
+            for(Message m: eco.getPort().getReceives()) {
+                if(m.hasAnnotation("websocket_server_ready")) {
+                    listenerReady.append("//Notify app with " + m.getName() + "\n");
+                    listenerReady.append("byte forward_buf[2];\n");
+                    listenerReady.append("forward_buf[0] = (" + ctx.getHandlerCode(cfg, m) + " >> 8) & 0xFF;\n");
+                    listenerReady.append("forward_buf[1] =  " + ctx.getHandlerCode(cfg, m) + " & 0xFF;\n\n");
+                    listenerReady.append("externalMessageEnqueue(forward_buf, 2, " + portName + "_instance.listener_id);\n\n");
+                }
+            }
+            ctemplate = ctemplate.replace("/*LISTENER_READY*/", listenerReady);
+            
+            //end server ready
+            
+            
 
             Integer nbClientMax;
             if(eco.hasAnnotation("websocket_nb_client_max")) {
@@ -276,11 +293,6 @@ public class PosixWS extends NetworkLibraryGenerator {
             boolean additionalParam = false;
             if(eco.hasAnnotation("websocket_enable_unicast")) {
                 if(eco.annotation("websocket_enable_unicast").iterator().next().compareTo("true") == 0) {
-                    additionalParam = true;
-                }
-            }
-            if(eco.hasAnnotation("mqtt_multi_topic_publish_selection")) {
-                if(eco.annotation("mqtt_multi_topic_publish_selection").iterator().next().compareTo("true") == 0) {
                     additionalParam = true;
                 }
             }
