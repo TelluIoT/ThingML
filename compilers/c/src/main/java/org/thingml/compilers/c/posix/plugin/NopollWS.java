@@ -174,6 +174,11 @@ public class NopollWS extends NetworkLibraryGenerator {
                     ctx.appendFormalParameters(t, builder, m);
                     builder.append("{\n");
                     builder.append(portName + "_setup();\n");
+                    
+                    String threadName = "thread_" + eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + portName;
+                    
+                    builder.append("pthread_t " + threadName +";\n");
+                    builder.append("pthread_create( &" + threadName + ", NULL, " + portName + "_start_receiver_process, NULL);\n");
                     builder.append("}\n\n");
                 } else {
                     Set<String> ignoreList = new HashSet<String>();
