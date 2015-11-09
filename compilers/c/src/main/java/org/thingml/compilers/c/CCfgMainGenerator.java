@@ -527,7 +527,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             
             
             for (Message m : p.getSends()) {
-                System.out.println("T: " + t.getName() + ", P: " + p.getName() + ", M: " + m.getName());
+                //System.out.println("T: " + t.getName() + ", P: " + p.getName() + ", M: " + m.getName());
                 // Thing Port Message Forwarder list filling
                 if(tpm.containsKey(m)) {
                     tpeco = tpm.get(m);
@@ -1304,19 +1304,30 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         // Generate code to initialize variable for instances
         
         int nbConnectorSoFar = 0;
-        for (Instance inst : cfg.allInstances()) {
-            nbConnectorSoFar = generateInstanceInitCode(inst, cfg, builder, ctx, nbConnectorSoFar);  
-        }
         for (ExternalConnector eco : cfg.getExternalConnectors()) {
             nbConnectorSoFar = generateExternalConnectorInitCode(eco, cfg, builder, ctx, nbConnectorSoFar);
         }
+        
+        /*for (Instance inst : cfg.allInstances()) {
+            nbConnectorSoFar = generateInstanceInitCode(inst, cfg, builder, ctx, nbConnectorSoFar);  
+        }*/
                 
         //Initialize network connections if needed
         generateInitializationNetworkCode(cfg, builder, ctx);
 
-        for (Instance inst : cfg.allInstances()) {
+        System.out.println("Instance initialization order");
+        List<Instance> Instances = ctx.orderInstanceInit(cfg);
+        Instance inst;
+        while(!Instances.isEmpty()) {
+            inst = Instances.get(Instances.size()-1);
+            Instances.remove(inst);
+            nbConnectorSoFar = generateInstanceInitCode(inst, cfg, builder, ctx, nbConnectorSoFar);  
             generateInstanceOnEntryCode(inst, builder, ctx);
         }
+        
+        /*for (Instance inst : cfg.allInstances()) {
+            generateInstanceOnEntryCode(inst, builder, ctx);
+        }*/
 
         builder.append("}\n");
     }

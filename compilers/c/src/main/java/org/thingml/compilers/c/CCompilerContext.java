@@ -21,6 +21,8 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.Context;
 
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -708,4 +710,43 @@ public abstract class CCompilerContext extends Context {
         
         return res;
     }
+    
+    
+    private List<Instance> isRequiredBy(Instance cur, List<Connector> Cos, List<Instance> Instances) {
+        System.out.println("I: " + cur.getName());
+        List<Instance> res = new LinkedList<Instance>();
+        //List<Connector> toBeRemoved = new LinkedList<Connector>();
+        Instance needed;
+        for (Connector co : Cos) {
+            if(co.getCli().getInstance().getName().compareTo(cur.getName()) == 0) {
+                needed = co.getSrv().getInstance();
+                for(Instance inst : Instances) {
+                    if(inst.getName().compareTo(needed.getName()) == 0) {
+                        Instances.remove(inst);
+                        //Cos.remove(co);
+                        res.addAll(0, isRequiredBy(inst,Cos,Instances));
+                        res.add(0, inst);
+                        break;
+                    }
+                }
+            }
+        }
+        return res;
+    } 
+    
+    List<Instance> orderInstanceInit(Configuration cfg) {
+        List<Instance> Instances = new LinkedList<Instance>(cfg.allInstances());
+        List<Connector> Cos = new LinkedList<Connector>(cfg.allConnectors());
+        List<Instance> res = new LinkedList<Instance>();
+        Instance cur;
+        while(!Instances.isEmpty()) {
+            cur = Instances.get(0);
+            Instances.remove(cur);
+            res.addAll(0, isRequiredBy(cur, Cos, Instances));
+            res.add(0, cur);
+        }
+        return res;
+    }
+
+    
 }
