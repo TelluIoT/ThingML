@@ -153,6 +153,10 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         //builder.append("var Connector = require('./Connector');\n");
         builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
 
+        //if(!ctx.getCompiler().getDebugProfiles().isEmpty()) {//FIXME
+            builder.append("var colors = require('colors/safe');\n");
+        //}
+
         for (Thing t : cfg.allThings()) {
             builder.append("var " + t.getName() + " = require('./" + t.getName() + "');\n");
         }
@@ -194,19 +198,33 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         for (Instance i : cfg.allInstances()) {
             for (Property p : i.getType().allPropertiesInDepth()) {
                 if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
+                    String accessor = "getValue";
+                    String escaper = "\"";
+                    boolean isNumber = false;
+                    if(p.getType() instanceof PrimitiveType && ((PrimitiveType)p.getType()).isNumber()) {
+                        accessor = "getNumber";
+                        //escaper = "";
+                        isNumber = true;
+                    }
+
                     //Update ThingML properties when Kevoree properties are updated
-                    builder.append("this.dictionary.on('" + i.getName() + "_" + ctx.getVariableName(p) + "', function (oldValue, newValue) {");
-                    builder.append("if(" + i.getName() + "." + ctx.getVariableName(p) + " !== newValue) { ");
+                    builder.append("this.dictionary.on('" + i.getName() + "_" + ctx.getVariableName(p) + "', function (newValue) {");
+                    if (isNumber) {
+                        builder.append("newValue = Number(newValue);\n");
+                    }
+                    builder.append("console.log(\"Kevoree attribute " + i.getName() + "_" + ctx.getVariableName(p) + " updated...\");\n");
+                    builder.append("if(this." + i.getName() + "." + ctx.getVariableName(p) + " !== newValue) { ");
+                    builder.append("console.log(\"updating ThingML attribute...\");\n");
                     builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
                     builder.append("}});\n");
 
                     //Update Kevoree properties when ThingML properties are updated
                     builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', function(newValue) {");
-                    builder.append("if(this.dictionary.getValue('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== newValue) {\n");
-                    builder.append("var instance = this.getModelEntity();\n");
-                    builder.append("var attrVal = instance.dictionary.findValuesById('" + i.getName() + "_" + ctx.getVariableName(p) + "');\n");
-                    builder.append("attrVal.value = '' + newValue;\n");
-                    builder.append("}});\n");
+                    builder.append("console.log(\"ThingML attribute " + i.getName() + "_" + ctx.getVariableName(p) + " updated...\");\n");
+                    builder.append("if(this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== newValue) {\n");
+                    builder.append("console.log(\"updating Kevoree attribute...\");\n");
+                    builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + i.getName() + "_" + ctx.getVariableName(p) + " = " + escaper + "'+newValue+'" + escaper + "');\n");
+                    builder.append("}}.bind(this));\n");
                 }
             }
         }
